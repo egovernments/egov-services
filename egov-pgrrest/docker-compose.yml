@@ -16,6 +16,30 @@ services:
     ports:
       - "2181:2181"
       - "9092:9092"
+  locationassignment:
+    image: egovio/pgr-locationassignment:latest
+    ports:
+      - "6060:8080"
+    links:
+      - kafka
+  employeeassignment:
+    image: egovio/pgr-employeeassignment:latest
+    ports:
+      - "5050:8080"
+    links:
+      - kafka
+  persist:
+    image: egovio/pgr-persist:latest
+    ports:
+      - "4040:8080"
+    links:
+      - kafka
+  indexing:
+    image: egovio/pgr-indexing:latest
+    ports:
+      - "7070:8080"
+    links:
+      - kafka
   pgrrest:
     image: egovio/pgrrest:1.0.0
     ports:

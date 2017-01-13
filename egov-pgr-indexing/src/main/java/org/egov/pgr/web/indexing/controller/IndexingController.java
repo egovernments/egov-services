@@ -1,4 +1,4 @@
-package org.egov.pgr.web.locationassignment.controller;
+package org.egov.pgr.web.indexing.controller;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -12,8 +12,7 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
-import org.egov.pgr.web.locationassignment.model.ServiceRequestReq;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.egov.pgr.web.indexing.model.ServiceRequestReq;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -22,9 +21,8 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RestController
-@RequestMapping("/pgr/locationassignment")
-public class LocationAssignmentController {
-	public void validatedRequestsReceiver() {
+public class IndexingController {
+	public void savedRequestsReceiver() {
 		Properties props = new Properties();
 		props.put("bootstrap.servers", "localhost:9092");
 		props.put("group.id", "notifications");
@@ -32,11 +30,11 @@ public class LocationAssignmentController {
 		props.put("auto.commit.interval.ms", "10000");
 		props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
 		props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-		KafkaConsumer<String, String> validatedRequests = new KafkaConsumer<>(props);
-		validatedRequests.subscribe(Arrays.asList("ap.public.mseva.locationassigned"));
+		KafkaConsumer<String, String> requests = new KafkaConsumer<>(props);
+		requests.subscribe(Arrays.asList("ap.public.mseva.saved"));
 		while (true) {
-			ConsumerRecords<String, String> records = validatedRequests.poll(5000);
-			System.err.println("******** polling validatedRequestsReceiver at time " + new Date().toString());
+			ConsumerRecords<String, String> records = requests.poll(5000);
+			System.err.println("******** polling savedRequestsReceiver at time " + new Date().toString());
 			for (ConsumerRecord<String, String> record : records) {
 				ObjectMapper mapper = new ObjectMapper();
 				ServiceRequestReq request;
@@ -44,13 +42,12 @@ public class LocationAssignmentController {
 					request = mapper.readValue(record.value(), ServiceRequestReq.class);
 					if (request.getRequestInfo().getRequesterId() != null
 							|| request.getRequestInfo().getRequesterId() != StringUtils.EMPTY) {
-
-						System.err.println(
-								"---------------- Received form topic  ap.public.mseva.locationassigned -------------------------");
-						System.err.println("---------------- Location Assigned to Complaint --------------");
-						pushAssignedRequests(request, "ap.public.mseva.locationassigned");
-						System.err.println(
-								"---------------- Pushing to topic ap.public.mseva.locationassigned -------------------------");
+						System.out.println(
+								"---------------- Received form topic  ap.public.mseva.saved -------------------------");
+						System.out.println("---------------- Indexing done --------------");
+						pushIndexedRequests(request, "ap.public.mseva.indexed");
+						System.out.println(
+								"---------------- Pushing to topic ap.public.mseva.indexed -------------------------");
 					}
 				} catch (JsonParseException e) {
 					e.printStackTrace();
@@ -63,7 +60,7 @@ public class LocationAssignmentController {
 		}
 	}
 
-	private void pushAssignedRequests(ServiceRequestReq request, String topic) throws JsonProcessingException {
+	private void pushIndexedRequests(ServiceRequestReq request, String topic) throws JsonProcessingException {
 		Properties props = new Properties();
 		props.put("bootstrap.servers", "localhost:9092");
 		props.put("acks", "all");

@@ -34,14 +34,20 @@ public class PersistController {
 		savedRequests.subscribe(Arrays.asList("ap.public.mseva.assigned"));
 		while (true) {
 			ConsumerRecords<String, String> records = savedRequests.poll(5000);
-			System.err.println("******** polling savedRequestsReceiver at time " + new Date().toString());
+			System.err.println("******** polling assignedRequestsReceiver at time " + new Date().toString());
 			for (ConsumerRecord<String, String> record : records) {
 
 				ObjectMapper mapper = new ObjectMapper();
 				ServiceRequestReq request;
 				try {
 					request = mapper.readValue(record.value(), ServiceRequestReq.class);
-					pushValidatedRequests(request, "ap.public.mseva.persisted");
+					System.err.println(
+							"---------------- Received form topic  ap.public.mseva.assigned -------------------------");
+					System.err.println("---------------- Complaint persist --------------");
+					pushPersistedRequests(request, "ap.public.mseva.persisted");
+					System.err.println(
+							"---------------- Pushing to topic ap.public.mseva.persisted -------------------------");
+
 				} catch (JsonParseException e) {
 					e.printStackTrace();
 				} catch (JsonMappingException e) {
@@ -54,7 +60,7 @@ public class PersistController {
 		}
 	}
 
-	private void pushValidatedRequests(ServiceRequestReq request, String topic) throws JsonProcessingException {
+	private void pushPersistedRequests(ServiceRequestReq request, String topic) throws JsonProcessingException {
 		Properties props = new Properties();
 		props.put("bootstrap.servers", "localhost:9092");
 		props.put("acks", "all");

@@ -22,7 +22,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @RestController
 public class EmployeeAssignmentController {
 
-	public void numberGeneratedRequestsReceiver() {
+	public void locationAssignedRequestsReceiver() {
 		Properties props = new Properties();
 		props.put("bootstrap.servers", "localhost:9092");
 		props.put("group.id", "notifications");
@@ -34,14 +34,20 @@ public class EmployeeAssignmentController {
 		savedRequests.subscribe(Arrays.asList("ap.public.mseva.numbergenerated"));
 		while (true) {
 			ConsumerRecords<String, String> records = savedRequests.poll(5000);
-			System.err.println("******** polling savedRequestsReceiver at time " + new Date().toString());
+			System.err.println("******** polling locationAssignedRequestsReceiver at time " + new Date().toString());
 			for (ConsumerRecord<String, String> record : records) {
 
 				ObjectMapper mapper = new ObjectMapper();
 				ServiceRequestReq request;
 				try {
 					request = mapper.readValue(record.value(), ServiceRequestReq.class);
+					System.err.println(
+							"---------------- Received form topic  ap.public.mseva.locationassigned -------------------------");
+					System.err.println("---------------- Employee Assigned to Complaint --------------");
 					pushValidatedRequests(request, "ap.public.mseva.assigned");
+					System.err.println(
+							"---------------- Pushing to topic ap.public.mseva.assigned -------------------------");
+
 				} catch (JsonParseException e) {
 					e.printStackTrace();
 				} catch (JsonMappingException e) {

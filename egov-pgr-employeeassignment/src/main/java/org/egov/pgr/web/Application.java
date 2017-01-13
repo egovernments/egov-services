@@ -16,7 +16,7 @@ public class Application extends SpringBootServletInitializer {
 
 	@PostConstruct
 	public void listen() {
-		employeeAssignmentController.numberGeneratedRequestsReceiver();
+		employeeAssignmentController.locationAssignedRequestsReceiver();
 	}
 
 	public static void main(String[] args) {

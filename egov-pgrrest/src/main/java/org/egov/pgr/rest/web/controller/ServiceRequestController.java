@@ -42,7 +42,6 @@ import org.egov.pgr.service.ComplaintStatusService;
 import org.egov.pgr.service.ComplaintTypeService;
 import org.egov.pgr.service.es.ComplaintIndexService;
 import org.egov.pims.commons.Position;
-import org.egov.pims.commons.service.PositionService;
 import org.joda.time.DateTime;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,7 +94,6 @@ public class ServiceRequestController {
 	@Autowired
 	private ComplaintRouterService complaintRouterService;
 
-	
 	@Autowired
 	private ComplaintIndexService complaintIndexService;
 
@@ -407,6 +405,42 @@ public class ServiceRequestController {
 		}
 	}
 
+	@RequestMapping(value = "/receive-success-requests", method = RequestMethod.GET)
+	public void successRequestsReceiver(@RequestParam String jurisdiction_id) {
+
+		Properties props = new Properties();
+		props.put("bootstrap.servers", "localhost:9092");
+		props.put("group.id", "notifications");
+		props.put("enable.auto.commit", "true");
+		props.put("auto.commit.interval.ms", "10000");
+		props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+		props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+		KafkaConsumer<String, String> validatedRequests = new KafkaConsumer<>(props);
+		validatedRequests.subscribe(Arrays.asList(jurisdiction_id + ".mseva.indexed"));
+		while (true) {
+			ConsumerRecords<String, String> records = validatedRequests.poll(5000);
+			System.err.println("******* polling assignedRequestsReceiver at time " + new Date().toString());
+			for (ConsumerRecord<String, String> record : records) {
+				ObjectMapper mapper = new ObjectMapper();
+				Complaint complaint;
+				ServiceRequestReq request;
+				try {
+					request = mapper.readValue(record.value(), ServiceRequestReq.class);
+					complaint = toComplaint(request);
+					complaint = assignComplaint(complaint);
+					Complaint savedComplaint = complaintService.createComplaint(complaint);
+
+				} catch (JsonParseException e) {
+					e.printStackTrace();
+				} catch (JsonMappingException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
 	private Complaint assignComplaint(Complaint complaint) {
 		final Position assignee = complaintRouterService.getAssignee(complaint);
 		complaint.setAssignee(assignee);
@@ -453,7 +487,7 @@ public class ServiceRequestController {
 
 		return complaint;
 	}
-	
+
 	@RequestMapping(value = "/receive-saved-requests", method = RequestMethod.GET)
 	public void savedRequestsReceiver(@RequestParam String jurisdiction_id) {
 		Properties props = new Properties();
@@ -469,8 +503,8 @@ public class ServiceRequestController {
 			ConsumerRecords<String, String> records = savedRequests.poll(5000);
 			System.err.println("******** polling savedRequestsReceiver at time " + new Date().toString());
 			for (ConsumerRecord<String, String> record : records) {
-					Complaint complaint = complaintService.getComplaintByCRN(record.value());
-					//complaintIndexService.createComplaintIndex(complaint);
+				Complaint complaint = complaintService.getComplaintByCRN(record.value());
+				// complaintIndexService.createComplaintIndex(complaint);
 			}
 		}
 	}

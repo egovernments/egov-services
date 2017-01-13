@@ -1,0 +1,18 @@
+version: '2'
+services:
+  kafka:
+    image: spotify/kafka:latest #pulling from spotfiy because zookeeper is req is rolled in
+    environment:
+      - ADVERTISED_HOST=kafka
+      - ADVERTISED_PORT=9092
+    ports:
+      - "2181:2181"
+      - "9092:9092"
+  notifications:
+    build: .
+    ports:
+      - "8080:8080"
+      - "9990:9990"
+      - "8787:8787"
+    links:
+      - kafka

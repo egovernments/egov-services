@@ -245,7 +245,7 @@ public class ServiceRequestController {
 	private void pushValidatedRequests(ServiceRequestReq serviceRequestReq, String topic)
 			throws JsonProcessingException {
 		Properties props = new Properties();
-		props.put("bootstrap.servers", "localhost:9092");
+		props.put("bootstrap.servers", "kafka:9092");
 		props.put("acks", "all");
 		props.put("retries", 0);
 		props.put("batch.size", 1);
@@ -265,7 +265,7 @@ public class ServiceRequestController {
 
 	private void pushAssignedRequests(ServiceRequestReq request, String topic) throws JsonProcessingException {
 		Properties props = new Properties();
-		props.put("bootstrap.servers", "localhost:9092");
+		props.put("bootstrap.servers", "kafka:9092");
 		props.put("acks", "all");
 		props.put("retries", 0);
 		props.put("batch.size", 1);
@@ -284,7 +284,7 @@ public class ServiceRequestController {
 
 	private void pushSavedRequests(String crn, String topic) throws JsonProcessingException {
 		Properties props = new Properties();
-		props.put("bootstrap.servers", "localhost:9092");
+		props.put("bootstrap.servers", "kafka:9092");
 		props.put("acks", "all");
 		props.put("retries", 0);
 		props.put("batch.size", 1);
@@ -304,7 +304,7 @@ public class ServiceRequestController {
 	public void validatedRequestsReceiver(@RequestParam String jurisdiction_id) {
 
 		Properties props = new Properties();
-		props.put("bootstrap.servers", "localhost:9092");
+		props.put("bootstrap.servers", "kafka:9092");
 		props.put("group.id", "notifications");
 		props.put("enable.auto.commit", "true");
 		props.put("auto.commit.interval.ms", "10000");
@@ -340,7 +340,7 @@ public class ServiceRequestController {
 	@RequestMapping(value = "/receive-location-assigned-requests", method = RequestMethod.GET)
 	public void locationAssignedRequestsReceiver(@RequestParam String jurisdiction_id) {
 		Properties props = new Properties();
-		props.put("bootstrap.servers", "localhost:9092");
+		props.put("bootstrap.servers", "kafka:9092");
 		props.put("group.id", "notifications");
 		props.put("enable.auto.commit", "true");
 		props.put("auto.commit.interval.ms", "10000");
@@ -372,7 +372,7 @@ public class ServiceRequestController {
 	public void assignedRequestsReceiver(@RequestParam String jurisdiction_id) {
 
 		Properties props = new Properties();
-		props.put("bootstrap.servers", "localhost:9092");
+		props.put("bootstrap.servers", "kafka:9092");
 		props.put("group.id", "notifications");
 		props.put("enable.auto.commit", "true");
 		props.put("auto.commit.interval.ms", "10000");
@@ -409,7 +409,7 @@ public class ServiceRequestController {
 	public void successRequestsReceiver(@RequestParam String jurisdiction_id) {
 
 		Properties props = new Properties();
-		props.put("bootstrap.servers", "localhost:9092");
+		props.put("bootstrap.servers", "kafka:9092");
 		props.put("group.id", "notifications");
 		props.put("enable.auto.commit", "true");
 		props.put("auto.commit.interval.ms", "10000");
@@ -491,7 +491,7 @@ public class ServiceRequestController {
 	@RequestMapping(value = "/receive-saved-requests", method = RequestMethod.GET)
 	public void savedRequestsReceiver(@RequestParam String jurisdiction_id) {
 		Properties props = new Properties();
-		props.put("bootstrap.servers", "localhost:9092");
+		props.put("bootstrap.servers", "kafka:9092");
 		props.put("group.id", "notifications");
 		props.put("enable.auto.commit", "true");
 		props.put("auto.commit.interval.ms", "10000");

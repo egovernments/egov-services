@@ -24,14 +24,14 @@ public class EmployeeAssignmentController {
 
 	public void locationAssignedRequestsReceiver() {
 		Properties props = new Properties();
-		props.put("bootstrap.servers", "localhost:9092");
-		props.put("group.id", "notifications");
+		props.put("bootstrap.servers", "kafka:9092");
+		props.put("group.id", "locationassigned");
 		props.put("enable.auto.commit", "true");
 		props.put("auto.commit.interval.ms", "10000");
 		props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
 		props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
 		KafkaConsumer<String, String> savedRequests = new KafkaConsumer<>(props);
-		savedRequests.subscribe(Arrays.asList("ap.public.mseva.numbergenerated"));
+		savedRequests.subscribe(Arrays.asList("ap.public.mseva.locationassigned"));
 		while (true) {
 			ConsumerRecords<String, String> records = savedRequests.poll(5000);
 			System.err.println("******** polling locationAssignedRequestsReceiver at time " + new Date().toString());
@@ -62,7 +62,7 @@ public class EmployeeAssignmentController {
 
 	private void pushValidatedRequests(ServiceRequestReq request, String topic) throws JsonProcessingException {
 		Properties props = new Properties();
-		props.put("bootstrap.servers", "localhost:9092");
+		props.put("bootstrap.servers", "kafka:9092");
 		props.put("acks", "all");
 		props.put("retries", 0);
 		props.put("batch.size", 1);

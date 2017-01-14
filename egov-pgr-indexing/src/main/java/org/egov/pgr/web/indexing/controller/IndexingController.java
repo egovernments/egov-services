@@ -24,8 +24,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class IndexingController {
 	public void savedRequestsReceiver() {
 		Properties props = new Properties();
-		props.put("bootstrap.servers", "localhost:9092");
-		props.put("group.id", "notifications");
+		props.put("bootstrap.servers", "kafka:9092");
+		props.put("group.id", "saved");
 		props.put("enable.auto.commit", "true");
 		props.put("auto.commit.interval.ms", "10000");
 		props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
@@ -62,7 +62,7 @@ public class IndexingController {
 
 	private void pushIndexedRequests(ServiceRequestReq request, String topic) throws JsonProcessingException {
 		Properties props = new Properties();
-		props.put("bootstrap.servers", "localhost:9092");
+		props.put("bootstrap.servers", "kafka:9092");
 		props.put("acks", "all");
 		props.put("retries", 0);
 		props.put("batch.size", 1);

@@ -13,7 +13,6 @@ import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.egov.pgr.web.locationassignment.model.ServiceRequestReq;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -22,18 +21,17 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RestController
-@RequestMapping("/pgr/locationassignment")
 public class LocationAssignmentController {
 	public void validatedRequestsReceiver() {
 		Properties props = new Properties();
-		props.put("bootstrap.servers", "localhost:9092");
-		props.put("group.id", "notifications");
+		props.put("bootstrap.servers", "kafka:9092");
+		props.put("group.id", "validated");
 		props.put("enable.auto.commit", "true");
 		props.put("auto.commit.interval.ms", "10000");
 		props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
 		props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
 		KafkaConsumer<String, String> validatedRequests = new KafkaConsumer<>(props);
-		validatedRequests.subscribe(Arrays.asList("ap.public.mseva.locationassigned"));
+		validatedRequests.subscribe(Arrays.asList("ap.public.mseva.validated"));
 		while (true) {
 			ConsumerRecords<String, String> records = validatedRequests.poll(5000);
 			System.err.println("******** polling validatedRequestsReceiver at time " + new Date().toString());
@@ -46,7 +44,7 @@ public class LocationAssignmentController {
 							|| request.getRequestInfo().getRequesterId() != StringUtils.EMPTY) {
 
 						System.err.println(
-								"---------------- Received form topic  ap.public.mseva.locationassigned -------------------------");
+								"---------------- Received form topic  ap.public.mseva.validated -------------------------");
 						System.err.println("---------------- Location Assigned to Complaint --------------");
 						pushAssignedRequests(request, "ap.public.mseva.locationassigned");
 						System.err.println(
@@ -65,7 +63,7 @@ public class LocationAssignmentController {
 
 	private void pushAssignedRequests(ServiceRequestReq request, String topic) throws JsonProcessingException {
 		Properties props = new Properties();
-		props.put("bootstrap.servers", "localhost:9092");
+		props.put("bootstrap.servers", "kafka:9092");
 		props.put("acks", "all");
 		props.put("retries", 0);
 		props.put("batch.size", 1);

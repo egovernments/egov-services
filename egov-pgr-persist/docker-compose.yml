@@ -8,10 +8,11 @@ services:
     ports:
       - "2181:2181"
       - "9092:9092"
-  notifications:
+  persist:
     build: .
     ports:
       - "8080:8080"
       - "9990:9990"
+      - "8787:8787"
     links:
       - kafka

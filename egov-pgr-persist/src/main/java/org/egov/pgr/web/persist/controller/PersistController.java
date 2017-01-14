@@ -24,8 +24,8 @@ public class PersistController {
 
 	public void assignedRequestsReceiver() {
 		Properties props = new Properties();
-		props.put("bootstrap.servers", "localhost:9092");
-		props.put("group.id", "notifications");
+		props.put("bootstrap.servers", "kafka:9092");
+		props.put("group.id", "assigned");
 		props.put("enable.auto.commit", "true");
 		props.put("auto.commit.interval.ms", "10000");
 		props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
@@ -44,9 +44,9 @@ public class PersistController {
 					System.err.println(
 							"---------------- Received form topic  ap.public.mseva.assigned -------------------------");
 					System.err.println("---------------- Complaint persist --------------");
-					pushPersistedRequests(request, "ap.public.mseva.persisted");
+					pushPersistedRequests(request, "ap.public.mseva.saved");
 					System.err.println(
-							"---------------- Pushing to topic ap.public.mseva.persisted -------------------------");
+							"---------------- Pushing to topic ap.public.mseva.saved -------------------------");
 
 				} catch (JsonParseException e) {
 					e.printStackTrace();
@@ -62,7 +62,7 @@ public class PersistController {
 
 	private void pushPersistedRequests(ServiceRequestReq request, String topic) throws JsonProcessingException {
 		Properties props = new Properties();
-		props.put("bootstrap.servers", "localhost:9092");
+		props.put("bootstrap.servers", "kafka:9092");
 		props.put("acks", "all");
 		props.put("retries", 0);
 		props.put("batch.size", 1);

@@ -12,5 +12,3 @@ sudo docker build -t $image_name .
 cd ..
 done
 cd egov-pgrrest/
-sudo docker-compose build
-sudo docker-compose up

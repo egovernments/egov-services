@@ -1,0 +1,55 @@
+version: '2'
+services:
+  redis:
+    image: redis:3.2
+  postgres:
+    image: postgres:9.4
+    environment:
+      - POSTGRES_DB=mydb
+      - POSTGRES_USER=myuser
+      - POSTGRES_PASSWORD=mypass
+  kafka:
+    image: spotify/kafka:latest #pulling from spotfiy because zookeeper is req is rolled in
+    environment:
+      - ADVERTISED_HOST=kafka
+      - ADVERTISED_PORT=9092
+    ports:
+      - "2181:2181"
+      - "9092:9092"
+  notification:
+    image: egovio/notification:latest
+    ports:
+      - "9090:8080"
+      - "8787:8787"
+      - "9990:9990"
+    links:
+      - kafka
+  frontend:
+    image: egovio/frontend:latest
+    links:
+      - postgres:pghost
+    environment:
+      - DB_HOST=pghost
+      - DB_NAME=mydb
+      - DB_USER=myuser
+      - DB_PASSWORD=mypass
+      - MASTER_SERVER=true
+      - CORS_ENABLED=true
+    ports:
+      - "3000:8080"
+  pgrrest:
+    image: egovio/pgrrest:1.0.0
+    ports:
+      - "8080:8080"
+    links:
+      - redis
+      - postgres:pghost
+      - kafka
+    environment:
+      - DB_HOST=pghost
+      - DB_NAME=mydb
+      - DB_USER=myuser
+      - DB_PASSWORD=mypass
+      - REDIS_HOST=redis
+      - CORS_ENABLED=true
+      - MASTER_SERVER=false

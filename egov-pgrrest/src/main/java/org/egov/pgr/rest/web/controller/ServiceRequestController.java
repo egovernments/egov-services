@@ -25,7 +25,6 @@ import org.egov.pgr.entity.Complaint;
 import org.egov.pgr.entity.ComplaintType;
 import org.egov.pgr.entity.enums.ComplaintStatus;
 import org.egov.pgr.entity.enums.ReceivingMode;
-import org.egov.pgr.rest.web.location.assign.AssignSevaRequestLocation;
 import org.egov.pgr.rest.web.model.AttributeValue;
 import org.egov.pgr.rest.web.model.Error;
 import org.egov.pgr.rest.web.model.ErrorRes;
@@ -40,7 +39,6 @@ import org.egov.pgr.service.ComplaintRouterService;
 import org.egov.pgr.service.ComplaintService;
 import org.egov.pgr.service.ComplaintStatusService;
 import org.egov.pgr.service.ComplaintTypeService;
-import org.egov.pgr.service.es.ComplaintIndexService;
 import org.egov.pims.commons.Position;
 import org.joda.time.DateTime;
 import org.springframework.beans.BeanUtils;
@@ -89,13 +87,7 @@ public class ServiceRequestController {
 	private SevaNumberGeneratorImpl sevaNumberGeneratorImpl;
 
 	@Autowired
-	private AssignSevaRequestLocation assignSevaRequestLocation;
-
-	@Autowired
 	private ComplaintRouterService complaintRouterService;
-
-	@Autowired
-	private ComplaintIndexService complaintIndexService;
 
 	private ResponseInfo resInfo = null;
 
@@ -263,154 +255,12 @@ public class ServiceRequestController {
 		producer.close();
 	}
 
-	private void pushAssignedRequests(ServiceRequestReq request, String topic) throws JsonProcessingException {
-		Properties props = new Properties();
-		props.put("bootstrap.servers", "kafka:9092");
-		props.put("acks", "all");
-		props.put("retries", 0);
-		props.put("batch.size", 1);
-		props.put("linger.ms", 1);
-		props.put("buffer.memory", 33554432);
-		props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-		props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-
-		Producer producer = new KafkaProducer<>(props);
-		ObjectMapper mapper = new ObjectMapper();
-
-		producer.send(new ProducerRecord<String, String>(topic, request.getServiceRequest().getCrn(),
-				mapper.writeValueAsString(request)));
-		producer.close();
-	}
-
-	private void pushSavedRequests(String crn, String topic) throws JsonProcessingException {
-		Properties props = new Properties();
-		props.put("bootstrap.servers", "kafka:9092");
-		props.put("acks", "all");
-		props.put("retries", 0);
-		props.put("batch.size", 1);
-		props.put("linger.ms", 1);
-		props.put("buffer.memory", 33554432);
-		props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-		props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-
-		Producer producer = new KafkaProducer<>(props);
-		ObjectMapper mapper = new ObjectMapper();
-
-		producer.send(new ProducerRecord<String, String>(topic, crn, crn));
-		producer.close();
-	}
-
-	@RequestMapping(value = "/receive-validated-requests", method = RequestMethod.GET)
-	public void validatedRequestsReceiver(@RequestParam String jurisdiction_id) {
-
-		Properties props = new Properties();
-		props.put("bootstrap.servers", "kafka:9092");
-		props.put("group.id", "notifications");
-		props.put("enable.auto.commit", "true");
-		props.put("auto.commit.interval.ms", "10000");
-		props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-		props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-		KafkaConsumer<String, String> validatedRequests = new KafkaConsumer<>(props);
-		validatedRequests.subscribe(Arrays.asList(jurisdiction_id + ".mseva.validated"));
-		while (true) {
-			ConsumerRecords<String, String> records = validatedRequests.poll(5000);
-			System.err.println("******** polling validatedRequestsReceiver at time " + new Date().toString());
-			for (ConsumerRecord<String, String> record : records) {
-				ObjectMapper mapper = new ObjectMapper();
-				ServiceRequestReq request;
-				try {
-					request = mapper.readValue(record.value(), ServiceRequestReq.class);
-					if (assignSevaRequestLocation.assign(request.getServiceRequest())) {
-						pushAssignedRequests(request, jurisdiction_id + ".mseva.locationassigned");
-					} else {
-						pushAssignedRequests(request, jurisdiction_id + ".mseva.locationassignfailed");
-					}
-				} catch (JsonParseException e) {
-					e.printStackTrace();
-				} catch (JsonMappingException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-
-			}
-		}
-	}
-
-	@RequestMapping(value = "/receive-location-assigned-requests", method = RequestMethod.GET)
-	public void locationAssignedRequestsReceiver(@RequestParam String jurisdiction_id) {
-		Properties props = new Properties();
-		props.put("bootstrap.servers", "kafka:9092");
-		props.put("group.id", "notifications");
-		props.put("enable.auto.commit", "true");
-		props.put("auto.commit.interval.ms", "10000");
-		props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-		props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-		KafkaConsumer<String, String> validatedRequests = new KafkaConsumer<>(props);
-		validatedRequests.subscribe(Arrays.asList(jurisdiction_id + ".mseva.locationassigned"));
-		while (true) {
-			ConsumerRecords<String, String> records = validatedRequests.poll(5000);
-			System.err.println("******** polling locationAssignedRequestsReceiver at time " + new Date().toString());
-			for (ConsumerRecord<String, String> record : records) {
-				ObjectMapper mapper = new ObjectMapper();
-				ServiceRequestReq request;
-				try {
-					request = mapper.readValue(record.value(), ServiceRequestReq.class);
-					pushAssignedRequests(request, jurisdiction_id + ".mseva.assigned");
-				} catch (JsonParseException e) {
-					e.printStackTrace();
-				} catch (JsonMappingException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
-
-	@RequestMapping(value = "/receive-assigned-requests", method = RequestMethod.GET)
-	public void assignedRequestsReceiver(@RequestParam String jurisdiction_id) {
-
-		Properties props = new Properties();
-		props.put("bootstrap.servers", "kafka:9092");
-		props.put("group.id", "notifications");
-		props.put("enable.auto.commit", "true");
-		props.put("auto.commit.interval.ms", "10000");
-		props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-		props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-		KafkaConsumer<String, String> validatedRequests = new KafkaConsumer<>(props);
-		validatedRequests.subscribe(Arrays.asList(jurisdiction_id + ".mseva.assigned"));
-		while (true) {
-			ConsumerRecords<String, String> records = validatedRequests.poll(5000);
-			System.err.println("******* polling assignedRequestsReceiver at time " + new Date().toString());
-			for (ConsumerRecord<String, String> record : records) {
-				ObjectMapper mapper = new ObjectMapper();
-				Complaint complaint;
-				ServiceRequestReq request;
-				try {
-					request = mapper.readValue(record.value(), ServiceRequestReq.class);
-					complaint = toComplaint(request);
-					complaint = assignComplaint(complaint);
-					Complaint savedComplaint = complaintService.createComplaint(complaint);
-					pushSavedRequests(savedComplaint.getCrn(), jurisdiction_id + ".mseva.saved");
-
-				} catch (JsonParseException e) {
-					e.printStackTrace();
-				} catch (JsonMappingException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
-
 	@RequestMapping(value = "/receive-success-requests", method = RequestMethod.GET)
 	public void successRequestsReceiver(@RequestParam String jurisdiction_id) {
 
 		Properties props = new Properties();
 		props.put("bootstrap.servers", "kafka:9092");
-		props.put("group.id", "notifications");
+		props.put("group.id", "indexed");
 		props.put("enable.auto.commit", "true");
 		props.put("auto.commit.interval.ms", "10000");
 		props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
@@ -419,17 +269,18 @@ public class ServiceRequestController {
 		validatedRequests.subscribe(Arrays.asList(jurisdiction_id + ".mseva.indexed"));
 		while (true) {
 			ConsumerRecords<String, String> records = validatedRequests.poll(5000);
-			System.err.println("******* polling assignedRequestsReceiver at time " + new Date().toString());
+			System.err.println("******* polling indexedRequestsReceiver at time " + new Date().toString());
 			for (ConsumerRecord<String, String> record : records) {
 				ObjectMapper mapper = new ObjectMapper();
 				Complaint complaint;
 				ServiceRequestReq request;
 				try {
+					System.err.println("******* save  Complaint started at " + new Date().toString());
 					request = mapper.readValue(record.value(), ServiceRequestReq.class);
 					complaint = toComplaint(request);
 					complaint = assignComplaint(complaint);
 					Complaint savedComplaint = complaintService.createComplaint(complaint);
-
+					System.err.println("******* save  Complaint completed at " + new Date().toString());
 				} catch (JsonParseException e) {
 					e.printStackTrace();
 				} catch (JsonMappingException e) {
@@ -486,27 +337,6 @@ public class ServiceRequestController {
 		request.getServiceRequest().getValues().add(new AttributeValue("location_text", locationText));
 
 		return complaint;
-	}
-
-	@RequestMapping(value = "/receive-saved-requests", method = RequestMethod.GET)
-	public void savedRequestsReceiver(@RequestParam String jurisdiction_id) {
-		Properties props = new Properties();
-		props.put("bootstrap.servers", "kafka:9092");
-		props.put("group.id", "notifications");
-		props.put("enable.auto.commit", "true");
-		props.put("auto.commit.interval.ms", "10000");
-		props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-		props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-		KafkaConsumer<String, String> savedRequests = new KafkaConsumer<>(props);
-		savedRequests.subscribe(Arrays.asList(jurisdiction_id + ".mseva.saved"));
-		while (true) {
-			ConsumerRecords<String, String> records = savedRequests.poll(5000);
-			System.err.println("******** polling savedRequestsReceiver at time " + new Date().toString());
-			for (ConsumerRecord<String, String> record : records) {
-				Complaint complaint = complaintService.getComplaintByCRN(record.value());
-				// complaintIndexService.createComplaintIndex(complaint);
-			}
-		}
 	}
 
 	@ExceptionHandler(Exception.class)

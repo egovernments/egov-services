@@ -44,10 +44,31 @@ services:
       - "9960:9990"
     links:
       - kafka
+  notification:
+    image: egovio/notification
+    ports:
+      - "5050:8080"
+      - "8787:8787"
+      - "9950:9990"
+    links:
+      - kafka
+  frontend:
+    image: egovio/frontend:1.0.0
+    links:
+      - postgres:pghost
+    environment:
+      - DB_HOST=pghost
+      - DB_NAME=mydb
+      - DB_USER=myuser
+      - DB_PASSWORD=mypass
+      - MASTER_SERVER=true
+      - CORS_ENABLED=true
+    ports:
+      - "4040:8080"
   pgrrest:
     image: egovio/pgrrest:1.0.0
     ports:
-      - "5050:8080"
+      - "3030:8080"
     links:
       - redis
       - postgres:pghost

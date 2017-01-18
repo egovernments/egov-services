@@ -44,7 +44,7 @@ public class NotificationConsumer {
 		KafkaConsumer<String, String> notifications = new KafkaConsumer<>(props);
 		notifications.subscribe(Arrays.asList("egov-notification-sms", "egov-notification-email"));
 		while (true) {
-			ConsumerRecords<String, String> records = notifications.poll(1000);
+			ConsumerRecords<String, String> records = notifications.poll(10000);
 			System.err.println("******** polling at time " + new Date().toString());
 			for (ConsumerRecord<String, String> record : records) {
 				if (record.topic().equals("egov-notification-sms")) {

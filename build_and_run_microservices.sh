@@ -1,5 +1,5 @@
 #!/bin/bash
-SERVICES=(locationassignment employeeassignment persist indexing)
+SERVICES=(notification locationassignment employeeassignment persist indexing)
 for d in "${SERVICES[@]}"; do
  echo "Service name:"$d
 dir_path=egov-pgr-$d

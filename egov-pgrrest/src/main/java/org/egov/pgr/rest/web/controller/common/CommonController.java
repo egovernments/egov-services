@@ -61,6 +61,7 @@ import org.egov.pgr.rest.web.model.ErrorRes;
 import org.egov.pgr.rest.web.model.ResponseInfo;
 import org.egov.pgr.rest.web.model.UserRequest;
 import org.egov.pgr.rest.web.model.UserResponse;
+import org.egov.pgr.service.CommonService;
 import org.egov.pgr.utils.constants.PGRConstants;
 import org.egov.portal.entity.Citizen;
 import org.egov.portal.service.CitizenService;
@@ -92,6 +93,9 @@ public class CommonController extends PgrRestController {
 
     @Autowired
     private CitizenService citizenService;
+    
+    @Autowired
+    private CommonService commonService;
 
     @Autowired
     private IdentityRecoveryService identityRecoveryService;
@@ -111,7 +115,7 @@ public class CommonController extends PgrRestController {
 
             }
 
-            citizenService.sendOTPMessage(request.getUser().getMobileNo());
+            commonService.sendOTPMessage(request.getUser().getMobileNo());
             resInfo.setStatus("sendOTP.success");
             return resInfo;
         } catch (final Exception e) {

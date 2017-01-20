@@ -3,7 +3,7 @@ SERVICES=(notification pgr-locationassignment pgr-employeeassignment pgr-persist
 for d in "${SERVICES[@]}"; do
  echo "Service name:"$d
 dir_path=egov-$d
-image_name=egovio/pgr-$d:latest
+image_name=egovio/$d:latest
 cd $dir_path
  echo "Directory Path:"$dir_path
  echo "Image name:"$image_name

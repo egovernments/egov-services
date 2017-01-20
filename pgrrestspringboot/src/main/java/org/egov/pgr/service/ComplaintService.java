@@ -109,7 +109,6 @@ public class ComplaintService {
         complaint.setStatus(complaintStatusService.getByName("REGISTERED"));
         complaint.setAssignee(2L);
         complaint.setEscalationDate(new Date());
-        complaint.setEscalationDate(new Date());
         System.out.println(complaint.toString());
 
         complaintRepository.save(complaint);

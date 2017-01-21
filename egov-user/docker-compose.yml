@@ -1,0 +1,11 @@
+version: '2'
+services:
+  redis:
+    image: redis:3.2
+  user:
+    image: egovio/user:latest
+    ports:
+      - "8080:8080"
+      - "9990:9990"
+    links:
+      - redis

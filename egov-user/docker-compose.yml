@@ -6,6 +6,6 @@ services:
     image: egovio/user:latest
     ports:
       - "8080:8080"
-      - "9990:9990"
+      - "9980:9990"
     links:
       - redis

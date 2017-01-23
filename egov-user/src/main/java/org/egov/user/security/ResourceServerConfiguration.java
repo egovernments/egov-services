@@ -1,23 +1,31 @@
 package org.egov.user.security;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHandler;
-import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
+import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
+
+import redis.clients.jedis.JedisShardInfo;
 
 @Configuration
 @EnableResourceServer
-@EnableRedisHttpSession
 public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
 
 	private static final String RESOURCE_ID = "pgr_rest_api";
 
+	@Value("${spring.redis.host}")
+	private String host;
+
 	@Override
 	public void configure(ResourceServerSecurityConfigurer resources) {
-		resources.resourceId(RESOURCE_ID).stateless(false);
+		resources.resourceId(RESOURCE_ID).stateless(false).tokenStore(tokenStore());
 	}
 
 	@Override
@@ -25,8 +33,25 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 		http.anonymous().disable().requestMatchers().antMatchers("/rest/**").and().authorizeRequests()
 				.antMatchers("/rest/complaint/**")
 				.access("#oauth2.clientHasRole('ROLE_CITIZEN') or #oauth2.clientHasRole('ROLE_EMPLOYEE')")
-				.antMatchers("/rest/citizen/**").access("hasRole('ROLE_CITIZEN','ROLE_EMPLOYEE')").and()
-				.exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler());
+				.antMatchers("/rest/citizen/**").access("hasRole('ROLE_CITIZEN','ROLE_EMPLOYEE')")
+				.antMatchers("/rest/test/**").access("#oauth2.hasScope('read')").and().exceptionHandling()
+				.accessDeniedHandler(new OAuth2AccessDeniedHandler());
+	}
+
+	@Bean
+	public TokenStore tokenStore() {
+		try {
+			return new RedisTokenStore(connectionFactory());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	@Bean
+	public JedisConnectionFactory connectionFactory() throws Exception {
+		return new JedisConnectionFactory(new JedisShardInfo(host));
 	}
 
 }

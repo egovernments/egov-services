@@ -1,26 +1,22 @@
-FROM egovio/openjdk:8-jre-headless
+#FROM openjdk:8-jdk
+
+FROM maven:3.3.9-jdk-8
 
 MAINTAINER Sumanth<sumanth@egovernments.org>
 
-# advertise jboss service port
-#EXPOSE 8080 9990
-
 #set environment variables for application.properties
-#ENV DB_NAME=pgrdb
-#    SHOW_SQL=true
-
-# copy pre-built JAR into image
+ENV DB_NAME=mydb \
+    SHOW_SQL=true \
+    DB_HOST=localhost \
+    DB_PORT=5432 \
+    DB_USER=postgres \
+    DB_PASSWORD=postgres \
+    GENERATE_DDL=true
 
 # INSTRUCTIONS ON HOW TO BUILD JAR:
 # Move to the location where pom.xml is exist in project and build project using below command
 # "mvn clean package"
 COPY /target/pgr-rest-spring-boot-0.0.1-SNAPSHOT.jar /opt/egov/egov-pgr-rest-spring-boot.jar
-
-#COPY templates/* /templates/
-#COPY docker-entrypoint.sh /usr/local/bin/
-
-# generate dynamic configs and launch jboss server
-#ENTRYPOINT ["docker-entrypoint.sh"]
 
 # launch standalone webapp
 CMD ["java","-jar", "/opt/egov/egov-pgr-rest-spring-boot.jar"]

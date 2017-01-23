@@ -59,7 +59,7 @@ public class DBSequenceGenerator {
     @PersistenceContext
     private EntityManager entityManager;
 
-    @Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW, noRollbackFor = SQLGrammarException.class)
+    @Transactional(propagation = Propagation.REQUIRES_NEW, noRollbackFor = SQLGrammarException.class)
     public Serializable createAndGetNextSequence(final String sequenceName) throws SQLException {
         Query query = entityManager.unwrap(Session.class).createSQLQuery("create sequence " + sequenceName);
         query.executeUpdate();

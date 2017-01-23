@@ -4,8 +4,22 @@ services:
     image: postgres:9.4
     environment:
       - POSTGRES_DB=mydb
-      - POSTGRES_USER=myuser
-      - POSTGRES_PASSWORD=mypass
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
+  frontend:
+    image: egovio/frontend:latest
+    links:
+      - postgres:pghost
+    environment:
+      - DB_HOST=pghost
+      - DB_NAME=mydb
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - MASTER_SERVER=true
+      - CORS_ENABLED=true
+    ports:
+      - "3000:8080"
 
   pgrspringboot:
     image: springboot:latest
@@ -16,5 +30,6 @@ services:
     environment:
       - DB_HOST=pghost
       - DB_NAME=mydb
-      - DB_USER=myuser
-      - DB_PASSWORD=mypass
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - GENERATE_DDL=false

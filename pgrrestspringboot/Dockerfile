@@ -1,6 +1,4 @@
-#FROM openjdk:8-jdk
-
-FROM maven:3.3.9-jdk-8
+FROM egovio/openjdk:8-jre-headless
 
 MAINTAINER Sumanth<sumanth@egovernments.org>
 

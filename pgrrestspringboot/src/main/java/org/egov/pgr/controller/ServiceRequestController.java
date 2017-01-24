@@ -1,10 +1,16 @@
 package org.egov.pgr.controller;
 
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.concurrent.Future;
 
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -12,6 +18,7 @@ import org.apache.kafka.clients.producer.RecordMetadata;
 import org.egov.pgr.entity.Complaint;
 import org.egov.pgr.entity.ComplaintType;
 import org.egov.pgr.entity.enums.ReceivingMode;
+import org.egov.pgr.model.AttributeValue;
 import org.egov.pgr.model.Error;
 import org.egov.pgr.model.ErrorRes;
 import org.egov.pgr.model.RequestInfo;
@@ -36,7 +43,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RestController
@@ -125,7 +134,7 @@ public class ServiceRequestController {
 	private void pushValidatedRequests(ServiceRequestReq serviceRequestReq, String topic)
 			throws JsonProcessingException {
 		Properties props = new Properties();
-		props.put("bootstrap.servers", "kafka:9092");
+		props.put("bootstrap.servers", "localhost:9092");
 		props.put("acks", "all");
 		props.put("retries", 0);
 		props.put("batch.size", 1);
@@ -141,6 +150,86 @@ public class ServiceRequestController {
 				serviceRequestReq.getServiceRequest().getCrn(), mapper.writeValueAsString(serviceRequestReq)));
 		System.err.println(future.toString());
 		producer.close();
+	}
+	
+	public void assignedRequestsReceiver() {
+		Properties props = new Properties();
+		props.put("bootstrap.servers", "localhost:9092");
+		props.put("group.id", "assigned");
+		props.put("enable.auto.commit", "true");
+		props.put("auto.commit.interval.ms", "10000");
+		props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+		props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+		KafkaConsumer<String, String> savedRequests = new KafkaConsumer<>(props);
+		savedRequests.subscribe(Arrays.asList("ap.public.mseva.assigned"));
+		while (true) {
+			ConsumerRecords<String, String> records = savedRequests.poll(5000);
+			System.err.println("******** polling assignedRequestsReceiver at time " + new Date().toString());
+			for (ConsumerRecord<String, String> record : records) {
+
+				ObjectMapper mapper = new ObjectMapper();
+				ServiceRequestReq request;
+				try {
+					request = mapper.readValue(record.value(), ServiceRequestReq.class);
+					
+					System.err.println(
+							"---------------- Received form topic  ap.public.mseva.assigned -------------------------");
+				} catch (JsonParseException e) {
+					e.printStackTrace();
+				} catch (JsonMappingException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+
+			}
+		}
+	}
+	
+	
+	private Complaint toComplaint(ServiceRequestReq request){
+		Complaint complaint = new Complaint();
+		ServiceRequest serviceRequest = request.getServiceRequest();
+		BeanUtils.copyProperties(serviceRequest, complaint);
+//		Authentication authUser = SecurityContextHolder.getContext().getAuthentication();
+//		String name = StringUtils.EMPTY;
+//		if (Objects.nonNull(authUser)) {
+//			SecureUser secureUser = (SecureUser) authUser.getPrincipal();
+//			if (Objects.isNull(secureUser))
+//				name = "ANONYMOUS";
+//			else
+//				name = secureUser.getUserType().name();
+//		}
+//		if (name.equals("CITIZEN") || name.equals("EMPLOYEE")) {
+//			User user = userService.getUserById(Long.valueOf(request.getRequestInfo().getRequesterId()));
+//			complaint.getComplainant().setUserDetail(user);
+//		} else {
+			complaint.getComplainant().setName(request.getServiceRequest().getFirstName());
+			complaint.getComplainant().setMobile(request.getServiceRequest().getPhone());
+			complaint.getComplainant().setEmail(request.getServiceRequest().getEmail());
+//		}
+			
+		List<AttributeValue> values = serviceRequest.getValues();	
+//		if (Objects.nonNull(request.getServiceRequest().getCrossHierarchyId())
+//				&& Long.parseLong(request.getServiceRequest().getCrossHierarchyId()) > 0) {
+//			final Long locationId = Long.parseLong(request.getServiceRequest().getCrossHierarchyId());
+////			final CrossHierarchy crosshierarchy = crossHierarchyService.findById(locationId);
+//			complaint.setLocation(crosshierarchy.getParent());
+//			complaint.setChildLocation(crosshierarchy.getChild());
+//			complaint.getChildLocation().setParent(crosshierarchy.getChild().getParent());
+//		}
+//		if (Objects.nonNull(request.getServiceRequest().getComplaintTypeCode())) {
+//			final ComplaintType complaintType = complaintTypeService
+//					.findBy(Long.valueOf(request.getServiceRequest().getComplaintTypeCode()));
+//			complaint.setComplaintType(complaintType);
+//		}
+
+		complaint.setReceivingMode(ReceivingMode.MOBILE);
+//		String locationText = complaint.getLocation().getLocalName() + " " + complaint.getChildLocation().getName();
+//		request.getServiceRequest().getValues().add(new AttributeValue("location_text", locationText));
+
+		return complaint;
+		
 	}
 	
 	@ExceptionHandler(Exception.class)

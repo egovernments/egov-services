@@ -32,14 +32,6 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 	@Autowired
 	private CustomTokenEnhancer customTokenEnhancer;
 
-	/*
-	 * @Autowired private CustomAuthenticationProvider
-	 * customAuthenticationProvider;
-	 * 
-	 * @Bean public AuthenticationManager authenticationManager() { return new
-	 * ProviderManager(Arrays.asList(customAuthenticationProvider)); }
-	 */
-
 	@Autowired
 	private TokenStore tokenStore;
 

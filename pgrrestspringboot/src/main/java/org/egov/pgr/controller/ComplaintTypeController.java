@@ -21,8 +21,15 @@ public class ComplaintTypeController {
 
 	@RequestMapping(value = "/complaintTypeByCategory", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public List<ComplaintType> getAllComplaintTypeByCategory(@RequestParam Long categoryId,@RequestParam String tenantId) {
+	public List<ComplaintType> getAllComplaintTypeByCategory(@RequestParam Long categoryId,
+			@RequestParam String tenantId) {
 		return complaintTypeService.findActiveComplaintTypesByCategory(categoryId);
+	}
+
+	@RequestMapping(value = "/getFrequentComplaints", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public List<ComplaintType> getFrequentComplaintsFiled(@RequestParam Integer count,@RequestParam String tenantId) {
+		return complaintTypeService.getFrequentlyFiledComplaints(count);
 	}
 
 }

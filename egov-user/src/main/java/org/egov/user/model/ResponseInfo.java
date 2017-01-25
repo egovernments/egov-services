@@ -101,6 +101,15 @@ public class ResponseInfo {
 		this.status = status;
 	}
 
+	public ResponseInfo(String apiId, String ver, String ts, String resMsgId, String msgId, String status) {
+		this.apiId = apiId;
+		this.ver = ver;
+		this.ts = ts;
+		this.resMsgId = resMsgId;
+		this.msgId = msgId;
+		this.status = status;
+	}
+
 	@Override
 	public boolean equals(java.lang.Object o) {
 		if (this == o) {

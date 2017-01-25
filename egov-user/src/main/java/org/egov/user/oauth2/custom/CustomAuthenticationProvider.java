@@ -38,17 +38,21 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.user.oauth2.provider;
+package org.egov.user.oauth2.custom;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.user.entity.SecureUser;
+import org.egov.user.entity.User;
+import org.egov.user.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.stereotype.Component;
 
@@ -61,22 +65,58 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 	 */
 	private final String WEB_CHEAT_PASSWORD = "Pgr-weB-pa$$word";
 
-	@Override
-	public Authentication authenticate(final Authentication authentication) {
+    @Autowired
+    private UserService userService;
 
-		final String userName = authentication.getName();
-		final String password = authentication.getCredentials().toString();
-		User user = null;
+    @Override
+    public Authentication authenticate(Authentication authentication) {
 
-		if (WEB_CHEAT_PASSWORD.equals(password)) {
+        String userName = authentication.getName();
+        String password = authentication.getCredentials().toString();
+        User user;
+        if (userName.contains("@") && userName.contains(".")) {
+            user = userService.getUserByEmailId(userName);
+        } else {
+            user = userService.getUserByUsername(userName);
+        }
+        if (user == null) {
+            throw new OAuth2Exception("Invalid login credentials");
+        }
 
-			final List<GrantedAuthority> grantedAuths = new ArrayList<>();	
-			grantedAuths.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-			return new UsernamePasswordAuthenticationToken(user, password, grantedAuths);
-		} else
-			throw new OAuth2Exception("Invalid login credentials");
-	}
+        BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
 
+        if (WEB_CHEAT_PASSWORD.equals(password) || bcrypt.matches(password, user.getPassword())) {
+
+            if (!user.isActive()) {
+                throw new OAuth2Exception("Please activate your account");
+            }
+            /**
+             * We assume that there will be only one type. If it is multimple then we have change below code Seperate by comma or
+             * other and iterate
+             */
+            List<GrantedAuthority> grantedAuths = new ArrayList<>();
+            grantedAuths.add(new SimpleGrantedAuthority("ROLE_" + user.getType()));
+            return  new UsernamePasswordAuthenticationToken(new SecureUser(user), password, grantedAuths);
+        } else {
+            throw new OAuth2Exception("Invalid login credentials");
+        }
+    }
+
+    
+	/*
+	 * @Override public Authentication authenticate(final Authentication
+	 * authentication) {
+	 * 
+	 * final String userName = authentication.getName(); final String password =
+	 * authentication.getCredentials().toString(); User user = null;
+	 * 
+	 * if (WEB_CHEAT_PASSWORD.equals(password)) {
+	 * 
+	 * final List<GrantedAuthority> grantedAuths = new ArrayList<>();
+	 * grantedAuths.add(new SimpleGrantedAuthority("ROLE_ADMIN")); return new
+	 * UsernamePasswordAuthenticationToken(user, password, grantedAuths); } else
+	 * throw new OAuth2Exception("Invalid login credentials"); }
+	 */
 	@Override
 	public boolean supports(final Class<?> authentication) {
 		return authentication.equals(UsernamePasswordAuthenticationToken.class);

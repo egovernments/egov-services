@@ -38,11 +38,12 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.user.oauth2.provider;
+package org.egov.user.oauth2.custom;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.egov.user.entity.SecureUser;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
@@ -56,6 +57,8 @@ public class CustomTokenEnhancer extends TokenEnhancerChain {
 	public OAuth2AccessToken enhance(final OAuth2AccessToken accessToken, final OAuth2Authentication authentication) {
 		final DefaultOAuth2AccessToken token = (DefaultOAuth2AccessToken) accessToken;
 
+		SecureUser su = (SecureUser) authentication.getUserAuthentication().getPrincipal();
+
 		final Map<String, Object> info = new LinkedHashMap<String, Object>();
 		final Map<String, Object> responseInfo = new LinkedHashMap<String, Object>();
 
@@ -65,8 +68,8 @@ public class CustomTokenEnhancer extends TokenEnhancerChain {
 		responseInfo.put("res_msg_id", "");
 		responseInfo.put("msg_id", "");
 		responseInfo.put("status", "Access Token generated successfully");
-
 		info.put("ResponseInfo", responseInfo);
+		info.put("User", su.getUser());
 
 		token.setAdditionalInformation(info);
 

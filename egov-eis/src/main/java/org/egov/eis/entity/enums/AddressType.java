@@ -38,20 +38,9 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.user.entity;
+package org.egov.eis.entity.enums;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-
-import org.egov.user.entity.enums.AddressType;
-
-@Entity
-@Table(name = "eg_permanent_address")
-public class PermanentAddress extends Address {
-
-	private static final long serialVersionUID = -501531162886279406L;
-
-	public PermanentAddress() {
-		setType(AddressType.PERMANENT);
-	}
+public enum AddressType {
+	// This order should not be interrupted
+	PERMANENT, CORRESPONDENCE, USUALADDRESS, EVENTADDRESS, PRESENTADDRESS, PROPERTYADDRESS;
 }

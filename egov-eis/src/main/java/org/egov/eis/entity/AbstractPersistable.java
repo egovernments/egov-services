@@ -38,20 +38,34 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.user.entity;
+package org.egov.eis.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import java.io.Serializable;
 
-import org.egov.user.entity.enums.AddressType;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.Version;
 
-@Entity
-@Table(name = "eg_correspondence_address")
-public class CorrespondenceAddress extends Address {
+@MappedSuperclass
+public abstract class AbstractPersistable<PK extends Serializable> implements Serializable {
 
-	private static final long serialVersionUID = 8118252693607452276L;
+	private static final long serialVersionUID = 3565591554044983532L;
+	@Version
+	private Long version;
 
-	public CorrespondenceAddress() {
-		setType(AddressType.CORRESPONDENCE);
+	public abstract PK getId();
+
+	protected abstract void setId(PK id);
+
+	public Long getVersion() {
+		return version;
+	}
+
+	public boolean isNew() {
+		return null == getId();
+	}
+
+	@Override
+	public String toString() {
+		return String.format("Entity of type %s with id: %s", this.getClass().getName(), getId());
 	}
 }

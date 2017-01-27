@@ -16,7 +16,14 @@ public class Application extends SpringBootServletInitializer {
 
 	@PostConstruct
 	public void listen() {
-		employeeAssignmentController.locationAssignedRequestsReceiver();
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				employeeAssignmentController.locationAssignedRequestsReceiver();
+			}
+		}).start();
+
 	}
 
 	public static void main(String[] args) {

@@ -15,7 +15,14 @@ public class Application extends SpringBootServletInitializer {
 
 	@PostConstruct
 	public void listen() {
-		indexingController.savedRequestsReceiver();
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				indexingController.savedRequestsReceiver();
+			}
+		}).start();
+
 	}
 
 	public static void main(String[] args) {

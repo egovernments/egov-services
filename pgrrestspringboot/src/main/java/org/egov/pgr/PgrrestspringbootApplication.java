@@ -9,13 +9,21 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class PgrrestspringbootApplication {
-	
+
 	@Autowired
 	private ServiceRequestController serviceRequestController;
-	
+
 	@PostConstruct
 	public void listen() {
-		serviceRequestController.assignedRequestsReceiver();
+
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				serviceRequestController.assignedRequestsReceiver();
+			}
+		}).start();
+
 	}
 
 	public static void main(String[] args) {

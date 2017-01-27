@@ -15,7 +15,13 @@ public class Application extends SpringBootServletInitializer {
 
 	@PostConstruct
 	public void listen() {
-		locationAssignmentController.validatedRequestsReceiver();
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				locationAssignmentController.validatedRequestsReceiver();
+			}
+		}).start();
 	}
 
 	public static void main(String[] args) {

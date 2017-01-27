@@ -16,7 +16,14 @@ public class Application extends SpringBootServletInitializer {
 
 	@PostConstruct
 	public void listen() {
-		notificationConsumer.consume();
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				notificationConsumer.consume();
+			}
+		}).start();
+
 	}
 
 	public static void main(String[] args) {

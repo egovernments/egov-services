@@ -17,3 +17,4 @@ RUN DEPLOY_DIR=$JBOSS_HOME/standalone/deployments \
  && cp /usr/local/src/eGov/egovrest/target/egov-pgrrest.war $DEPLOY_DIR \
  && cd $DEPLOY_DIR \
  && touch egov-pgrrest.dodeploy
+

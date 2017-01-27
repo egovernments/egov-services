@@ -1,12 +1,12 @@
 version: '2'
 services:
   zookeeper:
-    image: wurstmeister/zookeeper
+    image: egovio/zookeeper:latest
     ports:
       - "2181:2181"
 
   kafka:
-    image: wurstmeister/kafka
+    image: egovio/kafka:latest
     links:
       - zookeeper:zk
     ports:

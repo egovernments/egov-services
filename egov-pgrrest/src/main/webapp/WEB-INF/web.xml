@@ -12,6 +12,7 @@
 		<param-name>locatorFactorySelector</param-name>
 		<param-value>classpath*:config/spring/applicationContext-erp.xml</param-value>
 	</context-param>
+	
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>

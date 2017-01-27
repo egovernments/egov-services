@@ -3,11 +3,11 @@ package org.egov.eis.controller;
 import java.util.Date;
 import java.util.List;
 
-import org.egov.eis.model.DesignationRes;
+import org.egov.eis.model.DepartmentRes;
 import org.egov.eis.model.Error;
 import org.egov.eis.model.ErrorRes;
 import org.egov.eis.model.ResponseInfo;
-import org.egov.eis.service.DesignationService;
+import org.egov.eis.service.DepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,41 +19,26 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class DesignationRestController {
+public class DepartmentRestController {
 
 	@Autowired
-	private DesignationService designationService;
+	private DepartmentService departmentService;
 
-	@RequestMapping(value = "/designations", method = RequestMethod.GET)
+	@RequestMapping(value = "/departments", method = RequestMethod.GET)
 	@ResponseBody
-	public DesignationRes getDesignations(@RequestParam(value = "name", required = true) String name,
+	public DepartmentRes getDesignations(@RequestParam(value = "code") String code,
 			@RequestParam(value = "pageSize", required = false, defaultValue = "20") Integer pageSize,
 			@RequestParam(value = "pageNumber", required = false, defaultValue = "1") Integer pageNumber,
 			@RequestParam(value = "sort", required = false, defaultValue = "[-name]") List<String> sort)
 			throws Exception {
 
-		DesignationRes response = new DesignationRes();
+		DepartmentRes response = new DepartmentRes();
 		response.setResponseInfo(new ResponseInfo("", "", new Date().toString(), "", "", "Successful response"));
-		if (name != null && !name.isEmpty()) {
-			response.getDesignation().addAll(designationService.getDesignationsByName(name));
-		} if (name == null || name.isEmpty()) {
-			response.getDesignation().addAll(designationService.getAllDesignations());
-		} else {
-			throw new Exception();
+		if (code != null && !code.isEmpty()) {
+			response.getDepartment().add(departmentService.getByCode(code));
 		}
-
-		return response;
-	}
-
-	@RequestMapping(value = "/designation", method = RequestMethod.GET)
-	@ResponseBody
-	public DesignationRes getDesignation(@RequestParam(value = "tenantId", required = true) String tenantId,
-			@RequestParam(value = "id") String id) throws Exception {
-
-		DesignationRes response = new DesignationRes();
-		response.setResponseInfo(new ResponseInfo("", "", new Date().toString(), "", "", "Successful response"));
-		if (id != null && !id.isEmpty()) {
-			response.getDesignation().add(designationService.getDesignationById(Long.valueOf(id)));
+		if (code == null || code.isEmpty()) {
+			response.getDepartment().addAll(departmentService.getAllDepartments());
 		} else {
 			throw new Exception();
 		}
@@ -66,11 +51,11 @@ public class DesignationRestController {
 		ex.printStackTrace();
 		ErrorRes response = new ErrorRes();
 		ResponseInfo responseInfo = new ResponseInfo("", "", new Date().toString(), "", "",
-				"Failed to get designations");
+				"Failed to get departments");
 		response.setResponseInfo(responseInfo);
 		Error error = new Error();
 		error.setCode(400);
-		error.setDescription("Failed to get designations");
+		error.setDescription("Failed to get departments");
 		response.setError(error);
 		return new ResponseEntity<ErrorRes>(response, HttpStatus.BAD_REQUEST);
 	}

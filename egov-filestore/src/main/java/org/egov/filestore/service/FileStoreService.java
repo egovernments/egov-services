@@ -14,10 +14,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
-import org.egov.exception.ApplicationRuntimeException;
+import org.egov.filestore.exception.ApplicationRuntimeException;
 import org.egov.filestore.entity.FileStoreMapper;
 import org.egov.filestore.repository.FileStoreMapperRepository;
-import org.egov.properties.ApplicationProperties;
+import org.egov.filestore.config.properties.ApplicationProperties;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

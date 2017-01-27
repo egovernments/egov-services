@@ -37,52 +37,68 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.eis.service;
+package org.egov.eis.model;
 
-import java.util.Date;
-import java.util.List;
+import org.egov.eis.entity.ObjectType;
+import org.egov.eis.entity.Position;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-import org.egov.eis.entity.Employee;
-import org.egov.eis.repository.EmployeeRepository;
-import org.hibernate.Session;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+public class PositionHierarchy {
 
-@Service
-@Transactional(readOnly = true)
-public class EmployeeService {
+	@JsonProperty("id")
+	private Long id;
 
-	private final EmployeeRepository employeeRepository;
+	@JsonProperty("fromPosition")
+	private Position fromPosition;
 
-	@PersistenceContext
-	private EntityManager entityManager;
+	@JsonProperty("toPosition")
+	private Position toPosition;
 
-	@Autowired
-	public EmployeeService(final EmployeeRepository employeeRepository) {
-		this.employeeRepository = employeeRepository;
+	@JsonProperty("objectType")
+	private ObjectType objectType;
+
+	@JsonProperty("objectSubType")
+	private String objectSubType;
+
+	public Position getFromPosition() {
+		return fromPosition;
 	}
 
-	public Session getCurrentSession() {
-		return entityManager.unwrap(Session.class);
+	public void setFromPosition(Position fromPosition) {
+		this.fromPosition = fromPosition;
 	}
 
-	public Employee getByCode(String code) {
-
-		return employeeRepository.findByCode(code);
+	public Position getToPosition() {
+		return toPosition;
 	}
 
-	public List<Employee> getByPositionAndAsOnDate(final Long positionId, final Date asOnDate) {
-
-		return employeeRepository.findByPositionAndAsOnDate(positionId, asOnDate);
+	public void setToPosition(Position toPosition) {
+		this.toPosition = toPosition;
 	}
 
-	public List<Employee> getByDepartmentDesignation(final String deptCode, final String desigCode) {
+	public ObjectType getObjectType() {
+		return objectType;
+	}
 
-		return employeeRepository.findByDepartmentDesignation(deptCode, desigCode);
+	public void setObjectType(ObjectType objectType) {
+		this.objectType = objectType;
+	}
+
+	public String getObjectSubType() {
+		return objectSubType;
+	}
+
+	public void setObjectSubType(String objectSubType) {
+		this.objectSubType = objectSubType;
+	}
+
+	public Long getId() {
+		return this.id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 }

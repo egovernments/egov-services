@@ -45,6 +45,11 @@ public class EmployeeRestController {
 			response.getEmployee().addAll(employeeService.getByPositionAndAsOnDate(Long.parseLong(positionId),
 					asOnDate.toDateTimeAtStartOfDay().toDate()));
 
+		} else if (assignmentDepartmentCode != null && !assignmentDepartmentCode.isEmpty()
+				&& assignmentDesignationCode != null && !assignmentDesignationCode.isEmpty()) {
+			response.getEmployee().addAll(
+					employeeService.getByDepartmentDesignation(assignmentDepartmentCode, assignmentDesignationCode));
+
 		} else {
 			throw new Exception();
 		}

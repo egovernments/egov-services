@@ -68,6 +68,12 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 			@Param("desigId") final Long desigId, @Param("boundaryIds") final Set<Long> boundaryIds);
 
 	@Query(" select distinct EMP from Employee EMP inner join EMP.assignments ASSIGN "
+			+ " where ASSIGN.department.code=:deptCode and ASSIGN.designation.code=:desigCode and ASSIGN.fromDate<=current_date and ASSIGN.toDate>=current_date "
+			+ " and EMP.active=true order by EMP.code")
+	List<Employee> findByDepartmentDesignation(@Param("deptCode") final String deptCode,
+			@Param("desigCode") final String desigCode);
+
+	@Query(" select distinct EMP from Employee EMP inner join EMP.assignments ASSIGN "
 			+ " where ASSIGN.position.id=:positionId and ASSIGN.fromDate<=:asOnDate and ASSIGN.toDate>=:asOnDate "
 			+ " and EMP.active=true order by EMP.code")
 	List<Employee> findByPositionAndAsOnDate(@Param("positionId") final Long positionId,

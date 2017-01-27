@@ -37,52 +37,45 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.eis.service;
+package org.egov.eis.entity;
 
 import java.util.Date;
-import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+public class ObjectType {
+	Integer id;
+	String type;
+	String description;
+	Date lastmodifieddate;
 
-import org.egov.eis.entity.Employee;
-import org.egov.eis.repository.EmployeeRepository;
-import org.hibernate.Session;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-@Service
-@Transactional(readOnly = true)
-public class EmployeeService {
-
-	private final EmployeeRepository employeeRepository;
-
-	@PersistenceContext
-	private EntityManager entityManager;
-
-	@Autowired
-	public EmployeeService(final EmployeeRepository employeeRepository) {
-		this.employeeRepository = employeeRepository;
+	public String getDescription() {
+		return description;
 	}
 
-	public Session getCurrentSession() {
-		return entityManager.unwrap(Session.class);
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
-	public Employee getByCode(String code) {
-
-		return employeeRepository.findByCode(code);
+	public Integer getId() {
+		return id;
 	}
 
-	public List<Employee> getByPositionAndAsOnDate(final Long positionId, final Date asOnDate) {
-
-		return employeeRepository.findByPositionAndAsOnDate(positionId, asOnDate);
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
-	public List<Employee> getByDepartmentDesignation(final String deptCode, final String desigCode) {
-
-		return employeeRepository.findByDepartmentDesignation(deptCode, desigCode);
+	public Date getLastmodifieddate() {
+		return lastmodifieddate;
 	}
 
+	public void setLastmodifieddate(Date lastmodifieddate) {
+		this.lastmodifieddate = lastmodifieddate;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
 }

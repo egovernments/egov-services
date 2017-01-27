@@ -3,6 +3,7 @@ package org.egov.pgr.web.assignment.controller;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -11,6 +12,8 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.egov.pgr.web.assignment.model.AttributeValue;
+import org.egov.pgr.web.assignment.model.ServiceRequest;
 import org.egov.pgr.web.assignment.model.ServiceRequestReq;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -41,13 +44,17 @@ public class EmployeeAssignmentController {
 				ServiceRequestReq request;
 				try {
 					request = mapper.readValue(record.value(), ServiceRequestReq.class);
+					ServiceRequest serviceRequest = request.getServiceRequest();
+			        List<AttributeValue> attributesList = serviceRequest.getValues();
+					attributesList.add(new AttributeValue("assignee", "2"));
+					serviceRequest.setValues(attributesList);
+					request.setServiceRequest(serviceRequest);
 					System.err.println(
 							"---------------- Received form topic  ap.public.mseva.locationassigned -------------------------");
 					System.err.println("---------------- Employee Assigned to Complaint --------------");
 					pushValidatedRequests(request, "ap.public.mseva.assigned");
 					System.err.println(
 							"---------------- Pushing to topic ap.public.mseva.assigned -------------------------");
-
 				} catch (JsonParseException e) {
 					e.printStackTrace();
 				} catch (JsonMappingException e) {
@@ -78,5 +85,4 @@ public class EmployeeAssignmentController {
 				mapper.writeValueAsString(request)));
 		producer.close();
 	}
-
 }

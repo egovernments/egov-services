@@ -15,15 +15,7 @@ public class PgrrestspringbootApplication {
 
 	@PostConstruct
 	public void listen() {
-
-		new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				serviceRequestController.assignedRequestsReceiver();
-			}
-		}).start();
-
+		serviceRequestController.assignedRequestsReceiver();
 	}
 
 	public static void main(String[] args) {

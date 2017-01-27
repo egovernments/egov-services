@@ -3,6 +3,7 @@ package org.egov.pgr.web.locationassignment.controller;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.lang3.StringUtils;
@@ -12,6 +13,8 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.egov.pgr.web.locationassignment.model.AttributeValue;
+import org.egov.pgr.web.locationassignment.model.ServiceRequest;
 import org.egov.pgr.web.locationassignment.model.ServiceRequestReq;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -43,6 +46,12 @@ public class LocationAssignmentController {
 					if (request.getRequestInfo().getRequesterId() != null
 							|| request.getRequestInfo().getRequesterId() != StringUtils.EMPTY) {
 
+						ServiceRequest serviceRequest = request.getServiceRequest();
+				        List<AttributeValue> attributesList = serviceRequest.getValues();
+						attributesList.add(new AttributeValue("location", "5"));
+						attributesList.add(new AttributeValue("childLocation", "172"));
+						serviceRequest.setValues(attributesList);
+						request.setServiceRequest(serviceRequest);
 						System.err.println(
 								"---------------- Received form topic  ap.public.mseva.validated -------------------------");
 						System.err.println("---------------- Location Assigned to Complaint --------------");

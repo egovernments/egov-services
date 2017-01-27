@@ -149,12 +149,13 @@ public class ServiceRequestController {
 		Future<RecordMetadata> future = producer.send(new ProducerRecord<String, String>(topic,
 				serviceRequestReq.getServiceRequest().getCrn(), mapper.writeValueAsString(serviceRequestReq)));
 		System.err.println(future.toString());
+		System.out.println("------------- RECORD PUSHED TO VALIDATED TOPIC -----------");
 		producer.close();
 	}
 	
 	public void assignedRequestsReceiver() {
 		Properties props = new Properties();
-		props.put("bootstrap.servers", "kafka:9092");
+		props.put("bootstrap.servers", "localhost:9092");
 		props.put("group.id", "assigned");
 		props.put("enable.auto.commit", "true");
 		props.put("auto.commit.interval.ms", "10000");
@@ -181,7 +182,6 @@ public class ServiceRequestController {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-
 			}
 		}
 	}

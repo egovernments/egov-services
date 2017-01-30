@@ -1,4 +1,4 @@
-package org.egov.pgr.builder;
+package org.egov.pgr.shared;
 
 import org.egov.pgr.model.ServiceRequest;
 import org.springframework.kafka.support.serializer.JsonDeserializer;

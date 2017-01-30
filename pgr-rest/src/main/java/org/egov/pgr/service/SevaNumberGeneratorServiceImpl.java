@@ -1,4 +1,4 @@
-package org.egov.pgr.rest.numbergeneration;
+package org.egov.pgr.service;
 
 import java.io.Serializable;
 import java.sql.SQLException;
@@ -15,7 +15,7 @@ import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.apache.commons.lang3.StringUtils.upperCase;
 
 @Service
-public class SevaNumberGeneratorImpl implements SevaNumberGenerator {
+public class SevaNumberGeneratorServiceImpl implements SevaNumberGeneratorService {
 
 	 private static final String APP_NUMBER_SEQ_PREFIX = "SEQ_APPLICATION_NUMBER%s";
 	   

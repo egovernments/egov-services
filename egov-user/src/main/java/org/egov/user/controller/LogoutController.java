@@ -9,14 +9,11 @@ import org.egov.user.model.ResponseInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class LogoutController {
@@ -24,21 +21,13 @@ public class LogoutController {
 	@Autowired
 	private TokenStore tokenStore;
 
-	@RequestMapping(value = "/rest/user/_logout", method = RequestMethod.POST)
+	@RequestMapping(value = "/_logout", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseInfo logout(@RequestBody RequestInfo requestInfo) throws Exception {
-
-		String authHeader = requestInfo.getAuthToken();
-		if (authHeader != null) {
-			String tokenValue = authHeader.replace("Bearer", "").trim();
-			OAuth2AccessToken accessToken = tokenStore.readAccessToken(tokenValue);
-			tokenStore.removeAccessToken(accessToken);
-		}
-
-		ResponseInfo responseInfo = new ResponseInfo(requestInfo.getApiId(), requestInfo.getVer(),
-				new Date().toString(), requestInfo.getRequesterId(), requestInfo.getMsgId(), "Logout successfully");
+	public ResponseInfo deleteToken(@RequestParam("access_token") String accessToken) throws Exception {
+		OAuth2AccessToken redisToken = tokenStore.readAccessToken(accessToken);
+		tokenStore.removeAccessToken(redisToken);
+		ResponseInfo responseInfo = new ResponseInfo("", "", new Date().toString(), "", "", "Logout successfully");
 		return responseInfo;
-
 	}
 
 	@ExceptionHandler(Exception.class)

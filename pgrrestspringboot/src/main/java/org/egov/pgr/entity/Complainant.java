@@ -40,101 +40,96 @@
 
 package org.egov.pgr.entity;
 
-import static org.egov.pgr.entity.Complainant.SEQ_COMPLAINANT;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.validation.constraints.Pattern;
-
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.SafeHtml;
+
+import javax.persistence.*;
+import javax.validation.constraints.Pattern;
+
+import static org.egov.pgr.entity.Complainant.SEQ_COMPLAINANT;
 
 @Entity
 @Table(name = "egpgr_complainant")
 @SequenceGenerator(name = SEQ_COMPLAINANT, sequenceName = SEQ_COMPLAINANT, allocationSize = 1)
 public class Complainant extends AbstractPersistable<Long> {
 
-	public static final String MOBILE_NUM = "^((\\+)?(\\d{2}[-]))?(\\d{10}){1}?$";
-	public static final String EMAIL = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
-	public static final String SEQ_COMPLAINANT = "SEQ_EGPGR_COMPLAINANT";
-	private static final long serialVersionUID = 5691022600220045218L;
-	@Id
-	@GeneratedValue(generator = SEQ_COMPLAINANT, strategy = GenerationType.SEQUENCE)
-	private Long id;
+    public static final String MOBILE_NUM = "^((\\+)?(\\d{2}[-]))?(\\d{10}){1}?$";
+    public static final String EMAIL = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
+    public static final String SEQ_COMPLAINANT = "SEQ_EGPGR_COMPLAINANT";
+    private static final long serialVersionUID = 5691022600220045218L;
+    @Id
+    @GeneratedValue(generator = SEQ_COMPLAINANT, strategy = GenerationType.SEQUENCE)
+    private Long id;
 
-	@Length(max = 150)
-	@SafeHtml
-	private String name;
+    @Length(max = 150)
+    @SafeHtml
+    private String name;
 
-	@Length(max = 20)
-	@SafeHtml
-	@Pattern(regexp = MOBILE_NUM)
-	private String mobile;
+    @Length(max = 20)
+    @SafeHtml
+    @Pattern(regexp = MOBILE_NUM)
+    private String mobile;
 
-	@Length(max = 100)
-	@SafeHtml
-	@Email(regexp = EMAIL)
-	private String email;
+    @Length(max = 100)
+    @SafeHtml
+    @Email(regexp = EMAIL)
+    private String email;
 
-	private Long userDetail;
+    private Long userDetail;
 
-	@Length(max = 256)
-	@SafeHtml
-	private String address;
+    @Length(max = 256)
+    @SafeHtml
+    private String address;
 
-	@Override
-	public Long getId() {
-		return id;
-	}
+    @Override
+    public Long getId() {
+        return id;
+    }
 
-	@Override
-	protected void setId(final Long id) {
-		this.id = id;
-	}
+    @Override
+    protected void setId(final Long id) {
+        this.id = id;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(final String name) {
-		this.name = name;
-	}
+    public void setName(final String name) {
+        this.name = name;
+    }
 
-	public String getMobile() {
-		return mobile;
-	}
+    public String getMobile() {
+        return mobile;
+    }
 
-	public void setMobile(final String mobile) {
-		this.mobile = mobile;
-	}
+    public void setMobile(final String mobile) {
+        this.mobile = mobile;
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	public void setEmail(final String email) {
-		this.email = email;
-	}
+    public void setEmail(final String email) {
+        this.email = email;
+    }
 
-	public Long getUserDetail() {
-		return userDetail;
-	}
+    public Long getUserDetail() {
+        return userDetail;
+    }
 
-	public void setUserDetail(final Long userDetail) {
-		this.userDetail = userDetail;
-	}
+    public void setUserDetail(final Long userDetail) {
+        this.userDetail = userDetail;
+    }
 
-	public String getAddress() {
-		return address;
-	}
+    public String getAddress() {
+        return address;
+    }
 
-	public void setAddress(final String address) {
-		this.address = address;
-	}
+    public void setAddress(final String address) {
+        this.address = address;
+    }
 
 }

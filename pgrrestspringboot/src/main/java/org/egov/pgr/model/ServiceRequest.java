@@ -1,9 +1,6 @@
 package org.egov.pgr.model;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import org.egov.pgr.entity.enums.ComplaintStatus;
 
@@ -65,7 +62,7 @@ public class ServiceRequest {
     @JsonProperty("lat")
     private Double lat = null;
 
-    @JsonProperty("long")
+    @JsonProperty("lng")
     private Double lng = null;
 
     @JsonProperty("media_url")
@@ -97,6 +94,14 @@ public class ServiceRequest {
     
     @JsonProperty("values")
     private List<AttributeValue> values = new ArrayList<>();
+
+    //TODO - Delete this
+    @JsonProperty("values")
+    private Map<String, String> values1 = new HashMap<>();
+
+    public String attributeForName(String name) {
+        return values1.get(name);
+    }
 
     public String getCrn() {
         return crn;
@@ -313,18 +318,6 @@ public class ServiceRequest {
 	public void setValues(List<AttributeValue> values) {
 		this.values = values;
 	}
-
-	public boolean validate(ServiceRequest serviceRequest) {
-        if ((serviceRequest.getComplaintTypeCode() != null || serviceRequest.getComplaintTypeCode() != "") &&
-               (serviceRequest.getDetails() != null || serviceRequest.getDetails() != "") &&
-               (serviceRequest.getCrossHierarchyId() != null || serviceRequest.getCrossHierarchyId() != ""))
-            return true;
-        else if ((serviceRequest.getCrossHierarchyId() != null || serviceRequest.getCrossHierarchyId() != "") ||
-                (Objects.nonNull(serviceRequest.getLat()) && (Objects.nonNull(serviceRequest.getLat()))))
-            return true;
-        else
-            return false;
-    }
 
     @Override
     public boolean equals(java.lang.Object o) {

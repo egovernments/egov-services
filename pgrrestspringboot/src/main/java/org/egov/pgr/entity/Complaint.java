@@ -40,186 +40,173 @@
 
 package org.egov.pgr.entity;
 
-import static org.egov.pgr.entity.Complaint.SEQ_COMPLAINT;
-
-import java.util.Date;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-
 import org.egov.pgr.entity.enums.CitizenFeedback;
 import org.egov.pgr.entity.enums.ReceivingMode;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.SafeHtml;
+
+import javax.persistence.*;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import java.util.Date;
+
+import static org.egov.pgr.entity.Complaint.SEQ_COMPLAINT;
 
 @Entity
 @Table(name = "egpgr_complaint")
 @SequenceGenerator(name = SEQ_COMPLAINT, sequenceName = SEQ_COMPLAINT, allocationSize = 1)
 public class Complaint extends AbstractAuditable {
 
-	public static final String SEQ_COMPLAINT = "SEQ_EGPGR_COMPLAINT";
-	private static final long serialVersionUID = 4020616083055647372L;
-	@Id
-	@GeneratedValue(generator = SEQ_COMPLAINT, strategy = GenerationType.SEQUENCE)
-	private Long id;
+    public static final String SEQ_COMPLAINT = "SEQ_EGPGR_COMPLAINT";
+    private static final long serialVersionUID = 4020616083055647372L;
+    @Id
+    @GeneratedValue(generator = SEQ_COMPLAINT, strategy = GenerationType.SEQUENCE)
+    private Long id;
 
-	@Column(name = "crn", unique = true)
-	@Length(max = 32)
-	@SafeHtml
-	private String crn = "";
+    @Column(name = "crn", unique = true)
+    @Length(max = 32)
+    @SafeHtml
+    private String crn = "";
 
-	@ManyToOne
-	@JoinColumn(name = "complaintType", nullable = true)
-	private ComplaintType complaintType;
+    @ManyToOne
+    @JoinColumn(name = "complaintType", nullable = true)
+    private ComplaintType complaintType;
 
-	@ManyToOne(cascade = CascadeType.ALL)
-	@Valid
-	@NotNull
-	@JoinColumn(name = "complainant", nullable = false)
-	private Complainant complainant = new Complainant();
+    @ManyToOne(cascade = CascadeType.ALL)
+    @Valid
+    @NotNull
+    @JoinColumn(name = "complainant", nullable = false)
+    private Complainant complainant = new Complainant();
 
-	private Long assignee;
+    private Long assignee;
 
-	private Long location;
+    private Long location;
 
-	@ManyToOne
-	@NotNull
-	@JoinColumn(name = "status")
-	private ComplaintStatus status = new ComplaintStatus();
+    @ManyToOne
+    @NotNull
+    @JoinColumn(name = "status")
+    private ComplaintStatus status = new ComplaintStatus();
 
-	@Length(min = 10, max = 500)
-	@SafeHtml
-	private String details;
+    @Length(min = 10, max = 500)
+    @SafeHtml
+    private String details;
 
-	@Length(max = 200)
-	@SafeHtml
+    @Length(max = 200)
+    @SafeHtml
 //	@Column(name = "landmarkdetails")
-	private String landmarkDetails;
+    private String landmarkDetails;
 
-	@Enumerated(EnumType.ORDINAL)
-	@NotNull
+    @Enumerated(EnumType.ORDINAL)
+    @NotNull
 //	@Column(name = "receivingmode")
-	private ReceivingMode receivingMode = ReceivingMode.WEBSITE;
+    private ReceivingMode receivingMode = ReceivingMode.WEBSITE;
 
-	@ManyToOne
-	@JoinColumn(name = "receivingCenter", nullable = true)
-	private ReceivingCenter receivingCenter;
+    @ManyToOne
+    @JoinColumn(name = "receivingCenter", nullable = true)
+    private ReceivingCenter receivingCenter;
 
 //	private Set<Long> supportDocs;
 
-	private double lng;
+    private double lng;
 
-	private double lat;
+    private double lat;
 
-	@Column(name = "escalation_date", nullable = false)
-	private Date escalationDate;
+    @Column(name = "escalation_date", nullable = false)
+    private Date escalationDate;
 
-	private Long department;
+    private Long department;
 
-	@Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.ORDINAL)
 //	@Column(name = "citizenfeedback")
-	private CitizenFeedback citizenFeedback;
+    private CitizenFeedback citizenFeedback;
 
-//	@Column(name = "childlocation")
-	private Long childLocation;
+    //	@Column(name = "childlocation")
+    private Long childLocation;
 
-	@Transient
-	private String latlngAddress;
+    @Transient
+    private String latlngAddress;
 
-	/*
-	 * For indexing the below fields are kept. These will not be added to the
-	 * database. This will be available only in index.
-	 */
-	@Transient
-	private Long crossHierarchyId;
+    /*
+     * For indexing the below fields are kept. These will not be added to the
+     * database. This will be available only in index.
+     */
+    @Transient
+    private Long crossHierarchyId;
 
-	@Override
-	public Long getId() {
-		return this.id;
-	}
+    @Override
+    public Long getId() {
+        return this.id;
+    }
 
-	@Override
-	public void setId(Long id) {
-		this.id = id;
-	}
+    @Override
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public String getCrn() {
-		return this.crn;
-	}
+    public String getCrn() {
+        return this.crn;
+    }
 
-	public void setCrn(String crn) {
-		this.crn = crn;
-	}
+    public void setCrn(String crn) {
+        this.crn = crn;
+    }
 
-	
-	public ComplaintType getComplaintType() {
-		return complaintType;
-	}
 
-	public void setComplaintType(ComplaintType complaintType) {
-		this.complaintType = complaintType;
-	}
+    public ComplaintType getComplaintType() {
+        return complaintType;
+    }
 
-	public Complainant getComplainant() {
-		return this.complainant;
-	}
+    public void setComplaintType(ComplaintType complaintType) {
+        this.complaintType = complaintType;
+    }
 
-	public void setComplainant(Complainant complainant) {
-		this.complainant = complainant;
-	}
+    public Complainant getComplainant() {
+        return this.complainant;
+    }
 
-	public Long getAssignee() {
-		return this.assignee;
-	}
+    public void setComplainant(Complainant complainant) {
+        this.complainant = complainant;
+    }
 
-	public void setAssignee(Long assignee) {
-		this.assignee = assignee;
-	}
+    public Long getAssignee() {
+        return this.assignee;
+    }
 
-	public ComplaintStatus getStatus() {
-		return this.status;
-	}
+    public void setAssignee(Long assignee) {
+        this.assignee = assignee;
+    }
 
-	public void setStatus(ComplaintStatus status) {
-		this.status = status;
-	}
+    public ComplaintStatus getStatus() {
+        return this.status;
+    }
 
-	public String getDetails() {
-		return this.details;
-	}
+    public void setStatus(ComplaintStatus status) {
+        this.status = status;
+    }
 
-	public void setDetails(String details) {
-		this.details = details;
-	}
+    public String getDetails() {
+        return this.details;
+    }
 
-	public ReceivingMode getReceivingMode() {
-		return this.receivingMode;
-	}
+    public void setDetails(String details) {
+        this.details = details;
+    }
 
-	public void setReceivingMode(ReceivingMode receivingMode) {
-		this.receivingMode = receivingMode;
-	}
+    public ReceivingMode getReceivingMode() {
+        return this.receivingMode;
+    }
 
-	public ReceivingCenter getReceivingCenter() {
-		return this.receivingCenter;
-	}
+    public void setReceivingMode(ReceivingMode receivingMode) {
+        this.receivingMode = receivingMode;
+    }
 
-	public void setReceivingCenter(ReceivingCenter receivingCenter) {
-		this.receivingCenter = receivingCenter;
-	}
+    public ReceivingCenter getReceivingCenter() {
+        return this.receivingCenter;
+    }
+
+    public void setReceivingCenter(ReceivingCenter receivingCenter) {
+        this.receivingCenter = receivingCenter;
+    }
 
 //	public Set<Long> getSupportDocs() {
 //		return this.supportDocs;
@@ -229,119 +216,120 @@ public class Complaint extends AbstractAuditable {
 //		this.supportDocs = supportDocs;
 //	}
 
-	public Long getLocation() {
-		return this.location;
-	}
+    public Long getLocation() {
+        return this.location;
+    }
 
-	public void setLocation(Long location) {
-		this.location = location;
-	}
+    public void setLocation(Long location) {
+        this.location = location;
+    }
 
-	public String getLandmarkDetails() {
-		return this.landmarkDetails;
-	}
+    public String getLandmarkDetails() {
+        return this.landmarkDetails;
+    }
 
-	public void setLandmarkDetails(String landmarkDetails) {
-		this.landmarkDetails = landmarkDetails;
-	}
+    public void setLandmarkDetails(String landmarkDetails) {
+        this.landmarkDetails = landmarkDetails;
+    }
 
-	public double getLat() {
-		return this.lat;
-	}
+    public double getLat() {
+        return this.lat;
+    }
 
-	public void setLat(double lat) {
-		this.lat = lat;
-	}
+    public void setLat(double lat) {
+        this.lat = lat;
+    }
 
-	public double getLng() {
-		return this.lng;
-	}
+    public double getLng() {
+        return this.lng;
+    }
 
-	public void setLng(double lng) {
-		this.lng = lng;
-	}
+    public void setLng(double lng) {
+        this.lng = lng;
+    }
 
-	public Date getEscalationDate() {
-		return null == this.escalationDate ? null : this.escalationDate;
-	}
+    public Date getEscalationDate() {
+        return null == this.escalationDate ? null : this.escalationDate;
+    }
 
-	public void setEscalationDate(Date escalationDate) {
-		this.escalationDate = null == escalationDate ? null : escalationDate;
-	}
+    public void setEscalationDate(Date escalationDate) {
+        this.escalationDate = null == escalationDate ? null : escalationDate;
+    }
 
-	public Long getDepartment() {
-		return this.department;
-	}
+    public Long getDepartment() {
+        return this.department;
+    }
 
-	@Override
-	public String toString() {
-		return "Complaint [id=" + id + ", crn=" + crn + ", complaintType="
-				+ complaintType + ", complainant=" + complainant
-				+ ", assignee=" + assignee + ", location=" + location
-				+ ", status=" + status + ", details=" + details
-				+ ", landmarkDetails=" + landmarkDetails + ", receivingMode="
-				+ receivingMode + ", receivingCenter=" + receivingCenter
-				+ ", lng=" + lng + ", lat=" + lat + ", escalationDate="
-				+ escalationDate + ", department=" + department
-				+ ", citizenFeedback=" + citizenFeedback + ", childLocation="
-				+ childLocation + ", latlngAddress=" + latlngAddress
-				+ ", crossHierarchyId=" + crossHierarchyId + "]";
-	}
+    @Override
+    public String toString() {
+        return "Complaint [id=" + id + ", crn=" + crn + ", complaintType="
+                + complaintType + ", complainant=" + complainant
+                + ", assignee=" + assignee + ", location=" + location
+                + ", status=" + status + ", details=" + details
+                + ", landmarkDetails=" + landmarkDetails + ", receivingMode="
+                + receivingMode + ", receivingCenter=" + receivingCenter
+                + ", lng=" + lng + ", lat=" + lat + ", escalationDate="
+                + escalationDate + ", department=" + department
+                + ", citizenFeedback=" + citizenFeedback + ", childLocation="
+                + childLocation + ", latlngAddress=" + latlngAddress
+                + ", crossHierarchyId=" + crossHierarchyId + "]";
+    }
 
-	public void setDepartment(Long department) {
-		this.department = department;
-	}
+    public void setDepartment(Long department) {
+        this.department = department;
+    }
 
-	public CitizenFeedback getCitizenFeedback() {
-		return this.citizenFeedback;
-	}
+    public CitizenFeedback getCitizenFeedback() {
+        return this.citizenFeedback;
+    }
 
-	public void setCitizenFeedback(CitizenFeedback citizenFeedback) {
-		this.citizenFeedback = citizenFeedback;
-	}
+    public void setCitizenFeedback(CitizenFeedback citizenFeedback) {
+        this.citizenFeedback = citizenFeedback;
+    }
 
-	public Long getChildLocation() {
-		return this.childLocation;
-	}
+    public Long getChildLocation() {
+        return this.childLocation;
+    }
 
-	public void setChildLocation(Long childLocation) {
-		this.childLocation = childLocation;
-	}
+    public void setChildLocation(Long childLocation) {
+        this.childLocation = childLocation;
+    }
 
-	public Long getCrossHierarchyId() {
-		return this.crossHierarchyId;
-	}
+    public Long getCrossHierarchyId() {
+        return this.crossHierarchyId;
+    }
 
-	public void setCrossHierarchyId(Long crossHierarchyId) {
-		this.crossHierarchyId = crossHierarchyId;
-	}
+    public void setCrossHierarchyId(Long crossHierarchyId) {
+        this.crossHierarchyId = crossHierarchyId;
+    }
 
-	public String getLatlngAddress() {
-		return this.latlngAddress;
-	}
+    public String getLatlngAddress() {
+        return this.latlngAddress;
+    }
 
-	public void setLatlngAddress(String latlngAddress) {
-		this.latlngAddress = latlngAddress;
-	}
+    public void setLatlngAddress(String latlngAddress) {
+        this.latlngAddress = latlngAddress;
+    }
 
 	/*
-	 * @Override public String myLinkId() { return this.crn; }
+     * @Override public String myLinkId() { return this.crn; }
 	 */
-	// @Override
-	// public String getStateDetails() {
-	// SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
-	// return
-	// String.format("Complaint Number %s for %s filed on %s. Date of resolution %s",
-	// this.getCrn(),
-	// this.getComplaintType().getName(),
-	// formatter.format(this.getCreatedDate()),
-	// formatter.format(this.getEscalationDate()));
-	// }
+    // @Override
+    // public String getStateDetails() {
+    // SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
+    // return
+    // String.format("Complaint Number %s for %s filed on %s. Date of resolution %s",
+    // this.getCrn(),
+    // this.getComplaintType().getName(),
+    // formatter.format(this.getCreatedDate()),
+    // formatter.format(this.getEscalationDate()));
+    // }
 
-	// @Override
-	// protected StateInfoBuilder buildStateInfo() {
-	// return
-	// super.buildStateInfo().citizenName(this.getComplainant().getName()).refDate(this.getCreatedDate()).citizenPhoneno(this.getComplainant().getMobile())
-	// .citizenAddress(this.getComplainant().getAddress()).refNum(this.getCrn()).location(this.getLocation().getName()).task("Grievance").status(this.getStatus().getName());
-	// }
+    // @Override
+    // protected StateInfoBuilder buildStateInfo() {
+    // return
+    // super.buildStateInfo().citizenName(this.getComplainant().getName()).refDate(this.getCreatedDate()).citizenPhoneno(this.getComplainant().getMobile())
+    // .citizenAddress(this.getComplainant().getAddress()).refNum(this.getCrn()).location(this.getLocation().getName()).task("Grievance").status(this.getStatus().getName());
+    // }
+
 }

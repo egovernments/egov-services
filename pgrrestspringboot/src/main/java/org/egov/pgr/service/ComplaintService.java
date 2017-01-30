@@ -105,12 +105,10 @@ public class ComplaintService {
     
     @Transactional
     public Complaint createComplaint(Complaint complaint) throws ValidationException {
-
         complaint.setStatus(complaintStatusService.getByName("REGISTERED"));
         complaint.setAssignee(2L);
         complaint.setEscalationDate(new Date());
         System.out.println(complaint.toString());
-
         complaintRepository.save(complaint);
         return complaint;
     }

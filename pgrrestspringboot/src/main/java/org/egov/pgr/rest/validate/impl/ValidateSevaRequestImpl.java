@@ -4,7 +4,7 @@ import java.util.Objects;
 
 import org.egov.pgr.model.RequestInfo;
 import org.egov.pgr.model.ServiceRequest;
-import org.egov.pgr.model.ServiceRequestReq;
+import org.egov.pgr.model.SevaRequest;
 import org.egov.pgr.rest.validate.ValidateSevaRequest;
 import org.egov.pgr.utils.StringUtils;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 public class ValidateSevaRequestImpl implements ValidateSevaRequest {
 
 	@Override
-	public Boolean validate(final ServiceRequestReq request) {
+	public Boolean validate(final SevaRequest request) {
 
 		return validateRequestInfo(request.getRequestInfo()) && validateServiceRequest(request.getServiceRequest());
 	}

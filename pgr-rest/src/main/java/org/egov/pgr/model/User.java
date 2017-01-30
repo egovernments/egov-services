@@ -1,4 +1,4 @@
-package org.egov.pgr.shared;
+package org.egov.pgr.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 

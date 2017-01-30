@@ -1,10 +1,10 @@
 package org.egov.pgr.controller;
 
-import org.egov.pgr.shared.User;
 import org.egov.pgr.model.Error;
 import org.egov.pgr.model.*;
 import org.egov.pgr.producer.GrievanceProducer;
 import org.egov.pgr.service.SevaNumberGeneratorServiceImpl;
+import org.egov.pgr.model.User;
 import org.egov.pgr.validators.FieldErrorDTO;
 import org.egov.pgr.validators.SevaRequestValidator;
 import org.egov.pgr.validators.ValidationErrorDTO;

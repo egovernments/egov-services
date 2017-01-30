@@ -1,11 +1,13 @@
 package org.egov.pgr.model;
 
-import java.util.*;
-
-import org.egov.pgr.entity.enums.ComplaintStatus;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.egov.pgr.entity.enums.ComplaintStatus;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * Service request raised by the citizen
@@ -38,15 +40,15 @@ public class ServiceRequest {
     @JsonProperty("service_notice")
     private String serviceNotice = null;
 
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss",timezone = "IST")
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "IST")
     @JsonProperty("requested_datetime")
     private Date createdDate = null;
 
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss",timezone = "IST")
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "IST")
     @JsonProperty("updated_datetime")
     private Date lastModifiedDate = null;
 
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss",timezone = "IST")
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "IST")
     @JsonProperty("expected_datetime")
     private Date escalationDate = null;
 
@@ -91,16 +93,12 @@ public class ServiceRequest {
 
     @JsonProperty("approval_comment")
     private String approvalComment = null;
-    
-    @JsonProperty("values")
-    private List<AttributeValue> values = new ArrayList<>();
 
-    //TODO - Delete this
     @JsonProperty("values")
-    private Map<String, String> values1 = new HashMap<>();
+    private Map<String, String> values = new HashMap<>();
 
     public String attributeForName(String name) {
-        return values1.get(name);
+        return values.get(name);
     }
 
     public String getCrn() {
@@ -311,13 +309,13 @@ public class ServiceRequest {
         this.complaintTypeId = complaintTypeId;
     }
 
-    public List<AttributeValue> getValues() {
-		return values;
-	}
+    public Map<String, String> getValues() {
+        return values;
+    }
 
-	public void setValues(List<AttributeValue> values) {
-		this.values = values;
-	}
+    public void setValues(Map<String, String> values) {
+        this.values = values;
+    }
 
     @Override
     public boolean equals(java.lang.Object o) {

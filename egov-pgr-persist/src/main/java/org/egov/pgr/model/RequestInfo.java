@@ -1,9 +1,7 @@
-package org.egov.pgr.web.persist.model;
+package org.egov.pgr.model;
 
 import java.util.Date;
 import java.util.Objects;
-
-import org.springframework.util.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;

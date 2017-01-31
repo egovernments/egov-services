@@ -13,6 +13,7 @@ public class GrievanceAssignmentProducer {
 
     public void sendMessage(String topic, Object message) {
         ListenableFuture<SendResult<String, Object>> future = kafkaTemplate.send(topic, message);
+        //TODO - Implement what happens on failure/success
         future.addCallback(
                 new ListenableFutureCallback<SendResult<String, Object>>() {
                     @Override

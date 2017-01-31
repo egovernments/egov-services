@@ -2,6 +2,7 @@ package org.egov.pgr.producer;
 
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
@@ -16,6 +17,22 @@ import java.util.Map;
 @Configuration
 @EnableKafka
 public class GrievanceAssignmentProducerConfig {
+
+    @Value("kafka.producer.config.bootstrap_server_config")
+    private String serverConfig;
+
+    @Value("kafka.producer.config.buffer_memory_config")
+    private String bufferMemoryConfig;
+
+    @Value("kafka.producer.config.linger_ms_config")
+    private String lingerMsConfig;
+
+    @Value("kafka.producer.config.batch_size_config")
+    private String batchSizeConfig;
+
+    @Value("kafka.producer.config.retries_config")
+    private String retiresConfig;
+
     @Bean
     public ProducerFactory<String, Object> producerFactory() {
         return new DefaultKafkaProducerFactory<>(producerConfigs());
@@ -24,11 +41,11 @@ public class GrievanceAssignmentProducerConfig {
     @Bean
     public Map<String, Object> producerConfigs() {
         Map<String, Object> props = new HashMap<>();
-        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
-        props.put(ProducerConfig.RETRIES_CONFIG, 0);
-        props.put(ProducerConfig.BATCH_SIZE_CONFIG, 16384);
-        props.put(ProducerConfig.LINGER_MS_CONFIG, 1);
-        props.put(ProducerConfig.BUFFER_MEMORY_CONFIG, 33554432);
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, serverConfig);
+        props.put(ProducerConfig.RETRIES_CONFIG, retiresConfig);
+        props.put(ProducerConfig.BATCH_SIZE_CONFIG, batchSizeConfig);
+        props.put(ProducerConfig.LINGER_MS_CONFIG, lingerMsConfig);
+        props.put(ProducerConfig.BUFFER_MEMORY_CONFIG, bufferMemoryConfig);
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
         return props;

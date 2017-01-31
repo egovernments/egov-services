@@ -1,9 +1,11 @@
 package org.egov.pgr.services;
 
+import org.egov.pgr.model.RequestInfo;
+
 public interface BoundaryService {
 
-    String fetchBoundaryByLatLng(Double lat, Double lng);
+    Long fetchBoundaryByLatLng(RequestInfo requestInfo, Double lat, Double lng);
 
-    String fetchBoundaryByCrossHierarchy(String crossHierarchyId);
+    Long fetchBoundaryByCrossHierarchy(RequestInfo requestInfo, String crossHierarchyId);
 
 }

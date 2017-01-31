@@ -38,11 +38,11 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.notification.web.messaging.sms;
+package org.egov.notification.web.services.sms;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.egov.notification.web.messaging.MessagePriority.MEDIUM;
+import static org.egov.notification.web.services.MessagePriority.MEDIUM;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -57,7 +57,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.egov.notification.web.config.properties.ApplicationProperties;
-import org.egov.notification.web.messaging.MessagePriority;
+import org.egov.notification.web.services.MessagePriority;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

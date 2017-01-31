@@ -38,7 +38,7 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.notification.web.messaging.email;
+package org.egov.notification.web.services.email;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;

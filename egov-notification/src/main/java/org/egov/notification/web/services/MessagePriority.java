@@ -38,7 +38,7 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.notification.web.messaging;
+package org.egov.notification.web.services;
 
 public enum MessagePriority {
     HIGH, MEDIUM, LOW;

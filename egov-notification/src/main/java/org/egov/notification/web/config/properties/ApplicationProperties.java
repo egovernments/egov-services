@@ -50,10 +50,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
 
 @Configuration
-@PropertySource(value = { "classpath:config/application-config.properties",
-		"classpath:config/egov-erp-${user.name}.properties",
-		"classpath:config/application-config-${client.id}.properties",
-		"classpath:config/egov-erp-override.properties" }, ignoreResourceNotFound = true)
+@PropertySource(value = { "classpath:config/application-config.properties"}, ignoreResourceNotFound = true)
 @Order(0)
 public class ApplicationProperties {
 

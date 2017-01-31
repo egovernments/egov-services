@@ -18,20 +18,20 @@ import java.util.Map;
 @EnableKafka
 public class GrievanceAssignmentProducerConfig {
 
-    @Value("kafka.producer.config.bootstrap_server_config")
+    @Value("${kafka.config.bootstrap_server_config}")
     private String serverConfig;
 
-    @Value("kafka.producer.config.buffer_memory_config")
-    private String bufferMemoryConfig;
+    @Value("${kafka.producer.config.buffer_memory_config}")
+    private Integer bufferMemoryConfig;
 
-    @Value("kafka.producer.config.linger_ms_config")
-    private String lingerMsConfig;
+    @Value("${kafka.producer.config.linger_ms_config}")
+    private Integer lingerMsConfig;
 
-    @Value("kafka.producer.config.batch_size_config")
-    private String batchSizeConfig;
+    @Value("${kafka.producer.config.batch_size_config}")
+    private Integer batchSizeConfig;
 
-    @Value("kafka.producer.config.retries_config")
-    private String retiresConfig;
+    @Value("${kafka.producer.config.retries_config}")
+    private Integer retiresConfig;
 
     @Bean
     public ProducerFactory<String, Object> producerFactory() {

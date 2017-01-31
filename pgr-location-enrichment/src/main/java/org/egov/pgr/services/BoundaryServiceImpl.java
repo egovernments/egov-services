@@ -22,7 +22,7 @@ public class BoundaryServiceImpl implements BoundaryService {
 
     @Override
     public Long fetchBoundaryByCrossHierarchy(RequestInfo requestInfo, String crossHierarchyId) {
-        String url = boundaryServiceHost + "/v2/589037550f00006f16a3effa"
+        String url = boundaryServiceHost + "/v2/589037550f00006f16a3effa";
         BoundaryServiceRequest request = new BoundaryServiceRequest(requestInfo, crossHierarchyId);
         return getBoundaryServiceResponse(url, request).getBoundary().get(0).getId();
     }

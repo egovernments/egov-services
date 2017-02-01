@@ -44,7 +44,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         endpoints.tokenStore(tokenStore).authenticationManager(authenticationManager)
-                .pathMapping("/oauth/token", "/login").tokenEnhancer(customTokenEnhancer);
+                .pathMapping("/oauth/token", "/_login").tokenEnhancer(customTokenEnhancer);
     }
 
     @Override

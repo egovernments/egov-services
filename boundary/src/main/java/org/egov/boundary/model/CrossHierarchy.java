@@ -52,8 +52,6 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-@JsonAutoDetect
 @Entity
 @Table(name = "EG_CROSSHIERARCHY")
 @SequenceGenerator(name = CrossHierarchy.SEQ_CROSSHIERARCHY, sequenceName = CrossHierarchy.SEQ_CROSSHIERARCHY, allocationSize = 1)

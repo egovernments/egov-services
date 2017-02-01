@@ -95,6 +95,10 @@ public class BoundaryService {
     public Boundary createBoundary(final Boundary boundary) {
         boundary.setHistory(false);
         boundary.setMaterializedPath(getMaterializedPath(null, boundary.getParent()));
+        if(boundary.getBoundaryType()!=null && boundary.getBoundaryType().getId()!=null)
+        {
+        	boundary.setBoundaryType(boundaryTypeService.findById(boundary.getBoundaryType().getId()));
+        }
         return boundaryRepository.save(boundary);
     }
 

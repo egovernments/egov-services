@@ -56,8 +56,6 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.SafeHtml;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-@JsonAutoDetect
 @Entity
 @Table(name = "EG_BOUNDARY_TYPE")
 @SequenceGenerator(name = BoundaryType.SEQ_BOUNDARY_TYPE, sequenceName = BoundaryType.SEQ_BOUNDARY_TYPE, allocationSize = 1)

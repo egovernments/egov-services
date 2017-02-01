@@ -45,11 +45,11 @@ package org.egov.boundary.repository;
 import java.util.List;
 
 import org.egov.boundary.model.HierarchyType;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-@RepositoryRestResource()
-public interface HierarchyTypeRepository extends CrudRepository<HierarchyType, Long> {
+@Repository
+public interface HierarchyTypeRepository extends JpaRepository<HierarchyType, Long> {
     HierarchyType findByName(String name);
 
     List<HierarchyType> findByNameContainingIgnoreCase(String name);

@@ -52,7 +52,6 @@ import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.SafeHtml;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-@JsonAutoDetect
 @Entity
 @Table(name = "eg_hierarchy_type")
 @SequenceGenerator(name = HierarchyType.SEQ_HIERARCHY_TYPE, sequenceName = HierarchyType.SEQ_HIERARCHY_TYPE, allocationSize = 1)

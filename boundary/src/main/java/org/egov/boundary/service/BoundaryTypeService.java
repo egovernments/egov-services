@@ -63,8 +63,17 @@ public class BoundaryTypeService {
 
 	@Transactional
 	public BoundaryType createBoundaryType(BoundaryType boundaryType) {
+		if(boundaryType.getHierarchyType()!=null && boundaryType.getHierarchyType().getId()!=null)
+			boundaryType.setHierarchyType(hierarchyTypeService.findById(boundaryType.getHierarchyType().getId()));
+		
+		if(boundaryType.getParent()!=null && boundaryType.getParent().getId()!=null)
+			boundaryType.setParent(findById(boundaryType.getParent().getId()));
 		
 		return boundaryTypeRepository.save(boundaryType);
+	}
+
+	public BoundaryType findById(Long id) {  
+	 return	boundaryTypeRepository.findOne(id);
 	}
 
 	@Transactional

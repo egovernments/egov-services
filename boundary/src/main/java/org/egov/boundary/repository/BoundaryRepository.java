@@ -50,12 +50,12 @@ import org.egov.boundary.model.HierarchyType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.stereotype.Repository;
 
-@RepositoryRestResource
+@Repository
 public interface BoundaryRepository extends JpaRepository<Boundary, Long> {
 
-  //  @QueryHints({@QueryHint(name = HINT_CACHEABLE, value = "true")})
+   // @QueryHints({@QueryHint(name = HINT_CACHEABLE, value = "true")})
     Boundary findByName(String name);
 
     List<Boundary> findByNameContainingIgnoreCase(String name);
@@ -126,5 +126,5 @@ public interface BoundaryRepository extends JpaRepository<Boundary, Long> {
 
     List<Boundary> findByBoundaryTypeOrderByBoundaryNumAsc(BoundaryType boundaryType);
 
-    Boundary findByBoundaryNum(String code);  
+    Boundary findByBoundaryNum(String code);
 }

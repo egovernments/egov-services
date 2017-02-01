@@ -15,7 +15,7 @@ COPY /target/egov-location-0.0.1-SNAPSHOT.jar /opt/egov/egov-location.jar
 
 # launch standalone webapp
 CMD ["java","-jar", "/opt/egov/egov-location.jar"]
-#CMD ["java", "-Xdebug", "-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8787", "-jar", "/opt/egov/egov-notification.jar"]
+#CMD ["java", "-Xdebug", "-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8787", "-jar", "/opt/egov/egov-location.jar"]
 
 # NOTE: the two 'RUN' commands can probably be combined inside of a single
 # script (i.e. RUN build-and-install-app.sh) so that we can also clean up the

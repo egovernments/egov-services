@@ -4,11 +4,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.egov</groupId>
-	<artifactId>boundary</artifactId>
+	<artifactId>egov-location</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 
-	<name>boundary</name>
+	<name>egov-location</name>
 	<description>boundary service for egov applications</description>
 
 	<parent>

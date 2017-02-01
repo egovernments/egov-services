@@ -1,10 +1,11 @@
 package org.egov.pgr.controller;
 
+import org.egov.pgr.entity.Complaint;
 import org.egov.pgr.model.Error;
 import org.egov.pgr.model.*;
 import org.egov.pgr.producer.GrievanceProducer;
+import org.egov.pgr.service.ComplaintService;
 import org.egov.pgr.service.SevaNumberGeneratorServiceImpl;
-import org.egov.pgr.model.User;
 import org.egov.pgr.validators.FieldErrorDTO;
 import org.egov.pgr.validators.SevaRequestValidator;
 import org.egov.pgr.validators.ValidationErrorDTO;
@@ -30,6 +31,9 @@ public class ServiceRequestController {
 
     @Autowired
     private GrievanceProducer kafkaProducer;
+
+    @Autowired
+    private ComplaintService complaintService;
 
     private ResponseInfo resInfo = null;
 
@@ -96,5 +100,12 @@ public class ServiceRequestController {
         error.setDescription("General Server Error");
         response.setError(error);
         return new ResponseEntity<ErrorRes>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Complaint getAllComplaintTypeByCategory(@RequestParam Long complaintId,
+                                                   @RequestParam String tenantId) {
+        return complaintService.getComplaintById(complaintId);
     }
 }

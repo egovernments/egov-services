@@ -1,21 +1,19 @@
 package org.egov.boundary.web.controller;
 
-import java.net.URI;
 import java.util.List;
 
 import javax.validation.Valid;
 
 import org.egov.boundary.model.Boundary;
 import org.egov.boundary.service.BoundaryService;
-import org.egov.boundary.web.wrapper.Error;
-import org.egov.boundary.web.wrapper.ErrorResponse;
 import org.egov.boundary.web.wrapper.BoundaryRequest;
 import org.egov.boundary.web.wrapper.BoundaryResponse;
+import org.egov.boundary.web.wrapper.Error;
+import org.egov.boundary.web.wrapper.ErrorResponse;
 import org.egov.boundary.web.wrapper.RequestInfo;
 import org.egov.boundary.web.wrapper.ResponseInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;

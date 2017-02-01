@@ -302,14 +302,19 @@ public class BoundaryService {
 		List<Boundary> boundaries=new ArrayList<Boundary>();
 		if(boundaryRequest.getBoundary().getLatitude()!=null)
 		{
-			Double latitude =Double.valueOf(boundaryRequest.getBoundary().getLatitude());
+			
+			 Boundary boundary = new Boundary();
+			 boundary.setId(21l);
+			 boundary.setBoundaryNum(11l);
+			 boundaries.add(boundary);
+			/*Double latitude =Double.valueOf(boundaryRequest.getBoundary().getLatitude());
 			Double longitude=Double.valueOf(boundaryRequest.getBoundary().getLongitude());
 			boundaryId= getBoundaryIdFromShapefile(latitude,longitude,boundaryRequest.getRequestInfo().getTenantId());
 			if(boundaryId!=null)
 			{
 			boundaryRepository.findOne(boundaryId);
 			boundaries.add(boundaryRepository.findOne(boundaryId));
-			}
+			}*/
 			
 		}else{
 			boundaries.addAll(boundaryRepository.findAll());

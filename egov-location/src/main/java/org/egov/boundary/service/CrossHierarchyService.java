@@ -180,6 +180,6 @@ public class CrossHierarchyService {
 		}
 		
 		
-		return crossHierarchyRepository.findAll(); 
+		return crossHierarchy; 
 	}
 }

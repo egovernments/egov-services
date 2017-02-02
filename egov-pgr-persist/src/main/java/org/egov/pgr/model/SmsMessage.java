@@ -2,12 +2,19 @@ package org.egov.pgr.model;
 
 public class SmsMessage {
 
-    private String mobileNumber = null;
-
-    private String message = null;
+    private String mobileNumber;
+    private String message;
 
     public SmsMessage(String mobileNumber, String message) {
         this.mobileNumber = mobileNumber;
         this.message = message;
+    }
+
+    public String getMobileNumber() {
+        return mobileNumber;
+    }
+
+    public String getMessage() {
+        return message;
     }
 }

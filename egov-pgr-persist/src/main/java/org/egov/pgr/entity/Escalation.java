@@ -38,26 +38,70 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.pgr.service;
+package org.egov.pgr.entity;
 
-import org.egov.pgr.entity.ComplaintType;
-import org.egov.pgr.repository.ComplaintTypeRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import javax.persistence.*;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
-@Service
-@Transactional(readOnly = true)
-public class ComplaintTypeService {
+import static org.egov.pgr.entity.Escalation.SEQ_ESCALATION;
 
-    private final ComplaintTypeRepository complaintTypeRepository;
+@Entity
+@Table(name = "egpgr_escalation")
+@SequenceGenerator(name = SEQ_ESCALATION, sequenceName = SEQ_ESCALATION, allocationSize = 1)
+public class Escalation extends AbstractAuditable {
 
-    @Autowired
-    public ComplaintTypeService(final ComplaintTypeRepository complaintTypeRepository) {
-        this.complaintTypeRepository = complaintTypeRepository;
+    public static final String SEQ_ESCALATION = "SEQ_EGPGR_ESCALATION";
+    private static final long serialVersionUID = -1317277378596990014L;
+    @Id
+    @GeneratedValue(generator = SEQ_ESCALATION, strategy = GenerationType.SEQUENCE)
+    private Long id;
+
+    @Valid
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "complaint_type_id")
+    private ComplaintType complaintType;
+
+    @NotNull
+    @Column(name = "designation_id")
+    private Long designation;
+
+    @Column(name = "no_of_hrs")
+    private Integer noOfHrs;
+
+    @Override
+    public Long getId() {
+        return id;
     }
 
-    public ComplaintType findByCode(final String code) {
-        return complaintTypeRepository.findByCode(code);
+    @Override
+    public void setId(final Long id) {
+        this.id = id;
     }
+
+    public ComplaintType getComplaintType() {
+        return complaintType;
+    }
+
+    public void setComplaintType(final ComplaintType complaintType) {
+        this.complaintType = complaintType;
+    }
+
+    public Long getDesignation() {
+        return designation;
+    }
+
+    public void setDesignation(final Long designation) {
+        this.designation = designation;
+    }
+
+    public Integer getNoOfHrs() {
+        return noOfHrs;
+    }
+
+    public void setNoOfHrs(final Integer noOfHrs) {
+        this.noOfHrs = noOfHrs;
+    }
+
 }

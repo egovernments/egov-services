@@ -44,21 +44,9 @@ import org.egov.pgr.entity.ComplaintType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 @Repository
 public interface ComplaintTypeRepository extends JpaRepository<ComplaintType, Long> {
 
-    ComplaintType findByName(String name);
-
-    List<ComplaintType> findByIsActiveTrueAndNameContainingIgnoreCase(String name);
-    
-    List<ComplaintType> findByIsActiveTrueAndCategoryIdOrderByNameAsc(Long categoryId);
-
     ComplaintType findByCode(String code);
-
-    List<ComplaintType> findByIsActiveTrueOrderByNameAsc();
-    
-    List<ComplaintType> findByNameContainingIgnoreCase(String name);
 
 }

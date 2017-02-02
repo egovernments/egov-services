@@ -47,7 +47,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.ValidationException;
-import java.util.Date;
 
 @Service
 @Transactional
@@ -55,14 +54,9 @@ public class ComplaintService {
 
     @Autowired
     private ComplaintRepository complaintRepository;
-    @Autowired
-    private ComplaintStatusService complaintStatusService;
 
     @Transactional
     public Complaint createComplaint(Complaint complaint) throws ValidationException {
-        complaint.setStatus(complaintStatusService.getByName("REGISTERED"));
-        complaint.setAssignee(2L);
-        complaint.setEscalationDate(new Date());
         complaintRepository.save(complaint);
         return complaint;
     }

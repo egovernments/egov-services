@@ -6,10 +6,14 @@ import org.egov.pgr.model.*;
 import org.egov.pgr.producer.GrievanceProducer;
 import org.egov.pgr.service.ComplaintService;
 import org.egov.pgr.service.SevaNumberGeneratorServiceImpl;
+import org.egov.pgr.specification.SevaSpecification;
 import org.egov.pgr.validators.FieldErrorDTO;
 import org.egov.pgr.validators.SevaRequestValidator;
 import org.egov.pgr.validators.ValidationErrorDTO;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +23,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
@@ -102,10 +108,34 @@ public class ServiceRequestController {
         return new ResponseEntity<ErrorRes>(response, HttpStatus.BAD_REQUEST);
     }
 
-    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE,
+            headers = {"api_id", "ver", "ts", "action", "did", "msg_id", "requester_id", "auth_token"})
     @ResponseBody
-    public Complaint getAllComplaintTypeByCategory(@RequestParam Long complaintId,
-                                                   @RequestParam String tenantId) {
-        return complaintService.getComplaintById(complaintId);
+    public ServiceRequestRes getSevaDetails(@RequestParam("jurisdiction_id") Long jurisdiction_id,
+                                            @RequestParam(value = "service_request_id", required = false) String service_request_id,
+                                            @RequestParam(value = "service_code", required = false) String service_code,
+                                            @RequestParam(value = "start_date", required = false) @DateTimeFormat(pattern = "dd-MM-yyyy") Date start_date,
+                                            @RequestParam(value = "end_date", required = false) @DateTimeFormat(pattern = "dd-MM-yyyy") Date end_date,
+                                            @RequestParam(value = "status", required = false) String status,
+                                            @RequestParam(value = "last_modified_datetime", required = false) @DateTimeFormat(pattern = "dd-MM-yyyy") Date last_modified_date,
+                                            @RequestHeader HttpHeaders headers) {
+        SevaSearchCriteria sevaSearchCriteria = new SevaSearchCriteria(service_request_id, service_code, start_date,
+                end_date, status, last_modified_date);
+        SevaSpecification sevaSpecification = new SevaSpecification(sevaSearchCriteria);
+        List<Complaint> complaints = complaintService.findAll(sevaSpecification);
+
+        ServiceRequestRes serviceRequestResponse = new ServiceRequestRes();
+        serviceRequestResponse.setServiceRequests(ServiceRequests.createServiceRequestsFromComplaints(complaints));
+        ResponseInfo responseInfo = createResponseInfo(headers);
+        serviceRequestResponse.setResposneInfo(responseInfo);
+        return serviceRequestResponse;
+    }
+
+    private ResponseInfo createResponseInfo(@RequestHeader HttpHeaders headers) {
+        String api_id = headers.getFirst("api_id");
+        String ver = headers.getFirst("ver");
+        String ts = headers.getFirst("ts");
+        String msg_id = headers.getFirst("msg_id");
+        return new ResponseInfo(api_id, ver, ts, "uief87324", msg_id, "true");
     }
 }

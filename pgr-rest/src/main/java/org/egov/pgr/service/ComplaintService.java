@@ -62,6 +62,7 @@ import org.egov.pgr.entity.enums.ComplaintStatus;
 import org.egov.pgr.entity.enums.ReceivingMode;
 import org.egov.pgr.model.ServiceRequest;
 import org.egov.pgr.repository.ComplaintRepository;
+import org.egov.pgr.specification.SevaSpecification;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.CriteriaSpecification;
@@ -102,7 +103,7 @@ public class ComplaintService {
     private JdbcTemplate jdbcTemplate;
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-    
+
     @Transactional
     public Complaint createComplaint(Complaint complaint) throws ValidationException {
         complaint.setStatus(complaintStatusService.getByName("REGISTERED"));
@@ -138,8 +139,13 @@ public class ComplaintService {
 
         return criteria.list();
     }
-    
+
     public List<ReceivingMode> getAllReceivingModes() {
         return Arrays.asList(ReceivingMode.values());
     }
+
+    public List<Complaint> findAll(SevaSpecification sevaSpecification) {
+        return complaintRepository.findAll(sevaSpecification);
+    }
+
 }

@@ -40,7 +40,7 @@ public class AssignmentRestController {
 		EmployeeRes response = new EmployeeRes();
 		response.setResponseInfo(new ResponseInfo("", "", new Date().toString(), "", "", "Successful response"));
 		if (code != null && !code.isEmpty() && asOnDate != null) {
-			response.getAssignment().addAll(assignmentService.getAllActiveEmployeeAssignmentsByEmpCode(code,
+			response.getAssignments().addAll(assignmentService.getAllActiveEmployeeAssignmentsByEmpCode(code,
 					asOnDate.toDateTimeAtStartOfDay().toDate()));
 		} else {
 			throw new Exception();

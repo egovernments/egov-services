@@ -15,22 +15,22 @@ public class EmployeeRes {
 	private ResponseInfo responseInfo = null;
 
 	@JsonProperty("Education")
-	private List<EducationalQualification> education = new ArrayList<EducationalQualification>();
+	private List<EducationalQualification> qualifications = new ArrayList<EducationalQualification>();
 
 	@JsonProperty("Assignment")
-	private List<Assignment> assignment = new ArrayList<Assignment>();
+	private List<Assignment> assignments = new ArrayList<Assignment>();
 
 	@JsonProperty("Jurisdiction")
-	private List<Boundary> jurisdiction = new ArrayList<Boundary>();
+	private List<Boundary> jurisdictions = new ArrayList<Boundary>();
 
 	@JsonProperty("Probation")
-	private List<Probation> probation = new ArrayList<Probation>();
+	private List<Probation> probations = new ArrayList<Probation>();
 
 	@JsonProperty("Service")
-	private List<ServiceHistory> service = new ArrayList<ServiceHistory>();
+	private List<ServiceHistory> services = new ArrayList<ServiceHistory>();
 
 	@JsonProperty("Employee")
-	private List<Employee> employee = new ArrayList<Employee>();
+	private List<Employee> employees = new ArrayList<Employee>();
 
 	public EmployeeRes responseInfo(ResponseInfo responseInfo) {
 		this.responseInfo = responseInfo;
@@ -45,112 +45,116 @@ public class EmployeeRes {
 		this.responseInfo = responseInfo;
 	}
 
-	public EmployeeRes education(List<EducationalQualification> education) {
-		this.education = education;
+	public EmployeeRes education(List<EducationalQualification> qualifications) {
+		this.qualifications = qualifications;
 		return this;
 	}
 
-	public EmployeeRes addEducationItem(EducationalQualification educationItem) {
-		this.education.add(educationItem);
+	public EmployeeRes addEducationItem(EducationalQualification qualifications) {
+		this.qualifications.add(qualifications);
 		return this;
+	}
+
+	public List<EducationalQualification> getQualifications() {
+		return qualifications;
+	}
+
+	public void setQualifications(List<EducationalQualification> qualifications) {
+		this.qualifications = qualifications;
+	}
+
+	public List<Assignment> getAssignments() {
+		return assignments;
+	}
+
+	public void setAssignments(List<Assignment> assignments) {
+		this.assignments = assignments;
+	}
+
+	public List<Boundary> getJurisdictions() {
+		return jurisdictions;
+	}
+
+	public void setJurisdictions(List<Boundary> jurisdictions) {
+		this.jurisdictions = jurisdictions;
+	}
+
+	public List<Probation> getProbations() {
+		return probations;
+	}
+
+	public void setProbations(List<Probation> probations) {
+		this.probations = probations;
+	}
+
+	public List<ServiceHistory> getServices() {
+		return services;
+	}
+
+	public void setServices(List<ServiceHistory> services) {
+		this.services = services;
+	}
+
+	public List<Employee> getEmployees() {
+		return employees;
+	}
+
+	public void setEmployees(List<Employee> employees) {
+		this.employees = employees;
 	}
 
 	public List<EducationalQualification> getEducation() {
-		return education;
+		return qualifications;
 	}
 
-	public void setEducation(List<EducationalQualification> education) {
-		this.education = education;
-	}
-
-	public EmployeeRes assignment(List<Assignment> assignment) {
-		this.assignment = assignment;
+	public EmployeeRes assignment(List<Assignment> assignments) {
+		this.assignments = assignments;
 		return this;
 	}
 
 	public EmployeeRes addAssignmentItem(Assignment assignmentItem) {
-		this.assignment.add(assignmentItem);
+		this.assignments.add(assignmentItem);
 		return this;
 	}
 
-	public List<Assignment> getAssignment() {
-		return assignment;
-	}
-
-	public void setAssignment(List<Assignment> assignment) {
-		this.assignment = assignment;
-	}
-
-	public EmployeeRes jurisdiction(List<Boundary> jurisdiction) {
-		this.jurisdiction = jurisdiction;
+	public EmployeeRes jurisdiction(List<Boundary> jurisdictions) {
+		this.jurisdictions = jurisdictions;
 		return this;
 	}
 
 	public EmployeeRes addJurisdictionItem(Boundary jurisdictionItem) {
-		this.jurisdiction.add(jurisdictionItem);
+		this.jurisdictions.add(jurisdictionItem);
 		return this;
 	}
 
-	public List<Boundary> getJurisdiction() {
-		return jurisdiction;
-	}
-
-	public void setJurisdiction(List<Boundary> jurisdiction) {
-		this.jurisdiction = jurisdiction;
-	}
-
-	public EmployeeRes probation(List<Probation> probation) {
-		this.probation = probation;
+	public EmployeeRes probation(List<Probation> probations) {
+		this.probations = probations;
 		return this;
 	}
 
 	public EmployeeRes addProbationItem(Probation probationItem) {
-		this.probation.add(probationItem);
+		this.probations.add(probationItem);
 		return this;
 	}
 
-	public List<Probation> getProbation() {
-		return probation;
-	}
-
-	public void setProbation(List<Probation> probation) {
-		this.probation = probation;
-	}
-
-	public EmployeeRes service(List<ServiceHistory> service) {
-		this.service = service;
+	public EmployeeRes service(List<ServiceHistory> services) {
+		this.services = services;
 		return this;
 	}
 
 	public EmployeeRes addServiceItem(ServiceHistory serviceItem) {
-		this.service.add(serviceItem);
+		this.services.add(serviceItem);
 		return this;
 	}
 
-	public List<ServiceHistory> getService() {
-		return service;
-	}
-
-	public void setService(List<ServiceHistory> service) {
-		this.service = service;
-	}
-
-	public EmployeeRes employee(List<Employee> employee) {
-		this.employee = employee;
+	public EmployeeRes employee(List<Employee> employees) {
+		this.employees = employees;
 		return this;
 	}
 
 	public EmployeeRes addEmployeeItem(Employee employeeItem) {
-		this.employee.add(employeeItem);
+		this.employees.add(employeeItem);
 		return this;
-	}
-
-	public List<Employee> getEmployee() {
-		return employee;
-	}
-
-	public void setEmployee(List<Employee> employee) {
-		this.employee = employee;
 	}
 
 	@Override
@@ -163,17 +167,17 @@ public class EmployeeRes {
 		}
 		EmployeeRes employeeRes = (EmployeeRes) o;
 		return Objects.equals(this.responseInfo, employeeRes.responseInfo)
-				&& Objects.equals(this.education, employeeRes.education)
-				&& Objects.equals(this.assignment, employeeRes.assignment)
-				&& Objects.equals(this.jurisdiction, employeeRes.jurisdiction)
-				&& Objects.equals(this.probation, employeeRes.probation)
-				&& Objects.equals(this.service, employeeRes.service)
-				&& Objects.equals(this.employee, employeeRes.employee);
+				&& Objects.equals(this.qualifications, employeeRes.qualifications)
+				&& Objects.equals(this.assignments, employeeRes.assignments)
+				&& Objects.equals(this.jurisdictions, employeeRes.jurisdictions)
+				&& Objects.equals(this.probations, employeeRes.probations)
+				&& Objects.equals(this.services, employeeRes.services)
+				&& Objects.equals(this.employees, employeeRes.employees);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(responseInfo, education, assignment, jurisdiction, probation, service, employee);
+		return Objects.hash(responseInfo, qualifications, assignments, jurisdictions, probations, services, employees);
 	}
 
 	@Override
@@ -182,12 +186,12 @@ public class EmployeeRes {
 		sb.append("class EmployeeRes {\n");
 
 		sb.append("    responseInfo: ").append(toIndentedString(responseInfo)).append("\n");
-		sb.append("    education: ").append(toIndentedString(education)).append("\n");
-		sb.append("    assignment: ").append(toIndentedString(assignment)).append("\n");
-		sb.append("    jurisdiction: ").append(toIndentedString(jurisdiction)).append("\n");
-		sb.append("    probation: ").append(toIndentedString(probation)).append("\n");
-		sb.append("    service: ").append(toIndentedString(service)).append("\n");
-		sb.append("    employee: ").append(toIndentedString(employee)).append("\n");
+		sb.append("    education: ").append(toIndentedString(qualifications)).append("\n");
+		sb.append("    assignment: ").append(toIndentedString(assignments)).append("\n");
+		sb.append("    jurisdiction: ").append(toIndentedString(jurisdictions)).append("\n");
+		sb.append("    probation: ").append(toIndentedString(probations)).append("\n");
+		sb.append("    service: ").append(toIndentedString(services)).append("\n");
+		sb.append("    employee: ").append(toIndentedString(employees)).append("\n");
 		sb.append("}");
 		return sb.toString();
 	}

@@ -41,18 +41,18 @@ public class EmployeeRestController {
 		EmployeeRes response = new EmployeeRes();
 		response.setResponseInfo(new ResponseInfo("", "", new Date().toString(), "", "", "Successful response"));
 		if (code != null && !code.isEmpty()) {
-			response.getEmployee().add(employeeService.getByCode(code));
+			response.getEmployees().add(employeeService.getByCode(code));
 		} else if (positionId != null && !positionId.isEmpty() && asOnDate != null) {
-			response.getEmployee().addAll(employeeService.getByPositionAndAsOnDate(Long.parseLong(positionId),
+			response.getEmployees().addAll(employeeService.getByPositionAndAsOnDate(Long.parseLong(positionId),
 					asOnDate.toDateTimeAtStartOfDay().toDate()));
 
 		} else if (assignmentDepartmentCode != null && !assignmentDepartmentCode.isEmpty()
 				&& assignmentDesignationCode != null && !assignmentDesignationCode.isEmpty()) {
-			response.getEmployee().addAll(
+			response.getEmployees().addAll(
 					employeeService.getByDepartmentDesignation(assignmentDepartmentCode, assignmentDesignationCode));
 
 		} else if (roleName != null && !roleName.isEmpty()) {
-			response.getEmployee().addAll(employeeService.getEmployeesByRoleName(roleName));
+			response.getEmployees().addAll(employeeService.getEmployeesByRoleName(roleName));
 		} else {
 			throw new Exception();
 		}

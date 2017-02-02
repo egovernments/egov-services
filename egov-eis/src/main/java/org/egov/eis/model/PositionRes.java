@@ -11,8 +11,8 @@ public class PositionRes {
 	@JsonProperty("ResponseInfo")
 	private ResponseInfo responseInfo = null;
 
-	@JsonProperty("Position")
-	private List<Position> position = new ArrayList<Position>();
+	@JsonProperty("Positions")
+	private List<Position> positions = new ArrayList<Position>();
 
 	public PositionRes responseInfo(ResponseInfo responseInfo) {
 		this.responseInfo = responseInfo;
@@ -27,22 +27,22 @@ public class PositionRes {
 		this.responseInfo = responseInfo;
 	}
 
-	public PositionRes position(List<Position> position) {
-		this.position = position;
+	public PositionRes position(List<Position> positions) {
+		this.positions = positions;
 		return this;
 	}
 
 	public PositionRes addPositionItem(Position positionItem) {
-		this.position.add(positionItem);
+		this.positions.add(positionItem);
 		return this;
 	}
 
 	public List<Position> getPosition() {
-		return position;
+		return positions;
 	}
 
-	public void setPosition(List<Position> position) {
-		this.position = position;
+	public void setPosition(List<Position> positions) {
+		this.positions = positions;
 	}
 
 	@Override
@@ -55,12 +55,12 @@ public class PositionRes {
 		}
 		PositionRes positionRes = (PositionRes) o;
 		return Objects.equals(this.responseInfo, positionRes.responseInfo)
-				&& Objects.equals(this.position, positionRes.position);
+				&& Objects.equals(this.positions, positionRes.positions);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(responseInfo, position);
+		return Objects.hash(responseInfo, positions);
 	}
 
 	@Override
@@ -69,7 +69,7 @@ public class PositionRes {
 		sb.append("class PositionRes {\n");
 
 		sb.append("    responseInfo: ").append(toIndentedString(responseInfo)).append("\n");
-		sb.append("    position: ").append(toIndentedString(position)).append("\n");
+		sb.append("    position: ").append(toIndentedString(positions)).append("\n");
 		sb.append("}");
 		return sb.toString();
 	}

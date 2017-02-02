@@ -12,8 +12,8 @@ public class PositionHierarchyRes {
 	@JsonProperty("ResponseInfo")
 	private ResponseInfo responseInfo = null;
 
-	@JsonProperty("PositionHierarchy")
-	private List<PositionHierarchy> positionHierarchy = new ArrayList<PositionHierarchy>();
+	@JsonProperty("PositionHierarchies")
+	private List<PositionHierarchy> positionHierarchies = new ArrayList<PositionHierarchy>();
 
 	public PositionHierarchyRes responseInfo(ResponseInfo responseInfo) {
 		this.responseInfo = responseInfo;
@@ -28,22 +28,22 @@ public class PositionHierarchyRes {
 		this.responseInfo = responseInfo;
 	}
 
-	public PositionHierarchyRes positionHierarchy(List<PositionHierarchy> positionHierarchy) {
-		this.positionHierarchy = positionHierarchy;
+	public PositionHierarchyRes positionHierarchy(List<PositionHierarchy> positionHierarchies) {
+		this.positionHierarchies = positionHierarchies;
 		return this;
 	}
 
 	public PositionHierarchyRes addPositionHierarchyItem(PositionHierarchy positionHierarchyItem) {
-		this.positionHierarchy.add(positionHierarchyItem);
+		this.positionHierarchies.add(positionHierarchyItem);
 		return this;
 	}
 
-	public List<PositionHierarchy> getPositionHierarchy() {
-		return positionHierarchy;
+	public List<PositionHierarchy> getPositionHierarchies() {
+		return positionHierarchies;
 	}
 
-	public void setPositionHierarchy(List<PositionHierarchy> positionHierarchy) {
-		this.positionHierarchy = positionHierarchy;
+	public void setPositionHierarchies(List<PositionHierarchy> positionHierarchies) {
+		this.positionHierarchies = positionHierarchies;
 	}
 
 	@Override
@@ -56,12 +56,12 @@ public class PositionHierarchyRes {
 		}
 		PositionHierarchyRes positionHierarchyRes = (PositionHierarchyRes) o;
 		return Objects.equals(this.responseInfo, positionHierarchyRes.responseInfo)
-				&& Objects.equals(this.positionHierarchy, positionHierarchyRes.positionHierarchy);
+				&& Objects.equals(this.positionHierarchies, positionHierarchyRes.positionHierarchies);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(responseInfo, positionHierarchy);
+		return Objects.hash(responseInfo, positionHierarchies);
 	}
 
 	@Override
@@ -70,7 +70,7 @@ public class PositionHierarchyRes {
 		sb.append("class PositionHierarchyRes {\n");
 
 		sb.append("    responseInfo: ").append(toIndentedString(responseInfo)).append("\n");
-		sb.append("    position: ").append(toIndentedString(positionHierarchy)).append("\n");
+		sb.append("    position: ").append(toIndentedString(positionHierarchies)).append("\n");
 		sb.append("}");
 		return sb.toString();
 	}

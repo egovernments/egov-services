@@ -37,96 +37,86 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.eis.entity;
 
-import static org.egov.eis.entity.PositionHierarchy.SEQ_POSITIONHIERARCHY;
+package org.egov.workflow.entity;
 
-import javax.persistence.Column;
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name = "egeis_position_hierarchy")
-@SequenceGenerator(name = SEQ_POSITIONHIERARCHY, sequenceName = SEQ_POSITIONHIERARCHY, allocationSize = 1)
-@JsonIgnoreProperties(value = { "handler", "hibernateLazyInitializer" })
-public class PositionHierarchy extends AbstractAuditable {
+//@Unique(id = "id", tableName = "egpgr_complainttype_category", fields = { "name" }, columnName = { "name", }, enableDfltMsg = true)
+@Table(name = "egpgr_complainttype_category")
+@SequenceGenerator(name = ComplaintTypeCategory.SEQ_COMP_TYPE_CATEGORY, sequenceName = ComplaintTypeCategory.SEQ_COMP_TYPE_CATEGORY, allocationSize = 1)
+public class ComplaintTypeCategory extends AbstractPersistable<Long> {
+    private static final long serialVersionUID = 2739365086791183614L;
 
-	public static final String SEQ_POSITIONHIERARCHY = "SEQ_EGEIS_POSITION_HIERARCHY";
+    public static final String SEQ_COMP_TYPE_CATEGORY = "SEQ_EGPGR_COMPLAINTTYPE_CATEGORY";
 
-	private static final long serialVersionUID = 8666462146278384384L;
+    @Id
+    @GeneratedValue(generator = SEQ_COMP_TYPE_CATEGORY, strategy = GenerationType.SEQUENCE)
+    private Long id;
 
-	@Id
-	@GeneratedValue(generator = SEQ_POSITIONHIERARCHY, strategy = GenerationType.SEQUENCE)
-	private Long id;
+    @NotNull
+    @SafeHtml
+    @Length(min = 5, max = 100)
+    private String name;
 
-	@NotNull
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "position_from")
-	private Position fromPosition;
+    @SafeHtml
+    @Length(max = 250)
+    private String description;
 
-	@NotNull
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "position_to")
-	private Position toPosition;
+    @OneToMany(mappedBy = "category", fetch = FetchType.EAGER)
+    @Fetch(FetchMode.SUBSELECT)
+    @JsonIgnore
+    private List<ComplaintType> complaintTypes;
 
-	@NotNull
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "object_type_id")
-	private ObjectType objectType;
+    @Override
+    protected void setId(final Long id) {
+        this.id = id;
+    }
 
-	@Column(name = "object_sub_type")
-	private String objectSubType;
+    @Override
+    public Long getId() {
+        return id;
+    }
 
-	public Position getFromPosition() {
-		return fromPosition;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setFromPosition(Position fromPosition) {
-		this.fromPosition = fromPosition;
-	}
+    public void setName(final String name) {
+        this.name = name;
+    }
 
-	public Position getToPosition() {
-		return toPosition;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public void setToPosition(Position toPosition) {
-		this.toPosition = toPosition;
-	}
+    public void setDescription(final String description) {
+        this.description = description;
+    }
 
-	public ObjectType getObjectType() {
-		return objectType;
-	}
+    public List<ComplaintType> getComplaintTypes() {
+        return complaintTypes;
+    }
 
-	public void setObjectType(ObjectType objectType) {
-		this.objectType = objectType;
-	}
-
-	public String getObjectSubType() {
-		return objectSubType;
-	}
-
-	public void setObjectSubType(String objectSubType) {
-		this.objectSubType = objectSubType;
-	}
-
-	@Override
-	public Long getId() {
-		return this.id;
-	}
-
-	@Override
-	public void setId(Long id) {
-		this.id = id;
-	}
-
+    public void setComplaintTypes(final List<ComplaintType> complaintTypes) {
+        this.complaintTypes = complaintTypes;
+    }
 }

@@ -38,7 +38,7 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.entity;
+package org.egov.workflow.entity;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -52,88 +52,76 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 @Entity
 @Table(name = "eg_position")
 @SequenceGenerator(name = Position.SEQ_POSITION, sequenceName = Position.SEQ_POSITION, allocationSize = 1)
-@JsonIgnoreProperties(value = { "handler", "hibernateLazyInitializer" })
 public class Position extends AbstractAuditable {
+    public static final String SEQ_POSITION = "SEQ_EG_POSITION";
+    private static final long serialVersionUID = -7237503685614187960L;
+    @Id
+    @GeneratedValue(generator = SEQ_POSITION, strategy = GenerationType.SEQUENCE)
+    private Long id;
 
-	public static final String SEQ_POSITION = "SEQ_EG_POSITION";
+    @Column(name = "name", unique = true)
+    private String name;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "deptDesig")
+    private DeptDesig deptDesig;
+    private boolean isPostOutsourced;
 
-	private static final long serialVersionUID = -7237503685614187960L;
+    @Override
+    public Long getId() {
+        return id;
+    }
 
-	@Id
-	@GeneratedValue(generator = SEQ_POSITION, strategy = GenerationType.SEQUENCE)
-	private Long id;
+    @Override
+    public void setId(final Long id) {
+        this.id = id;
+    }
 
-	@Column(name = "name", unique = true)
-	private String name;
+    public String getName() {
+        return name;
+    }
 
-	@JsonIgnore
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn(name = "deptDesig")
-	private DeptDesig deptDesig;
+    public void setName(final String name) {
+        this.name = name;
+    }
 
-	private boolean isPostOutsourced;
+    public boolean isPostOutsourced() {
+        return isPostOutsourced;
+    }
 
-	@Override
-	public Long getId() {
-		return id;
-	}
+    public void setPostOutsourced(final boolean isPostOutsourced) {
+        this.isPostOutsourced = isPostOutsourced;
+    }
 
-	@Override
-	public void setId(final Long id) {
-		this.id = id;
-	}
+    public boolean getIsPostOutsourced() {
+        return isPostOutsourced;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public void setIsPostOutsourced(final boolean isPostOutsourced) {
+        this.isPostOutsourced = isPostOutsourced;
+    }
 
-	public void setName(final String name) {
-		this.name = name;
-	}
+    public DeptDesig getDeptDesig() {
+        return deptDesig;
+    }
 
-	public boolean isPostOutsourced() {
-		return isPostOutsourced;
-	}
+    public void setDeptDesig(final DeptDesig deptDesig) {
+        this.deptDesig = deptDesig;
+    }
 
-	public void setPostOutsourced(final boolean isPostOutsourced) {
-		this.isPostOutsourced = isPostOutsourced;
-	}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Position)) return false;
+        Position position = (Position) o;
+        return this.getName().equals(position.getName());
+    }
 
-	public boolean getIsPostOutsourced() {
-		return isPostOutsourced;
-	}
-
-	public void setIsPostOutsourced(final boolean isPostOutsourced) {
-		this.isPostOutsourced = isPostOutsourced;
-	}
-
-	public DeptDesig getDeptDesig() {
-		return deptDesig;
-	}
-
-	public void setDeptDesig(final DeptDesig deptDesig) {
-		this.deptDesig = deptDesig;
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (!(o instanceof Position))
-			return false;
-		Position position = (Position) o;
-		return this.getName().equals(position.getName());
-	}
-
-	@Override
-	public int hashCode() {
-		return 31 * this.getName().hashCode();
-	}
+    @Override
+    public int hashCode() {
+        return 31 * this.getName().hashCode();
+    }
 
 }

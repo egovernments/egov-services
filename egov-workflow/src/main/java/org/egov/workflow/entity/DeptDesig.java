@@ -38,10 +38,8 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.entity;
+package org.egov.workflow.entity;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -52,88 +50,64 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 @Entity
-@Table(name = "eg_position")
-@SequenceGenerator(name = Position.SEQ_POSITION, sequenceName = Position.SEQ_POSITION, allocationSize = 1)
-@JsonIgnoreProperties(value = { "handler", "hibernateLazyInitializer" })
-public class Position extends AbstractAuditable {
+@Table(name = "egeis_deptdesig")
+@SequenceGenerator(name = DeptDesig.SEQ_DEPTDESIG, sequenceName = DeptDesig.SEQ_DEPTDESIG, allocationSize = 1)
+public class DeptDesig extends AbstractAuditable {
+    public static final String SEQ_DEPTDESIG = "SEQ_egeis_deptdesig";
+    private static final long serialVersionUID = 6184300877653586028L;
+    @Id
+    @GeneratedValue(generator = SEQ_DEPTDESIG, strategy = GenerationType.SEQUENCE)
+    private Long id;
 
-	public static final String SEQ_POSITION = "SEQ_EG_POSITION";
+   // @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "designation")
+    private String designation;
 
-	private static final long serialVersionUID = -7237503685614187960L;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "department")
+    private Department department;
+    private Integer sanctionedPosts;
+    private Integer outsourcedPosts;
 
-	@Id
-	@GeneratedValue(generator = SEQ_POSITION, strategy = GenerationType.SEQUENCE)
-	private Long id;
+    public Long getId() {
+        return id;
+    }
 
-	@Column(name = "name", unique = true)
-	private String name;
+    public void setId(final Long id) {
+        this.id = id;
+    }
 
-	@JsonIgnore
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn(name = "deptDesig")
-	private DeptDesig deptDesig;
+   /* public Designation getDesignation() {
+        return designation;
+    }
 
-	private boolean isPostOutsourced;
+    public void setDesignation(final Designation designation) {
+        this.designation = designation;
+    }*/
 
-	@Override
-	public Long getId() {
-		return id;
-	}
+    public Department getDepartment() {
+        return department;
+    }
 
-	@Override
-	public void setId(final Long id) {
-		this.id = id;
-	}
+    public void setDepartment(final Department department) {
+        this.department = department;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public Integer getSanctionedPosts() {
+        return sanctionedPosts;
+    }
 
-	public void setName(final String name) {
-		this.name = name;
-	}
+    public void setSanctionedPosts(final Integer sanctionedPosts) {
+        this.sanctionedPosts = sanctionedPosts;
+    }
 
-	public boolean isPostOutsourced() {
-		return isPostOutsourced;
-	}
+    public Integer getOutsourcedPosts() {
+        return outsourcedPosts;
+    }
 
-	public void setPostOutsourced(final boolean isPostOutsourced) {
-		this.isPostOutsourced = isPostOutsourced;
-	}
-
-	public boolean getIsPostOutsourced() {
-		return isPostOutsourced;
-	}
-
-	public void setIsPostOutsourced(final boolean isPostOutsourced) {
-		this.isPostOutsourced = isPostOutsourced;
-	}
-
-	public DeptDesig getDeptDesig() {
-		return deptDesig;
-	}
-
-	public void setDeptDesig(final DeptDesig deptDesig) {
-		this.deptDesig = deptDesig;
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (!(o instanceof Position))
-			return false;
-		Position position = (Position) o;
-		return this.getName().equals(position.getName());
-	}
-
-	@Override
-	public int hashCode() {
-		return 31 * this.getName().hashCode();
-	}
+    public void setOutsourcedPosts(final Integer outsourcedPosts) {
+        this.outsourcedPosts = outsourcedPosts;
+    }
 
 }

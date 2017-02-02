@@ -37,13 +37,10 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.eis.entity;
 
-import static org.egov.eis.entity.PositionHierarchy.SEQ_POSITIONHIERARCHY;
+package org.egov.workflow.entity;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -53,80 +50,61 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-@Table(name = "egeis_position_hierarchy")
-@SequenceGenerator(name = SEQ_POSITIONHIERARCHY, sequenceName = SEQ_POSITIONHIERARCHY, allocationSize = 1)
-@JsonIgnoreProperties(value = { "handler", "hibernateLazyInitializer" })
-public class PositionHierarchy extends AbstractAuditable {
+@Table(name = "egpgr_router")
+@SequenceGenerator(name = ComplaintRouter.SEQ_COMPLAINTROUTER, sequenceName = ComplaintRouter.SEQ_COMPLAINTROUTER, allocationSize = 1)
+public class ComplaintRouter extends AbstractAuditable {
 
-	public static final String SEQ_POSITIONHIERARCHY = "SEQ_EGEIS_POSITION_HIERARCHY";
+    private static final long serialVersionUID = 5691022600220045218L;
+    public static final String SEQ_COMPLAINTROUTER = "SEQ_EGPGR_ROUTER";
 
-	private static final long serialVersionUID = 8666462146278384384L;
+    @Id
+    @GeneratedValue(generator = SEQ_COMPLAINTROUTER, strategy = GenerationType.SEQUENCE)
+    private Long id;
 
-	@Id
-	@GeneratedValue(generator = SEQ_POSITIONHIERARCHY, strategy = GenerationType.SEQUENCE)
-	private Long id;
+    @ManyToOne
+    @JoinColumn(name = "complainttypeid")
+    private ComplaintType complaintType;
 
-	@NotNull
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "position_from")
-	private Position fromPosition;
+    @ManyToOne
+    @JoinColumn(name = "bndryid")
+    private Boundary boundary;
 
-	@NotNull
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "position_to")
-	private Position toPosition;
+    @ManyToOne
+    @NotNull
+    @JoinColumn(name = "position")
+    private Position position;
 
-	@NotNull
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "object_type_id")
-	private ObjectType objectType;
+    public Long getId() {
+        return id;
+    }
 
-	@Column(name = "object_sub_type")
-	private String objectSubType;
+    public void setId(final Long id) {
+        this.id = id;
+    }
 
-	public Position getFromPosition() {
-		return fromPosition;
-	}
+    public ComplaintType getComplaintType() {
+        return complaintType;
+    }
 
-	public void setFromPosition(Position fromPosition) {
-		this.fromPosition = fromPosition;
-	}
+    public void setComplaintType(final ComplaintType complaintType) {
+        this.complaintType = complaintType;
+    }
 
-	public Position getToPosition() {
-		return toPosition;
-	}
+    public Position getPosition() {
+        return position;
+    }
 
-	public void setToPosition(Position toPosition) {
-		this.toPosition = toPosition;
-	}
+    public void setPosition(final Position position) {
+        this.position = position;
+    }
 
-	public ObjectType getObjectType() {
-		return objectType;
-	}
+    public Boundary getBoundary() {
+        return boundary;
+    }
 
-	public void setObjectType(ObjectType objectType) {
-		this.objectType = objectType;
-	}
-
-	public String getObjectSubType() {
-		return objectSubType;
-	}
-
-	public void setObjectSubType(String objectSubType) {
-		this.objectSubType = objectSubType;
-	}
-
-	@Override
-	public Long getId() {
-		return this.id;
-	}
-
-	@Override
-	public void setId(Long id) {
-		this.id = id;
-	}
-
+    public void setBoundary(final Boundary boundary) {
+        this.boundary = boundary;
+    }
 }

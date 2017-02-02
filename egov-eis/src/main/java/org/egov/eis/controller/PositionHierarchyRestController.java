@@ -30,7 +30,7 @@ public class PositionHierarchyRestController {
 			@RequestParam(value = "objectType") String objectType,
 			@RequestParam(value = "objectSubType") String objectSubType,
 			@RequestParam(value = "fromPosition") String fromPosition,
-			@RequestParam(value = "toPosition") String toPosition,
+			@RequestParam(value = "toPosition",required = false) String toPosition,
 			@RequestParam(value = "pageSize", required = false, defaultValue = "20") Integer pageSize,
 			@RequestParam(value = "pageNumber", required = false, defaultValue = "1") Integer pageNumber,
 			@RequestParam(value = "sort", required = false, defaultValue = "[-objectType]") List<String> sort)
@@ -40,23 +40,23 @@ public class PositionHierarchyRestController {
 		response.setResponseInfo(new ResponseInfo("", "", new Date().toString(), "", "", "Successful response"));
 		if (objectType != null && !objectType.isEmpty() && objectSubType != null && !objectSubType.isEmpty()
 				&& fromPosition != null && !fromPosition.isEmpty() && toPosition != null && !toPosition.isEmpty()) {
-			response.getPositionHierarchy()
+			response.getPositionHierarchies()
 					.add(positionHierarchyService.getPosHirByFromAndToPosAndObjectTypeAndObjectSubType(
 							Long.valueOf(fromPosition), Long.valueOf(toPosition),objectType,
 							objectSubType));
 		} else if (objectType != null && !objectType.isEmpty() && objectSubType != null && !objectSubType.isEmpty()
 				&& fromPosition != null && !fromPosition.isEmpty() && (toPosition == null || toPosition.isEmpty())) {
-			response.getPositionHierarchy().add(positionHierarchyService.getPosHirByPosAndObjectTypeAndObjectSubType(
+			response.getPositionHierarchies().add(positionHierarchyService.getPosHirByPosAndObjectTypeAndObjectSubType(
 					Long.valueOf(fromPosition),objectType, objectSubType));
 		} else if (objectType != null && !objectType.isEmpty() && objectSubType != null && !objectSubType.isEmpty()
 				&& ((fromPosition == null || fromPosition.isEmpty()) && (toPosition == null || toPosition.isEmpty()))) {
-			response.getPositionHierarchy().addAll(positionHierarchyService
+			response.getPositionHierarchies().addAll(positionHierarchyService
 					.getPosHirByObjectTypeAndObjectSubType(objectType, objectSubType));
 		} else if (objectType != null && !objectType.isEmpty()
 				&& ((objectSubType == null || objectSubType.isEmpty())
 						&& (fromPosition == null || fromPosition.isEmpty())
 						&& (toPosition == null || toPosition.isEmpty()))) {
-			response.getPositionHierarchy().addAll(
+			response.getPositionHierarchies().addAll(
 					positionHierarchyService.getListOfPositionHeirarchyByObjectType(objectType));
 		} else {
 			throw new Exception();

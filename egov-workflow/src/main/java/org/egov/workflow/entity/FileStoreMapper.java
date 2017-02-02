@@ -38,102 +38,76 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.entity;
+package org.egov.workflow.entity;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.validator.constraints.NotBlank;
 
+@Table(name = "eg_filestoremap")
 @Entity
-@Table(name = "eg_position")
-@SequenceGenerator(name = Position.SEQ_POSITION, sequenceName = Position.SEQ_POSITION, allocationSize = 1)
-@JsonIgnoreProperties(value = { "handler", "hibernateLazyInitializer" })
-public class Position extends AbstractAuditable {
+@SequenceGenerator(name = FileStoreMapper.SEQ_FILESTOREMAPPER, sequenceName = FileStoreMapper.SEQ_FILESTOREMAPPER, allocationSize = 1)
+public class FileStoreMapper extends AbstractPersistable<Long> {
+    public static final String SEQ_FILESTOREMAPPER = "SEQ_EG_FILESTOREMAP";
+    private static final long serialVersionUID = -2997164207274266823L;
+    @Id
+    @GeneratedValue(generator = SEQ_FILESTOREMAPPER, strategy = GenerationType.SEQUENCE)
+    private Long id;
 
-	public static final String SEQ_POSITION = "SEQ_EG_POSITION";
+    @NotBlank
+    @Column(length = 36, unique = true, nullable = false)
+    private String fileStoreId;
 
-	private static final long serialVersionUID = -7237503685614187960L;
+    @NotBlank
+    private String fileName;
 
-	@Id
-	@GeneratedValue(generator = SEQ_POSITION, strategy = GenerationType.SEQUENCE)
-	private Long id;
+    private String contentType;
 
-	@Column(name = "name", unique = true)
-	private String name;
+    protected FileStoreMapper() {
+        // For JPA
+    }
 
-	@JsonIgnore
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn(name = "deptDesig")
-	private DeptDesig deptDesig;
+    public FileStoreMapper(final String fileStoreId, final String fileName) {
+        this.fileStoreId = fileStoreId;
+        this.fileName = fileName;
+    }
 
-	private boolean isPostOutsourced;
+    public Long getId() {
+        return id;
+    }
 
-	@Override
-	public Long getId() {
-		return id;
-	}
+    public void setId(final Long id) {
+        this.id = id;
+    }
 
-	@Override
-	public void setId(final Long id) {
-		this.id = id;
-	}
+    public String getFileStoreId() {
+        return fileStoreId;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public void setFileStoreId(final String fileStoreId) {
+        this.fileStoreId = fileStoreId;
+    }
 
-	public void setName(final String name) {
-		this.name = name;
-	}
+    public String getFileName() {
+        return fileName;
+    }
 
-	public boolean isPostOutsourced() {
-		return isPostOutsourced;
-	}
+    public void setFileName(final String fileName) {
+        this.fileName = fileName;
+    }
 
-	public void setPostOutsourced(final boolean isPostOutsourced) {
-		this.isPostOutsourced = isPostOutsourced;
-	}
+    public String getContentType() {
+        return contentType;
+    }
 
-	public boolean getIsPostOutsourced() {
-		return isPostOutsourced;
-	}
-
-	public void setIsPostOutsourced(final boolean isPostOutsourced) {
-		this.isPostOutsourced = isPostOutsourced;
-	}
-
-	public DeptDesig getDeptDesig() {
-		return deptDesig;
-	}
-
-	public void setDeptDesig(final DeptDesig deptDesig) {
-		this.deptDesig = deptDesig;
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (!(o instanceof Position))
-			return false;
-		Position position = (Position) o;
-		return this.getName().equals(position.getName());
-	}
-
-	@Override
-	public int hashCode() {
-		return 31 * this.getName().hashCode();
-	}
+    public void setContentType(final String contentType) {
+        this.contentType = contentType;
+    }
 
 }

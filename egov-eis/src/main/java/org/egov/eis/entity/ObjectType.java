@@ -41,6 +41,9 @@ package org.egov.eis.entity;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(value = { "handler", "hibernateLazyInitializer" })
 public class ObjectType {
 	Integer id;
 	String type;

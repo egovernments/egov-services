@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.boundary.model.Boundary;
-import org.egov.boundary.model.BoundaryType;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

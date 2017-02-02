@@ -35,8 +35,7 @@ public class BoundaryController {
 
 	@PostMapping
 	@ResponseBody
-	public ResponseEntity<?> create(@RequestBody @Valid BoundaryRequest boundaryRequest,
-			BindingResult errors) {
+	public ResponseEntity<?> create(@RequestBody @Valid BoundaryRequest boundaryRequest, BindingResult errors) {
 
 		if (errors.hasErrors()) {
 			ErrorResponse errRes = populateErrors(errors);
@@ -54,11 +53,11 @@ public class BoundaryController {
 		boundaryResponse.setResponseInfo(responseInfo);
 		return new ResponseEntity<BoundaryResponse>(boundaryResponse, HttpStatus.CREATED);
 	}
-	
+
 	@PutMapping(value = "/{code}")
 	@ResponseBody
-	public ResponseEntity<?> update(@RequestBody @Valid BoundaryRequest boundaryRequest,
-			BindingResult errors,@PathVariable String code)  {
+	public ResponseEntity<?> update(@RequestBody @Valid BoundaryRequest boundaryRequest, BindingResult errors,
+			@PathVariable String code) {
 
 		if (errors.hasErrors()) {
 			ErrorResponse errRes = populateErrors(errors);
@@ -66,10 +65,10 @@ public class BoundaryController {
 		}
 		RequestInfo requestInfo = boundaryRequest.getRequestInfo();
 		Boundary boundaryFromDb = boundaryService.findByCode(code);
-		Boundary boundary =	boundaryRequest.getBoundary();
+		Boundary boundary = boundaryRequest.getBoundary();
 		boundary.setId(boundaryFromDb.getId());
 		boundary.setVersion(boundaryFromDb.getVersion());
-		boundary= boundaryService.updateBoundary(boundary);
+		boundary = boundaryService.updateBoundary(boundary);
 
 		BoundaryResponse boundaryResponse = new BoundaryResponse();
 		boundaryResponse.getBoundarys().add(boundary);
@@ -80,21 +79,16 @@ public class BoundaryController {
 		boundaryResponse.setResponseInfo(responseInfo);
 		return new ResponseEntity<BoundaryResponse>(boundaryResponse, HttpStatus.CREATED);
 	}
-	
-	
-	
+
 	@GetMapping
 	@ResponseBody
 	public ResponseEntity<?> search(@ModelAttribute BoundaryRequest boundaryRequest) {
 
-		 
-		
 		BoundaryResponse boundaryResponse = new BoundaryResponse();
 		List<Boundary> allBoundarys = boundaryService.getAllBoundary(boundaryRequest);
 		boundaryResponse.getBoundarys().addAll(allBoundarys);
 		ResponseInfo responseInfo = new ResponseInfo();
 		responseInfo.setStatus(HttpStatus.CREATED.toString());
-		//responseInfo.setApi_id(body.getRequestInfo().getApi_id());
 		boundaryResponse.setResponseInfo(responseInfo);
 		return new ResponseEntity<BoundaryResponse>(boundaryResponse, HttpStatus.OK);
 	}
@@ -109,10 +103,8 @@ public class BoundaryController {
 		Error error = new Error();
 		error.setCode(1);
 		error.setDescription("Error while binding request");
-		if(errors.hasFieldErrors())
-		{
-			for(FieldError errs :  errors.getFieldErrors())
-			{
+		if (errors.hasFieldErrors()) {
+			for (FieldError errs : errors.getFieldErrors()) {
 				error.getFilelds().add(errs.getField());
 				error.getFilelds().add(errs.getRejectedValue());
 			}

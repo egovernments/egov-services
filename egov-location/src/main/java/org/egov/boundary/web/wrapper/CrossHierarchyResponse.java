@@ -3,7 +3,6 @@ package org.egov.boundary.web.wrapper;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.egov.boundary.model.Boundary;
 import org.egov.boundary.model.CrossHierarchy;
 
 import com.fasterxml.jackson.annotation.JsonProperty;

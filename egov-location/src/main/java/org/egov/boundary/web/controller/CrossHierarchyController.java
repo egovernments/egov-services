@@ -1,21 +1,19 @@
 package org.egov.boundary.web.controller;
 
-import java.net.URI;
 import java.util.List;
 
 import javax.validation.Valid;
 
 import org.egov.boundary.model.CrossHierarchy;
 import org.egov.boundary.service.CrossHierarchyService;
-import org.egov.boundary.web.wrapper.Error;
-import org.egov.boundary.web.wrapper.ErrorResponse;
 import org.egov.boundary.web.wrapper.CrossHierarchyRequest;
 import org.egov.boundary.web.wrapper.CrossHierarchyResponse;
+import org.egov.boundary.web.wrapper.Error;
+import org.egov.boundary.web.wrapper.ErrorResponse;
 import org.egov.boundary.web.wrapper.RequestInfo;
 import org.egov.boundary.web.wrapper.ResponseInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -56,11 +54,11 @@ public class CrossHierarchyController {
 		crossHierarchyResponse.setResponseInfo(responseInfo);
 		return new ResponseEntity<CrossHierarchyResponse>(crossHierarchyResponse, HttpStatus.CREATED);
 	}
-	
+
 	@PutMapping(value = "/{code}")
 	@ResponseBody
 	public ResponseEntity<?> update(@RequestBody @Valid CrossHierarchyRequest crossHierarchyRequest,
-			BindingResult errors,@PathVariable String code)  {
+			BindingResult errors, @PathVariable String code) {
 
 		if (errors.hasErrors()) {
 			ErrorResponse errRes = populateErrors(errors);
@@ -68,10 +66,10 @@ public class CrossHierarchyController {
 		}
 		RequestInfo requestInfo = crossHierarchyRequest.getRequestInfo();
 		CrossHierarchy crossHierarchyFromDb = crossHierarchyService.findByCode(code);
-		CrossHierarchy crossHierarchy =	crossHierarchyRequest.getCrossHierarchy();
+		CrossHierarchy crossHierarchy = crossHierarchyRequest.getCrossHierarchy();
 		crossHierarchy.setId(crossHierarchyFromDb.getId());
 		crossHierarchy.setVersion(crossHierarchyFromDb.getVersion());
-		crossHierarchy= crossHierarchyService.update(crossHierarchy);
+		crossHierarchy = crossHierarchyService.update(crossHierarchy);
 
 		CrossHierarchyResponse crossHierarchyResponse = new CrossHierarchyResponse();
 		crossHierarchyResponse.getCrossHierarchys().add(crossHierarchy);
@@ -82,21 +80,17 @@ public class CrossHierarchyController {
 		crossHierarchyResponse.setResponseInfo(responseInfo);
 		return new ResponseEntity<CrossHierarchyResponse>(crossHierarchyResponse, HttpStatus.CREATED);
 	}
-	
-	
-	
+
 	@GetMapping
 	@ResponseBody
 	public ResponseEntity<?> search(@ModelAttribute CrossHierarchyRequest crossHierarchyRequest) {
 
-		 
-		
 		CrossHierarchyResponse crossHierarchyResponse = new CrossHierarchyResponse();
 		List<CrossHierarchy> allCrossHierarchys = crossHierarchyService.getAllCrossHierarchys();
 		crossHierarchyResponse.getCrossHierarchys().addAll(allCrossHierarchys);
 		ResponseInfo responseInfo = new ResponseInfo();
-		responseInfo.setStatus(HttpStatus.CREATED.toString());
-		//responseInfo.setApi_id(body.getRequestInfo().getApi_id());
+		responseInfo.setStatus(HttpStatus.OK.toString());
+		// responseInfo.setApi_id(body.getRequestInfo().getApi_id());
 		crossHierarchyResponse.setResponseInfo(responseInfo);
 		return new ResponseEntity<CrossHierarchyResponse>(crossHierarchyResponse, HttpStatus.OK);
 	}
@@ -111,10 +105,8 @@ public class CrossHierarchyController {
 		Error error = new Error();
 		error.setCode(1);
 		error.setDescription("Error while binding request");
-		if(errors.hasFieldErrors())
-		{
-			for(FieldError errs :  errors.getFieldErrors())
-			{
+		if (errors.hasFieldErrors()) {
+			for (FieldError errs : errors.getFieldErrors()) {
 				error.getFilelds().add(errs.getField());
 				error.getFilelds().add(errs.getRejectedValue());
 			}

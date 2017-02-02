@@ -41,7 +41,6 @@
 package org.egov.boundary.service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.egov.boundary.model.Boundary;
@@ -51,7 +50,6 @@ import org.egov.boundary.repository.CrossHierarchyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 @Service
 @Transactional(readOnly = true)
@@ -166,6 +164,7 @@ public class CrossHierarchyService {
 	}
 
 	public List<CrossHierarchy> getAllCrossHierarchys() {
+		
 		return crossHierarchyRepository.findAll(); 
 	}
 }

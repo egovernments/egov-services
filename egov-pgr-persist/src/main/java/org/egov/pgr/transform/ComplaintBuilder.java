@@ -11,7 +11,6 @@ import org.egov.pgr.service.EscalationService;
 import org.egov.pgr.service.PositionService;
 import org.springframework.beans.BeanUtils;
 
-import java.util.Date;
 import java.util.Objects;
 
 public class ComplaintBuilder {
@@ -31,9 +30,12 @@ public class ComplaintBuilder {
     }
 
     public Complaint build() {
-        BeanUtils.copyProperties(this.serviceRequest, complaint);
         this.complaint.setCrn(this.serviceRequest.getCrn());
+        this.complaint.setLat(this.serviceRequest.getLat());
+        this.complaint.setLng(this.serviceRequest.getLng());
         this.complaint.setDetails(this.serviceRequest.getDetails());
+        this.complaint.setLandmarkDetails(this.serviceRequest.getLandmarkDetails());
+        this.complaint.setEscalationDate(this.serviceRequest.getEscalationDate());
         setComplainant();
         setReceivingMode();
         setComplaintType();
@@ -56,7 +58,8 @@ public class ComplaintBuilder {
     }
 
     private void setEscalationDate() {
-        Long designationId = new PositionService().designationIdForAsignee(this.complaint.getAssignee());
+        //TODO - pass in tenant id correctly
+        Long designationId = new PositionService().designationIdForAssignee("", this.complaint.getAssignee());
         this.complaint.setEscalationDate(escalationService.getExpiryDate(this.complaint, designationId));
     }
 

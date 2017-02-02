@@ -40,17 +40,15 @@
 
 package org.egov.pgr.entity;
 
-import org.springframework.data.jpa.domain.AbstractPersistable;
-
 import javax.persistence.*;
 
 @Entity
-@Table(name = "egpgr_receiving_center", uniqueConstraints = @UniqueConstraint(columnNames = { "name" }) )
+@Table(name = "egpgr_receiving_center", uniqueConstraints = @UniqueConstraint(columnNames = {"name"}))
 @SequenceGenerator(name = ReceivingCenter.SEQ_RECEIVINGCENTER, sequenceName = ReceivingCenter.SEQ_RECEIVINGCENTER, allocationSize = 1)
 public class ReceivingCenter extends AbstractPersistable<Long> {
 
-	private static final long serialVersionUID = -1568590266889348235L;
-	public static final String SEQ_RECEIVINGCENTER = "SEQ_EGPGR_RECEIVING_CENTER";
+    private static final long serialVersionUID = -1568590266889348235L;
+    public static final String SEQ_RECEIVINGCENTER = "SEQ_EGPGR_RECEIVING_CENTER";
 
     @Id
     @GeneratedValue(generator = SEQ_RECEIVINGCENTER, strategy = GenerationType.SEQUENCE)

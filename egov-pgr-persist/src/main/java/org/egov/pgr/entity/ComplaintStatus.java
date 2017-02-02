@@ -40,8 +40,6 @@
 
 package org.egov.pgr.entity;
 
-import org.springframework.data.jpa.domain.AbstractPersistable;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 

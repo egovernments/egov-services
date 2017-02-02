@@ -33,7 +33,7 @@ public class GrievancePersistenceListener {
     @Autowired
     private GrievanceProducer kafkaProducer;
 
-    @KafkaListener(id = "grievancePersister", topics = "ap.public.mseva.persistreadyf", group = "grievances")
+    @KafkaListener(id = "grievancePersister", topics = "ap.public.mseva.persistreadyg", group = "grievances")
     public void processMessage(ConsumerRecord<String, SevaRequest> record) {
         SevaRequest sevaRequest = record.value();
         Complaint complaint = persistComplaint(sevaRequest);
@@ -56,7 +56,7 @@ public class GrievancePersistenceListener {
         kafkaProducer.sendMessage(".mseva.validated", emailMessage);
     }
 
-    private String getEmailSubject(Complaint complaint) {
+    private String getEmailBody(Complaint complaint) {
         //TODO - Get boundary name by id
         String locationName = "";
         final String formattedCreatedDate = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(complaint.getCreatedDate());
@@ -78,7 +78,7 @@ public class GrievancePersistenceListener {
         return emailBody.toString();
     }
 
-    private String getEmailBody(Complaint complaint) {
+    private String getEmailSubject(Complaint complaint) {
         return new StringBuffer()
                 .append("Registered Grievance -")
                 .append(complaint.getCrn())

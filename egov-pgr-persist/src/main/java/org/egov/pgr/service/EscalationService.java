@@ -43,10 +43,7 @@ package org.egov.pgr.service;
 import org.apache.commons.lang3.time.DateUtils;
 import org.egov.pgr.entity.Complaint;
 import org.egov.pgr.entity.Escalation;
-import org.egov.pgr.repository.ComplaintRepository;
 import org.egov.pgr.repository.EscalationRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,35 +53,22 @@ import java.util.Date;
 @Service
 @Transactional(readOnly = true)
 public class EscalationService {
-    private static final Logger LOG = LoggerFactory.getLogger(EscalationService.class);
+
     private final EscalationRepository escalationRepository;
 
     @Autowired
-    private ComplaintService complaintService;
-
-    @Autowired
-    private ComplaintRepository complaintRepository;
-
-    @Autowired
     public EscalationService(final EscalationRepository escalationRepository) {
-
         this.escalationRepository = escalationRepository;
     }
 
     public Date getExpiryDate(final Complaint complaint, final Long designationId) {
-        Date expiryDate = complaint.getEscalationDate();
         final Integer noOfhrs = getHrsToResolve(designationId, complaint.getComplaintType().getId());
-        expiryDate = DateUtils.addHours(expiryDate, noOfhrs);
-        return expiryDate;
+        final Date expiryDate = complaint.getEscalationDate();
+        return DateUtils.addHours(expiryDate, noOfhrs);
     }
 
     public Integer getHrsToResolve(final Long designationId, final Long complaintTypeId) {
-        final Escalation escalation = escalationRepository.findByDesignationAndComplaintType(designationId,
-                complaintTypeId);
-        if (escalation != null)
-            return escalation.getNoOfHrs();
-        else
-            //TODO - Move it to properties file
-            return 48;
+        final Escalation escalation = escalationRepository.findByDesignationAndComplaintType(designationId, complaintTypeId);
+        return (escalation != null) ? escalation.getNoOfHrs() : 48;
     }
 }

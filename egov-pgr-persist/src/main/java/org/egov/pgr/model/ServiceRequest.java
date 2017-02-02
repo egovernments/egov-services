@@ -67,7 +67,7 @@ public class ServiceRequest {
     @JsonProperty("lat")
     private Double lat = null;
 
-    @JsonProperty("long")
+    @JsonProperty("lng")
     private Double lng = null;
 
     @JsonProperty("media_url")

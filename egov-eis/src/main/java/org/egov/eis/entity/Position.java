@@ -72,8 +72,7 @@ public class Position extends AbstractAuditable {
 	@Column(name = "name", unique = true)
 	private String name;
 
-	@JsonIgnore
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name = "deptDesig")
 	private DeptDesig deptDesig;
 

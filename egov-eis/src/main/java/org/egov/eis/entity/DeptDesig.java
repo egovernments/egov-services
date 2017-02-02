@@ -40,76 +40,71 @@
 
 package org.egov.eis.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.*;
 
 @Entity
 @Table(name = "egeis_deptdesig")
 @SequenceGenerator(name = DeptDesig.SEQ_DEPTDESIG, sequenceName = DeptDesig.SEQ_DEPTDESIG, allocationSize = 1)
 public class DeptDesig extends AbstractAuditable {
 
-	public static final String SEQ_DEPTDESIG = "SEQ_EGEIS_DEPTDESIG";
-	
-	private static final long serialVersionUID = 6184300877653586028L;
-	@Id
-	@GeneratedValue(generator = SEQ_DEPTDESIG, strategy = GenerationType.SEQUENCE)
-	private Long id;
+    public static final String SEQ_DEPTDESIG = "SEQ_EGEIS_DEPTDESIG";
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "designation")
-	private Designation designation;
+    private static final long serialVersionUID = 6184300877653586028L;
+    @Id
+    @GeneratedValue(generator = SEQ_DEPTDESIG, strategy = GenerationType.SEQUENCE)
+    private Long id;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "department")
-	private Department department;
-	private Integer sanctionedPosts;
-	private Integer outsourcedPosts;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "designation")
+    private Designation designation;
 
-	public Long getId() {
-		return id;
-	}
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "department")
+    private Department department;
+    private Integer sanctionedPosts;
+    private Integer outsourcedPosts;
 
-	public void setId(final Long id) {
-		this.id = id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public Designation getDesignation() {
-		return designation;
-	}
+    public void setId(final Long id) {
+        this.id = id;
+    }
 
-	public void setDesignation(final Designation designation) {
-		this.designation = designation;
-	}
+    public Designation getDesignation() {
+        return designation;
+    }
 
-	public Department getDepartment() {
-		return department;
-	}
+    public void setDesignation(final Designation designation) {
+        this.designation = designation;
+    }
 
-	public void setDepartment(final Department department) {
-		this.department = department;
-	}
+    public Department getDepartment() {
+        return department;
+    }
 
-	public Integer getSanctionedPosts() {
-		return sanctionedPosts;
-	}
+    public void setDepartment(final Department department) {
+        this.department = department;
+    }
 
-	public void setSanctionedPosts(final Integer sanctionedPosts) {
-		this.sanctionedPosts = sanctionedPosts;
-	}
+    public Integer getSanctionedPosts() {
+        return sanctionedPosts;
+    }
 
-	public Integer getOutsourcedPosts() {
-		return outsourcedPosts;
-	}
+    public void setSanctionedPosts(final Integer sanctionedPosts) {
+        this.sanctionedPosts = sanctionedPosts;
+    }
 
-	public void setOutsourcedPosts(final Integer outsourcedPosts) {
-		this.outsourcedPosts = outsourcedPosts;
-	}
+    public Integer getOutsourcedPosts() {
+        return outsourcedPosts;
+    }
+
+    public void setOutsourcedPosts(final Integer outsourcedPosts) {
+        this.outsourcedPosts = outsourcedPosts;
+    }
 
 }

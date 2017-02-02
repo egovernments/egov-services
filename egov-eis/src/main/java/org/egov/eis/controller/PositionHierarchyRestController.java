@@ -42,22 +42,22 @@ public class PositionHierarchyRestController {
 				&& fromPosition != null && !fromPosition.isEmpty() && toPosition != null && !toPosition.isEmpty()) {
 			response.getPositionHierarchy()
 					.add(positionHierarchyService.getPosHirByFromAndToPosAndObjectTypeAndObjectSubType(
-							Long.valueOf(fromPosition), Long.valueOf(toPosition), Integer.valueOf(objectType),
+							Long.valueOf(fromPosition), Long.valueOf(toPosition),objectType,
 							objectSubType));
 		} else if (objectType != null && !objectType.isEmpty() && objectSubType != null && !objectSubType.isEmpty()
 				&& fromPosition != null && !fromPosition.isEmpty() && (toPosition == null || toPosition.isEmpty())) {
 			response.getPositionHierarchy().add(positionHierarchyService.getPosHirByPosAndObjectTypeAndObjectSubType(
-					Long.valueOf(fromPosition), Integer.valueOf(objectType), objectSubType));
+					Long.valueOf(fromPosition),objectType, objectSubType));
 		} else if (objectType != null && !objectType.isEmpty() && objectSubType != null && !objectSubType.isEmpty()
 				&& ((fromPosition == null || fromPosition.isEmpty()) && (toPosition == null || toPosition.isEmpty()))) {
 			response.getPositionHierarchy().addAll(positionHierarchyService
-					.getPosHirByObjectTypeAndObjectSubType(Integer.valueOf(objectType), objectSubType));
+					.getPosHirByObjectTypeAndObjectSubType(objectType, objectSubType));
 		} else if (objectType != null && !objectType.isEmpty()
 				&& ((objectSubType == null || objectSubType.isEmpty())
 						&& (fromPosition == null || fromPosition.isEmpty())
 						&& (toPosition == null || toPosition.isEmpty()))) {
 			response.getPositionHierarchy().addAll(
-					positionHierarchyService.getListOfPositionHeirarchyByObjectType(Integer.valueOf(objectType)));
+					positionHierarchyService.getListOfPositionHeirarchyByObjectType(objectType));
 		} else {
 			throw new Exception();
 		}

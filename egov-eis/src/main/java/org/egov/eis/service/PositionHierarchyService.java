@@ -75,30 +75,30 @@ public class PositionHierarchyService {
 		positionHierarchyRepository.delete(positionHierarchy);
 	}
 
-	public PositionHierarchy getPositionHierarchyByPosAndObjectType(final Long posId, final Integer objectId) {
-		return positionHierarchyRepository.getPositionHierarchyByPosAndObjectType(posId, objectId);
+	public PositionHierarchy getPositionHierarchyByPosAndObjectType(final Long posId, final Integer objectType) {
+		return positionHierarchyRepository.getPositionHierarchyByPosAndObjectType(posId, objectType);
 	}
 
-	public PositionHierarchy getPosHirByPosAndObjectTypeAndObjectSubType(final Long posId, final Integer objectId,
+	public PositionHierarchy getPosHirByPosAndObjectTypeAndObjectSubType(final Long posId, final String objectType,
 			final String objectSubType) {
-		return positionHierarchyRepository.getPosHirByPosAndObjectTypeAndObjectSubType(posId, objectId, objectSubType);
+		return positionHierarchyRepository.getPosHirByPosAndObjectTypeAndObjectSubType(posId, objectType, objectSubType);
 	}
 
 	public PositionHierarchy getPosHirByFromAndToPosAndObjectTypeAndObjectSubType(final Long fromPosId,
-			final Long toPosId, final Integer objectId, final String objectSubType) {
+			final Long toPosId, final String objectType, final String objectSubType) {
 		return positionHierarchyRepository.getPosHirByFromAndToPosAndObjectTypeAndObjectSubType(fromPosId, toPosId,
-				objectId, objectSubType);
+				objectType, objectSubType);
 	}
 
 	public List<PositionHierarchy> getPosHirByToPosAndObjectTypeAndObjectSubType(final Long toPosId,
-			final Integer objectId, final String objectSubType) {
-		return positionHierarchyRepository.getPosHirByToPosAndObjectTypeAndObjectSubType(toPosId, objectId,
+			final String objectType, final String objectSubType) {
+		return positionHierarchyRepository.getPosHirByToPosAndObjectTypeAndObjectSubType(toPosId, objectType,
 				objectSubType);
 	}
 
-	public List<PositionHierarchy> getPosHirByObjectTypeAndObjectSubType(final Integer objectId,
+	public List<PositionHierarchy> getPosHirByObjectTypeAndObjectSubType(final String objectType,
 			final String objectSubType) {
-		return positionHierarchyRepository.getPosHirByObjectTypeAndObjectSubType(objectId, objectSubType);
+		return positionHierarchyRepository.getPosHirByObjectTypeAndObjectSubType(objectType, objectSubType);
 	}
 
 	public void deleteAllInBatch(final List<PositionHierarchy> existingPosHierarchy) {
@@ -107,13 +107,13 @@ public class PositionHierarchyService {
 	}
 
 	public List<PositionHierarchy> getPositionHeirarchyByFromPositionAndObjectType(Long fromPositionId,
-			Integer objectId) {
+			String objectType) {
 		return positionHierarchyRepository.getListOfPositionHeirarchyByFromPositionAndObjectType(fromPositionId,
-				objectId);
+				objectType);
 	}
 
-	public List<PositionHierarchy> getListOfPositionHeirarchyByObjectType(Integer objectId) {
-		return positionHierarchyRepository.getListOfPositionHeirarchyByObjectType(objectId);
+	public List<PositionHierarchy> getListOfPositionHeirarchyByObjectType(String objectType) {
+		return positionHierarchyRepository.getListOfPositionHeirarchyByObjectType(objectType);
 	}
 
 	public List<PositionHierarchy> getListOfPositionHeirarchyByObjectSubType(final String objectSubType) {
@@ -121,23 +121,23 @@ public class PositionHierarchyService {
 	}
 
 	public List<PositionHierarchy> getListOfPositionHeirarchyByFromPositionAndObjectTypeAndSubType(Long fromPositionId,
-			Integer objectId, final String objectSubType) {
+			String objectType, final String objectSubType) {
 
-		if (fromPositionId != 0 && objectId != 0 && objectSubType != null)
+		if (fromPositionId != 0 && objectType != null && objectSubType != null)
 			return positionHierarchyRepository.getListOfPositionHeirarchyByFromPositionAndObjectTypeAndSubType(
-					fromPositionId, objectId, objectSubType);
-		else if (fromPositionId == 0 && objectId != 0 && objectSubType != null)
-			return positionHierarchyRepository.getPosHirByObjectTypeAndObjectSubType(objectId, objectSubType);
-		else if (fromPositionId != 0 && objectId != 0 && objectSubType == null)
+					fromPositionId, objectType, objectSubType);
+		else if (fromPositionId == 0 && objectType != null && objectSubType != null)
+			return positionHierarchyRepository.getPosHirByObjectTypeAndObjectSubType(objectType, objectSubType);
+		else if (fromPositionId != 0 && objectType != null && objectSubType == null)
 			return positionHierarchyRepository.getListOfPositionHeirarchyByFromPositionAndObjectType(fromPositionId,
-					objectId);
-		else if (fromPositionId == 0 && objectId != 0 && objectSubType == null)
-			return positionHierarchyRepository.getListOfPositionHeirarchyByObjectType(objectId);
+					objectType);
+		else if (fromPositionId == 0 && objectType != null && objectSubType == null)
+			return positionHierarchyRepository.getListOfPositionHeirarchyByObjectType(objectType);
 		else
 			return Collections.emptyList();
 	}
 
-	public List<PositionHierarchy> getListOfPositionHeirarchyByPositionObjectTypeSubType(final Integer objectType,
+	public List<PositionHierarchy> getListOfPositionHeirarchyByPositionObjectTypeSubType(final String objectType,
 			final List<String> compTypeCodes, final Position fromPositionId) {
 		return positionHierarchyRepository.findPositionHierarchyByComplaintTypesAndFromPosition(objectType,
 				compTypeCodes, fromPositionId);

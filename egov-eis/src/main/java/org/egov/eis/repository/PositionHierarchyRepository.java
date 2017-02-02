@@ -55,41 +55,41 @@ public interface PositionHierarchyRepository extends JpaRepository<PositionHiera
 	PositionHierarchy getPositionHierarchyByPosAndObjectType(@Param("fromPosition") Long fromPosition,
 			@Param("objectType") Integer objectType);
 
-	@Query(" from PositionHierarchy P where P.fromPosition.id=:fromPosition and P.objectType.id=:objectType and P.objectSubType=:objectSubType")
+	@Query(" from PositionHierarchy P where P.fromPosition.id=:fromPosition and P.objectType.type=:objectType and P.objectSubType=:objectSubType")
 	PositionHierarchy getPosHirByPosAndObjectTypeAndObjectSubType(@Param("fromPosition") Long fromPosition,
-			@Param("objectType") Integer objectType, @Param("objectSubType") String objectSubType);
+			@Param("objectType") String objectType, @Param("objectSubType") String objectSubType);
 
-	@Query(" from PositionHierarchy P where P.toPosition.id=:toPosition and P.objectType.id=:objectType and P.objectSubType=:objectSubType")
+	@Query(" from PositionHierarchy P where P.toPosition.id=:toPosition and P.objectType.type=:objectType and P.objectSubType=:objectSubType")
 	List<PositionHierarchy> getPosHirByToPosAndObjectTypeAndObjectSubType(@Param("toPosition") Long toPosition,
-			@Param("objectType") Integer objectType, @Param("objectSubType") String objectSubType);
+			@Param("objectType") String objectType, @Param("objectSubType") String objectSubType);
 
-	@Query(" from PositionHierarchy P where P.fromPosition.id=:fromPosition and P.toPosition.id=:toPosition and P.objectType.id=:objectType and P.objectSubType=:objectSubType")
+	@Query(" from PositionHierarchy P where P.fromPosition.id=:fromPosition and P.toPosition.id=:toPosition and P.objectType.type=:objectType and P.objectSubType=:objectSubType")
 	PositionHierarchy getPosHirByFromAndToPosAndObjectTypeAndObjectSubType(@Param("fromPosition") Long fromPosition,
-			@Param("toPosition") Long toPosition, @Param("objectType") Integer objectType,
+			@Param("toPosition") Long toPosition, @Param("objectType") String objectType,
 			@Param("objectSubType") String objectSubType);
 
-	@Query(" from PositionHierarchy P where  P.objectType.id=:objectType and P.objectSubType=:objectSubType")
-	public List<PositionHierarchy> getPosHirByObjectTypeAndObjectSubType(@Param("objectType") Integer objectType,
+	@Query(" from PositionHierarchy P where  P.objectType.type=:objectType and P.objectSubType=:objectSubType")
+	public List<PositionHierarchy> getPosHirByObjectTypeAndObjectSubType(@Param("objectType") String objectType,
 			@Param("objectSubType") String objectSubType);
 
-	@Query(" from PositionHierarchy P where P.fromPosition.id=:fromPosition and P.objectType.id=:objectType  order by  P.objectSubType ")
+	@Query(" from PositionHierarchy P where P.fromPosition.id=:fromPosition and P.objectType.type=:objectType  order by  P.objectSubType ")
 	List<PositionHierarchy> getListOfPositionHeirarchyByFromPositionAndObjectType(
-			@Param("fromPosition") Long fromPosition, @Param("objectType") Integer objectType);
+			@Param("fromPosition") Long fromPosition, @Param("objectType") String objectType);
 
 	@Query(" from PositionHierarchy P where P.fromPosition.id=:fromPosition and P.objectType.id=:objectType and P.objectSubType=:objectSubType")
 	List<PositionHierarchy> getListOfPositionHeirarchyByFromPositionAndObjectTypeAndSubType(
-			@Param("fromPosition") Long fromPosition, @Param("objectType") Integer objectType,
+			@Param("fromPosition") Long fromPosition, @Param("objectType") String objectType,
 			@Param("objectSubType") String objectSubType);
 
 	@Query(" from PositionHierarchy P where  P.objectSubType=:objectSubType ")
 	List<PositionHierarchy> getListOfPositionHeirarchyByObjectSubType(@Param("objectSubType") String objectSubType);
 
-	@Query(" from PositionHierarchy P where  P.objectType.id=:objectType ")
-	List<PositionHierarchy> getListOfPositionHeirarchyByObjectType(@Param("objectType") Integer objectType);
+	@Query(" from PositionHierarchy P where  P.objectType.type=:objectType ")
+	List<PositionHierarchy> getListOfPositionHeirarchyByObjectType(@Param("objectType") String objectType);
 
-	@Query("select ph from PositionHierarchy ph where ph.objectType.id=:objectType and ph.objectSubType in :complaintTypes and ph.fromPosition = :fromPosition")
+	@Query("select ph from PositionHierarchy ph where ph.objectType.type=:objectType and ph.objectSubType in :complaintTypes and ph.fromPosition = :fromPosition")
 	public List<PositionHierarchy> findPositionHierarchyByComplaintTypesAndFromPosition(
-			@Param("objectType") Integer objectType, @Param("complaintTypes") List<String> complaintTypes,
+			@Param("objectType") String objectType, @Param("complaintTypes") List<String> complaintTypes,
 			@Param("fromPosition") Position fromPosition);
 
 }

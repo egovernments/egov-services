@@ -1,12 +1,11 @@
 package org.egov.web.notification.sms.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-@Data
+@Getter
+@AllArgsConstructor
 public class SMSRequest {
-    @JsonProperty("mobileNumber")
     private String mobileNumber;
-    @JsonProperty("message")
     private String message;
 }

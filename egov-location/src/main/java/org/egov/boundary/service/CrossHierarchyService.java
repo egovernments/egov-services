@@ -47,6 +47,7 @@ import org.egov.boundary.model.Boundary;
 import org.egov.boundary.model.BoundaryType;
 import org.egov.boundary.model.CrossHierarchy;
 import org.egov.boundary.repository.CrossHierarchyRepository;
+import org.egov.boundary.web.wrapper.CrossHierarchyRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -163,7 +164,21 @@ public class CrossHierarchyService {
 		return crossHierarchyRepository.findByCode(code);
 	}
 
-	public List<CrossHierarchy> getAllCrossHierarchys() {
+	public List<CrossHierarchy> getAllCrossHierarchys(CrossHierarchyRequest crossHierarchyRequest) {
+		List<CrossHierarchy> crossHierarchy=new ArrayList<CrossHierarchy>();
+		if(crossHierarchyRequest.getCrossHierarchy().getId()!=null)
+		{
+			crossHierarchy.add(crossHierarchyRepository.findById(crossHierarchyRequest.getCrossHierarchy().getId()));	
+
+		}
+		else if(crossHierarchyRequest.getCrossHierarchy().getCode()!=null)
+		{
+  				crossHierarchy.add(findByCode(crossHierarchyRequest.getCrossHierarchy().getCode()));
+
+		}else{
+			crossHierarchy.addAll(crossHierarchyRepository.findAll());
+		}
+		
 		
 		return crossHierarchyRepository.findAll(); 
 	}

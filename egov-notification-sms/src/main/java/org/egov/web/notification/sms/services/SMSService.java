@@ -40,95 +40,103 @@
 
 package org.egov.web.notification.sms.services;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.message.BasicNameValuePair;
 import org.egov.web.notification.sms.config.properties.ApplicationProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
-
-@Service("smsService")
+@Service
 public class SMSService {
-	private static final Logger LOGGER = LoggerFactory.getLogger(SMSService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SMSService.class);
 
-	private static final String SMS_PRIORITY_PARAM_VALUE = "sms.%s.priority.param.value";
-	private static final String SENDERID_PARAM_NAME = "sms.sender.req.param.name";
-	private static final String USERNAME_PARAM_NAME = "sms.sender.username.req.param.name";
-	private static final String PASWRD_PARAM_NAME = "sms.sender.password.req.param.name";
-	private static final String DEST_MOBILENUM_PARAM_NAME = "sms.destination.mobile.req.param.name";
-	private static final String DEST_MESSAGE_PARAM_NAME = "sms.message.req.param.name";
-	private static final String SMS_EXTRA_REQ_PARAMS = "sms.extra.req.params";
-	private static final String MOBILE_NUMBER_PREFIX = "mobile.number.prefix";
+    private static final String SMS_PRIORITY_PARAM_VALUE = "sms.%s.priority.param.value";
+    private static final String SENDERID_PARAM_NAME = "sms.sender.req.param.name";
+    private static final String USERNAME_PARAM_NAME = "sms.sender.username.req.param.name";
+    private static final String PASWRD_PARAM_NAME = "sms.sender.password.req.param.name";
+    private static final String DEST_MOBILENUM_PARAM_NAME = "sms.destination.mobile.req.param.name";
+    private static final String DEST_MESSAGE_PARAM_NAME = "sms.message.req.param.name";
+    private static final String SMS_EXTRA_REQ_PARAMS = "sms.extra.req.params";
+    private static final String MOBILE_NUMBER_PREFIX = "mobile.number.prefix";
 
-	@Autowired
-	private ApplicationProperties applicationProperties;
+    private ApplicationProperties applicationProperties;
+    private RestTemplate restTemplate;
 
-	public boolean sendSMS(String mobileNumber, String message) {
-		return sendSMS(mobileNumber, message, MessagePriority.MEDIUM);
-	}
+    @Autowired
+    public SMSService(ApplicationProperties applicationProperties, RestTemplate restTemplate) {
+        this.applicationProperties = applicationProperties;
+        this.restTemplate = restTemplate;
+    }
 
-	public boolean sendSMS(String mobileNumber, String message, MessagePriority priority) {
+    public boolean sendSMS(String mobileNumber, String message, MessagePriority priority) {
+        if (applicationProperties.smsEnabled()) {
+            try {
+                final MultiValueMap<String, String> requestBody = getSmsRequestBody(mobileNumber, message, priority);
+                HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(requestBody, getHttpHeaders());
+                final String url = applicationProperties.smsProviderURL();
+                ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
+                return isResponseCodeNotInKnownErrorCodeList(response);
+            } catch (RestClientException e) {
+                LOGGER.error("Error occurred while sending SMS to " + mobileNumber, e);
+                return false;
+            }
+        } else {
+            LOGGER.info("SMS is disabled");
+            return false;
+        }
+    }
 
-		if (applicationProperties.smsEnabled()) {
-			try {
-				HttpClient client = HttpClientBuilder.create().build();
-				HttpPost post = new HttpPost(applicationProperties.smsProviderURL());
-				List<NameValuePair> urlParameters = new ArrayList<>();
-				urlParameters.add(new BasicNameValuePair(applicationProperties.getProperty(USERNAME_PARAM_NAME),
-						applicationProperties.smsSenderUsername()));
-				urlParameters.add(new BasicNameValuePair(applicationProperties.getProperty(PASWRD_PARAM_NAME),
-						applicationProperties.smsSenderPassword()));
-				urlParameters.add(new BasicNameValuePair(applicationProperties.getProperty(SENDERID_PARAM_NAME),
-						applicationProperties.smsSender()));
-				urlParameters.add(new BasicNameValuePair(applicationProperties.getProperty(DEST_MOBILENUM_PARAM_NAME),
-						applicationProperties.getProperty(MOBILE_NUMBER_PREFIX) + mobileNumber));
-				urlParameters.add(
-						new BasicNameValuePair(applicationProperties.getProperty(DEST_MESSAGE_PARAM_NAME), message));
-				setAdditionalParameters(urlParameters, priority);
-				post.setEntity(new UrlEncodedFormEntity(urlParameters, UTF_8));
-				HttpResponse response = client.execute(post);
-				String responseCode = IOUtils.toString(response.getEntity().getContent(), UTF_8.toString());
-				LOGGER.info("SMS sending completed with response code [{}] - [{}]", responseCode,
-						applicationProperties.smsResponseMessageForCode(responseCode));
-				return applicationProperties.smsErrorCodes().parallelStream().noneMatch(responseCode::startsWith);
-			} catch (UnsupportedOperationException | IOException e) {
-				LOGGER.error("Error occurred while sending SMS [%s]", e);
-				return false;
-			}
-		} else {
-			return false;
-		}
+    private HttpHeaders getHttpHeaders() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        return headers;
+    }
 
-	}
+    private MultiValueMap<String, String> getSmsRequestBody(String mobileNumber, String message, MessagePriority
+            priority) {
+        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+        map.add(applicationProperties.getProperty(USERNAME_PARAM_NAME), applicationProperties.smsSenderUsername());
+        map.add(applicationProperties.getProperty(PASWRD_PARAM_NAME), applicationProperties.smsSenderPassword());
+        map.add(applicationProperties.getProperty(SENDERID_PARAM_NAME), applicationProperties.smsSender());
+        map.add(applicationProperties.getProperty(DEST_MOBILENUM_PARAM_NAME),
+                applicationProperties.getProperty(MOBILE_NUMBER_PREFIX) + mobileNumber);
+        map.add(applicationProperties.getProperty(DEST_MESSAGE_PARAM_NAME), message);
+        populateSmsPriority(priority, map);
+        populateAdditionalSmsParameters(map);
 
-	private void setAdditionalParameters(List<NameValuePair> urlParameters, MessagePriority priority) {
-		if (StringUtils.isNotBlank(applicationProperties.getProperty(SMS_EXTRA_REQ_PARAMS))) {
-			String[] extraParms = applicationProperties.getProperty(SMS_EXTRA_REQ_PARAMS).split("&");
-			if (extraParms.length > 0)
-				for (String extraParm : extraParms) {
-					String[] paramNameValue = extraParm.split("=");
-					urlParameters.add(new BasicNameValuePair(paramNameValue[0], paramNameValue[1]));
-				}
-		}
+        return map;
+    }
 
-		if (applicationProperties.getProperty("sms.priority.enabled", Boolean.class)) {
-			urlParameters.add(new BasicNameValuePair(applicationProperties.getProperty("sms.priority.param.name"),
-					applicationProperties.getProperty(String.format(SMS_PRIORITY_PARAM_VALUE, priority.toString()))));
-		}
+    private void populateSmsPriority(MessagePriority priority, MultiValueMap<String, String> map) {
+        if (applicationProperties.getProperty("sms.priority.enabled", Boolean.class)) {
+            map.add(applicationProperties.getProperty("sms.priority.param.name"),
+                    applicationProperties.getProperty(String.format(SMS_PRIORITY_PARAM_VALUE, priority.toString())));
+        }
+    }
 
-	}
+    private void populateAdditionalSmsParameters(MultiValueMap<String, String> map) {
+        if (StringUtils.isNotBlank(applicationProperties.getProperty(SMS_EXTRA_REQ_PARAMS))) {
+            String[] extraParameters = applicationProperties.getProperty(SMS_EXTRA_REQ_PARAMS).split("&");
+            if (extraParameters.length > 0)
+                for (String extraParm : extraParameters) {
+                    String[] paramNameValue = extraParm.split("=");
+                    map.add(paramNameValue[0], paramNameValue[1]);
+                }
+        }
+    }
+
+    private boolean isResponseCodeNotInKnownErrorCodeList(ResponseEntity<?> response) {
+        final String responseCode = Integer.toString(response.getStatusCodeValue());
+        return applicationProperties.smsErrorCodes().stream().noneMatch(responseCode::startsWith);
+    }
+
 }

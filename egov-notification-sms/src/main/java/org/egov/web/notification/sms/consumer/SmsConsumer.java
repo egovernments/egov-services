@@ -1,6 +1,6 @@
 package org.egov.web.notification.sms.consumer;
 
-import org.egov.web.notification.sms.model.SMSRequest;
+import org.egov.web.notification.sms.contract.SMSRequest;
 import org.egov.web.notification.sms.services.MessagePriority;
 import org.egov.web.notification.sms.services.SMSService;
 import org.springframework.beans.factory.annotation.Autowired;

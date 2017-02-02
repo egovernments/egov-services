@@ -1,4 +1,4 @@
-package org.egov.web.notification.sms.model;
+package org.egov.web.notification.sms.contract;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -27,7 +27,7 @@ public class SmsConsumerTest {
 
     @Test
     public void testShouldSendSmsWhenPayloadIsReceived() {
-        final String payload = "{\"mobileNumber\":\"123545\", \"message\": \"testmessage\"}";
+        final String payload = "{\"mobileNumber\":\"123545\", \"message\": \"testmessage\", \"foo\":\"bar\"}";
         Message<String> smsRequest = new GenericMessage<>(payload);
 
         sink.input().send(smsRequest);

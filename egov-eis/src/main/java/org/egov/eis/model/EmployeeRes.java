@@ -14,22 +14,22 @@ public class EmployeeRes {
 	@JsonProperty("ResponseInfo")
 	private ResponseInfo responseInfo = null;
 
-	@JsonProperty("Education")
+	@JsonProperty("Qualifications")
 	private List<EducationalQualification> qualifications = new ArrayList<EducationalQualification>();
 
-	@JsonProperty("Assignment")
+	@JsonProperty("Assignments")
 	private List<Assignment> assignments = new ArrayList<Assignment>();
 
-	@JsonProperty("Jurisdiction")
+	@JsonProperty("Jurisdictions")
 	private List<Boundary> jurisdictions = new ArrayList<Boundary>();
 
-	@JsonProperty("Probation")
+	@JsonProperty("Probations")
 	private List<Probation> probations = new ArrayList<Probation>();
 
-	@JsonProperty("Service")
+	@JsonProperty("Services")
 	private List<ServiceHistory> services = new ArrayList<ServiceHistory>();
 
-	@JsonProperty("Employee")
+	@JsonProperty("Employees")
 	private List<Employee> employees = new ArrayList<Employee>();
 
 	public EmployeeRes responseInfo(ResponseInfo responseInfo) {
@@ -45,7 +45,7 @@ public class EmployeeRes {
 		this.responseInfo = responseInfo;
 	}
 
-	public EmployeeRes education(List<EducationalQualification> qualifications) {
+	public EmployeeRes qualifications(List<EducationalQualification> qualifications) {
 		this.qualifications = qualifications;
 		return this;
 	}
@@ -107,7 +107,7 @@ public class EmployeeRes {
 		return qualifications;
 	}
 
-	public EmployeeRes assignment(List<Assignment> assignments) {
+	public EmployeeRes assignments(List<Assignment> assignments) {
 		this.assignments = assignments;
 		return this;
 	}
@@ -117,7 +117,7 @@ public class EmployeeRes {
 		return this;
 	}
 
-	public EmployeeRes jurisdiction(List<Boundary> jurisdictions) {
+	public EmployeeRes jurisdictions(List<Boundary> jurisdictions) {
 		this.jurisdictions = jurisdictions;
 		return this;
 	}
@@ -127,7 +127,7 @@ public class EmployeeRes {
 		return this;
 	}
 
-	public EmployeeRes probation(List<Probation> probations) {
+	public EmployeeRes probations(List<Probation> probations) {
 		this.probations = probations;
 		return this;
 	}
@@ -137,7 +137,7 @@ public class EmployeeRes {
 		return this;
 	}
 
-	public EmployeeRes service(List<ServiceHistory> services) {
+	public EmployeeRes services(List<ServiceHistory> services) {
 		this.services = services;
 		return this;
 	}
@@ -147,7 +147,7 @@ public class EmployeeRes {
 		return this;
 	}
 
-	public EmployeeRes employee(List<Employee> employees) {
+	public EmployeeRes employees(List<Employee> employees) {
 		this.employees = employees;
 		return this;
 	}

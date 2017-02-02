@@ -114,12 +114,6 @@ public class Complaint extends AbstractAuditable {
     @Column(name = "escalation_date", nullable = false)
     private Date escalationDate;
 
-    @Column(name = "createddate")
-    private Date createdDate;
-
-    @Column(name = "lastmodifieddate")
-    private Date lastModifiedDate;
-
     private Long department;
 
     @Enumerated(EnumType.ORDINAL)
@@ -315,14 +309,6 @@ public class Complaint extends AbstractAuditable {
 
     public void setLatlngAddress(String latlngAddress) {
         this.latlngAddress = latlngAddress;
-    }
-
-    public Date getCreatedDate() {
-        return createdDate;
-    }
-
-    public Date getLastModifiedDate() {
-        return lastModifiedDate;
     }
 
 	/*

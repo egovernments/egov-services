@@ -1,6 +1,7 @@
 package org.egov.pgr.controller;
 
 import org.egov.pgr.entity.Complaint;
+import org.egov.pgr.factory.ServiceRequestsFactory;
 import org.egov.pgr.model.Error;
 import org.egov.pgr.model.*;
 import org.egov.pgr.producer.GrievanceProducer;
@@ -10,7 +11,6 @@ import org.egov.pgr.specification.SevaSpecification;
 import org.egov.pgr.validators.FieldErrorDTO;
 import org.egov.pgr.validators.SevaRequestValidator;
 import org.egov.pgr.validators.ValidationErrorDTO;
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -111,21 +110,21 @@ public class ServiceRequestController {
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE,
             headers = {"api_id", "ver", "ts", "action", "did", "msg_id", "requester_id", "auth_token"})
     @ResponseBody
-    public ServiceRequestRes getSevaDetails(@RequestParam("jurisdiction_id") Long jurisdiction_id,
-                                            @RequestParam(value = "service_request_id", required = false) String service_request_id,
-                                            @RequestParam(value = "service_code", required = false) String service_code,
-                                            @RequestParam(value = "start_date", required = false) @DateTimeFormat(pattern = "dd-MM-yyyy") Date start_date,
-                                            @RequestParam(value = "end_date", required = false) @DateTimeFormat(pattern = "dd-MM-yyyy") Date end_date,
+    public ServiceRequestRes getSevaDetails(@RequestParam("jurisdiction_id") Long jurisdictionId,
+                                            @RequestParam(value = "service_request_id", required = false) String serviceRequestId,
+                                            @RequestParam(value = "service_code", required = false) String serviceCode,
+                                            @RequestParam(value = "start_date", required = false) @DateTimeFormat(pattern = "dd-MM-yyyy") Date startDate,
+                                            @RequestParam(value = "end_date", required = false) @DateTimeFormat(pattern = "dd-MM-yyyy") Date endDate,
                                             @RequestParam(value = "status", required = false) String status,
-                                            @RequestParam(value = "last_modified_datetime", required = false) @DateTimeFormat(pattern = "dd-MM-yyyy") Date last_modified_date,
+                                            @RequestParam(value = "last_modified_datetime", required = false) @DateTimeFormat(pattern = "dd-MM-yyyy") Date lastModifiedDate,
                                             @RequestHeader HttpHeaders headers) {
-        SevaSearchCriteria sevaSearchCriteria = new SevaSearchCriteria(service_request_id, service_code, start_date,
-                end_date, status, last_modified_date);
+        SevaSearchCriteria sevaSearchCriteria = new SevaSearchCriteria(serviceRequestId, serviceCode, startDate,
+                endDate, status, lastModifiedDate);
         SevaSpecification sevaSpecification = new SevaSpecification(sevaSearchCriteria);
         List<Complaint> complaints = complaintService.findAll(sevaSpecification);
 
         ServiceRequestRes serviceRequestResponse = new ServiceRequestRes();
-        serviceRequestResponse.setServiceRequests(ServiceRequests.createServiceRequestsFromComplaints(complaints));
+        serviceRequestResponse.setServiceRequests(ServiceRequestsFactory.createServiceRequestsFromComplaints(complaints));
         ResponseInfo responseInfo = createResponseInfo(headers);
         serviceRequestResponse.setResposneInfo(responseInfo);
         return serviceRequestResponse;

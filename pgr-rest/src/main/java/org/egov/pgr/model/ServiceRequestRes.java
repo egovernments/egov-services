@@ -10,7 +10,7 @@ public class ServiceRequestRes   {
   @JsonProperty("ResposneInfo")
   private ResponseInfo resposneInfo = null;
 
-  @JsonProperty("ServiceRequests")
+  @JsonProperty("ServiceRequestsFactory")
   private List<ServiceRequest> serviceRequests = new ArrayList<>();
 
   public ServiceRequestRes resposneInfo(ResponseInfo resposneInfo) {

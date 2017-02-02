@@ -3,45 +3,45 @@ package org.egov.pgr.model;
 import java.util.Date;
 
 public class SevaSearchCriteria {
-    private String service_request_id;
-    private String service_code;
-    private Date start_date;
-    private Date end_date;
+    private String serviceRequestId;
+    private String serviceCode;
+    private Date startDate;
+    private Date endDate;
     private String status;
-    private Date last_modified_datetime;
+    private Date lastModifiedDatetime;
 
-    public SevaSearchCriteria(String service_request_id, String service_code,
-                              Date start_date, Date end_date, String status,
-                              Date last_modified_datetime){
-        this.service_request_id = service_request_id;
-        this.service_code = service_code;
-        this.start_date = start_date;
-        this.end_date = end_date;
+    public SevaSearchCriteria(String serviceRequestId, String serviceCode,
+                              Date startDate, Date endDate, String status,
+                              Date lastModifiedDatetime) {
+        this.serviceRequestId = serviceRequestId;
+        this.serviceCode = serviceCode;
+        this.startDate = startDate;
+        this.endDate = endDate;
         this.status = status;
-        this.last_modified_datetime = last_modified_datetime;
+        this.lastModifiedDatetime = lastModifiedDatetime;
     }
 
-    public String getService_request_id() {
-        return service_request_id;
+    public String getServiceRequestId() {
+        return serviceRequestId;
     }
 
-    public String getService_code() {
-        return service_code;
+    public String getServiceCode() {
+        return serviceCode;
     }
 
-    public Date getStart_date() {
-        return start_date;
+    public Date getStartDate() {
+        return startDate;
     }
 
-    public Date getEnd_date() {
-        return end_date;
+    public Date getEndDate() {
+        return endDate;
     }
 
     public String getStatus() {
         return status;
     }
 
-    public Date getLast_modified_datetime() {
-        return last_modified_datetime;
+    public Date getLastModifiedDatetime() {
+        return lastModifiedDatetime;
     }
 }

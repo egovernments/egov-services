@@ -89,4 +89,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 	@Query("from Employee  where  upper(code) like '%'||upper(:code)||'%'  and active=true order by id")
 	List<Employee> findActiveEmployeeByCodeLike(@Param("code") String code);
 
+	@Query("select distinct emp from Employee emp, IN (emp.roles) role where role.name = :roleName ")
+	Set<Employee> findEmployeesByRoleName(@Param("roleName") String roleName);
+
 }

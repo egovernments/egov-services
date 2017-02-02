@@ -41,6 +41,7 @@ package org.egov.eis.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -85,4 +86,7 @@ public class EmployeeService {
 		return employeeRepository.findByDepartmentDesignation(deptCode, desigCode);
 	}
 
+	public Set<Employee> getEmployeesByRoleName(final String roleName) {
+		return employeeRepository.findEmployeesByRoleName(roleName);
+	}
 }

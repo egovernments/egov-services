@@ -33,6 +33,7 @@ public class EmployeeRestController {
 			@RequestParam(value = "asOnDate", required = false) LocalDate asOnDate,
 			@RequestParam(value = "assignmentIsPrimary", required = false) Boolean assignmentIsPrimary,
 			@RequestParam(value = "positionId", required = true) String positionId,
+			@RequestParam(value = "roleName", required = false) String roleName,
 			@RequestParam(value = "pageSize", required = false, defaultValue = "20") Integer pageSize,
 			@RequestParam(value = "pageNumber", required = false, defaultValue = "1") Integer pageNumber)
 			throws Exception {
@@ -50,6 +51,8 @@ public class EmployeeRestController {
 			response.getEmployee().addAll(
 					employeeService.getByDepartmentDesignation(assignmentDepartmentCode, assignmentDesignationCode));
 
+		} else if (roleName != null && !roleName.isEmpty()) {
+			response.getEmployee().addAll(employeeService.getEmployeesByRoleName(roleName));
 		} else {
 			throw new Exception();
 		}

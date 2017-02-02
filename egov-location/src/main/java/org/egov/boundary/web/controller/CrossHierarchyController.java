@@ -86,7 +86,7 @@ public class CrossHierarchyController {
 	public ResponseEntity<?> search(@ModelAttribute CrossHierarchyRequest crossHierarchyRequest) {
 
 		CrossHierarchyResponse crossHierarchyResponse = new CrossHierarchyResponse();
-		List<CrossHierarchy> allCrossHierarchys = crossHierarchyService.getAllCrossHierarchys();
+		List<CrossHierarchy> allCrossHierarchys = crossHierarchyService.getAllCrossHierarchys(crossHierarchyRequest);
 		crossHierarchyResponse.getCrossHierarchys().addAll(allCrossHierarchys);
 		ResponseInfo responseInfo = new ResponseInfo();
 		responseInfo.setStatus(HttpStatus.OK.toString());

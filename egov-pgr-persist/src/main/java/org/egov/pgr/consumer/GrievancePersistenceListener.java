@@ -1,10 +1,10 @@
 package org.egov.pgr.consumer;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.egov.pgr.contracts.grievance.SevaRequest;
 import org.egov.pgr.entity.Complaint;
-import org.egov.pgr.model.EmailMessage;
-import org.egov.pgr.model.SevaRequest;
-import org.egov.pgr.model.SmsMessage;
+import org.egov.pgr.model.EmailComposer;
+import org.egov.pgr.model.SmsComposer;
 import org.egov.pgr.producer.GrievanceProducer;
 import org.egov.pgr.service.ComplaintService;
 import org.egov.pgr.service.ComplaintStatusService;
@@ -13,8 +13,8 @@ import org.egov.pgr.service.EscalationService;
 import org.egov.pgr.transform.ComplaintBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
-
-import java.text.SimpleDateFormat;
+import org.trimou.engine.MustacheEngine;
+import org.trimou.engine.MustacheEngineBuilder;
 
 public class GrievancePersistenceListener {
 
@@ -33,61 +33,32 @@ public class GrievancePersistenceListener {
     @Autowired
     private GrievanceProducer kafkaProducer;
 
+    MustacheEngine templatingEngine = MustacheEngineBuilder.newBuilder().build();
+
     @KafkaListener(id = "grievancePersister", topics = "ap.public.mseva.persistreadyg", group = "grievances")
     public void processMessage(ConsumerRecord<String, SevaRequest> record) {
         SevaRequest sevaRequest = record.value();
         Complaint complaint = persistComplaint(sevaRequest);
-        triggerEmail(complaint);
         triggerSms(complaint);
-        triggerIndexing(sevaRequest);
+        triggerEmail(complaint);
+        triggerIndexing(complaint);
         triggerWorkflow(sevaRequest);
     }
 
     private void triggerWorkflow(SevaRequest record) {
-
+        //TODO - Trigger workflow
     }
 
-    private void triggerIndexing(SevaRequest record) {
-        kafkaProducer.sendMessage(".mseva.validated", record);
+    private void triggerIndexing(Complaint record) {
+        kafkaProducer.sendMessage(".mseva.index", record);
     }
 
     private void triggerEmail(Complaint complaint) {
-        EmailMessage emailMessage = new EmailMessage(complaint.getComplainant().getEmail(), getEmailSubject(complaint), getEmailBody(complaint), null);
-        kafkaProducer.sendMessage(".mseva.validated", emailMessage);
-    }
-
-    private String getEmailBody(Complaint complaint) {
-        //TODO - Get boundary name by id
-        String locationName = "";
-        final String formattedCreatedDate = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(complaint.getCreatedDate());
-        final StringBuffer emailBody = new StringBuffer().append("Dear ")
-                .append(complaint.getComplainant().getName())
-                .append(",\n \n \tThank you for registering a grievance (")
-                .append(complaint.getCrn())
-                .append("). Your grievance is registered successfully.\n \tPlease use this number for all future references.")
-                .append("\n \n Grievance Details - \n \n Complaint type - ")
-                .append(complaint.getComplaintType().getName());
-        if (complaint.getLocation() != null)
-            emailBody.append(" \n Location details - ").append(locationName);
-        emailBody.append("\n Grievance description - ")
-                .append(complaint.getDetails())
-                .append("\n Grievance status -")
-                .append(complaint.getStatus().getName())
-                .append("\n Grievance Registration Date - ")
-                .append(formattedCreatedDate);
-        return emailBody.toString();
-    }
-
-    private String getEmailSubject(Complaint complaint) {
-        return new StringBuffer()
-                .append("Registered Grievance -")
-                .append(complaint.getCrn())
-                .append(" successfuly").toString();
+        kafkaProducer.sendMessage(".mseva.email", new EmailComposer(complaint, templatingEngine).compose());
     }
 
     private void triggerSms(Complaint complaint) {
-        SmsMessage smsMessage = new SmsMessage(complaint.getComplainant().getEmail(), getSmsBody(complaint));
-        kafkaProducer.sendMessage(".mseva.validated", smsMessage);
+        kafkaProducer.sendMessage(".mseva.sms", new SmsComposer(complaint, templatingEngine).compose());
     }
 
     private Complaint persistComplaint(SevaRequest sevaRequest) {
@@ -95,13 +66,5 @@ public class GrievancePersistenceListener {
         complaintService.createComplaint(complaint);
         return complaint;
     }
-
-    private String getSmsBody(Complaint complaint) {
-        return new StringBuffer().append("Your grievance for ")
-                .append(complaint.getComplaintType().getName())
-                .append(" has been registered successfully with tracking number (").append(complaint.getCrn())
-                .append("). Please use this number for all future references.").toString();
-    }
-
 
 }

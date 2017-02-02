@@ -1,6 +1,6 @@
 package org.egov.pgr.service;
 
-import org.egov.pgr.contracts.PositionsResponse;
+import org.egov.pgr.contracts.position.PositionsResponse;
 import org.springframework.web.client.RestTemplate;
 
 public class PositionService {

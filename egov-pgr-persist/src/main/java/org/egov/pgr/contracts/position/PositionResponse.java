@@ -1,4 +1,4 @@
-package org.egov.pgr.contracts;
+package org.egov.pgr.contracts.position;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

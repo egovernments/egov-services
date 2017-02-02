@@ -1,4 +1,4 @@
-package org.egov.pgr.model;
+package org.egov.pgr.contracts.grievance;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;

@@ -4,12 +4,11 @@ import org.egov.pgr.entity.Complaint;
 import org.egov.pgr.entity.ComplaintStatus;
 import org.egov.pgr.entity.ComplaintType;
 import org.egov.pgr.entity.enums.ReceivingMode;
-import org.egov.pgr.model.ServiceRequest;
+import org.egov.pgr.contracts.grievance.ServiceRequest;
 import org.egov.pgr.service.ComplaintStatusService;
 import org.egov.pgr.service.ComplaintTypeService;
 import org.egov.pgr.service.EscalationService;
 import org.egov.pgr.service.PositionService;
-import org.springframework.beans.BeanUtils;
 
 import java.util.Objects;
 

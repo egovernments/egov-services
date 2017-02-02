@@ -1,4 +1,4 @@
-package org.egov.pgr.model;
+package org.egov.pgr.contracts.sms;
 
 public class SmsMessage {
 

@@ -2,7 +2,7 @@ package org.egov.pgr.consumer;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
-import org.egov.pgr.model.SevaRequest;
+import org.egov.pgr.contracts.grievance.SevaRequest;
 import org.egov.pgr.transform.SevaRequestDeserializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

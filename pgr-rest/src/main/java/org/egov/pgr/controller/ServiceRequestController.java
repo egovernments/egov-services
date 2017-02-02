@@ -1,6 +1,8 @@
 package org.egov.pgr.controller;
 
 import org.egov.pgr.entity.Complaint;
+import org.egov.pgr.exception.UnauthorizedAccessException;
+import org.egov.pgr.factory.ResponseInfoFactory;
 import org.egov.pgr.factory.ServiceRequestsFactory;
 import org.egov.pgr.model.Error;
 import org.egov.pgr.model.*;
@@ -96,15 +98,15 @@ public class ServiceRequestController {
     }
 
     @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<ErrorRes> handleError(Exception ex) {
-        ex.printStackTrace();
-        ErrorRes response = new ErrorRes();
-        response.setResposneInfo(resInfo);
-        Error error = new Error();
-        error.setCode(400);
-        error.setDescription("General Server Error");
-        response.setError(error);
-        return new ResponseEntity<ErrorRes>(response, HttpStatus.BAD_REQUEST);
+        return getErrorResponseEntity(ex, HttpStatus.INTERNAL_SERVER_ERROR, "General Server error");
+    }
+
+    @ExceptionHandler(UnauthorizedAccessException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ResponseEntity<ErrorRes> handleAuthenticationError(UnauthorizedAccessException ex) {
+        return getErrorResponseEntity(ex, HttpStatus.UNAUTHORIZED, "You are not authorized fot this action");
     }
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE,
@@ -117,24 +119,41 @@ public class ServiceRequestController {
                                             @RequestParam(value = "end_date", required = false) @DateTimeFormat(pattern = "dd-MM-yyyy") Date endDate,
                                             @RequestParam(value = "status", required = false) String status,
                                             @RequestParam(value = "last_modified_datetime", required = false) @DateTimeFormat(pattern = "dd-MM-yyyy") Date lastModifiedDate,
-                                            @RequestHeader HttpHeaders headers) {
-        SevaSearchCriteria sevaSearchCriteria = new SevaSearchCriteria(serviceRequestId, serviceCode, startDate,
-                endDate, status, lastModifiedDate);
-        SevaSpecification sevaSpecification = new SevaSpecification(sevaSearchCriteria);
-        List<Complaint> complaints = complaintService.findAll(sevaSpecification);
+                                            @RequestHeader HttpHeaders headers) throws UnauthorizedAccessException {
+        try {
 
-        ServiceRequestRes serviceRequestResponse = new ServiceRequestRes();
-        serviceRequestResponse.setServiceRequests(ServiceRequestsFactory.createServiceRequestsFromComplaints(complaints));
-        ResponseInfo responseInfo = createResponseInfo(headers);
-        serviceRequestResponse.setResposneInfo(responseInfo);
-        return serviceRequestResponse;
+//            validateAuthToken(headers.getFirst("auth_token"));
+            SevaSearchCriteria sevaSearchCriteria = new SevaSearchCriteria(serviceRequestId, serviceCode, startDate,
+                    endDate, status, lastModifiedDate);
+            SevaSpecification sevaSpecification = new SevaSpecification(sevaSearchCriteria);
+            List<Complaint> complaints = complaintService.findAll(sevaSpecification);
+
+            ServiceRequestRes serviceRequestResponse = new ServiceRequestRes();
+            serviceRequestResponse.setServiceRequests(ServiceRequestsFactory.createServiceRequestsFromComplaints(complaints));
+            ResponseInfo responseInfo = ResponseInfoFactory.createResponseInfoFromRequestHeaders(headers);
+            serviceRequestResponse.setResposneInfo(responseInfo);
+            return serviceRequestResponse;
+        } catch (Exception exception) {
+            throw exception;
+        }
     }
 
-    private ResponseInfo createResponseInfo(@RequestHeader HttpHeaders headers) {
-        String api_id = headers.getFirst("api_id");
-        String ver = headers.getFirst("ver");
-        String ts = headers.getFirst("ts");
-        String msg_id = headers.getFirst("msg_id");
-        return new ResponseInfo(api_id, ver, ts, "uief87324", msg_id, "true");
+    private void validateAuthToken(String authToken) throws UnauthorizedAccessException {
+        User user = null;
+        user = retrieveUser(authToken);
+        if (user == null) {
+            throw new UnauthorizedAccessException();
+        }
+    }
+
+    private ResponseEntity<ErrorRes> getErrorResponseEntity(Exception ex, HttpStatus httpStatus, String errorDescription) {
+        ex.printStackTrace();
+        ErrorRes response = new ErrorRes();
+        response.setResposneInfo(resInfo);
+        Error error = new Error();
+        error.setCode(httpStatus.value());
+        error.setDescription(errorDescription);
+        response.setError(error);
+        return new ResponseEntity<>(response, httpStatus);
     }
 }

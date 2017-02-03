@@ -4,22 +4,17 @@ import org.egov.pgr.entity.Complaint;
 import org.egov.pgr.exception.UnauthorizedAccessException;
 import org.egov.pgr.factory.ResponseInfoFactory;
 import org.egov.pgr.factory.ServiceRequestsFactory;
-import org.egov.pgr.model.Error;
 import org.egov.pgr.model.*;
 import org.egov.pgr.producer.GrievanceProducer;
 import org.egov.pgr.service.ComplaintService;
-import org.egov.pgr.service.SevaNumberGeneratorServiceImpl;
+import org.egov.pgr.service.SevaNumberGeneratorService;
 import org.egov.pgr.specification.SevaSpecification;
-import org.egov.pgr.validators.FieldErrorDTO;
 import org.egov.pgr.validators.SevaRequestValidator;
-import org.egov.pgr.validators.ValidationErrorDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -27,14 +22,13 @@ import org.springframework.web.client.RestTemplate;
 import javax.validation.Valid;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = {"/seva"})
 public class ServiceRequestController {
 
     @Autowired
-    private SevaNumberGeneratorServiceImpl sevaNumberGeneratorImpl;
+    private SevaNumberGeneratorService sevaNumberGeneratorImpl;
 
     @Autowired
     private GrievanceProducer kafkaProducer;
@@ -84,42 +78,17 @@ public class ServiceRequestController {
         return new RestTemplate().getForObject(url, User.class);
     }
 
-    @ExceptionHandler
-    @ResponseBody
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity handle(MethodArgumentNotValidException exception) {
-        ValidationErrorDTO dto = new ValidationErrorDTO();
-        dto.addFieldErrors(exception.getBindingResult().getFieldErrors()
-                .stream()
-                .map(fieldError -> new FieldErrorDTO(fieldError.getField(), fieldError.getDefaultMessage()))
-                .collect(Collectors.toList()));
-
-        return new ResponseEntity(dto, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResponseEntity<ErrorRes> handleError(Exception ex) {
-        return getErrorResponseEntity(ex, HttpStatus.INTERNAL_SERVER_ERROR, "General Server error");
-    }
-
-    @ExceptionHandler(UnauthorizedAccessException.class)
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ResponseEntity<ErrorRes> handleAuthenticationError(UnauthorizedAccessException ex) {
-        return getErrorResponseEntity(ex, HttpStatus.UNAUTHORIZED, "You are not authorized fot this action");
-    }
-
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE,
             headers = {"api_id", "ver", "ts", "action", "did", "msg_id", "requester_id", "auth_token"})
     @ResponseBody
-    public ServiceRequestRes getSevaDetails(@RequestParam("jurisdiction_id") Long jurisdictionId,
-                                            @RequestParam(value = "service_request_id", required = false) String serviceRequestId,
-                                            @RequestParam(value = "service_code", required = false) String serviceCode,
-                                            @RequestParam(value = "start_date", required = false) @DateTimeFormat(pattern = "dd-MM-yyyy") Date startDate,
-                                            @RequestParam(value = "end_date", required = false) @DateTimeFormat(pattern = "dd-MM-yyyy") Date endDate,
-                                            @RequestParam(value = "status", required = false) String status,
-                                            @RequestParam(value = "last_modified_datetime", required = false) @DateTimeFormat(pattern = "dd-MM-yyyy") Date lastModifiedDate,
-                                            @RequestHeader HttpHeaders headers) throws UnauthorizedAccessException {
+    public ServiceRequestRes getServiceRequests(@RequestParam("jurisdiction_id") Long jurisdictionId,
+                                                @RequestParam(value = "service_request_id", required = false) String serviceRequestId,
+                                                @RequestParam(value = "service_code", required = false) String serviceCode,
+                                                @RequestParam(value = "start_date", required = false) @DateTimeFormat(pattern = "dd-MM-yyyy") Date startDate,
+                                                @RequestParam(value = "end_date", required = false) @DateTimeFormat(pattern = "dd-MM-yyyy") Date endDate,
+                                                @RequestParam(value = "status", required = false) String status,
+                                                @RequestParam(value = "last_modified_datetime", required = false) @DateTimeFormat(pattern = "dd-MM-yyyy") Date lastModifiedDate,
+                                                @RequestHeader HttpHeaders headers) throws UnauthorizedAccessException {
         try {
 
 //            validateAuthToken(headers.getFirst("auth_token"));
@@ -144,16 +113,5 @@ public class ServiceRequestController {
         if (user == null) {
             throw new UnauthorizedAccessException();
         }
-    }
-
-    private ResponseEntity<ErrorRes> getErrorResponseEntity(Exception ex, HttpStatus httpStatus, String errorDescription) {
-        ex.printStackTrace();
-        ErrorRes response = new ErrorRes();
-        response.setResposneInfo(resInfo);
-        Error error = new Error();
-        error.setCode(httpStatus.value());
-        error.setDescription(errorDescription);
-        response.setError(error);
-        return new ResponseEntity<>(response, httpStatus);
     }
 }

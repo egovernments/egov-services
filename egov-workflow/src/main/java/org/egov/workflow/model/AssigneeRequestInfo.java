@@ -4,31 +4,30 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class AssigneeRequestInfo {
 
-	@JsonProperty("ResposneInfo")
-	private ResponseInfo resposneInfo = null;
-	
-	@JsonProperty("AssigneeFilterInfo")
-	private AssigneeFilterInfo assigneeFilterInfo = null;
-	
-	public AssigneeRequestInfo() {
-		
-	}
+    @JsonProperty("ResposneInfo")
+    private RequestInfo requestInfo = null;
 
-	public ResponseInfo getResposneInfo() {
-		return resposneInfo;
-	}
+    @JsonProperty("AssigneeFilterInfo")
+    private AssigneeFilterInfo assigneeFilterInfo = null;
 
-	public void setResposneInfo(ResponseInfo resposneInfo) {
-		this.resposneInfo = resposneInfo;
-	}
+    public AssigneeRequestInfo() {
 
-	public AssigneeFilterInfo getAssigneeFilterInfo() {
-		return assigneeFilterInfo;
-	}
+    }
 
-	public void setAssigneeFilterInfo(AssigneeFilterInfo assigneeFilterInfo) {
-		this.assigneeFilterInfo = assigneeFilterInfo;
-	}
-	
-    
+    public RequestInfo getRequestInfo() {
+        return requestInfo;
+    }
+
+    public void setRequestInfo(final RequestInfo requestInfo) {
+        this.requestInfo = requestInfo;
+    }
+
+    public AssigneeFilterInfo getAssigneeFilterInfo() {
+        return assigneeFilterInfo;
+    }
+
+    public void setAssigneeFilterInfo(final AssigneeFilterInfo assigneeFilterInfo) {
+        this.assigneeFilterInfo = assigneeFilterInfo;
+    }
+
 }

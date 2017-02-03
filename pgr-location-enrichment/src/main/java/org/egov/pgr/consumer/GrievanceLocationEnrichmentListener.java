@@ -9,6 +9,7 @@ import org.egov.pgr.model.SevaRequest;
 import org.egov.pgr.producer.GrievanceAssignmentProducer;
 import org.egov.pgr.services.BoundaryService;
 import org.egov.pgr.services.CrossHierarchyService;
+import org.egov.pgr.transform.BoundaryResponse;
 import org.egov.pgr.transform.CrossHierarchyResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -50,17 +51,20 @@ public class GrievanceLocationEnrichmentListener {
 	}
 
 	private void populateLocation(SevaRequest sevaRequest) {
-		Long locationId = null;
 		ServiceRequest serviceRequest = sevaRequest.getServiceRequest();
 		RequestInfo requestInfo = sevaRequest.getRequestInfo();
-		if (locationHasBeenProvided(serviceRequest))
-			sevaRequest.getServiceRequest().getValues().put("locationId", String.valueOf(boundaryService
-					.fetchBoundaryByLatLng(requestInfo, serviceRequest.getLat(), serviceRequest.getLng())));
+		if (locationHasBeenProvided(serviceRequest)) {
+			BoundaryResponse response = boundaryService.fetchBoundaryByLatLng(requestInfo, serviceRequest.getLat(),
+					serviceRequest.getLng());
+			sevaRequest.getServiceRequest().getValues().put("location_id", String.valueOf(response.getId()));
+			sevaRequest.getServiceRequest().getValues().put("location_name", response.getName());
+		}
 		;
 		if (crossHierarchyIdHasBeenProvided(serviceRequest)) {
 			CrossHierarchyResponse chResponse = crossHierarchyService.fetchCrossHierarchyById(requestInfo,
 					serviceRequest.getCrossHierarchyId());
 			sevaRequest.getServiceRequest().getValues().put("location_id", chResponse.getParent().getId().toString());
+			sevaRequest.getServiceRequest().getValues().put("location_name", chResponse.getParent().getName());
 			sevaRequest.getServiceRequest().getValues().put("child_location_id",
 					chResponse.getChild().getId().toString());
 		}

@@ -69,6 +69,7 @@ public class ExternalSMSService implements SMSService {
     private static final String DEST_MESSAGE_PARAM_NAME = "sms.message.req.param.name";
     private static final String SMS_EXTRA_REQ_PARAMS = "sms.extra.req.params";
     private static final String MOBILE_NUMBER_PREFIX = "mobile.number.prefix";
+    private static final String SMS_RESPONSE_NOT_SUCCESSFUL = "Sms response not successful";
 
     private ApplicationProperties applicationProperties;
     private RestTemplate restTemplate;
@@ -80,16 +81,18 @@ public class ExternalSMSService implements SMSService {
     }
 
     @Override
-    public boolean sendSMS(String mobileNumber, String message, MessagePriority priority) {
+    public void sendSMS(String mobileNumber, String message, MessagePriority priority) {
         try {
             final MultiValueMap<String, String> requestBody = getSmsRequestBody(mobileNumber, message, priority);
             HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(requestBody, getHttpHeaders());
             final String url = applicationProperties.smsProviderURL();
             ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
-            return isResponseCodeNotInKnownErrorCodeList(response);
+            if (isResponseCodeInKnownErrorCodeList(response)) {
+                throw new RuntimeException(SMS_RESPONSE_NOT_SUCCESSFUL);
+            }
         } catch (RestClientException e) {
             LOGGER.error("Error occurred while sending SMS to " + mobileNumber, e);
-            return false;
+            throw e;
         }
     }
 
@@ -132,9 +135,9 @@ public class ExternalSMSService implements SMSService {
         }
     }
 
-    private boolean isResponseCodeNotInKnownErrorCodeList(ResponseEntity<?> response) {
+    private boolean isResponseCodeInKnownErrorCodeList(ResponseEntity<?> response) {
         final String responseCode = Integer.toString(response.getStatusCodeValue());
-        return applicationProperties.smsErrorCodes().stream().noneMatch(responseCode::startsWith);
+        return applicationProperties.smsErrorCodes().stream().anyMatch(errorCode -> errorCode.equals(responseCode));
     }
 
 }

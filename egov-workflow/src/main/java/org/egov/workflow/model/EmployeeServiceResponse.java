@@ -6,17 +6,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class EmployeesResponse {
+public class EmployeeServiceResponse {
 
 	@JsonProperty("Employees")
-	private List<EmployeeResponse> employees;
+	private List<EmployeeResponse> employee;
 
-	public List<EmployeeResponse> getEmployees() {
-		return employees;
-	}
-
-	public void setEmployees(List<EmployeeResponse> employees) {
-		this.employees = employees;
+	public List<EmployeeResponse> getEmployee() {
+		return employee;
 	}
 
 }

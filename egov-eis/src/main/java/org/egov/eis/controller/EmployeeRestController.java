@@ -12,8 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,7 +23,7 @@ public class EmployeeRestController {
 	@Autowired
 	private EmployeeService employeeService;
 
-	@RequestMapping(value = "/employee", method = RequestMethod.GET)
+	@GetMapping(value = "/employee")
 	@ResponseBody
 	public EmployeeRes getEmployees(@RequestParam(value = "tenantId", required = true) String tenantId,
 			@RequestParam(value = "code", required = false) String code,
@@ -32,7 +31,7 @@ public class EmployeeRestController {
 			@RequestParam(value = "assignmentDesignationCode", required = false) String assignmentDesignationCode,
 			@RequestParam(value = "asOnDate", required = false) LocalDate asOnDate,
 			@RequestParam(value = "assignmentIsPrimary", required = false) Boolean assignmentIsPrimary,
-			@RequestParam(value = "positionId", required = true) String positionId,
+			@RequestParam(value = "positionId", required = false) String positionId,
 			@RequestParam(value = "roleName", required = false) String roleName,
 			@RequestParam(value = "pageSize", required = false, defaultValue = "20") Integer pageSize,
 			@RequestParam(value = "pageNumber", required = false, defaultValue = "1") Integer pageNumber)

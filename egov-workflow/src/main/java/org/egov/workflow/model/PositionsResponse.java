@@ -7,10 +7,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PositionsResponse {
-	
+
 	@JsonProperty("Positions")
 	private List<PositionResponse> positions;
-	
+
 	@JsonProperty("PositionHierarchies")
 	private List<PositionHierarchyResponse> positionHierarchies;
 

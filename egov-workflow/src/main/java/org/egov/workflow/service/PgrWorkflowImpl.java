@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class PgrWorkflowImpl implements WorkflowInterface {
-	
+
 	@Autowired
 	private ComplaintRouterService complaintRouterService;
 
@@ -51,8 +51,8 @@ public class PgrWorkflowImpl implements WorkflowInterface {
 	}
 
 	@Override
-	public PositionResponse getAssignee(Long boundaryId,String complaintTypeCode,Long assigneeId) {
-		return complaintRouterService.getAssignee(boundaryId, complaintTypeCode,assigneeId);
+	public PositionResponse getAssignee(Long boundaryId, String complaintTypeCode, Long assigneeId) {
+		return complaintRouterService.getAssignee(boundaryId, complaintTypeCode, assigneeId);
 	}
 
 	@Override

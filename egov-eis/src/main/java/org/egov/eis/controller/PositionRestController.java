@@ -3,8 +3,10 @@ package org.egov.eis.controller;
 import java.util.Date;
 import java.util.List;
 
+import org.egov.eis.entity.Position;
 import org.egov.eis.model.Error;
 import org.egov.eis.model.ErrorRes;
+import org.egov.eis.model.PositionRequest;
 import org.egov.eis.model.PositionRes;
 import org.egov.eis.model.ResponseInfo;
 import org.egov.eis.service.PositionService;
@@ -13,9 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,7 +28,7 @@ public class PositionRestController {
 	@Autowired
 	private PositionService positionService;
 
-	@RequestMapping(value = "/employee/{code}/positions", method = RequestMethod.GET)
+	@GetMapping(value = "/employee/{code}/positions")
 	@ResponseBody
 	public PositionRes getPositions(@PathVariable("code") String code,
 			@RequestParam(value = "tenantId", required = true) String tenantId,
@@ -50,7 +52,7 @@ public class PositionRestController {
 		return response;
 	}
 
-	@RequestMapping(value = "/position", method = RequestMethod.GET)
+	@GetMapping(value = "/position")
 	@ResponseBody
 	public PositionRes getPosition(@RequestParam(value = "tenantId", required = true) String tenantId,
 			@RequestParam(value = "id") String id) throws Exception {
@@ -65,6 +67,20 @@ public class PositionRestController {
 
 		return response;
 	}
+	
+	@GetMapping(value="positions")
+	@ResponseBody
+	public ResponseEntity<?> search(@ModelAttribute PositionRequest positionRequest) {
+
+		PositionRes response = new PositionRes();
+		List<Position> positions = positionService.getPositions(positionRequest);
+		response.getPosition().addAll(positions);
+		ResponseInfo responseInfo = new ResponseInfo("","",new Date().toString(),"","","");
+		responseInfo.setStatus(HttpStatus.CREATED.toString());
+		response.setResponseInfo(responseInfo);
+		return new ResponseEntity<PositionRes>(response, HttpStatus.OK);
+	}
+
 
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<ErrorRes> handleError(Exception ex) {

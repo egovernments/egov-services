@@ -39,6 +39,7 @@
  */
 package org.egov.eis.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -46,6 +47,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.egov.eis.entity.Position;
+import org.egov.eis.model.PositionRequest;
 import org.egov.eis.repository.PositionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -71,5 +73,14 @@ public class PositionService {
 
 	public List<Position> getAllPositionsByEmpCode(final String code, final Date asOnDate) {
 		return positionRepository.getAllPositionsByEmpCode(code, asOnDate);
+	}
+
+	public List<Position> getPositions(PositionRequest positionRequest) {
+		List<Position> positions = new ArrayList<Position>();
+		if (positionRequest.getPosition().getId() != null) {
+			positions.add(getById(positionRequest.getPosition().getId()));
+		}
+
+		return positions;
 	}
 }

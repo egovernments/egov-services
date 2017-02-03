@@ -39,11 +39,13 @@
  */
 package org.egov.eis.service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import org.egov.eis.entity.Position;
 import org.egov.eis.entity.PositionHierarchy;
+import org.egov.eis.model.PositionHierarchyRequest;
 import org.egov.eis.repository.PositionHierarchyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -81,7 +83,8 @@ public class PositionHierarchyService {
 
 	public PositionHierarchy getPosHirByPosAndObjectTypeAndObjectSubType(final Long posId, final String objectType,
 			final String objectSubType) {
-		return positionHierarchyRepository.getPosHirByPosAndObjectTypeAndObjectSubType(posId, objectType, objectSubType);
+		return positionHierarchyRepository.getPosHirByPosAndObjectTypeAndObjectSubType(posId, objectType,
+				objectSubType);
 	}
 
 	public PositionHierarchy getPosHirByFromAndToPosAndObjectTypeAndObjectSubType(final Long fromPosId,
@@ -141,6 +144,23 @@ public class PositionHierarchyService {
 			final List<String> compTypeCodes, final Position fromPositionId) {
 		return positionHierarchyRepository.findPositionHierarchyByComplaintTypesAndFromPosition(objectType,
 				compTypeCodes, fromPositionId);
+	}
+
+	public List<PositionHierarchy> getPositionHierarchys(PositionHierarchyRequest positionHierarchyRequest) {
+		List<PositionHierarchy> positionHierarchys = new ArrayList<PositionHierarchy>();
+		if (positionHierarchyRequest.getPositionHierarchy().getObjectType().getType() != null
+				&& !positionHierarchyRequest.getPositionHierarchy().getObjectType().getType().isEmpty()
+				&& positionHierarchyRequest.getPositionHierarchy().getObjectSubType() != null
+				&& !positionHierarchyRequest.getPositionHierarchy().getObjectSubType().isEmpty()
+				&& positionHierarchyRequest.getPositionHierarchy().getFromPosition().getId() != null
+				&& (positionHierarchyRequest.getPositionHierarchy().getToPosition().getId() == null)) {
+			positionHierarchys.add(getPosHirByPosAndObjectTypeAndObjectSubType(
+					positionHierarchyRequest.getPositionHierarchy().getFromPosition().getId(),
+					positionHierarchyRequest.getPositionHierarchy().getObjectType().getType(),
+					positionHierarchyRequest.getPositionHierarchy().getObjectSubType()));
+		}
+
+		return positionHierarchys;
 	}
 
 }

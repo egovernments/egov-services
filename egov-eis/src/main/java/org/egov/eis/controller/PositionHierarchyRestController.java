@@ -3,8 +3,10 @@ package org.egov.eis.controller;
 import java.util.Date;
 import java.util.List;
 
+import org.egov.eis.entity.PositionHierarchy;
 import org.egov.eis.model.Error;
 import org.egov.eis.model.ErrorRes;
+import org.egov.eis.model.PositionHierarchyRequest;
 import org.egov.eis.model.PositionHierarchyRes;
 import org.egov.eis.model.ResponseInfo;
 import org.egov.eis.service.PositionHierarchyService;
@@ -12,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,7 +34,7 @@ public class PositionHierarchyRestController {
 			@RequestParam(value = "objectType") String objectType,
 			@RequestParam(value = "objectSubType") String objectSubType,
 			@RequestParam(value = "fromPosition") String fromPosition,
-			@RequestParam(value = "toPosition",required = false) String toPosition,
+			@RequestParam(value = "toPosition", required = false) String toPosition,
 			@RequestParam(value = "pageSize", required = false, defaultValue = "20") Integer pageSize,
 			@RequestParam(value = "pageNumber", required = false, defaultValue = "1") Integer pageNumber,
 			@RequestParam(value = "sort", required = false, defaultValue = "[-objectType]") List<String> sort)
@@ -40,29 +44,42 @@ public class PositionHierarchyRestController {
 		response.setResponseInfo(new ResponseInfo("", "", new Date().toString(), "", "", "Successful response"));
 		if (objectType != null && !objectType.isEmpty() && objectSubType != null && !objectSubType.isEmpty()
 				&& fromPosition != null && !fromPosition.isEmpty() && toPosition != null && !toPosition.isEmpty()) {
-			response.getPositionHierarchies()
+			response.getPositionHierarchy()
 					.add(positionHierarchyService.getPosHirByFromAndToPosAndObjectTypeAndObjectSubType(
-							Long.valueOf(fromPosition), Long.valueOf(toPosition),objectType,
-							objectSubType));
+							Long.valueOf(fromPosition), Long.valueOf(toPosition), objectType, objectSubType));
 		} else if (objectType != null && !objectType.isEmpty() && objectSubType != null && !objectSubType.isEmpty()
 				&& fromPosition != null && !fromPosition.isEmpty() && (toPosition == null || toPosition.isEmpty())) {
-			response.getPositionHierarchies().add(positionHierarchyService.getPosHirByPosAndObjectTypeAndObjectSubType(
-					Long.valueOf(fromPosition),objectType, objectSubType));
+			response.getPositionHierarchy().add(positionHierarchyService.getPosHirByPosAndObjectTypeAndObjectSubType(
+					Long.valueOf(fromPosition), objectType, objectSubType));
 		} else if (objectType != null && !objectType.isEmpty() && objectSubType != null && !objectSubType.isEmpty()
 				&& ((fromPosition == null || fromPosition.isEmpty()) && (toPosition == null || toPosition.isEmpty()))) {
-			response.getPositionHierarchies().addAll(positionHierarchyService
-					.getPosHirByObjectTypeAndObjectSubType(objectType, objectSubType));
+			response.getPositionHierarchy()
+					.addAll(positionHierarchyService.getPosHirByObjectTypeAndObjectSubType(objectType, objectSubType));
 		} else if (objectType != null && !objectType.isEmpty()
 				&& ((objectSubType == null || objectSubType.isEmpty())
 						&& (fromPosition == null || fromPosition.isEmpty())
 						&& (toPosition == null || toPosition.isEmpty()))) {
-			response.getPositionHierarchies().addAll(
-					positionHierarchyService.getListOfPositionHeirarchyByObjectType(objectType));
+			response.getPositionHierarchy()
+					.addAll(positionHierarchyService.getListOfPositionHeirarchyByObjectType(objectType));
 		} else {
 			throw new Exception();
 		}
 
 		return response;
+	}
+
+	@GetMapping(value = "positionhierarchys")
+	@ResponseBody
+	public ResponseEntity<?> search(@ModelAttribute PositionHierarchyRequest positionHierarchyRequest) {
+
+		PositionHierarchyRes response = new PositionHierarchyRes();
+		List<PositionHierarchy> positionHierarchys = positionHierarchyService
+				.getPositionHierarchys(positionHierarchyRequest);
+		response.getPositionHierarchy().addAll(positionHierarchys);
+		ResponseInfo responseInfo = new ResponseInfo("", "", new Date().toString(), "", "", "");
+		responseInfo.setStatus(HttpStatus.CREATED.toString());
+		response.setResponseInfo(responseInfo);
+		return new ResponseEntity<PositionHierarchyRes>(response, HttpStatus.OK);
 	}
 
 	@ExceptionHandler(Exception.class)

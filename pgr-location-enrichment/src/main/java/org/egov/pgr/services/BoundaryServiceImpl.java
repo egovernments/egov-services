@@ -13,14 +13,11 @@ public class BoundaryServiceImpl implements BoundaryService {
 	@Value("${egov.services.boundary_service.host}")
 	private String boundaryServiceHost;
 
-	@Value("${egov.services.crosshierarchy_service.host}")
-	private String crossHierarchyServiceHost;
-
 	@Override
 	public BoundaryResponse fetchBoundaryByLatLng(RequestInfo requestInfo, Double lat, Double lng) {
 		String url = boundaryServiceHost
 				+ "v1/location/boundarys?boundary.latitude={latitude}&boundary.longitude={longitude}";
-		return getBoundaryServiceResponse(url, String.valueOf(lat), String.valueOf(lng), "").getBoundary().get(0);
+		return getBoundaryServiceResponse(url, String.valueOf(lat), String.valueOf(lng)).getBoundary().get(0);
 	}
 
 	private BoundaryServiceResponse getBoundaryServiceResponse(final String url, String... args) {

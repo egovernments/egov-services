@@ -49,6 +49,7 @@ import javax.persistence.PersistenceContext;
 import org.egov.pgr.entity.Complaint;
 import org.egov.pgr.entity.ComplaintType;
 import org.egov.pgr.repository.ComplaintTypeRepository;
+import org.egov.pgr.wrapper.ComplaintTypeRequest;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
@@ -62,69 +63,70 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 @Service
 @Transactional(readOnly = true)
 public class ComplaintTypeService {
 
-    private final ComplaintTypeRepository complaintTypeRepository;
+	private final ComplaintTypeRepository complaintTypeRepository;
 
-    @PersistenceContext
-    private EntityManager entityManager;
+	@PersistenceContext
+	private EntityManager entityManager;
 
-    @Autowired
-    public ComplaintTypeService(final ComplaintTypeRepository complaintTypeRepository) {
-        this.complaintTypeRepository = complaintTypeRepository;
-    }
+	@Autowired
+	public ComplaintTypeService(final ComplaintTypeRepository complaintTypeRepository) {
+		this.complaintTypeRepository = complaintTypeRepository;
+	}
 
-    public ComplaintType findBy(final Long complaintTypeId) {
-        return complaintTypeRepository.findOne(complaintTypeId);
-    }
+	public ComplaintType findBy(final Long complaintTypeId) {
+		return complaintTypeRepository.findOne(complaintTypeId);
+	}
 
-    @Transactional
-    public ComplaintType createComplaintType(final ComplaintType complaintType) {
-        return complaintTypeRepository.save(complaintType);
-    }
+	@Transactional
+	public ComplaintType createComplaintType(final ComplaintType complaintType) {
+		return complaintTypeRepository.save(complaintType);
+	}
 
-    @Transactional
-    public ComplaintType updateComplaintType(final ComplaintType complaintType) {
-        return complaintTypeRepository.save(complaintType);
-    }
+	@Transactional
+	public ComplaintType updateComplaintType(final ComplaintType complaintType) {
+		return complaintTypeRepository.save(complaintType);
+	}
 
-    public List<ComplaintType> findAll() {
-        return complaintTypeRepository.findAll(new Sort(Sort.Direction.ASC, "name"));
-    }
+	public List<ComplaintType> findAll() {
+		return complaintTypeRepository.findAll(new Sort(Sort.Direction.ASC, "name"));
+	}
 
-    public List<ComplaintType> findAllActiveByNameLike(final String name) {
-        return complaintTypeRepository.findByIsActiveTrueAndNameContainingIgnoreCase(name);
-    }
+	public List<ComplaintType> findAllActiveByNameLike(final String name) {
+		return complaintTypeRepository.findByIsActiveTrueAndNameContainingIgnoreCase(name);
+	}
 
-    public List<ComplaintType> findActiveComplaintTypesByCategory(final Long categoryId) {
-        return complaintTypeRepository.findByIsActiveTrueAndCategoryIdOrderByNameAsc(categoryId);
-    }
+	public List<ComplaintType> findActiveComplaintTypesByCategory(final Long categoryId) {
+		return complaintTypeRepository.findByIsActiveTrueAndCategoryIdOrderByNameAsc(categoryId);
+	}
 
-    public List<ComplaintType> findAllByNameLike(final String name) {
-        return complaintTypeRepository.findByNameContainingIgnoreCase(name);
-    }
+	public List<ComplaintType> findAllByNameLike(final String name) {
+		return complaintTypeRepository.findByNameContainingIgnoreCase(name);
+	}
 
-    public ComplaintType findByName(final String name) {
-        return complaintTypeRepository.findByName(name);
-    }
+	public ComplaintType findByName(final String name) {
+		return complaintTypeRepository.findByName(name);
+	}
 
-    public ComplaintType load(final Long id) {
-        return complaintTypeRepository.getOne(id);
-    }
+	public ComplaintType load(final Long id) {
+		return complaintTypeRepository.getOne(id);
+	}
 
-    public Page<ComplaintType> getListOfComplaintTypes(final Integer pageNumber, final Integer pageSize) {
-        final Pageable pageable = new PageRequest(pageNumber - 1, pageSize, Sort.Direction.ASC, "name");
-        return complaintTypeRepository.findAll(pageable);
-    }
+	public Page<ComplaintType> getListOfComplaintTypes(final Integer pageNumber, final Integer pageSize) {
+		final Pageable pageable = new PageRequest(pageNumber - 1, pageSize, Sort.Direction.ASC, "name");
+		return complaintTypeRepository.findAll(pageable);
+	}
 
-    /**
-     * List top 5 complaint types filed in last one month
-     *
-     * @return complaint Type list
-     */
+	/**
+	 * List top 5 complaint types filed in last one month
+	 *
+	 * @return complaint Type list
+	 */
 	public List<ComplaintType> getFrequentlyFiledComplaints(Integer count) {
 
 		DateTime previousDate = new DateTime();
@@ -150,16 +152,25 @@ public class ComplaintTypeService {
 
 	}
 
-    public ComplaintType findByCode(final String code) {
+	public ComplaintType findByCode(final String code) {
 
-        return complaintTypeRepository.findByCode(code);
-    }
+		return complaintTypeRepository.findByCode(code);
+	}
 
-//    public List<Department> getAllComplaintTypeDepartments() {
-//        return complaintTypeRepository.findAllComplaintTypeDepartments();
-//    }
+	public List<ComplaintType> findActiveComplaintTypes() {
+		return complaintTypeRepository.findByIsActiveTrueOrderByNameAsc();
+	}
 
-    public List<ComplaintType> findActiveComplaintTypes() {
-        return complaintTypeRepository.findByIsActiveTrueOrderByNameAsc();
-    }
+	public List<ComplaintType> getComplaintType(ComplaintTypeRequest complaintTypeRequest) {
+
+		List<ComplaintType> complaintTypes = new ArrayList<ComplaintType>();
+		if (!StringUtils.isEmpty(complaintTypeRequest.getComplaintType().getCode())) {
+
+			complaintTypes.add(findByCode(complaintTypeRequest.getComplaintType().getCode()));
+
+		}
+
+		return complaintTypes;
+	}
+
 }

@@ -40,71 +40,67 @@
 
 package org.egov.workflow.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-
 
 @Entity
 @Table(name = "egpgr_router")
 @SequenceGenerator(name = ComplaintRouter.SEQ_COMPLAINTROUTER, sequenceName = ComplaintRouter.SEQ_COMPLAINTROUTER, allocationSize = 1)
 public class ComplaintRouter extends AbstractAuditable {
 
-    private static final long serialVersionUID = 5691022600220045218L;
-    public static final String SEQ_COMPLAINTROUTER = "SEQ_EGPGR_ROUTER";
+	private static final long serialVersionUID = 5691022600220045218L;
+	
+	public static final String SEQ_COMPLAINTROUTER = "SEQ_EGPGR_ROUTER";
 
-    @Id
-    @GeneratedValue(generator = SEQ_COMPLAINTROUTER, strategy = GenerationType.SEQUENCE)
-    private Long id;
+	@Id
+	@GeneratedValue(generator = SEQ_COMPLAINTROUTER, strategy = GenerationType.SEQUENCE)
+	private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "complainttypeid")
-    private ComplaintType complaintType;
+	@Column(name = "complainttypeid")
+	private Long complaintType;
 
-    @ManyToOne
-    @JoinColumn(name = "bndryid")
-    private Boundary boundary;
+	@Column(name = "bndryid")
+	private Long boundary;
 
-    @ManyToOne
-    @NotNull
-    @JoinColumn(name = "position")
-    private Position position;
+	@NotNull
+	@Column(name = "position")
+	private Long position;
 
-    public Long getId() {
-        return id;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public void setId(final Long id) {
-        this.id = id;
-    }
+	public void setId(final Long id) {
+		this.id = id;
+	}
 
-    public ComplaintType getComplaintType() {
-        return complaintType;
-    }
+	public Long getComplaintType() {
+		return complaintType;
+	}
 
-    public void setComplaintType(final ComplaintType complaintType) {
-        this.complaintType = complaintType;
-    }
+	public void setComplaintType(final Long complaintType) {
+		this.complaintType = complaintType;
+	}
 
-    public Position getPosition() {
-        return position;
-    }
+	public Long getPosition() {
+		return position;
+	}
 
-    public void setPosition(final Position position) {
-        this.position = position;
-    }
+	public void setPosition(final Long position) {
+		this.position = position;
+	}
 
-    public Boundary getBoundary() {
-        return boundary;
-    }
+	public Long getBoundary() {
+		return boundary;
+	}
 
-    public void setBoundary(final Boundary boundary) {
-        this.boundary = boundary;
-    }
+	public void setBoundary(final Long boundary) {
+		this.boundary = boundary;
+	}
 }

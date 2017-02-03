@@ -4,11 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PositionHierarchyResponse {
-	
+
 	private Long id;
-	
+
 	private PositionResponse fromPosition;
-	
+
 	private PositionResponse toPosition;
 
 	public Long getId() {
@@ -34,7 +34,5 @@ public class PositionHierarchyResponse {
 	public void setToPosition(PositionResponse toPosition) {
 		this.toPosition = toPosition;
 	}
-	
-	
-  
+
 }

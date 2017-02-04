@@ -23,13 +23,13 @@ public class SmsPropertiesTest {
     private SmsProperties smsProperties;
 
     @Test
-    public void testShouldCreatePropertyClassWithValuesInjected() {
+    public void test_should_create_property_class_with_values_injected() {
         assertEquals("http://sms/esms/sendsmsrequest", smsProperties.getSmsProviderURL());
         assertEquals(Arrays.asList("401", "404"), smsProperties.getSmsErrorCodes());
     }
 
     @Test
-    public void testShouldReturnSmsRequestBody() {
+    public void test_should_return_sms_request_body() {
         final SMSRequest smsRequest = new SMSRequest("mobileNumber", "testMessage");
         final MultiValueMap<String, String> smsRequestBody =
                 smsProperties.getSmsRequestBody(smsRequest, Priority.MEDIUM);

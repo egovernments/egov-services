@@ -27,7 +27,7 @@ public class SmsConsumerTest {
     private SMSService smsService;
 
     @Test
-    public void testShouldSendSmsWhenPayloadIsReceived() {
+    public void test_should_send_sms_when_payload_is_received() {
         final String payload = "{\"mobileNumber\":\"123545\", \"message\": \"testmessage\", \"foo\":\"bar\"}";
         Message<String> smsRequest = new GenericMessage<>(payload);
 

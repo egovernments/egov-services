@@ -40,7 +40,7 @@
 
 package org.egov.web.notification.sms.services;
 
-import org.egov.web.notification.sms.config.properties.SmsProperties;
+import org.egov.web.notification.sms.config.SmsProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -38,7 +38,7 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.web.notification.sms.config.properties;
+package org.egov.web.notification.sms.config;
 
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;

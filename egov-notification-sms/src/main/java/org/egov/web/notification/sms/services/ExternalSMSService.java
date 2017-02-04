@@ -41,6 +41,7 @@
 package org.egov.web.notification.sms.services;
 
 import org.egov.web.notification.sms.config.SmsProperties;
+import org.egov.web.notification.sms.contract.SMSRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,16 +72,16 @@ public class ExternalSMSService implements SMSService {
     }
 
     @Override
-    public void sendSMS(String mobileNumber, String message, Priority priority) {
+    public void sendSMS(SMSRequest smsRequest, Priority priority) {
         try {
-            HttpEntity<MultiValueMap<String, String>> request = getRequest(mobileNumber, message, priority);
+            HttpEntity<MultiValueMap<String, String>> request = getRequest(smsRequest, priority);
             String url = smsProperties.getSmsProviderURL();
             ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
             if (isResponseCodeInKnownErrorCodeList(response)) {
                 throw new RuntimeException(SMS_RESPONSE_NOT_SUCCESSFUL);
             }
         } catch (RestClientException e) {
-            LOGGER.error("Error occurred while sending SMS to " + mobileNumber, e);
+            LOGGER.error("Error occurred while sending SMS to " + smsRequest.getMobileNumber(), e);
             throw e;
         }
     }
@@ -90,10 +91,9 @@ public class ExternalSMSService implements SMSService {
         return smsProperties.getSmsErrorCodes().stream().anyMatch(errorCode -> errorCode.equals(responseCode));
     }
 
-    private HttpEntity<MultiValueMap<String, String>> getRequest(String mobileNumber, String message, Priority
+    private HttpEntity<MultiValueMap<String, String>> getRequest(SMSRequest smsRequest, Priority
             priority) {
-        final MultiValueMap<String, String> requestBody = smsProperties.getSmsRequestBody(mobileNumber, message,
-                priority);
+        final MultiValueMap<String, String> requestBody = smsProperties.getSmsRequestBody(smsRequest, priority);
         return new HttpEntity<>(requestBody, getHttpHeaders());
     }
 

@@ -1,5 +1,6 @@
 package org.egov.web.notification.sms.consumer;
 
+import org.egov.web.notification.sms.contract.SMSRequest;
 import org.egov.web.notification.sms.services.Priority;
 import org.egov.web.notification.sms.services.SMSService;
 import org.junit.Test;
@@ -33,6 +34,6 @@ public class SmsConsumerTest {
         sink.input().send(smsRequest);
 
         verify(smsService, times(1))
-                .sendSMS("123545", "testmessage", Priority.HIGH);
+                .sendSMS(new SMSRequest("123545", "testmessage"), Priority.HIGH);
     }
 }

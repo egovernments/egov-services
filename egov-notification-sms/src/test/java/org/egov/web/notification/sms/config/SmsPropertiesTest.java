@@ -1,5 +1,6 @@
 package org.egov.web.notification.sms.config;
 
+import org.egov.web.notification.sms.contract.SMSRequest;
 import org.egov.web.notification.sms.services.Priority;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,8 +30,9 @@ public class SmsPropertiesTest {
 
     @Test
     public void testShouldReturnSmsRequestBody() {
+        final SMSRequest smsRequest = new SMSRequest("mobileNumber", "testMessage");
         final MultiValueMap<String, String> smsRequestBody =
-                smsProperties.getSmsRequestBody("mobileNumber", "testMessage", Priority.MEDIUM);
+                smsProperties.getSmsRequestBody(smsRequest, Priority.MEDIUM);
 
         assertEquals(8, smsRequestBody.keySet().size());
         assertEquals("user123", smsRequestBody.getFirst("username"));

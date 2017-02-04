@@ -20,6 +20,6 @@ public class SmsConsumer {
 
     @StreamListener(Sink.INPUT)
     public void receive(SMSRequest smsRequest) {
-        smsService.sendSMS(smsRequest.getMobileNumber(), smsRequest.getMessage(), Priority.HIGH);
+        smsService.sendSMS(smsRequest, Priority.HIGH);
     }
 }

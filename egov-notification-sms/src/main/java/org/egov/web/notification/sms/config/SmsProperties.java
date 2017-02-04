@@ -42,6 +42,7 @@ package org.egov.web.notification.sms.config;
 
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
+import org.egov.web.notification.sms.contract.SMSRequest;
 import org.egov.web.notification.sms.services.Priority;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -64,13 +65,13 @@ public class SmsProperties {
     @Autowired
     private Environment environment;
 
-    public MultiValueMap<String, String> getSmsRequestBody(String mobileNumber, String message, Priority priority) {
+    public MultiValueMap<String, String> getSmsRequestBody(SMSRequest smsRequest, Priority priority) {
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.add(userParameterName, userName);
         map.add(passwordParameterName, password);
         map.add(senderIdParameterName, smsSender);
-        map.add(mobileNumberParameterName, getMobileNumberWithPrefix(mobileNumber));
-        map.add(messageParameterName, message);
+        map.add(mobileNumberParameterName, getMobileNumberWithPrefix(smsRequest.getMobileNumber()));
+        map.add(messageParameterName, smsRequest.getMessage());
         populateSmsPriority(priority, map);
         populateAdditionalSmsParameters(map);
 

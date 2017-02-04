@@ -40,8 +40,7 @@
 
 package org.egov.web.notification.sms.services;
 
-import org.apache.commons.lang3.StringUtils;
-import org.egov.web.notification.sms.config.properties.ApplicationProperties;
+import org.egov.web.notification.sms.config.properties.SmsProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +50,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -61,31 +59,22 @@ import org.springframework.web.client.RestTemplate;
 public class ExternalSMSService implements SMSService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExternalSMSService.class);
 
-    private static final String SMS_PRIORITY_PARAM_VALUE = "sms.%s.priority.param.value";
-    private static final String SENDERID_PARAM_NAME = "sms.sender.req.param.name";
-    private static final String USERNAME_PARAM_NAME = "sms.sender.username.req.param.name";
-    private static final String PASWRD_PARAM_NAME = "sms.sender.password.req.param.name";
-    private static final String DEST_MOBILENUM_PARAM_NAME = "sms.destination.mobile.req.param.name";
-    private static final String DEST_MESSAGE_PARAM_NAME = "sms.message.req.param.name";
-    private static final String SMS_EXTRA_REQ_PARAMS = "sms.extra.req.params";
-    private static final String MOBILE_NUMBER_PREFIX = "mobile.number.prefix";
     private static final String SMS_RESPONSE_NOT_SUCCESSFUL = "Sms response not successful";
 
-    private ApplicationProperties applicationProperties;
+    private SmsProperties smsProperties;
     private RestTemplate restTemplate;
 
     @Autowired
-    public ExternalSMSService(ApplicationProperties applicationProperties, RestTemplate restTemplate) {
-        this.applicationProperties = applicationProperties;
+    public ExternalSMSService(SmsProperties smsProperties, RestTemplate restTemplate) {
+        this.smsProperties = smsProperties;
         this.restTemplate = restTemplate;
     }
 
     @Override
-    public void sendSMS(String mobileNumber, String message, MessagePriority priority) {
+    public void sendSMS(String mobileNumber, String message, Priority priority) {
         try {
-            final MultiValueMap<String, String> requestBody = getSmsRequestBody(mobileNumber, message, priority);
-            HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(requestBody, getHttpHeaders());
-            final String url = applicationProperties.smsProviderURL();
+            HttpEntity<MultiValueMap<String, String>> request = getRequest(mobileNumber, message, priority);
+            String url = smsProperties.getSmsProviderURL();
             ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
             if (isResponseCodeInKnownErrorCodeList(response)) {
                 throw new RuntimeException(SMS_RESPONSE_NOT_SUCCESSFUL);
@@ -96,48 +85,22 @@ public class ExternalSMSService implements SMSService {
         }
     }
 
+    private boolean isResponseCodeInKnownErrorCodeList(ResponseEntity<?> response) {
+        final String responseCode = Integer.toString(response.getStatusCodeValue());
+        return smsProperties.getSmsErrorCodes().stream().anyMatch(errorCode -> errorCode.equals(responseCode));
+    }
+
+    private HttpEntity<MultiValueMap<String, String>> getRequest(String mobileNumber, String message, Priority
+            priority) {
+        final MultiValueMap<String, String> requestBody = smsProperties.getSmsRequestBody(mobileNumber, message,
+                priority);
+        return new HttpEntity<>(requestBody, getHttpHeaders());
+    }
+
     private HttpHeaders getHttpHeaders() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         return headers;
-    }
-
-    private MultiValueMap<String, String> getSmsRequestBody(String mobileNumber, String message, MessagePriority
-            priority) {
-        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-        map.add(applicationProperties.getProperty(USERNAME_PARAM_NAME), applicationProperties.smsSenderUsername());
-        map.add(applicationProperties.getProperty(PASWRD_PARAM_NAME), applicationProperties.smsSenderPassword());
-        map.add(applicationProperties.getProperty(SENDERID_PARAM_NAME), applicationProperties.smsSender());
-        map.add(applicationProperties.getProperty(DEST_MOBILENUM_PARAM_NAME),
-                applicationProperties.getProperty(MOBILE_NUMBER_PREFIX) + mobileNumber);
-        map.add(applicationProperties.getProperty(DEST_MESSAGE_PARAM_NAME), message);
-        populateSmsPriority(priority, map);
-        populateAdditionalSmsParameters(map);
-
-        return map;
-    }
-
-    private void populateSmsPriority(MessagePriority priority, MultiValueMap<String, String> map) {
-        if (applicationProperties.getProperty("sms.priority.enabled", Boolean.class)) {
-            map.add(applicationProperties.getProperty("sms.priority.param.name"),
-                    applicationProperties.getProperty(String.format(SMS_PRIORITY_PARAM_VALUE, priority.toString())));
-        }
-    }
-
-    private void populateAdditionalSmsParameters(MultiValueMap<String, String> map) {
-        if (StringUtils.isNotBlank(applicationProperties.getProperty(SMS_EXTRA_REQ_PARAMS))) {
-            String[] extraParameters = applicationProperties.getProperty(SMS_EXTRA_REQ_PARAMS).split("&");
-            if (extraParameters.length > 0)
-                for (String extraParm : extraParameters) {
-                    String[] paramNameValue = extraParm.split("=");
-                    map.add(paramNameValue[0], paramNameValue[1]);
-                }
-        }
-    }
-
-    private boolean isResponseCodeInKnownErrorCodeList(ResponseEntity<?> response) {
-        final String responseCode = Integer.toString(response.getStatusCodeValue());
-        return applicationProperties.smsErrorCodes().stream().anyMatch(errorCode -> errorCode.equals(responseCode));
     }
 
 }

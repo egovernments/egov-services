@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 public class ConsoleSMSService implements SMSService {
 
     @Override
-    public void sendSMS(String mobileNumber, String message, MessagePriority priority) {
+    public void sendSMS(String mobileNumber, String message, Priority priority) {
         System.out.println(String.format("Sending sms to %s with message '%s'", mobileNumber, message));
     }
 }

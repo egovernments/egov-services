@@ -1,7 +1,7 @@
 package org.egov.web.notification.sms.consumer;
 
 import org.egov.web.notification.sms.contract.SMSRequest;
-import org.egov.web.notification.sms.services.MessagePriority;
+import org.egov.web.notification.sms.services.Priority;
 import org.egov.web.notification.sms.services.SMSService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.annotation.EnableBinding;
@@ -20,6 +20,6 @@ public class SmsConsumer {
 
     @StreamListener(Sink.INPUT)
     public void receive(SMSRequest smsRequest) {
-        smsService.sendSMS(smsRequest.getMobileNumber(), smsRequest.getMessage(), MessagePriority.HIGH);
+        smsService.sendSMS(smsRequest.getMobileNumber(), smsRequest.getMessage(), Priority.HIGH);
     }
 }

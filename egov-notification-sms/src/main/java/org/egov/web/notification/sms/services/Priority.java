@@ -40,7 +40,7 @@
 
 package org.egov.web.notification.sms.services;
 
-public enum MessagePriority {
+public enum Priority {
 	HIGH, MEDIUM, LOW;
 
 	@Override

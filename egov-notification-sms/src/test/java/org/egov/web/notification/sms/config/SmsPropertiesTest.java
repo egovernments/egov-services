@@ -1,6 +1,5 @@
-package org.egov.web.notification.sms.config.properties;
+package org.egov.web.notification.sms.config;
 
-import org.egov.web.notification.sms.config.SmsProperties;
 import org.egov.web.notification.sms.services.Priority;
 import org.junit.Test;
 import org.junit.runner.RunWith;

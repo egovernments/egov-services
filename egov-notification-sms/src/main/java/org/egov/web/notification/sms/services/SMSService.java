@@ -1,8 +1,9 @@
 package org.egov.web.notification.sms.services;
 
-import org.egov.web.notification.sms.contract.SMSRequest;
+import org.egov.web.notification.sms.models.Priority;
+import org.egov.web.notification.sms.models.Sms;
 
 public interface SMSService {
-    void sendSMS(SMSRequest smsRequest, Priority priority);
+    void sendSMS(Sms sms, Priority priority);
 }
 

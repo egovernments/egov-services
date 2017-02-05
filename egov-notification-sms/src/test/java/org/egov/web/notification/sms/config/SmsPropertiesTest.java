@@ -1,7 +1,7 @@
 package org.egov.web.notification.sms.config;
 
-import org.egov.web.notification.sms.contract.SMSRequest;
-import org.egov.web.notification.sms.services.Priority;
+import org.egov.web.notification.sms.models.Priority;
+import org.egov.web.notification.sms.models.Sms;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +30,9 @@ public class SmsPropertiesTest {
 
     @Test
     public void test_should_return_sms_request_body() {
-        final SMSRequest smsRequest = new SMSRequest("mobileNumber", "testMessage");
+        final Sms sms = new Sms("mobileNumber", "testMessage");
         final MultiValueMap<String, String> smsRequestBody =
-                smsProperties.getSmsRequestBody(smsRequest, Priority.MEDIUM);
+                smsProperties.getSmsRequestBody(sms, Priority.MEDIUM);
 
         assertEquals(8, smsRequestBody.keySet().size());
         assertEquals("user123", smsRequestBody.getFirst("username"));

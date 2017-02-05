@@ -65,14 +65,14 @@ public class SmsProperties {
     @Autowired
     private Environment environment;
 
-    public MultiValueMap<String, String> getSmsRequestBody(Sms sms, Priority priority) {
+    public MultiValueMap<String, String> getSmsRequestBody(Sms sms) {
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.add(userParameterName, userName);
         map.add(passwordParameterName, password);
         map.add(senderIdParameterName, smsSender);
         map.add(mobileNumberParameterName, getMobileNumberWithPrefix(sms.getMobileNumber()));
         map.add(messageParameterName, sms.getMessage());
-        populateSmsPriority(priority, map);
+        populateSmsPriority(sms.getPriority(), map);
         populateAdditionalSmsParameters(map);
 
         return map;

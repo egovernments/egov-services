@@ -1,6 +1,5 @@
 package org.egov.web.notification.sms.services;
 
-import org.egov.web.notification.sms.models.Priority;
 import org.egov.web.notification.sms.models.Sms;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
@@ -10,7 +9,7 @@ import org.springframework.stereotype.Service;
 public class ConsoleSMSService implements SMSService {
 
     @Override
-    public void sendSMS(Sms sms, Priority priority) {
+    public void sendSMS(Sms sms) {
         System.out.println(String.format("Sending sms to %s with message '%s'",
                 sms.getMobileNumber(), sms.getMessage()));
     }

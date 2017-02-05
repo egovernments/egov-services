@@ -44,8 +44,8 @@ public class ExternalSMSServiceTest {
     public void test_should_send_sms_when_request_is_valid() {
         when(smsProperties.getSmsProviderURL()).thenReturn("http://sms/sms");
         final LinkedMultiValueMap<String, String> expectedContent = getExpectedContent();
-        final Sms sms = new Sms("mobileNumber", "testMessage");
-        when(smsProperties.getSmsRequestBody(sms, Priority.MEDIUM))
+        final Sms sms = new Sms("mobileNumber", "testMessage", Priority.MEDIUM);
+        when(smsProperties.getSmsRequestBody(sms))
                 .thenReturn(expectedContent);
         when(smsProperties.getSmsErrorCodes()).thenReturn(Arrays.asList("404", "401"));
 
@@ -54,29 +54,29 @@ public class ExternalSMSServiceTest {
                 .andExpect(content().formData(expectedContent))
                 .andRespond(withSuccess("sometextmessage", MediaType.TEXT_PLAIN));
 
-        smsService.sendSMS(sms, Priority.MEDIUM);
+        smsService.sendSMS(sms);
 
         server.verify();
     }
 
     @Test
     public void test_should_not_send_sms_when_mobile_number_is_not_present() {
-        final Sms sms = new Sms(null, "testMessage");
+        final Sms sms = new Sms(null, "testMessage", Priority.MEDIUM);
         server.expect(never(), anything())
                 .andRespond(withBadRequest());
 
-        smsService.sendSMS(sms, Priority.MEDIUM);
+        smsService.sendSMS(sms);
 
         server.verify();
     }
 
     @Test
     public void test_should_not_send_sms_when_message_is_not_present() {
-        final Sms sms = new Sms("mobileNumber", null);
+        final Sms sms = new Sms("mobileNumber", null, Priority.MEDIUM);
         server.expect(never(), anything())
                 .andRespond(withBadRequest());
 
-        smsService.sendSMS(sms, Priority.HIGH);
+        smsService.sendSMS(sms);
 
         server.verify();
     }
@@ -85,8 +85,8 @@ public class ExternalSMSServiceTest {
     public void test_should_throw_exception_when_response_is_not_successful() {
         when(smsProperties.getSmsProviderURL()).thenReturn("http://sms/sms");
         final LinkedMultiValueMap<String, String> expectedContent = getExpectedContent();
-        final Sms sms = new Sms("mobileNumber", "testMessage");
-        when(smsProperties.getSmsRequestBody(sms, Priority.MEDIUM))
+        final Sms sms = new Sms("mobileNumber", "testMessage", Priority.MEDIUM);
+        when(smsProperties.getSmsRequestBody(sms))
                 .thenReturn(expectedContent);
         when(smsProperties.getSmsErrorCodes()).thenReturn(Arrays.asList("400", "401"));
 
@@ -95,7 +95,7 @@ public class ExternalSMSServiceTest {
                 .andExpect(content().formData(expectedContent))
                 .andRespond(withBadRequest());
 
-        smsService.sendSMS(sms, Priority.MEDIUM);
+        smsService.sendSMS(sms);
     }
 
 

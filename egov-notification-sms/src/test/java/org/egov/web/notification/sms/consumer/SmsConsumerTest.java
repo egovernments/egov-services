@@ -34,6 +34,6 @@ public class SmsConsumerTest {
         sink.input().send(smsRequest);
 
         verify(smsService, times(1))
-                .sendSMS(new Sms("123545", "testmessage"), Priority.HIGH);
+                .sendSMS(new Sms("123545", "testmessage", Priority.HIGH));
     }
 }

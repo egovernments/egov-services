@@ -1,7 +1,6 @@
 package org.egov.web.notification.sms.consumer;
 
 import org.egov.web.notification.sms.consumer.contract.SMSRequest;
-import org.egov.web.notification.sms.models.Priority;
 import org.egov.web.notification.sms.services.SMSService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.annotation.EnableBinding;
@@ -20,6 +19,6 @@ public class SmsConsumer {
 
     @StreamListener(Sink.INPUT)
     public void receive(SMSRequest smsRequest) {
-        smsService.sendSMS(smsRequest.toDomain(), Priority.HIGH);
+        smsService.sendSMS(smsRequest.toDomain());
     }
 }

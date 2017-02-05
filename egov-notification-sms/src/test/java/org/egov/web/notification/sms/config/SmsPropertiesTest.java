@@ -30,9 +30,9 @@ public class SmsPropertiesTest {
 
     @Test
     public void test_should_return_sms_request_body() {
-        final Sms sms = new Sms("mobileNumber", "testMessage");
+        final Sms sms = new Sms("mobileNumber", "testMessage", Priority.MEDIUM);
         final MultiValueMap<String, String> smsRequestBody =
-                smsProperties.getSmsRequestBody(sms, Priority.MEDIUM);
+                smsProperties.getSmsRequestBody(sms);
 
         assertEquals(8, smsRequestBody.keySet().size());
         assertEquals("user123", smsRequestBody.getFirst("username"));

@@ -14,6 +14,7 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 public class Sms {
     private String mobileNumber;
     private String message;
+    private Priority priority;
 
     public boolean isValid() {
         return isNotEmpty(mobileNumber) && isNotEmpty(message);

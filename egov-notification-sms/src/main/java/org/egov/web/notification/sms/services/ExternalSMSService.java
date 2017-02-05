@@ -41,7 +41,6 @@
 package org.egov.web.notification.sms.services;
 
 import org.egov.web.notification.sms.config.SmsProperties;
-import org.egov.web.notification.sms.models.Priority;
 import org.egov.web.notification.sms.models.Sms;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,17 +72,17 @@ public class ExternalSMSService implements SMSService {
     }
 
     @Override
-    public void sendSMS(Sms sms, Priority priority) {
+    public void sendSMS(Sms sms) {
         if (!sms.isValid()) {
             LOGGER.error(String.format("Sms %s is not valid", sms));
             return;
         }
-        submitToExternalSmsService(sms, priority);
+        submitToExternalSmsService(sms);
     }
 
-    private void submitToExternalSmsService(Sms sms, Priority priority) {
+    private void submitToExternalSmsService(Sms sms) {
         try {
-            HttpEntity<MultiValueMap<String, String>> request = getRequest(sms, priority);
+            HttpEntity<MultiValueMap<String, String>> request = getRequest(sms);
             String url = smsProperties.getSmsProviderURL();
             ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
             if (isResponseCodeInKnownErrorCodeList(response)) {
@@ -100,9 +99,8 @@ public class ExternalSMSService implements SMSService {
         return smsProperties.getSmsErrorCodes().stream().anyMatch(errorCode -> errorCode.equals(responseCode));
     }
 
-    private HttpEntity<MultiValueMap<String, String>> getRequest(Sms sms, Priority
-            priority) {
-        final MultiValueMap<String, String> requestBody = smsProperties.getSmsRequestBody(sms, priority);
+    private HttpEntity<MultiValueMap<String, String>> getRequest(Sms sms) {
+        final MultiValueMap<String, String> requestBody = smsProperties.getSmsRequestBody(sms);
         return new HttpEntity<>(requestBody, getHttpHeaders());
     }
 

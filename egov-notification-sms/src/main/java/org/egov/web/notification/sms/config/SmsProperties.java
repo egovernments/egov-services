@@ -59,7 +59,7 @@ public class SmsProperties {
 
     private static final String SMS_PRIORITY_PARAM_VALUE = "sms.%s.priority.param.value";
     private static final String SMS_EXTRA_REQ_PARAMS = "sms.extra.req.params";
-    private static final String DELIMITER = "&";
+    private static final String KEY_VALUE_PAIR_DELIMITER = "&";
     private static final String KEY_VALUE_DELIMITER = "=";
 
     @Autowired
@@ -148,7 +148,7 @@ public class SmsProperties {
     }
 
     private HashMap<String, String> getExtraRequestParameters() {
-        String[] extraParameters = getProperty(SMS_EXTRA_REQ_PARAMS).split(DELIMITER);
+        String[] extraParameters = getProperty(SMS_EXTRA_REQ_PARAMS).split(KEY_VALUE_PAIR_DELIMITER);
         final HashMap<String, String> map = new HashMap<>();
         if (extraParameters.length > 0) {
             for (String extraParm : extraParameters) {

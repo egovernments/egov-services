@@ -4,6 +4,6 @@ import org.egov.workflow.model.ComplaintTypeResponse;
 
 public interface ComplaintTypeService {
 
-	ComplaintTypeResponse fetchComplaintTypeById(String code);
+	ComplaintTypeResponse fetchComplaintTypeByCode(String code);
 
 }

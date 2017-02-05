@@ -16,13 +16,13 @@ public class PositionServiceImpl implements PositionService {
 
 	@Override
 	public PositionResponse getById(Long id) {
-		String url = positionServiceHost + "eis/positions?psoition.id={id}";
+		String url = positionServiceHost + "eis/position?id={id}";
 		return getPositionServiceResponseById(url, id).getPosition().get(0);
 	}
 
 	@Override
 	public List<PositionResponse> getByEmployeeCode(String code) {
-		String url = positionServiceHost + "eis/employee/{code}/psoitions";
+		String url = positionServiceHost + "eis/employee/{code}/positions";
 		return getPositionServiceResponseByCode(url, code).getPosition();
 	}
 

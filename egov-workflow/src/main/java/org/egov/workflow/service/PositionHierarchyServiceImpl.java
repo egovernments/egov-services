@@ -11,23 +11,24 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class PositionHierarchyServiceImpl implements PositionHierarchyService {
 
-	@Value("${egov.services.positionhierarchy_service.host}")
-	private String positionHierarchyServiceHost;
+    @Value("${egov.services.positionhierarchy_service.host}")
+    private String positionHierarchyServiceHost;
 
-	@Override
-	public List<PositionHierarchyResponse> getByObjectTypeObjectSubTypeAndFromPosition(String objectType,
-			String objectSubType, Long fromPositionid) {
-		String url = positionHierarchyServiceHost
-				+ "eis/positionhierarchys?psoitionHierarchy.objectType.type={objectType}&psoitionHierarchy.objectSubType={objectSubType}&psoitionHierarchy.fromPosition.id={fromPosition}";
-		return getPositionHierarchyServiceResponse(url, objectType, objectSubType, fromPositionid)
-				.getPositionHierarchy();
-	}
+    @Override
+    public List<PositionHierarchyResponse> getByObjectTypeObjectSubTypeAndFromPosition(final String objectType,
+            final String objectSubType, final Long fromPositionid) {
+        final String url = positionHierarchyServiceHost
+                + "eis/positionhierarchies?tenantId=database&objectType=" + objectType + "&objectSubType=" + objectSubType
+                + "&fromPosition=" + fromPositionid;
+        return getPositionHierarchyServiceResponse(url, objectType, objectSubType, fromPositionid)
+                .getPositionHierarchy();
+    }
 
-	private PositionHierarchyServiceResponse getPositionHierarchyServiceResponse(final String url, String objectType,
-			String objectSubType, Long fromPositionid) {
-		RestTemplate restTemplate = new RestTemplate();
-		return restTemplate.getForObject(url, PositionHierarchyServiceResponse.class, objectType, objectSubType,
-				fromPositionid);
-	}
+    private PositionHierarchyServiceResponse getPositionHierarchyServiceResponse(final String url, final String objectType,
+            final String objectSubType, final Long fromPositionid) {
+        final RestTemplate restTemplate = new RestTemplate();
+        return restTemplate.getForObject(url, PositionHierarchyServiceResponse.class, objectType, objectSubType,
+                fromPositionid);
+    }
 
 }

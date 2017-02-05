@@ -126,7 +126,7 @@ public class ComplaintRouterService {
 				if (StringUtils.isNotBlank(complaintTypeCode)) {
 					for (final BoundaryResponse bndry : boundaries) {
 						ComplaintTypeResponse complaintType = complaintTypeService
-								.fetchComplaintTypeById(complaintTypeCode);
+								.fetchComplaintTypeByCode(complaintTypeCode);
 						complaintRouter = complaintRouterRepository
 								.findByComplaintTypeAndBoundary(complaintType.getId(), bndry.getId());
 						if (null != complaintRouter)
@@ -134,7 +134,7 @@ public class ComplaintRouterService {
 					}
 					if (null == complaintRouter) {
 						ComplaintTypeResponse complaintType = complaintTypeService
-								.fetchComplaintTypeById(complaintTypeCode);
+								.fetchComplaintTypeByCode(complaintTypeCode);
 						complaintRouter = complaintRouterRepository.findByOnlyComplaintType(complaintType.getId());
 					}
 					if (null == complaintRouter)
@@ -145,7 +145,7 @@ public class ComplaintRouterService {
 						}
 				}
 			} else {
-				ComplaintTypeResponse complaintType = complaintTypeService.fetchComplaintTypeById(complaintTypeCode);
+				ComplaintTypeResponse complaintType = complaintTypeService.fetchComplaintTypeByCode(complaintTypeCode);
 				complaintRouter = complaintRouterRepository.findByOnlyComplaintType(complaintType.getId());
 				if (null == complaintRouter)
 					complaintRouter = complaintRouterRepository.findCityAdminGrievanceOfficer("ADMINISTRATION");

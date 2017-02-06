@@ -40,8 +40,8 @@
 
 package org.egov.pgr.entity;
 
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -53,23 +53,19 @@ public abstract class AbstractAuditable extends AbstractPersistable<Long> {
 
     private static final long serialVersionUID = 7138056997693406739L;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
     @Column(name = "createdby")
-//    @CreatedBy
     private Long createdBy;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @CreatedDate
+    @CreationTimestamp
     @Column(name = "createddate")
     private Date createdDate;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
     @Column(name = "lastmodifiedby")
-//    @LastModifiedBy
     private Long lastModifiedBy;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @LastModifiedDate
+    @UpdateTimestamp
     @Column(name = "lastmodifieddate")
     private Date lastModifiedDate;
 

@@ -37,7 +37,7 @@ public class GrievancePersistenceListener {
 
     MustacheEngine templatingEngine = MustacheEngineBuilder.newBuilder().addTemplateLocator(new ClassPathTemplateLocator(1, "templates","txt")).build();
 
-    @KafkaListener(id = "grievancePersister", topics = "ap.public.mseva.persistreadyg", group = "grievances")
+    @KafkaListener(id = "grievancePersister", topics = "ap.public.mseva.persistreadyh", group = "grievances")
     public void processMessage(ConsumerRecord<String, SevaRequest> record) {
         SevaRequest sevaRequest = record.value();
         Complaint complaint = persistComplaint(sevaRequest);
@@ -65,7 +65,7 @@ public class GrievancePersistenceListener {
 
     private Complaint persistComplaint(SevaRequest sevaRequest) {
         Complaint complaint = new ComplaintBuilder(sevaRequest.getServiceRequest(), complaintTypeService, complaintStatusService, escalationService).build();
-//        complaintService.createComplaint(complaint);
+        complaint = complaintService.createComplaint(complaint);
         return complaint;
     }
 

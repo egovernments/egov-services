@@ -2,7 +2,9 @@ package org.egov.pgr;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.egov.pgr.repository.UserRepository;
 import org.egov.pgr.resolver.AuthenticatedUserResolver;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +23,14 @@ public class PgrRestSpringBootApplication {
     @Bean
     public RestTemplate getRestTemplate() {
         return new RestTemplate();
+    }
+
+    @Value("${user.service.url}")
+    private String userServiceUrl;
+
+    @Bean
+    public UserRepository userRepository(RestTemplate restTemplate) {
+        return new UserRepository(restTemplate, userServiceUrl);
     }
 
     @Bean

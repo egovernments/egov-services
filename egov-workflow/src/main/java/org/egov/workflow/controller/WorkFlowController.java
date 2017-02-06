@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class WorkFlowAssigneeController {
+public class WorkFlowController {
 
     @Autowired
     private PgrWorkflowImpl pgrWorkflowImpl;
-
-    @PostMapping(value = "/getAssignee", produces = MediaType.APPLICATION_JSON_VALUE)
+    
+    @PostMapping(value = "/assignee", produces = MediaType.APPLICATION_JSON_VALUE)
     public PositionResponse getComplaintAssignee(@RequestBody final AssigneeRequestInfo request) {
         final AssigneeFilterInfo assigneeFilterInfo = request.getAssigneeFilterInfo();
 

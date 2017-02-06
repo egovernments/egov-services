@@ -121,6 +121,18 @@ public class ServiceRequest {
         lastName = complaint.getComplainant().getName();
         phone = complaint.getComplainant().getMobile();
         email = complaint.getComplainant().getEmail();
+        values = new HashMap<>();
+        values.put("ReceivingMode", complaint.getReceivingMode().toString());
+        values.put("ComplaintStatus", complaint.getStatus().getName());
+        if (complaint.getReceivingCenter() != null) {
+            values.put("ReceivingCenter", complaint.getReceivingCenter().getName());
+        }
+        if (complaint.getLocation() != null) {
+            values.put("LocationId", complaint.getLocation().getName());
+        }
+        if (complaint.getChildLocation() != null) {
+            values.put("ChildLocationId", complaint.getChildLocation().getName());
+        }
     }
 
     @Override

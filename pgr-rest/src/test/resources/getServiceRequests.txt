@@ -5,7 +5,7 @@
          "ts":"ts",
          "res_msg_id":"uief87324",
          "msg_id":"msg_id",
-         "status":"true"},
+         "status":"successful"},
     "ServiceRequest":[
         {"service_request_id":"%1$s",
          "status":false,
@@ -33,6 +33,13 @@
          "account_id":null,
          "approval_position":null,
          "approval_comment":null,
-         "values":{}}
+         "values":{
+            "ReceivingMode": "%5$s",
+            "ReceivingCenter": "%6$s",
+            "ComplaintStatus": "%2$s",
+            "LocationId": "%7$s",
+            "ChildLocationId": "%8$s"
+         }
+         }
     ]
 }

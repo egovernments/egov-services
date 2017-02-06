@@ -80,7 +80,13 @@ public class Complaint extends AbstractAuditable {
 
     private Long assignee;
 
-    private Long location;
+    @ManyToOne
+    @JoinColumn(name = "location")
+    private Boundary location;
+
+    @ManyToOne
+    @JoinColumn(name = "childlocation")
+    private Boundary childLocation;
 
     @ManyToOne
     @NotNull
@@ -119,9 +125,6 @@ public class Complaint extends AbstractAuditable {
     @Enumerated(EnumType.ORDINAL)
 //	@Column(name = "citizenfeedback")
     private CitizenFeedback citizenFeedback;
-
-    //	@Column(name = "childlocation")
-    private Long childLocation;
 
     @Transient
     private String latlngAddress;
@@ -216,11 +219,11 @@ public class Complaint extends AbstractAuditable {
 //		this.supportDocs = supportDocs;
 //	}
 
-    public Long getLocation() {
+    public Boundary getLocation() {
         return this.location;
     }
 
-    public void setLocation(Long location) {
+    public void setLocation(Boundary location) {
         this.location = location;
     }
 
@@ -264,14 +267,14 @@ public class Complaint extends AbstractAuditable {
     public String toString() {
         return "Complaint [id=" + id + ", crn=" + crn + ", complaintType="
                 + complaintType + ", complainant=" + complainant
-                + ", assignee=" + assignee + ", location=" + location
+                + ", assignee=" + assignee + ", location=" + location.getName()
                 + ", status=" + status + ", details=" + details
                 + ", landmarkDetails=" + landmarkDetails + ", receivingMode="
                 + receivingMode + ", receivingCenter=" + receivingCenter
                 + ", lng=" + lng + ", lat=" + lat + ", escalationDate="
                 + escalationDate + ", department=" + department
                 + ", citizenFeedback=" + citizenFeedback + ", childLocation="
-                + childLocation + ", latlngAddress=" + latlngAddress
+                + childLocation.getName() + ", latlngAddress=" + latlngAddress
                 + ", crossHierarchyId=" + crossHierarchyId + "]";
     }
 
@@ -287,11 +290,11 @@ public class Complaint extends AbstractAuditable {
         this.citizenFeedback = citizenFeedback;
     }
 
-    public Long getChildLocation() {
+    public Boundary getChildLocation() {
         return this.childLocation;
     }
 
-    public void setChildLocation(Long childLocation) {
+    public void setChildLocation(Boundary childLocation) {
         this.childLocation = childLocation;
     }
 

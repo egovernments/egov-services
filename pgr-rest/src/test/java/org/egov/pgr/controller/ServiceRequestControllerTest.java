@@ -52,19 +52,29 @@ public class ServiceRequestControllerTest {
         String crn = "1234";
         String complaintType = "abc";
         String complainant = "kumar";
+        String receivingMode = "MANUAL";
+        String receivingCenter = "Commissioner Office";
+        String location = "Election Ward No 1";
+        String childLocation = "Gadu Veedhi";
 
         Complaint complaint = new ComplaintBuilder()
                 .crn(crn)
                 .complaintStatus(ComplaintStatus.REGISTERED)
                 .complaintType(complaintType)
                 .complainant(complainant)
+                .receivingMode(receivingMode)
+                .receivingCenter(receivingCenter)
+                .locationId(location)
+                .childLocationId(childLocation)
                 .buildComplaint();
         List<Complaint> complaints = new ArrayList<>(Collections.singletonList(complaint));
         when(mockComplaintService.findAll(any(SevaSpecification.class))).thenReturn(complaints);
 
         String content = new TestResourceReader().readResource("getServiceRequests.txt");
-        String expectedContent = String.format(content, crn, String.valueOf(ComplaintStatus.REGISTERED),
-                complaintType, complainant);
+        String expectedContent = String.format(
+                content, crn, String.valueOf(ComplaintStatus.REGISTERED),
+                complaintType, complainant, receivingMode, receivingCenter,
+                location, childLocation);
 
         mockMvc.perform(get("/seva?jurisdiction_id=1")
                 .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))

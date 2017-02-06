@@ -99,7 +99,7 @@ public class ServiceRequestController {
 
             ServiceRequestRes serviceRequestResponse = new ServiceRequestRes();
             serviceRequestResponse.setServiceRequests(ServiceRequestsFactory.createServiceRequestsFromComplaints(complaints));
-            ResponseInfo responseInfo = ResponseInfoFactory.createResponseInfoFromRequestHeaders(headers);
+            ResponseInfo responseInfo = ResponseInfoFactory.createResponseInfoFromRequestHeaders(headers, true);
             serviceRequestResponse.setResposneInfo(responseInfo);
             return serviceRequestResponse;
         } catch (Exception exception) {

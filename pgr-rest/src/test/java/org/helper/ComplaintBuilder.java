@@ -1,9 +1,7 @@
 package org.helper;
 
-import org.egov.pgr.entity.Complainant;
-import org.egov.pgr.entity.Complaint;
-import org.egov.pgr.entity.ComplaintStatus;
-import org.egov.pgr.entity.ComplaintType;
+import org.egov.pgr.entity.*;
+import org.egov.pgr.entity.enums.ReceivingMode;
 
 public class ComplaintBuilder {
     private Complaint complaint;
@@ -35,6 +33,32 @@ public class ComplaintBuilder {
         Complainant complainant = new Complainant();
         complainant.setName(name);
         this.complaint.setComplainant(complainant);
+        return this;
+    }
+
+    public ComplaintBuilder receivingMode(String mode) {
+        this.complaint.setReceivingMode(ReceivingMode.valueOf(mode));
+        return this;
+    }
+
+    public ComplaintBuilder receivingCenter(String center) {
+        ReceivingCenter receivingCenter = new ReceivingCenter();
+        receivingCenter.setName(center);
+        this.complaint.setReceivingCenter(receivingCenter);
+        return this;
+    }
+
+    public ComplaintBuilder locationId(String name) {
+        Boundary boundary = new Boundary();
+        boundary.setName(name);
+        this.complaint.setLocation(boundary);
+        return this;
+    }
+
+    public ComplaintBuilder childLocationId(String name) {
+        Boundary boundary = new Boundary();
+        boundary.setName(name);
+        this.complaint.setChildLocation(boundary);
         return this;
     }
 

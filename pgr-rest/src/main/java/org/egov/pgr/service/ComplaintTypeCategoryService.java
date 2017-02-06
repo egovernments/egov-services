@@ -69,7 +69,7 @@ public class ComplaintTypeCategoryService {
         return complaintTypeCategoryRepository.save(complaintTypeCategory);
     }
 
-    public List<ComplaintTypeCategory> findAll() {
+    public List<ComplaintTypeCategory> getAll() {
         return complaintTypeCategoryRepository.findAll(new Sort(Sort.Direction.ASC, "name"));
     }
 

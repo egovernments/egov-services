@@ -1,32 +1,13 @@
 package org.egov.pgr.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
+@Getter
+@AllArgsConstructor
 public class User {
-
     private String mobileNumber;
     private String emailId;
     private String name;
     private Integer id;
-
-    public User() {
-
-    }
-
-    public String getMobileNumber() {
-        return mobileNumber;
-    }
-
-    public String getEmailId() {
-        return emailId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Integer getId() {
-        return id;
-    }
 }

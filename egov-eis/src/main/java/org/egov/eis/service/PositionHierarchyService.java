@@ -148,18 +148,21 @@ public class PositionHierarchyService {
 
 	public List<PositionHierarchy> getPositionHierarchys(PositionHierarchyRequest positionHierarchyRequest) {
 		List<PositionHierarchy> positionHierarchys = new ArrayList<PositionHierarchy>();
-		if (positionHierarchyRequest.getPositionHierarchy().getObjectType().getType() != null
-				&& !positionHierarchyRequest.getPositionHierarchy().getObjectType().getType().isEmpty()
-				&& positionHierarchyRequest.getPositionHierarchy().getObjectSubType() != null
-				&& !positionHierarchyRequest.getPositionHierarchy().getObjectSubType().isEmpty()
-				&& (positionHierarchyRequest.getPositionHierarchy().getFromPosition() != null
-						&& positionHierarchyRequest.getPositionHierarchy().getFromPosition().getId() != null)
-				&& (positionHierarchyRequest.getPositionHierarchy().getToPosition() == null
-						|| positionHierarchyRequest.getPositionHierarchy().getToPosition().getId() == null)) {
-			positionHierarchys.add(getPosHirByPosAndObjectTypeAndObjectSubType(
-					positionHierarchyRequest.getPositionHierarchy().getFromPosition().getId(),
-					positionHierarchyRequest.getPositionHierarchy().getObjectType().getType(),
-					positionHierarchyRequest.getPositionHierarchy().getObjectSubType()));
+		if (positionHierarchyRequest.getPositionHierarchy() != null) {
+			if ((positionHierarchyRequest.getPositionHierarchy().getObjectType() != null
+					&& positionHierarchyRequest.getPositionHierarchy().getObjectType().getType() != null
+					&& !positionHierarchyRequest.getPositionHierarchy().getObjectType().getType().isEmpty())
+					&& (positionHierarchyRequest.getPositionHierarchy().getObjectSubType() != null
+							&& !positionHierarchyRequest.getPositionHierarchy().getObjectSubType().isEmpty())
+					&& (positionHierarchyRequest.getPositionHierarchy().getFromPosition() != null
+							&& positionHierarchyRequest.getPositionHierarchy().getFromPosition().getId() != null)
+					&& (positionHierarchyRequest.getPositionHierarchy().getToPosition() == null
+							|| positionHierarchyRequest.getPositionHierarchy().getToPosition().getId() == null)) {
+				positionHierarchys.add(getPosHirByPosAndObjectTypeAndObjectSubType(
+						positionHierarchyRequest.getPositionHierarchy().getFromPosition().getId(),
+						positionHierarchyRequest.getPositionHierarchy().getObjectType().getType(),
+						positionHierarchyRequest.getPositionHierarchy().getObjectSubType()));
+			}
 		}
 
 		return positionHierarchys;

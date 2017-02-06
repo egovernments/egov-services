@@ -152,8 +152,10 @@ public class PositionHierarchyService {
 				&& !positionHierarchyRequest.getPositionHierarchy().getObjectType().getType().isEmpty()
 				&& positionHierarchyRequest.getPositionHierarchy().getObjectSubType() != null
 				&& !positionHierarchyRequest.getPositionHierarchy().getObjectSubType().isEmpty()
-				&& positionHierarchyRequest.getPositionHierarchy().getFromPosition().getId() != null
-				&& (positionHierarchyRequest.getPositionHierarchy().getToPosition().getId() == null)) {
+				&& (positionHierarchyRequest.getPositionHierarchy().getFromPosition() != null
+						&& positionHierarchyRequest.getPositionHierarchy().getFromPosition().getId() != null)
+				&& (positionHierarchyRequest.getPositionHierarchy().getToPosition() == null
+						|| positionHierarchyRequest.getPositionHierarchy().getToPosition().getId() == null)) {
 			positionHierarchys.add(getPosHirByPosAndObjectTypeAndObjectSubType(
 					positionHierarchyRequest.getPositionHierarchy().getFromPosition().getId(),
 					positionHierarchyRequest.getPositionHierarchy().getObjectType().getType(),

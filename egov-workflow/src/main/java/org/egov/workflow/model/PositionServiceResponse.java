@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PositionServiceResponse {
 
-	@JsonProperty("Position")
+	@JsonProperty("Positions")
 	private List<PositionResponse> position;
 
 	public List<PositionResponse> getPosition() {

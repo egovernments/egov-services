@@ -14,8 +14,7 @@ public class ComplaintTypeServiceImpl implements ComplaintTypeService {
 
 	@Override
 	public ComplaintTypeResponse fetchComplaintTypeByCode(String code) {
-	        //this api belongs to pgr not in workflow
-		String url = complaintTypeServiceHost + "workflow/complaintType?complaintType.code={code}";
+		String url = complaintTypeServiceHost + "pgr/complaintType?complaintType.code={code}";
 		return getComplaintTypeServiceResponse(url, code).getComplaintType().get(0);
 	}
 

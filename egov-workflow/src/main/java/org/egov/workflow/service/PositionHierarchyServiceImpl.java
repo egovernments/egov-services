@@ -17,9 +17,8 @@ public class PositionHierarchyServiceImpl implements PositionHierarchyService {
     @Override
     public List<PositionHierarchyResponse> getByObjectTypeObjectSubTypeAndFromPosition(final String objectType,
             final String objectSubType, final Long fromPositionid) {
-        final String url = positionHierarchyServiceHost
-                + "eis/positionhierarchies?tenantId=database&objectType=" + objectType + "&objectSubType=" + objectSubType
-                + "&fromPosition=" + fromPositionid;
+    	String url = positionHierarchyServiceHost
+				+ "eis/positionhierarchys?positionHierarchy.objectType.type={objectType}&positionHierarchy.objectSubType={objectSubType}&positionHierarchy.fromPosition.id={fromPosition}";
         return getPositionHierarchyServiceResponse(url, objectType, objectSubType, fromPositionid)
                 .getPositionHierarchy();
     }

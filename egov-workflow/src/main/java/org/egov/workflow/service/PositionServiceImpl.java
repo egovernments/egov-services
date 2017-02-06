@@ -16,7 +16,7 @@ public class PositionServiceImpl implements PositionService {
 
 	@Override
 	public PositionResponse getById(Long id) {
-		String url = positionServiceHost + "eis/position?id={id}";
+		String url = positionServiceHost + "eis/positions?position.id="+id;
 		return getPositionServiceResponseById(url, id).getPosition().get(0);
 	}
 

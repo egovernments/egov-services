@@ -59,7 +59,6 @@ public class GrievanceLocationEnrichmentListener {
 			sevaRequest.getServiceRequest().getValues().put("location_id", String.valueOf(response.getId()));
 			sevaRequest.getServiceRequest().getValues().put("location_name", response.getName());
 		}
-		;
 		if (crossHierarchyIdHasBeenProvided(serviceRequest)) {
 			CrossHierarchyResponse chResponse = crossHierarchyService.fetchCrossHierarchyById(requestInfo,
 					serviceRequest.getCrossHierarchyId());

@@ -8,6 +8,7 @@ public class ServiceRequestFactory {
     public static ServiceRequest createFromComplaint(Complaint complaint) {
         ServiceRequest serviceRequest = new ServiceRequest();
         serviceRequest.setCrn(complaint.getCrn());
+        serviceRequest.setStatus(complaint.isCompleted());
         serviceRequest.setStatusDetails(ComplaintStatus.valueOf(complaint.getStatus().getName()));
         serviceRequest.setComplaintTypeName(complaint.getComplaintType().getName());
         serviceRequest.setComplaintTypeCode(complaint.getComplaintType().getCode());

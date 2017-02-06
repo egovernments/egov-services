@@ -311,6 +311,11 @@ public class Complaint extends AbstractAuditable {
         this.latlngAddress = latlngAddress;
     }
 
+    public boolean isCompleted() {
+        return org.egov.pgr.entity.enums.ComplaintStatus.valueOf(getStatus().getName())
+                == org.egov.pgr.entity.enums.ComplaintStatus.COMPLETED;
+    }
+
 	/*
      * @Override public String myLinkId() { return this.crn; }
 	 */

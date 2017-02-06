@@ -1,4 +1,4 @@
-package org.egov.pgr.specification;
+package org.egov.pgr.repository.specification;
 
 import org.egov.pgr.entity.*;
 import org.egov.pgr.model.SevaSearchCriteria;

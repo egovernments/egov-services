@@ -8,7 +8,7 @@ import org.egov.pgr.model.*;
 import org.egov.pgr.producer.GrievanceProducer;
 import org.egov.pgr.service.ComplaintService;
 import org.egov.pgr.service.SevaNumberGeneratorService;
-import org.egov.pgr.specification.SevaSpecification;
+import org.egov.pgr.repository.specification.SevaSpecification;
 import org.egov.pgr.validators.SevaRequestValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;

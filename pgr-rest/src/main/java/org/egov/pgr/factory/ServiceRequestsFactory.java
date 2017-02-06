@@ -10,7 +10,7 @@ public class ServiceRequestsFactory {
     public static List<ServiceRequest> createServiceRequestsFromComplaints(List<Complaint> complaints) {
         List<ServiceRequest> serviceRequests = new ArrayList<>();
         for (Complaint complaint : complaints) {
-            serviceRequests.add(ServiceRequestFactory.createFromComplaint(complaint));
+            serviceRequests.add(new ServiceRequest(complaint));
         }
         return serviceRequests;
     }

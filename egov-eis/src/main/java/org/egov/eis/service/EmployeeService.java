@@ -89,4 +89,8 @@ public class EmployeeService {
 	public Set<Employee> getEmployeesByRoleName(final String roleName) {
 		return employeeRepository.findEmployeesByRoleName(roleName);
 	}
+	
+	public Employee getEmployeeById(Long userId) {
+		return employeeRepository.findById(userId);
+	}
 }

@@ -92,4 +92,5 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 	@Query("select distinct emp from Employee emp, IN (emp.roles) role where role.name = :roleName ")
 	Set<Employee> findEmployeesByRoleName(@Param("roleName") String roleName);
 
+	public Employee findById(Long userId);
 }

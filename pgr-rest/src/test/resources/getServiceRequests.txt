@@ -6,7 +6,7 @@
          "res_msg_id":"uief87324",
          "msg_id":"msg_id",
          "status":"true"},
-    "ServiceRequestsFactory":[
+    "ServiceRequest":[
         {"service_request_id":"%1$s",
          "status":false,
          "status_details":"%2$s",

@@ -3,6 +3,7 @@ package org.egov.pgr.model;
 import org.egov.pgr.contracts.email.EmailMessage;
 import org.egov.pgr.entity.Complaint;
 import org.trimou.engine.MustacheEngine;
+import org.trimou.util.ImmutableMap;
 
 import java.text.SimpleDateFormat;
 
@@ -21,32 +22,24 @@ public class EmailComposer {
     }
 
     private String getEmailBody(Complaint complaint) {
-        //TODO - Get boundary name by id
-        String locationName = "";
         final String formattedCreatedDate = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(complaint.getCreatedDate());
-        final StringBuffer emailBody = new StringBuffer().append("Dear ")
-                .append(complaint.getComplainant().getName())
-                .append(",\n \n \tThank you for registering a grievance (")
-                .append(complaint.getCrn())
-                .append("). Your grievance is registered successfully.\n \tPlease use this number for all future references.")
-                .append("\n \n Grievance Details - \n \n Complaint type - ")
-                .append(complaint.getComplaintType().getName());
-        if (complaint.getLocation() != null)
-            emailBody.append(" \n Location details - ").append(locationName);
-        emailBody.append("\n Grievance description - ")
-                .append(complaint.getDetails())
-                .append("\n Grievance status -")
-                .append(complaint.getStatus().getName())
-                .append("\n Grievance Registration Date - ")
-                .append(formattedCreatedDate);
-        return emailBody.toString();
+        ImmutableMap.ImmutableMapBuilder<Object, Object> builder = ImmutableMap.builder();
+        builder.put("complainantName", complaint.getComplainant().getName());
+        builder.put("crn", complaint.getCrn());
+        builder.put("complaintType", complaint.getComplaintType().getName());
+        builder.put("locationName", complaint.getLocationName());
+        builder.put("complaintDetails", complaint.getDetails());
+        builder.put("registeredDate", formattedCreatedDate);
+        builder.put("statusName", complaint.getStatus().getName());
+        return templatingEngine.getMustache("email_body_en").render(builder.build());
     }
 
     private String getEmailSubject(Complaint complaint) {
-        return new StringBuffer()
-                .append("Registered Grievance -")
-                .append(complaint.getCrn())
-                .append(" successfuly").toString();
+        return templatingEngine
+                .getMustache("email_subject_en")
+                .render(ImmutableMap.<String, Object>of(
+                        "crn", complaint.getCrn()
+                ));
     }
 
 }

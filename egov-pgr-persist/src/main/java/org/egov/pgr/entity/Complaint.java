@@ -126,10 +126,13 @@ public class Complaint extends AbstractAuditable {
     @Transient
     private String latlngAddress;
 
+    @Transient
+    private String locationName;
+
     /*
-     * For indexing the below fields are kept. These will not be added to the
-     * database. This will be available only in index.
-     */
+         * For indexing the below fields are kept. These will not be added to the
+         * database. This will be available only in index.
+         */
     @Transient
     private Long crossHierarchyId;
 
@@ -311,7 +314,15 @@ public class Complaint extends AbstractAuditable {
         this.latlngAddress = latlngAddress;
     }
 
-	/*
+
+    public String getLocationName() {
+        return locationName;
+    }
+
+    public void setLocationName(String locationName) {
+        this.locationName = locationName;
+    }
+    /*
      * @Override public String myLinkId() { return this.crn; }
 	 */
     // @Override

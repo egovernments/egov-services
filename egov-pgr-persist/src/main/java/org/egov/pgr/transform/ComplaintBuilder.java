@@ -1,16 +1,19 @@
 package org.egov.pgr.transform;
 
+import org.egov.pgr.contracts.grievance.ServiceRequest;
 import org.egov.pgr.entity.Complaint;
 import org.egov.pgr.entity.ComplaintStatus;
 import org.egov.pgr.entity.ComplaintType;
 import org.egov.pgr.entity.enums.ReceivingMode;
-import org.egov.pgr.contracts.grievance.ServiceRequest;
 import org.egov.pgr.service.ComplaintStatusService;
 import org.egov.pgr.service.ComplaintTypeService;
 import org.egov.pgr.service.EscalationService;
 import org.egov.pgr.service.PositionService;
 
+import java.util.Date;
 import java.util.Objects;
+
+import static org.egov.pgr.contracts.grievance.ServiceRequest.*;
 
 public class ComplaintBuilder {
 
@@ -29,12 +32,7 @@ public class ComplaintBuilder {
     }
 
     public Complaint build() {
-        this.complaint.setCrn(this.serviceRequest.getCrn());
-        this.complaint.setLat(this.serviceRequest.getLat());
-        this.complaint.setLng(this.serviceRequest.getLng());
-        this.complaint.setDetails(this.serviceRequest.getDetails());
-        this.complaint.setLandmarkDetails(this.serviceRequest.getLandmarkDetails());
-        this.complaint.setEscalationDate(this.serviceRequest.getEscalationDate());
+        setBasicInfo();
         setComplainant();
         setReceivingMode();
         setComplaintType();
@@ -45,9 +43,18 @@ public class ComplaintBuilder {
         return this.complaint;
     }
 
+    private void setBasicInfo() {
+        this.complaint.setCrn(this.serviceRequest.getCrn());
+        this.complaint.setLat(this.serviceRequest.getLat());
+        this.complaint.setLng(this.serviceRequest.getLng());
+        this.complaint.setDetails(this.serviceRequest.getDetails());
+        this.complaint.setCreatedDate(new Date());
+        this.complaint.setLandmarkDetails(this.serviceRequest.getLandmarkDetails());
+    }
+
     private void setComplainant() {
         String userId;
-        if ((userId = this.serviceRequest.getValues().get("user_id")) != null) {
+        if ((userId = this.serviceRequest.getValues().get(USER_ID)) != null) {
             this.complaint.getComplainant().setUserDetail(Long.valueOf(userId));
         } else {
             this.complaint.getComplainant().setName(this.serviceRequest.getFirstName());
@@ -58,19 +65,22 @@ public class ComplaintBuilder {
 
     private void setEscalationDate() {
         //TODO - pass in tenant id correctly
+        this.complaint.setEscalationDate(new Date());
         Long designationId = new PositionService().designationIdForAssignee("", this.complaint.getAssignee());
         this.complaint.setEscalationDate(escalationService.getExpiryDate(this.complaint, designationId));
     }
 
     private void setLocationDetails() {
-        String locationId = this.serviceRequest.getValues().get("location_id");
-        String childLocationId = this.serviceRequest.getValues().get("child_location_id");
+        String locationId = this.serviceRequest.getValues().get(LOCATION_ID);
+        String childLocationId = this.serviceRequest.getValues().get(CHILD_LOCATION_ID);
+        String locationName = this.serviceRequest.getValues().get(LOCATION_NAME);
         if (Objects.nonNull(locationId)) this.complaint.setLocation(Long.parseLong(locationId));
         if (Objects.nonNull(childLocationId)) this.complaint.setChildLocation(Long.parseLong(childLocationId));
+        if (Objects.nonNull(locationName)) this.complaint.setLocationName(locationName);
     }
 
     private void setAssigneeId() {
-        String assigneeId = this.serviceRequest.getValues().get("assignee_id");
+        String assigneeId = this.serviceRequest.getValues().get(ASSIGNEE_ID);
         if (Objects.nonNull(assigneeId)) this.complaint.setAssignee(Long.parseLong(assigneeId));
     }
 

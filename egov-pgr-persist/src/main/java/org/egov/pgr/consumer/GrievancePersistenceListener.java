@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.trimou.engine.MustacheEngine;
 import org.trimou.engine.MustacheEngineBuilder;
+import org.trimou.engine.locator.ClassPathTemplateLocator;
+import org.trimou.engine.locator.FileSystemTemplateLocator;
 
 public class GrievancePersistenceListener {
 
@@ -33,7 +35,7 @@ public class GrievancePersistenceListener {
     @Autowired
     private GrievanceProducer kafkaProducer;
 
-    MustacheEngine templatingEngine = MustacheEngineBuilder.newBuilder().build();
+    MustacheEngine templatingEngine = MustacheEngineBuilder.newBuilder().addTemplateLocator(new ClassPathTemplateLocator(1, "templates","txt")).build();
 
     @KafkaListener(id = "grievancePersister", topics = "ap.public.mseva.persistreadyg", group = "grievances")
     public void processMessage(ConsumerRecord<String, SevaRequest> record) {
@@ -63,7 +65,7 @@ public class GrievancePersistenceListener {
 
     private Complaint persistComplaint(SevaRequest sevaRequest) {
         Complaint complaint = new ComplaintBuilder(sevaRequest.getServiceRequest(), complaintTypeService, complaintStatusService, escalationService).build();
-        complaintService.createComplaint(complaint);
+//        complaintService.createComplaint(complaint);
         return complaint;
     }
 

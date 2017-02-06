@@ -19,9 +19,8 @@ public class SmsComposer {
     }
 
     private String getSmsBody(Complaint complaint) {
-        String smsMessage = "Your grievance for {{name}} has been registered successfully with tracking number ({{number}}). Please use this number for all future references.";
         return templatingEngine
-                .compileMustache("smsTemplate", smsMessage)
+                .getMustache("sms_en")
                 .render(ImmutableMap.<String, Object>of(
                         "name", complaint.getComplaintType().getName(),
                         "number", complaint.getCrn()

@@ -45,15 +45,13 @@ public class PgrWorkflowImpl implements WorkflowInterface {
          state.setSenderName(
                 getUserById(processInstance.getUserId()) != null ? getUserById(processInstance.getUserId()).getName() : "");
         state.setStatus(StateStatus.INPROGRESS);
-        state.setValue("Registered");
+        state.setValue(processInstance.getStatus());
         state.setComments(processInstance.getDescription());
         state.setOwnerPosition(ownerPosition);
-        state.setNextAction("Waiting for escalation");
         state.setType(processInstance.getBusinessKey());
         state.setInitiatorPosition(
                 getInitiator(processInstance.getUserId()) != null ? getInitiator(processInstance.getUserId()).getId() : null);
         final WorkflowTypes type = workflowTypeService.getWorkflowTypeByType(state.getType());
-        state.setMyLinkId(type.getLink().replace(":ID", processInstance.getId()));
         state.setNatureOfTask(type.getDisplayName());
         state.setExtraInfo(processInstance.getStateDetails());
         stateService.create(state);

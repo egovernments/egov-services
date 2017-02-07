@@ -108,7 +108,6 @@ public class State extends AbstractAuditable {
     @Column(name = "INITIATOR_POS")
     private Long initiatorPosition;
     
-    private String myLinkId;
 
     public State() {
     }
@@ -250,14 +249,6 @@ public class State extends AbstractAuditable {
 
     public enum StateStatus {
         STARTED, INPROGRESS, ENDED
-    }
-
-    public String getMyLinkId() {
-        return myLinkId;
-    }
-
-    public void setMyLinkId(String myLinkId) {
-        this.myLinkId = myLinkId;
     }
 
 }

@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/complaintType")
+@RequestMapping("/complaintTypes")
 public class ComplaintTypeController {
 
     @Autowired

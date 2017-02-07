@@ -1,0 +1,19 @@
+package org.egov.pgr.domain.model;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+
+import java.util.Date;
+
+@Getter
+@AllArgsConstructor
+@Builder
+public class ComplaintSearchCriteria {
+    private String serviceRequestId;
+    private String serviceCode;
+    private Date startDate;
+    private Date endDate;
+    private String status;
+    private Date lastModifiedDatetime;
+}

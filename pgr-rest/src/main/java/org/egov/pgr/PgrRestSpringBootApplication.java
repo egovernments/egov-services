@@ -2,8 +2,10 @@ package org.egov.pgr;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.egov.pgr.repository.UserRepository;
-import org.egov.pgr.resolver.AuthenticatedUserResolver;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import org.egov.pgr.domain.service.UserService;
+import org.egov.pgr.persistence.UserRepository;
+import org.egov.pgr.web.resolver.AuthenticatedUserResolver;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -34,6 +36,11 @@ public class PgrRestSpringBootApplication {
     }
 
     @Bean
+    public UserService userService(UserRepository userRepository) {
+        return new UserService(userRepository);
+    }
+
+    @Bean
     public WebMvcConfigurerAdapter webMvcConfigurerAdapter(AuthenticatedUserResolver authenticatedUserResolver) {
         return new WebMvcConfigurerAdapter() {
 
@@ -55,6 +62,7 @@ public class PgrRestSpringBootApplication {
         MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
         ObjectMapper mapper = new ObjectMapper();
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
         converter.setObjectMapper(mapper);
         return converter;
     }

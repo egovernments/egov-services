@@ -1,7 +1,7 @@
 package org.helper;
 
-import org.egov.pgr.entity.*;
-import org.egov.pgr.entity.enums.ReceivingMode;
+import org.egov.pgr.persistence.entity.*;
+import org.egov.pgr.persistence.entity.enums.ReceivingMode;
 
 public class ComplaintBuilder {
     private Complaint complaint;
@@ -15,7 +15,7 @@ public class ComplaintBuilder {
         return this;
     }
 
-    public ComplaintBuilder complaintStatus(org.egov.pgr.entity.enums.ComplaintStatus status) {
+    public ComplaintBuilder complaintStatus(org.egov.pgr.persistence.entity.enums.ComplaintStatus status) {
         ComplaintStatus complaintStatus = new ComplaintStatus();
         complaintStatus.setName(String.valueOf(status));
         this.complaint.setStatus(complaintStatus);

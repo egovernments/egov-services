@@ -1,12 +1,12 @@
 {
-    "ResposneInfo":
+    "response_info":
         {"api_id":"api_id",
          "ver":"ver",
          "ts":"ts",
          "res_msg_id":"uief87324",
          "msg_id":"msg_id",
          "status":"successful"},
-    "ServiceRequest":[
+    "service_requests":[
         {"service_request_id":"%1$s",
          "status":false,
          "status_details":"%2$s",
@@ -22,11 +22,11 @@
          "address":null,
          "address_id":"null",
          "zipcode":null,
-         "lat":0.0,
-         "lng":0.0,
+         "latitude":0.0,
+         "longitude":0.0,
          "media_url":null,
-         "first_name":"%4$s",
-         "last_name":"%4$s",
+         "first_name":"%3$s",
+         "last_name":null,
          "phone":null,
          "email":null,
          "device_id":null,
@@ -34,11 +34,10 @@
          "approval_position":null,
          "approval_comment":null,
          "values":{
-            "ReceivingMode": "%5$s",
-            "ReceivingCenter": "%6$s",
-            "ComplaintStatus": "%2$s",
-            "LocationId": "%7$s",
-            "ChildLocationId": "%8$s"
+            "ReceivingMode": "%4$s",
+            "ReceivingCenter": "%5$s",
+            "LocationId": "%6$s",
+            "ChildLocationId": "%7$s"
          }
          }
     ]

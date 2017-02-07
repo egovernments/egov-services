@@ -42,6 +42,7 @@ package org.egov.pgr.service;
 
 import org.egov.pgr.entity.Complaint;
 import org.egov.pgr.entity.ComplaintType;
+import org.egov.pgr.model.ComplaintTypeSearchCriteria;
 import org.egov.pgr.repository.ComplaintTypeRepository;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -153,4 +154,7 @@ public class ComplaintTypeService {
         return complaintTypeRepository.findByCode(complaintTypeCode);
 	}
 
+	public List<ComplaintType> findByCategories(ComplaintTypeSearchCriteria searchCriteria) {
+		return null;
+	}
 }

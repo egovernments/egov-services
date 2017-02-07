@@ -2,6 +2,7 @@ package org.egov.pgr.controller;
 
 import org.egov.pgr.contract.ComplaintType;
 import org.egov.pgr.contract.ComplaintTypeResponse;
+import org.egov.pgr.model.ComplaintTypeSearchCriteria;
 import org.egov.pgr.service.ComplaintTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,11 @@ public class ComplaintTypeController {
                                                  @RequestParam(required = false) Long categoryId,
                                                  @RequestParam(required = false) Long count,
                                                  @RequestParam String tenantId) {
-        return complaintTypeService.findActiveComplaintTypesByCategory(categoryId)
+        final ComplaintTypeSearchCriteria searchCriteria = ComplaintTypeSearchCriteria.builder()
+                .categoryId(categoryId)
+                .count(count)
+                .complaintTypeSearch(type).build();
+        return complaintTypeService.findByCategories(searchCriteria)
                 .stream()
                 .map(ComplaintType::new)
                 .collect(Collectors.toList());

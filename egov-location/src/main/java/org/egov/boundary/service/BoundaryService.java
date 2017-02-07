@@ -301,8 +301,8 @@ public class BoundaryService {
 	public List<Boundary> getAllBoundary(BoundaryRequest boundaryRequest) {
 		Long boundaryId;
 		List<Boundary> boundaries = new ArrayList<Boundary>();
-		if (StringUtils.isEmpty(boundaryRequest.getBoundary().getLatitude())
-				&& StringUtils.isEmpty(boundaryRequest.getBoundary().getLongitude())) {
+		if (!StringUtils.isEmpty(boundaryRequest.getBoundary().getLatitude())
+				&&!StringUtils.isEmpty(boundaryRequest.getBoundary().getLongitude())) {
 
 			Boundary boundary = new Boundary();
 			boundary.setId(21l);

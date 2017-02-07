@@ -52,42 +52,16 @@ import org.springframework.stereotype.Repository;
 public interface ComplaintRouterRepository extends JpaRepository<ComplaintRouter, Long> {
 
 	@Query("select cr from ComplaintRouter cr where cr.complaintType=:complaintType and cr.boundary=:boundary")
-	public ComplaintRouter findByComplaintTypeAndBoundary(@Param("complaintType") Long complaintType,
-			@Param("boundary") Long boundary);
+	ComplaintRouter findByComplaintTypeAndBoundary(@Param("complaintType") Long complaintType,
+												   @Param("boundary") Long boundary);
 
 	@Query("select cr from ComplaintRouter cr where cr.complaintType=:complaintType and cr.boundary is null")
-	public ComplaintRouter findByOnlyComplaintType(@Param("complaintType") Long complaintType);
-
-	@Query("select cr from ComplaintRouter cr where cr.complaintType=:complaintTypeId ")
-	List<ComplaintRouter> findRoutersByComplaintType(@Param("complaintTypeId") Long complaintTypeId);
-
-	@Query("select cr from ComplaintRouter cr where cr.position=:positionId and cr.complaintType=:complaintTypeId ")
-	public List<ComplaintRouter> findRoutersByComplaintTypeAndPosition(@Param("complaintTypeId") Long complaintTypeId,
-			@Param("positionId") Long positionId);
-
-	@Query("select cr from ComplaintRouter cr where cr.position=:positionId and cr.complaintType=:complaintTypeId  and cr.boundary=:boundaryId")
-	public List<ComplaintRouter> findRoutersByComplaintTypeAndBoundaryAndPosition(
-			@Param("complaintTypeId") Long complaintTypeId, @Param("boundaryId") Long boundaryId,
-			@Param("positionId") Long positionId);
-
-	@Query("select cr from ComplaintRouter cr where  cr.complaintType=:complaintTypeId and  cr.boundary=:boundaryId")
-	public List<ComplaintRouter> findRoutersByComplaintTypeAndBoundary(@Param("complaintTypeId") Long complaintTypeId,
-			@Param("boundaryId") Long boundaryId);
-
-	@Query("select cr from ComplaintRouter cr where cr.position=:positionId ")
-	public List<ComplaintRouter> findRoutersByPosition(@Param("positionId") Long positionId);
-
-	@Query("select cr from ComplaintRouter cr where cr.position=:positionId and cr.boundary=:boundaryId")
-	public List<ComplaintRouter> findRoutersByBoundaryAndPosition(@Param("boundaryId") Long boundaryId,
-			@Param("positionId") Long positionId);
-
-	@Query("select cr from ComplaintRouter cr where  cr.boundary=:boundaryId")
-	public List<ComplaintRouter> findRoutersByBoundary(@Param("boundaryId") Long boundaryId);
+	ComplaintRouter findByOnlyComplaintType(@Param("complaintType") Long complaintType);
 
 	@Query("select cr from ComplaintRouter cr where cr.boundary=:bndry and cr.complaintType is null")
-	public ComplaintRouter findByOnlyBoundary(@Param("bndry") Long bndry);
+	ComplaintRouter findByOnlyBoundary(@Param("bndry") Long bndry);
 
 	@Query(value = "select cr from egpgr_router cr eg_boundary boundary , eg_boundary_type boundarytype ,eg_hierarchy_type hierarchytype where boundary.boundarytype = boundarytype.id and hierarchytype.id = boundarytype.hierarchytype and cr.boundary = boundary.id and boundary.parent is null and cr.complainttype is null and hierarchytype.name=:hierarchyType", nativeQuery = true)
-	public ComplaintRouter findCityAdminGrievanceOfficer(@Param("hierarchyType") String hierarchyType);
+	ComplaintRouter findCityAdminGrievanceOfficer(@Param("hierarchyType") String hierarchyType);
 
 }

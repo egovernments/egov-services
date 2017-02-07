@@ -4,19 +4,13 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
 
+@Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EmployeesResponse {
 
 	@JsonProperty("Employees")
 	private List<EmployeeResponse> employees;
-
-	public List<EmployeeResponse> getEmployees() {
-		return employees;
-	}
-
-	public void setEmployees(List<EmployeeResponse> employees) {
-		this.employees = employees;
-	}
 
 }

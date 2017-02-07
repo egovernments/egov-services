@@ -1,7 +1,9 @@
 package org.egov.workflow.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
 
+@Getter
 public class AssigneeFilterInfo {
 
     @JsonProperty("boundary_id")
@@ -12,29 +14,5 @@ public class AssigneeFilterInfo {
 
     @JsonProperty("current_assignee_id")
     private Long currentAssigneeId;
-
-    public Long getBoundaryId() {
-        return boundaryId;
-    }
-
-    public void setBoundaryId(final Long boundaryId) {
-        this.boundaryId = boundaryId;
-    }
-
-    public String getComplaintTypeCode() {
-        return complaintTypeCode;
-    }
-
-    public void setComplaintTypeCode(final String complaintTypeCode) {
-        this.complaintTypeCode = complaintTypeCode;
-    }
-
-    public Long getCurrentAssigneeId() {
-        return currentAssigneeId;
-    }
-
-    public void setCurrentAssigneeId(final Long currentAssigneeId) {
-        this.currentAssigneeId = currentAssigneeId;
-    }
 
 }

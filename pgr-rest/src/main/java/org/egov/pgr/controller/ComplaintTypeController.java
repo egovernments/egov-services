@@ -20,7 +20,7 @@ public class ComplaintTypeController {
     @GetMapping
     public List<ComplaintType> getComplaintTypes(@RequestParam String type,
                                                  @RequestParam(required = false) Long categoryId,
-                                                 @RequestParam(required = false) Long count,
+                                                 @RequestParam(required = false) Integer count,
                                                  @RequestParam String tenantId) {
         final ComplaintTypeSearchCriteria searchCriteria = ComplaintTypeSearchCriteria.builder()
                 .categoryId(categoryId)

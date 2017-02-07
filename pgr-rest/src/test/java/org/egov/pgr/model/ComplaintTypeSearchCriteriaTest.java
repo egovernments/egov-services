@@ -1,7 +1,7 @@
 package org.egov.pgr.model;
 
 
-import org.egov.pgr.exception.InvalidComplaintSearchException;
+import org.egov.pgr.exception.InvalidComplaintTypeSearchException;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -20,7 +20,7 @@ public class ComplaintTypeSearchCriteriaTest {
                 .categoryId(123L)
                 .build();
 
-        thrown.expect(InvalidComplaintSearchException.class);
+        thrown.expect(InvalidComplaintTypeSearchException.class);
         thrown.expectMessage("Invalid search type");
 
         searchCriteria.isValid();
@@ -33,7 +33,7 @@ public class ComplaintTypeSearchCriteriaTest {
                 .categoryId(null)
                 .build();
 
-        thrown.expect(InvalidComplaintSearchException.class);
+        thrown.expect(InvalidComplaintTypeSearchException.class);
         thrown.expectMessage("Category id is not present");
 
         searchCriteria.isValid();
@@ -46,17 +46,17 @@ public class ComplaintTypeSearchCriteriaTest {
                 .count(null)
                 .build();
 
-        assertEquals(Long.valueOf(5), searchCriteria.getCount());
+        assertEquals(5, searchCriteria.getCount());
     }
 
     @Test
     public void test_should_return_count_when_frequency_is_present() {
         final ComplaintTypeSearchCriteria searchCriteria = ComplaintTypeSearchCriteria.builder()
                 .complaintTypeSearch("frequency")
-                .count(10L)
+                .count(10)
                 .build();
 
-        assertEquals(Long.valueOf(10), searchCriteria.getCount());
+        assertEquals(10, searchCriteria.getCount());
     }
 
     @Test
@@ -73,7 +73,7 @@ public class ComplaintTypeSearchCriteriaTest {
     public void test_should_not_thrown_exception_for_a_valid_frequency_search_type() {
         final ComplaintTypeSearchCriteria searchCriteria = ComplaintTypeSearchCriteria.builder()
                 .complaintTypeSearch("FREQUENCY")
-                .count(10L)
+                .count(10)
                 .build();
 
         searchCriteria.isValid();

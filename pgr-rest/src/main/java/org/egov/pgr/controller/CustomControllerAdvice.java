@@ -1,6 +1,8 @@
-package org.egov.pgr.exception;
+package org.egov.pgr.controller;
 
 import org.egov.pgr.contract.ErrorResponse;
+import org.egov.pgr.exception.InvalidComplaintTypeSearchException;
+import org.egov.pgr.exception.UnauthorizedAccessException;
 import org.egov.pgr.model.Error;
 import org.egov.pgr.validators.FieldErrorDTO;
 import org.egov.pgr.validators.ValidationErrorDTO;
@@ -17,8 +19,9 @@ import java.util.stream.Collectors;
 
 @ControllerAdvice
 @RestController
-public class CustomExceptionHandler {
+public class CustomControllerAdvice {
 
+    //    Do we need this?
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public String handleMissingParamsError(Exception ex) {
@@ -26,9 +29,9 @@ public class CustomExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(InvalidComplaintSearchException.class)
+    @ExceptionHandler(InvalidComplaintTypeSearchException.class)
     public ErrorResponse handleInvalidSearchTypeException(Exception ex) {
-        return new ErrorResponse(null, new Error(400, ex.getMessage()));
+        return new ErrorResponse(null, new Error(HttpStatus.BAD_REQUEST.value(), ex.getMessage()));
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

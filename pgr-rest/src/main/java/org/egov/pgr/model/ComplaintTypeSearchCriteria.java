@@ -46,6 +46,14 @@ public class ComplaintTypeSearchCriteria {
             throw new InvalidComplaintTypeSearchException(INVALID_KNOWN_TYPE);
         }
     }
+
+    public boolean isCategorySearch() {
+        return getComplaintTypeSearch() == ComplaintTypeSearch.CATEGORY;
+    }
+
+    public boolean isFrequencySearch() {
+        return getComplaintTypeSearch() == ComplaintTypeSearch.FREQUENCY;
+    }
 }
 
 

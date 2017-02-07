@@ -26,7 +26,7 @@ public class ComplaintTypeController {
                 .categoryId(categoryId)
                 .count(count)
                 .complaintTypeSearch(type).build();
-        return complaintTypeService.findByCategories(searchCriteria)
+        return complaintTypeService.findByCriteria(searchCriteria)
                 .stream()
                 .map(ComplaintType::new)
                 .collect(Collectors.toList());
@@ -38,23 +38,6 @@ public class ComplaintTypeController {
         org.egov.pgr.entity.ComplaintType complaintType = complaintTypeService
                 .getComplaintType(complaintTypeCode);
         return new ComplaintTypeResponse(complaintType);
-    }
-
-    @GetMapping(value = "/complaintTypeByCategory")
-    public List<ComplaintType> getAllComplaintTypeByCategory(@RequestParam Long categoryId,
-                                                             @RequestParam String tenantId) {
-        return complaintTypeService.findActiveComplaintTypesByCategory(categoryId)
-                .stream()
-                .map(ComplaintType::new)
-                .collect(Collectors.toList());
-    }
-
-    @GetMapping(value = "/getFrequentComplaints")
-    public List<ComplaintType> getFrequentComplaintsFiled(@RequestParam Integer count, @RequestParam String tenantId) {
-        return complaintTypeService.getFrequentlyFiledComplaints(count)
-                .stream()
-                .map(ComplaintType::new)
-                .collect(Collectors.toList());
     }
 
 }

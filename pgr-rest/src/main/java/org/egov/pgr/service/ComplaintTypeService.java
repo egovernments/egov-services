@@ -40,121 +40,38 @@
 
 package org.egov.pgr.service;
 
-import org.egov.pgr.entity.Complaint;
 import org.egov.pgr.entity.ComplaintType;
 import org.egov.pgr.model.ComplaintTypeSearchCriteria;
 import org.egov.pgr.repository.ComplaintTypeRepository;
-import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@Transactional(readOnly = true)
 public class ComplaintTypeService {
 
 	private final ComplaintTypeRepository complaintTypeRepository;
-
-	@PersistenceContext
-	private EntityManager entityManager;
 
 	@Autowired
 	public ComplaintTypeService(final ComplaintTypeRepository complaintTypeRepository) {
 		this.complaintTypeRepository = complaintTypeRepository;
 	}
 
-	public ComplaintType findBy(final Long complaintTypeId) {
-		return complaintTypeRepository.findOne(complaintTypeId);
-	}
-
-	@Transactional
-	public ComplaintType createComplaintType(final ComplaintType complaintType) {
-		return complaintTypeRepository.save(complaintType);
-	}
-
-	@Transactional
-	public ComplaintType updateComplaintType(final ComplaintType complaintType) {
-		return complaintTypeRepository.save(complaintType);
-	}
-
-	public List<ComplaintType> findAll() {
-		return complaintTypeRepository.findAll(new Sort(Sort.Direction.ASC, "name"));
-	}
-
-	public List<ComplaintType> findAllActiveByNameLike(final String name) {
-		return complaintTypeRepository.findByIsActiveTrueAndNameContainingIgnoreCase(name);
-	}
-
 	public List<ComplaintType> findActiveComplaintTypesByCategory(final Long categoryId) {
-		return complaintTypeRepository.findByIsActiveTrueAndCategoryIdOrderByNameAsc(categoryId);
-	}
-
-	public List<ComplaintType> findAllByNameLike(final String name) {
-		return complaintTypeRepository.findByNameContainingIgnoreCase(name);
-	}
-
-	public ComplaintType findByName(final String name) {
-		return complaintTypeRepository.findByName(name);
-	}
-
-	public ComplaintType load(final Long id) {
-		return complaintTypeRepository.getOne(id);
-	}
-
-	public Page<ComplaintType> getListOfComplaintTypes(final Integer pageNumber, final Integer pageSize) {
-		final Pageable pageable = new PageRequest(pageNumber - 1, pageSize, Sort.Direction.ASC, "name");
-		return complaintTypeRepository.findAll(pageable);
-	}
-
-	/**
-	 * List top 5 complaint types filed in last one month
-	 *
-	 * @return complaint Type list
-	 */
-	public List<ComplaintType> getFrequentlyFiledComplaints(Integer count) {
-
-		DateTime previousDate = new DateTime();
-		final DateTime currentDate = new DateTime();
-		previousDate = previousDate.minusMonths(1);
-
-		final Criteria criteria = entityManager.unwrap(Session.class).createCriteria(Complaint.class, "complaint");
-		criteria.createAlias("complaint.complaintType", "compType");
-		criteria.setProjection(Projections.projectionList().add(Projections.property("complaint.complaintType"))
-				.add(Projections.count("complaint.complaintType").as("count"))
-				.add(Projections.groupProperty("complaint.complaintType")));
-		criteria.add(Restrictions.between("complaint.createdDate", previousDate.toDate(), currentDate.toDate()));
-		criteria.add(Restrictions.eq("compType.isActive", Boolean.TRUE));
-		criteria.setMaxResults(count).addOrder(Order.desc("count"));
-		final List<Object> resultList = criteria.list();
-		final List<ComplaintType> complaintTypeList = new ArrayList<ComplaintType>();
-
-		for (final Object row : resultList) {
-			final Object[] columns = (Object[]) row;
-			complaintTypeList.add((ComplaintType) columns[0]);
-		}
-		return complaintTypeList;
-
-	}
+        return complaintTypeRepository.findActiveComplaintTypesByCategory(categoryId);
+    }
 
 	public ComplaintType getComplaintType(String complaintTypeCode) {
-        return complaintTypeRepository.findByCode(complaintTypeCode);
-	}
+        return complaintTypeRepository.getComplaintType(complaintTypeCode);
+    }
 
-	public List<ComplaintType> findByCategories(ComplaintTypeSearchCriteria searchCriteria) {
-		return null;
-	}
+    public List<ComplaintType> findByCriteria(ComplaintTypeSearchCriteria searchCriteria) {
+        if (searchCriteria.isCategorySearch()) {
+            return this.findActiveComplaintTypesByCategory(searchCriteria.getCategoryId());
+        } else if (searchCriteria.isFrequencySearch()) {
+            return complaintTypeRepository.getFrequentlyFiledComplaints(searchCriteria.getCount());
+        }
+        return null;
+    }
 }

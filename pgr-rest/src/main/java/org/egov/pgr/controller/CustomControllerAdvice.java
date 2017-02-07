@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @RestController
 public class CustomControllerAdvice {
 
-    //    Do we need this?
+    //TODO:    Confirm if we need this?
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public String handleMissingParamsError(Exception ex) {

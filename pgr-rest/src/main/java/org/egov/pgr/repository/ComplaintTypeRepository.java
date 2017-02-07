@@ -40,28 +40,64 @@
 
 package org.egov.pgr.repository;
 
+import org.egov.pgr.entity.Complaint;
+import org.egov.pgr.entity.ComplaintType;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
+import org.joda.time.DateTime;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.ArrayList;
 import java.util.List;
 
-import org.egov.pgr.entity.ComplaintType;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+@Service
+public class ComplaintTypeRepository {
 
-@Repository
-public interface ComplaintTypeRepository extends JpaRepository<ComplaintType, Long> {
+    private ComplaintTypeJpaRepository complaintTypeJpaRepository;
+    @PersistenceContext
+    private EntityManager entityManager;
 
-    ComplaintType findByName(String name);
+    @Autowired
+    public ComplaintTypeRepository(ComplaintTypeJpaRepository complaintTypeJpaRepository) {
+        this.complaintTypeJpaRepository = complaintTypeJpaRepository;
+    }
 
-    List<ComplaintType> findByIsActiveTrueAndNameContainingIgnoreCase(String name);
-    
-    List<ComplaintType> findByIsActiveTrueAndCategoryIdOrderByNameAsc(Long categoryId);
+    public List<ComplaintType> findActiveComplaintTypesByCategory(Long categoryId) {
+        return complaintTypeJpaRepository.findByIsActiveTrueAndCategoryIdOrderByNameAsc(categoryId);
+    }
 
-    ComplaintType findByCode(String code);
+    public List<ComplaintType> getFrequentlyFiledComplaints(Integer count) {
 
-//    @Query("select distinct ct.department from ComplaintType ct order by ct.department.name asc")
-//    List<Department> findAllComplaintTypeDepartments();
-    
-    List<ComplaintType> findByIsActiveTrueOrderByNameAsc();
-    
-    List<ComplaintType> findByNameContainingIgnoreCase(String name);
+        DateTime previousDate = new DateTime();
+        final DateTime currentDate = new DateTime();
+        previousDate = previousDate.minusMonths(1);
 
+        final Criteria criteria = entityManager.unwrap(Session.class).createCriteria(Complaint.class, "complaint");
+        criteria.createAlias("complaint.complaintType", "compType");
+        criteria.setProjection(Projections.projectionList().add(Projections.property("complaint.complaintType"))
+                .add(Projections.count("complaint.complaintType").as("count"))
+                .add(Projections.groupProperty("complaint.complaintType")));
+        criteria.add(Restrictions.between("complaint.createdDate", previousDate.toDate(), currentDate.toDate()));
+        criteria.add(Restrictions.eq("compType.isActive", Boolean.TRUE));
+        criteria.setMaxResults(count).addOrder(Order.desc("count"));
+        final List<Object> resultList = criteria.list();
+        final List<ComplaintType> complaintTypeList = new ArrayList<ComplaintType>();
+
+        for (final Object row : resultList) {
+            final Object[] columns = (Object[]) row;
+            complaintTypeList.add((ComplaintType) columns[0]);
+        }
+        return complaintTypeList;
+
+    }
+
+    public ComplaintType getComplaintType(String complaintTypeCode) {
+        return complaintTypeJpaRepository.findByCode(complaintTypeCode);
+    }
 }

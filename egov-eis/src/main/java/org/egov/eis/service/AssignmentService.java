@@ -52,6 +52,7 @@ import org.egov.eis.entity.Employee;
 import org.egov.eis.entity.Position;
 import org.egov.eis.entity.Role;
 import org.egov.eis.entity.User;
+import org.egov.eis.model.PositionRequest;
 import org.egov.eis.repository.AssignmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -361,6 +362,13 @@ public class AssignmentService {
 	 */
 	public List<Assignment> getAllActiveEmployeeAssignmentsByEmpCode(final String code, final Date asOnDate) {
 		return assignmentRepository.getAllActiveAssignmentsByEmpCode(code, asOnDate);
+	}
+	
+	public List<Assignment> getPositionsForUser(final PositionRequest positionRequest) {
+	    List<Assignment> assignments = new ArrayList<Assignment>();
+	    if(positionRequest.getUserId() != null) 
+	        assignments.add(assignmentRepository.getPrimaryAssignmentForUser(positionRequest.getUserId()));
+	    return assignments;
 	}
 
 }

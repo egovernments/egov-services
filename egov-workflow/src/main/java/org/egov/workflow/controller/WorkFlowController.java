@@ -2,6 +2,7 @@ package org.egov.workflow.controller;
 
 import java.util.Date;
 
+import org.egov.workflow.entity.ProcessInstance;
 import org.egov.workflow.model.AssigneeFilterInfo;
 import org.egov.workflow.model.AssigneeRequestInfo;
 import org.egov.workflow.model.PositionResponse;
@@ -29,6 +30,11 @@ public class WorkFlowController {
             positionResponse.setResponseInfo(
                     new ResponseInfo("", "", new Date().toString(), "", "", "Successful response", ""));
         return positionResponse;
+    }
+    
+    @PostMapping(value = "/startworkflow", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ProcessInstance startWorkflow(@RequestBody final ProcessInstance processInstance) {
+       return pgrWorkflowImpl.start("test", processInstance);
     }
 
 }

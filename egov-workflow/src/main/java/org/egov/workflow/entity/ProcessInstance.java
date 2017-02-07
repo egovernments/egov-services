@@ -1,35 +1,56 @@
 package org.egov.workflow.entity;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+
+import org.egov.workflow.model.RequestInfo;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ProcessInstance {
     
+    @JsonProperty("requestInfo")
+    private RequestInfo requestInfo = null;
+    
+    @JsonProperty("object_id")
     private String id = null;
 
+    @JsonProperty("type")
     private String type = null;
 
+    @JsonProperty("description")
     private String description = null;
 
+    @JsonProperty("created_Date")
     private Date createdDate = null;
 
+    @JsonProperty("lastupdated_Since")
     private Date lastupdatedSince = null;
 
+    @JsonProperty("status")
     private String status = null;
     
+    @JsonProperty("action")
     private String action=null;
    
+    @JsonProperty("business_Key")
     private String businessKey = null;
 
+    @JsonProperty("assignee")
     private String assignee = null;
 
+    @JsonProperty("group")
     private String group = null;
-
- //   private WorkflowEntity entity = null;
     
+    @JsonProperty("user_id")
+    private Long userId = null;
+    
+    @JsonProperty("state_id")
+    private Long stateId;
+    
+    @JsonProperty("state_details")
+    private String stateDetails;
 
-    private Map<String,Attribute> attributes = new HashMap<String,Attribute>();
+   //private Map<String,Attribute> attributes = new HashMap<String,Attribute>();
 
     public String getAction() {
         return action;
@@ -110,27 +131,55 @@ public class ProcessInstance {
     public void setGroup(String group) {
         this.group = group;
     }
-/*
-    public WorkflowEntity getEntity() {
-        return entity;
-    }
+    
 
-    public void setEntity(WorkflowEntity entity) {
-        this.entity = entity;
-    }*/
-
-    public Map<String, Attribute> getAttributes() {
+ /*   public Map<String, Attribute> getAttributes() {
         return attributes;
     }
 
     public void setAttributes(Map<String, Attribute> attributes) {
         this.attributes = attributes;
-    }
+    }*/
 
     public ProcessInstance id(String id) {
       this.id = id;
       return this;
     }
 
+    public Long getUserId() {
+        return userId;
+    }
 
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public void setAssignee(String assignee) {
+        this.assignee = assignee;
+    }
+
+    public RequestInfo getRequestInfo() {
+        return requestInfo;
+    }
+
+    public void setRequestInfo(RequestInfo requestInfo) {
+        this.requestInfo = requestInfo;
+    }
+
+    public Long getStateId() {
+        return stateId;
+    }
+
+    public void setStateId(Long stateId) {
+        this.stateId = stateId;
+    }
+
+    public String getStateDetails() {
+        return stateDetails;
+    }
+
+    public void setStateDetails(String stateDetails) {
+        this.stateDetails = stateDetails;
+    }
+    
 }

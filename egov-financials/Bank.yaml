@@ -1,0 +1,157 @@
+  /banks:
+   get:
+    summary: Get the list of banks
+    description: banks
+    parameters:
+     - name:      request_info.action
+       type:       string
+       in:      query
+       description:      common request_info
+       required:      false
+     - name:      request_info.did
+       type:       string
+       in:      query
+       description:      common request_info
+       required:      false
+     - name:      request_info.msg_id
+       type:       string
+       in:      query
+       description:      common request_info
+       required:      false
+     - name:      request_info.requester_id
+       type:       string
+       in:      query
+       description:      common request_info
+       required:      false
+     - name:      request_info.auth_token
+       type:       string
+       in:      query
+       description:      common request_info
+       required:      false
+     - name: bank.id
+       type: integer
+       format: int64
+       in: query
+       description: common request_info
+       required: false
+     - name: bank.code
+       type: string
+       in: query
+       description: common request_info
+       required: true
+     - name: bank.name
+       type: string
+       in: query
+       description: common request_info
+       required: true
+     - name: bank.description
+       type: string
+       in: query
+       description: common request_info
+       required: false
+     - name: bank.active
+       type: boolean
+       in: query
+       description: common request_info
+       required: true
+     - name: bank.type
+       type: string
+       in: query
+       description: common request_info
+       required: false
+     - name: bank.bank_branches
+       type: 
+       in: query
+       description: common request_info
+       required: false
+    responses:
+     200:
+      description: bank retrieved Successfully
+      schema:
+       $ref: '#/definitions/bank_response'
+     400:
+      description: Invalid Input
+      schema:
+       $ref: '#/definitions/error_response'
+     404:
+      description: bankNot Found
+   post:
+    summary: Get the list of banks
+    description: banks
+    parameters:
+     - name: bank_request
+       in: body
+       description: common request_info
+       schema:
+        $ref: '#/definitions/bank_request'
+    responses:
+     201:
+      description: bank created Successfully
+      schema:
+       $ref: '#/definitions/bank_response'
+     400:
+      description: Invalid Input
+      schema:
+       $ref: '#/definitions/error_response'
+     404:
+      description: bankNot Found
+   put:
+    summary: Get the list of banks
+    description: banks
+    parameters:
+     - name: bank_request
+       in: body
+       description: common request_info
+       schema:
+        $ref: '#/definitions/bank_request'
+    responses:
+     200:
+      description: bank update Successfully
+      schema:
+       $ref: '#/definitions/bank_response'
+     400:
+      description: Invalid Input
+      schema:
+       $ref: '#/definitions/error_response'
+     404:
+      description: bankNot Found
+definitions:
+  bank:
+   type: object
+   properties:
+    id:
+     type: integer
+     format: int64
+     description: describe id
+    code:
+     type: string
+     description: describe code
+    name:
+     type: string
+     description: describe name
+    description:
+     type: string
+     description: describe description
+    active:
+     type: boolean
+     description: describe active
+    type:
+     type: string
+     description: describe type
+    bank_branches:
+     type: 
+     description: describe bank_branches
+  bank_request:
+   properties:
+    request_info:
+     $ref: '#/definitions/request_info'
+    bank:
+     $ref: '#/definitions/bank'
+  bank_response:
+   properties:
+    response_info:
+     $ref: '#/definitions/response_info'
+    bank:
+     type: array
+     items:
+      $ref: '#/definitions/bank'

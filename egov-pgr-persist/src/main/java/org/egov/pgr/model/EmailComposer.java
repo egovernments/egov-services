@@ -2,19 +2,23 @@ package org.egov.pgr.model;
 
 import org.egov.pgr.contracts.email.EmailMessage;
 import org.egov.pgr.entity.Complaint;
-import org.trimou.engine.MustacheEngine;
+import org.egov.pgr.service.TemplateService;
 import org.trimou.util.ImmutableMap;
 
 import java.text.SimpleDateFormat;
+import java.util.Map;
 
 public class EmailComposer {
 
-    private Complaint complaint;
-    private MustacheEngine templatingEngine;
+    private static final String EMAIL_BODY_EN_TEMPLATE = "email_body_end";
+    private static final String EMAIL_SUBJECT_EN_TEMPLATE = "email_subject_en";
 
-    public EmailComposer(Complaint complaint, MustacheEngine templatingEngine) {
+    private Complaint complaint;
+    private TemplateService templateService;
+
+    public EmailComposer(Complaint complaint, TemplateService templateService) {
         this.complaint = complaint;
-        this.templatingEngine = templatingEngine;
+        this.templateService = templateService;
     }
 
     public EmailMessage compose() {
@@ -31,15 +35,12 @@ public class EmailComposer {
         builder.put("complaintDetails", complaint.getDetails());
         builder.put("registeredDate", formattedCreatedDate);
         builder.put("statusName", complaint.getStatus().getName());
-        return templatingEngine.getMustache("email_body_en").render(builder.build());
+        return templateService.loadByName(EMAIL_BODY_EN_TEMPLATE, builder);
     }
 
     private String getEmailSubject(Complaint complaint) {
-        return templatingEngine
-                .getMustache("email_subject_en")
-                .render(ImmutableMap.<String, Object>of(
-                        "crn", complaint.getCrn()
-                ));
+        Map<Object, Object> objectMap = ImmutableMap.of("crn", complaint.getCrn());
+        return templateService.loadByName(EMAIL_SUBJECT_EN_TEMPLATE, objectMap);
     }
 
 }

@@ -1,4 +1,4 @@
-package org.egov.pgr.transform;
+package org.egov.pgr.model;
 
 import org.egov.pgr.contracts.grievance.ServiceRequest;
 import org.egov.pgr.entity.Complaint;
@@ -8,13 +8,16 @@ import org.egov.pgr.entity.enums.ReceivingMode;
 import org.egov.pgr.service.ComplaintStatusService;
 import org.egov.pgr.service.ComplaintTypeService;
 import org.egov.pgr.service.EscalationService;
-import org.egov.pgr.service.PositionService;
+import org.egov.pgr.repository.PositionRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.Objects;
 
 import static org.egov.pgr.contracts.grievance.ServiceRequest.*;
 
+@Component
 public class ComplaintBuilder {
 
     private final ComplaintTypeService complaintTypeService;
@@ -22,11 +25,14 @@ public class ComplaintBuilder {
     private final ComplaintStatusService complaintStatusService;
     private final EscalationService escalationService;
     private final Complaint complaint;
+    private final PositionRepository positionRepository;
 
-    public ComplaintBuilder(ServiceRequest serviceRequest, ComplaintTypeService complaintTypeService, ComplaintStatusService complaintStatusService, EscalationService escalationService) {
+    @Autowired
+    public ComplaintBuilder(ServiceRequest serviceRequest, ComplaintTypeService complaintTypeService, ComplaintStatusService complaintStatusService, EscalationService escalationService, PositionRepository positionRepository) {
         this.serviceRequest = serviceRequest;
         this.complaintStatusService = complaintStatusService;
         this.escalationService = escalationService;
+        this.positionRepository = positionRepository;
         this.complaint = new Complaint();
         this.complaintTypeService = complaintTypeService;
     }
@@ -48,7 +54,6 @@ public class ComplaintBuilder {
         this.complaint.setLat(this.serviceRequest.getLat());
         this.complaint.setLng(this.serviceRequest.getLng());
         this.complaint.setDetails(this.serviceRequest.getDetails());
-        this.complaint.setCreatedDate(new Date());
         this.complaint.setLandmarkDetails(this.serviceRequest.getLandmarkDetails());
     }
 
@@ -66,7 +71,7 @@ public class ComplaintBuilder {
     private void setEscalationDate() {
         //TODO - pass in tenant id correctly
         this.complaint.setEscalationDate(new Date());
-        Long designationId = new PositionService().designationIdForAssignee("", this.complaint.getAssignee());
+        Long designationId = positionRepository.designationIdForAssignee("", this.complaint.getAssignee());
         this.complaint.setEscalationDate(escalationService.getExpiryDate(this.complaint, designationId));
     }
 

@@ -2,21 +2,17 @@ package org.egov.pgr.consumer;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.egov.pgr.contracts.grievance.SevaRequest;
+import org.egov.pgr.contracts.workflow.CreatWorkflowRequest;
 import org.egov.pgr.entity.Complaint;
+import org.egov.pgr.model.ComplaintBuilder;
 import org.egov.pgr.model.EmailComposer;
 import org.egov.pgr.model.SmsComposer;
 import org.egov.pgr.producer.GrievanceProducer;
-import org.egov.pgr.service.ComplaintService;
-import org.egov.pgr.service.ComplaintStatusService;
-import org.egov.pgr.service.ComplaintTypeService;
-import org.egov.pgr.service.EscalationService;
-import org.egov.pgr.transform.ComplaintBuilder;
+import org.egov.pgr.repository.PositionRepository;
+import org.egov.pgr.repository.WorkflowRepository;
+import org.egov.pgr.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.trimou.engine.MustacheEngine;
-import org.trimou.engine.MustacheEngineBuilder;
-import org.trimou.engine.locator.ClassPathTemplateLocator;
-import org.trimou.engine.locator.FileSystemTemplateLocator;
 
 public class GrievancePersistenceListener {
 
@@ -33,9 +29,16 @@ public class GrievancePersistenceListener {
     private EscalationService escalationService;
 
     @Autowired
+    private WorkflowRepository workflowRepository;
+
+    @Autowired
     private GrievanceProducer kafkaProducer;
 
-    MustacheEngine templatingEngine = MustacheEngineBuilder.newBuilder().addTemplateLocator(new ClassPathTemplateLocator(1, "templates","txt")).build();
+    @Autowired
+    private PositionRepository positionRepository;
+
+    @Autowired
+    private TemplateService templateService;
 
     @KafkaListener(id = "grievancePersister", topics = "ap.public.mseva.persistreadyh", group = "grievances")
     public void processMessage(ConsumerRecord<String, SevaRequest> record) {
@@ -44,11 +47,11 @@ public class GrievancePersistenceListener {
         triggerSms(complaint);
         triggerEmail(complaint);
         triggerIndexing(complaint);
-        triggerWorkflow(sevaRequest);
+        triggerWorkflow(complaint);
     }
 
-    private void triggerWorkflow(SevaRequest record) {
-        //TODO - Trigger workflow
+    private void triggerWorkflow(Complaint complaint) {
+        workflowRepository.startWorkFlow(new CreatWorkflowRequest().fromDomain(complaint));
     }
 
     private void triggerIndexing(Complaint record) {
@@ -56,15 +59,15 @@ public class GrievancePersistenceListener {
     }
 
     private void triggerEmail(Complaint complaint) {
-        kafkaProducer.sendMessage(".mseva.email", new EmailComposer(complaint, templatingEngine).compose());
+        kafkaProducer.sendMessage(".mseva.email", new EmailComposer(complaint, templateService).compose());
     }
 
     private void triggerSms(Complaint complaint) {
-        kafkaProducer.sendMessage(".mseva.sms", new SmsComposer(complaint, templatingEngine).compose());
+        kafkaProducer.sendMessage(".mseva.sms", new SmsComposer(complaint, templateService).compose());
     }
 
     private Complaint persistComplaint(SevaRequest sevaRequest) {
-        Complaint complaint = new ComplaintBuilder(sevaRequest.getServiceRequest(), complaintTypeService, complaintStatusService, escalationService).build();
+        Complaint complaint = new ComplaintBuilder(sevaRequest.getServiceRequest(), complaintTypeService, complaintStatusService, escalationService, positionRepository).build();
         complaint = complaintService.createComplaint(complaint);
         return complaint;
     }

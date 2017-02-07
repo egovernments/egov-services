@@ -2,16 +2,17 @@ package org.egov.pgr.model;
 
 import org.egov.pgr.contracts.sms.SmsMessage;
 import org.egov.pgr.entity.Complaint;
+import org.egov.pgr.service.TemplateService;
 import org.trimou.engine.MustacheEngine;
 import org.trimou.util.ImmutableMap;
 
 public class SmsComposer {
     private Complaint complaint;
-    private MustacheEngine templatingEngine;
+    private TemplateService templateService;
 
-    public SmsComposer(Complaint complaint, MustacheEngine templatingEngine) {
+    public SmsComposer(Complaint complaint, TemplateService templateService) {
         this.complaint = complaint;
-        this.templatingEngine = templatingEngine;
+        this.templateService = templateService;
     }
 
     public SmsMessage compose() {
@@ -19,12 +20,10 @@ public class SmsComposer {
     }
 
     private String getSmsBody(Complaint complaint) {
-        return templatingEngine
-                .getMustache("sms_en")
-                .render(ImmutableMap.<String, Object>of(
-                        "name", complaint.getComplaintType().getName(),
-                        "number", complaint.getCrn()
-                ));
+        return templateService.loadByName("sms_en", ImmutableMap.of(
+                "name", complaint.getComplaintType().getName(),
+                "number", complaint.getCrn()
+        ));
     }
 
 }

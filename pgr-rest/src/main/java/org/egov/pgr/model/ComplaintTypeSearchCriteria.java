@@ -30,7 +30,7 @@ public class ComplaintTypeSearchCriteria {
         return count == null ? DEFAULT_FREQUENCY_COUNT : count;
     }
 
-    public void isValid() {
+    public void validate() {
         validateSearchType();
         validateCategorySearchType();
     }

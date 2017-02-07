@@ -23,7 +23,7 @@ public class ComplaintTypeSearchCriteriaTest {
         thrown.expect(InvalidComplaintTypeSearchException.class);
         thrown.expectMessage("Invalid search type");
 
-        searchCriteria.isValid();
+        searchCriteria.validate();
     }
 
     @Test
@@ -36,7 +36,7 @@ public class ComplaintTypeSearchCriteriaTest {
         thrown.expect(InvalidComplaintTypeSearchException.class);
         thrown.expectMessage("Category id is not present");
 
-        searchCriteria.isValid();
+        searchCriteria.validate();
     }
 
     @Test
@@ -66,7 +66,7 @@ public class ComplaintTypeSearchCriteriaTest {
                 .categoryId(10L)
                 .build();
 
-        searchCriteria.isValid();
+        searchCriteria.validate();
     }
 
     @Test
@@ -76,7 +76,7 @@ public class ComplaintTypeSearchCriteriaTest {
                 .count(10)
                 .build();
 
-        searchCriteria.isValid();
+        searchCriteria.validate();
     }
 
 

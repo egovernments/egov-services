@@ -1,0 +1,13 @@
+[
+   {
+      "district_name":"KURNOOL",
+      "cities":[
+         {
+            "url":"http:\/\/kurnool-uat.egovernments.org",
+            "city_name":"Kurnool",
+            "city_code":1016,
+            "tenant_id":"ap.kurnool"
+         }
+       ]
+    }
+]

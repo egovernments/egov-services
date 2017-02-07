@@ -40,16 +40,9 @@
 
 package org.egov.pgr.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.egov.pgr.entity.Complaint;
 import org.egov.pgr.entity.ComplaintType;
 import org.egov.pgr.repository.ComplaintTypeRepository;
-import org.egov.pgr.wrapper.ComplaintTypeRequest;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
@@ -63,7 +56,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -152,25 +149,8 @@ public class ComplaintTypeService {
 
 	}
 
-	public ComplaintType findByCode(final String code) {
-
-		return complaintTypeRepository.findByCode(code);
-	}
-
-	public List<ComplaintType> findActiveComplaintTypes() {
-		return complaintTypeRepository.findByIsActiveTrueOrderByNameAsc();
-	}
-
-	public List<ComplaintType> getComplaintType(ComplaintTypeRequest complaintTypeRequest) {
-
-		List<ComplaintType> complaintTypes = new ArrayList<ComplaintType>();
-		if (!StringUtils.isEmpty(complaintTypeRequest.getComplaintType().getCode())) {
-
-			complaintTypes.add(findByCode(complaintTypeRequest.getComplaintType().getCode()));
-
-		}
-
-		return complaintTypes;
+	public ComplaintType getComplaintType(String complaintTypeCode) {
+        return complaintTypeRepository.findByCode(complaintTypeCode);
 	}
 
 }

@@ -7,12 +7,13 @@ import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 @Service
-public class AuthenticatedUserResolver implements org.springframework.web.method.support.HandlerMethodArgumentResolver {
+public class AuthenticatedUserResolver implements HandlerMethodArgumentResolver {
 
     private static final String AUTH_TOKEN_HEADER = "auth_token";
     private UserRepository userRepository;

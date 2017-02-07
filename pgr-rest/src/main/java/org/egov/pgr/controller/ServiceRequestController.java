@@ -6,9 +6,9 @@ import org.egov.pgr.factory.ResponseInfoFactory;
 import org.egov.pgr.factory.ServiceRequestsFactory;
 import org.egov.pgr.model.*;
 import org.egov.pgr.producer.GrievanceProducer;
+import org.egov.pgr.repository.specification.SevaSpecification;
 import org.egov.pgr.service.ComplaintService;
 import org.egov.pgr.service.SevaNumberGeneratorService;
-import org.egov.pgr.repository.specification.SevaSpecification;
 import org.egov.pgr.validators.SevaRequestValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -28,7 +28,7 @@ import java.util.List;
 public class ServiceRequestController {
 
     @Autowired
-    private SevaNumberGeneratorService sevaNumberGeneratorImpl;
+    private SevaNumberGeneratorService sevaNumberGeneratorService;
 
     @Autowired
     private GrievanceProducer kafkaProducer;
@@ -59,7 +59,7 @@ public class ServiceRequestController {
                 serviceRequest.setPhone(user.getMobileNumber());
                 serviceRequest.setEmail(user.getEmailId());
             }
-            String newComplaintId = sevaNumberGeneratorImpl.generate();
+            String newComplaintId = sevaNumberGeneratorService.generate();
             request.getServiceRequest().setCrn(newComplaintId);
             request.getRequestInfo().setAction("create");
             kafkaProducer.sendMessage(jurisdiction_id + ".mseva.validated", request);

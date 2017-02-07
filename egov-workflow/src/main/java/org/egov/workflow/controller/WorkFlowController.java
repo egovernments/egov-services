@@ -46,6 +46,7 @@ public class WorkFlowController {
         if (positionResponse != null)
             positionResponse.setResponseInfo(
                     new ResponseInfo("", "", new Date().toString(), "", "", "Successful response", ""));
+        pgrWorkflowImpl.getAssignee(null, null, null);
         return positionResponse;
     }
 

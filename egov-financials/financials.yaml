@@ -1,0 +1,472 @@
+# Example YAML to get you started quickly.
+# Be aware that YAML has indentation based scoping.
+# Code completion support is available so start typing for available options.
+swagger: '2.0'
+
+# This is your document metadata
+info:
+  version: "1.0.0"
+  title: Financial System APIs
+  description: All API for Financial System is available here
+  contact:
+    name: Manikanta PT
+    
+host: localhost:8080
+basePath: /v1/egf
+
+# Describe your paths here
+paths:
+  /banks:
+   get:
+    summary: Get the list of banks
+    description: banks
+    parameters:
+     - name:      request_info.action
+       type:       string
+       in:      query
+       description:      common request_info
+       required:      false
+     - name:      request_info.did
+       type:       string
+       in:      query
+       description:      common request_info
+       required:      false
+     - name:      request_info.msg_id
+       type:       string
+       in:      query
+       description:      common request_info
+       required:      false
+     - name:      request_info.requester_id
+       type:       string
+       in:      query
+       description:      common request_info
+       required:      false
+     - name:      request_info.auth_token
+       type:       string
+       in:      query
+       description:      common request_info
+       required:      false
+     - name: bank.id
+       type: integer
+       format: int64
+       in: query
+       description: common request_info
+       required: false
+     - name: bank.code
+       type: string
+       in: query
+       description: common request_info
+       required: true
+     - name: bank.name
+       type: string
+       in: query
+       description: common request_info
+       required: true
+     - name: bank.description
+       type: string
+       in: query
+       description: common request_info
+       required: false
+     - name: bank.active
+       type: boolean
+       in: query
+       description: common request_info
+       required: true
+     - name: bank.type
+       type: string
+       in: query
+       description: common request_info
+       required: false
+     - name: bank.bank_branches
+       type: string
+       in: query
+       description: common request_info
+       required: false
+    responses:
+     200:
+      description: bank retrieved Successfully
+      schema:
+        $ref: '#/definitions/bank_response'
+     400:
+      description: Invalid Input
+      schema:
+       $ref: '#/definitions/error_response'
+     404:
+      description: bankNot Found
+   post:
+    summary: Get the list of banks
+    description: banks
+    parameters:
+     - name: bank_request
+       in: body
+       description: common request_info
+       schema:
+        $ref: '#/definitions/bank_request'
+    responses:
+     201:
+      description: bank created Successfully
+      schema:
+       $ref: '#/definitions/bank_response'
+     400:
+      description: Invalid Input
+      schema:
+       $ref: '#/definitions/error_response'
+     404:
+      description: bankNot Found
+   put:
+    summary: Get the list of banks
+    description: banks
+    parameters:
+     - name: bank_request
+       in: body
+       description: common request_info
+       schema:
+        $ref: '#/definitions/bank_request'
+    responses:
+     200:
+      description: bank update Successfully
+      schema:
+       $ref: '#/definitions/bank_response'
+     400:
+      description: Invalid Input
+      schema:
+       $ref: '#/definitions/error_response'
+     404:
+      description: bankNot Found
+  /bankbranches:
+   get:
+    summary: Get the list of bankbranchs
+    description: bankbranchs
+    parameters:
+     - name:      request_info.action
+       type:       string
+       in:      query
+       description:      common request_info
+       required:      false
+     - name:      request_info.did
+       type:       string
+       in:      query
+       description:      common request_info
+       required:      false
+     - name:      request_info.msg_id
+       type:       string
+       in:      query
+       description:      common request_info
+       required:      false
+     - name:      request_info.requester_id
+       type:       string
+       in:      query
+       description:      common request_info
+       required:      false
+     - name:      request_info.auth_token
+       type:       string
+       in:      query
+       description:      common request_info
+       required:      false
+     - name: bank_branch.id
+       type: integer
+       format: int64
+       in: query
+       description: common request_info
+       required: false
+     - name: bank_branch.bankid
+       type: integer
+       format: int64
+       in: query
+       description: common request_info
+       required: false
+     - name: bank_branch.code
+       type: string
+       in: query
+       description: common request_info
+       required: true
+     - name: bank_branch.name
+       type: string
+       in: query
+       description: common request_info
+       required: true
+     - name: bank_branch.address
+       type: string
+       in: query
+       description: common request_info
+       required: true
+     - name: bank_branch.address2
+       type: string
+       in: query
+       description: common request_info
+       required: false
+     - name: bank_branch.city
+       type: string
+       in: query
+       description: common request_info
+       required: false
+     - name: bank_branch.state
+       type: string
+       in: query
+       description: common request_info
+       required: false
+     - name: bank_branch.pincode
+       type: string
+       in: query
+       description: common request_info
+       required: false
+     - name: bank_branch.phone
+       type: string
+       in: query
+       description: common request_info
+       required: false
+     - name: bank_branch.fax
+       type: string
+       in: query
+       description: common request_info
+       required: false
+     - name: bank_branch.contact_person
+       type: string
+       in: query
+       description: common request_info
+       required: false
+     - name: bank_branch.active
+       type: boolean
+       in: query
+       description: common request_info
+       required: true
+     - name: bank_branch.description
+       type: string
+       in: query
+       description: common request_info
+       required: false
+     - name: bank_branch.micr
+       type: string
+       in: query
+       description: common request_info
+       required: false
+    responses:
+     200:
+      description: bank_branch retrieved Successfully
+      schema:
+       $ref: '#/definitions/bank_branch_response'
+     400:
+      description: Invalid Input
+      schema:
+       $ref: '#/definitions/error_response'
+     404:
+      description: bank_branchNot Found
+   post:
+    summary: Get the list of bankbranchs
+    description: bankbranchs
+    parameters:
+     - name: bank_branch_request
+       in: body
+       description: common request_info
+       schema:
+        $ref: '#/definitions/bank_branch_request'
+    responses:
+     201:
+      description: bank_branch created Successfully
+      schema:
+       $ref: '#/definitions/bank_branch_response'
+     400:
+      description: Invalid Input
+      schema:
+       $ref: '#/definitions/error_response'
+     404:
+      description: bank_branchNot Found
+   put:
+    summary: Get the list of bankbranchs
+    description: bankbranchs
+    parameters:
+     - name: bank_branch_request
+       in: body
+       description: common request_info
+       schema:
+        $ref: '#/definitions/bank_branch_request'
+    responses:
+     200:
+      description: bank_branch update Successfully
+      schema:
+       $ref: '#/definitions/bank_branch_response'
+     400:
+      description: Invalid Input
+      schema:
+       $ref: '#/definitions/error_response'
+     404:
+      description: bank_branchNot Found
+definitions:
+  bank_branch:
+   type: object
+   properties:
+    id:
+     type: integer
+     format: int64
+     description: describe id
+    code:
+     type: string
+     description: describe code
+    name:
+     type: string
+     description: describe name
+    address:
+     type: string
+     description: describe address
+    address2:
+     type: string
+     description: describe address2
+    city:
+     type: string
+     description: describe city
+    state:
+     type: string
+     description: describe state
+    pincode:
+     type: string
+     description: describe pincode
+    phone:
+     type: string
+     description: describe phone
+    fax:
+     type: string
+     description: describe fax
+    contact_person:
+     type: string
+     description: describe contact_person
+    active:
+     type: boolean
+     description: describe active
+    micr:
+     type: string
+     description: describe micr
+  bank_branch_request:
+   properties:
+    request_info:
+     $ref: '#/definitions/request_info'
+    bank_branch:
+     $ref: '#/definitions/bank_branch'
+  bank_branch_response:
+   properties:
+    response_info:
+     $ref: '#/definitions/response_info'
+    bank_branch:
+     type: array
+     items:
+      $ref: '#/definitions/bank_branch'
+
+  bank:
+   type: object
+   properties:
+    id:
+     type: integer
+     format: int64
+     description: describe id
+    code:
+     type: string
+     description: describe code
+    name:
+     type: string
+     description: describe name
+    active:
+     type: boolean
+     description: describe active
+    bank_branches:
+     type: string
+     description: describe bank_branches
+  bank_request:
+   properties:
+    request_info:
+     $ref: '#/definitions/request_info'
+    bank:
+     $ref: '#/definitions/bank'
+  bank_response:
+   properties:
+    response_info:
+     $ref: '#/definitions/response_info'
+    bank:
+     type: array
+     items:
+      $ref: '#/definitions/bank'
+  request_info:
+    type: object
+    properties:
+      api_id:
+        type: string
+        description: unique API ID
+      ver:
+        type: string
+        description: API version
+      ts:
+        type: string
+        description: >-
+          response timestamp YYYY-MM-DDThh:mm:ss+/-nn:nn (timezone defaulted to
+          +5.30)
+      action:
+        type: string
+        description: api action like GET/POST/PUT/DELETE in case of http calls
+      did:
+        type: string
+        description: device UUID from which API is called
+      key:
+        type: string
+        description: API key (dynamic)
+      msg_id:
+        type: string
+        description: 'unique request message id, UUID, for handling API idempotency'
+      requester_id:
+        type: string
+        description: UserId of the user calling
+      auth_token:
+        type: string
+        description: //session/jwt/saml token/oauth token
+    required:
+      - api_id
+      - ver
+      - ts
+  response_info:
+    type: object
+    properties:
+      api_id:
+        type: string
+        description: unique API ID
+      ver:
+        type: string
+        description: API version
+      ts:
+        type: string
+        description: >-
+          response timestamp YYYY-MM-DDThh:mm:ss+/-nn:nn (timezone defaulted to
+          +5.30)
+      res_msg_id:
+        type: string
+        description: unique response message id (UUID)
+      msg_id:
+        type: string
+        description: message id of the request
+      status:
+        type: string
+        description: 'status of request e.g. successful, failed etc'
+    required:
+      - api_id
+      - ver
+      - ts
+      - status
+      
+  error:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+      description:
+        type: string
+      fields:
+        type: object
+    required:
+      - code
+      - message
+  error_response:
+    properties:
+      response_info:
+        $ref: '#/definitions/response_info'
+      error:
+        $ref: '#/definitions/error'
+    type: object

@@ -1,12 +1,10 @@
 package org.egov.workflow.web.controller;
 
-import org.egov.workflow.web.contract.ProcessInstance;
+import org.egov.workflow.domain.model.PositionResponse;
+import org.egov.workflow.domain.service.WorkflowInterface;
 import org.egov.workflow.web.contract.AssigneeFilterInfo;
 import org.egov.workflow.web.contract.AssigneeRequestInfo;
-import org.egov.workflow.domain.model.PositionResponse;
 import org.egov.workflow.web.contract.ResponseInfo;
-import org.egov.workflow.domain.service.WorkflowInterface;
-import org.egov.workflow.domain.service.WorkflowService;
 import org.egov.workflow.web.validation.ProcessInstanceValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -16,15 +14,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
 import java.util.Date;
 
 
 @RestController
 public class WorkFlowController {
-
-    @Autowired
-    private WorkflowService workflowService;
 
     @Autowired
     private WorkflowInterface pgrWorkflowImpl;
@@ -45,12 +39,5 @@ public class WorkFlowController {
                     new ResponseInfo("", "", new Date().toString(), "", "", "Successful response", ""));
         return positionResponse;
     }
-
-    @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
-    public String startWorkflow(@Valid @RequestBody final ProcessInstance processInstance) {
-        workflowService.publish(processInstance);
-        return "yay!";
-    }
-
 
 }

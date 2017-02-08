@@ -1,6 +1,6 @@
 package org.egov.pgr.employee.enrichment.repository;
 
-import org.egov.pgr.employee.enrichment.PropertiesManager;
+import org.egov.pgr.employee.enrichment.config.PropertiesManager;
 import org.egov.pgr.employee.enrichment.repository.contract.AssigneeFilterInfo;
 import org.egov.pgr.employee.enrichment.repository.contract.AssigneeRequestInfo;
 import org.egov.pgr.employee.enrichment.repository.contract.AssigneeResponse;

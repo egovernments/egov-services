@@ -1,7 +1,7 @@
 package org.egov.pgr.employee.enrichment.repository;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.egov.pgr.employee.enrichment.PropertiesManager;
+import org.egov.pgr.employee.enrichment.config.PropertiesManager;
 import org.egov.pgr.employee.enrichment.repository.contract.AssigneeResponse;
 import org.junit.Before;
 import org.junit.Test;

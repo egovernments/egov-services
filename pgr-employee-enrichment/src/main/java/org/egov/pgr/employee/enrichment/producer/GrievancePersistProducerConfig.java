@@ -1,11 +1,9 @@
 package org.egov.pgr.employee.enrichment.producer;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
-import org.springframework.beans.factory.annotation.Value;
+import org.egov.pgr.employee.enrichment.config.PropertiesManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
@@ -14,24 +12,15 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Configuration
 @EnableKafka
 public class GrievancePersistProducerConfig {
 
-    @Value("${kafka.config.bootstrap_server_config}")
-    private String serverConfig;
-
-    @Value("${kafka.producer.config.buffer_memory_config}")
-    private Integer bufferMemoryConfig;
-
-    @Value("${kafka.producer.config.linger_ms_config}")
-    private Integer lingerMsConfig;
-
-    @Value("${kafka.producer.config.batch_size_config}")
-    private Integer batchSizeConfig;
-
-    @Value("${kafka.producer.config.retries_config}")
-    private Integer retiresConfig;
+    @Autowired
+    private PropertiesManager propertiesManager;
 
     @Bean
     public ProducerFactory<String, Object> producerFactory() {
@@ -41,11 +30,11 @@ public class GrievancePersistProducerConfig {
     @Bean
     public Map<String, Object> producerConfigs() {
         Map<String, Object> props = new HashMap<>();
-        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, serverConfig);
-        props.put(ProducerConfig.RETRIES_CONFIG, retiresConfig);
-        props.put(ProducerConfig.BATCH_SIZE_CONFIG, batchSizeConfig);
-        props.put(ProducerConfig.LINGER_MS_CONFIG, lingerMsConfig);
-        props.put(ProducerConfig.BUFFER_MEMORY_CONFIG, bufferMemoryConfig);
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, propertiesManager.getServerConfig());
+        props.put(ProducerConfig.RETRIES_CONFIG, propertiesManager.getRetriesConfig());
+        props.put(ProducerConfig.BATCH_SIZE_CONFIG, propertiesManager.getBatchSizeConfig());
+        props.put(ProducerConfig.LINGER_MS_CONFIG, propertiesManager.getLingerMsConfig());
+        props.put(ProducerConfig.BUFFER_MEMORY_CONFIG, propertiesManager.getBufferMemoryConfig());
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
         return props;

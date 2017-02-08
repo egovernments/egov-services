@@ -61,7 +61,7 @@ public class ComplaintControllerTest {
                 .crn(crn)
                 .closed(false)
                 .complaintType(new ComplaintType(complaintType, "complaintCode"))
-                .complainant(new Complainant(complainant, "phone", "email"))
+                .complainant(new Complainant(complainant, null, null))
                 .complaintLocation(new ComplaintLocation(new Coordinates(0d, 0d), null))
                 .additionalValues(additionalValues)
                 .authenticatedUser(AuthenticatedUser.createAnonymousUser())

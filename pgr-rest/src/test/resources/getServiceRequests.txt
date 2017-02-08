@@ -7,12 +7,10 @@
          "msg_id":"msg_id",
          "status":"successful"},
     "service_requests":[
-        {"service_request_id":"%1$s",
+        {"service_request_id":"1234",
          "status":false,
-         "status_details":"%2$s",
-         "service_name":"%3$s",
-         "service_code":null,
-         "service_id":"null",
+         "service_name":"abc",
+         "service_code":"complaintCode",
          "description":null,
          "agency_responsible":null,
          "service_notice":null,
@@ -20,25 +18,23 @@
          "updated_datetime":null,
          "expected_datetime":null,
          "address":null,
-         "address_id":"null",
+         "address_id":null,
          "zipcode":null,
-         "latitude":0.0,
-         "longitude":0.0,
-         "media_url":null,
-         "first_name":"%3$s",
+         "lat":0.0,
+         "long":0.0,
+         "media_urls":null,
+         "first_name":"kumar",
          "last_name":null,
          "phone":null,
          "email":null,
          "device_id":null,
          "account_id":null,
-         "approval_position":null,
-         "approval_comment":null,
          "values":{
-            "ReceivingMode": "%4$s",
-            "ReceivingCenter": "%5$s",
-            "LocationId": "%6$s",
-            "ChildLocationId": "%7$s"
+            "ReceivingMode": "MANUAL",
+            "ReceivingCenter": "Commissioner Office",
+            "LocationId": "Election Ward No 1",
+            "ChildLocationId": "Gadu Veedhi"
          }
-         }
+     }
     ]
 }

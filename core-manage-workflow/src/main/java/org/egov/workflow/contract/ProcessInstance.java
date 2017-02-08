@@ -54,4 +54,60 @@ public class ProcessInstance {
     @JsonProperty("state_details")
     private String stateDetails;
 
+    public RequestInfo getRequestInfo() {
+        return requestInfo;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public Date getLastupdatedSince() {
+        return lastupdatedSince;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public String getAction() {
+        return action;
+    }
+
+    public String getBusinessKey() {
+        return businessKey;
+    }
+
+    public Long getAssignee() {
+        return assignee;
+    }
+
+    public String getGroup() {
+        return group;
+    }
+
+    public String getSenderName() {
+        return senderName;
+    }
+
+    public Long getStateId() {
+        return stateId;
+    }
+
+    public String getStateDetails() {
+        return stateDetails;
+    }
+
 }

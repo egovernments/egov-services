@@ -4,6 +4,6 @@ import org.egov.workflow.model.PositionResponse;
 
 public interface AssignmentService {
     
-    PositionResponse getPositionsForUser(Long userId);
+    PositionResponse getPositionsForUser(String userId);
 
 }

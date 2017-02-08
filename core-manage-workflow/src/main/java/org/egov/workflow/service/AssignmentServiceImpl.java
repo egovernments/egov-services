@@ -13,13 +13,13 @@ public class AssignmentServiceImpl implements AssignmentService {
     private String EmployeeServiceHost;
 
     @Override
-    public PositionResponse getPositionsForUser(final Long userId) {
+    public PositionResponse getPositionsForUser(final String userId) {
         final String url = EmployeeServiceHost + "v1/eis/employeepositions?userId={userId}";
         final PositionsResponse position = getPositionResponse(url, userId);
         return position != null ? position.getPositions().get(0) : null;
     }
 
-    private PositionsResponse getPositionResponse(final String url, final Long userId) {
+    private PositionsResponse getPositionResponse(final String url, final String userId) {
         final RestTemplate restTemplate = new RestTemplate();
         return restTemplate.getForObject(url, PositionsResponse.class, userId);
     }

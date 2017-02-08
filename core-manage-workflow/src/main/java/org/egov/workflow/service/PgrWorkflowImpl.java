@@ -53,7 +53,7 @@ public class PgrWorkflowImpl implements WorkflowInterface {
         state.setNatureOfTask(type.getDisplayName());
         state.setExtraInfo(processInstance.getStateDetails());
         stateService.create(state);
-        if (state.getId() != null) processInstance.setId(state.getId().toString());
+        //if (state.getId() != null) processInstance.setId(state.getId().toString());
         return processInstance;
     }
 
@@ -101,7 +101,7 @@ public class PgrWorkflowImpl implements WorkflowInterface {
     private PositionResponse getInitiator(final Long userId) {
         PositionResponse position = null;
         try {
-            position = assignmentService.getPositionsForUser(userId);
+            //position = assignmentService.getPositionsForUser(userId);
         } catch (final Exception e) {
             LOG.error("Error while setting initiator position");
         }

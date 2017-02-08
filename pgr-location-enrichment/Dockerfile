@@ -14,10 +14,10 @@ ENV DB_NAME=mydb \
 # INSTRUCTIONS ON HOW TO BUILD JAR:
 # Move to the location where pom.xml is exist in project and build project using below command
 # "mvn clean package"
-COPY /target/pgr-rest-spring-boot-0.0.1-SNAPSHOT.jar /opt/egov/egov-pgr-rest-spring-boot.jar
+COPY /target/pgr-location-enrichment-0.0.1-SNAPSHOT.jar /opt/egov/pgr-location-enrichment.jar
 
 # launch standalone webapp
-CMD ["java","-jar", "/opt/egov/egov-pgr-rest-spring-boot.jar"]
+CMD ["java","-jar", "/opt/egov/pgr-location-enrichment.jar"]
 #CMD ["java", "-Xdebug", "-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8787", "-jar", "/opt/egov/egov-pgr-rest-spring-boot.jar"]
 
 # NOTE: the two 'RUN' commands can probably be combined inside of a single

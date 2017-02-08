@@ -1,12 +1,8 @@
 package org.egov.pgr.employee.enrichment.consumer;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
-import org.egov.pgr.employee.enrichment.model.SevaRequest;
-import org.egov.pgr.employee.enrichment.transform.SevaRequestDeserializer;
+import org.egov.pgr.employee.enrichment.consumer.contract.HashMapDeserializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +12,9 @@ import org.springframework.kafka.config.KafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Configuration
 @EnableKafka
@@ -40,8 +39,8 @@ public class GrievanceEmployeeEnrichmentConsumerConfig {
     private String autoOffsetReset;
 
     @Bean
-    KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, SevaRequest>> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, SevaRequest> factory = new ConcurrentKafkaListenerContainerFactory<>();
+    KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, Map>> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, Map> factory = new ConcurrentKafkaListenerContainerFactory<>();
         // TODO - Tweak params with some real values.
         factory.setConsumerFactory(consumerFactory());
         factory.setConcurrency(3);
@@ -50,7 +49,7 @@ public class GrievanceEmployeeEnrichmentConsumerConfig {
     }
 
     @Bean
-    public ConsumerFactory<String, SevaRequest> consumerFactory() {
+    public ConsumerFactory<String, Map> consumerFactory() {
         return new DefaultKafkaConsumerFactory<>(consumerConfigs());
     }
 
@@ -64,7 +63,7 @@ public class GrievanceEmployeeEnrichmentConsumerConfig {
         propsMap.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, autoOffsetReset);
         propsMap.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         propsMap.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        propsMap.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, SevaRequestDeserializer.class);
+        propsMap.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, HashMapDeserializer.class);
         return propsMap;
     }
 

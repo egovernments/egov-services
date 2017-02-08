@@ -1,4 +1,4 @@
-package org.egov.pgr.employee.enrichment.model;
+package org.egov.pgr.employee.enrichment.consumer.contract;
 
 import java.util.Date;
 
@@ -12,7 +12,7 @@ public class RequestInfo {
     @JsonProperty("ver")
     private String ver = null;
 
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "IST")
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:enrichSevaWithAssignee", timezone = "IST")
     @JsonProperty("ts")
     private Date ts = null;
 

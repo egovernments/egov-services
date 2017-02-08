@@ -1,12 +1,14 @@
 package org.egov.pgr.employee.enrichment.consumer;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.egov.pgr.employee.enrichment.model.SevaRequest;
 import org.egov.pgr.employee.enrichment.producer.GrievancePersistProducer;
-import org.egov.pgr.employee.enrichment.service.EmployeePopulateService;
+import org.egov.pgr.employee.enrichment.service.AssignmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class GrievanceEmployeeEnrichmentListener {
 
@@ -14,10 +16,10 @@ public class GrievanceEmployeeEnrichmentListener {
     private String employeeEnrichedTopicName;
 
     @Autowired
-    private GrievancePersistProducer kafkaProducer;
+    private GrievancePersistProducer producer;
 
     @Autowired
-    private EmployeePopulateService employeePopulateService;
+    private AssignmentService service;
 
     /*
      * Example message
@@ -32,14 +34,10 @@ public class GrievanceEmployeeEnrichmentListener {
      * "testing"}}}
      */
     @KafkaListener(id = "${kafka.topics.pgr.locationpopulated.id}", topics = "${kafka.topics.pgr.locationpopulated.name}", group = "${kafka.topics.pgr.locationpopulated.group}")
-    public void listen(ConsumerRecord<String, SevaRequest> record) {
-        SevaRequest sevaRequest = record.value();
-        sevaRequest.getServiceRequest().getValues().put("assignment_id",
-                employeePopulateService.fetchEmployeeAssignmentByLocation(
-                        Long.valueOf(sevaRequest.getServiceRequest().getValues().get("location_id")),
-                        sevaRequest.getServiceRequest().getComplaintTypeCode()).toString());
-
-        kafkaProducer.sendMessage(employeeEnrichedTopicName, sevaRequest);
+    public void processMessage(ConsumerRecord record) {
+        HashMap sevaRequestHash = (HashMap) record.value();
+        Map enrichedSevaRequest = service.enrichSevaWithAssignee(sevaRequestHash);
+        producer.sendMessage(employeeEnrichedTopicName, enrichedSevaRequest);
     }
 
 }

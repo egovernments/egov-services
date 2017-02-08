@@ -1,13 +1,20 @@
-package org.egov.pgr.employee.enrichment.model;
+package org.egov.pgr.employee.enrichment.consumer.contract;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+@Getter
 public class ServiceRequest {
+
+    enum ComplaintStatus {
+        COMPLETED, FORWARDED, REJECTED, REGISTERED, WITHDRAWN, REOPENED, PROCESSING;
+    }
+
     @JsonProperty("service_request_id")
     private String crn = null;
 
@@ -35,15 +42,15 @@ public class ServiceRequest {
     @JsonProperty("service_notice")
     private String serviceNotice = null;
 
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "IST")
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:enrichSevaWithAssignee", timezone = "IST")
     @JsonProperty("requested_datetime")
     private Date createdDate = null;
 
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "IST")
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:enrichSevaWithAssignee", timezone = "IST")
     @JsonProperty("updated_datetime")
     private Date lastModifiedDate = null;
 
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "IST")
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:enrichSevaWithAssignee", timezone = "IST")
     @JsonProperty("expected_datetime")
     private Date escalationDate = null;
 
@@ -92,111 +99,4 @@ public class ServiceRequest {
     @JsonProperty("values")
     private Map<String, String> values = new HashMap<>();
 
-    public String getCrn() {
-        return crn;
-    }
-
-    public Boolean getStatus() {
-        return status;
-    }
-
-    public ComplaintStatus getStatusDetails() {
-        return statusDetails;
-    }
-
-    public String getComplaintTypeName() {
-        return complaintTypeName;
-    }
-
-    public String getComplaintTypeCode() {
-        return complaintTypeCode;
-    }
-
-    public String getComplaintTypeId() {
-        return complaintTypeId;
-    }
-
-    public String getDetails() {
-        return details;
-    }
-
-    public String getAgencyResponsible() {
-        return agencyResponsible;
-    }
-
-    public String getServiceNotice() {
-        return serviceNotice;
-    }
-
-    public Date getCreatedDate() {
-        return createdDate;
-    }
-
-    public Date getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public Date getEscalationDate() {
-        return escalationDate;
-    }
-
-    public String getLandmarkDetails() {
-        return landmarkDetails;
-    }
-
-    public String getCrossHierarchyId() {
-        return crossHierarchyId;
-    }
-
-    public Integer getZipcode() {
-        return zipcode;
-    }
-
-    public Double getLat() {
-        return lat;
-    }
-
-    public Double getLng() {
-        return lng;
-    }
-
-    public String getMediaUrl() {
-        return mediaUrl;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getDeviceId() {
-        return deviceId;
-    }
-
-    public String getAccountId() {
-        return accountId;
-    }
-
-    public Long getApprovalPosition() {
-        return approvalPosition;
-    }
-
-    public String getApprovalComment() {
-        return approvalComment;
-    }
-
-    public Map<String, String> getValues() {
-        return values;
-    }
 }

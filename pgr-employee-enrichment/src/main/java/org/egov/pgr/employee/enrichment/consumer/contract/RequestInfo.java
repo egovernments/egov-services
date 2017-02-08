@@ -1,72 +1,50 @@
 package org.egov.pgr.employee.enrichment.consumer.contract;
 
-import java.util.Date;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
 
+import java.util.Date;
+
+@Getter
 public class RequestInfo {
-    @JsonProperty("api_id")
+
+    public static final String API_ID = "api_id";
+    public static final String VER = "ver";
+    public static final String TS = "ts";
+    public static final String ACTION = "action";
+    public static final String DID = "did";
+    public static final String KEY = "key";
+    public static final String MSG_ID = "msg_id";
+    public static final String REQUESTER_ID = "requester_id";
+    public static final String AUTH_TOKEN = "auth_token";
+
+    @JsonProperty(API_ID)
     private String apiId = null;
 
-    @JsonProperty("ver")
+    @JsonProperty(VER)
     private String ver = null;
 
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:enrichSevaWithAssignee", timezone = "IST")
-    @JsonProperty("ts")
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "IST")
+    @JsonProperty(TS)
     private Date ts = null;
 
-    @JsonProperty("action")
+    @JsonProperty(ACTION)
     private String action = null;
 
-    @JsonProperty("did")
+    @JsonProperty(DID)
     private String did = null;
 
-    @JsonProperty("key")
+    @JsonProperty(KEY)
     private String key = null;
 
-    @JsonProperty("msg_id")
+    @JsonProperty(MSG_ID)
     private String msgId = null;
 
-    @JsonProperty("requester_id")
+    @JsonProperty(REQUESTER_ID)
     private String requesterId = null;
 
-    @JsonProperty("auth_token")
+    @JsonProperty(AUTH_TOKEN)
     private String authToken = null;
 
-    public String getApiId() {
-        return apiId;
-    }
-
-    public String getVer() {
-        return ver;
-    }
-
-    public Date getTs() {
-        return ts;
-    }
-
-    public String getAction() {
-        return action;
-    }
-
-    public String getDid() {
-        return did;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public String getMsgId() {
-        return msgId;
-    }
-
-    public String getRequesterId() {
-        return requesterId;
-    }
-
-    public String getAuthToken() {
-        return authToken;
-    }
 }

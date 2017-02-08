@@ -1,9 +1,9 @@
 package org.egov.pgr.employee.enrichment.repository;
 
 import org.egov.pgr.employee.enrichment.PropertiesManager;
-import org.egov.pgr.employee.enrichment.repository.contract.AssigneeResponse;
 import org.egov.pgr.employee.enrichment.repository.contract.AssigneeFilterInfo;
 import org.egov.pgr.employee.enrichment.repository.contract.AssigneeRequestInfo;
+import org.egov.pgr.employee.enrichment.repository.contract.AssigneeResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -18,7 +18,6 @@ public class AssigneeRepositoryImpl implements AssigneeRepository {
     public AssigneeRepositoryImpl(RestTemplate restTemplate, PropertiesManager propertiesManager) {
         this.restTemplate = restTemplate;
         this.propertiesManager = propertiesManager;
-        new AssigneeRequestInfo();
     }
 
     @Override

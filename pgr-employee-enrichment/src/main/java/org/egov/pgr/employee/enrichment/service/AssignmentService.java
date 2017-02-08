@@ -6,6 +6,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
+import static org.egov.pgr.employee.enrichment.consumer.contract.ServiceRequest.*;
+import static org.egov.pgr.employee.enrichment.consumer.contract.SevaRequest.SERVICE_REQUEST;
+
 @Service
 public class AssignmentService {
 
@@ -17,12 +20,12 @@ public class AssignmentService {
     }
 
     public Map enrichSevaWithAssignee(Map sevaRequestHash) {
-        Map serviceRequest = (Map) sevaRequestHash.get("ServiceRequest");
-        Map values = (Map) serviceRequest.get("values");
-        Long boundaryId = Long.valueOf((String) values.get("location_id"));
-        String complaintType = (String) serviceRequest.get("service_code");
+        Map serviceRequest = (Map) sevaRequestHash.get(SERVICE_REQUEST);
+        Map values = (Map) serviceRequest.get(VALUES);
+        Long boundaryId = Long.valueOf((String) values.get(VALUES_LOCATION_ID));
+        String complaintType = (String) serviceRequest.get(SERVICE_CODE);
         String assigneeId = String.valueOf(assigneeRepository.assigneeByBoundaryAndComplaintType(boundaryId, complaintType));
-        values.put("assignment_id", assigneeId);
+        values.put(VALUES_ASSIGNMENT_ID, assigneeId);
         return sevaRequestHash;
     }
 

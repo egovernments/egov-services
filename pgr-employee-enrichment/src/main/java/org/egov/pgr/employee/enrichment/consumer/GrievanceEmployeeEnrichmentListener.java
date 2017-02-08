@@ -16,10 +16,19 @@ public class GrievanceEmployeeEnrichmentListener {
     private String employeeEnrichedTopicName;
 
     @Autowired
-    private GrievancePersistProducer producer;
+    private GrievancePersistProducer grievancePersistProducer;
 
     @Autowired
-    private AssignmentService service;
+    private AssignmentService assignmentService;
+
+    @Autowired
+    public GrievanceEmployeeEnrichmentListener(GrievancePersistProducer grievancePersistProducer, AssignmentService assignmentService) {
+        this.assignmentService = assignmentService;
+        this.grievancePersistProducer = grievancePersistProducer;
+    }
+
+    public GrievanceEmployeeEnrichmentListener() {
+    }
 
     /*
      * Example message
@@ -36,8 +45,8 @@ public class GrievanceEmployeeEnrichmentListener {
     @KafkaListener(id = "${kafka.topics.pgr.locationpopulated.id}", topics = "${kafka.topics.pgr.locationpopulated.name}", group = "${kafka.topics.pgr.locationpopulated.group}")
     public void processMessage(ConsumerRecord record) {
         HashMap sevaRequestHash = (HashMap) record.value();
-        Map enrichedSevaRequest = service.enrichSevaWithAssignee(sevaRequestHash);
-        producer.sendMessage(employeeEnrichedTopicName, enrichedSevaRequest);
+        Map enrichedSevaRequest = assignmentService.enrichSevaWithAssignee(sevaRequestHash);
+        grievancePersistProducer.sendMessage(employeeEnrichedTopicName, enrichedSevaRequest);
     }
 
 }

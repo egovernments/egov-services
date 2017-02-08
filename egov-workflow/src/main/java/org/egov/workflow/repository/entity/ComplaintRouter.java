@@ -38,28 +38,69 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.workflow.repository;
+package org.egov.workflow.repository.entity;
 
-import org.egov.workflow.repository.entity.ComplaintRouter;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
-@Repository
-public interface ComplaintRouterRepository extends JpaRepository<ComplaintRouter, Long> {
+@Entity
+@Table(name = "egpgr_router")
+@SequenceGenerator(name = ComplaintRouter.SEQ_COMPLAINTROUTER, sequenceName = ComplaintRouter.SEQ_COMPLAINTROUTER, allocationSize = 1)
+public class ComplaintRouter extends AbstractAuditable {
 
-	@Query("select cr from ComplaintRouter cr where cr.complaintType=:complaintType and cr.boundary=:boundary")
-	ComplaintRouter findByComplaintTypeAndBoundary(@Param("complaintType") Long complaintType,
-												   @Param("boundary") Long boundary);
+	private static final long serialVersionUID = 5691022600220045218L;
+	
+	public static final String SEQ_COMPLAINTROUTER = "SEQ_EGPGR_ROUTER";
 
-	@Query("select cr from ComplaintRouter cr where cr.complaintType=:complaintType and cr.boundary is null")
-	ComplaintRouter findByOnlyComplaintType(@Param("complaintType") Long complaintType);
+	@Id
+	@GeneratedValue(generator = SEQ_COMPLAINTROUTER, strategy = GenerationType.SEQUENCE)
+	private Long id;
 
-	@Query("select cr from ComplaintRouter cr where cr.boundary=:bndry and cr.complaintType is null")
-	ComplaintRouter findByOnlyBoundary(@Param("bndry") Long bndry);
+	@Column(name = "complainttypeid")
+	private Long complaintType;
 
-	@Query(value = "select cr from egpgr_router cr eg_boundary boundary , eg_boundary_type boundarytype ,eg_hierarchy_type hierarchytype where boundary.boundarytype = boundarytype.id and hierarchytype.id = boundarytype.hierarchytype and cr.boundary = boundary.id and boundary.parent is null and cr.complainttype is null and hierarchytype.name=:hierarchyType", nativeQuery = true)
-	ComplaintRouter findCityAdminGrievanceOfficer(@Param("hierarchyType") String hierarchyType);
+	@Column(name = "bndryid")
+	private Long boundary;
 
+	@NotNull
+	@Column(name = "position")
+	private Long position;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(final Long id) {
+		this.id = id;
+	}
+
+	public Long getComplaintType() {
+		return complaintType;
+	}
+
+	public void setComplaintType(final Long complaintType) {
+		this.complaintType = complaintType;
+	}
+
+	public Long getPosition() {
+		return position;
+	}
+
+	public void setPosition(final Long position) {
+		this.position = position;
+	}
+
+	public Long getBoundary() {
+		return boundary;
+	}
+
+	public void setBoundary(final Long boundary) {
+		this.boundary = boundary;
+	}
 }

@@ -40,26 +40,13 @@
 
 package org.egov.workflow.entity;
 
+import org.hibernate.validator.constraints.Length;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.Length;
 
 
 @Entity
@@ -72,29 +59,29 @@ public class State extends AbstractAuditable {
     public static final String STATE_REOPENED = "Reopened";
     static final String SEQ_STATE = "SEQ_EG_WF_STATES";
     private static final long serialVersionUID = -9159043292636575746L;
-    
+
     @Id
     @GeneratedValue(generator = SEQ_STATE, strategy = GenerationType.SEQUENCE)
     private Long id;
-    
+
     @NotNull
     private String type;
-    
+
     @NotNull
     @Length(min = 1)
     private String value;
-    
+
     @Column(name = "OWNER_POS")
     private Long ownerPosition;
-    
+
     @Column(name = "OWNER_USER")
     private Long ownerUser;
-    
+
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY, mappedBy = "state")
     @OrderBy("id")
     private Set<StateHistory> history = new HashSet<>();
-    
-    
+
+
     private String senderName;
     private String nextAction;
     private String comments;
@@ -107,8 +94,6 @@ public class State extends AbstractAuditable {
     private StateStatus status;
     @Column(name = "INITIATOR_POS")
     private Long initiatorPosition;
-    
-    private String myLinkId;
 
     public State() {
     }
@@ -250,14 +235,6 @@ public class State extends AbstractAuditable {
 
     public enum StateStatus {
         STARTED, INPROGRESS, ENDED
-    }
-
-    public String getMyLinkId() {
-        return myLinkId;
-    }
-
-    public void setMyLinkId(String myLinkId) {
-        this.myLinkId = myLinkId;
     }
 
 }

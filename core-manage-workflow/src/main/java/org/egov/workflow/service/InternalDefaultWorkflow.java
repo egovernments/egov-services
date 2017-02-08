@@ -2,7 +2,7 @@ package org.egov.workflow.service;
 
 import java.util.List;
 
-import org.egov.workflow.contract.ProcessInstance;
+import org.egov.workflow.repository.consumer.contract.ProcessInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -100,8 +100,8 @@ public class InternalDefaultWorkflow implements WorkflowInterface {
 	}
 
 	@Override
-	public List<org.egov.workflow.entity.Task> getTasks(String jurisdiction,
-			ProcessInstance processInstance) {
+	public List<org.egov.workflow.repository.entity.Task> getTasks(String jurisdiction,
+                                                                   ProcessInstance processInstance) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -114,13 +114,13 @@ public class InternalDefaultWorkflow implements WorkflowInterface {
 	}
 
 	@Override
-	public org.egov.workflow.entity.Task update(String jurisdiction, org.egov.workflow.entity.Task task) {
+	public org.egov.workflow.repository.entity.Task update(String jurisdiction, org.egov.workflow.repository.entity.Task task) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public List<org.egov.workflow.entity.Task> getHistoryDetail(String workflowId) {
+	public List<org.egov.workflow.repository.entity.Task> getHistoryDetail(String workflowId) {
 		// TODO Auto-generated method stub
 		return null;
 	}

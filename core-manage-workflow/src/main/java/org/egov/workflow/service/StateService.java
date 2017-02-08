@@ -43,7 +43,7 @@ package org.egov.workflow.service;
 import java.util.Date;
 import java.util.List;
 
-import org.egov.workflow.entity.State;
+import org.egov.workflow.repository.entity.State;
 import org.egov.workflow.repository.StateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

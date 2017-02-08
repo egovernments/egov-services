@@ -38,37 +38,81 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.workflow.service;
+package org.egov.workflow.repository.entity;
 
-import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
-import org.egov.workflow.repository.entity.WorkflowTypes;
-import org.egov.workflow.repository.WorkflowTypeRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.hibernate.validator.constraints.Length;
 
-@Service
-@Transactional(readOnly = true)
-public class WorkflowTypeService {
+@Entity
+@Table(name = "EG_WF_ACTION")
+@SequenceGenerator(name = WorkflowAction.SEQ_WF_ACTION, sequenceName = WorkflowAction.SEQ_WF_ACTION, allocationSize = 1)
+public class WorkflowAction extends AbstractAuditable {
 
-    @Autowired
-    private WorkflowTypeRepository workflowTypeRepository;
+    static final String SEQ_WF_ACTION = "SEQ_EG_WF_ACTION";
+    private static final long serialVersionUID = -7940804129929823917L;
+    @Id
+    @GeneratedValue(generator = SEQ_WF_ACTION, strategy = GenerationType.SEQUENCE)
+    private Long id;
 
-    public WorkflowTypes getEnabledWorkflowTypeByType(String type) {
-        return workflowTypeRepository.findByTypeAndEnabledIsTrue(type);
+    @NotNull
+    @Length(min = 1, max = 255)
+    private String name;
+
+    @NotNull
+    @Length(min = 1, max = 1024)
+    private String description;
+
+    @NotNull
+    @Length(min = 1, max = 255)
+    private String type;
+
+    protected WorkflowAction() {
     }
 
-    public WorkflowTypes getWorkflowTypeByType(String type) {
-        return workflowTypeRepository.findByType(type);
+    public WorkflowAction(final String name, final String type, final String description) {
+        this.name = name;
+        this.type = type;
+        this.description = description;
     }
 
-    public List<WorkflowTypes> getAllWorkflowTypes() {
-        return workflowTypeRepository.findAll(new Sort(Sort.Direction.ASC, "type"));
+    @Override
+    public Long getId() {
+        return id;
     }
 
-    public WorkflowTypes getWorkflowTypeById(Long id) {
-        return workflowTypeRepository.findOne(id);
+    @Override
+    protected void setId(final Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    protected void setName(final String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    protected void setDescription(final String description) {
+        this.description = description;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    protected void setType(final String type) {
+        this.type = type;
     }
 }

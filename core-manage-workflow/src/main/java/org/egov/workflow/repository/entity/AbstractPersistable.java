@@ -38,15 +38,35 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.workflow.repository;
+package org.egov.workflow.repository.entity;
 
-import org.egov.workflow.repository.entity.WorkflowTypes;
-import org.springframework.data.jpa.repository.JpaRepository;
+import java.io.Serializable;
 
-public interface WorkflowTypeRepository extends JpaRepository<WorkflowTypes, Long> {
+import javax.persistence.MappedSuperclass;
+import javax.persistence.Version;
 
-    WorkflowTypes findByTypeAndEnabledIsTrue(String type);
+@MappedSuperclass
+public abstract class AbstractPersistable<PK extends Serializable> implements Serializable {
 
-    WorkflowTypes findByType(String type);
+    private static final long serialVersionUID = 7094572260034458544L;
 
+    @Version
+    private Long version;
+
+    public abstract PK getId();
+
+    protected abstract void setId(PK id);
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public boolean isNew() {
+        return null == getId();
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Entity of type %s with id: %s", this.getClass().getName(), getId());
+    }
 }

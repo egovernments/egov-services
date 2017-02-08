@@ -38,15 +38,66 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.workflow.repository;
+package org.egov.workflow.repository.entity;
 
-import org.egov.workflow.repository.entity.WorkflowTypes;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-public interface WorkflowTypeRepository extends JpaRepository<WorkflowTypes, Long> {
+import javax.persistence.*;
+import java.util.Date;
 
-    WorkflowTypes findByTypeAndEnabledIsTrue(String type);
+@MappedSuperclass
+@EntityListeners(AuditingEntityListener.class)
+public abstract class AbstractAuditable extends AbstractPersistable<Long> {
 
-    WorkflowTypes findByType(String type);
+    private static final long serialVersionUID = 7138056997693406739L;
 
+    @Column(name = "createdBy")
+    private Long createdBy;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @CreatedDate
+    @Column(name="createdDate")
+    private Date createdDate;
+
+    @Column(name = "lastModifiedBy")
+    private Long lastModifiedBy;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @LastModifiedDate
+    @Column(name="lastModifiedDate")
+    private Date lastModifiedDate;
+
+    public Long getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(final Long createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(final Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public Long getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+
+    public void setLastModifiedBy(final Long lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public Date getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(final Date lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
 }

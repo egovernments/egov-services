@@ -2,8 +2,8 @@ package org.egov.workflow.service;
 
 import java.util.List;
 
-import org.egov.workflow.contract.ProcessInstance;
-import org.egov.workflow.entity.Task;
+import org.egov.workflow.repository.consumer.contract.ProcessInstance;
+import org.egov.workflow.repository.entity.Task;
 
 public interface WorkflowInterface {
 

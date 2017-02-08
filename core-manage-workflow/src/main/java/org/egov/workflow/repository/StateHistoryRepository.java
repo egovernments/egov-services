@@ -42,7 +42,7 @@ package org.egov.workflow.repository;
 
 import java.util.Date;
 
-import org.egov.workflow.entity.StateHistory;
+import org.egov.workflow.repository.entity.StateHistory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

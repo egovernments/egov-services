@@ -38,15 +38,8 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.workflow.repository;
+package org.egov.workflow.repository.entity.Enum;
 
-import org.egov.workflow.repository.entity.WorkflowTypes;
-import org.springframework.data.jpa.repository.JpaRepository;
-
-public interface WorkflowTypeRepository extends JpaRepository<WorkflowTypes, Long> {
-
-    WorkflowTypes findByTypeAndEnabledIsTrue(String type);
-
-    WorkflowTypes findByType(String type);
-
+public enum UserType {
+    CITIZEN, EMPLOYEE, SYSTEM;
 }

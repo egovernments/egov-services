@@ -9,8 +9,72 @@ services:
   workflow:
     image: egovio/workflow:latest
     ports:
+      - "9090:8080"
+    links:
+      - postgres:pghost
+    environment:
+      - DB_HOST=pghost
+      - DB_PORT=5432
+      - DB_NAME=mydb
+      - DB_USER=myuser
+      - DB_PASSWORD=mypass
+      - REDIS_HOST=redis
+      - CORS_ENABLED=true
+      - MASTER_SERVER=false
+      
+  location:
+    image: egovio/location:latest
+    ports:
+      - "9080:8080"
+    links:
+      - kafka
+      - postgres:pghost
+    environment:
+      - DB_HOST=pghost
+      - DB_PORT=5432
+      - DB_NAME=mydb
+      - DB_USER=myuser
+      - DB_PASSWORD=mypass
+      - REDIS_HOST=redis
+      - CORS_ENABLED=true
+      - MASTER_SERVER=false
+      
+  pgrrest:
+    image: egovio/pgrrest:latest
+    ports:
       - "8080:8080"
-      - "9990:9990"
+    links:
+      - kafka
+      - postgres:pghost
+    environment:
+      - DB_HOST=pghost
+      - DB_PORT=5432
+      - DB_NAME=mydb
+      - DB_USER=myuser
+      - DB_PASSWORD=mypass
+      - REDIS_HOST=redis
+      - CORS_ENABLED=true
+      - MASTER_SERVER=false
+  
+  employee:
+    image: egovio/employee:latest
+    ports:
+      - "7080:8080"
+    links:
+      - postgres:pghost
+    environment:
+      - DB_HOST=pghost
+      - DB_PORT=5432
+      - DB_NAME=mydb
+      - DB_USER=myuser
+      - DB_PASSWORD=mypass
+      - REDIS_HOST=redis
+      - CORS_ENABLED=true
+      - MASTER_SERVER=false
+  user:
+    image: egovio/user:latest
+    ports:
+      - "6080:8080"
     links:
       - postgres:pghost
     environment:

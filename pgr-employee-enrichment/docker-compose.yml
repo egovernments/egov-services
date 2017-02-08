@@ -32,22 +32,42 @@ services:
     volumes:
       - ./pg-container-data:/var/lib/pg/data
 
-  frontend:
-    image: egovio/frontend:latest
+  workflow:
+    image: egovio/workflow:latest
+    ports:
+      - "5080:8080"
     links:
+      - kafka
       - postgres:pghost
     environment:
       - DB_HOST=pghost
+      - DB_PORT=5432
       - DB_NAME=mydb
-      - DB_USER=postgres
-      - DB_PASSWORD=postgres
-      - MASTER_SERVER=true
+      - DB_USER=myuser
+      - DB_PASSWORD=mypass
+      - REDIS_HOST=redis
       - CORS_ENABLED=true
+      - MASTER_SERVER=false
+      
+  location:
+    image: egovio/location:latest
     ports:
-      - "3000:8080"
-
-  pgrspringboot:
-    image: springboot:latest
+      - "9080:8080"
+    links:
+      - kafka
+      - postgres:pghost
+    environment:
+      - DB_HOST=pghost
+      - DB_PORT=5432
+      - DB_NAME=mydb
+      - DB_USER=myuser
+      - DB_PASSWORD=mypass
+      - REDIS_HOST=redis
+      - CORS_ENABLED=true
+      - MASTER_SERVER=false
+      
+  pgrrest:
+    image: egovio/pgrrest:latest
     ports:
       - "8080:8080"
     links:
@@ -55,24 +75,48 @@ services:
       - postgres:pghost
     environment:
       - DB_HOST=pghost
-      - DB_NAME=mydb
       - DB_PORT=5432
-      - DB_USER=postgres
-      - DB_PASSWORD=postgres
-      - GENERATE_DDL=false
+      - DB_NAME=mydb
+      - DB_USER=myuser
+      - DB_PASSWORD=mypass
+      - REDIS_HOST=redis
+      - CORS_ENABLED=true
+      - MASTER_SERVER=false
   
-  locationassignment:
-    image: locationassignment:latest
+  employee:
+    image: egovio/employee:latest
     ports:
-      - "5080:8080"
-      - "9990:9990"
-      - "8787:8787"
+      - "7080:8080"
     links:
-      - kafka
-
-  employeeassignment:
-    image: employeeassignment:latest
+      - postgres:pghost
+    environment:
+      - DB_HOST=pghost
+      - DB_PORT=5432
+      - DB_NAME=mydb
+      - DB_USER=myuser
+      - DB_PASSWORD=mypass
+      - REDIS_HOST=redis
+      - CORS_ENABLED=true
+      - MASTER_SERVER=false
+  user:
+    image: egovio/user:latest
     ports:
-      - "4080:8080"
+      - "6080:8080"
+    links:
+      - postgres:pghost
+    environment:
+      - DB_HOST=pghost
+      - DB_PORT=5432
+      - DB_NAME=mydb
+      - DB_USER=myuser
+      - DB_PASSWORD=mypass
+      - REDIS_HOST=redis
+      - CORS_ENABLED=true
+      - MASTER_SERVER=false
+      
+  employeeenrichment:
+    image: egovio/employeeenrichment:latest
+    ports:
+      - "9090:8080"
     links:
       - kafka

@@ -32,22 +32,8 @@ services:
     volumes:
       - ./pg-container-data:/var/lib/pg/data
 
-  frontend:
-    image: egovio/frontend:latest
-    links:
-      - postgres:pghost
-    environment:
-      - DB_HOST=pghost
-      - DB_NAME=mydb
-      - DB_USER=postgres
-      - DB_PASSWORD=postgres
-      - MASTER_SERVER=true
-      - CORS_ENABLED=true
-    ports:
-      - "3000:8080"
-
-  pgrspringboot:
-    image: springboot:latest
+  location:
+    image: egovio/location:latest
     ports:
       - "8080:8080"
     links:
@@ -55,24 +41,17 @@ services:
       - postgres:pghost
     environment:
       - DB_HOST=pghost
-      - DB_NAME=mydb
       - DB_PORT=5432
-      - DB_USER=postgres
-      - DB_PASSWORD=postgres
-      - GENERATE_DDL=false
-  
-  locationassignment:
-    image: locationassignment:latest
-    ports:
-      - "5080:8080"
-      - "9990:9990"
-      - "8787:8787"
-    links:
-      - kafka
+      - DB_NAME=mydb
+      - DB_USER=myuser
+      - DB_PASSWORD=mypass
+      - REDIS_HOST=redis
+      - CORS_ENABLED=true
+      - MASTER_SERVER=false
 
-  employeeassignment:
-    image: employeeassignment:latest
+  locationenrichment:
+    image: egovio/locationenrichment:latest
     ports:
-      - "4080:8080"
+      - "9090:8080"
     links:
       - kafka

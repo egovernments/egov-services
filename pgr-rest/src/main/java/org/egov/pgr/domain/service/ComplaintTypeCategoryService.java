@@ -40,8 +40,8 @@
 
 package org.egov.pgr.domain.service;
 
-import org.egov.pgr.persistence.ComplaintTypeCategoryRepository;
 import org.egov.pgr.persistence.entity.ComplaintTypeCategory;
+import org.egov.pgr.persistence.repository.ComplaintTypeCategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;

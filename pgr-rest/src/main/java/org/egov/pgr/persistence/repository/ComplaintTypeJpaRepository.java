@@ -1,4 +1,4 @@
-package org.egov.pgr.persistence;
+package org.egov.pgr.persistence.repository;
 
 import org.egov.pgr.persistence.entity.ComplaintType;
 import org.springframework.data.jpa.repository.JpaRepository;

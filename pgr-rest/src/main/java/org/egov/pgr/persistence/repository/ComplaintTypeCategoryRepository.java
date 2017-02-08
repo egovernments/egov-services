@@ -38,15 +38,15 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.pgr.persistence;
+package org.egov.pgr.persistence.repository;
 
-import org.egov.pgr.persistence.entity.Complaint;
+import org.egov.pgr.persistence.entity.ComplaintTypeCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ComplaintJpaRepository extends JpaRepository<Complaint, Long>, JpaSpecificationExecutor<Complaint> {
+public interface ComplaintTypeCategoryRepository extends JpaRepository<ComplaintTypeCategory, Long> {
+
+    ComplaintTypeCategory findByName(String name);
 
 }
-

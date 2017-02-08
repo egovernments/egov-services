@@ -2,7 +2,7 @@ package org.egov.pgr.domain.service;
 
 import org.egov.pgr.domain.model.Complaint;
 import org.egov.pgr.domain.model.ComplaintSearchCriteria;
-import org.egov.pgr.persistence.ComplaintRepository;
+import org.egov.pgr.persistence.repository.ComplaintRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

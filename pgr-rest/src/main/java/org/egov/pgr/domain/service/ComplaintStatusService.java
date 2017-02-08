@@ -40,8 +40,8 @@
 
 package org.egov.pgr.domain.service;
 
-import org.egov.pgr.persistence.ComplaintStatusRepository;
 import org.egov.pgr.persistence.entity.ComplaintStatus;
+import org.egov.pgr.persistence.repository.ComplaintStatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

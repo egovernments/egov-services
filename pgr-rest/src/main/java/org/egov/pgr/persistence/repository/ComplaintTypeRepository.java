@@ -38,7 +38,7 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.pgr.persistence;
+package org.egov.pgr.persistence.repository;
 
 import org.egov.pgr.persistence.entity.Complaint;
 import org.egov.pgr.persistence.entity.ComplaintType;

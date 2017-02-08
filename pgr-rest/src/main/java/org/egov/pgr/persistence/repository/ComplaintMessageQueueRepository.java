@@ -1,4 +1,4 @@
-package org.egov.pgr.persistence;
+package org.egov.pgr.persistence.repository;
 
 import org.egov.pgr.persistence.queue.contract.Complaint;
 import org.springframework.beans.factory.annotation.Autowired;

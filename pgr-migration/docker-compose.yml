@@ -1,0 +1,21 @@
+version: '2'
+services:
+  postgres:
+    image: postgres:9.4
+    environment:
+      - POSTGRES_DB=pgr
+      - POSTGRES_USER=pgruser
+      - POSTGRES_PASSWORD=pgrpass
+  migration:
+    image: egovio/pgr-migration:latest
+    ports:
+      - "8080:8080"
+      - "9990:9990"
+    links:
+      - postgres:pghost
+    environment:
+      - DB_HOST=pghost
+      - DB_PORT=5432
+      - DB_NAME=pgr
+      - DB_USER=pgruser
+      - DB_PASSWORD=pgrpass

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import org.egov.pgr.persistence.entity.ComplaintType;
+import org.egov.pgr.persistence.queue.contract.RequestInfo;
 
 import javax.validation.Valid;
 

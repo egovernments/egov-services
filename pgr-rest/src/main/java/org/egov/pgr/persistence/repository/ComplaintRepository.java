@@ -2,6 +2,7 @@ package org.egov.pgr.persistence.repository;
 
 import org.egov.pgr.domain.model.Complaint;
 import org.egov.pgr.domain.model.ComplaintSearchCriteria;
+import org.egov.pgr.persistence.queue.contract.SevaRequest;
 import org.egov.pgr.persistence.specification.SevaSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,10 +25,9 @@ public class ComplaintRepository {
         this.complaintMessageQueueRepository = complaintMessageQueueRepository;
     }
 
-    public void save(Complaint complaint) {
-        final org.egov.pgr.persistence.queue.contract.Complaint complaintDto =
-                new org.egov.pgr.persistence.queue.contract.Complaint(complaint, CREATE);
-        this.complaintMessageQueueRepository.save(complaintDto);
+    public void save(SevaRequest sevaRequest, String jurisdictionId) {
+        sevaRequest.getRequestInfo().setAction(CREATE);
+        this.complaintMessageQueueRepository.save(sevaRequest, jurisdictionId);
     }
 
     public List<Complaint> findAll(ComplaintSearchCriteria complaintSearchCriteria) {
@@ -38,10 +38,9 @@ public class ComplaintRepository {
                 .collect(Collectors.toList());
     }
 
-    public void update(Complaint complaint) {
-        final org.egov.pgr.persistence.queue.contract.Complaint complaintDto =
-                new org.egov.pgr.persistence.queue.contract.Complaint(complaint, UPDATE);
-        this.complaintMessageQueueRepository.save(complaintDto);
+    public void update(SevaRequest sevaRequest, String jurisdictionId) {
+        sevaRequest.getRequestInfo().setAction(UPDATE);
+        this.complaintMessageQueueRepository.save(sevaRequest, jurisdictionId);
     }
 }
 

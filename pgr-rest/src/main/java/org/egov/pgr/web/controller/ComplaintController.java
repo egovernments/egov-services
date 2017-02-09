@@ -5,7 +5,11 @@ import org.egov.pgr.domain.model.Complaint;
 import org.egov.pgr.domain.model.ComplaintSearchCriteria;
 import org.egov.pgr.domain.service.ComplaintService;
 import org.egov.pgr.domain.service.UserService;
-import org.egov.pgr.web.contract.*;
+import org.egov.pgr.persistence.queue.contract.RequestInfo;
+import org.egov.pgr.persistence.queue.contract.ServiceRequest;
+import org.egov.pgr.persistence.queue.contract.SevaRequest;
+import org.egov.pgr.web.contract.ResponseInfo;
+import org.egov.pgr.web.contract.ServiceResponse;
 import org.egov.pgr.web.contract.factory.ResponseInfoFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -39,7 +43,7 @@ public class ComplaintController {
         RequestInfo requestInfo = request.getRequestInfo();
         final AuthenticatedUser user = userService.getUser(requestInfo.getAuthToken());
         final Complaint complaint = request.toDomain(user, jurisdictionId);
-        complaintService.save(complaint);
+        complaintService.save(complaint, request);
         ResponseInfo responseInfo = getResponseInfo(requestInfo);
         return new ServiceResponse(responseInfo, Collections.singletonList(new ServiceRequest(complaint)));
     }
@@ -51,7 +55,7 @@ public class ComplaintController {
         RequestInfo requestInfo = request.getRequestInfo();
         final AuthenticatedUser user = userService.getUser(requestInfo.getAuthToken());
         final Complaint complaint = request.toDomain(user, jurisdictionId);
-        complaintService.update(complaint);
+        complaintService.update(complaint, request);
         ResponseInfo responseInfo = getResponseInfo(requestInfo);
         return new ServiceResponse(responseInfo, Collections.singletonList(new ServiceRequest(complaint)));
     }

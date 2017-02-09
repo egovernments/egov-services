@@ -2,6 +2,7 @@ package org.egov.pgr.domain.service;
 
 import org.egov.pgr.domain.model.Complaint;
 import org.egov.pgr.domain.model.ComplaintSearchCriteria;
+import org.egov.pgr.persistence.queue.contract.SevaRequest;
 import org.egov.pgr.persistence.repository.ComplaintRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,16 +26,16 @@ public class ComplaintService {
         return complaintRepository.findAll(complaintSearchCriteria);
     }
 
-    public void save(Complaint complaint) {
+    public void save(Complaint complaint, SevaRequest sevaRequest) {
         complaint.validate();
         final String crn = sevaNumberGeneratorService.generate();
-        complaint.setCrn(crn);
-        complaintRepository.save(complaint);
+        sevaRequest.getServiceRequest().setCrn(crn);
+        complaintRepository.save(sevaRequest, complaint.getJurisdictionId());
     }
 
-    public void update(Complaint complaint) {
+    public void update(Complaint complaint, SevaRequest sevaRequest) {
         complaint.validate();
-        complaintRepository.update(complaint);
+        complaintRepository.update(sevaRequest, complaint.getJurisdictionId());
     }
 
 }

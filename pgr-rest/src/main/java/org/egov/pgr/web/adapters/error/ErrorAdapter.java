@@ -1,7 +1,7 @@
-package org.egov.pgr.web.validators;
+package org.egov.pgr.web.adapters.error;
 
 import org.egov.pgr.web.contract.ErrorResponse;
 
-public interface Validator<T> {
+public interface ErrorAdapter<T> {
     ErrorResponse validate(T model);
 }

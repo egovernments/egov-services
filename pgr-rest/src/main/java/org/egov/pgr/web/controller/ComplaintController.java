@@ -78,9 +78,11 @@ public class ComplaintController {
                 .status(status)
                 .lastModifiedDatetime(lastModifiedDate)
                 .build();
-
         final List<Complaint> complaints = complaintService.findAll(complaintSearchCriteria);
+        return createResponse(headers, complaints);
+    }
 
+    private ServiceResponse createResponse(@RequestHeader HttpHeaders headers, List<Complaint> complaints) {
         final List<ServiceRequest> serviceRequests = complaints
                 .stream()
                 .map(ServiceRequest::new)

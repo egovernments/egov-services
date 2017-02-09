@@ -3,20 +3,14 @@ package org.egov.pgr.web.controller;
 import org.egov.pgr.domain.exception.InvalidComplaintException;
 import org.egov.pgr.domain.exception.InvalidComplaintTypeSearchException;
 import org.egov.pgr.domain.exception.UnauthorizedAccessException;
+import org.egov.pgr.web.adapters.error.SevaRequestErrorAdapter;
 import org.egov.pgr.web.contract.ErrorResponse;
-import org.egov.pgr.web.validators.FieldErrorDTO;
-import org.egov.pgr.web.validators.SevaRequestValidator;
-import org.egov.pgr.web.validators.ValidationErrorDTO;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.stream.Collectors;
 
 @ControllerAdvice
 @RestController
@@ -39,7 +33,7 @@ public class CustomControllerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(InvalidComplaintException.class)
     public ErrorResponse handleInvalidComplaintException(InvalidComplaintException ex) {
-        return new SevaRequestValidator().validate(ex.getComplaint());
+        return new SevaRequestErrorAdapter().validate(ex.getComplaint());
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -54,14 +48,4 @@ public class CustomControllerAdvice {
         return ex.getMessage();
     }
 
-    @ExceptionHandler
-    public ResponseEntity handle(MethodArgumentNotValidException exception) {
-        ValidationErrorDTO dto = new ValidationErrorDTO();
-        dto.addFieldErrors(exception.getBindingResult().getFieldErrors()
-                .stream()
-                .map(fieldError -> new FieldErrorDTO(fieldError.getField(), fieldError.getDefaultMessage()))
-                .collect(Collectors.toList()));
-
-        return new ResponseEntity(dto, HttpStatus.BAD_REQUEST);
-    }
 }

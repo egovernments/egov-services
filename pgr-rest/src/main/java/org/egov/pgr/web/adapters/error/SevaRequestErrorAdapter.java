@@ -1,4 +1,4 @@
-package org.egov.pgr.web.validators;
+package org.egov.pgr.web.adapters.error;
 
 import org.egov.pgr.domain.model.Complaint;
 import org.egov.pgr.web.contract.Error;
@@ -7,7 +7,7 @@ import org.egov.pgr.web.contract.ErrorResponse;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SevaRequestValidator implements Validator<Complaint> {
+public class SevaRequestErrorAdapter implements ErrorAdapter<Complaint> {
 
     private static final String LOCATION_MANDATORY_MESSAGE = "latitude/longitude or cross hierarcy id is required";
     private static final String COMPLAINANT_MANDATORY_MESSAGE = "is required for anonymous complaint";

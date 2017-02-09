@@ -11,6 +11,6 @@ import lombok.Getter;
 public class ComplaintTypeServiceResponse {
 
 	@JsonProperty("ComplaintType")
-	private List<ComplaintTypeResponse> complaintType;
+	private ComplaintTypeResponse complaintType;
 
 }

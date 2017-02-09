@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.egov.workflow.domain.model.WorkflowProcess;
 
 import java.util.Date;
+import java.util.Map;
 
 @Getter
 public class ProcessInstance {
@@ -40,6 +41,7 @@ public class ProcessInstance {
     @JsonProperty("business_key")
     private String businessKey = null;
 
+    @Setter
     @JsonProperty("assignee")
     private Long assignee = null;
 
@@ -49,11 +51,15 @@ public class ProcessInstance {
     @JsonProperty("sender_name")
     private String senderName = null;
 
+    @Setter
     @JsonProperty("state_id")
     private Long stateId;
 
     @JsonProperty("state_details")
     private String stateDetails;
+
+    @JsonProperty("")
+    private Map<String, String> values;
 
     public WorkflowProcess asDomain() {
         return new WorkflowProcess();

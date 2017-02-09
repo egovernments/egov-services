@@ -14,13 +14,13 @@ public class ComplaintTypeServiceImpl implements ComplaintTypeService {
 
 	@Override
 	public ComplaintTypeResponse fetchComplaintTypeByCode(String code) {
-		String url = complaintTypeServiceHost + "pgr/complaintType?complaintType.code={code}";
-		return getComplaintTypeServiceResponse(url, code).getComplaintType().get(0);
+		String url = complaintTypeServiceHost + "pgr/complaintTypes/{code}?tenantId={tenantId}";
+		return getComplaintTypeServiceResponse(url, code).getComplaintType();
 	}
 
 	private ComplaintTypeServiceResponse getComplaintTypeServiceResponse(final String url, String code) {
 		RestTemplate restTemplate = new RestTemplate();
-		return restTemplate.getForObject(url, ComplaintTypeServiceResponse.class, code);
+		return restTemplate.getForObject(url, ComplaintTypeServiceResponse.class, code, "fakeTenant");
 	}
 
 }

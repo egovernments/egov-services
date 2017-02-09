@@ -33,7 +33,7 @@ public class CustomControllerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(InvalidComplaintException.class)
     public ErrorResponse handleInvalidComplaintException(InvalidComplaintException ex) {
-        return new SevaRequestErrorAdapter().validate(ex.getComplaint());
+        return new SevaRequestErrorAdapter().adapt(ex.getComplaint());
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

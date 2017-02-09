@@ -23,14 +23,14 @@ public class SevaRequestErrorAdapter implements ErrorAdapter<Complaint> {
     private static final String EMAIL_FIELD_NAME = "service_request.email";
 
     @Override
-    public ErrorResponse validate(Complaint model) {
+    public ErrorResponse adapt(Complaint model) {
         List<Error> errors = new ArrayList<>();
         addLocationValidationErrors(model, errors);
-        addComplainantValidationErros(model, errors);
+        addComplainantValidationErrors(model, errors);
         return new ErrorResponse(null, errors);
     }
 
-    private void addComplainantValidationErros(Complaint model, List<Error> errors) {
+    private void addComplainantValidationErrors(Complaint model, List<Error> errors) {
         if (model.isMandatoryFieldsAbsentForAnonymousComplaint()) {
             errors.add(new Error(MANDATORY_FIRST_NAME_CODE, COMPLAINANT_MANDATORY_MESSAGE, FIRST_NAME_FIELD_NAME));
             errors.add(new Error(MANDATORY_PHONE_NUMBER_CODE, COMPLAINANT_MANDATORY_MESSAGE, PHONE_FIELD_NAME));

@@ -13,10 +13,10 @@ import org.egov.pgr.domain.model.Complaint;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SevaRequest {
-    @JsonProperty("request_info")
+    @JsonProperty("RequestInfo")
     private RequestInfo requestInfo;
 
-    @JsonProperty("service_request")
+    @JsonProperty("ServiceRequest")
     private ServiceRequest serviceRequest;
 
     public Complaint toDomain(AuthenticatedUser authenticatedUser, String jurisdictionId) {

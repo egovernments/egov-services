@@ -38,11 +38,11 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.filestore.repository;
+package org.egov.filestore.persistence.repository;
 
 import javax.persistence.QueryHint;
 
-import org.egov.filestore.entity.FileStoreMapper;
+import org.egov.filestore.persistence.entity.FileStoreMapper;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.stereotype.Repository;

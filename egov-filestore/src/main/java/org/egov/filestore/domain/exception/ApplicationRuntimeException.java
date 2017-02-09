@@ -38,7 +38,7 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.filestore.exception;
+package org.egov.filestore.domain.exception;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

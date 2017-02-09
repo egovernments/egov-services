@@ -38,21 +38,22 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.filestore.entity;
+package org.egov.filestore.persistence.entity;
 
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.stereotype.Component;
 
-import static org.egov.filestore.entity.FileStoreMapper.SEQ_FILESTOREMAPPER;
+import javax.persistence.*;
 
+import static org.egov.filestore.persistence.entity.FileStoreMapper.SEQ_FILESTOREMAPPER;
+
+
+@Component
+@Getter
+@Setter
 @Table(name = "eg_filestoremap")
 @Entity
 @SequenceGenerator(name = SEQ_FILESTOREMAPPER, sequenceName = SEQ_FILESTOREMAPPER, allocationSize = 1)
@@ -71,56 +72,5 @@ public class FileStoreMapper extends AbstractPersistable<Long> {
     private String fileName;
 
     private String contentType;
-    
-    private String tenant;
-
-    protected FileStoreMapper() {
-        // For JPA
-    }
-
-    public FileStoreMapper(final String fileStoreId, final String fileName) {
-        this.fileStoreId = fileStoreId;
-        this.fileName = fileName;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(final Long id) {
-        this.id = id;
-    }
-
-    public String getFileStoreId() {
-        return fileStoreId;
-    }
-
-    public void setFileStoreId(final String fileStoreId) {
-        this.fileStoreId = fileStoreId;
-    }
-
-    public String getFileName() {
-        return fileName;
-    }
-
-    public void setFileName(final String fileName) {
-        this.fileName = fileName;
-    }
-
-    public String getContentType() {
-        return contentType;
-    }
-
-    public void setContentType(final String contentType) {
-        this.contentType = contentType;
-    }
-
-	public String getTenant() {
-		return tenant;
-	}
-
-	public void setTenant(String tenant) {
-		this.tenant = tenant;
-	}
-
 }
+

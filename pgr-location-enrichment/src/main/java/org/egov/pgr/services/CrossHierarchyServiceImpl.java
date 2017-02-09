@@ -10,7 +10,7 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class CrossHierarchyServiceImpl implements CrossHierarchyService {
 
-	@Value("${egov.services.crosshierarchy_service.host}")
+	@Value("${egov.services.boundary.host}")
 	private String crossHierarchyServiceHost;
 
 	@Override

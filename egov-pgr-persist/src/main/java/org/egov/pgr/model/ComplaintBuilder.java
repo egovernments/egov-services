@@ -5,29 +5,25 @@ import org.egov.pgr.entity.Complaint;
 import org.egov.pgr.entity.ComplaintStatus;
 import org.egov.pgr.entity.ComplaintType;
 import org.egov.pgr.entity.enums.ReceivingMode;
+import org.egov.pgr.repository.PositionRepository;
 import org.egov.pgr.service.ComplaintStatusService;
 import org.egov.pgr.service.ComplaintTypeService;
 import org.egov.pgr.service.EscalationService;
-import org.egov.pgr.repository.PositionRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.Objects;
 
 import static org.egov.pgr.contracts.grievance.ServiceRequest.*;
 
-@Component
 public class ComplaintBuilder {
 
     private final ComplaintTypeService complaintTypeService;
-    private final ServiceRequest serviceRequest;
     private final ComplaintStatusService complaintStatusService;
     private final EscalationService escalationService;
-    private final Complaint complaint;
     private final PositionRepository positionRepository;
+    private final Complaint complaint;
+    private final ServiceRequest serviceRequest;
 
-    @Autowired
     public ComplaintBuilder(ServiceRequest serviceRequest, ComplaintTypeService complaintTypeService, ComplaintStatusService complaintStatusService, EscalationService escalationService, PositionRepository positionRepository) {
         this.serviceRequest = serviceRequest;
         this.complaintStatusService = complaintStatusService;

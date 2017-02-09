@@ -11,16 +11,16 @@ public class PersistenceProperties {
     @Autowired
     private Environment environment;
 
-    @Value("${services.workflow.hostname}")
+    @Value("${egov.services.workflow.hostname}")
     private String workflowServiceHostname;
 
-    @Value("${services.position.hostname}")
+    @Value("${egov.services.eis.hostname}")
     private String positionServiceHostname;
 
-    @Value("${service.workflow.create.context}")
+    @Value("${egov.services.workflow.create.context}")
     private String createWorkflowContext;
 
-    @Value("${service.position.fetch_assignee.context}")
+    @Value("${egov.services.eis.fetch_assignee.context}")
     private String fetchAssigneeContext;
 
     private String getProperty(String propKey) {

@@ -9,7 +9,7 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class ComplaintTypeServiceImpl implements ComplaintTypeService {
 
-	@Value("${egov.services.complainttype_service.host}")
+	@Value("${egov.services.pgrrest.host}")
 	private String complaintTypeServiceHost;
 
 	@Override

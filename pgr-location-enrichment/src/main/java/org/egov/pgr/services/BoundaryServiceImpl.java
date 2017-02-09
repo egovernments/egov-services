@@ -10,7 +10,7 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class BoundaryServiceImpl implements BoundaryService {
 
-	@Value("${egov.services.boundary_service.host}")
+	@Value("${egov.services.boundary.host}")
 	private String boundaryServiceHost;
 
 	@Override

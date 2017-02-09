@@ -11,7 +11,7 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class PositionServiceImpl implements PositionService {
 
-	@Value("${egov.services.position_service.host}")
+	@Value("${egov.services.eis.host}")
 	private String positionServiceHost;
 
 	@Override

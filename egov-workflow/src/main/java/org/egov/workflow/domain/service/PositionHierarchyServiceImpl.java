@@ -11,7 +11,7 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class PositionHierarchyServiceImpl implements PositionHierarchyService {
 
-    @Value("${egov.services.positionhierarchy_service.host}")
+    @Value("${egov.services.eis.host}")
     private String positionHierarchyServiceHost;
 
     @Override

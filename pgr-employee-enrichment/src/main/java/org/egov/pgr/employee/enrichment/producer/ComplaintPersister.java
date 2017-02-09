@@ -6,7 +6,7 @@ import org.springframework.kafka.support.SendResult;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
-public class GrievancePersistProducer {
+public class ComplaintPersister {
 
     @Autowired
     private KafkaTemplate<String, Object> kafkaTemplate;

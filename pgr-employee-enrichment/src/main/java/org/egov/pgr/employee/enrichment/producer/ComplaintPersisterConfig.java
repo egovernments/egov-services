@@ -17,7 +17,7 @@ import java.util.Map;
 
 @Configuration
 @EnableKafka
-public class GrievancePersistProducerConfig {
+public class ComplaintPersisterConfig {
 
     @Autowired
     private PropertiesManager propertiesManager;
@@ -46,7 +46,7 @@ public class GrievancePersistProducerConfig {
     }
 
     @Bean
-    public GrievancePersistProducer sender() {
-        return new GrievancePersistProducer();
+    public ComplaintPersister sender() {
+        return new ComplaintPersister();
     }
 }

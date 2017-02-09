@@ -19,14 +19,14 @@ public class AssignmentService {
         this.assigneeRepository = assigneeRepository;
     }
 
-    public Map enrichSevaWithAssignee(Map sevaRequestHash) {
-        Map serviceRequest = (Map) sevaRequestHash.get(SERVICE_REQUEST);
+    public Map enrichComplaintWithAssignee(Map complaintRequestHash) {
+        Map serviceRequest = (Map) complaintRequestHash.get(SERVICE_REQUEST);
         Map values = (Map) serviceRequest.get(VALUES);
         Long boundaryId = Long.valueOf((String) values.get(VALUES_LOCATION_ID));
         String complaintType = (String) serviceRequest.get(SERVICE_CODE);
         String assigneeId = String.valueOf(assigneeRepository.assigneeByBoundaryAndComplaintType(boundaryId, complaintType));
         values.put(VALUES_ASSIGNMENT_ID, assigneeId);
-        return sevaRequestHash;
+        return complaintRequestHash;
     }
 
 }

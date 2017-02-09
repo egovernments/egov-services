@@ -36,7 +36,7 @@ public class AssignmentServiceTest {
     @Test
     public void testThatHashIsEnrichedWithLocation() throws Exception {
         Map sevaRequestMap = buildSevaRequestMap();
-        Map map = assignmentService.enrichSevaWithAssignee(sevaRequestMap);
+        Map map = assignmentService.enrichComplaintWithAssignee(sevaRequestMap);
 
         assertEquals("10", extractValue(map, VALUES_ASSIGNMENT_ID));
     }

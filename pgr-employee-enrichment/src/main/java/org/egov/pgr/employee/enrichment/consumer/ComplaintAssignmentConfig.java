@@ -18,7 +18,7 @@ import java.util.Map;
 
 @Configuration
 @EnableKafka
-public class GrievanceEmployeeEnrichmentConsumerConfig {
+public class ComplaintAssignmentConfig {
 
     @Value("${kafka.config.bootstrap_server_config}")
     private String serverConfig;
@@ -68,8 +68,8 @@ public class GrievanceEmployeeEnrichmentConsumerConfig {
     }
 
     @Bean
-    public GrievanceEmployeeEnrichmentListener listener() {
-        return new GrievanceEmployeeEnrichmentListener();
+    public ComplaintAssignment listener() {
+        return new ComplaintAssignment();
     }
 
 }

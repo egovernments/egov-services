@@ -1,7 +1,7 @@
 package org.egov.pgr.employee.enrichment.consumer;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.egov.pgr.employee.enrichment.producer.GrievancePersistProducer;
+import org.egov.pgr.employee.enrichment.producer.ComplaintPersister;
 import org.egov.pgr.employee.enrichment.service.AssignmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,24 +10,24 @@ import org.springframework.kafka.annotation.KafkaListener;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GrievanceEmployeeEnrichmentListener {
+public class ComplaintAssignment {
 
     @Value("${kafka.topics.pgr.employee_enriched.name}")
     private String employeeEnrichedTopicName;
 
     @Autowired
-    private GrievancePersistProducer grievancePersistProducer;
+    private ComplaintPersister complaintPersister;
 
     @Autowired
     private AssignmentService assignmentService;
 
     @Autowired
-    public GrievanceEmployeeEnrichmentListener(GrievancePersistProducer grievancePersistProducer, AssignmentService assignmentService) {
+    public ComplaintAssignment(ComplaintPersister complaintPersister, AssignmentService assignmentService) {
         this.assignmentService = assignmentService;
-        this.grievancePersistProducer = grievancePersistProducer;
+        this.complaintPersister = complaintPersister;
     }
 
-    public GrievanceEmployeeEnrichmentListener() {
+    public ComplaintAssignment() {
     }
 
     /*
@@ -45,8 +45,8 @@ public class GrievanceEmployeeEnrichmentListener {
     @KafkaListener(id = "${kafka.topics.pgr.locationpopulated.id}", topics = "${kafka.topics.pgr.locationpopulated.name}", group = "${kafka.topics.pgr.locationpopulated.group}")
     public void processMessage(ConsumerRecord record) {
         HashMap sevaRequestHash = (HashMap) record.value();
-        Map enrichedSevaRequest = assignmentService.enrichSevaWithAssignee(sevaRequestHash);
-        grievancePersistProducer.sendMessage(employeeEnrichedTopicName, enrichedSevaRequest);
+        Map enrichedSevaRequest = assignmentService.enrichComplaintWithAssignee(sevaRequestHash);
+        complaintPersister.sendMessage(employeeEnrichedTopicName, enrichedSevaRequest);
     }
 
 }

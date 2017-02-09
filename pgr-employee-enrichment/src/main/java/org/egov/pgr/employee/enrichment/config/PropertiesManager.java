@@ -1,20 +1,15 @@
 package org.egov.pgr.employee.enrichment.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 @Component
 public class PropertiesManager {
 
-    @Autowired
-    private Environment environment;
-
-    @Value("${egov.services.workflow_service.hostname}")
+    @Value("${egov.services.workflow.hostname}")
     private String workflowServiceHostname;
 
-    @Value("${egov.services.workflow_service.fetch_assignee}")
+    @Value("${egov.services.workflow.fetch_assignee}")
     private String fetchAssigneeContext;
 
     @Value("${kafka.config.bootstrap_server_config}")

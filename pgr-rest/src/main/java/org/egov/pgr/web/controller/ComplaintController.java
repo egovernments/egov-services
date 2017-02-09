@@ -33,7 +33,7 @@ public class ComplaintController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     public ServiceResponse createServiceRequest(@RequestParam("jurisdiction_id") String jurisdictionId,
                                                 @Valid @RequestBody SevaRequest request) {
         RequestInfo requestInfo = request.getRequestInfo();

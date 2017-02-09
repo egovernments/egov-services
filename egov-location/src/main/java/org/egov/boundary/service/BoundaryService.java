@@ -302,22 +302,21 @@ public class BoundaryService {
 	public List<Boundary> getAllBoundary(BoundaryRequest boundaryRequest) {
 		Long boundaryId;
 		List<Boundary> boundaries = new ArrayList<Boundary>();
-		if(boundaryRequest.getBoundary().getId()!=null)
-		{
-			boundaries.add(boundaryRepository.findOne(boundaryRequest.getBoundary().getId()))	;
-
-		}else{
-		if (!StringUtils.isEmpty(boundaryRequest.getBoundary().getLatitude())
-				&&!StringUtils.isEmpty(boundaryRequest.getBoundary().getLongitude())) {
-
-			Boundary boundary = new Boundary();
-			boundary.setId(21l);
-			boundary.setBoundaryNum(11l);
-			boundaries.add(boundary);
+		if (boundaryRequest.getBoundary().getId() != null) {
+			boundaries.add(boundaryRepository.findOne(boundaryRequest.getBoundary().getId()));
 
 		} else {
-			boundaries.addAll(boundaryRepository.findAll());
-		}
+			if (!StringUtils.isEmpty(boundaryRequest.getBoundary().getLatitude())
+					&& !StringUtils.isEmpty(boundaryRequest.getBoundary().getLongitude())) {
+
+				Boundary boundary = new Boundary();
+				boundary.setId(21l);
+				boundary.setBoundaryNum(11l);
+				boundaries.add(boundary);
+
+			} else {
+				boundaries.addAll(boundaryRepository.findAll());
+			}
 		}
 
 		return boundaries;

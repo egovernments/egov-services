@@ -1,5 +1,7 @@
 package org.egov.boundary.service;
 
+import java.util.ArrayList;
+
 /*
  * eGov suite of products aim to improve the internal efficiency,transparency,
  * accountability and the service delivery of the government  organizations.
@@ -40,15 +42,15 @@ package org.egov.boundary.service;
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-
-
 import java.util.List;
 
 import org.egov.boundary.model.HierarchyType;
 import org.egov.boundary.repository.HierarchyTypeRepository;
+import org.egov.boundary.web.wrapper.HierarchyTypeRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 /**
  * Service for the HierarchyType
@@ -59,44 +61,58 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class HierarchyTypeService {
 
-    private HierarchyTypeRepository hierarchyTypeRepository;
+	private HierarchyTypeRepository hierarchyTypeRepository;
 
-    @Autowired
-    public HierarchyTypeService(HierarchyTypeRepository hierarchyTypeRepository) {
-        this.hierarchyTypeRepository = hierarchyTypeRepository;
-    }
-
-    @Transactional
-    public HierarchyType createHierarchyType(HierarchyType hierarchyType) {
-        return hierarchyTypeRepository.save(hierarchyType);
-    }
-
-    @Transactional
-    public HierarchyType updateHierarchyType(HierarchyType hierarchyType) {
-        return hierarchyTypeRepository.save(hierarchyType);
-    }
-
-    public HierarchyType getHierarchyTypeByName(String name) {
-        return hierarchyTypeRepository.findByName(name);
-    }
-
-    public List<HierarchyType> getAllHierarchyTypes() {
-        return null;//hierarchyTypeRepository.findAll();
-    }
-    @Transactional
-	public HierarchyType create(HierarchyType hierarchyType) {
-	return	hierarchyTypeRepository.save(hierarchyType);
-		 
+	@Autowired
+	public HierarchyTypeService(HierarchyTypeRepository hierarchyTypeRepository) {
+		this.hierarchyTypeRepository = hierarchyTypeRepository;
 	}
-    
-    
+
+	@Transactional
+	public HierarchyType createHierarchyType(HierarchyType hierarchyType) {
+		return hierarchyTypeRepository.save(hierarchyType);
+	}
+
+	@Transactional
+	public HierarchyType updateHierarchyType(HierarchyType hierarchyType) {
+		return hierarchyTypeRepository.save(hierarchyType);
+	}
+
+	public HierarchyType getHierarchyTypeByName(String name) {
+		return hierarchyTypeRepository.findByName(name);
+	}
+
+	@Transactional
+	public HierarchyType create(HierarchyType hierarchyType) {
+		return hierarchyTypeRepository.save(hierarchyType);
+
+	}
 
 	public HierarchyType findByCode(String code) {
-		return	hierarchyTypeRepository.findByCode(code);
-		
+		return hierarchyTypeRepository.findByCode(code);
+
 	}
+
 	public HierarchyType findById(Long id) {
-		return	hierarchyTypeRepository.findOne(id);
-		
+		return hierarchyTypeRepository.findOne(id);
+
+	}
+
+	public List<HierarchyType> getAllHierarchyTypes(HierarchyTypeRequest hierarchyTypeRequest) {
+		List<HierarchyType> hierarchyTypes = new ArrayList<HierarchyType>();
+		if (hierarchyTypeRequest.getHierarchyType().getId() != null) {
+			hierarchyTypes.add(hierarchyTypeRepository.findOne(hierarchyTypeRequest.getHierarchyType().getId()));
+
+		} else {
+			if (!StringUtils.isEmpty(hierarchyTypeRequest.getHierarchyType().getCode())) {
+				hierarchyTypes.add(findByCode(hierarchyTypeRequest.getHierarchyType().getCode()));
+
+			} else {
+				hierarchyTypes.addAll(hierarchyTypeRepository.findAll());
+			}
+
+		}
+		return hierarchyTypes;
+
 	}
 }

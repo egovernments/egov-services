@@ -40,40 +40,42 @@
 
 package org.egov.boundary.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.egov.boundary.model.Boundary;
 import org.egov.boundary.model.BoundaryType;
 import org.egov.boundary.model.HierarchyType;
 import org.egov.boundary.repository.BoundaryTypeRepository;
+import org.egov.boundary.web.wrapper.BoundaryTypeRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 @Service
 @Transactional(readOnly = true)
 public class BoundaryTypeService {
 	@Autowired
 	private BoundaryTypeRepository boundaryTypeRepository;
-	
 
 	@Autowired
 	private HierarchyTypeService hierarchyTypeService;
 
 	@Transactional
 	public BoundaryType createBoundaryType(BoundaryType boundaryType) {
-		if(boundaryType.getHierarchyType()!=null && boundaryType.getHierarchyType().getId()!=null)
+		if (boundaryType.getHierarchyType() != null && boundaryType.getHierarchyType().getId() != null)
 			boundaryType.setHierarchyType(hierarchyTypeService.findById(boundaryType.getHierarchyType().getId()));
-		
-		if(boundaryType.getParent()!=null && boundaryType.getParent().getId()!=null)
+
+		if (boundaryType.getParent() != null && boundaryType.getParent().getId() != null)
 			boundaryType.setParent(findById(boundaryType.getParent().getId()));
-		
+
 		return boundaryTypeRepository.save(boundaryType);
 	}
 
-	public BoundaryType findById(Long id) {  
-	 return	boundaryTypeRepository.findOne(id);
+	public BoundaryType findById(Long id) {
+		return boundaryTypeRepository.findOne(id);
 	}
 
 	@Transactional
@@ -141,8 +143,16 @@ public class BoundaryTypeService {
 
 	}
 
-	public List<BoundaryType> getAllBoundaryTypes() {
-		return null;// boundaryTypeRepository.findAll();
-
+	public List<BoundaryType> getAllBoundaryTypes(BoundaryTypeRequest boundarytypeRequest) {
+		List<BoundaryType> boundaryTypes = new ArrayList<BoundaryType>();
+		if (boundarytypeRequest.getBoundaryType().getId() != null) {
+			boundaryTypes.add(boundaryTypeRepository.findOne(boundarytypeRequest.getBoundaryType().getId()));
+		} else if (boundarytypeRequest.getBoundaryType().getCode() != null) {
+			boundaryTypes.add(findByCode(boundarytypeRequest.getBoundaryType().getCode()));
+		} else {
+			boundaryTypes.addAll(boundaryTypeRepository.findAll());
+		}
+		return boundaryTypes;
 	}
+
 }

@@ -37,8 +37,7 @@ public class BoundaryTypeController {
 	private BoundaryTypeService boundaryTypeService;
 
 	@PostMapping()
-	public ResponseEntity<?> create(@RequestBody  BoundaryTypeRequest boundaryTypeRequest,
-			BindingResult errors) {
+	public ResponseEntity<?> create(@RequestBody BoundaryTypeRequest boundaryTypeRequest, BindingResult errors) {
 		if (errors.hasErrors()) {
 			ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
@@ -55,11 +54,11 @@ public class BoundaryTypeController {
 		boundaryTypeResponse.setResponseInfo(responseInfo);
 		return new ResponseEntity<BoundaryTypeResponse>(boundaryTypeResponse, HttpStatus.CREATED);
 	}
-	
+
 	@PutMapping(value = "/{code}")
 	@ResponseBody
-	public ResponseEntity<?> update(@RequestBody @Valid BoundaryTypeRequest boundaryTypeRequest,
-			BindingResult errors,@PathVariable String code)  {
+	public ResponseEntity<?> update(@RequestBody @Valid BoundaryTypeRequest boundaryTypeRequest, BindingResult errors,
+			@PathVariable String code) {
 
 		if (errors.hasErrors()) {
 			ErrorResponse errRes = populateErrors(errors);
@@ -67,10 +66,10 @@ public class BoundaryTypeController {
 		}
 		RequestInfo requestInfo = boundaryTypeRequest.getRequestInfo();
 		BoundaryType boundaryTypeFromDb = boundaryTypeService.findByCode(code);
-		BoundaryType boundaryType =	boundaryTypeRequest.getBoundaryType();
+		BoundaryType boundaryType = boundaryTypeRequest.getBoundaryType();
 		boundaryType.setId(boundaryTypeFromDb.getId());
 		boundaryType.setVersion(boundaryTypeFromDb.getVersion());
-		boundaryType= boundaryTypeService.updateBoundaryType(boundaryType);
+		boundaryType = boundaryTypeService.updateBoundaryType(boundaryType);
 
 		BoundaryTypeResponse boundaryTypeResponse = new BoundaryTypeResponse();
 		boundaryTypeResponse.getBoundaryTypes().add(boundaryType);
@@ -81,21 +80,17 @@ public class BoundaryTypeController {
 		boundaryTypeResponse.setResponseInfo(responseInfo);
 		return new ResponseEntity<BoundaryTypeResponse>(boundaryTypeResponse, HttpStatus.CREATED);
 	}
-	
-	
-	
+
 	@GetMapping
 	@ResponseBody
 	public ResponseEntity<?> search(@ModelAttribute BoundaryTypeRequest boundaryTypeRequest) {
 
-		 
-		
 		BoundaryTypeResponse boundaryTypeResponse = new BoundaryTypeResponse();
-		List<BoundaryType> allBoundaryTypes = boundaryTypeService.getAllBoundaryTypes();
+		List<BoundaryType> allBoundaryTypes = boundaryTypeService.getAllBoundaryTypes(boundaryTypeRequest);
 		boundaryTypeResponse.getBoundaryTypes().addAll(allBoundaryTypes);
 		ResponseInfo responseInfo = new ResponseInfo();
 		responseInfo.setStatus(HttpStatus.CREATED.toString());
-		//responseInfo.setApi_id(body.getRequestInfo().getApi_id());
+		// responseInfo.setApi_id(body.getRequestInfo().getApi_id());
 		boundaryTypeResponse.setResponseInfo(responseInfo);
 		return new ResponseEntity<BoundaryTypeResponse>(boundaryTypeResponse, HttpStatus.OK);
 	}
@@ -110,10 +105,8 @@ public class BoundaryTypeController {
 		Error error = new Error();
 		error.setCode(1);
 		error.setDescription("Error while binding request");
-		if(errors.hasFieldErrors())
-		{
-			for(FieldError errs :  errors.getFieldErrors())
-			{
+		if (errors.hasFieldErrors()) {
+			for (FieldError errs : errors.getFieldErrors()) {
 				error.getFilelds().add(errs.getField());
 				error.getFilelds().add(errs.getRejectedValue());
 			}

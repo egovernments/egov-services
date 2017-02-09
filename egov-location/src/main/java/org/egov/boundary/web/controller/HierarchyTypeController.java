@@ -38,7 +38,7 @@ public class HierarchyTypeController {
 
 	@PostMapping
 	@ResponseBody
-	public ResponseEntity<?> create(@Valid @RequestBody  HierarchyTypeRequest hierarchyTypeRequest,
+	public ResponseEntity<?> create(@Valid @RequestBody HierarchyTypeRequest hierarchyTypeRequest,
 			BindingResult errors) {
 
 		if (errors.hasErrors()) {
@@ -57,11 +57,11 @@ public class HierarchyTypeController {
 		hierarchyTypeResponse.setResponseInfo(responseInfo);
 		return new ResponseEntity<HierarchyTypeResponse>(hierarchyTypeResponse, HttpStatus.CREATED);
 	}
-	
+
 	@PutMapping(value = "/{code}")
 	@ResponseBody
-	public ResponseEntity<?> update(@Valid @RequestBody  HierarchyTypeRequest hierarchyTypeRequest,
-			BindingResult errors,@PathVariable String code)  {
+	public ResponseEntity<?> update(@Valid @RequestBody HierarchyTypeRequest hierarchyTypeRequest, BindingResult errors,
+			@PathVariable String code) {
 
 		if (errors.hasErrors()) {
 			ErrorResponse errRes = populateErrors(errors);
@@ -69,10 +69,10 @@ public class HierarchyTypeController {
 		}
 		RequestInfo requestInfo = hierarchyTypeRequest.getRequestInfo();
 		HierarchyType hierarchyTypeFromDb = hierarchyTypeService.findByCode(code);
-		HierarchyType hierarchyType =	hierarchyTypeRequest.getHierarchyType();
+		HierarchyType hierarchyType = hierarchyTypeRequest.getHierarchyType();
 		hierarchyType.setId(hierarchyTypeFromDb.getId());
 		hierarchyType.setVersion(hierarchyTypeFromDb.getVersion());
-		hierarchyType= hierarchyTypeService.updateHierarchyType(hierarchyType);
+		hierarchyType = hierarchyTypeService.updateHierarchyType(hierarchyType);
 
 		HierarchyTypeResponse hierarchyTypeResponse = new HierarchyTypeResponse();
 		hierarchyTypeResponse.getHierarchyTypes().add(hierarchyType);
@@ -83,21 +83,17 @@ public class HierarchyTypeController {
 		hierarchyTypeResponse.setResponseInfo(responseInfo);
 		return new ResponseEntity<HierarchyTypeResponse>(hierarchyTypeResponse, HttpStatus.CREATED);
 	}
-	
-	
-	
+
 	@GetMapping
 	@ResponseBody
-	public ResponseEntity<?> search(@ModelAttribute HierarchyTypeRequest hierarchyTypeRequest ) {
+	public ResponseEntity<?> search(@ModelAttribute HierarchyTypeRequest hierarchyTypeRequest) {
 
-		 
-		
 		HierarchyTypeResponse hierarchyTypeResponse = new HierarchyTypeResponse();
-		List<HierarchyType> allHierarchyTypes = hierarchyTypeService.getAllHierarchyTypes();
+		List<HierarchyType> allHierarchyTypes = hierarchyTypeService.getAllHierarchyTypes(hierarchyTypeRequest);
 		hierarchyTypeResponse.getHierarchyTypes().addAll(allHierarchyTypes);
 		ResponseInfo responseInfo = new ResponseInfo();
 		responseInfo.setStatus(HttpStatus.CREATED.toString());
-		//responseInfo.setApi_id(body.getRequestInfo().getApi_id());
+		// responseInfo.setApi_id(body.getRequestInfo().getApi_id());
 		hierarchyTypeResponse.setResponseInfo(responseInfo);
 		return new ResponseEntity<HierarchyTypeResponse>(hierarchyTypeResponse, HttpStatus.OK);
 	}
@@ -112,10 +108,8 @@ public class HierarchyTypeController {
 		Error error = new Error();
 		error.setCode(1);
 		error.setDescription("Error while binding request");
-		if(errors.hasFieldErrors())
-		{
-			for(FieldError errs :  errors.getFieldErrors())
-			{
+		if (errors.hasFieldErrors()) {
+			for (FieldError errs : errors.getFieldErrors()) {
 				error.getFilelds().add(errs.getField());
 				error.getFilelds().add(errs.getRejectedValue());
 			}

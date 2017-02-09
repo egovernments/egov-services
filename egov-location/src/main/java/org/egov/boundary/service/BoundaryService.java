@@ -52,6 +52,7 @@ import java.util.Set;
 
 import org.egov.boundary.model.Boundary;
 import org.egov.boundary.model.BoundaryType;
+import org.egov.boundary.model.CrossHierarchy;
 import org.egov.boundary.model.HierarchyType;
 import org.egov.boundary.repository.BoundaryRepository;
 import org.egov.boundary.web.wrapper.BoundaryRequest;
@@ -301,6 +302,11 @@ public class BoundaryService {
 	public List<Boundary> getAllBoundary(BoundaryRequest boundaryRequest) {
 		Long boundaryId;
 		List<Boundary> boundaries = new ArrayList<Boundary>();
+		if(boundaryRequest.getBoundary().getId()!=null)
+		{
+			boundaries.add(boundaryRepository.findOne(boundaryRequest.getBoundary().getId()))	;
+
+		}else{
 		if (!StringUtils.isEmpty(boundaryRequest.getBoundary().getLatitude())
 				&&!StringUtils.isEmpty(boundaryRequest.getBoundary().getLongitude())) {
 
@@ -311,6 +317,7 @@ public class BoundaryService {
 
 		} else {
 			boundaries.addAll(boundaryRepository.findAll());
+		}
 		}
 
 		return boundaries;

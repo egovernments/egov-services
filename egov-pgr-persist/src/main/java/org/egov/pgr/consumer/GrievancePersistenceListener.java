@@ -40,7 +40,7 @@ public class GrievancePersistenceListener {
     @Autowired
     private TemplateService templateService;
 
-    @KafkaListener(id = "grievancePersister", topics = "ap.public.mseva.persistreadyh", group = "grievances")
+    @KafkaListener(id = "${kafka.topics.pgr.employeeassigned.id}", topics = "${kafka.topics.pgr.employeeassigned.name}", group = "${kafka.topics.pgr.employeeassigned.group}")
     public void processMessage(ConsumerRecord<String, SevaRequest> record) {
         SevaRequest sevaRequest = record.value();
         Complaint complaint = persistComplaint(sevaRequest);

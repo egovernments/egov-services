@@ -1,41 +1,26 @@
 package org.egov.filestore.persistence.repository;
 
-import org.apache.commons.io.FileUtils;
 import org.egov.filestore.domain.model.Artifact;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Repository;
-import org.springframework.web.context.ServletContextAware;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.ServletContext;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
-@Repository
-public class DiskFileStoreRepository implements ServletContextAware{
+@Service
+public class DiskFileStoreRepository {
 
-    private String fileStorageMountPath;
-    private ServletContext servletContext;
+    private FileRepository fileRepository;
 
-    public DiskFileStoreRepository(@Value("${fileStorageMountPath}") String fileStorageMountPath) {
-        this.fileStorageMountPath = fileStorageMountPath;
+    public DiskFileStoreRepository(FileRepository fileRepository) {
+        this.fileRepository = fileRepository;
     }
 
-    public void storeFilesOnDisk(List<Artifact> atrifactsToStore, String tenantId, String module) throws IOException {
-        for(Artifact artifactToStore: atrifactsToStore) {
-            MultipartFile multipartFile = artifactToStore.getMultipartFile();
-            String fileStoreId = artifactToStore.getFileStoreId();
-
-            Path path = Paths.get(fileStorageMountPath, fileStoreId);
-            FileUtils.forceMkdirParent(path.toFile());
-            multipartFile.transferTo(path.toFile());
-        }
+    public void write(List<Artifact> artifacts) {
+        artifacts.forEach(artifact -> {
+            MultipartFile multipartFile = artifact.getMultipartFile();
+            fileRepository.write(multipartFile, artifact.getPath());
+        });
     }
 
-    @Override
-    public void setServletContext(ServletContext servletContext) {
-        this.servletContext = servletContext;
-    }
 }
+

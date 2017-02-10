@@ -48,20 +48,19 @@ import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 
-import static org.egov.filestore.persistence.entity.FileStoreMapper.SEQ_FILESTOREMAPPER;
+import static org.egov.filestore.persistence.entity.Artifact.SEQ_FILESTOREMAP;
 
 
-@Component
 @Getter
 @Setter
 @Table(name = "eg_filestoremap")
 @Entity
-@SequenceGenerator(name = SEQ_FILESTOREMAPPER, sequenceName = SEQ_FILESTOREMAPPER, allocationSize = 1)
-public class FileStoreMapper extends AbstractPersistable<Long> {
-    public static final String SEQ_FILESTOREMAPPER = "SEQ_EG_FILESTOREMAP";
+@SequenceGenerator(name = SEQ_FILESTOREMAP, sequenceName = SEQ_FILESTOREMAP, allocationSize = 1)
+public class Artifact extends AbstractPersistable<Long> {
+    public static final String SEQ_FILESTOREMAP = "SEQ_EG_FILESTOREMAP";
     private static final long serialVersionUID = -2997164207274266823L;
     @Id
-    @GeneratedValue(generator = SEQ_FILESTOREMAPPER, strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(generator = SEQ_FILESTOREMAP, strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @NotBlank
@@ -70,7 +69,8 @@ public class FileStoreMapper extends AbstractPersistable<Long> {
 
     @NotBlank
     private String fileName;
-
     private String contentType;
+    private String jurisdictionId;
+    private String module;
 }
 

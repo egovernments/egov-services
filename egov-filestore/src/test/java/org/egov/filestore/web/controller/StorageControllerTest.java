@@ -1,7 +1,6 @@
 package org.egov.filestore.web.controller;
 
-import org.egov.filestore.domain.service.FileStorageService;
-import org.egov.filestore.persistence.entity.FileStoreMapper;
+import org.egov.filestore.domain.service.StorageService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,14 +21,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(FileController.class)
-public class FileControllerTest {
+@WebMvcTest(StorageController.class)
+public class StorageControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private FileStorageService fileStorageService;
+    private StorageService storageService;
 
     @Test
     public void testGetFile() throws Exception {
@@ -41,19 +40,19 @@ public class FileControllerTest {
         MockMultipartFile mockJpegImageFile = new MockMultipartFile("file", "this is an image.jpeg", "image/jpeg", "image content".getBytes());
         MockMultipartFile mockPdfDocumentFile = new MockMultipartFile("file", "lease_agreement.pdf", "application/pdf", "pdf content".getBytes());
 
-        when(fileStorageService.storeFiles(Arrays.asList(mockJpegImageFile, mockPdfDocumentFile), "mumbai", "pgr")).thenReturn(Arrays.asList(new FileStoreMapper()));
+        when(storageService.save(Arrays.asList(mockJpegImageFile, mockPdfDocumentFile), "mumbai", "pgr")).thenReturn(Arrays.asList("fileStoreId1", "fileStoreId2"));
 
         mockMvc.perform(
             fileUpload("/files")
                 .file(mockJpegImageFile)
                 .file(mockPdfDocumentFile)
-                .param("tenantId", "mumbai")
+                .param("jurisdictionId", "mumbai")
                 .param("module", "pgr")
         )
         .andExpect(status().isCreated())
         .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-        .andExpect(content().json("[{\"version\":null,\"id\":null,\"fileStoreId\":null,\"fileName\":null,\"contentType\":null,\"new\":true}]"));
+        .andExpect(content().json("[\"fileStoreId1\", \"fileStoreId2\"]"));
 
-        verify(fileStorageService).storeFiles(Arrays.asList(mockJpegImageFile, mockPdfDocumentFile), "mumbai", "pgr");
+        verify(storageService).save(Arrays.asList(mockJpegImageFile, mockPdfDocumentFile), "mumbai", "pgr");
     }
 }

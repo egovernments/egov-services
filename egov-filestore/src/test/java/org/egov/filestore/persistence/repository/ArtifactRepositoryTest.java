@@ -1,7 +1,6 @@
 package org.egov.filestore.persistence.repository;
 
-import org.egov.filestore.domain.model.Artifact;
-import org.egov.filestore.persistence.entity.FileStoreMapper;
+import org.egov.filestore.persistence.entity.Artifact;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -26,38 +25,39 @@ public class ArtifactRepositoryTest {
     DiskFileStoreRepository diskFileStoreRepository;
 
     @Mock
-    FileStoreMapperRepository fileStoreMapperRepository;
+    FileStoreJpaRepository fileStoreJpaRepository;
 
     @Captor
-    private ArgumentCaptor<List<FileStoreMapper>> listArgumentCaptor;
+    private ArgumentCaptor<List<Artifact>> listArgumentCaptor;
 
     private final String TENANT_ID = "mumbai";
     private final String MODULE = "pgr";
+    private final String FILE_STORAGE_MOUNT_PATH = "some_path";
 
     @Test
     public void shouldCallDiskRepository() throws Exception {
-        ArtifactRepository artifactRepository = new ArtifactRepository(diskFileStoreRepository, fileStoreMapperRepository);
-        List<Artifact> listOfMockedArtifacts = getListOfArtifacts();
-        artifactRepository.storeArtifacts(listOfMockedArtifacts, TENANT_ID, MODULE);
+        ArtifactRepository artifactRepository = new ArtifactRepository(diskFileStoreRepository, fileStoreJpaRepository);
+        List<org.egov.filestore.domain.model.Artifact> listOfMockedArtifacts = getListOfArtifacts();
+        artifactRepository.save(listOfMockedArtifacts);
 
-        verify(diskFileStoreRepository).storeFilesOnDisk(listOfMockedArtifacts, TENANT_ID, MODULE);
+        verify(diskFileStoreRepository).write(listOfMockedArtifacts);
     }
 
     @Test
     public void shouldCallFileStoreMapperRepository() throws Exception {
-        ArtifactRepository artifactRepository = new ArtifactRepository(diskFileStoreRepository, fileStoreMapperRepository);
-        List<Artifact> listOfMockedArtifacts = getListOfArtifacts();
+        ArtifactRepository artifactRepository = new ArtifactRepository(diskFileStoreRepository, fileStoreJpaRepository);
+        List<org.egov.filestore.domain.model.Artifact> listOfMockedArtifacts = getListOfArtifacts();
 
 
-        when(fileStoreMapperRepository.save(listArgumentCaptor.capture())).thenReturn(Arrays.asList());
+        when(fileStoreJpaRepository.save(listArgumentCaptor.capture())).thenReturn(Arrays.asList());
 
-        artifactRepository.storeArtifacts(listOfMockedArtifacts, TENANT_ID, MODULE);
+        artifactRepository.save(listOfMockedArtifacts);
 
         assertEquals("filename1.extension", listArgumentCaptor.getValue().get(0).getFileName());
         assertEquals("filename2.extension", listArgumentCaptor.getValue().get(1).getFileName());
     }
 
-    private List<Artifact> getListOfArtifacts() {
+    private List<org.egov.filestore.domain.model.Artifact> getListOfArtifacts() {
         MultipartFile multipartFile1 = mock(MultipartFile.class);
         MultipartFile multipartFile2 = mock(MultipartFile.class);
 
@@ -65,8 +65,8 @@ public class ArtifactRepositoryTest {
         when(multipartFile2.getOriginalFilename()).thenReturn("filename2.extension");
 
         return Arrays.asList(
-                new Artifact(multipartFile1, UUID.randomUUID().toString()),
-                new Artifact(multipartFile2, UUID.randomUUID().toString())
+                new org.egov.filestore.domain.model.Artifact(multipartFile1, UUID.randomUUID().toString(), MODULE, TENANT_ID, FILE_STORAGE_MOUNT_PATH),
+                new org.egov.filestore.domain.model.Artifact(multipartFile2, UUID.randomUUID().toString(), MODULE, TENANT_ID, FILE_STORAGE_MOUNT_PATH)
         );
     }
 }

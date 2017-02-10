@@ -1,10 +1,8 @@
 package org.egov.filestore.persistence.repository;
 
-import org.egov.filestore.domain.model.Artifact;
-import org.egov.filestore.persistence.entity.FileStoreMapper;
+import org.egov.filestore.persistence.entity.Artifact;
 import org.springframework.stereotype.Repository;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -12,28 +10,31 @@ import java.util.stream.Collectors;
 public class ArtifactRepository {
 
     private DiskFileStoreRepository diskFileStoreRepository;
-    private FileStoreMapperRepository fileStoreMapperRepository;
+    private FileStoreJpaRepository fileStoreJpaRepository;
 
-    public ArtifactRepository(DiskFileStoreRepository diskFileStoreRepository, FileStoreMapperRepository fileStoreMapperRepository) {
+    public ArtifactRepository(DiskFileStoreRepository diskFileStoreRepository, FileStoreJpaRepository fileStoreJpaRepository) {
         this.diskFileStoreRepository = diskFileStoreRepository;
-        this.fileStoreMapperRepository = fileStoreMapperRepository;
+        this.fileStoreJpaRepository = fileStoreJpaRepository;
     }
 
-    public List<FileStoreMapper> storeArtifacts(List<Artifact> artifacts, String tenantId, String module) throws IOException {
-        this.diskFileStoreRepository.storeFilesOnDisk(artifacts, tenantId, module);
-        return this.fileStoreMapperRepository.save(mapArtifactsListToEntitiesList(artifacts));
+    public List<String> save(List<org.egov.filestore.domain.model.Artifact> artifacts) {
+        diskFileStoreRepository.write(artifacts);
+        List<Artifact> artifactEntities = mapArtifactsListToEntitiesList(artifacts);
+        return fileStoreJpaRepository.save(artifactEntities)
+                .stream()
+                .map(Artifact::getFileStoreId)
+                .collect(Collectors.toList());
     }
 
-    private List<FileStoreMapper> mapArtifactsListToEntitiesList(List<Artifact> artifacts) {
+    private List<Artifact> mapArtifactsListToEntitiesList(List<org.egov.filestore.domain.model.Artifact> artifacts) {
         return artifacts.stream().map(this::mapArtifactToFileStoreMapper).collect(Collectors.toList());
     }
 
-    private FileStoreMapper mapArtifactToFileStoreMapper(Artifact artifact) {
-        FileStoreMapper fileStoreMapper = new FileStoreMapper();
-        fileStoreMapper.setFileStoreId(artifact.getFileStoreId());
-        fileStoreMapper.setFileName(artifact.getMultipartFile().getOriginalFilename());
-        fileStoreMapper.setContentType(artifact.getMultipartFile().getContentType());
-
-        return fileStoreMapper;
+    private Artifact mapArtifactToFileStoreMapper(org.egov.filestore.domain.model.Artifact artifact) {
+        Artifact artifactEntity = new Artifact();
+        artifactEntity.setFileStoreId(artifact.getFileStoreId());
+        artifactEntity.setFileName(artifact.getMultipartFile().getOriginalFilename());
+        artifactEntity.setContentType(artifact.getMultipartFile().getContentType());
+        return artifactEntity;
     }
 }

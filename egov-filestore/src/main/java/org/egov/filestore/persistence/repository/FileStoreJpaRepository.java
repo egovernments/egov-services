@@ -42,14 +42,14 @@ package org.egov.filestore.persistence.repository;
 
 import javax.persistence.QueryHint;
 
-import org.egov.filestore.persistence.entity.FileStoreMapper;
+import org.egov.filestore.persistence.entity.Artifact;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface FileStoreMapperRepository extends JpaRepository<FileStoreMapper,Long>{
+public interface FileStoreJpaRepository extends JpaRepository<Artifact,Long>{
     @QueryHints({ @QueryHint(name = "org.hibernate.cacheable", value = "true") })
-    FileStoreMapper findByFileStoreId(String fileStoreId);
+    Artifact findByFileStoreId(String fileStoreId);
     
 }

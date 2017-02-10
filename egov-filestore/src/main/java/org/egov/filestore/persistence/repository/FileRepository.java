@@ -1,6 +1,8 @@
 package org.egov.filestore.persistence.repository;
 
 import org.apache.commons.io.FileUtils;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -15,6 +17,10 @@ public class FileRepository {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public Resource read(Path path) {
+        return new FileSystemResource(path.toFile());
     }
 
 }

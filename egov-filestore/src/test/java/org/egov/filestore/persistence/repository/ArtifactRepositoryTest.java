@@ -1,6 +1,8 @@
 package org.egov.filestore.persistence.repository;
 
+import org.egov.filestore.domain.model.Resource;
 import org.egov.filestore.persistence.entity.Artifact;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -14,6 +16,8 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -30,22 +34,27 @@ public class ArtifactRepositoryTest {
     @Captor
     private ArgumentCaptor<List<Artifact>> listArgumentCaptor;
 
-    private final String TENANT_ID = "mumbai";
-    private final String MODULE = "pgr";
+    private final String JURISDICTION_ID = "jurisdictionId";
+    private final String MODULE = "module";
     private final String FILE_STORAGE_MOUNT_PATH = "some_path";
+    private ArtifactRepository artifactRepository;
+
+    @Before
+    public void setUp() {
+        artifactRepository = new ArtifactRepository(diskFileStoreRepository, fileStoreJpaRepository);
+    }
 
     @Test
-    public void shouldCallDiskRepository() throws Exception {
-        ArtifactRepository artifactRepository = new ArtifactRepository(diskFileStoreRepository, fileStoreJpaRepository);
+    public void shouldSaveArtifactToRepository() throws Exception {
         List<org.egov.filestore.domain.model.Artifact> listOfMockedArtifacts = getListOfArtifacts();
+
         artifactRepository.save(listOfMockedArtifacts);
 
         verify(diskFileStoreRepository).write(listOfMockedArtifacts);
     }
 
     @Test
-    public void shouldCallFileStoreMapperRepository() throws Exception {
-        ArtifactRepository artifactRepository = new ArtifactRepository(diskFileStoreRepository, fileStoreJpaRepository);
+    public void shouldPersistArtifactMetaDataToJpaRepository() throws Exception {
         List<org.egov.filestore.domain.model.Artifact> listOfMockedArtifacts = getListOfArtifacts();
 
 
@@ -57,6 +66,24 @@ public class ArtifactRepositoryTest {
         assertEquals("filename2.extension", listArgumentCaptor.getValue().get(1).getFileName());
     }
 
+    @Test
+    public void shouldRetrieveArtifactMetaDataForGivenFileStoreId() {
+        org.springframework.core.io.Resource mockedResource = mock(org.springframework.core.io.Resource.class);
+        Resource expectedResource = new Resource("contentType", "fileName", mockedResource);
+        when(diskFileStoreRepository.read(any())).thenReturn(mockedResource);
+        Artifact artifact = new Artifact();
+        artifact.setFileStoreId("fileStoreId");
+        artifact.setContentType("contentType");
+        artifact.setFileName("fileName");
+        when(fileStoreJpaRepository.findByFileStoreId("fileStoreId")).thenReturn(artifact);
+
+        Resource actualResource = artifactRepository.find("fileStoreId");
+
+        assertEquals(actualResource.getContentType(), "contentType");
+        assertEquals(actualResource.getFileName(), "fileName");
+        assertEquals(actualResource.getResource(), mockedResource);
+    }
+
     private List<org.egov.filestore.domain.model.Artifact> getListOfArtifacts() {
         MultipartFile multipartFile1 = mock(MultipartFile.class);
         MultipartFile multipartFile2 = mock(MultipartFile.class);
@@ -65,8 +92,8 @@ public class ArtifactRepositoryTest {
         when(multipartFile2.getOriginalFilename()).thenReturn("filename2.extension");
 
         return Arrays.asList(
-                new org.egov.filestore.domain.model.Artifact(multipartFile1, UUID.randomUUID().toString(), MODULE, TENANT_ID, FILE_STORAGE_MOUNT_PATH),
-                new org.egov.filestore.domain.model.Artifact(multipartFile2, UUID.randomUUID().toString(), MODULE, TENANT_ID, FILE_STORAGE_MOUNT_PATH)
+                new org.egov.filestore.domain.model.Artifact(multipartFile1, UUID.randomUUID().toString(), MODULE, JURISDICTION_ID),
+                new org.egov.filestore.domain.model.Artifact(multipartFile2, UUID.randomUUID().toString(), MODULE, JURISDICTION_ID)
         );
     }
 }

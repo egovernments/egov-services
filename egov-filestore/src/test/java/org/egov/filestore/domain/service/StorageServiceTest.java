@@ -2,7 +2,9 @@ package org.egov.filestore.domain.service;
 
 
 import org.egov.filestore.domain.model.Artifact;
+import org.egov.filestore.domain.model.Resource;
 import org.egov.filestore.persistence.repository.ArtifactRepository;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -13,6 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -30,10 +34,15 @@ public class StorageServiceTest {
     private final String JURISDICTION_ID = "mumbai";
     private final String FILE_STORE_ID_1 = "FileStoreID1";
     private final String FILE_STORE_ID_2 = "FileStoreID2";
+    private StorageService storageService;
+
+    @Before
+    public void setup(){
+        storageService = new StorageService(artifactRepository, idGeneratorService);
+    }
 
     @Test
     public void shouldSaveArtifacts() throws Exception {
-        StorageService storageService = new StorageService(artifactRepository, idGeneratorService, MOUNT_PATH);
         List<MultipartFile> listOfMultipartFiles = getMockFileList();
         List<Artifact> listOfArtifacts = getArtifactList(listOfMultipartFiles);
 
@@ -42,6 +51,16 @@ public class StorageServiceTest {
         storageService.save(listOfMultipartFiles, JURISDICTION_ID, MODULE);
 
         verify(artifactRepository).save(listOfArtifacts);
+    }
+
+    @Test
+    public void shouldRetrieveArtifact() throws Exception {
+        Resource expectedResource = mock(Resource.class);
+        when(artifactRepository.find("fileStoreId")).thenReturn(expectedResource);
+
+        Resource actualResource = storageService.retrieve("fileStoreId");
+
+        assertEquals(expectedResource, actualResource);
     }
 
     private List<MultipartFile> getMockFileList() {
@@ -54,8 +73,8 @@ public class StorageServiceTest {
     }
 
     private List<Artifact> getArtifactList(List<MultipartFile> multipartFiles) {
-        Artifact artifact1 = new Artifact(multipartFiles.get(0), FILE_STORE_ID_1, MODULE, JURISDICTION_ID, MOUNT_PATH);
-        Artifact artifact2 = new Artifact(multipartFiles.get(1), FILE_STORE_ID_2, MODULE, JURISDICTION_ID, MOUNT_PATH);
+        Artifact artifact1 = new Artifact(multipartFiles.get(0), FILE_STORE_ID_1, MODULE, JURISDICTION_ID);
+        Artifact artifact2 = new Artifact(multipartFiles.get(1), FILE_STORE_ID_2, MODULE, JURISDICTION_ID);
 
         return Arrays.asList(artifact1, artifact2);
     }

@@ -1,21 +1,25 @@
 package org.egov.filestore.web.controller;
 
+import org.apache.commons.io.FileUtils;
 import org.egov.filestore.domain.service.StorageService;
 import org.egov.filestore.web.contract.File;
 import org.egov.filestore.web.contract.StorageResponse;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RestController
+@Controller
 @RequestMapping("/files")
 public class StorageController {
 
@@ -25,13 +29,20 @@ public class StorageController {
         this.storageService = storageService;
     }
 
-    @GetMapping()
-    public ResponseEntity<Resource> getFile() {
-        return ResponseEntity.ok(new FileSystemResource("application.properties"));
+    @GetMapping("/{fileStoreId}")
+    @ResponseBody
+    public ResponseEntity<Resource> getFile(@PathVariable("fileStoreId") String fileStoreId) {
+        org.egov.filestore.domain.model.Resource resource = storageService.retrieve(fileStoreId);
+        return ResponseEntity
+                .ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\""+ resource.getFileName() +"\"")
+                .header(HttpHeaders.CONTENT_TYPE, resource.getContentType())
+                .body(resource.getResource());
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
     public StorageResponse storeFiles(@RequestParam("file") List<MultipartFile> files,
                                       @RequestParam("jurisdictionId") String jurisdictionId,
                                       @RequestParam("module") String module) throws IOException {

@@ -43,6 +43,7 @@ package org.egov.filestore.persistence.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.egov.filestore.domain.model.FileLocation;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.stereotype.Component;
 
@@ -72,5 +73,9 @@ public class Artifact extends AbstractPersistable<Long> {
     private String contentType;
     private String jurisdictionId;
     private String module;
+
+    public FileLocation getFileLocation() {
+        return new FileLocation(fileStoreId, module, jurisdictionId);
+    }
 }
 

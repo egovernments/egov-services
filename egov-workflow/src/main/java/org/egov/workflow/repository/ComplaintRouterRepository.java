@@ -59,7 +59,7 @@ public interface ComplaintRouterRepository extends JpaRepository<ComplaintRouter
 	@Query("select cr from ComplaintRouter cr where cr.boundary=:bndry and cr.complaintType is null")
 	ComplaintRouter findByOnlyBoundary(@Param("bndry") Long bndry);
 
-	@Query(value = "select cr from egpgr_router cr eg_boundary boundary , eg_boundary_type boundarytype ,eg_hierarchy_type hierarchytype where boundary.boundarytype = boundarytype.id and hierarchytype.id = boundarytype.hierarchytype and cr.boundary = boundary.id and boundary.parent is null and cr.complainttype is null and hierarchytype.name=:hierarchyType", nativeQuery = true)
+	@Query(value = "select cr from egpgr_router cr, eg_boundary boundary , eg_boundary_type boundarytype ,eg_hierarchy_type hierarchytype where boundary.boundarytype = boundarytype.id and hierarchytype.id = boundarytype.hierarchytype and cr.bndryid = boundary.id and boundary.parent is null and cr.complainttypeid is null and hierarchytype.name=:hierarchyType", nativeQuery = true)
 	ComplaintRouter findCityAdminGrievanceOfficer(@Param("hierarchyType") String hierarchyType);
 
 }

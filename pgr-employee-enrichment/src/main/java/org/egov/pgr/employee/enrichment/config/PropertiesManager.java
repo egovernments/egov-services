@@ -9,8 +9,8 @@ public class PropertiesManager {
     @Value("${egov.services.workflow.hostname}")
     private String workflowServiceHostname;
 
-    @Value("${egov.services.workflow.fetch_assignee}")
-    private String fetchAssigneeContext;
+    @Value("${egov.services.workflow.create_workflow}")
+    private String createWorkflowContext;
 
     @Value("${kafka.config.bootstrap_server_config}")
     private String serverConfig;
@@ -27,8 +27,8 @@ public class PropertiesManager {
     @Value("${kafka.producer.config.retries_config}")
     private Integer retiresConfig;
 
-    public String getAssigneeUrl() {
-        return this.workflowServiceHostname + this.fetchAssigneeContext;
+    public String getCreateWorkflowUrl() {
+        return this.workflowServiceHostname + this.createWorkflowContext;
     }
 
     public String getServerConfig() {

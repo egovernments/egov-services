@@ -20,7 +20,7 @@ public class PropertiesManagerTest {
 
     @Test
     public void testAssigneeServiceUrlIsReturned() throws Exception {
-        String expectedUrl = "http://workflow/assignee";
-        assertEquals(expectedUrl, propertiesManager.getAssigneeUrl());
+        String expectedUrl = "http://workflow-service/workflow/create";
+        assertEquals(expectedUrl, propertiesManager.getCreateWorkflowUrl());
     }
 }

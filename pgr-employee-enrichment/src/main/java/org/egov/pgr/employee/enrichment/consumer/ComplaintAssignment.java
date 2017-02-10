@@ -2,7 +2,7 @@ package org.egov.pgr.employee.enrichment.consumer;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.egov.pgr.employee.enrichment.producer.ComplaintPersister;
-import org.egov.pgr.employee.enrichment.service.AssignmentService;
+import org.egov.pgr.employee.enrichment.service.WorkflowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -19,11 +19,11 @@ public class ComplaintAssignment {
     private ComplaintPersister complaintPersister;
 
     @Autowired
-    private AssignmentService assignmentService;
+    private WorkflowService workflowService;
 
     @Autowired
-    public ComplaintAssignment(ComplaintPersister complaintPersister, AssignmentService assignmentService) {
-        this.assignmentService = assignmentService;
+    public ComplaintAssignment(ComplaintPersister complaintPersister, WorkflowService workflowService) {
+        this.workflowService = workflowService;
         this.complaintPersister = complaintPersister;
     }
 
@@ -45,7 +45,7 @@ public class ComplaintAssignment {
     @KafkaListener(id = "${kafka.topics.pgr.locationpopulated.id}", topics = "${kafka.topics.pgr.locationpopulated.name}", group = "${kafka.topics.pgr.locationpopulated.group}")
     public void processMessage(ConsumerRecord record) {
         HashMap sevaRequestHash = (HashMap) record.value();
-        Map enrichedSevaRequest = assignmentService.enrichComplaintWithAssignee(sevaRequestHash);
+        Map enrichedSevaRequest = workflowService.enrichWorkflowDetails(sevaRequestHash);
         complaintPersister.sendMessage(employeeEnrichedTopicName, enrichedSevaRequest);
     }
 

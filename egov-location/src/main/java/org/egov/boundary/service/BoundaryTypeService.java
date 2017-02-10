@@ -147,10 +147,14 @@ public class BoundaryTypeService {
 		List<BoundaryType> boundaryTypes = new ArrayList<BoundaryType>();
 		if (boundarytypeRequest.getBoundaryType().getId() != null) {
 			boundaryTypes.add(boundaryTypeRepository.findOne(boundarytypeRequest.getBoundaryType().getId()));
-		} else if (boundarytypeRequest.getBoundaryType().getCode() != null) {
-			boundaryTypes.add(findByCode(boundarytypeRequest.getBoundaryType().getCode()));
 		} else {
-			boundaryTypes.addAll(boundaryTypeRepository.findAll());
+			if (boundarytypeRequest.getBoundaryType().getCode() != null) {
+
+				boundaryTypes.add(findByCode(boundarytypeRequest.getBoundaryType().getCode()));
+
+			} else {
+				boundaryTypes.addAll(boundaryTypeRepository.findAll());
+			}
 		}
 		return boundaryTypes;
 	}

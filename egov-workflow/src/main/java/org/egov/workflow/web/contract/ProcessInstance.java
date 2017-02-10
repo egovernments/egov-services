@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
-import org.egov.workflow.domain.model.WorkflowProcess;
 
 import java.util.Date;
 import java.util.Map;
@@ -58,10 +57,7 @@ public class ProcessInstance {
     @JsonProperty("state_details")
     private String stateDetails;
 
-    @JsonProperty("")
+    @JsonProperty("values")
     private Map<String, String> values;
 
-    public WorkflowProcess asDomain() {
-        return new WorkflowProcess();
-    }
 }

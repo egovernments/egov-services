@@ -1,5 +1,6 @@
 package org.egov.filestore.web.controller;
 
+import org.apache.commons.io.IOUtils;
 import org.egov.filestore.domain.service.StorageService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,6 +12,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.io.IOException;
 import java.util.Arrays;
 
 import static org.mockito.Mockito.verify;
@@ -51,8 +53,17 @@ public class StorageControllerTest {
         )
         .andExpect(status().isCreated())
         .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-        .andExpect(content().json("[\"fileStoreId1\", \"fileStoreId2\"]"));
+        .andExpect(content().json(expectedJson()));
 
         verify(storageService).save(Arrays.asList(mockJpegImageFile, mockPdfDocumentFile), "mumbai", "pgr");
+    }
+
+    private String expectedJson() {
+        try {
+            return IOUtils.toString(this.getClass().getClassLoader()
+                    .getResourceAsStream("storageResponse.json"), "UTF-8");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

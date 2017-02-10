@@ -75,7 +75,7 @@ public class WorkflowRequest {
         String boundaryId = (String) values.get(VALUES_LOCATION_ID);
         String complaintType = (String) serviceRequest.get(SERVICE_CODE);
         String status = (String) serviceRequest.get(STATUS);
-        Long currentAssignee = values.get(VALUES_ASSIGNMENT_ID) != null ? Long.valueOf(String.valueOf(values.get(VALUES_ASSIGNMENT_ID))) : null;
+        Long currentAssignee = values.get(VALUES_ASSIGNEE_ID) != null ? Long.valueOf(String.valueOf(values.get(VALUES_ASSIGNEE_ID))) : null;
         Map<String, String > valuesToSet = new HashMap<>();
         valuesToSet.put(VALUES_COMLAINT_TYPE_CODE, complaintType);
         valuesToSet.put(BOUNDARY_ID, boundaryId);

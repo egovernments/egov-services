@@ -26,7 +26,7 @@ public class WorkflowService {
         Map values = (Map) serviceRequest.get(VALUES);
         WorkflowRequest request = WorkflowRequest.fromComplaintHash(complaintRequestHash);
         WorkflowResponse workflowResponse = workflowRepository.triggerWorkflow(request);
-        values.put(VALUES_ASSIGNMENT_ID, workflowResponse.getAssignee());
+        values.put(VALUES_ASSIGNEE_ID, workflowResponse.getAssignee());
         values.put(VALUES_STATE_ID, workflowResponse.getStateId());
         return complaintRequestHash;
     }

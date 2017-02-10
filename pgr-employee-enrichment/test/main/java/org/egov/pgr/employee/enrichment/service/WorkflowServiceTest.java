@@ -46,7 +46,7 @@ public class WorkflowServiceTest {
         long expectedAssigneeId = 10L;
         long expectedStateId = 22L;
 
-        assertEquals(Long.valueOf(expectedAssigneeId), extractValue(map, VALUES_ASSIGNMENT_ID));
+        assertEquals(Long.valueOf(expectedAssigneeId), extractValue(map, VALUES_ASSIGNEE_ID));
         assertEquals(Long.valueOf(expectedStateId), extractValue(map, VALUES_STATE_ID));
     }
 

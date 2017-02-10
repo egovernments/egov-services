@@ -65,6 +65,8 @@ import org.hibernate.validator.constraints.SafeHtml;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 @Entity
  
@@ -87,16 +89,18 @@ public class Boundary extends AbstractAuditable {
     private String name;
 
     private Long boundaryNum;
-
+    @JsonProperty(access=Access.WRITE_ONLY)
     @ManyToOne
     @JoinColumn(name = "boundaryType", updatable = false)
     private BoundaryType boundaryType;
 
+    @JsonProperty(access=Access.WRITE_ONLY)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent")
     @Fetch(value = FetchMode.SELECT)
     private Boundary parent;
 
+    @JsonProperty(access=Access.WRITE_ONLY)
     @OneToMany(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "parent")
     @Fetch(value = FetchMode.SUBSELECT)

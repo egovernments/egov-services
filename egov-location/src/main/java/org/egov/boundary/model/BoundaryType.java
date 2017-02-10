@@ -56,6 +56,9 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.SafeHtml;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+
 @Entity
 @Table(name = "EG_BOUNDARY_TYPE")
 @SequenceGenerator(name = BoundaryType.SEQ_BOUNDARY_TYPE, sequenceName = BoundaryType.SEQ_BOUNDARY_TYPE, allocationSize = 1)
@@ -79,8 +82,9 @@ public class BoundaryType extends AbstractAuditable  {
     @ManyToOne
     @NotNull
     @JoinColumn(name = "hierarchytype")
+    @JsonProperty(access=Access.WRITE_ONLY)
     private HierarchyType hierarchyType;
-
+    @JsonProperty(access=Access.WRITE_ONLY)
     @ManyToOne
     @JoinColumn(name = "parent")
     private BoundaryType parent;

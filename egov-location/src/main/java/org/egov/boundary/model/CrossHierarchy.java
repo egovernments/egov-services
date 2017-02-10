@@ -52,6 +52,9 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+
 @Entity
 @Table(name = "EG_CROSSHIERARCHY")
 @SequenceGenerator(name = CrossHierarchy.SEQ_CROSSHIERARCHY, sequenceName = CrossHierarchy.SEQ_CROSSHIERARCHY, allocationSize = 1)
@@ -61,24 +64,22 @@ public class CrossHierarchy extends AbstractAuditable {
     @Id
     @GeneratedValue(generator = SEQ_CROSSHIERARCHY, strategy = GenerationType.SEQUENCE)
     private Long id;
-
     @ManyToOne
     @JoinColumn(name = "parent")
     @Fetch(value = FetchMode.JOIN)
     private Boundary parent;
     
     private String code;
-
     @ManyToOne
     @JoinColumn(name = "child")
     @Fetch(value = FetchMode.JOIN)
     private Boundary child;
-
+    @JsonProperty(access=Access.WRITE_ONLY)
     @ManyToOne
     @JoinColumn(name = "parenttype")
     @Fetch(value = FetchMode.JOIN)
     private BoundaryType parentType;
-
+    @JsonProperty(access=Access.WRITE_ONLY)
     @ManyToOne
     @JoinColumn(name = "childtype")
     @Fetch(value = FetchMode.JOIN)

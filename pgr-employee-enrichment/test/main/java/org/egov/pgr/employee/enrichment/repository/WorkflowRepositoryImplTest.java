@@ -48,19 +48,19 @@ public class WorkflowRepositoryImplTest {
 
     @Test
     public void testAssigneeIsFetchedByBoundaryIdAndComplaintType() throws Exception {
+        WorkflowRequest expectedWorkflowRequest = getWorkflowRequest();
         this.workflowResponse = buildSuccessResponse();
         server.expect(once(), requestTo(expectedUri))
                 .andExpect(method(HttpMethod.POST))
-                .andExpect(content().string(getExpectedContent()))
+                .andExpect(content().string(getExpectedContentFor(expectedWorkflowRequest)))
                 .andRespond(withSuccess(this.workflowResponse, MediaType.APPLICATION_JSON));
-        WorkflowResponse workflowResponse = workflowRepository.triggerWorkflow(getWorkflowRequest());
+        WorkflowResponse workflowResponse = workflowRepository.triggerWorkflow(expectedWorkflowRequest);
 
         assertEquals(Long.valueOf(333L), workflowResponse.getAssignee());
         assertEquals(Long.valueOf(312L), workflowResponse.getStateId());
     }
 
-    private String getExpectedContent() throws JsonProcessingException {
-        WorkflowRequest request = getWorkflowRequest();
+    private String getExpectedContentFor(WorkflowRequest request) throws JsonProcessingException {
         return new ObjectMapper().writeValueAsString(request);
     }
 

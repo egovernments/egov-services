@@ -20,6 +20,7 @@ public class WorkflowRequest {
 
     private static final String VALUES_COMLAINT_TYPE_CODE = "complaint_type_code";
     private static final String BOUNDARY_ID = "boundary_id";
+    public static final String WORKFLOW_TYPE = "Complaint";
 
     @JsonProperty("RequestInfo")
     private RequestInfo requestInfo;
@@ -79,6 +80,6 @@ public class WorkflowRequest {
         valuesToSet.put(VALUES_COMLAINT_TYPE_CODE, complaintType);
         valuesToSet.put(BOUNDARY_ID, boundaryId);
         return WorkflowRequest.builder().assignee(currentAssignee).action(requestInfo.getAction())
-                .requestInfo(requestInfo).values(valuesToSet).status(status).build();
+                .requestInfo(requestInfo).values(valuesToSet).status(status).type(WORKFLOW_TYPE).build();
     }
 }

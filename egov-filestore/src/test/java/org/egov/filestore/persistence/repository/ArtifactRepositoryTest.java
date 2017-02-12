@@ -63,7 +63,11 @@ public class ArtifactRepositoryTest {
         artifactRepository.save(listOfMockedArtifacts);
 
         assertEquals("filename1.extension", listArgumentCaptor.getValue().get(0).getFileName());
+        assertEquals("image/png", listArgumentCaptor.getValue().get(0).getContentType());
+        assertEquals(JURISDICTION_ID, listArgumentCaptor.getValue().get(0).getJurisdictionId());
+        assertEquals(MODULE, listArgumentCaptor.getValue().get(0).getModule());
         assertEquals("filename2.extension", listArgumentCaptor.getValue().get(1).getFileName());
+
     }
 
     @Test
@@ -89,6 +93,7 @@ public class ArtifactRepositoryTest {
         MultipartFile multipartFile2 = mock(MultipartFile.class);
 
         when(multipartFile1.getOriginalFilename()).thenReturn("filename1.extension");
+        when(multipartFile1.getContentType()).thenReturn("image/png");
         when(multipartFile2.getOriginalFilename()).thenReturn("filename2.extension");
 
         return Arrays.asList(

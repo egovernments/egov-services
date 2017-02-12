@@ -36,6 +36,8 @@ public class ArtifactRepository {
         artifactEntity.setFileStoreId(artifact.getFileStoreId());
         artifactEntity.setFileName(artifact.getMultipartFile().getOriginalFilename());
         artifactEntity.setContentType(artifact.getMultipartFile().getContentType());
+        artifactEntity.setJurisdictionId(artifact.getJurisdictionId());
+        artifactEntity.setModule(artifact.getModule());
         return artifactEntity;
     }
 

@@ -45,7 +45,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.egov.filestore.domain.model.FileLocation;
 import org.hibernate.validator.constraints.NotBlank;
-import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 

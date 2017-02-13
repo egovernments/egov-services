@@ -17,10 +17,7 @@ import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.argThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ArtifactRepositoryTest {
@@ -36,7 +33,6 @@ public class ArtifactRepositoryTest {
 
     private final String JURISDICTION_ID = "jurisdictionId";
     private final String MODULE = "module";
-    private final String FILE_STORAGE_MOUNT_PATH = "some_path";
     private ArtifactRepository artifactRepository;
 
     @Before
@@ -73,7 +69,6 @@ public class ArtifactRepositoryTest {
     @Test
     public void shouldRetrieveArtifactMetaDataForGivenFileStoreId() {
         org.springframework.core.io.Resource mockedResource = mock(org.springframework.core.io.Resource.class);
-        Resource expectedResource = new Resource("contentType", "fileName", mockedResource);
         when(diskFileStoreRepository.read(any())).thenReturn(mockedResource);
         Artifact artifact = new Artifact();
         artifact.setFileStoreId("fileStoreId");

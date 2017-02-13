@@ -10,16 +10,15 @@ node("slave") {
 
 	stage "Results"
         archive "${env.JOB_BASE_NAME}/target/*.jar"
-            
-    stage "Build docker image"
-        dir("${env.JOB_BASE_NAME}") {
-            app = docker.build("egovio/${env.JOB_BASE_NAME}")
-        }
 
-    stage "Push to docker hub"
-        docker.withRegistry("https://registry.hub.docker.com", "dockerhub") {
-            sh "docker --version"
+    docker.withRegistry("https://registry.hub.docker.com", "dockerhub") {
+        stage "Build docker image"
+            dir("${env.JOB_BASE_NAME}") {
+                app = docker.build("egovio/${env.JOB_BASE_NAME}")
+            }
+
+        stage "Push to docker hub"
             app.tag("daily-${commit_id}")
             app.push()
-        }
+    }
 }

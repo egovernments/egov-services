@@ -17,5 +17,6 @@ node("slave") {
         }
 
     stage "Push to docker hub"
-        app.push("daily-${commit_id}")
+        app.tag("daily-${commit_id}")
+        app.push()
 }

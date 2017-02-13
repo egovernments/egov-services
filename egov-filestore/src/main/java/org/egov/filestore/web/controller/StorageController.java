@@ -92,7 +92,8 @@ public class StorageController {
                 .newInstance()
                 .scheme(fileStoreHostScheme)
                 .host(fileStoreHost)
-                .pathSegment(contextPath, MAPPED_PATH, fileStorageId)
+                .path(contextPath)
+                .pathSegment(MAPPED_PATH, fileStorageId)
                 .build()
                 .toUriString();
     }

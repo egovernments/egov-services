@@ -1,9 +1,10 @@
 node("slave") {
     def app = "";
+    def commit_id="";
 	stage("Build"){
 	    checkout scm
 	    sh "git rev-parse --short HEAD > .git/commit-id".trim()
-        def commit_id = readFile('.git/commit-id')
+        commit_id = readFile('.git/commit-id')
         docker.image("egovio/ci").inside {
                 sh "cd ${env.JOB_BASE_NAME}; mvn clean package;"
         }

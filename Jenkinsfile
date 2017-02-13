@@ -1,6 +1,6 @@
 node("slave") {
-        stage "Build"
-            git "https://github.com/egovernments/pgr-services.git"
+	stage "Build"
+	    checkout scm
             docker.image("egovio/ci").inside {
                 sh "cd ${env.JOB_NAME}; mvn clean package;"
             }

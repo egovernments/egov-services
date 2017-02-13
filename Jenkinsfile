@@ -23,4 +23,8 @@ node("slave") {
             }
         }
     }
+
+    stage("Finished"){
+        echo "Finished"
+    }
 }

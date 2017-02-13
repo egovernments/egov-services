@@ -4,7 +4,9 @@ import org.egov.persistence.repository.MessageRepository;
 import org.egov.web.contract.CreateMessagesRequest;
 import org.egov.web.contract.Message;
 import org.egov.web.contract.MessagesResponse;
+import org.egov.web.exception.InvalidCreateMessageRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -30,7 +32,11 @@ public class MessageController {
     }
 
     @PostMapping()
-    public MessagesResponse createMessages(@Valid @RequestBody CreateMessagesRequest messageRequest) {
+    public MessagesResponse createMessages(@Valid @RequestBody CreateMessagesRequest messageRequest,
+                                           BindingResult bindingResult) {
+        if (bindingResult.hasErrors())
+            throw new InvalidCreateMessageRequest(bindingResult.getFieldErrors());
+
         final List<org.egov.persistence.entity.Message> entityMessages = messageRequest.toEntityMessages();
         messageRepository.save(entityMessages);
         List<Message> messages = mapToContractMessages(entityMessages);

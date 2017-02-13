@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Size;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,6 +17,7 @@ public class CreateMessagesRequest {
     @NotEmpty
     private String locale;
     @Size(min = 1)
+    @Valid
     private List<Message> messages;
 
     public List<org.egov.persistence.entity.Message> toEntityMessages() {

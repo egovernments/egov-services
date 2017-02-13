@@ -6,7 +6,6 @@ import org.egov.filestore.domain.service.StorageService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.io.FileSystemResource;
@@ -26,9 +25,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(StorageController.class)
@@ -51,16 +48,16 @@ public class StorageControllerTest {
         when(storageService.save(Arrays.asList(mockJpegImageFile, mockPdfDocumentFile), JURISDICTION_ID, MODULE, TAG)).thenReturn(Arrays.asList("fileStoreId1", "fileStoreId2"));
 
         mockMvc.perform(
-            fileUpload("/files")
-                .file(mockJpegImageFile)
-                .file(mockPdfDocumentFile)
-                .param("jurisdictionId", JURISDICTION_ID)
-                .param("module", MODULE)
-                .param("tag", TAG)
+                fileUpload("/files")
+                        .file(mockJpegImageFile)
+                        .file(mockPdfDocumentFile)
+                        .param("jurisdictionId", JURISDICTION_ID)
+                        .param("module", MODULE)
+                        .param("tag", TAG)
         )
-        .andExpect(status().isCreated())
-        .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-        .andExpect(content().json(getStorageResponse()));
+                .andExpect(status().isCreated())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(content().json(getStorageResponse()));
 
         verify(storageService)
                 .save(Arrays.asList(mockJpegImageFile, mockPdfDocumentFile), JURISDICTION_ID, MODULE, TAG);
@@ -91,9 +88,9 @@ public class StorageControllerTest {
         mockMvc.perform(
                 get("/files?tag=" + TAG)
         )
-        .andExpect(status().isOk())
-        .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-        .andExpect(content().json(getRetrieveByTagResponse()));
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(content().json(getRetrieveByTagResponse()));
 
         verify(storageService).retrieveByTag(TAG);
     }

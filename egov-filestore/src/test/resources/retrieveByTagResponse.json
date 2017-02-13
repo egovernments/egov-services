@@ -1,10 +1,10 @@
 {
   "files": [
     {
-      "url": "http://localhost/filestore/files/fileStoreId1"
+      "url": "http://localhost:8080/filestore/files/fileStoreId1"
     },
     {
-      "url": "http://localhost/filestore/files/fileStoreId2"
+      "url": "http://localhost:8080/filestore/files/fileStoreId2"
     }
   ]
 }

@@ -3,9 +3,6 @@ package org.egov.filestore.domain.model;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import org.springframework.web.util.UriComponentsBuilder;
-
-import java.net.URL;
 
 @AllArgsConstructor
 @Getter

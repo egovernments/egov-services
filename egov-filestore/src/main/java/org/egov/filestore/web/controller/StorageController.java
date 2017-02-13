@@ -9,36 +9,27 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.egov.filestore.web.controller.StorageController.MAPPED_PATH;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Controller
-@RequestMapping(MAPPED_PATH)
+@RequestMapping("/files")
 public class StorageController {
 
-    static final String MAPPED_PATH = "files";
     private StorageService storageService;
     private String fileStoreHost;
-    private String fileStoreHostScheme;
-    private String contextPath;
 
     public StorageController(StorageService storageService,
-                             @Value("${fileStoreHost}") String fileStoreHost,
-                             @Value("${fileStoreHostScheme}") String fileStoreHostScheme,
-                             @Value("${server.contextPath}") String contextPath) {
+                             @Value("${fileStoreHost}") String fileStoreHost) {
         this.storageService = storageService;
         this.fileStoreHost = fileStoreHost;
-        this.fileStoreHostScheme = fileStoreHostScheme;
-        this.contextPath = contextPath;
     }
 
     @GetMapping("/{fileStoreId}")
@@ -52,13 +43,13 @@ public class StorageController {
                 .body(resource.getResource());
     }
 
-    @GetMapping()
+    @GetMapping(produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public LocationResponse getUrlListByTag(@RequestParam("tag") String tag) {
         return getLocationResponse(storageService.retrieveByTag(tag));
     }
 
-    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public StorageResponse storeFiles(@RequestParam("file") List<MultipartFile> files,
@@ -87,15 +78,8 @@ public class StorageController {
     }
 
     private String constructUrl(String fileStorageId) {
-
-        return UriComponentsBuilder
-                .newInstance()
-                .scheme(fileStoreHostScheme)
-                .host(fileStoreHost)
-                .path(contextPath)
-                .pathSegment(MAPPED_PATH, fileStorageId)
-                .build()
-                .toUriString();
+        String PATH_SEPARATOR = "/";
+        return String.format("%s%s%s%s%s", fileStoreHost, PATH_SEPARATOR, "files", PATH_SEPARATOR, fileStorageId);
     }
 
 }

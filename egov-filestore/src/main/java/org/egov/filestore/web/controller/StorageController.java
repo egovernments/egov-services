@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -56,7 +55,7 @@ public class StorageController {
     @GetMapping()
     @ResponseBody
     public LocationResponse getUrlListByTag(@RequestParam("tag") String tag) {
-        return getRetrieveResponse(storageService.retrieveByTag(tag));
+        return getLocationResponse(storageService.retrieveByTag(tag));
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -65,7 +64,7 @@ public class StorageController {
     public StorageResponse storeFiles(@RequestParam("file") List<MultipartFile> files,
                                       @RequestParam("jurisdictionId") String jurisdictionId,
                                       @RequestParam("module") String module,
-                                      @RequestParam(value = "tag", required = false) String tag) throws IOException {
+                                      @RequestParam(value = "tag", required = false) String tag){
 
         return getStorageResponse(storageService.save(files, jurisdictionId, module, tag));
     }
@@ -79,7 +78,7 @@ public class StorageController {
 
     }
 
-    private LocationResponse getRetrieveResponse(List<String> fileStorageIds) {
+    private LocationResponse getLocationResponse(List<String> fileStorageIds) {
         return new LocationResponse(
                 fileStorageIds.stream()
                         .map(fileStorageId -> new Url(constructUrl(fileStorageId)))

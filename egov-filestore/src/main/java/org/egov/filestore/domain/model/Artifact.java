@@ -3,7 +3,6 @@ package org.egov.filestore.domain.model;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
-@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Getter

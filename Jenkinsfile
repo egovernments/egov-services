@@ -1,4 +1,5 @@
 node("slave") {
+    def app = "";
 	stage "Build"
 	    checkout scm
 	    sh "git rev-parse --short HEAD > .git/commit-id".trim()
@@ -12,10 +13,9 @@ node("slave") {
             
     stage "Build docker image"
         dir("${env.JOB_BASE_NAME}") {
-            def app = docker.build("egovio/${env.JOB_BASE_NAME}")
+            app = docker.build("egovio/${env.JOB_BASE_NAME}")
         }
 
     stage "Push to docker hub"
         app.push("daily-${commit_id}")
-        
 }

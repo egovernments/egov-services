@@ -91,6 +91,9 @@ public class Complaint extends AbstractAuditable {
     @SafeHtml
     private String details;
 
+    @Column(name = "state_id")
+    private Long stateId;
+
     @Length(max = 200)
     @SafeHtml
 //	@Column(name = "landmarkdetails")
@@ -105,10 +108,7 @@ public class Complaint extends AbstractAuditable {
     @JoinColumn(name = "receivingCenter", nullable = true)
     private ReceivingCenter receivingCenter;
 
-//	private Set<Long> supportDocs;
-
     private double lng;
-
     private double lat;
 
     @Column(name = "escalation_date", nullable = false)
@@ -117,7 +117,6 @@ public class Complaint extends AbstractAuditable {
     private Long department;
 
     @Enumerated(EnumType.ORDINAL)
-//	@Column(name = "citizenfeedback")
     private CitizenFeedback citizenFeedback;
 
     //	@Column(name = "childlocation")
@@ -129,10 +128,6 @@ public class Complaint extends AbstractAuditable {
     @Transient
     private String locationName;
 
-    /*
-         * For indexing the below fields are kept. These will not be added to the
-         * database. This will be available only in index.
-         */
     @Transient
     private Long crossHierarchyId;
 
@@ -314,6 +309,9 @@ public class Complaint extends AbstractAuditable {
         this.latlngAddress = latlngAddress;
     }
 
+    public void setStateId(Long stateId) {
+        this.stateId = stateId;
+    }
 
     public String getLocationName() {
         return locationName;

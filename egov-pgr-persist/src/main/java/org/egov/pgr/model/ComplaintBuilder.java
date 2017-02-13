@@ -42,13 +42,22 @@ public class ComplaintBuilder {
         setAssigneeId();
         setLocationDetails();
         setEscalationDate();
+        setWorkflowDetails();
         return this.complaint;
+    }
+
+    private void setWorkflowDetails() {
+        String stateId = this.serviceRequest.getValues().get(VALUES_STATE_ID);
+        if(stateId != null) {
+            Long stateIdAsLong = Long.valueOf(stateId);
+            this.complaint.setStateId(stateIdAsLong);
+        }
     }
 
     private void setBasicInfo() {
         this.complaint.setCrn(this.serviceRequest.getCrn());
-        this.complaint.setLat(this.serviceRequest.getLat());
-        this.complaint.setLng(this.serviceRequest.getLng());
+        this.complaint.setLat(this.serviceRequest.getLat() == null ? 0.0 : this.serviceRequest.getLat());
+        this.complaint.setLng(this.serviceRequest.getLng() == null ? 0.0 : this.serviceRequest.getLng());
         this.complaint.setDetails(this.serviceRequest.getDetails());
         this.complaint.setLandmarkDetails(this.serviceRequest.getLandmarkDetails());
     }
@@ -81,7 +90,7 @@ public class ComplaintBuilder {
     }
 
     private void setAssigneeId() {
-        String assigneeId = this.serviceRequest.getValues().get(ASSIGNEE_ID);
+        String assigneeId = this.serviceRequest.getValues().get(VALUES_ASSIGNEE_ID);
         if (Objects.nonNull(assigneeId)) this.complaint.setAssignee(Long.parseLong(assigneeId));
     }
 
@@ -92,13 +101,12 @@ public class ComplaintBuilder {
     }
 
     private void setReceivingMode() {
-        //TODO - Set this correctly
-        complaint.setReceivingMode(ReceivingMode.MOBILE);
+        String receivingMode = this.serviceRequest.getValues().get(VALUES_RECIEVING_MODE);
+        if(receivingMode != null) this.complaint.setReceivingMode(ReceivingMode.MOBILE);
     }
 
     private void setComplaintType() {
         if (Objects.isNull(serviceRequest.getComplaintTypeCode())) return;
-        //TODO - Satyam what will come from UI? Code or Id?
         ComplaintType complaintType = this.complaintTypeService.findByCode(serviceRequest.getComplaintTypeCode());
         complaint.setComplaintType(complaintType);
     }

@@ -24,7 +24,7 @@ public class GrievancePersistenceConsumerConfig {
     @Value("${kafka.config.bootstrap_server_config}")
     private String serverConfig;
 
-    @Value("${kafka.consumer.config.group_id}")
+    @Value("${kafka.topics.pgr.workflowupdated.group}")
     private String groupId;
 
     @Bean

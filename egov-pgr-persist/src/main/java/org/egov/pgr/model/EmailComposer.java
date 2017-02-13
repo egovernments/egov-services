@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class EmailComposer {
 
-    private static final String EMAIL_BODY_EN_TEMPLATE = "email_body_end";
+    private static final String EMAIL_BODY_EN_TEMPLATE = "email_body_en";
     private static final String EMAIL_SUBJECT_EN_TEMPLATE = "email_subject_en";
 
     private Complaint complaint;

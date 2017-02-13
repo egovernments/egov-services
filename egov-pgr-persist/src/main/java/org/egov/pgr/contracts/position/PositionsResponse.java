@@ -8,7 +8,7 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PositionsResponse {
 
-    @JsonProperty("Position")
+    @JsonProperty("Positions")
     List<PositionResponse> positions;
 
     public List<PositionResponse> getPositions() {

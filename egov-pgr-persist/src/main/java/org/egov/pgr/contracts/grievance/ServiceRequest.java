@@ -2,21 +2,23 @@ package org.egov.pgr.contracts.grievance;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Service request raised by the citizen
- */
+@Getter
 public class ServiceRequest {
 
     public static final String USER_ID = "user_id";
     public static final String LOCATION_ID = "location_id";
     public static final String CHILD_LOCATION_ID = "child_location_id";
     public static final String LOCATION_NAME = "location_name";
-    public static final String ASSIGNEE_ID = "assignee_id";
+    public static final String VALUES_ASSIGNEE_ID = "assignment_id";
+    public static final String VALUES_STATE_ID = "state_id";
+    public static final String VALUES_RECIEVING_MODE = "receivingMode";
+
 
     public enum ComplaintStatus {
         COMPLETED, FORWARDED, REJECTED, REGISTERED, WITHDRAWN, REOPENED, PROCESSING;
@@ -106,111 +108,4 @@ public class ServiceRequest {
     @JsonProperty("values")
     private Map<String, String> values = new HashMap<>();
 
-    public String getCrn() {
-        return crn;
-    }
-
-    public Boolean getStatus() {
-        return status;
-    }
-
-    public ComplaintStatus getStatusDetails() {
-        return statusDetails;
-    }
-
-    public String getComplaintTypeName() {
-        return complaintTypeName;
-    }
-
-    public String getComplaintTypeCode() {
-        return complaintTypeCode;
-    }
-
-    public String getComplaintTypeId() {
-        return complaintTypeId;
-    }
-
-    public String getDetails() {
-        return details;
-    }
-
-    public String getAgencyResponsible() {
-        return agencyResponsible;
-    }
-
-    public String getServiceNotice() {
-        return serviceNotice;
-    }
-
-    public Date getCreatedDate() {
-        return createdDate;
-    }
-
-    public Date getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public Date getEscalationDate() {
-        return escalationDate;
-    }
-
-    public String getLandmarkDetails() {
-        return landmarkDetails;
-    }
-
-    public String getCrossHierarchyId() {
-        return crossHierarchyId;
-    }
-
-    public Integer getZipcode() {
-        return zipcode;
-    }
-
-    public Double getLat() {
-        return lat;
-    }
-
-    public Double getLng() {
-        return lng;
-    }
-
-    public String getMediaUrl() {
-        return mediaUrl;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getDeviceId() {
-        return deviceId;
-    }
-
-    public String getAccountId() {
-        return accountId;
-    }
-
-    public Long getApprovalPosition() {
-        return approvalPosition;
-    }
-
-    public String getApprovalComment() {
-        return approvalComment;
-    }
-
-    public Map<String, String> getValues() {
-        return values;
-    }
 }

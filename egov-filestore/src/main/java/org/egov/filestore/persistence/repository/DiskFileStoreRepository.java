@@ -26,8 +26,9 @@ public class DiskFileStoreRepository {
     public void write(List<Artifact> artifacts) {
         artifacts.forEach(artifact -> {
             MultipartFile multipartFile = artifact.getMultipartFile();
-            Path path = Paths.get(fileMountPath, artifact.getJurisdictionId(), artifact.getModule(),
-                    artifact.getFileStoreId());
+            FileLocation fileLocation = artifact.getFileLocation();
+            Path path = Paths.get(fileMountPath, fileLocation.getJurisdictionId(), fileLocation.getModule(),
+                    fileLocation.getFileStoreId());
             fileRepository.write(multipartFile, path);
         });
     }

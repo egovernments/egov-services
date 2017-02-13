@@ -84,8 +84,10 @@ public class StorageServiceTest {
     }
 
     private List<Artifact> getArtifactList(List<MultipartFile> multipartFiles) {
-        Artifact artifact1 = new Artifact(multipartFiles.get(0), FILE_STORE_ID_1, MODULE, JURISDICTION_ID, TAG);
-        Artifact artifact2 = new Artifact(multipartFiles.get(1), FILE_STORE_ID_2, MODULE, JURISDICTION_ID, TAG);
+        Artifact artifact1 = new Artifact(multipartFiles.get(0),
+                new FileLocation(FILE_STORE_ID_1, MODULE, JURISDICTION_ID, TAG));
+        Artifact artifact2 = new Artifact(multipartFiles.get(1),
+                new FileLocation(FILE_STORE_ID_2, MODULE, JURISDICTION_ID, TAG));
 
         return Arrays.asList(artifact1, artifact2);
     }

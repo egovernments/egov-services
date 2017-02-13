@@ -28,7 +28,7 @@ public class DiskFileStoreRepositoryTest {
     private FileRepository fileRepository;
 
     private final String FILE_STORAGE_MOUNT_PATH = "some_path";
-    private final String TENANT_ID = "tenant_id";
+    private final String JURISDICTION_ID = "jurisdiction_id";
     private final String MODULE = "module_id";
     private final String TAG = "tag";
     private DiskFileStoreRepository diskFileStoreRepository;
@@ -45,21 +45,21 @@ public class DiskFileStoreRepositoryTest {
         String fileStoreId2 = UUID.randomUUID().toString();
         String fileStoreId1 = UUID.randomUUID().toString();
         List<Artifact> listOfMockedArtifacts = Arrays.asList(
-                new Artifact(file1, fileStoreId1, MODULE, TENANT_ID, TAG),
-                new Artifact(file2, fileStoreId2, MODULE, TENANT_ID, TAG)
+                new Artifact(file1, new FileLocation(fileStoreId1, MODULE, JURISDICTION_ID, TAG)),
+                new Artifact(file2, new FileLocation(fileStoreId2, MODULE, JURISDICTION_ID, TAG))
         );
 
         diskFileStoreRepository.write(listOfMockedArtifacts);
 
-        verify(fileRepository).write(file1, Paths.get(FILE_STORAGE_MOUNT_PATH, TENANT_ID, MODULE, fileStoreId1));
-        verify(fileRepository).write(file2, Paths.get(FILE_STORAGE_MOUNT_PATH, TENANT_ID, MODULE, fileStoreId2));
+        verify(fileRepository).write(file1, Paths.get(FILE_STORAGE_MOUNT_PATH, JURISDICTION_ID, MODULE, fileStoreId1));
+        verify(fileRepository).write(file2, Paths.get(FILE_STORAGE_MOUNT_PATH, JURISDICTION_ID, MODULE, fileStoreId2));
     }
 
     @Test
     public void shouldReturnResourceForGivenPath() {
-        FileLocation fileLocation = new FileLocation("fileStoreId", MODULE, TENANT_ID, TAG);
+        FileLocation fileLocation = new FileLocation("fileStoreId", MODULE, JURISDICTION_ID, TAG);
         Resource expectedResource = mock(Resource.class);
-        when(fileRepository.read(Paths.get(FILE_STORAGE_MOUNT_PATH, TENANT_ID, MODULE, "fileStoreId")))
+        when(fileRepository.read(Paths.get(FILE_STORAGE_MOUNT_PATH, JURISDICTION_ID, MODULE, "fileStoreId")))
                 .thenReturn(expectedResource);
 
         Resource actualResource = diskFileStoreRepository.read(fileLocation);

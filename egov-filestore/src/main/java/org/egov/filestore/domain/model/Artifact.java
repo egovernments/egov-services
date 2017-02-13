@@ -9,9 +9,6 @@ import org.springframework.web.multipart.MultipartFile;
 @EqualsAndHashCode
 public class Artifact {
     private MultipartFile multipartFile;
-    private String fileStoreId;
-    private String module;
-    private String jurisdictionId;
-    private String tag;
+    private FileLocation fileLocation;
 }
 

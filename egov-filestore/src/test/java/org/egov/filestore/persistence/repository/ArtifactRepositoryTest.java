@@ -24,10 +24,10 @@ import static org.mockito.Mockito.*;
 public class ArtifactRepositoryTest {
 
     @Mock
-    DiskFileStoreRepository diskFileStoreRepository;
+    private DiskFileStoreRepository diskFileStoreRepository;
 
     @Mock
-    FileStoreJpaRepository fileStoreJpaRepository;
+    private FileStoreJpaRepository fileStoreJpaRepository;
 
     @Captor
     private ArgumentCaptor<List<Artifact>> listArgumentCaptor;
@@ -108,8 +108,10 @@ public class ArtifactRepositoryTest {
         when(multipartFile2.getOriginalFilename()).thenReturn("filename2.extension");
 
         return Arrays.asList(
-                new org.egov.filestore.domain.model.Artifact(multipartFile1, UUID.randomUUID().toString(), MODULE, JURISDICTION_ID, TAG),
-                new org.egov.filestore.domain.model.Artifact(multipartFile2, UUID.randomUUID().toString(), MODULE, JURISDICTION_ID, TAG)
+                new org.egov.filestore.domain.model.Artifact(multipartFile1,
+                        new FileLocation(UUID.randomUUID().toString(), MODULE, JURISDICTION_ID, TAG)),
+                new org.egov.filestore.domain.model.Artifact(multipartFile2,
+                        new FileLocation(UUID.randomUUID().toString(), MODULE, JURISDICTION_ID, TAG))
         );
     }
 

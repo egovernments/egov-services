@@ -34,12 +34,12 @@ public class ArtifactRepository {
 
     private Artifact mapArtifactToFileStoreMapper(org.egov.filestore.domain.model.Artifact artifact) {
         Artifact artifactEntity = new Artifact();
-        artifactEntity.setFileStoreId(artifact.getFileStoreId());
+        artifactEntity.setFileStoreId(artifact.getFileLocation().getFileStoreId());
         artifactEntity.setFileName(artifact.getMultipartFile().getOriginalFilename());
         artifactEntity.setContentType(artifact.getMultipartFile().getContentType());
-        artifactEntity.setJurisdictionId(artifact.getJurisdictionId());
-        artifactEntity.setModule(artifact.getModule());
-        artifactEntity.setTag(artifact.getTag());
+        artifactEntity.setJurisdictionId(artifact.getFileLocation().getJurisdictionId());
+        artifactEntity.setModule(artifact.getFileLocation().getModule());
+        artifactEntity.setTag(artifact.getFileLocation().getTag());
         return artifactEntity;
     }
 

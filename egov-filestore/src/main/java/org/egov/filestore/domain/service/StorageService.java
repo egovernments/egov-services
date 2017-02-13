@@ -35,13 +35,20 @@ public class StorageService {
                                                String module,
                                                String tag) {
         return files.stream()
-                .map(file -> Artifact.builder()
-                        .multipartFile(file)
-                        .fileStoreId(this.idGeneratorService.getId())
-                        .module(module)
-                        .jurisdictionId(jurisdictionId)
-                        .tag(tag)
-                        .build())
+                .map(file -> {
+
+                    FileLocation fileLocation = FileLocation.builder()
+                            .fileStoreId(this.idGeneratorService.getId())
+                            .jurisdictionId(jurisdictionId)
+                            .module(module)
+                            .tag(tag)
+                            .build();
+
+                    return Artifact.builder()
+                            .multipartFile(file)
+                            .fileLocation(fileLocation)
+                            .build();
+                })
                 .collect(Collectors.toList());
     }
 

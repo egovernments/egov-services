@@ -17,7 +17,7 @@ node("slave") {
         }
 
     stage "Push to docker hub"
-        withRegistry("https://registry.hub.docker.com", "dockerhub") {
+        docker.withRegistry("https://registry.hub.docker.com", "dockerhub") {
             app.tag("daily-${commit_id}")
             app.push()
         }

@@ -11,8 +11,9 @@ node("slave") {
         archive "${env.JOB_BASE_NAME}/target/*.jar"
             
     stage "Build docker image"
-        dir("${env.JOB_BASE_NAME}")
+        dir("${env.JOB_BASE_NAME}") {
             def app = docker.build("egovio/${env.JOB_BASE_NAME}")
+        }
 
     stage "Push to docker hub"
         app.push("daily-${commit_id}")

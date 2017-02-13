@@ -1,14 +1,19 @@
 node("slave") {
 	stage "Build"
 	    checkout scm
-            docker.image("egovio/ci").inside {
+	    sh "git rev-parse --short HEAD > .git/commit-id".trim()
+        def commit_id = readFile('.git/commit-id')
+        docker.image("egovio/ci").inside {
                 sh "cd ${env.JOB_BASE_NAME}; mvn clean package;"
-            }
+        }
 
-	    stage "Results"
-            archive "${env.JOB_BASE_NAME}/target/*.jar"
+	stage "Results"
+        archive "${env.JOB_BASE_NAME}/target/*.jar"
             
-        stage "Publish to docker hub" 
-            echo "publishing docker image"
+    stage "Build docker image"
+        def app = docker.build("egovio/${env.JOB_BASE_NAME}")
+
+    stage "Push to docker hub"
+        app.push("daily-${commit_id}")
         
 }

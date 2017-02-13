@@ -1,10 +1,8 @@
 package org.egov.filestore.web.controller;
 
-import org.apache.commons.io.FileUtils;
 import org.egov.filestore.domain.service.StorageService;
 import org.egov.filestore.web.contract.File;
 import org.egov.filestore.web.contract.StorageResponse;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,9 +42,10 @@ public class StorageController {
     @ResponseBody
     public StorageResponse storeFiles(@RequestParam("file") List<MultipartFile> files,
                                       @RequestParam("jurisdictionId") String jurisdictionId,
-                                      @RequestParam("module") String module) throws IOException {
+                                      @RequestParam("module") String module,
+                                      @RequestParam(value = "tag", required = false) String tag ) throws IOException {
 
-        return getStorageResponse(storageService.save(files, jurisdictionId, module));
+        return getStorageResponse(storageService.save(files, jurisdictionId, module, tag));
     }
 
     private StorageResponse getStorageResponse(List<String> fileStorageIds) {

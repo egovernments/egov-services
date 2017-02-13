@@ -34,6 +34,7 @@ public class StorageControllerTest {
 
     private static final String MODULE = "module";
     private static final String JURISDICTION_ID = "jurisdictionId";
+    private static final String TAG = "tag";
     @Autowired
     private MockMvc mockMvc;
 
@@ -46,7 +47,7 @@ public class StorageControllerTest {
         MockMultipartFile mockJpegImageFile = new MockMultipartFile("file", "this is an image.jpeg", "image/jpeg", "image content".getBytes());
         MockMultipartFile mockPdfDocumentFile = new MockMultipartFile("file", "lease_agreement.pdf", "application/pdf", "pdf content".getBytes());
 
-        when(storageService.save(Arrays.asList(mockJpegImageFile, mockPdfDocumentFile), JURISDICTION_ID, MODULE)).thenReturn(Arrays.asList("fileStoreId1", "fileStoreId2"));
+        when(storageService.save(Arrays.asList(mockJpegImageFile, mockPdfDocumentFile), JURISDICTION_ID, MODULE, TAG)).thenReturn(Arrays.asList("fileStoreId1", "fileStoreId2"));
 
         mockMvc.perform(
             fileUpload("/files")
@@ -54,13 +55,14 @@ public class StorageControllerTest {
                 .file(mockPdfDocumentFile)
                 .param("jurisdictionId", JURISDICTION_ID)
                 .param("module", MODULE)
+                .param("tag", TAG)
         )
         .andExpect(status().isCreated())
         .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
         .andExpect(content().json(expectedJson()));
 
         verify(storageService)
-                .save(Arrays.asList(mockJpegImageFile, mockPdfDocumentFile), JURISDICTION_ID, MODULE);
+                .save(Arrays.asList(mockJpegImageFile, mockPdfDocumentFile), JURISDICTION_ID, MODULE, TAG);
     }
 
     @Test

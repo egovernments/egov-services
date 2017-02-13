@@ -33,6 +33,8 @@ public class ArtifactRepositoryTest {
 
     private final String JURISDICTION_ID = "jurisdictionId";
     private final String MODULE = "module";
+    private final String TAG = "tag";
+
     private ArtifactRepository artifactRepository;
 
     @Before
@@ -62,6 +64,7 @@ public class ArtifactRepositoryTest {
         assertEquals("image/png", listArgumentCaptor.getValue().get(0).getContentType());
         assertEquals(JURISDICTION_ID, listArgumentCaptor.getValue().get(0).getJurisdictionId());
         assertEquals(MODULE, listArgumentCaptor.getValue().get(0).getModule());
+        assertEquals(TAG, listArgumentCaptor.getValue().get(0).getTag());
         assertEquals("filename2.extension", listArgumentCaptor.getValue().get(1).getFileName());
 
     }
@@ -92,8 +95,8 @@ public class ArtifactRepositoryTest {
         when(multipartFile2.getOriginalFilename()).thenReturn("filename2.extension");
 
         return Arrays.asList(
-                new org.egov.filestore.domain.model.Artifact(multipartFile1, UUID.randomUUID().toString(), MODULE, JURISDICTION_ID),
-                new org.egov.filestore.domain.model.Artifact(multipartFile2, UUID.randomUUID().toString(), MODULE, JURISDICTION_ID)
+                new org.egov.filestore.domain.model.Artifact(multipartFile1, UUID.randomUUID().toString(), MODULE, JURISDICTION_ID, TAG),
+                new org.egov.filestore.domain.model.Artifact(multipartFile2, UUID.randomUUID().toString(), MODULE, JURISDICTION_ID, TAG)
         );
     }
 }

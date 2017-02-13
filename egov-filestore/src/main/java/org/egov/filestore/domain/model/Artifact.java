@@ -13,6 +13,6 @@ public class Artifact {
     private String fileStoreId;
     private String module;
     private String jurisdictionId;
-
+    private String tag;
 }
 

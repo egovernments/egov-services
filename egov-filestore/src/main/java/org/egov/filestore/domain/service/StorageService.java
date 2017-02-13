@@ -24,21 +24,23 @@ public class StorageService {
         this.idGeneratorService = idGeneratorService;
     }
 
-    public List<String> save(List<MultipartFile> filesToStore, String jurisdictionId, String module) {
+    public List<String> save(List<MultipartFile> filesToStore, String jurisdictionId, String module, String tag) {
         List<Artifact> artifacts =
-                mapFilesToArtifacts(filesToStore, jurisdictionId, module);
+                mapFilesToArtifacts(filesToStore, jurisdictionId, module, tag);
         return this.artifactRepository.save(artifacts);
     }
 
     private List<Artifact> mapFilesToArtifacts(List<MultipartFile> files,
                                                String jurisdictionId,
-                                               String module) {
+                                               String module,
+                                               String tag) {
         return files.stream()
                 .map(file -> Artifact.builder()
                         .multipartFile(file)
                         .fileStoreId(this.idGeneratorService.getId())
                         .module(module)
                         .jurisdictionId(jurisdictionId)
+                        .tag(tag)
                         .build())
                 .collect(Collectors.toList());
     }

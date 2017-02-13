@@ -30,6 +30,7 @@ public class DiskFileStoreRepositoryTest {
     private final String FILE_STORAGE_MOUNT_PATH = "some_path";
     private final String TENANT_ID = "tenant_id";
     private final String MODULE = "module_id";
+    private final String TAG = "tag";
     private DiskFileStoreRepository diskFileStoreRepository;
 
     @Before
@@ -44,8 +45,8 @@ public class DiskFileStoreRepositoryTest {
         String fileStoreId2 = UUID.randomUUID().toString();
         String fileStoreId1 = UUID.randomUUID().toString();
         List<Artifact> listOfMockedArtifacts = Arrays.asList(
-                new Artifact(file1, fileStoreId1, MODULE, TENANT_ID),
-                new Artifact(file2, fileStoreId2, MODULE, TENANT_ID)
+                new Artifact(file1, fileStoreId1, MODULE, TENANT_ID, TAG),
+                new Artifact(file2, fileStoreId2, MODULE, TENANT_ID, TAG)
         );
 
         diskFileStoreRepository.write(listOfMockedArtifacts);

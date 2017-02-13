@@ -38,6 +38,7 @@ public class ArtifactRepository {
         artifactEntity.setContentType(artifact.getMultipartFile().getContentType());
         artifactEntity.setJurisdictionId(artifact.getJurisdictionId());
         artifactEntity.setModule(artifact.getModule());
+        artifactEntity.setTag(artifact.getTag());
         return artifactEntity;
     }
 

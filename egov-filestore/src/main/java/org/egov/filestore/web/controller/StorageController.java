@@ -17,7 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
 @Controller
 @RequestMapping("/files")
@@ -25,6 +25,7 @@ public class StorageController {
 
     private StorageService storageService;
     private String fileStoreHost;
+    private final static String PATH_SEPARATOR = "/";
 
     public StorageController(StorageService storageService,
                              @Value("${fileStoreHost}") String fileStoreHost) {
@@ -43,13 +44,13 @@ public class StorageController {
                 .body(resource.getResource());
     }
 
-    @GetMapping(produces = APPLICATION_JSON_VALUE)
+    @GetMapping(produces = APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public LocationResponse getUrlListByTag(@RequestParam("tag") String tag) {
         return getLocationResponse(storageService.retrieveByTag(tag));
     }
 
-    @PostMapping(produces = APPLICATION_JSON_VALUE)
+    @PostMapping(produces = APPLICATION_JSON_UTF8_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public StorageResponse storeFiles(@RequestParam("file") List<MultipartFile> files,
@@ -78,7 +79,6 @@ public class StorageController {
     }
 
     private String constructUrl(String fileStorageId) {
-        String PATH_SEPARATOR = "/";
         return String.format("%s%s%s%s%s", fileStoreHost, PATH_SEPARATOR, "files", PATH_SEPARATOR, fileStorageId);
     }
 

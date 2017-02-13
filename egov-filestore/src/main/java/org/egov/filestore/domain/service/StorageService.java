@@ -1,10 +1,10 @@
 package org.egov.filestore.domain.service;
 
 import org.egov.filestore.domain.model.Artifact;
+import org.egov.filestore.domain.model.FileLocation;
 import org.egov.filestore.domain.model.Resource;
 import org.egov.filestore.persistence.repository.ArtifactRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -47,5 +47,12 @@ public class StorageService {
 
     public Resource retrieve(String fileStoreId) {
         return artifactRepository.find(fileStoreId);
+    }
+
+    public List<String> retrieveByTag(String tag) {
+        return artifactRepository.findByTag(tag)
+                .stream()
+                .map(FileLocation::getFileStoreId)
+                .collect(Collectors.toList());
     }
 }

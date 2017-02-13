@@ -75,7 +75,7 @@ public class Artifact extends AbstractPersistable<Long> {
     private String tag;
 
     public FileLocation getFileLocation() {
-        return new FileLocation(fileStoreId, module, jurisdictionId);
+        return new FileLocation(fileStoreId, module, jurisdictionId, tag);
     }
 }
 

@@ -6,6 +6,7 @@ import org.egov.filestore.domain.service.StorageService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.io.FileSystemResource;
@@ -19,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.List;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -41,7 +43,6 @@ public class StorageControllerTest {
     @MockBean
     private StorageService storageService;
 
-
     @Test
     public void testUploadFile() throws Exception {
         MockMultipartFile mockJpegImageFile = new MockMultipartFile("file", "this is an image.jpeg", "image/jpeg", "image content".getBytes());
@@ -59,7 +60,7 @@ public class StorageControllerTest {
         )
         .andExpect(status().isCreated())
         .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-        .andExpect(content().json(expectedJson()));
+        .andExpect(content().json(getStorageResponse()));
 
         verify(storageService)
                 .save(Arrays.asList(mockJpegImageFile, mockPdfDocumentFile), JURISDICTION_ID, MODULE, TAG);
@@ -81,14 +82,38 @@ public class StorageControllerTest {
                 .andExpect(content().bytes(getExpectedBytes(fileSystemResource)));
     }
 
+    @Test
+    public void testRetrievingFilesListByTag() throws Exception {
+        List<String> fileStoreIdsList = Arrays.asList("fileStoreId1", "fileStoreId2");
+
+        when(storageService.retrieveByTag(TAG)).thenReturn(fileStoreIdsList);
+
+        mockMvc.perform(
+                get("/files?tag=" + TAG)
+        )
+        .andExpect(status().isOk())
+        .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+        .andExpect(content().json(getRetrieveByTagResponse()));
+
+        verify(storageService).retrieveByTag(TAG);
+    }
+
     private byte[] getExpectedBytes(Resource fileSystemResource) throws IOException {
         return IOUtils.toString(fileSystemResource.getInputStream(), "UTF-8").getBytes();
     }
 
-    private String expectedJson() {
+    private String getStorageResponse() {
+        return getFileContents("storageResponse.json");
+    }
+
+    private String getRetrieveByTagResponse() {
+        return getFileContents("retrieveByTagResponse.json");
+    }
+
+    private String getFileContents(String fileName) {
         try {
             return IOUtils.toString(this.getClass().getClassLoader()
-                    .getResourceAsStream("storageResponse.json"), "UTF-8");
+                    .getResourceAsStream(fileName), "UTF-8");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

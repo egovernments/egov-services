@@ -2,6 +2,7 @@ package org.egov.filestore.domain.service;
 
 
 import org.egov.filestore.domain.model.Artifact;
+import org.egov.filestore.domain.model.FileLocation;
 import org.egov.filestore.domain.model.Resource;
 import org.egov.filestore.persistence.repository.ArtifactRepository;
 import org.junit.Before;
@@ -63,6 +64,16 @@ public class StorageServiceTest {
         assertEquals(expectedResource, actualResource);
     }
 
+    @Test
+    public void shouldRetrieveListOfUrlsGivenATag() throws Exception {
+        List<FileLocation> listOfFileLOcations = getListOfFileLocations();
+        when(artifactRepository.findByTag(TAG)).thenReturn(listOfFileLOcations);
+
+        List<String> expected = storageService.retrieveByTag(TAG);
+
+        assertEquals(expected, Arrays.asList(FILE_STORE_ID_1, FILE_STORE_ID_2));
+    }
+
     private List<MultipartFile> getMockFileList() {
         MultipartFile multipartFile1 = new MockMultipartFile("file", "filename1.extension",
                 "mime type", "content".getBytes());
@@ -77,5 +88,12 @@ public class StorageServiceTest {
         Artifact artifact2 = new Artifact(multipartFiles.get(1), FILE_STORE_ID_2, MODULE, JURISDICTION_ID, TAG);
 
         return Arrays.asList(artifact1, artifact2);
+    }
+
+    private List<FileLocation> getListOfFileLocations() {
+        return Arrays.asList(
+                new FileLocation(FILE_STORE_ID_1, MODULE, JURISDICTION_ID, TAG),
+                new FileLocation(FILE_STORE_ID_2, MODULE, JURISDICTION_ID, TAG)
+        );
     }
 }

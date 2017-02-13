@@ -1,5 +1,6 @@
 package org.egov.filestore.persistence.repository;
 
+import org.egov.filestore.domain.model.FileLocation;
 import org.egov.filestore.domain.model.Resource;
 import org.egov.filestore.persistence.entity.Artifact;
 import org.springframework.stereotype.Repository;
@@ -46,5 +47,20 @@ public class ArtifactRepository {
         Artifact artifact = fileStoreJpaRepository.findByFileStoreId(fileStoreId);
         org.springframework.core.io.Resource resource = diskFileStoreRepository.read(artifact.getFileLocation());
         return new Resource(artifact.getContentType(), artifact.getFileName(), resource);
+    }
+
+    public List<FileLocation> findByTag(String tag) {
+        return fileStoreJpaRepository.findByTag(tag).stream()
+                .map(this::mapArtifactToFileLocation)
+                .collect(Collectors.toList());
+    }
+
+    private FileLocation mapArtifactToFileLocation(Artifact artifact) {
+        return new FileLocation(
+                artifact.getFileStoreId(),
+                artifact.getModule(),
+                artifact.getJurisdictionId(),
+                artifact.getTag()
+        );
     }
 }

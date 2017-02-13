@@ -57,7 +57,7 @@ public class DiskFileStoreRepositoryTest {
 
     @Test
     public void shouldReturnResourceForGivenPath() {
-        FileLocation fileLocation = new FileLocation("fileStoreId", MODULE, TENANT_ID);
+        FileLocation fileLocation = new FileLocation("fileStoreId", MODULE, TENANT_ID, TAG);
         Resource expectedResource = mock(Resource.class);
         when(fileRepository.read(Paths.get(FILE_STORAGE_MOUNT_PATH, TENANT_ID, MODULE, "fileStoreId")))
                 .thenReturn(expectedResource);

@@ -1,5 +1,6 @@
 package org.egov.filestore.persistence.repository;
 
+import org.egov.filestore.domain.model.FileLocation;
 import org.egov.filestore.domain.model.Resource;
 import org.egov.filestore.persistence.entity.Artifact;
 import org.junit.Before;
@@ -34,6 +35,8 @@ public class ArtifactRepositoryTest {
     private final String JURISDICTION_ID = "jurisdictionId";
     private final String MODULE = "module";
     private final String TAG = "tag";
+    private final String FILE_STORE_ID_1 = "fileStoreId1";
+    private final String FILE_STORE_ID_2 = "fileStoreId2";
 
     private ArtifactRepository artifactRepository;
 
@@ -86,6 +89,16 @@ public class ArtifactRepositoryTest {
         assertEquals(actualResource.getResource(), mockedResource);
     }
 
+    @Test
+    public void shouldRetrieveArtifactMetaDataForGivenTag() {
+        when(fileStoreJpaRepository.findByTag(TAG)).thenReturn(getListOfArtifactEntities());
+
+        List<FileLocation> actual = artifactRepository.findByTag(TAG);
+
+        assertEquals(actual, getListOfFileLocations());
+        verify(fileStoreJpaRepository).findByTag(TAG);
+    }
+
     private List<org.egov.filestore.domain.model.Artifact> getListOfArtifacts() {
         MultipartFile multipartFile1 = mock(MultipartFile.class);
         MultipartFile multipartFile2 = mock(MultipartFile.class);
@@ -97,6 +110,31 @@ public class ArtifactRepositoryTest {
         return Arrays.asList(
                 new org.egov.filestore.domain.model.Artifact(multipartFile1, UUID.randomUUID().toString(), MODULE, JURISDICTION_ID, TAG),
                 new org.egov.filestore.domain.model.Artifact(multipartFile2, UUID.randomUUID().toString(), MODULE, JURISDICTION_ID, TAG)
+        );
+    }
+
+    private List<Artifact> getListOfArtifactEntities() {
+        return Arrays.asList(
+                new Artifact() {{
+                    setFileStoreId(FILE_STORE_ID_1);
+                    setJurisdictionId(JURISDICTION_ID);
+                    setModule(MODULE);
+                    setTag(TAG);
+                }},
+
+                new Artifact() {{
+                    setFileStoreId(FILE_STORE_ID_2);
+                    setJurisdictionId(JURISDICTION_ID);
+                    setModule(MODULE);
+                    setTag(TAG);
+                }}
+        );
+    }
+
+    private List<FileLocation> getListOfFileLocations() {
+        return Arrays.asList(
+                new FileLocation(FILE_STORE_ID_1, MODULE, JURISDICTION_ID, TAG),
+                new FileLocation(FILE_STORE_ID_2, MODULE, JURISDICTION_ID, TAG)
         );
     }
 }

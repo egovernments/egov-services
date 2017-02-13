@@ -1,24 +1,25 @@
 node("slave") {
     def app = "";
-	stage "Build"
+	stage("Build"){
 	    checkout scm
 	    sh "git rev-parse --short HEAD > .git/commit-id".trim()
         def commit_id = readFile('.git/commit-id')
         docker.image("egovio/ci").inside {
                 sh "cd ${env.JOB_BASE_NAME}; mvn clean package;"
         }
+    }
 
-	stage "Results"
+	stage("Archive Results"){
         archive "${env.JOB_BASE_NAME}/target/*.jar"
+    }
 
     docker.withRegistry("https://registry.hub.docker.com", "dockerhub") {
-        stage "Build docker image"
+        stage("Build and publish docker image"){
             dir("${env.JOB_BASE_NAME}") {
                 app = docker.build("egovio/${env.JOB_BASE_NAME}")
+                app.tag("daily-${commit_id}")
+                app.push()
             }
-
-        stage "Push to docker hub"
-            app.tag("daily-${commit_id}")
-            app.push()
+        }
     }
 }

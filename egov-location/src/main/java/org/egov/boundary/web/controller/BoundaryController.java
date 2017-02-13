@@ -1,6 +1,7 @@
 package org.egov.boundary.web.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -91,6 +93,18 @@ public class BoundaryController {
 		responseInfo.setStatus(HttpStatus.CREATED.toString());
 		boundaryResponse.setResponseInfo(responseInfo);
 		return new ResponseEntity<BoundaryResponse>(boundaryResponse, HttpStatus.OK);
+	}
+	
+	
+	@GetMapping("/getLocationByLocationName")
+	@ResponseBody
+	public ResponseEntity<?> getLocation(@RequestParam("locationName") final String locationName) {
+		try {
+			final List<Map<String, Object>> list = boundaryService.getBoundaryDataByNameLike(locationName);
+			return new ResponseEntity<List<Map<String, Object>>>(list, HttpStatus.OK);
+		} catch (final Exception e) {
+			return new ResponseEntity<String>("error in request", HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	private ErrorResponse populateErrors(BindingResult errors) {

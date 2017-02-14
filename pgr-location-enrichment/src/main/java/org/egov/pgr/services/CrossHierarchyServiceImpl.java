@@ -16,7 +16,7 @@ public class CrossHierarchyServiceImpl implements CrossHierarchyService {
 	@Override
 	public CrossHierarchyResponse fetchCrossHierarchyById(RequestInfo requestInfo, String crossHierarchyId) {
 		String url = crossHierarchyServiceHost + "v1/location/crosshierarchys?crossHierarchy.id={crossHierarchyId}";
-		return getCrossHierarchyServiceResponse(url, "", "", crossHierarchyId).getCrossHierarchys().get(0);
+		return getCrossHierarchyServiceResponse(url, crossHierarchyId).getCrossHierarchys().get(0);
 	}
 
 	private CrossHierarchyServiceResponse getCrossHierarchyServiceResponse(final String url, String... args) {

@@ -22,7 +22,7 @@ node("slave") {
         }
 
         stage("Build publish docker image"){
-            app.push()
+            app.push("${env.BUILD_ID}-${commit-id}")
         }
     }
 

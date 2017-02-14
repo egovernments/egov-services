@@ -22,12 +22,7 @@ node("slave") {
         }
 
         stage("Build publish docker image"){
-            sh "docker tag egovio/${env.JOB_BASE_NAME} egovio/${env.JOB_BASE_NAME}:${env.BUILD_ID}-${commit_id}"
             app.push()
         }
-    }
-
-    stage("Finished"){
-        echo "Finished"
     }
 }

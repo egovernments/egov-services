@@ -14,7 +14,7 @@ Request Body
 
 | Field | Description |
 | ------ | ------ |
-| files | Files to upload |
+| file | Files to upload |
 | jurisdictionId | Jurisdiction ID (Required Field) |
 | module | Name of the module where this request is coming from. (Required Field) |
 | tag | Tag (Optional Field) |

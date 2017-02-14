@@ -6,7 +6,14 @@ node("slave") {
 	    sh "git rev-parse --short HEAD > .git/commit-id".trim()
         commit_id = readFile('.git/commit-id')
         docker.image("egovio/ci").inside {
-                sh "cd ${env.JOB_BASE_NAME}; mvn clean package;"
+                dir("${env.JOB_BASE_NAME}"){
+                    def settings_exists = fileExists("settings.xml");
+                    if (settings_exists){
+                        sh "mvn clean package -s settings.xml";
+                    } else {
+                        sh "mvn clean package";
+                    }
+                }
         }
     }
 

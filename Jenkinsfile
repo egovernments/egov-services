@@ -15,11 +15,14 @@ node("slave") {
     }
 
     docker.withRegistry("https://registry.hub.docker.com", "dockerhub") {
-        stage("Build and publish docker image"){
+        stage("Build docker image"){
             dir("${env.JOB_BASE_NAME}") {
                 app = docker.build("egovio/${env.JOB_BASE_NAME}")
-                app.push()
             }
+        }
+
+        stage("Build publish docker image"){
+            app.push()
         }
     }
 

@@ -1,6 +1,7 @@
 node("slave") {
     def app = "";
     def commit_id="";
+    echo "${env.JOB_BASE_NAME}"
     def service_name = "${env.JOB_BASE_NAME}".split("/")[-2];
 	stage("Build"){
 	    checkout scm

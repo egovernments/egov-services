@@ -5,6 +5,7 @@ import lombok.Getter;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,8 +13,9 @@ import java.util.stream.Collectors;
 @Getter
 @AllArgsConstructor
 public class CreateMessagesRequest {
-    @NotEmpty
-    private String jurisdictionId;
+    @Valid
+    @NotNull
+    private RequestInfo requestInfo;
     @NotEmpty
     private String locale;
     @Size(min = 1)
@@ -30,7 +32,7 @@ public class CreateMessagesRequest {
         return org.egov.persistence.entity.Message.builder()
                 .code(contractMessage.getCode())
                 .message(contractMessage.getMessage())
-                .jurisdictionId(jurisdictionId)
+                .tenantId(requestInfo.getTenantId())
                 .locale(locale)
                 .build();
     }

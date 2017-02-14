@@ -28,6 +28,6 @@ public class Message {
     @Column(name = "message")
     private String message;
 
-    @Column(name = "jurisdiction_id")
-    private String jurisdictionId;
+    @Column(name = "tenant_id")
+    private String tenantId;
 }

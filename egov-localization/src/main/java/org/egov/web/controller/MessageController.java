@@ -26,8 +26,8 @@ public class MessageController {
 
     @GetMapping()
     public MessagesResponse getMessagesForLocale(@RequestParam("locale") String locale,
-                                                 @RequestParam("jurisdictionId") String jurisdictionId) {
-        final List<Message> messages = getMessages(locale, jurisdictionId);
+                                                 @RequestParam("tenantId") String tenantId) {
+        final List<Message> messages = getMessages(locale, tenantId);
         return new MessagesResponse(messages);
     }
 
@@ -50,7 +50,7 @@ public class MessageController {
     }
 
     private List<Message> getMessages(String locale, String jurisdictionId) {
-        return mapToContractMessages(messageRepository.findByJurisdictionIdAndLocale(jurisdictionId, locale));
+        return mapToContractMessages(messageRepository.findByTenantIdAndLocale(jurisdictionId, locale));
     }
 
 }

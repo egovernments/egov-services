@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface MessageRepository extends JpaRepository<Message, Long> {
-    List<Message> findByTenantIdAndLocale(String jurisdictionId, String locale);
+    List<Message> findByTenantIdAndLocale(String tenantId, String locale);
 }

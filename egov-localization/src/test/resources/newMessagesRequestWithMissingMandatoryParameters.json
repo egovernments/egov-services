@@ -1,0 +1,16 @@
+{
+  "requestInfo": {
+    "tenantId": null
+  },
+  "locale": null,
+  "messages": [
+    {
+      "code": "code1",
+      "message": "message1"
+    },
+    {
+      "code": null,
+      "message": null
+    }
+  ]
+}

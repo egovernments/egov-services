@@ -6,6 +6,7 @@ import org.egov.web.contract.Message;
 import org.egov.web.contract.MessagesResponse;
 import org.egov.web.exception.InvalidCreateMessageRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,6 +33,7 @@ public class MessageController {
     }
 
     @PostMapping()
+    @ResponseStatus(HttpStatus.CREATED)
     public MessagesResponse createMessages(@Valid @RequestBody CreateMessagesRequest messageRequest,
                                            BindingResult bindingResult) {
         if (bindingResult.hasErrors())
@@ -49,8 +51,8 @@ public class MessageController {
                 .collect(Collectors.toList());
     }
 
-    private List<Message> getMessages(String locale, String jurisdictionId) {
-        return mapToContractMessages(messageRepository.findByTenantIdAndLocale(jurisdictionId, locale));
+    private List<Message> getMessages(String locale, String tenantId) {
+        return mapToContractMessages(messageRepository.findByTenantIdAndLocale(tenantId, locale));
     }
 
 }

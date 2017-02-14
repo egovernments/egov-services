@@ -1,5 +1,6 @@
 package org.egov.filestore.persistence.repository;
 
+import org.egov.filestore.domain.exception.ArtifactNotFoundException;
 import org.egov.filestore.domain.model.FileLocation;
 import org.egov.filestore.domain.model.Resource;
 import org.egov.filestore.persistence.entity.Artifact;
@@ -45,6 +46,9 @@ public class ArtifactRepository {
 
     public Resource find(String fileStoreId) {
         Artifact artifact = fileStoreJpaRepository.findByFileStoreId(fileStoreId);
+        if(artifact == null)
+            throw new ArtifactNotFoundException(fileStoreId);
+
         org.springframework.core.io.Resource resource = diskFileStoreRepository.read(artifact.getFileLocation());
         return new Resource(artifact.getContentType(), artifact.getFileName(), resource);
     }

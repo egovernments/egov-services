@@ -2,6 +2,7 @@ package org.egov.filestore.web.controller;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.egov.filestore.domain.exception.ArtifactNotFoundException;
 import org.egov.filestore.domain.service.StorageService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -93,6 +94,13 @@ public class StorageControllerTest {
                 .andExpect(content().json(getRetrieveByTagResponse()));
 
         verify(storageService).retrieveByTag(TAG);
+    }
+
+    @Test
+    public void test400WhenFileIsNotFound() throws Exception {
+        when(storageService.retrieve("fileStoreId")).thenThrow(new ArtifactNotFoundException("fileStoreId"));
+
+        mockMvc.perform(get("/files/fileStoreId")).andExpect(status().isNotFound());
     }
 
     private byte[] getExpectedBytes(Resource fileSystemResource) throws IOException {

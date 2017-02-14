@@ -1,5 +1,6 @@
 package org.egov.filestore.persistence.repository;
 
+import org.egov.filestore.domain.exception.ArtifactNotFoundException;
 import org.egov.filestore.domain.model.FileLocation;
 import org.egov.filestore.domain.model.Resource;
 import org.egov.filestore.persistence.entity.Artifact;
@@ -87,6 +88,13 @@ public class ArtifactRepositoryTest {
         assertEquals(actualResource.getContentType(), "contentType");
         assertEquals(actualResource.getFileName(), "fileName");
         assertEquals(actualResource.getResource(), mockedResource);
+    }
+
+    @Test(expected = ArtifactNotFoundException.class)
+    public void shouldRaiseExceptionWhenArtifactNotFound() throws Exception {
+        when(fileStoreJpaRepository.findByFileStoreId("fileStoreId")).thenReturn(null);
+
+        artifactRepository.find("fileStoreId");
     }
 
     @Test

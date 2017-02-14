@@ -25,7 +25,7 @@ node("slave") {
 
     docker.withRegistry("https://registry.hub.docker.com", "dockerhub") {
         stage("Build docker image"){
-            dir("${env.service_name}") {
+            dir("${service_name}") {
                 app = docker.build("egovio/${service_name}")
             }
         }

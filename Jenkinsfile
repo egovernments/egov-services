@@ -1,8 +1,8 @@
 node("slave") {
     def app = "";
     def commit_id="";
-    echo "${env.JOB_BASE_NAME}"
-    def service_name = "${env.JOB_BASE_NAME}".split("/")[-2];
+    echo "${env.JOB_NAME}"
+    def service_name = "${env.JOB_NAME}".split("/")[-2];
 	stage("Build"){
 	    checkout scm
 	    sh "git rev-parse --short HEAD > .git/commit-id".trim()

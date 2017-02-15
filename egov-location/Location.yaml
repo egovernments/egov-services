@@ -1,0 +1,667 @@
+swagger: '2.0'
+info:
+  version: 0.0.0
+  title: Location Service
+host: phoenix-qa.egovernments.org
+schemes:
+  - https
+basePath: '/v1/[API endpoint]'
+
+paths:
+  /hierarchyType:
+    get:
+      summary: List of Hierarchy Types Like "ADMIN","LOCATION", "REVENUE" etc.
+      description: >
+        Provides a list of available Hierarchy Type and their associated
+         codes. These request types can be unique to each tenant.
+      parameters:
+        - name: request_info
+          in: body
+          description: Commmon Request info for the Services.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - name: tenant_id
+          in: query
+          description: Unique id for for a tenant.
+          required: true
+          type: string
+          format: varchar
+      tags:
+        - Hierarchy List
+      responses:
+        '200':
+          description: HierarchyType
+          schema:
+            $ref: '#/definitions/HierarchyTypeResponse'
+        '400':
+          description: tenantid was not provided or General service error
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        '404':
+          description: tenantid provided was not found
+          schema:
+            $ref: '#/definitions/ErrorRes'
+    post:
+      summary: Create Hierarchy Type
+      description: To create a new HierarchyType.
+      parameters:
+        - name: hierarchyType
+          in: body
+          description: Details for the new Hierarchy Type .
+          required: true
+          schema:
+            $ref: '#/definitions/HierarchyTypeRequest'
+        - name: tenant_id
+          in: query
+          description: Unique id for tenant.
+          required: true
+          type: string
+          format: varchar
+      tags:
+        - Hierarchy
+      responses:
+        '201':
+          description: Hierarchy Type created
+          schema:
+            $ref: '#/definitions/HierarchyTypeResponse'
+        '400':
+          description: tenantid was not provided or General service error
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        '404':
+          description: tenantid provided was not found
+          schema:
+            $ref: '#/definitions/ErrorRes'
+  '/hierarchyType/{code}':
+    put:
+      summary: Update HierarchyType
+      description: To update an existing HierarchyType.
+      parameters:
+        - name: tenant_id
+          in: query
+          description: Unique id of tenant.
+          required: true
+          type: string
+          format: varchar
+        - name: code
+          in: path
+          description: Unique code for HierarchyType to be updated .
+          required: true
+          type: string
+          format: varchar
+        - name: service
+          in: body
+          description: Request header for the new Service Request.
+          required: true
+          schema:
+            $ref: '#/definitions/HierarchyTypeRequest'
+      tags:
+        - Hierarchy
+      responses:
+        '200':
+          description: service updated
+          schema:
+            $ref: '#/definitions/HierarchyTypeResponse'
+        '400':
+          description: jurisdiction_id was not provided or General service error
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        '404':
+          description: jurisdiction_id provided was not found
+          schema:
+            $ref: '#/definitions/ErrorRes'
+  /boundaryType:
+    get:
+      summary: List of boundary Types Like "City","Zone", "Ward" etc.
+      description: >
+        Provides a list of available boundary Type and their associated
+         codes. These request types can be unique to each tenant.
+      parameters:
+        - name: request_info
+          in: body
+          description: Commmon Request info for the Services.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - name: tenant_id
+          in: query
+          description: Unique id for for a tenant.
+          required: true
+          type: string
+          format: varchar
+      tags:
+        - boundary List
+      responses:
+        '200':
+          description: boundaryType
+          schema:
+            $ref: '#/definitions/BoundaryTypeResponse'
+        '400':
+          description: tenantid was not provided or General service error
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        '404':
+          description: tenantid provided was not found
+          schema:
+            $ref: '#/definitions/ErrorRes'
+    post:
+      summary: Create boundary Type
+      description: To create a new boundaryType.
+      parameters:
+        - name: boundaryType
+          in: body
+          description: Details for the new boundary Type .
+          required: true
+          schema:
+            $ref: '#/definitions/BoundaryTypeRequest'
+        - name: tenant_id
+          in: query
+          description: Unique id for tenant.
+          required: true
+          type: string
+          format: varchar
+      tags:
+        - boundary
+      responses:
+        '201':
+          description: boundary Type created
+          schema:
+            $ref: '#/definitions/BoundaryTypeResponse'
+        '400':
+          description: tenantid was not provided or General service error
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        '404':
+          description: tenantid provided was not found
+          schema:
+            $ref: '#/definitions/ErrorRes'
+  /boundaryType/{id}:
+    put:
+      summary: Update boundaryType
+      description: To update an existing boundaryType.
+      parameters:
+        - name: tenant_id
+          in: query
+          description: Unique id of tenant.
+          required: true
+          type: string
+          format: varchar
+        - name: id
+          in: path
+          description: Unique code for boundaryType to be updated .
+          required: true
+          type: string
+          format: varchar
+        - name: service
+          in: body
+          description: Request header for the new Service Request.
+          required: true
+          schema:
+            $ref: '#/definitions/BoundaryTypeRequest'
+      tags:
+        - boundary
+      responses:
+        '200':
+          description: service updated
+          schema:
+            $ref: '#/definitions/BoundaryTypeResponse'
+        '400':
+          description: jurisdiction_id was not provided or General service error
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        '404':
+          description: jurisdiction_id provided was not found
+          schema:
+            $ref: '#/definitions/ErrorRes'
+  /boundaries:
+    get:
+      summary: List of boundaries for the given query parameters.
+      description: >
+        Provides a list of available boundary  and their associated
+         id's. These request types can be unique to each tenant.
+      parameters:
+        - name: request_info
+          in: body
+          description: Commmon Request info for the Services.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - name: tenant_id
+          in: query
+          description: Unique id for for a tenant.
+          required: true
+          type: string
+          format: varchar
+        - name: id
+          in: query
+          description: Unique id for for a boundary.
+          required: true
+          type: string
+          format: varchar
+        - name: latitude
+          in: query
+          description: latitude of the boundary.
+          required: true
+          type: string
+          format: varchar
+        - name: longitude
+          in: query
+          description: longitude of the boundary.
+          required: true
+          type: string
+          format: varchar
+        - name: Name
+          in: query
+          description: longitude of the boundary.
+          required: true
+          type: string
+          format: varchar
+        - name: boundaryTypeCode
+          in: query
+          description: BoundaryType of the boundary.
+          required: true
+          type: string
+          format: varchar
+        - name: HierarchyTypeCode
+          in: query
+          description: Hierarchy of the boundary.
+          required: true
+          type: string
+          format: varchar
+        - name: parentBoundaryCode
+          in: query
+          description: the code of parent boundary for which we anted child boundaries in the response.
+          required: true
+          type: string
+          format: varchar  
+        - name: orderBy
+          in: query
+          description: Hierarchy of the boundary.
+          required: true
+          type: string
+          format: varchar
+        - name: fieldArray
+          in: query
+          description: Set Of Fields Required in the Response.
+          required: true
+          type: string
+          format: varchar
+      tags:
+        - boundary List
+      responses:
+        '200':
+          description: boundary
+          schema:
+            $ref: '#/definitions/BoundaryResponse'
+        '400':
+          description: tenantid was not provided or General service error
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        '404':
+          description: tenantid provided was not found
+          schema:
+            $ref: '#/definitions/ErrorRes'
+
+  /crossHierarchy:
+    get:
+      summary: List of cross Hierarchy data for the given query parameters.
+      description: >
+        Provides a list of available boundary  and their associated
+         id's. These request types can be unique to each tenant.
+      parameters:
+        - name: request_info
+          in: body
+          description: Commmon Request info for the Services.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - name: parentType
+          in: query
+          description: BoundaryType of the parent Boundary.
+          required: true
+          type: string
+          format: varchar
+        - name: childType
+          in: query
+          description: BoundaryType of the child Boundary.
+          required: true
+          type: string
+          format: varchar
+      tags:
+        - boundary List
+      responses:
+        '200':
+          description: boundary
+          schema:
+            $ref: '#/definitions/CrossHierarchyResponse'
+        '400':
+          description: tenantid was not provided or General service error
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        '404':
+          description: tenantid provided was not found
+          schema:
+            $ref: '#/definitions/ErrorRes'
+
+
+  /boundary:
+    post:
+      summary: Creates a boundary
+      description: Creates a boundary.
+      parameters:
+        - $ref: "#/parameters/tenant_id"
+        - name: boundary
+          in: body
+          description: The boundary to create boundary.
+          required: true
+          schema:
+            $ref: '#/definitions/BoundaryRequest'
+      tags:
+        - BOUNDARY
+      responses:
+        '201':
+          description: Boundary created succesfully.
+          schema:
+            $ref: '#/definitions/BoundaryResponse'
+        '400':
+          description: Boundary couldn't have been created.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        '404':
+          description:  Not able to update boundary.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+          
+  /boundary/{id}:
+    put:
+      summary: Update boundary
+      description: To update an existing boundary.
+      parameters:
+        - name: tenant_id
+          in: query
+          description: Unique id of tenant.
+          required: true
+          type: string
+          format: varchar
+        - name: id
+          in: path
+          description: Unique code for boundary to be updated .
+          required: true
+          type: string
+          format: varchar
+        - name: boundary
+          in: body
+          description: Request header for the new Service Request.
+          required: true
+          schema:
+            $ref: '#/definitions/BoundaryRequest'
+      tags:
+        - boundary
+      responses:
+        '200':
+          description: Boundary updated
+          schema:
+            $ref: '#/definitions/BoundaryResponse'
+        '400':
+          description: tenant_id was not provided or General service error
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        '404':
+          description: tenant_id provided was not found
+          schema:
+            $ref: '#/definitions/ErrorRes'
+  
+            
+
+definitions:
+  HierarchyType :
+    type: object
+    properties:
+      id:
+        type: string
+        description: unique id for the HierarchyType.
+      code:
+        type: string
+        description: Unique Code for HierarchyType.Type
+      name:
+        type: string
+        format: date
+        description: HierarchyType Name.
+      loalname:
+        type: string
+        format: date
+        description: Local HierarchyType name .
+      
+  BoundaryType :
+    type: object
+    properties:
+      id:
+        type: string
+        description: boundary number of the boundary.
+      name:
+        type: string
+        format: date
+      parent:
+        $ref: '#/definitions/BoundaryType' 
+      hierarchyType:
+        $ref: '#/definitions/HierarchyType' 
+  Boundary:
+    type: object
+    properties:
+      id:
+        type: string
+        description: unique id for the boundary.
+      name:
+        type: string
+        description: name of the boundary.
+      parent:
+        $ref: '#/definitions/Boundary'
+      boundary_num:
+        type: string
+        description: boundary number of the boundary.
+      from_date:
+        type: string
+        format: date
+        description: from date of the boundary.
+      to_date:
+        type: string
+        format: date
+        description: to date of the boundary.
+      is_history:
+        type: string
+        description: is history of the boundary.
+      bndry_id:
+        type: string
+        description: bndry Id of the boundary.
+      local_name:
+        type: string
+        description: local name of the boundary.
+      longitude:
+        type: string
+        description: longitude of the boundary.
+      latitude:
+        type: string
+        description: latitude of the boundary.
+      boundaryType:
+        $ref: '#/definitions/BoundaryType' 
+      materialized_path:
+        type: string
+        description: materialized path of the boundary.
+        
+  CrossHierarchy :
+    type: object
+    properties:
+      id:
+        type: string
+        description: unique id for the cross hierarchy.
+      parent:
+        type: string
+        description: parent name for the cross hierarchy.
+      child:
+        type: string
+        description: child name for the cross hierarchy.
+
+  CrossHierarchyResponse:
+    properties:
+      RequestInfo:
+        $ref: '#/definitions/ResponseInfo'
+      HierarchyType:
+        $ref: '#/definitions/CrossHierarchy'
+    type: object
+        
+  HierarchyTypeRequest:
+    properties:
+      RequestInfo:
+        $ref: '#/definitions/RequestInfo'
+      HierarchyType:
+        $ref: '#/definitions/HierarchyType'
+    type: object
+      
+  
+        
+  HierarchyTypeResponse:
+    properties:
+      ResponseInfo:
+        $ref: '#/definitions/ResponseInfo'
+      HierarchyType:
+        type: array
+        items:
+          $ref: '#/definitions/HierarchyType'
+
+  BoundaryTypeRequest:
+    properties:
+      RequestInfo:
+        $ref: '#/definitions/RequestInfo'
+      BoundaryType:
+        $ref: '#/definitions/BoundaryType'
+    type: object
+    
+  BoundaryTypeResponse:
+    properties:
+      ResponseInfo:
+        $ref: '#/definitions/ResponseInfo'
+      BoundaryType:
+        type: array
+        items:
+          $ref: '#/definitions/BoundaryType'
+    type: object 
+      
+  BoundaryRequest:
+    properties:
+      RequestInfo:
+        $ref: '#/definitions/RequestInfo'
+      Boundary:
+          $ref: '#/definitions/Boundary'
+    type: object
+        
+  BoundaryResponse:
+    properties:
+      ResponseInfo:
+        $ref: '#/definitions/ResponseInfo'
+      Boundary:
+        type: array
+        items:
+          $ref: '#/definitions/Boundary'
+    type: object
+        
+  ErrorRes:
+    properties:
+      ResposneInfo:
+        $ref: '#/definitions/ResponseInfo'
+      Error:
+        $ref: '#/definitions/Error'
+    type: object
+    
+
+  RequestInfo:
+    type: object
+    properties:
+      api_id:
+        type: string
+        description: unique API ID
+      ver:
+        type: string
+        description: API version
+      ts:
+        type: string
+        format: date-time
+        description: >-
+          response timestamp YYYY-MM-DDThh:mm:ss+/-nn:nn (timezone defaulted to
+          +5.30)
+      action:
+        type: string
+        description: api action like GET/POST/PUT/DELETE in case of http calls
+      did:
+        type: string
+        description: device UUID from which API is called
+      key:
+        type: string
+        description: API key (dynamic)
+      msg_id:
+        type: string
+        description: 'unique request message id, UUID, for handling API idempotency'
+      requester_id:
+        type: string
+        description: UserId of the user calling
+      auth_token:
+        type: string
+        description: //session/jwt/saml token/oauth token
+    required:
+      - api_id
+      - ver
+      - ts
+      
+  ResponseInfo:
+    type: object
+    properties:
+      api_id:
+        type: string
+        description: unique API ID
+      ver:
+        type: string
+        description: API version
+      ts:
+        type: string
+        format: date-time
+        description: >-
+          response timestamp YYYY-MM-DDThh:mm:ss+/-nn:nn (timezone defaulted to
+          +5.30)
+      res_msg_id:
+        type: string
+        description: unique response message id (UUID)
+      msg_id:
+        type: string
+        description: message id of the request
+      status:
+        type: string
+        description: 'status of request e.g. successful, failed etc'
+    required:
+      - api_id
+      - ver
+      - ts
+      - status
+      
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+      description:
+        type: string
+      filelds:
+        type: object
+    required:
+      - code
+      - message
+      
+parameters:
+  tenant_id:
+    name: tenant_id
+    in: query
+    required: true
+    description: Combination of state name and ulb name
+    type: string

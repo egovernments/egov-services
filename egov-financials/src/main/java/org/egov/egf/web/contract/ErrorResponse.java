@@ -1,24 +1,14 @@
 package org.egov.egf.web.contract;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class ErrorResponse {
 
+	@JsonProperty("response_info")
 	private ResponseInfo responseInfo;
 
+	@JsonProperty("error")
 	private Error error;
 
-	public ResponseInfo getResponseInfo() {
-		return responseInfo;
-	}
-
-	public void setResponseInfo(ResponseInfo responseInfo) {
-		this.responseInfo = responseInfo;
-	}
-
-	public Error getError() {
-		return error;
-	}
-
-	public void setError(Error error) {
-		this.error = error;
-	}
+	
 }

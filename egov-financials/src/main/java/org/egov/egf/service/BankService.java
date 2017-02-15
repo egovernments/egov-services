@@ -3,13 +3,11 @@ package org.egov.egf.service;
 
 import java.util.List;
 
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import org.egov.egf.entity.BankEntity;
-import org.egov.egf.repository.BankRepository;
-
+import org.egov.egf.persistence.entity.Bank;
+import org.egov.egf.persistence.repository.BankRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -30,26 +28,26 @@ public class BankService  {
 	}
 
 	@Transactional
-	public BankEntity create(final BankEntity bank) {
+	public Bank create(final Bank bank) {
 		return bankRepository.save(bank);
 	} 
 	@Transactional
-	public BankEntity update(final BankEntity bank) {
+	public Bank update(final Bank bank) {
 		return bankRepository.save(bank);
 	} 
-	public List<BankEntity> findAll() {
+	public List<Bank> findAll() {
 		return bankRepository.findAll(new Sort(Sort.Direction.ASC, "name"));
 	}
-	public BankEntity findByName(String name){
+	public Bank findByName(String name){
 		return bankRepository.findByName(name);
 	}
-	public BankEntity findByCode(String code){
+	public Bank findByCode(String code){
 		return bankRepository.findByCode(code);
 	}
-	public BankEntity findOne(Long id){
+	public Bank findOne(Long id){
 		return bankRepository.findOne(id);
 	}
-	public List<BankEntity> search(BankEntity bank){
+	public List<Bank> search(Bank bank){
 		return bankRepository.findAll();
 	}
 }

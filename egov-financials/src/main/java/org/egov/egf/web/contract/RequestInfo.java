@@ -1,55 +1,32 @@
 package org.egov.egf.web.contract;
 
-public class RequestInfo extends Info {
+import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.Data;
+
+@Data
+public class RequestInfo {
 
 	private String action = null;
 
 	private String did = null;
 
-	private String msg_id = null;
+	private String msgId = null;
 
-	private String requester_id = null;
+	private String requesterId = null;
 
-	private String auth_token = null;
+	private String authToken = null;
 
-	public String getAction() {
-		return action;
-	}
+	private String apiId = null;
 
-	public void setAction(String action) {
-		this.action = action;
-	}
+	private String ver = null;
 
-	public String getDid() {
-		return did;
-	}
+	private Date ts = null;
 
-	public void setDid(String did) {
-		this.did = did;
-	}
+	private String key = null;
 
-	public String getMsg_id() {
-		return msg_id;
-	}
-
-	public void setMsg_id(String msg_id) {
-		this.msg_id = msg_id;
-	}
-
-	public String getRequester_id() {
-		return requester_id;
-	}
-
-	public void setRequester_id(String requester_id) {
-		this.requester_id = requester_id;
-	}
-
-	public String getAuth_token() {
-		return auth_token;
-	}
-
-	public void setAuth_token(String auth_token) {
-		this.auth_token = auth_token;
-	}
+	private String tenantId = null;
 
 }

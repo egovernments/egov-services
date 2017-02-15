@@ -1,24 +1,24 @@
 package org.egov.egf.web.contract;
 
-public class ResponseInfo extends Info {
+import java.util.Date;
+
+import lombok.Data;
+
+@Data
+public class ResponseInfo {
 
 	private String resMsgId = null;
+	
 	private String status = null;
 
-	public String getResMsgId() {
-		return resMsgId;
-	}
+	private String apiId = null;
 
-	public void setResMsgId(String resMsgId) {
-		this.resMsgId = resMsgId;
-	}
+	private String ver = null;
 
-	public String getStatus() {
-		return status;
-	}
+	private Date ts = null;
 
-	public void setStatus(String status) {
-		this.status = status;
-	}
+	private String key = null;
+
+	private String tenantId = null;
 
 }

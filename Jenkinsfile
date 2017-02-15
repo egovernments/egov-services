@@ -42,10 +42,8 @@ node("slave") {
 		    sh "docker push egovio/${service_name}:${commit_id}"
 		}
 	} catch (e) {
-	    currentBuild.result = "FAILED"
+	    notifyBuild("FAILED")
 	    throw e
-	} finally {
-	    notifyBuild(currentBuild.result)
 	}
 }
 

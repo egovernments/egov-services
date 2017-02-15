@@ -308,7 +308,6 @@ public class BoundaryService {
 		} else {
 			if (!StringUtils.isEmpty(boundaryRequest.getBoundary().getLatitude())
 					&& !StringUtils.isEmpty(boundaryRequest.getBoundary().getLongitude())) {
-
 				Boundary boundary = new Boundary();
 				boundary.setId(21l);
 				boundary.setBoundaryNum(11l);

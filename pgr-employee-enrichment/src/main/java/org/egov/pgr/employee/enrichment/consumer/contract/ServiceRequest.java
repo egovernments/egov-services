@@ -7,7 +7,7 @@ public class ServiceRequest {
     public static final String STATUS = "status";
     public static final String VALUES = "values";
     public static final String VALUES_LOCATION_ID = "location_id";
-    public static final String VALUES_ASSIGNEE_ID = "assignee_id";
+    public static final String VALUES_ASSIGNEE_ID = "assignment_id";
     public static final String VALUES_STATE_ID = "state_id";
 
 }

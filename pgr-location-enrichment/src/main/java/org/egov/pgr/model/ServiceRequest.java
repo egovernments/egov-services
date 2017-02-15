@@ -199,4 +199,9 @@ public class ServiceRequest {
     public Map<String, String> getValues() {
         return values;
     }
+
+    public void setValues(Map<String, String> values) {
+        this.values = values;
+    }
+
 }

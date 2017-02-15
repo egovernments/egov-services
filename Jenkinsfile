@@ -1,6 +1,5 @@
 node("slave") {
 	try {
-	    //notifyBuild('STARTED')
 	    def app = "";
 	    def commit_id="";
 	    echo "${env.JOB_NAME}"
@@ -48,11 +47,8 @@ node("slave") {
 	    }
 	} catch (e) {
 	    // If there was an exception thrown, the build failed
-	    currentBuild.result = "FAILED"
+	    notifyBuild("FAILED")
 	    throw e
-	} finally {
-	    // Success or failure, always send notifications
-	    notifyBuild(currentBuild.result)
 	}
 }
 

@@ -48,11 +48,14 @@ node("slave") {
 	} catch (e) {
 	    notifyBuild("FAILED")
 	    throw e
-	}
+	} finally {
+	    notifyBuild(currentBuild.result)
+ 	}
 }
 
-def notifyBuild(String buildStatus = 'STARTED') {
+def notifyBuild(String buildStatus) {
   buildStatus =  buildStatus ?: 'SUCCESSFUL'
+  BUILD_STARUS = "${buildStatus}"
 
   def colorName = 'RED'
   def colorCode = '#FF0000'
@@ -61,10 +64,7 @@ def notifyBuild(String buildStatus = 'STARTED') {
   def details = """<p>STARTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
     <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT;</p>"""
 
-  if (buildStatus == 'STARTED') {
-    color = 'YELLOW'
-    colorCode = '#FFFF00'
-  } else if (buildStatus == 'SUCCESSFUL') {
+ if (buildStatus == 'SUCCESSFUL') {
     color = 'GREEN'
     colorCode = '#00FF00'
   } else {
@@ -72,9 +72,9 @@ def notifyBuild(String buildStatus = 'STARTED') {
     colorCode = '#FF0000'
   }
 
-  slackSend (color: colorCode, message: summary)
+  //slackSend (color: colorCode, message: summary)
 
   emailext (
-  	   body: '${JELLY_SCRIPT,template="html"}', recipientProviders: [[$class: 'CulpritsRecipientProvider'], [$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']], replyTo: '$DEFAULT_REPLYTO', subject: '$PROJECT_NAME - Build # $BUILD_NUMBER - ${BUILD_STATUS}!', to: '$DEFAULT_RECIPIENTS'
+  	   body: '${JELLY_SCRIPT,template="html"}', recipientProviders: [[$class: 'CulpritsRecipientProvider'], [$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']], replyTo: "$DEFAULT_REPLYTO', subject: '$PROJECT_NAME - Build # $BUILD_NUMBER - ${BUILD_STATUS}!", to: 'vasanth@egovernments.org' //$DEFAULT_RECIPIENTS'
     )
 }

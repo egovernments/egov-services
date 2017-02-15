@@ -31,20 +31,15 @@ node("slave") {
 			archive "${service_name}/target/*.jar"
 	    }
 
-	    docker.withRegistry("https://registry.hub.docker.com", "dockerhub") 
-	    {
-			stage("Build docker image")
-			{
-		    	dir("${service_name}") 
-		    	{
-		        	app = docker.build("egovio/${service_name}")
-		    	}
-			}
-			stage("Publish docker image")
-			{
-		    	app.push()
-			}
-	    }
+		stage("Build docker image")
+		{
+	        sh "cd ${service_name}; docker build -t egovio/${service_name}:${commit_id} ."
+		}
+
+		stage("Publish docker image")
+		{
+		    sh "docker push egovio/${service_name}:${commit_id}"
+		}
 	} catch (e) {
 	    currentBuild.result = "FAILED"
 	    throw e

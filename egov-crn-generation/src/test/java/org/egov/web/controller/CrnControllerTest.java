@@ -35,6 +35,6 @@ public class CrnControllerTest {
         )
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(content().json("{\"crn\": \"crn_value\"}"));
+                .andExpect(content().json("{\"value\": \"crn_value\"}"));
     }
 }

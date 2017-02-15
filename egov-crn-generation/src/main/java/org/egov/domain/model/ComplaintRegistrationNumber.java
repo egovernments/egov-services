@@ -8,5 +8,5 @@ import lombok.Getter;
 @AllArgsConstructor
 @EqualsAndHashCode
 public class ComplaintRegistrationNumber {
-    public String crn;
+    public String value;
 }

@@ -33,12 +33,12 @@ node("slave") {
 
 		stage("Build docker image")
 		{
-	        sh "docker build -t egovio/${service_name}:${commit_id} \."
+	        sh "cd ${service_name}; docker build -t egovio/${service_name}:${commit_id} .";
 		}
 
 		stage("Publish docker image")
 		{
-		    sh "docker push egovio/${service_name}:${commit_id}"
+		    sh "docker push egovio/${service_name}:${commit_id}";
 		}
 	} catch (e) {
 	    currentBuild.result = "FAILED"

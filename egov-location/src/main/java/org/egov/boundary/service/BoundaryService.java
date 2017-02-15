@@ -312,6 +312,7 @@ public class BoundaryService {
 				Boundary boundary = new Boundary();
 				boundary.setId(21l);
 				boundary.setBoundaryNum(11l);
+				boundary.setName("Bangalore");
 				boundaries.add(boundary);
 
 			} else {

@@ -55,7 +55,7 @@ node("slave") {
 
 def notifyBuild(String buildStatus) {
   buildStatus =  buildStatus ?: 'SUCCESSFUL'
-  BUILD_STARUS = "${buildStatus}"
+  BUILD_STATUS = "${buildStatus}"
 
   def colorName = 'RED'
   def colorCode = '#FF0000'
@@ -72,9 +72,9 @@ def notifyBuild(String buildStatus) {
     colorCode = '#FF0000'
   }
 
-  //slackSend (color: colorCode, message: summary)
+  slackSend (color: colorCode, message: summary)
 
   emailext (
-  	   body: '${JELLY_SCRIPT,template="html"}', recipientProviders: [[$class: 'CulpritsRecipientProvider'], [$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']], replyTo: "${DEFAULT_REPLYTO}", subject: "$PROJECT_NAME - Build # $BUILD_NUMBER - ${BUILD_STATUS}!", to: 'vasanth@egovernments.org' //$DEFAULT_RECIPIENTS'
+  	   body: '${JELLY_SCRIPT,template="html"}', recipientProviders: [[$class: 'CulpritsRecipientProvider'], [$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']], subject: "$PROJECT_NAME - Build # $BUILD_NUMBER - ${BUILD_STATUS}!", to: '$DEFAULT_RECIPIENTS'
     )
 }

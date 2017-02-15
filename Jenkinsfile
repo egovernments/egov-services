@@ -39,7 +39,7 @@ node("slave") {
 
 		stage("Publish docker image")
 		{
-		    sh "docker push egovio/${service_name}:${commit_id}"
+		    sh "docker push egovio/${service_name}:${BUILD_ID}-${commit_id}"
 		}
 	} catch (e) {
 	    notifyBuild("FAILED")

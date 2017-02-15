@@ -33,8 +33,8 @@ node("slave") {
 
 		stage("Build docker image")
 		{
-	        sh "cd ${service_name} && docker build egovio/${service_name}:${commit_id} ."
-		sh "docker tag egovio/${service_name}:${commit_id} egovio/${service_name}:${commit_id}"
+	        sh "cd ${service_name} && docker build egovio/${service_name} ."
+		sh "docker tag egovio/${service_name} egovio/${service_name}:${commit_id}"
 		}
 
 		stage("Publish docker image")

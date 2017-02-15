@@ -21,7 +21,7 @@
          "address_id":null,
          "zipcode":null,
          "lat":0.0,
-         "long":0.0,
+         "lng":0.0,
          "media_urls":null,
          "first_name":"kumar",
          "last_name":null,

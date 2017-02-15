@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 @Entity
 @Data
-@Table(name = "messages")
+@Table(name = "message")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

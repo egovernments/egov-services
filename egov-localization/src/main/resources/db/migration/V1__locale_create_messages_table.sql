@@ -1,4 +1,4 @@
-CREATE TABLE MESSAGES (
+CREATE TABLE message (
 	id serial not null primary key,
 	locale varchar(255) not null,
 	code varchar(255) not null,

@@ -1,6 +1,5 @@
 node("slave") {
 	try {
-	    notifyBuild('STARTED')
 	    def app = "";
 	    def commit_id="";
 	    echo "${env.JOB_NAME}"

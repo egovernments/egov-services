@@ -27,7 +27,7 @@ node("slave") {
 			}
 	    }
 
-		stage("Archive Results")
+		stage("Build Artifacts")
 		{
 			archive "${service_name}/target/*.jar"
 	    }
@@ -41,7 +41,7 @@ node("slave") {
 		        	app = docker.build("egovio/${service_name}")
 		    	}
 			}
-			stage("Build publish docker image")
+			stage("Publish docker image")
 			{
 		    	app.push()
 			}

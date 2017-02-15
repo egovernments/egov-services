@@ -23,22 +23,24 @@ node("slave") {
 			                sh "cd ${service_name}; mvn clean package";
 			            }
 			        }
-			    	stage("Archive Results")
-					{
-						archive "${service_name}/target/*.jar"
-				    }
-
-					stage("Build docker image")
-					{
-						sh "docker build -t egovio/${service_name}:${commit_id} -f ${service_name}"
-					}
-
-					stage("Publish docker image")
-					{
-					    sh "docker push egovio/${service_name}:${commit_id}"
-					}
 			}
 	    }
+
+		stage("Archive Results")
+		{
+			archive "${service_name}/target/*.jar"
+	    }
+
+		stage("Build docker image")
+		{
+	        sh "cd ${service_name} && docker build egovio/${service_name}:${commit_id} ."
+		sh "docker tag egovio/${service_name}:${commit_id} egovio/${service_name}:${commit_id}"
+		}
+
+		stage("Publish docker image")
+		{
+		    sh "docker push egovio/${service_name}:${commit_id}"
+		}
 	} catch (e) {
 	    currentBuild.result = "FAILED"
 	    throw e

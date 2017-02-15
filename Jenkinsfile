@@ -33,7 +33,7 @@ node("slave") {
 
 		stage("Build docker image")
 		{
-	        sh "cd ${service_name} && docker build -t egovio/${service_name}:${commit_id} ."
+	        sh "cd ${service_name} && docker build -t egovio/${service_name}:${commit_id} -f '${service_name}'"
 		}
 
 		stage("Publish docker image")
@@ -41,10 +41,8 @@ node("slave") {
 		    sh "docker push egovio/${service_name}:${commit_id}"
 		}
 	} catch (e) {
-	    currentBuild.result = "FAILED"
+	    //notifyBuild("FAILED")
 	    throw e
-	} finally {
-	    notifyBuild(currentBuild.result)
 	}
 }
 

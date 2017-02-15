@@ -31,7 +31,7 @@ node("slave") {
         }
 
         stage("Build publish docker image"){
-            app.tag("${BUILD_ID}-${commit_id}")
+            app.tag("${commit_id}")
             app.push()
         }
     }

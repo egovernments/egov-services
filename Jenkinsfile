@@ -31,6 +31,7 @@ node("slave") {
         }
 
         stage("Build publish docker image"){
+            app.tag("registry.hub.docker.com/egovio/${service_name}:${BUILD_ID}-${commit_id}")
             app.push()
         }
     }

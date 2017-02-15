@@ -30,6 +30,7 @@ public class ComplaintService {
         complaint.validate();
         final String crn = sevaNumberGeneratorService.generate();
         sevaRequest.getServiceRequest().setCrn(crn);
+        complaint.setCrn(crn);
         complaintRepository.save(sevaRequest, complaint.getJurisdictionId());
     }
 

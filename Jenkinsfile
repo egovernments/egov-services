@@ -1,5 +1,6 @@
 node("slave") {
 	try {
+	    notifyBuild('STARTED')
 	    def app = "";
 	    def commit_id="";
 	    echo "${env.JOB_NAME}"
@@ -26,7 +27,7 @@ node("slave") {
 			}
 	    }
 
-		stage("Build Artifacts")
+		stage("Archive Results")
 		{
 			archive "${service_name}/target/*.jar"
 	    }
@@ -46,25 +47,25 @@ node("slave") {
 			}
 	    }
 	} catch (e) {
-	    notifyBuild("FAILED")
+	    currentBuild.result = "FAILED"
 	    throw e
 	} finally {
 	    notifyBuild(currentBuild.result)
- 	}
+	}
 }
 
-def notifyBuild(String buildStatus) {
+def notifyBuild(String buildStatus = 'STARTED') {
   buildStatus =  buildStatus ?: 'SUCCESSFUL'
-  BUILD_STATUS = "${buildStatus}"
 
   def colorName = 'RED'
   def colorCode = '#FF0000'
   def subject = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
   def summary = "${subject} (${env.BUILD_URL})"
-  def details = """<p>STARTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
-    <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT;</p>"""
 
- if (buildStatus == 'SUCCESSFUL') {
+  if (buildStatus == 'STARTED') {
+    color = 'YELLOW'
+    colorCode = '#FFFF00'
+  } else if (buildStatus == 'SUCCESSFUL') {
     color = 'GREEN'
     colorCode = '#00FF00'
   } else {
@@ -72,9 +73,10 @@ def notifyBuild(String buildStatus) {
     colorCode = '#FF0000'
   }
 
+  // Send notifications
   slackSend (color: colorCode, message: summary)
 
   emailext (
-  	   body: '${JELLY_SCRIPT,template="html"}', recipientProviders: [[$class: 'CulpritsRecipientProvider'], [$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']], subject: "$PROJECT_NAME - Build # $BUILD_NUMBER - ${BUILD_STATUS}!", to: '$DEFAULT_RECIPIENTS'
+  	   body: '$DEFAULT_CONTENT', recipientProviders: [[$class: 'CulpritsRecipientProvider'], [$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']], replyTo: '$DEFAULT_REPLYTO', subject: "$PROJECT_NAME - Build # $BUILD_NUMBER - ${buildStatus}!", to: '$DEFAULT_RECIPIENTS'
     )
 }

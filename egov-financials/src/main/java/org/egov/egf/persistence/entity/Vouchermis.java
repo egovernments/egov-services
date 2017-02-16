@@ -83,7 +83,7 @@ public class Vouchermis implements java.io.Serializable {
 	private Functionary functionary;
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "voucherheaderid", nullable = true)
-	private VoucherHeader voucherheaderid;
+	private VoucherHeader voucherHeader;
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "functionid")
 	private Function function;
@@ -94,5 +94,5 @@ public class Vouchermis implements java.io.Serializable {
 	private String budgetaryAppnumber;
 
 	private Boolean budgetCheckReq = true;
-
+	  
 }

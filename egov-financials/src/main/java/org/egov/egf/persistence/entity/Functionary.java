@@ -52,7 +52,7 @@ import org.hibernate.validator.constraints.Length;
 @Entity
 @Table(name = "egf_functionary")
 @SequenceGenerator(name = Functionary.SEQ, sequenceName = Functionary.SEQ, allocationSize = 1)
-public class Functionary implements java.io.Serializable {
+public class Functionary extends AbstractAuditable implements java.io.Serializable {
 	   
 	private static final long serialVersionUID = 1L;
 	public static final String SEQ = "seq_functionary";
@@ -67,6 +67,10 @@ public class Functionary implements java.io.Serializable {
 	private String name;
 	private Boolean active;
 
-	 
+	 @Override
+	    public Long getId()
+	    {
+	    	return this.id;
+	    }
 
 }

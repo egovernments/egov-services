@@ -88,6 +88,10 @@ public class Fund extends AbstractAuditable {
 
     private Boolean active;
 
-    
+    @Override
+    public Long getId()
+    {
+    	return this.id;
+    }
 
 }

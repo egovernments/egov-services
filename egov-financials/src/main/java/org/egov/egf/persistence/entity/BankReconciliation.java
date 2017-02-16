@@ -55,6 +55,10 @@ public class BankReconciliation extends AbstractAuditable {
 
 	private Long instrumentHeaderId;
 
-	 
+	 @Override
+	    public Long getId()
+	    {
+	    	return this.id;
+	    }
 
 }

@@ -113,5 +113,9 @@ public class ChartOfAccounts extends AbstractAuditable {
 
 	@OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "chartOfAccounts", targetEntity = ChartOfAccountDetail.class)
 	private Set<ChartOfAccountDetail> chartOfAccountDetails = new HashSet<>();
-
+	 @Override
+	    public Long getId()
+	    {
+	    	return this.id;
+	    }
 }

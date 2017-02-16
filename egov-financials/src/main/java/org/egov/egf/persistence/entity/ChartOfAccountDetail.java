@@ -72,7 +72,11 @@ public class ChartOfAccountDetail extends AbstractAuditable {
     @JoinColumn(name = "detailtypeid")
   
     private AccountDetailType accountDetailType;
-
+    @Override
+    public Long getId()
+    {
+    	return this.id;
+    }
     
 
     

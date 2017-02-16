@@ -87,7 +87,11 @@ public class FiscalPeriod extends AbstractAuditable {
         
         private Boolean isClosed ;
 
-        
+        @Override
+        public Long getId()
+        {
+        	return this.id;
+        }
        
 
         

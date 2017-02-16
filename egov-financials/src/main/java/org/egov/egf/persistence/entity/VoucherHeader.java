@@ -102,12 +102,16 @@ public class VoucherHeader extends AbstractAuditable  {
     private String cgvn;
     private Long moduleId;
     
-   
+    @Override
+    public Long getId()
+    {
+    	return this.id;
+    }
   
-    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "voucherHeaderId", targetEntity = GeneralLedger.class)
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "voucherHeader", targetEntity = GeneralLedger.class)
     @DrillDownTable
     private Set<GeneralLedger> generalLedger;
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "voucherheaderid", targetEntity = Vouchermis.class)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "voucherHeader", targetEntity = Vouchermis.class)
    
     @DrillDown
     private Vouchermis vouchermis;

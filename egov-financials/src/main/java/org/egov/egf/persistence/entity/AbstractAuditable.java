@@ -44,6 +44,8 @@ import java.util.Date;
 
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -60,7 +62,9 @@ import lombok.Data;
 public abstract @Data class AbstractAuditable extends AbstractPersistable<Long> {
 
     private static final long serialVersionUID = 7138056997693406739L;
- 
+   
+    public abstract Long getId();
+    
     @CreatedBy
     private Long createdBy;
 
@@ -106,5 +110,16 @@ public abstract @Data class AbstractAuditable extends AbstractPersistable<Long> 
 	public void setLastModifiedDate(Date lastModifiedDate) {
 		this.lastModifiedDate = lastModifiedDate;
 	}
-
+   
+	@PrePersist
+	@PreUpdate
+	public void addAuditFields()
+	{
+		if(getId()==null)
+		{
+			this.createdDate=new Date();
+		}
+		this.lastModifiedDate=new Date();
+	}
+	
 }

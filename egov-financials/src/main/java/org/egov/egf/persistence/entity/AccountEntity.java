@@ -88,7 +88,11 @@ public class AccountEntity extends AbstractAuditable  {
 	private String description;
  
 	
-
+	 @Override
+	    public Long getId()
+	    {
+	    	return this.id;
+	    }
 	 
 
 }

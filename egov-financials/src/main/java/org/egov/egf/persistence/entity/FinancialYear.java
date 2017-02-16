@@ -109,5 +109,9 @@ public class FinancialYear extends AbstractAuditable {
     public void addFiscalPeriod(final FiscalPeriod fiscalPeriod) {
     	this.fiscalPeriodList.add(fiscalPeriod);
     }
-
+    @Override
+    public Long getId()
+    {
+    	return this.id;
+    }
 }

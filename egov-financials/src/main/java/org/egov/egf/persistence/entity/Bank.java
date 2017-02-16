@@ -89,6 +89,7 @@ public class  Bank extends AbstractAuditable {
 	@OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "bank", targetEntity = BankBranch.class)
 	private Set<BankBranch> bankBranches = new HashSet<>(0);
 
+	@Override
 	public Long getId() {
 		return id;
 	}

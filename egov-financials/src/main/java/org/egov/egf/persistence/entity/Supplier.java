@@ -105,6 +105,10 @@ public class Supplier extends AbstractAuditable {
 	@JoinColumn(name = "bank")
 	private Bank bank;
 
-	 
+	 @Override
+	    public Long getId()
+	    {
+	    	return this.id;
+	    }
 
 }

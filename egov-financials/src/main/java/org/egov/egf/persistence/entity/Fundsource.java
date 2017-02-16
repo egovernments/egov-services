@@ -90,7 +90,11 @@ public class Fundsource extends AbstractAuditable {
 
     private Boolean isParent;
 
-    
+    @Override
+    public Long getId()
+    {
+    	return this.id;
+    }
 
     
 

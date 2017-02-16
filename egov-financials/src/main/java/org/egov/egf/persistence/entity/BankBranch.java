@@ -129,7 +129,11 @@ public class BankBranch extends AbstractAuditable {
     public boolean isAccountsExist() {
         return bankAccounts != null && !bankAccounts.isEmpty();
     }
-
+    @Override
+    public Long getId()
+    {
+    	return this.id;
+    }
   
 
 }

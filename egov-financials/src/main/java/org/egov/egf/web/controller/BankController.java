@@ -13,6 +13,7 @@ import org.egov.egf.web.contract.Error;
 import org.egov.egf.web.contract.ErrorResponse;
 import org.egov.egf.web.contract.RequestInfo;
 import org.egov.egf.web.contract.ResponseInfo;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,12 +44,16 @@ public class BankController {
 		}
 		RequestInfo requestInfo = bankRequest.getRequestInfo();
 		BankContract bankContract = bankRequest.getBanks().get(0);
-		Bank bankEntity=new Bank();
-		bankEntity.map(bankContract);
+	//	Bank bankEntity=new Bank();
+	//	bankEntity.map(bankContract);
+		
+		ModelMapper model=new ModelMapper();
+		Bank	bankEntity=	model.map(bankContract, Bank.class);
 		bankEntity = bankService.create(bankEntity);
+		BankContract resp=model.map(bankEntity, BankContract.class);
 		bankContract.setId(bankEntity.getId());
 		BankContractResponse BankContractResponse = new BankContractResponse();
-		BankContractResponse.getBanks().add(bankContract);
+		BankContractResponse.getBanks().add(resp);
 
 		ResponseInfo responseInfo = new ResponseInfo();
 		responseInfo.setStatus(HttpStatus.CREATED.toString());

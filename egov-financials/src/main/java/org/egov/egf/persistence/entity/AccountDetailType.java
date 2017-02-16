@@ -99,7 +99,11 @@ public class AccountDetailType extends AbstractAuditable implements java.io.Seri
    
     private String fullyQualifiedName;
 
-   
+    @Override
+    public Long getId()
+    {
+    	return this.id;
+    }
      
 
      

@@ -85,6 +85,10 @@ public class SubScheme extends AbstractAuditable
 	private Date govtAdminSanctionDate;
 	
  
-	
+	 @Override
+	    public Long getId()
+	    {
+	    	return this.id;
+	    }
 
 }

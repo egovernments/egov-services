@@ -96,6 +96,13 @@ public class BankAccount extends AbstractAuditable implements java.io.Serializab
     @Enumerated(EnumType.STRING)
     @Column(name = "type")
     private BankAccountType type;
+    
+    @Override
+    public Long getId()
+    {
+    	return this.id;
+    }
+    
  
    
     

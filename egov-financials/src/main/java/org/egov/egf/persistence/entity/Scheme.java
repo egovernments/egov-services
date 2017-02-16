@@ -99,4 +99,9 @@ public class Scheme extends  AbstractAuditable {
         return "id:" + id + ",Code:" + code + "," + "isActive:" + active;
     }
 
+    @Override
+    public Long getId()
+    {
+    	return this.id;
+    }
 }

@@ -84,7 +84,11 @@ public class Function extends AbstractAuditable {
     private Function parentId;
 
      
-     
+    @Override
+    public Long getId()
+    {
+    	return this.id;
+    }
 
      
 

@@ -82,6 +82,10 @@ public class GeneralLedger extends AbstractPersistable<Long> {
     @Transient
     private Boolean isSubLedger;
 
-   
+    
+    public Long getId()
+    {
+    	return this.id;
+    }
      
 }

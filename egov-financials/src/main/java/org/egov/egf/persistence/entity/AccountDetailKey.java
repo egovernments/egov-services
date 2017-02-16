@@ -77,5 +77,9 @@ public class AccountDetailKey extends AbstractAuditable {
 	@ManyToOne
 	@JoinColumn(name = "detailTypeId")
 	private AccountDetailType accountDetailType;
-
+	 @Override
+	    public Long getId()
+	    {
+	    	return this.id;
+	    }
 }

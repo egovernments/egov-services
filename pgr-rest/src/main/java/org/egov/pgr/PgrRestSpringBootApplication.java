@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import org.egov.pgr.domain.service.UserService;
 import org.egov.pgr.persistence.UserRepository;
+import org.egov.pgr.web.interceptor.CorrelationIdAwareRestTemplate;
+import org.egov.pgr.web.interceptor.CorrelationIdInterceptor;
 import org.egov.pgr.web.resolver.AuthenticatedUserResolver;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -15,6 +17,7 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import java.util.List;
@@ -24,7 +27,7 @@ public class PgrRestSpringBootApplication {
 
     @Bean
     public RestTemplate getRestTemplate() {
-        return new RestTemplate();
+        return new CorrelationIdAwareRestTemplate();
     }
 
     @Value("${user.service.url}")
@@ -54,6 +57,10 @@ public class PgrRestSpringBootApplication {
                 argumentResolvers.add(authenticatedUserResolver);
             }
 
+            @Override
+            public void addInterceptors(InterceptorRegistry registry) {
+                registry.addInterceptor(new CorrelationIdInterceptor());
+            }
         };
     }
 

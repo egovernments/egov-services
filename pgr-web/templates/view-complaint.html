@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	    <meta charset="utf-8">
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	    <meta name="description" content="eGov System" />
+	    <meta name="author" content="eGovernments Foundation" />
+	
+	    <title>eGov Urban Portal</title>
+		<link rel="icon" href="../resources/global/images/favicon.png" sizes="32x32">
+	    <link rel="stylesheet" href="../resources/global/css/bootstrap/bootstrap.css">
+		<link rel="stylesheet" href="../resources/global/css/font-icons/font-awesome/css/font-awesome.min.css">
+		<link rel="stylesheet" href="../resources/global/css/bootstrap/typeahead.css">
+		<link rel="stylesheet"	href="../resources/global/js/image-gallery/css/blueimp-gallery.min.css">
+		<link rel="stylesheet" href="../resources/global/css/bootstrap-tour/bootstrap-tour.css">
+		<link rel="stylesheet" href="../resources/global/css/egov/custom.css?rnd=2.1.0-SNAPSHOT_2502">
+	
+		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+		<script src="../resources/global/js/ie8/html5shiv.min.js"></script>
+		<script src="../resources/global/js/ie8/respond.min.js"></script>
+		<![endif]-->
+	
+	</head>
+    <body class="page-body" oncontextmenu="return false;">
+        <div class="page-container">
+            
+			<header class="navbar navbar-fixed-top"><!-- set fixed position by adding class "navbar-fixed-top" -->
+				<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+					<div class="container-fluid">
+						<div class="navbar-header col-md-10 col-xs-10">
+							<a class="navbar-brand" href="javascript:void(0);">
+								
+								<img src="" height="60">
+								
+								<div>
+									<span class="title2">
+									
+									Update Grievance
+									</span>
+								</div>
+							</a>
+						</div>
+						
+						<div class="nav-right-menu col-md-2 col-xs-2">
+							<ul class="hr-menu text-right">
+								<li class="ico-menu">
+									<a href="http://www.egovernments.org" target="_blank">
+										<img src="../resources/global/images/logo@2x.png" title="Powered by eGovernments" height="20px">
+									</a>
+								</li>
+								
+							</ul>
+						</div>
+						
+					</div>
+				</nav>
+			</header>
+
+            <div class="main-content">
+
+				<div class="row viewcomplaint">
+				<script id="viewcomplaint-script" type="text/x-handlebars-template">
+					{{#service_requests}}
+					<div class="col-md-12">
+						<div class="panel panel-primary" data-collapsed="0">
+							<div class="panel-heading">
+								<div class="panel-title">
+									{{service_request_id}}
+								</div>
+							</div>
+							<div class="panel-body">
+								<div class="row add-border">
+									<div class="col-md-3 col-xs-6 add-margin">Name</div>
+									<div class="col-md-3 col-xs-6 add-margin view-content">
+										{{first_name}}
+									</div>
+									<div class="col-md-3 col-xs-6 add-margin">
+										Phone Number
+									</div>
+									<div class="col-md-3 col-xs-6 add-margin view-content">
+											{{phone}}	
+									</div>
+								</div>
+				
+								<div class="row add-border">
+									<div class="col-md-3 col-xs-6 add-margin">
+										SRN
+									</div>
+									<div class="col-md-3 col-xs-6 add-margin view-content">
+										{{service_request_id}}
+									</div>
+									<div class="col-md-3 col-xs-6 add-margin">
+										Grievance Date
+									</div>
+									<div class="col-md-3 col-xs-6 add-margin view-content">
+										{{requested_datetime}}
+									</div>
+								</div>
+								<div class="row add-border">
+									<div class="col-md-3 col-xs-6 add-margin">Grievance Department</div>
+									<div class="col-md-3 col-xs-6 add-margin view-content">
+										
+									</div>
+									<div class="col-md-3 col-xs-6 add-margin">Next Escalation Date</div>
+									<div class="col-md-3 col-xs-6 add-margin view-content">
+										{{expected_datetime}}
+									</div> 
+								</div>
+								<div class="row add-border">
+									<div class="col-md-3 col-xs-6 add-margin">Grievance Type</div>
+									<div class="col-md-3 col-xs-6 add-margin view-content">
+										{{service_name}}
+									</div>
+									<div class="col-md-3 col-xs-6 add-margin">Filed via</div>
+									<div class="col-md-3 col-xs-6 add-margin view-content">
+										{{values.ReceivingMode}}
+									</div>
+								</div>
+								<div class="row add-border">
+									<div class="col-md-3 col-xs-6 add-margin">Grievance Details</div>
+									<div class="col-md-9 col-xs-6 add-margin view-content">
+										{{description}}
+									</div>
+								</div>
+					{{/service_requests}}
+								<div class="row add-border">
+									<div class="col-md-3 col-xs-6 add-margin">
+										Photos/Video
+									</div>
+									{{#files}}
+										<div class="col-md-3 col-xs-12 add-margin down-file view-content" id="links">
+										<a href="{{url}}" data-gallery> <img class="img-width add-margin" src="{{url}}" /></a>
+										</div>
+									{{/files}}
+								</div>
+					{{#service_requests}}
+								<div class="row add-border">
+									<div class="col-md-3 col-xs-6 add-margin">
+										Location
+									</div>
+									<div class="col-md-9 col-xs-6 add-margin view-content">
+										<span class="map-tool-class btn-secondary" data-toggle="tooltip"
+											data-placement="top" title="" data-original-title="Locate on map"
+											onclick="jQuery('#complaint-locate').modal('show', {backdrop: 'static'});">
+											<i class="fa fa-map-marker"></i></span> <span id="address_locate">
+											{{values.LocationName}}</span>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-3 col-xs-6 add-margin">
+										Landmark
+									</div>
+									<div class="col-md-9 col-xs-6 add-margin view-content">
+										{{address}}
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					{{/service_requests}}
+				</script>
+				</div>
+				
+
+				<!-- <div class="row">
+					<div class="col-md-12">
+						<div class="panel-group">
+							<div class="panel panel-primary">
+								<div class="panel-heading slide-history-menu">
+									<div class="panel-title">
+										<strong>Grievance History</strong>
+									</div>
+									<div class="history-icon">
+										<i class="fa fa-angle-down" id="toggle-his-icon"></i>
+									</div>
+								</div>
+								<div class="panel-body history-slide">
+									<div class="row hidden-xs visible-sm visible-md visible-lg view-content header-color">
+										<div class="col-sm-2 col-xs-6 add-margin">Date</div>
+										<div class="col-sm-2 col-xs-6 add-margin">Updated By</div>
+										<div class="col-sm-2 col-xs-6 add-margin">Status</div>
+										<div class="col-sm-2 col-xs-6 add-margin">Current Owner/Officer Responsible</div>
+										<div class="col-sm-2 col-xs-6 add-margin">Department</div>
+										<div class="col-sm-2 col-xs-6 add-margin">Comments</div>
+									</div>
+									
+										
+											
+											<div class="row  add-border">
+												<div class="col-sm-2 col-xs-12 add-margin">
+													
+													13-01-2017 09:52 AM Fri
+												</div>
+												<div class="col-sm-2 col-xs-12 add-margin">
+													O And M Project
+												</div>
+												<div class="col-sm-2 col-xs-12 add-margin">
+													REGISTERED
+												</div>
+												<div class="col-sm-2 col-xs-12 add-margin">
+													0935528::S.Ravindra Babu::Commissioner
+												</div>
+												<div class="col-sm-2 col-xs-12 add-margin">
+													ADMINISTRATION
+												</div>
+												<div class="col-sm-2 col-xs-12 add-margin">
+													Complaint is escalated&nbsp;
+												</div>
+											</div>
+											
+											<div class="row  add-border">
+												<div class="col-sm-2 col-xs-12 add-margin">
+													
+													11-01-2017 18:11 PM Wed
+												</div>
+												<div class="col-sm-2 col-xs-12 add-margin">
+													O And M Project
+												</div>
+												<div class="col-sm-2 col-xs-12 add-margin">
+													REGISTERED
+												</div>
+												<div class="col-sm-2 col-xs-12 add-margin">
+													0905867::G.Raja Sekhar::Executive Engineer
+												</div>
+												<div class="col-sm-2 col-xs-12 add-margin">
+													ENGINEERING
+												</div>
+												<div class="col-sm-2 col-xs-12 add-margin">
+													Complaint is escalated&nbsp;
+												</div>
+											</div>
+											
+											<div class="row  add-border">
+												<div class="col-sm-2 col-xs-12 add-margin">
+													
+													10-01-2017 17:52 PM Tue
+												</div>
+												<div class="col-sm-2 col-xs-12 add-margin">
+													O And M Project
+												</div>
+												<div class="col-sm-2 col-xs-12 add-margin">
+													REGISTERED
+												</div>
+												<div class="col-sm-2 col-xs-12 add-margin">
+													1048833::C.Radha Krishna::Deputy Executive Engineer
+												</div>
+												<div class="col-sm-2 col-xs-12 add-margin">
+													ENGINEERING
+												</div>
+												<div class="col-sm-2 col-xs-12 add-margin">
+													Complaint is escalated&nbsp;
+												</div>
+											</div>
+											
+											<div class="row  add-border">
+												<div class="col-sm-2 col-xs-12 add-margin">
+													
+													09-01-2017 17:44 PM Mon
+												</div>
+												<div class="col-sm-2 col-xs-12 add-margin">
+													O And M Project
+												</div>
+												<div class="col-sm-2 col-xs-12 add-margin">
+													REGISTERED
+												</div>
+												<div class="col-sm-2 col-xs-12 add-margin">
+													0953956::S.Hari Krishna::Assistant Engineer
+												</div>
+												<div class="col-sm-2 col-xs-12 add-margin">
+													ENGINEERING
+												</div>
+												<div class="col-sm-2 col-xs-12 add-margin">
+													Grievance registered with Complaint Number : 00317-2017-ZL&nbsp;
+												</div>
+											</div>
+											
+										
+										
+									
+								</div>
+							</div>
+						</div>
+					</div>
+				</div> -->
+
+				<!-- Modal 6 (Long Modal)-->
+				<div class="modal fade" id="complaint-locate">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-body">
+								<div class="row">
+									<div class="col-md-12">
+										<div class="panel panel-primary" data-collapsed="0">
+											<!-- to apply shadow add class "panel-shadow" -->
+											<!-- panel head -->
+											<div class="panel-heading">
+												<div class="panel-title" id="show_address_in_map">Grievance History</div>
+											</div>
+											<!-- panel body -->
+											<div class="panel-body no-padding">
+												<script type="text/javascript" src="https://maps.google.com/maps/api/js?key=AIzaSyB4Rn4dQ1hivzYaXNvpxxUB5i3x2j4ytic&amp;libraries=places"></script>
+												<script type="text/javascript" src="../resources/global/js/geolocation/geolocation-marker.js"></script>
+												<div id="normal" class="img-prop"></div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- The Bootstrap Image Gallery lightbox, should be a child element of the document body -->
+				<div id="blueimp-gallery" class="blueimp-gallery"
+					data-use-bootstrap-modal="false">
+					<!-- The container for the modal slides -->
+					<div class="slides"></div>
+					<!-- Controls for the borderless lightbox -->
+					<h3 class="title"></h3>
+					<ol class="indicator"></ol>
+					<!-- The modal dialog, which will be used to wrap the lightbox content -->
+					<div class="modal fade">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" aria-hidden="true">&times;</button>
+									<h4 class="modal-title"></h4>
+								</div>
+								<div class="modal-body next"></div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-default pull-left prev">
+										<i class="glyphicon glyphicon-chevron-left"></i>Previous</button>
+									<button type="button" class="btn btn-primary next">Next
+									 	<i class="glyphicon glyphicon-chevron-right"></i>
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<script>
+				var lat = '0.0';
+				var lng = '0.0';
+				</script>
+				<!-- <div class="panel panel-primary" data-collapsed="0">
+					<div class="panel-heading">
+						<div class="panel-title">
+							<strong>Actions</strong>
+						</div>
+					</div>
+					<div class="panel-body">
+						<form id="complaintUpdate" role="form" class="form-horizontal form-groups-bordered" action="/pgr/complaint/update/00317-2017-ZL" method="post" enctype="multipart/form-data">
+							<div class="form-group">
+								<div class="col-md-3 col-xs-6 add-margin">
+									Change Status
+								</div>
+								<div class="col-md-3 col-xs-6 add-margin">
+									<select id="status" name="status" class="form-control">
+									</select>
+									
+									<input id="latlngaddress" name="latlngAddress" type="hidden" value=""/>
+								</div>
+								<div class="col-md-3 col-xs-6 add-margin">
+									Change Grievance Type
+								</div>
+								<div class="col-md-3 col-xs-6 add-margin">
+									<select id="complaintType" name="complaintType" class="form-control">
+									</select>
+									
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="col-md-3 col-xs-12 add-margin">
+									Change Jurisdiction
+								</div>
+								<div class="col-md-3 col-xs-12 add-margin">
+									<select id="ct-sel-jurisd" name="location" class="form-control" data-first-option="false">
+									</select>
+									
+								</div>
+				
+								<div class="col-md-3 col-xs-12 add-margin">
+									<select id="location" name="childLocation" class="form-control" data-first-option="false">
+									</select>
+									
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-3 col-xs-12">Forward Grievance To</label>
+								<div class="col-md-3 col-xs-12 add-margin">
+									<select id="approvalDepartment" class="form-control">  
+									</select>
+								</div>
+								<div class="col-md-3 col-xs-12 add-margin">
+									<select id="approvalDesignation" class="form-control" data-first-option="false">  
+										<option value="">
+											Select Designation
+										</option>
+										
+									</select>
+								</div>
+								<div class="col-md-3 col-xs-12 add-margin">
+									<select name="approvalPosition" id="approvalPosition"
+										class="form-control">
+									</select>
+								</div>
+							</div>
+							
+							<div class="form-group">
+								<div class="col-md-3 add-margin">
+									Include Message<span class="mandatory"></span>
+								</div>
+								<div class="col-md-9 add-margin">
+									<textarea class="form-control" id="inc_messge" placeholder="" required="required"
+										maxlength="400" name="approvalComent"></textarea>
+										
+								</div>
+							</div>  
+							<div class="form-group">
+								<div class="col-sm-3 col-xs-12">
+									<a href="#" id="triggerFile" class="btn btn-secondary">Upload Photograph/Video</a>
+									<input type="file" id="file1" name="files" data-id="1" class="filechange inline btn" style="display:none;"/>
+									<input type="file" id="file2" name="files" data-id="2" class="filechange inline btn" style="display:none;"/>
+									<input type="file" id="file3" name="files" data-id="3" class="filechange inline btn" style="display:none;"/>
+								</div>
+								<div class="col-sm-6 col-xs-12">
+									<div id="file1block" class="add-margin col-sm-4 col-xs-4">
+										<img id="preview1" src="#" alt="" class="display-hide "/>
+										<div class="remove-img preview-cross1 display-hide" data-file-id><i class="fa fa-times-circle"></i></div>
+										<div class="add-padding" id="filename1"></div>
+									</div>
+									<div id="file2block" class="add-margin display-hide col-sm-4 col-xs-4">
+										<img id="preview2" src="#" alt="" class="display-hide"/>
+										<div class="remove-img preview-cross2 display-hide" data-file-id><i class="fa fa-times-circle"></i></div>
+										<div class="add-padding" id="filename2"></div>
+									</div>
+									<div id="file3block" class="add-margin display-hide col-sm-4 col-xs-4">
+										<img id="preview3" src="#" alt="" class="display-hide"/>
+										<div class="remove-img preview-cross3 display-hide" data-file-id><i class="fa fa-times-circle"></i></div>
+										<div class="add-padding" id="filename3"></div>
+									</div>
+								</div>
+							</div>
+				
+							<div class="form-group">
+									<div class="col-md-3 col-xs-6 add-margin">
+										Feedback<span class="mandatory"></span>
+									</div>
+									<div class="col-md-3 col-xs-6 add-margin">
+										<span style="cursor: default;"><div class="rating-symbol" style="display: inline-block; position: relative;"><div class="rating-symbol-background fa fa-star-o fa-2x" style="visibility: hidden;"></div><div class="rating-symbol-foreground" style="display: inline-block; position: absolute; overflow: hidden; left: 0px; right: 0px; width: auto;"><span class="fa fa-star fa-2x symbol-filled"></span></div></div><div class="rating-symbol" style="display: inline-block; position: relative;"><div class="rating-symbol-background fa fa-star-o fa-2x" style="visibility: hidden;"></div><div class="rating-symbol-foreground" style="display: inline-block; position: absolute; overflow: hidden; left: 0px; right: 0px; width: auto;"><span class="fa fa-star fa-2x symbol-filled"></span></div></div><div class="rating-symbol" style="display: inline-block; position: relative;"><div class="rating-symbol-background fa fa-star-o fa-2x" style="visibility: hidden;"></div><div class="rating-symbol-foreground" style="display: inline-block; position: absolute; overflow: hidden; left: 0px; right: 0px; width: auto;"><span class="fa fa-star fa-2x symbol-filled"></span></div></div><div class="rating-symbol" style="display: inline-block; position: relative;"><div class="rating-symbol-background fa fa-star-o fa-2x" style="visibility: hidden;"></div><div class="rating-symbol-foreground" style="display: inline-block; position: absolute; overflow: hidden; left: 0px; right: 0px; width: auto;"><span class="fa fa-star fa-2x symbol-filled"></span></div></div><div class="rating-symbol" style="display: inline-block; position: relative;"><div class="rating-symbol-background fa fa-star-o fa-2x" style="visibility: visible;"></div><div class="rating-symbol-foreground" style="display: inline-block; position: absolute; overflow: hidden; left: 0px; right: 0px; width: 0%;"><span></span></div></div></span><input id="citizenRating" type="hidden" class="rating" data-filled="fa fa-star fa-2x symbol-filled" data-empty="fa fa-star-o fa-2x" name="citizenRating" value="4">
+									</div>
+							</div>
+				
+							<div class="form-group">
+								<div class="text-center">
+						        	<button type="button" class="btn btn-primary">
+										Submit
+									</button>
+									<a href="" >Send Email</a>
+									<button type="reset" class="btn btn-danger">
+										Reset
+									</button>
+									<button type="button" class="btn btn-default" onclick="window.close();">Close</button>   
+								</div>
+							</div>
+						</form>
+					</div>
+				</div> -->
+            </div>
+				
+			<footer class="main">
+			    Powered by <a href="http://egovernments.org/" target="_blank">eGovernments Foundation</a>
+			</footer>
+        </div>
+        <input type="hidden" value="15.83" id="getcitylat">
+        <input type="hidden" value="78.05" id="getcitylng">
+        <div class="modal fade loader-class" data-backdrop="static">
+			<div class="modal-dialog">
+					<div class="modal-body">
+						<div class="row spinner-margin text-center">
+							<div class="col-md-12 ">
+								<div class="spinner">
+									<div class="rect1"></div>
+									<div class="rect2"></div>
+									<div class="rect3"></div>
+									<div class="rect4"></div>
+									<div class="rect5"></div>
+								</div>
+							</div>
+							
+							<div class="col-md-12 spinner-text">
+								Processing your request. Please wait..
+							</div>
+						</div>
+					</div>
+			</div>
+		</div>
+		<div class="modal fade demo-class" data-backdrop="static" style="opacity:0.01">
+			<div class="modal-dialog">
+					<div class="modal-body">
+						
+					</div>
+			</div>
+		</div>
+
+		<script src="../resources/global/js/jquery/jquery.js"></script>
+		<script src="../resources/global/js/bootstrap/bootstrap.js"></script>
+		<script src="../resources/global/js/bootstrap/bootbox.min.js"></script>
+		<script src="../resources/global/js/bootstrap-tour/bootstrap-tour.js"></script>
+		<script src="../resources/global/js/bootstrap/typeahead.bundle.js"></script>
+		<script src="../resources/global/js/jquery/plugins/jquery.inputmask.bundle.min.js"></script>
+		<script src="../resources/global/js/jquery/plugins/jquery.validate.min.js"></script>
+		<script src="../resources/global/js/egov/patternvalidation.js?rnd=2.1.0-SNAPSHOT_2502"></script>
+		<script src="../resources/global/js/egov/custom.js?rnd=2.1.0-SNAPSHOT_2502"></script>
+		<script	src="../resources/global/js/image-gallery/js/jquery.blueimp-gallery.min.js"></script>
+		<script	src="../resources/global/js/image-gallery/js/bootstrap-image-gallery.js"></script>
+		<script	src="../resources/global/js/handlebars/handlebars-v4.0.5.js"></script>
+		<script src="../resources/app/js/fileuploadndmaps.js?rnd=2.1.0-SNAPSHOT_2502"></script>
+		<script src="../resources/app/js/complaintview.js?rnd=2.1.0-SNAPSHOT_2502"></script>
+		<script src="../resources/app/js/complaintviewmap.js?rnd=2.1.0-SNAPSHOT_2502"></script>
+    </body>
+</html>

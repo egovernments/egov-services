@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	    <meta charset="utf-8">
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	    <meta name="description" content="eGov System" />
+	    <meta name="author" content="eGovernments Foundation" />
+	
+	    <title>eGov Urban Portal</title>
+		<link rel="icon" href="../resources/global/images/favicon.png" sizes="32x32">
+	    <link rel="stylesheet" href="../resources/global/css/bootstrap/bootstrap.css">
+		<link rel="stylesheet" href="../resources/global/css/font-icons/font-awesome/css/font-awesome.min.css">
+		<link rel="stylesheet" href="../resources/global/css/bootstrap/typeahead.css">
+		<link rel="stylesheet" href="../resources/global/css/bootstrap-tour/bootstrap-tour.css">
+		<link rel="stylesheet" href="../resources/global/css/egov/map-autocomplete.css?rnd=2.1.0-SNAPSHOT_2503">
+		<link rel="stylesheet" href="../resources/global/css/egov/custom.css?rnd=2.1.0-SNAPSHOT_2503">
+		<link rel="stylesheet" href="../resources/app/css/or-spacer.css">
+		
+		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+		<script src="../resources/global/js/ie8/html5shiv.min.js"></script>
+		<script src="../resources/global/js/ie8/respond.min.js"></script>
+		<![endif]-->
+	
+	</head>
+    <body class="page-body" oncontextmenu="return false;">
+        <div class="page-container">
+            
+			<header class="navbar navbar-fixed-top"><!-- set fixed position by adding class "navbar-fixed-top" -->
+				<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+					<div class="container-fluid">
+					<div class="navbar-header col-md-10 col-xs-10">
+						<a class="navbar-brand" href="javascript:void(0);">
+							
+							<img src="../resources/global/images/logo@2x.png" height="60">
+							
+							<div>
+								<span class="title2">
+								
+								Create Grievance
+								</span>
+							</div>
+						</a>
+					</div>
+
+					<div class="nav-right-menu col-md-2 col-xs-2">
+						<ul class="hr-menu text-right">
+							<li class="ico-menu">
+								<a href="http://www.egovernments.org" target="_blank">
+									<img src="../resources/global/images/logo@2x.png" title="Powered by eGovernments" height="20px">
+								</a>
+							</li>
+							
+						</ul>
+					</div>
+
+					</div>
+				</nav>
+			</header>
+
+	        <div class="main-content">
+
+				<div class="row">
+					<div class="col-md-12" style="position:relative;">
+						<ol class="breadcrumb hide">
+							<li><a href="javascript:void(0)">Create Grievance</a></li>
+						</ol>
+						<div class="tour-section" data-toggle="tooltip" title="Click for demo!"><i class="fa fa-question" aria-hidden="true"></i></div>
+						<form id="complaintform" class="form-horizontal form-groups-bordered" role="form" action="register" method="post" enctype="multipart/form-data" autocomplete="off">
+							<div class="panel panel-primary acknowledgement hide" data-collapsed="0">
+								<div class="panel-heading">
+									<div class="panel-title" id="firstname">
+									</div>
+								</div>
+								<div class="panel-body">
+									<div class="form-group text-center">
+										<div class="col-md-12">
+											<p>Service Request is received and is under process.</p>
+											<p>Your SRN(Service Request No.) is <span class="view-content" id="crn">00014-2017-TC</span>. Please use this for all your future references</p>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="createcrn">
+								<div class="panel panel-primary" data-collapsed="0">
+									<div class="panel-heading">
+										<div class="panel-title">
+											<strong>Contact Information</strong>
+										</div>
+									</div>
+									<div class="panel-body custom-form">
+
+										<!-- <div class="form-group">
+											<label class="col-sm-3 control-label">Receiving Mode</label>
+											<div class="col-sm-9 col-xs-12 dynamic-span capitalize">
+												<span><input id="receivingMode1" name="receivingMode" type="radio" value="MANUAL"><label for="receivingMode1">MANUAL</label></span><span><input id="receivingMode2" name="receivingMode" type="radio" value="EMAIL"><label for="receivingMode2">EMAIL</label></span><span><input id="receivingMode3" name="receivingMode" type="radio" value="CALL"><label for="receivingMode3">CALL</label></span>
+											</div>
+										</div>
+										
+										<div class="form-group display-hide" id="recenter">
+											<label class="col-sm-3 control-label">Receiving Center</label>
+											<div class="col-sm-6">
+												<select id="receivingCenter" name="receivingCenter" class="form-control" disabled="disabled">
+										                                <option value=""> Select </option>
+										                                <option value="5">CM Office</option><option value="2">Mayor/Chairperson Office</option><option value="8">Public Representatives</option><option value="9">Office of CDMA</option><option value="10">Office of RDMA</option><option value="4">Commissioner Office</option><option value="3">Zonal Office</option><option value="1">Complaint Cell</option><option value="6">Field visits</option><option value="7">Adverse Items(Paper/news)</option>
+										                            </select>
+										                            
+											</div>
+										</div>
+										
+										<div class="form-group display-hide" id="regnoblock">
+											<label for="field-1" class="col-sm-3 control-label">CRN<small id="crnReq" class="display-hide"></small></label>
+											<div class="col-sm-6">
+												<input id="crn" name="crn" class="form-control patternvalidation" data-pattern="alphanumericwithhyphen" disabled="disabled" type="text" value="" maxlength="32">
+												
+											</div>
+										</div> -->
+
+										<div class="form-group">
+											<label for="field-1" class="col-sm-3 control-label">Name<span class="mandatory"></span></label>
+											<div class="col-sm-6 add-margin">
+												<input id="f-name" name="first_name" data-pattern="alphabetwithspace" placeholder="Name" class="form-control patternvalidation" required="required" type="text" value=""/>
+												 
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-3 control-label">Mobile Number<span class="mandatory"></span></label>
+											<div class="col-sm-2 add-margin">
+												<div class="input-group">
+													<span class="input-group-addon">+91</span>
+													  	<input id="mob-no" name="phone" placeholder="Mobile Number" class="form-control is_valid_number mobilevalidate patternvalidation" data-pattern="number" required="required" type="text" value=""/>
+												</div>
+												<label id="mob-no-error" class="error display-hide" for="mob-no">Required</label>
+											</div>
+											<div class="col-sm-1">
+												<label for="field-1" class="control-label">Email<span class="mandatory"></span></label>
+											</div>
+											<div class="col-sm-3">
+												<input id="email" name="email" required="required" placeholder="abc@xyz.com" type="email" class="form-control emailvalidate" value=""/>
+												
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-3 control-label">Address</label>
+											<div class="col-sm-6">
+												<textarea class="form-control autogrow" maxlength="256"></textarea>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="panel panel-primary" data-collapsed="0">
+									<div class="panel-heading">
+										<div class="panel-title">
+											Grievance Information
+										</div>
+									</div>
+									<div class="panel-body custom-form ">
+
+										<div id="topcomplaintsection">
+											<div class="form-group">
+												<label class="col-sm-3 control-label">Select from Top Grievance types</label>
+												<div class="col-sm-6 add-margin" id="topcomplaint">
+													
+												</div>
+											</div>
+
+											<div class="or-spacer">
+											  <div class="mask"></div>
+											  <span><i>OR</i></span>
+											</div>
+										</div>
+										
+
+										<div class="form-group">
+											<label class="col-sm-3 control-label">
+												Grievance Category<span class="mandatory"></span>
+											</label>
+											<div class="col-sm-6 add-margin">
+												<select id="complaintTypeCategory" name="categorytext" data-extra class="form-control" required="required">
+												</select>
+												
+											</div>
+										</div>
+										<br>
+										<div class="form-group">
+											<label class="col-sm-3 control-label">
+												Grievance Type<span class="mandatory"></span>
+											</label>
+											<div class="col-sm-6">
+												<select id="complaintType" name="service_code" class="form-control" required="required">
+													<option value="">Select</option>
+												</select>
+												
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="panel panel-primary" data-collapsed="0">
+									<div class="panel-heading">
+										<div class="panel-title">
+											More Details
+										</div>
+									</div>
+									<div class="panel-body custom-form">
+
+										<div class="form-group">
+											<label class="col-sm-3 control-label">
+												Grievance Details <span class="mandatory"></span>
+											</label>
+											<div class="col-sm-6">
+												<textarea id="doc" name="description" class="form-control" minlength="10" maxlength="500" placeholder="Give more details about the complaint to help us solve your issue" required="required"></textarea>
+												<div class="text-left"><small>Minimum 10 and maximum 500 characters.</small></div>
+											</div>
+										</div>
+										
+										<div class="form-group">
+											<div class="col-sm-3 col-xs-12 text-center" id="upload-section">
+												<a href="#" id="triggerFile" class="btn btn-secondary">Upload Photograph/Video</a>
+												<input type="file" id="file1" name="file" data-id="1" class="filechange inline btn" style="display:none;"/>
+												<input type="file" id="file2" name="file" data-id="2" class="filechange inline btn" style="display:none;"/>
+												<input type="file" id="file3" name="file" data-id="3" class="filechange inline btn" style="display:none;"/>
+											</div>
+											<div class="col-sm-6 col-xs-12">
+												<div id="file1block" class="add-margin col-sm-4 col-xs-4">
+													<img id="preview1" src="#" alt="" class="display-hide "/>
+													<div class="remove-img preview-cross1 display-hide" data-file-id><i class="fa fa-times-circle"></i></div>
+													<div class="add-padding" id="filename1"></div>
+												</div>
+												<div id="file2block" class="add-margin display-hide col-sm-4 col-xs-4">
+													<img id="preview2" src="#" alt="" class="display-hide"/>
+													<div class="remove-img preview-cross2 display-hide" data-file-id><i class="fa fa-times-circle"></i></div>
+													<div class="add-padding" id="filename2"></div>
+												</div>
+												<div id="file3block" class="add-margin display-hide col-sm-4 col-xs-4">
+													<img id="preview3" src="#" alt="" class="display-hide"/>
+													<div class="remove-img preview-cross3 display-hide" data-file-id><i class="fa fa-times-circle"></i></div>
+													<div class="add-padding" id="filename3"></div>
+												</div>
+											</div>
+										</div>
+										
+										<div class="form-group">
+											<label class="col-sm-3 control-label">Grievance Location<span class="mandatory"></span></label>
+											<div class="col-sm-6">
+												<div class="input-group"  id="location-tour">
+													<input id="location" name="locationtext" data-extra="" type="text" class="form-control low-width" placeholder="Start typing your Grievance location or select it from location icon" autocomplete="off" required="required"/>
+													<span class="input-group-addon map-class btn-secondary" title="See on map" onclick="jQuery('#modal-6').modal('show', {backdrop: 'static'});"><i class="fa fa-map-marker specific"></i></span>
+													<input id="locationid" type="hidden" value=""/>
+											                                <input id="receivingMode" type="hidden" value="Website"/>
+													<input id="address_id" name="address_id" type="hidden" value=""/>
+									   				<input id="lat" name="lat" type="hidden" value="0.0"/>
+					                   				<input id="lng" name="lng" type="hidden" value="0.0"/>
+												</div>
+												<!-- <label id="location-error" class="error display-hide" for="location">Required</label> -->
+												<input id="latlngaddress" type="hidden" value=""/>
+											</div>
+										</div>
+										
+										<div class="form-group">
+											<label class="col-sm-3 control-label">Landmark (if any)</label>
+											<div class="col-sm-6">
+												<textarea id="landmarkDetails" name="address" maxlength="200" class="form-control"></textarea>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="row captcha-section text-center">
+									<div class="text-center inline-elem">
+										<canvas id="captchaCanvas" height=70 width=180></canvas>
+										<img id="captchaimage">
+										<span class="add-padding"><i class="fa fa-refresh" aria-hidden="true"></i></span>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-sm-offset-4 col-md-4" id="captcha-section">
+										<input type="text" name="captcha" data-extra class="form-control" id="captcha" placeholder="Enter the above text" required="required">
+									</div>
+								</div><br>
+								<div class="row">
+									<div class="text-center">
+										<button type="button" class="btn btn-primary" id="create-griev">Create Grievance</button>
+										<a href="javascript:void(0)" class="btn btn-default" onclick="self.close()">Close</a>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+
+				<div class="modal fade" id="modal-6">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-body">
+								<div class="row">
+									<div class="col-md-12">
+										<div class="panel panel-primary" data-collapsed="0"><!-- to apply shadow add class "panel-shadow" -->
+											<!-- panel head -->
+											<div class="panel-heading">
+												<div class="panel-title">Grievance Location</div>
+											</div>
+										
+											<!-- panel body -->
+											<div class="panel-body no-padding">
+												<script type="text/javascript" src="https://maps.google.com/maps/api/js?key=AIzaSyB4Rn4dQ1hivzYaXNvpxxUB5i3x2j4ytic&amp;libraries=places"></script>
+												<script type="text/javascript" src="../resources/global/js/geolocation/geolocation-marker.js"></script>
+												<div id="normal" class="img-prop"></div>
+												<input id="pac-input" class="controls" type="text" placeholder="Enter a location">
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<div class="modal-footer">
+								<button type="button" class="btn btn-info btn-save-location" data-dismiss="modal">OK</button>
+								<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+							</div>
+						</div>
+					</div>
+				</div>
+	        </div>
+				
+			<footer class="main">
+			    Powered by <a href="http://egovernments.org/" target="_blank">eGovernments Foundation</a>
+			</footer>
+        </div>
+
+        <input type="hidden" value="" id="getcitylat">
+        <input type="hidden" value="" id="getcitylng">
+
+        <div class="modal fade loader-class" data-backdrop="static">
+			<div class="modal-dialog">
+					<div class="modal-body">
+						<div class="row spinner-margin text-center">
+							<div class="col-md-12 ">
+								<div class="spinner">
+									<div class="rect1"></div>
+									<div class="rect2"></div>
+									<div class="rect3"></div>
+									<div class="rect4"></div>
+									<div class="rect5"></div>
+								</div>
+							</div>
+							
+							<div class="col-md-12 spinner-text">
+								Processing your request. Please wait..
+							</div>
+						</div>
+					</div>
+			</div>
+		</div>
+
+		<div class="modal fade demo-class" data-backdrop="static" style="opacity:0.01">
+			<div class="modal-dialog">
+					<div class="modal-body">
+						
+					</div>
+			</div>
+		</div>
+
+		<script src="../resources/global/js/jquery/jquery.js"></script>
+		<script src="../resources/global/js/bootstrap/bootstrap.js"></script>
+		<script src="../resources/global/js/bootstrap/bootbox.min.js"></script>
+		<script src="../resources/global/js/bootstrap-tour/bootstrap-tour.js"></script>
+		<script src="../resources/global/js/bootstrap/typeahead.bundle.js"></script>
+		<script src="../resources/global/js/jquery/plugins/jquery.inputmask.bundle.min.js"></script>
+		<script src="../resources/global/js/jquery/plugins/jquery.validate.min.js"></script>
+		<script src="../resources/global/js/jquery/plugins/exif.js"></script>
+		<script src="../resources/global/js/egov/custom.js"></script>
+		<script src="../resources/global/js/egov/patternvalidation.js"></script>
+		<script src="../resources/global/js/egov/captcha.js"></script>
+		<script src="../resources/app/js/fileuploadndmaps.js"></script>
+		<script src="../resources/app/js/complaint.js"></script>
+    </body>
+</html>

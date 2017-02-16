@@ -38,6 +38,7 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 var openedWindows = [];
+var locale = [];
 $(document).ready(function()
 {
 	
@@ -138,6 +139,13 @@ $(document).ready(function()
 		$.each( openedWindows, function( i, val ) {
 			var window = val;
 			window.close();
+		});
+	});
+
+	$.each(JSON.parse(localStorage.getItem("lang_response")), function(i, item){
+		var ele=$('[data-translate="'+ item.code +'"]');
+		ele.each(function(i,el){
+			$(this).contents().first().replaceWith(item.message);
 		});
 	});
 	

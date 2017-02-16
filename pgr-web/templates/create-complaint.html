@@ -36,7 +36,7 @@
 							<img src="../resources/global/images/logo@2x.png" height="60">
 							
 							<div>
-								<span class="title2">
+								<span class="title2" data-translate="create.grievance">
 								
 								Create Grievance
 								</span>
@@ -64,7 +64,7 @@
 				<div class="row">
 					<div class="col-md-12" style="position:relative;">
 						<ol class="breadcrumb hide">
-							<li><a href="javascript:void(0)">Create Grievance</a></li>
+							<li><a href="javascript:void(0)" data-translate="create.grievance">Create Grievance</a></li>
 						</ol>
 						<div class="tour-section" data-toggle="tooltip" title="Click for demo!"><i class="fa fa-question" aria-hidden="true"></i></div>
 						<form id="complaintform" class="form-horizontal form-groups-bordered" role="form" action="register" method="post" enctype="multipart/form-data" autocomplete="off">
@@ -85,8 +85,8 @@
 							<div class="createcrn">
 								<div class="panel panel-primary" data-collapsed="0">
 									<div class="panel-heading">
-										<div class="panel-title">
-											<strong>Contact Information</strong>
+										<div class="panel-title" data-translate="contact.information">
+											Contact Information
 										</div>
 									</div>
 									<div class="panel-body custom-form">
@@ -118,14 +118,14 @@
 										</div> -->
 
 										<div class="form-group">
-											<label for="field-1" class="col-sm-3 control-label">Name<span class="mandatory"></span></label>
+											<label for="field-1" class="col-sm-3 control-label" data-translate="name">Name<span class="mandatory"></span></label>
 											<div class="col-sm-6 add-margin">
 												<input id="f-name" name="first_name" data-pattern="alphabetwithspace" placeholder="Name" class="form-control patternvalidation" required="required" type="text" value=""/>
 												 
 											</div>
 										</div>
 										<div class="form-group">
-											<label class="col-sm-3 control-label">Mobile Number<span class="mandatory"></span></label>
+											<label class="col-sm-3 control-label" data-translate="mobile.number">Mobile Number<span class="mandatory"></span></label>
 											<div class="col-sm-2 add-margin">
 												<div class="input-group">
 													<span class="input-group-addon">+91</span>
@@ -134,7 +134,7 @@
 												<label id="mob-no-error" class="error display-hide" for="mob-no">Required</label>
 											</div>
 											<div class="col-sm-1">
-												<label for="field-1" class="control-label">Email<span class="mandatory"></span></label>
+												<label for="field-1" class="control-label" data-translate="email">Email<span class="mandatory"></span></label>
 											</div>
 											<div class="col-sm-3">
 												<input id="email" name="email" required="required" placeholder="abc@xyz.com" type="email" class="form-control emailvalidate" value=""/>
@@ -142,16 +142,16 @@
 											</div>
 										</div>
 										<div class="form-group">
-											<label class="col-sm-3 control-label">Address</label>
+											<label class="col-sm-3 control-label" data-translate="address">Address</label>
 											<div class="col-sm-6">
-												<textarea class="form-control autogrow" maxlength="256"></textarea>
+												<textarea class="form-control autogrow" name="complainantAddress" maxlength="256"></textarea>
 											</div>
 										</div>
 									</div>
 								</div>
 								<div class="panel panel-primary" data-collapsed="0">
 									<div class="panel-heading">
-										<div class="panel-title">
+										<div class="panel-title" data-translate="grievance.information">
 											Grievance Information
 										</div>
 									</div>
@@ -159,7 +159,7 @@
 
 										<div id="topcomplaintsection">
 											<div class="form-group">
-												<label class="col-sm-3 control-label">Select from Top Grievance types</label>
+												<label class="col-sm-3 control-label" data-translate="top.grievance.types">Select from Top Grievance types</label>
 												<div class="col-sm-6 add-margin" id="topcomplaint">
 													
 												</div>
@@ -167,13 +167,13 @@
 
 											<div class="or-spacer">
 											  <div class="mask"></div>
-											  <span><i>OR</i></span>
+											  <span><i data-translate="or">OR</i></span>
 											</div>
 										</div>
 										
 
 										<div class="form-group">
-											<label class="col-sm-3 control-label">
+											<label class="col-sm-3 control-label" data-translate="grievance.category">
 												Grievance Category<span class="mandatory"></span>
 											</label>
 											<div class="col-sm-6 add-margin">
@@ -184,7 +184,7 @@
 										</div>
 										<br>
 										<div class="form-group">
-											<label class="col-sm-3 control-label">
+											<label class="col-sm-3 control-label" data-translate="grievance.type">
 												Grievance Type<span class="mandatory"></span>
 											</label>
 											<div class="col-sm-6">
@@ -198,25 +198,25 @@
 								</div>
 								<div class="panel panel-primary" data-collapsed="0">
 									<div class="panel-heading">
-										<div class="panel-title">
+										<div class="panel-title" data-translate="more.details">
 											More Details
 										</div>
 									</div>
 									<div class="panel-body custom-form">
 
 										<div class="form-group">
-											<label class="col-sm-3 control-label">
+											<label class="col-sm-3 control-label" data-translate="grievance.details">
 												Grievance Details <span class="mandatory"></span>
 											</label>
 											<div class="col-sm-6">
 												<textarea id="doc" name="description" class="form-control" minlength="10" maxlength="500" placeholder="Give more details about the complaint to help us solve your issue" required="required"></textarea>
-												<div class="text-left"><small>Minimum 10 and maximum 500 characters.</small></div>
+												<div class="text-left"><small  data-translate="min.10.max.500">Minimum 10 and maximum 500 characters.</small></div>
 											</div>
 										</div>
 										
 										<div class="form-group">
 											<div class="col-sm-3 col-xs-12 text-center" id="upload-section">
-												<a href="#" id="triggerFile" class="btn btn-secondary">Upload Photograph/Video</a>
+												<a href="#" id="triggerFile" class="btn btn-secondary" data-translate="upload.photograph.video">Upload Photograph/Video</a>
 												<input type="file" id="file1" name="file" data-id="1" class="filechange inline btn" style="display:none;"/>
 												<input type="file" id="file2" name="file" data-id="2" class="filechange inline btn" style="display:none;"/>
 												<input type="file" id="file3" name="file" data-id="3" class="filechange inline btn" style="display:none;"/>
@@ -241,7 +241,7 @@
 										</div>
 										
 										<div class="form-group">
-											<label class="col-sm-3 control-label">Grievance Location<span class="mandatory"></span></label>
+											<label class="col-sm-3 control-label" data-translate="grievance.location">Grievance Location<span class="mandatory"></span></label>
 											<div class="col-sm-6">
 												<div class="input-group"  id="location-tour">
 													<input id="location" name="locationtext" data-extra="" type="text" class="form-control low-width" placeholder="Start typing your Grievance location or select it from location icon" autocomplete="off" required="required"/>
@@ -258,7 +258,7 @@
 										</div>
 										
 										<div class="form-group">
-											<label class="col-sm-3 control-label">Landmark (if any)</label>
+											<label class="col-sm-3 control-label" data-translate="landmark">Landmark</label>
 											<div class="col-sm-6">
 												<textarea id="landmarkDetails" name="address" maxlength="200" class="form-control"></textarea>
 											</div>
@@ -279,8 +279,8 @@
 								</div><br>
 								<div class="row">
 									<div class="text-center">
-										<button type="button" class="btn btn-primary" id="create-griev">Create Grievance</button>
-										<a href="javascript:void(0)" class="btn btn-default" onclick="self.close()">Close</a>
+										<button type="button" class="btn btn-primary" id="create-griev" data-translate="create.grievance">Create Grievance</button>
+										<a href="javascript:void(0)" class="btn btn-default" onclick="self.close()" data-translate="close">Close</a>
 									</div>
 								</div>
 							</div>
@@ -297,7 +297,7 @@
 										<div class="panel panel-primary" data-collapsed="0"><!-- to apply shadow add class "panel-shadow" -->
 											<!-- panel head -->
 											<div class="panel-heading">
-												<div class="panel-title">Grievance Location</div>
+												<div class="panel-title" data-translate="grievance.location">Grievance Location</div>
 											</div>
 										
 											<!-- panel body -->
@@ -313,8 +313,8 @@
 							</div>
 							
 							<div class="modal-footer">
-								<button type="button" class="btn btn-info btn-save-location" data-dismiss="modal">OK</button>
-								<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+								<button type="button" class="btn btn-info btn-save-location" data-dismiss="modal" data-translate="ok">OK</button>
+								<button type="button" class="btn btn-default" data-dismiss="modal" data-translate="close">Close</button>
 							</div>
 						</div>
 					</div>
@@ -343,11 +343,33 @@
 								</div>
 							</div>
 							
-							<div class="col-md-12 spinner-text">
+							<div class="col-md-12 spinner-text" data-translate="processing.your.request">
 								Processing your request. Please wait..
 							</div>
 						</div>
 					</div>
+			</div>
+		</div>
+
+		<div class="modal fade lang-class">
+			<div class="modal-dialog">
+					<!-- Modal content-->
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <button type="button" class="close" data-dismiss="modal">&times;</button>
+				        <h4 class="modal-title" data-translate="set.language">Set Language</h4>
+				      </div>
+				      <div class="modal-body">
+				        <select name="" id="lang-dropdown" class="form-control">
+				        	<option value="mr_IN">Marathi</option>
+				        	<option value="en_IN" selected>English</option>
+				        </select>
+				      </div>
+				      <div class="modal-footer">
+				        <button type="button" class="btn btn-default" data-dismiss="modal" data-translate="close">Close</button>
+				        <button type="button" class="btn btn-primary set-lang" data-translate="save">Save</button>
+				      </div>
+				    </div>
 			</div>
 		</div>
 

@@ -37,9 +37,12 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
+var srn = getParameterByName('srn');
+//var tenantId = getParameterByName('tenantId');
 
 $(document).ready(function()
 {
+
 	$("#btn_submit").click(function(){
 		if($("#btn_submit").name=='Close')
 			{
@@ -146,16 +149,23 @@ $(document).ready(function()
 	//console.log(headers.header)
 
 	$.ajax({
-		url: "http://localhost:32/pgr/seva?jurisdiction_id=2&service_request_id=00001-2017-LP",
+		url: "http://localhost:32/pgr/seva?jurisdiction_id=2&service_request_id="+srn,
 		headers : headers.header,
 		beforeSend : function(){
 			showLoader();
 		},
 		success : function(response){
 			console.log('Get complaint done!');
+
+			if(response.service_requests.length == 0){
+				bootbox.alert('Not a valid SRN!');
+				hideLoader();
+				return;
+			}
+
 			//console.log(JSON.stringify(response));
 			$.ajax({
-				url: "http://localhost:32/filestore/files?tag=00001-2017-LP",
+				url: "http://localhost:32/filestore/files?tag="+srn,
 				type : 'GET',
 				success : function(fileresponse){
 					/*if(fileresponse.files.length > 0){
@@ -190,3 +200,15 @@ $(document).ready(function()
 	});	
 	
 });
+
+function getParameterByName(name, url) {
+    if (!url) {
+      url = window.location.href;
+    }
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}

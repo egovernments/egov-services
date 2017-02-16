@@ -230,6 +230,8 @@ $(document).ready(function()
 
 	$('#create-griev').click(function(){
 
+		console.log('came to click');
+
 		var RequestInfo = new $.RequestInfo();
 		
 		if($('form').valid()){
@@ -249,6 +251,7 @@ $(document).ready(function()
 				var finobj = {};
 				finobj['receivingMode'] = $('#receivingMode').val();
 				finobj['status'] = 'REGISTERED';
+				finobj['complainantAddress'] = $('textarea[name="complainantAddress"]').val();
 
 				data['values'] = finobj;
 
@@ -301,7 +304,7 @@ $(document).ready(function()
 								success: function(fileresponse){
 									console.log('file upload success');
 									//Ack page shown
-									$('.breadcrumb').append('<li class="active">Acknowledgement</li>');
+									$('.breadcrumb').append('<li class="active" data-translate="ack">Acknowledgement</li>');
 									$('.acknowledgement, .breadcrumb').removeClass('hide');
 									$('.acknowledgement #firstname').html('Dear '+response.service_requests[0].first_name+',');
 									$('.acknowledgement #crn').html(response.service_requests[0].service_request_id);
@@ -328,8 +331,13 @@ $(document).ready(function()
 					}
 				});	
 			}else{
-				bootbox.alert("Captcha failed!", function(){ $('#captcha').focus(); });
+				bootbox.alert("Captcha failed!", function(){ 
+					captcha.refreshCaptcha();
+					$('#captcha').focus(); 
+				});
 			}
+		}else{
+			captcha.refreshCaptcha();
 		}
 
 	});
@@ -367,7 +375,7 @@ $(document).ready(function()
 		$("#complaintTypeCategory").val($(this).data('category'));
 		$("#complaintTypeCategory").trigger('change');
 		$('#complaintType').val($(this).data('type'));
-	})
+	});
 
 });
 
@@ -457,7 +465,7 @@ function topComplaintTypes(){
 			if(data.length > 0){
 				$('#topcomplaint').html('');
 				$.each(data,function(i,obj){
-					$('#topcomplaint').append('<a href="javascript:void(0)" data-type="'+obj.serviceCode+'" data-category="'+obj.groupId+'" class="btn btn-secondary btn-xs tag-element freq-ct" data-toggle="popover" title="Click to select the Grievance category and type">'+obj.name+'</a>')
+					$('#topcomplaint').append('<a href="javascript:void(0)" data-type="'+obj.serviceCode+'" data-category="'+obj.groupId+'" class="btn btn-secondary btn-xs tag-element freq-ct" data-toggle="popover" title="Click to select the Grievance category and type">'+obj.serviceName+'</a>')
 				});
 			}else{
 				$('#topcomplaintsection').hide();

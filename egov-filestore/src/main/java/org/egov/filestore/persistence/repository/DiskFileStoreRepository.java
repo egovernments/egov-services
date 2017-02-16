@@ -18,7 +18,7 @@ public class DiskFileStoreRepository {
     private String fileMountPath;
 
     public DiskFileStoreRepository(FileRepository fileRepository,
-                                   @Value("${fileStorageMountPath}") String fileMountPath) {
+                                   @Value("${file.storage.mount.path}") String fileMountPath) {
         this.fileRepository = fileRepository;
         this.fileMountPath = fileMountPath;
     }

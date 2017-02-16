@@ -28,7 +28,7 @@ public class StorageController {
     private final static String PATH_SEPARATOR = "/";
 
     public StorageController(StorageService storageService,
-                             @Value("${fileStoreHost}") String fileStoreHost) {
+                             @Value("${file.store.host}") String fileStoreHost) {
         this.storageService = storageService;
         this.fileStoreHost = fileStoreHost;
     }

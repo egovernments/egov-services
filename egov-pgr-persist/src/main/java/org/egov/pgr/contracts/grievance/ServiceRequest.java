@@ -18,7 +18,7 @@ public class ServiceRequest {
     public static final String VALUES_ASSIGNEE_ID = "assignment_id";
     public static final String VALUES_STATE_ID = "state_id";
     public static final String VALUES_RECIEVING_MODE = "receivingMode";
-
+    public static final String VALUES_COMPLAINANT_ADDRESS = "complainantAddress";
 
     public enum ComplaintStatus {
         COMPLETED, FORWARDED, REJECTED, REGISTERED, WITHDRAWN, REOPENED, PROCESSING;

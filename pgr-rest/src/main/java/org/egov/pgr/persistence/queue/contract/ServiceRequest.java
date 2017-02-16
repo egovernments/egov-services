@@ -2,15 +2,19 @@ package org.egov.pgr.persistence.queue.contract;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import org.apache.commons.lang.StringUtils;
 import org.egov.pgr.domain.model.*;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Service request raised by the citizen
@@ -114,7 +118,8 @@ public class ServiceRequest {
     public org.egov.pgr.domain.model.Complaint toDomain(AuthenticatedUser authenticatedUser, String jurisdictionId) {
         final Coordinates coordinates = new Coordinates(latitude, longitude);
         final ComplaintLocation complaintLocation = new ComplaintLocation(coordinates, crossHierarchyId);
-        final Complainant complainant = new Complainant(firstName, phone, email);
+        final String complainantAddress = Objects.isNull(values.get("complainantAddress")) ? StringUtils.EMPTY : values.get("complainantAddress"); 
+        final Complainant complainant = new Complainant(firstName, phone, email,complainantAddress);
         return org.egov.pgr.domain.model.Complaint.builder()
                 .authenticatedUser(authenticatedUser)
                 .crn(crn)

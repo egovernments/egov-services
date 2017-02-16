@@ -8,7 +8,7 @@ import lombok.Getter;
 public class ComplaintTypeResponse {
 
 	private Long id;
-	private String name;
-	private String code;
+	private String serviceName;
+	private String serviceCode;
 
 }

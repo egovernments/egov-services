@@ -70,6 +70,7 @@ public class ComplaintBuilder {
             this.complaint.getComplainant().setName(this.serviceRequest.getFirstName());
             this.complaint.getComplainant().setMobile(this.serviceRequest.getPhone());
             this.complaint.getComplainant().setEmail(this.serviceRequest.getEmail());
+            this.complaint.getComplainant().setAddress(this.serviceRequest.getValues().get(VALUES_COMPLAINANT_ADDRESS));
         }
     }
 

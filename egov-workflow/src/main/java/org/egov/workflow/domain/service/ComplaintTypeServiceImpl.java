@@ -14,7 +14,7 @@ public class ComplaintTypeServiceImpl implements ComplaintTypeService {
 
 	@Override
 	public ComplaintTypeResponse fetchComplaintTypeByCode(String code) {
-		String url = complaintTypeServiceHost + "pgr/complaintTypes/{complaintTypeCode}?tenantId={tenantId}";
+		String url = complaintTypeServiceHost + "pgr/services/{serviceCode}?tenantId={tenantId}";
 		return getComplaintTypeServiceResponse(url, code).getComplaintType();
 	}
 

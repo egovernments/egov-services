@@ -33,7 +33,7 @@ public class ComplaintTypeController {
     }
 
     @GetMapping("/{serviceCode}")
-    public ComplaintTypeResponse getComplaintTypes(@PathVariable(name = "complaintTypeCode") String complaintTypeCode,
+    public ComplaintTypeResponse getComplaintTypes(@PathVariable(name = "serviceCode") String complaintTypeCode,
                                                    @RequestParam String tenantId) {
         org.egov.pgr.persistence.entity.ComplaintType complaintType = complaintTypeService
                 .getComplaintType(complaintTypeCode);

@@ -4,6 +4,7 @@ import lombok.Getter;
 
 @Getter
 public class ComplaintType {
+	private Long id;
     private String serviceName;
     private String serviceCode;
     private String description;
@@ -14,6 +15,7 @@ public class ComplaintType {
     private String groups;
 
     public ComplaintType(org.egov.pgr.persistence.entity.ComplaintType domainComplaintType) {
+    	this.id = domainComplaintType.getId();
         this.serviceName = domainComplaintType.getName();
         this.serviceCode = domainComplaintType.getCode();
         this.description = domainComplaintType.getDescription();

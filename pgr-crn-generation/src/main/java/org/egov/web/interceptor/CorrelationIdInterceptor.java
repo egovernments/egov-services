@@ -1,6 +1,7 @@
 package org.egov.web.interceptor;
 
 import org.egov.domain.model.RequestContext;
+import org.slf4j.MDC;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,6 +16,7 @@ public class CorrelationIdInterceptor extends HandlerInterceptorAdapter {
                              Object handler) throws Exception {
 
         final String correlationId = getCorrelationId(request);
+        MDC.put(RequestContext.CORRELATION_ID, correlationId);
         RequestContext.setId(correlationId);
         return super.preHandle(request, response, handler);
     }

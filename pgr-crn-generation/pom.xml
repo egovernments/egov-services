@@ -4,11 +4,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.egov</groupId>
-	<artifactId>crn-generation</artifactId>
+	<artifactId>pgr-crn-generation</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>egov-crn-generation</name>
+	<name>pgr-crn-generation</name>
 	<description>CRN generation</description>
 
 	<parent>

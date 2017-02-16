@@ -1,6 +1,6 @@
 package org.egov.web.controller;
 
-import org.egov.domain.model.ComplaintRegistrationNumber;
+import org.egov.web.contract.ComplaintRegistrationNumber;
 import org.egov.domain.service.CrnGeneratorService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

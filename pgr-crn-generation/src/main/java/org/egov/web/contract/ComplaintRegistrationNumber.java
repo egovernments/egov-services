@@ -1,4 +1,4 @@
-package org.egov.domain.model;
+package org.egov.web.contract;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;

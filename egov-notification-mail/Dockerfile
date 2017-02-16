@@ -10,7 +10,7 @@ EXPOSE 8080 9990
 # INSTRUCTIONS ON HOW TO BUILD JAR:
 # Move to the location where pom.xml is exist in project and build project using below command
 # "mvn clean package"
-COPY /target/egov-notification-sms-0.0.1-SNAPSHOT.jar /opt/egov/egov-notification-sms.jar
+COPY /target/egov-notification-mail-0.0.1-SNAPSHOT.jar /opt/egov/egov-notification-mail.jar
 
 
 # launch standalone webapp

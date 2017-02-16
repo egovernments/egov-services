@@ -16,7 +16,7 @@ public class SmsNotificationListener {
             group = "${kafka.topics.notification.sms.group}")
     public void listen(ConsumerRecord<String, SMSRequest> record) {
         System.err.println("***** received message [key " + record.key() + "] + value [" + record.value()
-                + "] from topic egov-notification-mail");
+                + "] from topic egov-notification-sms");
         SMSRequest request = record.value();
         smsService.sendSMS(request.toDomain());
     }

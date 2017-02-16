@@ -2,13 +2,13 @@ package org.egov.egf.persistence.repository;
 
 
 import org.egov.egf.persistence.entity.Bank;
-
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 
 @Repository 
-public interface BankRepository extends JpaRepository<Bank,java.lang.Long> {
+public interface BankRepository extends JpaRepository<Bank,java.lang.Long>,JpaSpecificationExecutor<Bank> {
 
 	Bank findByName(String name);
 

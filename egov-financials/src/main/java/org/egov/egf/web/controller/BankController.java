@@ -94,7 +94,7 @@ public class BankController {
 		BankContractResponse BankContractResponse =new  BankContractResponse();
 		Bank bankEntity=new Bank();
 		bankEntity.map(bankRequest.getBank());
-		List<Bank> allBanks = bankService.findAll();
+		List<Bank> allBanks = bankService.findAll(bankRequest.getBank());
 		//BankContractResponse.getBanks().addAll(bankRequest.getBank());
 		BankContract bank=null;
 		for(Bank b:allBanks)

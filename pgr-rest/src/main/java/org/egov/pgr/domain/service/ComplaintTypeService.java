@@ -33,6 +33,9 @@ public class ComplaintTypeService {
         } else if (searchCriteria.isFrequencySearch()) {
             return complaintTypeRepository.getFrequentlyFiledComplaints(searchCriteria.getCount());
         }
+        else if(searchCriteria.isReturnAll()){
+        	return complaintTypeRepository.getAllComplaintTypes();
+        }
         return null;
     }
 }

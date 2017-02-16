@@ -14,7 +14,7 @@ import java.util.Objects;
 @AllArgsConstructor
 public class ComplaintTypeSearchCriteria {
 
-    private static final List<String> KNOWN_SEARCH_TYPES = Arrays.asList("category", "frequency");
+    private static final List<String> KNOWN_SEARCH_TYPES = Arrays.asList("category", "frequency","all");
     private static final int DEFAULT_FREQUENCY_COUNT = 5;
     private static final String INVALID_KNOWN_TYPE = "Invalid search type";
     private static final String CATEGORY_ID_IS_NOT_PRESENT = "Category id is not present";
@@ -53,6 +53,10 @@ public class ComplaintTypeSearchCriteria {
 
     public boolean isFrequencySearch() {
         return getComplaintTypeSearch() == ComplaintTypeSearch.FREQUENCY;
+    }
+    
+    public boolean isReturnAll(){
+    	return getComplaintTypeSearch() == ComplaintTypeSearch.ALL;
     }
 }
 

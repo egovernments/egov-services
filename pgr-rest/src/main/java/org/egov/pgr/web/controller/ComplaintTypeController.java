@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/complaintTypes")
+@RequestMapping("/services")
 public class ComplaintTypeController {
 
     @Autowired
@@ -32,7 +32,7 @@ public class ComplaintTypeController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/{complaintTypeCode}")
+    @GetMapping("/{serviceCode}")
     public ComplaintTypeResponse getComplaintTypes(@PathVariable(name = "complaintTypeCode") String complaintTypeCode,
                                                    @RequestParam String tenantId) {
         org.egov.pgr.persistence.entity.ComplaintType complaintType = complaintTypeService

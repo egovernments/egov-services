@@ -100,4 +100,8 @@ public class ComplaintTypeRepository {
     public ComplaintType getComplaintType(String complaintTypeCode) {
         return complaintTypeJpaRepository.findByCode(complaintTypeCode);
     }
+    
+    public List<ComplaintType> getAllComplaintTypes(){
+    	return complaintTypeJpaRepository.findAll();
+    }
 }

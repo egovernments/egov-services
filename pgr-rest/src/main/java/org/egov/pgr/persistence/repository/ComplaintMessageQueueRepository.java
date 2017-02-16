@@ -1,5 +1,6 @@
 package org.egov.pgr.persistence.repository;
 
+import org.egov.pgr.domain.model.RequestContext;
 import org.egov.pgr.persistence.queue.contract.SevaRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,6 +23,7 @@ public class ComplaintMessageQueueRepository {
 
     public void save(SevaRequest sevaRequest, String jurisdictionId) {
         String topicName = queueNameSuffix;
+        sevaRequest.getRequestInfo().setMsgId(RequestContext.getId());
         kafkaTemplate.send(topicName, sevaRequest);
     }
 }

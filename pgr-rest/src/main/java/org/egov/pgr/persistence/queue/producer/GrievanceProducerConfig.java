@@ -43,8 +43,4 @@ public class GrievanceProducerConfig {
         return new KafkaTemplate<>(producerFactory());
     }
 
-    @Bean
-    public GrievanceProducer sender() {
-        return new GrievanceProducer();
-    }
 }

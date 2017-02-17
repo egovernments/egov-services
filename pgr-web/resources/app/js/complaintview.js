@@ -115,7 +115,7 @@ $(document).ready(function()
 				
 			}, 
 			error: function (response) {
-				console.log("failed");
+				//console.log("failed");
 			}
 		});
 	});
@@ -130,7 +130,7 @@ $(document).ready(function()
 			},
 			dataType: "json",
 			success: function (response) {
-				console.log("success"+response);
+				//console.log("success"+response);
 				$('#approvalPosition').empty();
 				$('#approvalPosition').append($("<option value=''>Select</option>"));
 				$.each(response, function(index, value) {
@@ -139,7 +139,7 @@ $(document).ready(function()
 				
 			}, 
 			error: function (response) {
-				console.log("failed");
+				//console.log("failed");
 			}
 		});
 	});
@@ -168,19 +168,47 @@ $(document).ready(function()
 				url: "/filestore/files?tag="+srn,
 				type : 'GET',
 				success : function(fileresponse){
-					console.log(fileresponse.files)
-					/*if(fileresponse.files.length > 0){
-						$.each(fileresponse.files, function(i, item) {
-							console.log(item.url);
-							//$('#links').append('<a href="'+item.url+'" data-gallery> <img class="img-width add-margin"src="'+item.url+'" /></a>');
-						});
-					}*/
+					//console.log(fileresponse.files)
+
+					/*
+					//History
+					$.ajax({
+						url : "/workflow/history?workflowId=122",
+						type : 'GET',
+						success : function(work_response){
+
+							console.log(JSON.stringify(work_response));
+
+							var wf_response = {};
+							wf_response['workflow'] = work_response;
+
+							var wf_source   = $("#wfcomplaint-script").html();
+							var wf_template = Handlebars.compile(wf_source);
+							$('.wfcomplaint').append(wf_template(wf_response));
+
+							var com_source   = $("#viewcomplaint-script").html();
+							var com_template = Handlebars.compile(com_source);
+							$('.viewcomplaint').append(com_template(response));
+						},
+						error:function(){
+							bootbox.alert('Workflow Error!');
+						},
+						complete : function(){
+							hideLoader();
+						}
+					});*/
 					response['files'] = fileresponse.files;
 					var source   = $("#viewcomplaint-script").html();
 					var template = Handlebars.compile(source);
 					//response['service_requests'][0]['customLocation'] = response['service_requests'][0]['values'].ChildLocationName+' - '+response['service_requests'][0]['values'].LocationName;
 					$('.viewcomplaint').append(template(response));
 					//console.log(JSON.stringify(response));
+
+					var dobj = new Date().toISOString();
+				    var dat = dobj.split('T')[0].split("-").reverse().join("-");
+				    var tm = dobj.split('T')[1];
+				    var tim = tm.substring(0,tm.indexOf("."));
+					$('.currDate').html( dat+' '+tim);
 				},
 				error : function(){
 					bootbox.alert('Media file Error!');

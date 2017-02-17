@@ -17,7 +17,6 @@ public class AuthenticatedUser {
     private Integer id;
     private boolean anonymousUser;
     private List<Role> roles;
-    private String address;
 
     public static AuthenticatedUser createAnonymousUser() {
         return AuthenticatedUser.builder().anonymousUser(true).build();
@@ -28,6 +27,6 @@ public class AuthenticatedUser {
     }
 
     public Complainant toComplainant() {
-        return new Complainant(name, mobileNumber, emailId,address);
+        return new Complainant(name, mobileNumber, emailId, null);
     }
 }

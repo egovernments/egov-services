@@ -3,55 +3,55 @@ def commit_id="";
 def service_name = "${env.JOB_BASE_NAME}";
 def build_wkflo;
 
-try {
-  node("slave"){
-    checkout scm
-    sh "git rev-parse --short HEAD > .git/commit-id".trim()
-    commit_id = readFile('.git/commit-id')
+node("slave"){
+    try {
+        checkout scm
+        sh "git rev-parse --short HEAD > .git/commit-id".trim()
+        commit_id = readFile('.git/commit-id')
 
-    def build_workflow_exists = fileExists("${service_name}/build.wkflo");
-    if (build_workflow_exists) {
-        build_wkflo = load '${service_name}/build.wkflo'
-        build_wkflo.main()
-    } else {
-        stage("Build"){
-            docker.image("egovio/ci").inside {
-                dir("${service_name}")
-                {
-                    def settings_exists = fileExists("settings.xml");
-                    if (settings_exists){
-                        sh "cd ${service_name}; mvn clean package -s settings.xml";
-                    } else{
-                    sh "cd ${service_name}; mvn clean package";
+        def build_workflow_exists = fileExists("${service_name}/build.wkflo");
+        if (build_workflow_exists) {
+            build_wkflo = load '${service_name}/build.wkflo'
+            build_wkflo.main()
+        } else {
+            stage("Build"){
+                docker.image("egovio/ci").inside {
+                    dir("${service_name}")
+                    {
+                        def settings_exists = fileExists("settings.xml");
+                        if (settings_exists){
+                            sh "cd ${service_name}; mvn clean package -s settings.xml";
+                        } else{
+                        sh "cd ${service_name}; mvn clean package";
+                        }
                     }
                 }
             }
         }
-    }
 
-    stage("Archive Results") {
+        stage("Archive Results") {
         archive "${service_name}/target/*.jar"
-    }
+        }
 
-    stage("Build docker image") {
-        sh "cd ${service_name} && docker build -t egovio/${service_name} ."
-        sh "docker tag egovio/${service_name} egovio/${service_name}:${BUILD_ID}-${commit_id}"
-        sh "docker tag egovio/${service_name} egovio/${service_name}:latest"
-    }
+        stage("Build docker image") {
+            sh "cd ${service_name} && docker build -t egovio/${service_name} ."
+            sh "docker tag egovio/${service_name} egovio/${service_name}:${BUILD_ID}-${commit_id}"
+            sh "docker tag egovio/${service_name} egovio/${service_name}:latest"
+        }
 
-    stage("Publish docker image") {
-        sh "docker push egovio/${service_name}:${BUILD_ID}-${commit_id}"
-        sh "docker push egovio/${service_name}:latest"
-    }
+        stage("Publish docker image") {
+            sh "docker push egovio/${service_name}:${BUILD_ID}-${commit_id}"
+            sh "docker push egovio/${service_name}:latest"
+        }
 
-    stage("Clean docker image locally") {
-        sh "docker rmi egovio/${service_name}:${BUILD_ID}-${commit_id}"
-        sh "docker rmi egovio/${service_name}:latest"
+        stage("Clean docker image locally") {
+            sh "docker rmi egovio/${service_name}:${BUILD_ID}-${commit_id}"
+            sh "docker rmi egovio/${service_name}:latest"
+        }
+    } catch (e) {
+        notifyBuild("FAILED")
+        throw e
     }
-  }
-} catch (e) {
-    notifyBuild("FAILED")
-    throw e
 }
 
 

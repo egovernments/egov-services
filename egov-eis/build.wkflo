@@ -1,7 +1,7 @@
 def build(service_name) {
     stage("Build"){
         docker.image("egovio/ci").inside {
-            sh "cd ${service_name}; mvn clean test verify package -s settings.xml";
+            sh "cd ${service_name}; mvn clean test verify package";
         }
     }
 }

@@ -1,12 +1,12 @@
-package org.egov.indexer.consumer;
+package org.egov.web.indexer.consumer;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
-import org.egov.indexer.entity.ComplaintIndex;
-import org.egov.indexer.transform.ComplaintIndexDeserializer;
+import org.egov.web.indexer.models.ComplaintIndex;
+import org.egov.web.indexer.transform.ComplaintIndexDeserializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

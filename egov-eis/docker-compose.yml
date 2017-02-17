@@ -2,34 +2,9 @@ version: '2'
 services:
   postgres:
     image: postgres:9.4
+    ports:
+      - "5432:5432"
     environment:
-      - POSTGRES_DB=mydb
+      - POSTGRES_DB=devdb
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-  eis:
-    image: egovio/eis:latest
-    ports:
-      - "8080:8080"
-      - "9980:9990"
-    links:
-      - postgres:pghost
-    environment:
-      - DB_HOST=pghost
-      - DB_PORT=5432
-      - DB_NAME=mydb
-      - DB_USER=postgres
-      - DB_PASSWORD=postgres
-      - GENERATE_DDL=false
-  frontend:
-    image: egovio/frontend:latest
-    links:
-      - postgres:pghost
-    environment:
-      - DB_HOST=pghost
-      - DB_NAME=mydb
-      - DB_USER=postgres
-      - DB_PASSWORD=postgres
-      - MASTER_SERVER=true
-      - CORS_ENABLED=true
-    ports:
-      - "3000:8080"

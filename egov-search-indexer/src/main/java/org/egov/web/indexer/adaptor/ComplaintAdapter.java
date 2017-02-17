@@ -18,15 +18,28 @@ import org.egov.web.indexer.service.AssignmentService;
 import org.egov.web.indexer.service.BoundaryService;
 import org.egov.web.indexer.service.CityService;
 import org.egov.web.indexer.service.ComplaintTypeService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ComplaintAdapter {
 
-	private IndexerPropertiesManager propertiesManager;
-	private BoundaryService boundaryService;
-	private ComplaintTypeService complaintTypeService;
-	private CityService cityService;
-	private AssignmentService assignmentService;
 	public static final String NOASSIGNMENT = "NO ASSIGNMENT";
+
+	@Autowired
+	private IndexerPropertiesManager propertiesManager;
+
+	@Autowired
+	private BoundaryService boundaryService;
+
+	@Autowired
+	private ComplaintTypeService complaintTypeService;
+
+	@Autowired
+	private CityService cityService;
+
+	@Autowired
+	private AssignmentService assignmentService;
 
 	public ComplaintAdapter(IndexerPropertiesManager propertiesManager, BoundaryService boundaryService,
 			ComplaintTypeService complaintTypeService, CityService cityService, AssignmentService assignmentService) {
@@ -39,8 +52,7 @@ public class ComplaintAdapter {
 
 	public ComplaintIndex index(ServiceRequest serviceRequest) {
 		if (serviceRequest != null && !serviceRequest.getValues().isEmpty()) {
-			if (serviceRequest.getValues().get("complaintStatus")
-					.equalsIgnoreCase("REGISTERED")) {
+			if (serviceRequest.getValues().get("complaintStatus").equalsIgnoreCase("REGISTERED")) {
 				return indexOnCreate(serviceRequest);
 			} else {
 				return indexOnUpdate(serviceRequest);
@@ -54,7 +66,7 @@ public class ComplaintAdapter {
 		// Reading from serviceRequest
 		complaintIndex.setCrn(serviceRequest.getCrn());
 		try {
-			//TODO : Need to handle UTC time zone (ex:2016-10-21T11:28:56.603Z)
+			// TODO : Need to handle UTC time zone (ex:2016-10-21T11:28:56.603Z)
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 			complaintIndex.setCreatedDate(formatter.parse(serviceRequest.getCreatedDate()));
 			complaintIndex.setEscalationDate(formatter.parse(serviceRequest.getEscalationDate()));

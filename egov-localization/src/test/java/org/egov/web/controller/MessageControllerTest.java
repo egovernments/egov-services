@@ -1,6 +1,7 @@
 package org.egov.web.controller;
 
 import org.apache.commons.io.IOUtils;
+import org.egov.domain.model.RequestContext;
 import org.egov.persistence.entity.Message;
 import org.egov.persistence.repository.MessageRepository;
 import org.junit.Test;
@@ -16,6 +17,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -42,11 +44,14 @@ public class MessageControllerTest {
                 .thenReturn(entitMessages);
 
         mockMvc.perform(get("/messages")
+                .header("X-CORRELATION-ID", "someId")
                 .param("tenantId", TENANT_ID)
                 .param("locale", LOCALE))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(content().json(getFileContents("messagesResponse.json")));
+
+        assertEquals("someId", RequestContext.getId());
     }
 
     @Test
@@ -67,10 +72,13 @@ public class MessageControllerTest {
         when(messageRepository.save(expectedMessages)).thenReturn(getEntityMessages());
 
         mockMvc.perform(post("/messages")
+                .header("X-CORRELATION-ID", "someId")
                 .content(getFileContents("newMessagesRequest.json")).contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(content().json(getFileContents("messagesResponse.json")));
+
+        assertEquals("someId", RequestContext.getId());
     }
 
     @Test

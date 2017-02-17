@@ -1,6 +1,6 @@
 $(document).ready(function(){
-	$('.set-lang').click(function(){
-		var sel_value = $('#lang-dropdown option:selected').val();
+	$('#lang-dropdown').change(function(){
+		var sel_value = $(this).val();
 		$.ajax({
 			url : '/localization/messages?tenantId=ap.public&locale='+sel_value,
 			type : 'GET',

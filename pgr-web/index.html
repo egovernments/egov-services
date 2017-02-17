@@ -51,6 +51,17 @@
 				</nav>
 			</header>
 			<div class="main-content">
+				<div class="row">
+					<div class="col-md-offset-8 col-md-2 text-right view-content">
+						<label for="" class="text-right" style="line-height: 2.5;">Select Locale</label>
+					</div>
+					<div class="col-md-2">
+						<select name="" id="lang-dropdown" class="form-control">
+							<option value="mr_IN">Marathi</option>
+							<option value="en_IN" selected>English</option>
+						</select>
+					</div>	
+				</div>
 				<div class="row top-space">
 				    <div class="text-center error-msg">
 					<noscript>
@@ -230,9 +241,9 @@ Bangalore - 560102
 		</div>
 
 
-		<div class="modal fade lang-class">
+		<!-- <div class="modal fade lang-class">
 			<div class="modal-dialog">
-					<!-- Modal content-->
+					Modal content
 				    <div class="modal-content">
 				      <div class="modal-header">
 				        <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -250,7 +261,7 @@ Bangalore - 560102
 				      </div>
 				    </div>
 			</div>
-		</div>
+		</div> -->
 		
 		<script src="resources/global/js/bootstrap/bootstrap.js" type="text/javascript"></script>
 		<script src="resources/global/js/bootstrap/bootbox.min.js"></script>
@@ -263,7 +274,7 @@ Bangalore - 560102
 					window.open('templates/view-complaint.html?srn='+$('#compsearchtxt').val(), '_blank');
 				});
 
-				$('.lang-class').modal('show');
+				//$('.lang-class').modal('show');
 			});
 		</script>
 	</body>

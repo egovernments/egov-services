@@ -1,13 +1,34 @@
 package org.egov.user;
 
+import org.egov.user.interceptor.CorrelationIdInterceptor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.http.MediaType;
+import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 @SpringBootApplication
 @ComponentScan(basePackages = "org.egov.user")
-public class EgovUserApplication extends WebMvcConfigurerAdapter {
+public class EgovUserApplication {
+
+	@Bean
+	public WebMvcConfigurerAdapter webMvcConfigurerAdapter() {
+		return new WebMvcConfigurerAdapter() {
+
+			@Override
+			public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
+				configurer.defaultContentType(MediaType.APPLICATION_JSON_UTF8);
+			}
+
+			@Override
+			public void addInterceptors(InterceptorRegistry registry) {
+				registry.addInterceptor(new CorrelationIdInterceptor());
+			}
+		};
+	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(EgovUserApplication.class, args);

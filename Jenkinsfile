@@ -2,7 +2,6 @@ node("slave") {
 	try {
 	    def app = "";
 	    def commit_id="";
-	    echo "${env.JOB_NAME}"
 	    def service_name = "${env.JOB_BASE_NAME}";
 		stage("Build")
 		{
@@ -42,6 +41,12 @@ node("slave") {
 		{
 		    sh "docker push egovio/${service_name}:${BUILD_ID}-${commit_id}"
 		    sh "docker push egovio/${service_name}:latest"
+		}
+
+		stage("Clean docker image locally")
+		{
+		    sh "docker rmi egovio/${service_name}:${BUILD_ID}-${commit_id}"
+	        sh "docker rmi egovio/${service_name}:latest"
 		}
 	} catch (e) {
 	    notifyBuild("FAILED")

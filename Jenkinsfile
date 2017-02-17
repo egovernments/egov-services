@@ -13,19 +13,7 @@ node("slave"){
         if (build_workflow_exists) {
             build_wkflo = load "${service_name}/build.wkflo"
         } else {
-            stage("Build"){
-                docker.image("egovio/ci").inside {
-                    dir("${service_name}")
-                    {
-                        def settings_exists = fileExists("settings.xml");
-                        if (settings_exists){
-                            sh "cd ${service_name}; mvn clean package -s settings.xml";
-                        } else{
-                        sh "cd ${service_name}; mvn clean package";
-                        }
-                    }
-                }
-            }
+            defaultMavenBuild()
         }
 
         stage("Archive Results") {
@@ -53,6 +41,13 @@ node("slave"){
     }
 }
 
+def defaultMavenBuild(){
+    stage("Build"){
+        docker.image("egovio/ci").inside {
+            sh "cd ${service_name}; mvn clean package";
+        }
+    }
+}
 
 def notifyBuild(String buildStatus = 'STARTED') {
   buildStatus =  buildStatus ?: 'SUCCESSFUL'

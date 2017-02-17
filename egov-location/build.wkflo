@@ -1,0 +1,5 @@
+stage("Build"){
+    docker.image("egovio/ci").inside {
+        sh "cd ${service_name}; mvn clean package -s settings.xml";
+    }
+}

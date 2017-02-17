@@ -19,6 +19,7 @@ node("slave"){
 
         stage("Archive Results") {
         archive "${service_name}/target/*.jar"
+	archive "${service_name}/target/**/*.html"
         }
 
         stage("Build docker image") {

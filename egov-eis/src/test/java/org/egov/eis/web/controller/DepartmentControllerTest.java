@@ -19,7 +19,6 @@ import java.util.Collections;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -34,7 +33,7 @@ public class DepartmentControllerTest {
     private DepartmentService departmentService;
 
     @Test
-    public void test_should_fetch_messages_for_given_locale() throws Exception {
+    public void test_should_fetch_department_for_given_code() throws Exception {
         final String departmentCode = "departmentCode";
         final Department department = new Department();
         department.setId(1L);
@@ -46,6 +45,24 @@ public class DepartmentControllerTest {
         mockMvc.perform(get("/departments")
                 .header("X-CORRELATION-ID", "someId")
                 .param("code", departmentCode))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().json(getFileContents("departmentsResponse.json")));
+
+        assertEquals("someId", RequestContext.getId());
+    }
+
+    @Test
+    public void test_should_fetch_all_departments() throws Exception {
+        final Department department = new Department();
+        department.setId(1L);
+        department.setCode("departmentCode");
+        department.setName("departmentName");
+        when(departmentService.find(null))
+                .thenReturn(Collections.singletonList(department));
+
+        mockMvc.perform(get("/departments")
+                .header("X-CORRELATION-ID", "someId"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(content().json(getFileContents("departmentsResponse.json")));

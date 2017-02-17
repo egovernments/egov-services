@@ -120,7 +120,7 @@
 										<div class="form-group">
 											<label for="field-1" class="col-sm-3 control-label" data-translate="name">Name<span class="mandatory"></span></label>
 											<div class="col-sm-6 add-margin">
-												<input id="f-name" name="first_name" data-pattern="alphabetwithspace" placeholder="Name" class="form-control patternvalidation" required="required" type="text" value=""/>
+												<input id="f-name" name="first_name" data-pattern="alphabetwithspace" class="form-control patternvalidation" required="required" type="text" value=""/>
 												 
 											</div>
 										</div>
@@ -129,7 +129,7 @@
 											<div class="col-sm-2 add-margin">
 												<div class="input-group">
 													<span class="input-group-addon">+91</span>
-													  	<input id="mob-no" name="phone" placeholder="Mobile Number" class="form-control is_valid_number mobilevalidate patternvalidation" data-pattern="number" required="required" type="text" value=""/>
+													  	<input id="mob-no" name="phone" class="form-control is_valid_number mobilevalidate patternvalidation" data-pattern="number" required="required" type="text" value=""/>
 												</div>
 												<label id="mob-no-error" class="error display-hide" for="mob-no">Required</label>
 											</div>
@@ -137,7 +137,7 @@
 												<label for="field-1" class="control-label" data-translate="email">Email<span class="mandatory"></span></label>
 											</div>
 											<div class="col-sm-3">
-												<input id="email" name="email" required="required" placeholder="abc@xyz.com" type="email" class="form-control emailvalidate" value=""/>
+												<input id="email" name="email" required="required" type="email" class="form-control emailvalidate" value=""/>
 												
 											</div>
 										</div>
@@ -216,7 +216,7 @@
 										
 										<div class="form-group">
 											<div class="col-sm-3 col-xs-12 text-center" id="upload-section">
-												<a href="#" id="triggerFile" class="btn btn-secondary" data-translate="upload.photograph.video">Upload Photograph/Video</a>
+												<a href="javascript:void(0)" id="triggerFile" class="btn btn-secondary" data-translate="upload.photograph.video">Upload Photograph/Video</a>
 												<input type="file" id="file1" name="file" data-id="1" class="filechange inline btn" style="display:none;"/>
 												<input type="file" id="file2" name="file" data-id="2" class="filechange inline btn" style="display:none;"/>
 												<input type="file" id="file3" name="file" data-id="3" class="filechange inline btn" style="display:none;"/>

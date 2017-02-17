@@ -48,7 +48,7 @@ $(document).ready(function(){
 	var removedarray = [];
 	var fileid;
 	
-	$('#triggerFile').click(function(){
+	$('#triggerFile:enabled').click(function(){
 		console.log(removedarray.length);
 		if(removedarray.length == 0 || removedarray.length == 3)
 		{
@@ -406,6 +406,9 @@ function clearimagepreview(){
 		$('#preview'+i+'').removeAttr("src");
 		$('#filename'+i+'').html('');
 	}
+	filefilled = {};
+	removedarray = [];
+	$('#triggerFile').removeAttr('disabled');
 }
 
 function navigateToImage(obj){

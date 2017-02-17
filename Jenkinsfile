@@ -5,15 +5,15 @@ def service_name = "${env.JOB_BASE_NAME}";
 try {
   node("slave"){
     checkout scm
+    sh "git rev-parse --short HEAD > .git/commit-id".trim()
+    commit_id = readFile('.git/commit-id')
+
     def build_workflow_exists = fileExists("${service_name}/build.wkflo");
     if (build_workflow_exists) {
         build_wkflo = load '${service_name}/build.wkflo'
-        build_wkflow.main()
+        build_wkflo.main()
     } else {
         stage("Build"){
-            sh "git rev-parse --short HEAD > .git/commit-id".trim()
-            commit_id = readFile('.git/commit-id')
-            def build_workflow_exists = fileExists("${service_name}/");
             docker.image("egovio/ci").inside {
                 dir("${service_name}")
                 {

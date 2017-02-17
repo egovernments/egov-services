@@ -304,12 +304,7 @@ $(document).ready(function()
 								success: function(fileresponse){
 									console.log('file upload success');
 									//Ack page shown
-									$('.breadcrumb').append('<li class="active" data-translate="ack">Acknowledgement</li>');
-									$('.acknowledgement, .breadcrumb').removeClass('hide');
-									$('.acknowledgement #firstname').html('Dear '+response.service_requests[0].first_name+',');
-									$('.acknowledgement #crn').html(response.service_requests[0].service_request_id);
-									$('.createcrn, .tour-section').addClass('hide');
-									console.log('Complaint Acknowledgement Done');
+									doAck(response);
 								},
 								error: function(){
 									bootbox.alert('Media file not uploaded!');
@@ -320,7 +315,10 @@ $(document).ready(function()
 								}
 							});
 						}else{
-							console.log('File not uploaded')
+							console.log('File not uploaded');
+							//Ack page shown
+							doAck(response);
+							hideLoader();
 						}
 					},
 					error : function(jqXHR, textStatus){
@@ -378,6 +376,15 @@ $(document).ready(function()
 	});
 
 });
+
+function doAck(response){
+	$('.breadcrumb').append('<li class="active" data-translate="ack">Acknowledgement</li>');
+	$('.acknowledgement, .breadcrumb').removeClass('hide');
+	$('.acknowledgement #firstname').html('Dear '+response.service_requests[0].first_name+',');
+	$('.acknowledgement #crn').html(response.service_requests[0].service_request_id);
+	$('.createcrn, .tour-section').addClass('hide');
+	console.log('Complaint Acknowledgement Done');
+}
 
 function typingfeel(text, input){
 	$.each(text.split(''), function(i, letter){

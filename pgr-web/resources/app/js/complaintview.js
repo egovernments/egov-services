@@ -72,7 +72,7 @@ $(document).ready(function()
 	});
 	
 	$('#ct-sel-jurisd').change(function(){
-		console.log("came jursidiction"+$('#ct-sel-jurisd').val());
+		//console.log("came jursidiction"+$('#ct-sel-jurisd').val());
 		$.ajax({
 			url: "/pgr/ajax-getChildLocation",
 			type: "GET",
@@ -81,7 +81,7 @@ $(document).ready(function()
 			},
 			dataType: "json",
 			success: function (response) {
-				console.log("success"+response);
+				//console.log("success"+response);
 				$('#location').empty();
 				
 				$('#location').append($("<option value=''>Select</option>"));
@@ -92,7 +92,7 @@ $(document).ready(function()
 				
 			}, 
 			error: function (response) {
-				console.log("failed");
+				//console.log("failed");
 			}
 		});
 	});
@@ -106,7 +106,7 @@ $(document).ready(function()
 			},
 			dataType: "json",
 			success: function (response) {
-				console.log("success"+response);
+				//console.log("success"+response);
 				$('#approvalDesignation').empty();
 				$('#approvalDesignation').append($("<option value=''>Select</option>"));
 				$.each(response, function(index, value) {
@@ -155,7 +155,7 @@ $(document).ready(function()
 			showLoader();
 		},
 		success : function(response){
-			console.log('Get complaint done!');
+			//console.log('Get complaint done!');
 
 			if(response.service_requests.length == 0){
 				bootbox.alert('Not a valid SRN!');
@@ -168,6 +168,7 @@ $(document).ready(function()
 				url: "/filestore/files?tag="+srn,
 				type : 'GET',
 				success : function(fileresponse){
+					console.log(fileresponse.files)
 					/*if(fileresponse.files.length > 0){
 						$.each(fileresponse.files, function(i, item) {
 							console.log(item.url);
@@ -179,14 +180,14 @@ $(document).ready(function()
 					var template = Handlebars.compile(source);
 					//response['service_requests'][0]['customLocation'] = response['service_requests'][0]['values'].ChildLocationName+' - '+response['service_requests'][0]['values'].LocationName;
 					$('.viewcomplaint').append(template(response));
-					console.log(JSON.stringify(response));
+					//console.log(JSON.stringify(response));
 				},
 				error : function(){
 					bootbox.alert('Media file Error!');
 				},
 				complete : function(){
 					hideLoader();
-					console.log('Media Complete function called!');
+					//console.log('Media Complete function called!');
 				}
 			});
 		},
@@ -195,7 +196,7 @@ $(document).ready(function()
 			hideLoader();
 		},
 		complete : function(){
-			console.log('Main complete called')
+			//console.log('Main complete called')
 		}
 	});	
 	

@@ -12,7 +12,7 @@ node("slave"){
         def build_workflow_exists = fileExists("${service_name}/build.wkflo");
         if (build_workflow_exists) {
             build_wkflo = load "${service_name}/build.wkflo"
-            build_wkflo.main()
+            build_wkflo.buildMain()
         } else {
             stage("Build"){
                 docker.image("egovio/ci").inside {

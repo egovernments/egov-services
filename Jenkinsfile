@@ -1,6 +1,7 @@
 def app = "";
 def commit_id="";
 def service_name = "${env.JOB_BASE_NAME}";
+def build_wkflo;
 
 try {
   node("slave"){

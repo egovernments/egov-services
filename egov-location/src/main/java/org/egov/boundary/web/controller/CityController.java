@@ -19,7 +19,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 @RequestMapping("/city")
 public class CityController {
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping
     public String getCity() {
 
         ObjectMapper mapper = new ObjectMapper();

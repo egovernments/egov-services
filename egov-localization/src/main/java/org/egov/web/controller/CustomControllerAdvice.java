@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
-public class ControllerValidationHandler {
+public class CustomControllerAdvice {
 
     @ExceptionHandler(InvalidCreateMessageRequest.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)

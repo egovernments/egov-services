@@ -12,8 +12,9 @@ node("slave"){
         def build_workflow_exists = fileExists("${service_name}/build.wkflo");
         if (build_workflow_exists) {
             build_wkflo = load "${service_name}/build.wkflo"
+            build_wkflo.build(${service_name})
         } else {
-            defaultMavenBuild()
+            defaultMavenBuild(${service_name})
         }
 
         stage("Archive Results") {
@@ -41,7 +42,7 @@ node("slave"){
     }
 }
 
-def defaultMavenBuild(){
+def defaultMavenBuild(service_name){
     stage("Build"){
         docker.image("egovio/ci").inside {
             sh "cd ${service_name}; mvn clean package";

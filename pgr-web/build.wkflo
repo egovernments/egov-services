@@ -1,3 +1,7 @@
-stage("Build") {
-    echo "Nothing to build in pgr-web. Its just a single page application serving an html."
+def build(service_name) {
+    stage("Build") {
+        echo "Nothing to build in ${service_name}. Its just a single page application serving an html."
+    }
 }
+
+return this;

@@ -11,14 +11,16 @@ $(document).ready(function(){
 				localStorage.setItem("lang", sel_value);
 				localStorage.setItem("lang_response", JSON.stringify(locale));
 
-				//console.log(JSON.stringify(locale));
-				
-				$.each(JSON.parse(localStorage.getItem("lang_response")), function(i, item){
-					var ele=$('[data-translate="'+ item.code +'"]');
-					ele.each(function(i,el){
-						//el.firstChild.data = item.message;
-						$(this).contents().first().replaceWith(item.message);
+				var langresult;
+
+				$('[data-translate]').each(function(i,v){
+					var translate = $(this).data('translate');
+					langresult = JSON.parse(localStorage.getItem("lang_response")).filter(function( obj ) {
+					  return obj.code == translate;
 					});
+					//console.log(translate+'<--->'+JSON.stringify(result)+'<---->'+Object.values(result[0])[1]);
+					if(langresult.length > 0)
+						$(this).contents().first().replaceWith(Object.values(langresult[0])[1]);
 				});
 
 			},error : function(){

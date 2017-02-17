@@ -1,9 +1,3 @@
-echo "hello from loading build.wkflo"
-
-buildMain() {
-    stage("Build") {
-        echo "Nothing to build in pgr-web. Its just a single page application serving an html."
-    }
+stage("Build") {
+    echo "Nothing to build in pgr-web. Its just a single page application serving an html."
 }
-
-return this;

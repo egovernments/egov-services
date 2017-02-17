@@ -51,8 +51,6 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.SafeHtml;
 
-import com.google.gson.annotations.Expose;
-
 @Entity
 @Table(name = "eg_department")
 @SequenceGenerator(name = Department.SEQ_DEPARTMENT, sequenceName = Department.SEQ_DEPARTMENT, allocationSize = 1)
@@ -60,7 +58,6 @@ public class Department extends AbstractAuditable {
 
     public static final String SEQ_DEPARTMENT = "SEQ_EG_DEPARTMENT";
     private static final long serialVersionUID = 7630238192598939863L;
-    @Expose
     @Id
     @GeneratedValue(generator = SEQ_DEPARTMENT, strategy = GenerationType.SEQUENCE)
     private Long id;

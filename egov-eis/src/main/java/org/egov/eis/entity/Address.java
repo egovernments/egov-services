@@ -60,8 +60,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.egov.eis.entity.enums.AddressType;
 import org.hibernate.validator.constraints.SafeHtml;
 
-import com.google.gson.annotations.Expose;
-
 @Entity
 @Table(name = "eg_address")
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -73,7 +71,6 @@ public abstract class Address extends AbstractPersistable<Long> {
 
 	public static final String SEQ_ADDRESS = "seq_eg_address";
 
-	@Expose
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = SEQ_ADDRESS)
 	private Long id;

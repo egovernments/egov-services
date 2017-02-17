@@ -149,7 +149,7 @@ $(document).ready(function()
 	//console.log(headers.header)
 
 	$.ajax({
-		url: "http://localhost:32/pgr/seva?jurisdiction_id=2&service_request_id="+srn,
+		url: "/pgr/seva?jurisdiction_id=2&service_request_id="+srn,
 		headers : headers.header,
 		beforeSend : function(){
 			showLoader();
@@ -165,7 +165,7 @@ $(document).ready(function()
 
 			//console.log(JSON.stringify(response));
 			$.ajax({
-				url: "http://localhost:32/filestore/files?tag="+srn,
+				url: "/filestore/files?tag="+srn,
 				type : 'GET',
 				success : function(fileresponse){
 					/*if(fileresponse.files.length > 0){

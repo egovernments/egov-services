@@ -64,7 +64,7 @@ $(document).ready(function()
 	$('#complaintTypeCategory').change(function() {
 		if ($(this).val()) {
 			$.ajax({
-				url: "http://localhost:32/pgr/services?type=category&categoryId="+$(this).val()+"&tenantId=ap.public",
+				url: "/pgr/services?type=category&categoryId="+$(this).val()+"&tenantId=ap.public",
 				async :false,
 			}).done(function(data) {
 				loadDD.load({
@@ -81,7 +81,7 @@ $(document).ready(function()
 
 	//typeahead initialize
 	var locationtypeahead = new $.typeahead({
-		url : 'http://localhost:32/v1/location/boundarys/getLocationByLocationName?locationName=%QUERY',
+		url : '/v1/location/boundarys/getLocationByLocationName?locationName=%QUERY',
 		element : $('#location'),
 		keyValue:'id',
 		keyDisplayName:'name',
@@ -266,7 +266,7 @@ $(document).ready(function()
 				//console.log(JSON.stringify(request));
 
 				$.ajax({
-					url: "http://localhost:32/pgr/seva?jurisdiction_id=ap.public",
+					url: "/pgr/seva?jurisdiction_id=ap.public",
 					type : 'POST',
 					dataType: 'json',
 					processData : false,
@@ -295,7 +295,7 @@ $(document).ready(function()
 							});
 
 							$.ajax({
-								url: "http://localhost:32/filestore/files",
+								url: "/filestore/files",
 								type : 'POST',
 								// THIS MUST BE DONE FOR FILE UPLOADING
 	    						contentType: false,
@@ -443,7 +443,7 @@ function showChangeDropdown(dropdown)
 
 function complaintCategory(){
 	$.ajax({
-		url: "http://localhost:32/pgr/complaintTypeCategories?tenantId=ap.public",
+		url: "/pgr/complaintTypeCategories?tenantId=ap.public",
 		success : function(data){
 			loadDD.load({
 				element:$('#complaintTypeCategory'),
@@ -460,7 +460,7 @@ function complaintCategory(){
 
 function topComplaintTypes(){
 	$.ajax({
-		url: "http://localhost:32/pgr/services?type=frequency&count=5&tenantId=ap.public",
+		url: "/pgr/services?type=frequency&count=5&tenantId=ap.public",
 		success : function(data){
 			if(data.length > 0){
 				$('#topcomplaint').html('');

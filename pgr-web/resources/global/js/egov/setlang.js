@@ -2,7 +2,7 @@ $(document).ready(function(){
 	$('.set-lang').click(function(){
 		var sel_value = $('#lang-dropdown option:selected').val();
 		$.ajax({
-			url : 'http://localhost:32/localization/messages?tenantId=ap.public&locale='+sel_value,
+			url : '/localization/messages?tenantId=ap.public&locale='+sel_value,
 			type : 'GET',
 			success : function(response){
 				locale = response.messages;

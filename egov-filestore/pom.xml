@@ -117,6 +117,22 @@
 						</goals>
 						<configuration>
 							<rules>
+                                <rule>
+                                    <element>CLASS</element>
+                                    <excludes>
+                                        <exclude>*Test</exclude>
+                                        <exclude>org.egov.filestore.persistence.repository.FileRepository</exclude>
+                                        <exclude>org.egov.filestore.EgovFilestoreApplication</exclude>
+                                        <exclude>org.egov.filestore.persistence.entity.AbstractPersistable</exclude>
+                                    </excludes>
+                                    <limits>
+                                        <limit>
+                                            <counter>LINE</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>0.50</minimum>
+                                        </limit>
+                                    </limits>
+                                </rule>
 								<rule>
 									<element>BUNDLE</element>
 									<limits>

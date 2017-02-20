@@ -27,10 +27,10 @@ try {
         image_builder.clean(service_name, commit_id)
     }
 
-    stage("Deploy to QA") {
-        deployer.deploy(service_name, commit_id)
-    }
+//    stage("Deploy to QA") {
+//        deployer.deploy(service_name, commit_id)
+//    }
 } catch (e) {
-    //  notifier.notifyBuild("FAILED")
+    notifier.notifyBuild("FAILED")
     throw e
 }

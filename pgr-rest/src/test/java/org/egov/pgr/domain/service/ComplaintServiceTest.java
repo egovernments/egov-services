@@ -1,5 +1,6 @@
 package org.egov.pgr.domain.service;
 
+import org.egov.pgr.domain.exception.InvalidComplaintException;
 import org.egov.pgr.domain.model.*;
 import org.egov.pgr.persistence.queue.contract.RequestInfo;
 import org.egov.pgr.persistence.queue.contract.ServiceRequest;
@@ -15,6 +16,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -119,14 +121,13 @@ public class ComplaintServiceTest {
         assertEquals(expectedComplaint, actualComplaints.get(0));
     }
 
-
     private Complaint getComplaint() {
         final AuthenticatedUser user = getAuthenticatedUser();
         return Complaint.builder()
                 .tenantId(TENANT_ID)
                 .authenticatedUser(user)
                 .complainant(Complainant.builder().build())
-                .complaintLocation(new ComplaintLocation(new Coordinates(0d, 0d), "id"))
+                .complaintLocation(new ComplaintLocation(new Coordinates(0d, 0d), "id", null))
                 .build();
     }
 

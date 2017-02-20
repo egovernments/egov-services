@@ -170,7 +170,7 @@ public class Complaint extends AbstractAuditable {
                 new org.egov.pgr.domain.model.ComplaintType(this.complaintType.getName(), complainant.getId()
                         .toString());
         return org.egov.pgr.domain.model.Complaint.builder()
-                .complaintLocation(new ComplaintLocation(coordinates, getCrossHierarchyId()))
+                .complaintLocation(new ComplaintLocation(coordinates, getCrossHierarchyId(), null))
                 .additionalValues(getAdditionalValues())
                 .complaintType(complaintType)
                 .authenticatedUser(AuthenticatedUser.createAnonymousUser())

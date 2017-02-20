@@ -51,7 +51,7 @@ public class SevaRequestTest {
                 .authenticatedUser(user)
                 .complainant(Complainant.builder().build())
                 .crn(CRN)
-                .complaintLocation(new ComplaintLocation(new Coordinates(0d, 0d), "id"))
+                .complaintLocation(new ComplaintLocation(new Coordinates(0d, 0d), "id", null))
                 .build();
     }
 

@@ -1,6 +1,6 @@
 package org.egov.pgr.consumer;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.egov.pgr.config.PropertiesManager;
 import org.egov.pgr.model.RequestInfo;
@@ -16,7 +16,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 
 import java.util.HashMap;
 
-import static org.apache.commons.lang.StringUtils.isNotEmpty;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 import static org.egov.pgr.model.ServiceRequest.*;
 
 
@@ -79,10 +79,9 @@ public class GrievanceLocationEnrichmentListener {
     }
 
     private boolean locationIdIsNotProvided(SevaRequest sevaRequest) {
-        return (sevaRequest.getServiceRequest().getValues() == null ||
+        return sevaRequest.getServiceRequest().getValues() == null ||
                 sevaRequest.getServiceRequest().getValues().get(LOCATION_ID) == null ||
-                StringUtils.isEmpty(sevaRequest.getServiceRequest().getValues().get(LOCATION_ID))
-        );
+                StringUtils.isEmpty(sevaRequest.getServiceRequest().getValues().get(LOCATION_ID));
     }
 
     private boolean crossHierarchyIdHasBeenProvided(ServiceRequest serviceRequest) {

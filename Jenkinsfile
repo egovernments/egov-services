@@ -15,7 +15,7 @@ node("slave"){
             build_wkflo = load "${service_name}/build.wkflo"
             build_wkflo.build("${service_name}", "${ci_image}")
         } else {
-            defaultMavenBuild("${service_name}")
+            defaultMavenBuild("${service_name}", "${ci_image}")
         }
 
         stage("Archive Results") {
@@ -44,7 +44,7 @@ node("slave"){
     }
 }
 
-def defaultMavenBuild(service_name){
+def defaultMavenBuild(service_name, ci_image){
     stage("Build"){
         docker.image("${ci_image}").inside {
             sh "cd ${service_name}; mvn clean verify package";

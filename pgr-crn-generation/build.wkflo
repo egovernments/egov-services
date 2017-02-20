@@ -1,6 +1,6 @@
 def build(service_name) {
     stage("Build"){
-        docker.image("egovio/ci").inside {
+        docker.image("${ci_image}").inside {
             sh "cd ${service_name}; mvn -v; mvn clean package -s settings.xml";
         }
     }

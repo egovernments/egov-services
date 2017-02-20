@@ -2,6 +2,7 @@ def app = "";
 def commit_id="";
 def service_name = "${env.JOB_BASE_NAME}";
 def build_wkflo;
+def ci_image = "egovio/ci:0.0.1"
 
 node("slave"){
     try {
@@ -45,7 +46,7 @@ node("slave"){
 
 def defaultMavenBuild(service_name){
     stage("Build"){
-        docker.image("egovio/ci").inside {
+        docker.image("${ci_image}").inside {
             sh "cd ${service_name}; mvn clean package";
         }
     }

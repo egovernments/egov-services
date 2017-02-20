@@ -1,4 +1,22 @@
 def deploy(service_name, commit_id){
+    milestone()
+    try {
+        timeout(time: 10, unit: 'SECONDS') {
+            input message: 'Do you want to release this build?',
+                  parameters: [[$class: 'BooleanParameterDefinition',
+                                defaultValue: false,
+                                description: 'Ticking this box will do a release',
+                                name: 'Release']]
+	doDeploy()
+        }
+    } catch (err) {
+        def user = err.getCauses()[0].getUser()
+        echo "Aborted by:\n ${user}"
+    }
+    milestone()
+}
+
+def doDeploy(){
     def namespace = "${JOB_NAME}".split("/")[-2]
     def tag = "${BUILD_ID}-${commit_id}"
     def image = "${service_name}:${tag}"

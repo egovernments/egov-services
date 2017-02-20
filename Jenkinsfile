@@ -27,9 +27,6 @@ node("slave"){
         image_builder.clean(service_name, commit_id)
 
         stage("Deploy to QA") {
-            milestone()
-            input("Deploy to QA?")
-            milestone()
             deployer.deploy(service_name, commit_id)
         }
     } catch (e) {

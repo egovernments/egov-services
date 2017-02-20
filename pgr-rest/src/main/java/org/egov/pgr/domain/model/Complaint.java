@@ -26,7 +26,7 @@ public class Complaint {
     private ComplaintType complaintType;
     private String address;
     private List<String> mediaUrls;
-    private String jurisdictionId;
+    private String tenantId;
     private String description;
     private Date createdDate;
     private Date lastModifiedDate;

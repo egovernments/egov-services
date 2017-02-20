@@ -24,7 +24,6 @@ public class SevaRequestTest {
 
     @Test
     public void test_should_set_user_details_to_seva_request() {
-
         final Complaint complaint = getComplaint();
         final SevaRequest sevaRequest = getSevaRequest();
 
@@ -34,10 +33,21 @@ public class SevaRequestTest {
         assertEquals(UserType.CITIZEN.toString(), sevaRequest.getRequestInfo().getUserType());
     }
 
+    @Test
+    public void test_should_set_tenant_id_to_seva_request() {
+        final Complaint complaint = getComplaint();
+        final SevaRequest sevaRequest = getSevaRequest();
+
+        sevaRequest.update(complaint);
+
+        assertEquals(TENANT_ID, sevaRequest.getRequestInfo().getTenantId());
+    }
+
+
     private Complaint getComplaint() {
         final AuthenticatedUser user = getAuthenticatedUser();
         return Complaint.builder()
-                .jurisdictionId(TENANT_ID)
+                .tenantId(TENANT_ID)
                 .authenticatedUser(user)
                 .complainant(Complainant.builder().build())
                 .crn(CRN)

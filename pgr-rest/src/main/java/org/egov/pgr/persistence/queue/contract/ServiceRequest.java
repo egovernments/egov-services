@@ -131,7 +131,7 @@ public class ServiceRequest {
                 .mediaUrls(mediaUrls)
                 .complaintLocation(complaintLocation)
                 .complainant(complainant)
-                .jurisdictionId(jurisdictionId)
+                .tenantId(jurisdictionId)
                 .description(description)
                 .build();
 

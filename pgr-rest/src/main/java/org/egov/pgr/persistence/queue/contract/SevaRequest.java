@@ -27,5 +27,6 @@ public class SevaRequest {
         serviceRequest.setCrn(complaint.getCrn());
         requestInfo.setUserId(complaint.getAuthenticatedUser().getId().toString());
         requestInfo.setUserType(complaint.getAuthenticatedUser().getType().toString());
+        requestInfo.setTenantId(complaint.getTenantId());
     }
 }

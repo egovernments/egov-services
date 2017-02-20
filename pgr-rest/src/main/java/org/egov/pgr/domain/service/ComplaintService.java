@@ -31,13 +31,13 @@ public class ComplaintService {
         final String crn = sevaNumberGeneratorService.generate();
         complaint.setCrn(crn);
         sevaRequest.update(complaint);
-        complaintRepository.save(sevaRequest, complaint.getJurisdictionId());
+        complaintRepository.save(sevaRequest, complaint.getTenantId());
     }
 
     public void update(Complaint complaint, SevaRequest sevaRequest) {
         complaint.validate();
         sevaRequest.update(complaint);
-        complaintRepository.update(sevaRequest, complaint.getJurisdictionId());
+        complaintRepository.update(sevaRequest, complaint.getTenantId());
     }
 
 }

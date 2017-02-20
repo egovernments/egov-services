@@ -17,7 +17,7 @@ node("slave"){
 
         code_builder.build(service_name, ci_image)
 
-        archiver.archive(service_name)
+        archiver.archiveArtifacts(service_name)
 
         image_builder.build(service_name, commit_id)
 

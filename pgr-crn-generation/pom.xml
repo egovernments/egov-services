@@ -115,7 +115,7 @@
 				<extensions>true</extensions>
 				<configuration>
 					<!-- Provide the base class for your auto-generated tests -->
-					<baseClassForTests>org.egov.web.controller.CrnBase</baseClassForTests>
+					<packageWithBaseClasses>org.egov.contract</packageWithBaseClasses>
 				</configuration>
 			</plugin>
 		</plugins>

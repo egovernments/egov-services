@@ -1,7 +1,8 @@
-package org.egov.web.controller;
+package org.egov.contract;
 
 import com.jayway.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.egov.domain.service.CrnGeneratorService;
+import org.egov.web.controller.CrnController;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -12,7 +13,7 @@ import static org.mockito.Mockito.when;
 
 
 @RunWith(MockitoJUnitRunner.class)
-public class CrnBase {
+public class ContractVerifierBase {
 
     @Mock
     CrnGeneratorService crnGeneratorService;

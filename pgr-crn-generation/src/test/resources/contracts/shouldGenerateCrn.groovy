@@ -7,7 +7,7 @@ Contract.make {
         method 'GET'
         url '/crn'
         headers {
-            contentType('application/json')
+
         }
     }
 

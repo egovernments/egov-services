@@ -47,7 +47,7 @@ node("slave"){
 def defaultMavenBuild(service_name){
     stage("Build"){
         docker.image("${ci_image}").inside {
-            sh "cd ${service_name}; mvn clean package";
+            sh "cd ${service_name}; mvn clean verify package";
         }
     }
 }

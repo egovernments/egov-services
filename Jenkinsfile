@@ -14,7 +14,7 @@ node("slave"){
         archiver = load("jenkins/archiver.groovy")
         image_builder = load("jenkins/image_builder.groovy")
         notifier = load("jenkins/notifier.groovy")
-        deployer = load("jenkins/notifier.deployer")
+        deployer = load("jenkins/deployer.groovy")
 
         code_builder.build(service_name, ci_image)
 
@@ -33,7 +33,7 @@ node("slave"){
             deployer.deploy(service_name, commit_id)
         }
     } catch (e) {
-        notifier.notifyBuild("FAILED")
+        //notifier.notifyBuild("FAILED")
         throw e
     }
 }

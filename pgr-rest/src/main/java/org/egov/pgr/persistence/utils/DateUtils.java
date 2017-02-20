@@ -159,7 +159,9 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
      * @return boolean
      */
     public static boolean compareDates(final Date firstDate, final Date secondDate) {
-        return firstDate == null || secondDate == null ? true : firstDate.before(secondDate) ? false : true;
+    	if (firstDate == null || secondDate == null)
+			return true;
+		return firstDate.before(secondDate) ? false : true;
     }
 
     /**
@@ -312,27 +314,6 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
      */
     public static String getDefaultFormattedDate(final Date date) {
         return getDateFormatter(DFT_DATE_FORMAT).format(date);
-    }
-
-    /**
-     * Gets the second year.
-     *
-     * @param date
-     *            the date
-     * @return the second year
-     */
-    private static int getSecondYear(final java.sql.Date date) {
-        final Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        final int currenty = calendar.get(Calendar.YEAR);
-        int Year2 = 0;
-        final int currentm = calendar.get(Calendar.MONTH);
-        final int lstmonth = Calendar.APRIL;
-        if (currentm >= lstmonth)
-            Year2 = currenty + 1;
-        else
-            Year2 = currenty - 1;
-        return Year2;
     }
 
     /**

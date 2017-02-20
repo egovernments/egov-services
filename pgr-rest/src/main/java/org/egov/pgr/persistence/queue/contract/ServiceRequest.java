@@ -117,12 +117,12 @@ public class ServiceRequest {
         values = complaint.getAdditionalValues();
     }
 
-    public org.egov.pgr.domain.model.Complaint toDomain(AuthenticatedUser authenticatedUser, String jurisdictionId) {
+    public Complaint toDomain(AuthenticatedUser authenticatedUser, String jurisdictionId) {
         final Coordinates coordinates = new Coordinates(latitude, longitude);
         final ComplaintLocation complaintLocation = new ComplaintLocation(coordinates, crossHierarchyId);
         final String complainantAddress = Objects.isNull(values.get("complainantAddress")) ? StringUtils.EMPTY : values.get("complainantAddress"); 
         final Complainant complainant = new Complainant(firstName, phone, email,complainantAddress);
-        return org.egov.pgr.domain.model.Complaint.builder()
+        return Complaint.builder()
                 .authenticatedUser(authenticatedUser)
                 .crn(crn)
                 .complaintType(new ComplaintType(complaintTypeName, complaintTypeCode))

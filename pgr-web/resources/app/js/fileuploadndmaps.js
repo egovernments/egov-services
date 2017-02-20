@@ -39,6 +39,8 @@
  */
 var fileinputid = [];
 var filefilled = {};//image fullfilled array
+var fileid;
+var fileSize = 5e+6;
 $(document).ready(function(){
 	
 	var fileformats = ['jpg', 'jpeg', 'gif', 'png',  '3g2', '3gp', '3gp2', '3gpp', 'avi', 'divx', 'flv', 'mov', 'mp4', 'mpeg4', 'mpg4', 'mpeg', 'mpg', 'm4v', 'wmv' ];
@@ -46,55 +48,40 @@ $(document).ready(function(){
 	
 	fileinputid = ['file1','file2','file3'];//assigning file id
 	var removedarray = [];
-	var fileid;
+	
 	
 	$('#triggerFile:enabled').click(function(){
-		console.log(removedarray.length);
+		//console.log(removedarray.length);
 		if(removedarray.length == 0 || removedarray.length == 3)
 		{
 			var keys=Object.keys(filefilled);
 			fileid = fileinputid[keys.length];
-			console.log("File ID normal:"+fileid);
+			//console.log("File ID normal:"+fileid);
 			}else{
 			fileid = removedarray[0];
-			console.log("File ID removal:"+fileid);
+			//console.log("File ID removal:"+fileid);
 		}
-	    
 		
 		$('#'+fileid).trigger("click");
 	});
 	
-	$('.remove-img').click(function(){
-		console.log("Removal");
-		delete filefilled[$(this).attr('data-file-id')];
-		if ($.inArray($(this).attr('data-file-id'), removedarray) !== -1)//check removed file id already exists, if exists leave as such or push it
+	$(document).on('click','.remove-img',function(){
+		//console.log("Removal");
+		var toRemove = $(this).attr('data-file-id');
+		delete filefilled[toRemove];
+		if ($.inArray(toRemove, removedarray) !== -1)//check removed file id already exists, if exists leave as such or push it
 		{
 			
 			}else{
-			removedarray.push($(this).attr('data-file-id'));
+			removedarray.push(toRemove);
 			removedarray.sort();
-			console.log("sorted removed array"+removedarray);
+			//console.log("sorted removed array"+removedarray);
 		}
 		
-		console.log("File filled array:"+JSON.stringify(filefilled));
+		//console.log("File filled array:"+JSON.stringify(filefilled));
+		$('#'+toRemove+'block').remove();
 		$('#'+$(this).attr('data-file-id')).val('');
 		$('#triggerFile').removeAttr('disabled');
-		if($(this).attr('data-file-id') == 'file1')
-		{
-			$('#file1block, .preview-cross1, #preview1').hide();
-			$('#preview1').removeAttr("src");
-			$('#filename1').html('');
-		}else if($(this).attr('data-file-id') == 'file2')
-		{
-			$('#file2block, .preview-cross2, #preview2').hide();
-			$('#preview2').removeAttr("src");
-			$('#filename2').html('');
-		}else if($(this).attr('data-file-id') == 'file3')
-		{
-			$('#file3block, .preview-cross3, #preview3').hide();
-			$('#preview3').removeAttr("src");
-			$('#filename3').html('');
-		}
 		
 	});
 	
@@ -102,9 +89,14 @@ $(document).ready(function(){
 	{
 		/*validation for file upload*/
 		myfile= $( this ).val();
-		var ext = myfile.split('.').pop();
+		var ext = myfile.split('.').pop().toLowerCase();
 		if($.inArray(ext, fileformats) > -1){
-			//do something    
+				//do something  
+				if(this.files[0].size > fileSize){
+					bootbox.alert('File size exceeds 5MB limit');
+					$( this ).val('');	
+					return;
+				}
 			}else{
 				bootbox.alert(ext+" file format is not allowed");
 			return;
@@ -126,24 +118,27 @@ $(document).ready(function(){
 				EXIF.getData(e.target.files[0], function() {
 					var imagelat = EXIF.getTag(this, "GPSLatitude"),
 					imagelongt = EXIF.getTag(this, "GPSLongitude");
-					var formatted_lat = format_lat_long(imagelat.toString());
-					var formatted_long = format_lat_long(imagelongt.toString());
-					$.ajax({
-						type: "POST",
-						url: 'https://maps.googleapis.com/maps/api/geocode/json?latlng='+formatted_lat+','+formatted_long+'&sensor=true',
-						dataType: 'json',
-						success : function(data){
-							$('#location').typeahead('val', data.results[0].formatted_address);
-							myCenter=new google.maps.LatLng(formatted_lat, formatted_long);
-							$('#lat').val(formatted_lat);
-							$('#lng').val(formatted_long);
-							lat = formatted_lat;
-							lng = formatted_long;
-							//setmarkerfromimage();
-						    	map.setCenter(myCenter);
-						}
-					});
-					//console.log(EXIF.pretty(this));
+					if(imagelat || imagelongt){
+						//console.log(imagelat+'<--->'+imagelongt)
+						var formatted_lat = format_lat_long(imagelat.toString());
+						var formatted_long = format_lat_long(imagelongt.toString());
+						$.ajax({
+							type: "POST",
+							url: 'https://maps.googleapis.com/maps/api/geocode/json?latlng='+formatted_lat+','+formatted_long+'&sensor=true',
+							dataType: 'json',
+							success : function(data){
+								$('#location').typeahead('val', data.results[0].formatted_address);
+								myCenter=new google.maps.LatLng(formatted_lat, formatted_long);
+								$('#lat').val(formatted_lat);
+								$('#lng').val(formatted_long);
+								lat = formatted_lat;
+								lng = formatted_long;
+								//setmarkerfromimage();
+							    	map.setCenter(myCenter);
+							}
+						});
+						//console.log(EXIF.pretty(this));	
+					}
 				});
 			}
 			
@@ -161,28 +156,7 @@ $(document).ready(function(){
 		if (input.files && input.files[0]) {
 			var reader = new FileReader();
 			reader.onload = function(e) {
-				if(fileid == 'file1')
-				{
-					$('#file1block, .preview-cross1, #preview1').show();
-					$('.preview-cross1').attr('data-file-id',fileid);
-					$('#preview1').attr('src', e.target.result).width(100);
-					navigateToImage($('#preview1'));
-					$('#filename1').html(filename);
-				}else if(fileid == 'file2')
-				{
-					$('#file2block, .preview-cross2, #preview2').show();
-					$('.preview-cross2').attr('data-file-id',fileid);
-					$('#preview2').attr('src', e.target.result).width(100);
-					navigateToImage($('#preview2'));
-					$('#filename2').html(filename);
-				}else if(fileid == 'file3')
-				{
-					$('#file3block, .preview-cross3, #preview3').show();
-					$('.preview-cross3').attr('data-file-id',fileid);
-					$('#preview3').attr('src', e.target.result).width(100);
-					navigateToImage($('#preview3'));
-					$('#filename3').html(filename);
-				}
+				setImage(e,input, filename);
 			}
 			
 			reader.readAsDataURL(input.files[0]);
@@ -399,6 +373,25 @@ $(document).ready(function(){
 	});
 	
 });
+
+function setImage(e,input, filename){
+	var type = input.files[0].type.split('/')[0];
+	var ind = fileid.split("file").pop();
+	if(type == 'image'){
+		var template = '<div id="file'+ind+'block" class="add-margin col-sm-4 col-xs-4">'+
+						'<img src="'+e.target.result+'" alt="" width="100px"/>'+
+						'<div class="remove-img" data-file-id="'+fileid+'"><i class="fa fa-times-circle"></i></div>'+
+						'<div class="add-padding">'+filename+'</div>'+
+						'</div>';
+	}else if(type="video"){
+		var template = '<div id="file'+ind+'block" class="add-margin col-sm-4 col-xs-4">'+
+						'<video width="100px" controls>'+
+						'<source src="'+e.target.result+'" type="video/mp4"></video>'+
+						'<div class="remove-img" data-file-id="'+fileid+'"><i class="fa fa-times-circle"></i></div>'+
+						'</div>';
+	}
+	$('.fileblock').append(template);
+}
 
 function clearimagepreview(){
 	for(var i=1;i<=fileinputid.length;i++){

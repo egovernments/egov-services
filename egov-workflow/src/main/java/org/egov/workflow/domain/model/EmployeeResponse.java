@@ -7,8 +7,9 @@ import lombok.Getter;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EmployeeResponse {
 
-	private Long id;
-	private String name;
-	private String code;
+    private Long id;
+    private String name;
+    private String code;
+    private String username;
 
 }

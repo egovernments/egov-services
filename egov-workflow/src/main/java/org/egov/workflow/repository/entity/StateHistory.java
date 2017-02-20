@@ -40,12 +40,24 @@
 
 package org.egov.workflow.repository.entity;
 
-import org.hibernate.annotations.Immutable;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.Immutable;
 
 @Entity
 @Immutable
@@ -59,28 +71,29 @@ public class StateHistory implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = SEQ_STATEHISTORY)
     private Long id;
 
-    @JoinColumn(name = "createdBy")
+    @Column(name = "createdBy")
     private Long createdBy;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
 
-    @JoinColumn(name = "lastModifiedBy")
+    @Column(name = "lastModifiedBy")
     private Long lastModifiedBy;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastModifiedDate;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "state_id")
     private State state;
 
     @NotNull
     private String value;
 
-    @JoinColumn(name = "OWNER_POS")
+    @Column(name = "OWNER_POS")
     private Long ownerPosition;
 
-    @JoinColumn(name = "OWNER_USER")
+    @Column(name = "OWNER_USER")
     private Long ownerUser;
 
     private String senderName;
@@ -90,10 +103,10 @@ public class StateHistory implements Serializable {
     private String extraInfo;
     private Date dateInfo;
     private Date extraDateInfo;
-    
-    @JoinColumn(name = "INITIATOR_POS")
+
+    @Column(name = "INITIATOR_POS")
     private Long initiatorPosition;
-    
+
     StateHistory() {
     }
 
@@ -131,7 +144,6 @@ public class StateHistory implements Serializable {
     public void setValue(final String value) {
         this.value = value;
     }
-
 
     public String getSenderName() {
         return senderName;
@@ -252,6 +264,21 @@ public class StateHistory implements Serializable {
     public void setInitiatorPosition(Long initiatorPosition) {
         this.initiatorPosition = initiatorPosition;
     }
-    
+
+    public Task map() {
+        Task t = new Task();
+        t.setBusinessKey(this.getState().getType());
+        t.setComments(this.comments == null ? "" : this.comments);
+        t.setCreatedDate(this.getCreatedDate());
+        t.setId(this.getId().toString());
+        t.setStatus(this.getValue());
+        t.setDescription(this.getNatureOfTask());
+        t.setOwner(this.getOwnerPosition().toString());
+        t.setDetails(this.extraInfo == null ? "" : this.extraInfo);
+        t.setSender(this.senderName == null ? "" : this.senderName);
+        t.setAction(this.nextAction == null ? "" : this.nextAction);
+        return t;
+
+    }
 
 }

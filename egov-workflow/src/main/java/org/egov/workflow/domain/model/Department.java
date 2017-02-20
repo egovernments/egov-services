@@ -38,97 +38,45 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.workflow.repository.entity;
+package org.egov.workflow.domain.model;
 
-import javax.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-@Entity
-@Table(name = "EG_WF_TYPES")
-@SequenceGenerator(name = WorkflowTypes.SEQ_WORKFLOWTYPES, sequenceName = WorkflowTypes.SEQ_WORKFLOWTYPES, allocationSize = 1)
-public class WorkflowTypes extends AbstractAuditable {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Department {
 
-    static final String SEQ_WORKFLOWTYPES = "SEQ_EG_WF_TYPES";
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(generator = SEQ_WORKFLOWTYPES, strategy = GenerationType.SEQUENCE)
+    @JsonProperty("id")
     private Long id;
 
-    @Column(name = "module")
-    private Long module;
+    @JsonProperty("name")
+    private String name;
 
-    private String type;
-
-    private String typeFQN;
-
-    private String link;
-
-    private String displayName;
-
-    private boolean enabled;
-
-    private boolean grouped;
+    @JsonProperty("code")
+    private String code;
 
     public Long getId() {
         return id;
     }
 
-    public void setId(final Long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Long getModule() {
-        return module;
+    public String getName() {
+        return name;
     }
 
-    public void setModule(Long module) {
-        this.module = module;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getType() {
-        return type;
+    public String getCode() {
+        return code;
     }
 
-    public void setType(final String type) {
-        this.type = type;
+    public void setCode(String code) {
+        this.code = code;
     }
 
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public void setDisplayName(final String displayName) {
-        this.displayName = displayName;
-    }
-
-    public String getLink() {
-        return link;
-    }
-
-    public void setLink(final String link) {
-        this.link = link;
-    }
-
-    public String getTypeFQN() {
-        return typeFQN;
-    }
-
-    public void setTypeFQN(final String typeFQN) {
-        this.typeFQN = typeFQN;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(final boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public boolean isGrouped() {
-        return grouped;
-    }
-
-    public void setGrouped(final boolean grouped) {
-        this.grouped = grouped;
-    }
 }

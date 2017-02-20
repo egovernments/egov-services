@@ -6,7 +6,7 @@ import org.egov.workflow.domain.model.PositionHierarchyResponse;
 
 public interface PositionHierarchyService {
 
-	List<PositionHierarchyResponse> getByObjectTypeObjectSubTypeAndFromPosition(String objectType, String objectSubType,
-			Long fromPositionid);
+    List<PositionHierarchyResponse> getByObjectTypeObjectSubTypeAndFromPosition(String objectType, String objectSubType,
+            Long fromPositionid);
 
 }

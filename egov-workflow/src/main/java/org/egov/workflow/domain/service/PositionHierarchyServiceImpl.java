@@ -2,23 +2,23 @@ package org.egov.workflow.domain.service;
 
 import java.util.List;
 
+import org.egov.workflow.config.PropertiesManager;
 import org.egov.workflow.domain.model.PositionHierarchyResponse;
 import org.egov.workflow.domain.model.PositionHierarchyServiceResponse;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
 public class PositionHierarchyServiceImpl implements PositionHierarchyService {
 
-    @Value("${egov.services.eis.host}")
-    private String positionHierarchyServiceHost;
+    @Autowired
+    private PropertiesManager propertiesManager;
 
     @Override
     public List<PositionHierarchyResponse> getByObjectTypeObjectSubTypeAndFromPosition(final String objectType,
             final String objectSubType, final Long fromPositionid) {
-    	String url = positionHierarchyServiceHost
-				+ "eis/positionhierarchys?positionHierarchy.objectType.type={objectType}&positionHierarchy.objectSubType={objectSubType}&positionHierarchy.fromPosition.id={fromPosition}";
+        String url = propertiesManager.getPositionHierarchyUrl();
         return getPositionHierarchyServiceResponse(url, objectType, objectSubType, fromPositionid)
                 .getPositionHierarchy();
     }

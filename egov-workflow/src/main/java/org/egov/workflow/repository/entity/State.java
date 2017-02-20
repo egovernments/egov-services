@@ -40,14 +40,26 @@
 
 package org.egov.workflow.repository.entity;
 
-import org.hibernate.validator.constraints.Length;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.Length;
 
 @Entity
 @Table(name = "EG_WF_STATES")
@@ -77,10 +89,9 @@ public class State extends AbstractAuditable {
     @Column(name = "OWNER_USER")
     private Long ownerUser;
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY, mappedBy = "state")
+    @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.LAZY, mappedBy = "state")
     @OrderBy("id")
     private Set<StateHistory> history = new HashSet<>();
-
 
     private String senderName;
     private String nextAction;
@@ -235,6 +246,21 @@ public class State extends AbstractAuditable {
 
     public enum StateStatus {
         STARTED, INPROGRESS, ENDED
+    }
+
+    public Task map() {
+        Task t = new Task();
+        t.setBusinessKey(this.type == null ? "" : this.type);
+        t.setComments(this.comments == null ? "" : this.comments);
+        t.setCreatedDate(this.getCreatedDate());
+        t.setId(this.id.toString());
+        t.setStatus(this.value);
+        t.setNatureOfTask(this.natureOfTask == null ? "" : this.natureOfTask);
+        t.setDetails(this.extraInfo == null ? "" : this.extraInfo);
+        t.setSender(this.senderName == null ? "" : this.senderName);
+        t.setAction(this.nextAction == null ? "" : this.nextAction);
+        return t;
+
     }
 
 }

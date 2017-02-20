@@ -6,12 +6,9 @@ import org.egov.pgr.employee.enrichment.repository.contract.WorkflowRequest;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.egov.pgr.employee.enrichment.model.ServiceRequest.SERVICE_CODE;
-import static org.egov.pgr.employee.enrichment.model.ServiceRequest.VALUES_LOCATION_ID;
-
 public class SevaRequest {
 
-    public final static String SERVICE_REQUEST = "ServiceRequest";
+    private final static String SERVICE_REQUEST = "ServiceRequest";
     private final static String REQUEST_INFO = "RequestInfo";
     private static final String VALUES_ASSIGNEE_ID = "assignment_id";
     private static final String VALUES_STATE_ID = "state_id";
@@ -19,7 +16,9 @@ public class SevaRequest {
     private static final String VALUES_COMLAINT_TYPE_CODE = "complaint_type_code";
     private static final String BOUNDARY_ID = "boundary_id";
     private static final String WORKFLOW_TYPE = "Complaint";
-    public static final String STATUS = "status";
+    private static final String STATUS = "status";
+    private static final String SERVICE_CODE = "service_code";
+    private static final String VALUES_LOCATION_ID = "location_id";
 
     private HashMap<String, Object> sevaRequestMap;
 

@@ -6,6 +6,8 @@ import org.egov.workflow.web.contract.ProcessInstance;
 public interface Workflow {
 
     ProcessInstance start(String jurisdiction, ProcessInstance processInstance);
+    
+    ProcessInstance end(String jurisdiction, ProcessInstance processInstance);
 
    // ProcessInstance getProcess(String jurisdiction, ProcessInstance processInstance);
 

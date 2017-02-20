@@ -27,9 +27,8 @@ public class ProcessInstanceValidator implements Validator {
         RequestInfo requestInfo = processToValidate.getRequestInfo();
         if (requestInfo == null)
             errors.rejectValue("requestInfo", "requestInfo.required", "Header values are required");
-        if (requestInfo != null) {
-            if (requestInfo.getTenantId() == null)
-                errors.rejectValue("requestInfo.tenantId", "tenantId.required", "Tenant id is required");
+        if (requestInfo != null && requestInfo.getTenantId() == null) {
+            errors.rejectValue("requestInfo.tenantId", "tenantId.required", "Tenant id is required");
         }
     }
 }

@@ -10,46 +10,22 @@ node("slave"){
         checkout scm
         sh "git rev-parse --short HEAD > .git/commit-id".trim()
         commit_id = readFile('.git/commit-id')
+        code_builder = load("jenkins/code_builder.groovy")
+        archiver = load("jenkins/archiver.groovy")
+        image_builder = load("jenkins/image_builder.groovy")
         notifier = load("jenkins/notifier.groovy")
 
-        def build_workflow_exists = fileExists("${service_name}/build.wkflo");
-        if (build_workflow_exists) {
-            build_wkflo = load "${service_name}/build.wkflo"
-            build_wkflo.build("${service_name}", "${ci_image}")
-        } else {
-            defaultMavenBuild("${service_name}", "${ci_image}")
-        }
+        code_builder.build(service_name, ci_image)
 
-        stage("Archive Results") {
-        archive "${service_name}/target/*.jar"
-	archive "${service_name}/target/**/*.html"
-        }
+        archiver.archive(service_name)
 
-        stage("Build docker image") {
-            sh "cd ${service_name} && docker build -t egovio/${service_name} ."
-            sh "docker tag egovio/${service_name} egovio/${service_name}:${BUILD_ID}-${commit_id}"
-            sh "docker tag egovio/${service_name} egovio/${service_name}:latest"
-        }
+        image_builder.build(service_name, commit_id)
 
-        stage("Publish docker image") {
-            sh "docker push egovio/${service_name}:${BUILD_ID}-${commit_id}"
-            sh "docker push egovio/${service_name}:latest"
-        }
+        image_builder.publish(service_name, commit_id)
 
-        stage("Clean docker image locally") {
-            sh "docker rmi egovio/${service_name}:${BUILD_ID}-${commit_id}"
-            sh "docker rmi egovio/${service_name}:latest"
-        }
+        image_builder.clean(service_name, commit_id)
     } catch (e) {
         notifier.notifyBuild("FAILED")
         throw e
-    }
-}
-
-def defaultMavenBuild(service_name, ci_image){
-    stage("Build"){
-        docker.image("${ci_image}").inside {
-            sh "cd ${service_name}; mvn clean verify package";
-        }
     }
 }

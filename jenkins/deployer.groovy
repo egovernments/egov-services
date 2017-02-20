@@ -4,13 +4,12 @@ def deploy(service_name, commit_id, timeoutInMins=5){
 	timeout(time:timeoutInMins, unit:'MINUTES') {
 	    input(message:'Approve deployment?')
         }
-        node("slave"){
-            doDeploy()
-	}	
     } catch (err) {
-        def user = err.getCauses()[0].getUser()
-        echo "Aborted by:\n ${user}"
+        echo "Timed-out waiting for input!!"
     }
+    node("slave") {
+        doDeploy()
+    }	
     milestone()
 }
 

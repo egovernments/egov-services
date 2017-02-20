@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 
 @Service
-public class PgrWorkflowImpl implements WorkflowInterface {
+public class PgrWorkflowImpl implements Workflow {
 
     private ComplaintRouterService complaintRouterService;
     private StateService stateService;

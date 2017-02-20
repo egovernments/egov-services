@@ -1,10 +1,9 @@
 package org.egov.workflow.service;
 
 
-import org.egov.workflow.repository.entity.State;
 import org.egov.workflow.web.contract.ProcessInstance;
 
-public interface WorkflowInterface {
+public interface Workflow {
 
     ProcessInstance start(String jurisdiction, ProcessInstance processInstance);
 

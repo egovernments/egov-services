@@ -4,7 +4,7 @@ import org.egov.pgr.domain.model.AuthenticatedUser;
 import org.egov.pgr.persistence.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static org.apache.commons.lang.StringUtils.isEmpty;
+import static org.springframework.util.StringUtils.isEmpty;
 
 public class UserService {
     private UserRepository userRepository;

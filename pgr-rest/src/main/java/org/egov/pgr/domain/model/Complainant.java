@@ -4,7 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Value;
 
-import static org.apache.commons.lang.StringUtils.isEmpty;
+import static org.springframework.util.StringUtils.isEmpty;
+
 
 //A person who made a complaint
 @Value

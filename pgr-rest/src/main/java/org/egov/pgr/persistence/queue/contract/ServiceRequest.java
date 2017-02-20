@@ -8,7 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.egov.pgr.domain.model.*;
 
 import java.util.Date;
@@ -120,7 +120,7 @@ public class ServiceRequest {
     public Complaint toDomain(AuthenticatedUser authenticatedUser, String jurisdictionId) {
         final Coordinates coordinates = new Coordinates(latitude, longitude);
         final ComplaintLocation complaintLocation = new ComplaintLocation(coordinates, crossHierarchyId);
-        final String complainantAddress = Objects.isNull(values.get("complainantAddress")) ? StringUtils.EMPTY : values.get("complainantAddress"); 
+        final String complainantAddress = Objects.isNull(values.get("complainantAddress")) ? StringUtils.EMPTY : values.get("complainantAddress");
         final Complainant complainant = new Complainant(firstName, phone, email,complainantAddress);
         return Complaint.builder()
                 .authenticatedUser(authenticatedUser)

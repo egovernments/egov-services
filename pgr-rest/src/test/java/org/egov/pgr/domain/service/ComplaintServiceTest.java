@@ -93,7 +93,7 @@ public class ComplaintServiceTest {
 
         complaintService.save(complaint, sevaRequest);
 
-        verify(complaintRepository).save(sevaRequest, TENANT_ID);
+        verify(complaintRepository).save(sevaRequest);
     }
 
     @Test
@@ -104,7 +104,7 @@ public class ComplaintServiceTest {
 
         complaintService.update(complaint, sevaRequest);
 
-        verify(complaintRepository).update(sevaRequest, TENANT_ID);
+        verify(complaintRepository).update(sevaRequest);
     }
 
     @Test

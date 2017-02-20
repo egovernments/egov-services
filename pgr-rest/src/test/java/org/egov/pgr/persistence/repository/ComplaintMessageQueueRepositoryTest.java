@@ -35,7 +35,7 @@ public class ComplaintMessageQueueRepositoryTest {
         sevaRequest.setRequestInfo(new RequestInfo());
         RequestContext.setId(correlationId);
 
-        complaintMessageQueueRepository.save(sevaRequest, TENANT_ID);
+        complaintMessageQueueRepository.save(sevaRequest);
 
         assertEquals(correlationId, sevaRequest.getRequestInfo().getMsgId());
     }

@@ -21,7 +21,7 @@ public class ComplaintMessageQueueRepository {
         this.queueNameSuffix = queueNameSuffix;
     }
 
-    public void save(SevaRequest sevaRequest, String jurisdictionId) {
+    public void save(SevaRequest sevaRequest) {
         String topicName = queueNameSuffix;
         sevaRequest.getRequestInfo().setMsgId(RequestContext.getId());
         kafkaTemplate.send(topicName, sevaRequest);

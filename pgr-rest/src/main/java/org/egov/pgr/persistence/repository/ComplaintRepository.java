@@ -25,9 +25,9 @@ public class ComplaintRepository {
         this.complaintMessageQueueRepository = complaintMessageQueueRepository;
     }
 
-    public void save(SevaRequest sevaRequest, String jurisdictionId) {
+    public void save(SevaRequest sevaRequest) {
         sevaRequest.getRequestInfo().setAction(CREATE);
-        this.complaintMessageQueueRepository.save(sevaRequest, jurisdictionId);
+        this.complaintMessageQueueRepository.save(sevaRequest);
     }
 
     public List<Complaint> findAll(ComplaintSearchCriteria complaintSearchCriteria) {
@@ -38,9 +38,9 @@ public class ComplaintRepository {
                 .collect(Collectors.toList());
     }
 
-    public void update(SevaRequest sevaRequest, String jurisdictionId) {
+    public void update(SevaRequest sevaRequest) {
         sevaRequest.getRequestInfo().setAction(UPDATE);
-        this.complaintMessageQueueRepository.save(sevaRequest, jurisdictionId);
+        this.complaintMessageQueueRepository.save(sevaRequest);
     }
 }
 

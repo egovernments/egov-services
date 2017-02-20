@@ -14,6 +14,7 @@ node("slave"){
         archiver = load("jenkins/archiver.groovy")
         image_builder = load("jenkins/image_builder.groovy")
         notifier = load("jenkins/notifier.groovy")
+        deployer = load("jenkins/notifier.deployer")
 
         code_builder.build(service_name, ci_image)
 
@@ -24,6 +25,13 @@ node("slave"){
         image_builder.publish(service_name, commit_id)
 
         image_builder.clean(service_name, commit_id)
+
+        stage("Deploy to QA") {
+            milestone()
+            input("Deploy to QA?")
+            milestone()
+            deployer.deploy(service_name, commit_id)
+        }
     } catch (e) {
         notifier.notifyBuild("FAILED")
         throw e

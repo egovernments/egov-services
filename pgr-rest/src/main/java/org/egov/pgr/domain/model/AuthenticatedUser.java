@@ -22,7 +22,7 @@ public class AuthenticatedUser {
 
     public static AuthenticatedUser createAnonymousUser() {
         final List<UserType> type = Collections.singletonList(UserType.SYSTEM);
-        return AuthenticatedUser.builder().anonymousUser(true).type(type).build();
+        return AuthenticatedUser.builder().anonymousUser(true).type(type).id(0).build();
     }
 
     public UserType getType() {

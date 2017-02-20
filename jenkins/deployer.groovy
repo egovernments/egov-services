@@ -1,14 +1,12 @@
-def deploy(service_name, commit_id){
+def deploy(service_name, commit_id, timeoutInMins=5){
     milestone()
     try {
-        timeout(time: 10, unit: 'SECONDS') {
-            input message: 'Do you want to release this build?',
-                  parameters: [[$class: 'BooleanParameterDefinition',
-                                defaultValue: false,
-                                description: 'Ticking this box will do a release',
-                                name: 'Release']]
-	doDeploy()
+	timeout(time:timeoutInMins, unit:'MINUTES') {
+	    input(message:'Approve deployment?')
         }
+        node("slave"){
+            doDeploy()
+	}	
     } catch (err) {
         def user = err.getCauses()[0].getUser()
         echo "Aborted by:\n ${user}"

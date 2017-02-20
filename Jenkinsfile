@@ -5,8 +5,8 @@ def build_wkflo;
 def ci_image = "egovio/ci:0.0.1"
 def notifier = "";
 
-node("slave"){
-    try {
+try {
+    node("slave"){
         checkout scm
         sh "git rev-parse --short HEAD > .git/commit-id".trim()
         commit_id = readFile('.git/commit-id')
@@ -25,12 +25,12 @@ node("slave"){
         image_builder.publish(service_name, commit_id)
 
         image_builder.clean(service_name, commit_id)
-
-        stage("Deploy to QA") {
-            deployer.deploy(service_name, commit_id)
-        }
-    } catch (e) {
-        //  notifier.notifyBuild("FAILED")
-        throw e
     }
+
+    stage("Deploy to QA") {
+        deployer.deploy(service_name, commit_id)
+    }
+} catch (e) {
+    //  notifier.notifyBuild("FAILED")
+    throw e
 }

@@ -1,4 +1,4 @@
-def build(service_name) {
+def build(service_name, ci_image) {
     stage("Build") {
         echo "Nothing to build in ${service_name}. Its just a single page application serving an html."
     }

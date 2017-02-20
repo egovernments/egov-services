@@ -38,4 +38,8 @@ public class RequestInfo   {
     @JsonProperty("auth_token")
     private String authToken;
 
+    private String userId;
+    private String userType;
+    private String tenantId;
+
 }

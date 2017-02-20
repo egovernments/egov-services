@@ -22,4 +22,10 @@ public class SevaRequest {
     public Complaint toDomain(AuthenticatedUser authenticatedUser, String jurisdictionId) {
         return serviceRequest.toDomain(authenticatedUser, jurisdictionId);
     }
+
+    public void update(Complaint complaint) {
+        serviceRequest.setCrn(complaint.getCrn());
+        requestInfo.setUserId(complaint.getAuthenticatedUser().getId().toString());
+        requestInfo.setUserType(complaint.getAuthenticatedUser().getType().toString());
+    }
 }

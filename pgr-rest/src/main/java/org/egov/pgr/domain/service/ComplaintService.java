@@ -29,13 +29,14 @@ public class ComplaintService {
     public void save(Complaint complaint, SevaRequest sevaRequest) {
         complaint.validate();
         final String crn = sevaNumberGeneratorService.generate();
-        sevaRequest.getServiceRequest().setCrn(crn);
         complaint.setCrn(crn);
+        sevaRequest.update(complaint);
         complaintRepository.save(sevaRequest, complaint.getJurisdictionId());
     }
 
     public void update(Complaint complaint, SevaRequest sevaRequest) {
         complaint.validate();
+        sevaRequest.update(complaint);
         complaintRepository.update(sevaRequest, complaint.getJurisdictionId());
     }
 

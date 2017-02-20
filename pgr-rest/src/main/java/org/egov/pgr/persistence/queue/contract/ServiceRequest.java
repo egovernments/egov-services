@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -21,6 +22,7 @@ import java.util.Objects;
  */
 @Data
 @AllArgsConstructor
+@Builder
 @EqualsAndHashCode
 public class ServiceRequest {
     @JsonProperty("service_request_id")

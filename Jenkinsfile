@@ -31,6 +31,8 @@ try {
 //        deployer.deploy(service_name, commit_id)
 //    }
 } catch (e) {
-    notifier.notifyBuild("FAILED")
-    throw e
+    node{
+        notifier.notifyBuild("FAILED")
+        throw e
+    }
 }

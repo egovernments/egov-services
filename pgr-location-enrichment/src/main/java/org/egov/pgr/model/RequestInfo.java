@@ -1,11 +1,9 @@
 package org.egov.pgr.model;
 
-import java.util.Date;
-import java.util.Objects;
-
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.Date;
 
 public class RequestInfo {
     @JsonProperty("api_id")

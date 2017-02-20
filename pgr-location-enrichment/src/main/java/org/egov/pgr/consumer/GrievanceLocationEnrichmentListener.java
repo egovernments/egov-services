@@ -1,8 +1,5 @@
 package org.egov.pgr.consumer;
 
-import static org.apache.commons.lang.StringUtils.isNotEmpty;
-
-import java.util.HashMap;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.egov.pgr.model.RequestInfo;
@@ -16,6 +13,10 @@ import org.egov.pgr.transform.CrossHierarchyResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
+
+import java.util.HashMap;
+
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 public class GrievanceLocationEnrichmentListener {
 
@@ -80,8 +81,10 @@ public class GrievanceLocationEnrichmentListener {
     }
 
     private boolean locationHasBeenProvided(ServiceRequest serviceRequest) {
-        return (serviceRequest.getLat() != null && serviceRequest.getLat() > 0 && serviceRequest.getLng() != null
-                && serviceRequest.getLng() > 0);
+        return serviceRequest.getLat() != null &&
+                serviceRequest.getLat() > 0 &&
+                serviceRequest.getLng() != null &&
+                serviceRequest.getLng() > 0;
     }
 
 }

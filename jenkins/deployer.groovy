@@ -1,5 +1,5 @@
 def deploy(service_name, commit_id){
-    def namespace = ${JOB_NAME}.split("/")[-2]
+    def namespace = "${JOB_NAME}".split("/")[-2]
     def tag = "${BUILD_ID}-${commit_id}"
     def image = "${service_name}:${tag}"
     sh "kubectl set image deployments/${service_name} ${service_name}=${image} --namespace=${namespace}"

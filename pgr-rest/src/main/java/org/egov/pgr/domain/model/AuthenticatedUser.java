@@ -11,7 +11,6 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class AuthenticatedUser {
-    private static final String CITIZEN = "Citizen";
     private String mobileNumber;
     private String emailId;
     private String name;

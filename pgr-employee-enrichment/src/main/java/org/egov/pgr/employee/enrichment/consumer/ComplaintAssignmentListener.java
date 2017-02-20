@@ -1,33 +1,26 @@
 package org.egov.pgr.employee.enrichment.consumer;
 
-import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.egov.pgr.employee.enrichment.producer.ComplaintPersister;
+import org.egov.pgr.employee.enrichment.model.SevaRequest;
+import org.egov.pgr.employee.enrichment.model.RequestContext;
+import org.egov.pgr.employee.enrichment.repository.ComplaintRepository;
 import org.egov.pgr.employee.enrichment.service.WorkflowService;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
-import java.util.Map;
 
-public class ComplaintAssignment {
+@Service
+public class ComplaintAssignmentListener {
 
-    @Value("${kafka.topics.pgr.employee_enriched.name}")
-    private String employeeEnrichedTopicName;
-
-    @Autowired
-    private ComplaintPersister complaintPersister;
-
-    @Autowired
+    private ComplaintRepository complaintRepository;
     private WorkflowService workflowService;
 
     @Autowired
-    public ComplaintAssignment(ComplaintPersister complaintPersister, WorkflowService workflowService) {
+    public ComplaintAssignmentListener(ComplaintRepository complaintRepository, WorkflowService workflowService) {
         this.workflowService = workflowService;
-        this.complaintPersister = complaintPersister;
-    }
-
-    public ComplaintAssignment() {
+        this.complaintRepository = complaintRepository;
     }
 
     /*
@@ -43,10 +36,12 @@ public class ComplaintAssignment {
      * "testing"}}}
      */
     @KafkaListener(id = "${kafka.topics.pgr.locationpopulated.id}", topics = "${kafka.topics.pgr.locationpopulated.name}", group = "${kafka.topics.pgr.locationpopulated.group}")
-    public void processMessage(ConsumerRecord record) {
-        HashMap sevaRequestHash = (HashMap) record.value();
-        Map enrichedSevaRequest = workflowService.enrichWorkflowDetails(sevaRequestHash);
-        complaintPersister.sendMessage(employeeEnrichedTopicName, enrichedSevaRequest);
+    public void process(HashMap<String, Object> sevaRequestMap) {
+        final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
+        MDC.put(RequestContext.CORRELATION_ID, sevaRequest.getCorrelationId());
+        RequestContext.setId(sevaRequest.getCorrelationId());
+        final SevaRequest enrichedSevaRequest = workflowService.enrichWorkflow(sevaRequest);
+        complaintRepository.save(enrichedSevaRequest);
     }
 
 }

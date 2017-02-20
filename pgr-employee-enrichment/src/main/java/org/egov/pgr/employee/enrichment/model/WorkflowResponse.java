@@ -1,4 +1,4 @@
-package org.egov.pgr.employee.enrichment.repository.contract;
+package org.egov.pgr.employee.enrichment.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -11,9 +11,9 @@ import lombok.Getter;
 public class WorkflowResponse {
 
     @JsonProperty("state_id")
-    private Long stateId;
+    private String stateId;
 
     @JsonProperty("assignee")
-    private Long assignee;
+    private String assignee;
 
 }

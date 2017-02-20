@@ -12,4 +12,4 @@ def deploy(service_name, commit_id){
     }
 }
 
-return this
+return this;

@@ -8,12 +8,12 @@ def deploy(service_name, commit_id, timeoutInMins=5){
         echo "Timed-out waiting for input!!"
     }
     node("slave") {
-        doDeploy()
+        doDeploy(service_name, commit_id)
     }	
     milestone()
 }
 
-def doDeploy(){
+def doDeploy(service_name, commit_id){
     def namespace = "${JOB_NAME}".split("/")[-2]
     def tag = "${BUILD_ID}-${commit_id}"
     def image = "${service_name}:${tag}"

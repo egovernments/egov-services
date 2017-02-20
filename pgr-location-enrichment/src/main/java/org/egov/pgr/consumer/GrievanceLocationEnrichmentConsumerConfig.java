@@ -2,8 +2,13 @@ package org.egov.pgr.consumer;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.egov.pgr.config.PropertiesManager;
 import org.egov.pgr.model.SevaRequest;
+import org.egov.pgr.producer.GrievanceAssignmentProducer;
+import org.egov.pgr.services.BoundaryService;
+import org.egov.pgr.services.CrossHierarchyService;
 import org.egov.pgr.transform.SevaRequestDeserializer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -39,6 +44,15 @@ public class GrievanceLocationEnrichmentConsumerConfig {
     @Value("${kafka.consumer.config.auto_offset_reset}")
     private String autoOffsetReset;
 
+    @Autowired
+    private BoundaryService boundaryService;
+    @Autowired
+    private CrossHierarchyService crossHierarchyService;
+    @Autowired
+    private GrievanceAssignmentProducer kafkaProducer;
+    @Autowired
+    private PropertiesManager propertiesManager;
+
 
     @Bean
     KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, SevaRequest>> kafkaListenerContainerFactory() {
@@ -72,7 +86,7 @@ public class GrievanceLocationEnrichmentConsumerConfig {
 
     @Bean
     public GrievanceLocationEnrichmentListener listener() {
-        return new GrievanceLocationEnrichmentListener();
+        return new GrievanceLocationEnrichmentListener(boundaryService, crossHierarchyService, kafkaProducer, propertiesManager);
     }
 
 }

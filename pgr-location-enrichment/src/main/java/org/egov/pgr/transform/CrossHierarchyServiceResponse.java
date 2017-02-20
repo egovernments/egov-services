@@ -1,18 +1,18 @@
 package org.egov.pgr.transform;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@AllArgsConstructor
+@Getter
 public class CrossHierarchyServiceResponse {
 
-	@JsonProperty("CrossHierarchy")
-	private List<CrossHierarchyResponse> crossHierarchys;
-
-	public List<CrossHierarchyResponse> getCrossHierarchys() {
-		return crossHierarchys;
-	}
+    @JsonProperty("CrossHierarchy")
+    private List<CrossHierarchyResponse> crossHierarchys;
 
 }

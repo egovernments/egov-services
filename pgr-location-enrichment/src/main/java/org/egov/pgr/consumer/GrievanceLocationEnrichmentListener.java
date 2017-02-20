@@ -1,7 +1,8 @@
 package org.egov.pgr.consumer;
 
-
+import org.apache.commons.lang.StringUtils;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.egov.pgr.config.PropertiesManager;
 import org.egov.pgr.model.RequestInfo;
 import org.egov.pgr.model.ServiceRequest;
 import org.egov.pgr.model.SevaRequest;
@@ -11,26 +12,28 @@ import org.egov.pgr.services.CrossHierarchyService;
 import org.egov.pgr.transform.BoundaryResponse;
 import org.egov.pgr.transform.CrossHierarchyResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 
 import java.util.HashMap;
 
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+import static org.apache.commons.lang.StringUtils.isNotEmpty;
+import static org.egov.pgr.model.ServiceRequest.*;
+
 
 public class GrievanceLocationEnrichmentListener {
 
-    @Value("${kafka.topics.pgr.boundary_enriched.name}")
-    private String locationEnrichedTopicName;
-
-    @Autowired
+    private PropertiesManager propertiesManager;
     private GrievanceAssignmentProducer kafkaProducer;
-
-    @Autowired
     private BoundaryService boundaryService;
+    private CrossHierarchyService crossHierarchyService;
 
     @Autowired
-    private CrossHierarchyService crossHierarchyService;
+    public GrievanceLocationEnrichmentListener(BoundaryService boundaryService, CrossHierarchyService crossHierarchyService, GrievanceAssignmentProducer producer, PropertiesManager propertiesManager) {
+        this.boundaryService = boundaryService;
+        this.crossHierarchyService = crossHierarchyService;
+        this.propertiesManager = propertiesManager;
+        kafkaProducer = producer;
+    }
 
     /*
      * Example message {"RequestInfo":{"api_id":"1","ver":"1","ts":null,"action":"create","did":
@@ -46,8 +49,8 @@ public class GrievanceLocationEnrichmentListener {
     @KafkaListener(id = "${kafka.topics.pgr.validated.id}", topics = "${kafka.topics.pgr.validated.name}", group = "${kafka.topics.pgr.validated.group}")
     public void listen(ConsumerRecord<String, SevaRequest> record) {
         SevaRequest sevaRequest = record.value();
-        populateLocation(sevaRequest);
-        kafkaProducer.sendMessage(locationEnrichedTopicName, sevaRequest);
+        if (locationIdIsNotProvided(sevaRequest)) populateLocation(sevaRequest);
+        kafkaProducer.sendMessage(propertiesManager.getLocationEnrichedTopicName(), sevaRequest);
     }
 
     private void populateLocation(SevaRequest sevaRequest) {
@@ -60,8 +63,8 @@ public class GrievanceLocationEnrichmentListener {
                 sevaRequest.getServiceRequest().setValues(new HashMap<>());
             }
 
-            sevaRequest.getServiceRequest().getValues().put("location_id", String.valueOf(response.getId()));
-            sevaRequest.getServiceRequest().getValues().put("location_name", response.getName());
+            sevaRequest.getServiceRequest().getValues().put(LOCATION_ID, String.valueOf(response.getId()));
+            sevaRequest.getServiceRequest().getValues().put(LOCATION_NAME, response.getName());
         }
         if (crossHierarchyIdHasBeenProvided(serviceRequest)) {
             CrossHierarchyResponse chResponse = crossHierarchyService.fetchCrossHierarchyById(requestInfo,
@@ -69,11 +72,17 @@ public class GrievanceLocationEnrichmentListener {
             if (sevaRequest.getServiceRequest().getValues() == null) {
                 sevaRequest.getServiceRequest().setValues(new HashMap<>());
             }
-            sevaRequest.getServiceRequest().getValues().put("location_id", chResponse.getParent().getId().toString());
-            sevaRequest.getServiceRequest().getValues().put("location_name", chResponse.getParent().getName());
-            sevaRequest.getServiceRequest().getValues().put("child_location_id",
-                    chResponse.getChild().getId().toString());
+            sevaRequest.getServiceRequest().getValues().put(LOCATION_ID, chResponse.getParent().getId().toString());
+            sevaRequest.getServiceRequest().getValues().put(LOCATION_NAME, chResponse.getParent().getName());
+            sevaRequest.getServiceRequest().getValues().put(CHILD_LOCATION_ID, chResponse.getChild().getId().toString());
         }
+    }
+
+    private boolean locationIdIsNotProvided(SevaRequest sevaRequest) {
+        return (sevaRequest.getServiceRequest().getValues() == null ||
+                sevaRequest.getServiceRequest().getValues().get(LOCATION_ID) == null ||
+                StringUtils.isEmpty(sevaRequest.getServiceRequest().getValues().get(LOCATION_ID))
+        );
     }
 
     private boolean crossHierarchyIdHasBeenProvided(ServiceRequest serviceRequest) {

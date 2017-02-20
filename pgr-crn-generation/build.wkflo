@@ -1,7 +1,7 @@
 def build(service_name, ci_image) {
     stage("Build"){
         docker.image("${ci_image}").inside {
-            sh "cd ${service_name}; mvn clean package deploy -s settings.xml";
+            sh "cd ${service_name}; mvn -v; mvn clean package -s settings.xml";
         }
     }
 }

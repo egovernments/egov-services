@@ -26,14 +26,6 @@
 		<joda-time-version>2.9.6</joda-time-version>
 	</properties>
 
-	<distributionManagement>
-		<snapshotRepository>
-			<id>repo.egovernments.org</id>
-			<name>eGov ERP Snapshots Repository</name>
-			<url>http://repo.egovernments.org/nexus/content/repositories/snapshots/</url>
-		</snapshotRepository>
-	</distributionManagement>
-
 	<dependencies>
 
 		<dependency>

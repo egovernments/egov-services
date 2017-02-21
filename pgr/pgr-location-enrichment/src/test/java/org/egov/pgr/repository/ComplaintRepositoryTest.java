@@ -26,11 +26,12 @@ public class ComplaintRepositoryTest {
 
     @Test
     public void test_should_send_message() {
-        final SevaRequest sevaRequest = new SevaRequest(new HashMap<>());
+        final HashMap<String, Object> sevaRequestMap = new HashMap<>();
+        final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
 
         complaintRepository.save(sevaRequest);
 
-        verify(kafkaTemplate).send("topicName", sevaRequest);
+        verify(kafkaTemplate).send("topicName", sevaRequestMap);
     }
 
 }

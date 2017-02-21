@@ -95,4 +95,8 @@ public class SevaRequest {
         final RequestInfo requestInfo = (RequestInfo) sevaRequestMap.get(REQUEST_INFO);
         return requestInfo.getMsgId();
     }
+
+    public HashMap<String, Object> getRequestMap() {
+        return sevaRequestMap;
+    }
 }

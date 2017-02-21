@@ -17,10 +17,13 @@ def notifyBuild(String buildStatus = 'STARTED') {
     colorCode = '#FF0000'
   }
 
-  slackSend (color: colorCode, message: summary)
-  emailext (
-     body: '$DEFAULT_CONTENT', recipientProviders: [[$class: 'CulpritsRecipientProvider'], [$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']], replyTo: '$DEFAULT_REPLYTO', subject: '$PROJECT_NAME - Build # $BUILD_NUMBER - ${BUILD_STATUS}!', to: '$DEFAULT_RECIPIENTS'
+  if (${buildStatus} = "FAILED")
+  {
+    slackSend (color: colorCode, message: summary)
+    emailext (
+      body: '${SCRIPT, template="groovy-html.template"}', recipientProviders: [[$class: 'CulpritsRecipientProvider'], [$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']], replyTo: '$DEFAULT_REPLYTO', subject: '$PROJECT_NAME - Build # $BUILD_NUMBER - ${buildStatus}!', to: '$DEFAULT_RECIPIENTS'
     )
+  }
 }
 
 return this;

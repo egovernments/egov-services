@@ -1,0 +1,14 @@
+{
+  "CrossHierarchy": [
+    {
+      "parent": {
+        "id": 1,
+        "name": "parent"
+      },
+      "child": {
+        "id": 2
+      }
+    }
+  ]
+}
+

@@ -12,4 +12,8 @@ public class CrossHierarchyServiceResponse {
     @JsonProperty("CrossHierarchy")
     private List<CrossHierarchyResponse> crossHierarchys;
 
+    public CrossHierarchyResponse getCrossHierarchy() {
+        return crossHierarchys.get(0);
+    }
+
 }

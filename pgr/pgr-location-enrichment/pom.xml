@@ -48,6 +48,12 @@
             <optional>true</optional>
         </dependency>
 
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.5</version>
+        </dependency>
+
         <!--Test dependencies-->
 
         <dependency>
@@ -109,16 +115,35 @@
                         </goals>
                         <configuration>
                             <rules>
+
+                                <rule>
+                                    <element>CLASS</element>
+                                    <excludes>
+                                        <exclude>org.egov.pgr.PgrLocationEnrichmentApplication</exclude>
+                                        <exclude>org.egov.pgr.contract.*</exclude>
+                                        <exclude>org.egov.pgr.model.RequestContext</exclude>
+                                        <exclude>org.egov.pgr.http.CorrelationIdAwareRestTemplate</exclude>
+                                    </excludes>
+                                    <limits>
+                                        <limit>
+                                            <counter>LINE</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>0.90</minimum>
+                                        </limit>
+                                    </limits>
+                                </rule>
+
                                 <rule>
                                     <element>BUNDLE</element>
                                     <limits>
                                         <limit>
                                             <counter>COMPLEXITY</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.2</minimum>
+                                            <minimum>0.3</minimum>
                                         </limit>
                                     </limits>
                                 </rule>
+
                             </rules>
                         </configuration>
                     </execution>

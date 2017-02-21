@@ -1,4 +1,4 @@
-package org.egov.pgr.model;
+package org.egov.pgr.contract;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

@@ -35,5 +35,4 @@ try {
     throw e
   } finally {
     notifyBuild(currentBuild.result)
-  }
 }

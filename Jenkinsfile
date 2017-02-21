@@ -32,11 +32,8 @@ try {
 //    }
 } catch (e) {
     node{
-      currentBuild.result = "FAILED"
-      throw e
+        notifier.notifyBuild("FAILED")
+        throw e
     }
-  } finally {
-    node{
-      notifier.notifyBuild(currentBuild.result)
-    }
-  }
+}
+

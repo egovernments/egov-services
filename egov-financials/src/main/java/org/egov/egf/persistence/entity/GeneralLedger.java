@@ -39,6 +39,7 @@
  */
 package org.egov.egf.persistence.entity;
 
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -52,9 +53,13 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
 import org.ja.annotation.DrillDownTable;
+import org.ja.annotation.Ignore;
 
 import lombok.Data;
 @Data
@@ -68,12 +73,21 @@ public class GeneralLedger extends AbstractPersistable<Long> {
     @GeneratedValue(generator = GeneralLedger.SEQ, strategy = GenerationType.SEQUENCE)
     private Long id = null;
     private Integer orderId;
-    private ChartOfAccounts chartOfAccounts;
+    private ChartOfAccount chartOfAccount;
+    @NotNull
     @Length(max=16)
     private String glcode;
-    private Double debitAmount;
-    private Double creditAmount;
+    @NotNull
+    @Min(value=0)
+    @Max(value=999999999)
+    private BigDecimal debitAmount;
+    @NotNull
+    @Min(value=0)
+    @Max(value=999999999)
+    private BigDecimal creditAmount;
+    @Ignore
     private VoucherHeader voucherHeader;
+    
     private Function function;
     @DrillDownTable
     @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "generalLedger", targetEntity = GeneralLedgerDetail.class)

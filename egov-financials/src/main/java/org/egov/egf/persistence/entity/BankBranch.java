@@ -54,7 +54,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
@@ -80,16 +79,16 @@ public class BankBranch extends AbstractAuditable {
     private Bank bank;
 
     @NotNull
-    @Length(max = 50)
+    @Length(max = 50,min=1)
     private String code;
 
     @NotNull
-    @Length(max = 50)
+    @Length(max = 50,min=1)
     @Pattern(regexp="^[a-zA-Z0-9_]*$")
     private String name;
 
     @NotNull
-    @Length(max = 50)
+    @Length(max = 50,min=1)
     private String address;
 
     @Length(max = 50)

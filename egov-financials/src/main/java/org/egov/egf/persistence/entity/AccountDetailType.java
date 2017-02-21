@@ -50,6 +50,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
@@ -70,33 +71,30 @@ public class AccountDetailType extends AbstractAuditable implements java.io.Seri
    
     private Long id;
 
-    @Column(nullable = false, unique = true)
-    @Length(max = 50)
+    
+    @NotNull
+    @Length(max = 50,min=1)
     private String name;
 
     @NotNull
-    @Length(max = 50)
-   
+    @Length(max = 50,min=1)
     private String description;
 
     @Length(max = 25)
-   
     private String tableName;
 
     @Length(max = 25)
-   
     private String columnName;
 
-    @Column(nullable = false, unique = true)
-    @Length(max = 50)
    
+    @Length(max = 50)
     private String attributeName;
 
+    @NotNull
     private Boolean active;
 
     @Column(name = "FULLY_QUALIFIED_NAME")
-    @Length(max = 250)
-   
+    @Length(max = 250,min=1)
     private String fullyQualifiedName;
 
     @Override

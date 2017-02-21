@@ -72,11 +72,12 @@ public class Function extends AbstractAuditable {
     @NotNull
     private String code;
 
-
+    @NotNull
     private Integer level;
-
+    @NotNull
     private Boolean active;
-
+    //is this required?
+    @NotNull
     private Boolean isParent;
 
     @ManyToOne(fetch = FetchType.LAZY)

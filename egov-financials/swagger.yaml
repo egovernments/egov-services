@@ -1,5 +1,5 @@
 # Financials Version 1 API
-swagger: '2.0'
+swagger: 2.0
 
 # This is your document metadata
 info:
@@ -22,52 +22,6 @@ paths:
           - Masters
           - Bank
         parameters:
-          - name: requestInfo.action
-            type: string
-            in: query
-            description: action
-          - name: requestInfo.did
-            type: string
-            in: query
-            description: did
-          - name: requestInfo.msgId
-            type: string
-            in: query
-            description: msg id
-          - name: requestInfo.requesterId
-            type: string
-            in: query
-            description: requester id
-          - name: requestInfo.authToken
-            type: string
-            in: query
-            description: auth token
-          - name: requestInfo.apiId
-            type: string
-            in: query
-            description: api id
-          - name: requestInfo.ver
-            type: string
-            in: query
-            description: ver
-          - name: requestInfo.ts
-            type: string
-            format: date
-            in: query
-            description: ts
-          - name: requestInfo.key
-            type: string
-            in: query
-            description: key
-          - name: requestInfo.tenantId
-            type: string
-            in: query
-            description: tenant id
-          - name: bank.id
-            type: integer
-            format: int64
-            in: query
-            description: Unique Identifier of the Bank
           - name: bank.code
             type: string
             in: query
@@ -78,39 +32,11 @@ paths:
             in: query
             description: name of the Bank
             required: true
-          - name: bank.description
-            type: string
-            in: query
-            description: description of the Bank
           - name: bank.active
             type: boolean
             in: query
             description: Whether Bank is Active or not. If the value is TRUE, then Bank is active,If the value is FALSE then Bank is inactive
             required: true
-          - name: bank.type
-            type: string
-            in: query
-            description: type of the Bank
-          - name: page.totalResults
-            type: integer
-            format: int32
-            in: query
-            description: total results of the Search Results
-          - name: page.totalPages
-            type: integer
-            format: int32
-            in: query
-            description: total pages of the Search Results
-          - name: page.pageSize
-            type: integer
-            format: int32
-            in: query
-            description: page size of the Search Results
-          - name: page.currentPage
-            type: integer
-            format: int32
-            in: query
-            description: current page of the Search Results
         responses:
           200:
             description: Bank retrieved Successfully
@@ -177,52 +103,6 @@ paths:
           - Masters
           - BankBranch
         parameters:
-          - name: requestInfo.action
-            type: string
-            in: query
-            description: action
-          - name: requestInfo.did
-            type: string
-            in: query
-            description: did
-          - name: requestInfo.msgId
-            type: string
-            in: query
-            description: msg id
-          - name: requestInfo.requesterId
-            type: string
-            in: query
-            description: requester id
-          - name: requestInfo.authToken
-            type: string
-            in: query
-            description: auth token
-          - name: requestInfo.apiId
-            type: string
-            in: query
-            description: api id
-          - name: requestInfo.ver
-            type: string
-            in: query
-            description: ver
-          - name: requestInfo.ts
-            type: string
-            format: date
-            in: query
-            description: ts
-          - name: requestInfo.key
-            type: string
-            in: query
-            description: key
-          - name: requestInfo.tenantId
-            type: string
-            in: query
-            description: tenant id
-          - name: bankBranch.id
-            type: integer
-            format: int64
-            in: query
-            description: Unique Identifier of the BankBranch
           - name: bankBranch.bankid
             type: integer
             format: int64
@@ -239,72 +119,11 @@ paths:
             in: query
             description: name of the BankBranch
             required: true
-          - name: bankBranch.address
-            type: string
-            in: query
-            description: address of the BankBranch
-            required: true
-          - name: bankBranch.address2
-            type: string
-            in: query
-            description: address2 of the BankBranch
-          - name: bankBranch.city
-            type: string
-            in: query
-            description: city of the BankBranch
-          - name: bankBranch.state
-            type: string
-            in: query
-            description: state of the BankBranch
-          - name: bankBranch.pincode
-            type: string
-            in: query
-            description: pincode of the BankBranch
-          - name: bankBranch.phone
-            type: string
-            in: query
-            description: Phone number of the BankBranch
-          - name: bankBranch.fax
-            type: string
-            in: query
-            description: Fax number of the BankBranch
-          - name: bankBranch.contactPerson
-            type: string
-            in: query
-            description: contact person of the BankBranch
           - name: bankBranch.active
             type: boolean
             in: query
             description: Whether BankBranch is Active or not. If the value is TRUE, then BankBranch is active,If the value is FALSE then BankBranch is inactive
             required: true
-          - name: bankBranch.description
-            type: string
-            in: query
-            description: description of the BankBranch
-          - name: bankBranch.micr
-            type: string
-            in: query
-            description: MICR Code of the BankBranch
-          - name: page.totalResults
-            type: integer
-            format: int32
-            in: query
-            description: total results of the Search Results
-          - name: page.totalPages
-            type: integer
-            format: int32
-            in: query
-            description: total pages of the Search Results
-          - name: page.pageSize
-            type: integer
-            format: int32
-            in: query
-            description: page size of the Search Results
-          - name: page.currentPage
-            type: integer
-            format: int32
-            in: query
-            description: current page of the Search Results
         responses:
           200:
             description: BankBranch retrieved Successfully
@@ -371,114 +190,20 @@ paths:
           - Masters
           - BankAccount
         parameters:
-          - name: requestInfo.action
-            type: string
-            in: query
-            description: action
-          - name: requestInfo.did
-            type: string
-            in: query
-            description: did
-          - name: requestInfo.msgId
-            type: string
-            in: query
-            description: msg id
-          - name: requestInfo.requesterId
-            type: string
-            in: query
-            description: requester id
-          - name: requestInfo.authToken
-            type: string
-            in: query
-            description: auth token
-          - name: requestInfo.apiId
-            type: string
-            in: query
-            description: api id
-          - name: requestInfo.ver
-            type: string
-            in: query
-            description: ver
-          - name: requestInfo.ts
-            type: string
-            format: date
-            in: query
-            description: ts
-          - name: requestInfo.key
-            type: string
-            in: query
-            description: key
-          - name: requestInfo.tenantId
-            type: string
-            in: query
-            description: tenant id
-          - name: bankAccount.id
-            type: integer
-            format: int64
-            in: query
-            description: Unique Identifier of the BankAccount
           - name: bankAccount.bankBranchid
             type: integer
             format: int64
             in: query
             description: bank branch of the BankAccount
-          - name: bankAccount.chartOfAccountsid
-            type: integer
-            format: int64
-            in: query
-            description: chart of accounts of the BankAccount
-          - name: bankAccount.fundid
-            type: integer
-            format: int64
-            in: query
-            description: fund of the BankAccount
-          - name: bankAccount.accountNumber
-            type: string
-            in: query
-            description: account number of the BankAccount
-            required: true
           - name: bankAccount.accountType
             type: string
             in: query
             description: account type of the BankAccount
-          - name: bankAccount.description
-            type: string
-            in: query
-            description: description of the BankAccount
           - name: bankAccount.active
             type: boolean
             in: query
             description: Whether BankAccount is Active or not. If the value is TRUE, then BankAccount is active,If the value is FALSE then BankAccount is inactive
             required: true
-          - name: bankAccount.payTo
-            type: string
-            in: query
-            description: pay to of the BankAccount
-          - name: bankAccount.typeid
-            type: integer
-            format: int64
-            in: query
-            description: type of the BankAccount
-          - name: page.totalResults
-            type: integer
-            format: int32
-            in: query
-            description: total results of the Search Results
-          - name: page.totalPages
-            type: integer
-            format: int32
-            in: query
-            description: total pages of the Search Results
-          - name: page.pageSize
-            type: integer
-            format: int32
-            in: query
-            description: page size of the Search Results
-          - name: page.currentPage
-            type: integer
-            format: int32
-            in: query
-            description: current page of the Search Results
         responses:
           200:
             description: BankAccount retrieved Successfully
@@ -545,105 +270,11 @@ paths:
           - Masters
           - FinancialYear
         parameters:
-          - name: requestInfo.action
-            type: string
-            in: query
-            description: action
-          - name: requestInfo.did
-            type: string
-            in: query
-            description: did
-          - name: requestInfo.msgId
-            type: string
-            in: query
-            description: msg id
-          - name: requestInfo.requesterId
-            type: string
-            in: query
-            description: requester id
-          - name: requestInfo.authToken
-            type: string
-            in: query
-            description: auth token
-          - name: requestInfo.apiId
-            type: string
-            in: query
-            description: api id
-          - name: requestInfo.ver
-            type: string
-            in: query
-            description: ver
-          - name: requestInfo.ts
-            type: string
-            format: date
-            in: query
-            description: ts
-          - name: requestInfo.key
-            type: string
-            in: query
-            description: key
-          - name: requestInfo.tenantId
-            type: string
-            in: query
-            description: tenant id
-          - name: financialYear.id
-            type: integer
-            format: int64
-            in: query
-            description: Unique Identifier of the FinancialYear
-          - name: financialYear.finYearRange
-            type: string
-            in: query
-            description: fin year range of the FinancialYear
-            required: true
-          - name: financialYear.startingDate
-            type: string
-            format: date
-            in: query
-            description: starting date of the FinancialYear
-            required: true
-          - name: financialYear.endingDate
-            type: string
-            format: date
-            in: query
-            description: ending date of the FinancialYear
-            required: true
           - name: financialYear.active
             type: boolean
             in: query
             description: Whether FinancialYear is Active or not. If the value is TRUE, then FinancialYear is active,If the value is FALSE then FinancialYear is inactive
-          - name: financialYear.isActiveForPosting
-            type: boolean
-            in: query
-            description: is active for posting of the FinancialYear
-          - name: financialYear.isClosed
-            type: boolean
-            in: query
-            description: is closed of the FinancialYear
-          - name: financialYear.transferClosingBalance
-            type: boolean
-            in: query
-            description: transfer closing balance of the FinancialYear
-          - name: page.totalResults
-            type: integer
-            format: int32
-            in: query
-            description: total results of the Search Results
-          - name: page.totalPages
-            type: integer
-            format: int32
-            in: query
-            description: total pages of the Search Results
-          - name: page.pageSize
-            type: integer
-            format: int32
-            in: query
-            description: page size of the Search Results
-          - name: page.currentPage
-            type: integer
-            format: int32
-            in: query
-            description: current page of the Search Results
+            required: true
         responses:
           200:
             description: FinancialYear retrieved Successfully
@@ -710,106 +341,16 @@ paths:
           - Masters
           - FiscalPeriod
         parameters:
-          - name: requestInfo.action
-            type: string
-            in: query
-            description: action
-          - name: requestInfo.did
-            type: string
-            in: query
-            description: did
-          - name: requestInfo.msgId
-            type: string
-            in: query
-            description: msg id
-          - name: requestInfo.requesterId
-            type: string
-            in: query
-            description: requester id
-          - name: requestInfo.authToken
-            type: string
-            in: query
-            description: auth token
-          - name: requestInfo.apiId
-            type: string
-            in: query
-            description: api id
-          - name: requestInfo.ver
-            type: string
-            in: query
-            description: ver
-          - name: requestInfo.ts
-            type: string
-            format: date
-            in: query
-            description: ts
-          - name: requestInfo.key
-            type: string
-            in: query
-            description: key
-          - name: requestInfo.tenantId
-            type: string
-            in: query
-            description: tenant id
-          - name: fiscalPeriod.id
-            type: integer
-            format: int64
-            in: query
-            description: Unique Identifier of the FiscalPeriod
           - name: fiscalPeriod.name
             type: string
             in: query
             description: name of the FiscalPeriod
             required: true
-          - name: fiscalPeriod.financialYearid
-            type: integer
-            format: int64
-            in: query
-            description: financial year of the FiscalPeriod
-          - name: fiscalPeriod.startingDate
-            type: string
-            format: date
-            in: query
-            description: starting date of the FiscalPeriod
-            required: true
-          - name: fiscalPeriod.endingDate
-            type: string
-            format: date
-            in: query
-            description: ending date of the FiscalPeriod
-            required: true
           - name: fiscalPeriod.active
             type: boolean
             in: query
             description: Whether FiscalPeriod is Active or not. If the value is TRUE, then FiscalPeriod is active,If the value is FALSE then FiscalPeriod is inactive
-          - name: fiscalPeriod.isActiveForPosting
-            type: boolean
-            in: query
-            description: is active for posting of the FiscalPeriod
-          - name: fiscalPeriod.isClosed
-            type: boolean
-            in: query
-            description: is closed of the FiscalPeriod
-          - name: page.totalResults
-            type: integer
-            format: int32
-            in: query
-            description: total results of the Search Results
-          - name: page.totalPages
-            type: integer
-            format: int32
-            in: query
-            description: total pages of the Search Results
-          - name: page.pageSize
-            type: integer
-            format: int32
-            in: query
-            description: page size of the Search Results
-          - name: page.currentPage
-            type: integer
-            format: int32
-            in: query
-            description: current page of the Search Results
+            required: true
         responses:
           200:
             description: FiscalPeriod retrieved Successfully
@@ -876,52 +417,6 @@ paths:
           - Masters
           - Function
         parameters:
-          - name: requestInfo.action
-            type: string
-            in: query
-            description: action
-          - name: requestInfo.did
-            type: string
-            in: query
-            description: did
-          - name: requestInfo.msgId
-            type: string
-            in: query
-            description: msg id
-          - name: requestInfo.requesterId
-            type: string
-            in: query
-            description: requester id
-          - name: requestInfo.authToken
-            type: string
-            in: query
-            description: auth token
-          - name: requestInfo.apiId
-            type: string
-            in: query
-            description: api id
-          - name: requestInfo.ver
-            type: string
-            in: query
-            description: ver
-          - name: requestInfo.ts
-            type: string
-            format: date
-            in: query
-            description: ts
-          - name: requestInfo.key
-            type: string
-            in: query
-            description: key
-          - name: requestInfo.tenantId
-            type: string
-            in: query
-            description: tenant id
-          - name: function.id
-            type: integer
-            format: int64
-            in: query
-            description: Unique Identifier of the Function
           - name: function.name
             type: string
             in: query
@@ -932,44 +427,11 @@ paths:
             in: query
             description: code of the Function
             required: true
-          - name: function.level
-            type: integer
-            format: int32
-            in: query
-            description: level of the Function
           - name: function.active
             type: boolean
             in: query
             description: Whether Function is Active or not. If the value is TRUE, then Function is active,If the value is FALSE then Function is inactive
-          - name: function.isParent
-            type: boolean
-            in: query
-            description: is parent of the Function
-          - name: function.parentIdid
-            type: integer
-            format: int64
-            in: query
-            description: parent id of the Function
-          - name: page.totalResults
-            type: integer
-            format: int32
-            in: query
-            description: total results of the Search Results
-          - name: page.totalPages
-            type: integer
-            format: int32
-            in: query
-            description: total pages of the Search Results
-          - name: page.pageSize
-            type: integer
-            format: int32
-            in: query
-            description: page size of the Search Results
-          - name: page.currentPage
-            type: integer
-            format: int32
-            in: query
-            description: current page of the Search Results
+            required: true
         responses:
           200:
             description: Function retrieved Successfully
@@ -1036,52 +498,6 @@ paths:
           - Masters
           - Functionary
         parameters:
-          - name: requestInfo.action
-            type: string
-            in: query
-            description: action
-          - name: requestInfo.did
-            type: string
-            in: query
-            description: did
-          - name: requestInfo.msgId
-            type: string
-            in: query
-            description: msg id
-          - name: requestInfo.requesterId
-            type: string
-            in: query
-            description: requester id
-          - name: requestInfo.authToken
-            type: string
-            in: query
-            description: auth token
-          - name: requestInfo.apiId
-            type: string
-            in: query
-            description: api id
-          - name: requestInfo.ver
-            type: string
-            in: query
-            description: ver
-          - name: requestInfo.ts
-            type: string
-            format: date
-            in: query
-            description: ts
-          - name: requestInfo.key
-            type: string
-            in: query
-            description: key
-          - name: requestInfo.tenantId
-            type: string
-            in: query
-            description: tenant id
-          - name: functionary.id
-            type: integer
-            format: int64
-            in: query
-            description: Unique Identifier of the Functionary
           - name: functionary.code
             type: string
             in: query
@@ -1096,26 +512,7 @@ paths:
             type: boolean
             in: query
             description: Whether Functionary is Active or not. If the value is TRUE, then Functionary is active,If the value is FALSE then Functionary is inactive
-          - name: page.totalResults
-            type: integer
-            format: int32
-            in: query
-            description: total results of the Search Results
-          - name: page.totalPages
-            type: integer
-            format: int32
-            in: query
-            description: total pages of the Search Results
-          - name: page.pageSize
-            type: integer
-            format: int32
-            in: query
-            description: page size of the Search Results
-          - name: page.currentPage
-            type: integer
-            format: int32
-            in: query
-            description: current page of the Search Results
+            required: true
         responses:
           200:
             description: Functionary retrieved Successfully
@@ -1182,52 +579,6 @@ paths:
           - Masters
           - Fund
         parameters:
-          - name: requestInfo.action
-            type: string
-            in: query
-            description: action
-          - name: requestInfo.did
-            type: string
-            in: query
-            description: did
-          - name: requestInfo.msgId
-            type: string
-            in: query
-            description: msg id
-          - name: requestInfo.requesterId
-            type: string
-            in: query
-            description: requester id
-          - name: requestInfo.authToken
-            type: string
-            in: query
-            description: auth token
-          - name: requestInfo.apiId
-            type: string
-            in: query
-            description: api id
-          - name: requestInfo.ver
-            type: string
-            in: query
-            description: ver
-          - name: requestInfo.ts
-            type: string
-            format: date
-            in: query
-            description: ts
-          - name: requestInfo.key
-            type: string
-            in: query
-            description: key
-          - name: requestInfo.tenantId
-            type: string
-            in: query
-            description: tenant id
-          - name: fund.id
-            type: integer
-            format: int64
-            in: query
-            description: Unique Identifier of the Fund
           - name: fund.name
             type: string
             in: query
@@ -1238,49 +589,11 @@ paths:
             in: query
             description: code of the Fund
             required: true
-          - name: fund.identifier
-            type: string
-            in: query
-            description: identifier of the Fund
-          - name: fund.level
-            type: integer
-            format: int64
-            in: query
-            description: level of the Fund
-            required: true
-          - name: fund.parentIdid
-            type: integer
-            format: int64
-            in: query
-            description: parent id of the Fund
-          - name: fund.isParent
-            type: boolean
-            in: query
-            description: is parent of the Fund
           - name: fund.active
             type: boolean
             in: query
             description: Whether Fund is Active or not. If the value is TRUE, then Fund is active,If the value is FALSE then Fund is inactive
-          - name: page.totalResults
-            type: integer
-            format: int32
-            in: query
-            description: total results of the Search Results
-          - name: page.totalPages
-            type: integer
-            format: int32
-            in: query
-            description: total pages of the Search Results
-          - name: page.pageSize
-            type: integer
-            format: int32
-            in: query
-            description: page size of the Search Results
-          - name: page.currentPage
-            type: integer
-            format: int32
-            in: query
-            description: current page of the Search Results
+            required: true
         responses:
           200:
             description: Fund retrieved Successfully
@@ -1347,52 +660,6 @@ paths:
           - Masters
           - Fundsource
         parameters:
-          - name: requestInfo.action
-            type: string
-            in: query
-            description: action
-          - name: requestInfo.did
-            type: string
-            in: query
-            description: did
-          - name: requestInfo.msgId
-            type: string
-            in: query
-            description: msg id
-          - name: requestInfo.requesterId
-            type: string
-            in: query
-            description: requester id
-          - name: requestInfo.authToken
-            type: string
-            in: query
-            description: auth token
-          - name: requestInfo.apiId
-            type: string
-            in: query
-            description: api id
-          - name: requestInfo.ver
-            type: string
-            in: query
-            description: ver
-          - name: requestInfo.ts
-            type: string
-            format: date
-            in: query
-            description: ts
-          - name: requestInfo.key
-            type: string
-            in: query
-            description: key
-          - name: requestInfo.tenantId
-            type: string
-            in: query
-            description: tenant id
-          - name: fundsource.id
-            type: integer
-            format: int64
-            in: query
-            description: Unique Identifier of the Fundsource
           - name: fundsource.code
             type: string
             in: query
@@ -1403,47 +670,11 @@ paths:
             in: query
             description: name of the Fundsource
             required: true
-          - name: fundsource.type
-            type: string
-            in: query
-            description: type of the Fundsource
-          - name: fundsource.fundSourceid
-            type: integer
-            format: int64
-            in: query
-            description: fund source of the Fundsource
-          - name: fundsource.llevel
-            type: 
-            in: query
-            description: llevel of the Fundsource
           - name: fundsource.active
             type: boolean
             in: query
             description: Whether Fundsource is Active or not. If the value is TRUE, then Fundsource is active,If the value is FALSE then Fundsource is inactive
-          - name: fundsource.isParent
-            type: boolean
-            in: query
-            description: is parent of the Fundsource
-          - name: page.totalResults
-            type: integer
-            format: int32
-            in: query
-            description: total results of the Search Results
-          - name: page.totalPages
-            type: integer
-            format: int32
-            in: query
-            description: total pages of the Search Results
-          - name: page.pageSize
-            type: integer
-            format: int32
-            in: query
-            description: page size of the Search Results
-          - name: page.currentPage
-            type: integer
-            format: int32
-            in: query
-            description: current page of the Search Results
+            required: true
         responses:
           200:
             description: Fundsource retrieved Successfully
@@ -1510,57 +741,6 @@ paths:
           - Masters
           - Scheme
         parameters:
-          - name: requestInfo.action
-            type: string
-            in: query
-            description: action
-          - name: requestInfo.did
-            type: string
-            in: query
-            description: did
-          - name: requestInfo.msgId
-            type: string
-            in: query
-            description: msg id
-          - name: requestInfo.requesterId
-            type: string
-            in: query
-            description: requester id
-          - name: requestInfo.authToken
-            type: string
-            in: query
-            description: auth token
-          - name: requestInfo.apiId
-            type: string
-            in: query
-            description: api id
-          - name: requestInfo.ver
-            type: string
-            in: query
-            description: ver
-          - name: requestInfo.ts
-            type: string
-            format: date
-            in: query
-            description: ts
-          - name: requestInfo.key
-            type: string
-            in: query
-            description: key
-          - name: requestInfo.tenantId
-            type: string
-            in: query
-            description: tenant id
-          - name: scheme.id
-            type: integer
-            format: int64
-            in: query
-            description: Unique Identifier of the Scheme
-          - name: scheme.fundid
-            type: integer
-            format: int64
-            in: query
-            description: fund of the Scheme
           - name: scheme.code
             type: string
             in: query
@@ -1569,59 +749,11 @@ paths:
             type: string
             in: query
             description: name of the Scheme
-          - name: scheme.validFrom
-            type: string
-            format: date
-            in: query
-            description: valid from of the Scheme
-          - name: scheme.validTo
-            type: string
-            format: date
-            in: query
-            description: valid to of the Scheme
           - name: scheme.active
             type: boolean
             in: query
             description: Whether Scheme is Active or not. If the value is TRUE, then Scheme is active,If the value is FALSE then Scheme is inactive
-          - name: scheme.description
-            type: string
-            in: query
-            description: description of the Scheme
-          - name: scheme.sectorId
-            type: integer
-            format: int64
-            in: query
-            description: sector id of the Scheme
-          - name: scheme.aaes
-            type: integer
-            format: int64
-            in: query
-            description: aaes of the Scheme
-          - name: scheme.fieldId
-            type: integer
-            format: int64
-            in: query
-            description: field id of the Scheme
-          - name: page.totalResults
-            type: integer
-            format: int32
-            in: query
-            description: total results of the Search Results
-          - name: page.totalPages
-            type: integer
-            format: int32
-            in: query
-            description: total pages of the Search Results
-          - name: page.pageSize
-            type: integer
-            format: int32
-            in: query
-            description: page size of the Search Results
-          - name: page.currentPage
-            type: integer
-            format: int32
-            in: query
-            description: current page of the Search Results
+            required: true
         responses:
           200:
             description: Scheme retrieved Successfully
@@ -1688,144 +820,21 @@ paths:
           - Masters
           - SubScheme
         parameters:
-          - name: requestInfo.action
-            type: string
-            in: query
-            description: action
-          - name: requestInfo.did
-            type: string
-            in: query
-            description: did
-          - name: requestInfo.msgId
-            type: string
-            in: query
-            description: msg id
-          - name: requestInfo.requesterId
-            type: string
-            in: query
-            description: requester id
-          - name: requestInfo.authToken
-            type: string
-            in: query
-            description: auth token
-          - name: requestInfo.apiId
-            type: string
-            in: query
-            description: api id
-          - name: requestInfo.ver
-            type: string
-            in: query
-            description: ver
-          - name: requestInfo.ts
-            type: string
-            format: date
-            in: query
-            description: ts
-          - name: requestInfo.key
-            type: string
-            in: query
-            description: key
-          - name: requestInfo.tenantId
-            type: string
-            in: query
-            description: tenant id
-          - name: subScheme.id
-            type: integer
-            format: int64
-            in: query
-            description: Unique Identifier of the SubScheme
-          - name: subScheme.schemeid
-            type: integer
-            format: int64
-            in: query
-            description: scheme of the SubScheme
           - name: subScheme.code
             type: string
             in: query
             description: code of the SubScheme
+            required: true
           - name: subScheme.name
             type: string
             in: query
             description: name of the SubScheme
-          - name: subScheme.validFrom
-            type: string
-            format: date
-            in: query
-            description: valid from of the SubScheme
-          - name: subScheme.validTo
-            type: string
-            format: date
-            in: query
-            description: valid to of the SubScheme
+            required: true
           - name: subScheme.active
             type: boolean
             in: query
             description: Whether SubScheme is Active or not. If the value is TRUE, then SubScheme is active,If the value is FALSE then SubScheme is inactive
-          - name: subScheme.departmentId
-            type: integer
-            format: int64
-            in: query
-            description: department id of the SubScheme
-          - name: subScheme.initialEstimateAmount
-            type: 
-            in: query
-            description: initial estimate amount of the SubScheme
-          - name: subScheme.councilLoanProposalNumber
-            type: string
-            in: query
-            description: council loan proposal number of the SubScheme
-          - name: subScheme.councilAdminSanctionNumber
-            type: string
-            in: query
-            description: council admin sanction number of the SubScheme
-          - name: subScheme.govtLoanProposalNumber
-            type: string
-            in: query
-            description: govt loan proposal number of the SubScheme
-          - name: subScheme.govtAdminSanctionNumber
-            type: string
-            in: query
-            description: govt admin sanction number of the SubScheme
-          - name: subScheme.councilLoanProposalDate
-            type: string
-            format: date
-            in: query
-            description: council loan proposal date of the SubScheme
-          - name: subScheme.councilAdminSanctionDate
-            type: string
-            format: date
-            in: query
-            description: council admin sanction date of the SubScheme
-          - name: subScheme.govtLoanProposalDate
-            type: string
-            format: date
-            in: query
-            description: govt loan proposal date of the SubScheme
-          - name: subScheme.govtAdminSanctionDate
-            type: string
-            format: date
-            in: query
-            description: govt admin sanction date of the SubScheme
-          - name: page.totalResults
-            type: integer
-            format: int32
-            in: query
-            description: total results of the Search Results
-          - name: page.totalPages
-            type: integer
-            format: int32
-            in: query
-            description: total pages of the Search Results
-          - name: page.pageSize
-            type: integer
-            format: int32
-            in: query
-            description: page size of the Search Results
-          - name: page.currentPage
-            type: integer
-            format: int32
-            in: query
-            description: current page of the Search Results
+            required: true
         responses:
           200:
             description: SubScheme retrieved Successfully
@@ -1892,52 +901,6 @@ paths:
           - Masters
           - Supplier
         parameters:
-          - name: requestInfo.action
-            type: string
-            in: query
-            description: action
-          - name: requestInfo.did
-            type: string
-            in: query
-            description: did
-          - name: requestInfo.msgId
-            type: string
-            in: query
-            description: msg id
-          - name: requestInfo.requesterId
-            type: string
-            in: query
-            description: requester id
-          - name: requestInfo.authToken
-            type: string
-            in: query
-            description: auth token
-          - name: requestInfo.apiId
-            type: string
-            in: query
-            description: api id
-          - name: requestInfo.ver
-            type: string
-            in: query
-            description: ver
-          - name: requestInfo.ts
-            type: string
-            format: date
-            in: query
-            description: ts
-          - name: requestInfo.key
-            type: string
-            in: query
-            description: key
-          - name: requestInfo.tenantId
-            type: string
-            in: query
-            description: tenant id
-          - name: supplier.id
-            type: integer
-            format: int64
-            in: query
-            description: Unique Identifier of the Supplier
           - name: supplier.code
             type: string
             in: query
@@ -1948,71 +911,16 @@ paths:
             in: query
             description: name of the Supplier
             required: true
-          - name: supplier.address
-            type: string
-            in: query
-            description: address of the Supplier
-          - name: supplier.mobile
-            type: string
-            in: query
-            description: mobile of the Supplier
-          - name: supplier.email
-            type: string
-            in: query
-            description: email of the Supplier
-          - name: supplier.description
-            type: string
-            in: query
-            description: description of the Supplier
           - name: supplier.active
             type: boolean
             in: query
             description: Whether Supplier is Active or not. If the value is TRUE, then Supplier is active,If the value is FALSE then Supplier is inactive
-          - name: supplier.panNo
-            type: string
-            in: query
-            description: pan no of the Supplier
-          - name: supplier.tinNo
-            type: string
-            in: query
-            description: tin no of the Supplier
-          - name: supplier.regNo
-            type: string
-            in: query
-            description: reg no of the Supplier
-          - name: supplier.bankAccount
-            type: string
-            in: query
-            description: bank account of the Supplier
-          - name: supplier.ifsccode
-            type: string
-            in: query
-            description: ifsccode of the Supplier
+            required: true
           - name: supplier.bankid
             type: integer
             format: int64
             in: query
             description: bank of the Supplier
-          - name: page.totalResults
-            type: integer
-            format: int32
-            in: query
-            description: total results of the Search Results
-          - name: page.totalPages
-            type: integer
-            format: int32
-            in: query
-            description: total pages of the Search Results
-          - name: page.pageSize
-            type: integer
-            format: int32
-            in: query
-            description: page size of the Search Results
-          - name: page.currentPage
-            type: integer
-            format: int32
-            in: query
-            description: current page of the Search Results
         responses:
           200:
             description: Supplier retrieved Successfully
@@ -2079,101 +987,16 @@ paths:
           - Masters
           - AccountDetailType
         parameters:
-          - name: requestInfo.action
-            type: string
-            in: query
-            description: action
-          - name: requestInfo.did
-            type: string
-            in: query
-            description: did
-          - name: requestInfo.msgId
-            type: string
-            in: query
-            description: msg id
-          - name: requestInfo.requesterId
-            type: string
-            in: query
-            description: requester id
-          - name: requestInfo.authToken
-            type: string
-            in: query
-            description: auth token
-          - name: requestInfo.apiId
-            type: string
-            in: query
-            description: api id
-          - name: requestInfo.ver
-            type: string
-            in: query
-            description: ver
-          - name: requestInfo.ts
-            type: string
-            format: date
-            in: query
-            description: ts
-          - name: requestInfo.key
-            type: string
-            in: query
-            description: key
-          - name: requestInfo.tenantId
-            type: string
-            in: query
-            description: tenant id
-          - name: accountDetailType.id
-            type: integer
-            format: int64
-            in: query
-            description: Unique Identifier of the AccountDetailType
           - name: accountDetailType.name
             type: string
             in: query
             description: name of the AccountDetailType
-          - name: accountDetailType.description
-            type: string
-            in: query
-            description: description of the AccountDetailType
             required: true
-          - name: accountDetailType.tableName
-            type: string
-            in: query
-            description: table name of the AccountDetailType
-          - name: accountDetailType.columnName
-            type: string
-            in: query
-            description: column name of the AccountDetailType
-          - name: accountDetailType.attributeName
-            type: string
-            in: query
-            description: attribute name of the AccountDetailType
           - name: accountDetailType.active
             type: boolean
             in: query
             description: Whether AccountDetailType is Active or not. If the value is TRUE, then AccountDetailType is active,If the value is FALSE then AccountDetailType is inactive
-          - name: accountDetailType.fullyQualifiedName
-            type: string
-            in: query
-            description: fully qualified name of the AccountDetailType
-          - name: page.totalResults
-            type: integer
-            format: int32
-            in: query
-            description: total results of the Search Results
-          - name: page.totalPages
-            type: integer
-            format: int32
-            in: query
-            description: total pages of the Search Results
-          - name: page.pageSize
-            type: integer
-            format: int32
-            in: query
-            description: page size of the Search Results
-          - name: page.currentPage
-            type: integer
-            format: int32
-            in: query
-            description: current page of the Search Results
+            required: true
         responses:
           200:
             description: AccountDetailType retrieved Successfully
@@ -2240,92 +1063,10 @@ paths:
           - Masters
           - AccountDetailKey
         parameters:
-          - name: requestInfo.action
-            type: string
-            in: query
-            description: action
-          - name: requestInfo.did
-            type: string
-            in: query
-            description: did
-          - name: requestInfo.msgId
-            type: string
-            in: query
-            description: msg id
-          - name: requestInfo.requesterId
-            type: string
-            in: query
-            description: requester id
-          - name: requestInfo.authToken
-            type: string
-            in: query
-            description: auth token
-          - name: requestInfo.apiId
-            type: string
-            in: query
-            description: api id
-          - name: requestInfo.ver
-            type: string
-            in: query
-            description: ver
-          - name: requestInfo.ts
-            type: string
-            format: date
-            in: query
-            description: ts
-          - name: requestInfo.key
-            type: string
-            in: query
-            description: key
-          - name: requestInfo.tenantId
-            type: string
-            in: query
-            description: tenant id
-          - name: accountDetailKey.id
-            type: integer
-            format: int64
-            in: query
-            description: Unique Identifier of the AccountDetailKey
-          - name: accountDetailKey.groupId
-            type: integer
-            format: int32
-            in: query
-            description: group id of the AccountDetailKey
           - name: accountDetailKey.name
             type: string
             in: query
             description: name of the AccountDetailKey
-          - name: accountDetailKey.key
-            type: integer
-            format: int32
-            in: query
-            description: key of the AccountDetailKey
-          - name: accountDetailKey.accountDetailTypeid
-            type: integer
-            format: int64
-            in: query
-            description: account detail type of the AccountDetailKey
-            required: true
-          - name: page.totalResults
-            type: integer
-            format: int32
-            in: query
-            description: total results of the Search Results
-          - name: page.totalPages
-            type: integer
-            format: int32
-            in: query
-            description: total pages of the Search Results
-          - name: page.pageSize
-            type: integer
-            format: int32
-            in: query
-            description: page size of the Search Results
-          - name: page.currentPage
-            type: integer
-            format: int32
-            in: query
-            description: current page of the Search Results
         responses:
           200:
             description: AccountDetailKey retrieved Successfully
@@ -2392,58 +1133,6 @@ paths:
           - Masters
           - AccountEntity
         parameters:
-          - name: requestInfo.action
-            type: string
-            in: query
-            description: action
-          - name: requestInfo.did
-            type: string
-            in: query
-            description: did
-          - name: requestInfo.msgId
-            type: string
-            in: query
-            description: msg id
-          - name: requestInfo.requesterId
-            type: string
-            in: query
-            description: requester id
-          - name: requestInfo.authToken
-            type: string
-            in: query
-            description: auth token
-          - name: requestInfo.apiId
-            type: string
-            in: query
-            description: api id
-          - name: requestInfo.ver
-            type: string
-            in: query
-            description: ver
-          - name: requestInfo.ts
-            type: string
-            format: date
-            in: query
-            description: ts
-          - name: requestInfo.key
-            type: string
-            in: query
-            description: key
-          - name: requestInfo.tenantId
-            type: string
-            in: query
-            description: tenant id
-          - name: accountEntity.id
-            type: integer
-            format: int64
-            in: query
-            description: Unique Identifier of the AccountEntity
-          - name: accountEntity.accountDetailTypeid
-            type: integer
-            format: int64
-            in: query
-            description: account detail type of the AccountEntity
-            required: true
           - name: accountEntity.code
             type: string
             in: query
@@ -2458,30 +1147,7 @@ paths:
             type: boolean
             in: query
             description: Whether AccountEntity is Active or not. If the value is TRUE, then AccountEntity is active,If the value is FALSE then AccountEntity is inactive
-          - name: accountEntity.description
-            type: string
-            in: query
-            description: description of the AccountEntity
-          - name: page.totalResults
-            type: integer
-            format: int32
-            in: query
-            description: total results of the Search Results
-          - name: page.totalPages
-            type: integer
-            format: int32
-            in: query
-            description: total pages of the Search Results
-          - name: page.pageSize
-            type: integer
-            format: int32
-            in: query
-            description: page size of the Search Results
-          - name: page.currentPage
-            type: integer
-            format: int32
-            in: query
-            description: current page of the Search Results
+            required: true
         responses:
           200:
             description: AccountEntity retrieved Successfully
@@ -2539,6 +1205,304 @@ paths:
               $ref: '#/definitions/ErrorResponse'
           404:
             description: AccountEntity Not Found
+
+    /accountcodepurposes:
+      get:
+        summary: Get the list of accountcodepurposes
+        description: accountcodepurposes
+        tags: 
+          - Masters
+          - AccountCodePurpose
+        parameters:
+          - name: accountCodePurpose.name
+            type: string
+            in: query
+            description: name of the AccountCodePurpose
+            required: true
+        responses:
+          200:
+            description: AccountCodePurpose retrieved Successfully
+            schema:
+              $ref: '#/definitions/AccountCodePurposeResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: AccountCodePurpose Not Found
+      post:
+        summary: Create  new  accountcodepurposes
+        description: Create  new accountcodepurposes
+        tags: 
+          - Masters
+          - AccountCodePurpose
+        parameters:
+          - name: accountCodePurposeRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/AccountCodePurposeRequest'
+        responses:
+          201:
+            description: AccountCodePurpose created Successfully
+            schema:
+              $ref: '#/definitions/AccountCodePurposeResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: AccountCodePurpose Not Found
+      put:
+        summary: Update any of the accountcodepurposes
+        description: Update any of the accountcodepurposes
+        tags: 
+          - Masters
+          - AccountCodePurpose
+        parameters:
+          - name: accountCodePurposeRequest
+            in: body
+            description: common request_info
+            schema:
+              $ref: '#/definitions/AccountCodePurposeRequest'
+        responses:
+          200:
+            description: AccountCodePurpose update Successfully
+            schema:
+              $ref: '#/definitions/AccountCodePurposeResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: AccountCodePurpose Not Found
+
+    /chartofaccounts:
+      get:
+        summary: Get the list of chartofaccounts
+        description: chartofaccounts
+        tags: 
+          - Masters
+          - ChartOfAccount
+        parameters:
+          - name: chartOfAccount.name
+            type: string
+            in: query
+            description: name of the ChartOfAccount
+            required: true
+        responses:
+          200:
+            description: ChartOfAccount retrieved Successfully
+            schema:
+              $ref: '#/definitions/ChartOfAccountResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: ChartOfAccount Not Found
+      post:
+        summary: Create  new  chartofaccounts
+        description: Create  new chartofaccounts
+        tags: 
+          - Masters
+          - ChartOfAccount
+        parameters:
+          - name: chartOfAccountRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/ChartOfAccountRequest'
+        responses:
+          201:
+            description: ChartOfAccount created Successfully
+            schema:
+              $ref: '#/definitions/ChartOfAccountResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: ChartOfAccount Not Found
+      put:
+        summary: Update any of the chartofaccounts
+        description: Update any of the chartofaccounts
+        tags: 
+          - Masters
+          - ChartOfAccount
+        parameters:
+          - name: chartOfAccountRequest
+            in: body
+            description: common request_info
+            schema:
+              $ref: '#/definitions/ChartOfAccountRequest'
+        responses:
+          200:
+            description: ChartOfAccount update Successfully
+            schema:
+              $ref: '#/definitions/ChartOfAccountResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: ChartOfAccount Not Found
+
+    /chartofaccountdetails:
+      get:
+        summary: Get the list of chartofaccountdetails
+        description: chartofaccountdetails
+        tags: 
+          - Masters
+          - ChartOfAccountDetail
+        parameters:
+        responses:
+          200:
+            description: ChartOfAccountDetail retrieved Successfully
+            schema:
+              $ref: '#/definitions/ChartOfAccountDetailResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: ChartOfAccountDetail Not Found
+      post:
+        summary: Create  new  chartofaccountdetails
+        description: Create  new chartofaccountdetails
+        tags: 
+          - Masters
+          - ChartOfAccountDetail
+        parameters:
+          - name: chartOfAccountDetailRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/ChartOfAccountDetailRequest'
+        responses:
+          201:
+            description: ChartOfAccountDetail created Successfully
+            schema:
+              $ref: '#/definitions/ChartOfAccountDetailResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: ChartOfAccountDetail Not Found
+      put:
+        summary: Update any of the chartofaccountdetails
+        description: Update any of the chartofaccountdetails
+        tags: 
+          - Masters
+          - ChartOfAccountDetail
+        parameters:
+          - name: chartOfAccountDetailRequest
+            in: body
+            description: common request_info
+            schema:
+              $ref: '#/definitions/ChartOfAccountDetailRequest'
+        responses:
+          200:
+            description: ChartOfAccountDetail update Successfully
+            schema:
+              $ref: '#/definitions/ChartOfAccountDetailResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: ChartOfAccountDetail Not Found
+
+    /budgetgroups:
+      get:
+        summary: Get the list of budgetgroups
+        description: budgetgroups
+        tags: 
+          - Masters
+          - BudgetGroup
+        parameters:
+          - name: budgetGroup.name
+            type: string
+            in: query
+            description: name of the BudgetGroup
+          - name: budgetGroup.maxCodeid
+            type: integer
+            format: int64
+            in: query
+            description: max code of the BudgetGroup
+          - name: budgetGroup.minCodeid
+            type: integer
+            format: int64
+            in: query
+            description: min code of the BudgetGroup
+          - name: budgetGroup.accountTypeid
+            type: integer
+            format: int64
+            in: query
+            description: account type of the BudgetGroup
+          - name: budgetGroup.budgetingTypeid
+            type: integer
+            format: int64
+            in: query
+            description: budgeting type of the BudgetGroup
+        responses:
+          200:
+            description: BudgetGroup retrieved Successfully
+            schema:
+              $ref: '#/definitions/BudgetGroupResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: BudgetGroup Not Found
+      post:
+        summary: Create  new  budgetgroups
+        description: Create  new budgetgroups
+        tags: 
+          - Masters
+          - BudgetGroup
+        parameters:
+          - name: budgetGroupRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/BudgetGroupRequest'
+        responses:
+          201:
+            description: BudgetGroup created Successfully
+            schema:
+              $ref: '#/definitions/BudgetGroupResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: BudgetGroup Not Found
+      put:
+        summary: Update any of the budgetgroups
+        description: Update any of the budgetgroups
+        tags: 
+          - Masters
+          - BudgetGroup
+        parameters:
+          - name: budgetGroupRequest
+            in: body
+            description: common request_info
+            schema:
+              $ref: '#/definitions/BudgetGroupRequest'
+        responses:
+          200:
+            description: BudgetGroup update Successfully
+            schema:
+              $ref: '#/definitions/BudgetGroupResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: BudgetGroup Not Found
 definitions:
 
     Bank:
@@ -2552,10 +1516,12 @@ definitions:
           type: string
           description: code of the Bank
           maxLength: 50
+          minLength: 1
         name:
           type: string
           description: name of the Bank
           maxLength: 100
+          minLength: 2
         description:
           type: string
           description: description of the Bank
@@ -2599,15 +1565,18 @@ definitions:
           type: string
           description: code of the BankBranch
           maxLength: 50
+          minLength: 1
         name:
           type: string
           description: name of the BankBranch
           maxLength: 50
+          minLength: 1
           pattern: '^[a-zA-Z0-9_]*$'
         address:
           type: string
           description: address of the BankBranch
           maxLength: 50
+          minLength: 1
         address2:
           type: string
           description: address2 of the BankBranch
@@ -2675,8 +1644,8 @@ definitions:
           description: Unique Identifier of the BankAccount
         bankBranch:
           $ref: "#/definitions/BankBranch"
-        chartOfAccounts:
-          $ref: "#/definitions/ChartOfAccounts"
+        chartOfAccount:
+          $ref: "#/definitions/ChartOfAccount"
         fund:
           $ref: "#/definitions/Fund"
         accountNumber:
@@ -2696,12 +1665,15 @@ definitions:
         payTo:
           type: string
           description: pay to of the BankAccount
+          maxLength: 100
         type:
           type: string
-          enum: 
+          description:  Account Type of the BankAccount
+          enum:
             - RECEIPTS
             - PAYMENTS
             - RECEIPTS_PAYMENTS
+          
     BankAccountRequest:
       properties:
         requestInfo:
@@ -2883,10 +1855,12 @@ definitions:
           type: string
           description: code of the Functionary
           maxLength: 16
+          minLength: 1
         name:
           type: string
           description: name of the Functionary
           maxLength: 256
+          minLength: 1
         active:
           type: boolean
           description: Whether Functionary is Active or not. If the value is TRUE, then Functionary is active,If the value is FALSE then Functionary is inactive
@@ -3028,9 +2002,13 @@ definitions:
         code:
           type: string
           description: code of the Scheme
+          maxLength: 25
+          minLength: 1
         name:
           type: string
           description: name of the Scheme
+          maxLength: 25
+          minLength: 1
         validFrom:
           type: string
           format: date
@@ -3045,18 +2023,11 @@ definitions:
         description:
           type: string
           description: description of the Scheme
-        sectorId:
+          maxLength: 256
+        boundary:
           type: integer
           format: int64
-          description: sector id of the Scheme
-        aaes:
-          type: integer
-          format: int64
-          description: aaes of the Scheme
-        fieldId:
-          type: integer
-          format: int64
-          description: field id of the Scheme
+          description: boundary of the Scheme
     SchemeRequest:
       properties:
         requestInfo:
@@ -3088,9 +2059,13 @@ definitions:
         code:
           type: string
           description: code of the SubScheme
+          maxLength: 50
+          minLength: 1
         name:
           type: string
           description: name of the SubScheme
+          maxLength: 50
+          minLength: 1
         validFrom:
           type: string
           format: date
@@ -3106,37 +2081,6 @@ definitions:
           type: integer
           format: int64
           description: department id of the SubScheme
-        initialEstimateAmount:
-          type: 
-          description: initial estimate amount of the SubScheme
-        councilLoanProposalNumber:
-          type: string
-          description: council loan proposal number of the SubScheme
-        councilAdminSanctionNumber:
-          type: string
-          description: council admin sanction number of the SubScheme
-        govtLoanProposalNumber:
-          type: string
-          description: govt loan proposal number of the SubScheme
-        govtAdminSanctionNumber:
-          type: string
-          description: govt admin sanction number of the SubScheme
-        councilLoanProposalDate:
-          type: string
-          format: date
-          description: council loan proposal date of the SubScheme
-        councilAdminSanctionDate:
-          type: string
-          format: date
-          description: council admin sanction date of the SubScheme
-        govtLoanProposalDate:
-          type: string
-          format: date
-          description: govt loan proposal date of the SubScheme
-        govtAdminSanctionDate:
-          type: string
-          format: date
-          description: govt admin sanction date of the SubScheme
     SubSchemeRequest:
       properties:
         requestInfo:
@@ -3167,10 +2111,12 @@ definitions:
           type: string
           description: code of the Supplier
           maxLength: 50
+          minLength: 1
         name:
           type: string
           description: name of the Supplier
           maxLength: 50
+          minLength: 1
         address:
           type: string
           description: address of the Supplier
@@ -3198,17 +2144,17 @@ definitions:
           type: string
           description: tin no of the Supplier
           maxLength: 20
-        regNo:
+        registationNo:
           type: string
-          description: reg no of the Supplier
+          description: registation no of the Supplier
           maxLength: 25
         bankAccount:
           type: string
           description: bank account of the Supplier
           maxLength: 25
-        ifsccode:
+        ifscCode:
           type: string
-          description: ifsccode of the Supplier
+          description: ifsc code of the Supplier
           maxLength: 12
         bank:
           $ref: "#/definitions/Bank"
@@ -3242,10 +2188,12 @@ definitions:
           type: string
           description: name of the AccountDetailType
           maxLength: 50
+          minLength: 1
         description:
           type: string
           description: description of the AccountDetailType
           maxLength: 50
+          minLength: 1
         tableName:
           type: string
           description: table name of the AccountDetailType
@@ -3265,6 +2213,7 @@ definitions:
           type: string
           description: fully qualified name of the AccountDetailType
           maxLength: 250
+          minLength: 1
     AccountDetailTypeRequest:
       properties:
         requestInfo:
@@ -3304,7 +2253,7 @@ definitions:
           format: int32
           description: key of the AccountDetailKey
         accountDetailType:
-           $ref: "#/definitions/AccountDetailType"
+          $ref: "#/definitions/AccountDetailType"
     AccountDetailKeyRequest:
       properties:
         requestInfo:
@@ -3332,22 +2281,24 @@ definitions:
           format: int64
           description: Unique Identifier of the AccountEntity
         accountDetailType:
-            $ref: "#/definitions/AccountDetailType"
+          $ref: "#/definitions/AccountDetailType"
         code:
           type: string
           description: code of the AccountEntity
           maxLength: 25
+          minLength: 1
         name:
           type: string
           description: name of the AccountEntity
           maxLength: 350
+          minLength: 1
         active:
           type: boolean
           description: Whether AccountEntity is Active or not. If the value is TRUE, then AccountEntity is active,If the value is FALSE then AccountEntity is inactive
         description:
           type: string
           description: description of the AccountEntity
-          maxLength: 250
+          maxLength: 256
     AccountEntityRequest:
       properties:
         requestInfo:
@@ -3364,6 +2315,195 @@ definitions:
           type:  array
           items:
             $ref: '#/definitions/AccountEntity'
+        page:
+          $ref: '#/definitions/Page'
+
+    AccountCodePurpose:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the AccountCodePurpose
+        name:
+          type: string
+          description: name of the AccountCodePurpose
+          maxLength: 256
+          minLength: 3
+    AccountCodePurposeRequest:
+      properties:
+        requestInfo:
+          $ref: '#/definitions/RequestInfo'
+        accountCodePurposes:
+          type:  array
+          items:
+            $ref: '#/definitions/AccountCodePurpose'
+    AccountCodePurposeResponse:
+      properties:
+        responseInfo:
+          $ref: '#/definitions/ResponseInfo'
+        accountCodePurposes:
+          type:  array
+          items:
+            $ref: '#/definitions/AccountCodePurpose'
+        page:
+          $ref: '#/definitions/Page'
+
+    ChartOfAccount:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the ChartOfAccount
+        glcode:
+          type: string
+          description: glcode of the ChartOfAccount
+          maxLength: 16
+          minLength: 1
+        name:
+          type: string
+          description: name of the ChartOfAccount
+          maxLength: 128
+          minLength: 5
+        accountCodePurpose:
+          $ref: "#/definitions/AccountCodePurpose"
+        desciption:
+          type: string
+          description: desciption of the ChartOfAccount
+          maxLength: 256
+        isActiveForPosting:
+          type: boolean
+          description: is active for posting of the ChartOfAccount
+        parentId:
+          type: integer
+          format: int64
+          description: parent id of the ChartOfAccount
+        type:
+          type: string
+          description: type of the ChartOfAccount
+        classification:
+          type: integer
+          format: int64
+          description: classification of the ChartOfAccount
+        functionRequired:
+          type: boolean
+          description: function required of the ChartOfAccount
+        budgetCheckRequired:
+          type: boolean
+          description: budget check required of the ChartOfAccount
+        majorCode:
+          type: string
+          description: major code of the ChartOfAccount
+          maxLength: 16
+        isSubLedger:
+          type: boolean
+          description: is sub ledger of the ChartOfAccount
+    ChartOfAccountRequest:
+      properties:
+        requestInfo:
+          $ref: '#/definitions/RequestInfo'
+        chartOfAccounts:
+          type:  array
+          items:
+            $ref: '#/definitions/ChartOfAccount'
+    ChartOfAccountResponse:
+      properties:
+        responseInfo:
+          $ref: '#/definitions/ResponseInfo'
+        chartOfAccounts:
+          type:  array
+          items:
+            $ref: '#/definitions/ChartOfAccount'
+        page:
+          $ref: '#/definitions/Page'
+
+    ChartOfAccountDetail:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the ChartOfAccountDetail
+        chartOfAccount:
+          $ref: "#/definitions/ChartOfAccount"
+        accountDetailType:
+          $ref: "#/definitions/AccountDetailType"
+    ChartOfAccountDetailRequest:
+      properties:
+        requestInfo:
+          $ref: '#/definitions/RequestInfo'
+        chartOfAccountDetails:
+          type:  array
+          items:
+            $ref: '#/definitions/ChartOfAccountDetail'
+    ChartOfAccountDetailResponse:
+      properties:
+        responseInfo:
+          $ref: '#/definitions/ResponseInfo'
+        chartOfAccountDetails:
+          type:  array
+          items:
+            $ref: '#/definitions/ChartOfAccountDetail'
+        page:
+          $ref: '#/definitions/Page'
+
+    BudgetGroup:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the BudgetGroup
+        name:
+          type: string
+          description: name of the BudgetGroup
+          maxLength: 250
+          minLength: 1
+        description:
+          type: string
+          description: description of the BudgetGroup
+          maxLength: 250
+        majorCode:
+          $ref: "#/definitions/ChartOfAccount"
+        maxCode:
+          $ref: "#/definitions/ChartOfAccount"
+        minCode:
+          $ref: "#/definitions/ChartOfAccount"
+        accountType:
+          type: string
+          description: name of the BudgetGroup
+          enum:
+            - REVENUE_RECEIPTS
+            - REVENUE_EXPENDITURE
+            - CAPITAL_RECEIPTS
+            - CAPITAL_EXPENDITURE
+        budgetingType:
+          type: string
+          description: name of the BudgetGroup
+          enum:
+            - ALL
+            - DEBIT
+            - CREDIT
+        isActive:
+          type: boolean
+          description: is active of the BudgetGroup
+    BudgetGroupRequest:
+      properties:
+        requestInfo:
+          $ref: '#/definitions/RequestInfo'
+        budgetGroups:
+          type:  array
+          items:
+            $ref: '#/definitions/BudgetGroup'
+    BudgetGroupResponse:
+      properties:
+        responseInfo:
+          $ref: '#/definitions/ResponseInfo'
+        budgetGroups:
+          type:  array
+          items:
+            $ref: '#/definitions/BudgetGroup'
         page:
           $ref: '#/definitions/Page'
     ResponseInfo:
@@ -3459,7 +2599,7 @@ definitions:
       description:
        type: string
        description: Description of the FieldError
-    Page:	              
+    Page:
      type: object
      properties:
       pageSize:

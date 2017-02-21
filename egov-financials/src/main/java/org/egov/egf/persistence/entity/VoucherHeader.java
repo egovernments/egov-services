@@ -110,20 +110,16 @@ public class VoucherHeader extends AbstractAuditable  {
   
     @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "voucherHeader", targetEntity = GeneralLedger.class)
     @DrillDownTable
-    private Set<GeneralLedger> generalLedger;
+    private Set<GeneralLedger> ledgers;
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "voucherHeader", targetEntity = Vouchermis.class)
    
     @DrillDown
     private Vouchermis vouchermis;
-
-   
-   
-  
-
+ 
     public BigDecimal getTotalAmount() {
         BigDecimal amount = BigDecimal.ZERO;
-        for (final GeneralLedger detail : generalLedger)
-            amount = amount.add(new BigDecimal(detail.getDebitAmount()));
+        for (final GeneralLedger detail : ledgers)
+            amount = amount.add(detail.getDebitAmount());
         return amount;
     }
 

@@ -72,9 +72,10 @@ public class BankAccount extends AbstractAuditable implements java.io.Serializab
     @JoinColumn(name = "branchid", nullable = true)
     private BankBranch bankBranch;
 
+    
     @ManyToOne
     @JoinColumn(name = "glcodeid")
-    private ChartOfAccounts chartOfAccounts;
+    private ChartOfAccount chartOfAccount;
 
     @ManyToOne
     @JoinColumn(name = "fundid")
@@ -84,6 +85,7 @@ public class BankAccount extends AbstractAuditable implements java.io.Serializab
     @Length(max=25)
     private String accountNumber;
 
+    // is this required ?
     private String accountType;
     @Length(max=256)
     private String description;
@@ -91,8 +93,10 @@ public class BankAccount extends AbstractAuditable implements java.io.Serializab
     @NotNull
     private Boolean active;
 
+    @Length(max=100)
     private String payTo;  
 
+    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "type")
     private BankAccountType type;

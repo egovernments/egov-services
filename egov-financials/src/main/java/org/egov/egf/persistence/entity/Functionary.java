@@ -60,11 +60,13 @@ public class Functionary extends AbstractAuditable implements java.io.Serializab
     @GeneratedValue(generator = Functionary.SEQ, strategy = GenerationType.SEQUENCE)
 	private Long id;
 	@NotNull
-	@Length(max=16)
+	@Length(max=16,min=1)
 	private String code;
 	@NotNull
-	@Length(max=256)
+	@Length(max=256,min=1)
 	private String name;
+	
+	@NotNull
 	private Boolean active;
 
 	 @Override

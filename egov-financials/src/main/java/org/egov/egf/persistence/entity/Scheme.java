@@ -54,43 +54,53 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.Length;
+
+import lombok.Data;
 
 @Entity
 @Table(name = "egf_scheme")
-@SequenceGenerator(name = Functionary.SEQ, sequenceName = Functionary.SEQ, allocationSize = 1)
+@SequenceGenerator(name = Scheme.SEQ, sequenceName = Scheme.SEQ, allocationSize = 1)
+@Data
 public class Scheme extends  AbstractAuditable {
 
     private static final long serialVersionUID = 825465695975976653L;
     public static final String SEQ = "seq_scheme";
 	@Id
-    @GeneratedValue(generator = Functionary.SEQ, strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(generator = Scheme.SEQ, strategy = GenerationType.SEQUENCE)
     private Long id;
 
+	
 	@ManyToOne
 	@JoinColumn(name="fundId")
     private Fund fund;
 
+	@Length(max=25,min=1)
     private String code;
-
+	
+	@Length(max=25,min=1)
     private String name;
 
+	@NotNull
     private Date validFrom;
-
+	
+	@NotNull
     private Date validTo;
-
+	
+	@NotNull
     private Boolean active;
-
+	
+	@Length(max=256)
     private String description;
 
-    private Long sectorId;
+   
+    private Long boundary;
 
-    private Long aaes;
-
-    private Long fieldId;
-
-    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "scheme", targetEntity = SubScheme.class)
+  /*  @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "scheme", targetEntity = SubScheme.class)
     private Set<SubScheme> subSchemes = new LinkedHashSet<SubScheme>(0);
-
+*/
     
 
     @Override

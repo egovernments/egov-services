@@ -50,6 +50,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.ja.annotation.Ignore;
+
 @Entity
 @Table(name = "egf_vouchermis")
 @SequenceGenerator(name = Vouchermis.SEQ_VOUCHERMIS, sequenceName = Vouchermis.SEQ_VOUCHERMIS, allocationSize = 1)
@@ -60,16 +62,15 @@ public class Vouchermis implements java.io.Serializable {
 	@Id
 	@GeneratedValue(generator = SEQ_VOUCHERMIS, strategy = GenerationType.SEQUENCE)
 	private Long id;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fundsourceid")
 	private Fundsource fundsource;
 
 	private Integer billnumber;
- 
 
-	private Long divisionId;
+	private Long boundary;
 
-	 
 	private Long departmentId;
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -77,13 +78,12 @@ public class Vouchermis implements java.io.Serializable {
 	private Scheme scheme;
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "subschemeid")
-	private SubScheme subschemeid;
+	private SubScheme subScheme;
+	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "functionaryid")
 	private Functionary functionary;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "voucherheaderid", nullable = true)
-	private VoucherHeader voucherHeader;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "functionid")
 	private Function function;
@@ -91,8 +91,12 @@ public class Vouchermis implements java.io.Serializable {
 	private String sourcePath;
 
 	@Column(name = "budgetary_appnumber")
-	private String budgetaryAppnumber;
+	private String budgetAppropriationNo;
 
-	private Boolean budgetCheckReq = true;
-	  
+	private Boolean budgetCheckRequired = true;
+	
+	@Ignore
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "voucherheaderid", nullable = true)
+	private VoucherHeader voucherHeader;
 }

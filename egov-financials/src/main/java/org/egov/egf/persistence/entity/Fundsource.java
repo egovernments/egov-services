@@ -85,9 +85,9 @@ public class Fundsource extends AbstractAuditable {
     private Fundsource fundSource;
 
     private BigDecimal llevel;
-
+    @NotNull
     private Boolean active;
-
+// is this required
     private Boolean isParent;
 
     @Override

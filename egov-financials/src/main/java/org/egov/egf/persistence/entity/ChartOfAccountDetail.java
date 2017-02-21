@@ -48,6 +48,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "egf_chartofaccountdetail")
@@ -62,15 +63,15 @@ public class ChartOfAccountDetail extends AbstractAuditable {
     @Id
     @GeneratedValue(generator = ChartOfAccountDetail.SEQ_CHARTOFACCOUNTDETAIL, strategy = GenerationType.SEQUENCE)
     private Long id;
-
    
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "glcodeid")
-    private ChartOfAccounts chartOfAccounts;
+    private ChartOfAccount chartOfAccount;
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "detailtypeid")
-  
     private AccountDetailType accountDetailType;
     @Override
     public Long getId()

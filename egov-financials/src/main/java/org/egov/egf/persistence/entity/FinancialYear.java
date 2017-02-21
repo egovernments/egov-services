@@ -83,11 +83,11 @@ public class FinancialYear extends AbstractAuditable {
 
     @NotNull
     private Date endingDate;
-    
+    @NotNull
     private Boolean active;
-  
+    @NotNull
     private Boolean isActiveForPosting;
-    
+   
     private Boolean isClosed;
  
     private Boolean transferClosingBalance;
@@ -95,11 +95,7 @@ public class FinancialYear extends AbstractAuditable {
     @OneToMany(mappedBy = "financialYear", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("id DESC ")
     private List<FiscalPeriod> fiscalPeriodList = new ArrayList<FiscalPeriod>(0);
-
-     
-
    
-
     public void setFiscalPeriod(final List<FiscalPeriod> fiscalPeriod) {
         this.fiscalPeriodList.clear();
         if (fiscalPeriod != null)

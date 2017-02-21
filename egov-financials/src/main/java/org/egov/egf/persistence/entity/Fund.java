@@ -74,7 +74,7 @@ public class Fund extends AbstractAuditable {
     @Length(max = 50, min = 2)
     @NotNull
     private String code;
-
+    @NotNull
     private Character identifier;
     
     @NotNull
@@ -85,7 +85,7 @@ public class Fund extends AbstractAuditable {
     private Fund parentId;
 
     private Boolean isParent;
-
+    @NotNull
     private Boolean active;
 
     @Override

@@ -67,11 +67,11 @@ public class Supplier extends AbstractAuditable {
 
 	@Column(unique = true)
 	@NotNull
-	@Length(max = 50)
+	@Length(max = 50,min=1)
 	private String code;
 
 	@NotNull
-	@Length(max = 50)
+	@Length(max = 50,min=1)
 	private String name;
 
 	@Length(max = 300)
@@ -79,11 +79,13 @@ public class Supplier extends AbstractAuditable {
 
 	@Length(max = 10)
 	private String mobile;
+
 	@Length(max = 25)
 	private String email;
+	
 	@Length(max = 250)
 	private String description;
-
+	@NotNull
 	private Boolean active;
 
 	@Length(max = 10)
@@ -93,13 +95,13 @@ public class Supplier extends AbstractAuditable {
 	private String tinNo;
 
 	@Length(max = 25)
-	private String regNo;
+	private String registationNo;
 
 	@Length(max = 25)
 	private String bankAccount;
 
 	@Length(max = 12)
-	private String ifsccode;
+	private String ifscCode;
 
 	@ManyToOne
 	@JoinColumn(name = "bank")

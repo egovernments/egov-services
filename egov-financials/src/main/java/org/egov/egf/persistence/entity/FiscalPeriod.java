@@ -71,6 +71,7 @@ public class FiscalPeriod extends AbstractAuditable {
         @NotNull
         private String name = "";
         
+        @NotNull
         @ManyToOne(fetch=FetchType.LAZY)
         @JoinColumn(name="FinancialYearid", updatable = false)
         private FinancialYear financialYear ;
@@ -80,9 +81,9 @@ public class FiscalPeriod extends AbstractAuditable {
         
         @NotNull
         private Date endingDate;
-        
+        @NotNull
         private Boolean active;
-        
+        @NotNull
         private Boolean isActiveForPosting;
         
         private Boolean isClosed ;

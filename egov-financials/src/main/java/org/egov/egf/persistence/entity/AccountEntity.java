@@ -52,47 +52,40 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
 
-
 @Entity
-@Table(name="egf_accountentitymaster")
+@Table(name = "egf_accountentitymaster")
 @SequenceGenerator(name = AccountEntity.SEQ, sequenceName = AccountEntity.SEQ, allocationSize = 1)
-public class AccountEntity extends AbstractAuditable  {
+public class AccountEntity extends AbstractAuditable {
 
 	private static final long serialVersionUID = 1L;
 	public static final String SEQ = "seq_egf_accountentitymaster";
-	
+
 	@Id
 	@GeneratedValue(generator = SEQ, strategy = GenerationType.SEQUENCE)
 	private Long id;
 
- 
 	@NotNull
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="detailtypeid")
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "detailtypeid")
 	private AccountDetailType accountDetailType;
 
 	@NotNull
-	@Length(max=25)
+	@Length(max = 25, min = 1)
 	private String code;
-	 
+
 	@NotNull
-	@Length(max=350)
+	@Length(max = 350, min = 1)
 	private String name;
 	
-	 
-	
- 
+	@NotNull
 	private Boolean active;
-	
-	@Length(max=250)
+
+	@Length(max = 256)
 	private String description;
- 
-	
-	 @Override
-	    public Long getId()
-	    {
-	    	return this.id;
-	    }
-	 
+
+	@Override
+	public Long getId() {
+		return this.id;
+	}
 
 }

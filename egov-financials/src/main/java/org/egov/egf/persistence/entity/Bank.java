@@ -51,14 +51,16 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull; 
+import javax.validation.constraints.NotNull;
 
-import org.egov.egf.web.contract.BankContract;
 import org.hibernate.validator.constraints.Length;
+
+import lombok.Data;
 
 @Entity
 @Table(name = "egf_bank")
 @SequenceGenerator(name = Bank.SEQ_BANK, sequenceName = Bank.SEQ_BANK, allocationSize = 1)
+@Data
 public class  Bank extends AbstractAuditable {
 
 	private static final long serialVersionUID = -2839424467289504649L;
@@ -70,11 +72,11 @@ public class  Bank extends AbstractAuditable {
 	private Long id;
 
 	@NotNull
-	@Length(max = 50)
+	@Length(max = 50,min=1)
 	private String code;
 
 	@NotNull
-	@Length(max = 100)
+	@Length(max = 100,min=2)
 	private String name;
 
 	@Length(max = 250)
@@ -82,7 +84,8 @@ public class  Bank extends AbstractAuditable {
 
 	@NotNull
 	private Boolean active;
-
+// is this required?
+	@NotNull
 	@Length(max = 50)
 	private String type;
 
@@ -94,67 +97,10 @@ public class  Bank extends AbstractAuditable {
 		return id;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getCode() {
-		return code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public Boolean getActive() {
-		return active;
-	}
-
-	public void setActive(Boolean active) {
-		this.active = active;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
-	public Set<BankBranch> getBankBranches() {
-		return bankBranches;
-	}
-
-	public void setBankBranches(Set<BankBranch> bankBranches) {
-		this.bankBranches = bankBranches;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
-	public static String getSeqBank() {
-		return SEQ_BANK;
-	}
+	 
+	 
 	
-	public void map(BankContract bank)
+	/*public void map(BankContract bank)
 	{
 		if(bank!=null)
 		{
@@ -179,6 +125,6 @@ public class  Bank extends AbstractAuditable {
 		 bank.setActive(active);
 		 bank.setDescription(description);
 		return bank;
-	}
+	}*/
 	 
 }

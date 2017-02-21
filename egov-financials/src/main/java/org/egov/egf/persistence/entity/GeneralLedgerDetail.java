@@ -50,22 +50,36 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
+import org.ja.annotation.Ignore;
 @Entity
 @Table(name = "egf_generalledgerdetail")
 @SequenceGenerator(name = GeneralLedger.SEQ, sequenceName = GeneralLedger.SEQ, allocationSize = 1)
 public class GeneralLedgerDetail extends AbstractPersistable<Long> {
+ 
+	private static final long serialVersionUID = 8704167799390083959L;
 	public static final String SEQ = "seq_generalledgerdetail";
 	@Id
     @GeneratedValue(generator = GeneralLedger.SEQ, strategy = GenerationType.SEQUENCE)
     private Long id;
+	@Ignore
 	@ManyToOne
 	@JoinColumn(name="generalLedgerId")
     private GeneralLedger generalLedger;
-    private Long detailKeyId;
-   
+	
+	@NotNull
+    private AccountDetailKey accountDetailKey;
+    
+	@NotNull
     @ManyToOne
 	@JoinColumn(name="detailTypeId")
     private AccountDetailType accountDetailType;
+    @NotNull
+    @Min(1)
+    @Max(value=999999999)
     private BigDecimal amount;
 
     

@@ -1,5 +1,7 @@
 package org.egov.egf;
 
+import java.text.DateFormat;
+
 import org.egov.egf.web.interceptor.CorrelationIdAwareRestTemplate;
 import org.egov.egf.web.interceptor.CorrelationIdInterceptor;
 import org.springframework.boot.SpringApplication;
@@ -25,10 +27,12 @@ public class FinancialsApplication {
 
     @Bean
     public MappingJackson2HttpMessageConverter jacksonConverter() {
+    	//DateFormat std=DateFormat.getInstance().f
         MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
         ObjectMapper mapper = new ObjectMapper();
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+       // mapper.setDateFormat(std);
         converter.setObjectMapper(mapper);
         return converter;
     }

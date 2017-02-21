@@ -48,6 +48,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.Length;
 
 
 @Entity
@@ -60,30 +63,29 @@ public class SubScheme extends AbstractAuditable
     @GeneratedValue(generator = SubScheme.SEQ, strategy = GenerationType.SEQUENCE)
 	private Long id;
 	
+	@NotNull
 	private Scheme scheme;
 
+	@NotNull
+	@Length(max=50,min=1)
 	private String code;
 
+	@NotNull
+	@Length(max=50,min=1)
 	private String name;
 
+	@NotNull
 	private Date validFrom;
-
+	
+	@NotNull
 	private Date validTo;
-
+	
+	@NotNull
 	private Boolean active;
 
  	private Long departmentId;
  	
-	private BigDecimal initialEstimateAmount;
-	private String councilLoanProposalNumber;
-	private String councilAdminSanctionNumber;
-	private String govtLoanProposalNumber;
-	private String govtAdminSanctionNumber;
-	private Date councilLoanProposalDate;
-	private Date councilAdminSanctionDate;
-	private Date govtLoanProposalDate;
-	private Date govtAdminSanctionDate;
-	
+ 
  
 	 @Override
 	    public Long getId()

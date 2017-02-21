@@ -7,11 +7,11 @@ EXPOSE 8087
 # INSTRUCTIONS ON HOW TO BUILD JAR:
 # Move to the location where pom.xml is exist in project and build project using below command
 # "mvn clean package"
-COPY /target/localization-0.0.1-SNAPSHOT.jar /opt/egov/localization.jar
+COPY /target/egov-localization-0.0.1-SNAPSHOT.jar /opt/egov/egov-localization-0.0.1-SNAPSHOT.jar
 
 
 # launch standalone webapp
-CMD ["java","-jar", "/opt/egov/localization.jar"]
+CMD ["java","-jar", "/opt/egov/egov-localization-0.0.1-SNAPSHOT.jar"]
 
 # NOTE: the two 'RUN' commands can probably be combined inside of a single
 # script (i.e. RUN build-and-install-app.sh) so that we can also clean up the

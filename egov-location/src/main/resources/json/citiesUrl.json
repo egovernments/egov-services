@@ -1,13 +1,13 @@
 [
    {
-      "district_name":"KURNOOL",
-      "cities":[
+      "district_name":"UAT Instance",
+      "cities":
+      [
          {
-            "url":"http:\/\/kurnool-uat.egovernments.org",
-            "city_name":"Kurnool",
-            "city_code":1016,
-            "tenant_id":"ap.kurnool"
+            "city_name":"Amazon",
+            "city_code":1000,
+            "tenant_id":"ap.public"
          }
-       ]
+      ]
     }
 ]

@@ -135,15 +135,18 @@ public class PgrWorkflowImpl implements Workflow {
 
                 user = userService.getById(state.getOwnerUser());
                 t.setOwner(user.getUserName() + "::" + user.getName());
-                Department dept = departmentService.getDepartmentForUser(user.getId(), new Date());
+                /*Department dept = departmentService.getDepartmentForUser(user.getId(), new Date());*/
+                Department dept = departmentService.getDepartmentForUser();
                 Attribute attr = new Attribute();
                 attr.setCode("department");
                 attr.getValues().add(dept.getName());
                 t.getAttributes().put("department", attr);
             } else {
-                EmployeeResponse emp = employeeService.getUserForPosition(stateHistory.getOwnerPosition(), new Date());
+                /*EmployeeResponse emp = employeeService.getUserForPosition(stateHistory.getOwnerPosition(), new Date());*/
+                EmployeeResponse emp = employeeService.getUserForPosition();
                 t.setOwner(emp.getUsername() + "::" + emp.getName());
-                Department dept = positionService.getDepartmentByPosition(state.getOwnerPosition());
+                /*Department dept = positionService.getDepartmentByPosition(state.getOwnerPosition());*/
+                Department dept = positionService.getDepartmentByPosition();
                 Attribute attr = new Attribute();
                 attr.setCode("department");
                 attr.getValues().add(dept.getName());
@@ -162,15 +165,18 @@ public class PgrWorkflowImpl implements Workflow {
         if (state.getOwnerUser() != null) {
             user = userService.getById(state.getOwnerUser());
             t.setOwner(user.getUserName() + "::" + user.getName());
-            Department dept = departmentService.getDepartmentForUser(user.getId(), new Date());
+            /*Department dept = departmentService.getDepartmentForUser(user.getId(), new Date());*/
+            Department dept = departmentService.getDepartmentForUser();
             Attribute attr = new Attribute();
             attr.setCode("department");
             attr.getValues().add(dept.getName());
             t.getAttributes().put("department", attr);
         } else {
-            EmployeeResponse emp = employeeService.getUserForPosition(state.getOwnerPosition(), new Date());
+            /*EmployeeResponse emp = employeeService.getUserForPosition(stateHistory.getOwnerPosition(), new Date());*/
+            EmployeeResponse emp = employeeService.getUserForPosition();
             t.setOwner(emp.getUsername() + "::" + emp.getName());
-            Department dept = positionService.getDepartmentByPosition(state.getOwnerPosition());
+            /*Department dept = positionService.getDepartmentByPosition(state.getOwnerPosition());*/
+            Department dept = positionService.getDepartmentByPosition();
             Attribute attr = new Attribute();
             attr.setCode("department");
             attr.setValues(new ArrayList<String>());

@@ -29,10 +29,15 @@ public class PositionServiceImpl implements PositionService {
         return getPositionServiceResponseByCode(url, code).getPosition();
     }
 
+    /*
+     * @Override public Department getDepartmentByPosition(Long id) { String url = propertiesManager.getDepartmentByPositionUrl();
+     * return getDepartmentByPosition(url, id).getDepartment(); }
+     */
+
     @Override
-    public Department getDepartmentByPosition(Long id) {
+    public Department getDepartmentByPosition() {
         String url = propertiesManager.getDepartmentByPositionUrl();
-        return getDepartmentByPosition(url, id).getDepartment();
+        return getDepartmentByPosition(url).getDepartment();
     }
 
     private PositionServiceResponse getPositionServiceResponseById(final String url, Long id) {
@@ -45,9 +50,14 @@ public class PositionServiceImpl implements PositionService {
         return restTemplate.getForObject(url, PositionServiceResponse.class, code);
     }
 
-    private DepartmentRes getDepartmentByPosition(final String url, Long id) {
+    private DepartmentRes getDepartmentByPosition(final String url) {
         RestTemplate restTemplate = new RestTemplate();
         return restTemplate.postForObject(url, null, DepartmentRes.class);
     }
+
+    /*
+     * private DepartmentRes getDepartmentByPosition(final String url, Long id) { RestTemplate restTemplate = new RestTemplate();
+     * return restTemplate.postForObject(url, null, DepartmentRes.class); }
+     */
 
 }

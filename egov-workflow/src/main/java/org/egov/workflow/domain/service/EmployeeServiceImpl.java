@@ -1,6 +1,5 @@
 package org.egov.workflow.domain.service;
 
-import java.util.Date;
 import java.util.List;
 
 import org.egov.workflow.config.PropertiesManager;
@@ -27,15 +26,21 @@ public class EmployeeServiceImpl implements EmployeeService {
         return restTemplate.getForObject(url, EmployeeServiceResponse.class, roleName);
     }
 
+    /*
+     * @Override public EmployeeResponse getUserForPosition(Long posId, Date asOnDate) { String url =
+     * propertiesManager.getUserByPositionUrl(); return getUserForPosition(url, posId, asOnDate); } private EmployeeResponse
+     * getUserForPosition(final String url, Long posId, Date asOnDate) { RestTemplate restTemplate = new RestTemplate(); return
+     * restTemplate.postForObject(url, null, EmployeeResponse.class); }
+     */
+
     @Override
-    public EmployeeResponse getUserForPosition(Long posId, Date asOnDate) {
+    public EmployeeResponse getUserForPosition() {
         String url = propertiesManager.getUserByPositionUrl();
-        return getUserForPosition(url, posId, asOnDate);
+        return getUserForPosition(url);
     }
 
-    private EmployeeResponse getUserForPosition(final String url, Long posId, Date asOnDate) {
+    private EmployeeResponse getUserForPosition(final String url) {
         RestTemplate restTemplate = new RestTemplate();
         return restTemplate.postForObject(url, null, EmployeeResponse.class);
     }
-
 }

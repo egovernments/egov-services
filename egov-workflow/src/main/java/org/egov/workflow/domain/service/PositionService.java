@@ -11,6 +11,6 @@ public interface PositionService {
 
     List<PositionResponse> getByEmployeeCode(String code);
 
-    Department getDepartmentByPosition(Long id);
+    Department getDepartmentByPosition();
 
 }

@@ -1,15 +1,14 @@
 #!/bin/bash
-SERVICES=(notification pgr-locationassignment pgr-employeeassignment pgr-persist pgr-indexing)
+SERVICES=(pgr/pgr-rest pgr/pgr-location-enrichment core/egov-location)
 for d in "${SERVICES[@]}"; do
- echo "Service name:"$d
-dir_path=egov-$d
-image_name=egovio/$d:latest
-cd $dir_path
- echo "Directory Path:"$dir_path
- echo "Image name:"$image_name
-mvn clean package
-sudo docker build -t $image_name .
-cd ..
+    module=`echo "core/egov-notification" | awk '{split($0,a,"/"); print a[1]}'
+    service=`echo "core/egov-notification" | awk '{split($0,a,"/"); print a[2]}'
+    echo "Module name:"${module}
+    echo "Service name:"${service}
+    image_name=egovio/${service}:latest
+    cd ${module}
+    mvn clean package
+    sudo docker build -t $image_name .
+    cd ..
 done
 pwd
-cd egov-pgrrest/

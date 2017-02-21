@@ -1,6 +1,8 @@
 def app = "";
 def commit_id="";
+def module_name = "${env.JOB_NAME}".split("/")[-2];
 def service_name = "${env.JOB_BASE_NAME}";
+def path = "${module_name}/${service_name}"
 def build_wkflo;
 def ci_image = "egovio/ci:0.0.1"
 def notifier = "";
@@ -16,11 +18,11 @@ try {
         notifier = load("jenkins/notifier.groovy")
         deployer = load("jenkins/deployer.groovy")
 
-        code_builder.build(service_name, ci_image)
+        code_builder.build(path, ci_image)
 
-        archiver.archiveArtifacts(service_name)
+        archiver.archiveArtifacts(path)
 
-        image_builder.build(service_name, commit_id)
+        image_builder.build(module_name, service_name, commit_id)
 
         image_builder.publish(service_name, commit_id)
 

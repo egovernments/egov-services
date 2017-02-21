@@ -1,9 +1,0 @@
-def build(service_name, ci_image) {
-    stage("Build"){
-        docker.image("${ci_image}").inside {
-            sh "cd ${service_name}; mvn clean deploy -s settings.xml -Dnexus.user=${env.NEXUS_USER} -Dnexus.password=${env.NEXUS_PASSWORD}";
-        }
-    }
-}
-
-return this;

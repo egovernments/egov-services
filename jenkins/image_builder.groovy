@@ -1,6 +1,6 @@
-def build(service_name, commit_id){
+def build(module_name, service_name, commit_id){
     stage("Build docker image") {
-        sh "cd ${service_name} && docker build -t egovio/${service_name} ."
+        sh "cd ${module_name}/${service_name} && docker build -t egovio/${service_name} ."
         sh "docker tag egovio/${service_name} egovio/${service_name}:${BUILD_ID}-${commit_id}"
         sh "docker tag egovio/${service_name} egovio/${service_name}:latest"
     }

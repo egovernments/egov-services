@@ -1,7 +1,7 @@
-def archiveArtifacts(service_name){
+def archiveArtifacts(path){
     stage("Archive Results") {
-        archive "${service_name}/target/*.jar"
-        archive "${service_name}/target/**/*.html"
+        archive "${path}/target/*.jar"
+        archive "${path}/target/**/*.html"
     }
 }
 

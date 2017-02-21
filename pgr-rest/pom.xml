@@ -4,12 +4,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.egov.pgr</groupId>
-    <artifactId>pgr-rest-spring-boot</artifactId>
+    <artifactId>pgr-rest</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>pgrrestspringboot</name>
-    <description>Demo project for Spring Boot</description>
+    <name>PGR Rest project</name>
+    <description>PGR Rest project for eGov services</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>

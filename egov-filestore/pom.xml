@@ -4,12 +4,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.egov</groupId>
-	<artifactId>filestore-spring-boot</artifactId>
+	<artifactId>egov-filestore</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>egov-filestore</name>
-	<description>filestorespringboot</description>
+	<description>eGov File store project for eGov services</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>

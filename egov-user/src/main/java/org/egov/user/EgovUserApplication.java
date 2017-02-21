@@ -11,7 +11,6 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 @SpringBootApplication
-@ComponentScan(basePackages = "org.egov.user")
 public class EgovUserApplication {
 
 	@Bean

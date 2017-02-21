@@ -31,11 +31,9 @@ try {
 //        deployer.deploy(service_name, commit_id)
 //    }
 } catch (e) {
-    node{
-        currentBuild.result = "FAILED"
-        throw e
-    } finally {
-    // Success or failure, always send notifications
+    currentBuild.result = "FAILED"
+    throw e
+  } finally {
     notifyBuild(currentBuild.result)
   }
 }

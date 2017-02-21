@@ -1,10 +1,9 @@
 package org.egov.pgr.employee.enrichment.consumer;
 
-import org.egov.pgr.employee.enrichment.model.SevaRequest;
 import org.egov.pgr.employee.enrichment.model.RequestContext;
+import org.egov.pgr.employee.enrichment.model.SevaRequest;
 import org.egov.pgr.employee.enrichment.repository.ComplaintRepository;
 import org.egov.pgr.employee.enrichment.service.WorkflowService;
-import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
@@ -35,10 +34,11 @@ public class ComplaintAssignmentListener {
      * null,"approval_comment":null,"values":{"location_id":"1","child_location_id":"60","assignee_id":"2","location_name":
      * "testing"}}}
      */
-    @KafkaListener(id = "${kafka.topics.pgr.locationpopulated.id}", topics = "${kafka.topics.pgr.locationpopulated.name}", group = "${kafka.topics.pgr.locationpopulated.group}")
+    @KafkaListener(id = "${kafka.topics.pgr.locationpopulated.id}",
+            topics = "${kafka.topics.pgr.locationpopulated.name}",
+            group = "${kafka.topics.pgr.locationpopulated.group}")
     public void process(HashMap<String, Object> sevaRequestMap) {
         final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
-        MDC.put(RequestContext.CORRELATION_ID, sevaRequest.getCorrelationId());
         RequestContext.setId(sevaRequest.getCorrelationId());
         final SevaRequest enrichedSevaRequest = workflowService.enrichWorkflow(sevaRequest);
         complaintRepository.save(enrichedSevaRequest);

@@ -1,5 +1,7 @@
 package org.egov.pgr.employee.enrichment.model;
 
+import org.slf4j.MDC;
+
 public class RequestContext {
 
     public static String CORRELATION_ID = "X-CORRELATION-ID";
@@ -8,5 +10,8 @@ public class RequestContext {
 
     public static String getId() { return id.get(); }
 
-    public static void setId(String correlationId) { id.set(correlationId); }
+    public static void setId(String correlationId) {
+        id.set(correlationId);
+        MDC.put(RequestContext.CORRELATION_ID, correlationId);
+    }
 }

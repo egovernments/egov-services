@@ -53,17 +53,6 @@ public class ComplaintAssignmentListenerTest {
         assertEquals("correlationId", RequestContext.getId());
     }
 
-    @Test
-    public void test_should_set_mdc_with_correlation_id() {
-        final HashMap<String, Object> sevaRequestMap = getSevaRequestMap();
-        final SevaRequest enrichedSevaRequest = new SevaRequest(null);
-        when(workflowService.enrichWorkflow(any(SevaRequest.class))).thenReturn(enrichedSevaRequest);
-
-        complaintAssignmentListener.process(sevaRequestMap);
-
-        assertEquals("correlationId", MDC.get(RequestContext.CORRELATION_ID));
-    }
-
     private HashMap<String, Object> getSevaRequestMap() {
         final HashMap<String, Object> sevaRequestMap = new HashMap<>();
         final RequestInfo requestInfo = RequestInfo.builder()

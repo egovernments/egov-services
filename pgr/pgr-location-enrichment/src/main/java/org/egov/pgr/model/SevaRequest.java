@@ -1,10 +1,10 @@
 package org.egov.pgr.model;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.pgr.contract.BoundaryResponse;
 import org.egov.pgr.contract.CrossHierarchyResponse;
 import org.egov.pgr.contract.RequestInfo;
 import org.egov.pgr.contract.ServiceRequest;
+import org.egov.pgr.json.ObjectMapperFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,7 +25,7 @@ public class SevaRequest {
 
     public SevaRequest(HashMap<String, Object> sevaRequestMap) {
         this.sevaRequestMap = sevaRequestMap;
-        this.serviceRequestObject = new ObjectMapper()
+        this.serviceRequestObject = ObjectMapperFactory.create()
                 .convertValue(sevaRequestMap.get(SERVICE_REQUEST), ServiceRequest.class);
     }
 

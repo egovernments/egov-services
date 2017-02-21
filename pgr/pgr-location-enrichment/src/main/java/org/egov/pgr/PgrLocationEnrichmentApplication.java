@@ -1,8 +1,8 @@
 package org.egov.pgr;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.pgr.http.CorrelationIdAwareRestTemplate;
+import org.egov.pgr.json.ObjectMapperFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -14,9 +14,7 @@ public class PgrLocationEnrichmentApplication {
 
     @Bean
     public ObjectMapper getObjectMapper() {
-        final ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-        return objectMapper;
+        return ObjectMapperFactory.create();
     }
 
     @Bean

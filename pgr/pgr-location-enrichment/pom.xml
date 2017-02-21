@@ -123,6 +123,7 @@
                                         <exclude>org.egov.pgr.contract.*</exclude>
                                         <exclude>org.egov.pgr.model.RequestContext</exclude>
                                         <exclude>org.egov.pgr.http.CorrelationIdAwareRestTemplate</exclude>
+                                        <exclude>org.egov.pgr.json.ObjectMapperFactory</exclude>
                                     </excludes>
                                     <limits>
                                         <limit>

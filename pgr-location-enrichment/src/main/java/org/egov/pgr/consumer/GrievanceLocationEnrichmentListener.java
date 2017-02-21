@@ -3,14 +3,14 @@ package org.egov.pgr.consumer;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.egov.pgr.config.PropertiesManager;
+import org.egov.pgr.contract.BoundaryResponse;
+import org.egov.pgr.contract.CrossHierarchyResponse;
 import org.egov.pgr.model.RequestInfo;
 import org.egov.pgr.model.ServiceRequest;
 import org.egov.pgr.model.SevaRequest;
 import org.egov.pgr.producer.GrievanceAssignmentProducer;
 import org.egov.pgr.services.BoundaryService;
 import org.egov.pgr.services.CrossHierarchyService;
-import org.egov.pgr.contract.BoundaryResponse;
-import org.egov.pgr.contract.CrossHierarchyResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 
@@ -28,7 +28,10 @@ public class GrievanceLocationEnrichmentListener {
     private CrossHierarchyService crossHierarchyService;
 
     @Autowired
-    public GrievanceLocationEnrichmentListener(BoundaryService boundaryService, CrossHierarchyService crossHierarchyService, GrievanceAssignmentProducer producer, PropertiesManager propertiesManager) {
+    public GrievanceLocationEnrichmentListener(BoundaryService boundaryService,
+                                               CrossHierarchyService crossHierarchyService,
+                                               GrievanceAssignmentProducer producer,
+                                               PropertiesManager propertiesManager) {
         this.boundaryService = boundaryService;
         this.crossHierarchyService = crossHierarchyService;
         this.propertiesManager = propertiesManager;
@@ -57,7 +60,7 @@ public class GrievanceLocationEnrichmentListener {
         ServiceRequest serviceRequest = sevaRequest.getServiceRequest();
         RequestInfo requestInfo = sevaRequest.getRequestInfo();
         if (locationHasBeenProvided(serviceRequest)) {
-            BoundaryResponse response = boundaryService.fetchBoundaryByLatLng(requestInfo, serviceRequest.getLat(),
+            BoundaryResponse response = boundaryService.fetchBoundaryByLatLng(serviceRequest.getLat(),
                     serviceRequest.getLng());
             if (sevaRequest.getServiceRequest().getValues() == null) {
                 sevaRequest.getServiceRequest().setValues(new HashMap<>());

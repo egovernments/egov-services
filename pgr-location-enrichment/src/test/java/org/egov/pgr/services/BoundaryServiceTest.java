@@ -1,7 +1,6 @@
 package org.egov.pgr.services;
 
 import org.egov.pgr.config.PropertiesManager;
-import org.egov.pgr.model.RequestInfo;
 import org.egov.pgr.contract.BoundaryResponse;
 import org.egov.pgr.contract.BoundaryServiceResponse;
 import org.junit.Before;
@@ -19,14 +18,14 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class BoundaryServiceImplTest {
+public class BoundaryServiceTest {
 
     @Mock
     private RestTemplate restTemplate;
     @Mock
     private PropertiesManager propertiesManager;
     @InjectMocks
-    BoundaryServiceImpl boundaryService;
+    BoundaryService boundaryService;
 
     private String templateBoundaryUrl = "http://boundary/{lat}/{lng}";
 
@@ -40,7 +39,7 @@ public class BoundaryServiceImplTest {
         Double lat = 12.343, lng = 23.23;
         BoundaryServiceResponse himalaya = getSuccessBoundaryResponse(12L, "himalaya");
         when(restTemplate.getForObject(templateBoundaryUrl, BoundaryServiceResponse.class, "12.343", "23.23")).thenReturn(himalaya);
-        BoundaryResponse boundaryResponse = boundaryService.fetchBoundaryByLatLng(new RequestInfo(), lat, lng);
+        BoundaryResponse boundaryResponse = boundaryService.fetchBoundaryByLatLng(lat, lng);
 
         assertEquals("himalaya", boundaryResponse.getName());
         assertEquals(Long.valueOf(12), boundaryResponse.getId());

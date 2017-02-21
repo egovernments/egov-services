@@ -6,10 +6,10 @@ import org.egov.pgr.model.RequestInfo;
 import org.egov.pgr.model.ServiceRequest;
 import org.egov.pgr.model.SevaRequest;
 import org.egov.pgr.producer.GrievanceAssignmentProducer;
-import org.egov.pgr.services.BoundaryService;
-import org.egov.pgr.services.CrossHierarchyService;
 import org.egov.pgr.contract.BoundaryResponse;
 import org.egov.pgr.contract.CrossHierarchyResponse;
+import org.egov.pgr.services.BoundaryService;
+import org.egov.pgr.services.CrossHierarchyService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -96,7 +96,7 @@ public class GrievanceLocationEnrichmentListenerTest {
         Double lat = 12.343, lng = 24.223;
         listener.listen(getConsumeRecord(getServiceRequestWithLocationId(locationId, lat, lng)));
 
-        verify(boundaryService, never()).fetchBoundaryByLatLng(any(RequestInfo.class), any(Double.class), any(Double.class));
+        verify(boundaryService, never()).fetchBoundaryByLatLng(any(Double.class), any(Double.class));
     }
 
     @Test
@@ -117,7 +117,7 @@ public class GrievanceLocationEnrichmentListenerTest {
         boundaryCallSuccessMock(lat, lng, locId, locationName);
 
         listener.listen(getConsumeRecord(getServiceRequestWithLocationId(locationId, lat, lng)));
-        verify(boundaryService, atLeastOnce()).fetchBoundaryByLatLng(any(RequestInfo.class), eq(lat), eq(lng));
+        verify(boundaryService, atLeastOnce()).fetchBoundaryByLatLng(eq(lat), eq(lng));
     }
 
     @Test
@@ -148,7 +148,7 @@ public class GrievanceLocationEnrichmentListenerTest {
 
     private void boundaryCallSuccessMock(Double lat, Double lng, Long locationId, String locationName) {
         BoundaryResponse boundaryResponse = new BoundaryResponse(locationId, locationName);
-        when(boundaryService.fetchBoundaryByLatLng(any(RequestInfo.class), eq(lat), eq(lng))).thenReturn(boundaryResponse);
+        when(boundaryService.fetchBoundaryByLatLng(eq(lat), eq(lng))).thenReturn(boundaryResponse);
     }
 
     private ConsumerRecord<String, SevaRequest> getConsumeRecord(ServiceRequest serviceRequest) {

@@ -266,19 +266,18 @@ public class StateHistory implements Serializable {
     }
 
     public Task map() {
-        Task t = new Task();
-        t.setBusinessKey(this.getState().getType());
-        t.setComments(this.comments == null ? "" : this.comments);
-        t.setCreatedDate(this.getCreatedDate());
-        t.setId(this.getId().toString());
-        t.setStatus(this.getValue());
-        t.setDescription(this.getNatureOfTask());
-        t.setOwner(this.getOwnerPosition().toString());
-        t.setDetails(this.extraInfo == null ? "" : this.extraInfo);
-        t.setSender(this.senderName == null ? "" : this.senderName);
-        t.setAction(this.nextAction == null ? "" : this.nextAction);
+        Task t = Task.builder().businessKey(this.getState().getType()).
+                comments(this.comments == null ? "" : this.comments)
+                .createdDate(this.getCreatedDate())
+                .id(this.getId().toString())
+                .status(this.getValue())
+                .description(this.getNatureOfTask())
+                .owner(this.getOwnerPosition().toString())
+                .details(this.extraInfo == null ? "" : this.extraInfo)
+                .sender(this.senderName == null ? "" : this.senderName)
+                .action(this.nextAction == null ? "" : this.nextAction).build();
         return t;
-
+    
     }
 
 }

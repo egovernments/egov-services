@@ -1,0 +1,32 @@
+[
+  {
+  "type":null,
+  "lastupdatedSince":null,
+  "owner":"Owner1",
+  "assignee":null,
+  "module":null,
+  "state":null,
+  "status":"Created",
+  "url":null,
+  "sender":"sender1",
+  "comments":"Got workflow history 1",
+  "extraInfo":null,
+  "natureOfTask":null,
+  "attributes":null
+  },
+
+  {
+  "type":null,
+  "lastupdatedSince":null,
+  "owner":"Owner2",
+  "assignee":null,
+  "module":null,
+  "state":null,
+  "status":"Closed",
+  "url":null,
+  "sender":"sender2",
+  "comments":"Got workflow history 2",
+  "natureOfTask":null,
+  "attributes":null
+  }
+ ]

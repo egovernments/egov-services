@@ -36,9 +36,9 @@ public class WorkFlowController {
         return workflow.end(tenantId, processInstance);
     }
 
-    @GetMapping(value = "/history", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Task> getHistory(@RequestParam final String workflowId) {
-        return workflow.getHistoryDetail(workflowId);
+    @GetMapping(value = "/history")
+    public List<Task> getHistory(@RequestParam final String jurisdiction , @RequestParam final String workflowId) {
+        return workflow.getHistoryDetail(jurisdiction,workflowId);
     }
 
 }

@@ -117,7 +117,7 @@ public class PgrWorkflowImpl implements Workflow {
     }
 
     @Override
-    public List<Task> getHistoryDetail(final String workflowId) {
+    public List<Task> getHistoryDetail(final String jurisdiction,final String workflowId) {
         final List<Task> tasks = new ArrayList<Task>();
         Task t;
         final State state = stateService.getStateById(Long.valueOf(workflowId));
@@ -138,6 +138,7 @@ public class PgrWorkflowImpl implements Workflow {
                 /*Department dept = departmentService.getDepartmentForUser(user.getId(), new Date());*/
                 Department dept = departmentService.getDepartmentForUser();
                 Attribute attr = new Attribute();
+                attr.setValues(new ArrayList<>());
                 attr.setCode("department");
                 attr.getValues().add(dept.getName());
                 t.getAttributes().put("department", attr);
@@ -148,9 +149,10 @@ public class PgrWorkflowImpl implements Workflow {
                 /*Department dept = positionService.getDepartmentByPosition(state.getOwnerPosition());*/
                 Department dept = positionService.getDepartmentByPosition();
                 Attribute attr = new Attribute();
+                attr.setValues(new ArrayList<>());
                 attr.setCode("department");
                 attr.getValues().add(dept.getName());
-                t.getAttributes().put("department", attr);
+                //t.getAttributes().put("department", attr);
             }
             tasks.add(t);
         }
@@ -168,9 +170,10 @@ public class PgrWorkflowImpl implements Workflow {
             /*Department dept = departmentService.getDepartmentForUser(user.getId(), new Date());*/
             Department dept = departmentService.getDepartmentForUser();
             Attribute attr = new Attribute();
+            attr.setValues(new ArrayList<>());
             attr.setCode("department");
             attr.getValues().add(dept.getName());
-            t.getAttributes().put("department", attr);
+            //t.getAttributes().put("department", attr);
         } else {
             /*EmployeeResponse emp = employeeService.getUserForPosition(stateHistory.getOwnerPosition(), new Date());*/
             EmployeeResponse emp = employeeService.getUserForPosition();
@@ -178,10 +181,11 @@ public class PgrWorkflowImpl implements Workflow {
             /*Department dept = positionService.getDepartmentByPosition(state.getOwnerPosition());*/
             Department dept = positionService.getDepartmentByPosition();
             Attribute attr = new Attribute();
+            attr.setValues(new ArrayList<>());
             attr.setCode("department");
             attr.setValues(new ArrayList<String>());
             attr.getValues().add(dept.getName());
-            t.getAttributes().put("department", attr);
+            //t.getAttributes().put("department", attr);
         }
         tasks.add(t);
         return tasks;

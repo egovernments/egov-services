@@ -249,18 +249,17 @@ public class State extends AbstractAuditable {
     }
 
     public Task map() {
-        Task t = new Task();
-        t.setBusinessKey(this.type == null ? "" : this.type);
-        t.setComments(this.comments == null ? "" : this.comments);
-        t.setCreatedDate(this.getCreatedDate());
-        t.setId(this.id.toString());
-        t.setStatus(this.value);
-        t.setNatureOfTask(this.natureOfTask == null ? "" : this.natureOfTask);
-        t.setDetails(this.extraInfo == null ? "" : this.extraInfo);
-        t.setSender(this.senderName == null ? "" : this.senderName);
-        t.setAction(this.nextAction == null ? "" : this.nextAction);
+        Task t = Task.builder().businessKey(this.type).
+                comments(this.comments == null ? "" : this.comments)
+                .createdDate(this.getCreatedDate())
+                .id(this.getId().toString())
+                .status(this.getValue())
+                .description(this.getNatureOfTask())
+                .owner(this.getOwnerPosition().toString())
+                .details(this.extraInfo == null ? "" : this.extraInfo)
+                .sender(this.senderName == null ? "" : this.senderName)
+                .action(this.nextAction == null ? "" : this.nextAction).build();
         return t;
-
     }
 
 }

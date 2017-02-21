@@ -42,6 +42,7 @@ package org.egov.pgr.persistence.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 import org.egov.pgr.domain.model.AuthenticatedUser;
 import org.egov.pgr.domain.model.ComplaintLocation;
 import org.egov.pgr.domain.model.Coordinates;
@@ -53,10 +54,7 @@ import org.hibernate.validator.constraints.SafeHtml;
 import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static org.egov.pgr.persistence.entity.Complaint.SEQ_COMPLAINT;
 
@@ -166,11 +164,12 @@ public class Complaint extends AbstractAuditable {
 
     public org.egov.pgr.domain.model.Complaint toDomain() {
         final Coordinates coordinates = new Coordinates(latitude, longitude);
+        final String locationId = Objects.isNull(location) ? StringUtils.EMPTY : String.valueOf(location.getId());
         final org.egov.pgr.domain.model.ComplaintType complaintType =
                 new org.egov.pgr.domain.model.ComplaintType(this.complaintType.getName(), complainant.getId()
                         .toString());
         return org.egov.pgr.domain.model.Complaint.builder()
-                .complaintLocation(new ComplaintLocation(coordinates, getCrossHierarchyId(), null))
+                .complaintLocation(new ComplaintLocation(coordinates, getCrossHierarchyId(), locationId))
                 .additionalValues(getAdditionalValues())
                 .complaintType(complaintType)
                 .authenticatedUser(AuthenticatedUser.createAnonymousUser())

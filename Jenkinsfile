@@ -34,7 +34,7 @@ try {
 //    }
 } catch (e) {
     node{
-        notifier.notifyBuild("FAILED")
+//        notifier.notifyBuild("FAILED")
         throw e
     }
 }

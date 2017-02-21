@@ -143,16 +143,19 @@ $(document).ready(function()
 	});
 
 	var langresult;
-
-	$('[data-translate]').each(function(i,v){
-		var translate = $(this).data('translate');
-		langresult = JSON.parse(localStorage.getItem("lang_response")).filter(function( obj ) {
-		  return obj.code == translate;
+	var lang_response = localStorage.getItem("lang_response");
+	if(lang_response){
+		$('[data-translate]').each(function(i,v){
+			var translate = $(this).data('translate');
+			langresult = JSON.parse(lang_response).filter(function( obj ) {
+			  return obj.code == translate;
+			});
+			//console.log(translate+'<--->'+JSON.stringify(result)+'<---->'+Object.values(result[0])[1]);
+			if(langresult.length > 0)
+				$(this).contents().first().replaceWith(Object.values(langresult[0])[1]);
 		});
-		//console.log(translate+'<--->'+JSON.stringify(result)+'<---->'+Object.values(result[0])[1]);
-		if(langresult.length > 0)
-			$(this).contents().first().replaceWith(Object.values(langresult[0])[1]);
-	});
+	}
+	
 	
 });
 

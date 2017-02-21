@@ -1,7 +1,9 @@
 package org.egov.pgr.employee.enrichment.model;
 
+import org.apache.commons.lang.StringUtils;
 import org.egov.pgr.employee.enrichment.consumer.contract.RequestInfo;
 import org.egov.pgr.employee.enrichment.json.ObjectMapperFactory;
+import org.egov.pgr.employee.enrichment.repository.contract.Attribute;
 import org.egov.pgr.employee.enrichment.repository.contract.WorkflowRequest;
 import org.egov.pgr.employee.enrichment.repository.contract.WorkflowResponse;
 
@@ -15,8 +17,9 @@ public class SevaRequest {
     private static final String VALUES_ASSIGNEE_ID = "assignment_id";
     private static final String VALUES_STATE_ID = "state_id";
     private static final String VALUES = "values";
-    private static final String VALUES_COMLAINT_TYPE_CODE = "complaint_type_code";
-    private static final String BOUNDARY_ID = "boundary_id";
+    private static final String VALUES_COMLAINT_TYPE_CODE = "complaintTypeCode";
+    private static final String BOUNDARY_ID = "boundaryId";
+    private static final String STATE_DETAILS = "stateDetails";
     private static final String WORKFLOW_TYPE = "Complaint";
     private static final String STATUS = "status";
     private static final String SERVICE_CODE = "service_code";
@@ -59,7 +62,7 @@ public class SevaRequest {
         RequestInfo requestInfo = ObjectMapperFactory.create().convertValue(sevaRequestMap.get(REQUEST_INFO), RequestInfo.class);
         HashMap<String, String> values = (HashMap<String, String>) serviceRequest.get(VALUES);
         String complaintType = (String) serviceRequest.get(SERVICE_CODE);
-        Map<String, String> valuesToSet = getWorkFlowRequestValues(values, complaintType);
+        Map<String, Attribute> valuesToSet = getWorkFlowRequestValues(values, complaintType);
         return WorkflowRequest.builder()
                 .assignee(getCurrentAssignee(values))
                 .action(requestInfo.getAction())
@@ -69,10 +72,11 @@ public class SevaRequest {
                 .type(WORKFLOW_TYPE).build();
     }
 
-    private Map<String, String> getWorkFlowRequestValues(HashMap<String, String> values, String complaintType) {
-        Map<String, String > valuesToSet = new HashMap<>();
-        valuesToSet.put(VALUES_COMLAINT_TYPE_CODE, complaintType);
-        valuesToSet.put(BOUNDARY_ID, values.get(VALUES_LOCATION_ID));
+    private Map<String, Attribute> getWorkFlowRequestValues(HashMap<String, String> values, String complaintType) {
+        Map<String, Attribute> valuesToSet = new HashMap<>();
+        valuesToSet.put(VALUES_COMLAINT_TYPE_CODE, Attribute.asStringAttr(VALUES_COMLAINT_TYPE_CODE, complaintType));
+        valuesToSet.put(BOUNDARY_ID, Attribute.asStringAttr(BOUNDARY_ID, values.get(VALUES_LOCATION_ID)));
+        valuesToSet.put(STATE_DETAILS, Attribute.asStringAttr(STATE_DETAILS, StringUtils.EMPTY));
         return valuesToSet;
     }
 

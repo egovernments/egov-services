@@ -8,6 +8,7 @@ import org.egov.pgr.employee.enrichment.consumer.contract.RequestInfo;
 
 import java.util.Date;
 import java.util.Map;
+import java.util.Objects;
 
 @Getter
 @Builder
@@ -16,16 +17,13 @@ public class WorkflowRequest {
     @JsonProperty("RequestInfo")
     private RequestInfo requestInfo;
 
-    @JsonProperty("object_id")
-    private String id;
-
     @JsonProperty("type")
     private String type;
 
     @JsonProperty("description")
     private String description;
 
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss",timezone = "IST")
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "IST")
     @JsonProperty("created_Date")
     private Date createdDate;
 
@@ -53,9 +51,15 @@ public class WorkflowRequest {
     @JsonProperty("state_id")
     private Long stateId;
 
-    @JsonProperty("state_details")
-    private String stateDetails;
-
     @JsonProperty("values")
-    private Map<String, String> values;
+    private Map<String, Attribute> values;
+
+    public String getValueForKey(String key) {
+        if (Objects.nonNull(values.get(key)))
+            return values.get(key).getValues().get(0).getName();
+        return "";
+
+    }
+
+
 }

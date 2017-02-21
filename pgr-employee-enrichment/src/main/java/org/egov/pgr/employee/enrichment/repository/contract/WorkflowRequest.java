@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
-import org.egov.pgr.employee.enrichment.model.RequestInfo;
+import org.egov.pgr.employee.enrichment.consumer.contract.RequestInfo;
 
 import java.util.Date;
 import java.util.Map;

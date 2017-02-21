@@ -1,4 +1,4 @@
-package org.egov.pgr.employee.enrichment.model;
+package org.egov.pgr.employee.enrichment.repository.contract;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

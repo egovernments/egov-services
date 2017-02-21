@@ -1,7 +1,9 @@
 package org.egov.pgr.employee.enrichment.model;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.egov.pgr.employee.enrichment.consumer.contract.RequestInfo;
 import org.egov.pgr.employee.enrichment.repository.contract.WorkflowRequest;
+import org.egov.pgr.employee.enrichment.repository.contract.WorkflowResponse;
 
 import java.util.HashMap;
 import java.util.Map;

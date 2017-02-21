@@ -1,4 +1,4 @@
-package org.egov.pgr.employee.enrichment.model;
+package org.egov.pgr.employee.enrichment.consumer.contract;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;

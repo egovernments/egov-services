@@ -1,6 +1,6 @@
 package org.egov.pgr.employee.enrichment.consumer;
 
-import org.egov.pgr.employee.enrichment.model.RequestInfo;
+import org.egov.pgr.employee.enrichment.consumer.contract.RequestInfo;
 import org.egov.pgr.employee.enrichment.model.SevaRequest;
 import org.egov.pgr.employee.enrichment.model.RequestContext;
 import org.egov.pgr.employee.enrichment.repository.ComplaintRepository;
@@ -10,7 +10,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.slf4j.MDC;
 
 import java.util.HashMap;
 

@@ -1,8 +1,8 @@
 package org.egov.pgr.employee.enrichment.service;
 
-import org.egov.pgr.employee.enrichment.model.RequestInfo;
+import org.egov.pgr.employee.enrichment.consumer.contract.RequestInfo;
 import org.egov.pgr.employee.enrichment.model.SevaRequest;
-import org.egov.pgr.employee.enrichment.model.WorkflowResponse;
+import org.egov.pgr.employee.enrichment.repository.contract.WorkflowResponse;
 import org.egov.pgr.employee.enrichment.repository.WorkflowRepository;
 import org.egov.pgr.employee.enrichment.repository.contract.WorkflowRequest;
 import org.junit.Test;

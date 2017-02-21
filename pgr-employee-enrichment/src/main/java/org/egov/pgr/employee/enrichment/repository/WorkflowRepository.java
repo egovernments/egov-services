@@ -1,7 +1,7 @@
 package org.egov.pgr.employee.enrichment.repository;
 
 import org.egov.pgr.employee.enrichment.repository.contract.WorkflowRequest;
-import org.egov.pgr.employee.enrichment.model.WorkflowResponse;
+import org.egov.pgr.employee.enrichment.repository.contract.WorkflowResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

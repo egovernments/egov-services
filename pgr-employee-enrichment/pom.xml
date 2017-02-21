@@ -114,6 +114,26 @@
                         </goals>
                         <configuration>
                             <rules>
+
+                                <rule>
+                                    <element>CLASS</element>
+                                    <excludes>
+                                        <exclude>org.egov.pgr.employee.enrichment.PgrEmployeeEnrichmentApplication</exclude>
+                                        <exclude>org.egov.pgr.employee.enrichment.consumer.contract.*</exclude>
+                                        <exclude>org.egov.pgr.employee.enrichment.model.RequestContext</exclude>
+                                        <exclude>org.egov.pgr.employee.enrichment.repository.contract.*</exclude>
+                                        <exclude>org.egov.pgr.employee.enrichment.json.ObjectMapperFactory</exclude>
+                                        <exclude>org.egov.pgr.employee.enrichment.http.CorrelationIdAwareRestTemplate</exclude>
+                                    </excludes>
+                                    <limits>
+                                        <limit>
+                                            <counter>LINE</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>0.90</minimum>
+                                        </limit>
+                                    </limits>
+                                </rule>
+
                                 <rule>
                                     <element>BUNDLE</element>
                                     <limits>

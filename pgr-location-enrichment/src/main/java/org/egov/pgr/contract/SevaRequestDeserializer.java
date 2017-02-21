@@ -1,4 +1,4 @@
-package org.egov.pgr.transform;
+package org.egov.pgr.contract;
 
 import org.egov.pgr.model.SevaRequest;
 import org.springframework.kafka.support.serializer.JsonDeserializer;

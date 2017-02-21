@@ -7,7 +7,7 @@ import org.egov.pgr.model.SevaRequest;
 import org.egov.pgr.producer.GrievanceAssignmentProducer;
 import org.egov.pgr.services.BoundaryService;
 import org.egov.pgr.services.CrossHierarchyService;
-import org.egov.pgr.transform.SevaRequestDeserializer;
+import org.egov.pgr.contract.SevaRequestDeserializer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

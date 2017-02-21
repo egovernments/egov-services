@@ -9,8 +9,8 @@ import org.egov.pgr.model.SevaRequest;
 import org.egov.pgr.producer.GrievanceAssignmentProducer;
 import org.egov.pgr.services.BoundaryService;
 import org.egov.pgr.services.CrossHierarchyService;
-import org.egov.pgr.transform.BoundaryResponse;
-import org.egov.pgr.transform.CrossHierarchyResponse;
+import org.egov.pgr.contract.BoundaryResponse;
+import org.egov.pgr.contract.CrossHierarchyResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 

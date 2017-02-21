@@ -2,8 +2,8 @@ package org.egov.pgr.services;
 
 import org.egov.pgr.config.PropertiesManager;
 import org.egov.pgr.model.RequestInfo;
-import org.egov.pgr.transform.BoundaryResponse;
-import org.egov.pgr.transform.BoundaryServiceResponse;
+import org.egov.pgr.contract.BoundaryResponse;
+import org.egov.pgr.contract.BoundaryServiceResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;

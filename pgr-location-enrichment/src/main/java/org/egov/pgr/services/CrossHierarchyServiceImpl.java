@@ -1,8 +1,8 @@
 package org.egov.pgr.services;
 
 import org.egov.pgr.model.RequestInfo;
-import org.egov.pgr.transform.CrossHierarchyResponse;
-import org.egov.pgr.transform.CrossHierarchyServiceResponse;
+import org.egov.pgr.contract.CrossHierarchyResponse;
+import org.egov.pgr.contract.CrossHierarchyServiceResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;

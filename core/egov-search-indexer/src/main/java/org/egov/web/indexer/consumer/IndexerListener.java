@@ -7,7 +7,9 @@ import org.egov.web.indexer.models.ComplaintIndex;
 import org.egov.web.indexer.service.ElasticSearchIndexerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.stereotype.Service;
 
+@Service
 public class IndexerListener {
 
 	public static final String OBJECT_TYPE_COMPLAINT = "complaint";
@@ -24,7 +26,9 @@ public class IndexerListener {
 	 * :true,"statusNotes":"COMPLETED", "values": {"locationId":"172",
 	 * "childLocationId":"176"}}}
 	 */
-	@KafkaListener(id = "${kafka.topics.egov.index.id}", topics = "${kafka.topics.egov.index.name}", group = "${kafka.topics.egov.index.group}")
+	@KafkaListener(id = "${kafka.topics.egov.index.id}",
+            topics = "${kafka.topics.egov.index.name}",
+            group = "${kafka.topics.egov.index.group}")
 	public void listen(ConsumerRecord<String, SevaRequest> record) {
 		try {
 			SevaRequest sevaReq = record.value();

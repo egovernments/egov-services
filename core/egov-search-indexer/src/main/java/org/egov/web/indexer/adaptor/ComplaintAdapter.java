@@ -83,17 +83,10 @@ public class ComplaintAdapter {
 		complaintIndex.setComplaintTypeName(serviceRequest.getComplaintTypeName());
 		complaintIndex.setComplaintTypeCode(serviceRequest.getComplaintTypeCode());
 
+		InitializeComplaintTypeDetails(complaintIndex, serviceRequest.getComplaintTypeCode(), serviceRequest.getLat(),
+				serviceRequest.getLng());
 		// Need to read from service request - citizenfeedback
 		complaintIndex.setSatisfactionIndex(0);
-
-		// calls complaintTypeService : Get slahours from complaintype based on
-		// code
-		ComplaintType ctype = complaintTypeService.fetchComplaintTypeByCode(serviceRequest.getComplaintTypeCode());
-		complaintIndex.setComplaintSLADays(ctype.getSlaHours());
-
-		if (Objects.nonNull(serviceRequest.getLat()) && Objects.nonNull(serviceRequest.getLng())) {
-			complaintIndex.setComplaintGeo(new GeoPoint(serviceRequest.getLat(), serviceRequest.getLng()));
-		}
 
 		// Reading from serviceRequest values map
 		Map<String, String> values = serviceRequest.getValues();
@@ -139,6 +132,17 @@ public class ComplaintAdapter {
 		return complaintIndex;
 	}
 
+	public void InitializeComplaintTypeDetails(ComplaintIndex complaintIndex, String complaintTypeCode, Double lat,
+			Double lng) {
+		// calls complaintTypeService : Get slahours from complaintype based on
+		// code
+		ComplaintType ctype = complaintTypeService.fetchComplaintTypeByCode(complaintTypeCode);
+		if (Objects.nonNull(lat) && Objects.nonNull(lng)) {
+			complaintIndex.setComplaintSLADays(ctype.getSlaHours());
+			complaintIndex.setComplaintGeo(new GeoPoint(lat, lng));
+		}
+	}
+
 	public void InitializeBoundaryDetails(ComplaintIndex complaintIndex, String locationId, String childLocationId) {
 		Boundary boundary = boundaryService.fetchBoundaryById(Long.getLong(locationId));
 		if (Objects.nonNull(boundary)) {
@@ -159,13 +163,15 @@ public class ComplaintAdapter {
 	public void InitializeCityDetails(ComplaintIndex complaintIndex, String tenantId) {
 		// read tenantid from value map
 		City city = cityService.fetchCityById(Long.getLong(tenantId));
-		complaintIndex.setCityCode(city.getCode());
-		complaintIndex.setCityDistrictCode(city.getDistrictCode());
-		complaintIndex.setCityDistrictName(city.getDistrictName());
-		complaintIndex.setCityGrade(city.getGrade());
-		complaintIndex.setCityDomainUrl(city.getDomainURL());
-		complaintIndex.setCityName(city.getName());
-		complaintIndex.setCityRegionName(city.getRegionName());
+		if (city != null) {
+			complaintIndex.setCityCode(city.getCode());
+			complaintIndex.setCityDistrictCode(city.getDistrictCode());
+			complaintIndex.setCityDistrictName(city.getDistrictName());
+			complaintIndex.setCityGrade(city.getGrade());
+			complaintIndex.setCityDomainUrl(city.getDomainURL());
+			complaintIndex.setCityName(city.getName());
+			complaintIndex.setCityRegionName(city.getRegionName());
+		}
 	}
 
 	public void InitializeAssignmentDetails(ComplaintIndex complaintIndex, String assignmentId) {

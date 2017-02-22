@@ -1,8 +1,6 @@
 package org.egov.workflow.web.contract;
 
-import java.util.Date;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -58,6 +56,21 @@ public class ProcessInstance {
 
     @JsonProperty("values")
     private Map<String, Attribute> values;
+
+    public String getComments(){
+        return getValueForKey("approvalComments");
+    }
+
+    public boolean isGrievanceOfficer(){
+        return getValueForKey("userRole").equals("Grievance Officer");
+    }
+
+    public void setStateId(Long stateId){
+        Value value = new Value("stateId", String.valueOf(stateId));
+        List<Value> values = Collections.singletonList(value);
+        Attribute attribute = new Attribute(true, "stateId", "String", true, "This is the id of state",values);
+        this.values.put("stateId",attribute);
+    }
 
     //To be used to fetch single value attributes
     public String getValueForKey(String key){

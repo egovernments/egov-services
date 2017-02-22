@@ -77,11 +77,11 @@ public class PgrWorkflowImpl implements Workflow {
             state.addStateHistory(new StateHistory(state));
             state.setStatus(State.StateStatus.ENDED);
             state.setValue("closed");
-            state.setComments(processInstance.getValueForKey("approvalComments"));
+            state.setComments(processInstance.getComments());
             state.setSenderName(processInstance.getSenderName());
             state.setDateInfo(processInstance.getCreatedDate());
             //TODO OWNER POSITION condition to be checked
-            if(processInstance.getValueForKey("userRole").equals("Grievance Officer"))
+            if(processInstance.isGrievanceOfficer())
                 state.setOwnerPosition(state.getOwnerPosition());
             //TODO - Get these values from request info
             state.setCreatedBy(00L);
@@ -89,10 +89,7 @@ public class PgrWorkflowImpl implements Workflow {
             state.setCreatedDate(new Date());
             state.setLastModifiedDate(new Date());
             stateService.update(state);
-            Value value = new Value(STATE_ID, String.valueOf(state.getId()));
-            List<Value> values = Collections.singletonList(value);
-            Attribute attribute = new Attribute(true, STATE_ID, "String", true, "This is the id of state",values);
-            processInstance.getValues().put(STATE_ID,attribute);
+            processInstance.setStateId(state.getId());
             processInstance.setAssignee(state.getOwnerPosition());
         }
         return processInstance;

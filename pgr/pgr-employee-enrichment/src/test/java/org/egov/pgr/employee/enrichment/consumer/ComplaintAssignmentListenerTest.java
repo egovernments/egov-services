@@ -1,8 +1,7 @@
 package org.egov.pgr.employee.enrichment.consumer;
 
-import org.egov.pgr.employee.enrichment.consumer.contract.RequestInfo;
-import org.egov.pgr.employee.enrichment.model.SevaRequest;
 import org.egov.pgr.employee.enrichment.model.RequestContext;
+import org.egov.pgr.employee.enrichment.model.SevaRequest;
 import org.egov.pgr.employee.enrichment.repository.ComplaintRepository;
 import org.egov.pgr.employee.enrichment.service.WorkflowService;
 import org.junit.Test;
@@ -54,9 +53,8 @@ public class ComplaintAssignmentListenerTest {
 
     private HashMap<String, Object> getSevaRequestMap() {
         final HashMap<String, Object> sevaRequestMap = new HashMap<>();
-        final RequestInfo requestInfo = RequestInfo.builder()
-                .msgId("correlationId")
-                .build();
+        final HashMap<String, Object> requestInfo = new HashMap<>();
+        requestInfo.put("msg_id", "correlationId");
         sevaRequestMap.put("RequestInfo", requestInfo);
         return sevaRequestMap;
     }

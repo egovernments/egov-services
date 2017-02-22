@@ -1,7 +1,7 @@
 package org.egov.pgr.employee.enrichment.model;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.pgr.employee.enrichment.consumer.contract.RequestInfo;
+import org.egov.pgr.employee.enrichment.json.ObjectMapperFactory;
 import org.egov.pgr.employee.enrichment.repository.contract.WorkflowRequest;
 import org.egov.pgr.employee.enrichment.repository.contract.WorkflowResponse;
 
@@ -21,6 +21,7 @@ public class SevaRequest {
     private static final String STATUS = "status";
     private static final String SERVICE_CODE = "service_code";
     private static final String VALUES_LOCATION_ID = "location_id";
+    private static final String MSG_ID = "msg_id";
 
     private HashMap<String, Object> sevaRequestMap;
 
@@ -46,15 +47,16 @@ public class SevaRequest {
         return sevaRequestMap;
     }
 
+    @SuppressWarnings("unchecked")
     public String getCorrelationId() {
-        final RequestInfo requestInfo = (RequestInfo) sevaRequestMap.get(REQUEST_INFO);
-        return requestInfo.getMsgId();
+        final HashMap<String, Object> requestInfo = (HashMap<String, Object>) sevaRequestMap.get(REQUEST_INFO);
+        return String.valueOf(requestInfo.get(MSG_ID));
     }
 
     @SuppressWarnings("unchecked")
     public WorkflowRequest getWorkFlowRequest() {
         HashMap<String, Object> serviceRequest = (HashMap<String, Object>) sevaRequestMap.get(SERVICE_REQUEST);
-        RequestInfo requestInfo = new ObjectMapper().convertValue(sevaRequestMap.get(REQUEST_INFO), RequestInfo.class);
+        RequestInfo requestInfo = ObjectMapperFactory.create().convertValue(sevaRequestMap.get(REQUEST_INFO), RequestInfo.class);
         HashMap<String, String> values = (HashMap<String, String>) serviceRequest.get(VALUES);
         String complaintType = (String) serviceRequest.get(SERVICE_CODE);
         Map<String, String> valuesToSet = getWorkFlowRequestValues(values, complaintType);

@@ -2,7 +2,6 @@ package org.egov.pgr.model;
 
 import org.egov.pgr.contract.BoundaryResponse;
 import org.egov.pgr.contract.CrossHierarchyResponse;
-import org.egov.pgr.contract.RequestInfo;
 import org.egov.pgr.contract.ServiceRequest;
 import org.egov.pgr.json.ObjectMapperFactory;
 
@@ -19,6 +18,7 @@ public class SevaRequest {
     private final static String SERVICE_REQUEST = "ServiceRequest";
     private final static String REQUEST_INFO = "RequestInfo";
     private static final String VALUES = "values";
+    private static final String MSG_ID = "msg_id";
     private final ServiceRequest serviceRequestObject;
 
     private HashMap<String, Object> sevaRequestMap;
@@ -91,9 +91,10 @@ public class SevaRequest {
         return getValues() != null && isNotEmpty(getValues().get(LOCATION_ID));
     }
 
+    @SuppressWarnings("unchecked")
     public String getCorrelationId() {
-        final RequestInfo requestInfo = (RequestInfo) sevaRequestMap.get(REQUEST_INFO);
-        return requestInfo.getMsgId();
+        final HashMap<String, Object> requestInfo = (HashMap<String, Object>) sevaRequestMap.get(REQUEST_INFO);
+        return String.valueOf(requestInfo.get(MSG_ID));
     }
 
     public HashMap<String, Object> getRequestMap() {

@@ -1,6 +1,5 @@
 package org.egov.pgr.consumer;
 
-import org.egov.pgr.contract.RequestInfo;
 import org.egov.pgr.model.RequestContext;
 import org.egov.pgr.model.SevaRequest;
 import org.egov.pgr.repository.ComplaintRepository;
@@ -52,9 +51,8 @@ public class GrievanceLocationEnrichmentListenerTest {
 
     private HashMap<String, Object> getSevaRequestMap() {
         final HashMap<String, Object> sevaRequestMap = new HashMap<>();
-        final RequestInfo requestInfo = RequestInfo.builder()
-                .msgId("correlationId")
-                .build();
+        final HashMap<String, Object> requestInfo = new HashMap<>();
+        requestInfo.put("msg_id", "correlationId");
         sevaRequestMap.put("RequestInfo", requestInfo);
         return sevaRequestMap;
     }

@@ -85,7 +85,7 @@ public class Assignment extends AbstractAuditable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "designation")
 	private Designation designation;
-	@JsonIgnore
+	
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "department")

@@ -2,13 +2,15 @@ package org.egov.workflow.domain.service;
 
 import java.util.List;
 
-import org.egov.workflow.domain.model.EmployeeResponse;
+import org.egov.workflow.domain.model.Employee;
+import org.egov.workflow.domain.model.EmployeeRes;
+import org.joda.time.LocalDate;
 
 public interface EmployeeService {
 
-    List<EmployeeResponse> getByRoleName(String roleName);
+	List<Employee> getByRoleName(String roleName);
 
-    EmployeeResponse getUserForPosition();
+	EmployeeRes getEmployeeForPosition(Long posId, LocalDate asOnDate);
 
-    /* EmployeeResponse getUserForPosition(Long posId, Date asOnDate); */
+	EmployeeRes getEmployeeForUserId(Long userId);
 }

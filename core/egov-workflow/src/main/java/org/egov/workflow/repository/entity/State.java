@@ -41,6 +41,7 @@
 package org.egov.workflow.repository.entity;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -59,6 +60,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.egov.workflow.web.contract.Attribute;
 import org.hibernate.validator.constraints.Length;
 
 @Entity
@@ -258,7 +260,8 @@ public class State extends AbstractAuditable {
                 .owner(this.getOwnerPosition().toString())
                 .details(this.extraInfo == null ? "" : this.extraInfo)
                 .sender(this.senderName == null ? "" : this.senderName)
-                .action(this.nextAction == null ? "" : this.nextAction).build();
+                .action(this.nextAction == null ? "" : this.nextAction)
+                .attributes(new HashMap<String,Attribute>()).build();
         return t;
     }
 

@@ -40,18 +40,22 @@
 
 package org.egov.workflow.domain.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.egov.workflow.domain.exception.ApplicationRuntimeException;
-import org.egov.workflow.domain.model.*;
+import org.egov.workflow.domain.model.BoundaryResponse;
+import org.egov.workflow.domain.model.ComplaintTypeResponse;
+import org.egov.workflow.domain.model.Employee;
+import org.egov.workflow.domain.model.PositionHierarchyResponse;
+import org.egov.workflow.domain.model.PositionResponse;
 import org.egov.workflow.repository.ComplaintRouterRepository;
 import org.egov.workflow.repository.entity.ComplaintRouter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class ComplaintRouterService {
@@ -111,7 +115,7 @@ public class ComplaintRouterService {
      */
     public PositionResponse getAssignee(final Long boundaryId, final String complaintTypeCode, final Long assigneeId) {
         PositionResponse positionResponse = null;
-        EmployeeResponse employeeResponse = null;
+        Employee employeeResponse = null;
         ComplaintRouter complaintRouter = null;
         List<PositionResponse> positions = null;
         List<PositionHierarchyResponse> positionHierarchies = null;
@@ -155,7 +159,7 @@ public class ComplaintRouterService {
                 positionHierarchies = positionHierarchyService.getByObjectTypeObjectSubTypeAndFromPosition("Complaint",
                         complaintTypeCode, assigneeId);
                 if (positionHierarchies.isEmpty() || positionHierarchies.contains(null)) {
-                    final List<EmployeeResponse> employees = employeeService.getByRoleName("Grievance Routing Officer");
+                    final List<Employee> employees = employeeService.getByRoleName("Grievance Routing Officer");
                     if (!employees.isEmpty())
                         employeeResponse = employees.iterator().next();
                     if (employeeResponse != null)

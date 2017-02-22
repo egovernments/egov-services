@@ -42,6 +42,7 @@ package org.egov.workflow.repository.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashMap;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -57,6 +58,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
+import org.egov.workflow.web.contract.Attribute;
 import org.hibernate.annotations.Immutable;
 
 @Entity
@@ -275,7 +277,8 @@ public class StateHistory implements Serializable {
                 .owner(this.getOwnerPosition().toString())
                 .details(this.extraInfo == null ? "" : this.extraInfo)
                 .sender(this.senderName == null ? "" : this.senderName)
-                .action(this.nextAction == null ? "" : this.nextAction).build();
+                .action(this.nextAction == null ? "" : this.nextAction)
+                .attributes(new HashMap<String,Attribute>()).build();
         return t;
     
     }

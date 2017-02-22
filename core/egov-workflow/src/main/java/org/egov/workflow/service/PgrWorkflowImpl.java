@@ -1,20 +1,27 @@
 package org.egov.workflow.service;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+
 import org.egov.workflow.domain.model.Department;
-import org.egov.workflow.domain.model.EmployeeResponse;
+import org.egov.workflow.domain.model.Employee;
 import org.egov.workflow.domain.model.PositionResponse;
-import org.egov.workflow.domain.model.User;
-import org.egov.workflow.domain.service.*;
+import org.egov.workflow.domain.service.ComplaintRouterService;
+import org.egov.workflow.domain.service.EmployeeService;
+import org.egov.workflow.domain.service.PositionService;
 import org.egov.workflow.repository.entity.State;
 import org.egov.workflow.repository.entity.StateHistory;
 import org.egov.workflow.repository.entity.Task;
 import org.egov.workflow.web.contract.Attribute;
 import org.egov.workflow.web.contract.ProcessInstance;
 import org.egov.workflow.web.contract.Value;
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.*;
 
 @Service
 public class PgrWorkflowImpl implements Workflow {
@@ -23,14 +30,9 @@ public class PgrWorkflowImpl implements Workflow {
     public static final String DEPARTMENT = "department";
     private ComplaintRouterService complaintRouterService;
     private StateService stateService;
-    @Autowired
-    private UserService userService;
 
     @Autowired
     private PositionService positionService;
-
-    @Autowired
-    private DepartmentService departmentService;
 
     @Autowired
     private EmployeeService employeeService;
@@ -117,50 +119,46 @@ public class PgrWorkflowImpl implements Workflow {
         final Set<StateHistory> history = state.getHistory();
         for (final StateHistory stateHistory : history) {
             t = stateHistory.map();
-            User user;
-            User sender;
-            sender = userService.getById(stateHistory.getLastModifiedBy());
+            Employee user;
+			Employee sender;
+			sender = employeeService.getEmployeeForUserId(stateHistory.getLastModifiedBy()).getEmployees().get(0);
             if (sender != null)
-                t.setSender(sender.getUserName() + "::" + sender.getName());
+                t.setSender(sender.getUsername() + "::" + sender.getName());
             else
                 t.setSender("");
             if (stateHistory.getOwnerUser() != null) {
 
-                user = userService.getById(state.getOwnerUser());
-                t.setOwner(user.getUserName() + "::" + user.getName());
-                /*Department dept = departmentService.getDepartmentForUser(user.getId(), new Date());*/
-                Department dept = departmentService.getDepartmentForUser();
+            	user = employeeService.getEmployeeForUserId(state.getOwnerUser()).getEmployees().get(0);
+                t.setOwner(user.getUsername() + "::" + user.getName());
+                Department dept = user.getAssignments().get(0).getDepartment();
                 t.getAttributes().put(DEPARTMENT, putDepartmentValues(dept.getName()));
             } else {
-                /*EmployeeResponse emp = employeeService.getUserForPosition(stateHistory.getOwnerPosition(), new Date());*/
-                EmployeeResponse emp = employeeService.getUserForPosition();
+            	Employee emp = employeeService.getEmployeeForPosition(stateHistory.getOwnerPosition(), new LocalDate())
+						.getEmployees().get(0);
                 t.setOwner(emp.getUsername() + "::" + emp.getName());
-                /*Department dept = positionService.getDepartmentByPosition(state.getOwnerPosition());*/
-                Department dept = positionService.getDepartmentByPosition();
+                Department dept = emp.getAssignments().get(0).getDepartment();
                 t.getAttributes().put(DEPARTMENT, putDepartmentValues(dept.getName()));
             }
             tasks.add(t);
         }
         t = state.map();
-        User user;
-        User sender;
-        sender = userService.getById(state.getLastModifiedBy());
+        Employee user;
+		Employee sender;
+		sender = employeeService.getEmployeeForUserId(state.getLastModifiedBy()).getEmployees().get(0);
         if (sender != null)
-            t.setSender(sender.getUserName() + "::" + sender.getName());
+            t.setSender(sender.getUsername() + "::" + sender.getName());
         else
             t.setSender("");
         if (state.getOwnerUser() != null) {
-            user = userService.getById(state.getOwnerUser());
-            t.setOwner(user.getUserName() + "::" + user.getName());
-            /*Department dept = departmentService.getDepartmentForUser(user.getId(), new Date());*/
-            Department dept = departmentService.getDepartmentForUser();
+        	user = employeeService.getEmployeeForUserId(state.getOwnerUser()).getEmployees().get(0);
+            t.setOwner(user.getUsername() + "::" + user.getName());
+            Department dept = user.getAssignments().get(0).getDepartment();
             t.getAttributes().put(DEPARTMENT, putDepartmentValues(dept.getName()));
         } else {
-            /*EmployeeResponse emp = employeeService.getUserForPosition(stateHistory.getOwnerPosition(), new Date());*/
-            EmployeeResponse emp = employeeService.getUserForPosition();
+        	Employee emp = employeeService.getEmployeeForPosition(state.getOwnerPosition(), new LocalDate()).getEmployees()
+					.get(0);
             t.setOwner(emp.getUsername() + "::" + emp.getName());
-            /*Department dept = positionService.getDepartmentByPosition(state.getOwnerPosition());*/
-            Department dept = positionService.getDepartmentByPosition();
+            Department dept = emp.getAssignments().get(0).getDepartment();
             t.getAttributes().put(DEPARTMENT, putDepartmentValues(dept.getName()));
         }
         tasks.add(t);

@@ -93,7 +93,7 @@ public class Employee extends User {
 	@JoinColumn(name = "employeetype")
 	private EmployeeType employeeType;
 
-	@JsonIgnore
+	
 	@OneToMany(mappedBy = "employee", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	@OrderBy(" primary desc,toDate DESC ")
 	private final List<Assignment> assignments = new ArrayList<Assignment>(0);

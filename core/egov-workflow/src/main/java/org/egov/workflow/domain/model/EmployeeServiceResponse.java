@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Getter;
 
 @Getter
@@ -11,6 +12,6 @@ import lombok.Getter;
 public class EmployeeServiceResponse {
 
 	@JsonProperty("Employees")
-	private List<EmployeeResponse> employee;
+	private List<Employee> employee;
 
 }

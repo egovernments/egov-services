@@ -51,9 +51,12 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.SafeHtml;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Table(name = "eg_department")
 @SequenceGenerator(name = Department.SEQ_DEPARTMENT, sequenceName = Department.SEQ_DEPARTMENT, allocationSize = 1)
+@JsonIgnoreProperties(value = { "handler", "hibernateLazyInitializer" })
 public class Department extends AbstractAuditable {
 
     public static final String SEQ_DEPARTMENT = "SEQ_EG_DEPARTMENT";

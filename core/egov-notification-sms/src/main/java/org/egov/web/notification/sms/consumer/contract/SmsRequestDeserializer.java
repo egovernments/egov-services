@@ -1,6 +1,5 @@
-package org.egov.web.notification.sms.consumer;
+package org.egov.web.notification.sms.consumer.contract;
 
-import org.egov.web.notification.sms.consumer.contract.SMSRequest;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 
 public class SmsRequestDeserializer extends JsonDeserializer<SMSRequest> {

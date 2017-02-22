@@ -1,20 +1,13 @@
 package org.egov.web.indexer.contract;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
 
+@Getter
 public class SevaRequest {
     @JsonProperty("RequestInfo")
-    private RequestInfo requestInfo = null;
+    private RequestInfo requestInfo;
 
     @JsonProperty("ServiceRequest")
-    private ServiceRequest serviceRequest = null;
-
-    public ServiceRequest getServiceRequest() {
-        return serviceRequest;
-    }
-
-    public RequestInfo getRequestInfo() {
-
-        return requestInfo;
-    }
+    private ServiceRequest serviceRequest;
 }

@@ -1,21 +1,15 @@
 package org.egov.web.indexer.models;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class GeoPoint {
-
-	private double lat;
-	private double lon;
-
-	private GeoPoint() {
-		//required by mapper to instantiate object
-	}
-
-	public GeoPoint(double latitude, double longitude) {
-		this.lat = latitude;
-		this.lon = longitude;
-	}
+    private double lat;
+    private double lon;
 }
 
 

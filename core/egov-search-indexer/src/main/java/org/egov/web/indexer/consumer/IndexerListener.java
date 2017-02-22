@@ -12,31 +12,30 @@ import org.springframework.stereotype.Service;
 @Service
 public class IndexerListener {
 
-	public static final String OBJECT_TYPE_COMPLAINT = "complaint";
+    public static final String OBJECT_TYPE_COMPLAINT = "complaint";
 
-	@Autowired
-	private ElasticSearchIndexerService elasticSearchIndexerService;
+    private ElasticSearchIndexerService elasticSearchIndexerService;
+    private ComplaintAdapter complaintAdapter;
 
-	@Autowired
-	private ComplaintAdapter complaintAdapter;
+    @Autowired
+    public IndexerListener(ElasticSearchIndexerService elasticSearchIndexerService,
+                           ComplaintAdapter complaintAdapter) {
+        this.elasticSearchIndexerService = elasticSearchIndexerService;
+        this.complaintAdapter = complaintAdapter;
+    }
 
-	/**
-	 * A key/value pair to be received from Kafka. Format of Value map:
-	 * {"RequestInfo":{},"ServiceRequest":{"serviceRequestId":"somecrn","status"
-	 * :true,"statusNotes":"COMPLETED", "values": {"locationId":"172",
-	 * "childLocationId":"176"}}}
-	 */
-	@KafkaListener(id = "${kafka.topics.egov.index.id}",
+    /**
+     * A key/value pair to be received from Kafka. Format of Value map:
+     * {"RequestInfo":{},"ServiceRequest":{"serviceRequestId":"somecrn","status"
+     * :true,"statusNotes":"COMPLETED", "values": {"locationId":"172",
+     * "childLocationId":"176"}}}
+     */
+    @KafkaListener(id = "${kafka.topics.egov.index.id}",
             topics = "${kafka.topics.egov.index.name}",
             group = "${kafka.topics.egov.index.group}")
-	public void listen(ConsumerRecord<String, SevaRequest> record) {
-		try {
-			SevaRequest sevaReq = record.value();
-			ComplaintIndex complaintIndex = complaintAdapter.index(sevaReq.getServiceRequest());
-			elasticSearchIndexerService.indexObject(OBJECT_TYPE_COMPLAINT, complaintIndex.getCrn(), complaintIndex);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+    public void listen(ConsumerRecord<String, SevaRequest> record) {
+        SevaRequest sevaReq = record.value();
+        ComplaintIndex complaintIndex = complaintAdapter.index(sevaReq.getServiceRequest());
+        elasticSearchIndexerService.index(OBJECT_TYPE_COMPLAINT, complaintIndex.getCrn(), complaintIndex);
+    }
 }

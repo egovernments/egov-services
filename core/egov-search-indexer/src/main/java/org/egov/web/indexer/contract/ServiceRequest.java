@@ -1,10 +1,16 @@
 package org.egov.web.indexer.contract;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
+@Getter
+@Builder
+@AllArgsConstructor
 public class ServiceRequest {
     @JsonProperty("serviceRequestId")
     private String crn = null;
@@ -30,7 +36,7 @@ public class ServiceRequest {
     @JsonProperty("serviceNotice")
     private String serviceNotice = null;
 
-   // @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "IST")
+    // @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "IST")
     @JsonProperty("requestedDatetime")
     private String createdDate = null;
 
@@ -38,7 +44,7 @@ public class ServiceRequest {
     @JsonProperty("updatedDatetime")
     private String lastModifiedDate = null;
 
-   // @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "IST")
+    // @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "IST")
     @JsonProperty("expectedDatetime")
     private String escalationDate = null;
 
@@ -178,99 +184,99 @@ public class ServiceRequest {
         return values;
     }
 
-	public void setCrn(String crn) {
-		this.crn = crn;
-	}
+    public void setCrn(String crn) {
+        this.crn = crn;
+    }
 
-	public void setStatus(Boolean status) {
-		this.status = status;
-	}
+    public void setStatus(Boolean status) {
+        this.status = status;
+    }
 
-	public void setStatusDetails(String statusDetails) {
-		this.statusDetails = statusDetails;
-	}
+    public void setStatusDetails(String statusDetails) {
+        this.statusDetails = statusDetails;
+    }
 
-	public void setComplaintTypeName(String complaintTypeName) {
-		this.complaintTypeName = complaintTypeName;
-	}
+    public void setComplaintTypeName(String complaintTypeName) {
+        this.complaintTypeName = complaintTypeName;
+    }
 
-	public void setComplaintTypeCode(String complaintTypeCode) {
-		this.complaintTypeCode = complaintTypeCode;
-	}
+    public void setComplaintTypeCode(String complaintTypeCode) {
+        this.complaintTypeCode = complaintTypeCode;
+    }
 
-	public void setDetails(String details) {
-		this.details = details;
-	}
+    public void setDetails(String details) {
+        this.details = details;
+    }
 
-	public void setAgencyResponsible(String agencyResponsible) {
-		this.agencyResponsible = agencyResponsible;
-	}
+    public void setAgencyResponsible(String agencyResponsible) {
+        this.agencyResponsible = agencyResponsible;
+    }
 
-	public void setServiceNotice(String serviceNotice) {
-		this.serviceNotice = serviceNotice;
-	}
+    public void setServiceNotice(String serviceNotice) {
+        this.serviceNotice = serviceNotice;
+    }
 
-	public void setCreatedDate(String createdDate) {
-		this.createdDate = createdDate;
-	}
+    public void setCreatedDate(String createdDate) {
+        this.createdDate = createdDate;
+    }
 
-	public void setLastModifiedDate(String lastModifiedDate) {
-		this.lastModifiedDate = lastModifiedDate;
-	}
+    public void setLastModifiedDate(String lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
 
-	public void setEscalationDate(String escalationDate) {
-		this.escalationDate = escalationDate;
-	}
+    public void setEscalationDate(String escalationDate) {
+        this.escalationDate = escalationDate;
+    }
 
-	public void setLandmarkDetails(String landmarkDetails) {
-		this.landmarkDetails = landmarkDetails;
-	}
+    public void setLandmarkDetails(String landmarkDetails) {
+        this.landmarkDetails = landmarkDetails;
+    }
 
-	public void setCrossHierarchyId(String crossHierarchyId) {
-		this.crossHierarchyId = crossHierarchyId;
-	}
+    public void setCrossHierarchyId(String crossHierarchyId) {
+        this.crossHierarchyId = crossHierarchyId;
+    }
 
-	public void setZipcode(Integer zipcode) {
-		this.zipcode = zipcode;
-	}
+    public void setZipcode(Integer zipcode) {
+        this.zipcode = zipcode;
+    }
 
-	public void setLat(Double lat) {
-		this.lat = lat;
-	}
+    public void setLat(Double lat) {
+        this.lat = lat;
+    }
 
-	public void setLng(Double lng) {
-		this.lng = lng;
-	}
+    public void setLng(Double lng) {
+        this.lng = lng;
+    }
 
-	public void setMediaUrl(String mediaUrl) {
-		this.mediaUrl = mediaUrl;
-	}
+    public void setMediaUrl(String mediaUrl) {
+        this.mediaUrl = mediaUrl;
+    }
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
 
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	public void setDeviceId(String deviceId) {
-		this.deviceId = deviceId;
-	}
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
+    }
 
-	public void setAccountId(String accountId) {
-		this.accountId = accountId;
-	}
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
+    }
 
-	public void setValues(Map<String, String> values) {
-		this.values = values;
-	}
+    public void setValues(Map<String, String> values) {
+        this.values = values;
+    }
 }

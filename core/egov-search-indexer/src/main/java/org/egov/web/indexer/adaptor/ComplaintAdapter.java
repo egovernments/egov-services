@@ -8,7 +8,6 @@ import org.egov.web.indexer.service.AssignmentService;
 import org.egov.web.indexer.service.BoundaryService;
 import org.egov.web.indexer.service.CityService;
 import org.egov.web.indexer.service.ComplaintTypeService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
@@ -20,26 +19,19 @@ import java.util.Objects;
 @Service
 public class ComplaintAdapter {
 
-    public static final String NOASSIGNMENT = "NO ASSIGNMENT";
+    private static final String NOASSIGNMENT = "NO ASSIGNMENT";
 
-    @Autowired
     private IndexerProperties propertiesManager;
-
-    @Autowired
     private BoundaryService boundaryService;
-
-    @Autowired
     private ComplaintTypeService complaintTypeService;
-
-    @Autowired
     private CityService cityService;
-
-    @Autowired
     private AssignmentService assignmentService;
 
-    public ComplaintAdapter(IndexerProperties propertiesManager, BoundaryService boundaryService,
-                            ComplaintTypeService complaintTypeService, CityService cityService, AssignmentService
-                                    assignmentService) {
+    public ComplaintAdapter(IndexerProperties propertiesManager,
+                            BoundaryService boundaryService,
+                            ComplaintTypeService complaintTypeService,
+                            CityService cityService,
+                            AssignmentService assignmentService) {
         this.propertiesManager = propertiesManager;
         this.boundaryService = boundaryService;
         this.complaintTypeService = complaintTypeService;
@@ -47,7 +39,7 @@ public class ComplaintAdapter {
         this.assignmentService = assignmentService;
     }
 
-    public ComplaintIndex index(ServiceRequest serviceRequest) {
+    public ComplaintIndex adapt(ServiceRequest serviceRequest) {
         if (serviceRequest != null && !serviceRequest.getValues().isEmpty()) {
             if (serviceRequest.getValues().get("complaintStatus").equalsIgnoreCase("REGISTERED")) {
                 return indexOnCreate(serviceRequest);

@@ -2,9 +2,15 @@ package org.egov.web.indexer.contract;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 
 import java.util.Date;
 
+@Getter
+@Builder
+@AllArgsConstructor
 public class RequestInfo {
     @JsonProperty("api_id")
     private String apiId = null;

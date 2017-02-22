@@ -4,7 +4,8 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.egov.web.indexer.adaptor.ComplaintAdapter;
 import org.egov.web.indexer.contract.SevaRequest;
 import org.egov.web.indexer.models.ComplaintIndex;
-import org.egov.web.indexer.service.ElasticSearchIndexerService;
+import org.egov.web.indexer.models.RequestContext;
+import org.egov.web.indexer.service.ElasticSearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
@@ -12,15 +13,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class IndexerListener {
 
-    public static final String OBJECT_TYPE_COMPLAINT = "complaint";
+    private static final String OBJECT_TYPE_COMPLAINT = "complaint";
 
-    private ElasticSearchIndexerService elasticSearchIndexerService;
+    private ElasticSearchService elasticSearchService;
     private ComplaintAdapter complaintAdapter;
 
     @Autowired
-    public IndexerListener(ElasticSearchIndexerService elasticSearchIndexerService,
+    public IndexerListener(ElasticSearchService elasticSearchService,
                            ComplaintAdapter complaintAdapter) {
-        this.elasticSearchIndexerService = elasticSearchIndexerService;
+        this.elasticSearchService = elasticSearchService;
         this.complaintAdapter = complaintAdapter;
     }
 
@@ -34,8 +35,9 @@ public class IndexerListener {
             topics = "${kafka.topics.egov.index.name}",
             group = "${kafka.topics.egov.index.group}")
     public void listen(ConsumerRecord<String, SevaRequest> record) {
-        SevaRequest sevaReq = record.value();
-        ComplaintIndex complaintIndex = complaintAdapter.index(sevaReq.getServiceRequest());
-        elasticSearchIndexerService.index(OBJECT_TYPE_COMPLAINT, complaintIndex.getCrn(), complaintIndex);
+        SevaRequest sevaRequest = record.value();
+        RequestContext.setId(sevaRequest.getCorrelationId());
+        ComplaintIndex complaintIndex = complaintAdapter.adapt(sevaRequest.getServiceRequest());
+        elasticSearchService.index(OBJECT_TYPE_COMPLAINT, complaintIndex.getCrn(), complaintIndex);
     }
 }

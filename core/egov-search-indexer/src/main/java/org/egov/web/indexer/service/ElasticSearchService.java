@@ -7,13 +7,13 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Map;
 
 @Service
-public class ElasticSearchIndexerService {
+public class ElasticSearchService {
 
     private RestTemplate restTemplate;
     private final String indexServiceHost;
 
-    public ElasticSearchIndexerService(RestTemplate restTemplate,
-                                       @Value("${egov.services.esindexer.host}") String indexServiceHost) {
+    public ElasticSearchService(RestTemplate restTemplate,
+                                @Value("${egov.services.esindexer.host}") String indexServiceHost) {
         this.restTemplate = restTemplate;
         this.indexServiceHost = indexServiceHost;
     }

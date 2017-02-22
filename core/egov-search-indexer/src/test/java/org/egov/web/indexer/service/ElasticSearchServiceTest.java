@@ -17,16 +17,16 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ElasticSearchIndexerServiceTest {
+public class ElasticSearchServiceTest {
 
     private MockRestServiceServer server;
 
-    private ElasticSearchIndexerService elasticSearchIndexerService;
+    private ElasticSearchService elasticSearchService;
 
     @Before
     public void before() {
         RestTemplate restTemplate = new RestTemplate();
-        elasticSearchIndexerService = new ElasticSearchIndexerService(restTemplate, "http://host/");
+        elasticSearchService = new ElasticSearchService(restTemplate, "http://host/");
         server = MockRestServiceServer.bindTo(restTemplate).build();
     }
 
@@ -40,7 +40,7 @@ public class ElasticSearchIndexerServiceTest {
         Map<String, String> stringObj = new HashMap<String, String>();
         stringObj.put("key", "value");
 
-        elasticSearchIndexerService.index(indexName, indexId, stringObj);
+        elasticSearchService.index(indexName, indexId, stringObj);
 
         server.verify();
     }

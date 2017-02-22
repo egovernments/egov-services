@@ -7,12 +7,13 @@ import org.egov.web.indexer.service.AssignmentService;
 import org.egov.web.indexer.service.BoundaryService;
 import org.egov.web.indexer.service.CityService;
 import org.egov.web.indexer.service.ComplaintTypeService;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.Assert.assertNotNull;
@@ -36,14 +37,8 @@ public class ComplaintAdapterTest {
     @Mock
     private AssignmentService assignmentService;
 
+    @InjectMocks
     private ComplaintAdapter complaintAdapter;
-
-    @Before
-    public void before() {
-        complaintAdapter = new ComplaintAdapter(propertiesManager, boundaryService, complaintTypeService, cityService,
-                assignmentService);
-
-    }
 
     @Test
     public void test_create_index() {
@@ -53,7 +48,9 @@ public class ComplaintAdapterTest {
     }
 
     private ServiceRequest setUpServiceRequest() {
-        ServiceRequest serviceRequest = new ServiceRequest();
+        ServiceRequest serviceRequest = ServiceRequest.builder()
+                .values(new HashMap<>())
+                .build();
         serviceRequest.setCreatedDate("2016-10-20");
         serviceRequest.setEscalationDate("2016-10-21");
         serviceRequest.setFirstName("abc");

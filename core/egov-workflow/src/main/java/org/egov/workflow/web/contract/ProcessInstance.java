@@ -1,63 +1,69 @@
 package org.egov.workflow.web.contract;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Date;
+import java.util.Map;
+import java.util.Objects;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
-import java.util.Map;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Getter
+@AllArgsConstructor
+@Builder
 public class ProcessInstance {
 
     @JsonProperty("RequestInfo")
-    private RequestInfo requestInfo = null;
+    private RequestInfo requestInfo;
 
-    @JsonProperty("object_id")
+    @JsonProperty("objectId")
     @Setter
-    private String id = null;
+    private String id;
 
     @JsonProperty("type")
-    private String type = null;
+    private String type;
 
     @JsonProperty("description")
-    private String description = null;
+    private String description;
 
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss",timezone = "IST")
-    @JsonProperty("created_Date")
-    private Date createdDate = null;
+    @JsonProperty("createdDate")
+    private Date createdDate;
 
-    @JsonProperty("last_updated")
-    private Date lastupdatedSince = null;
+    @JsonProperty("lastupdated")
+    private Date lastupdatedSince;
 
     @JsonProperty("status")
-    private String status = null;
+    private String status;
 
     @JsonProperty("action")
-    private String action = null;
+    private String action;
 
-    @JsonProperty("business_key")
-    private String businessKey = null;
+    @JsonProperty("businessKey")
+    private String businessKey;
 
     @Setter
     @JsonProperty("assignee")
-    private Long assignee = null;
+    private Long assignee;
 
     @JsonProperty("group")
-    private String group = null;
+    private String group;
 
-    @JsonProperty("sender_name")
-    private String senderName = null;
-
-    @Setter
-    @JsonProperty("state_id")
-    private Long stateId;
-
-    @JsonProperty("state_details")
-    private String stateDetails;
+    @JsonProperty("senderName")
+    private String senderName;
 
     @JsonProperty("values")
-    private Map<String, String> values;
+    private Map<String, Attribute> values;
 
+    //To be used to fetch single value attributes
+    public String getValueForKey(String key){
+        if(Objects.nonNull(values.get(key)))
+            return values.get(key).getValues().get(0).getName();
+
+        return "";
+    }
 }

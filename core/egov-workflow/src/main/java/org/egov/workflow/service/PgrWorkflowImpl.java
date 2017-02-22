@@ -1,36 +1,28 @@
 package org.egov.workflow.service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-
 import org.egov.workflow.domain.model.Department;
 import org.egov.workflow.domain.model.EmployeeResponse;
 import org.egov.workflow.domain.model.PositionResponse;
 import org.egov.workflow.domain.model.User;
-import org.egov.workflow.domain.service.ComplaintRouterService;
-import org.egov.workflow.domain.service.DepartmentService;
-import org.egov.workflow.domain.service.EmployeeService;
-import org.egov.workflow.domain.service.PositionService;
-import org.egov.workflow.domain.service.UserService;
-import org.egov.workflow.repository.entity.Attribute;
+import org.egov.workflow.domain.service.*;
 import org.egov.workflow.repository.entity.State;
 import org.egov.workflow.repository.entity.StateHistory;
 import org.egov.workflow.repository.entity.Task;
-import org.egov.workflow.repository.entity.WorkflowTypes;
+import org.egov.workflow.web.contract.Attribute;
 import org.egov.workflow.web.contract.ProcessInstance;
+import org.egov.workflow.web.contract.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.*;
 
 @Service
 public class PgrWorkflowImpl implements Workflow {
 
+    public static final String STATE_ID = "stateId";
+    public static final String DEPARTMENT = "department";
     private ComplaintRouterService complaintRouterService;
     private StateService stateService;
-    private WorkflowTypeService workflowTypeService;
     @Autowired
     private UserService userService;
 
@@ -44,11 +36,9 @@ public class PgrWorkflowImpl implements Workflow {
     private EmployeeService employeeService;
 
     @Autowired
-    public PgrWorkflowImpl(ComplaintRouterService complaintRouterService, StateService stateService,
-            WorkflowTypeService workflowTypeService) {
+    public PgrWorkflowImpl(ComplaintRouterService complaintRouterService, StateService stateService) {
         this.complaintRouterService = complaintRouterService;
         this.stateService = stateService;
-        this.workflowTypeService = workflowTypeService;
     }
 
     @Override
@@ -60,52 +50,55 @@ public class PgrWorkflowImpl implements Workflow {
         state.setValue(processInstance.getStatus());
         state.setComments(processInstance.getDescription());
         state.setOwnerPosition(resolveAssignee(processInstance));
-        state.setExtraInfo(processInstance.getStateDetails());
+        state.setExtraInfo(processInstance.getValueForKey("statusDetails"));
         state.setDateInfo(processInstance.getCreatedDate());
-        final WorkflowTypes type = workflowTypeService.getWorkflowTypeByType(state.getType());
-        state.setNatureOfTask(type.getDisplayName());
-        // TODO - Get these values from request info
+        //TODO - Get these values from request info
         state.setCreatedBy(00L);
         state.setLastModifiedBy(00L);
         state.setCreatedDate(new Date());
         state.setLastModifiedDate(new Date());
         stateService.create(state);
-        processInstance.setStateId(state.getId());
+        Value value = new Value(STATE_ID, String.valueOf(state.getId()));
+        List<Value> values = Collections.singletonList(value);
+        Attribute attribute = new Attribute(true, STATE_ID, "String", true, "This is the id of state",values);
+        processInstance.getValues().put(STATE_ID,attribute);
         processInstance.setAssignee(state.getOwnerPosition());
 
         return processInstance;
     }
 
     @Override
-    public ProcessInstance end(String jurisdiction, ProcessInstance processInstance) {
-        Long stateId = processInstance.getStateId();
-        Map<String, String> values = processInstance.getValues();
+    public ProcessInstance end(String jurisdiction,ProcessInstance processInstance) {
+        Long stateId = Long.valueOf(processInstance.getValueForKey(STATE_ID));
         final State state = stateService.getStateById(stateId);
-        if (Objects.nonNull(state)) {
+        if(Objects.nonNull(state)){
             state.addStateHistory(new StateHistory(state));
             state.setStatus(State.StateStatus.ENDED);
             state.setValue("closed");
-            state.setComments(values.get("approvalComments"));
-            // TODO This is logged in username which should be populated
+            state.setComments(processInstance.getValueForKey("approvalComments"));
             state.setSenderName(processInstance.getSenderName());
             state.setDateInfo(processInstance.getCreatedDate());
-            // TODO OWNER POSITION condition to be checked
-            state.setOwnerPosition(state.getOwnerPosition());
-            // TODO - Get these values from request info
+            //TODO OWNER POSITION condition to be checked
+            if(processInstance.getValueForKey("userRole").equals("Grievance Officer"))
+                state.setOwnerPosition(state.getOwnerPosition());
+            //TODO - Get these values from request info
             state.setCreatedBy(00L);
             state.setLastModifiedBy(00L);
             state.setCreatedDate(new Date());
             state.setLastModifiedDate(new Date());
             stateService.update(state);
-            processInstance.setStateId(state.getId());
+            Value value = new Value(STATE_ID, String.valueOf(state.getId()));
+            List<Value> values = Collections.singletonList(value);
+            Attribute attribute = new Attribute(true, STATE_ID, "String", true, "This is the id of state",values);
+            processInstance.getValues().put(STATE_ID,attribute);
             processInstance.setAssignee(state.getOwnerPosition());
         }
         return processInstance;
     }
 
     private Long resolveAssignee(ProcessInstance processInstance) {
-        String complaintTypeCode = processInstance.getValues().get("complaint_type_code");
-        Long boundaryId = Long.valueOf(processInstance.getValues().get("boundary_id"));
+        String complaintTypeCode = processInstance.getValueForKey("complaintTypeCode");
+        Long boundaryId = Long.valueOf(processInstance.getValueForKey("boundaryId"));
         Long firstTimeAssignee = null;
         PositionResponse response = complaintRouterService.getAssignee(boundaryId, complaintTypeCode, firstTimeAssignee);
         return response.getId();
@@ -137,22 +130,14 @@ public class PgrWorkflowImpl implements Workflow {
                 t.setOwner(user.getUserName() + "::" + user.getName());
                 /*Department dept = departmentService.getDepartmentForUser(user.getId(), new Date());*/
                 Department dept = departmentService.getDepartmentForUser();
-                Attribute attr = new Attribute();
-                attr.setValues(new ArrayList<>());
-                attr.setCode("department");
-                attr.getValues().add(dept.getName());
-                t.getAttributes().put("department", attr);
+                t.getAttributes().put(DEPARTMENT, putDepartmentValues(dept.getName()));
             } else {
                 /*EmployeeResponse emp = employeeService.getUserForPosition(stateHistory.getOwnerPosition(), new Date());*/
                 EmployeeResponse emp = employeeService.getUserForPosition();
                 t.setOwner(emp.getUsername() + "::" + emp.getName());
                 /*Department dept = positionService.getDepartmentByPosition(state.getOwnerPosition());*/
                 Department dept = positionService.getDepartmentByPosition();
-                Attribute attr = new Attribute();
-                attr.setValues(new ArrayList<>());
-                attr.setCode("department");
-                attr.getValues().add(dept.getName());
-                //t.getAttributes().put("department", attr);
+                t.getAttributes().put(DEPARTMENT, putDepartmentValues(dept.getName()));
             }
             tasks.add(t);
         }
@@ -169,26 +154,27 @@ public class PgrWorkflowImpl implements Workflow {
             t.setOwner(user.getUserName() + "::" + user.getName());
             /*Department dept = departmentService.getDepartmentForUser(user.getId(), new Date());*/
             Department dept = departmentService.getDepartmentForUser();
-            Attribute attr = new Attribute();
-            attr.setValues(new ArrayList<>());
-            attr.setCode("department");
-            attr.getValues().add(dept.getName());
-            //t.getAttributes().put("department", attr);
+            t.getAttributes().put(DEPARTMENT, putDepartmentValues(dept.getName()));
         } else {
             /*EmployeeResponse emp = employeeService.getUserForPosition(stateHistory.getOwnerPosition(), new Date());*/
             EmployeeResponse emp = employeeService.getUserForPosition();
             t.setOwner(emp.getUsername() + "::" + emp.getName());
             /*Department dept = positionService.getDepartmentByPosition(state.getOwnerPosition());*/
             Department dept = positionService.getDepartmentByPosition();
-            Attribute attr = new Attribute();
-            attr.setValues(new ArrayList<>());
-            attr.setCode("department");
-            attr.setValues(new ArrayList<String>());
-            attr.getValues().add(dept.getName());
-            //t.getAttributes().put("department", attr);
+            t.getAttributes().put(DEPARTMENT, putDepartmentValues(dept.getName()));
         }
         tasks.add(t);
         return tasks;
+    }
+
+    private Attribute putDepartmentValues(String departmentName){
+        Value value = new Value(DEPARTMENT, departmentName);
+        List<Value> values = Collections.singletonList(value);
+        Attribute attribute = new Attribute().builder()
+                .values(values)
+                .build();
+
+        return attribute;
     }
 
 }

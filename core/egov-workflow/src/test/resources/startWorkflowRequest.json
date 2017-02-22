@@ -1,6 +1,57 @@
 {
-  "RequestInfo": {
-    "tenant_id": "tenantId"
+  "RequestInfo":{
+    "tenant_id": "tenantId",
+    "api_id":"",
+    "ver":"1"
   },
-  "description": "description"
+  "type":"Complaint",
+  "description":"Grievance registered successfully",
+  "status":"REGISTERED",
+  "action":"CREATE",
+  "businessKey":"765",
+  "assignee":"2",
+  "group":"",
+  "senderName":"harry",
+  "values":{
+    "stateDetails":{
+      "varible":true,
+      "code":"SD",
+      "datatype":"String",
+      "required":true,
+      "datatypeDescription": "Details of the workflow state",
+      "values":[
+        {
+          "key":"stateDetails",
+          "name":""
+        }
+      ]
+    },
+    "complaintTypeCode":{
+      "varible":true,
+      "code":"CTC",
+      "datatype":"String",
+      "required":true,
+      "datatypeDescription": "service code of complainttype",
+      "values":[
+        {
+          "key":"complaintTypeCode",
+          "name":"PHDMG"
+        }
+      ]
+    },
+    "boundaryId":{
+      "varible":true,
+      "code":"BNDRYID",
+      "datatype":"String",
+      "required":true,
+      "datatypeDescription": "Id of boundary",
+      "values":[
+        {
+          "key":"boundaryId",
+          "name":"173"
+        }
+      ]
+    }
+
+  }
 }

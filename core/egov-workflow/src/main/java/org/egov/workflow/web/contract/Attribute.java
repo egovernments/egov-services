@@ -1,15 +1,36 @@
-package org.egov.workflow.repository.entity;
+package org.egov.workflow.web.contract;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class Attribute {
 
+    @JsonProperty("variable")
     private Boolean variable;
+
+    @JsonProperty("code")
     private String code;
+
+    @JsonProperty("datatype")
     private String datatype;
+
+    @JsonProperty("required")
     private Boolean required;
-    private String datatype_description;
-    private List values;
+
+    @JsonProperty("datatypeDescription")
+    private String datatypeDescription;
+
+    @JsonProperty("values")
+    private List<Value> values = new ArrayList<Value>();
 
     public Boolean getVariable() {
         return variable;
@@ -44,20 +65,18 @@ public class Attribute {
     }
 
     public String getDatatype_description() {
-        return datatype_description;
+        return datatypeDescription;
     }
 
-    public void setDatatype_description(String datatype_description) {
-        this.datatype_description = datatype_description;
+    public void setDatatype_description(String datatypeDescription) {
+        this.datatypeDescription = datatypeDescription;
     }
 
-    public List getValues() {
+    public List<Value> getValues() {
         return values;
     }
 
-    public void setValues(List values) {
+    public void setValues(List<Value> values) {
         this.values = values;
     }
-
-    
 }

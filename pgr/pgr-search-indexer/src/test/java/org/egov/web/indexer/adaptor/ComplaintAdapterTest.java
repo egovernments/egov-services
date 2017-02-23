@@ -1,23 +1,27 @@
 package org.egov.web.indexer.adaptor;
 
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.when;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import org.egov.web.indexer.config.IndexerProperties;
-import org.egov.web.indexer.contract.*;
+import org.egov.web.indexer.contract.Assignment;
+import org.egov.web.indexer.contract.Boundary;
+import org.egov.web.indexer.contract.City;
+import org.egov.web.indexer.contract.ComplaintType;
+import org.egov.web.indexer.contract.ServiceRequest;
+import org.egov.web.indexer.repository.AssignmentRepository;
+import org.egov.web.indexer.repository.BoundaryRepository;
+import org.egov.web.indexer.repository.CityRepository;
+import org.egov.web.indexer.repository.ComplaintTypeRepository;
 import org.egov.web.indexer.repository.contract.ComplaintIndex;
-import org.egov.web.indexer.service.AssignmentService;
-import org.egov.web.indexer.service.BoundaryService;
-import org.egov.web.indexer.service.CityService;
-import org.egov.web.indexer.service.ComplaintTypeService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ComplaintAdapterTest {
@@ -26,16 +30,16 @@ public class ComplaintAdapterTest {
     private IndexerProperties propertiesManager;
 
     @Mock
-    private BoundaryService boundaryService;
+    private BoundaryRepository boundaryService;
 
     @Mock
-    private ComplaintTypeService complaintTypeService;
+    private ComplaintTypeRepository complaintTypeService;
 
     @Mock
-    private CityService cityService;
+    private CityRepository cityService;
 
     @Mock
-    private AssignmentService assignmentService;
+    private AssignmentRepository assignmentService;
 
     @InjectMocks
     private ComplaintAdapter complaintAdapter;

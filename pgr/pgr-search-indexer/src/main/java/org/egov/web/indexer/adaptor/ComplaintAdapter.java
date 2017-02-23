@@ -1,20 +1,24 @@
 package org.egov.web.indexer.adaptor;
 
-import org.egov.web.indexer.config.IndexerProperties;
-import org.egov.web.indexer.contract.*;
-import org.egov.web.indexer.repository.contract.ComplaintIndex;
-import org.egov.web.indexer.repository.contract.GeoPoint;
-import org.egov.web.indexer.service.AssignmentService;
-import org.egov.web.indexer.service.BoundaryService;
-import org.egov.web.indexer.service.CityService;
-import org.egov.web.indexer.service.ComplaintTypeService;
-import org.springframework.stereotype.Service;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
+
+import org.egov.web.indexer.config.IndexerProperties;
+import org.egov.web.indexer.contract.Assignment;
+import org.egov.web.indexer.contract.Boundary;
+import org.egov.web.indexer.contract.City;
+import org.egov.web.indexer.contract.ComplaintType;
+import org.egov.web.indexer.contract.ServiceRequest;
+import org.egov.web.indexer.repository.AssignmentRepository;
+import org.egov.web.indexer.repository.BoundaryRepository;
+import org.egov.web.indexer.repository.CityRepository;
+import org.egov.web.indexer.repository.ComplaintTypeRepository;
+import org.egov.web.indexer.repository.contract.ComplaintIndex;
+import org.egov.web.indexer.repository.contract.GeoPoint;
+import org.springframework.stereotype.Service;
 
 @Service
 public class ComplaintAdapter {
@@ -22,16 +26,16 @@ public class ComplaintAdapter {
     private static final String NOASSIGNMENT = "NO ASSIGNMENT";
 
     private IndexerProperties propertiesManager;
-    private BoundaryService boundaryService;
-    private ComplaintTypeService complaintTypeService;
-    private CityService cityService;
-    private AssignmentService assignmentService;
+    private BoundaryRepository boundaryService;
+    private ComplaintTypeRepository complaintTypeService;
+    private CityRepository cityService;
+    private AssignmentRepository assignmentService;
 
     public ComplaintAdapter(IndexerProperties propertiesManager,
-                            BoundaryService boundaryService,
-                            ComplaintTypeService complaintTypeService,
-                            CityService cityService,
-                            AssignmentService assignmentService) {
+                            BoundaryRepository boundaryService,
+                            ComplaintTypeRepository complaintTypeService,
+                            CityRepository cityService,
+                            AssignmentRepository assignmentService) {
         this.propertiesManager = propertiesManager;
         this.boundaryService = boundaryService;
         this.complaintTypeService = complaintTypeService;

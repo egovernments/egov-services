@@ -18,7 +18,7 @@ def notifyBuild(String buildStatus = 'STARTED') {
 
     slackSend (color: colorCode, message: summary)
     emailext (
-      body: '${SCRIPT, template="groovy-html.template"}', recipientProviders: [[$class: 'CulpritsRecipientProvider'], [$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']], replyTo: '$DEFAULT_REPLYTO', subject: '$PROJECT_NAME - Build # $BUILD_NUMBER - ${buildStatus}!', to: '$DEFAULT_RECIPIENTS'
+      body: '${SCRIPT, template="groovy-html.template"}', recipientProviders: [[$class: 'CulpritsRecipientProvider'], [$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']], replyTo: '$DEFAULT_REPLYTO', subject: "$PROJECT_NAME - Build # $BUILD_NUMBER - ${buildStatus}!", to: '$DEFAULT_RECIPIENTS'
     )
 }
 

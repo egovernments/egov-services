@@ -1,7 +1,6 @@
 package org.egov.workflow.web.controller;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
@@ -12,7 +11,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -69,7 +67,7 @@ public class WorkFlowControllerTest {
     }
 
     @Test
-    public void test_should_close_workflow() throws Exception{
+    public void test_should_close_workflow() throws Exception {
         final ProcessInstance expectedProcessInstance = ProcessInstance.builder()
                 .action("END")
                 .assignee(2L)
@@ -125,15 +123,14 @@ public class WorkFlowControllerTest {
                     isValuesValid(actualProcessInstance);
         }
 
-        private boolean isValuesValid(ProcessInstance processInstance){
-            Map<String,Attribute> attributesMap =  processInstance.getValues();
-            if(attributesMap.get(COMPLAINT_TYPE_CODE).getValues().size() != 1)
+        private boolean isValuesValid(ProcessInstance processInstance) {
+            Map<String, Attribute> attributesMap = processInstance.getValues();
+            if (attributesMap.get(COMPLAINT_TYPE_CODE).getValues().size() != 1)
                 return false;
             Value complaintType = attributesMap.get(COMPLAINT_TYPE_CODE).getValues().get(0);
-            if(attributesMap.get(BOUNDARY_ID).getValues().size() != 1)
+            if (attributesMap.get(BOUNDARY_ID).getValues().size() != 1)
                 return false;
-            Value boundary = attributesMap.
-                    get(BOUNDARY_ID).getValues().get(0);
+            Value boundary = attributesMap.get(BOUNDARY_ID).getValues().get(0);
             return (complaintType.getName().equals("PHDMG") && boundary.getName().equals("173"));
         }
     }
@@ -152,7 +149,7 @@ public class WorkFlowControllerTest {
         @Override
         public boolean matches(Object o) {
             final ProcessInstance actualProcessInstance = (ProcessInstance) o;
-            return expectedProcessInstance.getAction().equals(actualProcessInstance.getAction())&&
+            return expectedProcessInstance.getAction().equals(actualProcessInstance.getAction()) &&
                     expectedProcessInstance.getAssignee().equals(actualProcessInstance.getAssignee()) &&
                     expectedProcessInstance.getBusinessKey().equals(actualProcessInstance.getBusinessKey()) &&
                     expectedProcessInstance.getType().equals(actualProcessInstance.getType()) &&
@@ -161,24 +158,22 @@ public class WorkFlowControllerTest {
                     isValuesValid(actualProcessInstance);
         }
 
-        private boolean isValuesValid(ProcessInstance processInstance){
-            Map<String,Attribute> attributesMap =  processInstance.getValues();
-            if(attributesMap.get(APPROVAL_COMMENTS).getValues().size() != 1)
+        private boolean isValuesValid(ProcessInstance processInstance) {
+            Map<String, Attribute> attributesMap = processInstance.getValues();
+            if (attributesMap.get(APPROVAL_COMMENTS).getValues().size() != 1)
                 return false;
             Value comments = attributesMap.get(APPROVAL_COMMENTS).getValues().get(0);
-            if(attributesMap.get(STATE_ID).getValues().size() != 1)
+            if (attributesMap.get(STATE_ID).getValues().size() != 1)
                 return false;
             Value state = attributesMap.get(STATE_ID).getValues().get(0);
             return (comments.getName().equals("complaint closed") && state.getName().equals("119"));
         }
     }
 
-
-
-//    @Test
-//    public void testGetWorkFlowHistoryFailsWithoutJurisdictionId() throws Exception {
-//        mockMvc.perform(get("/history")).andExpect(status().isBadRequest());
-//    }
+    @Test
+    public void testGetWorkFlowHistoryFailsWithoutJurisdictionId() throws Exception {
+        mockMvc.perform(get("/history")).andExpect(status().isBadRequest());
+    }
 
     @Test
     public void testGetWorkFlowHistoryById() throws Exception {
@@ -193,7 +188,7 @@ public class WorkFlowControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(content().json(getFileContents("historyResponse.json")));
-        
+
         assertEquals("someId", RequestContext.getId());
     }
 
@@ -203,14 +198,14 @@ public class WorkFlowControllerTest {
                 .sender("sender1")
                 .status("Created")
                 .comments("Got workflow history 1")
-                //.createdDate(new Date("2016-08-31T10:46:22.083"))
+                // .createdDate(new Date("2016-08-31T10:46:22.083"))
                 .build();
         final Task history2 = Task.builder()
                 .owner("Owner2")
                 .sender("sender2")
                 .status("Closed")
                 .comments("Got workflow history 2")
-                //.createdDate(new Date("2016-08-31T10:46:22.083"))
+                // .createdDate(new Date("2016-08-31T10:46:22.083"))
                 .build();
         return Arrays.asList(history1, history2);
     }

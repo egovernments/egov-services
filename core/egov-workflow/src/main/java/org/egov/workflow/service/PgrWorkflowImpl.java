@@ -24,14 +24,13 @@ public class PgrWorkflowImpl implements Workflow {
     public static final String DEPARTMENT = "department";
     private ComplaintRouterService complaintRouterService;
     private StateService stateService;
-
-    @Autowired
     private EmployeeService employeeService;
 
     @Autowired
-    public PgrWorkflowImpl(ComplaintRouterService complaintRouterService, StateService stateService) {
+    public PgrWorkflowImpl(ComplaintRouterService complaintRouterService, StateService stateService, EmployeeService employeeService) {
         this.complaintRouterService = complaintRouterService;
         this.stateService = stateService;
+        this.employeeService = employeeService;
     }
 
     @Override

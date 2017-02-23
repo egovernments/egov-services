@@ -4,12 +4,12 @@
     <modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.egov</groupId>
-	<artifactId>egov-search-indexer</artifactId>
+	<artifactId>pgr-search-indexer</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>egov-search-indexer</name>
-	<description>Egov search indexer</description>
+	<name>pgr-search-indexer</name>
+	<description>PGR search indexer</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>

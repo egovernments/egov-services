@@ -14,7 +14,7 @@ ENV DB_NAME=mydb \
 # INSTRUCTIONS ON HOW TO BUILD JAR:
 # Move to the location where pom.xml is exist in project and build project using below command
 # "mvn clean package"
-COPY /target/egov-search-indexer-0.0.1-SNAPSHOT.jar /opt/egov/egov-search-indexer.jar
+COPY /target/pgr-search-indexer-0.0.1-SNAPSHOT.jar /opt/egov/pgr-search-indexer.jar
 
 # launch standalone webapp
 CMD ["java","-jar", "/opt/egov/egov-pgr-rest-spring-boot.jar"]

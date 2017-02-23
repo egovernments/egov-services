@@ -53,17 +53,6 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     }
 
     @Bean
-    public TokenStore tokenStore() {
-        try {
-            return new RedisTokenStore(connectionFactory());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
-    @Bean
     public JedisConnectionFactory connectionFactory() throws Exception {
         return new JedisConnectionFactory(new JedisShardInfo(host));
     }

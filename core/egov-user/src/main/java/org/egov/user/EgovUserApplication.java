@@ -1,17 +1,25 @@
 package org.egov.user;
 
 import org.egov.user.interceptor.CorrelationIdInterceptor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.http.MediaType;
+import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import redis.clients.jedis.JedisShardInfo;
 
 @SpringBootApplication
 public class EgovUserApplication {
+
+	@Value("${spring.redis.host}")
+	private String host;
 
 	@Bean
 	public WebMvcConfigurerAdapter webMvcConfigurerAdapter() {
@@ -27,6 +35,22 @@ public class EgovUserApplication {
 				registry.addInterceptor(new CorrelationIdInterceptor());
 			}
 		};
+	}
+
+	@Bean
+	public TokenStore tokenStore() {
+		try {
+			return new RedisTokenStore(connectionFactory());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	@Bean
+	public JedisConnectionFactory connectionFactory() throws Exception {
+		return new JedisConnectionFactory(new JedisShardInfo(host));
 	}
 
 	public static void main(String[] args) {

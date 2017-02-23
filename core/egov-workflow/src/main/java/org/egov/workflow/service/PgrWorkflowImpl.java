@@ -1,18 +1,10 @@
 package org.egov.workflow.service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-
 import org.egov.workflow.domain.model.Department;
 import org.egov.workflow.domain.model.Employee;
 import org.egov.workflow.domain.model.PositionResponse;
 import org.egov.workflow.domain.service.ComplaintRouterService;
 import org.egov.workflow.domain.service.EmployeeService;
-import org.egov.workflow.domain.service.PositionService;
 import org.egov.workflow.repository.entity.State;
 import org.egov.workflow.repository.entity.StateHistory;
 import org.egov.workflow.repository.entity.Task;
@@ -23,6 +15,8 @@ import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.*;
+
 @Service
 public class PgrWorkflowImpl implements Workflow {
 
@@ -30,9 +24,6 @@ public class PgrWorkflowImpl implements Workflow {
     public static final String DEPARTMENT = "department";
     private ComplaintRouterService complaintRouterService;
     private StateService stateService;
-
-    @Autowired
-    private PositionService positionService;
 
     @Autowired
     private EmployeeService employeeService;

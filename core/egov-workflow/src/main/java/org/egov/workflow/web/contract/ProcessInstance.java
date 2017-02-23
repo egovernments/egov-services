@@ -2,6 +2,7 @@ package org.egov.workflow.web.contract;
 
 import java.util.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -57,19 +58,21 @@ public class ProcessInstance {
     @JsonProperty("values")
     private Map<String, Attribute> values;
 
+    @JsonIgnore
     public String getComments(){
         return getValueForKey("approvalComments");
     }
 
+    @JsonIgnore
     public boolean isGrievanceOfficer(){
         return getValueForKey("userRole").equals("Grievance Officer");
     }
 
     public void setStateId(Long stateId){
         Value value = new Value("stateId", String.valueOf(stateId));
-        List<Value> values = Collections.singletonList(value);
-        Attribute attribute = new Attribute(true, "stateId", "String", true, "This is the id of state",values);
-        this.values.put("stateId",attribute);
+        List<Value> attributeValues = Collections.singletonList(value);
+        Attribute attribute = new Attribute(true, "stateId", "String", true, "This is the id of state",attributeValues);
+        values.put("stateId",attribute);
     }
 
     //To be used to fetch single value attributes

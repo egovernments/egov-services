@@ -1,13 +1,13 @@
 {
   "RequestInfo":{
-    "tenant_id": "tenantId",
+    "tenant_id":"tenantId",
     "api_id":"",
     "ver":"1"
   },
   "type":"Complaint",
   "description":"Grievance registered successfully",
   "status":"REGISTERED",
-  "action":"CREATE",
+  "action":"create",
   "businessKey":"765",
   "assignee":"2",
   "group":"",

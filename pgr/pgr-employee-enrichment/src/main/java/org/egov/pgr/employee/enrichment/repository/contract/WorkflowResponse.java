@@ -4,14 +4,26 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.Map;
+import java.util.Objects;
+
 @Getter
 @AllArgsConstructor
 public class WorkflowResponse {
 
-    @JsonProperty("state_id")
-    private String stateId;
+    public static final String STATE_ID = "stateId";
 
     @JsonProperty("assignee")
     private String assignee;
+
+    @JsonProperty("values")
+    private Map<String, Attribute> values;
+
+    public String getValueForKey(String key) {
+        if (Objects.nonNull(values.get(key)))
+            return values.get(key).getValues().get(0).getName();
+
+        return "";
+    }
 
 }

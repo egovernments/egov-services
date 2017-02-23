@@ -1,30 +1,35 @@
 package org.egov.pgr.employee.enrichment.model;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang.StringUtils;
 import org.egov.pgr.employee.enrichment.consumer.contract.RequestInfo;
-import org.egov.pgr.employee.enrichment.json.ObjectMapperFactory;
 import org.egov.pgr.employee.enrichment.repository.contract.Attribute;
 import org.egov.pgr.employee.enrichment.repository.contract.WorkflowRequest;
 import org.egov.pgr.employee.enrichment.repository.contract.WorkflowResponse;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+
+import static org.egov.pgr.employee.enrichment.repository.contract.WorkflowResponse.STATE_ID;
 
 public class SevaRequest {
 
-    private final static String SERVICE_REQUEST = "ServiceRequest";
-    private final static String REQUEST_INFO = "RequestInfo";
-    private static final String VALUES_ASSIGNEE_ID = "assignment_id";
-    private static final String VALUES_STATE_ID = "state_id";
-    private static final String VALUES = "values";
-    private static final String VALUES_COMLAINT_TYPE_CODE = "complaintTypeCode";
-    private static final String BOUNDARY_ID = "boundaryId";
-    private static final String STATE_DETAILS = "stateDetails";
-    private static final String WORKFLOW_TYPE = "Complaint";
-    private static final String STATUS = "status";
-    private static final String SERVICE_CODE = "service_code";
-    private static final String VALUES_LOCATION_ID = "location_id";
-    private static final String MSG_ID = "msg_id";
+    public final static String SERVICE_REQUEST = "ServiceRequest";
+    public final static String REQUEST_INFO = "RequestInfo";
+    public static final String VALUES_ASSIGNEE_ID = "assignment_id";
+    public static final String VALUES_STATE_ID = "state_id";
+    public static final String VALUES = "values";
+    public static final String VALUES_COMLAINT_TYPE_CODE = "complaintTypeCode";
+    public static final String BOUNDARY_ID = "boundaryId";
+    public static final String STATE_DETAILS = "stateDetails";
+    public static final String WORKFLOW_TYPE = "Complaint";
+    public static final String STATUS = "status";
+    public static final String SERVICE_CODE = "service_code";
+    public static final String VALUES_LOCATION_ID = "location_id";
+    public static final String MSG_ID = "msg_id";
+    public static final String VALUES_APPROVAL_COMMENT = "approvalComment";
+    public static final String USER_ROLE = "userRole";
 
     private HashMap<String, Object> sevaRequestMap;
 
@@ -46,6 +51,10 @@ public class SevaRequest {
         getValues().put(VALUES_STATE_ID, stateId);
     }
 
+    public RequestInfo getRequestInfo() {
+        return new ObjectMapper().convertValue(sevaRequestMap.get(REQUEST_INFO), RequestInfo.class);
+    }
+
     public HashMap<String, Object> getRequestMap() {
         return sevaRequestMap;
     }
@@ -59,17 +68,20 @@ public class SevaRequest {
     @SuppressWarnings("unchecked")
     public WorkflowRequest getWorkFlowRequest() {
         HashMap<String, Object> serviceRequest = (HashMap<String, Object>) sevaRequestMap.get(SERVICE_REQUEST);
-        RequestInfo requestInfo = ObjectMapperFactory.create().convertValue(sevaRequestMap.get(REQUEST_INFO), RequestInfo.class);
+        RequestInfo requestInfo = getRequestInfo();
         HashMap<String, String> values = (HashMap<String, String>) serviceRequest.get(VALUES);
         String complaintType = (String) serviceRequest.get(SERVICE_CODE);
         Map<String, Attribute> valuesToSet = getWorkFlowRequestValues(values, complaintType);
-        return WorkflowRequest.builder()
+        WorkflowRequest.WorkflowRequestBuilder workflowRequestBuilder = WorkflowRequest.builder()
                 .assignee(getCurrentAssignee(values))
-                .action(requestInfo.getAction())
+                .action(WorkflowRequest.Action.forComplaintStatus((String) serviceRequest.get(STATUS)))
                 .requestInfo(requestInfo)
                 .values(valuesToSet)
-                .status(values.get(STATUS))
-                .type(WORKFLOW_TYPE).build();
+                .status((String) serviceRequest.get(STATUS))
+                .type(WORKFLOW_TYPE)
+                .businessKey(WORKFLOW_TYPE);
+
+        return workflowRequestBuilder.build();
     }
 
     private Map<String, Attribute> getWorkFlowRequestValues(HashMap<String, String> values, String complaintType) {
@@ -77,7 +89,14 @@ public class SevaRequest {
         valuesToSet.put(VALUES_COMLAINT_TYPE_CODE, Attribute.asStringAttr(VALUES_COMLAINT_TYPE_CODE, complaintType));
         valuesToSet.put(BOUNDARY_ID, Attribute.asStringAttr(BOUNDARY_ID, values.get(VALUES_LOCATION_ID)));
         valuesToSet.put(STATE_DETAILS, Attribute.asStringAttr(STATE_DETAILS, StringUtils.EMPTY));
+        valuesToSet.put(USER_ROLE, Attribute.asStringAttr(USER_ROLE, getRequestInfo().getUserType()));
+        valuesToSet.put(VALUES_STATE_ID, Attribute.asStringAttr(STATE_DETAILS, getCurrentStateId(values)));
+        valuesToSet.put(VALUES_APPROVAL_COMMENT, Attribute.asStringAttr(VALUES_APPROVAL_COMMENT, values.get(VALUES_APPROVAL_COMMENT)));
         return valuesToSet;
+    }
+
+    private String getCurrentStateId(HashMap<String, String> values) {
+        return Objects.isNull(values.get(VALUES_STATE_ID)) ? null : values.get(VALUES_STATE_ID);
     }
 
     private Long getCurrentAssignee(HashMap<String, String> values) {
@@ -87,6 +106,6 @@ public class SevaRequest {
 
     public void update(WorkflowResponse workflowResponse) {
         setAssignee(workflowResponse.getAssignee());
-        setStateId(workflowResponse.getStateId());
+        setStateId(workflowResponse.getValueForKey(STATE_ID));
     }
 }

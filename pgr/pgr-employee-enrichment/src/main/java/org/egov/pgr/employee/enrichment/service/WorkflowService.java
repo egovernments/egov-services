@@ -19,7 +19,12 @@ public class WorkflowService {
 
     public SevaRequest enrichWorkflow(SevaRequest sevaRequest) {
         WorkflowRequest request = sevaRequest.getWorkFlowRequest();
-        WorkflowResponse workflowResponse = workflowRepository.create(request);
+        WorkflowResponse workflowResponse = null;
+        if (request.getStatus().toUpperCase().equals("REGISTERED")) {
+            workflowResponse = workflowRepository.create(request);
+        } else if (request.getStatus().toUpperCase().equals("COMPLETED")) {
+            workflowResponse = workflowRepository.close(request);
+        }
         sevaRequest.update(workflowResponse);
         return sevaRequest;
     }

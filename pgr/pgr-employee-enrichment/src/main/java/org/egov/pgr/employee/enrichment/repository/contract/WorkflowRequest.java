@@ -14,6 +14,25 @@ import java.util.Objects;
 @Builder
 public class WorkflowRequest {
 
+    public enum Action {
+        CREATE("create"), END("close");
+
+        private String strValue;
+
+        Action(String strValue) {
+            this.strValue = strValue;
+        }
+
+        public static String forComplaintStatus(String complaintStatus) {
+            if (complaintStatus.equals("REGISTERED")) {
+                return CREATE.strValue;
+            } else if (complaintStatus.equals("COMPLETED")) {
+                return END.strValue;
+            }
+            return CREATE.strValue;
+        }
+    }
+
     @JsonProperty("RequestInfo")
     private RequestInfo requestInfo;
 
@@ -48,9 +67,6 @@ public class WorkflowRequest {
     @JsonProperty("sender_name")
     private String senderName;
 
-    @JsonProperty("state_id")
-    private Long stateId;
-
     @JsonProperty("values")
     private Map<String, Attribute> values;
 
@@ -58,8 +74,6 @@ public class WorkflowRequest {
         if (Objects.nonNull(values.get(key)))
             return values.get(key).getValues().get(0).getName();
         return "";
-
     }
-
 
 }

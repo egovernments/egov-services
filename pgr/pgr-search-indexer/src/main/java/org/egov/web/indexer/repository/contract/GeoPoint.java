@@ -1,4 +1,4 @@
-package org.egov.web.indexer.models;
+package org.egov.web.indexer.repository.contract;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

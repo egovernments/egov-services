@@ -1,4 +1,4 @@
-package org.egov.web.indexer.models;
+package org.egov.web.indexer.repository.contract;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;

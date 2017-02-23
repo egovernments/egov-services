@@ -2,7 +2,7 @@ package org.egov.web.indexer.adaptor;
 
 import org.egov.web.indexer.config.IndexerProperties;
 import org.egov.web.indexer.contract.*;
-import org.egov.web.indexer.models.ComplaintIndex;
+import org.egov.web.indexer.repository.contract.ComplaintIndex;
 import org.egov.web.indexer.service.AssignmentService;
 import org.egov.web.indexer.service.BoundaryService;
 import org.egov.web.indexer.service.CityService;

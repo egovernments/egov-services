@@ -5,9 +5,9 @@ import org.egov.web.indexer.adaptor.ComplaintAdapter;
 import org.egov.web.indexer.contract.RequestInfo;
 import org.egov.web.indexer.contract.ServiceRequest;
 import org.egov.web.indexer.contract.SevaRequest;
-import org.egov.web.indexer.models.ComplaintIndex;
+import org.egov.web.indexer.repository.contract.ComplaintIndex;
 import org.egov.web.indexer.models.RequestContext;
-import org.egov.web.indexer.service.ElasticSearchService;
+import org.egov.web.indexer.repository.ElasticSearchRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -24,7 +24,7 @@ public class IndexerListenerTest {
     public static final String CRN = "crn";
     public static final String TOPIC_NAME = "topicName";
     @Mock
-    private ElasticSearchService elasticSearchService;
+    private ElasticSearchRepository elasticSearchRepository;
 
     @Mock
     private ComplaintAdapter complaintAdapter;
@@ -66,7 +66,7 @@ public class IndexerListenerTest {
 
         indexerListener.listen(consumerRecord);
 
-        verify(elasticSearchService).index("complaint", CRN, complaintIndex);
+        verify(elasticSearchRepository).index("complaint", CRN, complaintIndex);
     }
 
 }

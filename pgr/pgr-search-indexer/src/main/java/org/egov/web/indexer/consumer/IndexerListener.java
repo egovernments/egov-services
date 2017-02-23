@@ -3,9 +3,9 @@ package org.egov.web.indexer.consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.egov.web.indexer.adaptor.ComplaintAdapter;
 import org.egov.web.indexer.contract.SevaRequest;
-import org.egov.web.indexer.models.ComplaintIndex;
+import org.egov.web.indexer.repository.contract.ComplaintIndex;
 import org.egov.web.indexer.models.RequestContext;
-import org.egov.web.indexer.service.ElasticSearchService;
+import org.egov.web.indexer.repository.ElasticSearchRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
@@ -15,13 +15,13 @@ public class IndexerListener {
 
     private static final String OBJECT_TYPE_COMPLAINT = "complaint";
 
-    private ElasticSearchService elasticSearchService;
+    private ElasticSearchRepository elasticSearchRepository;
     private ComplaintAdapter complaintAdapter;
 
     @Autowired
-    public IndexerListener(ElasticSearchService elasticSearchService,
+    public IndexerListener(ElasticSearchRepository elasticSearchRepository,
                            ComplaintAdapter complaintAdapter) {
-        this.elasticSearchService = elasticSearchService;
+        this.elasticSearchRepository = elasticSearchRepository;
         this.complaintAdapter = complaintAdapter;
     }
 
@@ -38,6 +38,6 @@ public class IndexerListener {
         SevaRequest sevaRequest = record.value();
         RequestContext.setId(sevaRequest.getCorrelationId());
         ComplaintIndex complaintIndex = complaintAdapter.adapt(sevaRequest.getServiceRequest());
-        elasticSearchService.index(OBJECT_TYPE_COMPLAINT, complaintIndex.getCrn(), complaintIndex);
+        elasticSearchRepository.index(OBJECT_TYPE_COMPLAINT, complaintIndex.getCrn(), complaintIndex);
     }
 }

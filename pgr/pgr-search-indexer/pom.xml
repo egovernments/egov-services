@@ -107,19 +107,24 @@
                         <configuration>
                             <rules>
 
-                                <!--<rule>-->
-                                    <!--<element>CLASS</element>-->
-                                    <!--<excludes>-->
-                                        <!--<exclude>org.egov.pgr.PgrLocationEnrichmentApplication</exclude>-->
-                                    <!--</excludes>-->
-                                    <!--<limits>-->
-                                        <!--<limit>-->
-                                            <!--<counter>LINE</counter>-->
-                                            <!--<value>COVEREDRATIO</value>-->
-                                            <!--<minimum>0.90</minimum>-->
-                                        <!--</limit>-->
-                                    <!--</limits>-->
-                                <!--</rule>-->
+                                <rule>
+                                    <element>CLASS</element>
+                                    <excludes>
+                                        <exclude>org.egov.web.indexer.contract.*</exclude>
+                                        <exclude>org.egov.web.indexer.repository.contract.*</exclude>
+                                        <exclude>org.egov.web.indexer.config.IndexerProperties</exclude>
+                                        <exclude>org.egov.web.indexer.http.CorrelationIdAwareRestTemplate</exclude>
+                                        <exclude>org.egov.web.indexer.SearchIndexerApplication</exclude>
+                                        <exclude>org.egov.web.indexer.models.RequestContext</exclude>
+                                    </excludes>
+                                    <limits>
+                                        <limit>
+                                            <counter>LINE</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>0.90</minimum>
+                                        </limit>
+                                    </limits>
+                                </rule>
 
                                 <rule>
                                     <element>BUNDLE</element>

@@ -1,5 +1,6 @@
 package org.egov.web.indexer.service;
 
+import org.egov.web.indexer.repository.ElasticSearchRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,16 +18,16 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ElasticSearchServiceTest {
+public class ElasticSearchRepositoryTest {
 
     private MockRestServiceServer server;
 
-    private ElasticSearchService elasticSearchService;
+    private ElasticSearchRepository elasticSearchRepository;
 
     @Before
     public void before() {
         RestTemplate restTemplate = new RestTemplate();
-        elasticSearchService = new ElasticSearchService(restTemplate, "http://host/");
+        elasticSearchRepository = new ElasticSearchRepository(restTemplate, "http://host/");
         server = MockRestServiceServer.bindTo(restTemplate).build();
     }
 
@@ -40,7 +41,7 @@ public class ElasticSearchServiceTest {
         Map<String, String> stringObj = new HashMap<String, String>();
         stringObj.put("key", "value");
 
-        elasticSearchService.index(indexName, indexId, stringObj);
+        elasticSearchRepository.index(indexName, indexId, stringObj);
 
         server.verify();
     }

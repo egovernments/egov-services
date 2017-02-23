@@ -1,4 +1,5 @@
 package org.egov.egf.persistence.specification;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -14,10 +15,14 @@ import org.egov.egf.persistence.entity.FiscalPeriod;
 import org.egov.egf.persistence.entity.FiscalPeriod_;
 import org.egov.egf.persistence.queue.contract.FiscalPeriodContract;
 import org.springframework.data.jpa.domain.Specification;
-public class FiscalPeriodSpecification  implements Specification<FiscalPeriod> {
+
+public class FiscalPeriodSpecification implements Specification<FiscalPeriod> {
 	private FiscalPeriodContract criteria;
-	public FiscalPeriodSpecification(FiscalPeriodContract criteria){
-		this.criteria = criteria;}
+
+	public FiscalPeriodSpecification(FiscalPeriodContract criteria) {
+		this.criteria = criteria;
+	}
+
 	@Override
 	public Predicate toPredicate(Root<FiscalPeriod> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
 		Path<Long> id = root.get(FiscalPeriod_.id);
@@ -28,7 +33,10 @@ public class FiscalPeriodSpecification  implements Specification<FiscalPeriod> {
 		Path<Boolean> active = root.get(FiscalPeriod_.active);
 		Path<Boolean> isActiveForPosting = root.get(FiscalPeriod_.isActiveForPosting);
 		Path<Boolean> isClosed = root.get(FiscalPeriod_.isClosed);
-		final List<Predicate> predicates = new ArrayList<>();if (criteria.getId() != null) {
+		final List<Predicate> predicates = new ArrayList<>();
+		if(criteria!=null)
+		{
+		if (criteria.getId() != null) {
 			predicates.add(criteriaBuilder.equal(id, criteria.getId()));
 		}
 
@@ -59,6 +67,7 @@ public class FiscalPeriodSpecification  implements Specification<FiscalPeriod> {
 		if (criteria.getIsClosed() != null) {
 			predicates.add(criteriaBuilder.equal(isClosed, criteria.getIsClosed()));
 		}
-
-		return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));}
+		}
+		return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+	}
 }

@@ -10,7 +10,7 @@ import lombok.Data;
 @JsonPropertyOrder({"code","message","description","filelds"})
 public @Data class Error {
 
-	private Integer code = null;
+	private String code = null;
 
 	private String message = null;
 

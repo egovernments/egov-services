@@ -39,46 +39,48 @@
  */
 package org.egov.egf.persistence.queue.contract;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
 
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-@Data
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;@Builder@Getter@Setter@AllArgsConstructor@NoArgsConstructor
+
+@JsonPropertyOrder({ "id","name","code","level","active","isParent","parentId"})
 public class FunctionContract extends AuditableContract {
 
-	private Long id;
+        
+            private Long id;
 
-	@Length(max = 128, min = 2)
-	@NotNull
-	private String name;
+    @Length(max = 128, min = 2)
+    @NotNull
+    private String name;
 
-	@Length(max = 16, min = 2)
-	@NotNull
-	private String code;
+    @Length(max = 16, min = 2)
+    @NotNull
+    private String code;
 
-	@NotNull
-	private Integer level;
-	@NotNull
-	private Boolean active;
-	// is this required?
-	@NotNull
-	private Boolean isParent;
+    @NotNull
+    private Integer level;
+    @NotNull
+    private Boolean active;
+    //is this required?
+    @NotNull
+    private Boolean isParent;
 
-	private FunctionContract parentId;
+            private FunctionContract parentId;
 
-	public Long getId() {
-		return this.id;
-	}
+     
+        public Long getId()
+    {
+    	return this.id;
+    }
+
+     
 
 }

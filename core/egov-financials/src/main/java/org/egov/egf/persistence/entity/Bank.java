@@ -42,7 +42,6 @@ package org.egov.egf.persistence.entity;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -53,6 +52,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.validator.constraints.Length;
 
 import lombok.Data;
@@ -89,7 +90,8 @@ public class  Bank extends AbstractAuditable {
 	@Length(max = 50)
 	private String type;
 
-	@OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "bank", targetEntity = BankBranch.class)
+	@Fetch(FetchMode.SELECT)
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "bank", targetEntity = BankBranch.class)
 	private Set<BankBranch> bankBranches = new HashSet<>(0);
 
 	@Override

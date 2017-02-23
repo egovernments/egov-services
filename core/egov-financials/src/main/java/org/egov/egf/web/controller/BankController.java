@@ -1,21 +1,23 @@
 package org.egov.egf.web.controller;
 
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Date;
 
 import javax.validation.Valid;
 
+import org.egov.egf.domain.exception.CustomBindException;
 import org.egov.egf.persistence.entity.Bank;
 import org.egov.egf.persistence.queue.contract.BankContract;
 import org.egov.egf.persistence.queue.contract.BankContractRequest;
 import org.egov.egf.persistence.queue.contract.BankContractResponse;
-import org.egov.egf.persistence.queue.contract.ErrorResponse;
+import org.egov.egf.persistence.queue.contract.Pagination;
 import org.egov.egf.persistence.queue.contract.RequestInfo;
 import org.egov.egf.persistence.queue.contract.ResponseInfo;
 import org.egov.egf.persistence.service.BankService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -25,121 +27,157 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.egov.egf.persistence.queue.contract.Error;
 
 @RestController
-@RequestMapping("/banks")
+@RequestMapping("/banks")  
 public class BankController {
 	@Autowired
-	private BankService bankService;
- 
-	
+	private BankService  bankService;
 
 	@PostMapping
-	public ResponseEntity<?> create(@RequestBody @Valid BankContractRequest bankRequest, BindingResult errors) {
+	@ResponseStatus(HttpStatus.CREATED)
+	public  BankContractResponse create(@RequestBody @Valid BankContractRequest bankContractRequest, BindingResult errors) {
 		ModelMapper modelMapper=new ModelMapper();
+		bankService.validate(bankContractRequest,"create",errors);
 		if (errors.hasErrors()) {
-			ErrorResponse errRes = populateErrors(errors);
-			return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
+		  throw	new CustomBindException(errors);
 		}
 		
-		RequestInfo requestInfo = bankRequest.getRequestInfo();
-		BankContract bankContract = bankRequest.getBanks().get(0);
-	//	Bank bankEntity=new Bank();
-	//	bankEntity.map(bankContract);
+		BankContractResponse bankContractResponse = new BankContractResponse();
+		bankContractResponse.setBanks(new ArrayList<BankContract>());
+		for(BankContract bankContract:bankContractRequest.getBanks())
+		{
 		
-		 
 		Bank	bankEntity=	modelMapper.map(bankContract, Bank.class);
 		bankEntity = bankService.create(bankEntity);
 		BankContract resp=modelMapper.map(bankEntity, BankContract.class);
 		bankContract.setId(bankEntity.getId());
-		BankContractResponse BankContractResponse = new BankContractResponse();
-		BankContractResponse.getBanks().add(resp);
+		bankContractResponse.getBanks().add(resp);
+		}
 
-		ResponseInfo responseInfo = new ResponseInfo();
-		responseInfo.setStatus(HttpStatus.CREATED.toString());
-	//	responseInfo.setApi_id(requestInfo.getApi_id());
-		BankContractResponse.setResponseInfo(responseInfo);
-		return new ResponseEntity<BankContractResponse>(BankContractResponse, HttpStatus.CREATED);
+		bankContractResponse.setResponseInfo(getResponseInfo(bankContractRequest.getRequestInfo()));
+		 
+		return bankContractResponse;
 	}
 
-	@PutMapping(value = "/{code}")
- 
-	public ResponseEntity<?> update(@RequestBody @Valid BankContractRequest bankRequest, BindingResult errors,
-			@PathVariable String code) {
-
-		if (errors.hasErrors()) {
-			ErrorResponse errRes = populateErrors(errors);
-			return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
-		}
+	@PutMapping(value = "/{uniqueId}")
+	@ResponseStatus(HttpStatus.OK)
+	public BankContractResponse update(@RequestBody @Valid BankContractRequest bankContractRequest, BindingResult errors,
+			@PathVariable Long uniqueId) {
 		
-		RequestInfo requestInfo = bankRequest.getRequestInfo();
-		Bank bankFromDb = bankService.findByCode(code);
-		BankContract bank = bankRequest.getBanks().get(0);
+		bankService.validate(bankContractRequest,"update",errors);
+		
+		if (errors.hasErrors()) {
+			  throw	new CustomBindException(errors);
+			}
+	 
+		Bank bankFromDb = bankService.findOne(uniqueId);
+		BankContract bank = bankContractRequest.getBank();
 		
 		ModelMapper model=new ModelMapper();
 	 	model.map(bank, bankFromDb);
 		bankFromDb = bankService.update(bankFromDb);
-		BankContractResponse BankContractResponse = new BankContractResponse();
-		BankContractResponse.getBanks().add(bank);  
-
-		ResponseInfo responseInfo = new ResponseInfo();
-		responseInfo.setStatus(HttpStatus.CREATED.toString());
-	//	responseInfo.setApi_id(requestInfo.getApi_id());
-		BankContractResponse.setResponseInfo(responseInfo);
-		return new ResponseEntity<BankContractResponse>(BankContractResponse, HttpStatus.CREATED);
+		BankContractResponse bankContractResponse = new BankContractResponse();
+		bankContractResponse.setBank(bank);  
+		bankContractResponse.setResponseInfo(getResponseInfo(bankContractRequest.getRequestInfo()));
+		bankContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
+		return bankContractResponse;
 	}
+	
+	@GetMapping(value = "/{uniqueId}")
+	@ResponseStatus(HttpStatus.OK)
+	public BankContractResponse view(@RequestBody @Valid BankContractRequest bankContractRequest, BindingResult errors,
+			@PathVariable Long uniqueId) {
+
+		if (errors.hasErrors()) {
+			  throw	new CustomBindException(errors);
+			}
+		bankService.validate(bankContractRequest,"view",errors);
+		RequestInfo requestInfo = bankContractRequest.getRequestInfo();
+		Bank bankFromDb = bankService.findOne(uniqueId);
+		BankContract bank = bankContractRequest.getBank();
+		
+		ModelMapper model=new ModelMapper();
+	 	model.map(bank, bankFromDb);
+		
+		BankContractResponse bankContractResponse = new BankContractResponse();
+		bankContractResponse.setBank(bank);  
+		bankContractResponse.setResponseInfo(getResponseInfo(bankContractRequest.getRequestInfo()));
+		bankContractResponse.getResponseInfo().setStatus(HttpStatus.CREATED.toString());
+		return bankContractResponse ;
+	}
+	
+	@PutMapping
+	@ResponseStatus(HttpStatus.OK)
+	public BankContractResponse updateAll(@RequestBody @Valid BankContractRequest bankContractRequest, BindingResult errors) {
+		bankService.validate(bankContractRequest,"updateAll",errors);
+		if (errors.hasErrors()) {
+			  throw	new CustomBindException(errors);
+			}
+		
+ 
+		BankContractResponse bankContractResponse =new  BankContractResponse();
+		bankContractResponse.setBanks(new ArrayList<BankContract>());
+		for(BankContract bankContract:bankContractRequest.getBanks())
+		{
+		Bank bankFromDb = bankService.findOne(bankContract.getId());
+		 
+		
+		ModelMapper model=new ModelMapper();
+	 	model.map(bankContract, bankFromDb);
+		bankFromDb = bankService.update(bankFromDb);
+		model.map(bankFromDb,bankContract);
+		bankContractResponse.getBanks().add(bankContract);  
+		}
+
+		bankContractResponse.setResponseInfo(getResponseInfo(bankContractRequest.getRequestInfo()));
+		bankContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
+		
+		return bankContractResponse;
+	}
+	
 
 	@GetMapping
 	@ResponseBody
-	public ResponseEntity<?> search(@ModelAttribute BankContractRequest bankRequest) {
-
-		BankContractResponse BankContractResponse =new  BankContractResponse();
-		List<Bank> allBanks;
-		Bank bankEntity=new Bank();
+	@ResponseStatus(HttpStatus.OK)
+	public BankContractResponse search(@ModelAttribute BankContractRequest bankContractRequest,BindingResult errors) {
+		bankService.validate(bankContractRequest,"search",errors);
+		if (errors.hasErrors()) {
+			  throw	new CustomBindException(errors);
+			}
+		BankContractResponse bankContractResponse =new  BankContractResponse();
+		bankContractResponse.setBanks(new ArrayList<BankContract>());
+		bankContractResponse.setPage(new Pagination());
+		Page<Bank> allBanks;
 		ModelMapper model=new ModelMapper();
-		if(bankRequest.getBank()!=null)
-		{
-		model.map(bankRequest.getBank(), bankEntity);
-		
-		allBanks = bankService.search(bankRequest.getBank());
-		}else
-		{
-			  allBanks = bankService.findAll();
-		}
-		//BankContractResponse.getBanks().addAll(bankRequest.getBank());
-		BankContract bank=null;
+	 
+		allBanks = bankService.search(bankContractRequest);
+		BankContract bankContract=null;
 		for(Bank b:allBanks)
 		{
-			bank=new BankContract();
-			model.map(b, bank);
-			BankContractResponse.getBanks().add(bank);
+			bankContract=new BankContract();
+			model.map(b, bankContract);
+			bankContractResponse.getBanks().add(bankContract);
 		}
-		ResponseInfo responseInfo = new ResponseInfo();
-		responseInfo.setStatus(HttpStatus.CREATED.toString());
-		BankContractResponse.setResponseInfo(responseInfo);
-		return new ResponseEntity<BankContractResponse>(BankContractResponse, HttpStatus.OK);
+		bankContractResponse.getPage().map(allBanks);
+		bankContractResponse.setResponseInfo(getResponseInfo(bankContractRequest.getRequestInfo()));
+		bankContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
+		return bankContractResponse;
 	}
 
-	private ErrorResponse populateErrors(BindingResult errors) {
-		ErrorResponse errRes = new ErrorResponse();
-
-		ResponseInfo responseInfo = new ResponseInfo();
-		responseInfo.setStatus(HttpStatus.BAD_REQUEST.toString());
-		errRes.setResponseInfo(responseInfo);
-		Error error = new Error();
-		error.setCode(1);
-		error.setDescription("Error while binding request");
-		/*if (errors.hasFieldErrors()) {
-			for (FieldError errs : errors.getFieldErrors()) {
-				FieldError f=new FieldError();
-				error.getFilelds().add(errs.getField());
-				error.getFilelds().add(errs.getRejectedValue());
-			}
-		}*/
-		errRes.setError(error);
-		return errRes;
-	}
+	
+	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
+        new ResponseInfo();
+		return ResponseInfo.builder()
+                .apiId(requestInfo.getApiId())
+                .ver(requestInfo.getVer())
+                .ts(new Date())
+                .resMsgId(requestInfo.getMsgId())
+                .resMsgId("placeholder")
+                .status("placeholder")
+                .build();
+    }
 
 }

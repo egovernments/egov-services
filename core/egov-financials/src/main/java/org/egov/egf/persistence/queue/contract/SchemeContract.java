@@ -40,50 +40,60 @@
 package org.egov.egf.persistence.queue.contract;
 
 import java.util.Date;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
 
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-@Data
-public class SchemeContract extends AuditableContract {
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;@Builder@Getter@Setter@AllArgsConstructor@NoArgsConstructor
 
-	private Long id;
+@JsonPropertyOrder({ "id","fund","code","name","validFrom","validTo","active","description","boundary"})
+public class SchemeContract extends  AuditableContract {
 
-	private FundContract fund;
+        	        private Long id;
 
-	@Length(max = 25, min = 1)
-	private String code;
+	
+		    private FundContract fund;
 
-	@Length(max = 25, min = 1)
-	private String name;
+	@Length(max=25,min=1)
+    private String code;
+	
+	@Length(max=25,min=1)
+    private String name;
 
 	@NotNull
-	private Date validFrom;
-
+    private Date validFrom;
+	
 	@NotNull
-	private Date validTo;
-
+    private Date validTo;
+	
 	@NotNull
-	private Boolean active;
+    private Boolean active;
+	
+	@Length(max=256)
+    private String description;
 
-	@Length(max = 256)
-	private String description;
+   
+    private Long boundary;
 
-	private Long boundary;
+  /*      private Set<SubSchemeContract> subSchemeContracts = new LinkedHashSet<SubSchemeContract>(0);
+*/
+    
 
-	private Set<SubSchemeContract> subSchemeContracts = new LinkedHashSet<SubSchemeContract>(0);
+        @Override
+		public String toString() {
 
-	public String toString() {
+        return "id:" + id + ",Code:" + code + "," + "isActive:" + active;
+    }
 
-		return "id:" + id + ",Code:" + code + "," + "isActive:" + active;
-	}
-
-	public Long getId() {
-		return this.id;
-	}
+        public Long getId()
+    {
+    	return this.id;
+    }
 }

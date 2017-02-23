@@ -39,23 +39,21 @@
  */
 package org.egov.egf.persistence.queue.contract;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;@Builder@Getter@Setter@AllArgsConstructor@NoArgsConstructor
 
-import lombok.Data;
-@Data
+@JsonPropertyOrder({ "id","scheme","code","name","validFrom","validTo","active","departmentId"})
 public class SubSchemeContract extends AuditableContract
 {
     	    	private Long id;

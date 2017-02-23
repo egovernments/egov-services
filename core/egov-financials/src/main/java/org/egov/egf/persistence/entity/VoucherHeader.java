@@ -40,9 +40,7 @@
 package org.egov.egf.persistence.entity;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -57,13 +55,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
-import org.ja.annotation.DrillDown;
-import org.ja.annotation.DrillDownTable;
 
 @Entity
 @Table(name = "egf_voucherheader")
@@ -109,11 +104,11 @@ public class VoucherHeader extends AbstractAuditable  {
     }
   
     @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "voucherHeader", targetEntity = GeneralLedger.class)
-    @DrillDownTable
+    
     private Set<GeneralLedger> ledgers;
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "voucherHeader", targetEntity = Vouchermis.class)
    
-    @DrillDown
+ 
     private Vouchermis vouchermis;
  
     public BigDecimal getTotalAmount() {

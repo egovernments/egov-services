@@ -36,6 +36,8 @@ public class BudgetGroupSpecification implements Specification<BudgetGroup> {
 		Path<BudgetingType> budgetingType = root.get(BudgetGroup_.budgetingType);
 		Path<Boolean> isActive = root.get(BudgetGroup_.isActive);
 		final List<Predicate> predicates = new ArrayList<>();
+		if(criteria!=null)
+		{
 		if (criteria.getId() != null) {
 			predicates.add(criteriaBuilder.equal(id, criteria.getId()));
 		}
@@ -71,7 +73,7 @@ public class BudgetGroupSpecification implements Specification<BudgetGroup> {
 		if (criteria.getIsActive() != null) {
 			predicates.add(criteriaBuilder.equal(isActive, criteria.getIsActive()));
 		}
-
+		}
 		return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
 	}
 }

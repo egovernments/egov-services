@@ -1,8 +1,10 @@
 package  org.egov.egf.persistence.queue.contract;
-import java.util.List;  
- import lombok.Data; 
+import java.util.ArrayList;
+import java.util.List;
+
+import lombok.Data; 
 public @Data class FunctionContractRequest {
-private RequestInfo requestInfo = null;
-private List<FunctionContract> functions;
-private FunctionContract function;
-private Page page=new Page();}
+private RequestInfo requestInfo = new RequestInfo();
+private List<FunctionContract> functions =new ArrayList<FunctionContract>() ;
+private FunctionContract function =new FunctionContract() ;
+private Pagination page=new Pagination();}

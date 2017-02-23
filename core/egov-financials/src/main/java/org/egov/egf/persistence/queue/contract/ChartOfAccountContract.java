@@ -48,13 +48,20 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
 
-import lombok.Data;
-@Data
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;@Builder@Getter@Setter@AllArgsConstructor@NoArgsConstructor
+
+@JsonPropertyOrder({ "id","glcode","name","accountCodePurpose","desciption","isActiveForPosting","parentId","type","classification","functionRequired","budgetCheckRequired","majorCode","isSubLedger","chartOfAccountDetails"})
 public class ChartOfAccountContract extends AuditableContract {
 
-
-
-	private Long id;
+	
+	
+			private Long id;
 
 	@NotNull
 	@Length(max = 16,min=1)
@@ -63,11 +70,11 @@ public class ChartOfAccountContract extends AuditableContract {
 	@Length(max = 128,min=5)
 	private String name;
 
-	private AccountCodePurposeContract accountCodePurpose;
+		private AccountCodePurposeContract accountCodePurpose;
 
 	@Length(max = 256)
 	private String desciption;
-
+	
 	@NotNull
 	private Boolean isActiveForPosting;
 
@@ -87,7 +94,7 @@ public class ChartOfAccountContract extends AuditableContract {
 	@Transient
 	private Boolean isSubLedger;
 
-	private Set<ChartOfAccountDetailContract> chartOfAccountDetails = new HashSet<ChartOfAccountDetailContract>();
+		private Set<ChartOfAccountDetailContract> chartOfAccountDetails = new HashSet<ChartOfAccountDetailContract>();
 
-
+	 
 }

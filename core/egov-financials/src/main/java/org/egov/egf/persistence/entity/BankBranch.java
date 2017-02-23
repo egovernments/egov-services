@@ -58,7 +58,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.Length;
-import org.ja.annotation.Ignore;
 
 @Entity
 @Table(name = "egf_bankbranch")
@@ -122,7 +121,7 @@ public class BankBranch extends AbstractAuditable {
     @Column(name = "micr")
     private String micr;
 
-    @Ignore
+    
     @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "bankBranch", targetEntity = BankAccount.class)
     private Set<BankAccount> bankAccounts = new HashSet<>(0);
     public boolean isAccountsExist() {

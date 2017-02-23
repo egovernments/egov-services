@@ -10,7 +10,6 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import org.egov.egf.persistence.entity.Scheme;
 import org.egov.egf.persistence.entity.SubScheme;
 import org.egov.egf.persistence.entity.SubScheme_;
 import org.egov.egf.persistence.queue.contract.SubSchemeContract;
@@ -34,6 +33,8 @@ public class SubSchemeSpecification implements Specification<SubScheme> {
 		Path<Boolean> active = root.get(SubScheme_.active);
 		Path<Long> departmentId = root.get(SubScheme_.departmentId);
 		final List<Predicate> predicates = new ArrayList<>();
+		if(criteria!=null)
+		{
 		if (criteria.getId() != null) {
 			predicates.add(criteriaBuilder.equal(id, criteria.getId()));
 		}
@@ -65,7 +66,7 @@ public class SubSchemeSpecification implements Specification<SubScheme> {
 		if (criteria.getDepartmentId() != null) {
 			predicates.add(criteriaBuilder.equal(departmentId, criteria.getDepartmentId()));
 		}
-
+		}
 		return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
 	}
 }

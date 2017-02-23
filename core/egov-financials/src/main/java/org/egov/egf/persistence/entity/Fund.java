@@ -40,9 +40,6 @@
 
 package org.egov.egf.persistence.entity;
 
-import java.math.BigDecimal;
-import java.util.Date;
-
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;

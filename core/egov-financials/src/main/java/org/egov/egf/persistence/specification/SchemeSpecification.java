@@ -3,11 +3,9 @@ package org.egov.egf.persistence.specification;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
@@ -15,7 +13,6 @@ import javax.persistence.criteria.Root;
 import org.egov.egf.persistence.entity.Fund;
 import org.egov.egf.persistence.entity.Scheme;
 import org.egov.egf.persistence.entity.Scheme_;
-import org.egov.egf.persistence.entity.SubScheme;
 import org.egov.egf.persistence.queue.contract.SchemeContract;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -39,6 +36,8 @@ public class SchemeSpecification implements Specification<Scheme> {
 		Path<Long> boundary = root.get(Scheme_.boundary);
 		//Expression<Set<SubScheme>> subSchemes = root.get(Scheme_.subSchemes);
 		final List<Predicate> predicates = new ArrayList<>();
+		if(criteria!=null)
+		{
 		if (criteria.getId() != null) {
 			predicates.add(criteriaBuilder.equal(id, criteria.getId()));
 		}
@@ -78,7 +77,7 @@ public class SchemeSpecification implements Specification<Scheme> {
 		/*if (criteria.getSubSchemes() != null) {
 			predicates.add(criteriaBuilder.equal(subSchemes, criteria.getSubSchemes()));
 		}*/
-
+		}
 		return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
 	}
 }

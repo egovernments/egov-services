@@ -37,7 +37,7 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-
+ 
 package org.egov.egf.persistence.queue.contract;
 
 import javax.persistence.EnumType;
@@ -48,36 +48,39 @@ import org.egov.egf.persistence.entity.enums.BudgetAccountType;
 import org.egov.egf.persistence.entity.enums.BudgetingType;
 import org.hibernate.validator.constraints.Length;
 
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-@Data
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;@Builder@Getter@Setter@AllArgsConstructor@NoArgsConstructor
+
+@JsonPropertyOrder({ "id","name","description","majorCode","maxCode","minCode","accountType","budgetingType","isActive"})
 public class BudgetGroupContract extends AuditableContract {
 
-	private Long id;
+                    private Long id;
+  
+    @Length(max = 250,min=1)
+    private String name;
 
-	@Length(max = 250, min = 1)
-	private String name;
+    @Length(max = 250, message = "Max 250 characters are allowed for description")
+    private String description;
 
-	@Length(max = 250, message = "Max 250 characters are allowed for description")
-	private String description;
+            private ChartOfAccountContract majorCode;
 
-	private ChartOfAccountContract majorCode;
+            private ChartOfAccountContract maxCode;
 
-	private ChartOfAccountContract maxCode;
+            private ChartOfAccountContract minCode;
 
-	private ChartOfAccountContract minCode;
+    @Enumerated(value = EnumType.STRING)
+    private BudgetAccountType accountType;
 
-	@Enumerated(value = EnumType.STRING)
-	private BudgetAccountType accountType;
+    @Enumerated(value = EnumType.STRING)
+    private BudgetingType budgetingType;
+   
+    private Boolean isActive;
 
-	@Enumerated(value = EnumType.STRING)
-	private BudgetingType budgetingType;
+   
 
-	private Boolean isActive;
-
-	public Long getId() {
-		return id;
-	}
-
-	 
 }

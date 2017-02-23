@@ -11,7 +11,6 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import org.egov.egf.persistence.entity.AccountCodePurpose;
 import org.egov.egf.persistence.entity.ChartOfAccount;
 import org.egov.egf.persistence.entity.ChartOfAccountDetail;
 import org.egov.egf.persistence.entity.ChartOfAccount_;
@@ -44,6 +43,8 @@ public class ChartOfAccountSpecification implements Specification<ChartOfAccount
 
 		Expression<Set<ChartOfAccountDetail>> chartOfAccountDetails = root.get(ChartOfAccount_.chartOfAccountDetails);
 		final List<Predicate> predicates = new ArrayList<>();
+		if(criteria!=null)
+		{
 		if (criteria.getId() != null) {
 			predicates.add(criteriaBuilder.equal(id, criteria.getId()));
 		}
@@ -98,7 +99,7 @@ public class ChartOfAccountSpecification implements Specification<ChartOfAccount
 		if (criteria.getChartOfAccountDetails() != null) {
 			predicates.add(criteriaBuilder.equal(chartOfAccountDetails, criteria.getChartOfAccountDetails()));
 		}
-
+		}
 		return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
 	}
 }

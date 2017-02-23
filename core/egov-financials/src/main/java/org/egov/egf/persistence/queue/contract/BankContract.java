@@ -39,18 +39,6 @@
  */
 package org.egov.egf.persistence.queue.contract;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
@@ -80,9 +68,7 @@ public class  BankContract extends AuditableContract {
 	@NotNull
 	@Length(max = 50)
 	private String type;
-
 	
-	private Set<BankBranchContract> bankBranches = new HashSet<>(0);
 
 	public Long getId() {
 		return id;

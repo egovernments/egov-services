@@ -1,7 +1,5 @@
 package org.egov.egf;
 
-import java.text.DateFormat;
-
 import org.egov.egf.web.interceptor.CorrelationIdAwareRestTemplate;
 import org.egov.egf.web.interceptor.CorrelationIdInterceptor;
 import org.springframework.boot.SpringApplication;

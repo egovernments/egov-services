@@ -49,6 +49,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -58,8 +60,6 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
-import org.ja.annotation.DrillDownTable;
-import org.ja.annotation.Ignore;
 
 import lombok.Data;
 @Data
@@ -85,11 +85,13 @@ public class GeneralLedger extends AbstractPersistable<Long> {
     @Min(value=0)
     @Max(value=999999999)
     private BigDecimal creditAmount;
-    @Ignore
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "voucherheaderid", nullable = true)
     private VoucherHeader voucherHeader;
     
     private Function function;
-    @DrillDownTable
+   
     @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "generalLedger", targetEntity = GeneralLedgerDetail.class)
     private Set<GeneralLedgerDetail> ledgerDetails = new HashSet<GeneralLedgerDetail>();
 

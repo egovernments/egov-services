@@ -39,34 +39,35 @@
  */
 package org.egov.egf.persistence.queue.contract;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
 
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-@Data
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;@Builder@Getter@Setter@AllArgsConstructor@NoArgsConstructor
+
+@JsonPropertyOrder({ "id","code","name","active"})
 public class FunctionaryContract extends AuditableContract implements java.io.Serializable {
-
-	private Long id;
+	   
+			    	private Long id;
 	@NotNull
-	@Length(max = 16, min = 1)
+	@Length(max=16,min=1)
 	private String code;
 	@NotNull
-	@Length(max = 256, min = 1)
+	@Length(max=256,min=1)
 	private String name;
-
+	
 	@NotNull
 	private Boolean active;
 
-	public Long getId() {
-		return this.id;
-	}
+	 	    public Long getId()
+	    {
+	    	return this.id;
+	    }
 
 }

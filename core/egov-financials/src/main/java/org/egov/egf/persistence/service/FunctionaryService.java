@@ -8,12 +8,20 @@ import javax.persistence.PersistenceContext;
 
 import org.egov.egf.persistence.entity.Functionary;
 import org.egov.egf.persistence.queue.contract.FunctionaryContract;
+import org.egov.egf.persistence.queue.contract.FunctionaryContractRequest;
 import org.egov.egf.persistence.repository.FunctionaryRepository;
 import org.egov.egf.persistence.specification.FunctionarySpecification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.validation.SmartValidator;
 
 
 @Service 
@@ -29,7 +37,8 @@ public FunctionaryService(final FunctionaryRepository functionaryRepository) {
    this.functionaryRepository = functionaryRepository;
   }
 
-   @Transactional
+@Autowired
+	private SmartValidator validator;   @Transactional
    public Functionary create(final Functionary functionary) {
   return functionaryRepository.save(functionary);
   } 
@@ -49,8 +58,39 @@ public FunctionaryService(final FunctionaryRepository functionaryRepository) {
   public Functionary findOne(Long id){
   return functionaryRepository.findOne(id);
   }
-  public List<Functionary> search(FunctionaryContract functionaryContract){
-final FunctionarySpecification specification = new FunctionarySpecification(functionaryContract);
-  return functionaryRepository.findAll(specification);
+  public Page<Functionary> search(FunctionaryContractRequest functionaryContractRequest){
+final FunctionarySpecification specification = new FunctionarySpecification(functionaryContractRequest.getFunctionary());
+Pageable page = new PageRequest(functionaryContractRequest.getPage().getOffSet(),functionaryContractRequest.getPage().getPageSize());
+  return functionaryRepository.findAll(specification,page);
   }
+public BindingResult validate(FunctionaryContractRequest functionaryContractRequest, String method,BindingResult errors) { 
+	 
+		try { 
+			switch(method) 
+			{ 
+			case "update": 
+				Assert.notNull(functionaryContractRequest.getFunctionary(), "Functionary to edit must not be null"); 
+				validator.validate(functionaryContractRequest.getFunctionary(), errors); 
+				break; 
+			case "view": 
+				//validator.validate(functionaryContractRequest.getFunctionary(), errors); 
+				break; 
+			case "create": 
+				Assert.notNull(functionaryContractRequest.getFunctionaries(), "Functionaries to create must not be null"); 
+				for(FunctionaryContract b:functionaryContractRequest.getFunctionaries()) 
+				 validator.validate(b, errors); 
+				break; 
+			case "updateAll": 
+				Assert.notNull(functionaryContractRequest.getFunctionaries(), "Functionaries to create must not be null"); 
+				for(FunctionaryContract b:functionaryContractRequest.getFunctionaries()) 
+				 validator.validate(b, errors); 
+				break; 
+			default : validator.validate(functionaryContractRequest.getRequestInfo(), errors); 
+			} 
+		} catch (IllegalArgumentException e) { 
+			 errors.addError(new ObjectError("Missing data", e.getMessage())); 
+		} 
+		return errors; 
+ 
+	}
 }

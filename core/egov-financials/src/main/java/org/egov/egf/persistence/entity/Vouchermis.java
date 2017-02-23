@@ -50,8 +50,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import org.ja.annotation.Ignore;
-
 @Entity
 @Table(name = "egf_vouchermis")
 @SequenceGenerator(name = Vouchermis.SEQ_VOUCHERMIS, sequenceName = Vouchermis.SEQ_VOUCHERMIS, allocationSize = 1)
@@ -67,7 +65,7 @@ public class Vouchermis implements java.io.Serializable {
 	@JoinColumn(name = "fundsourceid")
 	private Fundsource fundsource;
 
-	private Integer billnumber;
+	private Integer billNumber;
 
 	private Long boundary;
 
@@ -95,7 +93,7 @@ public class Vouchermis implements java.io.Serializable {
 
 	private Boolean budgetCheckRequired = true;
 	
-	@Ignore
+	 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "voucherheaderid", nullable = true)
 	private VoucherHeader voucherHeader;

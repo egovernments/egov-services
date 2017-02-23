@@ -28,6 +28,8 @@ public class FunctionarySpecification implements Specification<Functionary> {
 		Path<String> name = root.get(Functionary_.name);
 		Path<Boolean> active = root.get(Functionary_.active);
 		final List<Predicate> predicates = new ArrayList<>();
+		if(criteria!=null)
+		{
 		if (criteria.getId() != null) {
 			predicates.add(criteriaBuilder.equal(id, criteria.getId()));
 		}
@@ -43,7 +45,7 @@ public class FunctionarySpecification implements Specification<Functionary> {
 		if (criteria.getActive() != null) {
 			predicates.add(criteriaBuilder.equal(active, criteria.getActive()));
 		}
-
+		}
 		return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
 	}
 }

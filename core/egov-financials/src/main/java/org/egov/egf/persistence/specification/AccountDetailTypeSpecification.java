@@ -33,6 +33,8 @@ public class AccountDetailTypeSpecification implements Specification<AccountDeta
 		Path<Boolean> active = root.get(AccountDetailType_.active);
 		Path<String> fullyQualifiedName = root.get(AccountDetailType_.fullyQualifiedName);
 		final List<Predicate> predicates = new ArrayList<>();
+		if(criteria!=null)
+		{
 		if (criteria.getId() != null) {
 			predicates.add(criteriaBuilder.equal(id, criteria.getId()));
 		}
@@ -64,7 +66,7 @@ public class AccountDetailTypeSpecification implements Specification<AccountDeta
 		if (criteria.getFullyQualifiedName() != null) {
 			predicates.add(criteriaBuilder.equal(fullyQualifiedName, criteria.getFullyQualifiedName()));
 		}
-
+		}
 		return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
 	}
 }

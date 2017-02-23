@@ -38,6 +38,8 @@ public class BankAccountSpecification implements Specification<BankAccount> {
 		Path<String> payTo = root.get(BankAccount_.payTo);
 		Path<BankAccountType> type = root.get(BankAccount_.type);
 		final List<Predicate> predicates = new ArrayList<>();
+		if(criteria!=null)
+		{
 		if (criteria.getId() != null) {
 			predicates.add(criteriaBuilder.equal(id, criteria.getId()));
 		}
@@ -77,7 +79,7 @@ public class BankAccountSpecification implements Specification<BankAccount> {
 		if (criteria.getType() != null) {
 			predicates.add(criteriaBuilder.equal(type, criteria.getType()));
 		}
-
+		}
 		return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
 	}
 }

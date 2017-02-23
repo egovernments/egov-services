@@ -36,6 +36,8 @@ public class FinancialYearSpecification implements Specification<FinancialYear> 
 		Path<Boolean> transferClosingBalance = root.get(FinancialYear_.transferClosingBalance);
 		Expression<List<FiscalPeriod>> expression = root.get(FinancialYear_.fiscalPeriodList);
 		final List<Predicate> predicates = new ArrayList<>();
+		if(criteria!=null)
+		{
 		if (criteria.getId() != null) {
 			predicates.add(criteriaBuilder.equal(id, criteria.getId()));
 		}
@@ -71,7 +73,7 @@ public class FinancialYearSpecification implements Specification<FinancialYear> 
 		if (criteria.getFiscalPeriodList() != null) {
 			predicates.add(criteriaBuilder.equal(expression, criteria.getFiscalPeriodList()));
 		}
-
+		}
 		return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
 	}
 }

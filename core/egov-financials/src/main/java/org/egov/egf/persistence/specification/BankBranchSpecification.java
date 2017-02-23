@@ -40,6 +40,8 @@ public class BankBranchSpecification implements Specification<BankBranch> {
 		Path<String> description = root.get(BankBranch_.description);
 		Path<String> micr = root.get(BankBranch_.micr);
 		final List<Predicate> predicates = new ArrayList<>();
+		if(criteria!=null)
+		{
 		if (criteria.getId() != null) {
 			predicates.add(criteriaBuilder.equal(id, criteria.getId()));
 		}
@@ -99,7 +101,7 @@ public class BankBranchSpecification implements Specification<BankBranch> {
 		if (criteria.getMicr() != null) {
 			predicates.add(criteriaBuilder.equal(micr, criteria.getMicr()));
 		}
-
+		}
 		return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
 	}
 }

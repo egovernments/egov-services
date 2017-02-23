@@ -34,7 +34,9 @@ public class BankSpecification implements Specification<Bank> {
 		Path<String> type = root.get(Bank_.type);
 	    Expression<Set<BankBranch>> bankBranches = root.get(Bank_.bankBranches);
 		final List<Predicate> predicates = new ArrayList<>();
-		
+	
+		if(criteria!=null)
+		{
 		if (criteria.getId() != null) {
 			predicates.add(criteriaBuilder.equal(id, criteria.getId()));
 		}
@@ -63,6 +65,7 @@ public class BankSpecification implements Specification<Bank> {
 			predicates.add(criteriaBuilder.equal(bankBranches, criteria.getBankBranches()));
 		}
 */
+		}
 		return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
 	}
 }

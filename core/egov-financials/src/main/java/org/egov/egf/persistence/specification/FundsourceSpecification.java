@@ -33,6 +33,8 @@ public class FundsourceSpecification implements Specification<Fundsource> {
 		Path<Boolean> active = root.get(Fundsource_.active);
 		Path<Boolean> isParent = root.get(Fundsource_.isParent);
 		final List<Predicate> predicates = new ArrayList<>();
+		if(criteria!=null)
+		{
 		if (criteria.getId() != null) {
 			predicates.add(criteriaBuilder.equal(id, criteria.getId()));
 		}
@@ -64,7 +66,7 @@ public class FundsourceSpecification implements Specification<Fundsource> {
 		if (criteria.getIsParent() != null) {
 			predicates.add(criteriaBuilder.equal(isParent, criteria.getIsParent()));
 		}
-
+		}
 		return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
 	}
 }

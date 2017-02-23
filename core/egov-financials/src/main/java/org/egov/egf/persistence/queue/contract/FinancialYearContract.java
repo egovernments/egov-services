@@ -50,35 +50,53 @@ import org.egov.egf.persistence.entity.FiscalPeriod;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-@Data
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;@Builder@Getter@Setter@AllArgsConstructor@NoArgsConstructor
+
+@JsonPropertyOrder({ "id","finYearRange","startingDate","endingDate","active","isActiveForPosting","isClosed","transferClosingBalance","fiscalPeriodList"})
 public class FinancialYearContract extends AuditableContract {
 
-	private Long id;
+        
+            private Long id;
 
-	@Length(min = 1, max = 25)
-	@NotBlank
-	private String finYearRange;
+    @Length(min = 1, max = 25)
+    @NotBlank
+        private String finYearRange;
 
-	@NotNull
-	private Date startingDate;
+  
+    @NotNull
+    private Date startingDate;
 
-	@NotNull
-	private Date endingDate;
-	@NotNull
-	private Boolean active;
-	@NotNull
-	private Boolean isActiveForPosting;
-
-	private Boolean isClosed;
-
-	private Boolean transferClosingBalance;
-
-	@OrderBy("id DESC ")
-	private List<FiscalPeriod> fiscalPeriodList = new ArrayList<FiscalPeriod>(0);
-
-	public Long getId() {
-		return this.id;
-	}
+    @NotNull
+    private Date endingDate;
+    @NotNull
+    private Boolean active;
+    @NotNull
+    private Boolean isActiveForPosting;
+   
+    private Boolean isClosed;
+ 
+    private Boolean transferClosingBalance;
+    
+        @OrderBy("id DESC ")
+    private List<FiscalPeriod> fiscalPeriodList = new ArrayList<FiscalPeriod>(0);
+   
+    public void setFiscalPeriod(final List<FiscalPeriod> fiscalPeriod) {
+        this.fiscalPeriodList.clear();
+        if (fiscalPeriod != null)
+            this.fiscalPeriodList.addAll(fiscalPeriod);
+    }
+    
+    public void addFiscalPeriod(final FiscalPeriod fiscalPeriod) {
+    	this.fiscalPeriodList.add(fiscalPeriod);
+    }
+        public Long getId()
+    {
+    	return this.id;
+    }
 }

@@ -42,11 +42,8 @@ package org.egov.egf.persistence.entity;
 
 import java.io.Serializable;
 
-
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Version;
-
-import lombok.Data;
 
 @MappedSuperclass
 public abstract  class AbstractPersistable<PK extends Serializable> implements Serializable {

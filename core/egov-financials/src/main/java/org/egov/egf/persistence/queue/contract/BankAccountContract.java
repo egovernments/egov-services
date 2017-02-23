@@ -46,40 +46,53 @@ import javax.validation.constraints.NotNull;
 import org.egov.egf.persistence.entity.enums.BankAccountType;
 import org.hibernate.validator.constraints.Length;
 
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-@Data
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;@Builder@Getter@Setter@AllArgsConstructor@NoArgsConstructor
+
+@JsonPropertyOrder({ "id","bankBranch","chartOfAccount","fund","accountNumber","accountType","description","active","payTo","type"})
 public class BankAccountContract extends AuditableContract implements java.io.Serializable {
+
+
 
 	private Long id;
 
 	private BankBranchContract bankBranch;
+
 
 	private ChartOfAccountContract chartOfAccount;
 
 	private FundContract fund;
 
 	@NotNull
-	@Length(max = 25)
+	@Length(max=25)
 	private String accountNumber;
 
 	// is this required ?
-	private String accountType;
-	@Length(max = 256)
-	private String description;
+			private String accountType;
+			@Length(max=256)
+			private String description;
 
-	@NotNull
-	private Boolean active;
+			@NotNull
+			private Boolean active;
 
-	@Length(max = 100)
-	private String payTo;
+			@Length(max=100)
+			private String payTo;  
 
-	@NotNull
-	@Enumerated(EnumType.STRING)
-	private BankAccountType type;
+			@NotNull
+			@Enumerated(EnumType.STRING)
+			private BankAccountType type;
 
-	public Long getId() {
-		return this.id;
-	}
+			public Long getId()
+			{
+				return this.id;
+			}
+
+
+
 
 }

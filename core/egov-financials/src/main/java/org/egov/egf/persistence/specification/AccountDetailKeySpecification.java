@@ -30,6 +30,7 @@ public class AccountDetailKeySpecification implements Specification<AccountDetai
 		Path<Integer> key = root.get(AccountDetailKey_.key);
 		Path<AccountDetailType> accountDetailType = root.get(AccountDetailKey_.accountDetailType);
 		final List<Predicate> predicates = new ArrayList<>();
+		if(criteria!=null){
 		if (criteria.getId() != null) {
 			predicates.add(criteriaBuilder.equal(id, criteria.getId()));
 		}
@@ -49,7 +50,7 @@ public class AccountDetailKeySpecification implements Specification<AccountDetai
 		if (criteria.getAccountDetailType() != null) {
 			predicates.add(criteriaBuilder.equal(accountDetailType, criteria.getAccountDetailType()));
 		}
-
+		}
 		return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
 	}
 }

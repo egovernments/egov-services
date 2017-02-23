@@ -43,15 +43,27 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
 
-import lombok.Data;
-@Data
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Builder
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+
+@JsonPropertyOrder({ "id", "name" })
 public class AccountCodePurposeContract extends AuditableContract {
 
-	
 	private Long id;
 
 	@NotNull
-	@Length(max=256,min=3)
+	@Length(max = 256, min = 3)
 	private String name;
-	 
+
 }

@@ -1,8 +1,10 @@
 package  org.egov.egf.persistence.queue.contract;
-import java.util.List;  
- import lombok.Data; 
+import java.util.ArrayList;
+import java.util.List;
+
+import lombok.Data; 
 public @Data class BankAccountContractRequest {
-private RequestInfo requestInfo = null;
-private List<BankAccountContract> bankAccounts;
-private BankAccountContract bankAccount;
-private Page page=new Page();}
+private RequestInfo requestInfo = new RequestInfo();
+private List<BankAccountContract> bankAccounts =new ArrayList<BankAccountContract>() ;
+private BankAccountContract bankAccount =new BankAccountContract() ;
+private Pagination page=new Pagination();}

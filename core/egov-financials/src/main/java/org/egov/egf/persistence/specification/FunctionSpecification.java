@@ -31,6 +31,8 @@ public class FunctionSpecification implements Specification<Function> {
 		Path<Boolean> isParent = root.get(Function_.isParent);
 		Path<Function> parentId = root.get(Function_.parentId);
 		final List<Predicate> predicates = new ArrayList<>();
+		if(criteria!=null)
+		{
 		if (criteria.getId() != null) {
 			predicates.add(criteriaBuilder.equal(id, criteria.getId()));
 		}
@@ -58,7 +60,7 @@ public class FunctionSpecification implements Specification<Function> {
 		if (criteria.getParentId() != null) {
 			predicates.add(criteriaBuilder.equal(parentId, criteria.getParentId()));
 		}
-
+		}
 		return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
 	}
 }

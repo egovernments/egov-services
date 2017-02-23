@@ -39,6 +39,8 @@ public class SupplierSpecification implements Specification<Supplier> {
 		Path<String> ifscCode = root.get(Supplier_.ifscCode);
 		Path<Bank> bank = root.get(Supplier_.bank);
 		final List<Predicate> predicates = new ArrayList<>();
+		if(criteria!=null)
+		{
 		if (criteria.getId() != null) {
 			predicates.add(criteriaBuilder.equal(id, criteria.getId()));
 		}
@@ -94,7 +96,7 @@ public class SupplierSpecification implements Specification<Supplier> {
 		if (criteria.getBank() != null) {
 			predicates.add(criteriaBuilder.equal(bank, criteria.getBank()));
 		}
-
+		}
 		return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
 	}
 }

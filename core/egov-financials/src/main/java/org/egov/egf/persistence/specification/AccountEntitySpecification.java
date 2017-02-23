@@ -31,6 +31,8 @@ public class AccountEntitySpecification implements Specification<AccountEntity> 
 		Path<Boolean> active = root.get(AccountEntity_.active);
 		Path<String> description = root.get(AccountEntity_.description);
 		final List<Predicate> predicates = new ArrayList<>();
+		if(criteria!=null)
+		{
 		if (criteria.getId() != null) {
 			predicates.add(criteriaBuilder.equal(id, criteria.getId()));
 		}
@@ -54,7 +56,7 @@ public class AccountEntitySpecification implements Specification<AccountEntity> 
 		if (criteria.getDescription() != null) {
 			predicates.add(criteriaBuilder.equal(description, criteria.getDescription()));
 		}
-
+		}
 		return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
 	}
 }

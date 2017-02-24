@@ -52,6 +52,7 @@ public class SevaRequestTest {
         valueMap.put(VALUES_LOCATION_ID, "18");
         valueMap.put(VALUES_APPROVAL_COMMENT, "this is approved");
         valueMap.put(VALUES_ASSIGNEE_ID, "23");
+        valueMap.put(STATUS, "REGISTERED");
         requestInfoMap.put("userType", "EMPLOYEE");
         serviceRequestMap.put(SERVICE_CODE, "PKJB");
         serviceRequestMap.put(STATUS, "REGISTERED");

@@ -71,96 +71,99 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Table(name = "egeis_employee")
 public class Employee extends User {
 
-	private static final long serialVersionUID = 7143156636894827118L;
+    private static final long serialVersionUID = 7143156636894827118L;
 
-	@NotNull
-	@SafeHtml
-	@Column(name = "code", unique = true)
-	@Pattern(regexp = Constants.ALPHANUMERIC)
-	private String code;
+    @NotNull
+    @SafeHtml
+    @Column(name = "code", unique = true)
+    @Pattern(regexp = Constants.ALPHANUMERIC)
+    private String code;
 
-	@Temporal(value = TemporalType.DATE)
-	private Date dateOfAppointment;
+    @Temporal(value = TemporalType.DATE)
+    private Date dateOfAppointment;
 
-	@Temporal(value = TemporalType.DATE)
-	private Date dateOfRetirement;
+    @Temporal(value = TemporalType.DATE)
+    private Date dateOfRetirement;
 
-	@Enumerated(EnumType.STRING)
-	private EmployeeStatus employeeStatus;
+    @Enumerated(EnumType.STRING)
+    private EmployeeStatus employeeStatus;
 
-	@JsonIgnore
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "employeetype")
-	private EmployeeType employeeType;
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "employeetype")
+    private EmployeeType employeeType;
 
-	
-	@OneToMany(mappedBy = "employee", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-	@OrderBy(" primary desc,toDate DESC ")
-	private final List<Assignment> assignments = new ArrayList<Assignment>(0);
+    @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy(" primary desc,toDate DESC ")
+    private final List<Assignment> assignments = new ArrayList<Assignment>(0);
 
-	@JsonIgnore
-	@OneToMany(mappedBy = "employee", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-	@OrderBy("id DESC ")
-	private final List<Jurisdiction> jurisdictions = new ArrayList<Jurisdiction>(0);
+    @JsonIgnore
+    @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("id DESC ")
+    private final List<Jurisdiction> jurisdictions = new ArrayList<Jurisdiction>(0);
 
-	public Employee() {
-		setType(UserType.EMPLOYEE);
-	}
+    public Employee() {
+        setType(UserType.EMPLOYEE);
+    }
 
-	public void setCode(final String code) {
-		this.code = code;
-	}
+    public void setCode(final String code) {
+        this.code = code;
+    }
 
-	public DateTime getDateOfAppointment() {
-		return null == dateOfAppointment ? null : new DateTime(dateOfAppointment);
-	}
+    public String getCode() {
+        return code;
+    }
 
-	public void setDateOfAppointment(final DateTime dateOfAppointment) {
-		this.dateOfAppointment = null == dateOfAppointment ? null : dateOfAppointment.toDate();
-	}
+    public DateTime getDateOfAppointment() {
+        return null == dateOfAppointment ? null : new DateTime(dateOfAppointment);
+    }
 
-	public DateTime getDateOfRetirement() {
-		return null == dateOfRetirement ? null : new DateTime(dateOfRetirement);
-	}
+    public void setDateOfAppointment(final DateTime dateOfAppointment) {
+        this.dateOfAppointment = null == dateOfAppointment ? null : dateOfAppointment.toDate();
+    }
 
-	public void setDateOfRetirement(final DateTime dateOfRetirement) {
-		this.dateOfRetirement = null == dateOfRetirement ? null : dateOfRetirement.toDate();
-	}
+    public DateTime getDateOfRetirement() {
+        return null == dateOfRetirement ? null : new DateTime(dateOfRetirement);
+    }
 
-	public EmployeeStatus getEmployeeStatus() {
-		return employeeStatus;
-	}
+    public void setDateOfRetirement(final DateTime dateOfRetirement) {
+        this.dateOfRetirement = null == dateOfRetirement ? null : dateOfRetirement.toDate();
+    }
 
-	public void setEmployeeStatus(final EmployeeStatus employeeStatus) {
-		this.employeeStatus = employeeStatus;
-	}
+    public EmployeeStatus getEmployeeStatus() {
+        return employeeStatus;
+    }
 
-	public EmployeeType getEmployeeType() {
-		return employeeType;
-	}
+    public void setEmployeeStatus(final EmployeeStatus employeeStatus) {
+        this.employeeStatus = employeeStatus;
+    }
 
-	public void setEmployeeType(final EmployeeType employeeType) {
-		this.employeeType = employeeType;
-	}
+    public EmployeeType getEmployeeType() {
+        return employeeType;
+    }
 
-	public List<Assignment> getAssignments() {
-		return assignments;
-	}
+    public void setEmployeeType(final EmployeeType employeeType) {
+        this.employeeType = employeeType;
+    }
 
-	public void setAssignments(final List<Assignment> assignments) {
-		this.assignments.clear();
-		if (assignments != null)
-			this.assignments.addAll(assignments);
-	}
+    public List<Assignment> getAssignments() {
+        return assignments;
+    }
 
-	public List<Jurisdiction> getJurisdictions() {
-		return jurisdictions;
-	}
+    public void setAssignments(final List<Assignment> assignments) {
+        this.assignments.clear();
+        if (assignments != null)
+            this.assignments.addAll(assignments);
+    }
 
-	public void setJurisdictions(final List<Jurisdiction> jurisdictions) {
-		this.jurisdictions.clear();
-		if (jurisdictions != null)
-			this.jurisdictions.addAll(jurisdictions);
-	}
+    public List<Jurisdiction> getJurisdictions() {
+        return jurisdictions;
+    }
+
+    public void setJurisdictions(final List<Jurisdiction> jurisdictions) {
+        this.jurisdictions.clear();
+        if (jurisdictions != null)
+            this.jurisdictions.addAll(jurisdictions);
+    }
 
 }

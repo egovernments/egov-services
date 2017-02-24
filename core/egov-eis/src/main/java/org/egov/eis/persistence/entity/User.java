@@ -179,7 +179,6 @@ public class User extends AbstractAuditable {
 		this.id = id;
 	}
 
-	@JsonIgnore
 	public String getUsername() {
 		return username;
 	}

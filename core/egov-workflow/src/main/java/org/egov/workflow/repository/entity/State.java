@@ -40,32 +40,24 @@
 
 package org.egov.workflow.repository.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import org.egov.workflow.web.contract.Attribute;
+import org.hibernate.validator.constraints.Length;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-
-import org.egov.workflow.web.contract.Attribute;
-import org.hibernate.validator.constraints.Length;
-
+@Builder
+@AllArgsConstructor
 @Entity
 @Table(name = "EG_WF_STATES")
 @SequenceGenerator(name = State.SEQ_STATE, sequenceName = State.SEQ_STATE, allocationSize = 1)
+
 public class State extends AbstractAuditable {
 
     public static final String DEFAULT_STATE_VALUE_CREATED = "Created";
@@ -264,5 +256,4 @@ public class State extends AbstractAuditable {
                 .attributes(new HashMap<String,Attribute>()).build();
         return t;
     }
-
 }

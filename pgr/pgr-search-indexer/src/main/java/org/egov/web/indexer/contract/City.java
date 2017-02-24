@@ -7,11 +7,11 @@ import lombok.Setter;
 @Setter
 public class City {
     // TODO : remove default values once the dependant rest service is ready.
-    private String name = "Kurnool";
-    private String code = "KC";
-    private String districtCode = "KC01";
-    private String districtName = "Kurnool District";
-    private String grade = "Grade A";
-    private String domainURL = "Localhost";
-    private String regionName = "Kurnool Region";
+    private String name;
+    private String code ;
+    private String districtCode ;
+    private String districtName ;
+    private String grade ;
+    private String domainURL;
+    private String regionName ;
 }

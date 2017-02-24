@@ -74,10 +74,10 @@ public class SevaRequest {
         Map<String, Attribute> valuesToSet = getWorkFlowRequestValues(values, complaintType);
         WorkflowRequest.WorkflowRequestBuilder workflowRequestBuilder = WorkflowRequest.builder()
                 .assignee(getCurrentAssignee(values))
-                .action(WorkflowRequest.Action.forComplaintStatus((String) serviceRequest.get(STATUS)))
+                .action(WorkflowRequest.Action.forComplaintStatus((String) values.get(STATUS)))
                 .requestInfo(requestInfo)
                 .values(valuesToSet)
-                .status((String) serviceRequest.get(STATUS))
+                .status((String) values.get(STATUS))
                 .type(WORKFLOW_TYPE)
                 .businessKey(WORKFLOW_TYPE);
 

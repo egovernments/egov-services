@@ -5,14 +5,14 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.egov.boundary.model.HierarchyType;
-import org.egov.boundary.service.HierarchyTypeService;
-import org.egov.boundary.web.wrapper.Error;
-import org.egov.boundary.web.wrapper.ErrorResponse;
-import org.egov.boundary.web.wrapper.HierarchyTypeRequest;
-import org.egov.boundary.web.wrapper.HierarchyTypeResponse;
-import org.egov.boundary.web.wrapper.RequestInfo;
-import org.egov.boundary.web.wrapper.ResponseInfo;
+import org.egov.boundary.domain.service.HierarchyTypeService;
+import org.egov.boundary.persistence.entity.HierarchyType;
+import org.egov.boundary.web.contract.Error;
+import org.egov.boundary.web.contract.ErrorResponse;
+import org.egov.boundary.web.contract.HierarchyTypeRequest;
+import org.egov.boundary.web.contract.HierarchyTypeResponse;
+import org.egov.boundary.web.contract.RequestInfo;
+import org.egov.boundary.web.contract.ResponseInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;

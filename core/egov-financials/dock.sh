@@ -1,4 +1,4 @@
 ./mvnw clean package
-docker build -t egovio/financials:latest .
-docker-compose build
-docker-compose up
+sudo docker build -t egovio/financials:latest .
+sudo docker-compose build
+sudo docker-compose up

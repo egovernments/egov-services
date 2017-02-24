@@ -1,7 +1,5 @@
 package org.egov.web.indexer.contract;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
@@ -10,6 +8,6 @@ import lombok.Getter;
 public class ComplaintTypeResponse {
 
 	@JsonProperty("ComplaintType")
-	private List<ComplaintType> complaintTypes;
+	private ComplaintType complaintType;
 
 }

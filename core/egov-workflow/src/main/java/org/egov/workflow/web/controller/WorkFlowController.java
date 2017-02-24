@@ -37,8 +37,8 @@ public class WorkFlowController {
     }
 
     @GetMapping(value = "/history")
-    public List<Task> getHistory(@RequestParam final String jurisdiction , @RequestParam final String workflowId) {
-        return workflow.getHistoryDetail(jurisdiction,workflowId);
+    public List<Task> getHistory(@RequestParam final String tenantId , @RequestParam final String workflowId) {
+        return workflow.getHistoryDetail(tenantId,workflowId);
     }
 
 }

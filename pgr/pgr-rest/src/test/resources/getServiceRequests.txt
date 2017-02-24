@@ -33,7 +33,8 @@
             "ReceivingMode": "MANUAL",
             "ReceivingCenter": "Commissioner Office",
             "LocationId": "Election Ward No 1",
-            "ChildLocationId": "Gadu Veedhi"
+            "ChildLocationId": "Gadu Veedhi",
+            "StateId": "1"
          }
      }
     ]

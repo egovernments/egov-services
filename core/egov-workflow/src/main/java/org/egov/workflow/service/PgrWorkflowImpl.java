@@ -99,7 +99,7 @@ public class PgrWorkflowImpl implements Workflow {
     }
 
     @Override
-    public List<Task> getHistoryDetail(final String jurisdiction,final String workflowId) {
+    public List<Task> getHistoryDetail(final String tenantId,final String workflowId) {
         final List<Task> tasks = new ArrayList<Task>();
         Task t;
         final State state = stateService.getStateById(Long.valueOf(workflowId));

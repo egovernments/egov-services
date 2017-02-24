@@ -19,7 +19,7 @@ public interface Workflow {
 
     // Task update(String jurisdiction, Task task);
 
-    List<Task> getHistoryDetail(String jurisdiction,String workflowId);
+    List<Task> getHistoryDetail(String tenantId,String workflowId);
 
     // List<Designation> getDesignations(Task t, String departmentCode);
 

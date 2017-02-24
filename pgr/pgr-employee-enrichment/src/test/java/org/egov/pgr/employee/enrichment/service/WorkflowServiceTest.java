@@ -40,6 +40,7 @@ public class WorkflowServiceTest {
         final HashMap<String, Object> complaintRequestMap = new HashMap<>();
         final HashMap<String, String> valuesMap = new HashMap<>();
         valuesMap.put("location_id", "locationId");
+        valuesMap.put("status", "REGISTERED");
         final HashMap<String, Object> serviceRequestMap = new HashMap<>();
         serviceRequestMap.put("values", valuesMap);
         serviceRequestMap.put("service_code", "serviceCode");
@@ -62,6 +63,7 @@ public class WorkflowServiceTest {
         final HashMap<String, Object> complaintRequestMap = new HashMap<>();
         final HashMap<String, String> valuesMap = new HashMap<>();
         valuesMap.put("location_id", "locationId");
+        valuesMap.put("status", "COMPLETED");
         final HashMap<String, Object> serviceRequestMap = new HashMap<>();
         serviceRequestMap.put("values", valuesMap);
         serviceRequestMap.put("service_code", "serviceCode");

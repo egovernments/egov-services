@@ -183,7 +183,7 @@ public class WorkFlowControllerTest {
 
         mockMvc.perform(get("/history")
                 .header("X-CORRELATION-ID", "someId")
-                .param("jurisdiction", TENANT_ID)
+                .param("tenantId", TENANT_ID)
                 .param("workflowId", "2"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))

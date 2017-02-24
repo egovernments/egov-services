@@ -1,11 +1,13 @@
 package org.egov.workflow;
 
+import org.egov.workflow.web.interceptor.CorrelationIdAwareRestTemplate;
 import org.egov.workflow.web.interceptor.CorrelationIdInterceptor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -34,6 +36,11 @@ public class EgovWorkflowApplication {
         };
     }
 
+    @Bean
+    public RestTemplate getRestTemplate() {
+        return new CorrelationIdAwareRestTemplate();
+    }
+    
     public static void main(String[] args) {
         SpringApplication.run(EgovWorkflowApplication.class, args);
     }

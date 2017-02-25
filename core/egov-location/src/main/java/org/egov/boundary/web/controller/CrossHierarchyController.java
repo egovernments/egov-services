@@ -4,14 +4,14 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.egov.boundary.model.CrossHierarchy;
-import org.egov.boundary.service.CrossHierarchyService;
-import org.egov.boundary.web.wrapper.CrossHierarchyRequest;
-import org.egov.boundary.web.wrapper.CrossHierarchyResponse;
-import org.egov.boundary.web.wrapper.Error;
-import org.egov.boundary.web.wrapper.ErrorResponse;
-import org.egov.boundary.web.wrapper.RequestInfo;
-import org.egov.boundary.web.wrapper.ResponseInfo;
+import org.egov.boundary.domain.service.CrossHierarchyService;
+import org.egov.boundary.persistence.entity.CrossHierarchy;
+import org.egov.boundary.web.contract.CrossHierarchyRequest;
+import org.egov.boundary.web.contract.CrossHierarchyResponse;
+import org.egov.boundary.web.contract.Error;
+import org.egov.boundary.web.contract.ErrorResponse;
+import org.egov.boundary.web.contract.RequestInfo;
+import org.egov.boundary.web.contract.ResponseInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

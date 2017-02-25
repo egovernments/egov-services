@@ -5,14 +5,14 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
-import org.egov.boundary.model.Boundary;
-import org.egov.boundary.service.BoundaryService;
-import org.egov.boundary.web.wrapper.BoundaryRequest;
-import org.egov.boundary.web.wrapper.BoundaryResponse;
-import org.egov.boundary.web.wrapper.Error;
-import org.egov.boundary.web.wrapper.ErrorResponse;
-import org.egov.boundary.web.wrapper.RequestInfo;
-import org.egov.boundary.web.wrapper.ResponseInfo;
+import org.egov.boundary.domain.service.BoundaryService;
+import org.egov.boundary.persistence.entity.Boundary;
+import org.egov.boundary.web.contract.BoundaryRequest;
+import org.egov.boundary.web.contract.BoundaryResponse;
+import org.egov.boundary.web.contract.Error;
+import org.egov.boundary.web.contract.ErrorResponse;
+import org.egov.boundary.web.contract.RequestInfo;
+import org.egov.boundary.web.contract.ResponseInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

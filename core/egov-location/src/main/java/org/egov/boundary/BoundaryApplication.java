@@ -1,6 +1,6 @@
 package org.egov.boundary;
 
-import org.egov.boundary.interceptor.CorrelationIdInterceptor;
+import org.egov.boundary.web.interceptor.CorrelationIdInterceptor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;

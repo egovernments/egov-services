@@ -8,22 +8,22 @@ import lombok.Getter;
 @AllArgsConstructor
 public class ResponseInfo {
     @JsonProperty("api_id")
-    private String apiId = null;
+    private String apiId;
 
     @JsonProperty("ver")
-    private String ver = null;
+    private String ver;
 
     @JsonProperty("ts")
-    private String ts = null;
+    private String ts;
 
     @JsonProperty("res_msg_id")
-    private String resMsgId = null;
+    private String resMsgId;
 
     @JsonProperty("msg_id")
-    private String msgId = null;
+    private String msgId;
 
     @JsonProperty("status")
-    private String status = null;
+    private String status;
 
     @JsonProperty("jurisdiction_id")
     private String jurisdictionId;

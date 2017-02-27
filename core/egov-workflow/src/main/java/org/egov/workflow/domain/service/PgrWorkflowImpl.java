@@ -153,7 +153,7 @@ public class PgrWorkflowImpl implements Workflow {
     private Attribute putDepartmentValues(String departmentName){
         Value value = new Value(DEPARTMENT, departmentName);
         List<Value> values = Collections.singletonList(value);
-        Attribute attribute = new Attribute().builder()
+        Attribute attribute = Attribute.builder()
                 .values(values)
                 .build();
 

@@ -1,16 +1,14 @@
 package org.egov.workflow.web.contract;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 
 @AllArgsConstructor
-@NoArgsConstructor
+@Getter
 @Builder
 public class Attribute {
 
@@ -30,53 +28,5 @@ public class Attribute {
     private String datatypeDescription;
 
     @JsonProperty("values")
-    private List<Value> values = new ArrayList<Value>();
-
-    public Boolean getVariable() {
-        return variable;
-    }
-
-    public void setVariable(Boolean variable) {
-        this.variable = variable;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getDatatype() {
-        return datatype;
-    }
-
-    public void setDatatype(String datatype) {
-        this.datatype = datatype;
-    }
-
-    public Boolean getRequired() {
-        return required;
-    }
-
-    public void setRequired(Boolean required) {
-        this.required = required;
-    }
-
-    public String getDatatype_description() {
-        return datatypeDescription;
-    }
-
-    public void setDatatype_description(String datatypeDescription) {
-        this.datatypeDescription = datatypeDescription;
-    }
-
-    public List<Value> getValues() {
-        return values;
-    }
-
-    public void setValues(List<Value> values) {
-        this.values = values;
-    }
+    private List<Value> values;
 }

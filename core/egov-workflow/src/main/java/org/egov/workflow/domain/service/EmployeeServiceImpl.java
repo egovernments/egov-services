@@ -21,7 +21,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Autowired
     public EmployeeServiceImpl(final RestTemplate restTemplate,
-            @Value("${egov.services.eis.hostname}") final String eisServiceHostname,
+            @Value("${egov.services.eis.host}") final String eisServiceHostname,
             @Value("${egov.services.eis.employee_by_userid}") final String employeesByUserIdUrl,
             @Value("${egov.services.eis.employee_by_position}") final String employeesByPositionIdurl,
             @Value("${egov.services.eis.employee_by_role}") final String employeesByRoleNameurl) {

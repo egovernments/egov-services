@@ -14,7 +14,7 @@ public class CrossHierarchyRepository {
 
     public CrossHierarchyRepository(@Value("${egov.services.boundary.host}")
                                          String crossHierarchyServiceHost,
-                                    @Value("egov.services.boundary.context.fetch_by_hierarchy_id")
+                                    @Value("${egov.services.boundary.context.fetch_by_hierarchy_id}")
                                          String crossHierarchyUrl,
                                     RestTemplate restTemplate) {
         this.restTemplate = restTemplate;

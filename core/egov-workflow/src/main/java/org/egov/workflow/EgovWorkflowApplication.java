@@ -1,5 +1,7 @@
 package org.egov.workflow;
 
+import java.text.SimpleDateFormat;
+
 import org.egov.workflow.web.interceptor.CorrelationIdAwareRestTemplate;
 import org.egov.workflow.web.interceptor.CorrelationIdInterceptor;
 import org.springframework.boot.SpringApplication;
@@ -14,7 +16,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 
 @SpringBootApplication
 public class EgovWorkflowApplication {
@@ -50,7 +51,7 @@ public class EgovWorkflowApplication {
         MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
         ObjectMapper mapper = new ObjectMapper();
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-        mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        mapper.setDateFormat(new SimpleDateFormat("dd/MM/yyyy hh:mm a"));
         converter.setObjectMapper(mapper);
         return converter;
     }

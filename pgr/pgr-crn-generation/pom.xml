@@ -26,14 +26,6 @@
 		<joda-time-version>2.9.6</joda-time-version>
 	</properties>
 
-	<distributionManagement>
-		<snapshotRepository>
-			<id>repo.egovernments.org</id>
-			<name>eGov ERP Snapshots Repository</name>
-			<url>http://repo.egovernments.org/nexus/content/repositories/snapshots/</url>
-		</snapshotRepository>
-	</distributionManagement>
-
 	<dependencies>
 
 		<dependency>
@@ -98,14 +90,6 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-contract-verifier</artifactId>
-			<version>1.0.3.RELEASE</version>
-			<scope>test</scope>
-		</dependency>
-
 	</dependencies>
 
 	<build>
@@ -114,20 +98,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-
-			<plugin>
-				<groupId>org.springframework.cloud</groupId>
-				<artifactId>spring-cloud-contract-maven-plugin</artifactId>
-				<version>1.0.3.RELEASE</version>
-				<!-- Don't forget about this value !! -->
-				<extensions>true</extensions>
-				<configuration>
-					<!-- Provide the base class for your auto-generated tests -->
-					<packageWithBaseClasses>org.egov.contract</packageWithBaseClasses>
-				</configuration>
-			</plugin>
 		</plugins>
 	</build>
-
 
 </project>

@@ -24,13 +24,13 @@ public class WorkFlowController {
     // binder.addValidators(new ProcessInstanceValidator());
     // }
 
-    @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/create")
     public ProcessInstance startWorkflow(@RequestBody final ProcessInstance processInstance) {
         String tenantId = processInstance.getRequestInfo().getTenantId();
         return workflow.start(tenantId, processInstance);
     }
 
-    @PostMapping(value = "/close", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/close")
     public ProcessInstance endWorkflow(@RequestBody final ProcessInstance processInstance) {
         String tenantId = processInstance.getRequestInfo().getTenantId();
         return workflow.end(tenantId, processInstance);

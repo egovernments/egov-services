@@ -41,15 +41,6 @@ public class ComplaintAdapter {
 		this.assignmentRepository = assignmentRepository;
 	}
 
-	public ComplaintIndex adapt(ServiceRequest serviceRequest) {
-		if (serviceRequest != null && !serviceRequest.getValues().isEmpty()
-				&& serviceRequest.getValues().get("complaintStatus").equalsIgnoreCase("REGISTERED")) {
-			return indexOnCreate(serviceRequest);
-
-		}
-		return null;
-	}
-
 	public ComplaintIndex indexOnCreate(ServiceRequest serviceRequest) {
 		ComplaintIndex complaintIndex = new ComplaintIndex();
 		// Reading from serviceRequest

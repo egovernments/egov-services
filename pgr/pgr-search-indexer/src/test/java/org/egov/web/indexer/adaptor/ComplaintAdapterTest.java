@@ -51,12 +51,6 @@ public class ComplaintAdapterTest {
 		assertNotNull(complaintIndex);
 	}
 
-	@Test(expected = NullPointerException.class)
-	public void test_complaintadapter_null() throws Exception {
-		complaintAdapter.adapt(null);
-		throw new NullPointerException();
-	}
-
 	private ServiceRequest setUpServiceRequest() {
 		ServiceRequest serviceRequest = ServiceRequest.builder().values(new HashMap<>()).build();
 		serviceRequest.setCreatedDate("2016-10-20");

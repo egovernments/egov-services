@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class PropertiesManager {
 
-	@Value("${egov.services.eis.hostname}")
+	@Value("${egov.services.eis.host}")
 	private String eisServiceHostname;
 
 	@Value("${egov.services.eis.position_by_id}")

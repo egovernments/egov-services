@@ -40,6 +40,7 @@
  
 package org.egov.egf.persistence.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -80,7 +81,7 @@ public class BudgetGroup extends AbstractAuditable {
     private ChartOfAccount majorCode;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "maxcode")
+    @JoinColumn(name = "hgfdsa")
     private ChartOfAccount maxCode;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -90,6 +91,7 @@ public class BudgetGroup extends AbstractAuditable {
     @Enumerated(value = EnumType.STRING)
     private BudgetAccountType accountType;
 
+    @Column(name="test")
     @Enumerated(value = EnumType.STRING)
     private BudgetingType budgetingType;
    

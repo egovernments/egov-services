@@ -11,6 +11,7 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.egov.egf.persistence.entity.AccountCodePurpose;
 import org.egov.egf.persistence.entity.ChartOfAccount;
 import org.egov.egf.persistence.entity.ChartOfAccountDetail;
 import org.egov.egf.persistence.entity.ChartOfAccount_;
@@ -29,7 +30,7 @@ public class ChartOfAccountSpecification implements Specification<ChartOfAccount
 		Path<Long> id = root.get(ChartOfAccount_.id);
 		Path<String> glcode = root.get(ChartOfAccount_.glcode);
 		Path<String> name = root.get(ChartOfAccount_.name);
-	//	Path<AccountCodePurpose> accountCodePurpose = root.get(ChartOfAccount_.accountCodePurpose);
+		//Path<AccountCodePurpose> accountCodePurpose = root.get(ChartOfAccount_.accountCodePurpose);
 		Path<String> desciption = root.get(ChartOfAccount_.desciption);
 		Path<Boolean> isActiveForPosting = root.get(ChartOfAccount_.isActiveForPosting);
 		/*
@@ -41,7 +42,7 @@ public class ChartOfAccountSpecification implements Specification<ChartOfAccount
 		Path<Boolean> budgetCheckRequired = root.get(ChartOfAccount_.budgetCheckRequired);
 		Path<String> majorCode = root.get(ChartOfAccount_.majorCode);
 
-		Expression<Set<ChartOfAccountDetail>> chartOfAccountDetails = root.get(ChartOfAccount_.chartOfAccountDetails);
+		//Expression<Set<ChartOfAccountDetail>> chartOfAccountDetails = root.get(ChartOfAccount_.chartOfAccountDetails);
 		final List<Predicate> predicates = new ArrayList<>();
 		if(criteria!=null)
 		{
@@ -96,9 +97,9 @@ public class ChartOfAccountSpecification implements Specification<ChartOfAccount
 		}
  
 
-		if (criteria.getChartOfAccountDetails() != null) {
+		/*if (criteria.getChartOfAccountDetails() != null) {
 			predicates.add(criteriaBuilder.equal(chartOfAccountDetails, criteria.getChartOfAccountDetails()));
-		}
+		}*/
 		}
 		return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
 	}

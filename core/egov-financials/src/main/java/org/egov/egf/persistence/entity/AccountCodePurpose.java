@@ -54,7 +54,6 @@ import lombok.Data;
 @Entity
 @Table(name = "egf_accountcodepurpose")
 @SequenceGenerator(name = AccountCodePurpose.SEQ, sequenceName = AccountCodePurpose.SEQ, allocationSize = 1)
- 
 public class AccountCodePurpose extends AbstractAuditable {
 
  

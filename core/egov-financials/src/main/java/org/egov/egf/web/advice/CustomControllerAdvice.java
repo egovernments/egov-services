@@ -3,6 +3,7 @@ package org.egov.egf.web.advice;
 import java.util.List;
 
 import org.egov.egf.domain.exception.CustomBindException;
+import org.egov.egf.domain.exception.InvalidDataException;
 import org.egov.egf.domain.exception.UnauthorizedAccessException;
 import org.egov.egf.persistence.queue.contract.Error;
 import org.egov.egf.persistence.queue.contract.ErrorResponse;
@@ -52,6 +53,25 @@ public class CustomControllerAdvice {
 			}
 		}
 		errRes.setError(error);
+		return errRes;
+    }
+    
+    
+    
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(InvalidDataException.class)
+    public ErrorResponse handleBindingErrors(InvalidDataException ex) {
+    	ErrorResponse errRes = new ErrorResponse();
+     
+		ResponseInfo responseInfo = new ResponseInfo();
+		responseInfo.setStatus(HttpStatus.BAD_REQUEST.toString());
+		errRes.setResponseInfo(responseInfo);
+		Error error = new Error();
+		error.setCode(InvalidDataException.code);
+		error.setMessage(ex.getFieldName());
+		error.setDescription(ex.getMessage());
+		errRes.setError(error);
+		
 		return errRes;
     }
     

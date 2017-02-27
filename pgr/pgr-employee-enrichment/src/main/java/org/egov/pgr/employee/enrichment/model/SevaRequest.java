@@ -77,7 +77,7 @@ public class SevaRequest {
                 .action(WorkflowRequest.Action.forComplaintStatus((String) values.get(STATUS)))
                 .requestInfo(requestInfo)
                 .values(valuesToSet)
-                .status((String) values.get(STATUS))
+                .status(values.get(STATUS))
                 .type(WORKFLOW_TYPE)
                 .businessKey(WORKFLOW_TYPE);
 

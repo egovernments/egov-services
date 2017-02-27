@@ -1,9 +1,9 @@
 package org.egov.pgr.employee.enrichment.repository;
 
-import org.egov.pgr.employee.enrichment.config.PropertiesManager;
 import org.egov.pgr.employee.enrichment.repository.contract.WorkflowRequest;
 import org.egov.pgr.employee.enrichment.repository.contract.WorkflowResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -11,19 +11,24 @@ import org.springframework.web.client.RestTemplate;
 public class WorkflowRepository {
 
     private RestTemplate restTemplate;
-    private PropertiesManager propertiesManager;
+    private String createWorkflowUrl;
+    private String closeWorkflowUrl;
 
     @Autowired
-    public WorkflowRepository(RestTemplate restTemplate, PropertiesManager propertiesManager) {
+    public WorkflowRepository(@Value("${egov.services.workflow.hostname}") String workflowHostname,
+                              @Value("${egov.services.workflow.create_workflow}") String createPath,
+                              @Value("${egov.services.workflow.close_workflow}") String closePath,
+                              RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
-        this.propertiesManager = propertiesManager;
+        this.createWorkflowUrl = workflowHostname + createPath;
+        this.closeWorkflowUrl = workflowHostname + closePath;
     }
 
     public WorkflowResponse create(WorkflowRequest workflowRequest) {
-        return restTemplate.postForObject(propertiesManager.workflowCreateUrl(), workflowRequest, WorkflowResponse.class);
+        return restTemplate.postForObject(createWorkflowUrl, workflowRequest, WorkflowResponse.class);
     }
 
     public WorkflowResponse close(WorkflowRequest workflowRequest) {
-        return restTemplate.postForObject(propertiesManager.workflowCloseUrl(), workflowRequest, WorkflowResponse.class);
+        return restTemplate.postForObject(closeWorkflowUrl, workflowRequest, WorkflowResponse.class);
     }
 }

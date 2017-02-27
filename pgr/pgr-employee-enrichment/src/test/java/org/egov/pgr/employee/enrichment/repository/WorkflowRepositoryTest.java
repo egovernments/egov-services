@@ -3,13 +3,11 @@ package org.egov.pgr.employee.enrichment.repository;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.egov.pgr.employee.enrichment.Resources;
-import org.egov.pgr.employee.enrichment.config.PropertiesManager;
 import org.egov.pgr.employee.enrichment.repository.contract.Attribute;
 import org.egov.pgr.employee.enrichment.repository.contract.WorkflowRequest;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
@@ -20,7 +18,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.client.ExpectedCount.once;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.*;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
@@ -28,18 +25,17 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 @RunWith(MockitoJUnitRunner.class)
 public class WorkflowRepositoryTest {
 
-    @Mock
-    private PropertiesManager propertiesManager;
     private MockRestServiceServer server;
     private WorkflowRepository workflowRepository;
     private Resources resources = new Resources();
+    private final String workflowHostname = "http://host/";
+    private final String workflowCreatePath = "workflow/create";
+    private final String workflowClosePath = "workflow/close";
 
     @Before
     public void before() {
         RestTemplate restTemplate = new RestTemplate();
-        when(propertiesManager.workflowCreateUrl()).thenReturn("http://host/workflow/create");
-        when(propertiesManager.workflowCloseUrl()).thenReturn("http://host/workflow/close");
-        workflowRepository = new WorkflowRepository(restTemplate, propertiesManager);
+        workflowRepository = new WorkflowRepository(workflowHostname, workflowCreatePath, workflowClosePath, restTemplate);
         server = MockRestServiceServer.bindTo(restTemplate).build();
     }
 

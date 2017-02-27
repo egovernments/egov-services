@@ -15,7 +15,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>1.5.1.RELEASE</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath/> <!-- lookup parent from persistence -->
     </parent>
 
     <properties>
@@ -153,13 +153,28 @@
                         </goals>
                         <configuration>
                             <rules>
+
+                                <rule>
+                                    <element>CLASS</element>
+                                    <excludes>
+                                        <exclude>org.egov.workflow.EgovWorkflowApplication</exclude>
+                                    </excludes>
+                                    <limits>
+                                        <limit>
+                                            <counter>LINE</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>0.00</minimum>
+                                        </limit>
+                                    </limits>
+                                </rule>
+
                                 <rule>
                                     <element>BUNDLE</element>
                                     <limits>
                                         <limit>
                                             <counter>COMPLEXITY</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.0</minimum>
+                                            <minimum>0.3</minimum>
                                         </limit>
                                     </limits>
                                 </rule>

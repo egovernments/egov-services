@@ -2,8 +2,8 @@ package org.egov.workflow.web.controller;
 
 import java.util.List;
 
-import org.egov.workflow.repository.entity.Task;
-import org.egov.workflow.service.Workflow;
+import org.egov.workflow.persistence.entity.Task;
+import org.egov.workflow.domain.service.Workflow;
 import org.egov.workflow.web.contract.ProcessInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;

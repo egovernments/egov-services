@@ -2,13 +2,13 @@ package org.egov.pgr.contracts.grievance;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
+import lombok.Data;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-@Getter
+@Data
 public class ServiceRequest {
 
     public static final String USER_ID = "user_id";
@@ -17,6 +17,7 @@ public class ServiceRequest {
     public static final String LOCATION_NAME = "location_name";
     public static final String VALUES_ASSIGNEE_ID = "assignment_id";
     public static final String VALUES_STATE_ID = "state_id";
+    public static final String VALUES_STATUS = "status";
     public static final String VALUES_RECIEVING_MODE = "receivingMode";
     public static final String VALUES_COMPLAINANT_ADDRESS = "complainantAddress";
 

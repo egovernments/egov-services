@@ -15,31 +15,33 @@ import org.springframework.kafka.annotation.KafkaListener;
 
 public class GrievancePersistenceListener {
 
-    @Autowired
     private ComplaintTypeService complaintTypeService;
-
-    @Autowired
     private ComplaintStatusService complaintStatusService;
-
-    @Autowired
     private ComplaintService complaintService;
-
-    @Autowired
     private EscalationService escalationService;
-
-    @Autowired
     private GrievanceProducer kafkaProducer;
-
-    @Autowired
     private PositionRepository positionRepository;
-
-    @Autowired
     private TemplateService templateService;
-
-    @Autowired
     private PersistenceProperties persistenceProperties;
 
-    @KafkaListener(id = "${kafka.topics.pgr.workflowupdated.id}", topics = "${kafka.topics.pgr.workflowupdated.name}", group = "${kafka.topics.pgr.workflowupdated.group}")
+    @Autowired
+    public GrievancePersistenceListener(ComplaintTypeService complaintTypeService, ComplaintStatusService complaintStatusService,
+                                        ComplaintService complaintService, EscalationService escalationService,
+                                        GrievanceProducer grievanceProducer, PositionRepository positionRepository,
+                                        TemplateService templateService) {
+        this.complaintService = complaintService;
+        this.complaintTypeService = complaintTypeService;
+        this.complaintStatusService = complaintStatusService;
+        this.complaintService = complaintService;
+        this.escalationService = escalationService;
+        this.kafkaProducer = grievanceProducer;
+        this.positionRepository = positionRepository;
+        this.templateService = templateService;
+    }
+
+    @KafkaListener(id = "${kafka.topics.pgr.workflowupdated.id}",
+            topics = "${kafka.topics.pgr.workflowupdated.name}",
+            group = "${kafka.topics.pgr.workflowupdated.group}")
     public void processMessage(ConsumerRecord<String, SevaRequest> record) {
         SevaRequest sevaRequest = record.value();
         Complaint complaint = persistComplaint(sevaRequest);
@@ -61,8 +63,10 @@ public class GrievancePersistenceListener {
     }
 
     private Complaint persistComplaint(SevaRequest sevaRequest) {
-        Complaint complaint = new ComplaintBuilder(sevaRequest.getServiceRequest(), complaintTypeService, complaintStatusService, escalationService, positionRepository).build();
-        complaint = complaintService.createComplaint(complaint);
+        String complaintCrn = sevaRequest.getServiceRequest().getCrn();
+        Complaint complaintByCrn = complaintService.findByCrn(complaintCrn);
+        Complaint complaint = new ComplaintBuilder(complaintByCrn, sevaRequest.getServiceRequest(), complaintTypeService, complaintStatusService, escalationService, positionRepository).build();
+        complaint = complaintService.save(complaint);
         return complaint;
     }
 

@@ -43,6 +43,7 @@ package org.egov.pgr.service;
 import org.egov.pgr.entity.Complaint;
 import org.egov.pgr.repository.ComplaintRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,11 +53,19 @@ import javax.validation.ValidationException;
 @Transactional
 public class ComplaintService {
 
-    @Autowired
     private ComplaintRepository complaintRepository;
 
+    @Autowired
+    public ComplaintService(ComplaintRepository complaintRepository) {
+        this.complaintRepository = complaintRepository;
+    }
+
+    public Complaint findByCrn(String complaintCrn) {
+        return complaintRepository.findByCrn(complaintCrn);
+    }
+
     @Transactional
-    public Complaint createComplaint(Complaint complaint) throws ValidationException {
+    public Complaint save(Complaint complaint) throws ValidationException {
         complaintRepository.save(complaint);
         return complaint;
     }

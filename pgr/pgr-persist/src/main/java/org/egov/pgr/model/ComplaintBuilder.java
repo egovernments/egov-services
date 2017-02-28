@@ -24,12 +24,12 @@ public class ComplaintBuilder {
     private final Complaint complaint;
     private final ServiceRequest serviceRequest;
 
-    public ComplaintBuilder(ServiceRequest serviceRequest, ComplaintTypeService complaintTypeService, ComplaintStatusService complaintStatusService, EscalationService escalationService, PositionRepository positionRepository) {
+    public ComplaintBuilder(Complaint complaint, ServiceRequest serviceRequest, ComplaintTypeService complaintTypeService, ComplaintStatusService complaintStatusService, EscalationService escalationService, PositionRepository positionRepository) {
         this.serviceRequest = serviceRequest;
         this.complaintStatusService = complaintStatusService;
         this.escalationService = escalationService;
         this.positionRepository = positionRepository;
-        this.complaint = new Complaint();
+        this.complaint = complaint == null ? new Complaint() : complaint;
         this.complaintTypeService = complaintTypeService;
     }
 
@@ -96,14 +96,18 @@ public class ComplaintBuilder {
     }
 
     private void setComplaintStatus() {
-        String statusName = org.egov.pgr.entity.enums.ComplaintStatus.REGISTERED.name();
-        ComplaintStatus complainStatus = complaintStatusService.getByName(statusName);
-        this.complaint.setStatus(complainStatus);
+        try {
+            org.egov.pgr.entity.enums.ComplaintStatus statusName = org.egov.pgr.entity.enums.ComplaintStatus.valueOf(serviceRequest.getValues().get(VALUES_STATUS));
+            ComplaintStatus complainStatus = complaintStatusService.getByName(statusName.toString());
+            this.complaint.setStatus(complainStatus);
+        } catch(IllegalArgumentException iae) {
+            //Log that invalid status was sent in
+        }
     }
 
     private void setReceivingMode() {
         String receivingMode = this.serviceRequest.getValues().get(VALUES_RECIEVING_MODE);
-        if(receivingMode != null) this.complaint.setReceivingMode(ReceivingMode.MOBILE);
+        if(receivingMode != null) this.complaint.setReceivingMode(ReceivingMode.valueOf(receivingMode));
     }
 
     private void setComplaintType() {

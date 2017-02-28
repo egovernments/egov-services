@@ -6,6 +6,7 @@ import org.egov.pgr.employee.enrichment.repository.ComplaintRepository;
 import org.egov.pgr.employee.enrichment.service.WorkflowService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -30,7 +31,7 @@ public class ComplaintAssignmentListenerTest {
     private ComplaintAssignmentListener complaintAssignmentListener;
 
     @Test
-    public void test_should_persist_enriched_seva_request() {
+    public void testShouldPersistEnrichedSevaRequest() {
         final HashMap<String, Object> sevaRequestMap = getSevaRequestMap();
         final SevaRequest enrichedSevaRequest = new SevaRequest(null);
         when(workflowService.enrichWorkflow(any(SevaRequest.class))).thenReturn(enrichedSevaRequest);
@@ -41,7 +42,7 @@ public class ComplaintAssignmentListenerTest {
     }
 
     @Test
-    public void test_should_set_request_context_with_correlation_id() {
+    public void testShouldSetRequestContextWithCorrelationId() {
         final HashMap<String, Object> sevaRequestMap = getSevaRequestMap();
         final SevaRequest enrichedSevaRequest = new SevaRequest(null);
         when(workflowService.enrichWorkflow(any(SevaRequest.class))).thenReturn(enrichedSevaRequest);
@@ -49,6 +50,17 @@ public class ComplaintAssignmentListenerTest {
         complaintAssignmentListener.process(sevaRequestMap);
 
         assertEquals("correlationId", RequestContext.getId());
+    }
+
+    @Test
+    public void testThatWorkflowEnrichmentIsCalledWithSevaRequest() throws Exception {
+        HashMap<String, Object> sevaRequest = getSevaRequestMap();
+        ArgumentCaptor<SevaRequest> sevaRequestCaptor = ArgumentCaptor.forClass(SevaRequest.class);
+        complaintAssignmentListener.process(sevaRequest);
+
+        verify(workflowService).enrichWorkflow(sevaRequestCaptor.capture());
+        SevaRequest value = sevaRequestCaptor.getValue();
+        assertEquals(sevaRequest, value.getRequestMap());
     }
 
     private HashMap<String, Object> getSevaRequestMap() {

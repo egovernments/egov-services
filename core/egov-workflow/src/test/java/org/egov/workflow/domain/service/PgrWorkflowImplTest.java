@@ -3,19 +3,24 @@ package org.egov.workflow.domain.service;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
+import java.util.HashMap;
 import java.util.List;
 
-import org.egov.workflow.domain.model.Assignment;
-import org.egov.workflow.domain.model.Department;
-import org.egov.workflow.domain.model.Employee;
-import org.egov.workflow.domain.model.EmployeeRes;
 import org.egov.workflow.persistence.entity.State;
 import org.egov.workflow.persistence.entity.StateHistory;
 import org.egov.workflow.persistence.entity.Task;
+import org.egov.workflow.persistence.repository.EmployeeRepository;
+import org.egov.workflow.web.contract.Assignment;
+import org.egov.workflow.web.contract.Attribute;
+import org.egov.workflow.web.contract.Department;
+import org.egov.workflow.web.contract.Employee;
+import org.egov.workflow.web.contract.EmployeeRes;
+import org.egov.workflow.web.contract.ProcessInstance;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -35,11 +40,35 @@ public class PgrWorkflowImplTest {
     private StateService stateService;
 
     @Mock
-    private EmployeeService employeeService;
+    private EmployeeRepository employeeRepository;
+    
+    @InjectMocks
+    private PgrWorkflowImpl workflow;
 
     @Before
     public void before() {
-        pgrWorkflowImpl = new PgrWorkflowImpl(complaintRouterService, stateService, employeeService);
+        pgrWorkflowImpl = new PgrWorkflowImpl(complaintRouterService, stateService, employeeRepository);
+    }
+    
+    @Test
+    public void test_should_close_workflow() throws Exception {
+        final State expectedState = new State();
+        expectedState.setId(119L);
+        expectedState.setComments("Workflow Terminated");
+
+        final ProcessInstance expectedProcessInstance = ProcessInstance.builder()
+                .type("Complaint")
+                .description("Workflow Terminated")
+                .assignee(2L)
+                .values(new HashMap<String,Attribute>())
+                .businessKey("765")
+                .build();
+        expectedProcessInstance.setStateId(119L);
+
+        when(stateService.getStateById(119L))
+                .thenReturn(expectedState);
+
+        workflow.end(TENANT_ID,expectedProcessInstance);
     }
 
     @Test
@@ -47,8 +76,8 @@ public class PgrWorkflowImplTest {
         State state = prepareState();
         EmployeeRes employeeRes = getEmployee();
         when(stateService.getStateById(2l)).thenReturn(state);
-        when(employeeService.getEmployeeForUserId(1l)).thenReturn(employeeRes);
-        when(employeeService.getEmployeeForPosition(3l, new LocalDate())).thenReturn(employeeRes);
+        when(employeeRepository.getEmployeeForUserId(1l)).thenReturn(employeeRes);
+        when(employeeRepository.getEmployeeForPosition(3l, new LocalDate())).thenReturn(employeeRes);
         List<Task> actualHistory = pgrWorkflowImpl.getHistoryDetail(TENANT_ID, "2");
         assertEquals(3, actualHistory.size());
     }

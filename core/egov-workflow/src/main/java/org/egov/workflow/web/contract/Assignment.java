@@ -37,9 +37,8 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.workflow.domain.model;
+package org.egov.workflow.web.contract;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
@@ -47,13 +46,12 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Assignment {
 
-	@JsonProperty("id")
-	private Long id;
-	
-	@JsonProperty("department")
-	private Department department;
+    @JsonProperty("id")
+    private Long id;
+
+    @JsonProperty("department")
+    private Department department;
 
 }

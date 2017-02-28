@@ -1,0 +1,7 @@
+{    
+ "ComplaintType" : {                          
+ "id" : 2,
+ "serviceName" : "Water Problem",
+ "serviceCode" : "C001"
+ }
+}

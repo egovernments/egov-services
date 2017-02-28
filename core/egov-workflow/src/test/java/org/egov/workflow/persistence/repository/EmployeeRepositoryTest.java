@@ -1,4 +1,4 @@
-package org.egov.workflow.domain.service;
+package org.egov.workflow.persistence.repository;
 
 import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.client.ExpectedCount.once;
@@ -8,8 +8,8 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 
 import java.util.List;
 
-import org.egov.workflow.domain.model.Employee;
-import org.egov.workflow.domain.model.EmployeeRes;
+import org.egov.workflow.web.contract.Employee;
+import org.egov.workflow.web.contract.EmployeeRes;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +21,7 @@ import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
 
 @RunWith(MockitoJUnitRunner.class)
-public class EmployeeServiceImplTest {
+public class EmployeeRepositoryTest {
 
     private static final String HOST = "http://host";
     private static final String EMPLOYEES_BY_USERID_URL = "/eis/employee?tenantId=ap.public&userId=1";
@@ -29,12 +29,12 @@ public class EmployeeServiceImplTest {
     private static final String EMPLOYEES_BY_ROLENAME_URL = "/eis/employee?tenantId=ap.public&roleName='Grievance/Officer'";
 
     private MockRestServiceServer server;
-    private EmployeeServiceImpl employeeServiceImpl;
+    private EmployeeRepository employeeRepository;
 
     @Before
     public void before() {
         final RestTemplate restTemplate = new RestTemplate();
-        employeeServiceImpl = new EmployeeServiceImpl(restTemplate, HOST, EMPLOYEES_BY_USERID_URL, EMPLOYEES_BY_POSITIONID_URL,
+        employeeRepository = new EmployeeRepository(restTemplate, HOST, EMPLOYEES_BY_USERID_URL, EMPLOYEES_BY_POSITIONID_URL,
                 EMPLOYEES_BY_ROLENAME_URL);
         server = MockRestServiceServer.bindTo(restTemplate).build();
     }
@@ -46,7 +46,7 @@ public class EmployeeServiceImplTest {
                 .andRespond(withSuccess(new Resources().getFileContents("employeeResponse.json"),
                         MediaType.APPLICATION_JSON_UTF8));
 
-        final EmployeeRes employeeRes = employeeServiceImpl.getEmployeeForUserId(1l);
+        final EmployeeRes employeeRes = employeeRepository.getEmployeeForUserId(1l);
         server.verify();
         assertEquals(1, employeeRes.getEmployees().size());
 
@@ -59,7 +59,7 @@ public class EmployeeServiceImplTest {
                 .andRespond(withSuccess(new Resources().getFileContents("employeeResponse.json"),
                         MediaType.APPLICATION_JSON_UTF8));
 
-        final EmployeeRes employeeRes = employeeServiceImpl.getEmployeeForPosition(1l, new LocalDate());
+        final EmployeeRes employeeRes = employeeRepository.getEmployeeForPosition(1l, new LocalDate());
         server.verify();
         assertEquals(1, employeeRes.getEmployees().size());
     }
@@ -71,7 +71,7 @@ public class EmployeeServiceImplTest {
                 .andRespond(withSuccess(new Resources().getFileContents("employeeResponse.json"),
                         MediaType.APPLICATION_JSON_UTF8));
 
-        List<Employee> employees = employeeServiceImpl.getByRoleName("Grievance Officer");
+        List<Employee> employees = employeeRepository.getByRoleName("Grievance Officer");
         server.verify();
         assertEquals(1, employees.size());
     }

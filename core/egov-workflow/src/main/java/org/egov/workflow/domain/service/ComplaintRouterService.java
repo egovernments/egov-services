@@ -45,13 +45,18 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.workflow.domain.exception.ApplicationRuntimeException;
-import org.egov.workflow.domain.model.BoundaryResponse;
-import org.egov.workflow.domain.model.ComplaintTypeResponse;
-import org.egov.workflow.domain.model.Employee;
-import org.egov.workflow.domain.model.PositionHierarchyResponse;
-import org.egov.workflow.domain.model.PositionResponse;
-import org.egov.workflow.persistence.repository.ComplaintRouterRepository;
 import org.egov.workflow.persistence.entity.ComplaintRouter;
+import org.egov.workflow.persistence.repository.BoundaryRepository;
+import org.egov.workflow.persistence.repository.ComplaintRouterRepository;
+import org.egov.workflow.persistence.repository.ComplaintTypeRepository;
+import org.egov.workflow.persistence.repository.EmployeeRepository;
+import org.egov.workflow.persistence.repository.PositionHierarchyRepository;
+import org.egov.workflow.persistence.repository.PositionRepository;
+import org.egov.workflow.web.contract.BoundaryResponse;
+import org.egov.workflow.web.contract.ComplaintTypeResponse;
+import org.egov.workflow.web.contract.Employee;
+import org.egov.workflow.web.contract.PositionHierarchyResponse;
+import org.egov.workflow.web.contract.PositionResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,19 +70,19 @@ public class ComplaintRouterService {
     private final ComplaintRouterRepository complaintRouterRepository;
 
     @Autowired
-    private BoundaryService boundaryService;
+    private BoundaryRepository boundaryRepository;
 
     @Autowired
-    private PositionService positionService;
+    private PositionRepository positionRepository;
 
     @Autowired
-    private PositionHierarchyService positionHierarchyService;
+    private PositionHierarchyRepository positionHierarchyRepository;
 
     @Autowired
-    private ComplaintTypeService complaintTypeService;
+    private ComplaintTypeRepository complaintTypeRepository;
 
     @Autowired
-    private EmployeeService employeeService;
+    private EmployeeRepository employeeRepository;
 
     @Autowired
     public ComplaintRouterService(final ComplaintRouterRepository complaintRouterRepository) {
@@ -125,7 +130,7 @@ public class ComplaintRouterService {
                 getParentBoundaries(boundaryId, boundaries);
                 if (StringUtils.isNotBlank(complaintTypeCode)) {
                     for (final BoundaryResponse bndry : boundaries) {
-                        ComplaintTypeResponse complaintType = complaintTypeService
+                        ComplaintTypeResponse complaintType = complaintTypeRepository
                                 .fetchComplaintTypeByCode(complaintTypeCode);
                         complaintRouter = complaintRouterRepository
                                 .findByComplaintTypeAndBoundary(complaintType.getId(), bndry.getId());
@@ -133,7 +138,7 @@ public class ComplaintRouterService {
                             break;
                     }
                     if (null == complaintRouter) {
-                        ComplaintTypeResponse complaintType = complaintTypeService
+                        ComplaintTypeResponse complaintType = complaintTypeRepository
                                 .fetchComplaintTypeByCode(complaintTypeCode);
                         complaintRouter = complaintRouterRepository.findByOnlyComplaintType(complaintType.getId());
                     }
@@ -145,27 +150,27 @@ public class ComplaintRouterService {
                         }
                 }
             } else {
-                ComplaintTypeResponse complaintType = complaintTypeService.fetchComplaintTypeByCode(complaintTypeCode);
+                ComplaintTypeResponse complaintType = complaintTypeRepository.fetchComplaintTypeByCode(complaintTypeCode);
                 complaintRouter = complaintRouterRepository.findByOnlyComplaintType(complaintType.getId());
                 if (null == complaintRouter)
                     complaintRouter = complaintRouterRepository.findCityAdminGrievanceOfficer("ADMINISTRATION");
             }
             if (complaintRouter != null) {
-                positionResponse = positionService.getById(complaintRouter.getPosition());
+                positionResponse = positionRepository.getById(complaintRouter.getPosition());
             } else
                 throw new ApplicationRuntimeException("PGR.001");
         } else
             try {
-                positionHierarchies = positionHierarchyService.getByObjectTypeObjectSubTypeAndFromPosition("Complaint",
+                positionHierarchies = positionHierarchyRepository.getByObjectTypeObjectSubTypeAndFromPosition("Complaint",
                         complaintTypeCode, assigneeId);
                 if (positionHierarchies.isEmpty() || positionHierarchies.contains(null)) {
-                    final List<Employee> employees = employeeService.getByRoleName("Grievance Routing Officer");
+                    final List<Employee> employees = employeeRepository.getByRoleName("Grievance Routing Officer");
                     if (!employees.isEmpty())
                         employeeResponse = employees.iterator().next();
                     if (employeeResponse != null)
-                        positions = positionService.getByEmployeeCode(employeeResponse.getCode());
+                        positions = positionRepository.getByEmployeeCode(employeeResponse.getCode());
                     if (!positions.isEmpty())
-                        positionResponse = positionService.getById(positions.iterator().next().getId());
+                        positionResponse = positionRepository.getById(positions.iterator().next().getId());
                 } else
                     positionResponse = positionHierarchies.iterator().next().getToPosition();
             } catch (final Exception e) {
@@ -179,7 +184,7 @@ public class ComplaintRouterService {
 
 
     public void getParentBoundaries(final Long bndryId, final List<BoundaryResponse> boundaryList) {
-        final BoundaryResponse bndry = boundaryService.fetchBoundaryById(bndryId);
+        final BoundaryResponse bndry = boundaryRepository.fetchBoundaryById(bndryId);
         if (bndry != null) {
             boundaryList.add(bndry);
             if (bndry.getParent() != null)

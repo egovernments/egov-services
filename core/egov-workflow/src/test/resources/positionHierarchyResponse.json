@@ -1,0 +1,14 @@
+{
+ "positionHierarchy" : [ {
+ "id" : 1,
+ "fromPosition" : {
+     "id" : "1",
+     "name" : "position1"
+ },
+ "toPosition" : {
+     "id" : "2",
+     "name" : "position2"
+
+ }
+ }]
+}

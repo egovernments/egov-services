@@ -1,0 +1,10 @@
+{
+ "Boundary" : [ {
+ "id" : 2,
+ "name" : "Srinivas\u0020Nagar",
+ "parent" : {
+   "id" : "1",
+   "name" : "Kurnool\u0020Municipality"
+ } 
+}]
+}

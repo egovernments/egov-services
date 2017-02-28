@@ -38,23 +38,25 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.workflow.domain.service;
+package org.egov.workflow.web.contract;
 
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-@Service
-@Transactional(readOnly = true)
-public class WorkflowActionService {
+import lombok.Getter;
+import lombok.Setter;
 
-    /*@Autowired
-    private WorkflowActionRepository workflowActionRepository;
+@Getter
+@Setter
+public class Department {
 
-    public WorkflowAction getWorkflowActionByNameAndType(String name, String type) {
-        return workflowActionRepository.findByNameAndType(name, type);
-    }
+    @JsonProperty("id")
+    private Long id;
 
-    public List<WorkflowAction> getAllWorkflowActionByTypeAndActionNames(String type, List<String> names) {
-        return workflowActionRepository.findAllByTypeAndNameIn(type, names);
-    }*/
+    @JsonProperty("name")
+    private String name;
+
+    @JsonProperty("code")
+    private String code;
+
+
 }

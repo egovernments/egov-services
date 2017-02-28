@@ -30,51 +30,59 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 @RestController
 @RequestMapping("/city")
 public class CityController {
-	
+
 	@Autowired
 	private CityService cityService;
 
-    @GetMapping
-    public String getCity(@RequestParam(value = "code", required = false) String code) {
+	@GetMapping
+	public String getCity(@RequestParam(value = "code", required = false) String code) {
 
-        ObjectMapper mapper = new ObjectMapper();
-        List<District> districts;
-        List<District> result = new ArrayList<>();
-        String jsonInString = "";
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-        try {
+		ObjectMapper mapper = new ObjectMapper();
+		List<District> districts;
+		List<District> result = new ArrayList<>();
+		String jsonInString = "";
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+		try {
 
-            districts = (List<District>) mapper.readValue(new ClassPathResource("/json/citiesUrl.json").getInputStream(),
-                    new TypeReference<List<District>>() {
-                    });
-            if (code != null && !code.isEmpty())
-                for (District d : districts) {
-                    List<CityModel> cities = d.getCities().stream()
-                            .filter(c -> c.getCityCode().compareTo(Integer.valueOf(code)) == 0).collect(Collectors.toList());
+			districts = (List<District>) mapper.readValue(
+					new ClassPathResource("/json/citiesUrl.json").getInputStream(),
+					new TypeReference<List<District>>() {
+					});
+			if (code != null && !code.isEmpty())
+				for (District d : districts) {
+					List<CityModel> cities = d.getCities().stream()
+							.filter(c -> c.getCityCode().compareTo(Integer.valueOf(code)) == 0)
+							.collect(Collectors.toList());
 
-                    jsonInString = objectMapper.writeValueAsString(!cities.isEmpty() ? cities.get(0) : cities);
-                }
-            else
-                jsonInString = objectMapper.writeValueAsString(districts);
-        } catch (IOException e) { 
-            e.printStackTrace();
-        }
+					jsonInString = objectMapper.writeValueAsString(!cities.isEmpty() ? cities.get(0) : cities);
+				}
+			else
+				jsonInString = objectMapper.writeValueAsString(districts);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
-        return jsonInString;
-    }
-    
-    
-    @GetMapping("/getCitybyCityRequest")
+		return jsonInString;
+	}
+
+	@GetMapping("/getCitybyCityRequest")
 	@ResponseBody
 	public ResponseEntity<?> search(@ModelAttribute CityRequest cityRequest) {
-    	CityResponse cityResponse = new CityResponse();
-    	City city= cityService.getCityByCityReq(cityRequest);
-		ResponseInfo responseInfo = new ResponseInfo();
-		cityResponse.setCity(city);
-		responseInfo.setStatus(HttpStatus.CREATED.toString());
-		cityResponse.setResponseInfo(responseInfo);
-		return new ResponseEntity<CityResponse>(cityResponse, HttpStatus.OK);
+		try{
+			CityResponse cityResponse = new CityResponse();
+			if(cityRequest.getCity()!=null){
+				City city = cityService.getCityByCityReq(cityRequest);
+				ResponseInfo responseInfo = new ResponseInfo();
+				cityResponse.setCity(city);
+				responseInfo.setStatus(HttpStatus.OK.toString());
+				cityResponse.setResponseInfo(responseInfo);
+				return new ResponseEntity<CityResponse>(cityResponse, HttpStatus.OK);
+			} else
+				return new ResponseEntity<CityResponse>(cityResponse, HttpStatus.BAD_REQUEST);
+		} catch (final Exception e) {
+			return new ResponseEntity<String>("error in request", HttpStatus.BAD_REQUEST);
+		}
 	}
 
 }

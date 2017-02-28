@@ -20,8 +20,7 @@ CREATE SEQUENCE seq_eg_citypreferences
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-ALTER TABLE ONLY eg_citypreferences ADD CONSTRAINT eg_citypreferences_pkey PRIMARY KEY (id);
-ALTER TABLE ONLY eg_citypreferences ADD CONSTRAINT eg_citypreferences_logo_fkey FOREIGN KEY (municipality_logo) REFERENCES eg_filestoremap(id);
+ALTER TABLE eg_citypreferences ADD CONSTRAINT eg_citypreferences_pkey PRIMARY KEY (id);
 -------------------END-------------------
 
 ------------------START------------------
@@ -49,6 +48,6 @@ CREATE SEQUENCE seq_eg_city
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-ALTER TABLE ONLY eg_city ADD CONSTRAINT eg_city_pkey PRIMARY KEY (id);
-ALTER TABLE ONLY eg_city ADD CONSTRAINT fk_preference FOREIGN KEY (preferences) REFERENCES eg_citypreferences(id) MATCH FULL;
+ALTER TABLE eg_city ADD CONSTRAINT eg_city_pkey PRIMARY KEY (id);
+
 -------------------END-------------------

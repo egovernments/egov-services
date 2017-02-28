@@ -15,6 +15,7 @@ import org.egov.egf.persistence.queue.contract.RequestInfo;
 import org.egov.egf.persistence.queue.contract.ResponseInfo;
 import org.egov.egf.persistence.service.BankService;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.builder.SkipExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -74,8 +75,10 @@ public class BankController {
 			}
 	 
 		Bank bankFromDb = bankService.findOne(uniqueId);
-		BankContract bank = bankContractRequest.getBank();
 		
+		BankContract bank = bankContractRequest.getBank();
+		//ignoring internally passed id if the put has id in url
+	    bank.setId(uniqueId);
 		ModelMapper model=new ModelMapper();
 	 	model.map(bank, bankFromDb);
 		bankFromDb = bankService.update(bankFromDb);
@@ -88,19 +91,19 @@ public class BankController {
 	
 	@GetMapping(value = "/{uniqueId}")
 	@ResponseStatus(HttpStatus.OK)
-	public BankContractResponse view(@RequestBody @Valid BankContractRequest bankContractRequest, BindingResult errors,
+	public BankContractResponse view(@ModelAttribute BankContractRequest bankContractRequest, BindingResult errors,
 			@PathVariable Long uniqueId) {
-
+		bankService.validate(bankContractRequest,"view",errors);
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
-		bankService.validate(bankContractRequest,"view",errors);
+		
 		RequestInfo requestInfo = bankContractRequest.getRequestInfo();
 		Bank bankFromDb = bankService.findOne(uniqueId);
 		BankContract bank = bankContractRequest.getBank();
 		
 		ModelMapper model=new ModelMapper();
-	 	model.map(bank, bankFromDb);
+	 	model.map(bankFromDb,bank );
 		
 		BankContractResponse bankContractResponse = new BankContractResponse();
 		bankContractResponse.setBank(bank);  

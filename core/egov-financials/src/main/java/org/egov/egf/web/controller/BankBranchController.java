@@ -72,7 +72,6 @@ public class BankBranchController {
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
-	 
 		BankBranch bankBranchFromDb = bankBranchService.findOne(uniqueId);
 		BankBranchContract bankBranch = bankBranchContractRequest.getBankBranch();
 		
@@ -95,6 +94,7 @@ public class BankBranchController {
 			  throw	new CustomBindException(errors);
 			}
 		bankBranchService.validate(bankBranchContractRequest,"view",errors);
+	
 		RequestInfo requestInfo = bankBranchContractRequest.getRequestInfo();
 		BankBranch bankBranchFromDb = bankBranchService.findOne(uniqueId);
 		BankBranchContract bankBranch = bankBranchContractRequest.getBankBranch();

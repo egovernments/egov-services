@@ -58,7 +58,7 @@ import org.hibernate.validator.constraints.Length;
 public class Function extends AbstractAuditable {
 
     private static final long serialVersionUID = 1L;
-    public static final String SEQ = "seq_function";
+    public static final String SEQ = "seq_egf_function";
 
     @Id
     @GeneratedValue(generator = SEQ, strategy = GenerationType.SEQUENCE)

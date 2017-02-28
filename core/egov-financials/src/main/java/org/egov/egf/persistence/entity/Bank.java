@@ -66,7 +66,7 @@ public class  Bank extends AbstractAuditable {
 
 	private static final long serialVersionUID = -2839424467289504649L;
 
-	public static final String SEQ_BANK = "seq_bank";
+	public static final String SEQ_BANK = "seq_egf_bank";
 
 	@Id
 	@GeneratedValue(generator = SEQ_BANK, strategy = GenerationType.SEQUENCE)

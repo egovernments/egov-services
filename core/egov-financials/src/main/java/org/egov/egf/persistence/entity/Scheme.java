@@ -62,7 +62,7 @@ import lombok.Data;
 public class Scheme extends  AbstractAuditable {
 
     private static final long serialVersionUID = 825465695975976653L;
-    public static final String SEQ = "seq_scheme";
+    public static final String SEQ = "seq_egf_scheme";
 	@Id
     @GeneratedValue(generator = Scheme.SEQ, strategy = GenerationType.SEQUENCE)
     private Long id;

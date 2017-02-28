@@ -60,7 +60,7 @@ import org.hibernate.validator.constraints.Length;
 @SequenceGenerator(name = BankAccount.SEQ_BANKACCOUNT, sequenceName = BankAccount.SEQ_BANKACCOUNT, allocationSize = 1)
 public class BankAccount extends AbstractAuditable implements java.io.Serializable {
 
-    public static final String SEQ_BANKACCOUNT = "seq_bankaccount";
+    public static final String SEQ_BANKACCOUNT = "seq_egf_bankaccount";
 
     private static final long serialVersionUID = 1L;
 

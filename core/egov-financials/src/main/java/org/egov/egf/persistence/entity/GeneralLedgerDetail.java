@@ -58,7 +58,7 @@ import javax.validation.constraints.NotNull;
 public class GeneralLedgerDetail extends AbstractPersistable<Long> {
  
 	private static final long serialVersionUID = 8704167799390083959L;
-	public static final String SEQ = "seq_generalledgerdetail";
+	public static final String SEQ = "seq_egf_generalledgerdetail";
 	@Id
     @GeneratedValue(generator = GeneralLedger.SEQ, strategy = GenerationType.SEQUENCE)
     private Long id;

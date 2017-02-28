@@ -94,6 +94,8 @@ public class ChartOfAccount extends AbstractAuditable {
 	@NotNull
 	private Boolean isActiveForPosting;
 
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="parentId")
 	private ChartOfAccount parentId;
 	@NotNull
 	private Character type;

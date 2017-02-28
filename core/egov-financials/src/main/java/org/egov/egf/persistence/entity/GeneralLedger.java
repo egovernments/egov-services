@@ -68,7 +68,7 @@ import lombok.Data;
 @SequenceGenerator(name = GeneralLedger.SEQ, sequenceName = GeneralLedger.SEQ, allocationSize = 1)
 public class GeneralLedger extends AbstractPersistable<Long> {
 	
-	public static final String SEQ = "seq_generalledger";
+	public static final String SEQ = "seq_egf_generalledger";
 	@Id
     @GeneratedValue(generator = GeneralLedger.SEQ, strategy = GenerationType.SEQUENCE)
     private Long id = null;

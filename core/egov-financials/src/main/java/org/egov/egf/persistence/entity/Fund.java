@@ -58,7 +58,7 @@ import org.hibernate.validator.constraints.Length;
 @SequenceGenerator(name = Fund.SEQ, sequenceName = Fund.SEQ, allocationSize = 1)
 public class Fund extends AbstractAuditable {
 
-    public static final String SEQ = "seq_fund";
+    public static final String SEQ = "seq_egf_fund";
     private static final long serialVersionUID = 7977534010758407945L;
     @Id
     @GeneratedValue(generator = Fund.SEQ, strategy = GenerationType.SEQUENCE)

@@ -6,7 +6,7 @@ Create table egf_chartofaccount(
 	purposeId bigint ,
 	desciption varchar(256),
 	isActiveForPosting boolean NOT NULL,
-	,
+	parentId bigint,
 	type varchar(1) NOT NULL,
 	classification bigint NOT NULL,
 	functionRequired boolean NOT NULL,

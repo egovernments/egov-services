@@ -42,9 +42,12 @@ package org.egov.egf.persistence.entity;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -57,12 +60,14 @@ import org.hibernate.validator.constraints.Length;
 @SequenceGenerator(name = SubScheme.SEQ, sequenceName = SubScheme.SEQ, allocationSize = 1)
 public class SubScheme extends AbstractAuditable
 {
-    public static final String SEQ = "seq_subscheme";
+    public static final String SEQ = "seq_egf_subscheme";
 	@Id
     @GeneratedValue(generator = SubScheme.SEQ, strategy = GenerationType.SEQUENCE)
 	private Long id;
 	
 	@NotNull
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="scheme")
 	private Scheme scheme;
 
 	@NotNull

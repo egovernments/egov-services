@@ -61,7 +61,7 @@ public class FiscalPeriod extends AbstractAuditable {
 
         private static final long serialVersionUID = -5166451072153556422L;
 
-        public static final String SEQ_FISCALPERIOD = "seq_fiscalperiod";
+        public static final String SEQ_FISCALPERIOD = "seq_egf_fiscalperiod";
 
         @Id
         @GeneratedValue(generator = SEQ_FISCALPERIOD, strategy = GenerationType.SEQUENCE)

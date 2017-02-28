@@ -66,7 +66,7 @@ import org.hibernate.validator.constraints.NotBlank;
 public class FinancialYear extends AbstractAuditable {
 
     private static final long serialVersionUID = -1563670460427134487L;
-    public static final String SEQ_FINANCIALYEAR = "seq_financialyear";
+    public static final String SEQ_FINANCIALYEAR = "seq_egf_financialyear";
 
     @Id
     @GeneratedValue(generator = SEQ_FINANCIALYEAR, strategy = GenerationType.SEQUENCE)

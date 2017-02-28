@@ -58,7 +58,7 @@ public class ChartOfAccountDetail extends AbstractAuditable {
 
     private static final long serialVersionUID = -8517026729631829413L;
 
-    public static final String SEQ_CHARTOFACCOUNTDETAIL = "SEQ_CHARTOFACCOUNTDETAIL";
+    public static final String SEQ_CHARTOFACCOUNTDETAIL = "seq_egf_chartofaccountdetail";
 
     @Id
     @GeneratedValue(generator = ChartOfAccountDetail.SEQ_CHARTOFACCOUNTDETAIL, strategy = GenerationType.SEQUENCE)

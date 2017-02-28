@@ -5,7 +5,7 @@ Create table egf_bankaccount(
 	glcodeid bigint ,
 	fundid bigint ,
 	accountNumber varchar(25) NOT NULL,
-	accountType varchar(,
+	accountType varchar(20),
 	description varchar(256),
 	active boolean NOT NULL,
 	payTo varchar(100),

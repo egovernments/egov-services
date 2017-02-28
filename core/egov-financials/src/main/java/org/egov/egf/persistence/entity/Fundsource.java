@@ -61,7 +61,7 @@ public class Fundsource extends AbstractAuditable {
 
     private static final long serialVersionUID = -6601962644148353761L;
 
-    public static final String SEQ_FUNDSOURCE = "SEQ_FUNDSOURCE";
+    public static final String SEQ_FUNDSOURCE = "seq_egf_fundsource";
 
     @Id
     @GeneratedValue(generator = SEQ_FUNDSOURCE, strategy = GenerationType.SEQUENCE)

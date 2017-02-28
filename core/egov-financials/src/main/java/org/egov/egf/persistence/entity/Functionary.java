@@ -55,7 +55,7 @@ import org.hibernate.validator.constraints.Length;
 public class Functionary extends AbstractAuditable implements java.io.Serializable {
 	   
 	private static final long serialVersionUID = 1L;
-	public static final String SEQ = "seq_functionary";
+	public static final String SEQ = "seq_egf_functionary";
 	@Id
     @GeneratedValue(generator = Functionary.SEQ, strategy = GenerationType.SEQUENCE)
 	private Long id;

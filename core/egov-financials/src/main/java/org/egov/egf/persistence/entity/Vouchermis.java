@@ -55,7 +55,7 @@ import javax.persistence.Table;
 @SequenceGenerator(name = Vouchermis.SEQ_VOUCHERMIS, sequenceName = Vouchermis.SEQ_VOUCHERMIS, allocationSize = 1)
 public class Vouchermis implements java.io.Serializable {
 
-	public static final String SEQ_VOUCHERMIS = "SEQ_VOUCHERMIS";
+	public static final String SEQ_VOUCHERMIS = "seq_egf_vouchermis";
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(generator = SEQ_VOUCHERMIS, strategy = GenerationType.SEQUENCE)

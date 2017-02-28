@@ -1,7 +1,7 @@
 
 Create table egf_subscheme( 
 	id bigint,
-	 NOT NULL,
+	 scheme bigint NOT NULL,
 	code varchar(50) NOT NULL,
 	name varchar(50) NOT NULL,
 	validFrom date NOT NULL,

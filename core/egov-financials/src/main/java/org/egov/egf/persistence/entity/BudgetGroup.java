@@ -40,7 +40,6 @@
  
 package org.egov.egf.persistence.entity;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -52,19 +51,17 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 
 import org.egov.egf.persistence.entity.enums.BudgetAccountType;
 import org.egov.egf.persistence.entity.enums.BudgetingType;
 import org.hibernate.validator.constraints.Length;
 
 @Entity
-@Table(name = "EGF_BUDGETGROUP")
+@Table(name = "egf_budgetgroup")
 @SequenceGenerator(name = BudgetGroup.SEQ_BUDGETGROUP, sequenceName = BudgetGroup.SEQ_BUDGETGROUP, allocationSize = 1)
-
 public class BudgetGroup extends AbstractAuditable {
 
-    public static final String SEQ_BUDGETGROUP = "SEQ_EGF_BUDGETGROUP";
+    public static final String SEQ_BUDGETGROUP = "seq_egf_budgetgroup";
     private static final long serialVersionUID = 8907540544512153346L;
     @Id
     @GeneratedValue(generator = SEQ_BUDGETGROUP, strategy = GenerationType.SEQUENCE)
@@ -81,7 +78,7 @@ public class BudgetGroup extends AbstractAuditable {
     private ChartOfAccount majorCode;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "hgfdsa")
+    @JoinColumn(name = "maxCode")
     private ChartOfAccount maxCode;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -91,77 +88,12 @@ public class BudgetGroup extends AbstractAuditable {
     @Enumerated(value = EnumType.STRING)
     private BudgetAccountType accountType;
 
-    @Column(name="test")
     @Enumerated(value = EnumType.STRING)
     private BudgetingType budgetingType;
    
-    private Boolean isActive;
+    private Boolean active;
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(final String description) {
-        this.description = description;
-    }
-
-    public ChartOfAccount getMajorCode() {
-        return majorCode;
-    }
-
-    public void setMajorCode(final ChartOfAccount majorCode) {
-        this.majorCode = majorCode;
-    }
-
-    public ChartOfAccount getMaxCode() {
-        return maxCode;
-    }
-
-    public void setMaxCode(final ChartOfAccount maxCode) {
-        this.maxCode = maxCode;
-    }
-
-    public ChartOfAccount getMinCode() {
-        return minCode;
-    }
-
-    public void setMinCode(final ChartOfAccount minCode) {
-        this.minCode = minCode;
-    }
-
-    @NotNull(message = "Please select accounttype")
-    public BudgetAccountType getAccountType() {
-        return accountType;
-    }
-
-    public void setAccountType(final BudgetAccountType accountType) {
-        this.accountType = accountType;
-    }
-
-    @NotNull(message = "Please select budgetingtype")
-    public BudgetingType getBudgetingType() {
-        return budgetingType;
-    }
-
-    public void setBudgetingType(final BudgetingType budgetingType) {
-        this.budgetingType = budgetingType;
-    }
-
-    public Boolean getIsActive() {
-        return isActive;
-    }
-
-    public void setIsActive(final Boolean isActive) {
-        this.isActive = isActive;
-    }
+    
 
     @Override
     public Long getId() {

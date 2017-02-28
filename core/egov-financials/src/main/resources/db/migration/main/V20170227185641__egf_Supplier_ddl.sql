@@ -1,7 +1,7 @@
 
 Create table egf_supplier( 
 	id bigint,
-	 varchar(50) NOT NULL,
+	code varchar(50) NOT NULL,
 	name varchar(50) NOT NULL,
 	address varchar(300),
 	mobile varchar(10),

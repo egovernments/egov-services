@@ -1,7 +1,9 @@
 package org.egov.pgr.model;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.pgr.contracts.grievance.ServiceRequest;
 import org.egov.pgr.entity.Complaint;
+import org.egov.pgr.entity.ComplaintType;
 import org.egov.pgr.entity.enums.ComplaintStatus;
 import org.egov.pgr.repository.PositionRepository;
 import org.egov.pgr.service.ComplaintStatusService;
@@ -13,6 +15,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -110,7 +113,36 @@ public class ComplaintBuilderTest {
     }
 
     private void setupMocks() {
+        setupStatusMock();
+        setupComplaintTypeMock();
+        setupPositionMock();
+        setupEscalationDateMock();
+    }
 
+    private void setupEscalationDateMock() {
+        long designationId = 12L;
+        Calendar c = Calendar.getInstance();
+        c.set(2017, 02, 28, 0, 0);
+        when(escalationService.getExpiryDate(any(Complaint.class), eq(designationId))).thenReturn(c.getTime());
+    }
+
+    private void setupPositionMock() {
+        long assigneeId = 123L;
+        long designationId = 12L;
+        when(positionRepository.designationIdForAssignee(StringUtils.EMPTY, assigneeId)).thenReturn(designationId);
+    }
+
+    private void setupComplaintTypeMock() {
+        ComplaintType complaintType = new ComplaintType();
+        complaintType.setName("magical powers");
+        when(complaintTypeService.findByCode("MAGIC")).thenReturn(complaintType);
+    }
+
+    private void setupStatusMock() {
+        String processing = "PROCESSING";
+        org.egov.pgr.entity.ComplaintStatus processingStatus = new org.egov.pgr.entity.ComplaintStatus();
+        processingStatus.setName(processing);
+        when(complaintStatusService.getByName(processing)).thenReturn(processingStatus);
     }
 
     private ComplaintBuilder complaintBuilderWithComplaint(Complaint complaint) {

@@ -1,5 +1,6 @@
 package org.egov.pgr.consumer;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.egov.pgr.config.PersistenceProperties;
 import org.egov.pgr.contracts.grievance.SevaRequest;
@@ -12,7 +13,11 @@ import org.egov.pgr.repository.PositionRepository;
 import org.egov.pgr.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+
+@Service
 public class GrievancePersistenceListener {
 
     private ComplaintTypeService complaintTypeService;
@@ -42,12 +47,19 @@ public class GrievancePersistenceListener {
     @KafkaListener(id = "${kafka.topics.pgr.workflowupdated.id}",
             topics = "${kafka.topics.pgr.workflowupdated.name}",
             group = "${kafka.topics.pgr.workflowupdated.group}")
-    public void processMessage(ConsumerRecord<String, SevaRequest> record) {
-        SevaRequest sevaRequest = record.value();
-        Complaint complaint = persistComplaint(sevaRequest);
-        triggerSms(complaint);
-        triggerEmail(complaint);
-        triggerIndexing(complaint);
+    public void processMessage(ConsumerRecord<String, Object> record) {
+        SevaRequest sevaRequest = null;
+        //TODO - Move away from concrete service request binding to a hash map.
+        try {
+            sevaRequest = new ObjectMapper().readValue((String) record.value(), SevaRequest.class);
+            Complaint complaint = persistComplaint(sevaRequest);
+            triggerSms(complaint);
+            triggerEmail(complaint);
+            triggerIndexing(complaint);
+        } catch (IOException e) {
+            //Log error around deserialization failed
+            e.printStackTrace();
+        }
     }
 
     private void triggerIndexing(Complaint record) {

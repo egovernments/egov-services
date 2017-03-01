@@ -69,54 +69,44 @@ public class ComplaintRouterService {
 
     private final ComplaintRouterRepository complaintRouterRepository;
 
-    @Autowired
     private BoundaryRepository boundaryRepository;
 
-    @Autowired
     private PositionRepository positionRepository;
 
-    @Autowired
     private PositionHierarchyRepository positionHierarchyRepository;
 
-    @Autowired
     private ComplaintTypeRepository complaintTypeRepository;
 
-    @Autowired
     private EmployeeRepository employeeRepository;
 
     @Autowired
-    public ComplaintRouterService(final ComplaintRouterRepository complaintRouterRepository) {
+    public ComplaintRouterService(final ComplaintRouterRepository complaintRouterRepository,
+            final BoundaryRepository boundaryRepository, final PositionRepository positionRepository,
+            final ComplaintTypeRepository complaintTypeRepository, final EmployeeRepository employeeRepository,
+            PositionHierarchyRepository positionHierarchyRepository) {
         this.complaintRouterRepository = complaintRouterRepository;
+        this.boundaryRepository = boundaryRepository;
+        this.positionRepository = positionRepository;
+        this.complaintTypeRepository = complaintTypeRepository;
+        this.employeeRepository = employeeRepository;
+        this.positionHierarchyRepository = positionHierarchyRepository;
     }
 
     /**
      * @param complaint
-     * @return This api takes responsibility of returning suitable position for
-     * the given complaint Api considers two fields from complaint a.
-     * complaintType b. Boundary The descision is taken as below 1. If
-     * complainttype and boundary from complaint is found in router then
-     * return corresponding position 2. If only complainttype from
-     * complaint is found search router for matching entry in router and
-     * return position 3. If no postion found for above then search
-     * router with only boundary of given complaint and return
-     * corresponding position 4. If none of the above gets position then
-     * return GO 5. GO is default for all complaints. It expects the
-     * data in the following format Say ComplaintType CT1,CT2,CT3
-     * Present with CT1 locationRequired is true Boundary B1 to B5 are
-     * child boundaries and B0 is the top boundary (add only child
-     * boundaries not the top or middle ones) Postion P1 to P10 are
-     * different positions then ComplaintRouter is populate like this
-     * ComplaintType Boundary Position
-     * ===================================================== 1. CT1 B1
-     * P1 2. CT1 B2 P2 3. CT1 B3 P3 4. CT1 B4 P4 5. CT1 B5 P5 6. CT1
-     * null P6 This is complaintType default 7. null B5 P7 This is
-     * Boundary default 8. null B0 P8 This is GO. he is city level
-     * default. This data is mandatory . Line 6 and 7 are exclusive
-     * means if 6 present 7 will not be considered . If you want
-     * boundary level default then dont add complaint type default
-     * search result complaint is registered with complaint type CT1 and
-     * boundary B1 will give P1 CT1 and Boundary is not provided will
-     * give p6, if line 6 not added then it will give P8
+     * @return This api takes responsibility of returning suitable position for the given complaint Api considers two fields from
+     * complaint a. complaintType b. Boundary The descision is taken as below 1. If complainttype and boundary from complaint is
+     * found in router then return corresponding position 2. If only complainttype from complaint is found search router for
+     * matching entry in router and return position 3. If no postion found for above then search router with only boundary of
+     * given complaint and return corresponding position 4. If none of the above gets position then return GO 5. GO is default for
+     * all complaints. It expects the data in the following format Say ComplaintType CT1,CT2,CT3 Present with CT1 locationRequired
+     * is true Boundary B1 to B5 are child boundaries and B0 is the top boundary (add only child boundaries not the top or middle
+     * ones) Postion P1 to P10 are different positions then ComplaintRouter is populate like this ComplaintType Boundary Position
+     * ===================================================== 1. CT1 B1 P1 2. CT1 B2 P2 3. CT1 B3 P3 4. CT1 B4 P4 5. CT1 B5 P5 6.
+     * CT1 null P6 This is complaintType default 7. null B5 P7 This is Boundary default 8. null B0 P8 This is GO. he is city level
+     * default. This data is mandatory . Line 6 and 7 are exclusive means if 6 present 7 will not be considered . If you want
+     * boundary level default then dont add complaint type default search result complaint is registered with complaint type CT1
+     * and boundary B1 will give P1 CT1 and Boundary is not provided will give p6, if line 6 not added then it will give P8
      */
     public PositionResponse getAssignee(final Long boundaryId, final String complaintTypeCode, final Long assigneeId) {
         PositionResponse positionResponse = null;
@@ -130,7 +120,7 @@ public class ComplaintRouterService {
                 getParentBoundaries(boundaryId, boundaries);
                 if (StringUtils.isNotBlank(complaintTypeCode)) {
                     for (final BoundaryResponse bndry : boundaries) {
-                        ComplaintTypeResponse complaintType = complaintTypeRepository
+                        final ComplaintTypeResponse complaintType = complaintTypeRepository
                                 .fetchComplaintTypeByCode(complaintTypeCode);
                         complaintRouter = complaintRouterRepository
                                 .findByComplaintTypeAndBoundary(complaintType.getId(), bndry.getId());
@@ -138,7 +128,7 @@ public class ComplaintRouterService {
                             break;
                     }
                     if (null == complaintRouter) {
-                        ComplaintTypeResponse complaintType = complaintTypeRepository
+                        final ComplaintTypeResponse complaintType = complaintTypeRepository
                                 .fetchComplaintTypeByCode(complaintTypeCode);
                         complaintRouter = complaintRouterRepository.findByOnlyComplaintType(complaintType.getId());
                     }
@@ -150,14 +140,14 @@ public class ComplaintRouterService {
                         }
                 }
             } else {
-                ComplaintTypeResponse complaintType = complaintTypeRepository.fetchComplaintTypeByCode(complaintTypeCode);
+                final ComplaintTypeResponse complaintType = complaintTypeRepository.fetchComplaintTypeByCode(complaintTypeCode);
                 complaintRouter = complaintRouterRepository.findByOnlyComplaintType(complaintType.getId());
                 if (null == complaintRouter)
                     complaintRouter = complaintRouterRepository.findCityAdminGrievanceOfficer("ADMINISTRATION");
             }
-            if (complaintRouter != null) {
+            if (complaintRouter != null)
                 positionResponse = positionRepository.getById(complaintRouter.getPosition());
-            } else
+            else
                 throw new ApplicationRuntimeException("PGR.001");
         } else
             try {
@@ -181,7 +171,6 @@ public class ComplaintRouterService {
             }
         return positionResponse;
     }
-
 
     public void getParentBoundaries(final Long bndryId, final List<BoundaryResponse> boundaryList) {
         final BoundaryResponse bndry = boundaryRepository.fetchBoundaryById(bndryId);

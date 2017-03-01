@@ -163,20 +163,15 @@
                                         <exclude>org.egov.workflow.web.contract.*</exclude>
                                         <exclude>org.egov.workflow.web.interceptor.*</exclude>
                                         <exclude>org.egov.workflow.web.validation.*</exclude>
-                                        <exclude>org.egov.workflow.repository.entity.*</exclude>
-                                        <exclude>org.egov.workflow.repository.producer.*</exclude>
                                         <exclude>org.egov.workflow.persistence.entity.*</exclude>
                                         <exclude>org.egov.workflow.persistence.producer.*</exclude>
-                                        <exclude>org.egov.workflow.domain.service.ComplaintRouterService</exclude>
-                                        <exclude>org.egov.workflow.domain.service.WorkflowTypeService</exclude>
                                         <exclude>org.egov.workflow.web.controller.WorkflowControllerAdvice</exclude>
-                                        <exclude>org.egov.workflow.domain.service.StateHistoryService:</exclude>
                                     </excludes>
                                     <limits>
                                         <limit>
                                             <counter>LINE</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.50</minimum>
+                                            <minimum>0.80</minimum>
                                         </limit>
                                     </limits>
                                 </rule>

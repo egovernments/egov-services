@@ -4,12 +4,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.egov.pgr.domain.model.AuthenticatedUser;
 import org.egov.pgr.domain.model.Complaint;
 
 @Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class SevaRequest {
@@ -19,14 +17,15 @@ public class SevaRequest {
     @JsonProperty("ServiceRequest")
     private ServiceRequest serviceRequest;
 
-    public Complaint toDomain(AuthenticatedUser authenticatedUser, String jurisdictionId) {
-        return serviceRequest.toDomain(authenticatedUser, jurisdictionId);
+    public Complaint toDomainForUpdateRequest(AuthenticatedUser authenticatedUser) {
+        return serviceRequest.toDomainForUpdateRequest(authenticatedUser);
+    }
+
+    public Complaint toDomainForCreateRequest(AuthenticatedUser authenticatedUser) {
+        return serviceRequest.toDomainForCreateRequest(authenticatedUser);
     }
 
     public void update(Complaint complaint) {
         serviceRequest.setCrn(complaint.getCrn());
-        requestInfo.setUserId(complaint.getAuthenticatedUser().getId().toString());
-        requestInfo.setUserType(complaint.getAuthenticatedUser().getType().toString());
-        requestInfo.setTenantId(complaint.getTenantId());
     }
 }

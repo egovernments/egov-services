@@ -1,4 +1,4 @@
-package org.egov.pgr.persistence;
+package org.egov.pgr.persistence.repository;
 
 import org.egov.pgr.domain.model.AuthenticatedUser;
 import org.springframework.web.client.RestTemplate;

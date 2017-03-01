@@ -2,13 +2,14 @@ package org.egov.pgr.persistence.queue.contract;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Date;
 
 @Getter
-@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class RequestInfo   {
     @JsonProperty("api_id")
     private String apiId;
@@ -21,6 +22,7 @@ public class RequestInfo   {
     private Date ts;
 
     @JsonProperty("action")
+    @Setter
     private String action;
 
     @JsonProperty("did")
@@ -30,6 +32,7 @@ public class RequestInfo   {
     private String key;
 
     @JsonProperty("msg_id")
+    @Setter
     private String msgId;
 
     @JsonProperty("requester_id")
@@ -37,9 +40,4 @@ public class RequestInfo   {
 
     @JsonProperty("auth_token")
     private String authToken;
-
-    private String userId;
-    private String userType;
-    private String tenantId;
-
 }

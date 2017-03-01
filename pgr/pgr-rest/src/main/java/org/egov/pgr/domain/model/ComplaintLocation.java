@@ -1,28 +1,30 @@
 package org.egov.pgr.domain.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Value;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 @AllArgsConstructor
 @Value
+@Builder
 public class ComplaintLocation {
     private Coordinates coordinates;
     private String crossHierarchyId;
     private String locationId;
 
-    public boolean isAbsent() {
-        return isLocationIdAbsent() && isCoordinatesAbsent() && isHierarchyAbsent();
+    public boolean isRawLocationAbsent() {
+        return isCoordinatesAbsent() && isHierarchyAbsent();
     }
 
-    private boolean isLocationIdAbsent() { return isEmpty(locationId); }
+    public boolean isLocationIdAbsent() { return isEmpty(locationId); }
 
-    private boolean isCoordinatesAbsent() {
+    public boolean isCoordinatesAbsent() {
         return coordinates != null && coordinates.isAbsent();
     }
 
-    private boolean isHierarchyAbsent() {
+    public boolean isHierarchyAbsent() {
         return isEmpty(crossHierarchyId);
     }
 }

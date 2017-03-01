@@ -1,6 +1,5 @@
 package org.egov.pgr.domain.service;
 
-import org.egov.pgr.domain.exception.InvalidComplaintException;
 import org.egov.pgr.domain.model.*;
 import org.egov.pgr.persistence.queue.contract.RequestInfo;
 import org.egov.pgr.persistence.queue.contract.ServiceRequest;
@@ -16,7 +15,6 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -36,7 +34,7 @@ public class ComplaintServiceTest {
     @Test
     public void test_should_validate_complaint_on_save() {
         final Complaint complaint = mock(Complaint.class);
-        when(complaint.getAuthenticatedUser()).thenReturn(getAuthenticatedUser());
+        when(complaint.getAuthenticatedUser()).thenReturn(getCitizen());
         final SevaRequest sevaRequest = getSevaRequest();
 
         complaintService.save(complaint, sevaRequest);
@@ -47,7 +45,7 @@ public class ComplaintServiceTest {
     @Test
     public void test_should_validate_complaint_on_update() {
         final Complaint complaint = mock(Complaint.class);
-        when(complaint.getAuthenticatedUser()).thenReturn(getAuthenticatedUser());
+        when(complaint.getAuthenticatedUser()).thenReturn(getCitizen());
         final SevaRequest sevaRequest = getSevaRequest();
 
         complaintService.update(complaint, sevaRequest);
@@ -89,8 +87,8 @@ public class ComplaintServiceTest {
     @Test
     public void test_should_persist_seva_request_on_save() {
         final Complaint complaint = getComplaint();
-        final SevaRequest sevaRequest = getSevaRequest();
-        sevaRequest.setServiceRequest(getServiceRequest());
+        final ServiceRequest serviceRequest = getServiceRequest();
+        final SevaRequest sevaRequest = new SevaRequest(new RequestInfo(), serviceRequest);
         when(sevaNumberGeneratorService.generate()).thenReturn(CRN);
 
         complaintService.save(complaint, sevaRequest);
@@ -101,8 +99,8 @@ public class ComplaintServiceTest {
     @Test
     public void test_should_persist_seva_request_on_update() {
         final Complaint complaint = getComplaint();
-        final SevaRequest sevaRequest = getSevaRequest();
-        sevaRequest.setServiceRequest(getServiceRequest());
+        final ServiceRequest serviceRequest = getServiceRequest();
+        final SevaRequest sevaRequest = new SevaRequest(new RequestInfo(), serviceRequest);
 
         complaintService.update(complaint, sevaRequest);
 
@@ -122,16 +120,23 @@ public class ComplaintServiceTest {
     }
 
     private Complaint getComplaint() {
-        final AuthenticatedUser user = getAuthenticatedUser();
+        final Coordinates coordinates = new Coordinates(0d, 0d);
+        final ComplaintLocation complaintLocation = new ComplaintLocation(coordinates, "id", null);
+        final Complainant complainant = Complainant.builder()
+                .userId("userId")
+                .build();
         return Complaint.builder()
+                .complainant(complainant)
+                .authenticatedUser(getCitizen())
+                .complaintLocation(complaintLocation)
                 .tenantId(TENANT_ID)
-                .authenticatedUser(user)
-                .complainant(Complainant.builder().build())
-                .complaintLocation(new ComplaintLocation(new Coordinates(0d, 0d), "id", null))
+                .description("description")
+                .crn("crn")
+                .complaintType(new ComplaintType(null, "complaintCode"))
                 .build();
     }
 
-    private AuthenticatedUser getAuthenticatedUser() {
+    private AuthenticatedUser getCitizen() {
         return AuthenticatedUser.builder()
                 .id(1)
                 .type(Collections.singletonList(UserType.CITIZEN))
@@ -139,10 +144,8 @@ public class ComplaintServiceTest {
     }
 
     private SevaRequest getSevaRequest() {
-        final SevaRequest sevaRequest = new SevaRequest();
-        sevaRequest.setRequestInfo(new RequestInfo());
-        sevaRequest.setServiceRequest(ServiceRequest.builder().build());
-        return sevaRequest;
+        final ServiceRequest serviceRequest = ServiceRequest.builder().build();
+        return new SevaRequest(new RequestInfo(), serviceRequest);
     }
 
     private ServiceRequest getServiceRequest() {

@@ -1,7 +1,7 @@
 package org.egov.pgr.domain.service;
 
 import org.egov.pgr.domain.model.ComplaintRegistrationNumber;
-import org.egov.pgr.persistence.CrnRepository;
+import org.egov.pgr.persistence.repository.CrnRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;

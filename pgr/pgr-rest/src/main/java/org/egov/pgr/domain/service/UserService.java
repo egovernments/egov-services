@@ -1,7 +1,7 @@
 package org.egov.pgr.domain.service;
 
 import org.egov.pgr.domain.model.AuthenticatedUser;
-import org.egov.pgr.persistence.UserRepository;
+import org.egov.pgr.persistence.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.springframework.util.StringUtils.isEmpty;

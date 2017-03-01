@@ -31,8 +31,7 @@ public class ComplaintMessageQueueRepositoryTest {
 
     @Test
     public void test_should_set_correlation_id_on_outgoing_message() {
-        final SevaRequest sevaRequest = new SevaRequest();
-        sevaRequest.setRequestInfo(new RequestInfo());
+        final SevaRequest sevaRequest = new SevaRequest(new RequestInfo(), null);
         RequestContext.setId(correlationId);
 
         complaintMessageQueueRepository.save(sevaRequest);

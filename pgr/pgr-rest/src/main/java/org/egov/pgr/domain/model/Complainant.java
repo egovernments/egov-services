@@ -2,22 +2,41 @@ package org.egov.pgr.domain.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Value;
+import lombok.Getter;
 
 import static org.springframework.util.StringUtils.isEmpty;
 
 
 //A person who made a complaint
-@Value
+@Getter
 @AllArgsConstructor
 @Builder
 public class Complainant {
     private String firstName;
-    private String phone;
+    private String mobile;
     private String email;
     private String address;
+    private String userId;
 
     public boolean isAbsent() {
-        return isEmpty(firstName) || isEmpty(phone) || isEmpty(email);
+        return isFirstNameAbsent() || isMobileAbsent() || isEmailAbsent();
     }
+
+    public boolean isEmailAbsent() {
+        return isEmpty(email);
+    }
+
+    public boolean isMobileAbsent() {
+        return isEmpty(mobile);
+    }
+
+    public boolean isFirstNameAbsent() {
+        return isEmpty(firstName);
+    }
+
+    public boolean isUserIdAbsent() {
+        return isEmpty(userId);
+    }
+
+
 }

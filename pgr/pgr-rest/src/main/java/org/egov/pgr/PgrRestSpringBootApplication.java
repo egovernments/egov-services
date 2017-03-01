@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import org.egov.pgr.domain.service.UserService;
-import org.egov.pgr.persistence.UserRepository;
+import org.egov.pgr.persistence.repository.UserRepository;
 import org.egov.pgr.web.interceptor.CorrelationIdAwareRestTemplate;
 import org.egov.pgr.web.interceptor.CorrelationIdInterceptor;
 import org.springframework.beans.factory.annotation.Value;

@@ -2,24 +2,33 @@ package org.egov.pgr.persistence.queue.contract;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import org.apache.commons.lang3.StringUtils;
+import lombok.*;
 import org.egov.pgr.domain.model.*;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Service request raised by the citizen
  */
-@Data
+@Getter
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
-@EqualsAndHashCode
 public class ServiceRequest {
+
+    private static final String LOCATION_ID = "locationId";
+    private static final String COMPLAINANT_ADDRESS = "complainantAddress";
+    private static final String RECEIVING_MODE = "receivingMode";
+    private static final String RECEIVING_CENTER = "receivingCenter";
+    private static final String USER_ID = "userId";
+
+    private String tenantId;
+
     @JsonProperty("service_request_id")
+    @Setter
     private String crn;
 
     @JsonProperty("status")
@@ -106,17 +115,22 @@ public class ServiceRequest {
         longitude = complaint.getComplaintLocation().getCoordinates().getLongitude();
         firstName = complaint.getComplainant().getFirstName();
         lastName = null;
-        phone = complaint.getComplainant().getPhone();
+        phone = complaint.getComplainant().getMobile();
         email = complaint.getComplainant().getEmail();
         values = complaint.getAdditionalValues();
     }
 
-    public Complaint toDomain(AuthenticatedUser authenticatedUser, String jurisdictionId) {
-        final Coordinates coordinates = new Coordinates(latitude, longitude);
-        final String locationId = Objects.isNull(values.get("location_id")) ? StringUtils.EMPTY : values.get("location_id");
-        final ComplaintLocation complaintLocation = new ComplaintLocation(coordinates, crossHierarchyId, locationId);
-        final String complainantAddress = Objects.isNull(values.get("complainantAddress")) ? StringUtils.EMPTY : values.get("complainantAddress");
-        final Complainant complainant = new Complainant(firstName, phone, email, complainantAddress);
+    public Complaint toDomainForCreateRequest(AuthenticatedUser authenticatedUser) {
+        return toDomain(authenticatedUser, false);
+    }
+
+    public Complaint toDomainForUpdateRequest(AuthenticatedUser authenticatedUser) {
+        return toDomain(authenticatedUser, true);
+    }
+
+    private Complaint toDomain(AuthenticatedUser authenticatedUser, boolean isUpdate) {
+        final ComplaintLocation complaintLocation = getComplaintLocation();
+        final Complainant complainant = getComplainant();
         return Complaint.builder()
                 .authenticatedUser(authenticatedUser)
                 .crn(crn)
@@ -126,10 +140,54 @@ public class ServiceRequest {
                 .mediaUrls(mediaUrls)
                 .complaintLocation(complaintLocation)
                 .complainant(complainant)
-                .tenantId(jurisdictionId)
+                .tenantId(tenantId)
                 .description(description)
+                .receivingMode(getReceivingMode())
+                .receivingCenter(getReceivingCenter())
+                .modifyComplaint(isUpdate)
                 .build();
 
+    }
+
+    private Complainant getComplainant() {
+        final String complainantAddress = getcomplainantAddress();
+        final String complainantUserId = getComplainantUserId();
+        return Complainant.builder()
+                .firstName(firstName)
+                .mobile(phone)
+                .email(email)
+                .userId(complainantUserId)
+                .address(complainantAddress)
+                .build();
+    }
+
+    private String getcomplainantAddress() {
+        return values.get(COMPLAINANT_ADDRESS);
+    }
+
+    private ComplaintLocation getComplaintLocation() {
+        final Coordinates coordinates = new Coordinates(latitude, longitude);
+        return ComplaintLocation.builder()
+                .coordinates(coordinates)
+                .crossHierarchyId(crossHierarchyId)
+                .locationId(getLocationId())
+                .build();
+    }
+
+    private String getLocationId() {
+        return values.get(LOCATION_ID);
+    }
+
+    private String getReceivingMode() {
+        return values.get(RECEIVING_MODE);
+    }
+
+    private String getReceivingCenter() {
+        return values.get(RECEIVING_CENTER);
+    }
+
+    private String getComplainantUserId() {
+        return values.get(USER_ID);
     }
 
 }

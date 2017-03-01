@@ -1,6 +1,6 @@
 package org.egov.pgr.domain.service;
 
-import org.egov.pgr.persistence.CrnRepository;
+import org.egov.pgr.persistence.repository.CrnRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

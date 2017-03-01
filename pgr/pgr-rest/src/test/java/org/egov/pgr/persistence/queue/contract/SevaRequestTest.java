@@ -22,36 +22,21 @@ public class SevaRequestTest {
         assertEquals(CRN, sevaRequest.getServiceRequest().getCrn());
     }
 
-    @Test
-    public void test_should_set_user_details_to_seva_request() {
-        final Complaint complaint = getComplaint();
-        final SevaRequest sevaRequest = getSevaRequest();
-
-        sevaRequest.update(complaint);
-
-        assertEquals("1", sevaRequest.getRequestInfo().getUserId());
-        assertEquals(UserType.CITIZEN.toString(), sevaRequest.getRequestInfo().getUserType());
-    }
-
-    @Test
-    public void test_should_set_tenant_id_to_seva_request() {
-        final Complaint complaint = getComplaint();
-        final SevaRequest sevaRequest = getSevaRequest();
-
-        sevaRequest.update(complaint);
-
-        assertEquals(TENANT_ID, sevaRequest.getRequestInfo().getTenantId());
-    }
-
-
     private Complaint getComplaint() {
         final AuthenticatedUser user = getAuthenticatedUser();
+        final Coordinates coordinates = new Coordinates(0d, 0d);
+        final ComplaintLocation complaintLocation = ComplaintLocation.builder()
+                .coordinates(coordinates)
+                .crossHierarchyId("id")
+                .build();
+
         return Complaint.builder()
                 .tenantId(TENANT_ID)
                 .authenticatedUser(user)
                 .complainant(Complainant.builder().build())
                 .crn(CRN)
-                .complaintLocation(new ComplaintLocation(new Coordinates(0d, 0d), "id", null))
+                .complaintLocation(complaintLocation)
+                .complaintType(new ComplaintType(null, null))
                 .build();
     }
 
@@ -63,10 +48,9 @@ public class SevaRequestTest {
     }
 
     private SevaRequest getSevaRequest() {
-        final SevaRequest sevaRequest = new SevaRequest();
-        sevaRequest.setRequestInfo(new RequestInfo());
-        sevaRequest.setServiceRequest(ServiceRequest.builder().build());
-        return sevaRequest;
+        final RequestInfo requestInfo = new RequestInfo();
+        final ServiceRequest serviceRequest = ServiceRequest.builder().build();
+        return new SevaRequest(requestInfo, serviceRequest);
     }
 
 }

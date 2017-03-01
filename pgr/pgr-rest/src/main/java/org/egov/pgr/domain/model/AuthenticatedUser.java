@@ -32,8 +32,12 @@ public class AuthenticatedUser {
         return getType() == UserType.CITIZEN;
     }
 
+    public boolean isEmployee() {
+        return getType() == UserType.EMPLOYEE;
+    }
+
     public Complainant toComplainant() {
-        return new Complainant(name, mobileNumber, emailId, null);
+        return new Complainant(name, mobileNumber, emailId, null, null);
     }
 }
 

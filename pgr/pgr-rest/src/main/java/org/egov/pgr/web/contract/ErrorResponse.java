@@ -1,6 +1,6 @@
 package org.egov.pgr.web.contract;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -9,11 +9,12 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 public class ErrorResponse {
-    @JsonProperty("response_info")
-    private ResponseInfo resposneInfo;
+    private ResponseInfo responseInfo;
+    private Error error;
 
-    @JsonProperty("errors")
-    private List<Error> errors;
-
+    @JsonIgnore
+    public List<ErrorField> getErrorFields() {
+        return error.getFields();
+    }
 }
 

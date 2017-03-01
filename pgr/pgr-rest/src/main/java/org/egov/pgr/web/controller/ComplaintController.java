@@ -17,7 +17,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -38,11 +37,10 @@ public class ComplaintController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ServiceResponse createServiceRequest(@RequestParam("jurisdiction_id") String jurisdictionId,
-                                                @Valid @RequestBody SevaRequest request) {
+    public ServiceResponse createServiceRequest(@RequestBody SevaRequest request) {
         RequestInfo requestInfo = request.getRequestInfo();
         final AuthenticatedUser user = userService.getUser(requestInfo.getAuthToken());
-        final Complaint complaint = request.toDomain(user, jurisdictionId);
+        final Complaint complaint = request.toDomainForCreateRequest(user);
         complaintService.save(complaint, request);
         ResponseInfo responseInfo = getResponseInfo(requestInfo);
         return new ServiceResponse(responseInfo, Collections.singletonList(new ServiceRequest(complaint)));
@@ -50,11 +48,10 @@ public class ComplaintController {
 
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
-    public ServiceResponse updateServiceRequest(@RequestParam("jurisdiction_id") String jurisdictionId,
-                                                @Valid @RequestBody SevaRequest request) {
+    public ServiceResponse updateServiceRequest(@RequestBody SevaRequest request) {
         RequestInfo requestInfo = request.getRequestInfo();
         final AuthenticatedUser user = userService.getUser(requestInfo.getAuthToken());
-        final Complaint complaint = request.toDomain(user, jurisdictionId);
+        final Complaint complaint = request.toDomainForUpdateRequest(user);
         complaintService.update(complaint, request);
         ResponseInfo responseInfo = getResponseInfo(requestInfo);
         return new ServiceResponse(responseInfo, Collections.singletonList(new ServiceRequest(complaint)));

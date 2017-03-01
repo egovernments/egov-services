@@ -11,10 +11,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import static org.springframework.util.StringUtils.isEmpty;
+
 @AllArgsConstructor
 @Builder
 @Getter
 public class Complaint {
+    private static final String MANUAL_RECEIVING_MODE = "MANUAL";
     @NonNull
     private AuthenticatedUser authenticatedUser;
     @NonNull
@@ -23,7 +26,9 @@ public class Complaint {
     private Complainant complainant;
     private String crn;
     private Map<String, String> additionalValues;
+    @NonNull
     private ComplaintType complaintType;
+    private String complaintStatus;
     private String address;
     private List<String> mediaUrls;
     private String tenantId;
@@ -32,27 +37,91 @@ public class Complaint {
     private Date lastModifiedDate;
     private Date escalationDate;
     private boolean closed;
+    private boolean modifyComplaint;
+    private String receivingMode;
+    private String receivingCenter;
 
-    public Complainant getComplainant() {
-        return authenticatedUser.isCitizen() ? authenticatedUser.toComplainant() : complainant;
+    public boolean isComplainantAbsent() {
+        if (authenticatedUser.isAnonymousUser() || authenticatedUser.isEmployee()) {
+            return complainant.isAbsent();
+        }
+        return complainant.isUserIdAbsent();
     }
 
-    public boolean isMandatoryFieldsAbsentForAnonymousComplaint() {
-        return authenticatedUser.isAnonymousUser() && complainant.isAbsent();
+    public boolean isComplainantEmailAbsent() {
+        return complainant.isEmailAbsent();
+    }
+
+    public boolean isComplainantPhoneAbsent() {
+        return complainant.isMobileAbsent();
+    }
+
+    public boolean isComplainantFirstNameAbsent() {
+        return complainant.isFirstNameAbsent();
+    }
+
+    public boolean isComplainantIdAbsent() {
+        return complainant.isUserIdAbsent();
     }
 
     public boolean isLocationAbsent() {
-        return complaintLocation.isAbsent();
+        if (isModifyComplaint()) {
+            return complaintLocation.isLocationIdAbsent();
+        }
+        return complaintLocation.isRawLocationAbsent();
+    }
+
+    public boolean isLocationIdAbsent() {
+        return complaintLocation.isLocationIdAbsent();
+    }
+
+    public boolean isRawLocationAbsent() {
+        return complaintLocation.isRawLocationAbsent();
     }
 
     public void validate() {
-        if (isLocationAbsent() || isMandatoryFieldsAbsentForAnonymousComplaint()) {
+        if (isLocationAbsent()
+                || isComplainantAbsent()
+                || isTenantIdAbsent()
+                || isComplaintTypeAbsent()
+                || isDescriptionAbsent()
+                || isCrnAbsent()
+                || isReceivingCenterAbsent()
+                || isReceivingModeAbsent()) {
             throw new InvalidComplaintException(this);
         }
+    }
+
+    public boolean isTenantIdAbsent() {
+        return isEmpty(tenantId);
+    }
+
+    public boolean isDescriptionAbsent() {
+        return isEmpty(description);
+    }
+
+    public boolean isComplaintTypeAbsent() {
+        return complaintType.isAbsent();
+    }
+
+    public boolean isCrnAbsent() {
+        return isModifyComplaint() && isEmpty(crn);
     }
 
     public void setCrn(String crn) {
         this.crn = crn;
     }
+
+
+    public boolean isReceivingModeAbsent() {
+        return authenticatedUser.isEmployee() && isEmpty(receivingMode);
+    }
+
+    public boolean isReceivingCenterAbsent() {
+        return authenticatedUser.isEmployee()
+                && MANUAL_RECEIVING_MODE.equalsIgnoreCase(receivingMode)
+                && isEmpty(receivingCenter);
+    }
+
 }
 

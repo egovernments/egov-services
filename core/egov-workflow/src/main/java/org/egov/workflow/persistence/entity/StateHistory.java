@@ -61,7 +61,12 @@ import javax.validation.constraints.NotNull;
 import org.egov.workflow.web.contract.Attribute;
 import org.hibernate.annotations.Immutable;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+
 @Entity
+@Builder
+@AllArgsConstructor
 @Immutable
 @Table(name = "eg_wf_state_history")
 @SequenceGenerator(name = StateHistory.SEQ_STATEHISTORY, sequenceName = StateHistory.SEQ_STATEHISTORY, allocationSize = 1)

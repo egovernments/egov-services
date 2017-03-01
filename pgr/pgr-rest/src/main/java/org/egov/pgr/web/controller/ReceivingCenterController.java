@@ -19,7 +19,7 @@ public class ReceivingCenterController {
 
 	@GetMapping
 	public List<ReceivingCenter> getAllReceivingCenters(@RequestParam String tenantId) {
-		return receivingCenterService.getAllReceivingCenters();
+		return receivingCenterService.getAllReceivingCenters(tenantId);
 	}
 
 }

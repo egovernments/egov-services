@@ -53,7 +53,7 @@ public class ReceivingModeService {
     @Autowired
     private ReceivingModeRepository receivingModeRepository;
 
-    public List<ReceivingMode> getAllReceivingModes() {
+    public List<ReceivingMode> getAllReceivingModes(String tenantId) {
         return receivingModeRepository.findAll();
     }
 }

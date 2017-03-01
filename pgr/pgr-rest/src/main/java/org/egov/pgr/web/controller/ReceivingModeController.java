@@ -19,7 +19,7 @@ public class ReceivingModeController {
 
 	@GetMapping
 	public List<ReceivingMode> getAll(@RequestParam String tenantId) {
-		return receivingModeService.getAllReceivingModes();
+		return receivingModeService.getAllReceivingModes(tenantId);
 	}
 
 }

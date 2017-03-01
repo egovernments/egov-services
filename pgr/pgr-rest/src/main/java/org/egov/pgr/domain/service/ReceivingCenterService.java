@@ -57,7 +57,7 @@ public class ReceivingCenterService {
 		this.receivingCenterRepository = receivingCenterRepository;
 	}
 
-	public List<ReceivingCenter> getAllReceivingCenters() {
+	public List<ReceivingCenter> getAllReceivingCenters(String tenantId) {
 		return receivingCenterRepository.findAll();
 	}
 }

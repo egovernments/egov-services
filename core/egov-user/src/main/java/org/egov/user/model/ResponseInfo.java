@@ -22,7 +22,9 @@ public class ResponseInfo {
 
 	@JsonProperty("status")
 	private String status = null;
-
+	
+	public ResponseInfo() {
+	}
 	public ResponseInfo apiId(String apiId) {
 		this.apiId = apiId;
 		return this;

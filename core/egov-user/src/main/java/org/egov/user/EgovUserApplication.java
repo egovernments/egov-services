@@ -13,6 +13,7 @@ import org.springframework.security.oauth2.provider.token.store.redis.RedisToken
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+
 import redis.clients.jedis.JedisShardInfo;
 
 @SpringBootApplication

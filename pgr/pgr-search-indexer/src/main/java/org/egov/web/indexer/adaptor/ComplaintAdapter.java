@@ -11,13 +11,15 @@ import org.egov.web.indexer.contract.Assignment;
 import org.egov.web.indexer.contract.Boundary;
 import org.egov.web.indexer.contract.City;
 import org.egov.web.indexer.contract.ComplaintType;
+import org.egov.web.indexer.contract.Employee;
 import org.egov.web.indexer.contract.ServiceRequest;
-import org.egov.web.indexer.repository.AssignmentRepository;
 import org.egov.web.indexer.repository.BoundaryRepository;
 import org.egov.web.indexer.repository.CityRepository;
 import org.egov.web.indexer.repository.ComplaintTypeRepository;
+import org.egov.web.indexer.repository.EmployeeRepository;
 import org.egov.web.indexer.repository.contract.ComplaintIndex;
 import org.egov.web.indexer.repository.contract.GeoPoint;
+import org.joda.time.LocalDate;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,16 +31,16 @@ public class ComplaintAdapter {
 	private BoundaryRepository boundaryRepository;
 	private ComplaintTypeRepository complaintTypeRepository;
 	private CityRepository cityRepository;
-	private AssignmentRepository assignmentRepository;
+	private EmployeeRepository employeeRepository;
 
 	public ComplaintAdapter(IndexerProperties propertiesManager, BoundaryRepository boundaryRepository,
 			ComplaintTypeRepository complaintTypeRepository, CityRepository cityRepository,
-			AssignmentRepository assignmentRepository) {
+			EmployeeRepository employeeRepository) {
 		this.propertiesManager = propertiesManager;
 		this.boundaryRepository = boundaryRepository;
 		this.complaintTypeRepository = complaintTypeRepository;
 		this.cityRepository = cityRepository;
-		this.assignmentRepository = assignmentRepository;
+		this.employeeRepository = employeeRepository;
 	}
 
 	public ComplaintIndex indexOnCreate(ServiceRequest serviceRequest) {
@@ -65,23 +67,20 @@ public class ComplaintAdapter {
 
 		InitializeComplaintTypeDetails(complaintIndex, serviceRequest.getComplaintTypeCode(), serviceRequest.getLat(),
 				serviceRequest.getLng());
-		// Need to read from service request - citizenfeedback
-		complaintIndex.setSatisfactionIndex(0);
 
 		// Reading from serviceRequest values map
 		Map<String, String> values = serviceRequest.getValues();
 		complaintIndex.setComplaintStatusName(values.get("complaintStatus"));
+		complaintIndex.setSatisfactionIndex(Double.valueOf(values.get("citizenFeedback")));
 
-		// Need to get escalation no of hrs based on complainttype and
-		// designation from values map
-		complaintIndex.setInitialFunctionarySLADays(0);
-		complaintIndex.setCurrentFunctionarySLADays(0);
+		complaintIndex.setInitialFunctionarySLADays(Long.valueOf(values.get("escalationHours")));
+		complaintIndex.setCurrentFunctionarySLADays(Long.valueOf(values.get("escalationHours")));
 
 		complaintIndex.setSource(propertiesManager.getProperty(String.format("complaint.source.%s.%s",
 				values.get("userType").toLowerCase(), values.get("receivingMode").toLowerCase())));
 		InitializeBoundaryDetails(complaintIndex, values.get("locationId"), values.get("childLocationId"));
 		InitializeCityDetails(complaintIndex, values.get("tenantId"));
-		InitializeAssignmentDetails(complaintIndex, values.get("assignmentId"));
+		InitializeEmployeeDetails(complaintIndex, values.get("assignmentId"), values.get("tenantId"));
 
 		// Default values set
 		complaintIndex.setClosed(false);
@@ -114,9 +113,6 @@ public class ComplaintAdapter {
 
 	public void InitializeComplaintTypeDetails(ComplaintIndex complaintIndex, String complaintTypeCode, Double lat,
 			Double lng) {
-		// calls complaintTypeRepository : Get slahours from complaintype based
-		// on
-		// code
 		ComplaintType ctype = complaintTypeRepository.fetchComplaintTypeByCode(complaintTypeCode);
 		if (Objects.nonNull(lat) && Objects.nonNull(lng)) {
 			complaintIndex.setComplaintSLADays(ctype.getSlaHours());
@@ -142,7 +138,6 @@ public class ComplaintAdapter {
 	}
 
 	public void InitializeCityDetails(ComplaintIndex complaintIndex, String tenantId) {
-		// read tenantid from value map
 		City city = cityRepository.fetchCityById(Long.valueOf(tenantId));
 		if (city != null) {
 			complaintIndex.setCityCode(city.getCode());
@@ -155,22 +150,28 @@ public class ComplaintAdapter {
 		}
 	}
 
-	public void InitializeAssignmentDetails(ComplaintIndex complaintIndex, String assignmentId) {
+	public void InitializeEmployeeDetails(ComplaintIndex complaintIndex, String assignmentId, String tenantId) {
 		complaintIndex.setAssigneeId(Long.valueOf(assignmentId));
-		// read assignmentid from value map
-		Assignment assignment = assignmentRepository.fetchAssignmentById(Long.valueOf(assignmentId));
-		if (assignment != null) {
-			complaintIndex.setAssigneeName(assignment.getName());
-			complaintIndex.setDepartmentName(assignment.getDepartmentName());
-			complaintIndex.setDepartmentCode(assignment.getDepartmentCode());
-			complaintIndex.setInitialFunctionaryName(assignment.getName() + " : " + assignment.getDesignationName()
-					+ " : " + NOASSIGNMENT + " : " + assignment.getDesignationName());
-			complaintIndex.setCurrentFunctionaryName(assignment.getName() + " : " + assignment.getDesignationName()
-					+ " : " + NOASSIGNMENT + " : " + assignment.getDesignationName());
+		Employee employee = employeeRepository.fetchEmployeeByPositionId(Long.valueOf(assignmentId), new LocalDate(),
+				tenantId);
+		if (employee != null) {
+			complaintIndex.setAssigneeName(employee.getName());
 			complaintIndex.setCurrentFunctionaryMobileNumber(
-					assignment.getMobileNumber() != null ? assignment.getMobileNumber() : "");
+					employee.getMobileNumber() != null ? employee.getMobileNumber() : "");
 			complaintIndex.setInitialFunctionaryMobileNumber(
-					assignment.getMobileNumber() != null ? assignment.getMobileNumber() : "");
+					employee.getMobileNumber() != null ? employee.getMobileNumber() : "");
+			if (!employee.getAssignments().isEmpty()) {
+				Assignment assignment = employee.getAssignments().get(0);
+				complaintIndex.setDepartmentName(assignment.getDepartment().getName());
+				complaintIndex.setDepartmentCode(assignment.getDepartment().getCode());
+				complaintIndex
+						.setInitialFunctionaryName(employee.getName() + " : " + assignment.getDesignation().getName()
+								+ " : " + NOASSIGNMENT + " : " + assignment.getDesignation().getName());
+				complaintIndex
+						.setCurrentFunctionaryName(employee.getName() + " : " + assignment.getDesignation().getName()
+								+ " : " + NOASSIGNMENT + " : " + assignment.getDesignation().getName());
+			}
+
 		}
 	}
 }

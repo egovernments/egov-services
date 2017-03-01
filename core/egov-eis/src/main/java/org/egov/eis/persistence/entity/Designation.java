@@ -57,6 +57,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.Pattern;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import org.egov.eis.persistence.regex.Constants;
 import org.hibernate.annotations.NamedQuery;
 import org.hibernate.validator.constraints.NotBlank;
@@ -66,6 +68,7 @@ import org.hibernate.validator.constraints.SafeHtml;
 @Table(name = "eg_designation")
 @SequenceGenerator(name = Designation.SEQ_DESIGNATION, sequenceName = Designation.SEQ_DESIGNATION, allocationSize = 1)
 @NamedQuery(name = "getDesignationForListOfDesgNames", query = "from Designation where trim(upper(name)) in(:param_0)")
+@JsonIgnoreProperties(value = { "handler", "hibernateLazyInitializer" })
 public class Designation extends AbstractAuditable {
 
 	public static final String SEQ_DESIGNATION = "SEQ_EG_DESIGNATION";

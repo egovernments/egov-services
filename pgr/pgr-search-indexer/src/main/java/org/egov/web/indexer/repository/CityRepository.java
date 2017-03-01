@@ -19,10 +19,10 @@ public class CityRepository {
 
 	public City fetchCityById(Long id) {
 		String url = this.cityServiceHost + "/v1/location/city/getCitybyCityRequest?city.id={id}";
-		return getBoundaryServiceResponse(url, id).getCity();
+		return getCityServiceResponse(url, id).getCity();
 	}
 
-	private CityResponse getBoundaryServiceResponse(final String url, Long id) {
+	private CityResponse getCityServiceResponse(final String url, Long id) {
 		return restTemplate.getForObject(url, CityResponse.class, id);
 	}
 

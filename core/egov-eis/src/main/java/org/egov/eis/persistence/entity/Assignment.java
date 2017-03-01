@@ -80,7 +80,6 @@ public class Assignment extends AbstractAuditable {
 	private Long fund;
 	private Long function;
 
-	@JsonIgnore
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "designation")

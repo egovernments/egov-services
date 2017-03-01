@@ -59,7 +59,7 @@ public class StateServiceTest {
 
 		when(stateRepository.save(state)).thenReturn(expectedState);
 
-		State actualState = stateService.create(state);
+		State actualState = stateService.update(state);
 		assertEquals(expectedState, actualState);
 	}
 

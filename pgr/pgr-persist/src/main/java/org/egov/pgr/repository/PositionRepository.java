@@ -9,19 +9,27 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class PositionRepository {
 
-    private RestTemplate restTemplate;
-    private PersistenceProperties persistenceProperties;
+	private RestTemplate restTemplate;
+	private PersistenceProperties persistenceProperties;
 
-    @Autowired
-    public PositionRepository(RestTemplate restTemplate, PersistenceProperties persistenceProperties) {
-        this.restTemplate = restTemplate;
-        this.persistenceProperties = persistenceProperties;
-    }
+	@Autowired
+	public PositionRepository(RestTemplate restTemplate, PersistenceProperties persistenceProperties) {
+		this.restTemplate = restTemplate;
+		this.persistenceProperties = persistenceProperties;
+	}
 
-    public Long designationIdForAssignee(String tenantId, Long assigneeId) {
-        String positionServiceEndpoint = this.persistenceProperties.getPositionServiceEndpoint();
-        PositionsResponse response = restTemplate.getForObject(positionServiceEndpoint, PositionsResponse.class, tenantId, assigneeId);
-        return response.getPositions().get(0).getDepartmentDesignation().getDesignation().getId();
-    }
+	public Long designationIdForAssignee(String tenantId, Long assigneeId) {
+		String positionServiceEndpoint = this.persistenceProperties.getPositionServiceEndpoint();
+		PositionsResponse response = restTemplate.getForObject(positionServiceEndpoint, PositionsResponse.class,
+				tenantId, assigneeId);
+		return response.getPositions().get(0).getDepartmentDesignation().getDesignation().getId();
+	}
+
+	public Long departmentIdForAssignee(String tenantId, Long assigneeId) {
+		String positionServiceEndpoint = this.persistenceProperties.getPositionServiceEndpoint();
+		PositionsResponse response = restTemplate.getForObject(positionServiceEndpoint, PositionsResponse.class,
+				tenantId, assigneeId);
+		return response.getPositions().get(0).getDepartmentDesignation().getDepartment().getId();
+	}
 
 }

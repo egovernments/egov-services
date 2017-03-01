@@ -33,7 +33,7 @@ public class GrievancePersistenceListener {
     public GrievancePersistenceListener(ComplaintTypeService complaintTypeService, ComplaintStatusService complaintStatusService,
                                         ComplaintService complaintService, EscalationService escalationService,
                                         GrievanceProducer grievanceProducer, PositionRepository positionRepository,
-                                        TemplateService templateService) {
+                                        TemplateService templateService,PersistenceProperties persistenceProperties) {
         this.complaintService = complaintService;
         this.complaintTypeService = complaintTypeService;
         this.complaintStatusService = complaintStatusService;
@@ -42,6 +42,7 @@ public class GrievancePersistenceListener {
         this.kafkaProducer = grievanceProducer;
         this.positionRepository = positionRepository;
         this.templateService = templateService;
+        this.persistenceProperties = persistenceProperties;
     }
 
     @KafkaListener(id = "${kafka.topics.pgr.workflowupdated.id}",

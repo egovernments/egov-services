@@ -60,7 +60,6 @@ public class DeptDesig extends AbstractAuditable {
     @JoinColumn(name = "designation")
     private Designation designation;
 
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department")
     private Department department;

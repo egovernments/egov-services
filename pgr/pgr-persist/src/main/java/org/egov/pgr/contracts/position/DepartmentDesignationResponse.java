@@ -6,10 +6,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DepartmentDesignationResponse {
 
-    @JsonProperty("designation")
-    private DesignationResponse designation;
+	@JsonProperty("designation")
+	private DesignationResponse designation;
 
-    public DesignationResponse getDesignation() {
-        return designation;
-    }
+	@JsonProperty("department")
+	private DepartmentResponse department;
+
+	public DesignationResponse getDesignation() {
+		return designation;
+	}
+
+	public DepartmentResponse getDepartment() {
+		return department;
+	}
 }

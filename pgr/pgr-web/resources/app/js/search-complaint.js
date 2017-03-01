@@ -37,15 +37,26 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
- $(document).ready(
-		function() {
-			if ($('#isMore').val() == "true") {
-				$(".form-group.show-searchcomp-more.display-hide").removeClass("display-hide");
-			}
-		});
- 
-var tableContainer;
-	
+ var loadDD = new $.loadDD();
+ var tableContainer = $("#complaintSearchResults");
+ $(document).ready(function() {
+
+	$.when(
+		
+		/*Show loader*/
+		showLoader(),
+
+		//load receiving mode
+		loadReceivingMode(),
+
+		/*load complaint types*/
+		complaintType()
+
+	).then(function() {
+		//Hide Loader
+		hideLoader();
+	});
+
     $('#toggle-searchcomp').click(function () {
         if ($(this).html() == "More..") {
             $(this).html('Less..');
@@ -56,79 +67,169 @@ var tableContainer;
 		}
 		
 	});
-    
-    function validateEmail($email) {
-	  var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
-	  return emailReg.test( $email );
-	}
-    
-    tableContainer1 = $("#complaintSearchResults"); 
-    
-    $('#searchComplaints').click(function () {
-    	
-    	if(DateValidation($('#start_date').val(), $('#end_date').val())){
-    		
-    		if( validateEmail($('#ct-email').val())) { 
-    			var urlStr="";
-            	if($('#currentLoggedUser').val()=='anonymous'){
-            		//bootbox.alert(" citizen");
-               		urlStr="/pgr/complaint/citizen/anonymous/search";
-            	}
-            	else{
-            		urlStr="/pgr/complaint/search";
-            	}
-            	
-        	//	$.post("/pgr/complaint/citizen/anonymous/search", $('#searchComplaintForm').serialize())
-            	$.post(urlStr,$('#searchComplaintForm').serialize())
-            	.done(function (searchResult) {
-        			console.log(JSON.stringify(searchResult));
-        			
-        			tableContainer1 = $('#complaintSearchResults').dataTable({
-        				destroy:true,
-        				//"sDom": "<'row'<'col-xs-12 hidden col-right'f>r>t<'row'<'col-md-6 col-xs-12'i><'col-md-3 col-xs-6'l><'col-md-3 col-xs-6 text-right'p>>",
-        				"sDom": "<'row'<'col-xs-12 hidden col-right'f>r>t<'row'<'col-xs-6 col-md-3 col-left'i><'col-xs-6 col-md-3 text-right col-left'l><'col-xs-12 col-md-3 col-right'<'export-data'T>><'col-xs-12 col-md-3 col-right'p>>",
-        				"aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-        				"autoWidth": false,
-        				"oTableTools": {
-        					"sSwfPath": "../../../../../../egi/resources/global/swf/copy_csv_xls_pdf.swf",
-        					"aButtons": [
-        					             { "sExtends": "xls",
-        					                 "mColumns": [0,1,2, 3, 4,5.6]},
-        					             { "sExtends": "pdf",
-        					                 "mColumns": [0,1,2, 3, 4,5.6]},
-        					             { "sExtends": "print",
-        					                 "mColumns": [0,1,2, 3, 4,5.6]},
-        					             ]
-        				},
-        				searchable:true,
-        				data: searchResult.content,
-        				columns: [
-        				{title: 'Complaint Number', data: 'crn'},
-        				{title: 'Grievance Type', data: 'complaintTypeName'},
-        				{title: 'Name', data: 'complainantName'},
-        				{title: 'Location', data: 'wardName'},
-        				{title: 'Status', data: 'complaintStatusName'},
-        				{title: 'Department', data: 'departmentName'},
-        				{title: 'Registration Date',
-        					render: function (data, type, full) {
-        						if(full!=null && full!= undefined && full.createdDate != undefined) {
-        							var regDateSplit = full.createdDate.split("T")[0].split("-");		
-        							return regDateSplit[2] + "/" + regDateSplit[1] + "/" + regDateSplit[0];
-        						}
-        						else return "";
-        			    	}
-        				},
-        				{data:'assigneeId',visible: false}
-        				]
-        			});
-        		});
-    		}else{
-    			bootbox.alert('Enter valid Email ID!');
-    		}
-    	}
+
+	$("#when_date").change(function () {
+        populatedate($('#when_date').val());
 	});
     
-   tableContainer = $("#csearch").dataTable({
+    $('#searchComplaints').click(function () {
+
+    	var formData = $("form :input")
+	    .filter(function(index, element) {
+	        return $(element).val() != "";
+	    }).serialize();// does the job!
+
+	    if(formData.length == 0){
+	    	bootbox.alert('Atleast one search criteria is required!');
+	    	return;
+	    }
+
+	    var searchURL = '/pgr/seva?jurisdiction_id=2&'+formData;
+    	var headers = new $.headers();
+
+    	tableContainer = $("#complaintSearchResults").DataTable( {
+    		"ajax": {
+	            "url": searchURL,
+	            headers : headers.header,
+	            "dataSrc": "service_requests",
+	            beforeSend : function(){
+					showLoader();
+				},
+				error: function(){
+					bootbox.alert('Error loading data!')
+				},
+				complete : function(){
+					hideLoader();
+				}
+	        },
+			destroy:true,
+			autoWidth: false,
+			dom: "<'row'<'col-xs-12 pull-right'f>r>t<'row buttons-margin'<'col-md-3 col-xs-6'i><'col-md-3  col-xs-6'l><'col-md-3 col-xs-6'B><'col-md-3 col-xs-6 text-right'p>>",
+			buttons: [
+			    'excel','print',
+			    {
+				    extend: 'pdf',
+				    filename: 'Grievance List',
+				    pageSize : 'LEGAL',
+			        orientation : 'landscape',
+				    exportOptions: {
+				        columns: ':visible',
+				    }
+				}
+			],
+			columns: [
+				{title: 'Complaint Number', data: 'service_request_id'},
+				{title: 'Grievance Type', data: 'service_name'},
+				{title: 'Name', data: 'first_name'},
+				{title: 'Location', data: 'values.LocationName'},
+				{title: 'Status', data: 'values.ComplaintStatus'},
+				{title: 'Department', data: 'departmentName'},
+				{title: 'Registration Date', data : 'requested_datetime'}
+			]
+	    });
+
+	});
+
+});
+
+$("#complaintSearchResults").on('click','tbody tr',function(event) {
+	var srn = tableContainer.row( this ).data().service_request_id;
+	openPopUp('view-complaint.html?srn='+srn, srn);
+});
+ 
+function populatedate(id) {
+    var d = new Date();
+    var quarter = getquarter(d);
+    var start, end;
+    switch (id) {
+		
+		case "lastsevendays":
+		$("#end_date").datepicker("setDate", d);
+		start = new Date(d.setDate((d.getDate() - 7)));
+		var start = new Date(start.getFullYear(), start.getMonth(), start.getDate());
+		$("#start_date").datepicker("setDate", start);
+		break;
+		
+		case "lastthirtydays":
+		$("#end_date").datepicker("setDate", d);
+		start = new Date(d.setDate((d.getDate() - 30)));
+		var start = new Date(start.getFullYear(), start.getMonth(), start.getDate());
+		$("#start_date").datepicker("setDate", start);
+		break;
+		
+		case "lastninetydays":
+		$("#end_date").datepicker("setDate", d);
+		start = new Date(d.setDate((d.getDate() - 90)));
+		var start = new Date(start.getFullYear(), start.getMonth(), start.getDate());
+		$("#start_date").datepicker("setDate", start);
+		break;
+		
+		case "today":
+		$("#end_date").datepicker("setDate", d);
+		$("#start_date").datepicker("setDate", d);
+		break;
+		
+		case "all":
+		$("#end_date").val("");
+		$("#start_date").val("");
+		break;
+		
+	}
+}
+
+function getquarter(d) {
+	if (d.getMonth() >= 0 && d.getMonth() <= 2) {
+        quarter = 4;
+		} else if (d.getMonth() >= 3 && d.getMonth() <= 5) {
+        quarter = 1;
+		} else if (d.getMonth() >= 6 && d.getMonth() <= 8) {
+		quarter = 2;
+		} else if (d.getMonth() >= 9 && d.getMonth() <= 11) {
+		quarter = 3;
+	}
+	
+    return quarter;
+}
+
+function loadReceivingMode(){
+	$.ajax({
+		url : "/pgr/receivingmode?tenantId=ap.public",
+		success : function(response){
+			loadDD.load({
+				element:$('#receivingMode'),
+				data:response,
+				keyValue:'code',
+				keyDisplayName:'name'
+			});
+		},
+		error: function(){
+			bootbox.alert('Receiving mode failed!')
+		}
+	});
+}
+
+function complaintType(){
+	$.ajax({
+		url: "/pgr/services?type=all&tenantId=ap.public",
+	}).done(function(data) {
+		loadDD.load({
+			element:$('#complaintType'),
+			data:data,
+			keyValue:'serviceCode',
+			keyDisplayName:'serviceName'
+		});
+	});
+}
+	
+    
+    /*function validateEmail($email) {
+	  var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+	  return emailReg.test( $email );
+	}*/
+    
+    
+    
+   /*tableContainer = $("#csearch").dataTable({
 		"sDom": "<'row'<'col-xs-12 hidden col-right'f>r>t<'row'<'col-md-6 col-xs-12'i><'col-md-3 col-xs-6'l><'col-md-3 col-xs-6 text-right'p>>",
 		//"sDom": "<'row'<'col-xs-12 hidden col-right'f>r>t<'row'<'col-xs-6 col-md-3 col-left'i><'col-xs-6 col-md-3 text-right col-left'l><'col-xs-12 col-md-3 col-right'<'export-data'T>><'col-xs-12 col-md-3 col-right'p>>",
 		"aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
@@ -137,13 +238,13 @@ var tableContainer;
 			"sSwfPath": "../../../../../../egi/resources/global/swf/copy_csv_xls_pdf.swf",
 			"aButtons": ["copy", "csv", "xls", "pdf", "print"]
 		}
-	});
+	});*/
 	
 	/*tableContainer.columnFilter({
 		"sPlaceHolder": "head:after"
 	});*/
 	
-	$("#complaintSearchResults").on('click','tbody tr',function(event) {
+	/*$("#complaintSearchResults").on('click','tbody tr',function(event) {
 		
 		//bootbox.alert(tableContainer1.fnGetData(this,0));
 		var crn=tableContainer1.fnGetData(this,0);
@@ -157,65 +258,7 @@ var tableContainer;
 			window.open("/pgr/complaint/update/"+crn);
 		else
 			window.open("/pgr/complaint/view/"+crn);
-	});
-	
-    $("#when_date").change(function () {
-        populatedate($('#when_date').val());
-	});
-	
-    function populatedate(id) {
-        var d = new Date();
-        var quarter = getquarter(d);
-        var start, end;
-        switch (id) {
-			
-			case "lastsevendays":
-			$("#end_date").datepicker("setDate", d);
-			start = new Date(d.setDate((d.getDate() - 7)));
-			var start = new Date(start.getFullYear(), start.getMonth(), start.getDate());
-			$("#start_date").datepicker("setDate", start);
-			break;
-			
-			case "lastthirtydays":
-			$("#end_date").datepicker("setDate", d);
-			start = new Date(d.setDate((d.getDate() - 30)));
-			var start = new Date(start.getFullYear(), start.getMonth(), start.getDate());
-			$("#start_date").datepicker("setDate", start);
-			break;
-			
-			case "lastninetydays":
-			$("#end_date").datepicker("setDate", d);
-			start = new Date(d.setDate((d.getDate() - 90)));
-			var start = new Date(start.getFullYear(), start.getMonth(), start.getDate());
-			$("#start_date").datepicker("setDate", start);
-			break;
-			
-			case "today":
-			$("#end_date").datepicker("setDate", d);
-			$("#start_date").datepicker("setDate", d);
-			break;
-			
-			case "all":
-			$("#end_date").val("");
-			$("#start_date").val("");
-			break;
-			
-		}
-	}
-	
-	function getquarter(d) {
-		if (d.getMonth() >= 0 && d.getMonth() <= 2) {
-            quarter = 4;
-			} else if (d.getMonth() >= 3 && d.getMonth() <= 5) {
-            quarter = 1;
-			} else if (d.getMonth() >= 6 && d.getMonth() <= 8) {
-			quarter = 2;
-			} else if (d.getMonth() >= 9 && d.getMonth() <= 11) {
-			quarter = 3;
-		}
-		
-        return quarter;
-	}
+	});*/
 	
 	/*$(".checkdate").focus(function () {
 		
@@ -226,7 +269,7 @@ var tableContainer;
 		
 	});*/
 	
-	$("form").submit(function(event){
+	/*$("form").submit(function(event){
 		if($("select#when_date option:selected").index() == 0){
 			
 			}else{
@@ -250,9 +293,9 @@ var tableContainer;
 			
 			event.preventDefault();
 		}
-	});
+	});*/
 	
-	$("#region").dataTable({
+	/*$("#region").dataTable({
 		"sDom": "<'row'<'col-xs-12 hidden col-right'f>r>t<'row'<'col-md-3 col-xs-12'i><'col-md-3 col-xs-6 col-right'l><'col-xs-12 col-md-3 col-right'<'export-data'T>><'col-md-3 col-xs-6 text-right'p>>",
 		//"sDom": "<'row'<'col-xs-12 hidden col-right'f>r>t<'row'<'col-xs-6 col-md-3 col-left'i><'col-xs-6 col-md-3 text-right col-left'l><'col-xs-12 col-md-3 col-right'<'export-data'T>><'col-xs-12 col-md-3 col-right'p>>",
 		"aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
@@ -275,10 +318,10 @@ var tableContainer;
 			return formatNumberInr(data);
 		      }
 		} ]
-	});
+	});*/
 	
 	
-	$("#department").dataTable({
+	/*$("#department").dataTable({
 		"sDom": "<'row'<'col-xs-12 hidden col-right'f>r>t<'row'<'col-md-3 col-xs-12'i><'col-md-3 col-xs-6 col-right'l><'col-xs-12 col-md-3 col-right'<'export-data'T>><'col-md-3 col-xs-6 text-right'p>>",
 		//"sDom": "<'row'<'col-xs-12 hidden col-right'f>r>t<'row'<'col-xs-6 col-md-3 col-left'i><'col-xs-6 col-md-3 text-right col-left'l><'col-xs-12 col-md-3 col-right'<'export-data'T>><'col-xs-12 col-md-3 col-right'p>>",
 		"aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
@@ -301,11 +344,11 @@ var tableContainer;
 			return formatNumberInr(data);
 		      }
 		} ]
-	});
+	});*/
 
-    $('#department_wrapper').hide();
+    /*$('#department_wrapper').hide();*/
     
-    $('#region a').click(function(e){
+    /*$('#region a').click(function(e){
        $('#region_wrapper').hide();
        $('#department_wrapper').show();
        $('.panel-title').html('Department Wise Report');
@@ -402,12 +445,12 @@ var tableContainer;
         $( api.column( colidx ).footer() ).html(
             '<b>'+formatNumberInr(pageTotal) +' ('+ formatNumberInr(total) +')</b>'
         );
-    }
+    }*/
 
 
 
 //inr formatting number
-function formatNumberInr(x){
+/*function formatNumberInr(x){
 	   if(x)
 	   {
 			x=x.toString();
@@ -424,5 +467,5 @@ function formatNumberInr(x){
 		    return res;
 	   }
 	   return x;
-}
+}*/
 						

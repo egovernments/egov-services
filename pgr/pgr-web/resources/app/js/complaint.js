@@ -37,6 +37,7 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
+var type = localStorage.getItem("type");
 var loadDD = new $.loadDD();
 $(document).ready(function()
 {
@@ -45,6 +46,10 @@ $(document).ready(function()
 		
 		/*Show loader*/
 		showLoader(),
+
+		loadBasedonType(),
+
+		loadReceivingMode(),
 
 		/*load grievance  category*/
 		complaintCategory(),
@@ -104,14 +109,31 @@ $(document).ready(function()
 		$('#complaintTypeName').typeahead('val',$(this).html().trim());
 		$("#complaintTypeName").trigger('blur');
 	});
-	
-	$('input[type=radio][name=receivingMode]').change(function() {
-		$('#receivingCenter').prop('selectedIndex',0);
-		disableCRN(); 
-		if ($("input[name=receivingMode]:checked").val() == 'MANUAL') {
-			enableRC();
-		} else {
-			disableRC();
+
+	$('#receivingMode').change(function(){
+		if($(this).val() == 'MANUAL'){
+			loadReceivingCenter();
+			$('#recenter').removeClass('hide');
+			$('#receivingCenter').attr({
+				name : 'receivingCenter',
+				required : 'required'
+			});
+		}else{
+			$('#recenter,#regnoblock').addClass('hide');
+			$('#receivingCenter,#service_request_id').removeAttr('name required');
+		}
+	});
+
+	$('#receivingCenter').change(function(){
+		if($(this).val()){
+			$('#regnoblock').removeClass('hide');
+			$('#service_request_id').attr({
+				name: 'service_request_id',
+				required : 'required'
+			});
+		}else{
+			$('#regnoblock').addClass('hide');
+			$('#service_request_id').removeAttr('name required');
 		}
 	});
 	
@@ -230,9 +252,7 @@ $(document).ready(function()
 
 	$('#create-griev').click(function(){
 
-		console.log('came to click');
-
-		var RequestInfo = new $.RequestInfo();
+		var RequestInfo = new $.RequestInfo(localStorage.getItem("auth"));
 		
 		if($('form').valid()){
 
@@ -242,16 +262,20 @@ $(document).ready(function()
 				var $form = $("form");
 				var data = getFormData($form);
 
-				data['service_request_id'] = '';
+				data['service_request_id'] = $('#service_request_id').val() ? $('#service_request_id').val() : '';
+				data['first_name'] = $('#first_name').val() ? $('#first_name').val() : '';
+				data['phone'] = $('#phone').val() ? $('#phone').val() : '';
+				data['email'] = $('#email').val() ? $('#email').val() : '';
 				data['status'] = true;
 				data['service_name'] = $('#complaintType option:selected').text();
 				data['requested_datetime'] = "";
 				data['media_url'] = "";
 
 				var finobj = {};
-				finobj['receivingMode'] = $('#receivingMode').val();
+				finobj['receivingMode'] = $('#receivingMode').val() ? $('#receivingMode').val() : 'Website';
+				finobj['receivingCenter'] = $('#receivingCenter').val() ? $('#receivingCenter').val() : '';
 				finobj['status'] = 'REGISTERED';
-				finobj['complainantAddress'] = $('textarea[name="complainantAddress"]').val();
+				finobj['complainantAddress'] = $('#complainantAddress').val() ? $('#complainantAddress').val() : '';
 
 				data['values'] = finobj;
 
@@ -263,7 +287,7 @@ $(document).ready(function()
 				request['RequestInfo'] = RequestInfo.requestInfo;
 				request['ServiceRequest'] = data;
 
-				//console.log(JSON.stringify(request));
+				console.log(JSON.stringify(request));
 
 				$.ajax({
 					url: "/pgr/seva?jurisdiction_id=ap.public",
@@ -327,7 +351,7 @@ $(document).ready(function()
 						$('.acknowledgement, .breadcrumb').addClass('hide');
 						$('.createcrn, .tour-section').removeClass('hide');
 					}
-				});	
+				});
 			}else{
 				bootbox.alert("Captcha failed!", function(){ 
 					captcha.refreshCaptcha();
@@ -349,26 +373,6 @@ $(document).ready(function()
 		$(this).parent().nextAll('li').remove();
 	});
 
-	$("#receivingCenter").change(function(){
-		if (this.value === '') {
-			disableCRN();
-			return;
-		} else {
-			$.ajax({
-				type: "GET",
-				url: "isCrnRequired",
-				cache: true,
-				data:{'receivingCenterId' : this.value}
-			}).done(function(value) {
-				 if(value === true) {
-					 enabledCRN();
-				 } else {
-					 disableCRN();
-				 }
-			});
-		}
-	});	
-
 	$(document).on('click','.freq-ct',function(){
 		$("#complaintTypeCategory").val($(this).data('category'));
 		$("#complaintTypeCategory").trigger('change');
@@ -379,6 +383,7 @@ $(document).ready(function()
 
 function doAck(response){
 	$('.breadcrumb').append('<li class="active" data-translate="ack">Acknowledgement</li>');
+	localization();
 	$('.acknowledgement, .breadcrumb').removeClass('hide');
 	$('.acknowledgement #firstname').html('Dear '+response.service_requests[0].first_name+',');
 	$('.acknowledgement #crn').html(response.service_requests[0].service_request_id);
@@ -412,40 +417,40 @@ function typingfeelintypeahead(text, input, typeaheadtext){
     });
 }
 
-function enableRC() {
-	$('#recenter').show();
-	$("#receivingCenter").removeAttr('disabled');
+function loadReceivingMode(){
+	$.ajax({
+		url : "/pgr/receivingmode?tenantId=ap.public",
+		success : function(response){
+			loadDD.load({
+				element:$('#receivingMode'),
+				data:response,
+				keyValue:'code',
+				keyDisplayName:'name'
+			});
+			$('.receivingModeSection').removeClass('hide');
+		},
+		error: function(){
+			bootbox.alert('Receiving mode failed!')
+		}
+	});
 }
 
-function disableRC(){
-	$('#recenter').hide();
-	$("#receivingCenter").attr('disabled', true)
-}
-
-function enabledCRN() {
-	$('#regnoblock').show();
-	$("#crnReq").show();
-//	$("#crn").attr('required','required');
-	$("#crn").removeAttr('disabled');
-}
-
-function disableCRN() {
-	$('#regnoblock').hide();
-	$("#crnReq").hide();
-	$("#crn").val("");
-	$("#crn").removeAttr('required');
-	$("#crn").attr('disabled',true);
-}
-
-/*demo code*/
-function showChangeDropdown(dropdown)
-{
-	$('.drophide').hide();
-	var showele = $(dropdown).find("option:selected").data('show');
-	if(showele)
-	{
-	  $(showele).show();	
-	}
+function loadReceivingCenter(){
+	$.ajax({
+		url : "/pgr/receivingcenter?tenantId=ap.public",
+		success : function(response){
+			loadDD.load({
+				element:$('#receivingCenter'),
+				data:response,
+				keyValue:'name',
+				keyDisplayName:'name'
+			});
+			$('#recenter').removeClass('hide');
+		},
+		error: function(){
+			bootbox.alert('Receiving mode failed!')
+		}
+	})
 }
 
 function complaintCategory(){
@@ -482,4 +487,14 @@ function topComplaintTypes(){
 			//bootbox.alert('Error!');
 		}
 	})
+}
+
+function loadBasedonType(){
+	if(type == 'CITIZEN'){//citizen
+		$('.citizenremove').remove();
+	}else if(type == 'EMPLOYEE'){//employee
+		
+	}else{//anonymous
+		$('.officialremove').remove();
+	}
 }

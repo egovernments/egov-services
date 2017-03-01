@@ -1,4 +1,9 @@
 $(document).ready(function(){
+
+	if(localStorage.getItem("lang")){
+		$('#lang-dropdown').val(localStorage.getItem("lang"))
+	}
+
 	$('#lang-dropdown').change(function(){
 		var sel_value = $(this).val();
 		$.ajax({
@@ -19,7 +24,10 @@ $(document).ready(function(){
 					  return obj.code == translate;
 					});
 					//console.log(translate+'<--->'+JSON.stringify(result)+'<---->'+Object.values(result[0])[1]);
-					if(langresult.length > 0)
+					var type = this.tagName.toLowerCase();
+					if(type == 'input' || type == 'textarea')
+						$(this).attr('placeholder',Object.values(langresult[0])[1]);
+					else
 						$(this).contents().first().replaceWith(Object.values(langresult[0])[1]);
 				});
 

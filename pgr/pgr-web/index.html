@@ -1,10 +1,4 @@
-
 <!DOCTYPE html>
-
-
-
-
-
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
@@ -16,7 +10,7 @@
 		<link rel="icon" href="resources/global/images/favicon.png" sizes="32x32">
 		<link rel="stylesheet" href="resources/global/css/bootstrap/bootstrap.css">
 		<link rel="stylesheet" href="resources/global/css/font-icons/font-awesome/css/font-awesome.min.css">
-        <link rel="stylesheet" href="resources/global/css/egov/custom.css?rnd=2.1.0-SNAPSHOT_2493">
+        <link rel="stylesheet" href="resources/global/css/egov/custom.css">
 		<script src="resources/global/js/jquery/jquery.js" type="text/javascript"></script>
 
 		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -68,17 +62,26 @@
 					    	You don't have javascript enabled.  Make sure Javascript is enabled.
 					</noscript>
 					</div>
-					<div class="col-md-12 side-space">
-						<div class="col-md-6 community-card">
-							<a href="templates/create-complaint.html" target="_blank">
+					<div class="col-md-6 side-space">
+						<div class="col-md-12 community-card">
+							<a href="templates/signup.html" target="_blank">
 								<div class="rounded-circle"><i class="fa fa-user a"></i></div>&nbsp;
+								<div class="label-font">
+									Create an account<br>
+									<span class="label-subfont">Create an account to avail our online services</span>
+								</div>
+							</a>
+						</div>
+						<div class="col-md-12 community-card">
+							<a href="templates/create-complaint.html" target="_blank">
+								<div class="rounded-circle"><i class="fa fa-pencil b"></i></div>
 								<div class="label-font" data-translate="create.grievance">
 									Create Grievance<br>
 									<span class="label-subfont" data-translate="create.grievance">Create Grievance</span>
 								</div>
 							</a>
 						</div>
-						<div class="col-md-6 community-card">
+						<div class="col-md-12 community-card">
 						  <a href="/pgr/complaint/citizen/anonymous/search?isMore=true" target="_blank">
 							<div class="rounded-circle"><i class="fa fa-search b"></i>
 							</div>
@@ -95,24 +98,22 @@
 						</div>
 						
 					</div>
-					<!-- <div class="col-md-6 side-space">
+					<div class="col-md-6 side-space">
 						
 						<div class="signin-formcontent signin-section">
 							<form method="post" role="form" id="signform" action="/egi/j_security_check" autocomplete="off">
 								<div class="form-group">
 									<div class="signin-title">Sign in</div>
 								</div>
-								<input style="display:none" type="text">
-								<input style="display:none" type="password" />
+								<input class="hide" type="text">
+								<input class="hide" type="password" />
 								<div class="form-group">
 									<div class="input-group">
 										<div class="input-group-addon style-label">
 											<i class="fa fa-user theme-color style-color"></i>
 										</div>
-										<input type="text" class="form-control style-form"
-											name="j_username" id="j_username"
-											placeholder="Mobile Number / Login ID" autocomplete="off"
-											required="required" autofocus="autofocus"/>
+										<input type="text" class="form-control style-form" name="username" id="username"
+											placeholder="Mobile Number / Login ID" autocomplete="off" required="required" autofocus="autofocus"/>
 										<label id="j_username-error" class="error pull-right" for="j_username"></label>
 									</div>
 								</div>
@@ -121,9 +122,7 @@
 										<div class="input-group-addon style-label">
 											<i class="fa fa-key theme-color style-color"></i>
 										</div>
-										<input type="password" class="form-control style-form"
-											name="j_password" id="j_password" placeholder="Password"
-											autocomplete="new-password" required="required" />
+										<input type="password" class="form-control style-form" name="password" id="password" placeholder="Password" autocomplete="new-password" required="required" />
 										<div class="input-group-addon font-12" data-toggle="modal"
 											data-target="#fpassword" data-backdrop="static">
 											Forgot?
@@ -143,8 +142,8 @@
 								
 								
 								<div class="form-group signin-leftpadding">
-									<button type="submit"
-										class="btn btn-custom btn-block btn-login signin-submit" id="signin-action">
+									<button type="button"
+										class="btn btn-custom btn-block btn-login preventDS" id="signin-action">
 										<i class="fa fa-sign-in"></i> Sign in
 									</button>
 								</div>
@@ -153,7 +152,7 @@
 								<input type="hidden"  name="userAgentInfo" value="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36" /> 
 							</form>
 						</div>
-					</div> -->
+					</div>
 				</div>
 				<div class="row text-center">
 					<div class="col-md-12 feature-top text-center"></div>
@@ -161,8 +160,8 @@
 						<a href="https://www.google.co.in/maps/@15.8367774,78.0407237,19.25z" target="_blank"><span><i class="fa fa-map-marker fa-2x"></i></span></a>
 						<p>
 							No. 18/2A, 2nd Floor, Ambalipura Village, 
-Sarjapur Main Road, Bellandur Gate, 
-Bangalore - 560102
+							Sarjapur Main Road, Bellandur Gate, 
+							Bangalore - 560102
 						</p>
 						<a class="block-left-text" href="https://www.google.co.in/maps/@15.8367774,78.0407237,19.25z" target="_blank">Find us on google maps</a>
 					</div>
@@ -239,43 +238,12 @@ Bangalore - 560102
 				</div>
 			</div>
 		</div>
-
-
-		<!-- <div class="modal fade lang-class">
-			<div class="modal-dialog">
-					Modal content
-				    <div class="modal-content">
-				      <div class="modal-header">
-				        <button type="button" class="close" data-dismiss="modal">&times;</button>
-				        <h4 class="modal-title" data-translate="set.language">Set Language</h4>
-				      </div>
-				      <div class="modal-body">
-				        <select name="" id="lang-dropdown" class="form-control">
-				        	<option value="mr_IN">Marathi</option>
-				        	<option value="en_IN" selected>English</option>
-				        </select>
-				      </div>
-				      <div class="modal-footer">
-				        <button type="button" class="btn btn-default" data-dismiss="modal" data-translate="close">Close</button>
-				        <button type="button" class="btn btn-primary set-lang" data-translate="save">Save</button>
-				      </div>
-				    </div>
-			</div>
-		</div> -->
 		
-		<script src="resources/global/js/bootstrap/bootstrap.js" type="text/javascript"></script>
+		<script src="resources/global/js/bootstrap/bootstrap.js"></script>
 		<script src="resources/global/js/bootstrap/bootbox.min.js"></script>
 		<script src="resources/global/js/egov/setlang.js"></script>
-        <script src="resources/global/js/egov/custom.js?rnd=2.1.0-SNAPSHOT_2493"></script>
+        <script src="resources/global/js/egov/custom.js"></script>
+        <script src="resources/app/js/login.js"></script>
 		<script src="resources/global/js/jquery/plugins/jquery.validate.min.js"></script>
-		<script>
-			$(document).ready(function(){
-				$('#compsearch').click(function(){
-					window.open('templates/view-complaint.html?srn='+$('#compsearchtxt').val(), '_blank');
-				});
-
-				//$('.lang-class').modal('show');
-			});
-		</script>
 	</body>
 </html>

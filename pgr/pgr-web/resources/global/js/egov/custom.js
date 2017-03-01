@@ -48,7 +48,7 @@ $(document).ready(function()
 	
 	try { 
 		$(".datepicker").datepicker({
-			format: "dd/mm/yyyy",
+			format: "dd-mm-yyyy",
 			autoclose: true 
 		}); 
 
@@ -80,7 +80,7 @@ $(document).ready(function()
 		//console.log('No select2');
 	}
 	
-	$("a.open-popup").click(function(e) {
+	/*$("a.open-popup").click(function(e) {
 		window.open(this.href, ''+$(this).attr('data-strwindname')+'', 'width=900, height=700, top=300, left=260,scrollbars=yes'); 
 		return false;
 	});
@@ -88,7 +88,7 @@ $(document).ready(function()
 	$(document).on('click', 'a.open-popup', function(e) {
 		window.open(this.href, ''+$(this).attr('data-strwindname')+'', 'width=900, height=700, top=300, left=260,scrollbars=yes'); 
 		return false;
-	});
+	});*/
 	
 	$("form.form-horizontal[data-ajaxsubmit!='true']").submit(function( event ) {
 		$('.loader-class').modal('show', {backdrop: 'static'});
@@ -136,28 +136,45 @@ $(document).ready(function()
 	});
 	
 	$('.signout').click(function(){
+		localStorage.removeItem('auth');
+		localStorage.removeItem('type');
+		window.open('../index.html','_self');
 		$.each( openedWindows, function( i, val ) {
 			var window = val;
 			window.close();
 		});
 	});
 
+	localization();
+
+	$(document).on('click','.preventDS',function(){
+		console.log('Prevented!!')
+	});
+	
+	
+});
+
+function localization(){
 	var langresult;
 	var lang_response = localStorage.getItem("lang_response");
 	if(lang_response){
 		$('[data-translate]').each(function(i,v){
+			
 			var translate = $(this).data('translate');
 			langresult = JSON.parse(lang_response).filter(function( obj ) {
 			  return obj.code == translate;
 			});
 			//console.log(translate+'<--->'+JSON.stringify(result)+'<---->'+Object.values(result[0])[1]);
-			if(langresult.length > 0)
-				$(this).contents().first().replaceWith(Object.values(langresult[0])[1]);
+			if(langresult.length > 0){
+				var type = this.tagName.toLowerCase();
+				if(type == 'input' || type == 'textarea')
+					$(this).attr('placeholder',Object.values(langresult[0])[1]);
+				else
+					$(this).contents().first().replaceWith(Object.values(langresult[0])[1]);
+			}
 		});
 	}
-	
-	
-});
+}
 
 function pageScrollTop()
 {
@@ -313,7 +330,25 @@ function hideLoader(){
 	$('.loader-class').modal('hide')
 }
 
-var RI = function(){
+function getParameterByName(name, url) {
+    if (!url) {
+      url = window.location.href;
+    }
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
+function openPopUp(url,name){
+	openedWindows=window.open(url,name,'width=900, height=700, top=300, left=260,scrollbars=yes');
+	if (window.focus) {openedWindows.focus()}
+	return false;
+}
+
+var RI = function(auth){
 	this.api_id = 'org.egov.pgr';
     this.ver = '1.0';
     var dobj = new Date().toISOString();
@@ -326,7 +361,7 @@ var RI = function(){
     this.key = 'xyz';
     this.msg_id = '654654';
     this.requester_id = '61';
-    this.auth_token = null;
+    this.auth_token = auth;
 
     var requestInfo={};
 

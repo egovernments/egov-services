@@ -158,6 +158,22 @@ body .spinner-text {
     -webkit-transform: scaleY(1);
   }
 }
+body .img-prop {
+  height: 350px;
+  width: 100%;
+}
+body #normal .centerMarker {
+  position: absolute;
+  background: url(../../images/marker.png) no-repeat;
+  top: 50%;
+  left: 50%;
+  z-index: 1;
+  margin-left: -10px;
+  margin-top: -34px;
+  height: 34px;
+  width: 20px;
+  cursor: pointer;
+}
 ::-webkit-input-placeholder {
   color: #999999;
 }
@@ -1854,22 +1870,6 @@ label.error {
 }
 .panel-primary .panel-body .remove-img:hover {
   color: #f2851f;
-}
-.panel-primary .panel-body .img-prop {
-  height: 350px;
-  width: 100%;
-}
-.panel-primary .panel-body #normal .centerMarker {
-  position: absolute;
-  background: url(../../images/marker.png) no-repeat;
-  top: 50%;
-  left: 50%;
-  z-index: 1;
-  margin-left: -10px;
-  margin-top: -34px;
-  height: 34px;
-  width: 20px;
-  cursor: pointer;
 }
 .panel-primary .panel-body.custom-form {
   padding: 0;

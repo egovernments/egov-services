@@ -38,12 +38,21 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 var srn = getParameterByName('srn');
+var lat, lng, myCenter;
 //var tenantId = getParameterByName('tenantId');
 
 $(document).ready(function()
 {
 
-	$("#btn_submit").click(function(){
+	if(localStorage.getItem('type') == 'CITIZEN'){
+		$('.employee-action').remove();
+	}else if(localStorage.getItem('type') == 'EMPLOYEE'){
+		$('.citizen-action').remove();
+	}else{
+		$('.action-section').remove();
+	}
+
+	/*$("#btn_submit").click(function(){
 		if($("#btn_submit").name=='Close')
 			{
 			return true;
@@ -57,7 +66,7 @@ $(document).ready(function()
 			$('#inc_messge').removeClass('error');
 		}
 		
-	});
+	});*/
 	
 	$('.slide-history-menu').click(function(){
 		$('.history-slide').slideToggle();
@@ -70,8 +79,49 @@ $(document).ready(function()
 			//$('#see-more-link').show();
 		}
 	});
+
+	$('#update-complaint').click(function(){
+		/*if($('form').valid()){
+			console.log('ready to update!')
+		}*/
+		var filefilledlength = Object.keys(filefilled).length;
+		if(filefilledlength > 0){
+			var formData=new FormData();
+			formData.append('jurisdictionId', 'ap.public');
+			formData.append('module', 'PGR');
+			formData.append('tag', srn);
+			// Main magic with files here
+
+			$('input[name=file]').each(function(){
+				var file = $(this)[0].files[0];
+				formData.append('file', file); 
+			});
+
+			$.ajax({
+				url: "/filestore/files",
+				type : 'POST',
+				beforeSend : function(){
+					showLoader();
+				},
+				// THIS MUST BE DONE FOR FILE UPLOADING
+				contentType: false,
+				processData : false,
+				data : formData,
+				success: function(fileresponse){
+					//console.log('file upload success');
+				},
+				error: function(){
+					bootbox.alert('Media file failed!');
+				},
+				complete : function(){
+					hideLoader();
+					//console.log('Complete function called!');
+				}
+			});
+		}
+	});
 	
-	$('#ct-sel-jurisd').change(function(){
+	/*$('#ct-sel-jurisd').change(function(){
 		//console.log("came jursidiction"+$('#ct-sel-jurisd').val());
 		$.ajax({
 			url: "/pgr/ajax-getChildLocation",
@@ -95,9 +145,9 @@ $(document).ready(function()
 				//console.log("failed");
 			}
 		});
-	});
+	});*/
 	
-	$('#approvalDepartment').change(function(){
+	/*$('#approvalDepartment').change(function(){
 		$.ajax({
 			url: "/pgr/ajax-approvalDesignations",     
 			type: "GET",
@@ -118,9 +168,9 @@ $(document).ready(function()
 				//console.log("failed");
 			}
 		});
-	});
+	});*/
 	
-	$('#approvalDesignation').change(function(){
+	/*$('#approvalDesignation').change(function(){
 		$.ajax({
 			url: "/pgr/ajax-approvalPositions",     
 			type: "GET",
@@ -142,7 +192,7 @@ $(document).ready(function()
 				//console.log("failed");
 			}
 		});
-	});
+	});*/
 
 	var headers = new $.headers();
 
@@ -163,21 +213,19 @@ $(document).ready(function()
 				return;
 			}
 
-			//console.log(JSON.stringify(response));
 			$.ajax({
 				url: "/filestore/files?tag="+srn,
 				type : 'GET',
 				success : function(fileresponse){
 					//console.log(fileresponse.files)
 
-					/*
 					//History
 					$.ajax({
-						url : "/workflow/history?workflowId=122",
+						url : "/workflow/history?tenantId=ap.public&workflowId="+response.service_requests[0].values.stateId,
 						type : 'GET',
 						success : function(work_response){
 
-							console.log(JSON.stringify(work_response));
+							//console.log('Work flow histry',JSON.stringify(work_response));
 
 							var wf_response = {};
 							wf_response['workflow'] = work_response;
@@ -186,9 +234,37 @@ $(document).ready(function()
 							var wf_template = Handlebars.compile(wf_source);
 							$('.wfcomplaint').append(wf_template(wf_response));
 
-							var com_source   = $("#viewcomplaint-script").html();
-							var com_template = Handlebars.compile(com_source);
-							$('.viewcomplaint').append(com_template(response));
+							lat = response.service_requests[0].lat;
+							lng = response.service_requests[0].lng;
+
+							if(localStorage.getItem('type') == 'CITIZEN' && response.service_requests[0].values.ComplaintStatus != 'COMPLETED')
+								$('.feedback').remove();
+
+							if (lat != '0' && lng != '0'){
+								$.ajax({ 
+							        type: "POST",
+							        async : false,
+							        url: 'https://maps.googleapis.com/maps/api/geocode/json?latlng='+response.service_requests[0].lat+','+response.service_requests[0].lng,
+							        dataType: 'json',
+							        success : function(data){
+							        	response.service_requests[0].values['latlngAddress'] = data.results[0].formatted_address;
+							        }
+								});
+							}
+
+							response['files'] = fileresponse.files;
+							var source   = $("#viewcomplaint-script").html();
+							var template = Handlebars.compile(source);
+							//response['service_requests'][0]['customLocation'] = response['service_requests'][0]['values'].ChildLocationName+' - '+response['service_requests'][0]['values'].LocationName;
+							$('.viewcomplaint').append(template(response));
+							//console.log('response with files',JSON.stringify(response));
+
+							//Start actions
+							if(localStorage.getItem('type') == 'EMPLOYEE'){
+								var loadDD = new $.loadDD();
+								complaintType(loadDD);
+							}
+
 						},
 						error:function(){
 							bootbox.alert('Workflow Error!');
@@ -196,25 +272,13 @@ $(document).ready(function()
 						complete : function(){
 							hideLoader();
 						}
-					});*/
-					response['files'] = fileresponse.files;
-					var source   = $("#viewcomplaint-script").html();
-					var template = Handlebars.compile(source);
-					//response['service_requests'][0]['customLocation'] = response['service_requests'][0]['values'].ChildLocationName+' - '+response['service_requests'][0]['values'].LocationName;
-					$('.viewcomplaint').append(template(response));
-					//console.log(JSON.stringify(response));
-
-					var dobj = new Date().toISOString();
-				    var dat = dobj.split('T')[0].split("-").reverse().join("-");
-				    var tm = dobj.split('T')[1];
-				    var tim = tm.substring(0,tm.indexOf("."));
-					$('.currDate').html( dat+' '+tim);
+					});
 				},
 				error : function(){
 					bootbox.alert('Media file Error!');
+					hideLoader();
 				},
 				complete : function(){
-					hideLoader();
 					//console.log('Media Complete function called!');
 				}
 			});
@@ -227,17 +291,61 @@ $(document).ready(function()
 			//console.log('Main complete called')
 		}
 	});	
+
+	$('#complaint-locate').on('show.bs.modal', function() {
+		//Must wait until the render of the modal appear, thats why we use the resizeMap and NOT resizingMap!! ;-)
+		//$('#show_address_in_map').html($('#address_locate').html());
+		myCenter=new google.maps.LatLng(lat, lng);
+		initialize();
+		resizeMap();
+	});
 	
 });
 
-function getParameterByName(name, url) {
-    if (!url) {
-      url = window.location.href;
-    }
-    name = name.replace(/[\[\]]/g, "\\$&");
-    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-        results = regex.exec(url);
-    if (!results) return null;
-    if (!results[2]) return '';
-    return decodeURIComponent(results[2].replace(/\+/g, " "));
+function complaintType(loadDD){
+	$.ajax({
+		url: "/pgr/services?type=all&tenantId=ap.public",
+	}).done(function(data) {
+		loadDD.load({
+			element:$('#complaintType'),
+			data:data,
+			keyValue:'serviceCode',
+			keyDisplayName:'serviceName'
+		});
+	});
 }
+
+function resizeMap() {
+	if(typeof map =="undefined") return;
+	setTimeout( function(){resizingMap();} , 400);
+}
+
+function resizingMap() {
+	if(typeof map =="undefined") return;
+	var center = map.getCenter();
+	google.maps.event.trigger(map, "resize");
+	map.setCenter(center); 
+}
+
+function initialize() {
+	
+	marker=new google.maps.Marker({
+		position:myCenter
+	});
+	
+	var mapProp = {
+		center:myCenter,
+		mapTypeControl: true,
+		zoom:12,
+		mapTypeId:google.maps.MapTypeId.ROADMAP
+	};
+	
+	map=new google.maps.Map(document.getElementById("normal"),mapProp);
+	
+	marker.setMap(map);
+	
+};
+
+google.maps.event.addDomListener(window, 'load', initialize);
+
+google.maps.event.addDomListener(window, "resize", resizingMap());

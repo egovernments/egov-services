@@ -115,31 +115,35 @@ $(document).ready(function(){
 			}
 			if(fileid == 'file1')
 			{
-				EXIF.getData(e.target.files[0], function() {
-					var imagelat = EXIF.getTag(this, "GPSLatitude"),
-					imagelongt = EXIF.getTag(this, "GPSLongitude");
-					if(imagelat || imagelongt){
-						//console.log(imagelat+'<--->'+imagelongt)
-						var formatted_lat = format_lat_long(imagelat.toString());
-						var formatted_long = format_lat_long(imagelongt.toString());
-						$.ajax({
-							type: "POST",
-							url: 'https://maps.googleapis.com/maps/api/geocode/json?latlng='+formatted_lat+','+formatted_long+'&sensor=true',
-							dataType: 'json',
-							success : function(data){
-								$('#location').typeahead('val', data.results[0].formatted_address);
-								myCenter=new google.maps.LatLng(formatted_lat, formatted_long);
-								$('#lat').val(formatted_lat);
-								$('#lng').val(formatted_long);
-								lat = formatted_lat;
-								lng = formatted_long;
-								//setmarkerfromimage();
-							    	map.setCenter(myCenter);
-							}
-						});
-						//console.log(EXIF.pretty(this));	
-					}
-				});
+				try{
+					EXIF.getData(e.target.files[0], function() {
+						var imagelat = EXIF.getTag(this, "GPSLatitude"),
+						imagelongt = EXIF.getTag(this, "GPSLongitude");
+						if(imagelat || imagelongt){
+							//console.log(imagelat+'<--->'+imagelongt)
+							var formatted_lat = format_lat_long(imagelat.toString());
+							var formatted_long = format_lat_long(imagelongt.toString());
+							$.ajax({
+								type: "POST",
+								url: 'https://maps.googleapis.com/maps/api/geocode/json?latlng='+formatted_lat+','+formatted_long+'&sensor=true',
+								dataType: 'json',
+								success : function(data){
+									$('#location').typeahead('val', data.results[0].formatted_address);
+									myCenter=new google.maps.LatLng(formatted_lat, formatted_long);
+									$('#lat').val(formatted_lat);
+									$('#lng').val(formatted_long);
+									lat = formatted_lat;
+									lng = formatted_long;
+									//setmarkerfromimage();
+								    	map.setCenter(myCenter);
+								}
+							});
+							//console.log(EXIF.pretty(this));	
+						}
+					});
+				}catch(e){
+					
+				}
 			}
 			
 			if(Object.keys(filefilled).length == 3)
@@ -260,7 +264,8 @@ $(document).ready(function(){
 	
 	function searchBar(map) {
 		
-		var input = /** @type {!HTMLInputElement} */(
+		try{
+			var input = /** @type {!HTMLInputElement} */(
 			      document.getElementById('pac-input'));
 
 			  var autocomplete = new google.maps.places.Autocomplete(input);
@@ -291,7 +296,9 @@ $(document).ready(function(){
 			    }
 
 			  });
+		}catch(e){
 
+		}
     };
 	
 	function mapcenterchangeevent(){

@@ -1,7 +1,6 @@
 package org.egov.filestore.domain.service;
 
 import org.egov.filestore.domain.model.Artifact;
-import org.egov.filestore.domain.model.FileInfo;
 import org.egov.filestore.domain.model.FileLocation;
 import org.egov.filestore.domain.model.Resource;
 import org.egov.filestore.persistence.repository.ArtifactRepository;
@@ -57,7 +56,10 @@ public class StorageService {
         return artifactRepository.find(fileStoreId);
     }
 
-    public List<FileInfo> retrieveByTag(String tag) {
-        return artifactRepository.findByTag(tag);
+    public List<String> retrieveByTag(String tag) {
+        return artifactRepository.findByTag(tag)
+                .stream()
+                .map(FileLocation::getFileStoreId)
+                .collect(Collectors.toList());
     }
 }

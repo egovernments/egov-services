@@ -2,9 +2,10 @@ package org.egov.filestore.web.controller;
 
 import org.egov.filestore.domain.service.StorageService;
 import org.egov.filestore.web.contract.File;
-import org.egov.filestore.web.contract.GetFilesByTagResponse;
-import org.egov.filestore.web.contract.ResponseFactory;
+import org.egov.filestore.web.contract.LocationResponse;
 import org.egov.filestore.web.contract.StorageResponse;
+import org.egov.filestore.web.contract.Url;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -23,12 +24,13 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 public class StorageController {
 
     private StorageService storageService;
-    private ResponseFactory responseFactory;
+    private String fileStoreHost;
     private final static String PATH_SEPARATOR = "/";
 
-    public StorageController(StorageService storageService, ResponseFactory responseFactory) {
+    public StorageController(StorageService storageService,
+                             @Value("${file.store.host}") String fileStoreHost) {
         this.storageService = storageService;
-        this.responseFactory = responseFactory;
+        this.fileStoreHost = fileStoreHost;
     }
 
     @GetMapping("/{fileStoreId}")
@@ -44,8 +46,8 @@ public class StorageController {
 
     @GetMapping(produces = APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public GetFilesByTagResponse getUrlListByTag(@RequestParam("tag") String tag) {
-        return responseFactory.getFilesByTagResponse(storageService.retrieveByTag(tag));
+    public LocationResponse getUrlListByTag(@RequestParam("tag") String tag) {
+        return getLocationResponse(storageService.retrieveByTag(tag));
     }
 
     @PostMapping(produces = APPLICATION_JSON_UTF8_VALUE)
@@ -67,4 +69,17 @@ public class StorageController {
         return new StorageResponse(files);
 
     }
+
+    private LocationResponse getLocationResponse(List<String> fileStorageIds) {
+        return new LocationResponse(
+                fileStorageIds.stream()
+                        .map(fileStorageId -> new Url(constructUrl(fileStorageId)))
+                        .collect(Collectors.toList())
+        );
+    }
+
+    private String constructUrl(String fileStorageId) {
+        return String.format("%s%s%s%s%s", fileStoreHost, PATH_SEPARATOR, "files", PATH_SEPARATOR, fileStorageId);
+    }
+
 }

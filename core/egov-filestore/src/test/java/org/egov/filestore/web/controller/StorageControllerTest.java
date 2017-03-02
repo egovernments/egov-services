@@ -3,11 +3,7 @@ package org.egov.filestore.web.controller;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.egov.filestore.domain.exception.ArtifactNotFoundException;
-import org.egov.filestore.domain.model.FileInfo;
 import org.egov.filestore.domain.service.StorageService;
-import org.egov.filestore.web.contract.FileRecord;
-import org.egov.filestore.web.contract.GetFilesByTagResponse;
-import org.egov.filestore.web.contract.ResponseFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +22,8 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 
-import static java.util.Arrays.asList;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -39,15 +35,11 @@ public class StorageControllerTest {
     private static final String MODULE = "module";
     private static final String JURISDICTION_ID = "jurisdictionId";
     private static final String TAG = "tag";
-
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
     private StorageService storageService;
-
-    @MockBean
-    private ResponseFactory responseFactory;
 
     @Test
     public void testUploadFile() throws Exception {
@@ -90,17 +82,9 @@ public class StorageControllerTest {
 
     @Test
     public void testRetrievingFilesListByTag() throws Exception {
-        FileRecord fileRecord1 = new FileRecord("http://localhost:8080/filestore/files/fileStoreId1",
-                "image/png");
-        FileRecord fileRecord2 = new FileRecord("http://localhost:8080/filestore/files/fileStoreId2",
-                "application/pdf");
+        List<String> fileStoreIdsList = Arrays.asList("fileStoreId1", "fileStoreId2");
 
-        GetFilesByTagResponse getFilesByTagResponse = new GetFilesByTagResponse(asList(fileRecord1, fileRecord2));
-
-        List<FileInfo> fileInfoList = asList(mock(FileInfo.class), mock(FileInfo.class));
-
-        when(storageService.retrieveByTag(TAG)).thenReturn(fileInfoList);
-        when(responseFactory.getFilesByTagResponse(fileInfoList)).thenReturn(getFilesByTagResponse);
+        when(storageService.retrieveByTag(TAG)).thenReturn(fileStoreIdsList);
 
         mockMvc.perform(
                 get("/files?tag=" + TAG)

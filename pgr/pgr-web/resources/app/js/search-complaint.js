@@ -123,7 +123,7 @@
 				{title: 'Name', data: 'first_name'},
 				{title: 'Location', data: 'values.LocationName'},
 				{title: 'Status', data: 'values.ComplaintStatus'},
-				{title: 'Department', data: 'departmentName'},
+				{title: 'Department', data: 'values.departmentName'},
 				{title: 'Registration Date', data : 'requested_datetime'}
 			]
 	    });

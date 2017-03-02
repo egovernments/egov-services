@@ -39,7 +39,7 @@
  */
 var srn = getUrlParameter('srn');
 var lat, lng, myCenter;
-
+var updateResponse = {};
 $(document).ready(function()
 {
 
@@ -80,44 +80,94 @@ $(document).ready(function()
 	});
 
 	$('#update-complaint').click(function(){
-		/*if($('form').valid()){
-			console.log('ready to update!')
-		}*/
-		var filefilledlength = Object.keys(filefilled).length;
-		if(filefilledlength > 0){
-			var formData=new FormData();
-			formData.append('jurisdictionId', 'ap.public');
-			formData.append('module', 'PGR');
-			formData.append('tag', srn);
-			// Main magic with files here
+		if($('form').valid()){
+			
+			var filefilledlength = Object.keys(filefilled).length;
+			
+			if(filefilledlength > 0){
+				var formData=new FormData();
+				formData.append('jurisdictionId', 'ap.public');
+				formData.append('module', 'PGR');
+				formData.append('tag', srn);
+				// Main magic with files here
 
-			$('input[name=file]').each(function(){
-				var file = $(this)[0].files[0];
-				formData.append('file', file); 
-			});
+				$('input[name=file]').each(function(){
+					var file = $(this)[0].files[0];
+					formData.append('file', file); 
+				});
+
+				$.ajax({
+					url: "/filestore/files",
+					type : 'POST',
+					beforeSend : function(){
+						showLoader();
+					},
+					// THIS MUST BE DONE FOR FILE UPLOADING
+					contentType: false,
+					processData : false,
+					data : formData,
+					success: function(fileresponse){
+						//console.log('file upload success');
+					},
+					error: function(){
+						bootbox.alert('Media file failed!');
+					},
+					complete : function(){
+						hideLoader();
+						//console.log('Complete function called!');
+					}
+				});
+			}
+
+			var req_obj = {};
+			req_obj['RequestInfo'] = updateResponse.response_info;
+			req_obj['ServiceRequest'] = updateResponse.service_requests[0];
+
+			var dat = new Date().toLocaleDateString();
+			var time = new Date().toLocaleTimeString();
+			var date = dat.split("/").join("-");
+			req_obj.ServiceRequest['updated_datetime'] = date+' '+time;
+			req_obj.ServiceRequest['tenantId'] = 'ap.public';
+			req_obj.ServiceRequest.values['ComplaintStatus'] = $('#status').val();
+			req_obj.ServiceRequest.values['approvalComments'] = $('#approvalComment').val();
+			//console.log(JSON.stringify(updateResponse));
+			//Ready to update
+
+			var str = JSON.stringify(req_obj);
+			str = str.replace(/LocationId/g, 'locationId');
+			str = str.replace(/ChildLocationId/g, 'childLocationId');
+			str = str.replace(/ChildLocationName/g, 'childLocationName');
+			str = str.replace(/ReceivingMode/g, 'receivingMode');
+			str = str.replace(/ComplaintStatus/g, 'status');
+			str = str.replace(/LocationName/g, 'locationName');
+
+			object = JSON.parse(str);
+
+			console.log(JSON.stringify(object))
+
 
 			$.ajax({
-				url: "/filestore/files",
-				type : 'POST',
+				url: "/pgr/seva?jurisdiction_id=ap.public",
+				type : 'PUT',
+				dataType: 'json',
+				processData : false,
+				contentType: "application/json",
 				beforeSend : function(){
 					showLoader();
 				},
-				// THIS MUST BE DONE FOR FILE UPLOADING
-				contentType: false,
-				processData : false,
-				data : formData,
-				success: function(fileresponse){
-					//console.log('file upload success');
+				data : JSON.stringify(object),
+				success : function(response){
+					console.log('response',response)
 				},
-				error: function(){
-					bootbox.alert('Media file failed!');
+				error : function(){
+					bootbox.alert('Error while update!');
 				},
 				complete : function(){
 					hideLoader();
-					//console.log('Complete function called!');
 				}
 			});
 		}
+		
 	});
 	
 	/*$('#ct-sel-jurisd').change(function(){
@@ -205,6 +255,8 @@ $(document).ready(function()
 		},
 		success : function(response){
 			//console.log('Get complaint done!');
+
+			updateResponse = response;
 
 			if(response.service_requests.length == 0){
 				bootbox.alert('Not a valid SRN!');

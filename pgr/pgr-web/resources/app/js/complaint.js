@@ -270,6 +270,7 @@ $(document).ready(function()
 				data['service_name'] = $('#complaintType option:selected').text();
 				data['requested_datetime'] = "";
 				data['media_url'] = "";
+				data['tenantId'] = 'ap.public';
 
 				var finobj = {};
 				finobj['receivingMode'] = $('#receivingMode').val() ? $('#receivingMode').val() : 'Website';

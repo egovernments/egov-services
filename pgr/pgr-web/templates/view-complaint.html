@@ -102,7 +102,7 @@
 								<div class="row add-border">
 									<div class="col-md-3 col-xs-6 add-margin">Grievance Department</div>
 									<div class="col-md-3 col-xs-6 add-margin view-content">
-										
+										{{values.departmentName}}
 									</div>
 									<div class="col-md-3 col-xs-6 add-margin">Next Escalation Date</div>
 									<div class="col-md-3 col-xs-6 add-margin view-content">
@@ -286,6 +286,8 @@
 								</div>
 								<div class="col-md-3 col-xs-6 add-margin">
 									<select id="status" name="status" class="form-control" required="">
+										<option value="">Select</option>
+										<option value="COMPLETED">COMPLETED</option>
 									</select>
 								</div>
 								<div class="col-md-3 col-xs-6 add-margin employee-action">
@@ -337,7 +339,7 @@
 									Include Message<span class="mandatory"></span>
 								</div>
 								<div class="col-md-9 add-margin">
-									<textarea class="form-control" id="inc_messge" placeholder="" required="required"
+									<textarea class="form-control" id="approvalComment" placeholder="" required="required"
 										maxlength="400" name="approvalComent"></textarea>
 										
 								</div>

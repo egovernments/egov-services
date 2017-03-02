@@ -64,8 +64,8 @@ public class DepartmentService {
 		return departmentRepository.findByCode(departmentCode);
 	}
 
-	public List<Department> find(String departmentCode) {
-        return StringUtils.isNotEmpty(departmentCode) ?
-                Collections.singletonList(getByDepartmentCode(departmentCode)) : getAllDepartments();
+	public List<Department> find(String departmentCode, Long id) {
+		return StringUtils.isNotEmpty(departmentCode) ? Collections.singletonList(getByDepartmentCode(departmentCode))
+				: id != null ? Collections.singletonList(departmentRepository.findOne(id)) : getAllDepartments();
 	}
 }

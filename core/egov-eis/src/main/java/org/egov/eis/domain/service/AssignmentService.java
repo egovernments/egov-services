@@ -58,7 +58,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 @Service
 @Transactional(readOnly = true)
 public class AssignmentService {
@@ -363,12 +362,16 @@ public class AssignmentService {
 	public List<Assignment> getAllActiveEmployeeAssignmentsByEmpCode(final String code, final Date asOnDate) {
 		return assignmentRepository.getAllActiveAssignmentsByEmpCode(code, asOnDate);
 	}
-	
+
 	public List<Assignment> getPositionsForUser(final PositionRequest positionRequest) {
-	    List<Assignment> assignments = new ArrayList<Assignment>();
-	    if(positionRequest.getUserId() != null) 
-	        assignments.add(assignmentRepository.getPrimaryAssignmentForUser(positionRequest.getUserId()));
-	    return assignments;
+		List<Assignment> assignments = new ArrayList<Assignment>();
+		if (positionRequest.getUserId() != null)
+			assignments.add(assignmentRepository.getPrimaryAssignmentForUser(positionRequest.getUserId()));
+		return assignments;
+	}
+
+	public List<Assignment> getAll() {
+		return assignmentRepository.findAll();
 	}
 
 }

@@ -43,6 +43,13 @@ public class Assignment {
 	@JsonProperty("govtOrderNumber")
 	private String govtOrderNumber = null;
 
+	public Assignment(org.egov.eis.persistence.entity.Assignment entityAssignment) {
+		id = entityAssignment.getId();
+		department = entityAssignment.getDepartment() != null ? entityAssignment.getDepartment().getName() : "";
+		designation = entityAssignment.getDesignation() != null ? entityAssignment.getDesignation().getName() : "";
+		fund = entityAssignment.getFund().toString();
+	}
+
 	public Assignment id(Long id) {
 		this.id = id;
 		return this;

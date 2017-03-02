@@ -3,6 +3,7 @@ package org.egov.eis.web.contract;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -13,6 +14,10 @@ public class AssignmentRes {
 
 	@JsonProperty("Assignment")
 	private List<Assignment> assignment = new ArrayList<Assignment>();
+
+	public AssignmentRes(List<org.egov.eis.persistence.entity.Assignment> entityAssignments) {
+		assignment = entityAssignments.stream().map(Assignment::new).collect(Collectors.toList());
+	}
 
 	public AssignmentRes responseInfo(ResponseInfo responseInfo) {
 		this.responseInfo = responseInfo;
@@ -80,4 +85,5 @@ public class AssignmentRes {
 		}
 		return o.toString().replace("\n", "\n    ");
 	}
+
 }

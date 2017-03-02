@@ -1,5 +1,14 @@
 package org.egov.eis.web.controller;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.io.IOException;
+import java.util.Collections;
+
 import org.apache.commons.io.IOUtils;
 import org.egov.eis.domain.model.RequestContext;
 import org.egov.eis.domain.service.DepartmentService;
@@ -13,71 +22,68 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.io.IOException;
-import java.util.Collections;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 @RunWith(SpringRunner.class)
 @WebMvcTest(DepartmentController.class)
 public class DepartmentControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+	@Autowired
+	private MockMvc mockMvc;
 
-    @MockBean
-    private DepartmentService departmentService;
+	@MockBean
+	private DepartmentService departmentService;
 
-    @Test
-    public void test_should_fetch_department_for_given_code() throws Exception {
-        final String departmentCode = "departmentCode";
-        final Department department = new Department();
-        department.setId(1L);
-        department.setCode("departmentCode");
-        department.setName("departmentName");
-        when(departmentService.find(departmentCode))
-                .thenReturn(Collections.singletonList(department));
+	@Test
+	public void testShouldFetchDepartmentForGivenCode() throws Exception {
+		final String departmentCode = "departmentCode";
+		final Department department = new Department();
+		department.setId(1L);
+		department.setCode("departmentCode");
+		department.setName("departmentName");
+		when(departmentService.find(departmentCode, null)).thenReturn(Collections.singletonList(department));
 
-        mockMvc.perform(get("/departments")
-                .header("X-CORRELATION-ID", "someId")
-                .param("code", departmentCode))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(content().json(getFileContents("departmentsResponse.json")));
+		mockMvc.perform(get("/departments").header("X-CORRELATION-ID", "someId").param("code", departmentCode))
+				.andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(content().json(getFileContents("departmentsResponse.json")));
 
-        assertEquals("someId", RequestContext.getId());
-    }
+		assertEquals("someId", RequestContext.getId());
+	}
 
-    @Test
-    public void test_should_fetch_all_departments() throws Exception {
-        final Department department = new Department();
-        department.setId(1L);
-        department.setCode("departmentCode");
-        department.setName("departmentName");
-        when(departmentService.find(null))
-                .thenReturn(Collections.singletonList(department));
+	@Test
+	public void testShouldFetchDepartmentForGivenId() throws Exception {
+		final Department department = new Department();
+		department.setId(1L);
+		department.setCode("departmentCode");
+		department.setName("departmentName");
+		when(departmentService.find(null, 1L)).thenReturn(Collections.singletonList(department));
 
-        mockMvc.perform(get("/departments")
-                .header("X-CORRELATION-ID", "someId"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(content().json(getFileContents("departmentsResponse.json")));
+		mockMvc.perform(get("/departments").header("X-CORRELATION-ID", "someId").param("id", "1"))
+				.andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(content().json(getFileContents("departmentsResponse.json")));
 
-        assertEquals("someId", RequestContext.getId());
-    }
+		assertEquals("someId", RequestContext.getId());
+	}
 
+	@Test
+	public void testShouldFetchAllDepartments() throws Exception {
+		final Department department = new Department();
+		department.setId(1L);
+		department.setCode("departmentCode");
+		department.setName("departmentName");
+		when(departmentService.find(null, null)).thenReturn(Collections.singletonList(department));
 
-    private String getFileContents(String fileName) {
-        try {
-            return IOUtils.toString(this.getClass().getClassLoader()
-                    .getResourceAsStream(fileName), "UTF-8");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+		mockMvc.perform(get("/departments").header("X-CORRELATION-ID", "someId")).andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(content().json(getFileContents("departmentsResponse.json")));
+
+		assertEquals("someId", RequestContext.getId());
+	}
+
+	private String getFileContents(String fileName) {
+		try {
+			return IOUtils.toString(this.getClass().getClassLoader().getResourceAsStream(fileName), "UTF-8");
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
 }

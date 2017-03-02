@@ -34,45 +34,44 @@ public class BudgetGroupSpecification implements Specification<BudgetGroup> {
 		Path<ChartOfAccount> minCode = root.get(BudgetGroup_.minCode);
 		Path<BudgetAccountType> accountType = root.get(BudgetGroup_.accountType);
 		Path<BudgetingType> budgetingType = root.get(BudgetGroup_.budgetingType);
-		Path<Boolean> isActive = root.get(BudgetGroup_.isActive);
+		Path<Boolean> isActive = root.get(BudgetGroup_.active);
 		final List<Predicate> predicates = new ArrayList<>();
-		if(criteria!=null)
-		{
-		if (criteria.getId() != null) {
-			predicates.add(criteriaBuilder.equal(id, criteria.getId()));
-		}
+		if (criteria != null) {
+			if (criteria.getId() != null) {
+				predicates.add(criteriaBuilder.equal(id, criteria.getId()));
+			}
 
-		if (criteria.getName() != null) {
-			predicates.add(criteriaBuilder.equal(name, criteria.getName()));
-		}
+			if (criteria.getName() != null) {
+				predicates.add(criteriaBuilder.equal(name, criteria.getName()));
+			}
 
-		if (criteria.getDescription() != null) {
-			predicates.add(criteriaBuilder.equal(description, criteria.getDescription()));
-		}
+			if (criteria.getDescription() != null) {
+				predicates.add(criteriaBuilder.equal(description, criteria.getDescription()));
+			}
 
-		if (criteria.getMajorCode() != null) {
-			predicates.add(criteriaBuilder.equal(majorCode, criteria.getMajorCode()));
-		}
+			if (criteria.getMajorCode() != null) {
+				predicates.add(criteriaBuilder.equal(majorCode, criteria.getMajorCode()));
+			}
 
-		if (criteria.getMaxCode() != null) {
-			predicates.add(criteriaBuilder.equal(maxCode, criteria.getMaxCode()));
-		}
+			if (criteria.getMaxCode() != null) {
+				predicates.add(criteriaBuilder.equal(maxCode, criteria.getMaxCode()));
+			}
 
-		if (criteria.getMinCode() != null) {
-			predicates.add(criteriaBuilder.equal(minCode, criteria.getMinCode()));
-		}
+			if (criteria.getMinCode() != null) {
+				predicates.add(criteriaBuilder.equal(minCode, criteria.getMinCode()));
+			}
 
-		if (criteria.getAccountType() != null) {
-			predicates.add(criteriaBuilder.equal(accountType, criteria.getAccountType()));
-		}
+			if (criteria.getAccountType() != null) {
+				predicates.add(criteriaBuilder.equal(accountType, criteria.getAccountType()));
+			}
 
-		if (criteria.getBudgetingType() != null) {
-			predicates.add(criteriaBuilder.equal(budgetingType, criteria.getBudgetingType()));
-		}
+			if (criteria.getBudgetingType() != null) {
+				predicates.add(criteriaBuilder.equal(budgetingType, criteria.getBudgetingType()));
+			}
 
-		if (criteria.getIsActive() != null) {
-			predicates.add(criteriaBuilder.equal(isActive, criteria.getIsActive()));
-		}
+			if (criteria.getIsActive() != null) {
+				predicates.add(criteriaBuilder.equal(isActive, criteria.getIsActive()));
+			}
 		}
 		return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
 	}

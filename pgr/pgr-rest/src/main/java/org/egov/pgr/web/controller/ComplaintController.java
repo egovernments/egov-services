@@ -43,7 +43,7 @@ public class ComplaintController {
         final Complaint complaint = request.toDomainForCreateRequest(user);
         complaintService.save(complaint, request);
         ResponseInfo responseInfo = getResponseInfo(requestInfo);
-        return new ServiceResponse(responseInfo, Collections.singletonList(new ServiceRequest(complaint)));
+        return new ServiceResponse(responseInfo, Collections.singletonList(request.getServiceRequest()));
     }
 
     @PutMapping

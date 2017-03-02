@@ -1,5 +1,6 @@
 package org.egov.pgr.persistence.queue.contract;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,10 +18,12 @@ public class SevaRequest {
     @JsonProperty("ServiceRequest")
     private ServiceRequest serviceRequest;
 
+    @JsonIgnore
     public Complaint toDomainForUpdateRequest(AuthenticatedUser authenticatedUser) {
         return serviceRequest.toDomainForUpdateRequest(authenticatedUser);
     }
 
+    @JsonIgnore
     public Complaint toDomainForCreateRequest(AuthenticatedUser authenticatedUser) {
         return serviceRequest.toDomainForCreateRequest(authenticatedUser);
     }

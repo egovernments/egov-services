@@ -244,8 +244,12 @@ $(document).ready(function(){
 		geocoder = new google.maps.Geocoder();
 		map=new google.maps.Map(document.getElementById("normal"),mapOptions);
 		
-		var GeoMarker = new GeolocationMarker(map);
-		$('<div/>').addClass('centerMarker').appendTo(map.getDiv());
+		try{
+			var GeoMarker = new GeolocationMarker(map);
+			$('<div/>').addClass('centerMarker').appendTo(map.getDiv());
+		}catch(e){
+
+		}
 		
 		navigator.geolocation.getCurrentPosition(userLocationFound, userLocationNotFound, mapOptions);
 
@@ -386,13 +390,13 @@ function setImage(e,input, filename){
 	var ind = fileid.split("file").pop();
 	if(type == 'image'){
 		var template = '<div id="file'+ind+'block" class="add-margin col-sm-4 col-xs-4">'+
-						'<img src="'+e.target.result+'" alt="" width="100px"/>'+
+						'<img src="'+e.target.result+'" alt="" width="100%"/>'+
 						'<div class="remove-img" data-file-id="'+fileid+'"><i class="fa fa-times-circle"></i></div>'+
 						'<div class="add-padding">'+filename+'</div>'+
 						'</div>';
 	}else if(type="video"){
 		var template = '<div id="file'+ind+'block" class="add-margin col-sm-4 col-xs-4">'+
-						'<video width="100px" controls>'+
+						'<video width="100%" controls>'+
 						'<source src="'+e.target.result+'" type="video/mp4"></video>'+
 						'<div class="remove-img" data-file-id="'+fileid+'"><i class="fa fa-times-circle"></i></div>'+
 						'</div>';

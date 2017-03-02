@@ -1848,7 +1848,7 @@ label.error {
   cursor: pointer;
   color: #fff;
   width: 20px;
-  padding: 4px;
+  padding: 0px 5px;
 }
 .panel-primary .panel-body .dynamic-span span,
 .panel-primary .panel-body .dynamic-span span label {

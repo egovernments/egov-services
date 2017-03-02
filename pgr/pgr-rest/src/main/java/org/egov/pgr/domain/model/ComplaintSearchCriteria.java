@@ -10,10 +10,13 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 public class ComplaintSearchCriteria {
-    private String serviceRequestId;
-    private String serviceCode;
-    private Date startDate;
-    private Date endDate;
-    private String status;
-    private Date lastModifiedDatetime;
+	private String serviceRequestId;
+	private String serviceCode;
+	private Date startDate;
+	private Date endDate;
+	private String status;
+	private Date lastModifiedDatetime;
+	private Long userId;
+	private Long assignmentId;
+
 }

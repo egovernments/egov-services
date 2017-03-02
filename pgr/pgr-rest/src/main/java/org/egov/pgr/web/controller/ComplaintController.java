@@ -23,85 +23,69 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping(value = {"/seva"})
+@RequestMapping(value = { "/seva" })
 public class ComplaintController {
 
-    private UserService userService;
-    private ComplaintService complaintService;
+	private UserService userService;
+	private ComplaintService complaintService;
 
-    @Autowired
-    public ComplaintController(UserService userService, ComplaintService complaintService) {
-        this.userService = userService;
-        this.complaintService = complaintService;
-    }
+	@Autowired
+	public ComplaintController(UserService userService, ComplaintService complaintService) {
+		this.userService = userService;
+		this.complaintService = complaintService;
+	}
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public ServiceResponse createServiceRequest(@RequestBody SevaRequest request) {
-        final AuthenticatedUser user = userService.getUser(request.getAuthToken());
-        final Complaint complaint = request.toDomainForCreateRequest(user);
-        complaintService.save(complaint, request);
-        ResponseInfo responseInfo = getResponseInfo(request);
-        return new ServiceResponse(responseInfo, Collections.singletonList(request.getServiceRequest()));
-    }
+	@PostMapping
+	@ResponseStatus(HttpStatus.CREATED)
+	public ServiceResponse createServiceRequest(@RequestBody SevaRequest request) {
+		final AuthenticatedUser user = userService.getUser(request.getAuthToken());
+		final Complaint complaint = request.toDomainForCreateRequest(user);
+		complaintService.save(complaint, request);
+		ResponseInfo responseInfo = getResponseInfo(request);
+		return new ServiceResponse(responseInfo, Collections.singletonList(request.getServiceRequest()));
+	}
 
-    @PutMapping
-    @ResponseStatus(HttpStatus.OK)
-    public ServiceResponse updateServiceRequest(@RequestBody SevaRequest request) {
-        RequestInfo requestInfo = request.getRequestInfo();
-        final AuthenticatedUser user = userService.getUser(requestInfo.getAuthToken());
-        final Complaint complaint = request.toDomainForUpdateRequest(user);
-        complaintService.update(complaint, request);
-        ResponseInfo responseInfo = getResponseInfo(request);
-        return new ServiceResponse(responseInfo, Collections.singletonList(new ServiceRequest(complaint)));
-    }
+	@PutMapping
+	@ResponseStatus(HttpStatus.OK)
+	public ServiceResponse updateServiceRequest(@RequestBody SevaRequest request) {
+		RequestInfo requestInfo = request.getRequestInfo();
+		final AuthenticatedUser user = userService.getUser(requestInfo.getAuthToken());
+		final Complaint complaint = request.toDomainForUpdateRequest(user);
+		complaintService.update(complaint, request);
+		ResponseInfo responseInfo = getResponseInfo(request);
+		return new ServiceResponse(responseInfo, Collections.singletonList(new ServiceRequest(complaint)));
+	}
 
-    @GetMapping(headers = {"api_id", "ver", "ts", "action", "did", "msg_id", "requester_id", "auth_token"})
-    public ServiceResponse getServiceRequests(@RequestParam("jurisdiction_id") Long jurisdictionId,
-                                              @RequestParam(value = "service_request_id", required = false)
-                                                             String serviceRequestId,
-                                              @RequestParam(value = "service_code", required = false)
-                                                             String serviceCode,
-                                              @RequestParam(value = "start_date", required = false)
-                                                     @DateTimeFormat(pattern = "dd-MM-yyyy") Date startDate,
-                                              @RequestParam(value = "end_date", required = false)
-                                                     @DateTimeFormat(pattern = "dd-MM-yyyy") Date endDate,
-                                              @RequestParam(value = "status", required = false) String status,
-                                              @RequestParam(value = "last_modified_datetime", required = false)
-                                                     @DateTimeFormat(pattern = "dd-MM-yyyy") Date lastModifiedDate,
-                                              @RequestHeader HttpHeaders headers) {
-        ComplaintSearchCriteria complaintSearchCriteria = ComplaintSearchCriteria.builder()
-                .serviceRequestId(serviceRequestId)
-                .serviceCode(serviceCode)
-                .startDate(startDate)
-                .endDate(endDate)
-                .status(status)
-                .lastModifiedDatetime(lastModifiedDate)
-                .build();
-        final List<Complaint> complaints = complaintService.findAll(complaintSearchCriteria);
-        return createResponse(headers, complaints);
-    }
+	@GetMapping(headers = { "api_id", "ver", "ts", "action", "did", "msg_id", "requester_id", "auth_token" })
+	public ServiceResponse getServiceRequests(@RequestParam("jurisdiction_id") Long jurisdictionId,
+			@RequestParam(value = "service_request_id", required = false) String serviceRequestId,
+			@RequestParam(value = "service_code", required = false) String serviceCode,
+			@RequestParam(value = "start_date", required = false) @DateTimeFormat(pattern = "dd-MM-yyyy") Date startDate,
+			@RequestParam(value = "end_date", required = false) @DateTimeFormat(pattern = "dd-MM-yyyy") Date endDate,
+			@RequestParam(value = "status", required = false) String status,
+			@RequestParam(value = "last_modified_datetime", required = false) @DateTimeFormat(pattern = "dd-MM-yyyy") Date lastModifiedDate,
+			@RequestParam(value = "assignment_id", required = false) Long assignmentId,
+			@RequestParam(value = "user_id", required = false) Long userId, @RequestHeader HttpHeaders headers) {
 
-    private ServiceResponse createResponse(@RequestHeader HttpHeaders headers, List<Complaint> complaints) {
-        final List<ServiceRequest> serviceRequests = complaints
-                .stream()
-                .map(ServiceRequest::new)
-                .collect(Collectors.toList());
+		ComplaintSearchCriteria complaintSearchCriteria = ComplaintSearchCriteria.builder().assignmentId(assignmentId)
+				.endDate(endDate).lastModifiedDatetime(lastModifiedDate).serviceCode(serviceCode)
+				.serviceRequestId(serviceRequestId).startDate(startDate).status(status).userId(userId).build();
+		final List<Complaint> complaints = complaintService.findAll(complaintSearchCriteria);
+		return createResponse(headers, complaints);
+	}
 
-        ResponseInfo responseInfo = ResponseInfoFactory.createResponseInfoFromRequestHeaders(headers, true);
-        return new ServiceResponse(responseInfo, serviceRequests);
-    }
+	private ServiceResponse createResponse(@RequestHeader HttpHeaders headers, List<Complaint> complaints) {
+		final List<ServiceRequest> serviceRequests = complaints.stream().map(ServiceRequest::new)
+				.collect(Collectors.toList());
 
-    private ResponseInfo getResponseInfo(SevaRequest request) {
-        final RequestInfo requestInfo = request.getRequestInfo();
-        return ResponseInfo.builder()
-                .apiId(requestInfo.getApiId())
-                .ver(requestInfo.getVer())
-                .ts(new Date().toString())
-                .msgId(requestInfo.getMsgId())
-                .resMsgId("placeholder")
-                .status("placeholder")
-                .build();
-    }
+		ResponseInfo responseInfo = ResponseInfoFactory.createResponseInfoFromRequestHeaders(headers, true);
+		return new ServiceResponse(responseInfo, serviceRequests);
+	}
+
+	private ResponseInfo getResponseInfo(SevaRequest request) {
+		final RequestInfo requestInfo = request.getRequestInfo();
+		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer()).ts(new Date().toString())
+				.msgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
+	}
 
 }

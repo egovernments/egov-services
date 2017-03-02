@@ -29,8 +29,8 @@ public class CityRepositoryTest {
 
 	@Test
 	public void test_should_fetch_city_for_given_id() throws Exception {
-		server.expect(once(), requestTo("http://host/v1/location/city/getCitybyCityRequest?city.id=1"))
-				.andExpect(method(HttpMethod.GET)).andRespond(withSuccess(
+		server.expect(once(), requestTo("http://host/v1/location/city/getCitybyCityRequest"))
+				.andExpect(method(HttpMethod.POST)).andRespond(withSuccess(
 						new Resources().getFileContents("successCityResponse.json"), MediaType.APPLICATION_JSON_UTF8));
 
 		final City city = cityRepository.fetchCityById(1L);

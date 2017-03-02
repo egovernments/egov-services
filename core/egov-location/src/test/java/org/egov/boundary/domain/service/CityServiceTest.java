@@ -23,10 +23,12 @@ public class CityServiceTest {
 
 	@Test
 	public void test_should_fetch_city_for_given_id() {
-		final City cityReq = City.builder().id(1L).build();
-		final CityRequest cityRequestForCityId = CityRequest.builder().city(cityReq).build();
+		final org.egov.boundary.web.contract.City cityContract = org.egov.boundary.web.contract.City.builder().id("1")
+				.build();
+		final CityRequest cityRequestForCityId = CityRequest.builder().city(cityContract).build();
 
-		when(cityRepository.findOne(cityRequestForCityId.getCity().getId())).thenReturn(getExpectedCityDetails());
+		when(cityRepository.findOne(Long.valueOf(cityRequestForCityId.getCity().getId())))
+				.thenReturn(getExpectedCityDetails());
 
 		City city = cityService.getCityByCityReq(cityRequestForCityId);
 
@@ -36,9 +38,9 @@ public class CityServiceTest {
 
 	@Test
 	public void test_should_fetch_city_for_given_code() {
-
-		final City cityReq = City.builder().code("0001").build();
-		final CityRequest cityRequestForCityCode = CityRequest.builder().city(cityReq).build();
+		final org.egov.boundary.web.contract.City cityContract = org.egov.boundary.web.contract.City.builder()
+				.code("0001").build();
+		final CityRequest cityRequestForCityCode = CityRequest.builder().city(cityContract).build();
 		when(cityRepository.findByCode(cityRequestForCityCode.getCity().getCode()))
 				.thenReturn(getExpectedCityDetails());
 

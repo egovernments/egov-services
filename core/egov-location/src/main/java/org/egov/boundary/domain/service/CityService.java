@@ -22,7 +22,7 @@ public class CityService {
 	public City getCityByCityReq(CityRequest cityRequest) {
 		City city = new City();
 		if (cityRequest.getCity().getId() != null) {
-			city = (cityRepository.findOne(cityRequest.getCity().getId()));
+			city = (cityRepository.findOne(Long.valueOf(cityRequest.getCity().getId())));
 
 		} else if (!StringUtils.isEmpty(cityRequest.getCity().getCode())) {
 			city = (cityRepository.findByCode(cityRequest.getCity().getCode()));

@@ -2,8 +2,6 @@ package org.egov.boundary.web.contract;
 
 import javax.validation.Valid;
 
-import org.egov.boundary.persistence.entity.City;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;

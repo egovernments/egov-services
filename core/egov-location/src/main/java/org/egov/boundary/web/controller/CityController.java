@@ -3,12 +3,13 @@ package org.egov.boundary.web.controller;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.egov.boundary.domain.model.CityModel;
 import org.egov.boundary.domain.model.District;
 import org.egov.boundary.domain.service.CityService;
-import org.egov.boundary.persistence.entity.City;
+import org.egov.boundary.web.contract.City;
 import org.egov.boundary.web.contract.CityRequest;
 import org.egov.boundary.web.contract.CityResponse;
 import org.egov.boundary.web.contract.ResponseInfo;
@@ -18,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -45,8 +47,7 @@ public class CityController {
 		objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
 		try {
 
-			districts = (List<District>) mapper.readValue(
-					new ClassPathResource("/json/citiesUrl.json").getInputStream(),
+			districts = (List<District>) mapper.readValue(new ClassPathResource("/json/citiesUrl.json").getFile(),
 					new TypeReference<List<District>>() {
 					});
 			if (code != null && !code.isEmpty())
@@ -66,23 +67,33 @@ public class CityController {
 		return jsonInString;
 	}
 
-	@GetMapping("/getCitybyCityRequest")
+	@PostMapping("/getCitybyCityRequest")
 	@ResponseBody
 	public ResponseEntity<?> search(@ModelAttribute CityRequest cityRequest) {
-		try{
-			CityResponse cityResponse = new CityResponse();
-			if(cityRequest.getCity()!=null){
-				City city = cityService.getCityByCityReq(cityRequest);
-				ResponseInfo responseInfo = new ResponseInfo();
-				cityResponse.setCity(city);
-				responseInfo.setStatus(HttpStatus.OK.toString());
-				cityResponse.setResponseInfo(responseInfo);
-				return new ResponseEntity<CityResponse>(cityResponse, HttpStatus.OK);
-			} else
-				return new ResponseEntity<CityResponse>(cityResponse, HttpStatus.BAD_REQUEST);
-		} catch (final Exception e) {
-			return new ResponseEntity<String>("error in request", HttpStatus.BAD_REQUEST);
-		}
+		CityResponse cityResponse = new CityResponse();
+		if (cityRequest.getCity() != null) {
+			ResponseInfo responseInfo = new ResponseInfo();
+			responseInfo.setStatus(HttpStatus.CREATED.toString());
+			cityResponse.setCity(getCity(cityRequest));
+			cityResponse.setResponseInfo(responseInfo);
+			return new ResponseEntity<CityResponse>(cityResponse, HttpStatus.OK);
+		} else
+			return new ResponseEntity<CityResponse>(cityResponse, HttpStatus.BAD_REQUEST);
 	}
 
+	private City getCity(CityRequest cityRequest) {
+		return mapToContractCity(cityService.getCityByCityReq(cityRequest));
+	}
+
+	private City mapToContractCity(org.egov.boundary.persistence.entity.City cityEntity) {
+		ObjectMapper mapper = new ObjectMapper();
+		City city = new City();
+		if (cityEntity != null) {
+			// Convert object to Map
+			Map<String, String> jsonInString = mapper.convertValue(cityEntity, Map.class);
+			// Convert Map to Object
+			city = mapper.convertValue(jsonInString, City.class);
+		}
+		return city;
+	}
 }

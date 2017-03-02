@@ -1,7 +1,5 @@
 package org.egov.boundary.web.contract;
 
-import org.egov.boundary.persistence.entity.City;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
@@ -13,5 +11,5 @@ public class CityResponse {
 	@JsonProperty("ResponseInfo")
 	private ResponseInfo responseInfo = null;
 	@JsonProperty("City")
-	private City city = new City();
+	private City city = null;
 }

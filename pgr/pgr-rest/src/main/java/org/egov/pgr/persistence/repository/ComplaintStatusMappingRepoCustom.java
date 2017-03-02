@@ -38,43 +38,17 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.pgr.persistence.entity;
+package org.egov.pgr.persistence.repository;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.List;
+import java.util.Set;
 
-import static org.egov.pgr.persistence.entity.ComplaintStatus.SEQ_COMPLAINTSTATUS;
+import org.egov.pgr.domain.model.Role;
+import org.egov.pgr.persistence.entity.ComplaintStatus;
 
-@Entity
-@Table(name = "egpgr_complaintstatus")
-@SequenceGenerator(name = SEQ_COMPLAINTSTATUS, sequenceName = SEQ_COMPLAINTSTATUS, allocationSize = 1)
-@JsonIgnoreProperties(value = { "handler", "hibernateLazyInitializer" })
-public class ComplaintStatus extends AbstractPersistable<Long> {
-    public static final String SEQ_COMPLAINTSTATUS = "SEQ_EGPGR_COMPLAINTSTATUS";
-    private static final long serialVersionUID = -9009821412847211632L;
-    @Id
-    @GeneratedValue(generator = SEQ_COMPLAINTSTATUS, strategy = GenerationType.SEQUENCE)
-    private Long id;
+@FunctionalInterface
+public interface ComplaintStatusMappingRepoCustom {
 
-    @NotNull
-    private String name;
-
-    public Long getId() {
-        return id;
-    }
-
-    protected void setId(final Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
-
+    List<ComplaintStatus> getStatusByRoleAndCurrentStatus(Set<Role> role, String status);
 }

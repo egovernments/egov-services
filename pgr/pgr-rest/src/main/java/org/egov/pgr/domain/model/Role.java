@@ -6,5 +6,7 @@ import lombok.Value;
 @Value
 @AllArgsConstructor
 public class Role {
+    
+    private Long id;
     private String name;
 }

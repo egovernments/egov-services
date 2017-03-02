@@ -37,9 +37,8 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-var srn = getParameterByName('srn');
+var srn = getUrlParameter('srn');
 var lat, lng, myCenter;
-//var tenantId = getParameterByName('tenantId');
 
 $(document).ready(function()
 {

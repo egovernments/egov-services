@@ -56,8 +56,10 @@ public class ReceivingCenter extends AbstractPersistable<Long> {
 
     private String name;
 
+    @Column(name="iscrnrequired")
     private boolean isCrnRequired;
-
+    
+    @Column(name ="orderno")
     private Long orderNo;
 
     @Override

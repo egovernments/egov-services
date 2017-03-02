@@ -40,8 +40,30 @@
 
 package org.egov.pgr.persistence.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+import static org.egov.pgr.persistence.entity.Complaint.SEQ_COMPLAINT;
+
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
 import org.apache.commons.lang3.StringUtils;
 import org.egov.pgr.domain.model.AuthenticatedUser;
 import org.egov.pgr.domain.model.ComplaintLocation;
@@ -51,12 +73,8 @@ import org.egov.pgr.persistence.entity.enums.ReceivingMode;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.SafeHtml;
 
-import javax.persistence.*;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import java.util.*;
-
-import static org.egov.pgr.persistence.entity.Complaint.SEQ_COMPLAINT;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -176,7 +194,7 @@ public class Complaint extends AbstractAuditable {
 				.authenticatedUser(AuthenticatedUser.createAnonymousUser()).complainant(complainant.toDomain())
 				.address(landmarkDetails).description(details).crn(crn).createdDate(getCreatedDate())
 				.lastModifiedDate(getLastModifiedDate()).mediaUrls(Collections.emptyList())
-				.escalationDate(getEscalationDate()).closed(isCompleted()).build();
+				.escalationDate(getEscalationDate()).closed(isCompleted()).department(department).build();
 	}
 
 	private Map<String, String> getAdditionalValues() {
@@ -196,6 +214,9 @@ public class Complaint extends AbstractAuditable {
 		}
 		if (getStateId() != null) {
 			map.put("stateId", getStateId().toString());
+		}
+		if (getAssignee() != null) {
+			map.put("assigneeId", getAssignee().toString());
 		}
 		return map;
 	}

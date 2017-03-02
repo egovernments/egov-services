@@ -34,7 +34,9 @@
             "ReceivingCenter": "Commissioner Office",
             "LocationId": "Election Ward No 1",
             "ChildLocationId": "Gadu Veedhi",
-            "StateId": "1"
+            "StateId": "1",
+            "AssigneeId": "2",
+            "DepartmentName": "Accounts"
          }
      }
     ]

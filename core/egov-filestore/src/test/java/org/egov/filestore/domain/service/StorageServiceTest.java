@@ -2,6 +2,7 @@ package org.egov.filestore.domain.service;
 
 
 import org.egov.filestore.domain.model.Artifact;
+import org.egov.filestore.domain.model.FileInfo;
 import org.egov.filestore.domain.model.FileLocation;
 import org.egov.filestore.domain.model.Resource;
 import org.egov.filestore.persistence.repository.ArtifactRepository;
@@ -16,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.Arrays;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -66,12 +68,12 @@ public class StorageServiceTest {
 
     @Test
     public void shouldRetrieveListOfUrlsGivenATag() throws Exception {
-        List<FileLocation> listOfFileLOcations = getListOfFileLocations();
-        when(artifactRepository.findByTag(TAG)).thenReturn(listOfFileLOcations);
+        List<FileInfo> listOfFileInfo = getListOfFileInfo();
+        when(artifactRepository.findByTag(TAG)).thenReturn(listOfFileInfo);
 
-        List<String> expected = storageService.retrieveByTag(TAG);
+        List<FileInfo> actual = storageService.retrieveByTag(TAG);
 
-        assertEquals(expected, Arrays.asList(FILE_STORE_ID_1, FILE_STORE_ID_2));
+        assertEquals(listOfFileInfo, actual);
     }
 
     private List<MultipartFile> getMockFileList() {
@@ -92,10 +94,20 @@ public class StorageServiceTest {
         return Arrays.asList(artifact1, artifact2);
     }
 
-    private List<FileLocation> getListOfFileLocations() {
-        return Arrays.asList(
-                new FileLocation(FILE_STORE_ID_1, MODULE, JURISDICTION_ID, TAG),
-                new FileLocation(FILE_STORE_ID_2, MODULE, JURISDICTION_ID, TAG)
+    private List<FileInfo> getListOfFileInfo() {
+        FileLocation fileLocation1 = new FileLocation(FILE_STORE_ID_1, MODULE, JURISDICTION_ID, TAG);
+        FileLocation fileLocation2 = new FileLocation(FILE_STORE_ID_2, MODULE, JURISDICTION_ID, TAG);
+
+        return asList(
+                FileInfo.builder()
+                        .fileLocation(fileLocation1)
+                        .contentType("contentType")
+                        .build(),
+
+                FileInfo.builder()
+                        .fileLocation(fileLocation2)
+                        .contentType("contentType")
+                        .build()
         );
     }
 }

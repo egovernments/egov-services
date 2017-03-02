@@ -1,6 +1,7 @@
 package org.egov.filestore.persistence.repository;
 
 import org.egov.filestore.domain.exception.ArtifactNotFoundException;
+import org.egov.filestore.domain.model.FileInfo;
 import org.egov.filestore.domain.model.FileLocation;
 import org.egov.filestore.domain.model.Resource;
 import org.egov.filestore.persistence.entity.Artifact;
@@ -17,6 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
@@ -60,7 +62,7 @@ public class ArtifactRepositoryTest {
         List<org.egov.filestore.domain.model.Artifact> listOfMockedArtifacts = getListOfArtifacts();
 
 
-        when(fileStoreJpaRepository.save(listArgumentCaptor.capture())).thenReturn(Arrays.asList());
+        when(fileStoreJpaRepository.save(listArgumentCaptor.capture())).thenReturn(asList());
 
         artifactRepository.save(listOfMockedArtifacts);
 
@@ -101,9 +103,9 @@ public class ArtifactRepositoryTest {
     public void shouldRetrieveArtifactMetaDataForGivenTag() {
         when(fileStoreJpaRepository.findByTag(TAG)).thenReturn(getListOfArtifactEntities());
 
-        List<FileLocation> actual = artifactRepository.findByTag(TAG);
+        List<FileInfo> actual = artifactRepository.findByTag(TAG);
 
-        assertEquals(actual, getListOfFileLocations());
+        assertEquals(actual, getListOfFileInfo());
         verify(fileStoreJpaRepository).findByTag(TAG);
     }
 
@@ -115,7 +117,7 @@ public class ArtifactRepositoryTest {
         when(multipartFile1.getContentType()).thenReturn("image/png");
         when(multipartFile2.getOriginalFilename()).thenReturn("filename2.extension");
 
-        return Arrays.asList(
+        return asList(
                 new org.egov.filestore.domain.model.Artifact(multipartFile1,
                         new FileLocation(UUID.randomUUID().toString(), MODULE, JURISDICTION_ID, TAG)),
                 new org.egov.filestore.domain.model.Artifact(multipartFile2,
@@ -124,12 +126,13 @@ public class ArtifactRepositoryTest {
     }
 
     private List<Artifact> getListOfArtifactEntities() {
-        return Arrays.asList(
+        return asList(
                 new Artifact() {{
                     setFileStoreId(FILE_STORE_ID_1);
                     setJurisdictionId(JURISDICTION_ID);
                     setModule(MODULE);
                     setTag(TAG);
+                    setContentType("contentType");
                 }},
 
                 new Artifact() {{
@@ -137,14 +140,25 @@ public class ArtifactRepositoryTest {
                     setJurisdictionId(JURISDICTION_ID);
                     setModule(MODULE);
                     setTag(TAG);
+                    setContentType("contentType");
                 }}
         );
     }
 
-    private List<FileLocation> getListOfFileLocations() {
-        return Arrays.asList(
-                new FileLocation(FILE_STORE_ID_1, MODULE, JURISDICTION_ID, TAG),
-                new FileLocation(FILE_STORE_ID_2, MODULE, JURISDICTION_ID, TAG)
+    private List<FileInfo> getListOfFileInfo() {
+        FileLocation fileLocation1 = new FileLocation(FILE_STORE_ID_1, MODULE, JURISDICTION_ID, TAG);
+        FileLocation fileLocation2 = new FileLocation(FILE_STORE_ID_2, MODULE, JURISDICTION_ID, TAG);
+
+        return asList(
+                FileInfo.builder()
+                        .fileLocation(fileLocation1)
+                        .contentType("contentType")
+                        .build(),
+
+                FileInfo.builder()
+                        .fileLocation(fileLocation2)
+                        .contentType("contentType")
+                        .build()
         );
     }
 }

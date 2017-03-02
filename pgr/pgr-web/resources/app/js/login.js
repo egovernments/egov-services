@@ -63,10 +63,10 @@ $(document).ready(function()
     );
 
 	$('#compsearch').click(function() {
-		var compnum=$('#compsearchtxt').val();
+		var compnum=$.trim($('#compsearchtxt').val());
 		if (compnum !== "") {
 			$('.search-error-msg').addClass('display-hide');
-			window.open('templates/view-complaint.html?srn='+$('#compsearchtxt').val(), '_blank');
+			window.open('templates/view-complaint.html?srn='+compnum, '_blank');
 		}else{
 			$('.search-error-msg').removeClass('display-hide');
 		}

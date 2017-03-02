@@ -62,15 +62,18 @@ import org.hibernate.validator.constraints.Length;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "egf_bankbranch")
 @SequenceGenerator(name = BankBranch.SEQ_BANKBRANCH, sequenceName = BankBranch.SEQ_BANKBRANCH, allocationSize = 1)
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(exclude={"bank","bankAccounts"})
+@Getter
+@Setter
+@EqualsAndHashCode(exclude={"bank","bankAccounts"},callSuper=false)
 public class BankBranch extends AbstractAuditable {
 
     private static final long serialVersionUID = -1445070413847273114L;

@@ -56,19 +56,28 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.Pattern;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import org.egov.eis.persistence.regex.Constants;
 import org.hibernate.annotations.NamedQuery;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.SafeHtml;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 @Entity
+@Data
 @Table(name = "eg_designation")
 @SequenceGenerator(name = Designation.SEQ_DESIGNATION, sequenceName = Designation.SEQ_DESIGNATION, allocationSize = 1)
 @NamedQuery(name = "getDesignationForListOfDesgNames", query = "from Designation where trim(upper(name)) in(:param_0)")
 @JsonIgnoreProperties(value = { "handler", "hibernateLazyInitializer" })
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Designation extends AbstractAuditable {
 
 	public static final String SEQ_DESIGNATION = "SEQ_EG_DESIGNATION";
@@ -102,37 +111,4 @@ public class Designation extends AbstractAuditable {
 	public void setId(final Long id) {
 		this.id = id;
 	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(final String name) {
-		this.name = name;
-	}
-
-	public String getCode() {
-		return code;
-	}
-
-	public void setCode(final String code) {
-		this.code = code;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(final String description) {
-		this.description = description;
-	}
-
-	public Long getChartOfAccounts() {
-		return chartOfAccounts;
-	}
-
-	public void setChartOfAccounts(final Long chartOfAccounts) {
-		this.chartOfAccounts = chartOfAccounts;
-	}
-
 }

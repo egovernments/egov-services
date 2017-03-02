@@ -3,7 +3,6 @@ package org.egov.boundary.web.controller;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.egov.boundary.domain.model.CityModel;
@@ -67,7 +66,7 @@ public class CityController {
 		return jsonInString;
 	}
 
-	@PostMapping(value="/getCitybyCityRequest")
+	@PostMapping(value = "/getCitybyCityRequest")
 	@ResponseBody
 	public ResponseEntity<?> search(@RequestBody CityRequest cityRequest) {
 		CityResponse cityResponse = new CityResponse();
@@ -89,10 +88,7 @@ public class CityController {
 		ObjectMapper mapper = new ObjectMapper();
 		City city = new City();
 		if (cityEntity != null) {
-			// Convert object to Map
-			Map<String, String> jsonInString = mapper.convertValue(cityEntity, Map.class);
-			// Convert Map to Object
-			city = mapper.convertValue(jsonInString, City.class);
+			city = mapper.convertValue(cityEntity, City.class);
 		}
 		return city;
 	}

@@ -10,7 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class Error {
-    private String code;
+    private int code;
     private String message;
     private String description;
     private List<ErrorField> fields;

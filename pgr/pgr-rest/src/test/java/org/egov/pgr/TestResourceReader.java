@@ -1,5 +1,6 @@
 package org.egov.pgr;
 
+import org.apache.commons.io.IOUtils;
 import org.springframework.util.ResourceUtils;
 
 import java.io.File;
@@ -13,3 +14,4 @@ public class TestResourceReader {
         return new String(Files.readAllBytes(Paths.get(file.getAbsolutePath())));
     }
 }
+

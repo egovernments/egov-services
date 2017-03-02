@@ -77,7 +77,7 @@ public class SevaRequestErrorAdapter implements ErrorAdapter<Complaint> {
     private Error getError(Complaint model) {
         List<ErrorField> errorFields = getErrorFields(model);
         return Error.builder()
-                .code(HttpStatus.BAD_REQUEST.toString())
+                .code(HttpStatus.BAD_REQUEST.value())
                 .message(INVALID_SEVA_REQUEST_MESSAGE)
                 .fields(errorFields)
                 .build();

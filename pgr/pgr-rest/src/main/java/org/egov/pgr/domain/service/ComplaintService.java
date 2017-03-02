@@ -42,10 +42,14 @@ public class ComplaintService {
 			deptIdNameMap.put(dept.getId(), dept.getName());
 		}
 		for (Complaint ct : complaints) {
-			if (ct.getDepartment() == null) {
+			if (ct.getDepartment() != null) {
 				if (ct.getAdditionalValues() == null)
 					ct.setAdditionalValues(new HashMap<String, String>());
 				ct.getAdditionalValues().put("departmentName", deptIdNameMap.get(ct.getDepartment()));
+			} else {
+				if (ct.getAdditionalValues() == null)
+					ct.setAdditionalValues(new HashMap<String, String>());
+				ct.getAdditionalValues().put("departmentName", "");
 			}
 		}
 

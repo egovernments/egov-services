@@ -2,21 +2,23 @@ package org.egov.eis.web.controller;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import org.egov.eis.web.contract.DesignationRes;
-import org.egov.eis.web.contract.Error;
-import org.egov.eis.web.contract.ErrorRes;
-import org.egov.eis.web.contract.ResponseInfo;
 import org.egov.eis.domain.service.DesignationService;
+import org.egov.eis.web.contract.Designation;
+import org.egov.eis.web.contract.DesignationRes;
+import org.egov.eis.web.contract.ResponseInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RestController
 public class DesignationRestController {
@@ -35,9 +37,11 @@ public class DesignationRestController {
 		DesignationRes response = new DesignationRes();
 		response.setResponseInfo(new ResponseInfo("", "", new Date().toString(), "", "", "Successful response"));
 		if (name != null && !name.isEmpty()) {
-			response.getDesignation().addAll(designationService.getDesignationsByName(name));
-		} if (name == null || name.isEmpty()) {
-			response.getDesignation().addAll(designationService.getAllDesignations());
+			response.getDesignation()
+					.addAll(mapToContractDesignationList(designationService.getDesignationsByName(name)));
+		}
+		if (name == null || name.isEmpty()) {
+			response.getDesignation().addAll(mapToContractDesignationList(designationService.getAllDesignations()));
 		} else {
 			throw new Exception();
 		}
@@ -53,26 +57,49 @@ public class DesignationRestController {
 		DesignationRes response = new DesignationRes();
 		response.setResponseInfo(new ResponseInfo("", "", new Date().toString(), "", "", "Successful response"));
 		if (id != null && !id.isEmpty()) {
-			response.getDesignation().add(designationService.getDesignationById(Long.valueOf(id)));
+			response.getDesignation()
+					.add(mapToContractDesignation(designationService.getDesignationById(Long.valueOf(id))));
 		} else {
 			throw new Exception();
 		}
-
 		return response;
 	}
 
-//	@ExceptionHandler(Exception.class)
-//	public ResponseEntity<ErrorRes> handleError(Exception ex) {
-//		ex.printStackTrace();
-//		ErrorRes response = new ErrorRes();
-//		ResponseInfo responseInfo = new ResponseInfo("", "", new Date().toString(), "", "",
-//				"Failed to get designations");
-//		response.setResponseInfo(responseInfo);
-//		Error error = new Error();
-//		error.setCode(400);
-//		error.setDescription("Failed to get designations");
-//		response.setError(error);
-//		return new ResponseEntity<ErrorRes>(response, HttpStatus.BAD_REQUEST);
-//	}
+	@PostMapping(value = "/designationByDepartmentId")
+	@ResponseBody
+	public ResponseEntity<?> getDesignationByDepartmentId(@RequestParam(value = "id") String id) {
+		DesignationRes desigResponse = new DesignationRes();
+		if (id != null && !id.isEmpty()) {
+			ResponseInfo responseInfo = new ResponseInfo();
+			responseInfo.setStatus(HttpStatus.OK.toString());
+			desigResponse.setResponseInfo(responseInfo);
+			List<Designation> designations = getDesignationByDepartment(id);
+			if (designations.isEmpty()) {
 
+			} else
+				desigResponse.getDesignation().addAll(designations);
+			return new ResponseEntity<DesignationRes>(desigResponse, HttpStatus.OK);
+		} else
+			return new ResponseEntity<DesignationRes>(desigResponse, HttpStatus.BAD_REQUEST);
+
+	}
+
+	private List<Designation> getDesignationByDepartment(String departmentId) {
+		return mapToContractDesignationList(
+				designationService.getAllDesignationByDepartment(Long.valueOf(departmentId), new Date()));
+	}
+
+	private Designation mapToContractDesignation(org.egov.eis.persistence.entity.Designation designationEntity) {
+		ObjectMapper mapper = new ObjectMapper();
+		Designation designation = new Designation();
+		if (designationEntity != null) {
+			designation = mapper.convertValue(designationEntity, Designation.class);
+		}
+		return designation;
+	}
+
+	private List<Designation> mapToContractDesignationList(
+			List<org.egov.eis.persistence.entity.Designation> designationEntity) {
+		return designationEntity.stream().map(Designation::new).collect(Collectors.toList());
+	}
 }

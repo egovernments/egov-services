@@ -38,11 +38,10 @@ public class ComplaintController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ServiceResponse createServiceRequest(@RequestBody SevaRequest request) {
-        RequestInfo requestInfo = request.getRequestInfo();
-        final AuthenticatedUser user = userService.getUser(requestInfo.getAuthToken());
+        final AuthenticatedUser user = userService.getUser(request.getAuthToken());
         final Complaint complaint = request.toDomainForCreateRequest(user);
         complaintService.save(complaint, request);
-        ResponseInfo responseInfo = getResponseInfo(requestInfo);
+        ResponseInfo responseInfo = getResponseInfo(request);
         return new ServiceResponse(responseInfo, Collections.singletonList(request.getServiceRequest()));
     }
 
@@ -53,7 +52,7 @@ public class ComplaintController {
         final AuthenticatedUser user = userService.getUser(requestInfo.getAuthToken());
         final Complaint complaint = request.toDomainForUpdateRequest(user);
         complaintService.update(complaint, request);
-        ResponseInfo responseInfo = getResponseInfo(requestInfo);
+        ResponseInfo responseInfo = getResponseInfo(request);
         return new ServiceResponse(responseInfo, Collections.singletonList(new ServiceRequest(complaint)));
     }
 
@@ -93,7 +92,8 @@ public class ComplaintController {
         return new ServiceResponse(responseInfo, serviceRequests);
     }
 
-    private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
+    private ResponseInfo getResponseInfo(SevaRequest request) {
+        final RequestInfo requestInfo = request.getRequestInfo();
         return ResponseInfo.builder()
                 .apiId(requestInfo.getApiId())
                 .ver(requestInfo.getVer())

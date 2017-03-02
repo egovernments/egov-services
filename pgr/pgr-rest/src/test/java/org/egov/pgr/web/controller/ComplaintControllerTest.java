@@ -20,7 +20,7 @@ import org.egov.pgr.domain.model.ComplaintType;
 import org.egov.pgr.domain.model.Coordinates;
 import org.egov.pgr.domain.service.ComplaintService;
 import org.egov.pgr.domain.service.UserService;
-import org.helper.TestResourceReader;
+import org.egov.pgr.TestResourceReader;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

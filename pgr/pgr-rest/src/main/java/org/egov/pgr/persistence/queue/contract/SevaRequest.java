@@ -28,6 +28,11 @@ public class SevaRequest {
         return serviceRequest.toDomainForCreateRequest(authenticatedUser);
     }
 
+    @JsonIgnore
+    public String getAuthToken() {
+        return requestInfo.getAuthToken();
+    }
+
     public void update(Complaint complaint) {
         serviceRequest.setCrn(complaint.getCrn());
     }

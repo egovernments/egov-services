@@ -127,7 +127,8 @@ public class ComplaintBuilder {
 	private void setReceivingMode() {
 		String receivingMode = this.serviceRequest.getValues().get(VALUES_RECIEVING_MODE);
 		if (receivingMode != null)
-			this.complaint.setReceivingMode(ReceivingMode.valueOf(receivingMode));
+			this.complaint.setReceivingMode(ReceivingMode.valueOf(receivingMode.toUpperCase()));
+		
 	}
 
 	private void setComplaintType() {

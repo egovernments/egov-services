@@ -58,15 +58,26 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
+import org.egov.egf.persistence.entity.enums.BudgetAccountType;
+import org.egov.egf.persistence.entity.enums.BudgetingType;
 import org.hibernate.annotations.ManyToAny;
 import org.hibernate.validator.constraints.Length;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode(exclude={"accountCodePurpose","chartOfAccountDetails"},callSuper=false)
 @Table(name = "egf_chartofaccount")
 @SequenceGenerator(name = ChartOfAccount.SEQ_CHARTOFACCOUNT, sequenceName = ChartOfAccount.SEQ_CHARTOFACCOUNT, allocationSize = 1)
-@Data
 public class ChartOfAccount extends AbstractAuditable {
 
 	private static final long serialVersionUID = 61219209022946300L;

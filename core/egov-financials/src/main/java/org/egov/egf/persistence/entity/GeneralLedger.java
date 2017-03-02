@@ -59,11 +59,23 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+import org.egov.egf.persistence.entity.enums.BudgetAccountType;
+import org.egov.egf.persistence.entity.enums.BudgetingType;
 import org.hibernate.validator.constraints.Length;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-@Data
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 @Entity
+@EqualsAndHashCode(exclude={"chartOfAccount","voucherHeader","function","ledgerDetails"},callSuper=false)
+
 @Table(name = "egf_generalledger")
 @SequenceGenerator(name = GeneralLedger.SEQ, sequenceName = GeneralLedger.SEQ, allocationSize = 1)
 public class GeneralLedger extends AbstractPersistable<Long> {

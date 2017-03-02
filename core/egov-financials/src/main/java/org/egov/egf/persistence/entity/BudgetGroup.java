@@ -52,11 +52,24 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.egov.egf.persistence.entity.enums.BankAccountType;
 import org.egov.egf.persistence.entity.enums.BudgetAccountType;
 import org.egov.egf.persistence.entity.enums.BudgetingType;
 import org.hibernate.validator.constraints.Length;
 
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode(exclude={"majorCode","maxCode","minCode","accountType","budgetingType"},callSuper=false)
+
 @Table(name = "egf_budgetgroup")
 @SequenceGenerator(name = BudgetGroup.SEQ_BUDGETGROUP, sequenceName = BudgetGroup.SEQ_BUDGETGROUP, allocationSize = 1)
 public class BudgetGroup extends AbstractAuditable {

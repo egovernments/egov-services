@@ -42,8 +42,18 @@ package org.egov.egf.persistence.entity;
 
 import java.util.Date;
 
+import org.egov.egf.persistence.entity.enums.BudgetAccountType;
+import org.egov.egf.persistence.entity.enums.BudgetingType;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
-@Data
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 public class EgwStatus implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;

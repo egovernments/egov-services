@@ -41,6 +41,7 @@
 package org.egov.egf.persistence.entity;
 
 import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
@@ -55,9 +56,13 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@MappedSuperclass
+@MappedSuperclass 
 @EntityListeners(AuditingEntityListener.class)
 public abstract @Data class AbstractAuditable extends AbstractPersistable<Long> {
 

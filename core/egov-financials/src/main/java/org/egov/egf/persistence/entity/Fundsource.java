@@ -52,9 +52,23 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.egov.egf.persistence.entity.enums.BudgetAccountType;
+import org.egov.egf.persistence.entity.enums.BudgetingType;
 import org.hibernate.validator.constraints.Length;
 
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode(exclude={"fundSource"},callSuper=false)
+
 @Table(name = "egf_fundsource")
 @SequenceGenerator(name = Fundsource.SEQ_FUNDSOURCE, sequenceName = Fundsource.SEQ_FUNDSOURCE, allocationSize = 1)
 public class Fundsource extends AbstractAuditable {

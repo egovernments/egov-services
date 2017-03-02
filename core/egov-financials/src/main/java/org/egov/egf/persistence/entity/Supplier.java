@@ -50,9 +50,23 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.egov.egf.persistence.entity.enums.BudgetAccountType;
+import org.egov.egf.persistence.entity.enums.BudgetingType;
 import org.hibernate.validator.constraints.Length;
 
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode(exclude={"bank"},callSuper=false)
+
 @Table(name = "egf_supplier")
 @SequenceGenerator(name = Supplier.SEQ, sequenceName = Supplier.SEQ, allocationSize = 1)
 public class Supplier extends AbstractAuditable {

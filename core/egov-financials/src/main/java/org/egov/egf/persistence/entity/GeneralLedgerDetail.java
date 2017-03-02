@@ -40,6 +40,7 @@
 package org.egov.egf.persistence.entity;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -52,7 +53,19 @@ import javax.persistence.Table;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode(exclude={"generalLedger","accountDetailKey","accountDetailType"},callSuper=false)
+
 @Table(name = "egf_generalledgerdetail")
 @SequenceGenerator(name = GeneralLedger.SEQ, sequenceName = GeneralLedger.SEQ, allocationSize = 1)
 public class GeneralLedgerDetail extends AbstractPersistable<Long> {

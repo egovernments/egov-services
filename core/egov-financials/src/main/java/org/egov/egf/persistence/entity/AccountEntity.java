@@ -39,6 +39,8 @@
  */
 package org.egov.egf.persistence.entity;
 
+import java.util.Set;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -52,8 +54,19 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
 
-@Entity
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Entity@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 @Table(name = "egf_accountentitymaster")
+@EqualsAndHashCode(exclude={"accountDetailType" },callSuper=false)
+
 @SequenceGenerator(name = AccountEntity.SEQ, sequenceName = AccountEntity.SEQ, allocationSize = 1)
 public class AccountEntity extends AbstractAuditable {
 

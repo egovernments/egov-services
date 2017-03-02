@@ -40,6 +40,8 @@
 
 package org.egov.egf.persistence.entity;
 
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -51,7 +53,16 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 @Table(name = "egf_accountdetailtype")
 @SequenceGenerator(name = AccountDetailType.SEQ_ACCOUNTDETAILTYPE, sequenceName = AccountDetailType.SEQ_ACCOUNTDETAILTYPE, allocationSize = 1)
  

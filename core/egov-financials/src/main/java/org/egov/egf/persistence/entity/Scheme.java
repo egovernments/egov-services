@@ -51,14 +51,26 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.egov.egf.persistence.entity.enums.BudgetAccountType;
+import org.egov.egf.persistence.entity.enums.BudgetingType;
 import org.hibernate.validator.constraints.Length;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "egf_scheme")
 @SequenceGenerator(name = Scheme.SEQ, sequenceName = Scheme.SEQ, allocationSize = 1)
-@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode(exclude={"fund"},callSuper=false)
+
 public class Scheme extends  AbstractAuditable {
 
     private static final long serialVersionUID = 825465695975976653L;

@@ -41,6 +41,22 @@ package org.egov.egf.persistence.entity;
 
 import java.math.BigDecimal;
 
+import javax.persistence.Entity;
+
+import org.egov.egf.persistence.entity.enums.BankAccountType;
+
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+/*@Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter*/
+@EqualsAndHashCode(exclude={"bankAccount"},callSuper=false)
+
 public class BankReconciliation extends AbstractAuditable {
 
 	private static final long serialVersionUID = 1L;

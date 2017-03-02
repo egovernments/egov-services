@@ -50,7 +50,21 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.egov.egf.persistence.entity.enums.BudgetAccountType;
+import org.egov.egf.persistence.entity.enums.BudgetingType;
+
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode(exclude={"fundsource","scheme","subScheme","functionary","function","voucherHeader"},callSuper=false)
 @Table(name = "egf_vouchermis")
 @SequenceGenerator(name = Vouchermis.SEQ_VOUCHERMIS, sequenceName = Vouchermis.SEQ_VOUCHERMIS, allocationSize = 1)
 public class Vouchermis implements java.io.Serializable {

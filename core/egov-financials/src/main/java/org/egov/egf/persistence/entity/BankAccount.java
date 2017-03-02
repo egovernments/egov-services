@@ -39,6 +39,8 @@
  */
 package org.egov.egf.persistence.entity;
 
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -55,7 +57,19 @@ import javax.validation.constraints.NotNull;
 import org.egov.egf.persistence.entity.enums.BankAccountType;
 import org.hibernate.validator.constraints.Length;
 
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode(exclude={"bankBranch","chartOfAccount","fund","type"},callSuper=false)
+
 @Table(name = "egf_bankaccount")
 @SequenceGenerator(name = BankAccount.SEQ_BANKACCOUNT, sequenceName = BankAccount.SEQ_BANKACCOUNT, allocationSize = 1)
 public class BankAccount extends AbstractAuditable implements java.io.Serializable {

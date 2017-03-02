@@ -15,13 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class WorkFlowController {
 
-    @Autowired
     private Workflow workflow;
 
-    // @InitBinder("processInstance")
-    // protected void initBinder(WebDataBinder binder) {
-    // binder.addValidators(new ProcessInstanceValidator());
-    // }
+    @Autowired
+    public WorkFlowController(Workflow workflow) {
+        this.workflow = workflow;
+    }
 
     @PostMapping(value = "/create")
     public ProcessInstance startWorkflow(@RequestBody final ProcessInstance processInstance) {

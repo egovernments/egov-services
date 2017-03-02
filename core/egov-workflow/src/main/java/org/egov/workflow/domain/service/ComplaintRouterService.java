@@ -45,6 +45,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.workflow.domain.exception.ApplicationRuntimeException;
+import org.egov.workflow.domain.exception.EscalationException;
 import org.egov.workflow.persistence.entity.ComplaintRouter;
 import org.egov.workflow.persistence.repository.BoundaryRepository;
 import org.egov.workflow.persistence.repository.ComplaintRouterRepository;
@@ -69,21 +70,21 @@ public class ComplaintRouterService {
 
     private final ComplaintRouterRepository complaintRouterRepository;
 
-    private BoundaryRepository boundaryRepository;
+    private final BoundaryRepository boundaryRepository;
 
-    private PositionRepository positionRepository;
+    private final PositionRepository positionRepository;
 
-    private PositionHierarchyRepository positionHierarchyRepository;
+    private final PositionHierarchyRepository positionHierarchyRepository;
 
-    private ComplaintTypeRepository complaintTypeRepository;
+    private final ComplaintTypeRepository complaintTypeRepository;
 
-    private EmployeeRepository employeeRepository;
+    private final EmployeeRepository employeeRepository;
 
     @Autowired
     public ComplaintRouterService(final ComplaintRouterRepository complaintRouterRepository,
             final BoundaryRepository boundaryRepository, final PositionRepository positionRepository,
             final ComplaintTypeRepository complaintTypeRepository, final EmployeeRepository employeeRepository,
-            PositionHierarchyRepository positionHierarchyRepository) {
+            final PositionHierarchyRepository positionHierarchyRepository) {
         this.complaintRouterRepository = complaintRouterRepository;
         this.boundaryRepository = boundaryRepository;
         this.positionRepository = positionRepository;
@@ -163,11 +164,11 @@ public class ComplaintRouterService {
                         positionResponse = positionRepository.getById(positions.iterator().next().getId());
                 } else
                     positionResponse = positionHierarchies.iterator().next().getToPosition();
-            } catch (final Exception e) {
+            } catch (final EscalationException e) {
                 // Ignoring and logging exception since exception will cause
                 // multi city scheduler to fail for all remaining cities.
                 LOG.error("An error occurred, escalation can't be completed ", e);
-                return null;
+                throw new ApplicationRuntimeException("PGR.001", e);
             }
         return positionResponse;
     }

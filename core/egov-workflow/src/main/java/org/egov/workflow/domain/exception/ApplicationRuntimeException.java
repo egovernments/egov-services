@@ -44,21 +44,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The Class ApplicationRuntimeException.
- * Generic unchecked exception class
+ * The Class ApplicationRuntimeException. Generic unchecked exception class
  */
 public class ApplicationRuntimeException extends RuntimeException {
-	
-	private static final long serialVersionUID = 1L;
-	private static final Logger LOG = LoggerFactory.getLogger(ApplicationRuntimeException.class);
-	
-	public ApplicationRuntimeException(final String msg) {
-		super(msg);
-		LOG.error(msg);
-	}
-	
-	public ApplicationRuntimeException(final String msg, final Throwable throwable) {
-		super(msg, throwable);
-		LOG.error(msg, throwable);
-	}
+
+    private static final long serialVersionUID = 1L;
+    private static final Logger LOG = LoggerFactory.getLogger(ApplicationRuntimeException.class);
+
+    public ApplicationRuntimeException(final String msg) {
+        super(msg);
+        LOG.error(msg);
+    }
+
+    public ApplicationRuntimeException(final String msg, final Throwable throwable) {
+        super(msg, throwable);
+        LOG.error(msg, throwable);
+    }
 }

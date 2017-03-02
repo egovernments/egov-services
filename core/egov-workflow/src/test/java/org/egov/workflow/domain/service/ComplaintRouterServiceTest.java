@@ -55,7 +55,6 @@ public class ComplaintRouterServiceTest {
         final ComplaintRouter router = getComplaintRouter();
         when(complaintTypeRepository.fetchComplaintTypeByCode("C001")).thenReturn(complaintType);
         when(complaintRouterRepository.findByComplaintTypeAndBoundary(complaintType.getId(), 1L)).thenReturn(router);
-        when(complaintRouterRepository.findByOnlyBoundary(1L)).thenReturn(router);
         when(complaintRouterRepository.findByOnlyComplaintType(1L)).thenReturn(router);
         when(complaintRouterRepository.findCityAdminGrievanceOfficer("ADMINISTRATION")).thenReturn(router);
         when(positionHierarchyRepository.getByObjectTypeObjectSubTypeAndFromPosition("Complaint", "C001", 2L))
@@ -104,7 +103,7 @@ public class ComplaintRouterServiceTest {
         final PositionResponse actualPosition = complaintRouterService.getAssignee(10L, "C001", null);
         assertEquals(expectedPosition, actualPosition);
     }
-    
+
     @Test
     public void test_should_return_assignee_without_complainttype() {
         final PositionResponse expectedPosition = new PositionResponse();
@@ -113,7 +112,7 @@ public class ComplaintRouterServiceTest {
         final PositionResponse actualPosition = complaintRouterService.getAssignee(null, "C001", null);
         assertEquals(expectedPosition, actualPosition);
     }
-    
+
     @Test
     public void test_should_return_assignee_with_city_administrator() {
         when(complaintRouterRepository.findByOnlyComplaintType(1L)).thenReturn(null);
@@ -123,7 +122,27 @@ public class ComplaintRouterServiceTest {
         final PositionResponse actualPosition = complaintRouterService.getAssignee(null, "C001", null);
         assertEquals(expectedPosition, actualPosition);
     }
-    
+
+    @Test
+    public void test_should_return_assignee_only_with_boundary() {
+        final BoundaryResponse boundary = new BoundaryResponse();
+        boundary.setName("Srinivas Nagar");
+        boundary.setId(10L);
+        when(boundaryRepository.fetchBoundaryById(10L)).thenReturn(boundary);
+        final ComplaintRouter complaintRouter = new ComplaintRouter();
+        complaintRouter.setBoundary(10L);
+        complaintRouter.setPosition(10L);
+        complaintRouter.setComplaintType(1L);
+        when(complaintRouterRepository.findByOnlyBoundary(10L)).thenReturn(complaintRouter);
+        when(complaintRouterRepository.findByOnlyComplaintType(1L)).thenReturn(null);
+        final PositionResponse expectedPosition = new PositionResponse();
+        expectedPosition.setId(10L);
+        expectedPosition.setName("Grievence_Officer_1");
+        final PositionResponse actualPosition = complaintRouterService.getAssignee(10L, "C001", null);
+        assertEquals(expectedPosition, actualPosition);
+
+    }
+
     private ComplaintRouter getComplaintRouter() {
         final ComplaintRouter complaintRouter = new ComplaintRouter();
         complaintRouter.setBoundary(1L);
@@ -143,7 +162,7 @@ public class ComplaintRouterServiceTest {
         final BoundaryResponse boundary = new BoundaryResponse();
         boundary.setName("Srinivas Nagar");
         boundary.setId(1L);
-        BoundaryResponse parent = new BoundaryResponse();
+        final BoundaryResponse parent = new BoundaryResponse();
         parent.setId(30L);
         parent.setName("Kurnool Municipality");
         boundary.setParent(parent);

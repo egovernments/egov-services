@@ -26,9 +26,6 @@ public class Employee {
 	@JsonProperty("username")
 	private String username;
 	
-/*	@JsonProperty("assignments")
-	private final List<Assignment> assignments = new ArrayList<Assignment>(0);*/
-	
 	@JsonProperty("roles")
 	private Set<Role> roles = new HashSet<>();
 

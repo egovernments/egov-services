@@ -1,7 +1,5 @@
 package org.egov.pgr.consumer;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.egov.pgr.config.PersistenceProperties;
 import org.egov.pgr.contracts.grievance.SevaRequest;
 import org.egov.pgr.entity.Complaint;
@@ -11,15 +9,18 @@ import org.egov.pgr.model.SmsComposer;
 import org.egov.pgr.producer.GrievanceProducer;
 import org.egov.pgr.repository.PositionRepository;
 import org.egov.pgr.service.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
+import java.util.HashMap;
 
 @Service
 public class GrievancePersistenceListener {
 
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
     private ComplaintTypeService complaintTypeService;
     private ComplaintStatusService complaintStatusService;
     private ComplaintService complaintService;
@@ -33,7 +34,7 @@ public class GrievancePersistenceListener {
     public GrievancePersistenceListener(ComplaintTypeService complaintTypeService, ComplaintStatusService complaintStatusService,
                                         ComplaintService complaintService, EscalationService escalationService,
                                         GrievanceProducer grievanceProducer, PositionRepository positionRepository,
-                                        TemplateService templateService,PersistenceProperties persistenceProperties) {
+                                        TemplateService templateService, PersistenceProperties persistenceProperties) {
         this.complaintService = complaintService;
         this.complaintTypeService = complaintTypeService;
         this.complaintStatusService = complaintStatusService;
@@ -48,34 +49,32 @@ public class GrievancePersistenceListener {
     @KafkaListener(id = "${kafka.topics.pgr.workflowupdated.id}",
             topics = "${kafka.topics.pgr.workflowupdated.name}",
             group = "${kafka.topics.pgr.workflowupdated.group}")
-    public void processMessage(ConsumerRecord<String, Object> record) {
-        SevaRequest sevaRequest = null;
-        //TODO - Move away from concrete service request binding to a hash map.
-        try {
-            sevaRequest = new ObjectMapper().readValue((String) record.value(), SevaRequest.class);
-            Complaint complaint = persistComplaint(sevaRequest);
-            triggerSms(complaint);
-            triggerEmail(complaint);
-            triggerIndexing(complaint);
-        } catch (IOException e) {
-            //Log error around deserialization failed
-            e.printStackTrace();
-        }
+    public void processMessage(HashMap<String, Object> sevaRequestMap) {
+        logger.debug("Received seva request");
+        SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
+        Complaint complaint = persistComplaint(sevaRequest);
+        triggerSms(complaint);
+        triggerEmail(complaint);
+        triggerIndexing(sevaRequest);
     }
 
-    private void triggerIndexing(Complaint record) {
+    private void triggerIndexing(SevaRequest record) {
+        logger.debug("Triggering Indexing for" + record.getServiceRequest().getCrn());
         kafkaProducer.sendMessage(persistenceProperties.getIndexingTopic(), record);
     }
 
     private void triggerEmail(Complaint complaint) {
+        logger.debug("Triggering email for" + complaint.getCrn());
         kafkaProducer.sendMessage(persistenceProperties.getEmailTopic(), new EmailComposer(complaint, templateService).compose());
     }
 
     private void triggerSms(Complaint complaint) {
+        logger.debug("Triggering sms for" + complaint.getCrn());
         kafkaProducer.sendMessage(persistenceProperties.getSmsTopic(), new SmsComposer(complaint, templateService).compose());
     }
 
     private Complaint persistComplaint(SevaRequest sevaRequest) {
+        logger.debug("Saving record in database for" + sevaRequest.getServiceRequest().getCrn());
         String complaintCrn = sevaRequest.getServiceRequest().getCrn();
         Complaint complaintByCrn = complaintService.findByCrn(complaintCrn);
         Complaint complaint = new ComplaintBuilder(complaintByCrn, sevaRequest.getServiceRequest(), complaintTypeService, complaintStatusService, escalationService, positionRepository).build();

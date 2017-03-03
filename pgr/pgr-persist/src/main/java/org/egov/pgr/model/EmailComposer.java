@@ -1,5 +1,6 @@
 package org.egov.pgr.model;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.pgr.contracts.email.EmailMessage;
 import org.egov.pgr.entity.Complaint;
 import org.egov.pgr.service.TemplateService;
@@ -22,7 +23,7 @@ public class EmailComposer {
     }
 
     public EmailMessage compose() {
-        return new EmailMessage(complaint.getComplainant().getEmail(), getEmailSubject(complaint), getEmailBody(complaint), null);
+        return new EmailMessage(complaint.getComplainant().getEmail(), getEmailSubject(complaint), getEmailBody(complaint), StringUtils.EMPTY);
     }
 
     private String getEmailBody(Complaint complaint) {

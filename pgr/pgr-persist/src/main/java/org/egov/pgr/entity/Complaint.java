@@ -202,17 +202,13 @@ public class Complaint extends AbstractAuditable {
         return this.receivingCenter;
     }
 
+    public Long getStateId() {
+        return stateId;
+    }
+
     public void setReceivingCenter(ReceivingCenter receivingCenter) {
         this.receivingCenter = receivingCenter;
     }
-
-//	public Set<Long> getSupportDocs() {
-//		return this.supportDocs;
-//	}
-//
-//	public void setSupportDocs(Set<Long> supportDocs) {
-//		this.supportDocs = supportDocs;
-//	}
 
     public Long getLocation() {
         return this.location;
@@ -320,25 +316,5 @@ public class Complaint extends AbstractAuditable {
     public void setLocationName(String locationName) {
         this.locationName = locationName;
     }
-    /*
-     * @Override public String myLinkId() { return this.crn; }
-	 */
-    // @Override
-    // public String getStateDetails() {
-    // SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
-    // return
-    // String.format("Complaint Number %s for %s filed on %s. Date of resolution %s",
-    // this.getCrn(),
-    // this.getComplaintType().getName(),
-    // formatter.format(this.getCreatedDate()),
-    // formatter.format(this.getEscalationDate()));
-    // }
-
-    // @Override
-    // protected StateInfoBuilder buildStateInfo() {
-    // return
-    // super.buildStateInfo().citizenName(this.getComplainant().getName()).refDate(this.getCreatedDate()).citizenPhoneno(this.getComplainant().getMobile())
-    // .citizenAddress(this.getComplainant().getAddress()).refNum(this.getCrn()).location(this.getLocation().getName()).task("Grievance").status(this.getStatus().getName());
-    // }
 
 }

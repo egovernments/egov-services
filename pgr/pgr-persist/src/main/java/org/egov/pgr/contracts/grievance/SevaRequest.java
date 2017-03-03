@@ -1,20 +1,18 @@
 package org.egov.pgr.contracts.grievance;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.HashMap;
 
 public class SevaRequest {
 
-    @JsonProperty("RequestInfo")
-    private RequestInfo requestInfo = null;
+    private static final String SERVICE_REQUEST = "ServiceRequest";
+    private HashMap<String, Object> sevaRequestMap;
 
-    @JsonProperty("ServiceRequest")
-    private ServiceRequest serviceRequest = null;
-
-    public RequestInfo getRequestInfo() {
-        return requestInfo;
+    public SevaRequest(HashMap<String, Object> sevaRequestMap) {
+        this.sevaRequestMap = sevaRequestMap;
     }
 
+    @SuppressWarnings("unchecked")
     public ServiceRequest getServiceRequest() {
-        return serviceRequest;
+        return new ServiceRequest((HashMap<String, Object>) sevaRequestMap.get(SERVICE_REQUEST));
     }
 }

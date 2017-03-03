@@ -16,7 +16,7 @@ public class SmsComposer {
     }
 
     public SmsMessage compose() {
-        return new SmsMessage(complaint.getComplainant().getEmail(), getSmsBody(complaint));
+        return new SmsMessage(complaint.getComplainant().getMobile(), getSmsBody(complaint));
     }
 
     private String getSmsBody(Complaint complaint) {

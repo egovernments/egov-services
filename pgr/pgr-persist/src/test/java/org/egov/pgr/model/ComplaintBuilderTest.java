@@ -1,21 +1,21 @@
 package org.egov.pgr.model;
 
-import org.apache.commons.lang3.StringUtils;
 import org.egov.pgr.contracts.grievance.ServiceRequest;
 import org.egov.pgr.entity.Complaint;
 import org.egov.pgr.entity.ComplaintType;
 import org.egov.pgr.entity.enums.ComplaintStatus;
+import org.egov.pgr.entity.enums.ReceivingMode;
 import org.egov.pgr.repository.PositionRepository;
 import org.egov.pgr.service.ComplaintStatusService;
 import org.egov.pgr.service.ComplaintTypeService;
 import org.egov.pgr.service.EscalationService;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,102 +34,107 @@ public class ComplaintBuilderTest {
     private EscalationService escalationService;
     @Mock
     private PositionRepository positionRepository;
-    private ServiceRequest serviceRequest;
-
-    @Before
-    public void setUp() throws Exception {
-        this.serviceRequest = new ServiceRequest();
-    }
+    private String tenantId = "ap.public";
 
     @Test
     public void testNewComplaintShouldBeCreatedWithPassedInServiceRequest() throws Exception {
         setupMocks();
-        String withdrawn = "WITHDRAWN";
-        org.egov.pgr.entity.ComplaintStatus withdrawnStatus = mock(org.egov.pgr.entity.ComplaintStatus.class);
-        withdrawnStatus.setName(withdrawn);
-        when(complaintStatusService.getByName(withdrawn)).thenReturn(withdrawnStatus);
-        Complaint complaint = new Complaint();
-        org.egov.pgr.entity.ComplaintStatus status = new org.egov.pgr.entity.ComplaintStatus();
-        status.setName(ComplaintStatus.PROCESSING.toString());
-        complaint.setStatus(status);
-        ComplaintBuilder complaintBuilder = complaintBuilderWithComplaint(complaint);
-        Map<String, String> valuesMap = new HashMap<>();
-        valuesMap.put("status", withdrawn);
-        this.serviceRequest.setValues(valuesMap);
+        ServiceRequest serviceRequest = successServiceRequest();
+        ComplaintBuilder complaintBuilder = complaintBuilderWithComplaint(new Complaint(), serviceRequest);
         Complaint builtComplaint = complaintBuilder.build();
 
-        assertEquals(withdrawnStatus, builtComplaint.getStatus());
-    }
-
-    @Test
-    public void testComplaintIsUpdatedWithValidStatus() throws Exception {
-        String withdrawn = "WITHDRAWN";
-        org.egov.pgr.entity.ComplaintStatus withdrawnStatus = new org.egov.pgr.entity.ComplaintStatus();
-        withdrawnStatus.setName(withdrawn);
-        when(complaintStatusService.getByName(withdrawn)).thenReturn(withdrawnStatus);
-        Complaint complaint = new Complaint();
-        org.egov.pgr.entity.ComplaintStatus status = new org.egov.pgr.entity.ComplaintStatus();
-        status.setName(ComplaintStatus.PROCESSING.toString());
-        complaint.setStatus(status);
-        ComplaintBuilder complaintBuilder = complaintBuilderWithComplaint(complaint);
-        Map<String, String> valuesMap = new HashMap<>();
-        valuesMap.put("status", withdrawn);
-        this.serviceRequest.setValues(valuesMap);
-        Complaint builtComplaint = complaintBuilder.build();
-
-        assertEquals(withdrawnStatus, builtComplaint.getStatus());
+        Calendar c = Calendar.getInstance();
+        c.setTime(builtComplaint.getEscalationDate());
+        assertEquals("AA-01892-AP", builtComplaint.getCrn());
+        assertEquals(15.232, builtComplaint.getLat(), 0.0);
+        assertEquals(18.232, builtComplaint.getLng(), 0.0);
+        assertEquals("complaint details", builtComplaint.getDetails());
+        assertEquals("landmark", builtComplaint.getLandmarkDetails());
+        assertEquals("complainant address", builtComplaint.getComplainant().getAddress());
+        assertEquals("raju@maildrop.cc", builtComplaint.getComplainant().getEmail());
+        assertEquals("9988776655", builtComplaint.getComplainant().getMobile());
+        assertEquals("raju", builtComplaint.getComplainant().getName());
+        assertEquals(ReceivingMode.WEBSITE, builtComplaint.getReceivingMode());
+        assertEquals("magical powers", builtComplaint.getComplaintType().getName());
+        assertEquals("PROCESSING", builtComplaint.getStatus().getName());
+        assertEquals(Long.valueOf(18), builtComplaint.getAssignee());
+        assertEquals(Long.valueOf(101), builtComplaint.getLocation());
+        assertEquals(Long.valueOf(201), builtComplaint.getChildLocation());
+        assertEquals("jhumritalaiyya", builtComplaint.getLocationName());
+        assertEquals(Long.valueOf(88), builtComplaint.getStateId());
+        assertEquals(Long.valueOf(11), builtComplaint.getDepartment());
+        assertEquals(28, c.get(Calendar.DAY_OF_MONTH));
+        assertEquals(2, c.get(Calendar.MONTH));
+        assertEquals(2017, c.get(Calendar.YEAR));
     }
 
     @Test
     public void testThatInvalidStatusIsIgnoredWhileUpdatingComplaint() throws Exception {
+        ServiceRequest serviceRequest = successServiceRequest();
         String invalidStatus = "INVALID_STATUS";
+        serviceRequest.getValues().put("status", invalidStatus);
         Complaint complaint = new Complaint();
         org.egov.pgr.entity.ComplaintStatus originalStatus = new org.egov.pgr.entity.ComplaintStatus();
         originalStatus.setName(ComplaintStatus.PROCESSING.toString());
         complaint.setStatus(originalStatus);
-        ComplaintBuilder complaintBuilder = complaintBuilderWithComplaint(complaint);
-        Map<String, String> valuesMap = new HashMap<>();
-        valuesMap.put("status", invalidStatus);
-        this.serviceRequest.setValues(valuesMap);
+        ComplaintBuilder complaintBuilder = complaintBuilderWithComplaint(complaint, serviceRequest);
         Complaint builtComplaint = complaintBuilder.build();
 
         verify(complaintStatusService, never()).getByName(invalidStatus);
         assertEquals(originalStatus, builtComplaint.getStatus());
     }
 
-    @Test
-    public void testThatStatusIsUpdatedForNewComplaint() throws Exception {
-        String processing = "PROCESSING";
-        org.egov.pgr.entity.ComplaintStatus processingStatus = new org.egov.pgr.entity.ComplaintStatus();
-        processingStatus.setName(processing);
-        when(complaintStatusService.getByName(processing)).thenReturn(processingStatus);
-        ComplaintBuilder complaintBuilder = complaintBuilderWithComplaint(null);
+    private ServiceRequest successServiceRequest() {
+        Map<String, Object> serviceRequestMap = new HashMap<>();
         Map<String, String> valuesMap = new HashMap<>();
-        valuesMap.put("status", processing);
-        this.serviceRequest.setValues(valuesMap);
-        Complaint builtComplaint = complaintBuilder.build();
-
-        assertEquals(processingStatus, builtComplaint.getStatus());
+        valuesMap.put("complainantAddress", "complainant address");
+        valuesMap.put("receivingMode", "Website");
+        valuesMap.put("status", "PROCESSING");
+        valuesMap.put("assignment_id", "18");
+        valuesMap.put("location_id", "101");
+        valuesMap.put("child_location_id", "201");
+        valuesMap.put("location_name", "jhumritalaiyya");
+        valuesMap.put("state_id", "88");
+        serviceRequestMap.put("values", valuesMap);
+        serviceRequestMap.put("tenantId", tenantId);
+        serviceRequestMap.put("service_request_id", "AA-01892-AP");
+        serviceRequestMap.put("lat", 15.232D);
+        serviceRequestMap.put("lng", 18.232D);
+        serviceRequestMap.put("address", "landmark");
+        serviceRequestMap.put("description", "complaint details");
+        serviceRequestMap.put("first_name", "raju");
+        serviceRequestMap.put("email", "raju@maildrop.cc");
+        serviceRequestMap.put("phone", "9988776655");
+        serviceRequestMap.put("service_code", "MAGIC");
+        return new ServiceRequest(serviceRequestMap);
     }
 
     private void setupMocks() {
+        long designationId = 12L;
+        long assigneeId = 18L;
+        Long departmentId = 11L;
+        Date escalationDate = getDateFor(2017, 2, 28);
+        String complaintStatus = "PROCESSING";
         setupStatusMock();
         setupComplaintTypeMock();
-        setupPositionMock();
-        setupEscalationDateMock();
+        setupPositionMock(assigneeId, designationId, departmentId);
+        setupEscalationDateMock(escalationDate, designationId);
+        setupComplaintStatusMock(complaintStatus);
     }
 
-    private void setupEscalationDateMock() {
-        long designationId = 12L;
-        Calendar c = Calendar.getInstance();
-        c.set(2017, 02, 28, 0, 0);
-        when(escalationService.getExpiryDate(any(Complaint.class), eq(designationId))).thenReturn(c.getTime());
+    private void setupComplaintStatusMock(String statusName) {
+        org.egov.pgr.entity.ComplaintStatus complaintStatus = new org.egov.pgr.entity.ComplaintStatus();
+        complaintStatus.setName(statusName);
+        when(complaintStatusService.getByName(statusName)).thenReturn(complaintStatus);
     }
 
-    private void setupPositionMock() {
-        long assigneeId = 123L;
-        long designationId = 12L;
-        when(positionRepository.designationIdForAssignee(StringUtils.EMPTY, assigneeId)).thenReturn(designationId);
+    private void setupEscalationDateMock(Date expectedDate, long designationId) {
+        when(escalationService.getExpiryDate(any(Complaint.class), eq(designationId))).thenReturn(expectedDate);
+    }
+
+    private void setupPositionMock(Long assigneeId, Long designationId, Long departmentId) {
+        when(positionRepository.designationIdForAssignee(tenantId, assigneeId)).thenReturn(designationId);
+        when(positionRepository.departmentIdForAssignee(tenantId, assigneeId)).thenReturn(departmentId);
     }
 
     private void setupComplaintTypeMock() {
@@ -145,8 +150,14 @@ public class ComplaintBuilderTest {
         when(complaintStatusService.getByName(processing)).thenReturn(processingStatus);
     }
 
-    private ComplaintBuilder complaintBuilderWithComplaint(Complaint complaint) {
+    private ComplaintBuilder complaintBuilderWithComplaint(Complaint complaint, ServiceRequest serviceRequest) {
         return new ComplaintBuilder(complaint, serviceRequest, complaintTypeService, complaintStatusService,
                 escalationService, positionRepository);
+    }
+
+    private Date getDateFor(int year, int month, int date) {
+        Calendar c = Calendar.getInstance();
+        c.set(year, month, date, 0, 0);
+        return c.getTime();
     }
 }

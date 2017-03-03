@@ -45,6 +45,7 @@ import org.egov.pgr.entity.Complaint;
 import org.egov.pgr.entity.Escalation;
 import org.egov.pgr.repository.EscalationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,10 +56,13 @@ import java.util.Date;
 public class EscalationService {
 
     private final EscalationRepository escalationRepository;
+    private Integer defaultEscalationHours;
 
     @Autowired
-    public EscalationService(final EscalationRepository escalationRepository) {
+    public EscalationService(final EscalationRepository escalationRepository,
+                             @Value("${defaults.escalationHours}") Integer defaultEscalationHours) {
         this.escalationRepository = escalationRepository;
+        this.defaultEscalationHours = defaultEscalationHours;
     }
 
     public Date getExpiryDate(final Complaint complaint, final Long designationId) {
@@ -67,8 +71,8 @@ public class EscalationService {
         return DateUtils.addHours(expiryDate, noOfhrs);
     }
 
-    public Integer getHrsToResolve(final Long designationId, final Long complaintTypeId) {
+    private Integer getHrsToResolve(final Long designationId, final Long complaintTypeId) {
         final Escalation escalation = escalationRepository.findByDesignationAndComplaintType(designationId, complaintTypeId);
-        return (escalation != null) ? escalation.getNoOfHrs() : 48;
+        return (escalation != null) ? escalation.getNoOfHrs() : defaultEscalationHours;
     }
 }

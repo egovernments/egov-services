@@ -52,8 +52,6 @@ import javax.persistence.Table;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 @Entity
 @Table(name = "egpgr_complaintstatus_mapping")
 @SequenceGenerator(name = ComplaintStatusMapping.SEQ_STATUSMAP, sequenceName = ComplaintStatusMapping.SEQ_STATUSMAP, allocationSize = 1)

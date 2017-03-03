@@ -40,10 +40,7 @@
 
 package org.egov.user.persistence.entity;
 
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -51,7 +48,9 @@ import javax.persistence.*;
 @Table(name = "eg_role")
 @Setter
 @Getter
-@Builder()
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class Role extends AbstractAuditable {
     private static final long serialVersionUID = -3174785753813418004L;

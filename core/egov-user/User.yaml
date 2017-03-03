@@ -84,7 +84,6 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/UserReq'
-        - $ref: "#/parameters/tenantId"
       tags:
         - User
       responses:
@@ -102,7 +101,6 @@ paths:
       summary: Update existing user master data for the User using the unique user name.
       description: To update an existing User master data.
       parameters:
-        - $ref: "#/parameters/tenantId"
         - name: user
           in: body
           description: Request header for the user with new of values.
@@ -409,11 +407,17 @@ definitions:
   UserReq:
     type: object
     properties:
+      tenantId:
+        description: Unique id for for a tenant.
+        type: string
       RequestInfo:
         $ref: '#/definitions/RequestInfo'
       User:
         $ref: '#/definitions/User'
-
+    required:
+      - tenantId
+      - RequestInfo
+      - User
   RequestInfo:
     type: object
     properties:

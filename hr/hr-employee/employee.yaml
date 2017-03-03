@@ -108,9 +108,6 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/EmployeeReq'
-
-        - $ref: "swagger-yaml/hr-masters.yaml/#/parameters/tenantId"
-
       tags:
         - Employee
       responses:
@@ -130,7 +127,6 @@ paths:
       summary: Update Employee data for a particular employee
       description: To update an existing employee's employee details and all other details like assignment, jurisdiction, qualification service details and porbation for which the code is passed.
       parameters:
-        - $ref: "swagger-yaml/hr-masters.yaml/#/parameters/tenantId"
         - name: employee
           in: body
           description: Request header for the employee with new of values.
@@ -862,13 +858,19 @@ definitions:
   EmployeeReq:
     type: object
     properties:
+      tenantId:
+        description: Unique id for for a tenant.
+        type: string
       RequestInfo:
         $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/RequestInfo'
       Employee:
         type: array
         items:
           $ref: '#/definitions/Employee'
-        
+    required:
+      - tenantId
+      - RequestInfo
+      - Employee   
   EmployeeInfo:
     title: Main employee details of the Employee of the system
     description: This object will have only the main or most frequently queried info.

@@ -1,5 +1,6 @@
 package org.egov.eis.web.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,8 +18,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RestController
 public class DesignationRestController {
@@ -55,10 +54,12 @@ public class DesignationRestController {
 			@RequestParam(value = "id") String id) throws Exception {
 
 		DesignationRes response = new DesignationRes();
+		List<Designation> designationList = new ArrayList<>();
 		response.setResponseInfo(new ResponseInfo("", "", new Date().toString(), "", "", "Successful response"));
 		if (id != null && !id.isEmpty()) {
-			response.getDesignation()
-					.add(mapToContractDesignation(designationService.getDesignationById(Long.valueOf(id))));
+			Designation designation = mapToContractDesignation(designationService.getDesignationById(Long.valueOf(id)));
+			designationList.add(designation);
+			response.setDesignation(designationList);
 		} else {
 			throw new Exception();
 		}
@@ -74,10 +75,7 @@ public class DesignationRestController {
 			responseInfo.setStatus(HttpStatus.OK.toString());
 			desigResponse.setResponseInfo(responseInfo);
 			List<Designation> designations = getDesignationByDepartment(id);
-			if (designations.isEmpty()) {
-
-			} else
-				desigResponse.getDesignation().addAll(designations);
+		    desigResponse.setDesignation(designations);
 			return new ResponseEntity<DesignationRes>(desigResponse, HttpStatus.OK);
 		} else
 			return new ResponseEntity<DesignationRes>(desigResponse, HttpStatus.BAD_REQUEST);
@@ -90,10 +88,9 @@ public class DesignationRestController {
 	}
 
 	private Designation mapToContractDesignation(org.egov.eis.persistence.entity.Designation designationEntity) {
-		ObjectMapper mapper = new ObjectMapper();
 		Designation designation = new Designation();
 		if (designationEntity != null) {
-			designation = mapper.convertValue(designationEntity, Designation.class);
+			designation = new Designation(designationEntity);
 		}
 		return designation;
 	}

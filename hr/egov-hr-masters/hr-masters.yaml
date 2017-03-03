@@ -97,8 +97,6 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/DesignationReq'
-
-        - $ref: "#/parameters/tenantId"
       tags:
         - Designation
       responses:
@@ -117,7 +115,6 @@ paths:
       summary: Update existing designation data for the code passed
       description: To update an existing designation master data.
       parameters:
-        - $ref: "#/parameters/tenantId"
         - name: designation
           in: body
           description: Request header for the designation with new of values.
@@ -213,8 +210,6 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/PositionReq'
-
-        - $ref: "#/parameters/tenantId"
       tags:
         - Position
       responses:
@@ -233,7 +228,6 @@ paths:
       summary: Update existing position data for the position Id passed
       description: To update an existing position master data.
       parameters:
-        - $ref: "#/parameters/tenantId"
         - name: position
           in: body
           description: Request header for the position with new of values.
@@ -341,8 +335,6 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/PositionHierarchyReq'
-
-        - $ref: "#/parameters/tenantId"
       tags:
         - Position Hierarchy
       responses:
@@ -356,7 +348,6 @@ paths:
       summary: Update existing position hierarchy master data for the object type passed.
       description: To update the set of existing position hierarchy master data for a certain object type.
       parameters:
-        - $ref: "#/parameters/tenantId"
         - name: positionHierarchy
           in: body
           description: Request header for the position hierarchy with new of values.
@@ -461,8 +452,6 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/GradeReq'
-
-        - $ref: "#/parameters/tenantId"
       tags:
         - Grade
       responses:
@@ -477,7 +466,7 @@ paths:
   /grades/{gradeId}:
     parameters:
       - $ref: "#/parameters/gradeId"
-    put:
+    post:
       summary: Update existing grade for the unique Id
       description: To update an existing grade master data.
       parameters:
@@ -487,7 +476,6 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/GradeReq'
-        - $ref: "#/parameters/tenantId"
       tags:
         - Grade
       responses:
@@ -571,8 +559,6 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/EmployeeTypeReq'
-
-        - $ref: "#/parameters/tenantId"
       tags:
         - Employee Type
       responses:
@@ -585,7 +571,7 @@ paths:
           schema:
             $ref: '#/definitions/ErrorRes'
   /employeetype/{employeetypeId}/_update:
-    put:
+    post:
       summary: Update an existing employee type.
       description: To update an existing employee type master data.
       parameters:
@@ -595,7 +581,6 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/EmployeeTypeReq'
-        - $ref: "#/parameters/tenantId"
         - name: employeetypeId
           in: path
           required: true
@@ -685,8 +670,6 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/GroupReq'
-
-        - $ref: "#/parameters/tenantId"
       tags:
         - Employee Group
       responses:
@@ -709,7 +692,6 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/GroupReq'
-        - $ref: "#/parameters/tenantId"
         - name: groupId
           in: path
           required: true
@@ -798,8 +780,6 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/RecruitmentQuotaReq'
-
-        - $ref: "#/parameters/tenantId"
       tags:
         - Recruitment Quota
       responses:
@@ -823,7 +803,6 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/RecruitmentQuotaReq'
-        - $ref: "#/parameters/tenantId"
         - name: quotaId
           in: path
           required: true
@@ -913,8 +892,6 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/RecruitmentTypeReq'
-
-        - $ref: "#/parameters/tenantId"
       tags:
         - Recruitment Type
       responses:
@@ -927,7 +904,7 @@ paths:
           schema:
             $ref: '#/definitions/ErrorRes'
   /recruitmenttype/{typeId}/_update:
-    put:
+    post:
       summary: Update an existing recruitment type.
       description: To update an existing recruitment type master data.
       parameters:
@@ -937,7 +914,6 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/RecruitmentTypeReq'
-        - $ref: "#/parameters/tenantId"
         - name: typeId
           in: path
           required: true
@@ -1026,8 +1002,6 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/RecruitmentModeReq'
-
-        - $ref: "#/parameters/tenantId"
       tags:
         - Recruitment Mode
       responses:
@@ -1050,7 +1024,6 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/RecruitmentModeReq'
-        - $ref: "#/parameters/tenantId"
         - name: modeId
           in: path
           required: true
@@ -1413,13 +1386,19 @@ definitions:
   PositionReq:
     type: object
     properties:
+      tenantId:
+        description: Unique id for for a tenant.
+        type: string
       RequestInfo:
         $ref: '#/definitions/RequestInfo'
       Position:
         type: array
         items:
           $ref: '#/definitions/Position'
-
+    required:
+      - tenantId
+      - RequestInfo
+      - Position
   Designation:
     type: object
     properties:
@@ -1465,11 +1444,17 @@ definitions:
   DesignationReq:
     type: object
     properties:
+      tenantId:
+        description: Unique id for for a tenant.
+        type: string
       RequestInfo:
         $ref: '#/definitions/RequestInfo'
       Designation:
         $ref: '#/definitions/Designation'   
-        
+    required:
+      - tenantId
+      - RequestInfo
+      - Designation    
   ObjectType:
     type: object
     properties:
@@ -1536,11 +1521,17 @@ definitions:
   PositionHierarchyReq:
     type: object
     properties:
+      tenantId:
+        description: Unique id for for a tenant.
+        type: string
       RequestInfo:
         $ref: '#/definitions/RequestInfo'
       PositionHierarchy:
         $ref: '#/definitions/PositionHierarchy'       
- 
+    required:
+      - tenantId
+      - RequestInfo
+      - PositionHierarchy
   Group:
     type: object
     description: Employee group master
@@ -1685,6 +1676,9 @@ definitions:
   GradeReq:
     type: object
     properties:
+      tenantId:
+        description: Unique id for for a tenant.
+        type: string
       RequestInfo:
         $ref: '#/definitions/RequestInfo'
       Grade:
@@ -1692,10 +1686,17 @@ definitions:
   RecruitmentModeReq:
     type: object
     properties:
+      tenantId:
+        description: Unique id for for a tenant.
+        type: string
       RequestInfo:
         $ref: '#/definitions/RequestInfo'
       RecruitmentMode:
         $ref: '#/definitions/RecruitmentMode'
+    required:
+      - tenantId
+      - RequestInfo
+      - RecruitmentMode
   RecruitmentModeRes:
     type: object
     properties:
@@ -1709,11 +1710,17 @@ definitions:
   RecruitmentTypeReq:
     type: object
     properties:
+      tenantId:
+        description: Unique id for for a tenant.
+        type: string
       RequestInfo:
         $ref: '#/definitions/RequestInfo'
       RecruitmentType:
         $ref: '#/definitions/RecruitmentType'
-        
+    required:
+      - tenantId
+      - RequestInfo
+      - RecruitmentType    
   RecruitmentTypeRes:
     type: object
     properties:
@@ -1727,10 +1734,17 @@ definitions:
   RecruitmentQuotaReq:
     type: object
     properties:
+      tenantId:
+        description: Unique id for for a tenant.
+        type: string
       RequestInfo:
         $ref: '#/definitions/RequestInfo'
       RecruitmentQuota:
         $ref: '#/definitions/RecruitmentQuota'
+    required:
+      - tenantId
+      - RequestInfo
+      - RecruitmentQuota
   EmployeeTypeRes:
     type: object
     properties:
@@ -1743,11 +1757,17 @@ definitions:
   EmployeeTypeReq:
     type: object
     properties:
+      tenantId:
+        description: Unique id for for a tenant.
+        type: string
       RequestInfo:
         $ref: '#/definitions/RequestInfo'
       EmployeeType:
         $ref: '#/definitions/EmployeeType'
- 
+    required:
+      - tenantId
+      - RequestInfo
+      - EmployeeType
   GroupRes:
     type: object
     properties:
@@ -1761,11 +1781,17 @@ definitions:
   GroupReq:
     type: object
     properties:
+      tenantId:
+        description: Unique id for for a tenant.
+        type: string
       RequestInfo:
         $ref: '#/definitions/RequestInfo'
       Group:
         $ref: '#/definitions/Group'
-        
+    required:
+      - tenantId
+      - RequestInfo
+      - Group    
   RecruitmentQuotaRes:
     type: object
     properties:

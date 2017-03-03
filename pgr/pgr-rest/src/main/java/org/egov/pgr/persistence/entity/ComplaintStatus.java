@@ -45,9 +45,16 @@ import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+
 import static org.egov.pgr.persistence.entity.ComplaintStatus.SEQ_COMPLAINTSTATUS;
 
 @Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "egpgr_complaintstatus")
 @SequenceGenerator(name = SEQ_COMPLAINTSTATUS, sequenceName = SEQ_COMPLAINTSTATUS, allocationSize = 1)
 @JsonIgnoreProperties(value = { "handler", "hibernateLazyInitializer" })

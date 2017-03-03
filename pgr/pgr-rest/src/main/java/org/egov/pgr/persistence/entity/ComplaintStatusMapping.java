@@ -40,6 +40,7 @@
 
 package org.egov.pgr.persistence.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -75,7 +76,7 @@ public class ComplaintStatusMapping extends AbstractPersistable<Long> {
 
     @NotNull
     @Valid
-    @JoinColumn(name = "role_id")
+    @Column(name="role_id")
     private Long role;
 
     @NotNull
@@ -107,16 +108,15 @@ public class ComplaintStatusMapping extends AbstractPersistable<Long> {
         this.showStatus = showStatus;
     }
 
-    public Long getRole() {
-        return role;
-    }
+	public Long getRole() {
+		return role;
+	}
 
-    public void setRole(Long role) {
-        this.role = role;
-    }
-    
+	public void setRole(Long role) {
+		this.role = role;
+	}
 
-    public Integer getOrderNo() {
+	public Integer getOrderNo() {
         return orderNo;
     }
 

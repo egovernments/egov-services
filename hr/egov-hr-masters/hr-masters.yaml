@@ -1,0 +1,1999 @@
+# Example YAML to get you started quickly.
+# Be aware that YAML has indentation based scoping.
+# Code completion support is available so start typing for available options.
+swagger: '2.0'
+
+# This is your document metadata
+info:
+  version: "1.0.0"
+  title: Employee Information System Master APIs
+  description: All APIs available for HR master definitions.
+  contact:
+    name: Elzan Mathew
+schemes:
+  - https
+basePath: '/v1/[API endpoint]'
+
+# Describe your paths here
+paths:
+  # This is a path endpoint. Change it.
+
+  /designations/_search:
+    # This is a HTTP operation
+    post:
+      # Describe this verb here. Note: you can use markdown 
+      summary: Get the list of designations defined in the system or a particular designation.
+      description: Get the designation master data for the parameter values.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Commmon request info for getting designation.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - $ref: "#/parameters/tenantId"
+        - $ref: "#/parameters/sortDesignations"
+        - name: name
+          in: query
+          description: Name of the designation.
+          required: false
+          type: string
+          format: varchar
+          minLength: 0
+          maxLength: 100
+          exclusiveMinimum: true
+          exclusiveMaximum: false 
+        - name: code
+          in: query
+          description: Unique code of the designation.
+          required: false
+          type: string
+          minLength: 0
+          maxLength: 20
+          exclusiveMinimum: true
+          exclusiveMaximum: false 
+        - name: id
+          in: query
+          description: Unique Id of designation
+          required: false
+          type: array
+          items: 
+            type: integer
+          format: int64
+          maxItems: 50
+        - name: active
+          in: query
+          description: True will be set in cases where only active designation are needed and False will be set when inactive designation are needed and no value will be set when all designation are needed.
+          required: false
+          type: boolean
+          format: varchar
+          default: true
+          allowEmptyValue: true
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Successful response
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "#/definitions/DesignationRes"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+
+      tags: 
+       - Designation
+  /designations/_create:       
+    post:
+      summary: Create a new Designation.
+      description: To create a new designation we need to call this API.
+      parameters:
+        - name: designation
+          in: body
+          description: Details for the new designation .
+          required: true
+          schema:
+            $ref: '#/definitions/DesignationReq'
+
+        - $ref: "#/parameters/tenantId"
+      tags:
+        - Designation
+      responses:
+        '201':
+          description: Designation created sucessfully.
+          schema:
+            $ref: '#/definitions/DesignationRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+  /designation/{code}/_update: 
+   parameters:
+    - $ref: "#/parameters/designationCode"
+   post:
+      summary: Update existing designation data for the code passed
+      description: To update an existing designation master data.
+      parameters:
+        - $ref: "#/parameters/tenantId"
+        - name: designation
+          in: body
+          description: Request header for the designation with new of values.
+          required: true
+          schema:
+            $ref: '#/definitions/DesignationReq'
+      tags:
+        - Designation
+      responses:
+        '200':
+          description: Designation updated.
+          schema:
+            $ref: '#/definitions/DesignationRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+
+  /positions/_search:
+    # This is a HTTP operation
+    post:
+      # Describe this verb here. Note: you can use markdown 
+      summary: Get the list of positions defined in the system or a particular position.
+      description: Get the position master data for the parameter values.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Commmon request info for getting position.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - $ref: "#/parameters/tenantId"
+        - name: name
+          in: query
+          description: Name of the position.
+          required: false
+          type: string
+          format: varchar
+        - name: id
+          in: query
+          description: Unique Id of position
+          required: false
+          type: array
+          items: 
+            type: integer
+          format: int64
+          maxItems: 50
+        - name: deptdesig.departmentId
+          in: query
+          description: Unique id of the department associated with the position.
+          required: false
+          type: integer
+          format: int64
+        - name: deptdesig.designationId
+          in: query
+          description: Unique id of the designation associated with the position.
+          required: false
+          type: integer
+          format: int64
+        - name: active
+          in: query
+          description: True will be set in cases where only active position are needed and False will be set when inactive position are needed and no value will be set when all positions are needed.
+          required: false
+          type: boolean
+          format: varchar
+          default: true
+          allowEmptyValue: true
+        - $ref: "#/parameters/sortPosition"
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Successful response
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "#/definitions/PositionRes"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+      tags: 
+       - Position
+  /positions/_create:       
+    post:
+      summary: Create a new Position master data.
+      description: To create a new position we need to call POST.
+      parameters:
+        - name: position
+          in: body
+          description: Details for the new position .
+          required: true
+          schema:
+            $ref: '#/definitions/PositionReq'
+
+        - $ref: "#/parameters/tenantId"
+      tags:
+        - Position
+      responses:
+        '201':
+          description: Position created sucessfully.
+          schema:
+            $ref: '#/definitions/PositionRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+  /position/{positionId}/_update: 
+   parameters:
+    - $ref: "#/parameters/positionId"
+   post:
+      summary: Update existing position data for the position Id passed
+      description: To update an existing position master data.
+      parameters:
+        - $ref: "#/parameters/tenantId"
+        - name: position
+          in: body
+          description: Request header for the position with new of values.
+          required: true
+          schema:
+            $ref: '#/definitions/PositionReq'
+      tags:
+        - Position
+      responses:
+        '200':
+          description: Position updated.
+          schema:
+            $ref: '#/definitions/PositionRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+
+  /positionhierarchies/_search:
+    # This is a HTTP operation
+    post:
+      # Describe this verb here. Note: you can use markdown 
+      summary: Get the list of position hierarchies defined in the system for a particular Object type. 
+      description: Get the position hierarchies master data for the parameter values.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Commmon request info for getting position hierarchies.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - $ref: "#/parameters/tenantId"
+        - name: objectType.type
+          in: query
+          description: Objecttype type data for which position hierarchies are needed.
+          required: false
+          type: string
+          maxLength: 50
+        - name: objectSubtype
+          in: query
+          description: Objecttype sub type data for which position hierarchies are needed.
+          required: false
+          type: string
+          maxLength: 50
+        - name: fromPosition
+          in: query
+          description: Name of the position for whom the position hierarchy needs to be listed.
+          required: false
+          type: string
+          maxLength: 100
+        - name: toPosition
+          in: query
+          description: Name of the position to whom the position hierarchy falls for a particular object type.
+          required: false
+          type: string
+          maxLength: 100
+        - name: id
+          in: query
+          description: Unique Id of position hierarchy
+          required: false
+          type: array
+          items: 
+            type: integer
+          format: int64
+          maxItems: 50
+        - name: sort
+          in: query
+          description: Position hierarchy search results will be sorted by object type and from position name name ascending by default if this parameter is not provided.
+          type: array
+          uniqueItems: true
+          minItems: 1
+          maxItems: 3
+          collectionFormat: pipes
+          items:  
+            type: string
+          pattern: '[-+](objectType.type|fromPosition|toPosition)'
+          default:
+            - +objectType
+            - +fromPosition
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Successful response
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "#/definitions/PositionHierarchyRes"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+
+      tags: 
+       - Position Hierarchy
+  /positionhierarchies/_create:       
+    post:
+      summary: Create a new Position hierarchy master data.
+      description: To create a new position hierarchy master data we need to call POST.
+      parameters:
+        - name: positionHierarchy
+          in: body
+          description: Details for the new position hierarchy .
+          required: true
+          schema:
+            $ref: '#/definitions/PositionHierarchyReq'
+
+        - $ref: "#/parameters/tenantId"
+      tags:
+        - Position Hierarchy
+      responses:
+        '201':
+          description: Position hierarchy created sucessfully.
+          schema:
+            $ref: '#/definitions/PositionHierarchyRes'
+
+  /positionhierarchies/{objectType}/_update: 
+   post:
+      summary: Update existing position hierarchy master data for the object type passed.
+      description: To update the set of existing position hierarchy master data for a certain object type.
+      parameters:
+        - $ref: "#/parameters/tenantId"
+        - name: positionHierarchy
+          in: body
+          description: Request header for the position hierarchy with new of values.
+          required: true
+          schema:
+            $ref: '#/definitions/PositionHierarchyReq'
+        - name: objectType
+          in: path
+          required: true
+          description: The type value of the object type.
+          type: string
+          minLength: 0
+          maxLength: 256
+          exclusiveMinimum: true
+          exclusiveMaximum: false 
+      tags:
+        - Position Hierarchy
+      responses:
+        '200':
+          description: Position Hierarchy updated.
+          schema:
+            $ref: '#/definitions/PositionHierarchyRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+
+  /grades/_search:
+    # This is a HTTP operation
+    post:
+      # Describe this verb here. Note: you can use markdown 
+      summary: Get the list of grades defined.
+      description: |
+        Get the grade master data. To get a particular grade one can pass the grade name.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Commmon request info for getting grade.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - $ref: "#/parameters/tenantId"
+        - name: name
+          in: query
+          description: Name of the grade.
+          required: false
+          type: string
+          maxLength: 50
+        - name: active
+          in: query
+          description: Get list of active /inactive grades.
+          required: false
+          type: boolean
+          format: varchar
+          default: true
+        - name: id
+          in: query
+          description: List of Unique Id of grade
+          required: false
+          type: array
+          items: 
+            type: integer
+          format: int64
+          maxItems: 50 
+        - name: sort
+          in: query
+          description: Grade search results will be sorted by name ascending by default if this parameter is not provided.
+          type: array
+          uniqueItems: true
+          minItems: 1
+          maxItems: 2
+          collectionFormat: pipes
+          items:
+             type: string
+          pattern: '[-+](name|orderno)'
+          default:
+            - +name
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Successful response.
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "#/definitions/GradeRes"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+      tags: 
+       - Grade
+  /grades/_create:
+    post:
+      summary: Create a new grade to the master list.
+      description: To create a new grade we can use POST and set all the required and non-mandatory parameters.
+      parameters:
+        - name: grade
+          in: body
+          description: Details for the new grade .
+          required: true
+          schema:
+            $ref: '#/definitions/GradeReq'
+
+        - $ref: "#/parameters/tenantId"
+      tags:
+        - Grade
+      responses:
+        '201':
+          description: Grade created sucessfully.
+          schema:
+            $ref: '#/definitions/GradeRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+  /grades/{gradeId}:
+    parameters:
+      - $ref: "#/parameters/gradeId"
+    put:
+      summary: Update existing grade for the unique Id
+      description: To update an existing grade master data.
+      parameters:
+        - name: grade
+          in: body
+          description: Request header for the grade to be deleted
+          required: true
+          schema:
+            $ref: '#/definitions/GradeReq'
+        - $ref: "#/parameters/tenantId"
+      tags:
+        - Grade
+      responses:
+        '200':
+          description: Grade updated.
+          schema:
+            $ref: '#/definitions/GradeRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+
+  /employeetypes/_search:
+    # This is a HTTP operation
+    post:
+      # Describe this verb here. Note: you can use markdown 
+      summary: Get the list of employee types defined in the system.
+      description: |
+        Get the employee type data. To get a particular employee type one can pass the name.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Commmon request info for getting employee type.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - $ref: "#/parameters/tenantId"
+        - name: name
+          in: query
+          description: Name of the employee type.
+          required: false
+          type: string
+          maxLength: 50 
+        - name: id
+          in: query
+          description: List of Unique Id of employee type
+          required: false
+          type: array
+          items: 
+            type: integer
+          format: int64
+          maxItems: 50
+        - name: sort
+          in: query
+          description: Employee Type search results will be sorted by name ascending by default if this parameter is not provided.
+          type: array
+          uniqueItems: true
+          minItems: 1
+          maxItems: 2
+          collectionFormat: pipes
+          items:
+            type: string
+          pattern: '[-+](name|chartOfAccounts)'
+          default:
+            - +name
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Successful response.
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "#/definitions/EmployeeTypeRes"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+
+      tags: 
+       - Employee Type
+  /employeetypes/_create:
+    post:
+      summary: Create a new employee type to the master list.
+      description: To create a new employee type we can use POST and set all the required and non-mandatory parameters.
+      parameters:
+        - name: employeeType
+          in: body
+          description: Details for the new employee type .
+          required: true
+          schema:
+            $ref: '#/definitions/EmployeeTypeReq'
+
+        - $ref: "#/parameters/tenantId"
+      tags:
+        - Employee Type
+      responses:
+        '201':
+          description: Employee Type created sucessfully.
+          schema:
+            $ref: '#/definitions/EmployeeTypeRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+  /employeetype/{employeetypeId}/_update:
+    put:
+      summary: Update an existing employee type.
+      description: To update an existing employee type master data.
+      parameters:
+        - name: employeeType
+          in: body
+          description: Request header for the employee type to be updated.
+          required: true
+          schema:
+            $ref: '#/definitions/EmployeeTypeReq'
+        - $ref: "#/parameters/tenantId"
+        - name: employeetypeId
+          in: path
+          required: true
+          description: The unique Id of the employee type
+          type: integer
+          format: int64
+
+      tags:
+        - Employee Type
+      responses:
+        '200':
+          description: Employee Type updated.
+          schema:
+            $ref: '#/definitions/EmployeeTypeRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+
+  /groups/_search:
+    # This is a HTTP operation
+    post:
+      # Describe this verb here. Note: you can use markdown 
+      summary: Get the list of employee groups defined in the system.
+      description: |
+        Get the employee group data. To get a particular employee group one can pass the name.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Commmon request info for getting employee group.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - $ref: "#/parameters/tenantId"
+        - name: name
+          in: query
+          description: Name of the employee group.
+          required: false
+          type: string
+          maxLength: 50 
+        - name: id
+          in: query
+          description: List of Unique Id of employee group
+          required: false
+          type: array
+          items: 
+            type: integer
+          format: int64
+          maxItems: 50
+        - name: sort
+          in: query
+          description: Employee group search results will be sorted by name ascending by default.
+          type: array
+          uniqueItems: true
+          minItems: 1
+          maxItems: 1
+          items:
+             type: string
+          pattern: '[-+](name)'
+          default:
+            - +name 
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Successful response.
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "#/definitions/GroupRes"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+
+      tags: 
+       - Employee Group
+  /groups/_create:
+    post:
+      summary: Create a new employee group to the master list.
+      description: To create a new employee group we can use POST and set all the required and non-mandatory parameters.
+      parameters:
+        - name: employeeGroup
+          in: body
+          description: Details for the new employee group .
+          required: true
+          schema:
+            $ref: '#/definitions/GroupReq'
+
+        - $ref: "#/parameters/tenantId"
+      tags:
+        - Employee Group
+      responses:
+        '201':
+          description: Employee group created sucessfully.
+          schema:
+            $ref: '#/definitions/GroupRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+  /group/{groupId}/_update:
+    post:
+      summary: Update an existing employee group.
+      description: To update an existing employee group master data.
+      parameters:
+        - name: employeeGroup
+          in: body
+          description: Request header for the employee group to be updated.
+          required: true
+          schema:
+            $ref: '#/definitions/GroupReq'
+        - $ref: "#/parameters/tenantId"
+        - name: groupId
+          in: path
+          required: true
+          description: The unique Id of the employee group
+          type: integer
+          format: int64
+
+      tags:
+        - Employee Group
+      responses:
+        '200':
+          description: Employee group updated.
+          schema:
+            $ref: '#/definitions/GroupRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+
+  /recruitmentquotas/_search:
+    # This is a HTTP operation
+    post:
+      # Describe this verb here. Note: you can use markdown 
+      summary: Get the list of recruitment quotas defined in the system.
+      description: |
+        Get the recruitment quota data. To get a particular recruitment quota one can pass the recruitment quota name.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Commmon request info for getting recruitment quota.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - $ref: "#/parameters/tenantId"
+        - name: name
+          in: query
+          description: Name of the recruitment quota.
+          required: false
+          type: string
+          maxLength: 50
+        - name: id
+          in: query
+          description: List of Unique Id of recruitment quota
+          required: false
+          type: array
+          items: 
+            type: integer
+          format: int64
+          maxItems: 50
+        - name: sort
+          in: query
+          description: Recruitment Quota search results will be sorted by name ascending by default.
+          type: array
+          uniqueItems: true
+          minItems: 1
+          maxItems: 1
+          items:
+             type: string
+          pattern: '[-+](name)'
+          default:
+            - +name 
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Successful response.
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "#/definitions/RecruitmentQuotaRes"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+      tags: 
+       - Recruitment Quota
+  /recruitmentquotas/_create:
+    post:
+      summary: Create a new recruitment quota to the master list.
+      description: To create a new recruitment quota we can use POST and set all the required and non-mandatory parameters.
+      parameters:
+        - name: recruitmentQuota
+          in: body
+          description: Details for the new recruitment quota .
+          required: true
+          schema:
+            $ref: '#/definitions/RecruitmentQuotaReq'
+
+        - $ref: "#/parameters/tenantId"
+      tags:
+        - Recruitment Quota
+      responses:
+        '201':
+          description: Recruitment quota created sucessfully.
+          schema:
+            $ref: '#/definitions/RecruitmentQuotaRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+            
+  /recruitmentquota/{quotaId}/_update:
+    post:
+      summary: Update an existing recruitment quota.
+      description: To update an existing recruitment quota master data.
+      parameters:
+        - name: recruitment_quota
+          in: body
+          description: Request header for the recruitment quota to be updated.
+          required: true
+          schema:
+            $ref: '#/definitions/RecruitmentQuotaReq'
+        - $ref: "#/parameters/tenantId"
+        - name: quotaId
+          in: path
+          required: true
+          description: The unique Id of the recruitment quota
+          type: integer
+          format: int64
+
+      tags:
+        - Recruitment Quota
+      responses:
+        '200':
+          description: Recruitment quota updated.
+          schema:
+            $ref: '#/definitions/RecruitmentQuotaRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+       
+          
+  /recruitmentType/_search:
+    # This is a HTTP operation
+    post:
+      # Describe this verb here. Note: you can use markdown 
+      summary: Get the list of recruitment types defined in the system.
+      description: |
+        Get the recruitment type data. To get a particular receruitment type one can pass the recruitment type name.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Commmon request info for getting recrutiment type.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - $ref: "#/parameters/tenantId"
+        - name: name
+          in: query
+          description: Name of the recruitment type.
+          required: false
+          type: string
+          maxLength: 50
+        - name: id
+          in: query
+          description: List of Unique Id of recruitment type
+          required: false
+          type: array
+          items: 
+            type: integer
+          format: int64
+          maxItems: 50
+        - name: sort
+          in: query
+          description: Recruitment type search results will be sorted by name ascending by default.
+          type: array
+          uniqueItems: true
+          minItems: 1
+          maxItems: 1
+          items:
+             type: string
+          pattern: '[-+](name)'
+          default:
+            - +name 
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Successful response.
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "#/definitions/RecruitmentTypeRes"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+      tags: 
+       - Recruitment Type
+  /recruitmentType/_create:
+    post:
+      summary: Create a new recruitment type to the master list.
+      description: To create a new recruitment type we can use POST and set all the required and non-mandatory parameters.
+      parameters:
+        - name: recruitmentType
+          in: body
+          description: Details for the new recruitment type .
+          required: true
+          schema:
+            $ref: '#/definitions/RecruitmentTypeReq'
+
+        - $ref: "#/parameters/tenantId"
+      tags:
+        - Recruitment Type
+      responses:
+        '201':
+          description: Recruitment type created sucessfully.
+          schema:
+            $ref: '#/definitions/RecruitmentTypeRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+  /recruitmenttype/{typeId}/_update:
+    put:
+      summary: Update an existing recruitment type.
+      description: To update an existing recruitment type master data.
+      parameters:
+        - name: recruitmentType
+          in: body
+          description: Request header for the recruitment type to be updated.
+          required: true
+          schema:
+            $ref: '#/definitions/RecruitmentTypeReq'
+        - $ref: "#/parameters/tenantId"
+        - name: typeId
+          in: path
+          required: true
+          description: The unique Id of the recruitment type
+          type: integer
+          format: int64
+
+      tags:
+        - Recruitment Type
+      responses:
+        '200':
+          description: Recruitment type updated.
+          schema:
+            $ref: '#/definitions/RecruitmentTypeRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+
+  /recruitmentmodes/_search:
+    # This is a HTTP operation
+    post:
+      # Describe this verb here. Note: you can use markdown 
+      summary: Get the list of recruitment modes defined in the system.
+      description: |
+        Get the recruitment mode data. To get a particular recruitment mode one can pass the recruitment mode name.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Commmon request info for getting recruitment mode.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - $ref: "#/parameters/tenantId"
+        - name: name
+          in: query
+          description: Name of the recruitment mode.
+          required: false
+          type: string
+          maxLength: 50
+        - name: id
+          in: query
+          description: List of Unique Id of recruitment mode
+          required: false
+          type: array
+          items:
+            type: integer
+          format: int64
+          maxItems: 50
+        - name: sort
+          in: query
+          description: Recruitment mode search results will be sorted by name ascending by default.
+          type: array
+          uniqueItems: true
+          minItems: 1
+          maxItems: 1
+          items:
+             type: string
+          pattern: '[-+](name)'
+          default:
+            - +name 
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Successful response.
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "#/definitions/RecruitmentModeRes"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+      tags: 
+       - Recruitment Mode
+  /recruitmentmodes/_create:
+    post:
+      summary: Create a new recruitment mode to the master list.
+      description: To create a new recruitment mode we can use POST and set all the required and non-mandatory parameters.
+      parameters:
+        - name: recruitmentModes
+          in: body
+          description: Details for the new recruitment mode .
+          required: true
+          schema:
+            $ref: '#/definitions/RecruitmentModeReq'
+
+        - $ref: "#/parameters/tenantId"
+      tags:
+        - Recruitment Mode
+      responses:
+        '201':
+          description: Recruitment mode created sucessfully.
+          schema:
+            $ref: '#/definitions/RecruitmentModeRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+  /recruitmentmode/{modeId}/_update:
+    post:
+      summary: Update an existing recruitment mode.
+      description: To update an existing recruitment mode master data.
+      parameters:
+        - name: recruitmentMode
+          in: body
+          description: Request header for the recruitment mode to be updated.
+          required: true
+          schema:
+            $ref: '#/definitions/RecruitmentModeReq'
+        - $ref: "#/parameters/tenantId"
+        - name: modeId
+          in: path
+          required: true
+          description: The unique Id of the recruitment mode
+          type: integer
+          format: int64
+
+      tags:
+        - Recruitment Mode
+      responses:
+        '200':
+          description: Recruitment mode updated.
+          schema:
+            $ref: '#/definitions/RecruitmentModeRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+            
+  /hrconfigurations/_search:
+    # This is a HTTP operation
+    post:
+      # Describe this verb here. Note: you can use markdown 
+      summary: Get the list of configuration paramaters defined in the system for entire HR module.
+      description: |
+        Get the configuration key data. To get a particular configuration key one can pass the key name.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Commmon request info for getting configuration key.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - $ref: "#/parameters/tenantId"
+        - name: name
+          in: query
+          description: Name of the configuration key.
+          required: false
+          type: string
+          maxLength: 50
+        - name: id
+          in: query
+          description: List of Unique Id of configuration.
+          required: false
+          type: array
+          items:
+            type: integer
+          format: int64
+          maxItems: 50
+        - name: sort
+          in: query
+          description: Configuration Key search results will be sorted by key name ascending by default.
+          type: array
+          uniqueItems: true
+          minItems: 1
+          maxItems: 1
+          items:
+             type: string
+          pattern: '[-+](keyname)'
+          default:
+            - +keyname 
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Successful response.
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "#/definitions/HRConfigurationRes"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+      tags: 
+       - Set Up  
+  /hrconfigurationvalues/_search:
+    # This is a HTTP operation
+    post:
+      # Describe this verb here. Note: you can use markdown 
+      summary: Get the list of configuration paramaters values defined in the system for a particular configuration key in HR module.
+      description: |
+        Get the configuration key value data. To get a particular configuration key values one can pass the key Id and date.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Commmon request info for getting configuration key values.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - $ref: "#/parameters/tenantId"
+        - name: keyId
+          in: query
+          description: Unique Id of configuration key.
+          required: false
+          type: integer
+          format: int64
+          maxLength: 50
+        - name: id
+          in: query
+          description: List of Unique Id of configuration value.
+          required: false
+          type: array
+          items: 
+            type: integer
+          format: int64
+          maxItems: 50
+        - name: effectiveFrom
+          in: query
+          description: The date for which the configuration value is applicable.
+          required: false
+          type: string
+          format: date  
+        - name: sort
+          in: query
+          description: Configuration Key values search results will be sorted by key name ascending and effectiveFrom descending by default.
+          type: array
+          uniqueItems: true
+          minItems: 1
+          maxItems: 2
+          items:
+             type: string
+          pattern: '[-+](keyId.name|effectiveFrom)'
+          default:
+            - +keyId.name
+            - -effectiveFrom
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Successful response.
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "#/definitions/HRConfigurationValuesRes"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+      tags: 
+       - Set Up  
+      
+  /hrstatuses/_search:
+    # This is a HTTP operation
+    post:
+      # Describe this verb here. Note: you can use markdown 
+      summary: Get the list of statuses for each object defined in the system for entire HR module.
+      description: |
+        Get the status list for a particular object/entity in the HR module.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Commmon request info for getting status.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - $ref: "#/parameters/tenantId"
+        - name: objectName
+          in: query
+          description: Name of the object/entity for which status is searched for.
+          required: false
+          type: string
+          maxLength: 50
+        - name: id
+          in: query
+          description: List of Unique Id of status master.
+          required: false
+          type: array
+          items: 
+            type: integer
+          format: int64
+          maxItems: 50
+        - name: code
+          in: query
+          description: Name of the status code.
+          required: false
+          type: string
+          maxLength: 20
+        - name: sort
+          in: query
+          description: Status list search results will be sorted by objectName and code ascending by default.
+          type: array
+          uniqueItems: true
+          minItems: 1
+          maxItems: 2
+          items:
+             type: string
+          pattern: '[-+](objectName|code)'
+          default:
+            - +objectName
+            - +code
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Successful response.
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "#/definitions/HRStatusRes"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+      tags: 
+       - Set Up        
+definitions:
+
+  Position:
+    title: Position (combination of department-designation) master definition
+    type: object
+    properties:
+      id:
+       type: integer
+       format: int64
+       description : Unique identifier of the position.
+      name:
+        type: string
+        description: Unique Position name.
+        minLength: 3
+        maxLength: 100
+      deptdesig:
+        type: object
+        description: Department and designation associated with this position.
+        items:
+          $ref: "#/definitions/DepartmentDesignation"
+      isPostOutsourced:
+        type: boolean
+        description: if this post is outsouced then value will be TRUE, else value will be FALSE.
+      active:
+        type: boolean
+        format: varchar
+        description: TRUE for active positions and FALSE for inactive positions.
+    required:
+      - id
+      - name
+      - deptdesig
+  DepartmentDesignation:
+    type: object
+    properties:
+      id:
+       type: integer
+       format: int64
+       description : Unique identifier of the department designation mapping.
+      department:
+        type: integer
+        format: int64
+        description: reference to the mapping department id.
+      designation:
+        type: object
+        description: reference of the designation.
+        items:
+          $ref: "#/definitions/Designation"
+    required:
+      - id
+      - department
+      - designation
+
+  RequestInfo:
+    type: object
+    properties:
+      apiId:
+        type: string
+        description: unique API ID
+      ver:
+        type: string
+        description: API version
+      ts:
+        type: string
+        description: >-
+          response timestamp YYYY-MM-DDThh:mm:ss+/-nn:nn (timezone defaulted to
+          +5.30)
+      action:
+        type: string
+        description: api action like GET/POST/PUT/DELETE in case of http calls
+      did:
+        type: string
+        description: device UUID from which API is called
+      key:
+        type: string
+        description: API key (dynamic)
+      msgId:
+        type: string
+        description: 'unique request message id, UUID, for handling API idempotency'
+      requesterId:
+        type: string
+        description: UserId of the user calling
+      authToken:
+        type: string
+        description: //session/jwt/saml token/oauth token
+    required:
+      - apiId
+      - ver
+      - ts
+  ResponseInfo:
+    type: object
+    properties:
+      apiId:
+        type: string
+        description: unique API ID
+      ver:
+        type: string
+        description: API version
+      ts:
+        type: string
+        description: >-
+          response timestamp YYYY-MM-DDThh:mm:ss+/-nn:nn (timezone defaulted to
+          +5.30)
+      resMsgId:
+        type: string
+        description: unique response message id (UUID)
+      msgId:
+        type: string
+        description: message id of the request
+      status:
+        type: string
+        description: 'status of request e.g. successful, failed etc'
+    required:
+      - apiId
+      - ver
+      - ts
+      - status
+      
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+      description:
+        type: string
+      fields:
+        type: object
+    required:
+      - code
+      - message
+  ErrorRes:
+    properties:
+      ResponseInfo:
+        $ref: '#/definitions/ResponseInfo'
+      Error:
+        $ref: '#/definitions/Error'
+    type: object
+
+  PositionRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: '#/definitions/ResponseInfo'
+      Position:
+        type: array
+        items: 
+         $ref: '#/definitions/Position'  
+         
+  PositionReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: '#/definitions/RequestInfo'
+      Position:
+        type: array
+        items:
+          $ref: '#/definitions/Position'
+
+  Designation:
+    type: object
+    properties:
+      id:
+       type: integer
+       format: int64
+       description : Unique identifier of the designation.
+      name:
+        type: string
+        description: Unique Designation name.
+        minLength: 3
+        maxLength: 100
+      code:
+        type: string
+        description: Unique code of the designation.
+        minLength: 3
+        maxLength: 20
+      description:
+        type: string
+        description: Brief description of Designation .
+        maxLength: 250
+      chartOfAccounts:
+        type: string
+        description: Unique account code of the chartofaccounts master.
+      active:
+        type: boolean
+        format: varchar
+        description: TRUE for active designation and FALSE for inactive designation.
+    required:
+      - id
+      - name
+      - code 
+      - active
+  DesignationRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: '#/definitions/ResponseInfo'
+      Designation:
+        type: array
+        items: 
+         $ref: '#/definitions/Designation' 
+  DesignationReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: '#/definitions/RequestInfo'
+      Designation:
+        $ref: '#/definitions/Designation'   
+        
+  ObjectType:
+    type: object
+    properties:
+      id:
+       type: integer
+       format: int64
+       description : Unique identifier of the object type.
+      type:
+        type: string
+        description: Unique name of the object type name.
+        minLength: 3
+        maxLength: 50
+      description:
+        type: string
+        description: Breif description of what this object type is used for.
+        maxLength: 250
+      lastmodifieddate:
+        type: string
+        format: date
+        description: Latest date of which the data was modified.
+    required:
+      - id
+      - type
+  
+  PositionHierarchy:
+    type: object
+    properties:
+      id:
+       type: integer
+       format: int64
+       description : Unique identifier of the position hierarchy.
+      fromPosition:
+        type: object
+        description: Position for which the hierarchy is mapped
+        items:
+          $ref: "#/definitions/Position"
+      toPosition:
+        type: object
+        description: Position to which the 'fromPosition' reports to.
+        items:
+          $ref: "#/definitions/Position"
+      objectType:
+        type: object
+        description: Position hierarchy is defined for which type of Object.
+        items:
+          $ref: "#/definitions/ObjectType"
+      objectSubType:
+        type: string
+        description: what sub types of the specified object type.
+    required:
+      - id
+      - fromPosition
+      - toPosition
+      - objectType
+  PositionHierarchyRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: '#/definitions/ResponseInfo'
+      PositionHierarchy:
+        type: array
+        items: 
+         $ref: '#/definitions/PositionHierarchy' 
+  PositionHierarchyReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: '#/definitions/RequestInfo'
+      PositionHierarchy:
+        $ref: '#/definitions/PositionHierarchy'       
+ 
+  Group:
+    type: object
+    description: Employee group master
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Key of the group master
+      name:
+        type: string
+        description: Name of the group. For example- State, Central , Local.
+        minLength: 2
+        maxLength: 50
+      description:
+        type: string
+        description: Brief description of what this group means.
+        maxLength: 250
+    required:
+      - id
+      - name
+  
+  RecruitmentMode:
+    type: object
+    description: Mode of recruitment of the employee
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Key of the mode of recruitment master.
+      name:
+        type: string
+        description: Name of the mode of recruitment. For example- UPSC, Department Exams, Direct
+        minLength: 2
+        maxLength: 50
+      description:
+        type: string
+        description: Brief description of the mode of recruitment. For example- UPSC, Department Exams, Direct
+        maxLength: 250
+    required:
+      - id
+      - name
+   
+  RecruitmentType:
+    type: object 
+    description: Various types of recruitment of an employee
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Key of the type of recruitment.
+      name:
+        type: string
+        description: Name of the type of recruitment. For example-Direct, Transfer, Compensatory
+        minLength: 3
+        maxLength: 50
+      description:
+        type: string
+        description: Description of the type of recruitment. 
+        maxLength: 250
+    required:
+      - id
+      - name
+      
+  RecruitmentQuota:
+    type: object
+    description: Various quota for recruitment of an employee
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Key of the type of recruitment quota.
+      name:
+        type: string
+        description: Name of the quota for recruitment. For example-Sports Quota, Ex-Serviceman, Handicapped, Others
+        minLength: 3
+        maxLength: 50
+      description:
+        type: string
+        description: Description of the quota for recruitment. 
+        maxLength: 250
+    required:
+      - id
+      - name  
+  EmployeeType:
+    type: object
+    properties:
+      id: 
+       type: integer
+       format: int64
+       description : Unique identifier of the employee type.
+      name:
+       type: string
+       description: Value for the employee type like -Permanent, Contract, Labour, Staff. 
+       minLength: 3
+       maxLength: 50
+       
+      chartOfAccounts:
+        type: string
+        description: chartofaccount glcode associated with this employee type
+        maxLength: 10
+    required:
+      - id
+      - name   
+      
+  Grade:   
+    type: object
+    properties:
+      id: 
+       type: integer
+       format: int64
+       description : Unique identifier of the grade.
+      name:
+        type: string
+        description: The Name of the grade.
+        minLength: 3
+        maxLength: 50
+      description:
+        type: string
+        description: The description of the grade.
+        maxLength: 250
+      orderno:
+        type: integer
+        description: order of hierarchy can be defined as a numeric value. Highest will have value 1.
+      active:
+        type: string
+        format: boolean
+        description: Shows if this grade data is active or not. If the value is TRUE, then this data is active one. If this needs to be marked as a deleted data then the value will be FALSE.
+    required:
+      - id
+      - name
+      - active
+      
+  GradeRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: '#/definitions/ResponseInfo'
+      Grade:
+        type: array
+        items: 
+         $ref: '#/definitions/Grade'  
+  GradeReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: '#/definitions/RequestInfo'
+      Grade:
+        $ref: '#/definitions/Grade'
+  RecruitmentModeReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: '#/definitions/RequestInfo'
+      RecruitmentMode:
+        $ref: '#/definitions/RecruitmentMode'
+  RecruitmentModeRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: '#/definitions/ResponseInfo'
+      RecruitmentMode:
+        type: array
+        items: 
+         $ref: '#/definitions/RecruitmentMode'  
+  
+  RecruitmentTypeReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: '#/definitions/RequestInfo'
+      RecruitmentType:
+        $ref: '#/definitions/RecruitmentType'
+        
+  RecruitmentTypeRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: '#/definitions/ResponseInfo'
+      RecruitmentType:
+        type: array
+        items: 
+         $ref: '#/definitions/RecruitmentType'  
+         
+  RecruitmentQuotaReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: '#/definitions/RequestInfo'
+      RecruitmentQuota:
+        $ref: '#/definitions/RecruitmentQuota'
+  EmployeeTypeRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: '#/definitions/ResponseInfo'
+      EmployeeType:
+        type: array
+        items: 
+         $ref: '#/definitions/EmployeeType'         
+  EmployeeTypeReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: '#/definitions/RequestInfo'
+      EmployeeType:
+        $ref: '#/definitions/EmployeeType'
+ 
+  GroupRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: '#/definitions/ResponseInfo'
+      Group:
+        type: array
+        items: 
+         $ref: '#/definitions/Group' 
+         
+  GroupReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: '#/definitions/RequestInfo'
+      Group:
+        $ref: '#/definitions/Group'
+        
+  RecruitmentQuotaRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: '#/definitions/ResponseInfo'
+      RecruitmentQuota:
+        type: array
+        items: 
+         $ref: '#/definitions/RecruitmentQuota'         
+  HRStatus:
+    type: object
+    properties:
+      id: 
+        type: integer
+        format: int64
+        description : Unique identifier of the status master.
+      objectName:
+        type: string
+        description: The Name of the object for which statuses are defined.
+        minLength: 3
+        maxLength: 50
+      code:
+        type: string
+        description: The status code.
+        minLength: 3
+        maxLength: 20
+      description:
+        type: string
+        description: The description of the status.
+        minLength: 3
+        maxLength: 250
+    required:
+      - id
+      - objectName
+      - code
+      - description
+      
+  HRStatusRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: '#/definitions/ResponseInfo'
+      HRStatus:
+        type: array
+        items: 
+         $ref: '#/definitions/HRStatus'  
+  HRConfiguration:
+    type: object
+    properties:
+      id: 
+        type: integer
+        format: int64
+        description : Unique identifier of the configuration master.
+      keyName:
+        type: string
+        description: The Name of the configuration parameter.
+        minLength: 3
+        maxLength: 50
+      description:
+        type: string
+        description: The description of the configuration parameter.
+        minLength: 3
+        maxLength: 250
+      createdBy:
+        type: integer
+        format: int64
+        description: Id of the user who created the record. 
+      createdDate:
+        type: string
+        format: date
+        description: Date on which the master data was added into the system.
+      lastModifiedBy:
+        type: integer
+        format: int64
+        description: Id of the user who last modified the record. 
+      lastModifiedDate:
+        type: string
+        format: date
+        description: Date on which the master data was last modified.
+    required:
+      - id
+      - keyName
+      - description
+ 
+  HRConfigurationRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: '#/definitions/ResponseInfo'
+      HRConfiguration:
+        type: array
+        items: 
+         $ref: '#/definitions/HRConfiguration' 
+  HRConfigurationValues:
+    type: object
+    properties:
+      id: 
+        type: integer
+        format: int64
+        description : Unique identifier of the configuration key values.
+      keyId:
+        type: integer
+        format: int64
+        description: Unique Id of the configuration key.
+      value:
+        type: string
+        description: The value of the of the configuration parameter.
+        minLength: 1
+        maxLength: 1000
+      effectiveFrom:
+        type: string
+        format: date
+        description: Date on which the configuration value defined is to be made active in the system.
+      createdBy:
+        type: integer
+        format: int64
+        description: Id of the user who created the record. 
+      createdDate:
+        type: string
+        format: date
+        description: Date on which the master data was added into the system.
+      lastModifiedBy:
+        type: integer
+        format: int64
+        description: Id of the user who last modified the record. 
+      lastModifiedDate:
+        type: string
+        format: date
+        description: Date on which the master data was last modified.
+    required:
+      - id
+      - keyId
+      - value
+      - effectiveFrom
+      
+  HRConfigurationValuesRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: '#/definitions/ResponseInfo'
+      HRConfigurationValues:
+        type: array
+        items: 
+         $ref: '#/definitions/HRConfigurationValues'        
+parameters:
+
+  tenantId:
+    name: tenantid
+    in: query
+    description: Unique id for for a tenant.
+    required: true
+    type: string
+    format: varchar
+  designationCode:
+    name: code
+    in: path
+    required: true
+    description: The code of the designation master.
+    type: string
+    minLength: 0
+    maxLength: 20
+    exclusiveMinimum: true
+    exclusiveMaximum: false
+
+  positionId:
+    name: positionId
+    in: path
+    required: true
+    description: The unique Id of the position.
+    type: integer
+    format: int64
+  
+  sortDesignations:
+    name: sort
+    in: query
+    description: Designation results will be sorted by name ascending by default if this parameter is not provided.
+    type: array
+    uniqueItems: true
+    minItems: 1
+    maxItems: 2
+    collectionFormat: pipes
+    items:
+      type: string
+      pattern: '[-+](code|name)'
+    default:
+      - +name
+  sortPosition:
+    name: sort
+    in: query
+    description: Position search results will be sorted by name ascending by default if this parameter is not provided.
+    type: array
+    uniqueItems: true
+    minItems: 1
+    maxItems: 2
+    collectionFormat: pipes
+    items:
+      type: string
+      pattern: '[-+](name|active)'
+    default:
+      - +name
+  gradeId:
+    name: gradeId
+    in: path
+    required: true
+    description: The unique Id of the grade
+    type: integer
+    format: int64
+
+tags:
+  - name: Designation
+    description: Everything you need to handle designation Master data.
+  - name: Position
+    description: Everything you need to handle in position master data.
+  - name: Position Hierarchy
+    description: Everything you need to handle position hierarchy data.
+  - name: Grade
+    description: Everything you need to handle in employee grade master data.
+  - name: Category
+    description: Everything you need to handle category Master data.
+  - name: Employee Group
+    description: Everything you need to handle in employee group master data.
+  - name: Employee Type
+    description: Everything you need to handle Employee Type Master data.
+  - name: Recruitment Quota
+    description: Everything you need to handle for recruitment quota master data.
+  - name: Recruitment Type
+    description: Everything you need to handle Recruitment type Master data.
+  - name: Recruitment Mode
+    description: Everything you need to handle in Recruitment mode master data.
+  - name: Set Up
+    description: Everything you need to handle in configuration keys and status master data.

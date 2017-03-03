@@ -17,7 +17,7 @@ ENV DB_NAME=mydb \
 COPY /target/pgr-search-indexer-0.0.1-SNAPSHOT.jar /opt/egov/pgr-search-indexer.jar
 
 # launch standalone webapp
-CMD ["java","-jar", "/opt/egov/egov-pgr-rest-spring-boot.jar"]
+CMD ["java","-jar", "/opt/egov/pgr-search-indexer.jar"]
 #CMD ["java", "-Xdebug", "-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8787", "-jar", "/opt/egov/egov-search-indexer.jar"]
 
 # NOTE: the two 'RUN' commands can probably be combined inside of a single

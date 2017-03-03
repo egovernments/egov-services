@@ -14,28 +14,28 @@ info:
 # Describe your paths here
 paths:
   # This is a path endpoint. Change it.
-  /users:
+  /users/_search:
     # This is a HTTP operation
-    get:
+    post:
       # Describe this verb here. Note: you can use markdown 
       summary: Get the list of users defined in the system.
       description: |
         Get the user list based on the input parameters.
       # This is array of GET operation parameters:
       parameters:
-        - name: request_info
+        - name: requestInfo
           in: body
           description: Commmon request info for getting user.
           required: true
           schema:
             $ref: '#/definitions/RequestInfo'
-        - name: user_name
+        - name: userName
           in: query
           required: false
           description: The unique user name of the User.
           type: string
           minLength: 0
-          maxLength: 256
+          maxLength: 64
           exclusiveMinimum: true
           exclusiveMaximum: false
         - name: active
@@ -50,7 +50,14 @@ paths:
         - $ref: "#/parameters/pageNumber"
         - $ref: "#/parameters/tenantId"
         - $ref: "#/parameters/sortUser"
-        
+        - name: id
+          in: query
+          description: List of Unique Id of User
+          required: false
+          type: array
+          items: 
+            type: integer
+          format: int64
       # Expected responses for this operation:
       responses:
         # Response code
@@ -64,10 +71,9 @@ paths:
           description: Invalid input.
           schema:
             $ref: '#/definitions/ErrorRes'
-        '404':
-          description: User does not exist.
       tags: 
        - User
+  /users/_create:       
     post:
       summary: Create a new User.
       description: To create a new User in the system.
@@ -89,10 +95,10 @@ paths:
         '400':
           description: Invalid input.
           
-  /user/{user_name}:   
+  /user/{userName}:   
     parameters:
       - $ref: "#/parameters/userName"
-    put:
+    post:
       summary: Update existing user master data for the User using the unique user name.
       description: To update an existing User master data.
       parameters:
@@ -114,21 +120,20 @@ paths:
           description: Invalid input.
           schema:
             $ref: '#/definitions/ErrorRes'
-        '404':
-          description: User not found.
+
   /user/_login:
     post:
       summary: Login a user based on username and password auth and return oAuth tokens.
       description: Login a user based on username and password auth and return oAuth tokens.
       parameters:
         - $ref: "#/parameters/tenantId"
-        - name: user_name
+        - name: userName
           in: query
           required: true
           description: The unique user name of the User.
           type: string
           minLength: 0
-          maxLength: 256
+          maxLength: 64
         - name: password
           in: query
           required: true
@@ -136,7 +141,7 @@ paths:
           type: string
           format: password
           minLength: 0
-          maxLength: 256
+          maxLength: 64
 
       tags:
         - User
@@ -160,7 +165,7 @@ paths:
       description:  Logout a user based on access token auth
       parameters:
         - $ref: "#/parameters/tenantId"
-        - name: logout_request
+        - name: logoutRequest
           in: body
           description: Request for logout using access token
           required: true
@@ -192,16 +197,22 @@ definitions:
       userName:
         type: string
         description: The unique username used for user login.
+        minLength: 1
+        maxLength: 64
       password:
         type: string
         format: password
         description: Password for user login.
+        maxLength: 64
       salutation:
         type: string
         description: The salutation of user name. Example- Mr, Miss, Mrs
+        maxLength: 5
       name:
         type: string
         description: The full name of the user.
+        minLength: 3
+        maxLength: 100
       gender:
         type: array
         description: Gender of the user.
@@ -214,36 +225,48 @@ definitions:
       mobileNumber:
         type: string
         description: Mobile number ofuser the user
+        maxLength: 10
       emailId:
         type: string
         description: Email address of the user
+        maxLength: 128
       altContactNumber:
         type: string
         description: Alternate contact number of the user
+        maxLength: 10
       pan:
         type: string
         description: PAN number of the user
+        maxLength: 10
       aadhaarNumber:
         type: string
         description: Aadhaar number of the user
+        pattern: "[0-9]"
+        maxLength: 12
       permanentAddress:
         type: string
         description: Permanent address of the user.
+        maxLength: 300
       permanentCity:
         type: string
         description: City of the permanent address.
+        maxLength: 300
       permanentPincode:
         type: string
         description: Permanent address pincode.
+        maxLength: 6
       correspondenceCity:
         type: string
         description: City of the correspondence address.
-      CorrespondencePincode:
+        maxLength: 50
+      correspondencePincode:
         type: string
         description: Permanent address pincode.
+        maxLength: 6
       correspondenceAddress:
         type: string
         description: Correspondence address of the user.
+        maxLength: 300
       active:
         type: boolean
         description: True if the user is active and False if the user is inactive.
@@ -258,8 +281,10 @@ definitions:
       locale:
         type: string
         description: Value will be set to "en_IN".
+        maxLength: 10
       type:
         type: array
+        maxLength: 20
         description : System set value internally. For employee value will be always "EMPLOYEE". For citizen value will be "CITIZEN".
         items:
           type: string
@@ -269,7 +294,6 @@ definitions:
            - SYSTEM
       signature:
         type: string
-        format: byte
         description : Image to be loaded for the signature of the employee
       accountLocked:
         type: boolean
@@ -282,9 +306,11 @@ definitions:
       fatherOrHusbandName:
         type: string
         description: Name of user's father or husband.
+        maxLength: 100
       bloodGroup:
         type: string
         description: Blood group of the user.
+        maxLength: 3
         items:
           type: string
           enum:
@@ -299,9 +325,9 @@ definitions:
       identificationMark:
         type: string
         description: Any identification mark of the person.
+        maxLength: 300
       photo:
         type: string
-        format: byte
         description : Image to be loaded for the photo of the user
       createdBy:
         type: integer
@@ -342,10 +368,13 @@ definitions:
        description : Unique identifier of the role.
       name:
         type: string
-        description: The Name of the Role.  
+        description: The Name of the Role.
+        minLength: 2
+        maxLength: 100
       description:
         type: string
         description: The description of the Role.
+        maxLength: 256
       createdBy:
         type: integer
         format: int64
@@ -388,7 +417,7 @@ definitions:
   RequestInfo:
     type: object
     properties:
-      api_id:
+      apiId:
         type: string
         description: unique API ID
       ver:
@@ -408,23 +437,24 @@ definitions:
       key:
         type: string
         description: API key (dynamic)
-      msg_id:
+      msgId:
         type: string
         description: 'unique request message id, UUID, for handling API idempotency'
-      requester_id:
+      requesterId:
         type: string
         description: UserId of the user calling
-      auth_token:
+      authToken:
         type: string
         description: //session/jwt/saml token/oauth token
     required:
-      - api_id
+      - apiId
       - ver
       - ts
+      
   ResponseInfo:
     type: object
     properties:
-      api_id:
+      apiId:
         type: string
         description: unique API ID
       ver:
@@ -435,20 +465,21 @@ definitions:
         description: >-
           response timestamp YYYY-MM-DDThh:mm:ss+/-nn:nn (timezone defaulted to
           +5.30)
-      res_msg_id:
+      resMsgId:
         type: string
         description: unique response message id (UUID)
-      msg_id:
+      msgId:
         type: string
         description: message id of the request
       status:
         type: string
         description: 'status of request e.g. successful, failed etc'
     required:
-      - api_id
+      - apiId
       - ver
       - ts
       - status
+      
   Error:
     type: object
     properties:
@@ -464,6 +495,7 @@ definitions:
     required:
       - code
       - message
+      
   ErrorRes:
     properties:
       ResponseInfo:
@@ -471,16 +503,17 @@ definitions:
       Error:
         $ref: '#/definitions/Error'
     type: object
+    
   LoginResponse:
     type: object
     properties:
-      access_token:
+      accessToken:
         type: string
-      token_type: 
+      tokenType: 
         type: string
-      refresh_token:
+      refreshToken:
         type: string
-      expires_in: 
+      expiresIn: 
         type: string
       scope: 
         type: string
@@ -489,23 +522,24 @@ definitions:
       User:
         $ref: '#/definitions/User'
     required:
-      - access_token
-      - token_type
-      - refresh_token
-      - expires_in
+      - accessToken
+      - tokenType
+      - refreshToken
+      - expiresIn
       - scope
       
 parameters:
   userName:
-    name: user_name
+    name: userName
     in: path
     required: true
     description: The unique user name with which the user login.
     type: string
     minLength: 0
-    maxLength: 256
+    maxLength: 64
     exclusiveMinimum: true
     exclusiveMaximum: false
+    
   pageSize:
     name: pageSize
     in: query
@@ -517,6 +551,7 @@ parameters:
     exclusiveMaximum: false
     multipleOf: 10
     default: 20
+    
   pageNumber:
     name: pageNumber
     in: query
@@ -542,6 +577,6 @@ parameters:
     collectionFormat: pipes
     items:
       type: string
-      pattern: '[-+](userName|name)'
+      pattern: '[-+](userName|name|gender)'
     default:
       - +name

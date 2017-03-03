@@ -53,12 +53,12 @@ public class SevaSpecification implements Specification<Complaint> {
 		if (criteria.getLastModifiedDatetime() != null) {
 			predicates.add(criteriaBuilder.lessThanOrEqualTo(lastModifiedDate, criteria.getLastModifiedDatetime()));
 		}
-		if (criteria.getUserId() == null) {
+		if (criteria.getUserId() != null) {
 
 			predicates.add(criteriaBuilder.equal(userId, criteria.getUserId()));
 		}
 
-		if (criteria.getAssignmentId() == null) {
+		if (criteria.getAssignmentId() != null) {
 
 			predicates.add(criteriaBuilder.equal(assignmentId, criteria.getAssignmentId()));
 		}

@@ -6,12 +6,10 @@ import org.egov.domain.model.Token;
 @Getter
 public class OtpResponse {
     private ResponseInfo responseInfo;
-    private String otp;
-    private String id;
+    private Otp otp;
 
     public OtpResponse(Token token) {
-        otp = token.getNumber();
-        id = token.getUuid();
+        otp = new Otp(token);
     }
 }
 

@@ -15,8 +15,8 @@ public class TokenService {
         this.tokenRepository = tokenRepository;
     }
 
-    public Token createToken(String identity) {
-        final Token token = new Token(identity);
+    public Token createToken(String identity, String tenantId) {
+        final Token token = new Token(identity, tenantId);
         return tokenRepository.save(token);
     }
 

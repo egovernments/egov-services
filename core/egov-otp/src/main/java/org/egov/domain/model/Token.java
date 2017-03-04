@@ -17,12 +17,14 @@ import static org.springframework.util.StringUtils.isEmpty;
 @Getter
 public class Token {
     private static final int TTL_IN_SECONDS = 300;
+    private final String tenantId;
     private String identity;
     private String number;
     private String uuid;
 
-    public Token(String identity) {
+    public Token(String identity, String tenantId) {
         this.identity = identity;
+        this.tenantId = tenantId;
         this.number = randomNumeric(5);
         this.uuid = UUID.randomUUID().toString();
     }

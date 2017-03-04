@@ -1,5 +1,9 @@
 {
   "responseInfo": null,
-  "otp": "randomNumber",
-  "id": "uuid"
+  "otp": {
+    "otp": "randomNumber",
+    "uuid": "uuid",
+    "identity": "identity",
+    "tenantId": "tenantId"
+  }
 }

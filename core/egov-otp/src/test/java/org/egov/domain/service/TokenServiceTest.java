@@ -3,7 +3,6 @@ package org.egov.domain.service;
 import org.egov.domain.model.Token;
 import org.egov.persistence.repository.TokenRepository;
 import org.hamcrest.CustomMatcher;
-import org.hamcrest.Matcher;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -24,33 +23,37 @@ public class TokenServiceTest {
     private TokenService tokenService;
 
     @Test
-    public void test_should_save_new_token_with_given_identity() {
+    public void test_should_save_new_token_with_given_identity_and_tenant() {
         final String identity = "identity";
+        final String tenantId = "tenant";
         final String randomTokenNumber = "randomTokenNumber";
         final Token savedToken = Token.builder()
                 .number(randomTokenNumber)
                 .identity(identity)
                 .uuid("uuid")
                 .build();
-        when(tokenRepository.save(argThat(new TokenMatcher(identity)))).thenReturn(savedToken);
+        when(tokenRepository.save(argThat(new TokenMatcher(identity, tenantId)))).thenReturn(savedToken);
 
-        final Token actualToken = tokenService.createToken(identity);
+        final Token actualToken = tokenService.createToken(identity, tenantId);
 
         assertEquals(savedToken, actualToken);
     }
 
     private class TokenMatcher extends CustomMatcher<Token> {
         private String identity;
+        private String tenantId;
 
-        public TokenMatcher(String identity) {
+        TokenMatcher(String identity, String tenantId) {
             super("Domain token matcher");
             this.identity = identity;
+            this.tenantId = tenantId;
         }
 
         @Override
         public boolean matches(Object o) {
             final Token actualToken = (Token) o;
-            return identity.equals(actualToken.getIdentity());
+            return identity.equals(actualToken.getIdentity())
+                    && tenantId.equals(actualToken.getTenantId());
         }
     }
 }

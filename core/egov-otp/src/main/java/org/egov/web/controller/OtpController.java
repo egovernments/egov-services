@@ -22,7 +22,7 @@ public class OtpController {
     @PostMapping("/_create")
     @ResponseStatus(HttpStatus.CREATED)
     public OtpResponse createOtp(@RequestBody OtpRequest otpRequest) {
-        final Token token = tokenService.createToken(otpRequest.getIdentity());
+        final Token token = tokenService.createToken(otpRequest.getIdentity(), otpRequest.getTenantId());
         return new OtpResponse(token);
     }
 }

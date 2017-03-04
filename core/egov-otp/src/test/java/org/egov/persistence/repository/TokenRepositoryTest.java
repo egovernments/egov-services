@@ -26,7 +26,7 @@ public class TokenRepositoryTest {
 
     @Test
     public void test_should_save_entity_token() {
-        final Token token = new Token("identity", "tokenNumber", "uuid");
+        final Token token = new Token("tenantId", "identity", "tokenNumber", "uuid");
         final org.egov.persistence.entity.Token expectedEntityToken =
                 new org.egov.persistence.entity.Token();
         expectedEntityToken.setNumber("tokenNumber");

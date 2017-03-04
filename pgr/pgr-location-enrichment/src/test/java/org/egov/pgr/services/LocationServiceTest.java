@@ -1,8 +1,15 @@
 package org.egov.pgr.services;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.HashMap;
+
 import org.egov.pgr.contract.BoundaryResponse;
 import org.egov.pgr.contract.CrossHierarchyResponse;
-import org.egov.pgr.contract.ServiceRequest;
 import org.egov.pgr.model.SevaRequest;
 import org.egov.pgr.repository.BoundaryRepository;
 import org.egov.pgr.repository.CrossHierarchyRepository;
@@ -11,14 +18,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import java.util.HashMap;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LocationServiceTest {
@@ -49,7 +48,7 @@ public class LocationServiceTest {
         final SevaRequest actualSevaRequest = locationService.enrich(sevaRequest);
 
         assertEquals(sevaRequest, actualSevaRequest);
-        verify(boundaryRepository, never()).findBoundary(any(), any());
+        verify(boundaryRepository, never()).findBoundary(any(), any(),any());
         verify(crossHierarchyRepository, never()).getCrossHierarchy(any());
     }
 
@@ -63,7 +62,7 @@ public class LocationServiceTest {
         final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
 
         final BoundaryResponse boundaryResponse = new BoundaryResponse(LOCATION_ID, BOUNDARY_NAME);
-        when(boundaryRepository.findBoundary("1.2", "4.5")).thenReturn(boundaryResponse);
+        when(boundaryRepository.findBoundary("1.2", "4.5","ap.kurnool")).thenReturn(boundaryResponse);
         final SevaRequest actualSevaRequest = locationService.enrich(sevaRequest);
 
         assertEquals("5", actualSevaRequest.getLocationId());

@@ -1,6 +1,11 @@
 package org.egov.pgr.repository;
 
-import org.apache.commons.io.IOUtils;
+import static org.junit.Assert.assertEquals;
+import static org.springframework.test.web.client.ExpectedCount.once;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
+import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
+
 import org.egov.pgr.contract.BoundaryResponse;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,14 +16,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
-
-import static org.junit.Assert.assertEquals;
-import static org.springframework.test.web.client.ExpectedCount.once;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.content;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
-import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
 @RunWith(MockitoJUnitRunner.class)
 public class BoundaryRepositoryTest {
@@ -43,7 +40,7 @@ public class BoundaryRepositoryTest {
                         withSuccess(new Resources().getFileContents("successBoundaryResponse.json"),
                                 MediaType.APPLICATION_JSON_UTF8));
 
-        final BoundaryResponse boundary = boundaryRepository.findBoundary("1.11", "2.22");
+        final BoundaryResponse boundary = boundaryRepository.findBoundary("1.11", "2.22","ap.kurnool");
 
         server.verify();
         assertEquals(Long.valueOf(1), boundary.getId());

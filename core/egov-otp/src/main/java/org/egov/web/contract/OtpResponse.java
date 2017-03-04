@@ -1,13 +1,17 @@
 package org.egov.web.contract;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.egov.domain.model.Token;
 
 @Getter
-@AllArgsConstructor
 public class OtpResponse {
     private ResponseInfo responseInfo;
     private String otp;
     private String id;
+
+    public OtpResponse(Token token) {
+        otp = token.getNumber();
+        id = token.getUuid();
+    }
 }
 

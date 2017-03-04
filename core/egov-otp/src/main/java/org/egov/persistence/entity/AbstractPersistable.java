@@ -58,13 +58,4 @@ public abstract class AbstractPersistable<PK extends Serializable> implements Se
     public Long getVersion() {
         return version;
     }
-
-    public boolean isNew() {
-        return null == getId();
-    }
-
-    @Override
-    public String toString() {
-        return String.format("Entity of type %s with id: %s", this.getClass().getName(), getId());
-    }
 }

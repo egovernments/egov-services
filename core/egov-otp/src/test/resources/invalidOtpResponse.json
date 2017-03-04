@@ -1,0 +1,15 @@
+{
+  "responseInfo": null,
+  "error": {
+    "code": 400,
+    "message": "Invalid OTP request",
+    "description": null,
+    "fields": [
+      {
+        "code": "OTP.IDENTITY_MANDATORY",
+        "message": "Identity field is mandatory",
+        "field": "identity"
+      }
+    ]
+  }
+}

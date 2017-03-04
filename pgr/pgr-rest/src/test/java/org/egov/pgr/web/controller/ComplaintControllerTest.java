@@ -23,6 +23,7 @@ import org.egov.pgr.domain.model.ComplaintLocation;
 import org.egov.pgr.domain.model.ComplaintSearchCriteria;
 import org.egov.pgr.domain.model.ComplaintType;
 import org.egov.pgr.domain.model.Coordinates;
+import org.egov.pgr.domain.model.Role;
 import org.egov.pgr.domain.model.UserType;
 import org.egov.pgr.domain.service.ComplaintService;
 import org.egov.pgr.domain.service.UserService;
@@ -66,7 +67,7 @@ public class ComplaintControllerTest {
 
 	public Complaint getComplaintWithNoTenantId() {
 		final ComplaintLocation complaintLocation = ComplaintLocation.builder()
-				.coordinates(new Coordinates(12.22d, 11.22d)).build();
+				.coordinates(new Coordinates(11.22d,12.22d)).build();
 		final Complainant complainant = Complainant.builder().userId("userId").build();
 		return Complaint.builder().complainant(complainant).authenticatedUser(getCitizen())
 				.complaintLocation(complaintLocation).tenantId(null).description("description")
@@ -89,6 +90,23 @@ public class ComplaintControllerTest {
 		String stateId = "1";
 		String assigneeId = "2";
 		String departmentName = "Accounts";
+		String address=null;
+		List<String> mediaUrls=new ArrayList<>();
+        mediaUrls.add(null);
+        mediaUrls.add(null);
+        String jurisdictionId="1";
+        String description=null;
+        String mobileNumber = null;
+        String emailId = null;
+        String name = "kumar";
+        Integer id =67;
+        boolean anonymousUser = false;
+        List<Role> roles=new ArrayList<>();
+        roles.add(new Role(1L,"Citizen"));
+        roles.add(new Role(2L,"Employee"));
+        List<UserType> type=new ArrayList <>();
+        type.add(UserType.CITIZEN);
+        type.add(UserType.EMPLOYEE);
 
 		final HashMap<String, String> additionalValues = new HashMap<>();
 		additionalValues.put("ReceivingMode", receivingMode);
@@ -98,21 +116,29 @@ public class ComplaintControllerTest {
 		additionalValues.put("StateId", stateId);
 		additionalValues.put("AssigneeId", assigneeId);
 		additionalValues.put("DepartmentName", departmentName);
+		AuthenticatedUser user=AuthenticatedUser.builder().mobileNumber(mobileNumber).emailId(emailId).name(name).id(id).anonymousUser(anonymousUser).roles(roles).type(type).build();
+		Complaint complaint=Complaint.builder()
+		        .authenticatedUser(user)
+		        .crn(crn)
+		         .complaintType(new ComplaintType("abc","complaintCode"))
+		         .additionalValues(additionalValues)
+		         .address(address)
+		         .mediaUrls(mediaUrls)
+		         .complaintLocation(new ComplaintLocation(new Coordinates(0.0,0.0),null,"34"))
+		         .complainant(new Complainant("kumar",null,null,"mico layout","user"))
+		         .tenantId(jurisdictionId)
+		         .description(description).build();
+		ComplaintSearchCriteria criteria=ComplaintSearchCriteria.builder().assignmentId(10L).endDate(null).lastModifiedDatetime(null).serviceCode("serviceCode_123").serviceRequestId("serid_123").startDate(null).status("registered").userId(10L).build();
 
-		Complaint complaint = Complaint.builder().crn(crn).closed(false)
-				.complaintType(new ComplaintType(complaintType, "complaintCode"))
-				.complainant(new Complainant(complainant, null, null, null, null))
-				.complaintLocation(new ComplaintLocation(new Coordinates(0d, 0d), null, null))
-				.additionalValues(additionalValues).authenticatedUser(AuthenticatedUser.createAnonymousUser()).build();
 
 		List<Complaint> complaints = new ArrayList<>(Collections.singletonList(complaint));
-		when(complaintService.findAll(any(ComplaintSearchCriteria.class))).thenReturn(complaints);
+		when(complaintService.findAll(criteria)).thenReturn(complaints);
 
 		String content = new TestResourceReader().readResource("getServiceRequests.txt");
 		String expectedContent = String.format(content, crn, complaintType, complainant, receivingMode, receivingCenter,
 				location, childLocation);
 
-		mockMvc.perform(get("/seva?jurisdiction_id=1")
+		mockMvc.perform(get("/seva?jurisdiction_id=1&service_request_id=serid_123&service_code=serviceCode_123&status=registered&assignment_id=10&user_id=10")
 				.accept(MediaType.parseMediaType("application/json;charset=UTF-8")).header("api_id", "api_id")
 				.header("ver", "ver").header("ts", "ts").header("action", "action").header("did", "did")
 				.header("msg_id", "msg_id").header("requester_id", "requester_id").header("auth_token", "auth_token"))

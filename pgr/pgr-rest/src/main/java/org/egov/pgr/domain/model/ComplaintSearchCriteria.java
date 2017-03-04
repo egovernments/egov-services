@@ -2,6 +2,7 @@ package org.egov.pgr.domain.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import java.util.Date;
@@ -9,6 +10,7 @@ import java.util.Date;
 @Getter
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode
 public class ComplaintSearchCriteria {
 	private String serviceRequestId;
 	private String serviceCode;

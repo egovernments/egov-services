@@ -7,6 +7,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public class OtpRequest {
     private RequestInfo requestInfo;
-    private String reference;
+    private String identity;
 }
 

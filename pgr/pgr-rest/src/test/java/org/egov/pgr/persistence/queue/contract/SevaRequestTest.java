@@ -43,7 +43,7 @@ public class SevaRequestTest {
     private AuthenticatedUser getAuthenticatedUser() {
         return AuthenticatedUser.builder()
                 .id(1)
-                .type(Collections.singletonList(UserType.CITIZEN))
+                .type(UserType.CITIZEN)
                 .build();
     }
 

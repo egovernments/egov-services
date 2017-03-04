@@ -27,11 +27,15 @@ public class PgrRestSpringBootApplication {
     }
 
     @Value("${user.service.url}")
+    private String userServiceHost;
+
+    @Value("${egov.services.user.get_user_details}")
     private String userServiceUrl;
+
 
     @Bean
     public UserRepository userRepository(RestTemplate restTemplate) {
-        return new UserRepository(restTemplate, userServiceUrl);
+        return new UserRepository(restTemplate, userServiceHost, userServiceUrl);
     }
 
     @Bean

@@ -75,7 +75,7 @@ public class ComplaintControllerTest {
 	}
 
 	public AuthenticatedUser getCitizen() {
-		return AuthenticatedUser.builder().id(1).type(Collections.singletonList(UserType.CITIZEN)).build();
+		return AuthenticatedUser.builder().id(1).type(UserType.CITIZEN).build();
 	}
 
 	@Test
@@ -104,9 +104,6 @@ public class ComplaintControllerTest {
         List<Role> roles=new ArrayList<>();
         roles.add(new Role(1L,"Citizen"));
         roles.add(new Role(2L,"Employee"));
-        List<UserType> type=new ArrayList <>();
-        type.add(UserType.CITIZEN);
-        type.add(UserType.EMPLOYEE);
 
 		final HashMap<String, String> additionalValues = new HashMap<>();
 		additionalValues.put("ReceivingMode", receivingMode);
@@ -116,7 +113,7 @@ public class ComplaintControllerTest {
 		additionalValues.put("StateId", stateId);
 		additionalValues.put("AssigneeId", assigneeId);
 		additionalValues.put("DepartmentName", departmentName);
-		AuthenticatedUser user=AuthenticatedUser.builder().mobileNumber(mobileNumber).emailId(emailId).name(name).id(id).anonymousUser(anonymousUser).roles(roles).type(type).build();
+		AuthenticatedUser user=AuthenticatedUser.builder().mobileNumber(mobileNumber).emailId(emailId).name(name).id(id).anonymousUser(anonymousUser).roles(roles).type(UserType.CITIZEN).build();
 		Complaint complaint=Complaint.builder()
 		        .authenticatedUser(user)
 		        .crn(crn)

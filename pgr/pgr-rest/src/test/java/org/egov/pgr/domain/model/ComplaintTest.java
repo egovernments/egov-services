@@ -419,14 +419,14 @@ public class ComplaintTest {
     private AuthenticatedUser getCitizen() {
         return AuthenticatedUser.builder()
                 .id(1)
-                .type(Collections.singletonList(UserType.CITIZEN))
+                .type(UserType.CITIZEN)
                 .build();
     }
 
     private AuthenticatedUser getEmployee() {
         return AuthenticatedUser.builder()
                 .id(1)
-                .type(Collections.singletonList(UserType.EMPLOYEE))
+                .type(UserType.EMPLOYEE)
                 .build();
     }
 }

@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.util.Collections;
 import java.util.List;
 
 @Getter
@@ -17,15 +16,15 @@ public class AuthenticatedUser {
     private Integer id;
     private boolean anonymousUser;
     private List<Role> roles;
-    private List<UserType> type;
+    private UserType type;
 
     public static AuthenticatedUser createAnonymousUser() {
-        final List<UserType> type = Collections.singletonList(UserType.SYSTEM);
+        final UserType type = UserType.SYSTEM;
         return AuthenticatedUser.builder().anonymousUser(true).type(type).id(0).build();
     }
 
     public UserType getType() {
-        return type.get(0);
+        return type;
     }
 
     public boolean isCitizen() {

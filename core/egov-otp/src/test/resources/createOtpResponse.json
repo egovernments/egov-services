@@ -2,7 +2,7 @@
   "responseInfo": null,
   "otp": {
     "otp": "randomNumber",
-    "uuid": "uuid",
+    "UUID": "uuid",
     "identity": "identity",
     "tenantId": "tenantId"
   }

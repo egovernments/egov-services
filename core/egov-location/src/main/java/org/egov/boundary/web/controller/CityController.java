@@ -35,18 +35,19 @@ public class CityController {
 	@Autowired
 	private CityService cityService;
 
+	@Autowired
+	private ObjectMapper objectMapper;
+
 	@GetMapping
 	public String getCity(@RequestParam(value = "code", required = false) String code) {
 
-		ObjectMapper mapper = new ObjectMapper();
 		List<District> districts;
 		List<District> result = new ArrayList<>();
 		String jsonInString = "";
-		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
 		try {
 
-			districts = (List<District>) mapper.readValue(new ClassPathResource("/json/citiesUrl.json").getFile(),
+			districts = (List<District>) objectMapper.readValue(new ClassPathResource("/json/citiesUrl.json").getFile(),
 					new TypeReference<List<District>>() {
 					});
 			if (code != null && !code.isEmpty())
@@ -81,15 +82,8 @@ public class CityController {
 	}
 
 	private City getCity(CityRequest cityRequest) {
-		return mapToContractCity(cityService.getCityByCityReq(cityRequest));
-	}
-
-	private City mapToContractCity(org.egov.boundary.persistence.entity.City cityEntity) {
-		ObjectMapper mapper = new ObjectMapper();
-		City city = new City();
-		if (cityEntity != null) {
-			city = mapper.convertValue(cityEntity, City.class);
-		}
+		org.egov.boundary.persistence.entity.City entityCity = cityService.getCityByCityReq(cityRequest);
+		City city = new City(entityCity);
 		return city;
 	}
 }

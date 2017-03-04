@@ -36,7 +36,7 @@ public class CityControllerTest {
 	public void test_should_fetch_city_for_given_cityrequest() throws Exception {
 
 		final org.egov.boundary.persistence.entity.City expectedCity = org.egov.boundary.persistence.entity.City
-				.builder().code("KC").name("Kurnool").domainURL("Localhost").grade("Grade A")
+				.builder().id(1L).code("KC").name("Kurnool").domainURL("Localhost").grade("Grade A")
 				.districtName("Kurnool District").districtCode("KC01").regionName("Kurnool Region").build();
 
 		when(cityService.getCityByCityReq(any(CityRequest.class))).thenReturn(expectedCity);

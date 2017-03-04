@@ -1,0 +1,17 @@
+{
+  "ResponseInfo": {
+    "api_id": null,
+    "ver": null,
+    "ts": null,
+    "key": null,
+    "tenantId": null,
+    "resMsgId": null,
+    "status": "200"
+  },
+  "Boundary": [
+    {
+      "id": "1",
+      "name": "Bank Road"
+    }
+   ]
+}

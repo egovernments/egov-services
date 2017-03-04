@@ -2,11 +2,13 @@ package org.egov.boundary.web.controller;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
 import org.egov.boundary.domain.service.BoundaryService;
-import org.egov.boundary.persistence.entity.Boundary;
+import org.egov.boundary.domain.service.CrossHierarchyService;
+import org.egov.boundary.web.contract.Boundary;
 import org.egov.boundary.web.contract.BoundaryRequest;
 import org.egov.boundary.web.contract.BoundaryResponse;
 import org.egov.boundary.web.contract.Error;
@@ -35,6 +37,9 @@ public class BoundaryController {
 	@Autowired
 	private BoundaryService boundaryService;
 
+	@Autowired
+	private CrossHierarchyService crossHierarchyService;
+
 	@PostMapping
 	@ResponseBody
 	public ResponseEntity<?> create(@RequestBody @Valid BoundaryRequest boundaryRequest, BindingResult errors) {
@@ -44,7 +49,7 @@ public class BoundaryController {
 			return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
 		}
 		RequestInfo requestInfo = boundaryRequest.getRequestInfo();
-		Boundary boundary = boundaryService.createBoundary(boundaryRequest.getBoundary());
+		Boundary boundary = mapToContractBoundary(boundaryService.createBoundary(boundaryRequest.getBoundary()));
 
 		BoundaryResponse boundaryResponse = new BoundaryResponse();
 		boundaryResponse.getBoundarys().add(boundary);
@@ -66,14 +71,14 @@ public class BoundaryController {
 			return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
 		}
 		RequestInfo requestInfo = boundaryRequest.getRequestInfo();
-		Boundary boundaryFromDb = boundaryService.findByCode(code);
-		Boundary boundary = boundaryRequest.getBoundary();
+		org.egov.boundary.persistence.entity.Boundary boundaryFromDb = boundaryService.findByCode(code);
+		org.egov.boundary.persistence.entity.Boundary boundary = boundaryRequest.getBoundary();
 		boundary.setId(boundaryFromDb.getId());
 		boundary.setVersion(boundaryFromDb.getVersion());
-		boundary = boundaryService.updateBoundary(boundary);
+		Boundary contractBoundary = mapToContractBoundary(boundaryService.updateBoundary(boundary));
 
 		BoundaryResponse boundaryResponse = new BoundaryResponse();
-		boundaryResponse.getBoundarys().add(boundary);
+		boundaryResponse.getBoundarys().add(contractBoundary);
 
 		ResponseInfo responseInfo = new ResponseInfo();
 		responseInfo.setStatus(HttpStatus.CREATED.toString());
@@ -87,15 +92,14 @@ public class BoundaryController {
 	public ResponseEntity<?> search(@ModelAttribute BoundaryRequest boundaryRequest) {
 
 		BoundaryResponse boundaryResponse = new BoundaryResponse();
-		List<Boundary> allBoundarys = boundaryService.getAllBoundary(boundaryRequest);
+		List<Boundary> allBoundarys = mapToContractBoundaryList(boundaryService.getAllBoundary(boundaryRequest));
 		boundaryResponse.getBoundarys().addAll(allBoundarys);
 		ResponseInfo responseInfo = new ResponseInfo();
 		responseInfo.setStatus(HttpStatus.CREATED.toString());
 		boundaryResponse.setResponseInfo(responseInfo);
 		return new ResponseEntity<BoundaryResponse>(boundaryResponse, HttpStatus.OK);
 	}
-	
-	
+
 	@GetMapping("/getLocationByLocationName")
 	@ResponseBody
 	public ResponseEntity<?> getLocation(@RequestParam("locationName") final String locationName) {
@@ -105,6 +109,41 @@ public class BoundaryController {
 		} catch (final Exception e) {
 			return new ResponseEntity<String>("error in request", HttpStatus.BAD_REQUEST);
 		}
+	}
+
+	@PostMapping(value = "/childLocationsByBoundaryId")
+	@ResponseBody
+	public ResponseEntity<?> getChildLocationsByBoundaryId(
+			@RequestParam(value = "boundaryId", required = true) final String boundaryId) {
+		BoundaryResponse boundaryResponse = new BoundaryResponse();
+		if (boundaryId != null && !boundaryId.isEmpty()) {
+			ResponseInfo responseInfo = new ResponseInfo();
+			responseInfo.setStatus(HttpStatus.OK.toString());
+			boundaryResponse.setResponseInfo(responseInfo);
+			List<Boundary> boundaries = getChildBoundaryByBoundaryId(boundaryId);
+			boundaryResponse.setBoundarys(boundaries);
+			return new ResponseEntity<BoundaryResponse>(boundaryResponse, HttpStatus.OK);
+		} else
+			return new ResponseEntity<BoundaryResponse>(boundaryResponse, HttpStatus.BAD_REQUEST);
+
+	}
+
+	private List<Boundary> getChildBoundaryByBoundaryId(String boundaryId) {
+		return mapToContractBoundaryList(
+				crossHierarchyService.getActiveChildBoundariesByBoundaryId(Long.valueOf(boundaryId)));
+	}
+
+	private List<Boundary> mapToContractBoundaryList(
+			List<org.egov.boundary.persistence.entity.Boundary> boundaryEntity) {
+		return boundaryEntity.stream().map(Boundary::new).collect(Collectors.toList());
+	}
+
+	private Boundary mapToContractBoundary(org.egov.boundary.persistence.entity.Boundary boundaryEntity) {
+		Boundary boundary = new Boundary();
+		if (boundaryEntity != null) {
+			boundary = new Boundary(boundaryEntity);
+		}
+		return boundary;
 	}
 
 	private ErrorResponse populateErrors(BindingResult errors) {

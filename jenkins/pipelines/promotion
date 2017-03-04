@@ -1,0 +1,23 @@
+def ci_image = "egovio/ci:0.0.3"
+def group = "${env.GROUP}"
+def source_env = "${env.SOURCE_ENV}"
+def dest_env = "${env.DEST_ENV}"
+
+try {
+    node("slave"){
+        checkout scm
+        env_snapshot = load("../env_snapshot.groovy")
+        kubectl_configurer = load("../kubectl_configurer.groovy")
+
+	    env_snapshot.takeSnapshot(group, source_env, ci_image)
+
+        archiver.archiveArtifacts("jenkins/scripts/image_tags.txt")
+    }
+
+//    stage("Deploy to QA") {
+//        deployer.deploy(service_name, commit_id)
+//    }
+} catch (e) {
+    throw e
+}
+

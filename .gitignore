@@ -1,6 +1,7 @@
 target/
 common-target/
 !.mvn/wrapper/maven-wrapper.jar
+**/*/image_tags.txt
 
 ### STS ###
 .apt_generated

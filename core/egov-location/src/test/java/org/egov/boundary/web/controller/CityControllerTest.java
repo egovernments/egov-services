@@ -12,7 +12,6 @@ import java.io.IOException;
 import org.apache.commons.io.IOUtils;
 import org.egov.boundary.domain.model.RequestContext;
 import org.egov.boundary.domain.service.CityService;
-import org.egov.boundary.web.contract.City;
 import org.egov.boundary.web.contract.CityRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -3,8 +3,10 @@ package org.egov.eis.web.controller;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.egov.eis.domain.service.AssignmentService;
+import org.egov.eis.web.contract.Assignment;
 import org.egov.eis.web.contract.AssignmentRes;
 import org.egov.eis.web.contract.EmployeeRes;
 import org.egov.eis.web.contract.Error;
@@ -13,11 +15,11 @@ import org.egov.eis.web.contract.ResponseInfo;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -59,10 +61,38 @@ public class AssignmentRestController {
 
 	@GetMapping(value = "/assignments")
 	public AssignmentRes getAssignments(@RequestParam(value = "id", required = false) Long id) {
-		if (id != null)
-			return new AssignmentRes(Collections.singletonList(assignmentService.getAssignmentById(id)));
-		else
-			return new AssignmentRes(assignmentService.getAll());
+		AssignmentRes response = new AssignmentRes();
+		if (id != null) {
+			org.egov.eis.persistence.entity.Assignment entityAssignment = assignmentService.getAssignmentById(id);
+			if (entityAssignment != null) {
+				Assignment assignment = new Assignment(entityAssignment);
+				response.setAssignment(Collections.singletonList(assignment));
+			}
+			return response;
+		} else {
+			List<org.egov.eis.persistence.entity.Assignment> entityAssignments = assignmentService.getAll();
+			if (!entityAssignments.isEmpty()) {
+				response.setAssignment(entityAssignments.stream().map(Assignment::new).collect(Collectors.toList()));
+			}
+			return response;
+		}
+	}
+
+	@PostMapping(value = "/assignmentsByDeptOrDesignId")
+	@ResponseBody
+	public ResponseEntity<?> getAssignmentsByDeptOrDesgnId(
+			@RequestParam(value = "deptId", required = false) Long deptId,
+			@RequestParam(value = "desgnId", required = false) Long desgnId) {
+		AssignmentRes response = new AssignmentRes();
+		if (deptId != null || desgnId != null) {
+			List<org.egov.eis.persistence.entity.Assignment> entityAssignments = assignmentService
+					.getPositionsByDepartmentAndDesignationForGivenRange(deptId, desgnId, new Date());
+			if (!entityAssignments.isEmpty()) {
+				response.setAssignment(entityAssignments.stream().map(Assignment::new).collect(Collectors.toList()));
+				return new ResponseEntity<AssignmentRes>(response, HttpStatus.OK);
+			}
+		}
+		return new ResponseEntity<AssignmentRes>(response, HttpStatus.BAD_REQUEST);
 	}
 
 	@ExceptionHandler(Exception.class)

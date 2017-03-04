@@ -1,0 +1,19 @@
+{
+  "ResponseInfo": null,
+  "Assignment": [
+    {
+      "id": 5,
+      "position": null,
+      "fund": "1",
+      "functionary": null,
+      "function": null,
+      "designation": "Assistant engineer",
+      "department": "Electrical",
+      "primary": null,
+      "fromDate": null,
+      "toDate": null,
+      "grade": null,
+      "govtOrderNumber": null
+    }
+  ]
+}

@@ -48,6 +48,13 @@ public class DesignationRestControllerTest {
 		assertEquals("someId", RequestContext.getId());
 	}
 
+	@Test
+	public void test_should_return_bad_request_when_department_is_empty() throws Exception {
+		when(designationService.getAllDesignationByDepartment(any(Long.class), any(Date.class))).thenReturn(null);
+		mockMvc.perform(post("/designationByDepartmentId").param("id", "").header("X-CORRELATION-ID", "someId")
+				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().isBadRequest());
+	}
+
 	private String getFileContents(String fileName) {
 		try {
 			return IOUtils.toString(this.getClass().getClassLoader().getResourceAsStream(fileName), "UTF-8");

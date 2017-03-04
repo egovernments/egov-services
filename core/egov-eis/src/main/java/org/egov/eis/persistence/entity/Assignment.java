@@ -60,9 +60,22 @@ import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 @Entity
 @Table(name = "egeis_assignment")
 @SequenceGenerator(name = Assignment.SEQ_ASSIGNMENT, sequenceName = Assignment.SEQ_ASSIGNMENT, allocationSize = 1)
+@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class Assignment extends AbstractAuditable {
 
 	public static final String SEQ_ASSIGNMENT = "SEQ_EGEIS_ASSIGNMENT";
@@ -84,7 +97,7 @@ public class Assignment extends AbstractAuditable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "designation")
 	private Designation designation;
-	
+
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "department")
@@ -116,115 +129,9 @@ public class Assignment extends AbstractAuditable {
 		return id;
 	}
 
-	public List<HeadOfDepartments> getHodList() {
-		return hodList;
-	}
-
-	public void setHodList(final List<HeadOfDepartments> hodLists) {
-		hodList = hodLists;
-	}
-
 	@Override
 	public void setId(final Long id) {
 		this.id = id;
-	}
-
-	public Designation getDesignation() {
-		return designation;
-	}
-
-	public void setDesignation(final Designation designation) {
-		this.designation = designation;
-	}
-
-	public Long getFunctionary() {
-		return functionary;
-	}
-
-	public void setFunctionary(final Long functionary) {
-		this.functionary = functionary;
-	}
-
-	public Long getFunction() {
-		return function;
-	}
-
-	public void setFunction(final Long function) {
-		this.function = function;
-	}
-
-	public Long getFund() {
-		return fund;
-	}
-
-	public void setFund(final Long fund) {
-		this.fund = fund;
-	}
-
-	public GradeMaster getGrade() {
-		return grade;
-	}
-
-	public void setGrade(final GradeMaster gradeId) {
-		grade = gradeId;
-	}
-
-	public boolean getPrimary() {
-		return primary;
-	}
-
-	public void setPrimary(final boolean primary) {
-		this.primary = primary;
-	}
-
-	public Position getPosition() {
-		return position;
-	}
-
-	public void setPosition(final Position position) {
-		this.position = position;
-	}
-
-	public Department getDepartment() {
-		return department;
-	}
-
-	public void setDepartment(final Department department) {
-		this.department = department;
-	}
-
-	public Date getFromDate() {
-		return fromDate;
-	}
-
-	public void setFromDate(final Date fromDate) {
-		this.fromDate = fromDate;
-	}
-
-	public Date getToDate() {
-		return toDate;
-	}
-
-	public void setToDate(final Date toDate) {
-		this.toDate = toDate;
-	}
-
-	public Employee getEmployee() {
-		return employee;
-	}
-
-	public void setEmployee(final Employee employee) {
-		this.employee = employee;
-	}
-
-	public List<HeadOfDepartments> getDeptSet() {
-		return deptSet;
-	}
-
-	public void setDeptSet(final List<HeadOfDepartments> deptSet) {
-		this.deptSet.clear();
-		if (deptSet != null)
-			this.deptSet.addAll(deptSet);
 	}
 
 }

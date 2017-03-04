@@ -53,88 +53,85 @@ import org.hibernate.validator.constraints.SafeHtml;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 @Entity
 @Table(name = "eg_department")
 @SequenceGenerator(name = Department.SEQ_DEPARTMENT, sequenceName = Department.SEQ_DEPARTMENT, allocationSize = 1)
 @JsonIgnoreProperties(value = { "handler", "hibernateLazyInitializer" })
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@Builder
 public class Department extends AbstractAuditable {
 
-    public static final String SEQ_DEPARTMENT = "SEQ_EG_DEPARTMENT";
-    private static final long serialVersionUID = 7630238192598939863L;
-    @Id
-    @GeneratedValue(generator = SEQ_DEPARTMENT, strategy = GenerationType.SEQUENCE)
-    private Long id;
+	public static final String SEQ_DEPARTMENT = "SEQ_EG_DEPARTMENT";
+	private static final long serialVersionUID = 7630238192598939863L;
+	@Id
+	@GeneratedValue(generator = SEQ_DEPARTMENT, strategy = GenerationType.SEQUENCE)
+	private Long id;
 
-    @Length(min = 1, max = 128)
-    @SafeHtml
-    private String name;
+	@Length(min = 1, max = 128)
+	@SafeHtml
+	private String name;
 
-    @NotBlank
-    @Length(min = 1, max = 128)
-    @SafeHtml
-    private String code;
+	@NotBlank
+	@Length(min = 1, max = 128)
+	@SafeHtml
+	private String code;
 
-    @Override
-    public Long getId() {
-        return id;
-    }
+	@Override
+	public Long getId() {
+		return id;
+	}
 
-    @Override
-    public void setId(final Long id) {
-        this.id = id;
-    }
+	@Override
+	public void setId(final Long id) {
+		this.id = id;
+	}
 
-    public String getName() {
-        return name;
-    }
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (code == null ? 0 : code.hashCode());
+		result = prime * result + (id == null ? 0 : id.hashCode());
+		result = prime * result + (name == null ? 0 : name.hashCode());
+		return result;
+	}
 
-    public void setName(final String name) {
-        this.name = name;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(final String code) {
-        this.code = code;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + (code == null ? 0 : code.hashCode());
-        result = prime * result + (id == null ? 0 : id.hashCode());
-        result = prime * result + (name == null ? 0 : name.hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final Department other = (Department) obj;
-        if (code == null) {
-            if (other.code != null)
-                return false;
-        } else if (!code.equals(other.code))
-            return false;
-        if (id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!id.equals(other.id))
-            return false;
-        if (name == null) {
-            if (other.name != null)
-                return false;
-        } else if (!name.equals(other.name))
-            return false;
-        return true;
-    }
+	@Override
+	public boolean equals(final Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		final Department other = (Department) obj;
+		if (code == null) {
+			if (other.code != null)
+				return false;
+		} else if (!code.equals(other.code))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		return true;
+	}
 
 }

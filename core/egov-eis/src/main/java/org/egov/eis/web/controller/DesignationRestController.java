@@ -75,7 +75,7 @@ public class DesignationRestController {
 			responseInfo.setStatus(HttpStatus.OK.toString());
 			desigResponse.setResponseInfo(responseInfo);
 			List<Designation> designations = getDesignationByDepartment(id);
-		    desigResponse.setDesignation(designations);
+			desigResponse.setDesignation(designations);
 			return new ResponseEntity<DesignationRes>(desigResponse, HttpStatus.OK);
 		} else
 			return new ResponseEntity<DesignationRes>(desigResponse, HttpStatus.BAD_REQUEST);

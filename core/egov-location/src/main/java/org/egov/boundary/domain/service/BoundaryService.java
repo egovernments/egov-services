@@ -52,7 +52,6 @@ import java.util.Set;
 
 import org.egov.boundary.persistence.entity.Boundary;
 import org.egov.boundary.persistence.entity.BoundaryType;
-import org.egov.boundary.persistence.entity.CrossHierarchy;
 import org.egov.boundary.persistence.entity.HierarchyType;
 import org.egov.boundary.persistence.repository.BoundaryRepository;
 import org.egov.boundary.web.contract.BoundaryRequest;
@@ -65,6 +64,7 @@ import org.opengis.feature.simple.SimpleFeatureType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -249,8 +249,7 @@ public class BoundaryService {
 		try {
 			if (latitude != null && longitude != null) {
 				final Map<String, URL> map = new HashMap<>();
-				map.put("url",
-						Thread.currentThread().getContextClassLoader().getResource("gis/" + tenantId + "/wards.shp"));
+				map.put("url", new ClassPathResource("/gis/" + tenantId.replace(".", "/") + "/wards.shp").getURL());
 				final DataStore dataStore = DataStoreFinder.getDataStore(map);
 				final FeatureCollection<SimpleFeatureType, SimpleFeature> collection = dataStore
 						.getFeatureSource(dataStore.getTypeNames()[0]).getFeatures();
@@ -300,7 +299,6 @@ public class BoundaryService {
 	}
 
 	public List<Boundary> getAllBoundary(BoundaryRequest boundaryRequest) {
-		Long boundaryId;
 		List<Boundary> boundaries = new ArrayList<Boundary>();
 		if (boundaryRequest.getBoundary().getId() != null) {
 			boundaries.add(boundaryRepository.findOne(boundaryRequest.getBoundary().getId()));
@@ -308,12 +306,13 @@ public class BoundaryService {
 		} else {
 			if (!StringUtils.isEmpty(boundaryRequest.getBoundary().getLatitude())
 					&& !StringUtils.isEmpty(boundaryRequest.getBoundary().getLongitude())) {
-				Boundary boundary = new Boundary();
-				boundary.setId(21l);
-				boundary.setBoundaryNum(11l);
-				boundary.setName("Bangalore");
-				boundaries.add(boundary);
-
+				Optional<Boundary> boundary = getBoundary(boundaryRequest.getBoundary().getLatitude().doubleValue(),
+						boundaryRequest.getBoundary().getLongitude().doubleValue(),
+						boundaryRequest.getBoundary().getTenantid());
+				if (boundary.isPresent())
+					boundaries.add(boundary.get());
+				else
+					boundaries = new ArrayList<Boundary>();
 			} else {
 				boundaries.addAll(boundaryRepository.findAll());
 			}

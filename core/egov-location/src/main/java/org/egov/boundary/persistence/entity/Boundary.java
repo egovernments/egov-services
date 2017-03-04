@@ -56,6 +56,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -69,233 +70,241 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 @Entity
- 
+
 @Table(name = "EG_BOUNDARY")
-@NamedQuery(name = "Boundary.findBoundariesByBoundaryType",
-        query = "select b from Boundary b where b.boundaryType.id = :boundaryTypeId")
+@NamedQuery(name = "Boundary.findBoundariesByBoundaryType", query = "select b from Boundary b where b.boundaryType.id = :boundaryTypeId")
 @SequenceGenerator(name = Boundary.SEQ_BOUNDARY, sequenceName = Boundary.SEQ_BOUNDARY, allocationSize = 1)
 public class Boundary extends AbstractAuditable {
 
-    public static final String SEQ_BOUNDARY = "seq_eg_boundary";
-    private static final long serialVersionUID = 3054956514161912026L;
- 
-    @Id
-    @GeneratedValue(generator = SEQ_BOUNDARY, strategy = GenerationType.SEQUENCE)
-    private Long id;
+	public static final String SEQ_BOUNDARY = "seq_eg_boundary";
+	private static final long serialVersionUID = 3054956514161912026L;
 
-    @Length(max = 512)
-    @SafeHtml
-    @NotBlank
-    private String name;
+	@Id
+	@GeneratedValue(generator = SEQ_BOUNDARY, strategy = GenerationType.SEQUENCE)
+	private Long id;
 
-    private Long boundaryNum;
-    @JsonProperty(access=Access.WRITE_ONLY)
-    @ManyToOne
-    @JoinColumn(name = "boundaryType", updatable = false)
-    private BoundaryType boundaryType;
+	@Length(max = 512)
+	@SafeHtml
+	@NotBlank
+	private String name;
 
-    @JsonProperty(access=Access.WRITE_ONLY)
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent")
-    @Fetch(value = FetchMode.SELECT)
-    private Boundary parent;
+	private Long boundaryNum;
+	@JsonProperty(access = Access.WRITE_ONLY)
+	@ManyToOne
+	@JoinColumn(name = "boundaryType", updatable = false)
+	private BoundaryType boundaryType;
 
-    @JsonProperty(access=Access.WRITE_ONLY)
-    @OneToMany(cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "parent")
-    @Fetch(value = FetchMode.SUBSELECT)
-    @JsonIgnore
-    private Set<Boundary> children = new HashSet<>();
+	@JsonProperty(access = Access.WRITE_ONLY)
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "parent")
+	@Fetch(value = FetchMode.SELECT)
+	private Boundary parent;
 
-    @DateTimeFormat(pattern = "dd-MM-yyyy")
-    private Date fromDate;
+	@JsonProperty(access = Access.WRITE_ONLY)
+	@OneToMany(cascade = CascadeType.REMOVE)
+	@JoinColumn(name = "parent")
+	@Fetch(value = FetchMode.SUBSELECT)
+	@JsonIgnore
+	private Set<Boundary> children = new HashSet<>();
 
-    private Date toDate;
+	@DateTimeFormat(pattern = "dd-MM-yyyy")
+	private Date fromDate;
 
-    private boolean isHistory;
+	private Date toDate;
 
-    private Long bndryId;
+	private boolean isHistory;
 
-    @SafeHtml
-    private String localName;
+	private Long bndryId;
 
-    private Float longitude;
+	@SafeHtml
+	private String localName;
 
-    private Float latitude;
+	private Float longitude;
 
-    @Length(max = 32)
-    private String materializedPath;
- 
+	private Float latitude;
 
-    
-    public Long getId() {
-        return id;
-    }
-   
-    public void setId(final Long id) {
-        this.id = id;
-    }
+	@Length(max = 32)
+	private String materializedPath;
 
-    public String getLocalName() {
-        return localName;
-    }
+	@Transient
+	private String tenantid;
 
-    public void setLocalName(final String boundaryNameLocal) {
-        localName = boundaryNameLocal;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public Boundary getParent() {
-        return parent;
-    }
+	public void setId(final Long id) {
+		this.id = id;
+	}
 
-    public void setParent(final Boundary parent) {
-        this.parent = parent;
-    }
+	public String getLocalName() {
+		return localName;
+	}
 
-    public Set<Boundary> getChildren() {
-        return children;
-    }
+	public void setLocalName(final String boundaryNameLocal) {
+		localName = boundaryNameLocal;
+	}
 
-    public void setChildren(final Set<Boundary> boundaries) {
-        children = boundaries;
-    }
+	public Boundary getParent() {
+		return parent;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public void setParent(final Boundary parent) {
+		this.parent = parent;
+	}
 
-    public void setName(final String name) {
+	public Set<Boundary> getChildren() {
+		return children;
+	}
 
-        this.name = name;
-    }
+	public void setChildren(final Set<Boundary> boundaries) {
+		children = boundaries;
+	}
 
-    public boolean isLeaf() {
-        return getChildren().isEmpty();
-    }
+	public String getName() {
+		return name;
+	}
 
-    public BoundaryType getBoundaryType() {
-        return boundaryType;
-    }
+	public void setName(final String name) {
 
-    public void setBoundaryType(final BoundaryType boundaryType) {
-        this.boundaryType = boundaryType;
-    }
+		this.name = name;
+	}
 
-    public Long getBoundaryNum() {
-        return boundaryNum;
-    }
+	public boolean isLeaf() {
+		return getChildren().isEmpty();
+	}
 
-    public void setBoundaryNum(final Long number) {
+	public BoundaryType getBoundaryType() {
+		return boundaryType;
+	}
 
-        boundaryNum = number;
-    }
+	public void setBoundaryType(final BoundaryType boundaryType) {
+		this.boundaryType = boundaryType;
+	}
 
-    public boolean isRoot() {
-        return getParent() == null;
-    }
+	public Long getBoundaryNum() {
+		return boundaryNum;
+	}
 
-    public Date getFromDate() {
-        return fromDate;
-    }
+	public void setBoundaryNum(final Long number) {
 
-    public void setFromDate(final Date fromDate) {
-        this.fromDate = fromDate;
-    }
+		boundaryNum = number;
+	}
 
-    public Date getToDate() {
-        return toDate;
-    }
+	public boolean isRoot() {
+		return getParent() == null;
+	}
 
-    public void setToDate(final Date toDate) {
-        this.toDate = toDate;
-    }
+	public Date getFromDate() {
+		return fromDate;
+	}
 
-    public boolean isHistory() {
-        return isHistory;
-    }
+	public void setFromDate(final Date fromDate) {
+		this.fromDate = fromDate;
+	}
 
-    public void setHistory(final boolean isHistory) {
-        this.isHistory = isHistory;
-    }
+	public Date getToDate() {
+		return toDate;
+	}
 
-    public Long getBndryId() {
-        return bndryId;
-    }
+	public void setToDate(final Date toDate) {
+		this.toDate = toDate;
+	}
 
-    public void setBndryId(final Long bndryId) {
-        this.bndryId = bndryId;
-    }
+	public boolean isHistory() {
+		return isHistory;
+	}
 
-    public Float getLongitude() {
-        return longitude;
-    }
+	public void setHistory(final boolean isHistory) {
+		this.isHistory = isHistory;
+	}
 
-    public void setLongitude(final Float longitude) {
-        this.longitude = longitude;
-    }
+	public Long getBndryId() {
+		return bndryId;
+	}
 
-    public Float getLatitude() {
-        return latitude;
-    }
+	public void setBndryId(final Long bndryId) {
+		this.bndryId = bndryId;
+	}
 
-    public void setLatitude(final Float latitude) {
-        this.latitude = latitude;
-    }
+	public Float getLongitude() {
+		return longitude;
+	}
 
-    public String getMaterializedPath() {
-        return materializedPath;
-    }
+	public void setLongitude(final Float longitude) {
+		this.longitude = longitude;
+	}
 
-    public void setMaterializedPath(final String materializedPath) {
-        this.materializedPath = materializedPath;
-    }
+	public Float getLatitude() {
+		return latitude;
+	}
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + (boundaryNum == null ? 0 : boundaryNum.hashCode());
-        result = prime * result + (id == null ? 0 : id.hashCode());
-        result = prime * result + (localName == null ? 0 : localName.hashCode());
-        result = prime * result + (name == null ? 0 : name.hashCode());
-        result = prime * result + (parent == null ? 0 : parent.hashCode());
-        return result;
-    }
+	public void setLatitude(final Float latitude) {
+		this.latitude = latitude;
+	}
 
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final Boundary other = (Boundary) obj;
-        if (boundaryNum == null) {
-            if (other.boundaryNum != null)
-                return false;
-        } else if (!boundaryNum.equals(other.boundaryNum))
-            return false;
-        if (id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!id.equals(other.id))
-            return false;
-        if (localName == null) {
-            if (other.localName != null)
-                return false;
-        } else if (!localName.equals(other.localName))
-            return false;
-        if (name == null) {
-            if (other.name != null)
-                return false;
-        } else if (!name.equals(other.name))
-            return false;
-        if (parent == null) {
-            if (other.parent != null)
-                return false;
-        } else if (!parent.equals(other.parent))
-            return false;
-        return true;
-    }
+	public String getMaterializedPath() {
+		return materializedPath;
+	}
+
+	public void setMaterializedPath(final String materializedPath) {
+		this.materializedPath = materializedPath;
+	}
+
+	public String getTenantid() {
+		return tenantid;
+	}
+
+	public void setTenantid(String tenantid) {
+		this.tenantid = tenantid;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (boundaryNum == null ? 0 : boundaryNum.hashCode());
+		result = prime * result + (id == null ? 0 : id.hashCode());
+		result = prime * result + (localName == null ? 0 : localName.hashCode());
+		result = prime * result + (name == null ? 0 : name.hashCode());
+		result = prime * result + (parent == null ? 0 : parent.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		final Boundary other = (Boundary) obj;
+		if (boundaryNum == null) {
+			if (other.boundaryNum != null)
+				return false;
+		} else if (!boundaryNum.equals(other.boundaryNum))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (localName == null) {
+			if (other.localName != null)
+				return false;
+		} else if (!localName.equals(other.localName))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (parent == null) {
+			if (other.parent != null)
+				return false;
+		} else if (!parent.equals(other.parent))
+			return false;
+		return true;
+	}
 }

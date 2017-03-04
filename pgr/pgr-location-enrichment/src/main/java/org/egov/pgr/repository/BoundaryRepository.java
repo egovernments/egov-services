@@ -21,9 +21,9 @@ public class BoundaryRepository {
         this.url = boundaryServiceHost + latLongUrl;
     }
 
-    public BoundaryResponse findBoundary(String latitude, String longitude) {
+    public BoundaryResponse findBoundary(String latitude, String longitude,String tenantid) {
         final BoundaryServiceResponse serviceResponse =
-                restTemplate.getForObject(this.url, BoundaryServiceResponse.class, latitude, longitude);
+                restTemplate.getForObject(this.url, BoundaryServiceResponse.class, latitude, longitude,tenantid);
         return serviceResponse.getBoundary();
     }
 

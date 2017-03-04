@@ -25,7 +25,7 @@ public class LocationService {
     private SevaRequest enrichLocation(SevaRequest sevaRequest) {
         if (sevaRequest.isLocationCoordinatesPresent()) {
             BoundaryResponse response = boundaryRepository
-                    .findBoundary(sevaRequest.getLatitude(), sevaRequest.getLongitude());
+                    .findBoundary(sevaRequest.getLatitude(), sevaRequest.getLongitude(),"ap.kurnool");
             sevaRequest.update(response);
         } else if (sevaRequest.isCrossHierarchyIdPresent()) {
             CrossHierarchyResponse response = crossHierarchyRepository

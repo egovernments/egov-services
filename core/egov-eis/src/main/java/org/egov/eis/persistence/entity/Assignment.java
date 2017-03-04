@@ -59,6 +59,8 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -89,8 +91,11 @@ public class Assignment extends AbstractAuditable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "position")
 	private Position position;
+	
 	private Long functionary;
+	
 	private Long fund;
+	
 	private Long function;
 
 	@NotNull
@@ -102,21 +107,28 @@ public class Assignment extends AbstractAuditable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "department")
 	private Department department;
+	
 	@Column(name = "isprimary")
 	private boolean primary;
+	
 	@NotNull
 	private Date fromDate;
+	
 	@NotNull
 	private Date toDate;
+	
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "grade")
 	private GradeMaster grade;
-	@JsonIgnore
+	
+	
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "employee")
+	@JsonProperty(access = Access.WRITE_ONLY)
 	private Employee employee;
+	
 	@JsonIgnore
 	@OneToMany(mappedBy = "assignment", orphanRemoval = true, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private final List<HeadOfDepartments> deptSet = new ArrayList<>(0);

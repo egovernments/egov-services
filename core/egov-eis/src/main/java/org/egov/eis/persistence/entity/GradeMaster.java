@@ -39,80 +39,50 @@
  */
 package org.egov.eis.persistence.entity;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Entity
+@Table(name = "EGEIS_GRADE_MSTR")
+@SequenceGenerator(name = GradeMaster.SEQ_EGPIMS_GRADE_MSTR_SEQ, sequenceName = GradeMaster.SEQ_EGPIMS_GRADE_MSTR_SEQ, allocationSize = 1)
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@JsonIgnoreProperties(value = { "handler", "hibernateLazyInitializer" })
 public class GradeMaster implements GenericMaster {
-	private static final long serialVersionUID = 1L;
+
+	private static final long serialVersionUID = -5019661346624936153L;
+	public static final String SEQ_EGPIMS_GRADE_MSTR_SEQ = "EGPIMS_GRADE_MSTR_SEQ";
+	@Id
+	@GeneratedValue(generator = SEQ_EGPIMS_GRADE_MSTR_SEQ, strategy = GenerationType.SEQUENCE)
+	@Column(name="GRADE_ID")
 	public Integer id;
+
 	public Integer age;
+
+	@Column(name = "GRADE_VALUE")
 	public String name;
+
+	@Column(name = "START_DATE")
 	public java.util.Date fromDate;
+
+	@Column(name = "END_DATE")
 	public java.util.Date toDate;
+
+	@Column(name = "ORDER_NO")
 	public Integer orderNo;
-	/**
-	 * @return Returns the id.
-	 */
-	public Integer getId() {
-		return id;
-	}
-	
-	/**
-	 * @param id
-	 *            The id to set.
-	 */
-	public void setId(Integer id) {
-		this.id = id;
-	}
-	
-	/**
-	 * @return Returns the name.
-	 */
-	public String getName() {
-		return name;
-	}
-	
-	/**
-	 * @param name
-	 *            The name to set.
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	public java.util.Date getFromDate() {
-		return fromDate;
-	}
-	
-	public void setFromDate(java.util.Date fromDate) {
-		this.fromDate = fromDate;
-	}
-	
-	public java.util.Date getToDate() {
-		return toDate;
-	}
-	
-	public void setToDate(java.util.Date toDate) {
-		this.toDate = toDate;
-	}
-	
-	public Integer getAge() {
-		return age;
-	}
-	
-	public void setAge(Integer age) {
-		this.age = age;
-	}
 
-	/**
-	 * @return the orderNo
-	 */
-	public Integer getOrderNo() {
-		return orderNo;
-	}
-
-	/**
-	 * @param orderNo the orderNo to set
-	 */
-	public void setOrderNo(Integer orderNo) {
-		this.orderNo = orderNo;
-	}
-	
 }

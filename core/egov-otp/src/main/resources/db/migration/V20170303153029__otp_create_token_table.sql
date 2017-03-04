@@ -1,5 +1,6 @@
 CREATE TABLE eg_token (
     id character(36) PRIMARY KEY,
+    tenant character varying(128) NOT NULL,
     tokennumber character varying(128) NOT NULL,
     tokenidentity character varying(100) NOT NULL,
     ttlsecs bigint NOT NULL,

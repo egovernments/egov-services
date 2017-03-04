@@ -28,11 +28,15 @@ public class Token extends AbstractAuditable {
     @Column(name = "tokenidentity")
     private String identity;
 
+    @Column(name = "tenant")
+    private String tenant;
+
     @Column(name = "ttlsecs")
     private Long timeToLiveInSeconds;
 
     public Token(org.egov.domain.model.Token domainToken) {
         id = domainToken.getUuid();
+        tenant = domainToken.getTenantId();
         number = domainToken.getNumber();
         identity = domainToken.getIdentity();
         timeToLiveInSeconds = domainToken.getTimeToLive();

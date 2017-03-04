@@ -2,9 +2,6 @@ package org.egov.persistence.repository;
 
 import org.egov.domain.model.Token;
 import org.hamcrest.CustomMatcher;
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -26,13 +23,19 @@ public class TokenRepositoryTest {
 
     @Test
     public void test_should_save_entity_token() {
-        final Token token = new Token("tenantId", "identity", "tokenNumber", "uuid");
+        final Token token = Token.builder()
+                .tenantId("tenantId")
+                .identity("identity")
+                .number("tokenNumber")
+                .uuid("uuid")
+                .build();
         final org.egov.persistence.entity.Token expectedEntityToken =
                 new org.egov.persistence.entity.Token();
         expectedEntityToken.setNumber("tokenNumber");
         expectedEntityToken.setTimeToLiveInSeconds(300L);
         expectedEntityToken.setId("uuid");
         expectedEntityToken.setIdentity("identity");
+        expectedEntityToken.setTenant("tenantId");
 
         final Token actualToken = tokenRepository.save(token);
 

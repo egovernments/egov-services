@@ -35,6 +35,7 @@ public class TokenJpaRepositoryTest {
         token.setCreatedBy(0L);
         token.setLastModifiedBy(1L);
         token.setLastModifiedDate(new Date());
+        token.setTenant("tenant");
 
         tokenJpaRepository.save(token);
 
@@ -50,6 +51,7 @@ public class TokenJpaRepositoryTest {
         assertNotNull(actualToken);
         assertEquals("id2" , actualToken.getId());
         assertEquals("identity2" , actualToken.getIdentity());
+        assertEquals("tenant2" , actualToken.getTenant());
         assertEquals("token2" , actualToken.getNumber());
         assertEquals(Long.valueOf(200) , actualToken.getTimeToLiveInSeconds());
         assertEquals(Long.valueOf(124) , actualToken.getCreatedBy());

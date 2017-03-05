@@ -23,8 +23,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(OtpController.class)
 public class OtpControllerTest {
 
-    final static String IDENTITY = "identity";
-    final static String TENANT_ID = "tenantId";
+    private final static String IDENTITY = "identity";
+    private final static String TENANT_ID = "tenantId";
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -46,7 +46,7 @@ public class OtpControllerTest {
 		final TokenRequest tokenRequest = new TokenRequest(IDENTITY, TENANT_ID);
 		when(tokenService.createToken(tokenRequest)).thenReturn(token);
 
-		mockMvc.perform(post("/_create").contentType(MediaType.APPLICATION_JSON_UTF8)
+		mockMvc.perform(post("/v1/_create").contentType(MediaType.APPLICATION_JSON_UTF8)
 				.content(resources.getFileContents("createOtpRequest.json")))
 				.andExpect(status().isCreated())
 				.andExpect(content().json(resources.getFileContents("createOtpResponse.json")));
@@ -55,9 +55,9 @@ public class OtpControllerTest {
     @Test
     public void test_should_return_error_response_when_token_request_is_not_valid() throws Exception {
 		final TokenRequest tokenRequest = new TokenRequest(null, TENANT_ID);
-        when(tokenService.createToken(tokenRequest)).thenThrow(new InvalidTokenRequestException());
+        when(tokenService.createToken(tokenRequest)).thenThrow(new InvalidTokenRequestException(tokenRequest));
 
-        mockMvc.perform(post("/_create").contentType(MediaType.APPLICATION_JSON_UTF8)
+        mockMvc.perform(post("/v1/_create").contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(resources.getFileContents("createOtpRequestWithoutIdentity.json")))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(resources.getFileContents("invalidOtpResponse.json")));
@@ -69,7 +69,7 @@ public class OtpControllerTest {
         final String expectedMessage = "exception message";
         when(tokenService.createToken(tokenRequest)).thenThrow(new RuntimeException(expectedMessage));
 
-        mockMvc.perform(post("/_create").contentType(MediaType.APPLICATION_JSON_UTF8)
+        mockMvc.perform(post("/v1/_create").contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(resources.getFileContents("createOtpRequestWithoutIdentity.json")))
                 .andExpect(status().isInternalServerError())
                 .andExpect(content().string(expectedMessage));

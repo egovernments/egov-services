@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class TokenRequestTest {
 
@@ -18,6 +19,7 @@ public class TokenRequestTest {
     public void test_should_throw_validation_exception_when_identity_not_present() {
         final TokenRequest token = new TokenRequest(null,"tenant");
 
+        assertTrue(token.isIdentityAbsent());
         token.validate();
     }
 
@@ -25,6 +27,7 @@ public class TokenRequestTest {
     public void test_should_throw_validation_exception_when_tenant_not_present() {
         final TokenRequest token = new TokenRequest("identity",null);
 
+        assertTrue(token.isTenantIdAbsent());
         token.validate();
     }
 

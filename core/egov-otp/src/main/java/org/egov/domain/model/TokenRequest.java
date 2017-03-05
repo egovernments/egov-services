@@ -24,9 +24,17 @@ public class TokenRequest {
     }
 
     public void validate() {
-        if (isEmpty(identity) || isEmpty(tenantId)) {
-            throw new InvalidTokenRequestException();
+        if (isIdentityAbsent() || isTenantIdAbsent()) {
+            throw new InvalidTokenRequestException(this);
         }
+    }
+
+    public boolean isTenantIdAbsent() {
+        return isEmpty(tenantId);
+    }
+
+    public boolean isIdentityAbsent() {
+        return isEmpty(identity);
     }
 
     public String generateToken() {

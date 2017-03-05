@@ -20,6 +20,5 @@ try {
 
 @NonCPS
 def envMatcher() {
-  ​def matcher = ("${env.JOB_BASE_NAME}" =~ /promote(.*)To(.*)/)
-  matcher
+  ​"${env.JOB_BASE_NAME}" =~ /promote(.*)To(.*)/
 }

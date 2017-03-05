@@ -1,6 +1,6 @@
 def ci_image = "egovio/ci:0.0.3"
 def group = "${env.GROUP}"
-def env = ${env.JOB_BASE_NAME}.split("-")
+def env = "${env.JOB_BASE_NAME}".split("-")
 def source_env = env[1]
 def dest_env = env[3]
 

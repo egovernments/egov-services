@@ -1,7 +1,7 @@
 def ci_image = "egovio/ci:0.0.3"
 def group = "${env.GROUP}"
 println group
-​def m = "${env.JOB_BASE_NAME}" =~ /promote(.*)To(.*)/
+​def m = ("${env.JOB_BASE_NAME}" =~ /promote(.*)To(.*)/)
 println m
 
 def source_env = m[0]​​[1]​.toLowerCase()​

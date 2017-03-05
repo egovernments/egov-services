@@ -21,8 +21,8 @@ def set_kube_credentials(env){
     withCredentials([string(credentialsId: "${env}-kube-cert", variable: "CERT")]){
         sh "echo ${CERT} >> /kube/admin.pem"
     }
-    withCredentials([string(credentialsId: "${env}-kube-key", variable: "CERT-KEY")]){
-        sh "echo ${CERT-KEY} >> /kube/admin-key.pem"
+    withCredentials([string(credentialsId: "${env}-kube-key", variable: "CERT_KEY")]){
+        sh "echo ${CERT_KEY} >> /kube/admin-key.pem"
     }
 }
 

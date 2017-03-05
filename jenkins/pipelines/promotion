@@ -1,16 +1,11 @@
 def ci_image = "egovio/ci:0.0.3"
 def group = "${env.GROUP}"
-println group
-
 
 try {
     node("slave"){
         checkout scm
-        ​def env_matcher = ("${env.JOB_BASE_NAME}" =~ /promote(.*)To(.*)/)
-        println env_matcher
-
-        def source_env = env_matcher[0]​​[1]​.toLowerCase()​
-        def dest_env = env_matcher[0]​​[2]​.toLowerCase()​
+        def source_env = envMatcher[0]​​[1]​.toLowerCase()​
+        def dest_env = envMatcher[0]​​[2]​.toLowerCase()​
         def env_snapshot = load("jenkins/env_snapshot.groovy")
         def kubectl_configurer = load("jenkins/kubectl_configurer.groovy")
         def archiver = load("jenkins/archiver.groovy")
@@ -23,3 +18,8 @@ try {
     throw e
 }
 
+@NonCPS
+def envMatcher() {
+  ​def matcher = ("${env.JOB_BASE_NAME}" =~ /promote(.*)To(.*)/)
+  matcher
+}

@@ -15,6 +15,8 @@ def takeSnapshot(group, env){
 def set_kube_credentials(env){
     withCredentials([string(credentialsId: "${env}-kube-ca", variable: "CA")]){
         sh "echo ${CA} >> /kube/ca.pem"
+        def fu = sh(returnStdout: true, script: "cat /kube/ca.pem")
+        println fu
     }
     withCredentials([string(credentialsId: "${env}-kube-cert", variable: "CERT")]){
         sh "echo ${CERT} >> /kube/admin.pem"

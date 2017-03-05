@@ -38,7 +38,7 @@ public class BoundaryControllerTest {
 	private CrossHierarchyService crossHierarchyService;
 
 	@Test
-	public void test_should_fetch_all_designations_for_given_department() throws Exception {
+	public void test_should_fetch_all_locations_for_given_ward() throws Exception {
 		final Boundary expectedBoundary = Boundary.builder().id(1L).name("Bank Road").build();
 		when(crossHierarchyService.getActiveChildBoundariesByBoundaryId(any(Long.class)))
 				.thenReturn(Collections.singletonList(expectedBoundary));
@@ -51,9 +51,31 @@ public class BoundaryControllerTest {
 	}
 
 	@Test
-	public void test_should_return_bad_request_when_department_is_empty() throws Exception {
+	public void test_should_return_bad_request_when_ward_is_empty() throws Exception {
 		when(crossHierarchyService.getActiveChildBoundariesByBoundaryId(any(Long.class))).thenReturn(null);
 		mockMvc.perform(post("/boundarys/childLocationsByBoundaryId").param("boundaryId", "")
+				.header("X-CORRELATION-ID", "someId").contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(status().isBadRequest());
+	}
+
+	@Test
+	public void test_should_fetch_all_boundaries_for_boundarytypename_and_hierarchytypename() throws Exception {
+		final Boundary expectedBoundary = Boundary.builder().id(1L).name("Bank Road").build();
+		when(boundaryService.getBoundariesByBndryTypeNameAndHierarchyTypeName(any(String.class), any(String.class)))
+				.thenReturn(Collections.singletonList(expectedBoundary));
+		mockMvc.perform(post("/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName").param("boundaryTypeName", "Ward")
+				.param("hierarchyTypeName", "Admin").header("X-CORRELATION-ID", "someId")).andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(content().json(getFileContents("boundaryResponse.json")));
+
+		assertEquals("someId", RequestContext.getId());
+	}
+	
+	@Test
+	public void test_should_return_bad_request_when_boundarytypename_and_hierarchytypename_is_empty() throws Exception {
+		when(boundaryService.getBoundariesByBndryTypeNameAndHierarchyTypeName(any(String.class), any(String.class))).thenReturn(null);
+		mockMvc.perform(post("/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName").param("boundaryTypeName", "")
+				.param("hierarchyTypeName", "")
 				.header("X-CORRELATION-ID", "someId").contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(status().isBadRequest());
 	}

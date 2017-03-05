@@ -145,6 +145,25 @@ public class BoundaryController {
 		}
 		return boundary;
 	}
+	
+	@PostMapping(value = "/boundariesByBndryTypeNameAndHierarchyTypeName")
+	@ResponseBody
+	public ResponseEntity<?> getBoundariesByBndryTypeNameAndHierarchyTypeName(
+			@RequestParam(value = "boundaryTypeName", required = true) final String boundaryTypeName,
+			@RequestParam(value = "hierarchyTypeName", required = true) final String hierarchyTypeName) {
+		BoundaryResponse boundaryResponse = new BoundaryResponse();
+		if (boundaryTypeName != null && !boundaryTypeName.isEmpty() && hierarchyTypeName != null && !hierarchyTypeName.isEmpty()) {
+			ResponseInfo responseInfo = new ResponseInfo();
+			responseInfo.setStatus(HttpStatus.OK.toString());
+			boundaryResponse.setResponseInfo(responseInfo);
+			List<org.egov.boundary.persistence.entity.Boundary> boundaryList = boundaryService.getBoundariesByBndryTypeNameAndHierarchyTypeName(boundaryTypeName, hierarchyTypeName);
+			boundaryResponse.setBoundarys(boundaryList.stream().map(Boundary::new).collect(Collectors.toList()));
+			return new ResponseEntity<BoundaryResponse>(boundaryResponse, HttpStatus.OK);
+		} else
+			return new ResponseEntity<BoundaryResponse>(boundaryResponse, HttpStatus.BAD_REQUEST);
+
+	}
+
 
 	private ErrorResponse populateErrors(BindingResult errors) {
 		ErrorResponse errRes = new ErrorResponse();

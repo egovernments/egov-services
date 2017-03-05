@@ -1,6 +1,6 @@
 package org.egov.web.controller;
 
-import org.egov.domain.InvalidTokenException;
+import org.egov.domain.InvalidTokenRequestException;
 import org.egov.web.contract.Error;
 import org.egov.web.contract.ErrorField;
 import org.egov.web.contract.ErrorResponse;
@@ -26,7 +26,7 @@ public class CustomControllerAdvice {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(InvalidTokenException.class)
+    @ExceptionHandler(InvalidTokenRequestException.class)
     public ErrorResponse handleInvalidSearchTypeException() {
         final Error error = createIdentityMandatoryError();
         return new ErrorResponse(null, error);

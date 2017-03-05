@@ -3,12 +3,14 @@ package org.egov.persistence.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.egov.domain.model.TokenRequest;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Date;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -34,13 +36,22 @@ public class Token extends AbstractAuditable {
     @Column(name = "ttlsecs")
     private Long timeToLiveInSeconds;
 
-    public Token(org.egov.domain.model.Token domainToken) {
-        id = domainToken.getUuid();
-        tenant = domainToken.getTenantId();
-        number = domainToken.getNumber();
-        identity = domainToken.getIdentity();
-        timeToLiveInSeconds = domainToken.getTimeToLive();
+    public Token(TokenRequest tokenRequest) {
+        id = UUID.randomUUID().toString();
+        number = tokenRequest.generateToken();
+        tenant = tokenRequest.getTenantId();
+        identity = tokenRequest.getIdentity();
+        timeToLiveInSeconds = tokenRequest.getTimeToLive();
         setCreatedBy(0L);
         setCreatedDate(new Date());
+    }
+
+    public org.egov.domain.model.Token toDomain() {
+        return org.egov.domain.model.Token.builder()
+                .uuid(id)
+                .identity(identity)
+                .number(number)
+                .tenantId(tenant)
+                .build();
     }
 }

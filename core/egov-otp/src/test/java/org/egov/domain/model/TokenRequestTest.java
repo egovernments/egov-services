@@ -1,0 +1,45 @@
+package org.egov.domain.model;
+
+import org.egov.domain.InvalidTokenRequestException;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+public class TokenRequestTest {
+
+    @Test
+    public void test_should_not_throw_validation_exception_when_mandatory_fields_are_present() {
+        final TokenRequest token = new TokenRequest("identity","tenant");
+        token.validate();
+    }
+
+    @Test(expected = InvalidTokenRequestException.class)
+    public void test_should_throw_validation_exception_when_identity_not_present() {
+        final TokenRequest token = new TokenRequest(null,"tenant");
+
+        token.validate();
+    }
+
+    @Test(expected = InvalidTokenRequestException.class)
+    public void test_should_throw_validation_exception_when_tenant_not_present() {
+        final TokenRequest token = new TokenRequest("identity",null);
+
+        token.validate();
+    }
+
+    @Test
+    public void test_should_generate_5_digit_token() {
+        final TokenRequest token = new TokenRequest("identity","tenant");
+
+        assertNotNull(token.generateToken());
+        assertEquals(5, token.generateToken().length());
+    }
+
+    @Test
+    public void test_should_300_second_ttl() {
+        final TokenRequest token = new TokenRequest("identity","tenant");
+
+        assertEquals(300, token.getTimeToLive());
+    }
+}

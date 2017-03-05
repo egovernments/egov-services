@@ -1,6 +1,7 @@
 package org.egov.domain.service;
 
 import org.egov.domain.model.Token;
+import org.egov.domain.model.TokenRequest;
 import org.egov.persistence.repository.TokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,10 +16,8 @@ public class TokenService {
         this.tokenRepository = tokenRepository;
     }
 
-    public Token createToken(String identity, String tenantId) {
-        final Token token = new Token(identity, tenantId);
-        return tokenRepository.save(token);
+    public Token createToken(TokenRequest tokenRequest) {
+        tokenRequest.validate();
+        return tokenRepository.save(tokenRequest);
     }
-
-
 }

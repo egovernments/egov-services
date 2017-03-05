@@ -1,5 +1,6 @@
 package org.egov.persistence.entity;
 
+import org.egov.domain.model.TokenRequest;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -8,7 +9,7 @@ import static org.junit.Assert.assertNotNull;
 public class TokenTest {
 
     @Test
-    public void test_should_create_entity_from_domain() {
+    public void test_should_create_entity_from_token_request() {
         final org.egov.domain.model.Token domainToken =
                 org.egov.domain.model.Token.builder()
                         .number("tokenNumber")
@@ -16,10 +17,11 @@ public class TokenTest {
                         .uuid("uuid")
                         .build();
 
-        final Token entityToken = new Token(domainToken);
+        final TokenRequest tokenRequest = new TokenRequest("identity", "tenantId");
+        final Token entityToken = new Token(tokenRequest);
 
-        assertEquals("tokenNumber", entityToken.getNumber());
-        assertEquals("uuid", entityToken.getId());
+        assertNotNull(entityToken.getNumber());
+        assertNotNull(entityToken.getId());
         assertEquals("identity", entityToken.getIdentity());
         assertEquals(Long.valueOf(0), entityToken.getCreatedBy());
         assertNotNull(entityToken.getCreatedDate());

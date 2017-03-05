@@ -1,6 +1,7 @@
 package org.egov.persistence.repository;
 
 import org.egov.domain.model.Token;
+import org.egov.domain.model.TokenRequest;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -12,10 +13,10 @@ public class TokenRepository {
         this.tokenJpaRepository = tokenJpaRepository;
     }
 
-    public Token save (Token token) {
+    public Token save(TokenRequest tokenRequest) {
         final org.egov.persistence.entity.Token entityToken =
-                new org.egov.persistence.entity.Token(token);
+                new org.egov.persistence.entity.Token(tokenRequest);
         tokenJpaRepository.save(entityToken);
-        return token;
+        return entityToken.toDomain();
     }
 }

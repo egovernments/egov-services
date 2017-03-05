@@ -1,8 +1,8 @@
 package org.egov.domain.service;
 
 import org.egov.domain.model.Token;
+import org.egov.domain.model.TokenRequest;
 import org.egov.persistence.repository.TokenRepository;
-import org.hamcrest.CustomMatcher;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -10,8 +10,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.argThat;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TokenServiceTest {
@@ -24,36 +23,22 @@ public class TokenServiceTest {
 
     @Test
     public void test_should_save_new_token_with_given_identity_and_tenant() {
-        final String identity = "identity";
-        final String tenantId = "tenant";
-        final String randomTokenNumber = "randomTokenNumber";
-        final Token savedToken = Token.builder()
-                .number(randomTokenNumber)
-                .identity(identity)
-                .uuid("uuid")
-                .build();
-        when(tokenRepository.save(argThat(new TokenMatcher(identity, tenantId)))).thenReturn(savedToken);
+        final Token savedToken = Token.builder().build();
+        final TokenRequest tokenRequest = mock(TokenRequest.class);
+        when(tokenRepository.save(tokenRequest)).thenReturn(savedToken);
 
-        final Token actualToken = tokenService.createToken(identity, tenantId);
+        final Token actualToken = tokenService.createToken(tokenRequest);
 
         assertEquals(savedToken, actualToken);
     }
 
-    private class TokenMatcher extends CustomMatcher<Token> {
-        private String identity;
-        private String tenantId;
+    @Test
+    public void test_should_validate_token_request() {
+        final TokenRequest tokenRequest = mock(TokenRequest.class);
 
-        TokenMatcher(String identity, String tenantId) {
-            super("Domain token matcher");
-            this.identity = identity;
-            this.tenantId = tenantId;
-        }
+        tokenService.createToken(tokenRequest);
 
-        @Override
-        public boolean matches(Object o) {
-            final Token actualToken = (Token) o;
-            return identity.equals(actualToken.getIdentity())
-                    && tenantId.equals(actualToken.getTenantId());
-        }
+        verify(tokenRequest).validate();
     }
+
 }

@@ -1,4 +1,3 @@
-def ci_image = "egovio/ci:0.0.3"
 def group = "${env.GROUP}"
 def env = "${env.JOB_BASE_NAME}".split("-")
 def source_env = env[1]
@@ -10,7 +9,7 @@ try {
         def env_snapshot = load("jenkins/env_snapshot.groovy")
         def archiver = load("jenkins/archiver.groovy")
 
-	    env_snapshot.takeSnapshot(group, source_env, ci_image)
+	    env_snapshot.takeSnapshot(group, source_env)
 
         archiver.archiveArtifacts("jenkins/scripts/image_tags.txt")
     }

@@ -8,7 +8,6 @@ try {
     node("slave"){
         checkout scm
         def env_snapshot = load("jenkins/env_snapshot.groovy")
-        def kubectl_configurer = load("jenkins/kubectl_configurer.groovy")
         def archiver = load("jenkins/archiver.groovy")
 
 	    env_snapshot.takeSnapshot(group, source_env, ci_image)

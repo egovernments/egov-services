@@ -1,11 +1,12 @@
 def ci_image = "egovio/ci:0.0.3"
 def group = "${env.GROUP}"
 println group
-​def m = ("${env.JOB_BASE_NAME}" =~ /promote(.*)To(.*)/)
-println m
+​def env_matcher = ""
+env_matcher = ("${env.JOB_BASE_NAME}" =~ /promote(.*)To(.*)/)
+println env_matcher
 
-def source_env = m[0]​​[1]​.toLowerCase()​
-def dest_env = m[0]​​[2]​.toLowerCase()​
+def source_env = env_matcher[0]​​[1]​.toLowerCase()​
+def dest_env = env_matcher[0]​​[2]​.toLowerCase()​
 
 try {
     node("slave"){

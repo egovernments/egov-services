@@ -8,6 +8,8 @@ def takeSnapshot(group, env){
             withCredentials([string(credentialsId: "${env}-kube-url", variable: "KUBE_SERVER_URL")]){
                 sh "python jenkins/scripts/snapshot.py ${group}";
             }
+            def fu = sh(returnStdout: true, script: "cat /.kube/config")
+            println "kubeconfig: ${CA}"
         }
     }
 }
@@ -15,7 +17,7 @@ def takeSnapshot(group, env){
 def set_kube_credentials(env){
     withCredentials([string(credentialsId: "${env}-kube-ca", variable: "CA")]){
         sh "echo ${CA} >> /kube/ca.pem"
-        def fu = sh(returnStdout: true, script: "cat /kube/ca.pem")
+        def fu = sh(returnStdout: true, script: "cat /.kube/config")
         println "ca: ${CA}"
     }
     withCredentials([string(credentialsId: "${env}-kube-cert", variable: "CERT")]){

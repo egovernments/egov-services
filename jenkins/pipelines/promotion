@@ -1,14 +1,17 @@
+def env_snapshot = load("jenkins/env_snapshot.groovy")
+def kubectl_configurer = load("jenkins/kubectl_configurer.groovy")
+def archiver = load("jenkins/archiver.groovy")
+
 def ci_image = "egovio/ci:0.0.3"
 def group = "${env.GROUP}"
 ​def m = "${env.JOB_BASE_NAME}" =~ /promote(.*)To(.*)/
+
 def source_env = m[0]​​[1]​.toLowerCase()​
 def dest_env = m[0]​​[2]​.toLowerCase()​
 
 try {
     node("slave"){
         checkout scm
-        env_snapshot = load("jenkins/env_snapshot.groovy")
-        kubectl_configurer = load("jenkins/kubectl_configurer.groovy")
 
 	    env_snapshot.takeSnapshot(group, source_env, ci_image)
 

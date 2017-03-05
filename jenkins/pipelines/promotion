@@ -4,8 +4,8 @@ def group = "${env.GROUP}"
 try {
     node("slave"){
         checkout scm
-        def source_env = envMatcher[0]​​[1]​.toLowerCase()​
-        def dest_env = envMatcher[0]​​[2]​.toLowerCase()​
+        def source_env = envMatcher()[0]​​[1]​.toLowerCase()​
+        def dest_env = envMatcher()[0]​​[2]​.toLowerCase()​
         def env_snapshot = load("jenkins/env_snapshot.groovy")
         def kubectl_configurer = load("jenkins/kubectl_configurer.groovy")
         def archiver = load("jenkins/archiver.groovy")

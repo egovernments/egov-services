@@ -46,6 +46,8 @@ def get_image_tags(deployments):
 
 def set_kubectl_env():
     kube_server_url = os.getenv("KUBE_SERVER_URL")
+    print "fubar"
+    print kube_server_url
     if not kube_server_url:
         raise Exception("KUBE_SERVER_URL env var is not set")
     set_kubectl_env_cmd = ("kubectl config set-cluster env --server {}"

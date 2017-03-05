@@ -1,5 +1,6 @@
 def takeSnapshot(group, env, ci_image){
     stage("Snapshot ${group} in ${env} env"){
+        sh "docker rmi egovio/ci:0.0.3"
         docker.image("${ci_image}").inside {
             set_kube_credentials(env)
             withCredentials([string(credentialsId: "${env}-kube-url", variable: "KUBE_SERVER_URL")]){

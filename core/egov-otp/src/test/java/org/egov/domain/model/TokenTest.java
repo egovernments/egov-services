@@ -23,6 +23,15 @@ public class TokenTest {
     }
 
     @Test
+    public void test_is_expired_should_return_false_when_token_expiry_is_now() {
+        final Token token = Token.builder()
+                .expiryDateTime(LocalDateTime.now(ZoneId.of(IST)))
+                .build();
+
+        assertFalse(token.isExpired());
+    }
+
+    @Test
     public void test_is_expired_should_return_true_when_token_expiry_is_in_the_past() {
         final Token token = Token.builder()
                 .expiryDateTime(LocalDateTime.now(ZoneId.of(IST)).minusSeconds(30))

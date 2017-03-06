@@ -10,6 +10,8 @@ import java.time.ZoneId;
 @EqualsAndHashCode
 @Getter
 public class Token {
+    private static final String IST = "Asia/Calcutta";
+
     private final String tenantId;
     private String identity;
     private String number;
@@ -19,7 +21,7 @@ public class Token {
     private boolean validated;
 
     public boolean isExpired() {
-        return LocalDateTime.now(ZoneId.of("Asia/Calcutta")).isAfter(expiryDateTime);
+        return LocalDateTime.now(ZoneId.of(IST)).isAfter(expiryDateTime);
     }
 }
 

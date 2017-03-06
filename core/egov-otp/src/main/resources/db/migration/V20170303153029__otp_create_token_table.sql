@@ -12,4 +12,4 @@ CREATE TABLE eg_token (
     version bigint
 );
 
-CREATE INDEX idx_token_number_identity ON eg_token (tokennumber, tokenidentity);
+CREATE INDEX idx_token_number_identity_tenant ON eg_token (tokennumber, tokenidentity, tenant);

@@ -1,10 +1,7 @@
 package org.egov.domain.service;
 
 import org.egov.domain.TokenValidationFailureException;
-import org.egov.domain.model.Token;
-import org.egov.domain.model.TokenRequest;
-import org.egov.domain.model.Tokens;
-import org.egov.domain.model.ValidateRequest;
+import org.egov.domain.model.*;
 import org.egov.persistence.repository.TokenRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -99,6 +96,18 @@ public class TokenServiceTest {
 
         assertFalse(updateSuccessful);
     }
+
+    @Test
+    public void test_should_return_otp_for_given_search_criteria() {
+        final Token expectedToken = Token.builder().build();
+        final TokenSearchCriteria searchCriteria = new TokenSearchCriteria("uuid", "tenant");
+        when(tokenRepository.findBy(searchCriteria)).thenReturn(expectedToken);
+
+        final Token actualToken = tokenService.search(searchCriteria);
+
+        assertEquals(expectedToken, actualToken);
+    }
+
 
 
 }

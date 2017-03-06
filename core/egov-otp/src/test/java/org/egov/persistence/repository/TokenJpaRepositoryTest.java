@@ -75,6 +75,13 @@ public class TokenJpaRepositoryTest {
 
     @Test
     @Sql(scripts = {"/sql/clearTokens.sql", "/sql/createTokens.sql"})
+    public void test_should_return_null_when_token_not_present_for_given_id() {
+        final Token token = tokenJpaRepository.findOne("unknown");
+        assertNull(token);
+    }
+
+    @Test
+    @Sql(scripts = {"/sql/clearTokens.sql", "/sql/createTokens.sql"})
     @Transactional()
     public void test_should_mark_token_as_validated() {
         final Token token = tokenJpaRepository.findOne("id2");

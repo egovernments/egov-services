@@ -1,9 +1,6 @@
 package org.egov.persistence.repository;
 
-import org.egov.domain.model.Token;
-import org.egov.domain.model.TokenRequest;
-import org.egov.domain.model.Tokens;
-import org.egov.domain.model.ValidateRequest;
+import org.egov.domain.model.*;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -40,5 +37,11 @@ public class TokenRepository {
                 .map(org.egov.persistence.entity.Token::toDomain)
                 .collect(Collectors.toList());
         return new Tokens(domainTokens);
+    }
+
+    public Token findBy(TokenSearchCriteria searchCriteria) {
+        final org.egov.persistence.entity.Token entityToken =
+                tokenJpaRepository.findOne(searchCriteria.getUuid());
+        return entityToken != null ? entityToken.toDomain() : null;
     }
 }

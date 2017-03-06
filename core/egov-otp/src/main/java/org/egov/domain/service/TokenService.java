@@ -1,10 +1,7 @@
 package org.egov.domain.service;
 
 import org.egov.domain.TokenValidationFailureException;
-import org.egov.domain.model.Token;
-import org.egov.domain.model.TokenRequest;
-import org.egov.domain.model.Tokens;
-import org.egov.domain.model.ValidateRequest;
+import org.egov.domain.model.*;
 import org.egov.persistence.repository.TokenRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,5 +34,9 @@ public class TokenService {
         }
         final Token matchingToken = tokens.getNonExpiredToken();
         return tokenRepository.markAsValidated(matchingToken);
+    }
+
+    public Token search(TokenSearchCriteria searchCriteria) {
+        return tokenRepository.findBy(searchCriteria);
     }
 }

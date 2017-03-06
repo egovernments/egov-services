@@ -33,5 +33,11 @@ public class OtpController {
         final boolean validationSuccessful = tokenService.validate(request.toDomain());
         return new OtpValidationResponse(validationSuccessful);
     }
+
+    @PostMapping("v1/_search")
+    public OtpResponse search(@RequestBody OtpRequest request) {
+        final Token token = tokenService.search(request.toSearchCriteria());
+        return new OtpResponse(token);
+    }
 }
 

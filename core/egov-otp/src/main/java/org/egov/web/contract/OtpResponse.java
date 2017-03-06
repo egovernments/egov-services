@@ -9,7 +9,9 @@ public class OtpResponse {
     private Otp otp;
 
     public OtpResponse(Token token) {
-        otp = new Otp(token);
+        if (token != null) {
+            otp = new Otp(token);
+        }
     }
 }
 

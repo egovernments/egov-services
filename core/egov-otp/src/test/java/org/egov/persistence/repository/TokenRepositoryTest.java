@@ -1,9 +1,6 @@
 package org.egov.persistence.repository;
 
-import org.egov.domain.model.Token;
-import org.egov.domain.model.TokenRequest;
-import org.egov.domain.model.Tokens;
-import org.egov.domain.model.ValidateRequest;
+import org.egov.domain.model.*;
 import org.hamcrest.CustomMatcher;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,6 +8,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -27,6 +27,7 @@ public class TokenRepositoryTest {
     private static final String TENANT_ID = "TENANT_ID";
     private static final long TIME_TO_LIVE_IN_SECONDS = 300L;
     private static final String IDENTITY = "IDENTITY";
+    private static final String IST = "Asia/Calcutta";
 
     @Mock
     private TokenJpaRepository tokenJpaRepository;
@@ -82,6 +83,40 @@ public class TokenRepositoryTest {
         assertNotNull(actualTokens);
         assertNotNull(actualTokens.getTokens());
         assertEquals(2, actualTokens.getTokens().size());
+    }
+
+    @Test
+    public void test_should_return_token_for_given_id() {
+        final String id = "uuid";
+        final String tenantId = "tenant";
+        final ZonedDateTime zonedDateTime = ZonedDateTime.of(2016, 1, 1, 4, 0, 0, 0, ZoneId.of(IST));
+        final Date createdDate = Date.from(zonedDateTime.toInstant());
+        final org.egov.persistence.entity.Token token1 = new org.egov
+                .persistence.entity.Token();
+        token1.setTimeToLiveInSeconds(300L);
+        token1.setCreatedDate(createdDate);
+        when(tokenJpaRepository.findOne(id))
+                .thenReturn(token1);
+        final Token expectedToken = Token.builder()
+                .timeToLiveInSeconds(300L)
+                .expiryDateTime(LocalDateTime.of(2016, 1, 1, 4, 5, 0))
+                .build();
+
+        final Token actualToken = tokenRepository.findBy(new TokenSearchCriteria(id, tenantId));
+
+        assertNotNull(actualToken);
+        assertEquals(expectedToken, actualToken);
+    }
+
+    @Test
+    public void test_should_return_null_when_token_not_present_for_given_id() {
+        final String id = "uuid";
+        final String tenantId = "tenant";
+        when(tokenJpaRepository.findOne(id)).thenReturn(null);
+
+        final Token actualToken = tokenRepository.findBy(new TokenSearchCriteria(id, tenantId));
+
+        assertNull(actualToken);
     }
 
     @Test

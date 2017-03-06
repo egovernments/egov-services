@@ -2,9 +2,11 @@ package org.egov.web.controller;
 
 import org.egov.Resources;
 import org.egov.domain.InvalidTokenRequestException;
+import org.egov.domain.InvalidTokenSearchCriteriaException;
 import org.egov.domain.InvalidTokenValidateRequestException;
 import org.egov.domain.model.Token;
 import org.egov.domain.model.TokenRequest;
+import org.egov.domain.model.TokenSearchCriteria;
 import org.egov.domain.model.ValidateRequest;
 import org.egov.domain.service.TokenService;
 import org.junit.Test;
@@ -28,46 +30,63 @@ public class OtpControllerTest {
     private final static String IDENTITY = "identity";
     private final static String TENANT_ID = "tenantId";
 
-	@Autowired
-	private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-	private Resources resources = new Resources();
+    private Resources resources = new Resources();
 
-	@MockBean
-	private TokenService tokenService;
+    @MockBean
+    private TokenService tokenService;
 
-	@Test
-	public void test_should_return_token() throws Exception {
+    @Test
+    public void test_should_return_token() throws Exception {
 
-		final Token token = Token.builder()
-				.uuid("uuid")
-				.identity(IDENTITY)
+        final Token token = Token.builder()
+                .uuid("uuid")
+                .identity(IDENTITY)
                 .tenantId(TENANT_ID)
-				.number("randomNumber")
-				.build();
-		final TokenRequest tokenRequest = new TokenRequest(IDENTITY, TENANT_ID);
-		when(tokenService.create(tokenRequest)).thenReturn(token);
+                .number("randomNumber")
+                .build();
+        final TokenRequest tokenRequest = new TokenRequest(IDENTITY, TENANT_ID);
+        when(tokenService.create(tokenRequest)).thenReturn(token);
 
-		mockMvc.perform(post("/v1/_create").contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(resources.getFileContents("createOtpRequest.json")))
-				.andExpect(status().isCreated())
-				.andExpect(content().json(resources.getFileContents("createOtpResponse.json")));
-	}
+        mockMvc.perform(post("/v1/_create").contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(resources.getFileContents("createOtpRequest.json")))
+                .andExpect(status().isCreated())
+                .andExpect(content().json(resources.getFileContents("createOtpResponse.json")));
+    }
 
-	@Test
-	public void test_should_return_success_response_when_validation_is_successful() throws Exception {
-		final ValidateRequest validateRequest = ValidateRequest.builder()
-				.otp("otpNumber")
-				.tenantId(TENANT_ID)
-				.identity(IDENTITY)
-				.build();
-		when(tokenService.validate(validateRequest)).thenReturn(true);
+    @Test
+    public void test_should_return_token_for_given_search_criteria() throws Exception {
+        final Token token = Token.builder()
+                .uuid("uuid")
+                .identity(IDENTITY)
+                .tenantId(TENANT_ID)
+                .number("randomNumber")
+                .build();
+        final String uuid = "uuid";
+        when(tokenService.search(new TokenSearchCriteria(uuid, TENANT_ID))).thenReturn(token);
 
-		mockMvc.perform(post("/v1/_validate").contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(resources.getFileContents("validateOtpRequest.json")))
-				.andExpect(status().isOk())
-				.andExpect(content().json(resources.getFileContents("successOtpValidationResponse.json")));
-	}
+        mockMvc.perform(post("/v1/_search").contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(resources.getFileContents("otpSearchRequest.json")))
+                .andExpect(status().isOk())
+                .andExpect(content().json(resources.getFileContents("createOtpResponse.json")));
+    }
+
+    @Test
+    public void test_should_return_success_response_when_validation_is_successful() throws Exception {
+        final ValidateRequest validateRequest = ValidateRequest.builder()
+                .otp("otpNumber")
+                .tenantId(TENANT_ID)
+                .identity(IDENTITY)
+                .build();
+        when(tokenService.validate(validateRequest)).thenReturn(true);
+
+        mockMvc.perform(post("/v1/_validate").contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(resources.getFileContents("validateOtpRequest.json")))
+                .andExpect(status().isOk())
+                .andExpect(content().json(resources.getFileContents("successOtpValidationResponse.json")));
+    }
 
     @Test
     public void test_should_return_error_response_when_otp_validation_request_is_not_valid() throws Exception {
@@ -87,7 +106,7 @@ public class OtpControllerTest {
 
     @Test
     public void test_should_return_error_response_when_token_request_is_not_valid() throws Exception {
-		final TokenRequest tokenRequest = new TokenRequest("", "");
+        final TokenRequest tokenRequest = new TokenRequest("", "");
         when(tokenService.create(tokenRequest)).thenThrow(new InvalidTokenRequestException(tokenRequest));
 
         mockMvc.perform(post("/v1/_create").contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -97,8 +116,21 @@ public class OtpControllerTest {
     }
 
     @Test
+    public void test_should_return_error_response_when_search_is_not_valid() throws Exception {
+        final TokenSearchCriteria searchCriteria = new TokenSearchCriteria("", "");
+        final InvalidTokenSearchCriteriaException exception =
+                new InvalidTokenSearchCriteriaException(searchCriteria);
+        when(tokenService.search(searchCriteria)).thenThrow(exception);
+
+        mockMvc.perform(post("/v1/_search").contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(resources.getFileContents("invalidOtpSearchRequest.json")))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json(resources.getFileContents("invalidOtpSearchResponse.json")));
+    }
+
+    @Test
     public void test_should_error_message_when_unhandled_exception_occurs() throws Exception {
-		final TokenRequest tokenRequest = new TokenRequest("", "");
+        final TokenRequest tokenRequest = new TokenRequest("", "");
         final String expectedMessage = "exception message";
         when(tokenService.create(tokenRequest)).thenThrow(new RuntimeException(expectedMessage));
 

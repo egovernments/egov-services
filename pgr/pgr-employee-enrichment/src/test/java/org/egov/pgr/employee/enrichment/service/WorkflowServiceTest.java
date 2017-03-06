@@ -55,7 +55,7 @@ public class WorkflowServiceTest {
         final SevaRequest enrichedSevaRequest = workflowService.enrichWorkflow(sevaRequest);
 
         assertEquals(ASSIGNEE, enrichedSevaRequest.getValues().get("assignment_id") );
-        assertEquals(STATE_ID, enrichedSevaRequest.getValues().get("state_id"));
+        assertEquals(STATE_ID, enrichedSevaRequest.getValues().get("stateId"));
     }
 
     @Test
@@ -77,7 +77,7 @@ public class WorkflowServiceTest {
         final SevaRequest enrichedSevaRequest = workflowService.enrichWorkflow(sevaRequest);
 
         assertEquals(ASSIGNEE, enrichedSevaRequest.getValues().get("assignment_id") );
-        assertEquals(STATE_ID, enrichedSevaRequest.getValues().get("state_id"));
+        assertEquals(STATE_ID, enrichedSevaRequest.getValues().get("stateId"));
     }
 
     @Test
@@ -99,7 +99,7 @@ public class WorkflowServiceTest {
         final SevaRequest enrichedSevaRequest = workflowService.enrichWorkflow(sevaRequest);
 
         assertEquals(ASSIGNEE, enrichedSevaRequest.getValues().get("assignment_id") );
-        assertEquals(STATE_ID, enrichedSevaRequest.getValues().get("state_id"));
+        assertEquals(STATE_ID, enrichedSevaRequest.getValues().get("stateId"));
     }
 
     @Test
@@ -121,7 +121,7 @@ public class WorkflowServiceTest {
         final SevaRequest enrichedSevaRequest = workflowService.enrichWorkflow(sevaRequest);
 
         assertEquals(ASSIGNEE, enrichedSevaRequest.getValues().get("assignment_id") );
-        assertEquals(STATE_ID, enrichedSevaRequest.getValues().get("state_id"));
+        assertEquals(STATE_ID, enrichedSevaRequest.getValues().get("stateId"));
     }
 
 

@@ -51,10 +51,6 @@ def get_image_tags(deployments):
 
 
 def set_kubectl_env():
-    get_kube_config_cmd = "cat /.kube/config"
-    out,err = Popen(shlex.split(get_kube_config_cmd)).communicate()
-    print "!!!!!"
-    print out, err
     kube_server_url = os.getenv("KUBE_SERVER_URL")
     if not kube_server_url:
         raise Exception("KUBE_SERVER_URL env var is not set")

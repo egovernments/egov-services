@@ -1,6 +1,8 @@
 package org.egov.workflow.domain.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
 import java.util.Collections;
@@ -16,18 +18,13 @@ import org.egov.workflow.persistence.entity.StateHistory;
 import org.egov.workflow.persistence.entity.Task;
 import org.egov.workflow.persistence.repository.EmployeeRepository;
 import org.egov.workflow.persistence.repository.PositionRepository;
-import org.egov.workflow.web.contract.Assignment;
-import org.egov.workflow.web.contract.Attribute;
-import org.egov.workflow.web.contract.Department;
-import org.egov.workflow.web.contract.Employee;
-import org.egov.workflow.web.contract.EmployeeRes;
-import org.egov.workflow.web.contract.PositionResponse;
-import org.egov.workflow.web.contract.ProcessInstance;
-import org.egov.workflow.web.contract.Value;
+import org.egov.workflow.web.contract.*;
+import org.egov.workflow.web.controller.WorkFlowControllerTest;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -50,6 +47,9 @@ public class PgrWorkflowImplTest {
     private StateService stateService;
 
     @Mock
+    private UserService userService;
+
+    @Mock
     private EmployeeRepository employeeRepository;
 
     @InjectMocks
@@ -60,7 +60,7 @@ public class PgrWorkflowImplTest {
 
     @Before
     public void before() {
-        pgrWorkflowImpl = new PgrWorkflowImpl(complaintRouterService, stateService, employeeRepository);
+        pgrWorkflowImpl = new PgrWorkflowImpl(complaintRouterService, stateService, employeeRepository,userService);
     }
 
     @Test
@@ -110,7 +110,27 @@ public class PgrWorkflowImplTest {
         expectedState.setId(119L);
         expectedState.setComments("Workflow Terminated");
 
+        final RequestInfo requestInfo = RequestInfo.builder()
+                .requesterId("67")
+                .build();
+
+        final Role role = Role.builder()
+                .name("citizen")
+                .id(1l)
+                .description("CITIZEN")
+                .build();
+
+        final User user = User.builder()
+                .id(67l)
+                .roles(Collections.singleton(role))
+                .build();
+
+        final GetUserByIdResponse expectedUserRequest = GetUserByIdResponse.builder()
+                .responseInfo(new ResponseInfo()).user(Collections.singletonList(user))
+                .build();
+
         final ProcessInstance expectedProcessInstance = ProcessInstance.builder()
+                .requestInfo(requestInfo)
                 .type("Complaint")
                 .description("Workflow Terminated")
                 .assignee(2L)
@@ -121,6 +141,9 @@ public class PgrWorkflowImplTest {
 
         when(stateService.getStateById(119L))
                 .thenReturn(expectedState);
+
+        when(userService.getUserById(67L))
+                .thenReturn(expectedUserRequest);
 
         workflow.end(TENANT_ID, expectedProcessInstance);
     }
@@ -179,5 +202,4 @@ public class PgrWorkflowImplTest {
         stateHistory.setOwnerUser(null);
         return stateHistory;
     }
-
 }

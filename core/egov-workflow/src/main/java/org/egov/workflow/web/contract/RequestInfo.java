@@ -2,11 +2,17 @@ package org.egov.workflow.web.contract;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
 @Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class RequestInfo {
 
     @JsonProperty("api_id")

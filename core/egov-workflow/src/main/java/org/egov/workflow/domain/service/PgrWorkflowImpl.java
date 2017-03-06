@@ -11,12 +11,7 @@ import org.egov.workflow.persistence.entity.State;
 import org.egov.workflow.persistence.entity.StateHistory;
 import org.egov.workflow.persistence.entity.Task;
 import org.egov.workflow.persistence.repository.EmployeeRepository;
-import org.egov.workflow.web.contract.Attribute;
-import org.egov.workflow.web.contract.Department;
-import org.egov.workflow.web.contract.Employee;
-import org.egov.workflow.web.contract.PositionResponse;
-import org.egov.workflow.web.contract.ProcessInstance;
-import org.egov.workflow.web.contract.Value;
+import org.egov.workflow.web.contract.*;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,13 +24,15 @@ public class PgrWorkflowImpl implements Workflow {
     private final ComplaintRouterService complaintRouterService;
     private final StateService stateService;
     private final EmployeeRepository employeeRepository;
+    private final UserService userService;
 
     @Autowired
     public PgrWorkflowImpl(final ComplaintRouterService complaintRouterService, final StateService stateService,
-            final EmployeeRepository employeeRepository) {
+            final EmployeeRepository employeeRepository, final UserService userService) {
         this.complaintRouterService = complaintRouterService;
         this.stateService = stateService;
         this.employeeRepository = employeeRepository;
+        this.userService = userService;
     }
 
     @Override
@@ -76,8 +73,10 @@ public class PgrWorkflowImpl implements Workflow {
             state.setSenderName(processInstance.getSenderName());
             state.setDateInfo(processInstance.getCreatedDate());
             // TODO OWNER POSITION condition to be checked
-            if (processInstance.isGrievanceOfficer())
+            GetUserByIdResponse user = userService.getUserById(Long.valueOf(processInstance.getRequestInfo().getRequesterId()));
+            if (user.isGrievanceOfficer()){
                 state.setOwnerPosition(state.getOwnerPosition());
+            }
             // TODO - Get these values from request info
             state.setCreatedBy(00L);
             state.setLastModifiedBy(00L);

@@ -18,7 +18,7 @@ public class SevaRequest {
     public final static String SERVICE_REQUEST = "ServiceRequest";
     public final static String REQUEST_INFO = "RequestInfo";
     public static final String VALUES_ASSIGNEE_ID = "assignment_id";
-    public static final String VALUES_STATE_ID = "state_id";
+    public static final String VALUES_STATE_ID = "stateId";
     public static final String VALUES = "values";
     public static final String VALUES_COMLAINT_TYPE_CODE = "complaintTypeCode";
     public static final String BOUNDARY_ID = "boundaryId";
@@ -28,7 +28,7 @@ public class SevaRequest {
     public static final String SERVICE_CODE = "service_code";
     public static final String VALUES_LOCATION_ID = "location_id";
     public static final String MSG_ID = "msg_id";
-    public static final String VALUES_APPROVAL_COMMENT = "approvalComment";
+    public static final String VALUES_APPROVAL_COMMENT = "approvalComments";
     public static final String USER_ROLE = "userRole";
 
     private HashMap<String, Object> sevaRequestMap;

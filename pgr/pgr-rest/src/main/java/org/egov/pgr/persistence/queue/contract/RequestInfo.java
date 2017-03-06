@@ -36,6 +36,7 @@ public class RequestInfo   {
     private String msgId;
 
     @JsonProperty("requester_id")
+    @Setter
     private String requesterId;
 
     @JsonProperty("auth_token")

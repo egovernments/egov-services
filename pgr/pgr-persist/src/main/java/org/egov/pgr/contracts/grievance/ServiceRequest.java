@@ -10,7 +10,7 @@ public class ServiceRequest {
     public static final String CHILD_LOCATION_ID = "child_location_id";
     public static final String LOCATION_NAME = "location_name";
     public static final String VALUES_ASSIGNEE_ID = "assignment_id";
-    public static final String VALUES_STATE_ID = "state_id";
+    public static final String VALUES_STATE_ID = "stateId";
     public static final String VALUES_STATUS = "status";
     public static final String VALUES_RECIEVING_MODE = "receivingMode";
     public static final String VALUES_COMPLAINANT_ADDRESS = "complainantAddress";

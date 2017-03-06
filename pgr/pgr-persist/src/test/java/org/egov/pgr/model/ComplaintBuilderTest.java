@@ -103,7 +103,7 @@ public class ComplaintBuilderTest {
         valuesMap.put("locationId", "101");
         valuesMap.put("child_location_id", "201");
         valuesMap.put("location_name", "jhumritalaiyya");
-        valuesMap.put("state_id", "88");
+        valuesMap.put("stateId", "88");
         serviceRequestMap.put("values", valuesMap);
         serviceRequestMap.put("tenantId", tenantId);
         serviceRequestMap.put("service_request_id", "AA-01892-AP");

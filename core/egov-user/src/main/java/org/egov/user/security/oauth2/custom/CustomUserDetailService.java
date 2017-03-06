@@ -40,8 +40,9 @@
 
 package org.egov.user.security.oauth2.custom;
 
-import org.egov.user.persistence.entity.SecureUser;
 import org.egov.user.domain.service.UserService;
+import org.egov.user.persistence.entity.User;
+import org.egov.user.web.contract.auth.SecureUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -58,6 +59,10 @@ public class CustomUserDetailService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) {
-		return new SecureUser(this.userService.getUserByUsername(username));
+		User user = this.userService.getUserByUsername(username);
+		return new SecureUser(
+				org.egov.user.web.contract.auth.User.builder().id(user.getId()).userName(user.getUsername())
+						.name(user.getName()).mobileNumber(user.getMobileNumber()).emailId(user.getEmailId())
+						.locale(user.getLocale()).active(user.isActive()).roles(user.getRoles()).build());
 	}
 }

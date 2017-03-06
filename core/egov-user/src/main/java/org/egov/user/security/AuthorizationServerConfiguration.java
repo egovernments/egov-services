@@ -13,48 +13,48 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
+
 import redis.clients.jedis.JedisShardInfo;
 
 @Configuration
 @EnableAuthorizationServer
 public class AuthorizationServerConfiguration extends AuthorizationServerConfigurerAdapter {
 
-    private static String REALM = "PGR_REST_OAUTH_REALM";
+	private static String REALM = "PGR_REST_OAUTH_REALM";
 
-    @Value("${spring.redis.host}")
-    private String host;
+	@Value("${spring.redis.host}")
+	private String host;
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+	@Autowired
+	private AuthenticationManager authenticationManager;
 
-    @Autowired
-    private CustomTokenEnhancer customTokenEnhancer;
+	@Autowired
+	private CustomTokenEnhancer customTokenEnhancer;
 
-    @Autowired
-    private TokenStore tokenStore;
+	@Autowired
+	private TokenStore tokenStore;
 
-    @Override
-    public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        clients.inMemory().withClient("egov-user-client").secret("egov-user-secret")
-                .authorizedGrantTypes("authorization_code", "refresh_token", "password")
-                .authorities("ROLE_APP", "ROLE_CITIZEN", "ROLE_ADMIN", "ROLE_EMPLOYEE").scopes("read", "write");
-    }
+	@Override
+	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
+		clients.inMemory().withClient("egov-user-client").secret("egov-user-secret")
+				.authorizedGrantTypes("authorization_code", "refresh_token", "password")
+				.authorities("ROLE_APP", "ROLE_CITIZEN", "ROLE_ADMIN", "ROLE_EMPLOYEE").scopes("read", "write");
+	}
 
-    @Override
-    public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-        endpoints.tokenStore(tokenStore).authenticationManager(authenticationManager)
-                .pathMapping("/oauth/token", "/_login").tokenEnhancer(customTokenEnhancer);
-    }
+	@Override
+	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+		endpoints.tokenStore(tokenStore).authenticationManager(authenticationManager)
+				.pathMapping("/oauth/token", "/_login").tokenEnhancer(customTokenEnhancer);
+	}
 
-    @Override
-    public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
-        oauthServer.realm(REALM + "/client");
-    }
+	@Override
+	public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
+		oauthServer.realm(REALM + "/client");
+	}
 
-    @Bean
-    public JedisConnectionFactory connectionFactory() throws Exception {
-        return new JedisConnectionFactory(new JedisShardInfo(host));
-    }
+	@Bean
+	public JedisConnectionFactory connectionFactory() throws Exception {
+		return new JedisConnectionFactory(new JedisShardInfo(host));
+	}
 
 }

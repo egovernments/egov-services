@@ -40,15 +40,15 @@
 
 package org.egov.user.security.oauth2.custom;
 
-import org.egov.user.persistence.entity.SecureUser;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import org.egov.user.web.contract.auth.SecureUser;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.stereotype.Service;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 @Service
 public class CustomTokenEnhancer extends TokenEnhancerChain {

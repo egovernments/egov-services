@@ -38,7 +38,7 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.user.persistence.entity;
+package org.egov.user.web.contract.auth;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -51,65 +51,63 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 public class SecureUser implements UserDetails {
-    private static final long serialVersionUID = -8756608845278722035L;
-    private final User user;
-    private final List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+	private static final long serialVersionUID = -8756608845278722035L;
+	private final User user;
+	private final List<SimpleGrantedAuthority> authorities = new ArrayList<>();
 
-    public SecureUser(User user) {
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found");
-        } else {
-            this.user = user;
-            user.getRoles().forEach(role ->
-                    this.authorities.add(new SimpleGrantedAuthority(role.getName()))
-            );
-        }
-    }
+	public SecureUser(User user) {
+		if (user == null) {
+			throw new UsernameNotFoundException("User not found");
+		} else {
+			this.user = user;
+			user.getRoles().forEach(role -> this.authorities.add(new SimpleGrantedAuthority(role.getName())));
+		}
+	}
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.authorities;
-    }
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return this.authorities;
+	}
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return this.user.getPwdExpiryDate().isAfterNow();
-    }
+	@Override
+	public boolean isAccountNonExpired() {
+		return false;
+	}
 
-    @Override
-    public boolean isAccountNonLocked() {
-        return !this.user.isAccountLocked();
-    }
+	@Override
+	public boolean isAccountNonLocked() {
+		return false;
+	}
 
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return this.user.getPwdExpiryDate().isAfterNow();
-    }
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return false;
+	}
 
-    @Override
-    public boolean isEnabled() {
-        return this.user.isActive();
-    }
+	@Override
+	public boolean isEnabled() {
+		return this.user.isActive();
+	}
 
-    @Override
-    public String getPassword() {
-        return this.user.getPassword();
-    }
+	@Override
+	public String getPassword() {
+		return null;
+	}
 
-    @Override
-    public String getUsername() {
-        return this.user.getUsername();
-    }
+	@Override
+	public String getUsername() {
+		return this.user.getUserName();
+	}
 
-    public Long getUserId() {
-        return this.user.getId();
-    }
+	public Long getUserId() {
+		return this.user.getId();
+	}
 
-    public UserType getUserType() {
-        return this.user.getType();
-    }
+	public UserType getUserType() {
+		return this.user.getType();
+	}
 
-    public User getUser() {
-        return this.user;
-    }
+	public User getUser() {
+		return this.user;
+	}
 }

@@ -26,6 +26,10 @@ def get_deployments():
 
 
 def get_image_tags(deployments):
+    get_kube_config_cmd = "cat ~/.kube/config"
+    out,err = Popen(shlex.split(get_kube_config_cmd)).communicate()
+    print "$$$$$$"
+    print out, err
     image_tags = {}
     for d in deployments:
         deployment_cmd = "kubectl get deployment {} -o json " \
@@ -33,7 +37,7 @@ def get_image_tags(deployments):
         deployment_config = Popen(shlex.split(deployment_cmd), stdout=PIPE)
         deployment_json, error = deployment_config.communicate()
         print "fubar"
-        print deployment_json
+        print deployment_json, error
         if error:
             raise Exception("Cannot find deployment config for {}\nERROR:{}".
                             format(d, error))

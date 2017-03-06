@@ -42,8 +42,11 @@ package org.egov.pgr.service;
 
 import org.apache.commons.lang3.time.DateUtils;
 import org.egov.pgr.entity.Complaint;
+import org.egov.pgr.entity.ComplaintType;
 import org.egov.pgr.entity.Escalation;
 import org.egov.pgr.repository.EscalationRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -55,6 +58,7 @@ import java.util.Date;
 @Transactional(readOnly = true)
 public class EscalationService {
 
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
     private final EscalationRepository escalationRepository;
     private Integer defaultEscalationHours;
 
@@ -66,13 +70,18 @@ public class EscalationService {
     }
 
     public Date getExpiryDate(final Complaint complaint, final Long designationId) {
-        final Integer noOfhrs = getHrsToResolve(designationId, complaint.getComplaintType().getId());
+        final Integer noOfhrs = getHrsToResolve(designationId, complaint.getComplaintType());
         final Date expiryDate = complaint.getEscalationDate();
         return DateUtils.addHours(expiryDate, noOfhrs);
     }
 
-    private Integer getHrsToResolve(final Long designationId, final Long complaintTypeId) {
-        final Escalation escalation = escalationRepository.findByDesignationAndComplaintType(designationId, complaintTypeId);
-        return (escalation != null) ? escalation.getNoOfHrs() : defaultEscalationHours;
+    private Integer getHrsToResolve(final Long designationId, final ComplaintType complaintType) {
+        if (complaintType != null) {
+            final Long complaintTypeId = complaintType.getId();
+            final Escalation escalation = escalationRepository.findByDesignationAndComplaintType(designationId, complaintTypeId);
+            return (escalation != null) ? escalation.getNoOfHrs() : defaultEscalationHours;
+        }
+        logger.error("Complaint type is null, so returning default escalation hours from config.");
+        return defaultEscalationHours;
     }
 }

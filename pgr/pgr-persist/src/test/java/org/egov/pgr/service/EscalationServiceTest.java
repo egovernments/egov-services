@@ -15,6 +15,8 @@ import java.util.Calendar;
 import java.util.Date;
 
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -70,6 +72,22 @@ public class EscalationServiceTest {
         this.complaint.setEscalationDate(inputDate);
         Date expiryDate = this.escalationService.getExpiryDate(complaint, designationId);
 
+        assertEquals(expectedDate, expiryDate);
+    }
+
+    @Test
+    public void testDefaultValueIsUsedWhenComplaintTypeIsNotPresent() throws Exception {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2017, 2, 22);
+        Date inputDate = calendar.getTime();
+        calendar.set(2017, 2, 24);
+        Date expectedDate = calendar.getTime();
+        complaint.setComplaintType(null);
+
+        this.complaint.setEscalationDate(inputDate);
+        Date expiryDate = this.escalationService.getExpiryDate(complaint, designationId);
+
+        verify(escalationRepository, never()).findByDesignationAndComplaintType(any(Long.class), any(Long.class));
         assertEquals(expectedDate, expiryDate);
     }
 }

@@ -9,6 +9,8 @@ import org.egov.pgr.repository.PositionRepository;
 import org.egov.pgr.service.ComplaintStatusService;
 import org.egov.pgr.service.ComplaintTypeService;
 import org.egov.pgr.service.EscalationService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 import java.util.Objects;
@@ -17,6 +19,7 @@ import static org.egov.pgr.contracts.grievance.ServiceRequest.*;
 
 public class ComplaintBuilder {
 
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
     private final ComplaintTypeService complaintTypeService;
     private final ComplaintStatusService complaintStatusService;
     private final EscalationService escalationService;
@@ -118,7 +121,7 @@ public class ComplaintBuilder {
             ComplaintStatus complainStatus = complaintStatusService.getByName(statusName.toString());
             this.complaint.setStatus(complainStatus);
         } catch (IllegalArgumentException iae) {
-            // Log that invalid status was sent in
+            logger.error(iae.getMessage(), iae);
         }
     }
 

@@ -20,7 +20,7 @@ try {
 
         code_builder.build(path, ci_image)
 
-        archiver.archiveArtifacts(path)
+        archiver.archiveArtifacts(["${path}/target/*.jar", "${path}/target/*.html"])
 
         image_builder.build(module_name, service_name, commit_id)
 

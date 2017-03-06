@@ -1,7 +1,8 @@
-def archiveArtifacts(path){
+def archiveArtifacts(artifacts){
     stage("Archive Results") {
-        archive "${path}/target/*.jar"
-        archive "${path}/target/**/*.html"
+        for (artifact in artifcats) {
+            archive "${artifact}"
+        }
     }
 }
 

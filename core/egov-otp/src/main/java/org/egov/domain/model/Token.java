@@ -1,9 +1,9 @@
 package org.egov.domain.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.*;
+
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @AllArgsConstructor
 @Builder
@@ -14,4 +14,13 @@ public class Token {
     private String identity;
     private String number;
     private String uuid;
+    private LocalDateTime expiryDateTime;
+    private Long timeToLiveInSeconds;
+    private boolean validated;
+
+    public boolean isExpired() {
+        return LocalDateTime.now(ZoneId.of("Asia/Calcutta")).isAfter(expiryDateTime);
+    }
 }
+
+

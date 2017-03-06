@@ -2,8 +2,10 @@ package org.egov.web.controller;
 
 import org.egov.Resources;
 import org.egov.domain.InvalidTokenRequestException;
+import org.egov.domain.InvalidTokenValidateRequestException;
 import org.egov.domain.model.Token;
 import org.egov.domain.model.TokenRequest;
+import org.egov.domain.model.ValidateRequest;
 import org.egov.domain.service.TokenService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,7 +46,7 @@ public class OtpControllerTest {
 				.number("randomNumber")
 				.build();
 		final TokenRequest tokenRequest = new TokenRequest(IDENTITY, TENANT_ID);
-		when(tokenService.createToken(tokenRequest)).thenReturn(token);
+		when(tokenService.create(tokenRequest)).thenReturn(token);
 
 		mockMvc.perform(post("/v1/_create").contentType(MediaType.APPLICATION_JSON_UTF8)
 				.content(resources.getFileContents("createOtpRequest.json")))
@@ -52,25 +54,56 @@ public class OtpControllerTest {
 				.andExpect(content().json(resources.getFileContents("createOtpResponse.json")));
 	}
 
+	@Test
+	public void test_should_return_success_response_when_validation_is_successful() throws Exception {
+		final ValidateRequest validateRequest = ValidateRequest.builder()
+				.otp("otpNumber")
+				.tenantId(TENANT_ID)
+				.identity(IDENTITY)
+				.build();
+		when(tokenService.validate(validateRequest)).thenReturn(true);
+
+		mockMvc.perform(post("/v1/_validate").contentType(MediaType.APPLICATION_JSON_UTF8)
+				.content(resources.getFileContents("validateOtpRequest.json")))
+				.andExpect(status().isOk())
+				.andExpect(content().json(resources.getFileContents("successOtpValidationResponse.json")));
+	}
+
+    @Test
+    public void test_should_return_error_response_when_otp_validation_request_is_not_valid() throws Exception {
+        final ValidateRequest validateRequest = ValidateRequest.builder()
+                .otp("")
+                .tenantId("")
+                .identity("")
+                .build();
+        when(tokenService.validate(validateRequest))
+                .thenThrow(new InvalidTokenValidateRequestException(validateRequest));
+
+        mockMvc.perform(post("/v1/_validate").contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(resources.getFileContents("invalidOtpValidationRequest.json")))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json(resources.getFileContents("errorOtpValidationResponse.json")));
+    }
+
     @Test
     public void test_should_return_error_response_when_token_request_is_not_valid() throws Exception {
-		final TokenRequest tokenRequest = new TokenRequest(null, TENANT_ID);
-        when(tokenService.createToken(tokenRequest)).thenThrow(new InvalidTokenRequestException(tokenRequest));
+		final TokenRequest tokenRequest = new TokenRequest("", "");
+        when(tokenService.create(tokenRequest)).thenThrow(new InvalidTokenRequestException(tokenRequest));
 
         mockMvc.perform(post("/v1/_create").contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(resources.getFileContents("createOtpRequestWithoutIdentity.json")))
+                .content(resources.getFileContents("invalidOtpRequest.json")))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(resources.getFileContents("invalidOtpResponse.json")));
     }
 
     @Test
     public void test_should_error_message_when_unhandled_exception_occurs() throws Exception {
-		final TokenRequest tokenRequest = new TokenRequest(null, TENANT_ID);
+		final TokenRequest tokenRequest = new TokenRequest("", "");
         final String expectedMessage = "exception message";
-        when(tokenService.createToken(tokenRequest)).thenThrow(new RuntimeException(expectedMessage));
+        when(tokenService.create(tokenRequest)).thenThrow(new RuntimeException(expectedMessage));
 
         mockMvc.perform(post("/v1/_create").contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(resources.getFileContents("createOtpRequestWithoutIdentity.json")))
+                .content(resources.getFileContents("invalidOtpRequest.json")))
                 .andExpect(status().isInternalServerError())
                 .andExpect(content().string(expectedMessage));
     }

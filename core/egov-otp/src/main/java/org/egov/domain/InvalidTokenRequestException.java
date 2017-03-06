@@ -14,3 +14,4 @@ public class InvalidTokenRequestException extends RuntimeException {
         this.tokenRequest = tokenRequest;
     }
 }
+

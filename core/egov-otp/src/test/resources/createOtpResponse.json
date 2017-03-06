@@ -4,6 +4,7 @@
     "otp": "randomNumber",
     "UUID": "uuid",
     "identity": "identity",
-    "tenantId": "tenantId"
+    "tenantId": "tenantId",
+    "isValidationSuccessful": false
   }
 }

@@ -13,11 +13,14 @@ public class Otp {
     private String uuid;
     private String identity;
     private String tenantId;
+    @JsonProperty("isValidationSuccessful")
+    private boolean validationSuccessful;
 
     public Otp(Token token) {
         otp = token.getNumber();
         uuid = token.getUuid();
         identity = token.getIdentity();
         tenantId = token.getTenantId();
+        validationSuccessful = token.isValidated();
     }
 }

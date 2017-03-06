@@ -3,6 +3,7 @@ CREATE TABLE eg_token (
     tenant character varying(128) NOT NULL,
     tokennumber character varying(128) NOT NULL,
     tokenidentity character varying(100) NOT NULL,
+    validated CHARACTER(1) NOT NULL DEFAULT 'N',
     ttlsecs bigint NOT NULL,
     createddate timestamp NOT NULL,
     lastmodifieddate timestamp,

@@ -2,6 +2,8 @@ package org.egov.persistence.repository;
 
 import org.egov.domain.model.Token;
 import org.egov.domain.model.TokenRequest;
+import org.egov.domain.model.Tokens;
+import org.egov.domain.model.ValidateRequest;
 import org.hamcrest.CustomMatcher;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,8 +11,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import java.util.Arrays;
+import java.util.Date;
+
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -54,6 +58,52 @@ public class TokenRepositoryTest {
         assertEquals(TOKEN_NUMBER, actualToken.getNumber());
         assertEquals(IDENTITY, actualToken.getIdentity());
         assertEquals(TENANT_ID, actualToken.getTenantId());
+    }
+
+    @Test
+    public void test_should_retrieve_tokens_given_otp_number_identity_and_tenant() {
+        final String otpNumber = "optNumber";
+        final String identity = "identity";
+        final String tenant = "tenant";
+        final org.egov.persistence.entity.Token token1 = new org.egov
+                .persistence.entity.Token();
+        token1.setTimeToLiveInSeconds(200L);
+        token1.setCreatedDate(new Date());
+        final org.egov.persistence.entity.Token token2 = new org.egov
+                .persistence.entity.Token();
+        token2.setTimeToLiveInSeconds(200L);
+        token2.setCreatedDate(new Date());
+        when(tokenJpaRepository.findByNumberAndIdentityAndTenant(otpNumber, identity, tenant))
+                .thenReturn(Arrays.asList(token1, token2));
+        final ValidateRequest validateRequest = new ValidateRequest(tenant, otpNumber, identity);
+
+        final Tokens actualTokens = tokenRepository.find(validateRequest);
+
+        assertNotNull(actualTokens);
+        assertNotNull(actualTokens.getTokens());
+        assertEquals(2, actualTokens.getTokens().size());
+    }
+
+    @Test
+    public void test_should_return_true_when_token_is_updated_to_validated() {
+        final Token token = Token.builder()
+                .uuid("uuid")
+                .build();
+        when(tokenJpaRepository.markTokenAsValidated("uuid")).thenReturn(1);
+
+        final boolean updateSuccessful = tokenRepository.markAsValidated(token);
+        assertTrue(updateSuccessful);
+    }
+
+    @Test
+    public void test_should_return_false_when_token_is_not_updated_successfully() {
+        final Token token = Token.builder()
+                .uuid("uuid")
+                .build();
+        when(tokenJpaRepository.markTokenAsValidated("uuid")).thenReturn(0);
+
+        final boolean updateSuccessful = tokenRepository.markAsValidated(token);
+        assertFalse(updateSuccessful);
     }
 
     private class TokenEntityMatcher extends CustomMatcher<org.egov.persistence.entity.Token> {

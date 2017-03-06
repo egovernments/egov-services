@@ -9,7 +9,7 @@ def takeSnapshot(group, env){
 
 def deploy(env){
     stage("Deploy to ${env} env"){
-        def cmd = "python jenkins/scripts/deploy.rb"
+        def cmd = "python jenkins/scripts/deploy.py"
         run(env, cmd)
     }
 }

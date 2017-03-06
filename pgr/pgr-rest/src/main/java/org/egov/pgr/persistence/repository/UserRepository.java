@@ -18,7 +18,7 @@ public class UserRepository {
 
     public AuthenticatedUser findUser(String token) {
         String url = String.format("%s%s", userHost + userServiceUrl, token);
-        return restTemplate.getForObject(url, AuthenticatedUser.class);
+        return restTemplate.postForObject(url,null, AuthenticatedUser.class);
     }
 
 }

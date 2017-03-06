@@ -7,6 +7,6 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class LocationResponse {
-    private List<Url> files;
+public class GetFilesByTagResponse {
+    private List<FileRecord> files;
 }

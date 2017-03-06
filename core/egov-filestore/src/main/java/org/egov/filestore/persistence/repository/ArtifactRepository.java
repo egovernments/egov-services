@@ -1,6 +1,7 @@
 package org.egov.filestore.persistence.repository;
 
 import org.egov.filestore.domain.exception.ArtifactNotFoundException;
+import org.egov.filestore.domain.model.FileInfo;
 import org.egov.filestore.domain.model.FileLocation;
 import org.egov.filestore.domain.model.Resource;
 import org.egov.filestore.persistence.entity.Artifact;
@@ -53,18 +54,16 @@ public class ArtifactRepository {
         return new Resource(artifact.getContentType(), artifact.getFileName(), resource);
     }
 
-    public List<FileLocation> findByTag(String tag) {
+    public List<FileInfo> findByTag(String tag) {
         return fileStoreJpaRepository.findByTag(tag).stream()
-                .map(this::mapArtifactToFileLocation)
+                .map(this::mapArtifactToFileInfo)
                 .collect(Collectors.toList());
     }
 
-    private FileLocation mapArtifactToFileLocation(Artifact artifact) {
-        return new FileLocation(
-                artifact.getFileStoreId(),
-                artifact.getModule(),
-                artifact.getJurisdictionId(),
-                artifact.getTag()
-        );
+    private FileInfo mapArtifactToFileInfo(Artifact artifact) {
+        FileLocation fileLocation = new FileLocation(
+                artifact.getFileStoreId(), artifact.getModule(), artifact.getJurisdictionId(), artifact.getTag());
+
+        return new FileInfo(artifact.getContentType(), fileLocation);
     }
 }

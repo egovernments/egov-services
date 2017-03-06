@@ -5,6 +5,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class Url {
+public class FileRecord {
     private String url;
+    private String contentType;
 }

@@ -1,6 +1,7 @@
 package org.egov.filestore.domain.service;
 
 import org.egov.filestore.domain.model.Artifact;
+import org.egov.filestore.domain.model.FileInfo;
 import org.egov.filestore.domain.model.FileLocation;
 import org.egov.filestore.domain.model.Resource;
 import org.egov.filestore.persistence.repository.ArtifactRepository;
@@ -36,18 +37,9 @@ public class StorageService {
                                                String tag) {
         return files.stream()
                 .map(file -> {
-
-                    FileLocation fileLocation = FileLocation.builder()
-                            .fileStoreId(this.idGeneratorService.getId())
-                            .jurisdictionId(jurisdictionId)
-                            .module(module)
-                            .tag(tag)
-                            .build();
-
-                    return Artifact.builder()
-                            .multipartFile(file)
-                            .fileLocation(fileLocation)
-                            .build();
+                    FileLocation fileLocation =
+                            new FileLocation(this.idGeneratorService.getId(), module, jurisdictionId, tag);
+                    return new Artifact(file, fileLocation);
                 })
                 .collect(Collectors.toList());
     }
@@ -56,10 +48,7 @@ public class StorageService {
         return artifactRepository.find(fileStoreId);
     }
 
-    public List<String> retrieveByTag(String tag) {
-        return artifactRepository.findByTag(tag)
-                .stream()
-                .map(FileLocation::getFileStoreId)
-                .collect(Collectors.toList());
+    public List<FileInfo> retrieveByTag(String tag) {
+        return artifactRepository.findByTag(tag);
     }
 }

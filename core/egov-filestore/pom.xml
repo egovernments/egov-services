@@ -121,9 +121,10 @@
                                     <element>CLASS</element>
                                     <excludes>
                                         <exclude>*Test</exclude>
-                                        <exclude>org.egov.filestore.persistence.repository.FileRepository</exclude>
-                                        <exclude>org.egov.filestore.EgovFilestoreApplication</exclude>
+										<exclude>org.egov.filestore.EgovFilestoreApplication</exclude>
+										<exclude>org.egov.filestore.persistence.repository.FileRepository</exclude>
                                         <exclude>org.egov.filestore.persistence.entity.AbstractPersistable</exclude>
+										<exclude>org.egov.filestore.persistence.entity.Artifact</exclude>
                                     </excludes>
                                     <limits>
                                         <limit>

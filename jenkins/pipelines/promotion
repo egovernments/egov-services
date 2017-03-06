@@ -12,6 +12,8 @@ try {
 	    deployer.takeSnapshot(group, source_env)
 
         archiver.archiveArtifacts(["jenkins/scripts/image_tags.txt"])
+
+        deployer.deploy(dest_env)
     }
 } catch (e) {
     throw e

@@ -100,7 +100,7 @@ public class ComplaintBuilderTest {
         valuesMap.put("receivingMode", "Website");
         valuesMap.put("status", "PROCESSING");
         valuesMap.put("assignment_id", "18");
-        valuesMap.put("location_id", "101");
+        valuesMap.put("locationId", "101");
         valuesMap.put("child_location_id", "201");
         valuesMap.put("location_name", "jhumritalaiyya");
         valuesMap.put("state_id", "88");

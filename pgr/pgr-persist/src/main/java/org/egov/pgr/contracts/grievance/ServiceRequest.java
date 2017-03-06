@@ -6,7 +6,7 @@ import java.util.Map;
 public class ServiceRequest {
 
     public static final String USER_ID = "user_id";
-    public static final String LOCATION_ID = "location_id";
+    public static final String LOCATION_ID = "locationId";
     public static final String CHILD_LOCATION_ID = "child_location_id";
     public static final String LOCATION_NAME = "location_name";
     public static final String VALUES_ASSIGNEE_ID = "assignment_id";

@@ -40,7 +40,7 @@ public class LocationServiceTest {
         serviceRequestMap.put("lat", 1.2d);
         serviceRequestMap.put("lng", 4.5d);
         final HashMap<String, String> valuesMap = new HashMap<>();
-        valuesMap.put("location_id", "5");
+        valuesMap.put("locationId", "5");
         serviceRequestMap.put("values", valuesMap);
         sevaRequestMap.put("ServiceRequest", serviceRequestMap);
         final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);

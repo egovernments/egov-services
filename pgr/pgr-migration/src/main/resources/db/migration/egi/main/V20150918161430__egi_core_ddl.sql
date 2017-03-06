@@ -630,25 +630,19 @@ ALTER TABLE ONLY eg_systemaudit ADD CONSTRAINT eg_systemaudit_pkey PRIMARY KEY (
 
 ------------------START------------------
 CREATE TABLE eg_token (
-    id bigint NOT NULL,
-    tokennumber character varying(128) NOT NULL,
-    tokenidentity character varying(100),
-    service character varying(100),
-    ttlsecs bigint NOT NULL,
-    createddate timestamp without time zone NOT NULL,
-    lastmodifieddate timestamp without time zone,
-    createdby bigint NOT NULL,
-    lastmodifiedby bigint,
-    version bigint
+id character(36) PRIMARY KEY,
+tenant character varying(128) NOT NULL,
+tokennumber character varying(128) NOT NULL,
+tokenidentity character varying(100) NOT NULL,
+ttlsecs bigint NOT NULL,
+createddate timestamp NOT NULL,
+lastmodifieddate timestamp,
+createdby bigint NOT NULL,
+lastmodifiedby bigint,
+version bigint
 );
-CREATE SEQUENCE seq_eg_token
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-ALTER TABLE ONLY eg_token ADD CONSTRAINT pk_token PRIMARY KEY (id);
-CREATE INDEX idx_token_number ON eg_token USING btree (tokennumber);
+CREATE INDEX idx_token_number_identity ON eg_token (tokennumber, tokenidentity);
+
 -------------------END-------------------
 
 ------------------START------------------

@@ -26,7 +26,7 @@ def get_deployments():
 
 
 def get_image_tags(deployments):
-    image_tags = {}
+    deployment_image_tags = {}
     for d in deployments:
         deployment_cmd = "kubectl get deployment {} -o json " \
                          "--namespace=egov".format(d)
@@ -37,11 +37,13 @@ def get_image_tags(deployments):
                             format(d, error))
         deployment = json.loads(deployment_json)
         containers = deployment['spec']['template']['spec']['containers']
+        image_tags = []
         for c in containers:
             name = str(c['name'])
             image = str(c['image'])
-            image_tags[name] = image
-    return image_tags
+            image_tags.append({name: image})
+        deployment_image_tags[d] = image_tags
+    return deployment_image_tags
 
 
 def main():

@@ -1,31 +1,26 @@
-def deploy(service_name, commit_id, timeoutInMins=5){
-    milestone()
-    try {
-	timeout(time:timeoutInMins, unit:'MINUTES') {
-	    input(message:'Approve deployment?')
+kubectl_image = "nsready/kubectl:0.0.1"
+
+def takeSnapshot(group, env){
+    stage("Snapshot ${group} in ${env} env"){
+        docker.image("${kubectl_image}").inside {
+            set_kube_credentials(env)
+            withCredentials([string(credentialsId: "${env}-kube-url", variable: "KUBE_SERVER_URL")]){
+                sh "kubectl config set-cluster env --server ${KUBE_SERVER_URL}"
+            }
+            sh "python jenkins/scripts/snapshot.py ${group}";
         }
-    } catch (err) {
-        echo "Timed-out waiting for input!!"
     }
-    node("slave") {
-        doDeploy(service_name, commit_id)
-    }	
-    milestone()
 }
 
-def doDeploy(service_name, commit_id){
-    def namespace = "${JOB_NAME}".split("/")[-2]
-    def tag = "${BUILD_ID}-${commit_id}"
-    def image = "${service_name}:${tag}"
-    def clusters = sh(returnStdout: true, script:"kubectl config get-clusters")
-    println(clusters)
-    sh "kubectl set image deployments/${service_name} ${service_name}=${image} --namespace=${namespace}"
-    def deployStatus = sh(returnStdout: true, script: "kubectl rollout status deployments/${service_name} --namespace=${namespace}").trim()
-    println(deploystatus)
-    if (deployStatus.contains("deployment \"${service_name}\" successfully rolled out")) {
-        println("deployment SUCCEDED!!")
-    } else {
-        throw new Exception("Deployment FAILED!!")
+def set_kube_credentials(env){
+    withCredentials([file(credentialsId: "${env}-kube-ca", variable: "CA")]){
+        sh "cp ${CA} /kube/ca.pem"
+    }
+    withCredentials([file(credentialsId: "${env}-kube-cert", variable: "CERT")]){
+        sh "cp ${CERT} /kube/admin.pem"
+    }
+    withCredentials([file(credentialsId: "${env}-kube-key", variable: "CERT_KEY")]){
+        sh "cp ${CERT_KEY} /kube/admin-key.pem"
     }
 }
 

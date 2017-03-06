@@ -22,6 +22,12 @@ public class Boundary {
 	private String id;
 	@JsonProperty("name")
 	private String name;
+	@JsonProperty("longitude")
+	private Float longitude;
+	@JsonProperty("latitude")
+	private Float latitude;
+	@JsonProperty("boundaryNum")
+	private Long boundaryNum;
 
 	private Boundary parent;
 
@@ -31,6 +37,9 @@ public class Boundary {
 		if (entityBoundary.getParent() != null) {
 			this.setParent(new Boundary(entityBoundary.getParent()));
 		}
+		this.longitude = entityBoundary.getLongitude();
+		this.latitude = entityBoundary.getLatitude();
+		this.boundaryNum = entityBoundary.getBoundaryNum();
 	}
 
 }

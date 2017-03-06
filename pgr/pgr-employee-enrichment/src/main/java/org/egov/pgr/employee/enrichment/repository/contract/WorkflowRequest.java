@@ -23,10 +23,18 @@ public class WorkflowRequest {
             this.strValue = strValue;
         }
 
+        public static Boolean isCreate(String value) {
+            return Action.CREATE.strValue.equalsIgnoreCase(value);
+        }
+
+        public static Boolean isEnd(String value) {
+            return Action.END.strValue.equalsIgnoreCase(value);
+        }
+
         public static String forComplaintStatus(String complaintStatus) {
-            if (complaintStatus.equals("REGISTERED")) {
+            if (complaintStatus.equalsIgnoreCase("REGISTERED")) {
                 return CREATE.strValue;
-            } else if (complaintStatus.equals("COMPLETED")) {
+            } else if (complaintStatus.equalsIgnoreCase("COMPLETED") || complaintStatus.equalsIgnoreCase("REJECTED") || complaintStatus.equalsIgnoreCase("WITHDRAWN")) {
                 return END.strValue;
             }
             return CREATE.strValue;

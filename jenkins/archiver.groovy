@@ -1,6 +1,6 @@
 def archiveArtifacts(artifacts){
     stage("Archive Results") {
-        for (artifact in artifcats) {
+        for (artifact in artifacts) {
             archive "${artifact}"
         }
     }

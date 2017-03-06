@@ -11,7 +11,7 @@ try {
 
 	    env_snapshot.takeSnapshot(group, source_env)
 
-        archiver.archiveArtifacts("jenkins/scripts/image_tags.txt")
+        archiver.archiveArtifacts(["jenkins/scripts/image_tags.txt"])
     }
 } catch (e) {
     throw e

@@ -77,7 +77,7 @@ public class GrievancePersistenceListener {
         logger.debug("Saving record in database for" + sevaRequest.getServiceRequest().getCrn());
         String complaintCrn = sevaRequest.getServiceRequest().getCrn();
         Complaint complaintByCrn = complaintService.findByCrn(complaintCrn);
-        Complaint complaint = new ComplaintBuilder(complaintByCrn, sevaRequest.getServiceRequest(), complaintTypeService, complaintStatusService, escalationService, positionRepository).build();
+        Complaint complaint = new ComplaintBuilder(complaintByCrn, sevaRequest, complaintTypeService, complaintStatusService, escalationService, positionRepository).build();
         complaint = complaintService.save(complaint);
         return complaint;
     }

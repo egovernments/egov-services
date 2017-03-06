@@ -1,6 +1,7 @@
 package org.egov.pgr.model;
 
 import org.egov.pgr.contracts.grievance.ServiceRequest;
+import org.egov.pgr.contracts.grievance.SevaRequest;
 import org.egov.pgr.entity.Complaint;
 import org.egov.pgr.entity.ComplaintStatus;
 import org.egov.pgr.entity.ComplaintType;
@@ -19,6 +20,7 @@ import static org.egov.pgr.contracts.grievance.ServiceRequest.*;
 
 public class ComplaintBuilder {
 
+    private final Long requesterId;
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private final ComplaintTypeService complaintTypeService;
     private final ComplaintStatusService complaintStatusService;
@@ -27,10 +29,11 @@ public class ComplaintBuilder {
     private final Complaint complaint;
     private final ServiceRequest serviceRequest;
 
-    public ComplaintBuilder(Complaint complaint, ServiceRequest serviceRequest,
+    public ComplaintBuilder(Complaint complaint, SevaRequest sevaRequest,
                             ComplaintTypeService complaintTypeService, ComplaintStatusService complaintStatusService,
                             EscalationService escalationService, PositionRepository positionRepository) {
-        this.serviceRequest = serviceRequest;
+        this.requesterId = sevaRequest.getRequesterId();
+        this.serviceRequest = sevaRequest.getServiceRequest();
         this.complaintStatusService = complaintStatusService;
         this.escalationService = escalationService;
         this.positionRepository = positionRepository;
@@ -40,6 +43,7 @@ public class ComplaintBuilder {
 
     public Complaint build() {
         setBasicInfo();
+        setAuditableFields();
         setComplainant();
         setReceivingMode();
         setComplaintType();
@@ -50,6 +54,13 @@ public class ComplaintBuilder {
         setWorkflowDetails();
         setDepartmentId();
         return this.complaint;
+    }
+
+    private void setAuditableFields() {
+        if (this.complaint.getCreatedBy() == null) this.complaint.setCreatedBy(this.requesterId);
+        if (this.complaint.getCreatedDate() == null) this.complaint.setCreatedDate(new Date());
+        this.complaint.setLastModifiedDate(new Date());
+        this.complaint.setLastModifiedBy(this.requesterId);
     }
 
     private void setDepartmentId() {

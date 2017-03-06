@@ -1,6 +1,6 @@
 package org.egov.pgr.model;
 
-import org.egov.pgr.contracts.grievance.ServiceRequest;
+import org.egov.pgr.contracts.grievance.SevaRequest;
 import org.egov.pgr.entity.Complaint;
 import org.egov.pgr.entity.ComplaintType;
 import org.egov.pgr.entity.enums.ComplaintStatus;
@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.*;
 
 
@@ -39,8 +40,8 @@ public class ComplaintBuilderTest {
     @Test
     public void testNewComplaintShouldBeCreatedWithPassedInServiceRequest() throws Exception {
         setupMocks();
-        ServiceRequest serviceRequest = successServiceRequest();
-        ComplaintBuilder complaintBuilder = complaintBuilderWithComplaint(new Complaint(), serviceRequest);
+        SevaRequest sevaRequest = successSevaRequest();
+        ComplaintBuilder complaintBuilder = complaintBuilderWithComplaint(new Complaint(), sevaRequest);
         Complaint builtComplaint = complaintBuilder.build();
 
         Calendar c = Calendar.getInstance();
@@ -63,6 +64,10 @@ public class ComplaintBuilderTest {
         assertEquals("jhumritalaiyya", builtComplaint.getLocationName());
         assertEquals(Long.valueOf(88), builtComplaint.getStateId());
         assertEquals(Long.valueOf(11), builtComplaint.getDepartment());
+        assertEquals(Long.valueOf(22), builtComplaint.getCreatedBy());
+        assertEquals(Long.valueOf(22), builtComplaint.getLastModifiedBy());
+        assertNotNull(builtComplaint.getCreatedDate());
+        assertNotNull(builtComplaint.getLastModifiedDate());
         assertEquals(28, c.get(Calendar.DAY_OF_MONTH));
         assertEquals(2, c.get(Calendar.MONTH));
         assertEquals(2017, c.get(Calendar.YEAR));
@@ -70,23 +75,27 @@ public class ComplaintBuilderTest {
 
     @Test
     public void testThatInvalidStatusIsIgnoredWhileUpdatingComplaint() throws Exception {
-        ServiceRequest serviceRequest = successServiceRequest();
+        SevaRequest sevaRequest = successSevaRequest();
         String invalidStatus = "INVALID_STATUS";
-        serviceRequest.getValues().put("status", invalidStatus);
+        sevaRequest.getServiceRequest().getValues().put("status", invalidStatus);
         Complaint complaint = new Complaint();
         org.egov.pgr.entity.ComplaintStatus originalStatus = new org.egov.pgr.entity.ComplaintStatus();
         originalStatus.setName(ComplaintStatus.PROCESSING.toString());
         complaint.setStatus(originalStatus);
-        ComplaintBuilder complaintBuilder = complaintBuilderWithComplaint(complaint, serviceRequest);
+        ComplaintBuilder complaintBuilder = complaintBuilderWithComplaint(complaint, sevaRequest);
         Complaint builtComplaint = complaintBuilder.build();
 
         verify(complaintStatusService, never()).getByName(invalidStatus);
         assertEquals(originalStatus, builtComplaint.getStatus());
     }
 
-    private ServiceRequest successServiceRequest() {
+    private SevaRequest successSevaRequest() {
+        HashMap<String, Object> sevaRequestMap = new HashMap<>();
         Map<String, Object> serviceRequestMap = new HashMap<>();
+        Map<String, Object> requestInfoMap = new HashMap<>();
         Map<String, String> valuesMap = new HashMap<>();
+        sevaRequestMap.put("RequestInfo", requestInfoMap);
+        requestInfoMap.put("requester_id", "22");
         valuesMap.put("complainantAddress", "complainant address");
         valuesMap.put("receivingMode", "Website");
         valuesMap.put("status", "PROCESSING");
@@ -106,7 +115,8 @@ public class ComplaintBuilderTest {
         serviceRequestMap.put("email", "raju@maildrop.cc");
         serviceRequestMap.put("phone", "9988776655");
         serviceRequestMap.put("service_code", "MAGIC");
-        return new ServiceRequest(serviceRequestMap);
+        sevaRequestMap.put("ServiceRequest", serviceRequestMap);
+        return new SevaRequest(sevaRequestMap);
     }
 
     private void setupMocks() {
@@ -150,8 +160,8 @@ public class ComplaintBuilderTest {
         when(complaintStatusService.getByName(processing)).thenReturn(processingStatus);
     }
 
-    private ComplaintBuilder complaintBuilderWithComplaint(Complaint complaint, ServiceRequest serviceRequest) {
-        return new ComplaintBuilder(complaint, serviceRequest, complaintTypeService, complaintStatusService,
+    private ComplaintBuilder complaintBuilderWithComplaint(Complaint complaint, SevaRequest sevaRequest) {
+        return new ComplaintBuilder(complaint, sevaRequest, complaintTypeService, complaintStatusService,
                 escalationService, positionRepository);
     }
 

@@ -32,6 +32,8 @@ def get_image_tags(deployments):
                          "--namespace=egov".format(d)
         deployment_config = Popen(shlex.split(deployment_cmd), stdout=PIPE)
         deployment_json, error = deployment_config.communicate()
+        print "fubar"
+        print deployment_json
         if error:
             raise Exception("Cannot find deployment config for {}\nERROR:{}".
                             format(d, error))
@@ -46,8 +48,6 @@ def get_image_tags(deployments):
 
 def set_kubectl_env():
     kube_server_url = os.getenv("KUBE_SERVER_URL")
-    print "fubar"
-    print kube_server_url
     if not kube_server_url:
         raise Exception("KUBE_SERVER_URL env var is not set")
     set_kubectl_env_cmd = ("kubectl config set-cluster env --server {}"

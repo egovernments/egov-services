@@ -6,8 +6,9 @@ def takeSnapshot(group, env){
         docker.image("${kubectl_image}").inside {
             set_kube_credentials(env)
             withCredentials([string(credentialsId: "${env}-kube-url", variable: "KUBE_SERVER_URL")]){
-                sh "python jenkins/scripts/snapshot.py ${group}";
+                sh "kubectl config set-cluster env --server ${KUBE_SERVER_URL}"
             }
+            sh "python jenkins/scripts/snapshot.py ${group}";
         }
     }
 }

@@ -27,7 +27,8 @@ def get_deployments():
 
 def get_image_tags(deployments):
     get_kube_config_cmd = "kubectl config view"
-    out,err = Popen(shlex.split(get_kube_config_cmd)).communicate()
+    out, err = Popen(shlex.split(get_kube_config_cmd),
+                     stdout=PIPE).communicate()
     print "$$$$$$"
     print out, err
     image_tags = {}
@@ -50,20 +51,7 @@ def get_image_tags(deployments):
     return image_tags
 
 
-def set_kubectl_env():
-    kube_server_url = os.getenv("KUBE_SERVER_URL")
-    if not kube_server_url:
-        raise Exception("KUBE_SERVER_URL env var is not set")
-    set_kubectl_env_cmd = ("kubectl config set-cluster env --server {}"
-                           .format(kube_server_url))
-    out, err = Popen(shlex.split(set_kubectl_env_cmd)).communicate()
-    if err:
-        raise Exception("kube server url could not be set\nERROR:{}"
-                        .format(err))
-
-
 def main():
-    set_kubectl_env()
     deployments = get_deployments()
     tags = get_image_tags(deployments)
     os.remove("image_tags.txt")

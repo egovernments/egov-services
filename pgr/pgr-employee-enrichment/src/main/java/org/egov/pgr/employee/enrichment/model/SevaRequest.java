@@ -90,7 +90,7 @@ public class SevaRequest {
         valuesToSet.put(BOUNDARY_ID, Attribute.asStringAttr(BOUNDARY_ID, values.get(VALUES_LOCATION_ID)));
         valuesToSet.put(STATE_DETAILS, Attribute.asStringAttr(STATE_DETAILS, StringUtils.EMPTY));
         valuesToSet.put(USER_ROLE, Attribute.asStringAttr(USER_ROLE, getRequestInfo().getUserType()));
-        valuesToSet.put(VALUES_STATE_ID, Attribute.asStringAttr(STATE_DETAILS, getCurrentStateId(values)));
+        valuesToSet.put(VALUES_STATE_ID, Attribute.asStringAttr(VALUES_STATE_ID, getCurrentStateId(values)));
         valuesToSet.put(VALUES_APPROVAL_COMMENT, Attribute.asStringAttr(VALUES_APPROVAL_COMMENT, values.get(VALUES_APPROVAL_COMMENT)));
         return valuesToSet;
     }

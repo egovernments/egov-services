@@ -20,9 +20,10 @@ public class WorkflowService {
     public SevaRequest enrichWorkflow(SevaRequest sevaRequest) {
         WorkflowRequest request = sevaRequest.getWorkFlowRequest();
         WorkflowResponse workflowResponse = null;
-        if (request.getStatus().toUpperCase().equals("REGISTERED")) {
+        String status = request.getStatus();
+        if (status.toUpperCase().equals("REGISTERED")) {
             workflowResponse = workflowRepository.create(request);
-        } else if (request.getStatus().toUpperCase().equals("COMPLETED")) {
+        } else if (status.equalsIgnoreCase("COMPLETED") || status.equalsIgnoreCase("WITHDRAWN") || status.equalsIgnoreCase("REJECTED")) {
             workflowResponse = workflowRepository.close(request);
         }
         sevaRequest.update(workflowResponse);

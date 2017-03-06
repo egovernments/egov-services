@@ -23,9 +23,14 @@ public class Boundary {
 	@JsonProperty("name")
 	private String name;
 
+	private Boundary parent;
+
 	public Boundary(org.egov.boundary.persistence.entity.Boundary entityBoundary) {
 		this.id = entityBoundary.getId().toString();
 		this.name = entityBoundary.getName();
+		if (entityBoundary.getParent() != null) {
+			this.setParent(new Boundary(entityBoundary.getParent()));
+		}
 	}
 
 }

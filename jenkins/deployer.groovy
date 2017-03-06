@@ -3,7 +3,7 @@ kubectl_image = "nsready/kubectl:0.0.1"
 def takeSnapshot(group, env){
     stage("Snapshot ${group} in ${env} env"){
         def cmd = "python jenkins/scripts/snapshot.py ${group}"
-        run(group, env, cmd)
+        run(env, cmd)
     }
 }
 

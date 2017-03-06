@@ -1,0 +1,1 @@
+ALTER TABLE eg_user add column photo character varying(36);

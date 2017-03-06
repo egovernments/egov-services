@@ -1,0 +1,1 @@
+ALTER TABLE eg_user DROP COLUMN signature;

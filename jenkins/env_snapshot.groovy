@@ -2,7 +2,6 @@ kubectl_image = "nsready/kubectl:0.0.1"
 
 def takeSnapshot(group, env){
     stage("Snapshot ${group} in ${env} env"){
-        sh "docker rmi ${kubectl_image}"
         docker.image("${kubectl_image}").inside {
             set_kube_credentials(env)
             withCredentials([string(credentialsId: "${env}-kube-url", variable: "KUBE_SERVER_URL")]){

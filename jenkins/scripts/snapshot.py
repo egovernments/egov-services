@@ -49,6 +49,7 @@ def main():
     tags = get_image_tags(deployments)
     tag_file = "{}/image_tags.txt".format(os.path.dirname(
         os.path.abspath(__file__)))
+    print tag_file
     try:
         os.remove(tag_file)
     except:

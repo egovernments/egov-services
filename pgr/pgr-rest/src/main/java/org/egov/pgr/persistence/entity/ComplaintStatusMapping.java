@@ -80,6 +80,7 @@ public class ComplaintStatusMapping extends AbstractPersistable<Long> {
     private Long role;
 
     @NotNull
+    @Column(name="orderno")
     private Integer orderNo;
 
     @Override

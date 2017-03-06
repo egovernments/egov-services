@@ -57,32 +57,38 @@ import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.exception.SQLGrammarException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ComplaintStatusMappingService {
-    
+
     @Autowired
-    private EmployeeRepository employeeRepository;
+    private final EmployeeRepository employeeRepository;
     
     @PersistenceContext
     private EntityManager entityManager;
-    
-    public List<ComplaintStatus> getStatusByRoleAndCurrentStatus(final Long userId, final String status,final String tenantId) {
-        Set<Role> userRoles = employeeRepository.getRolesByUserId(userId,tenantId);
-        List<Long> roles = userRoles.stream().map(role->role.getId()).collect(Collectors.toList());
-        Criteria criteria = entityManager.unwrap(Session.class).
-                createCriteria(ComplaintStatusMapping.class,"complaintMapping")
-                .createAlias("complaintMapping.currentStatus","complaintStatus");
+
+    public ComplaintStatusMappingService(final EmployeeRepository employeeRepository) {
+        this.employeeRepository = employeeRepository;
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW, noRollbackFor = SQLGrammarException.class)
+    public List<ComplaintStatus> getStatusByRoleAndCurrentStatus(final Long userId, final String status, final String tenantId) {
+        final Set<Role> userRoles = employeeRepository.getRolesByUserId(userId, tenantId);
+        final List<Long> roles = userRoles.stream().map(role -> role.getId()).collect(Collectors.toList());
+        final Criteria criteria = entityManager.unwrap(Session.class)
+                .createCriteria(ComplaintStatusMapping.class, "complaintMapping")
+                .createAlias("complaintMapping.currentStatus", "complaintStatus");
         criteria.add(Restrictions.eq("complaintStatus.name", status))
-        .add(Restrictions.in("complaintMapping.role", roles.toArray()))
-        .addOrder(Order.asc("complaintMapping.orderNo"));
+                .add(Restrictions.in("complaintMapping.role", roles.toArray()))
+                .addOrder(Order.asc("complaintMapping.orderNo"));
         criteria.setProjection(Projections.property("complaintMapping.showStatus"));
         criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
         return criteria.list();
     }
-    
-
 
 }

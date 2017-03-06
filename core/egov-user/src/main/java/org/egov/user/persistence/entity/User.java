@@ -109,7 +109,7 @@ public class User extends AbstractAuditable {
     @Column(name = "aadhaarnumber")
     private String aadhaarNumber;
 
-    @Column(name = "address")
+
     @OneToMany(
             mappedBy = "user",
             cascade = CascadeType.PERSIST,
@@ -120,7 +120,6 @@ public class User extends AbstractAuditable {
     @Column(name = "active")
     private boolean active;
 
-    @Column(name = "roles")
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "eg_userrole", joinColumns = @JoinColumn(name = "userid"),
             inverseJoinColumns = @JoinColumn(name = "roleid"))

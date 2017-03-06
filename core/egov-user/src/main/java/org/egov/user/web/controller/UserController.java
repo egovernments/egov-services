@@ -78,7 +78,7 @@ public class UserController {
                 .userName(userEntity.getUsername())
                 .salutation(userEntity.getSalutation())
                 .name(userEntity.getName())
-                .gender(userEntity.getGender().toString())
+                .gender(userEntity.getGender()!=null?userEntity.getGender().toString():"")
                 .mobileNumber(userEntity.getMobileNumber())
                 .emailId(userEntity.getEmailId())
                 .altContactNumber(userEntity.getAltContactNumber())
@@ -92,7 +92,7 @@ public class UserController {
                 .accountLocked(false)
                 .roles(convertEntityToContract(userEntity.getRoles()))
                 .signature(userEntity.getSignature())
-                .bloodGroup(userEntity.getBloodGroup().getValue())
+                .bloodGroup(userEntity.getBloodGroup()!=null?userEntity.getBloodGroup().getValue():"")
                 .photo(userEntity.getPhoto())
                 .identificationMark(userEntity.getIdentificationMark())
                 .createdBy(userEntity.getId())
@@ -113,7 +113,7 @@ public class UserController {
             userContract.setCorrespondencePinCode(address.getPinCode());
         });
 
-        if (isGuardianRelationFatherOrHusband(userEntity.getGuardianRelation())) {
+        if (userEntity.getGuardianRelation() != null && isGuardianRelationFatherOrHusband(userEntity.getGuardianRelation())) {
             userContract.setFatherOrHusbandName(userEntity.getGuardian());
         }
 

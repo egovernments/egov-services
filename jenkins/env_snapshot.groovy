@@ -8,8 +8,6 @@ def takeSnapshot(group, env){
             withCredentials([string(credentialsId: "${env}-kube-url", variable: "KUBE_SERVER_URL")]){
                 sh "python jenkins/scripts/snapshot.py ${group}";
             }
-            def fu = sh(returnStdout: true, script: "cat /.kube/config")
-            println "kubeconfig: ${CA}"
         }
     }
 }

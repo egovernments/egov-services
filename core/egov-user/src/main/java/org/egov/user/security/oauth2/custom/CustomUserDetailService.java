@@ -60,9 +60,9 @@ public class CustomUserDetailService implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String username) {
 		User user = this.userService.getUserByUsername(username);
-		return new SecureUser(
-				org.egov.user.web.contract.auth.User.builder().id(user.getId()).userName(user.getUsername())
-						.name(user.getName()).mobileNumber(user.getMobileNumber()).emailId(user.getEmailId())
-						.locale(user.getLocale()).active(user.isActive()).roles(user.getRoles()).build());
+		return new SecureUser(org.egov.user.web.contract.auth.User.builder().id(user.getId())
+				.userName(user.getUsername()).name(user.getName()).mobileNumber(user.getMobileNumber())
+				.emailId(user.getEmailId()).locale(user.getLocale()).active(user.isActive()).type(user.getType())
+				.roles(user.getRoles()).build());
 	}
 }

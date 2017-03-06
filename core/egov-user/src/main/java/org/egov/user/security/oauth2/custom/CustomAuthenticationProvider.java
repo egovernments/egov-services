@@ -97,11 +97,11 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 			 */
 			List<GrantedAuthority> grantedAuths = new ArrayList<>();
 			grantedAuths.add(new SimpleGrantedAuthority("ROLE_" + user.getType()));
-			return new UsernamePasswordAuthenticationToken(new SecureUser(
-					org.egov.user.web.contract.auth.User.builder().id(user.getId()).userName(user.getUsername())
-							.name(user.getName()).mobileNumber(user.getMobileNumber()).emailId(user.getEmailId())
-							.locale(user.getLocale()).active(user.isActive()).roles(user.getRoles()).build()),
-					password, grantedAuths);
+			return new UsernamePasswordAuthenticationToken(new SecureUser(org.egov.user.web.contract.auth.User.builder()
+					.id(user.getId()).userName(user.getUsername()).name(user.getName())
+					.mobileNumber(user.getMobileNumber()).emailId(user.getEmailId()).locale(user.getLocale())
+					.active(user.isActive()).type(user.getType()).roles(user.getRoles()).build()), password,
+					grantedAuths);
 		} else {
 			throw new OAuth2Exception("Invalid login credentials");
 		}

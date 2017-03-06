@@ -32,8 +32,6 @@ def get_image_tags(deployments):
                          "--namespace=egov".format(d)
         deployment_config = Popen(shlex.split(deployment_cmd), stdout=PIPE)
         deployment_json, error = deployment_config.communicate()
-        print "fubar"
-        print deployment_json, error
         if error:
             raise Exception("Cannot find deployment config for {}\nERROR:{}".
                             format(d, error))
@@ -49,8 +47,13 @@ def get_image_tags(deployments):
 def main():
     deployments = get_deployments()
     tags = get_image_tags(deployments)
-    os.remove("image_tags.txt")
-    with open("image_tags.txt", "w") as f:
+    tag_file = "{}/image_tags.txt".format(os.path.dirname(
+        os.path.abspath(__file__)))
+    try:
+        os.remove(tag_file)
+    except:
+        pass
+    with open(tag_file, "w") as f:
         f.write(json.dumps(tags))
 
 

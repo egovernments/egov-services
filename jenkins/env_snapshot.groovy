@@ -14,13 +14,13 @@ def takeSnapshot(group, env){
 }
 
 def set_kube_credentials(env){
-    withCredentials([string(credentialsId: "${env}-kube-ca", variable: "CA")]){
+    withCredentials([file(credentialsId: "${env}-kube-ca", variable: "CA")]){
         sh "cp ${CA} /kube/ca.pem"
     }
-    withCredentials([string(credentialsId: "${env}-kube-cert", variable: "CERT")]){
+    withCredentials([file(credentialsId: "${env}-kube-cert", variable: "CERT")]){
         sh "cp ${CERT} /kube/admin.pem"
     }
-    withCredentials([string(credentialsId: "${env}-kube-key", variable: "CERT_KEY")]){
+    withCredentials([file(credentialsId: "${env}-kube-key", variable: "CERT_KEY")]){
         sh "cp ${CERT_KEY} /kube/admin-key.pem"
     }
 }

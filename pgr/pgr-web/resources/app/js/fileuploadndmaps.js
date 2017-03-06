@@ -205,11 +205,19 @@ $(document).ready(function(){
 		    console.log("User confirmed! Location found: " + latLng.lat + ", " + latLng.lng);
 		    
 		    //Set current locaion to map
-		    var userLatLng = new google.maps.LatLng(latLng.lat, latLng.lng);
+		    /*var userLatLng = new google.maps.LatLng(latLng.lat, latLng.lng);
 			lat = latLng.lat;
 			lng = latLng.lng;
 			
 			getAddress(lat, lng);
+
+			map.setCenter(userLatLng);*/
+
+			var userLatLng = new google.maps.LatLng(15.82223689, 78.02439864);
+			lat = 15.82223689;
+			lng = 78.02439864;
+			
+			getAddress(15.82223689, 78.02439864);
 
 			map.setCenter(userLatLng);
 			
@@ -224,8 +232,10 @@ $(document).ready(function(){
 			
 		    //Assign static point to map
 			if(!citylat || !citylng){
-				citylat = 20.5937;
-				citylng = 78.9629;
+				/*citylat = 20.5937;
+				citylng = 78.9629;*/
+				citylat = 15.82223689;
+				citylng = 78.02439864;
 			    //console.log("Fallback set with no city setup: ", citylat+'<-->'+citylng);
 			}else{
 			    //console.log("Fallback set with city setup: ", citylat+'<-->'+citylng);

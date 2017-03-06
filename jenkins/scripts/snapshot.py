@@ -26,11 +26,6 @@ def get_deployments():
 
 
 def get_image_tags(deployments):
-    get_kube_config_cmd = "kubectl config view"
-    out, err = Popen(shlex.split(get_kube_config_cmd),
-                     stdout=PIPE).communicate()
-    print "$$$$$$"
-    print out, err
     image_tags = {}
     for d in deployments:
         deployment_cmd = "kubectl get deployment {} -o json " \

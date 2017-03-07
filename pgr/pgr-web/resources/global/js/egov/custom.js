@@ -161,11 +161,6 @@ $(document).ready(function()
 	});
 
 	localization();
-
-	$(document).on('click','.preventDS',function(){
-		console.log('Prevented!!')
-	});
-	
 	
 });
 

@@ -426,9 +426,8 @@ function worklist(){
 		"aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
 		"bDestroy": true,
 		"autoWidth": false,
-		/* Disable initial sort */
         "aaSorting": [],
-		"ajax": "/pgr/seva?jurisdiction_id=6&user_id="+localStorage.getItem("id"),
+		/*"ajax": "/pgr/seva?jurisdiction_id=6&user_id="+localStorage.getItem("id"),
 			"columns": [
 			{ "data": "date","width": "16%" },
 			{ "data": "sender","width": "15%" },
@@ -479,7 +478,7 @@ function worklist(){
 	          }else{
 	        	  //console.log('Response data is empty');
 	          }
-	     }
+	     }*/
 	});
 	
 }

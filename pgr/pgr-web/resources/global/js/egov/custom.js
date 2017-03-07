@@ -136,12 +136,27 @@ $(document).ready(function()
 	});
 	
 	$('.signout').click(function(){
-		localStorage.removeItem('auth');
-		localStorage.removeItem('type');
-		window.open('../index.html','_self');
-		$.each( openedWindows, function( i, val ) {
-			var window = val;
-			window.close();
+		$.ajax({
+			url : '/user/_logout?access_token='+localStorage.getItem('auth'),
+			type: 'POST',
+			success : function(response){
+				if(response.status == 'Logout successfully'){
+					localStorage.removeItem('auth');
+					localStorage.removeItem('type');
+					localStorage.removeItem('id');
+					window.open('../index.html','_self');
+					$.each( openedWindows, function( i, val ) {
+						var window = val;
+						window.close();
+					});
+				}
+			},
+			error : function(){
+				bootbox.alert('signout failed!');
+			},
+			complete: function(){
+
+			}
 		});
 	});
 

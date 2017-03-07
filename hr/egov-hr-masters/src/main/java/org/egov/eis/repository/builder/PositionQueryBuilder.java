@@ -105,8 +105,7 @@ public class PositionQueryBuilder {
 
 		if (positionGetRequest.getId() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" p.id = ?");
-			preparedStatementValues.add(positionGetRequest.getId());
+			selectQuery.append(" p.id IN " + getIdQuery(positionGetRequest.getId()));
 		}
 
 		if (positionGetRequest.getName() != null) {
@@ -173,5 +172,16 @@ public class PositionQueryBuilder {
 			queryString.append(" AND");
 
 		return true;
+	}
+
+	private static String getIdQuery(List<Long> idList) {
+		StringBuilder query = new StringBuilder("(");
+		if (idList.size() >= 1) {
+			query.append(idList.get(0).toString());
+			for (int i = 1; i < idList.size(); i++) {
+				query.append(", " + idList.get(i));
+			}
+		}
+		return query.append(")").toString();
 	}
 }

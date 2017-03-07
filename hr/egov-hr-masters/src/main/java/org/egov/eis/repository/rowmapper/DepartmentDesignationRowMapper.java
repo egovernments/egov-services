@@ -42,6 +42,8 @@ package org.egov.eis.repository.rowmapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.egov.eis.model.DepartmentDesignation;
 import org.egov.eis.model.Designation;
@@ -63,7 +65,9 @@ public class DepartmentDesignationRowMapper implements RowMapper<DepartmentDesig
 		departmentDesignation.setDepartmentId(rs.getLong("departmentId"));
 
 		DesignationGetRequest designationGetRequest = new DesignationGetRequest();
-		designationGetRequest.setId(rs.getLong("designationId"));
+		List<Long> designationID = new ArrayList<Long>();
+		designationID.add(rs.getLong("designationId"));
+		designationGetRequest.setId(designationID);
 		designationGetRequest.setTenantId(rs.getString("tenantId"));
 		
 		Designation designation = designationService.getDesignations(designationGetRequest).get(0);

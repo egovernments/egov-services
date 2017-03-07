@@ -90,8 +90,7 @@ public class LanguageQueryBuilder {
 
 		if (languageGetRequest.getId() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" id=?");
-			preparedStatementValues.add(languageGetRequest.getId());
+			selectQuery.append(" id IN " + getIdQuery(languageGetRequest.getId()));
 		}
 
 		if (languageGetRequest.getName() != null) {
@@ -146,5 +145,16 @@ public class LanguageQueryBuilder {
 			queryString.append(" AND");
 
 		return true;
+	}
+
+	private static String getIdQuery(List<Long> idList) {
+		StringBuilder query = new StringBuilder("(");
+		if (idList.size() >= 1) {
+			query.append(idList.get(0).toString());
+			for (int i = 1; i < idList.size(); i++) {
+				query.append(", " + idList.get(i));
+			}
+		}
+		return query.append(")").toString();
 	}
 }

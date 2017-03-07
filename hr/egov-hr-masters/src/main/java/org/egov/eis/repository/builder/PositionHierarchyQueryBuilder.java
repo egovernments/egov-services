@@ -137,8 +137,7 @@ public class PositionHierarchyQueryBuilder {
 
 		if (positionHierarchyGetRequest.getId() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" ph.id = ?");
-			preparedStatementValues.add(positionHierarchyGetRequest.getId());
+			selectQuery.append(" ph.id IN " + getIdQuery(positionHierarchyGetRequest.getId()));
 		}
 
 		if (positionHierarchyGetRequest.getFromPosition() != null) {
@@ -205,5 +204,16 @@ public class PositionHierarchyQueryBuilder {
 			queryString.append(" AND");
 
 		return true;
+	}
+
+	private static String getIdQuery(List<Long> idList) {
+		StringBuilder query = new StringBuilder("(");
+		if (idList.size() >= 1) {
+			query.append(idList.get(0).toString());
+			for (int i = 1; i < idList.size(); i++) {
+				query.append(", " + idList.get(i));
+			}
+		}
+		return query.append(")").toString();
 	}
 }

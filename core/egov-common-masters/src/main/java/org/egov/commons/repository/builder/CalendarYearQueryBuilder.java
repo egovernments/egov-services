@@ -65,8 +65,6 @@ public class CalendarYearQueryBuilder {
 			List preparedStatementValues) {
 		StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
 
-		System.err.println("Ignoring: " + calendarYearGetRequest.getActive());
-
 		addWhereClause(selectQuery, preparedStatementValues, calendarYearGetRequest);
 		addOrderByClause(selectQuery, calendarYearGetRequest);
 		addPagingClause(selectQuery, preparedStatementValues, calendarYearGetRequest);
@@ -80,8 +78,7 @@ public class CalendarYearQueryBuilder {
 			CalendarYearGetRequest calendarYearGetRequest) {
 
 		if (calendarYearGetRequest.getId() == null && calendarYearGetRequest.getName() == null
-				&& calendarYearGetRequest.getActive() == null
-				&& calendarYearGetRequest.getTenantId() == null)
+				&& calendarYearGetRequest.getActive() == null && calendarYearGetRequest.getTenantId() == null)
 			return;
 
 		selectQuery.append(" WHERE");
@@ -95,8 +92,7 @@ public class CalendarYearQueryBuilder {
 
 		if (calendarYearGetRequest.getId() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" id = ?");
-			preparedStatementValues.add(calendarYearGetRequest.getId());
+			selectQuery.append(" id IN " + getIdQuery(calendarYearGetRequest.getId()));
 		}
 
 		if (calendarYearGetRequest.getName() != null) {
@@ -152,5 +148,16 @@ public class CalendarYearQueryBuilder {
 			queryString.append(" AND");
 
 		return true;
+	}
+
+	private static String getIdQuery(List<Long> idList) {
+		StringBuilder query = new StringBuilder("(");
+		if (idList.size() >= 1) {
+			query.append(idList.get(0).toString());
+			for (int i = 1; i < idList.size(); i++) {
+				query.append(", " + idList.get(i));
+			}
+		}
+		return query.append(")").toString();
 	}
 }

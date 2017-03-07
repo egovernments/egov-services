@@ -92,8 +92,7 @@ public class RecruitmentQuotaQueryBuilder {
 
 		if (recruitmentQuotaGetRequest.getId() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" id = ?");
-			preparedStatementValues.add(recruitmentQuotaGetRequest.getId());
+			selectQuery.append(" id IN " + getIdQuery(recruitmentQuotaGetRequest.getId()));
 		}
 
 		if (recruitmentQuotaGetRequest.getName() != null) {
@@ -143,5 +142,16 @@ public class RecruitmentQuotaQueryBuilder {
 			queryString.append(" AND");
 
 		return true;
+	}
+
+	private static String getIdQuery(List<Long> idList) {
+		StringBuilder query = new StringBuilder("(");
+		if (idList.size() >= 1) {
+			query.append(idList.get(0).toString());
+			for (int i = 1; i < idList.size(); i++) {
+				query.append(", " + idList.get(i));
+			}
+		}
+		return query.append(")").toString();
 	}
 }

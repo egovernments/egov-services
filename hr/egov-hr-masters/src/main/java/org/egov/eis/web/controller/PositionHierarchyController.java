@@ -48,19 +48,19 @@ import org.egov.eis.model.PositionHierarchy;
 import org.egov.eis.service.PositionHierarchyService;
 import org.egov.eis.web.contract.PositionHierarchyGetRequest;
 import org.egov.eis.web.contract.PositionHierarchyResponse;
+import org.egov.eis.web.contract.RequestInfo;
 import org.egov.eis.web.contract.ResponseInfo;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
 import org.egov.eis.web.errorhandlers.ErrorHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -80,20 +80,19 @@ public class PositionHierarchyController {
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
 
-	@GetMapping(headers = { "apiId", "ver", "ts", "action", "did", "msgId", "requesterId", "authToken" })
+	@PostMapping("_search")
 	@ResponseBody
 	public ResponseEntity<?> search(@ModelAttribute @Valid PositionHierarchyGetRequest positionHierarchyGetRequest,
-			BindingResult bindingResult, @RequestHeader HttpHeaders headers) {
-		logger.debug("Inside search() of PositionHierarchyController" + headers);
+			BindingResult bindingResult, @RequestBody RequestInfo requestInfo) {
 
 		// validate header
-		if(headers.getFirst("apiId") == null || headers.getFirst("ver") == null || headers.getFirst("ts") == null ) {
-			return errHandler.getErrorResponseEntityForMissingHeaders(headers);
+		if(requestInfo.getApiId() == null || requestInfo.getVer() == null || requestInfo.getTs() == null ) {
+			return errHandler.getErrorResponseEntityForMissingRequestInfo(requestInfo);
 		}
 
 		// validate input params
 		if (bindingResult.hasErrors()) {
-			return errHandler.getErrorResponseEntityForMissingParametes(bindingResult, headers);
+			return errHandler.getErrorResponseEntityForMissingParameters(bindingResult, requestInfo);
 		}
 
 		// Call service
@@ -102,10 +101,10 @@ public class PositionHierarchyController {
 			positionHierarchiesList = positionHierarchyService.getPositionHierarchies(positionHierarchyGetRequest);
 		} catch (Exception exception) {
 			logger.error("Error while processing request " + positionHierarchyGetRequest, exception);
-			return errHandler.getResponseEntityForUnexpectedErrors(headers);
+			return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
 		}
 
-		return getSuccessResponse(positionHierarchiesList, headers);
+		return getSuccessResponse(positionHierarchiesList, requestInfo);
 	}
 
 	/**
@@ -114,10 +113,10 @@ public class PositionHierarchyController {
 	 * @param positionHierarchiesList
 	 * @return
 	 */
-	private ResponseEntity<?> getSuccessResponse(List<PositionHierarchy> positionHierarchiesList, HttpHeaders headers) {
+	private ResponseEntity<?> getSuccessResponse(List<PositionHierarchy> positionHierarchiesList, RequestInfo requestInfo) {
 		PositionHierarchyResponse positionHierarchyRes = new PositionHierarchyResponse();
 		positionHierarchyRes.setPositionHierarchy(positionHierarchiesList);
-		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestHeaders(headers, true);
+		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 		responseInfo.setStatus(HttpStatus.OK.toString());
 		positionHierarchyRes.setResponseInfo(responseInfo);
 		return new ResponseEntity<PositionHierarchyResponse>(positionHierarchyRes, HttpStatus.OK);

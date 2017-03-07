@@ -26,7 +26,7 @@ public class SevaRequest {
     public static final String WORKFLOW_TYPE = "Complaint";
     public static final String STATUS = "status";
     public static final String SERVICE_CODE = "service_code";
-    public static final String VALUES_LOCATION_ID = "location_id";
+    public static final String VALUES_LOCATION_ID = "locationId";
     public static final String MSG_ID = "msg_id";
     public static final String VALUES_APPROVAL_COMMENT = "approvalComments";
     public static final String USER_ROLE = "userRole";

@@ -11,10 +11,14 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import java.util.TimeZone;
+
 @SpringBootApplication
 public class OtpApplication {
 
-	@Bean
+    private static final String IST = "Asia/Calcutta";
+
+    @Bean
 	public WebMvcConfigurerAdapter webMvcConfigurerAdapter() {
 		return new WebMvcConfigurerAdapter() {
 
@@ -38,6 +42,7 @@ public class OtpApplication {
 
 
 	public static void main(String[] args) {
+		TimeZone.setDefault(TimeZone.getTimeZone(IST));
 		SpringApplication.run(OtpApplication.class, args);
 	}
 }

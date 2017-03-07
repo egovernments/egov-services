@@ -277,7 +277,7 @@ definitions:
     description: An employee is by default User of the system. User will be created from employee.
     type: object
     allOf: 
-    - $ref: 'swagger-yaml/user.yaml/#/definitions/User'
+    - $ref: 'swagger-yaml/User.yaml/#/definitions/User'
     properties:
       code:
         type: string
@@ -297,26 +297,20 @@ definitions:
         format: date
         description: Date of retirement of the employee.
       employeeStatus:
-        type: object
-        description: Status of the employee from the EmployeeStatus enum. Default value will be "EMPLOYED".
-        items:
-          type: string
-          enum:
-           - EMPLOYED
-           - RETIRED
-           - SUSPENDED
-           - DECEASED
+        description: Status of the employee from the status master where object type is "Employee Master". Default value will be "EMPLOYED". Possible status list for employee are - EMPLOYED,RETIRED,SUSPENDED and DECEASED
+        type: integer
+        format: int64
       recruitmentMode:
-        type: string
+        type: integer
         format: int64
         description: The mode of recruitment by which this employee came into the organization.Example- UPSC, Department Exams.
 
       recruitmentType:
-        type: string
+        type: integer
         format: int64
         description: The type of recruitment by which this employee came into the organization.Example- Direct, Transfer, Compensatory.
       recruitmentQuota:
-        type: string
+        type: integer
         format: int64
         description: The Quota of recruitment by which this employee came into the organization.Example- Sports Quota, Ex-Serviceman, Handicapped etc.
 
@@ -333,7 +327,7 @@ definitions:
         format: date
         description: Date of termination of the employee.
       employeeType:
-        type: string
+        type: integer
         format: int64
         description: Type of employment of the employee from the EmployeeType.
 
@@ -409,7 +403,7 @@ definitions:
         description: The unique bank account Number of an employee has account.
         maxLength: 20
       group:
-        type: string
+        type: integer
         format: int64
         description: What is the employee group he/she belongs to. For example- State,Central,Local.
 
@@ -495,12 +489,12 @@ definitions:
        format: int64
        description : Unique identifier of the assignment.
       position:
-        type: string
+        type: integer
         format: int64
         description: Position Id associated with the assignment.
 
       fund:
-        type: string
+        type: integer
         format: int64
         description: Fund Id associated with the assignment.
       functionary:
@@ -512,7 +506,7 @@ definitions:
         format: int64
         description: Function Id associated with the assignment.
       designation:
-        type: string
+        type: integer
         format: int64
         description: Designation Id associated with the assignment.
       department:

@@ -276,6 +276,8 @@ $(document).ready(function()
 				finobj['receivingMode'] = $('#receivingMode').val() ? $('#receivingMode').val() : 'Website';
 				finobj['receivingCenter'] = $('#receivingCenter').val() ? $('#receivingCenter').val() : '';
 				finobj['status'] = 'REGISTERED';
+				if(localStorage.getItem("type") == 'CITIZEN')
+					finobj['userId'] = localStorage.getItem('id');
 				finobj['complainantAddress'] = $('#complainantAddress').val() ? $('#complainantAddress').val() : '';
 
 				data['values'] = finobj;

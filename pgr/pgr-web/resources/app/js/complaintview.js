@@ -38,7 +38,7 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 var srn = getUrlParameter('srn');
-var lat, lng, myCenter;
+var lat, lng, myCenter,status;
 var updateResponse = {};
 $(document).ready(function()
 {
@@ -123,6 +123,8 @@ $(document).ready(function()
 			req_obj['RequestInfo'] = updateResponse.response_info;
 			req_obj['ServiceRequest'] = updateResponse.service_requests[0];
 
+			req_obj['RequestInfo']['auth_token'] = localStorage.getItem('auth');
+
 			var dat = new Date().toLocaleDateString();
 			var time = new Date().toLocaleTimeString();
 			var date = dat.split("/").join("-");
@@ -130,20 +132,22 @@ $(document).ready(function()
 			req_obj.ServiceRequest['tenantId'] = 'ap.public';
 			req_obj.ServiceRequest.values['ComplaintStatus'] = $('#status').val();
 			req_obj.ServiceRequest.values['approvalComments'] = $('#approvalComment').val();
+			req_obj.ServiceRequest.values['userId'] = 67;
+			req_obj.ServiceRequest.values['locationId'] = req_obj.ServiceRequest.values['LocationId'];
+			delete req_obj.ServiceRequest.values['LocationId'];
+			req_obj.ServiceRequest.values['childLocationId'] = req_obj.ServiceRequest.values['ChildLocationId'];
+			delete req_obj.ServiceRequest.values['ChildLocationId'];
+			req_obj.ServiceRequest.values['childLocationName'] = req_obj.ServiceRequest.values['ChildLocationName'];
+			delete req_obj.ServiceRequest.values['ChildLocationName'];
+			req_obj.ServiceRequest.values['receivingMode'] = req_obj.ServiceRequest.values['ReceivingMode'];
+			delete req_obj.ServiceRequest.values['ReceivingMode'];
+			req_obj.ServiceRequest.values['status'] = req_obj.ServiceRequest.values['ComplaintStatus'];
+			delete req_obj.ServiceRequest.values['ComplaintStatus'];
+			req_obj.ServiceRequest.values['locationName'] = req_obj.ServiceRequest.values['LocationName'];
+			delete req_obj.ServiceRequest.values['LocationName'];
 			//console.log(JSON.stringify(updateResponse));
-			//Ready to update
 
-			var str = JSON.stringify(req_obj);
-			str = str.replace(/LocationId/g, 'locationId');
-			str = str.replace(/ChildLocationId/g, 'childLocationId');
-			str = str.replace(/ChildLocationName/g, 'childLocationName');
-			str = str.replace(/ReceivingMode/g, 'receivingMode');
-			str = str.replace(/ComplaintStatus/g, 'status');
-			str = str.replace(/LocationName/g, 'locationName');
-
-			object = JSON.parse(str);
-
-			console.log(JSON.stringify(object))
+			console.log(JSON.stringify(req_obj));
 
 
 			$.ajax({
@@ -155,9 +159,11 @@ $(document).ready(function()
 				beforeSend : function(){
 					showLoader();
 				},
-				data : JSON.stringify(object),
+				data : JSON.stringify(req_obj),
 				success : function(response){
-					console.log('response',response)
+					bootbox.alert('Grievance updated succesfully!', function(){ 
+						window.location.reload();
+					});
 				},
 				error : function(){
 					bootbox.alert('Error while update!');
@@ -254,7 +260,7 @@ $(document).ready(function()
 			showLoader();
 		},
 		success : function(response){
-			//console.log('Get complaint done!');
+			//console.log('Get complaint done!'+JSON.stringify(response));
 
 			updateResponse = response;
 
@@ -288,6 +294,8 @@ $(document).ready(function()
 							lat = response.service_requests[0].lat;
 							lng = response.service_requests[0].lng;
 
+							status = response.service_requests[0].values.ComplaintStatus;
+
 							if(localStorage.getItem('type') == 'CITIZEN' && response.service_requests[0].values.ComplaintStatus != 'COMPLETED')
 								$('.feedback').remove();
 
@@ -311,10 +319,22 @@ $(document).ready(function()
 							//console.log('response with files',JSON.stringify(response));
 
 							//Start actions
+							if(localStorage.getItem('type') == 'EMPLOYEE' || localStorage.getItem('type') == 'CITIZEN'){
+								var loadDD = new $.loadDD();
+								nextStatus(loadDD);
+							}
+
 							if(localStorage.getItem('type') == 'EMPLOYEE'){
 								var loadDD = new $.loadDD();
 								complaintType(loadDD);
+								getWard(loadDD);
+								getLocality(loadDD);
+								getDepartment(loadDD);
+								getDesignation(loadDD);
+								getUser(loadDD);
 							}
+
+
 
 						},
 						error:function(){
@@ -364,6 +384,60 @@ function complaintType(loadDD){
 			keyDisplayName:'serviceName'
 		});
 	});
+}
+
+function nextStatus(loadDD){
+	$.ajax({
+		url: "/pgr/_getnextstatuses?userId="+localStorage.getItem("id")+"&currentStatus="+status+"&tenantId=ap.public",
+		type : 'POST'
+	}).done(function(data) {
+		loadDD.load({
+			element:$('#status'),
+			data:data,
+			keyValue:'name',
+			keyDisplayName:'name'
+		});
+	});
+}
+
+function getWard(loadDD){
+	/*$.ajax({
+		url: "/v1/location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?boundaryTypeName=Ward&hierarchyTypeName=Admin",
+		type : 'POST'
+	}).done(function(data) {
+		loadDD.load({
+			element:$('#ct-sel-jurisd'),
+			data:data,
+			keyValue:'name',
+			keyDisplayName:'name'
+		});
+	});*/
+}
+
+function getLocality(loadDD){
+
+}
+
+function getDepartment(loadDD){
+	$.ajax({
+		url: "/eis/departments",
+		type : 'GET'
+	}).done(function(data) {
+		loadDD.load({
+			element:$('#approvalDepartment'),
+			data:data,
+			keyValue:'name',
+			keyDisplayName:'name'
+		});
+	});
+}
+
+function getDesignation(loadDD){
+
+}
+
+function getUser(loadDD){
+	
 }
 
 function resizeMap() {

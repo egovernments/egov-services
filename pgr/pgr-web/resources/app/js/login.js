@@ -130,6 +130,9 @@ $(document).ready(function()
 			$.ajax({
 				url : '/user/_login?jurisdiction_id=ap.public',
 				type: 'POST',
+				beforeSend : function(){
+					showLoader();
+				},
 				headers : {
 					"Content-Type": "application/x-www-form-urlencoded",
 					"Authorization": "Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0"
@@ -143,6 +146,7 @@ $(document).ready(function()
 				success : function(response){
 					localStorage.setItem("auth", response.access_token);
 					localStorage.setItem("type", response.User.type);
+					localStorage.setItem("id", response.User.id);
 					if(localStorage.getItem("type") == 'CITIZEN')
 						window.open("templates/homepagecitizen.html","_self")
 					else if(localStorage.getItem("type") == 'EMPLOYEE')
@@ -150,6 +154,9 @@ $(document).ready(function()
 				},
 				error : function(){
 					bootbox.alert('User Auth failed!');
+				},
+				complete : function(){
+					hideLoader();
 				}
 			});
 		}else{

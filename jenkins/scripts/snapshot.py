@@ -9,7 +9,7 @@ group = sys.argv[1]
 
 def get_deployments():
     get_deployments_cmd = "kubectl get deployments --namespace=egov -l " \
-                          "group={}".format(group)
+                          "'group in ({})'".format(group)
     filter_headers_cmd = "grep -v NAME"
     awk_cmd = "awk {'print $1'}"
     deployments_verbose = Popen(shlex.split(get_deployments_cmd), stdout=PIPE)

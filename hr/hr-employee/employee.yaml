@@ -456,14 +456,17 @@ definitions:
         uniqueItems: true
         items:
           $ref: "#/definitions/DepartmentalTest"
-
+      tenantId:
+        type: string
+        description: Unique Identifier of which tenant this data is defined. For example, AP, AP-Kurnool etc.
+        maxLength: 256
     required:
      - code
      - jurisdictions
      - assignments
      - employeeStatus
      - employeeType
-
+     - tenantId   
      
 
   HODDepartment:
@@ -478,7 +481,6 @@ definitions:
         format: int64
         description: Departments for which HOD is defined.
     required:
-        - id
         - department
       
   Assignment:
@@ -565,9 +567,7 @@ definitions:
       - department
       - designation
       - position
-      - createdBy
-      - createdDate
-      
+
   ServiceHistory:
     type: object
     properties:
@@ -609,7 +609,6 @@ definitions:
         format: date
         description: Date on which the user master data was last modified.
     required:
-      - id
       - serviceInfo
       - serviceFrom
       - createdBy
@@ -660,11 +659,9 @@ definitions:
         format: date
         description: Date on which the user master data was last modified.
     required:
-      - id
       - designation
       - declaredOn 
-      - createdBy
-      - createdDate
+
   Regularisation:
     type: object
     properties:
@@ -711,11 +708,8 @@ definitions:
         format: date
         description: Date on which the user master data was last modified.
     required:
-      - id
       - designation
       - declaredOn 
-      - createdBy
-      - createdDate     
       
   EducationalQualification:
     type: object
@@ -757,11 +751,9 @@ definitions:
         format: date
         description: Date on which the user master data was last modified.
     required:
-      - id
       - qualification
       - yearOfPassing  
-      - createdBy
-      - createdDate
+
   TechnicalQualification:
     type: object
     properties:
@@ -802,10 +794,8 @@ definitions:
         format: date
         description: Date on which the user master data was last modified.
     required:
-      - id
       - skill
-      - createdBy
-      - createdDate
+
   DepartmentalTest:
     type: object
     properties:
@@ -843,18 +833,12 @@ definitions:
         format: date
         description: Date on which the user master data was last modified.
     required:
-      - id
       - test
       - yearOfPassing  
-      - createdBy
-      - createdDate
 
   EmployeeReq:
     type: object
     properties:
-      tenantId:
-        description: Unique id for for a tenant.
-        type: string
       RequestInfo:
         $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/RequestInfo'
       Employee:
@@ -862,9 +846,9 @@ definitions:
         items:
           $ref: '#/definitions/Employee'
     required:
-      - tenantId
       - RequestInfo
-      - Employee   
+      - Employee 
+      
   EmployeeInfo:
     title: Main employee details of the Employee of the system
     description: This object will have only the main or most frequently queried info.
@@ -874,15 +858,9 @@ definitions:
         type: string
         description: The unique code for an employee.
       employeeStatus:
-        type: object
-        description: Status of the employee from the EmployeeStatus enum. Default value will be "EMPLOYED".
-        items:
-          type: string
-          enum:
-           - EMPLOYED
-           - RETIRED
-           - SUSPENDED
-           - DECEASED
+        description: Status of the employee from the status master where object type is "Employee Master". Default value will be "EMPLOYED". Possible status list for employee are - EMPLOYED,RETIRED,SUSPENDED and DECEASED
+        type: integer
+        format: int64
       employeeType:
         type: integer
         format: int64
@@ -983,15 +961,9 @@ definitions:
         format: date
         description: Date of retirement of the employee.
       employeeStatus:
-        type: object
-        description: Status of the employee from the EmployeeStatus enum. Default value will be "EMPLOYED".
-        items:
-          type: string
-          enum:
-           - EMPLOYED
-           - RETIRED
-           - SUSPENDED
-           - DECEASED
+        description: Status of the employee from the status master where object type is "Employee Master". Default value will be "EMPLOYED". Possible status list for employee are - EMPLOYED,RETIRED,SUSPENDED and DECEASED
+        type: integer
+        format: int64
       recruitmentMode:
         type: integer
         format: int64
@@ -1134,14 +1106,17 @@ definitions:
         description: List of departmental tests qualified by the employee.
         items:
           $ref: "#/definitions/DepartmentalTest"
-
+      tenantId:
+        type: string
+        description: Unique Identifier of which tenant this data is defined. For example, AP, AP-Kurnool etc.
+        maxLength: 256
     required:
      - code
      - jurisdictions
      - assignments
      - employeeStatus
      - employeeType
-     
+     - tenantId
   EmployeeRes:
     type: object
     properties:
@@ -1305,7 +1280,10 @@ definitions:
         type: string
         format: date
         description: Date on which the user master data was last modified.
-
+      tenantId:
+        type: string
+        description: Unique Identifier of which tenant this data is defined. For example, AP, AP-Kurnool etc.
+        maxLength: 256
 
 parameters:
   pageSize:

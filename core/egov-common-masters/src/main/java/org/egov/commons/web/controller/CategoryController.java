@@ -48,19 +48,19 @@ import org.egov.commons.model.Category;
 import org.egov.commons.service.CategoryService;
 import org.egov.commons.web.contract.CategoryGetRequest;
 import org.egov.commons.web.contract.CategoryResponse;
+import org.egov.commons.web.contract.RequestInfo;
 import org.egov.commons.web.contract.ResponseInfo;
 import org.egov.commons.web.contract.factory.ResponseInfoFactory;
 import org.egov.commons.web.errorhandlers.ErrorHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -80,20 +80,19 @@ public class CategoryController {
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
 
-	@GetMapping(headers = { "apiId", "ver", "ts", "action", "did", "msgId", "requesterId", "authToken" })
+	@PostMapping("_search")
 	@ResponseBody
 	public ResponseEntity<?> search(@ModelAttribute @Valid CategoryGetRequest categoryGetRequest,
-			BindingResult bindingResult, @RequestHeader HttpHeaders headers) {
-		logger.debug("Inside search() of CategoryController" + headers);
+			BindingResult bindingResult, @RequestBody RequestInfo requestInfo) {
 
 		// validate header
-		if(headers.getFirst("apiId") == null || headers.getFirst("ver") == null || headers.getFirst("ts") == null ) {
-			return errHandler.getErrorResponseEntityForMissingHeaders(headers);
+		if(requestInfo.getApiId() == null || requestInfo.getVer() == null || requestInfo.getTs() == null ) {
+			return errHandler.getErrorResponseEntityForMissingRequestInfo(requestInfo);
 		}
 
 		// validate input params
 		if (bindingResult.hasErrors()) {
-			return errHandler.getErrorResponseEntityForMissingParametes(bindingResult, headers);
+			return errHandler.getErrorResponseEntityForMissingParameters(bindingResult, requestInfo);
 		}
 
 		// Call service
@@ -102,10 +101,10 @@ public class CategoryController {
 			categoriesList = categoryService.getCategories(categoryGetRequest);
 		} catch (Exception exception) {
 			logger.error("Error while processing request " + categoryGetRequest, exception);
-			return errHandler.getResponseEntityForUnexpectedErrors(headers);
+			return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
 		}
 
-		return getSuccessResponse(categoriesList, headers);
+		return getSuccessResponse(categoriesList, requestInfo);
 	}
 
 	/**
@@ -114,10 +113,10 @@ public class CategoryController {
 	 * @param categoriesList
 	 * @return
 	 */
-	private ResponseEntity<?> getSuccessResponse(List<Category> categoriesList, HttpHeaders headers) {
+	private ResponseEntity<?> getSuccessResponse(List<Category> categoriesList, RequestInfo requestInfo) {
 		CategoryResponse categoryRes = new CategoryResponse();
 		categoryRes.setCategory(categoriesList);
-		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestHeaders(headers, true);
+		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 		responseInfo.setStatus(HttpStatus.OK.toString());
 		categoryRes.setResponseInfo(responseInfo);
 		return new ResponseEntity<CategoryResponse>(categoryRes, HttpStatus.OK);

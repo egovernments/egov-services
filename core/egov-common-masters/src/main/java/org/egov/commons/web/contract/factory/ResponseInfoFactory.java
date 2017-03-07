@@ -40,20 +40,23 @@
 
 package org.egov.commons.web.contract.factory;
 
+import org.egov.commons.web.contract.RequestInfo;
 import org.egov.commons.web.contract.ResponseInfo;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Component
 public class ResponseInfoFactory {
-    public ResponseInfo createResponseInfoFromRequestHeaders(@RequestHeader HttpHeaders headers, Boolean success) {
-        String apiId = headers.getFirst("apiId");
-        String ver = headers.getFirst("ver");
-        String ts = headers.getFirst("ts");
+
+	public ResponseInfo createResponseInfoFromRequestInfo(@RequestBody RequestInfo requestInfo, Boolean success) {
+        String apiId = requestInfo.getApiId();
+        String ver = requestInfo.getVer();
+        String ts = requestInfo.getTs();
         String resMsgId = "uief87324"; // FIXME : Hard-coded
-        String msgId = headers.getFirst("msgId");
+        String msgId = requestInfo.getMsgId();
         String responseStatus = success ? "successful" : "failed";
-		return new ResponseInfo(apiId, ver, ts, resMsgId, msgId, responseStatus);
+
+        return new ResponseInfo(apiId, ver, ts, resMsgId, msgId, responseStatus);
     }
+
 }

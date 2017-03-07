@@ -11,7 +11,7 @@ public class OtpValidateRequest {
     private RequestInfo requestInfo;
     private Otp otp;
 
-    public ValidateRequest toDomain() {
+    public ValidateRequest toDomainValidateRequest() {
         return ValidateRequest.builder()
                 .tenantId(getTenantId())
                 .identity(getIdentity())

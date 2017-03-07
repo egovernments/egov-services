@@ -29,7 +29,7 @@ public class OtpController {
 
     @PostMapping("v1/_validate")
     public OtpResponse validateOtp(@RequestBody OtpValidateRequest request) {
-        final Token token = tokenService.validate(request.toDomain());
+        final Token token = tokenService.validate(request.toDomainValidateRequest());
         return new OtpResponse(token);
     }
 

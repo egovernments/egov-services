@@ -15,7 +15,7 @@ public class OtpValidateRequestTest {
         final OtpValidateRequest validateRequest =
                 new OtpValidateRequest(requestInfo, otp);
 
-        final ValidateRequest domain = validateRequest.toDomain();
+        final ValidateRequest domain = validateRequest.toDomainValidateRequest();
 
         assertNotNull(domain);
         assertEquals("otp", domain.getOtp());

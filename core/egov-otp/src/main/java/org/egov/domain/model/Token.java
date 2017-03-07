@@ -18,6 +18,7 @@ public class Token {
     private String uuid;
     private LocalDateTime expiryDateTime;
     private Long timeToLiveInSeconds;
+    @Setter
     private boolean validated;
 
     public boolean isExpired() {

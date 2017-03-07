@@ -24,7 +24,7 @@ public class TokenService {
         return tokenRepository.save(tokenRequest);
     }
 
-    public boolean validate(ValidateRequest validateRequest) {
+    public Token validate(ValidateRequest validateRequest) {
         validateRequest.validate();
         final Tokens tokens = tokenRepository
                 .find(validateRequest);
@@ -33,7 +33,8 @@ public class TokenService {
             throw new TokenValidationFailureException();
         }
         final Token matchingToken = tokens.getNonExpiredToken();
-        return tokenRepository.markAsValidated(matchingToken);
+        tokenRepository.markAsValidated(matchingToken);
+        return matchingToken;
     }
 
     public Token search(TokenSearchCriteria searchCriteria) {

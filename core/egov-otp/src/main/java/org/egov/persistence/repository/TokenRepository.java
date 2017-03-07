@@ -1,5 +1,6 @@
 package org.egov.persistence.repository;
 
+import org.egov.domain.TokenUpdateException;
 import org.egov.domain.model.*;
 import org.springframework.stereotype.Service;
 
@@ -25,8 +26,14 @@ public class TokenRepository {
     }
 
     @Transactional
-    public boolean markAsValidated(Token token) {
-        return tokenJpaRepository.markTokenAsValidated(token.getUuid()) == UPDATED_ROWS_COUNT;
+    public Token markAsValidated(Token token) {
+        token.setValidated(true);
+        final boolean isUpdateSuccessful = tokenJpaRepository
+                .markTokenAsValidated(token.getUuid()) == UPDATED_ROWS_COUNT;
+        if (!isUpdateSuccessful) {
+            throw new TokenUpdateException(token);
+        }
+        return token;
     }
 
     public Tokens find(ValidateRequest request) {

@@ -9,7 +9,6 @@ import org.egov.domain.model.TokenSearchCriteria;
 @Getter
 @AllArgsConstructor
 public class OtpRequest {
-    private RequestInfo requestInfo;
     private Otp otp;
 
     public TokenRequest getTokenRequest() {

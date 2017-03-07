@@ -68,33 +68,17 @@ public class TokenServiceTest {
     }
 
     @Test
-    public void test_should_return_true_when_token_is_successfully_updated_to_validated() {
+    public void test_should_return_token_when_token_is_successfully_updated_to_validated() {
         final ValidateRequest validateRequest = new ValidateRequest("tenant", "otpNumber", "identity");
         final Tokens tokens = mock(Tokens.class);
         final Token tokenToMarkAsValidated = mock(Token.class);
         when(tokens.getNonExpiredToken()).thenReturn(tokenToMarkAsValidated);
         when(tokens.hasSingleNonExpiredToken()).thenReturn(true);
         when(tokenRepository.find(validateRequest)).thenReturn(tokens);
-        when(tokenRepository.markAsValidated(tokenToMarkAsValidated)).thenReturn(true);
 
-        final boolean updateSuccessful = tokenService.validate(validateRequest);
+        final Token token = tokenService.validate(validateRequest);
 
-        assertTrue(updateSuccessful);
-    }
-
-    @Test
-    public void test_should_return_false_when_token_update_is_not_successful() {
-        final ValidateRequest validateRequest = new ValidateRequest("tenant", "otpNumber", "identity");
-        final Tokens tokens = mock(Tokens.class);
-        final Token tokenToMarkAsValidated = mock(Token.class);
-        when(tokens.getNonExpiredToken()).thenReturn(tokenToMarkAsValidated);
-        when(tokens.hasSingleNonExpiredToken()).thenReturn(true);
-        when(tokenRepository.find(validateRequest)).thenReturn(tokens);
-        when(tokenRepository.markAsValidated(tokenToMarkAsValidated)).thenReturn(false);
-
-        final boolean updateSuccessful = tokenService.validate(validateRequest);
-
-        assertFalse(updateSuccessful);
+        assertEquals(tokenToMarkAsValidated, token);
     }
 
     @Test

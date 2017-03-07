@@ -3,7 +3,9 @@ package org.egov.web.controller;
 import org.egov.domain.InvalidTokenRequestException;
 import org.egov.domain.InvalidTokenSearchCriteriaException;
 import org.egov.domain.InvalidTokenValidateRequestException;
+import org.egov.domain.TokenUpdateException;
 import org.egov.web.adapter.error.TokenSearchErrorAdapter;
+import org.egov.web.adapter.error.TokenUpdateErrorAdapter;
 import org.egov.web.adapter.error.TokenValidationRequestErrorAdapter;
 import org.egov.web.contract.ErrorResponse;
 import org.egov.web.adapter.error.TokenRequestErrorAdapter;
@@ -31,6 +33,12 @@ public class CustomControllerAdvice {
     @ExceptionHandler(InvalidTokenValidateRequestException.class)
     public ErrorResponse handleInvalidSearchTypeException(InvalidTokenValidateRequestException ex) {
         return new TokenValidationRequestErrorAdapter().adapt(ex.getValidateRequest());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(TokenUpdateException.class)
+    public ErrorResponse handleTokenUpdateException(TokenUpdateException ex) {
+        return new TokenUpdateErrorAdapter().adapt(ex.getToken());
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

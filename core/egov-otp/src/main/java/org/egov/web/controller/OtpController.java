@@ -5,7 +5,6 @@ import org.egov.domain.service.TokenService;
 import org.egov.web.contract.OtpRequest;
 import org.egov.web.contract.OtpResponse;
 import org.egov.web.contract.OtpValidateRequest;
-import org.egov.web.contract.OtpValidationResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,9 +28,9 @@ public class OtpController {
     }
 
     @PostMapping("v1/_validate")
-    public OtpValidationResponse validateOtp(@RequestBody OtpValidateRequest request) {
-        final boolean validationSuccessful = tokenService.validate(request.toDomain());
-        return new OtpValidationResponse(validationSuccessful);
+    public OtpResponse validateOtp(@RequestBody OtpValidateRequest request) {
+        final Token token = tokenService.validate(request.toDomain());
+        return new OtpResponse(token);
     }
 
     @PostMapping("v1/_search")

@@ -4,6 +4,7 @@ import org.egov.Resources;
 import org.egov.domain.InvalidTokenRequestException;
 import org.egov.domain.InvalidTokenSearchCriteriaException;
 import org.egov.domain.InvalidTokenValidateRequestException;
+import org.egov.domain.TokenUpdateException;
 import org.egov.domain.model.Token;
 import org.egov.domain.model.TokenRequest;
 import org.egov.domain.model.TokenSearchCriteria;
@@ -29,6 +30,7 @@ public class OtpControllerTest {
 
     private final static String IDENTITY = "identity";
     private final static String TENANT_ID = "tenantId";
+    private static final String OTP_NUMBER = "otpNumber";
 
     @Autowired
     private MockMvc mockMvc;
@@ -76,11 +78,18 @@ public class OtpControllerTest {
     @Test
     public void test_should_return_success_response_when_validation_is_successful() throws Exception {
         final ValidateRequest validateRequest = ValidateRequest.builder()
-                .otp("otpNumber")
+                .otp(OTP_NUMBER)
                 .tenantId(TENANT_ID)
                 .identity(IDENTITY)
                 .build();
-        when(tokenService.validate(validateRequest)).thenReturn(true);
+        final Token token = Token.builder()
+                .validated(true)
+                .tenantId(TENANT_ID)
+                .number(OTP_NUMBER)
+                .identity(IDENTITY)
+                .uuid("uuid")
+                .build();
+        when(tokenService.validate(validateRequest)).thenReturn(token);
 
         mockMvc.perform(post("/v1/_validate").contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(resources.getFileContents("validateOtpRequest.json")))
@@ -102,6 +111,23 @@ public class OtpControllerTest {
                 .content(resources.getFileContents("invalidOtpValidationRequest.json")))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(resources.getFileContents("errorOtpValidationResponse.json")));
+    }
+
+    @Test
+    public void test_should_return_error_response_when_otp_update_is_not_successful() throws Exception {
+        final ValidateRequest validateRequest = ValidateRequest.builder()
+                .otp(OTP_NUMBER)
+                .tenantId(TENANT_ID)
+                .identity(IDENTITY)
+                .build();
+        final Token token = Token.builder().build();
+        when(tokenService.validate(validateRequest))
+                .thenThrow(new TokenUpdateException(token));
+
+        mockMvc.perform(post("/v1/_validate").contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(resources.getFileContents("validateOtpRequest.json")))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json(resources.getFileContents("otpUpdateErrorResponse.json")));
     }
 
     @Test

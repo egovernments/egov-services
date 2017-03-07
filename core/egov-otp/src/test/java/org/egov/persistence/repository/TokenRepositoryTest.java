@@ -1,5 +1,6 @@
 package org.egov.persistence.repository;
 
+import org.egov.domain.TokenUpdateException;
 import org.egov.domain.model.*;
 import org.hamcrest.CustomMatcher;
 import org.junit.Test;
@@ -16,9 +17,7 @@ import java.util.Date;
 
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.argThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TokenRepositoryTest {
@@ -126,19 +125,18 @@ public class TokenRepositoryTest {
                 .build();
         when(tokenJpaRepository.markTokenAsValidated("uuid")).thenReturn(1);
 
-        final boolean updateSuccessful = tokenRepository.markAsValidated(token);
-        assertTrue(updateSuccessful);
+        tokenRepository.markAsValidated(token);
+        assertTrue(token.isValidated());
     }
 
-    @Test
+    @Test(expected = TokenUpdateException.class)
     public void test_should_return_false_when_token_is_not_updated_successfully() {
         final Token token = Token.builder()
                 .uuid("uuid")
                 .build();
         when(tokenJpaRepository.markTokenAsValidated("uuid")).thenReturn(0);
 
-        final boolean updateSuccessful = tokenRepository.markAsValidated(token);
-        assertFalse(updateSuccessful);
+        tokenRepository.markAsValidated(token);
     }
 
     private class TokenEntityMatcher extends CustomMatcher<org.egov.persistence.entity.Token> {

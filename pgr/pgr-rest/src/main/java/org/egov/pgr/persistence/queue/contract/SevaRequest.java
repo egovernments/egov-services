@@ -13,31 +13,35 @@ import org.egov.pgr.domain.model.Complaint;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SevaRequest {
-    @JsonProperty("RequestInfo")
-    private RequestInfo requestInfo;
+	@JsonProperty("RequestInfo")
+	private RequestInfo requestInfo;
 
-    @JsonProperty("ServiceRequest")
-    private ServiceRequest serviceRequest;
+	@JsonProperty("ServiceRequest")
+	private ServiceRequest serviceRequest;
 
-    @JsonIgnore
-    public Complaint toDomainForUpdateRequest(AuthenticatedUser authenticatedUser) {
-        return serviceRequest.toDomainForUpdateRequest(authenticatedUser);
-    }
+	@JsonIgnore
+	public Complaint toDomainForUpdateRequest(AuthenticatedUser authenticatedUser) {
+		return serviceRequest.toDomainForUpdateRequest(authenticatedUser);
+	}
 
-    @JsonIgnore
-    public Complaint toDomainForCreateRequest(AuthenticatedUser authenticatedUser) {
-        return serviceRequest.toDomainForCreateRequest(authenticatedUser);
-    }
+	@JsonIgnore
+	public Complaint toDomainForCreateRequest(AuthenticatedUser authenticatedUser) {
+		return serviceRequest.toDomainForCreateRequest(authenticatedUser);
+	}
 
-    @JsonIgnore
-    public String getAuthToken() {
-        return requestInfo.getAuthToken();
-    }
+	@JsonIgnore
+	public String getAuthToken() {
+		return requestInfo.getAuthToken();
+	}
 
-    public void update(Complaint complaint) {
-        //RequesterId should be populated in case of complaint update or close
-        if(StringUtils.isNotEmpty(requestInfo.getAuthToken()))
-            requestInfo.setRequesterId(complaint.getAuthenticatedUser().getId().toString());
-        serviceRequest.setCrn(complaint.getCrn());
-    }
+	public void update(Complaint complaint) {
+		// RequesterId should be populated in case of complaint update or close
+		if (StringUtils.isNotEmpty(requestInfo.getAuthToken()))
+			requestInfo.setRequesterId(complaint.getAuthenticatedUser().getId().toString());
+		else {
+			//This we need to remove and Find the anonymous user and set
+			requestInfo.setRequesterId("1");
+		}
+		serviceRequest.setCrn(complaint.getCrn());
+	}
 }

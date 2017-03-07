@@ -85,6 +85,7 @@ public class PgrWorkflowImplTest {
 
     private ProcessInstance getProcessInstance() {
         final Map<String, Attribute> valuesMap = new HashMap<String, Attribute>();
+        final RequestInfo requestInfo = new RequestInfo("apiId", "ver", new Date(), "start", "did", "key", "msgId", "1", null, "tenantId");
         final Value complaintType = new Value(COMPLAINT_TYPE_CODE, "C001");
         final Value boundary = new Value(BOUNDARY_ID, "1");
         final List<Value> value1 = Collections.singletonList(complaintType);
@@ -94,6 +95,7 @@ public class PgrWorkflowImplTest {
         valuesMap.put(COMPLAINT_TYPE_CODE, attributeComplaintType);
         valuesMap.put(BOUNDARY_ID, attributeBondary);
         final ProcessInstance processInstance = ProcessInstance.builder()
+        		.requestInfo(requestInfo)
                 .senderName("narasappa")
                 .status("Registered")
                 .description("Complaint is registered")

@@ -40,6 +40,9 @@
 
 $(document).ready(function()
 {	
+
+	preventBack();
+	
 	$('.menu-item').click(function(e)
 	{
 		$('.citizen-screens').hide();

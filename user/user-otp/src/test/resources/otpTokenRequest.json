@@ -1,0 +1,7 @@
+{
+  "otp": {
+    "identity": "mobileNumber",
+    "tenantId": "tenantId",
+    "isValidationSuccessful":false
+  }
+}

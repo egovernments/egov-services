@@ -93,8 +93,10 @@ paths:
             $ref: '#/definitions/UserRes'
         '400':
           description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
           
-  /user/{userName}:   
+  /user/{userName}/_update:   
     parameters:
       - $ref: "#/parameters/userName"
     post:
@@ -152,11 +154,7 @@ paths:
           description: Could not login - Invalid Credentials.
           schema:
             $ref: '#/definitions/ErrorRes'
-        default:
-          description: Login failed.
-          schema:
-            $ref: '#/definitions/ErrorRes'
-            
+
   /user/_logout:
     post:
       summary: Logout a user based on access token auth
@@ -176,11 +174,11 @@ paths:
           description: User logged out successfully.
           schema:
             $ref: '#/definitions/ResponseInfo'
-        default:
-          description: Logout failed.
+
+        '400':
+          description: Logout Failed.
           schema:
             $ref: '#/definitions/ErrorRes'
-        
 
 
 definitions:
@@ -212,7 +210,7 @@ definitions:
         minLength: 3
         maxLength: 100
       gender:
-        type: array
+        type: string
         description: Gender of the user.
         items:
           type: string
@@ -275,13 +273,14 @@ definitions:
       pwdExpiryDate:
         type: string
         format: date
+        readOnly: true
         description: Date on which the password registered will expire.
       locale:
         type: string
         description: Value will be set to "en_IN".
         maxLength: 10
       type:
-        type: array
+        type: string
         maxLength: 20
         description : System set value internally. For employee value will be always "EMPLOYEE". For citizen value will be "CITIZEN".
         items:
@@ -343,20 +342,21 @@ definitions:
         type: string
         format: date
         description: Date on which the user master data was last modified.
+      otpReference:
+        type: string
+        description: This is the UUID token that we genarate as part of OTP.
+      tenantId:
+        type: string
+        description: Unique Identifier of the tenant, Like AP, AP.Kurnool etc.
     required:
-     - id
      - userName
      - name
      - gender
      - mobileNumber
      - active
-     - pwdExpiryDate
      - locale
      - type
-     - createdDate
-     - createdBy
-     
-
+     - tenantId
   Role:
     type: object
     properties:
@@ -389,11 +389,12 @@ definitions:
         type: string
         format: date
         description: Date on which the role master data was last modified.
+      tenantId:
+        type: string
+        description: Unique Identifier of the tenant, Like AP, AP.Kurnool etc.
     required:
-      - id
       - name
-      - createdBy
-      - createdDate
+      - tenantId
       
   UserRes:
     type: object
@@ -407,15 +408,11 @@ definitions:
   UserReq:
     type: object
     properties:
-      tenantId:
-        description: Unique id for for a tenant.
-        type: string
       RequestInfo:
         $ref: '#/definitions/RequestInfo'
       User:
         $ref: '#/definitions/User'
     required:
-      - tenantId
       - RequestInfo
       - User
   RequestInfo:

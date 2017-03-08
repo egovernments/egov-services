@@ -40,6 +40,7 @@
 var srn = getUrlParameter('srn');
 var lat, lng, myCenter,status;
 var updateResponse = {};
+var departmentId, designationId;
 $(document).ready(function()
 {
 
@@ -423,8 +424,9 @@ function getDepartment(loadDD){
 	}).done(function(data) {
 		loadDD.load({
 			element:$('#approvalDepartment'),
-			data:data,
-			keyValue:'name',
+			placeholder : 'Select Deparment', // default - Select(optional)
+			data:data.Department,
+			keyValue:'id',
 			keyDisplayName:'name'
 		});
 	});

@@ -40,6 +40,8 @@
 
 $(document).ready(function()
 {
+
+	clearLocalStorage();
 	
 	$('.recovrbtn').click(function(){
 		if($('#emailOrMobileNum').val()===""){

@@ -141,9 +141,7 @@ $(document).ready(function()
 			type: 'POST',
 			success : function(response){
 				if(response.status == 'Logout successfully'){
-					localStorage.removeItem('auth');
-					localStorage.removeItem('type');
-					localStorage.removeItem('id');
+					clearLocalStorage();
 					window.open('../index.html','_self');
 					$.each( openedWindows, function( i, val ) {
 						var window = val;
@@ -361,6 +359,12 @@ function openPopUp(url,name){
 	return false;
 }
 
+function clearLocalStorage(){
+	localStorage.removeItem('auth');
+	localStorage.removeItem('type');
+	localStorage.removeItem('id');
+}
+
 var RI = function(auth){
 	this.api_id = 'org.egov.pgr';
     this.ver = '1.0';
@@ -428,7 +432,10 @@ var loadDropDown = function(){
 loadDropDown.prototype.load =function(params)
 {
 	params.element.empty();
-	params.element.append($("<option />").val('').text('Select'));
+	if(params.placeholder)
+		params.element.append($("<option />").val('').text(params.placeholder));
+	else
+		params.element.append($("<option />").val('').text('Select'));
 	$.each(params.data,function(i,obj)
     {
 		params.element.append($("<option />")

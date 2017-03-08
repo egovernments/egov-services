@@ -181,76 +181,61 @@ $(document).ready(function(){
 	}
 	
 	
-	var map, geocoder, geolocate, marker, mapProp;    
-        var lat, lng, address;
-	myCenter=new google.maps.LatLng(13.081604, 80.275183);
+	var map, geocoder, geolocate, marker, address, citylat, citylng;    
 	
 	function initialize() {
 		
-		//marker=new google.maps.Marker();
-		
-		//mapprop();
+		//city lat and lng from ajax - static kurnool
 		var latLng,mapOptions = {
 			zoom: 10,
 			timeout: 500, 
 			mapTypeControl: false,
 			navigationControl: false,
 		};
-		
-		var userLocationFound = function(position){
-		    latLng = {
-		        lat: position.coords.latitude,
-		        lng: position.coords.longitude
-		    };
-		    console.log("User confirmed! Location found: " + latLng.lat + ", " + latLng.lng);
-		    
-		    //Set current locaion to map
-		    /*var userLatLng = new google.maps.LatLng(latLng.lat, latLng.lng);
-			lat = latLng.lat;
-			lng = latLng.lng;
-			
-			getAddress(lat, lng);
 
-			map.setCenter(userLatLng);*/
+		var setCity = function(){
 
-			var userLatLng = new google.maps.LatLng(15.82223689, 78.02439864);
-			lat = 15.82223689;
-			lng = 78.02439864;
-			
-			getAddress(15.82223689, 78.02439864);
-
-			map.setCenter(userLatLng);
-			
-			mapcenterchangeevent();
-			
-		}
-		
-		var userLocationNotFound = function(){
-			
-			citylat = $('#getcitylat').val();
-			citylng = $('#getcitylng').val();
-			
-		    //Assign static point to map
-			if(!citylat || !citylng){
-				/*citylat = 20.5937;
-				citylng = 78.9629;*/
-				citylat = 15.82223689;
-				citylng = 78.02439864;
-			    //console.log("Fallback set with no city setup: ", citylat+'<-->'+citylng);
-			}else{
-			    //console.log("Fallback set with city setup: ", citylat+'<-->'+citylng);
-			}
-			
+			citylat = 15.82223689, citylng = 78.02439864;
 			latLng = {
 		        lat: citylat, // fallback lat 
 		        lng: citylng  // fallback lng
 		    };
+
 			setlatlong(citylat, citylng);
+
+			mapcenterchangeevent();
+			
+		}
+		
+		var userLocationFound = function(position){
+
+			latLng = {
+		        lat: position.coords.latitude,
+		        lng: position.coords.longitude
+		    };
+		    console.log("User confirmed! Location found: " + latLng.lat + ", " + latLng.lng);
+
+		    setlatlong(latLng.lat, latLng.lng);
+
 			mapcenterchangeevent();
 			
 		}
 
-		
+		var userLocationNotFound = function(position){
+
+			latLng = {
+		        lat: 20.5937,
+		        lng: 78.9629
+		    };
+
+		    console.log("User not confirmed! : 20.5937, 78.9629");
+
+		    setlatlong(latLng.lat, latLng.lng);
+
+			mapcenterchangeevent();
+			
+		}
+
 		geocoder = new google.maps.Geocoder();
 		map=new google.maps.Map(document.getElementById("normal"),mapOptions);
 		
@@ -260,8 +245,11 @@ $(document).ready(function(){
 		}catch(e){
 
 		}
+
+		setCity();
 		
-		navigator.geolocation.getCurrentPosition(userLocationFound, userLocationNotFound, mapOptions);
+		if(!citylat && !citylng)
+			navigator.geolocation.getCurrentPosition(userLocationFound, userLocationNotFound, mapOptions);
 
 		setTimeout(function () {
 		    if(!latLng){
@@ -272,10 +260,10 @@ $(document).ready(function(){
 		    }
 		}, mapOptions.timeout + 500); // Wait extra second
 		
-		searchBar(map);  
+		searchBar(map);
 		
 	};
-	
+
 	function searchBar(map) {
 		
 		try{
@@ -317,19 +305,16 @@ $(document).ready(function(){
 	
 	function mapcenterchangeevent(){
 		google.maps.event.addListener(map, 'center_changed', function() {
-			var location = map.getCenter();
-			//console.log(location.lat()+"<=======>"+location.lng());
-			getAddress(location.lat(), location.lng());
+			var NewMapCenter = map.getCenter();
+			var lat = NewMapCenter.lat();
+			var lng = NewMapCenter.lng();
+			getAddress(lat, lng);
 		});
 	}
 
 	function setlatlong(citylat , citylng){
 		var userLatLng = new google.maps.LatLng(citylat, citylng);
-		lat = citylat;
-		lng = citylng;
-		
-		getAddress(lat, lng);
-
+		getAddress(citylat, citylng);
 		map.setCenter(userLatLng);
 	}
 	
@@ -343,10 +328,12 @@ $(document).ready(function(){
 			}
 		});	
 	}
+
+	if(mode == 'create'){
+		google.maps.event.addDomListener(window, 'load', initialize);
 	
-	google.maps.event.addDomListener(window, 'load', initialize);
-	
-	google.maps.event.addDomListener(window, "resize", resizingMap());
+		google.maps.event.addDomListener(window, "resize", resizingMap());
+	}
 	
 	$('#modal-6').on('show.bs.modal', function() {
 		//Must wait until the render of the modal appear, thats why we use the resizeMap and NOT resizingMap!! ;-)

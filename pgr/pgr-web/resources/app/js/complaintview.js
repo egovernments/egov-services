@@ -334,8 +334,6 @@ $(document).ready(function()
 								getUser(loadDD);
 							}
 
-
-
 						},
 						error:function(){
 							bootbox.alert('Workflow Error!');

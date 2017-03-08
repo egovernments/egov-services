@@ -10,7 +10,7 @@
 
   "error": {
     "code": 400,
-    "message": "User ids cannot be empty",
+    "message": "User ids or username cannot be empty",
     "description": null,
     "fields": null
   }

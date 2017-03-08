@@ -49,21 +49,21 @@ import java.util.List;
 @Service
 public class UserService {
 
-    private UserRepository userRepository;
+	private UserRepository userRepository;
 
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+	public UserService(UserRepository userRepository) {
+		this.userRepository = userRepository;
+	}
 
-    public User getUserByUsername(final String userName) {
-        return userRepository.findByUsername(userName);
-    }
+	public User getUserByUsername(final String userName) {
+		return userRepository.findByUsername(userName);
+	}
 
-    public User getUserByEmailId(final String emailId) {
-        return userRepository.findByEmailId(emailId);
-    }
+	public User getUserByEmailId(final String emailId) {
+		return userRepository.findByEmailId(emailId);
+	}
 
-    public List<User> getUsersById(List<Long> ids) {
-        return userRepository.findAll(ids);
-    }
+	public List<User> getUsersById(List<Long> ids) {
+		return userRepository.findAll(ids);
+	}
 }

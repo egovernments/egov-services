@@ -8,7 +8,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @Getter
-public class GetUserByIdResponse {
+public class UserResponse {
     @JsonProperty("responseInfo")
     ResponseInfo responseInfo;
 

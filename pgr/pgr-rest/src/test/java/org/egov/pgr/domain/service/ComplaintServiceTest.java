@@ -22,7 +22,9 @@ import org.egov.pgr.persistence.queue.contract.ServiceRequest;
 import org.egov.pgr.persistence.queue.contract.SevaRequest;
 import org.egov.pgr.persistence.repository.ComplaintRepository;
 import org.egov.pgr.persistence.repository.DepartmentRepository;
+import org.egov.pgr.persistence.repository.UserRepository;
 import org.egov.pgr.web.contract.Department;
+import org.egov.pgr.web.contract.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -32,150 +34,141 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class ComplaintServiceTest {
 
-    private static final String CRN = "crn";
-    private static final String TENANT_ID = "tenantId";
-    @Mock
-    private ComplaintRepository complaintRepository;
+	private static final String CRN = "crn";
+	private static final String TENANT_ID = "tenantId";
+	@Mock
+	private ComplaintRepository complaintRepository;
 
-    @Mock
-    private DepartmentRepository departmentRepository;
+	@Mock
+	private DepartmentRepository departmentRepository;
 
-    @Mock
-    private SevaNumberGeneratorService sevaNumberGeneratorService;
+	@Mock
+	private UserRepository userRepository;
 
-    @InjectMocks
-    private ComplaintService complaintService;
+	@Mock
+	private SevaNumberGeneratorService sevaNumberGeneratorService;
 
-    @Test
-    public void test_should_validate_complaint_on_save() {
-        final Complaint complaint = mock(Complaint.class);
-        when(complaint.getAuthenticatedUser()).thenReturn(getCitizen());
-        final SevaRequest sevaRequest = getSevaRequest();
+	@InjectMocks
+	private ComplaintService complaintService;
 
-        complaintService.save(complaint, sevaRequest);
+	@Test
+	public void testShouldValidateComplaintOnSave() {
+		final Complaint complaint = mock(Complaint.class);
+		when(complaint.getAuthenticatedUser()).thenReturn(getCitizen());
+		final SevaRequest sevaRequest = getSevaRequest();
+		when(userRepository.getUserByUserName("anonymous")).thenReturn(populateUser());
+		complaintService.save(complaint, sevaRequest);
 
-        verify(complaint, times(1)).validate();
-    }
+		verify(complaint, times(1)).validate();
+	}
 
-    @Test
-    public void test_should_validate_complaint_on_update() {
-        final Complaint complaint = mock(Complaint.class);
-        when(complaint.getAuthenticatedUser()).thenReturn(getCitizen());
-        final SevaRequest sevaRequest = getSevaRequest();
+	@Test
+	public void testShouldValidateComplaintOnUpdate() {
+		final Complaint complaint = mock(Complaint.class);
+		when(complaint.getAuthenticatedUser()).thenReturn(getCitizen());
+		final SevaRequest sevaRequest = getSevaRequest();
 
-        complaintService.update(complaint, sevaRequest);
+		complaintService.update(complaint, sevaRequest);
 
-        verify(complaint, times(1)).validate();
-    }
+		verify(complaint, times(1)).validate();
+	}
 
-    @Test
-    public void test_should_update_seva_request_with_domain_complaint_on_save() {
-        final Complaint complaint = getComplaint();
-        final SevaRequest sevaRequest = mock(SevaRequest.class);
+	@Test
+	public void testShouldUpdateSevaRequestWithDomainComplaintOnSave() {
+		final Complaint complaint = getComplaint();
+		final SevaRequest sevaRequest = mock(SevaRequest.class);
+		when(userRepository.getUserByUserName("anonymous")).thenReturn(populateUser());
+		complaintService.save(complaint, sevaRequest);
 
-        complaintService.save(complaint, sevaRequest);
+		verify(sevaRequest).update(complaint);
+	}
 
-        verify(sevaRequest).update(complaint);
-    }
+	@Test
+	public void testShouldUpdateSevaRequestWithDomainComplaintOnUpdate() {
+		final Complaint complaint = getComplaint();
+		final SevaRequest sevaRequest = mock(SevaRequest.class);
 
-    @Test
-    public void test_should_update_seva_request_with_domain_complaint_on_update() {
-        final Complaint complaint = getComplaint();
-        final SevaRequest sevaRequest = mock(SevaRequest.class);
+		complaintService.update(complaint, sevaRequest);
 
-        complaintService.update(complaint, sevaRequest);
+		verify(sevaRequest).update(complaint);
+	}
 
-        verify(sevaRequest).update(complaint);
-    }
+	@Test
+	public void testShouldSetGeneratedCrnToDomainComplaintOnSave() {
+		final Complaint complaint = getComplaint();
+		final SevaRequest sevaRequest = getSevaRequest();
+		when(sevaNumberGeneratorService.generate()).thenReturn(CRN);
+		when(userRepository.getUserByUserName("anonymous")).thenReturn(populateUser());
+		complaintService.save(complaint, sevaRequest);
 
-    @Test
-    public void test_should_set_generated_crn_to_domain_complaint_on_save() {
-        final Complaint complaint = getComplaint();
-        final SevaRequest sevaRequest = getSevaRequest();
-        when(sevaNumberGeneratorService.generate()).thenReturn(CRN);
+		assertEquals(CRN, complaint.getCrn());
+	}
 
-        complaintService.save(complaint, sevaRequest);
+	@Test
+	public void testShouldPersistSevaRequestOnSave() {
+		final Complaint complaint = getComplaint();
+		final ServiceRequest serviceRequest = getServiceRequest();
+		final SevaRequest sevaRequest = new SevaRequest(new RequestInfo(), serviceRequest);
+		when(sevaNumberGeneratorService.generate()).thenReturn(CRN);
+		when(userRepository.getUserByUserName("anonymous")).thenReturn(populateUser());
+		complaintService.save(complaint, sevaRequest);
 
-        assertEquals(CRN, complaint.getCrn());
-    }
+		verify(complaintRepository).save(sevaRequest);
+	}
 
-    @Test
-    public void test_should_persist_seva_request_on_save() {
-        final Complaint complaint = getComplaint();
-        final ServiceRequest serviceRequest = getServiceRequest();
-        final SevaRequest sevaRequest = new SevaRequest(new RequestInfo(), serviceRequest);
-        when(sevaNumberGeneratorService.generate()).thenReturn(CRN);
+	@Test
+	public void testShouldPersistSevaRequestOnUpdate() {
+		final Complaint complaint = getComplaint();
+		final ServiceRequest serviceRequest = getServiceRequest();
+		final SevaRequest sevaRequest = new SevaRequest(new RequestInfo(), serviceRequest);
 
-        complaintService.save(complaint, sevaRequest);
+		complaintService.update(complaint, sevaRequest);
 
-        verify(complaintRepository).save(sevaRequest);
-    }
+		verify(complaintRepository).update(sevaRequest);
+	}
 
-    @Test
-    public void test_should_persist_seva_request_on_update() {
-        final Complaint complaint = getComplaint();
-        final ServiceRequest serviceRequest = getServiceRequest();
-        final SevaRequest sevaRequest = new SevaRequest(new RequestInfo(), serviceRequest);
+	@Test
+	public void testShouldFindAllComplaintsBySearchCriteria() {
+		final ComplaintSearchCriteria searchCriteria = ComplaintSearchCriteria.builder().build();
+		final Complaint expectedComplaint = getComplaint();
+		final Department expectedDepartment = getDepartment();
+		when(complaintRepository.findAll(searchCriteria)).thenReturn(Collections.singletonList(expectedComplaint));
+		when(departmentRepository.getAll()).thenReturn(Collections.singletonList(expectedDepartment));
 
-        complaintService.update(complaint, sevaRequest);
+		final List<Complaint> actualComplaints = complaintService.findAll(searchCriteria);
 
-        verify(complaintRepository).update(sevaRequest);
-    }
+		assertEquals(1, actualComplaints.size());
+		assertEquals(expectedComplaint, actualComplaints.get(0));
+	}
 
-    @Test
-    public void test_should_find_all_complaints_by_search_criteria() {
-        final ComplaintSearchCriteria searchCriteria = ComplaintSearchCriteria.builder().build();
-        final Complaint expectedComplaint = getComplaint();
-        final Department expectedDepartment = getDepartment();
-        when(complaintRepository.findAll(searchCriteria)).thenReturn(Collections.singletonList(expectedComplaint));
-        when(departmentRepository.getAll()).thenReturn(Collections.singletonList(expectedDepartment));
+	private Complaint getComplaint() {
+		final Coordinates coordinates = new Coordinates(0d, 0d);
+		final ComplaintLocation complaintLocation = new ComplaintLocation(coordinates, "id", null);
+		final Complainant complainant = Complainant.builder().userId("userId").build();
+		return Complaint.builder().complainant(complainant).authenticatedUser(getCitizen())
+				.complaintLocation(complaintLocation).tenantId(TENANT_ID).description("description").crn("crn")
+				.department(2L).complaintType(new ComplaintType(null, "complaintCode")).build();
+	}
 
-        final List<Complaint> actualComplaints = complaintService.findAll(searchCriteria);
+	private Department getDepartment() {
+		return Department.builder().id(2L).name("Accounts").code("A").build();
+	}
 
-        assertEquals(1, actualComplaints.size());
-        assertEquals(expectedComplaint, actualComplaints.get(0));
-    }
+	private AuthenticatedUser getCitizen() {
+		return AuthenticatedUser.builder().id(1).type(UserType.CITIZEN).build();
+	}
 
-    private Complaint getComplaint() {
-        final Coordinates coordinates = new Coordinates(0d, 0d);
-        final ComplaintLocation complaintLocation = new ComplaintLocation(coordinates, "id", null);
-        final Complainant complainant = Complainant.builder()
-                .userId("userId")
-                .build();
-        return Complaint.builder()
-                .complainant(complainant)
-                .authenticatedUser(getCitizen())
-                .complaintLocation(complaintLocation)
-                .tenantId(TENANT_ID)
-                .description("description")
-                .crn("crn")
-                .department(2L)
-                .complaintType(new ComplaintType(null, "complaintCode"))
-                .build();
-    }
-    
-    private Department getDepartment() {
-        return Department.builder()
-                .id(2L)
-                .name("Accounts")
-                .code("A")
-                .build();
-    }
+	private SevaRequest getSevaRequest() {
+		final ServiceRequest serviceRequest = ServiceRequest.builder().build();
+		return new SevaRequest(new RequestInfo(), serviceRequest);
+	}
 
-    private AuthenticatedUser getCitizen() {
-        return AuthenticatedUser.builder()
-                .id(1)
-                .type(UserType.CITIZEN)
-                .build();
-    }
+	private ServiceRequest getServiceRequest() {
+		return ServiceRequest.builder().build();
+	}
 
-    private SevaRequest getSevaRequest() {
-        final ServiceRequest serviceRequest = ServiceRequest.builder().build();
-        return new SevaRequest(new RequestInfo(), serviceRequest);
-    }
-
-    private ServiceRequest getServiceRequest() {
-        return ServiceRequest.builder().build();
-    }
+	private User populateUser() {
+		return User.builder().id(1L).name("user").build();
+	}
 
 }

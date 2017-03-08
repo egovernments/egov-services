@@ -1,15 +1,18 @@
 package org.egov.pgr.persistence.queue.contract;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import org.egov.pgr.domain.model.AuthenticatedUser;
 import org.egov.pgr.domain.model.Complaint;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class SevaRequest {
@@ -35,13 +38,6 @@ public class SevaRequest {
 	}
 
 	public void update(Complaint complaint) {
-		// RequesterId should be populated in case of complaint update or close
-		if (StringUtils.isNotEmpty(requestInfo.getAuthToken()))
-			requestInfo.setRequesterId(complaint.getAuthenticatedUser().getId().toString());
-		else {
-			//This we need to remove and Find the anonymous user and set
-			requestInfo.setRequesterId("1");
-		}
 		serviceRequest.setCrn(complaint.getCrn());
 	}
 }

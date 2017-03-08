@@ -33,7 +33,7 @@ public class ComplaintStatusMappingServiceTest {
     
     @Test
     @Sql(scripts = {"/sql/clearComplaintStatusMapping.sql", "/sql/InsertComplaintStatusMapping.sql"})
-    public void test_should_return_complaintstatus_list_by_user_id() {
+    public void testShouldReturnComplaintStatusListByUserId() {
         when(employeeRepository.getRolesByUserId(1L, "ap.public")).thenReturn(getRoles());
         List<ComplaintStatus> complaintStatuses = complaintStatusMappingService.getStatusByRoleAndCurrentStatus(1L, "REGISTERED", "ap.public");
         assertFalse(complaintStatuses.isEmpty());

@@ -1,13 +1,18 @@
 package org.egov.pgr.web.controller;
 
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.egov.pgr.domain.model.AuthenticatedUser;
 import org.egov.pgr.domain.model.Complaint;
 import org.egov.pgr.domain.model.ComplaintSearchCriteria;
 import org.egov.pgr.domain.service.ComplaintService;
-import org.egov.pgr.domain.service.UserService;
 import org.egov.pgr.persistence.queue.contract.RequestInfo;
 import org.egov.pgr.persistence.queue.contract.ServiceRequest;
 import org.egov.pgr.persistence.queue.contract.SevaRequest;
+import org.egov.pgr.persistence.repository.UserRepository;
 import org.egov.pgr.web.contract.ResponseInfo;
 import org.egov.pgr.web.contract.ServiceResponse;
 import org.egov.pgr.web.contract.factory.ResponseInfoFactory;
@@ -15,30 +20,33 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = { "/seva" })
 public class ComplaintController {
 
-	private UserService userService;
+	private UserRepository userRepository;
 	private ComplaintService complaintService;
 
 	@Autowired
-	public ComplaintController(UserService userService, ComplaintService complaintService) {
-		this.userService = userService;
+	public ComplaintController(UserRepository userRepository, ComplaintService complaintService) {
+		this.userRepository = userRepository;
 		this.complaintService = complaintService;
 	}
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public ServiceResponse createServiceRequest(@RequestBody SevaRequest request) {
-		final AuthenticatedUser user = userService.getUser(request.getAuthToken());
+		final AuthenticatedUser user = userRepository.getUser(request.getAuthToken());
 		final Complaint complaint = request.toDomainForCreateRequest(user);
 		complaintService.save(complaint, request);
 		ResponseInfo responseInfo = getResponseInfo(request);
@@ -49,7 +57,7 @@ public class ComplaintController {
 	@ResponseStatus(HttpStatus.OK)
 	public ServiceResponse updateServiceRequest(@RequestBody SevaRequest request) {
 		RequestInfo requestInfo = request.getRequestInfo();
-		final AuthenticatedUser user = userService.getUser(requestInfo.getAuthToken());
+		final AuthenticatedUser user = userRepository.getUser(requestInfo.getAuthToken());
 		final Complaint complaint = request.toDomainForUpdateRequest(user);
 		complaintService.update(complaint, request);
 		ResponseInfo responseInfo = getResponseInfo(request);

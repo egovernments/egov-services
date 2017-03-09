@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	    <meta charset="utf-8">
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	    <meta name="description" content="eGov System" />
+	    <meta name="author" content="eGovernments Foundation" />
+	
+	    <title>eGov Urban Portal</title>
+		<link rel="icon" href="../../resources/global/images/favicon.png" sizes="32x32">
+	   <link rel="stylesheet" href="../../resources/global/css/font-icons/font-awesome/css/font-awesome.min.css">
+		<link rel="stylesheet" href="../../resources/global/css/bootstrap/typeahead.css">
+		<link rel="stylesheet" href="../../resources/global/css/bootstrap-tour/bootstrap-tour.css">
+		<link rel="stylesheet" href="../../resources/global/css/egov/map-autocomplete.css">
+		<link rel="stylesheet" href="../../resources/global/css/egov/custom.css">
+		<link rel="stylesheet" href="../../resources/app/css/or-spacer.css">
+		
+		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+		<script src="../resources/global/js/ie8/html5shiv.min.js"></script>
+		<script src="../resources/global/js/ie8/respond.min.js"></script>
+		<![endif]-->
+	
+	</head>
+    <body class="page-body" oncontextmenu="return false;">
+        <div class="page-container">
+            
+			<header class="navbar navbar-fixed-top"><!-- set fixed position by adding class "navbar-fixed-top" -->
+				<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+					<div class="container-fluid">
+					<div class="navbar-header col-md-10 col-xs-10">
+						<a class="navbar-brand" href="javascript:void(0);">
+							
+							<img src="../../resources/global/images/logo@2x.png" height="60">
+							
+							<div>
+								<span class="title2" data-translate="create.function">
+								
+								Create Function
+								</span>
+							</div>
+						</a>
+					</div>
+
+					<div class="nav-right-menu col-md-2 col-xs-2">
+						<ul class="hr-menu text-right">
+							<li class="ico-menu">
+								<a href="http://www.egovernments.org" target="_blank">
+									<img src="../../resources/global/images/logo@2x.png" title="Powered by eGovernments" height="20px">
+								</a>
+							</li>
+							
+						</ul>
+					</div>
+
+					</div>
+				</nav>
+			</header>
+
+	        <div class="main-content">
+
+				<div class="row">
+					<div class="col-md-12" style="position:relative;">
+						<ol class="breadcrumb hide">
+							<li><a href="javascript:void(0)" data-translate="create.function">Create Function</a></li>
+						</ol>
+					
+						<form id="functionform" class="form-horizontal form-groups-bordered" role="form" method="post" enctype="multipart/form-data" autocomplete="off">
+							<div class="panel panel-primary acknowledgement hide" data-collapsed="0">
+								<div class="panel-heading">
+									<div class="panel-title" id="firstname">
+									</div>
+								</div>
+							</div>
+							<div class="createcrn">
+								<div class="panel panel-primary citizenremove" data-collapsed="0">
+									<div class="panel-heading">
+										<div class="panel-title" data-translate="contact.information">
+											Function Details
+										</div>
+									</div>
+									<div class="panel-body custom-form">
+											
+											<div class="form-group hide" id="regnoblock">
+												<label for="field-1" class="col-sm-3 control-label">Code<span class="mandatory"></span></label>
+												<div class="col-sm-6">
+													<input id="function_code" data-extra class="form-control patternvalidation" data-pattern="alphanumericwithhyphen" type="text" value="" maxlength="32">
+													
+												</div>
+											</div>	
+										</div>
+
+										<div class="form-group">
+											<label for="field-1" class="col-sm-3 control-label" data-translate="name">Name<span class="mandatory"></span></label>
+											<div class="col-sm-6 add-margin">
+												<input id="function_name" name="function_name" data-extra data-pattern="alphabetwithspace" class="form-control patternvalidation" required="required" type="text" value=""/>
+												 
+											</div>
+										</div>										
+									</div>
+								</div>								
+							
+								<div class="row">
+									<div class="text-center">
+										<button type="button" class="btn btn-primary" id="create-griev" data-translate="create.function">Create Function</button>
+										<a href="javascript:void(0)" class="btn btn-default" onclick="self.close()" data-translate="close">Close</a>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>			
+	        </div>
+				
+			<footer class="main">
+			    Powered by <a href="http://egovernments.org/" target="_blank">eGovernments Foundation</a>
+			</footer>
+        </div>
+
+        <input type="hidden" value="" id="getcitylat">
+        <input type="hidden" value="" id="getcitylng">
+
+        <div class="modal fade loader-class" data-backdrop="static">
+			<div class="modal-dialog">
+					<div class="modal-body">
+						<div class="row spinner-margin text-center">
+							<div class="col-md-12 ">
+								<div class="spinner">
+									<div class="rect1"></div>
+									<div class="rect2"></div>
+									<div class="rect3"></div>
+									<div class="rect4"></div>
+									<div class="rect5"></div>
+								</div>
+							</div>
+							
+							<div class="col-md-12 spinner-text" data-translate="processing.your.request">
+								Processing your request. Please wait..
+							</div>
+						</div>
+					</div>
+			</div>
+		</div>
+
+		<div class="modal fade lang-class">
+			<div class="modal-dialog">
+					<!-- Modal content-->
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <button type="button" class="close" data-dismiss="modal">&times;</button>
+				        <h4 class="modal-title" data-translate="set.language">Set Language</h4>
+				      </div>
+				      <div class="modal-body">
+				        <select name="" id="lang-dropdown" class="form-control">
+				        	<option value="mr_IN">Marathi</option>
+				        	<option value="en_IN" selected>English</option>
+				        </select>
+				      </div>
+				      <div class="modal-footer">
+				        <button type="button" class="btn btn-default" data-dismiss="modal" data-translate="close">Close</button>
+				        <button type="button" class="btn btn-primary set-lang" data-translate="save">Save</button>
+				      </div>
+				    </div>
+			</div>
+		</div>
+
+		<div class="modal fade demo-class" data-backdrop="static" style="opacity:0.01">
+			<div class="modal-dialog">
+					<div class="modal-body">
+						
+					</div>
+			</div>
+		</div>
+
+		<script src="../../resources/global/js/jquery/jquery.js"></script>
+		<script src="../../resources/global/js/bootstrap/bootstrap.js"></script>
+		<script src="../../resources/global/js/bootstrap/bootbox.min.js"></script>
+		<script src="../../resources/global/js/bootstrap-tour/bootstrap-tour.js"></script>
+		<script src="../../resources/global/js/bootstrap/typeahead.bundle.js"></script>
+		<script src="../../resources/global/js/jquery/plugins/jquery.inputmask.bundle.min.js"></script>
+		<script src="../../resources/global/js/jquery/plugins/jquery.validate.min.js"></script>
+		<script src="../../resources/global/js/jquery/plugins/exif.js"></script>
+		<script src="../../resources/global/js/egov/custom.js"></script>
+		<script src="../../resources/global/js/egov/patternvalidation.js"></script>
+		<script src="../../resources/app/js/function.js"></script>
+    </body>
+</html>

@@ -41,6 +41,7 @@ var srn = getUrlParameter('srn');
 var lat, lng, myCenter,status;
 var updateResponse = {};
 var departmentId, designationId;
+var loadDD = new $.loadDD();
 $(document).ready(function()
 {
 
@@ -203,52 +204,13 @@ $(document).ready(function()
 		});
 	});*/
 	
-	/*$('#approvalDepartment').change(function(){
-		$.ajax({
-			url: "/pgr/ajax-approvalDesignations",     
-			type: "GET",
-			data: {
-				approvalDepartment : $('#approvalDepartment').val()   
-			},
-			dataType: "json",
-			success: function (response) {
-				//console.log("success"+response);
-				$('#approvalDesignation').empty();
-				$('#approvalDesignation').append($("<option value=''>Select</option>"));
-				$.each(response, function(index, value) {
-					$('#approvalDesignation').append($('<option>').text(value.name).attr('value', value.id));
-				});
-				
-			}, 
-			error: function (response) {
-				//console.log("failed");
-			}
-		});
-	});*/
+	$('#approvalDepartment').change(function(){
+		getDesignation($(this).val());
+	});
 	
-	/*$('#approvalDesignation').change(function(){
-		$.ajax({
-			url: "/pgr/ajax-approvalPositions",     
-			type: "GET",
-			data: {
-				approvalDesignation : $('#approvalDesignation').val(),
-				approvalDepartment : $('#approvalDepartment').val()    
-			},
-			dataType: "json",
-			success: function (response) {
-				//console.log("success"+response);
-				$('#approvalPosition').empty();
-				$('#approvalPosition').append($("<option value=''>Select</option>"));
-				$.each(response, function(index, value) {
-					$('#approvalPosition').append($('<option>').text(value.name).attr('value', value.id));  
-				});
-				
-			}, 
-			error: function (response) {
-				//console.log("failed");
-			}
-		});
-	});*/
+	$('#approvalDesignation').change(function(){
+		getUser($('#approvalDepartment').val(),$(this).val())
+	});
 
 	var headers = new $.headers();
 
@@ -326,13 +288,11 @@ $(document).ready(function()
 							}
 
 							if(localStorage.getItem('type') == 'EMPLOYEE'){
-								var loadDD = new $.loadDD();
+								
 								complaintType(loadDD);
 								getWard(loadDD);
 								getLocality(loadDD);
 								getDepartment(loadDD);
-								getDesignation(loadDD);
-								getUser(loadDD);
 							}
 
 						},
@@ -432,12 +392,35 @@ function getDepartment(loadDD){
 	});
 }
 
-function getDesignation(loadDD){
-
+function getDesignation(depId){
+	$.ajax({
+		url: "/eis/designationByDepartmentId?id="+depId,
+		type : 'POST'
+	}).done(function(data) {
+		loadDD.load({
+			element:$('#approvalDesignation'),
+			placeholder : 'Select Designation', // default - Select(optional)
+			data:data.Designation,
+			keyValue:'id',
+			keyDisplayName:'name'
+		});
+	});
 }
 
-function getUser(loadDD){
-	
+function getUser(depId, desId){
+	console.log(depId, desId);
+	$.ajax({
+		url: "/eis/assignmentsByDeptOrDesignId?deptId="+depId+"&desgnId="+desId,
+		type : 'POST'
+	}).done(function(data) {
+		loadDD.load({
+			element:$('#approvalPosition'),
+			placeholder : 'Select Position', // default - Select(optional)
+			data:data.Assignment,
+			keyValue:'id',
+			keyDisplayName:'name'
+		});
+	});
 }
 
 function resizeMap() {

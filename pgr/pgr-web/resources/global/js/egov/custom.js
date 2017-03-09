@@ -354,8 +354,9 @@ var getUrlParameter = function getUrlParameter(sParam) {
 };
 
 function openPopUp(url,name){
-	openedWindows=window.open(url,name,'width=900, height=700, top=300, left=260,scrollbars=yes');
-	if (window.focus) {openedWindows.focus()}
+	var windowObjectReference = window.open(url,name,'width=900, height=700, top=300, left=260,scrollbars=yes');
+	openedWindows.push(windowObjectReference);
+	windowObjectReference.focus();
 	return false;
 }
 

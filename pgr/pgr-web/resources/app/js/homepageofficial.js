@@ -37,7 +37,7 @@
  *
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-
+var tableContainer;
 $(document).ready(function()
 {	
 	$('#new-pass').popover({ trigger: "focus",placement: "bottom"});
@@ -120,29 +120,27 @@ $(document).ready(function()
 	worklist();
 	
 	$("#official_inbox").on('click','tbody tr td i.inbox-history',function(e) {
+		var tr = $(this).closest('tr');
+		var row = tableContainer.row(tr);
+		var stateId = tableContainer.row(row[0][0]).data()['values']['stateId'];
 		$('.history-inbox').modal('show');
-		historyTableContainer = $("#historyTable"); 
-		historyTableContainer.dataTable({
+		var historyTableContainer = $("#historyTable"); 
+		historyTableContainer.DataTable({
 			"sDom": "<'row'<'col-xs-12 hidden col-right'f>r>t<'row buttons-margin'<'col-md-6 col-xs-12'i><'col-md-3 col-xs-6'l><'col-md-3 col-xs-6 text-right'p>>",
-			"aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
 			"autoWidth": false,
 			"paging": false,
 			"destroy":true,
-			/* Disable initial sort */
 	        "aaSorting": [],
-			"oLanguage": {
-				"sInfo": ""
+			"ajax": {
+				"url": "/workflow/history?tenantId=ap.public&workflowId="+stateId,
+				"dataSrc":"",
 			},
-			"ajax": "inbox/history?stateId="+tableContainer1.fnGetData($(this).parent().parent(),6),
 			"columns": [
-						{ "data": "date","width": "20%" },
-						{ "data": "sender","width": "15%" },
-						{ "data": "task","width": "20%" },
-						{ "data": "status","width": "20%" },
-						{ "data": "details","width": "20%" },
-						{ "data": "id","visible": false, "searchable": false },
-						{ "data": "link","visible": false, "searchable": false }
-						
+						{ "title":"Date", "data": "createdDate","width": "20%" },
+						{ "title":"Sender", "data": "owner","width": "15%" },
+						{ "title":"Nature of Work", "natureOfTask": "task","width": "20%" },
+						{ "title":"Status", "data": "status","width": "20%" },
+						{ "title":"Comments", "data": "comments","width": "20%" }
 					]
 		});
 		
@@ -172,13 +170,10 @@ $(document).ready(function()
 		//console.log($(this).attr('id')+ ' triggered by class');
 		tableContainer1.fnFilter(this.value);
 	});
-	
+
 	$("#official_inbox").on('click','tbody tr',function(event) {
-		if (tableContainer1.fnGetData(this,7) != undefined) {
-			var windowObjectReference = window.open(tableContainer1.fnGetData(this,7), ''+tableContainer1.fnGetData(this,6)+'', 'width=900, height=700, top=300, left=150,scrollbars=yes'); 
-			openedWindows.push(windowObjectReference);
-			windowObjectReference.focus();
-		}
+		var srn = tableContainer.row( this ).data()['service_request_id'];
+		openPopUp('view-complaint.html?srn='+srn,srn)
 	});
 	
 	$("#official_drafts").on('click','tbody tr',function(event) {
@@ -420,24 +415,32 @@ function clearnow(){
 }
 //common ajax functions for worklist, drafts and notifications 
 function worklist(){
+	var headers = new $.headers();
 	tableContainer1 = $("#official_inbox"); 
-	tableContainer1.dataTable({
+	tableContainer = tableContainer1.DataTable({
 		"sDom": "<'row'<'col-xs-12 hidden col-right'f>r>t<'row buttons-margin'<'col-md-5 col-xs-12'i><'col-md-3 col-xs-6'l><'col-md-4 col-xs-6 text-right'p>>",
 		"aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
 		"bDestroy": true,
 		"autoWidth": false,
         "aaSorting": [],
-		/*"ajax": "/pgr/seva?jurisdiction_id=6&user_id="+localStorage.getItem("id"),
-			"columns": [
-			{ "data": "date","width": "16%" },
-			{ "data": "sender","width": "15%" },
-			{ "data": "task","width": "20%" },
-			{ "data": "status","width": "24%" },
-			{ "data": "details","width": "20%" },
-			{ "data" : null, "target":-1,"defaultContent": '<i class="fa fa-history inbox-history history-size" class="tooltip-secondary" data-toggle="tooltip" title="History"></i>'},
-			{ "data": "id","visible": false, "searchable": false },
-			{ "data": "link","visible": false, "searchable": false }
-		],
+		"ajax": {
+			url : "/pgr/seva?jurisdiction_id=6&user_id="+localStorage.getItem("id"),
+			headers : headers.header,
+			dataSrc : "service_requests"
+		},
+		"columns": [
+		{ "title":"Date", "data": "requested_datetime","width": "16%" },
+		{ "title":"Sender", "data": "first_name","width": "15%" },
+		{ "title":"Nature of Work", "width": "20%", "render": function ( data, type, full, meta ) {
+			return 'Grievance';
+	    } },
+		{ "title":"Status", "data": "values.ComplaintStatus","width": "24%" },
+		{ "title":"Comments", "width": "20%", "render": function ( data, type, full, meta ) {
+			var text = 'Complaint Number '+(full.service_request_id)+' for '+(full.service_name)+' filed on '+(full.requested_datetime)+'. Date of Resolution is '+(full.expected_datetime);
+			return text;
+	    } },
+		{ "data" : null, "target":-1,"defaultContent": '<i class="fa fa-history inbox-history history-size" class="tooltip-secondary" data-toggle="tooltip" title="History"></i>'},
+		]/*,
 		"columnDefs": [
                {
                    "render": function ( data, type, row ) {

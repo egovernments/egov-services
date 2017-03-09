@@ -221,16 +221,6 @@
 								Worklist
 							</div>
 							<table class="table table-bordered datatable" id="official_inbox">
-								<thead>
-									<tr>
-										<th>Date</th>
-										<th>Sender</th>
-										<th>Nature of Work</th>
-										<th>Status</th>
-										<th>Details</th>
-										<th></th>
-									</tr>
-								</thead>
 							</table>
 						</div>
 					</div>
@@ -246,8 +236,33 @@
 				</div>
 			</footer>
 		</div>
+		<div class="modal fade history-inbox">
+			<div class="modal-dialog history">
+				<div class="modal-content">
+					
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+						<h4 class="modal-title">History</h4>
+					</div>
+					
+					<div class="modal-body">
+						<div class="row">
+							<div class="col-md-12">
+								<table class="table table-bordered datatable" id="historyTable">
+								</table>
+							</div>
+						</div>
+					</div>
+					
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+					</div>
+					
+				</div>
+			</div>
+		</div>
 		<script src="../resources/global/js/jquery/plugins/datatables/jquery.dataTables.min.js"></script>
-		<script src="../resources/global/js/jquery/plugins/datatables/dataTables.bootstrap.js"></script>
+		<script src="../resources/global/js/jquery/plugins/datatables/dataTables.bootstrap.min.js"></script>
 		<script src="../resources/global/js/jquery/plugins/datatables/responsive/js/datatables.responsive.js"></script>
 		<script src="../resources/global/js/jquery/plugins/datatables/moment.min.js"></script>
 		<script src="../resources/global/js/jquery/plugins/datatables/datetime-moment.js"></script>

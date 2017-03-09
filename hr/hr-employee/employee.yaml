@@ -457,7 +457,7 @@ definitions:
         type: string
         description: Unique Identifier of which tenant this data is defined. For example, AP, AP-Kurnool etc.
         maxLength: 256
-      allDocuments:
+      documents:
         type: array
         description: List of all the documents associated with an employee.
         maxItems: 50

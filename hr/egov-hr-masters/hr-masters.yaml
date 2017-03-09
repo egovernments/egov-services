@@ -12,7 +12,7 @@ info:
     name: Elzan Mathew
 schemes:
   - https
-basePath: '/v1/[API endpoint]'
+basePath: '/egov-hr-masters/[API endpoint]'
 
 # Describe your paths here
 paths:
@@ -1061,9 +1061,11 @@ paths:
         - $ref: "#/parameters/tenantId"
         - name: name
           in: query
-          description: Name of the configuration key.
+          description: List of Key Name for which configuration values are required.
           required: false
-          type: string
+          type: array
+          items:
+            type: string
           maxLength: 50
         - name: id
           in: query
@@ -1074,6 +1076,14 @@ paths:
             type: integer
           format: int64
           maxItems: 50
+        - name: effectiveFrom
+          in: query
+          description: The date for which the configuration value is applicable.
+          required: false
+          type: string
+          format: date  
+   #       default: current_date
+          
         - name: sort
           in: query
           description: Configuration Key search results will be sorted by key name ascending by default.
@@ -1101,73 +1111,7 @@ paths:
             $ref: '#/definitions/ErrorRes'
       tags: 
        - Set Up  
-  /hrconfigurationvalues/_search:
-    # This is a HTTP operation
-    post:
-      # Describe this verb here. Note: you can use markdown 
-      summary: Get the list of configuration paramaters values defined in the system for a particular configuration key in HR module.
-      description: |
-        Get the configuration key value data. To get a particular configuration key values one can pass the key Id and date.
-      # This is array of GET operation parameters:
-      parameters:
-        - name: requestInfo
-          in: body
-          description: Commmon request info for getting configuration key values.
-          required: true
-          schema:
-            $ref: '#/definitions/RequestInfo'
-        - $ref: "#/parameters/tenantId"
-        - name: keyId
-          in: query
-          description: Unique Id of configuration key.
-          required: false
-          type: integer
-          format: int64
-          maxLength: 50
-        - name: id
-          in: query
-          description: List of Unique Id of configuration value.
-          required: false
-          type: array
-          items: 
-            type: integer
-          format: int64
-          maxItems: 50
-        - name: effectiveFrom
-          in: query
-          description: The date for which the configuration value is applicable.
-          required: false
-          type: string
-          format: date  
-        - name: sort
-          in: query
-          description: Configuration Key values search results will be sorted by key name ascending and effectiveFrom descending by default.
-          type: array
-          uniqueItems: true
-          minItems: 1
-          maxItems: 2
-          items:
-             type: string
-          pattern: '[-+](keyId.name|effectiveFrom)'
-          default:
-            - +keyId.name
-            - -effectiveFrom
-      # Expected responses for this operation:
-      responses:
-        # Response code
-        200:
-          description: Successful response.
-          # A schema describing your response object.
-          # Use JSON Schema format
-          schema:
-            $ref: "#/definitions/HRConfigurationValuesRes"
-        '400':
-          description: Invalid input.
-          schema:
-            $ref: '#/definitions/ErrorRes'
-      tags: 
-       - Set Up  
-      
+
   /hrstatuses/_search:
     # This is a HTTP operation
     post:
@@ -1884,7 +1828,24 @@ definitions:
       HRConfiguration:
         type: array
         items: 
-         $ref: '#/definitions/HRConfiguration' 
+         $ref: '#/definitions/HRConfigurationKeyValues'
+         
+  HRConfigurationKeyValues:   
+    type: object
+    description: This object will depict how the respose object of configuration looks like. There will be a map of key value pairs where values will be a list. One key can have multiple values.
+    properties:
+      configValues: 
+        type: array
+        items:
+          type: object
+          properties:
+            key:
+              type: string
+            values:
+              type: array
+              items:
+                type: string
+         
   HRConfigurationValues:
     type: object
     properties:
@@ -1922,20 +1883,11 @@ definitions:
         format: date
         description: Date on which the master data was last modified.
     required:
-      - id
       - keyId
       - value
       - effectiveFrom
       
-  HRConfigurationValuesRes:
-    type: object
-    properties:
-      ResponseInfo:
-        $ref: '#/definitions/ResponseInfo'
-      HRConfigurationValues:
-        type: array
-        items: 
-         $ref: '#/definitions/HRConfigurationValues'        
+ 
 parameters:
 
   tenantId:

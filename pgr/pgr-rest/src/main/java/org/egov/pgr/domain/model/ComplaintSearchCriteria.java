@@ -20,5 +20,12 @@ public class ComplaintSearchCriteria {
 	private Date lastModifiedDatetime;
 	private Long userId;
 	private Long assignmentId;
+	private String name;
+	private String mobileNumber;
+	private String emailId;
+	private Long receivingMode;
+	private Long locationId;
+	private Long childLocationId;
+
 
 }

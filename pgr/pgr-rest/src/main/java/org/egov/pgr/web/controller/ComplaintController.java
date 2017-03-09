@@ -1,14 +1,10 @@
 package org.egov.pgr.web.controller;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.egov.pgr.domain.model.AuthenticatedUser;
 import org.egov.pgr.domain.model.Complaint;
 import org.egov.pgr.domain.model.ComplaintSearchCriteria;
 import org.egov.pgr.domain.service.ComplaintService;
+
 import org.egov.pgr.persistence.queue.contract.RequestInfo;
 import org.egov.pgr.persistence.queue.contract.ServiceRequest;
 import org.egov.pgr.persistence.queue.contract.SevaRequest;
@@ -20,15 +16,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = { "/seva" })
@@ -73,11 +66,18 @@ public class ComplaintController {
 			@RequestParam(value = "status", required = false) String status,
 			@RequestParam(value = "last_modified_datetime", required = false) @DateTimeFormat(pattern = "dd-MM-yyyy") Date lastModifiedDate,
 			@RequestParam(value = "assignment_id", required = false) Long assignmentId,
-			@RequestParam(value = "user_id", required = false) Long userId, @RequestHeader HttpHeaders headers) {
+			@RequestParam(value = "user_id", required = false) Long userId,
+			@RequestParam(value = "name",required = false)String name,
+			@RequestParam(value = "mobile_number",required=false)String mobileNumber,
+			@RequestParam(value = "email_id",required=false)String emailId,
+			@RequestParam(value = "receiving_mode",required=false)Long receivingMode,
+			@RequestParam(value = "location_id",required=false)Long locationId,
+			@RequestParam(value = "child_location_id",required=false)Long childLocationId,
+			@RequestHeader HttpHeaders headers) {
 
 		ComplaintSearchCriteria complaintSearchCriteria = ComplaintSearchCriteria.builder().assignmentId(assignmentId)
 				.endDate(endDate).lastModifiedDatetime(lastModifiedDate).serviceCode(serviceCode)
-				.serviceRequestId(serviceRequestId).startDate(startDate).status(status).userId(userId).build();
+				.serviceRequestId(serviceRequestId).startDate(startDate).status(status).userId(userId).name(name).mobileNumber(mobileNumber).emailId(emailId).receivingMode(receivingMode).locationId(locationId).childLocationId(childLocationId).build();
 		final List<Complaint> complaints = complaintService.findAll(complaintSearchCriteria);
 		return createResponse(headers, complaints);
 	}

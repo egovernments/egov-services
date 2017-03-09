@@ -95,7 +95,7 @@ public class Complaint extends AbstractAuditable {
 	private String crn = "";
 
 	@ManyToOne
-	@JoinColumn(name = "complaintType", nullable = true)
+	@JoinColumn(name = "complainttype", nullable = true)
 	private ComplaintType complaintType;
 
 	@ManyToOne(cascade = CascadeType.ALL)
@@ -123,16 +123,18 @@ public class Complaint extends AbstractAuditable {
 	@SafeHtml
 	private String details;
 
+	@Column(name="landmarkdetails")
 	@Length(max = 200)
 	@SafeHtml
 	private String landmarkDetails;
 
+	@Column(name="receivingmode")
 	@Enumerated(EnumType.ORDINAL)
 	@NotNull
 	private ReceivingMode receivingMode = ReceivingMode.WEBSITE;
 
 	@ManyToOne
-	@JoinColumn(name = "receivingCenter", nullable = true)
+	@JoinColumn(name = "receivingcenter", nullable = true)
 	private ReceivingCenter receivingCenter;
 
 	// private Set<Long> supportDocs;
@@ -147,7 +149,7 @@ public class Complaint extends AbstractAuditable {
 	private Date escalationDate;
 
 	private Long department;
-
+    @Column(name="citizenfeedback")
 	@Enumerated(EnumType.ORDINAL)
 	private CitizenFeedback citizenFeedback;
 

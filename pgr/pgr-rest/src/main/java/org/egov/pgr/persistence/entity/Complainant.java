@@ -75,7 +75,8 @@ public class Complainant extends AbstractPersistable<Long> {
     @SafeHtml
     @Email(regexp = EMAIL)
     private String email;
-
+    
+    @Column(name="userdetail")
     private Long userDetail;
 
     @Length(max = 256)

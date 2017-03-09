@@ -11,7 +11,15 @@ import org.egov.workflow.persistence.entity.State;
 import org.egov.workflow.persistence.entity.StateHistory;
 import org.egov.workflow.persistence.entity.Task;
 import org.egov.workflow.persistence.repository.EmployeeRepository;
-import org.egov.workflow.web.contract.*;
+import org.egov.workflow.persistence.repository.UserRepository;
+import org.egov.workflow.web.contract.Attribute;
+import org.egov.workflow.web.contract.Department;
+import org.egov.workflow.web.contract.Employee;
+import org.egov.workflow.web.contract.PositionResponse;
+import org.egov.workflow.web.contract.ProcessInstance;
+import org.egov.workflow.web.contract.User;
+import org.egov.workflow.web.contract.UserResponse;
+import org.egov.workflow.web.contract.Value;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,15 +32,15 @@ public class PgrWorkflowImpl implements Workflow {
 	private final ComplaintRouterService complaintRouterService;
 	private final StateService stateService;
 	private final EmployeeRepository employeeRepository;
-	private final UserService userService;
+	private final UserRepository userRepository;
 
 	@Autowired
 	public PgrWorkflowImpl(final ComplaintRouterService complaintRouterService, final StateService stateService,
-			final EmployeeRepository employeeRepository, final UserService userService) {
+			final EmployeeRepository employeeRepository, final UserRepository userRepository) {
 		this.complaintRouterService = complaintRouterService;
 		this.stateService = stateService;
 		this.employeeRepository = employeeRepository;
-		this.userService = userService;
+		this.userRepository = userRepository;
 	}
 
 	@Override
@@ -78,8 +86,8 @@ public class PgrWorkflowImpl implements Workflow {
 			state.setSenderName(processInstance.getSenderName());
 			state.setDateInfo(processInstance.getCreatedDate());
 			// TODO OWNER POSITION condition to be checked
-			GetUserByIdResponse user = userService
-					.getUserById(Long.valueOf(processInstance.getRequestInfo().getRequesterId()));
+			UserResponse user = userRepository
+					.findUserById(Long.valueOf(processInstance.getRequestInfo().getRequesterId()));
 			if (user.isGrievanceOfficer()) {
 				state.setOwnerPosition(state.getOwnerPosition());
 			}
@@ -114,12 +122,11 @@ public class PgrWorkflowImpl implements Workflow {
 		for (final StateHistory stateHistory : history) {
 			t = stateHistory.map();
 			Employee user;
-			Employee sender = null;
+			User sender = null;
 			if (stateHistory.getLastModifiedBy() > 0)
-				sender = employeeRepository.getEmployeeForUserId(stateHistory.getLastModifiedBy()).getEmployees()
-						.get(0);
+				sender = userRepository.findUserById(stateHistory.getLastModifiedBy()).getUser().get(0);
 			if (sender != null)
-				t.setSender(sender.getUsername() + "::" + sender.getName());
+				t.setSender(sender.getUserName() + "::" + sender.getName());
 			else
 				t.setSender("");
 			if (stateHistory.getOwnerUser() != null) {
@@ -139,11 +146,11 @@ public class PgrWorkflowImpl implements Workflow {
 		}
 		t = state.map();
 		Employee user;
-		Employee sender = null;
+		User sender = null;
 		if (state.getLastModifiedBy() > 0)
-			sender = employeeRepository.getEmployeeForUserId(state.getLastModifiedBy()).getEmployees().get(0);
+			sender = userRepository.findUserById(state.getLastModifiedBy()).getUser().get(0);
 		if (sender != null)
-			t.setSender(sender.getUsername() + "::" + sender.getName());
+			t.setSender(sender.getUserName() + "::" + sender.getName());
 		else
 			t.setSender("");
 		if (state.getOwnerUser() != null) {

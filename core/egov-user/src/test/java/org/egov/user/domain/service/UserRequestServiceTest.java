@@ -1,10 +1,15 @@
 package org.egov.user.domain.service;
 
+import org.egov.user.domain.exception.InvalidUserException;
 import org.egov.user.persistence.entity.User;
+import org.egov.user.persistence.entity.enums.Gender;
+import org.egov.user.persistence.entity.enums.UserType;
 import org.egov.user.persistence.repository.UserRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -12,13 +17,17 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UserRequestServiceTest {
 
     @Mock
     UserRepository userRepository;
+    @Captor
+    private ArgumentCaptor<User> userCaptor;
 
     UserService userService;
 
@@ -57,6 +66,32 @@ public class UserRequestServiceTest {
         User actualUser = userService.getUserByUsername(USER_NAME);
 
         assertThat(actualUser.getUsername()).isEqualTo(USER_NAME);
+    }
+
+    @Test
+    public void shouldSaveAValidUser() throws Exception {
+        org.egov.user.domain.model.User domainUser = validDomainUser();
+        User entityUser = new User().fromDomain(domainUser);
+        when(userRepository.save(userCaptor.capture())).thenReturn(entityUser);
+        User returnedUser = userService.save(domainUser);
+
+        assertEquals(entityUser, returnedUser);
+        assertEquals(entityUser.getUsername(), userCaptor.getValue().getUsername());
+        assertEquals(entityUser.getMobileNumber(), userCaptor.getValue().getMobileNumber());
+    }
+
+    @Test(expected = InvalidUserException.class)
+    public void shouldRaiseExceptionWhenUserIsInvalid() throws Exception {
+        org.egov.user.domain.model.User domainUser = org.egov.user.domain.model.User.builder().build();
+
+        userService.save(domainUser);
+        verify(userRepository, never()).save(any(User.class));
+    }
+
+    private org.egov.user.domain.model.User validDomainUser() {
+        return org.egov.user.domain.model.User.builder().username("supandi_rocks")
+                .name("Supandi").gender(Gender.MALE).type(UserType.CITIZEN)
+                .active(Boolean.TRUE).mobileNumber("9988776655").accountLocked(Boolean.FALSE).build();
     }
 
     private List<User> getListOfUsers() {

@@ -40,6 +40,7 @@
 
 package org.egov.pgr.domain.service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -50,7 +51,8 @@ import javax.persistence.PersistenceContext;
 import org.egov.pgr.domain.model.Role;
 import org.egov.pgr.persistence.entity.ComplaintStatus;
 import org.egov.pgr.persistence.entity.ComplaintStatusMapping;
-import org.egov.pgr.persistence.repository.EmployeeRepository;
+import org.egov.pgr.persistence.repository.UserRepository;
+import org.egov.pgr.web.contract.GetUserByIdResponse;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.CriteriaSpecification;
@@ -66,29 +68,31 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ComplaintStatusMappingService {
 
-    @Autowired
-    private final EmployeeRepository employeeRepository;
-    
-    @PersistenceContext
-    private EntityManager entityManager;
+	@Autowired
+	private UserRepository userRepository;
 
-    public ComplaintStatusMappingService(final EmployeeRepository employeeRepository) {
-        this.employeeRepository = employeeRepository;
-    }
+	@PersistenceContext
+	private EntityManager entityManager;
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW, noRollbackFor = SQLGrammarException.class)
-    public List<ComplaintStatus> getStatusByRoleAndCurrentStatus(final Long userId, final String status, final String tenantId) {
-        final Set<Role> userRoles = employeeRepository.getRolesByUserId(userId, tenantId);
-        final List<Long> roles = userRoles.stream().map(role -> role.getId()).collect(Collectors.toList());
-        final Criteria criteria = entityManager.unwrap(Session.class)
-                .createCriteria(ComplaintStatusMapping.class, "complaintMapping")
-                .createAlias("complaintMapping.currentStatus", "complaintStatus");
-        criteria.add(Restrictions.eq("complaintStatus.name", status))
-                .add(Restrictions.in("complaintMapping.role", roles.toArray()))
-                .addOrder(Order.asc("complaintMapping.orderNo"));
-        criteria.setProjection(Projections.property("complaintMapping.showStatus"));
-        criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
-        return criteria.list();
-    }
+	@Transactional(propagation = Propagation.REQUIRES_NEW, noRollbackFor = SQLGrammarException.class)
+	public List<ComplaintStatus> getStatusByRoleAndCurrentStatus(final Long userId, final String status,
+			final String tenantId) {
+		Set<Role> roles = new HashSet<Role>();
+		GetUserByIdResponse userRoles = userRepository.findUserById(userId);
+		if (!userRoles.getUser().isEmpty()) {
+			roles = userRoles.getUser().get(0).getRoles();
+			final List<Long> roleId = roles.stream().map(role -> role.getId()).collect(Collectors.toList());
+			final Criteria criteria = entityManager.unwrap(Session.class)
+					.createCriteria(ComplaintStatusMapping.class, "complaintMapping")
+					.createAlias("complaintMapping.currentStatus", "complaintStatus");
+			criteria.add(Restrictions.eq("complaintStatus.name", status))
+					.add(Restrictions.in("complaintMapping.role", roleId.toArray()))
+					.addOrder(Order.asc("complaintMapping.orderNo"));
+			criteria.setProjection(Projections.property("complaintMapping.showStatus"));
+			criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+			return criteria.list();
+		} else
+			return null;
+	}
 
 }

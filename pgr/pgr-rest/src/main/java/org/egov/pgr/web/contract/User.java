@@ -1,5 +1,9 @@
 package org.egov.pgr.web.contract;
 
+import java.util.Set;
+
+import org.egov.pgr.domain.model.Role;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -30,4 +34,6 @@ public class User {
 	@JsonProperty("emailId")
 	private String emailId;
 
+	@JsonProperty("roles")
+    private Set<Role> roles = null;
 }

@@ -3,13 +3,17 @@ package org.egov.pgr.domain.service;
 import static org.junit.Assert.assertFalse;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.egov.pgr.domain.model.Role;
 import org.egov.pgr.persistence.entity.ComplaintStatus;
-import org.egov.pgr.persistence.repository.EmployeeRepository;
+import org.egov.pgr.persistence.repository.UserRepository;
+import org.egov.pgr.web.contract.GetUserByIdResponse;
+import org.egov.pgr.web.contract.ResponseInfo;
+import org.egov.pgr.web.contract.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,27 +28,37 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 public class ComplaintStatusMappingServiceTest {
-    
-    @Autowired
-    private ComplaintStatusMappingService complaintStatusMappingService;
-    
-    @MockBean
-    private EmployeeRepository employeeRepository;
-    
-    @Test
-    @Sql(scripts = {"/sql/clearComplaintStatusMapping.sql", "/sql/InsertComplaintStatusMapping.sql"})
-    public void testShouldReturnComplaintStatusListByUserId() {
-        when(employeeRepository.getRolesByUserId(1L, "ap.public")).thenReturn(getRoles());
-        List<ComplaintStatus> complaintStatuses = complaintStatusMappingService.getStatusByRoleAndCurrentStatus(1L, "REGISTERED", "ap.public");
-        assertFalse(complaintStatuses.isEmpty());
-    }
-    
-    private Set<Role> getRoles() {
-        Set<Role> roles = new HashSet<Role>();
-        Role role1 = Role.builder().id(1L).name("EMPLOYEE").build();
-        Role role2 = Role.builder().id(2L).name("CITIZEN").build();
-        roles.add(role1);
-        roles.add(role2);
-        return roles;
-    }
+
+	@Autowired
+	private ComplaintStatusMappingService complaintStatusMappingService;
+
+	@MockBean
+	private UserRepository userRepository;
+
+	@Test
+	@Sql(scripts = { "/sql/clearComplaintStatusMapping.sql", "/sql/InsertComplaintStatusMapping.sql" })
+	public void testShouldReturnComplaintStatusListByUserId() {
+		when(userRepository.findUserById(18L)).thenReturn(getUserResponse());
+		List<ComplaintStatus> complaintStatuses = complaintStatusMappingService.getStatusByRoleAndCurrentStatus(18L,
+				"REGISTERED", "ap.public");
+		assertFalse(complaintStatuses.isEmpty());
+	}
+
+	private GetUserByIdResponse getUserResponse() {
+		final User user = User.builder().id(1L).name("manas").userName("manas").roles(getRoles()).build();
+		List<User> userList = new ArrayList<User>();
+		userList.add(user);
+		GetUserByIdResponse response = GetUserByIdResponse.builder()
+				.responseInfo(new ResponseInfo("", "", "", "", "", "")).user(userList).build();
+		return response;
+	}
+
+	private Set<Role> getRoles() {
+		Set<Role> roles = new HashSet<Role>();
+		Role role1 = Role.builder().id(1L).name("EMPLOYEE").build();
+		Role role2 = Role.builder().id(2L).name("CITIZEN").build();
+		roles.add(role1);
+		roles.add(role2);
+		return roles;
+	}
 }

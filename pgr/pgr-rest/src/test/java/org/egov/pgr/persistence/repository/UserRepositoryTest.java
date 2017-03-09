@@ -2,11 +2,13 @@ package org.egov.pgr.persistence.repository;
 
 import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.client.ExpectedCount.once;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.content;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
 import org.egov.pgr.domain.model.AuthenticatedUser;
+import org.egov.pgr.web.contract.GetUserByIdResponse;
 import org.egov.pgr.web.contract.User;
 import org.junit.Before;
 import org.junit.Test;
@@ -55,6 +57,19 @@ public class UserRepositoryTest {
 		final User user = userRepository.getUserByUserName("user");
 		server.verify();
 		assertEquals(1, user.getId().intValue());
+
+	}
+
+	@Test
+	public void testFindUserById() throws Exception {
+		server.expect(once(), requestTo("http://host/user/_search")).andExpect(method(HttpMethod.POST))
+				.andExpect(content().string(new Resources().getFileContents("searchUserByIdRequest.json")))
+				.andRespond(withSuccess(new Resources().getFileContents("searchUserById.json"),
+						MediaType.APPLICATION_JSON_UTF8));
+
+		final GetUserByIdResponse userResponse = userRepository.findUserById(67L);
+		server.verify();
+		assertEquals(1, userResponse.getUser().size());
 
 	}
 

@@ -2,7 +2,12 @@ package org.egov.pgr.persistence.repository;
 
 import static org.springframework.util.StringUtils.isEmpty;
 
+import java.util.Collections;
+
 import org.egov.pgr.domain.model.AuthenticatedUser;
+import org.egov.pgr.persistence.queue.contract.RequestInfo;
+import org.egov.pgr.web.contract.GetUserByIdRequest;
+import org.egov.pgr.web.contract.GetUserByIdResponse;
 import org.egov.pgr.web.contract.User;
 import org.egov.pgr.web.contract.UserRequest;
 import org.egov.pgr.web.contract.UserResponse;
@@ -40,5 +45,12 @@ public class UserRepository {
 		request.setUserName(userName);
 		String url = userHost + getUserByUserNameUrl;
 		return restTemplate.postForObject(url, request, UserResponse.class).getUser().get(0);
+	}
+
+	public GetUserByIdResponse findUserById(Long userId) {
+		String url = String.format("%s", userHost + getUserByUserNameUrl);
+		GetUserByIdRequest userRequest = GetUserByIdRequest.builder().requestInfo(new RequestInfo())
+				.id(Collections.singletonList(userId)).build();
+		return restTemplate.postForObject(url, userRequest, GetUserByIdResponse.class);
 	}
 }

@@ -86,6 +86,9 @@ public class PositionController {
 	public ResponseEntity<?> search(@ModelAttribute @Valid PositionGetRequest positionGetRequest,
 			BindingResult bindingResult, @PathVariable Long id, @RequestBody RequestInfo requestInfo) {
 
+		// FIXME : By strange behavior positionId is set to 1 by default. So setting it to null. Needs to check
+		positionGetRequest.setId(null);
+
 		// validate header
 		if(requestInfo.getApiId() == null || requestInfo.getVer() == null || requestInfo.getTs() == null ) {
 			return errHandler.getErrorResponseEntityForMissingRequestInfo(requestInfo);
@@ -99,6 +102,7 @@ public class PositionController {
 		// Call service
 		List<Position> positionsList = null;
 		try {
+			System.out.println(positionGetRequest.getId());
 			positionsList = positionService.getPositions(id, positionGetRequest, requestInfo);
 		} catch (Exception exception) {
 			logger.error("Error while processing request " + positionGetRequest, exception);

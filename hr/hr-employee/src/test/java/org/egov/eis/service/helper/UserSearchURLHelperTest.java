@@ -15,27 +15,29 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 public class UserSearchURLHelperTest {
-		
+
 	@InjectMocks
-    private UserSearchURLHelper testingObject;
-	
+	private UserSearchURLHelper testingObject;
+
 	@Mock
 	private ApplicationProperties applicationProperties;
-	
+
 	@Before
-    public void initMocks() {
-        MockitoAnnotations.initMocks(this);
-    }
+	public void initMocks() {
+		MockitoAnnotations.initMocks(this);
+	}
 
 	@Test
 	public void testGetBlankQuery() {
 		Mockito.when(applicationProperties.empServicesUsersServiceGetUsersHostname())
-			.thenReturn("http://localhost:8080/v1/users/_search");
+				.thenReturn("http://localhost:8080/v1/users/_search");
 		Mockito.when(applicationProperties.empSearchPageSizeMax()).thenReturn("500");
 		EmployeeGetRequest employeeGetRequest = getNewEmployeeGetRequest();
 		String url = testingObject.searchURL(employeeGetRequest);
 		System.out.println(url);
-		assertEquals("http://localhost:8080/v1/users/_search?tenantId=1&id=10,12,15,16&pageSize=500", url);
+		assertEquals(
+				"http://localhost:8080/v1/users/_search?tenantId=1&id=10,12,15,16&pageSize=500&sortBy=id&sortOrder=ASC",
+				url);
 	}
 
 	private EmployeeGetRequest getNewEmployeeGetRequest() {

@@ -38,56 +38,37 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.web.contract;
+package org.egov.eis.repository;
 
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
+import org.egov.eis.repository.builder.PositionAssignmentQueryBuilder;
+import org.egov.eis.repository.rowmapper.PositionIdsRowMapper;
+import org.egov.eis.web.contract.PositionGetRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+@Repository
+public class PositionAssignmentRepository {
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
 
-@Builder
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
-@EqualsAndHashCode
-public class PositionGetRequest {
+	@Autowired
+	private PositionIdsRowMapper positionIdsRowMapper;
 
-	private List<Long> id;
+	@Autowired
+	private PositionAssignmentQueryBuilder positionAssignmentsQueryBuilder;
 
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date asOnDate;
+	public List<Long> findForCriteria(Long employeeId, PositionGetRequest positionGetRequest) {
+		List<Object> preparedStatementValues = new ArrayList<Object>();
+		String queryStr = positionAssignmentsQueryBuilder.getQuery(employeeId, positionGetRequest,
+				preparedStatementValues);
 
-	private Boolean isPrimary;
+		List<Long> positionIds = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), positionIdsRowMapper);
 
-	private Long designationId;
-
-	private Long departmentId;
-
-	private String sortBy;
-
-	private String sortOrder;
-
-	@NotNull
-	private String tenantId;
-
-	@Min(1)
-	@Max(500)
-	private Short pageSize;
-
-	private Short pageNumber;
-
+		return positionIds;
+	}
 }

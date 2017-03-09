@@ -38,56 +38,20 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.web.contract;
+package org.egov.eis.repository.rowmapper;
 
-import java.util.Date;
-import java.util.List;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+@Component
+public class PositionIdsRowMapper implements RowMapper<Long> {
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-
-@Builder
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
-@EqualsAndHashCode
-public class PositionGetRequest {
-
-	private List<Long> id;
-
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date asOnDate;
-
-	private Boolean isPrimary;
-
-	private Long designationId;
-
-	private Long departmentId;
-
-	private String sortBy;
-
-	private String sortOrder;
-
-	@NotNull
-	private String tenantId;
-
-	@Min(1)
-	@Max(500)
-	private Short pageSize;
-
-	private Short pageNumber;
-
+	@Override
+	public Long mapRow(ResultSet rs, int rowNum) throws SQLException, DataAccessException {
+		return rs.getLong("positionId");
+	}
 }

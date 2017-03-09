@@ -26,7 +26,6 @@ CREATE TABLE egeis_employee (
 	bankAccount CHARACTER VARYING(20) NOT NULL,
     groupId BIGINT,
 	placeOfBirth CHARACTER VARYING(200) NOT NULL,
-	documents CHARACTER VARYING(250),
 	tenantId CHARACTER VARYING(250) NOT NULL,
 
 	CONSTRAINT pk_egeis_employee PRIMARY KEY (Id),

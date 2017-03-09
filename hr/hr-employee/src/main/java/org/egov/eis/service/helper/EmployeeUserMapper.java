@@ -20,6 +20,7 @@ public class EmployeeUserMapper {
 			userInfoMap.put(userInfo.getId(), userInfo);
 		}
 
+		// FIXME : Since user service is not ready. So, for now hard-coding the user details. Needs to change
 		for (EmployeeInfo employeeInfo : employeeInfoList) {
 /*
 			if (userInfoMap.containsKey(employeeInfo.getId())) {

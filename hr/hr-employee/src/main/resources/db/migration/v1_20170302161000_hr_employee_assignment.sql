@@ -12,14 +12,15 @@ CREATE TABLE egeis_assignment (
 	toDate DATE NOT NULL,
     gradeId BIGINT,
 	govtOrderNumber CHARACTER VARYING(250),
-	documents CHARACTER VARYING(250),
 	createdBy BIGINT NOT NULL,
 	createdDate DATE NOT NULL,
 	lastModifiedBy BIGINT,
 	lastModifiedDate DATE,
 	tenantId CHARACTER VARYING(250) NOT NULL,
 
-	CONSTRAINT pk_egeis_assignment PRIMARY KEY (Id)
+	CONSTRAINT pk_egeis_assignment PRIMARY KEY (id),
+	CONSTRAINT fk_egeis_assignment_employeeId FOREIGN KEY (employeeId)
+		REFERENCES egeis_employee (id)
 );
 
 CREATE SEQUENCE seq_egeis_assignment

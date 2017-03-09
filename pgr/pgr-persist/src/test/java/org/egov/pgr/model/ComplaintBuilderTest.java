@@ -6,6 +6,7 @@ import org.egov.pgr.entity.ComplaintType;
 import org.egov.pgr.entity.enums.ComplaintStatus;
 import org.egov.pgr.entity.enums.ReceivingMode;
 import org.egov.pgr.repository.PositionRepository;
+import org.egov.pgr.repository.UserRepository;
 import org.egov.pgr.service.ComplaintStatusService;
 import org.egov.pgr.service.ComplaintTypeService;
 import org.egov.pgr.service.EscalationService;
@@ -35,6 +36,9 @@ public class ComplaintBuilderTest {
     private EscalationService escalationService;
     @Mock
     private PositionRepository positionRepository;
+
+    @Mock
+    private UserRepository userRepository;
     private String tenantId = "ap.public";
 
     @Test
@@ -162,7 +166,7 @@ public class ComplaintBuilderTest {
 
     private ComplaintBuilder complaintBuilderWithComplaint(Complaint complaint, SevaRequest sevaRequest) {
         return new ComplaintBuilder(complaint, sevaRequest, complaintTypeService, complaintStatusService,
-                escalationService, positionRepository);
+                escalationService, positionRepository,userRepository);
     }
 
     private Date getDateFor(int year, int month, int date) {

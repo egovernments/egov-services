@@ -5,8 +5,14 @@ import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class RequestInfo {
 	@JsonProperty("api_id")
 	private String apiId = null;
@@ -35,6 +41,9 @@ public class RequestInfo {
 
 	@JsonProperty("auth_token")
 	private String authToken = null;
+
+	@JsonProperty("tenant_id")
+	private String tenantId;
 
 	public String getApiId() {
 		return apiId;
@@ -71,4 +80,6 @@ public class RequestInfo {
 	public String getAuthToken() {
 		return authToken;
 	}
+
+	public String getTenantId() {return tenantId;}
 }

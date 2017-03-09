@@ -2,11 +2,13 @@ package org.egov.pgr.model;
 
 import org.egov.pgr.contracts.grievance.ServiceRequest;
 import org.egov.pgr.contracts.grievance.SevaRequest;
+import org.egov.pgr.contracts.user.GetUserByIdResponse;
 import org.egov.pgr.entity.Complaint;
 import org.egov.pgr.entity.ComplaintStatus;
 import org.egov.pgr.entity.ComplaintType;
 import org.egov.pgr.entity.enums.ReceivingMode;
 import org.egov.pgr.repository.PositionRepository;
+import org.egov.pgr.repository.UserRepository;
 import org.egov.pgr.service.ComplaintStatusService;
 import org.egov.pgr.service.ComplaintTypeService;
 import org.egov.pgr.service.EscalationService;
@@ -26,12 +28,14 @@ public class ComplaintBuilder {
     private final ComplaintStatusService complaintStatusService;
     private final EscalationService escalationService;
     private final PositionRepository positionRepository;
+    private final UserRepository userRepository;
     private final Complaint complaint;
     private final ServiceRequest serviceRequest;
 
     public ComplaintBuilder(Complaint complaint, SevaRequest sevaRequest,
                             ComplaintTypeService complaintTypeService, ComplaintStatusService complaintStatusService,
-                            EscalationService escalationService, PositionRepository positionRepository) {
+                            EscalationService escalationService, PositionRepository positionRepository,
+                            UserRepository userRepository) {
         this.requesterId = sevaRequest.getRequesterId();
         this.serviceRequest = sevaRequest.getServiceRequest();
         this.complaintStatusService = complaintStatusService;
@@ -39,6 +43,7 @@ public class ComplaintBuilder {
         this.positionRepository = positionRepository;
         this.complaint = complaint == null ? new Complaint() : complaint;
         this.complaintTypeService = complaintTypeService;
+        this.userRepository = userRepository;
     }
 
     public Complaint build() {
@@ -92,7 +97,11 @@ public class ComplaintBuilder {
     private void setComplainant() {
         String userId;
         if ((userId = this.serviceRequest.getValues().get(USER_ID)) != null) {
+            GetUserByIdResponse user = userRepository.findUserById(Long.valueOf(userId));
             this.complaint.getComplainant().setUserDetail(Long.valueOf(userId));
+            this.complaint.getComplainant().setName(user.getUser().get(0).getMobileNumber());
+            this.complaint.getComplainant().setEmail(user.getUser().get(0).getEmailId());
+            this.complaint.getComplainant().setAddress(user.getUser().get(0).getPermanentAddress());
         } else {
             this.complaint.getComplainant().setName(this.serviceRequest.getFirstName());
             this.complaint.getComplainant().setMobile(this.serviceRequest.getPhone());

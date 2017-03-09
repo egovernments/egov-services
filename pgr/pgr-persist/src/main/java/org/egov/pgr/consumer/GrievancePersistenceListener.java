@@ -8,6 +8,7 @@ import org.egov.pgr.model.EmailComposer;
 import org.egov.pgr.model.SmsComposer;
 import org.egov.pgr.producer.GrievanceProducer;
 import org.egov.pgr.repository.PositionRepository;
+import org.egov.pgr.repository.UserRepository;
 import org.egov.pgr.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +28,7 @@ public class GrievancePersistenceListener {
     private EscalationService escalationService;
     private GrievanceProducer kafkaProducer;
     private PositionRepository positionRepository;
+    private UserRepository userRepository;
     private TemplateService templateService;
     private PersistenceProperties persistenceProperties;
 
@@ -34,7 +36,8 @@ public class GrievancePersistenceListener {
     public GrievancePersistenceListener(ComplaintTypeService complaintTypeService, ComplaintStatusService complaintStatusService,
                                         ComplaintService complaintService, EscalationService escalationService,
                                         GrievanceProducer grievanceProducer, PositionRepository positionRepository,
-                                        TemplateService templateService, PersistenceProperties persistenceProperties) {
+                                        UserRepository userRepository, TemplateService templateService,
+                                        PersistenceProperties persistenceProperties) {
         this.complaintService = complaintService;
         this.complaintTypeService = complaintTypeService;
         this.complaintStatusService = complaintStatusService;
@@ -44,6 +47,7 @@ public class GrievancePersistenceListener {
         this.positionRepository = positionRepository;
         this.templateService = templateService;
         this.persistenceProperties = persistenceProperties;
+        this.userRepository = userRepository;
     }
 
     @KafkaListener(id = "${kafka.topics.pgr.workflowupdated.id}",
@@ -77,7 +81,7 @@ public class GrievancePersistenceListener {
         logger.debug("Saving record in database for" + sevaRequest.getServiceRequest().getCrn());
         String complaintCrn = sevaRequest.getServiceRequest().getCrn();
         Complaint complaintByCrn = complaintService.findByCrn(complaintCrn);
-        Complaint complaint = new ComplaintBuilder(complaintByCrn, sevaRequest, complaintTypeService, complaintStatusService, escalationService, positionRepository).build();
+        Complaint complaint = new ComplaintBuilder(complaintByCrn, sevaRequest, complaintTypeService, complaintStatusService, escalationService, positionRepository,userRepository).build();
         complaint = complaintService.save(complaint);
         return complaint;
     }

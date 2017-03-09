@@ -10,50 +10,50 @@ import java.util.*;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
-public class UserTest {
+public class UserRequestTest {
 
     @Test
     public void test_entity_to_contract_conversion() throws Exception {
         org.egov.user.persistence.entity.User userEntity = getUserEntity();
-        User userContract = new User(userEntity);
+        UserRequest userRequestContract = new UserRequest(userEntity);
 
-        assertThat(userContract.getId()).isEqualTo(userEntity.getId());
-        assertThat(userContract.getUserName()).isEqualTo(userEntity.getUsername());
-        assertThat(userContract.getSalutation()).isEqualTo(userEntity.getSalutation());
-        assertThat(userContract.getName()).isEqualTo(userEntity.getName());
-        assertThat(userContract.getGender()).isEqualTo(userEntity.getGender().toString());
-        assertThat(userContract.getMobileNumber()).isEqualTo(userEntity.getMobileNumber());
-        assertThat(userContract.getEmailId()).isEqualTo(userEntity.getEmailId());
-        assertThat(userContract.getAltContactNumber()).isEqualTo(userEntity.getAltContactNumber());
-        assertThat(userContract.getPan()).isEqualTo(userEntity.getPan());
-        assertThat(userContract.getAadhaarNumber()).isEqualTo(userEntity.getAadhaarNumber());
-        assertThat(userContract.getPermanentAddress()).isEqualTo("house number 1, area/locality/sector, " +
+        assertThat(userRequestContract.getId()).isEqualTo(userEntity.getId());
+        assertThat(userRequestContract.getUserName()).isEqualTo(userEntity.getUsername());
+        assertThat(userRequestContract.getSalutation()).isEqualTo(userEntity.getSalutation());
+        assertThat(userRequestContract.getName()).isEqualTo(userEntity.getName());
+        assertThat(userRequestContract.getGender()).isEqualTo(userEntity.getGender().toString());
+        assertThat(userRequestContract.getMobileNumber()).isEqualTo(userEntity.getMobileNumber());
+        assertThat(userRequestContract.getEmailId()).isEqualTo(userEntity.getEmailId());
+        assertThat(userRequestContract.getAltContactNumber()).isEqualTo(userEntity.getAltContactNumber());
+        assertThat(userRequestContract.getPan()).isEqualTo(userEntity.getPan());
+        assertThat(userRequestContract.getAadhaarNumber()).isEqualTo(userEntity.getAadhaarNumber());
+        assertThat(userRequestContract.getPermanentAddress()).isEqualTo("house number 1, area/locality/sector, " +
                 "street/road/line, landmark, city/town/village 1, post office, sub district, " +
                 "district, state, country, PIN: pincode 1");
-        assertThat(userContract.getPermanentCity()).isEqualTo("city/town/village 1");
-        assertThat(userContract.getPermanentPinCode()).isEqualTo("pincode 1");
-        assertThat(userContract.getCorrespondenceAddress()).isEqualTo("house number 2, area/locality/sector, " +
+        assertThat(userRequestContract.getPermanentCity()).isEqualTo("city/town/village 1");
+        assertThat(userRequestContract.getPermanentPinCode()).isEqualTo("pincode 1");
+        assertThat(userRequestContract.getCorrespondenceAddress()).isEqualTo("house number 2, area/locality/sector, " +
                 "street/road/line, landmark, city/town/village 2, post office, sub district, " +
                 "district, state, country, PIN: pincode 2");
-        assertThat(userContract.getCorrespondenceCity()).isEqualTo("city/town/village 2");
-        assertThat(userContract.getCorrespondencePinCode()).isEqualTo("pincode 2");
-        assertThat(userContract.getActive()).isEqualTo(userEntity.isActive());
-        assertThat(userContract.getDob()).isEqualTo(userEntity.getDob());
-        assertThat(userContract.getPwdExpiryDate()).isEqualTo(userEntity.getPwdExpiryDate().toDate());
-        assertThat(userContract.getLocale()).isEqualTo(userEntity.getLocale());
-        assertThat(userContract.getType()).isEqualTo(userEntity.getType());
-        assertThat(userContract.getAccountLocked()).isEqualTo(userEntity.isAccountLocked());
-        assertThat(userContract.getFatherOrHusbandName()).isEqualTo(userEntity.getGuardian());
-        assertThat(userContract.getSignature()).isEqualTo(userEntity.getSignature());
-        assertThat(userContract.getBloodGroup()).isEqualTo(userEntity.getBloodGroup().getValue());
-        assertThat(userContract.getPhoto()).isEqualTo(userEntity.getPhoto());
-        assertThat(userContract.getIdentificationMark()).isEqualTo(userEntity.getIdentificationMark());
-        assertThat(userContract.getRoles().get(0).getName()).isEqualTo("name of the role 1");
-        assertThat(userContract.getRoles().get(1).getName()).isEqualTo("name of the role 2");
-        assertThat(userContract.getCreatedBy()).isEqualTo(1L);
-        assertThat(userContract.getCreatedDate()).isEqualTo(userEntity.getCreatedDate());
-        assertThat(userContract.getLastModifiedBy()).isEqualTo(1L);
-        assertThat(userContract.getLastModifiedDate()).isEqualTo(userEntity.getLastModifiedDate());
+        assertThat(userRequestContract.getCorrespondenceCity()).isEqualTo("city/town/village 2");
+        assertThat(userRequestContract.getCorrespondencePinCode()).isEqualTo("pincode 2");
+        assertThat(userRequestContract.getActive()).isEqualTo(userEntity.isActive());
+        assertThat(userRequestContract.getDob()).isEqualTo(userEntity.getDob());
+        assertThat(userRequestContract.getPwdExpiryDate()).isEqualTo(userEntity.getPwdExpiryDate().toDate());
+        assertThat(userRequestContract.getLocale()).isEqualTo(userEntity.getLocale());
+        assertThat(userRequestContract.getType()).isEqualTo(userEntity.getType());
+        assertThat(userRequestContract.getAccountLocked()).isEqualTo(userEntity.isAccountLocked());
+        assertThat(userRequestContract.getFatherOrHusbandName()).isEqualTo(userEntity.getGuardian());
+        assertThat(userRequestContract.getSignature()).isEqualTo(userEntity.getSignature());
+        assertThat(userRequestContract.getBloodGroup()).isEqualTo(userEntity.getBloodGroup().getValue());
+        assertThat(userRequestContract.getPhoto()).isEqualTo(userEntity.getPhoto());
+        assertThat(userRequestContract.getIdentificationMark()).isEqualTo(userEntity.getIdentificationMark());
+        assertThat(userRequestContract.getRoles().get(0).getName()).isEqualTo("name of the role 1");
+        assertThat(userRequestContract.getRoles().get(1).getName()).isEqualTo("name of the role 2");
+        assertThat(userRequestContract.getCreatedBy()).isEqualTo(1L);
+        assertThat(userRequestContract.getCreatedDate()).isEqualTo(userEntity.getCreatedDate());
+        assertThat(userRequestContract.getLastModifiedBy()).isEqualTo(1L);
+        assertThat(userRequestContract.getLastModifiedDate()).isEqualTo(userEntity.getLastModifiedDate());
     }
 
     private org.egov.user.persistence.entity.User getUserEntity() {

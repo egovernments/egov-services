@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RunWith(SpringRunner.class)
 @DataJpaTest
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
-public class UserRepositoryTest {
+public class UserRequestRepositoryTest {
 
     @Autowired
     UserRepository userRepository;

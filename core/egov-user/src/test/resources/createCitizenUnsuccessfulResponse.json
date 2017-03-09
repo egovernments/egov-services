@@ -1,0 +1,40 @@
+{
+  "ResponseInfo": null,
+  "Error": {
+    "code": 400,
+    "message": "Invalid user object",
+    "description": null,
+    "fields": [
+      {
+        "code": "core-user.001",
+        "message": "Gender is required",
+        "field": "User.gender"
+      },
+      {
+        "code": "core-user.002",
+        "message": "Type is required",
+        "field": "User.type"
+      },
+      {
+        "code": "core-user.003",
+        "message": "Active flag is required",
+        "field": "User.active"
+      },
+      {
+        "code": "core-user.004",
+        "message": "Mobile number is required",
+        "field": "User.mobile"
+      },
+      {
+        "code": "core-user.005",
+        "message": "Username is required",
+        "field": "User.username"
+      },
+      {
+        "code": "core-user.005",
+        "message": "Name is required",
+        "field": "User.name"
+      }
+    ]
+  }
+}

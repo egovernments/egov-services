@@ -57,7 +57,7 @@ public class SecureUser implements UserDetails {
 
 	public SecureUser(User user) {
 		if (user == null) {
-			throw new UsernameNotFoundException("User not found");
+			throw new UsernameNotFoundException("UserRequest not found");
 		} else {
 			this.user = user;
 			user.getRoles().forEach(role -> this.authorities.add(new SimpleGrantedAuthority(role.getName())));

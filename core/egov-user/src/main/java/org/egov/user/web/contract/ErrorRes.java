@@ -1,74 +1,79 @@
 package org.egov.user.web.contract;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
 import java.util.Objects;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
+@NoArgsConstructor
+@AllArgsConstructor
 public class ErrorRes {
-	@JsonProperty("ResponseInfo")
-	private ResponseInfo responseInfo = null;
 
-	@JsonProperty("Error")
-	private Error error = null;
+    @JsonProperty("ResponseInfo")
+    private ResponseInfo responseInfo = null;
 
-	public ErrorRes responseInfo(ResponseInfo responseInfo) {
-		this.responseInfo = responseInfo;
-		return this;
-	}
+    @JsonProperty("Error")
+    private Error error = null;
 
-	public ResponseInfo getResponseInfo() {
-		return responseInfo;
-	}
+    public ErrorRes responseInfo(ResponseInfo responseInfo) {
+        this.responseInfo = responseInfo;
+        return this;
+    }
 
-	public void setResponseInfo(ResponseInfo responseInfo) {
-		this.responseInfo = responseInfo;
-	}
+    public ResponseInfo getResponseInfo() {
+        return responseInfo;
+    }
 
-	public ErrorRes error(Error error) {
-		this.error = error;
-		return this;
-	}
+    public void setResponseInfo(ResponseInfo responseInfo) {
+        this.responseInfo = responseInfo;
+    }
 
-	public Error getError() {
-		return error;
-	}
+    public ErrorRes error(Error error) {
+        this.error = error;
+        return this;
+    }
 
-	public void setError(Error error) {
-		this.error = error;
-	}
+    public Error getError() {
+        return error;
+    }
 
-	@Override
-	public boolean equals(java.lang.Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-		ErrorRes errorRes = (ErrorRes) o;
-		return Objects.equals(this.responseInfo, errorRes.responseInfo) && Objects.equals(this.error, errorRes.error);
-	}
+    public void setError(Error error) {
+        this.error = error;
+    }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(responseInfo, error);
-	}
+    @Override
+    public boolean equals(java.lang.Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ErrorRes errorRes = (ErrorRes) o;
+        return Objects.equals(this.responseInfo, errorRes.responseInfo) && Objects.equals(this.error, errorRes.error);
+    }
 
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("class ErrorRes {\n");
+    @Override
+    public int hashCode() {
+        return Objects.hash(responseInfo, error);
+    }
 
-		sb.append("    responseInfo: ").append(toIndentedString(responseInfo)).append("\n");
-		sb.append("    error: ").append(toIndentedString(error)).append("\n");
-		sb.append("}");
-		return sb.toString();
-	}
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("class ErrorRes {\n");
 
-	private String toIndentedString(java.lang.Object o) {
-		if (o == null) {
-			return "null";
-		}
-		return o.toString().replace("\n", "\n    ");
-	}
+        sb.append("    responseInfo: ").append(toIndentedString(responseInfo)).append("\n");
+        sb.append("    error: ").append(toIndentedString(error)).append("\n");
+        sb.append("}");
+        return sb.toString();
+    }
+
+    private String toIndentedString(java.lang.Object o) {
+        if (o == null) {
+            return "null";
+        }
+        return o.toString().replace("\n", "\n    ");
+    }
 }

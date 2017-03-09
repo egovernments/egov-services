@@ -8,7 +8,7 @@ import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class RoleTest {
+public class RoleRequestTest {
 
     @Test
     public void test_entity_to_contract_conversion() throws Exception {
@@ -21,7 +21,7 @@ public class RoleTest {
 
         org.egov.user.persistence.entity.Role roleEntity = org.egov.user.persistence.entity.Role.builder()
                 .id(1L)
-                .name("name of the role 1")
+                .name("name of the roleRequest 1")
                 .description("description")
                 .build();
         roleEntity.setCreatedBy(user);
@@ -29,14 +29,14 @@ public class RoleTest {
         roleEntity.setLastModifiedBy(user);
         roleEntity.setLastModifiedDate(date);
 
-        Role role = new Role(roleEntity);
+        RoleRequest roleRequest = new RoleRequest(roleEntity);
 
-        assertThat(role.getId()).isEqualTo(1L);
-        assertThat(role.getName()).isEqualTo("name of the role 1");
-        assertThat(role.getDescription()).isEqualTo("description");
-        assertThat(role.getCreatedBy()).isEqualTo(1L);
-        assertThat(role.getCreatedDate()).isEqualTo(date);
-        assertThat(role.getLastModifiedBy()).isEqualTo(1L);
-        assertThat(role.getLastModifiedDate()).isEqualTo(date);
+        assertThat(roleRequest.getId()).isEqualTo(1L);
+        assertThat(roleRequest.getName()).isEqualTo("name of the roleRequest 1");
+        assertThat(roleRequest.getDescription()).isEqualTo("description");
+        assertThat(roleRequest.getCreatedBy()).isEqualTo(1L);
+        assertThat(roleRequest.getCreatedDate()).isEqualTo(date);
+        assertThat(roleRequest.getLastModifiedBy()).isEqualTo(1L);
+        assertThat(roleRequest.getLastModifiedDate()).isEqualTo(date);
     }
 }

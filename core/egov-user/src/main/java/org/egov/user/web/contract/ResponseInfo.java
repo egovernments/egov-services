@@ -9,21 +9,21 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResponseInfo {
-	@JsonProperty("apiId")
-	private String apiId = null;
+    @JsonProperty("apiId")
+    private String apiId = null;
 
-	@JsonProperty("ver")
-	private String ver = null;
+    @JsonProperty("ver")
+    private String ver = null;
 
-	@JsonProperty("ts")
-	private String ts = null;
+    @JsonProperty("ts")
+    private String ts = null;
 
-	@JsonProperty("resMsgId")
-	private String resMsgId = null;
+    @JsonProperty("resMsgId")
+    private String resMsgId = null;
 
-	@JsonProperty("msgId")
-	private String msgId = null;
+    @JsonProperty("msgId")
+    private String msgId = null;
 
-	@JsonProperty("status")
-	private String status = null;
+    @JsonProperty("status")
+    private String status = null;
 }

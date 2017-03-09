@@ -69,7 +69,7 @@ public class CustomTokenEnhancer extends TokenEnhancerChain {
         responseInfo.put("msg_id", "");
         responseInfo.put("status", "Access Token generated successfully");
         info.put("ResponseInfo", responseInfo);
-        info.put("User", su.getUser());
+        info.put("UserRequest", su.getUser());
 
         token.setAdditionalInformation(info);
 

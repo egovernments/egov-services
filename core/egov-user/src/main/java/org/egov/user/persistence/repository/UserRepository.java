@@ -46,6 +46,7 @@ import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.QueryHint;
+import javax.transaction.Transactional;
 
 import static org.hibernate.jpa.QueryHints.HINT_CACHEABLE;
 
@@ -55,4 +56,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     User findByUsername(String userName);
 
     User findByEmailId(String emailId);
+
+    @Transactional
+    User save(User user);
 }

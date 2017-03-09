@@ -157,4 +157,36 @@ public class User extends AbstractAuditable {
     public DateTime getPwdExpiryDate() {
         return null == pwdExpiryDate ? null : new DateTime(pwdExpiryDate);
     }
+
+    public User fromDomain(org.egov.user.domain.model.User user) {
+        this.name = user.getName();
+        this.id = user.getId();
+        this.username = user.getUsername();
+        this.title = user.getTitle();
+        this.password = user.getPassword();
+        this.salutation = user.getSalutation();
+        this.guardian = user.getGuardian();
+        this.guardianRelation = user.getGuardianRelation();
+        this.name = user.getName();
+        this.gender = user.getGender();
+        this.mobileNumber = user.getMobileNumber();
+        this.emailId = user.getEmailId();
+        this.altContactNumber = user.getAltContactNumber();
+        this.pan = user.getPan();
+        this.aadhaarNumber = user.getAadhaarNumber();
+        this.active = user.getActive();
+        this.roles = user.getRoles();
+        this.dob = user.getDob();
+        this.pwdExpiryDate = user.getPwdExpiryDate();
+        this.locale = user.getLocale();
+        this.type = user.getType();
+        this.bloodGroup = user.getBloodGroup();
+        this.identificationMark = user.getIdentificationMark();
+        this.signature = user.getSignature();
+        this.photo = user.getPhoto();
+        this.accountLocked = user.getAccountLocked();
+        this.setLastModifiedDate(user.getLastModifiedDate());
+        this.setCreatedDate(user.getCreatedDate());
+        return this;
+    }
 }

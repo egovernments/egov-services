@@ -63,7 +63,13 @@ public class UserService {
 		return userRepository.findByEmailId(emailId);
 	}
 
-	public List<User> getUsersById(List<Long> ids) {
-		return userRepository.findAll(ids);
-	}
+    public List<User> getUsersById(List<Long> ids) {
+        return userRepository.findAll(ids);
+    }
+
+    public User save(org.egov.user.domain.model.User user) {
+        user.validate();
+        User userToPersist = new User().fromDomain(user);
+        return userRepository.save(userToPersist);
+    }
 }

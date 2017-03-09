@@ -7,7 +7,6 @@
     "msgId": null,
     "status": "200"
   },
-
   "user": [
     {
       "id": 1,
@@ -27,11 +26,19 @@
       "correspondenceCity": "city/town/village 2",
       "correspondencePinCode": "pincode 2",
       "active": true,
-      "dob": "07/01/1990",
-      "pwdExpiryDate": "07/01/1990",
       "locale": "en_IN",
       "type": "CITIZEN",
       "accountLocked": false,
+      "fatherOrHusbandName": "name of relative",
+      "signature": "7a9d7f12-bdcb-4487-9d43-709838a0ad39",
+      "bloodGroup": "A+",
+      "photo": "3b26fb49-e43d-401b-899a-f8f0a1572de0",
+      "identificationMark": "identification mark",
+      "createdBy": 1,
+      "password": null,
+      "otpReference": null,
+      "lastModifiedBy": 1,
+      "tenantId": null,
       "roles": [
         {
           "id": 1,
@@ -52,15 +59,10 @@
           "lastModifiedDate": "07/01/1990"
         }
       ],
-      "fatherOrHusbandName": "name of relative",
-      "signature": "7a9d7f12-bdcb-4487-9d43-709838a0ad39",
-      "bloodGroup": "A+",
-      "photo": "3b26fb49-e43d-401b-899a-f8f0a1572de0",
-      "identificationMark": "identification mark",
-      "createdBy": 1,
-      "createdDate": "07/01/1990",
-      "lastModifiedBy": 1,
-      "lastModifiedDate": "07/01/1990"
+      "createdDate": "01-07-1990 11:11:11",
+      "lastModifiedDate": "01-07-1990 11:11:11",
+      "dob": "07/01/1990",
+      "pwdExpiryDate": "01-07-1990 11:11:11"
     }
   ]
 }

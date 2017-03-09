@@ -17,6 +17,6 @@ public class CreateUserRequest {
     private UserRequest userRequest;
 
     public User toDomainForCreate() {
-        return userRequest.toDomain();
+        return userRequest.toDomainForCreate();
     }
 }

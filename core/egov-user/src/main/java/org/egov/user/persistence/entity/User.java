@@ -175,7 +175,6 @@ public class User extends AbstractAuditable {
         this.pan = user.getPan();
         this.aadhaarNumber = user.getAadhaarNumber();
         this.active = user.getActive();
-        this.roles = user.getRoles();
         this.dob = user.getDob();
         this.pwdExpiryDate = user.getPwdExpiryDate();
         this.locale = user.getLocale();
@@ -187,6 +186,15 @@ public class User extends AbstractAuditable {
         this.accountLocked = user.getAccountLocked();
         this.setLastModifiedDate(user.getLastModifiedDate());
         this.setCreatedDate(user.getCreatedDate());
+        this.roles = user.getRoles();
+
+//        populateRoles(user);
         return this;
     }
+
+//    private void populateRoles(org.egov.user.domain.model.User user) {
+//        for(Role role : user.getRoles()) {
+//
+//        }
+//    }
 }

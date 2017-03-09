@@ -40,16 +40,20 @@
 
 package org.egov.user.domain.service;
 
+import org.egov.user.persistence.entity.Role;
 import org.egov.user.persistence.entity.User;
+import org.egov.user.persistence.repository.RoleRepository;
 import org.egov.user.persistence.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
 public class UserService {
 
 	private UserRepository userRepository;
+	private RoleRepository roleRepository;
 
 	public UserService(UserRepository userRepository) {
 		this.userRepository = userRepository;
@@ -70,6 +74,10 @@ public class UserService {
     public User save(org.egov.user.domain.model.User user) {
         user.validate();
         User userToPersist = new User().fromDomain(user);
+//        userToPersist.getRoles().stream().map((role) ->  roleRepository.findByName(role.getName())).collect(Collection.set)
+//        for(Role role : userToPersist.getRoles()) {
+//			roleRepository.findByName(role.getName());
+//		}
         return userRepository.save(userToPersist);
     }
 }

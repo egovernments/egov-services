@@ -105,9 +105,13 @@ public class UserRequestControllerTest {
     }
 
     private User buildUser() {
-        Calendar dateOfBirth = new GregorianCalendar(1917, Calendar.MARCH, 8, 11, 15, 36);
-        Calendar createdDate = new GregorianCalendar(2017, Calendar.FEBRUARY, 8, 11, 15, 36);
-        Calendar pwdExpiryDate = new GregorianCalendar(2018, Calendar.FEBRUARY, 8, 11, 15, 36);
+        Calendar c = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+        c.set(1917, Calendar.MARCH, 8, 11, 15, 36);
+        Date dateOfBirth = c.getTime();
+        c.set(2017, Calendar.FEBRUARY, 8, 11, 15, 36);
+        Date createdDate = c.getTime();
+        c.set(2018, Calendar.FEBRUARY, 8, 11, 15, 36);
+        Date pwdExpiryDate = c.getTime();
         Role role = new Role(12L, "CITIZEN", "Citizen role");
         Set<Role> roles = new HashSet<>();
         roles.add(role);
@@ -124,15 +128,15 @@ public class UserRequestControllerTest {
         user.setPan("AITGC5624P");
         user.setAadhaarNumber("96a70a9a-03bd-11e7-93ae-92361f002671");
         user.setActive(Boolean.TRUE);
-        user.setDob(dateOfBirth.getTime());
-        user.setPwdExpiryDate(pwdExpiryDate.getTime());
+        user.setDob(dateOfBirth);
+        user.setPwdExpiryDate(pwdExpiryDate);
         user.setLocale("en_IN");
         user.setType(UserType.CITIZEN);
         user.setAccountLocked(Boolean.FALSE);
         user.setBloodGroup(BloodGroup.O_POSITIVE);
         user.setIdentificationMark("Head is missing on the body");
-        user.setCreatedDate(createdDate.getTime());
-        user.setLastModifiedDate(createdDate.getTime());
+        user.setCreatedDate(createdDate);
+        user.setLastModifiedDate(createdDate);
         user.setCreatedBy(createdBy);
         user.setLastModifiedBy(createdBy);
         user.setRoles(roles);
@@ -140,7 +144,7 @@ public class UserRequestControllerTest {
     }
 
     private List<User> getUserEntities() {
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
         calendar.set(1990, Calendar.JULY, 1, 11, 11, 11);
         Date date = calendar.getTime();
 
@@ -174,7 +178,7 @@ public class UserRequestControllerTest {
     }
 
     private User populateUser() {
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
         calendar.set(1990, Calendar.JULY, 1, 11, 11, 11);
         Date date = calendar.getTime();
 
@@ -209,7 +213,7 @@ public class UserRequestControllerTest {
 
     private Set<Role> getListOfRoles() {
         User user = User.builder().id(0L).build();
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
         calendar.set(1990, Calendar.JULY, 1);
 
         Role role1 = Role.builder().id(1L).name("name of the role 1").description("description").build();

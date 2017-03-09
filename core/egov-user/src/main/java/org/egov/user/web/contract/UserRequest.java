@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.egov.user.domain.model.User;
 import org.egov.user.persistence.entity.Address;
+import org.egov.user.persistence.entity.Role;
 import org.egov.user.persistence.entity.enums.*;
 
 import java.util.*;
@@ -166,7 +167,17 @@ public class UserRequest {
         );
     }
 
-    public User toDomain() {
+    public User toDomainForCreate() {
+        Role citizen = new Role();
+        citizen.setName("CITIZEN");
+        Set<Role> roles = new HashSet<>();
+        roles.add(citizen);
+        return forDomain()
+                .roles(roles)
+                .build();
+    }
+
+    private User.UserBuilder forDomain() {
         return User.builder()
                 .name(this.name)
                 .username(this.userName)
@@ -189,7 +200,6 @@ public class UserRequest {
                 .bloodGroup(this.bloodGroup != null ? BloodGroup.valueOf(this.bloodGroup.toUpperCase()) : null)
                 .lastModifiedDate(new Date())
                 .createdDate(new Date())
-                .roles(this.roles != null ? this.roles.stream().map(RoleRequest::toDomain).collect(Collectors.toSet()): null)
-                .build();
+                .roles(this.roles != null ? this.roles.stream().map(RoleRequest::toDomain).collect(Collectors.toSet()) : null);
     }
 }

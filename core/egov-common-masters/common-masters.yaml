@@ -12,7 +12,7 @@ info:
     name: Elzan Mathew
 schemes:
   - https
-basePath: '/v1/[API endpoint]'
+basePath: '/egov-common-masters/[API endpoint]'
 
 # Describe your paths here
 paths:
@@ -851,8 +851,11 @@ definitions:
         format: varchar
         description: TRUE for active languages and FALSE for inactive languages.
         default: true
+      tenantId:
+        description: Unique id for for a tenant.
+        type: string
     required:
-      - id
+      - tenantId
       - name
       - active
 
@@ -965,8 +968,11 @@ definitions:
         type: boolean
         format: varchar
         description: TRUE for active religions and FALSE for inactive religions.
+      tenantId:
+        description: Unique id for for a tenant.
+        type: string
     required:
-      - id
+      - tenantId
       - name
       - active
       
@@ -991,8 +997,11 @@ definitions:
         type: boolean
         format: varchar
         description: TRUE for active community and FALSE for inactive community.
+      tenantId:
+        description: Unique id for for a tenant.
+        type: string
     required:
-      - id
+      - tenantId
       - name
       - active
 
@@ -1009,15 +1018,11 @@ definitions:
   LanguageReq:
     type: object
     properties:
-      tenantId:
-        description: Unique id for for a tenant.
-        type: string
       RequestInfo:
         $ref: '#/definitions/RequestInfo'
       Language:
         $ref: '#/definitions/Language'  
     required:
-      - tenantId
       - RequestInfo
       - Language
       
@@ -1059,15 +1064,11 @@ definitions:
   CommunityReq:
     type: object
     properties:
-      tenantId:
-        description: Unique id for for a tenant.
-        type: string
       RequestInfo:
         $ref: '#/definitions/RequestInfo'
       Community:
         $ref: '#/definitions/Community'
     required:
-      - tenantId
       - RequestInfo
       - Community
       
@@ -1093,8 +1094,11 @@ definitions:
         type: boolean
         format: varchar
         description: TRUE for active departments and FALSE for inactive departments.
+      tenantId:
+        description: Unique id for for a tenant.
+        type: string
     required:
-      - id
+      - tenantId
       - name
       - code
       - active
@@ -1112,15 +1116,11 @@ definitions:
   DepartmentReq:
     type: object
     properties:
-      tenantId:
-        description: Unique id for for a tenant.
-        type: string
       RequestInfo:
         $ref: '#/definitions/RequestInfo'
       Department:
         $ref: '#/definitions/Department'
     required:
-      - tenantId
       - RequestInfo
       - Department
       
@@ -1147,8 +1147,11 @@ definitions:
       active:
         type: boolean
         description: if this year is active then value will be TRUE, else value will be FALSE.
+      tenantId:
+        description: Unique id for for a tenant.
+        type: string
     required:
-      - id
+      - tenantId
       - name
       - startDate
       - endDate
@@ -1165,15 +1168,11 @@ definitions:
   CalendarYearReq:
     type: object
     properties:
-      tenantId:
-        description: Unique id for for a tenant.
-        type: string
       RequestInfo:
         $ref: '#/definitions/RequestInfo'
       CalendarYear:
         $ref: '#/definitions/CalendarYear'
     required:
-      - tenantId
       - RequestInfo
       - CalendarYear
   Holiday:
@@ -1198,9 +1197,11 @@ definitions:
         type: string
         format: date
         description: Date on which the holiday is applicable.
-
+      tenantId:
+        description: Unique id for for a tenant.
+        type: string
     required:
-      - id
+      - tenantId
       - calendarYear
       - name
       - applicableOn
@@ -1216,15 +1217,11 @@ definitions:
   HolidayReq:
     type: object
     properties:
-      tenantId:
-        description: Unique id for for a tenant.
-        type: string
       RequestInfo:
         $ref: '#/definitions/RequestInfo'
       Holiday:
         $ref: '#/definitions/Holiday'            
     required:
-      - tenantId
       - RequestInfo
       - Holiday     
   Category:
@@ -1248,7 +1245,13 @@ definitions:
         type: string
         format: boolean
         description: Shows if this category data is active or not. If the value is TRUE, then this data is active one. If this needs to be marked as a deleted data then the value will be FALSE.       
-
+      tenantId:
+        description: Unique id for for a tenant.
+        type: string
+    required:
+      - tenantId
+      - name
+      - active
   CategoryRes:
     type: object
     properties:
@@ -1261,15 +1264,11 @@ definitions:
   CategoryReq:
     type: object
     properties:
-      tenantId:
-        description: Unique id for for a tenant.
-        type: string
       RequestInfo:
         $ref: '#/definitions/RequestInfo'
       Category:
         $ref: '#/definitions/Category'
     required:
-      - tenantId
       - RequestInfo
       - Category
 parameters:

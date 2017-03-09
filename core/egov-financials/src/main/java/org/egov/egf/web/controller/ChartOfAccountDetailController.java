@@ -15,6 +15,7 @@ import org.egov.egf.persistence.queue.contract.RequestInfo;
 import org.egov.egf.persistence.queue.contract.ResponseInfo;
 import org.egov.egf.persistence.service.ChartOfAccountDetailService;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.builder.SkipExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -44,7 +45,7 @@ public class ChartOfAccountDetailController {
 		if (errors.hasErrors()) {
 		  throw	new CustomBindException(errors);
 		}
-		
+		chartOfAccountDetailService.fetchRelatedContracts(chartOfAccountDetailContractRequest);
 		ChartOfAccountDetailContractResponse chartOfAccountDetailContractResponse = new ChartOfAccountDetailContractResponse();
 		chartOfAccountDetailContractResponse.setChartOfAccountDetails(new ArrayList<ChartOfAccountDetailContract>());
 		for(ChartOfAccountDetailContract chartOfAccountDetailContract:chartOfAccountDetailContractRequest.getChartOfAccountDetails())
@@ -72,10 +73,12 @@ public class ChartOfAccountDetailController {
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
-	 
+		chartOfAccountDetailService.fetchRelatedContracts(chartOfAccountDetailContractRequest);
 		ChartOfAccountDetail chartOfAccountDetailFromDb = chartOfAccountDetailService.findOne(uniqueId);
-		ChartOfAccountDetailContract chartOfAccountDetail = chartOfAccountDetailContractRequest.getChartOfAccountDetail();
 		
+		ChartOfAccountDetailContract chartOfAccountDetail = chartOfAccountDetailContractRequest.getChartOfAccountDetail();
+		//ignoring internally passed id if the put has id in url
+	    chartOfAccountDetail.setId(uniqueId);
 		ModelMapper model=new ModelMapper();
 	 	model.map(chartOfAccountDetail, chartOfAccountDetailFromDb);
 		chartOfAccountDetailFromDb = chartOfAccountDetailService.update(chartOfAccountDetailFromDb);
@@ -88,19 +91,19 @@ public class ChartOfAccountDetailController {
 	
 	@GetMapping(value = "/{uniqueId}")
 	@ResponseStatus(HttpStatus.OK)
-	public ChartOfAccountDetailContractResponse view(@RequestBody @Valid ChartOfAccountDetailContractRequest chartOfAccountDetailContractRequest, BindingResult errors,
+	public ChartOfAccountDetailContractResponse view(@ModelAttribute ChartOfAccountDetailContractRequest chartOfAccountDetailContractRequest, BindingResult errors,
 			@PathVariable Long uniqueId) {
-
+		chartOfAccountDetailService.validate(chartOfAccountDetailContractRequest,"view",errors);
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
-		chartOfAccountDetailService.validate(chartOfAccountDetailContractRequest,"view",errors);
+		chartOfAccountDetailService.fetchRelatedContracts(chartOfAccountDetailContractRequest);
 		RequestInfo requestInfo = chartOfAccountDetailContractRequest.getRequestInfo();
 		ChartOfAccountDetail chartOfAccountDetailFromDb = chartOfAccountDetailService.findOne(uniqueId);
 		ChartOfAccountDetailContract chartOfAccountDetail = chartOfAccountDetailContractRequest.getChartOfAccountDetail();
 		
 		ModelMapper model=new ModelMapper();
-	 	model.map(chartOfAccountDetail, chartOfAccountDetailFromDb);
+	 	model.map(chartOfAccountDetailFromDb,chartOfAccountDetail );
 		
 		ChartOfAccountDetailContractResponse chartOfAccountDetailContractResponse = new ChartOfAccountDetailContractResponse();
 		chartOfAccountDetailContractResponse.setChartOfAccountDetail(chartOfAccountDetail);  
@@ -116,14 +119,13 @@ public class ChartOfAccountDetailController {
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
-		
+		chartOfAccountDetailService.fetchRelatedContracts(chartOfAccountDetailContractRequest);		
  
 		ChartOfAccountDetailContractResponse chartOfAccountDetailContractResponse =new  ChartOfAccountDetailContractResponse();
 		chartOfAccountDetailContractResponse.setChartOfAccountDetails(new ArrayList<ChartOfAccountDetailContract>());
 		for(ChartOfAccountDetailContract chartOfAccountDetailContract:chartOfAccountDetailContractRequest.getChartOfAccountDetails())
 		{
 		ChartOfAccountDetail chartOfAccountDetailFromDb = chartOfAccountDetailService.findOne(chartOfAccountDetailContract.getId());
-		 
 		
 		ModelMapper model=new ModelMapper();
 	 	model.map(chartOfAccountDetailContract, chartOfAccountDetailFromDb);
@@ -147,6 +149,7 @@ public class ChartOfAccountDetailController {
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
+		chartOfAccountDetailService.fetchRelatedContracts(chartOfAccountDetailContractRequest);
 		ChartOfAccountDetailContractResponse chartOfAccountDetailContractResponse =new  ChartOfAccountDetailContractResponse();
 		chartOfAccountDetailContractResponse.setChartOfAccountDetails(new ArrayList<ChartOfAccountDetailContract>());
 		chartOfAccountDetailContractResponse.setPage(new Pagination());

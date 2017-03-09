@@ -15,6 +15,7 @@ import org.egov.egf.persistence.queue.contract.RequestInfo;
 import org.egov.egf.persistence.queue.contract.ResponseInfo;
 import org.egov.egf.persistence.service.FunctionService;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.builder.SkipExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -44,7 +45,7 @@ public class FunctionController {
 		if (errors.hasErrors()) {
 		  throw	new CustomBindException(errors);
 		}
-		
+		functionService.fetchRelatedContracts(functionContractRequest);
 		FunctionContractResponse functionContractResponse = new FunctionContractResponse();
 		functionContractResponse.setFunctions(new ArrayList<FunctionContract>());
 		for(FunctionContract functionContract:functionContractRequest.getFunctions())
@@ -72,10 +73,12 @@ public class FunctionController {
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
-	 
+		functionService.fetchRelatedContracts(functionContractRequest);
 		Function functionFromDb = functionService.findOne(uniqueId);
-		FunctionContract function = functionContractRequest.getFunction();
 		
+		FunctionContract function = functionContractRequest.getFunction();
+		//ignoring internally passed id if the put has id in url
+	    function.setId(uniqueId);
 		ModelMapper model=new ModelMapper();
 	 	model.map(function, functionFromDb);
 		functionFromDb = functionService.update(functionFromDb);
@@ -88,19 +91,19 @@ public class FunctionController {
 	
 	@GetMapping(value = "/{uniqueId}")
 	@ResponseStatus(HttpStatus.OK)
-	public FunctionContractResponse view(@RequestBody @Valid FunctionContractRequest functionContractRequest, BindingResult errors,
+	public FunctionContractResponse view(@ModelAttribute FunctionContractRequest functionContractRequest, BindingResult errors,
 			@PathVariable Long uniqueId) {
-
+		functionService.validate(functionContractRequest,"view",errors);
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
-		functionService.validate(functionContractRequest,"view",errors);
+		functionService.fetchRelatedContracts(functionContractRequest);
 		RequestInfo requestInfo = functionContractRequest.getRequestInfo();
 		Function functionFromDb = functionService.findOne(uniqueId);
 		FunctionContract function = functionContractRequest.getFunction();
 		
 		ModelMapper model=new ModelMapper();
-	 	model.map(function, functionFromDb);
+	 	model.map(functionFromDb,function );
 		
 		FunctionContractResponse functionContractResponse = new FunctionContractResponse();
 		functionContractResponse.setFunction(function);  
@@ -116,14 +119,13 @@ public class FunctionController {
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
-		
+		functionService.fetchRelatedContracts(functionContractRequest);		
  
 		FunctionContractResponse functionContractResponse =new  FunctionContractResponse();
 		functionContractResponse.setFunctions(new ArrayList<FunctionContract>());
 		for(FunctionContract functionContract:functionContractRequest.getFunctions())
 		{
 		Function functionFromDb = functionService.findOne(functionContract.getId());
-		 
 		
 		ModelMapper model=new ModelMapper();
 	 	model.map(functionContract, functionFromDb);
@@ -147,6 +149,7 @@ public class FunctionController {
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
+		functionService.fetchRelatedContracts(functionContractRequest);
 		FunctionContractResponse functionContractResponse =new  FunctionContractResponse();
 		functionContractResponse.setFunctions(new ArrayList<FunctionContract>());
 		functionContractResponse.setPage(new Pagination());

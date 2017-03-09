@@ -15,6 +15,7 @@ import org.egov.egf.persistence.queue.contract.RequestInfo;
 import org.egov.egf.persistence.queue.contract.ResponseInfo;
 import org.egov.egf.persistence.service.FundsourceService;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.builder.SkipExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -44,7 +45,7 @@ public class FundsourceController {
 		if (errors.hasErrors()) {
 		  throw	new CustomBindException(errors);
 		}
-		
+		fundsourceService.fetchRelatedContracts(fundsourceContractRequest);
 		FundsourceContractResponse fundsourceContractResponse = new FundsourceContractResponse();
 		fundsourceContractResponse.setFundsources(new ArrayList<FundsourceContract>());
 		for(FundsourceContract fundsourceContract:fundsourceContractRequest.getFundsources())
@@ -72,10 +73,12 @@ public class FundsourceController {
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
-	 
+		fundsourceService.fetchRelatedContracts(fundsourceContractRequest);
 		Fundsource fundsourceFromDb = fundsourceService.findOne(uniqueId);
-		FundsourceContract fundsource = fundsourceContractRequest.getFundsource();
 		
+		FundsourceContract fundsource = fundsourceContractRequest.getFundsource();
+		//ignoring internally passed id if the put has id in url
+	    fundsource.setId(uniqueId);
 		ModelMapper model=new ModelMapper();
 	 	model.map(fundsource, fundsourceFromDb);
 		fundsourceFromDb = fundsourceService.update(fundsourceFromDb);
@@ -88,19 +91,19 @@ public class FundsourceController {
 	
 	@GetMapping(value = "/{uniqueId}")
 	@ResponseStatus(HttpStatus.OK)
-	public FundsourceContractResponse view(@RequestBody @Valid FundsourceContractRequest fundsourceContractRequest, BindingResult errors,
+	public FundsourceContractResponse view(@ModelAttribute FundsourceContractRequest fundsourceContractRequest, BindingResult errors,
 			@PathVariable Long uniqueId) {
-
+		fundsourceService.validate(fundsourceContractRequest,"view",errors);
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
-		fundsourceService.validate(fundsourceContractRequest,"view",errors);
+		fundsourceService.fetchRelatedContracts(fundsourceContractRequest);
 		RequestInfo requestInfo = fundsourceContractRequest.getRequestInfo();
 		Fundsource fundsourceFromDb = fundsourceService.findOne(uniqueId);
 		FundsourceContract fundsource = fundsourceContractRequest.getFundsource();
 		
 		ModelMapper model=new ModelMapper();
-	 	model.map(fundsource, fundsourceFromDb);
+	 	model.map(fundsourceFromDb,fundsource );
 		
 		FundsourceContractResponse fundsourceContractResponse = new FundsourceContractResponse();
 		fundsourceContractResponse.setFundsource(fundsource);  
@@ -116,14 +119,13 @@ public class FundsourceController {
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
-		
+		fundsourceService.fetchRelatedContracts(fundsourceContractRequest);		
  
 		FundsourceContractResponse fundsourceContractResponse =new  FundsourceContractResponse();
 		fundsourceContractResponse.setFundsources(new ArrayList<FundsourceContract>());
 		for(FundsourceContract fundsourceContract:fundsourceContractRequest.getFundsources())
 		{
 		Fundsource fundsourceFromDb = fundsourceService.findOne(fundsourceContract.getId());
-		 
 		
 		ModelMapper model=new ModelMapper();
 	 	model.map(fundsourceContract, fundsourceFromDb);
@@ -147,6 +149,7 @@ public class FundsourceController {
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
+		fundsourceService.fetchRelatedContracts(fundsourceContractRequest);
 		FundsourceContractResponse fundsourceContractResponse =new  FundsourceContractResponse();
 		fundsourceContractResponse.setFundsources(new ArrayList<FundsourceContract>());
 		fundsourceContractResponse.setPage(new Pagination());

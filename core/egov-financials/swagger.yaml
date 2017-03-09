@@ -12,31 +12,65 @@ info:
 schemes:
   - https
   - http
-basePath: '/v1/egf'
+basePath: 'egf-masters'
 paths:
-    /banks:
-      get:
+    /banks/_search:
+      post:
         summary: Get the list of banks
         description: banks
         tags: 
           - Masters
           - Bank
         parameters:
-          - name: bank.code
+          - name: requestInfo
+            in: body
+            description: Common Request info for the Services
+            schema:
+              $ref: '#/definitions/RequestInfo'
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: ids
+            type: string
+            in: query
+            description: comma seperated list of Ids,Maximum size=50 
+          - name: code
             type: string
             in: query
             description: code of the Bank
-            required: true
-          - name: bank.name
+            maxLength: 50
+          - name: name
             type: string
             in: query
             description: name of the Bank
-            required: true
-          - name: bank.active
+            maxLength: 100
+          - name: description
+            type: string
+            in: query
+            description: description of the Bank
+            maxLength: 250
+          - name: active
             type: boolean
             in: query
-            description: Whether Bank is Active or not. If the value is TRUE, then Bank is active,If the value is FALSE then Bank is inactive
-            required: true
+            description: Whether Bank is Active or not. If the value is TRUE, then Bank is active,If the value is FALSE then Bank is inactive,Default value is true
+          - name: type
+            type: string
+            in: query
+            description: type of the Bank
+            maxLength: 50
+          - name: pageSize
+            type: integer
+            format: int32
+            in: query
+            description: Number of records in a per page in  the Search Results, Default value is 20
+          - name: offSet
+            type: integer
+            format: int32
+            in: query
+            description: page number of the Search Results, Default value is 0
         responses:
           200:
             description: Bank retrieved Successfully
@@ -46,8 +80,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: Bank Not Found
+    /banks/_create:
       post:
         summary: Create  new  banks
         description: Create  new banks
@@ -55,6 +88,12 @@ paths:
           - Masters
           - Bank
         parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
           - name: bankRequest
             in: body
             description: Create  new 
@@ -69,15 +108,20 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: Bank Not Found
-      put:
+    /banks/{uniqueId}/_update:
+      post:
         summary: Update any of the banks
         description: Update any of the banks
         tags: 
           - Masters
           - Bank
         parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
           - name: bankRequest
             in: body
             description: common request_info
@@ -92,38 +136,109 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: Bank Not Found
 
-    /bankbranches:
-      get:
+    /bankbranches/_search:
+      post:
         summary: Get the list of bankbranches
         description: bankbranches
         tags: 
           - Masters
           - BankBranch
         parameters:
-          - name: bankBranch.bankid
+          - name: requestInfo
+            in: body
+            description: Common Request info for the Services
+            schema:
+              $ref: '#/definitions/RequestInfo'
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: ids
+            type: string
+            in: query
+            description: comma seperated list of Ids,Maximum size=50 
+          - name: bank
             type: integer
             format: int64
             in: query
             description: bank of the BankBranch
-            required: true
-          - name: bankBranch.code
+          - name: code
             type: string
             in: query
             description: code of the BankBranch
-            required: true
-          - name: bankBranch.name
+            maxLength: 50
+          - name: name
             type: string
             in: query
             description: name of the BankBranch
-            required: true
-          - name: bankBranch.active
+            maxLength: 50
+          - name: address
+            type: string
+            in: query
+            description: address of the BankBranch
+            maxLength: 50
+          - name: address2
+            type: string
+            in: query
+            description: address2 of the BankBranch
+            maxLength: 50
+          - name: city
+            type: string
+            in: query
+            description: city of the BankBranch
+            maxLength: 50
+          - name: state
+            type: string
+            in: query
+            description: state of the BankBranch
+            maxLength: 50
+          - name: pincode
+            type: string
+            in: query
+            description: pincode of the BankBranch
+            maxLength: 50
+          - name: phone
+            type: string
+            in: query
+            description: Phone number of the BankBranch
+            maxLength: 15
+          - name: fax
+            type: string
+            in: query
+            description: Fax number of the BankBranch
+            maxLength: 15
+          - name: contactPerson
+            type: string
+            in: query
+            description: contact person of the BankBranch
+            maxLength: 50
+          - name: active
             type: boolean
             in: query
-            description: Whether BankBranch is Active or not. If the value is TRUE, then BankBranch is active,If the value is FALSE then BankBranch is inactive
-            required: true
+            description: Whether BankBranch is Active or not. If the value is TRUE, then BankBranch is active,If the value is FALSE then BankBranch is inactive,Default value is true
+          - name: description
+            type: string
+            in: query
+            description: description of the BankBranch
+            maxLength: 256
+          - name: micr
+            type: string
+            in: query
+            description: MICR Code of the BankBranch
+            maxLength: 50
+          - name: pageSize
+            type: integer
+            format: int32
+            in: query
+            description: Number of records in a per page in  the Search Results, Default value is 20
+          - name: offSet
+            type: integer
+            format: int32
+            in: query
+            description: page number of the Search Results, Default value is 0
         responses:
           200:
             description: BankBranch retrieved Successfully
@@ -133,15 +248,20 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: BankBranch Not Found
+    /bankbranches/_create:
       post:
-        summary: Create  new  bankbranchs
-        description: Create  new bankbranchs
+        summary: Create  new  bankbranches
+        description: Create  new bankbranches
         tags: 
           - Masters
           - BankBranch
         parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
           - name: bankBranchRequest
             in: body
             description: Create  new 
@@ -156,15 +276,20 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: BankBranch Not Found
-      put:
+    /bankbranches/{uniqueId}/_update:
+      post:
         summary: Update any of the bankbranches
         description: Update any of the bankbranches
         tags: 
           - Masters
           - BankBranch
         parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
           - name: bankBranchRequest
             in: body
             description: common request_info
@@ -179,31 +304,83 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: BankBranch Not Found
 
-    /bankaccounts:
-      get:
+    /bankaccounts/_search:
+      post:
         summary: Get the list of bankaccounts
         description: bankaccounts
         tags: 
           - Masters
           - BankAccount
         parameters:
-          - name: bankAccount.bankBranchid
+          - name: requestInfo
+            in: body
+            description: Common Request info for the Services
+            schema:
+              $ref: '#/definitions/RequestInfo'
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: ids
+            type: string
+            in: query
+            description: comma seperated list of Ids,Maximum size=50 
+          - name: bankBranch
             type: integer
             format: int64
             in: query
             description: bank branch of the BankAccount
-          - name: bankAccount.accountType
+          - name: chartOfAccount
+            type: integer
+            format: int64
+            in: query
+            description: chart of account of the BankAccount
+          - name: fund
+            type: integer
+            format: int64
+            in: query
+            description: fund of the BankAccount
+          - name: accountNumber
+            type: string
+            in: query
+            description: account number of the BankAccount
+            maxLength: 25
+          - name: accountType
             type: string
             in: query
             description: account type of the BankAccount
-          - name: bankAccount.active
+          - name: description
+            type: string
+            in: query
+            description: description of the BankAccount
+            maxLength: 256
+          - name: active
             type: boolean
             in: query
-            description: Whether BankAccount is Active or not. If the value is TRUE, then BankAccount is active,If the value is FALSE then BankAccount is inactive
-            required: true
+            description: Whether BankAccount is Active or not. If the value is TRUE, then BankAccount is active,If the value is FALSE then BankAccount is inactive,Default value is true
+          - name: payTo
+            type: string
+            in: query
+            description: pay to of the BankAccount
+            maxLength: 100
+          - name: type
+            type: integer
+            format: int64
+            in: query
+            description: type of the BankAccount
+          - name: pageSize
+            type: integer
+            format: int32
+            in: query
+            description: Number of records in a per page in  the Search Results, Default value is 20
+          - name: offSet
+            type: integer
+            format: int32
+            in: query
+            description: page number of the Search Results, Default value is 0
         responses:
           200:
             description: BankAccount retrieved Successfully
@@ -213,8 +390,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: BankAccount Not Found
+    /bankaccounts/_create:
       post:
         summary: Create  new  bankaccounts
         description: Create  new bankaccounts
@@ -222,6 +398,12 @@ paths:
           - Masters
           - BankAccount
         parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
           - name: bankAccountRequest
             in: body
             description: Create  new 
@@ -236,15 +418,20 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: BankAccount Not Found
-      put:
+    /bankaccounts/{uniqueId}/_update:
+      post:
         summary: Update any of the bankaccounts
         description: Update any of the bankaccounts
         tags: 
           - Masters
           - BankAccount
         parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
           - name: bankAccountRequest
             in: body
             description: common request_info
@@ -259,22 +446,71 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: BankAccount Not Found
 
-    /financialyears:
-      get:
+    /financialyears/_search:
+      post:
         summary: Get the list of financialyears
         description: financialyears
         tags: 
           - Masters
           - FinancialYear
         parameters:
-          - name: financialYear.active
+          - name: requestInfo
+            in: body
+            description: Common Request info for the Services
+            schema:
+              $ref: '#/definitions/RequestInfo'
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: ids
+            type: string
+            in: query
+            description: comma seperated list of Ids,Maximum size=50 
+          - name: finYearRange
+            type: string
+            in: query
+            description: fin year range of the FinancialYear
+            maxLength: 25
+          - name: startingDate
+            type: string
+            format: date
+            in: query
+            description: starting date of the FinancialYear
+          - name: endingDate
+            type: string
+            format: date
+            in: query
+            description: ending date of the FinancialYear
+          - name: active
             type: boolean
             in: query
-            description: Whether FinancialYear is Active or not. If the value is TRUE, then FinancialYear is active,If the value is FALSE then FinancialYear is inactive
-            required: true
+            description: Whether FinancialYear is Active or not. If the value is TRUE, then FinancialYear is active,If the value is FALSE then FinancialYear is inactive,Default value is true
+          - name: isActiveForPosting
+            type: boolean
+            in: query
+            description: is active for posting of the FinancialYear
+          - name: isClosed
+            type: boolean
+            in: query
+            description: is closed of the FinancialYear
+          - name: transferClosingBalance
+            type: boolean
+            in: query
+            description: transfer closing balance of the FinancialYear
+          - name: pageSize
+            type: integer
+            format: int32
+            in: query
+            description: Number of records in a per page in  the Search Results, Default value is 20
+          - name: offSet
+            type: integer
+            format: int32
+            in: query
+            description: page number of the Search Results, Default value is 0
         responses:
           200:
             description: FinancialYear retrieved Successfully
@@ -284,8 +520,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: FinancialYear Not Found
+    /financialyears/_create:
       post:
         summary: Create  new  financialyears
         description: Create  new financialyears
@@ -293,6 +528,12 @@ paths:
           - Masters
           - FinancialYear
         parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
           - name: financialYearRequest
             in: body
             description: Create  new 
@@ -307,15 +548,20 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: FinancialYear Not Found
-      put:
+    /financialyears/{uniqueId}/_update:
+      post:
         summary: Update any of the financialyears
         description: Update any of the financialyears
         tags: 
           - Masters
           - FinancialYear
         parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
           - name: financialYearRequest
             in: body
             description: common request_info
@@ -330,27 +576,72 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: FinancialYear Not Found
 
-    /fiscalperiods:
-      get:
+    /fiscalperiods/_search:
+      post:
         summary: Get the list of fiscalperiods
         description: fiscalperiods
         tags: 
           - Masters
           - FiscalPeriod
         parameters:
-          - name: fiscalPeriod.name
+          - name: requestInfo
+            in: body
+            description: Common Request info for the Services
+            schema:
+              $ref: '#/definitions/RequestInfo'
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: ids
+            type: string
+            in: query
+            description: comma seperated list of Ids,Maximum size=50 
+          - name: name
             type: string
             in: query
             description: name of the FiscalPeriod
-            required: true
-          - name: fiscalPeriod.active
+            maxLength: 25
+          - name: financialYear
+            type: integer
+            format: int64
+            in: query
+            description: financial year of the FiscalPeriod
+          - name: startingDate
+            type: string
+            format: date
+            in: query
+            description: starting date of the FiscalPeriod
+          - name: endingDate
+            type: string
+            format: date
+            in: query
+            description: ending date of the FiscalPeriod
+          - name: active
             type: boolean
             in: query
-            description: Whether FiscalPeriod is Active or not. If the value is TRUE, then FiscalPeriod is active,If the value is FALSE then FiscalPeriod is inactive
-            required: true
+            description: Whether FiscalPeriod is Active or not. If the value is TRUE, then FiscalPeriod is active,If the value is FALSE then FiscalPeriod is inactive,Default value is true
+          - name: isActiveForPosting
+            type: boolean
+            in: query
+            description: is active for posting of the FiscalPeriod
+          - name: isClosed
+            type: boolean
+            in: query
+            description: is closed of the FiscalPeriod
+          - name: pageSize
+            type: integer
+            format: int32
+            in: query
+            description: Number of records in a per page in  the Search Results, Default value is 20
+          - name: offSet
+            type: integer
+            format: int32
+            in: query
+            description: page number of the Search Results, Default value is 0
         responses:
           200:
             description: FiscalPeriod retrieved Successfully
@@ -360,8 +651,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: FiscalPeriod Not Found
+    /fiscalperiods/_create:
       post:
         summary: Create  new  fiscalperiods
         description: Create  new fiscalperiods
@@ -369,6 +659,12 @@ paths:
           - Masters
           - FiscalPeriod
         parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
           - name: fiscalPeriodRequest
             in: body
             description: Create  new 
@@ -383,15 +679,20 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: FiscalPeriod Not Found
-      put:
+    /fiscalperiods/{uniqueId}/_update:
+      post:
         summary: Update any of the fiscalperiods
         description: Update any of the fiscalperiods
         tags: 
           - Masters
           - FiscalPeriod
         parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
           - name: fiscalPeriodRequest
             in: body
             description: common request_info
@@ -406,32 +707,68 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: FiscalPeriod Not Found
 
-    /functions:
-      get:
+    /functions/_search:
+      post:
         summary: Get the list of functions
         description: functions
         tags: 
           - Masters
           - Function
         parameters:
-          - name: function.name
+          - name: requestInfo
+            in: body
+            description: Common Request info for the Services
+            schema:
+              $ref: '#/definitions/RequestInfo'
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: ids
+            type: string
+            in: query
+            description: comma seperated list of Ids,Maximum size=50 
+          - name: name
             type: string
             in: query
             description: name of the Function
-            required: true
-          - name: function.code
+            maxLength: 128
+          - name: code
             type: string
             in: query
             description: code of the Function
-            required: true
-          - name: function.active
+            maxLength: 16
+          - name: level
+            type: integer
+            format: int32
+            in: query
+            description: level of the Function
+          - name: active
             type: boolean
             in: query
-            description: Whether Function is Active or not. If the value is TRUE, then Function is active,If the value is FALSE then Function is inactive
-            required: true
+            description: Whether Function is Active or not. If the value is TRUE, then Function is active,If the value is FALSE then Function is inactive,Default value is true
+          - name: isParent
+            type: boolean
+            in: query
+            description: is parent of the Function
+          - name: parentId
+            type: integer
+            format: int64
+            in: query
+            description: parent id of the Function
+          - name: pageSize
+            type: integer
+            format: int32
+            in: query
+            description: Number of records in a per page in  the Search Results, Default value is 20
+          - name: offSet
+            type: integer
+            format: int32
+            in: query
+            description: page number of the Search Results, Default value is 0
         responses:
           200:
             description: Function retrieved Successfully
@@ -441,8 +778,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: Function Not Found
+    /functions/_create:
       post:
         summary: Create  new  functions
         description: Create  new functions
@@ -450,6 +786,12 @@ paths:
           - Masters
           - Function
         parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
           - name: functionRequest
             in: body
             description: Create  new 
@@ -464,15 +806,20 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: Function Not Found
-      put:
+    /functions/{uniqueId}/_update:
+      post:
         summary: Update any of the functions
         description: Update any of the functions
         tags: 
           - Masters
           - Function
         parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
           - name: functionRequest
             in: body
             description: common request_info
@@ -487,32 +834,54 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: Function Not Found
 
-    /functionaries:
-      get:
+    /functionaries/_search:
+      post:
         summary: Get the list of functionaries
         description: functionaries
         tags: 
           - Masters
           - Functionary
         parameters:
-          - name: functionary.code
+          - name: requestInfo
+            in: body
+            description: Common Request info for the Services
+            schema:
+              $ref: '#/definitions/RequestInfo'
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: ids
+            type: string
+            in: query
+            description: comma seperated list of Ids,Maximum size=50 
+          - name: code
             type: string
             in: query
             description: code of the Functionary
-            required: true
-          - name: functionary.name
+            maxLength: 16
+          - name: name
             type: string
             in: query
             description: name of the Functionary
-            required: true
-          - name: functionary.active
+            maxLength: 256
+          - name: active
             type: boolean
             in: query
-            description: Whether Functionary is Active or not. If the value is TRUE, then Functionary is active,If the value is FALSE then Functionary is inactive
-            required: true
+            description: Whether Functionary is Active or not. If the value is TRUE, then Functionary is active,If the value is FALSE then Functionary is inactive,Default value is true
+          - name: pageSize
+            type: integer
+            format: int32
+            in: query
+            description: Number of records in a per page in  the Search Results, Default value is 20
+          - name: offSet
+            type: integer
+            format: int32
+            in: query
+            description: page number of the Search Results, Default value is 0
         responses:
           200:
             description: Functionary retrieved Successfully
@@ -522,15 +891,20 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: Functionary Not Found
+    /functionaries/_create:
       post:
-        summary: Create  new  functionarys
-        description: Create  new functionarys
+        summary: Create  new  functionaries
+        description: Create  new functionaries
         tags: 
           - Masters
           - Functionary
         parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
           - name: functionaryRequest
             in: body
             description: Create  new 
@@ -545,15 +919,20 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: Functionary Not Found
-      put:
+    /functionaries/{uniqueId}/_update:
+      post:
         summary: Update any of the functionaries
         description: Update any of the functionaries
         tags: 
           - Masters
           - Functionary
         parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
           - name: functionaryRequest
             in: body
             description: common request_info
@@ -568,32 +947,72 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: Functionary Not Found
 
-    /funds:
-      get:
+    /funds/_search:
+      post:
         summary: Get the list of funds
         description: funds
         tags: 
           - Masters
           - Fund
         parameters:
-          - name: fund.name
+          - name: requestInfo
+            in: body
+            description: Common Request info for the Services
+            schema:
+              $ref: '#/definitions/RequestInfo'
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: ids
+            type: string
+            in: query
+            description: comma seperated list of Ids,Maximum size=50 
+          - name: name
             type: string
             in: query
             description: name of the Fund
-            required: true
-          - name: fund.code
+            maxLength: 50
+          - name: code
             type: string
             in: query
             description: code of the Fund
-            required: true
-          - name: fund.active
+            maxLength: 50
+          - name: identifier
+            type: string
+            in: query
+            description: identifier of the Fund
+          - name: level
+            type: integer
+            format: int64
+            in: query
+            description: level of the Fund
+          - name: parentId
+            type: integer
+            format: int64
+            in: query
+            description: parent id of the Fund
+          - name: isParent
             type: boolean
             in: query
-            description: Whether Fund is Active or not. If the value is TRUE, then Fund is active,If the value is FALSE then Fund is inactive
-            required: true
+            description: is parent of the Fund
+          - name: active
+            type: boolean
+            in: query
+            description: Whether Fund is Active or not. If the value is TRUE, then Fund is active,If the value is FALSE then Fund is inactive,Default value is true
+          - name: pageSize
+            type: integer
+            format: int32
+            in: query
+            description: Number of records in a per page in  the Search Results, Default value is 20
+          - name: offSet
+            type: integer
+            format: int32
+            in: query
+            description: page number of the Search Results, Default value is 0
         responses:
           200:
             description: Fund retrieved Successfully
@@ -603,8 +1022,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: Fund Not Found
+    /funds/_create:
       post:
         summary: Create  new  funds
         description: Create  new funds
@@ -612,6 +1030,12 @@ paths:
           - Masters
           - Fund
         parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
           - name: fundRequest
             in: body
             description: Create  new 
@@ -626,15 +1050,20 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: Fund Not Found
-      put:
+    /funds/{uniqueId}/_update:
+      post:
         summary: Update any of the funds
         description: Update any of the funds
         tags: 
           - Masters
           - Fund
         parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
           - name: fundRequest
             in: body
             description: common request_info
@@ -649,32 +1078,73 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: Fund Not Found
 
-    /fundsources:
-      get:
+    /fundsources/_search:
+      post:
         summary: Get the list of fundsources
         description: fundsources
         tags: 
           - Masters
           - Fundsource
         parameters:
-          - name: fundsource.code
+          - name: requestInfo
+            in: body
+            description: Common Request info for the Services
+            schema:
+              $ref: '#/definitions/RequestInfo'
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: ids
+            type: string
+            in: query
+            description: comma seperated list of Ids,Maximum size=50 
+          - name: code
             type: string
             in: query
             description: code of the Fundsource
-            required: true
-          - name: fundsource.name
+            maxLength: 25
+          - name: name
             type: string
             in: query
             description: name of the Fundsource
-            required: true
-          - name: fundsource.active
+            maxLength: 25
+          - name: type
+            type: string
+            in: query
+            description: type of the Fundsource
+            maxLength: 25
+          - name: fundSource
+            type: integer
+            format: int64
+            in: query
+            description: fund source of the Fundsource
+          - name: llevel
+            type: number
+            format: double
+            in: query
+            description: llevel of the Fundsource
+          - name: active
             type: boolean
             in: query
-            description: Whether Fundsource is Active or not. If the value is TRUE, then Fundsource is active,If the value is FALSE then Fundsource is inactive
-            required: true
+            description: Whether Fundsource is Active or not. If the value is TRUE, then Fundsource is active,If the value is FALSE then Fundsource is inactive,Default value is true
+          - name: isParent
+            type: boolean
+            in: query
+            description: is parent of the Fundsource
+          - name: pageSize
+            type: integer
+            format: int32
+            in: query
+            description: Number of records in a per page in  the Search Results, Default value is 20
+          - name: offSet
+            type: integer
+            format: int32
+            in: query
+            description: page number of the Search Results, Default value is 0
         responses:
           200:
             description: Fundsource retrieved Successfully
@@ -684,8 +1154,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: Fundsource Not Found
+    /fundsources/_create:
       post:
         summary: Create  new  fundsources
         description: Create  new fundsources
@@ -693,6 +1162,12 @@ paths:
           - Masters
           - Fundsource
         parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
           - name: fundsourceRequest
             in: body
             description: Create  new 
@@ -707,15 +1182,20 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: Fundsource Not Found
-      put:
+    /fundsources/{uniqueId}/_update:
+      post:
         summary: Update any of the fundsources
         description: Update any of the fundsources
         tags: 
           - Masters
           - Fundsource
         parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
           - name: fundsourceRequest
             in: body
             description: common request_info
@@ -730,30 +1210,79 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: Fundsource Not Found
 
-    /schemes:
-      get:
+    /schemes/_search:
+      post:
         summary: Get the list of schemes
         description: schemes
         tags: 
           - Masters
           - Scheme
         parameters:
-          - name: scheme.code
+          - name: requestInfo
+            in: body
+            description: Common Request info for the Services
+            schema:
+              $ref: '#/definitions/RequestInfo'
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: ids
+            type: string
+            in: query
+            description: comma seperated list of Ids,Maximum size=50 
+          - name: fund
+            type: integer
+            format: int64
+            in: query
+            description: fund of the Scheme
+          - name: code
             type: string
             in: query
             description: code of the Scheme
-          - name: scheme.name
+            maxLength: 25
+          - name: name
             type: string
             in: query
             description: name of the Scheme
-          - name: scheme.active
+            maxLength: 25
+          - name: validFrom
+            type: string
+            format: date
+            in: query
+            description: valid from of the Scheme
+          - name: validTo
+            type: string
+            format: date
+            in: query
+            description: valid to of the Scheme
+          - name: active
             type: boolean
             in: query
-            description: Whether Scheme is Active or not. If the value is TRUE, then Scheme is active,If the value is FALSE then Scheme is inactive
-            required: true
+            description: Whether Scheme is Active or not. If the value is TRUE, then Scheme is active,If the value is FALSE then Scheme is inactive,Default value is true
+          - name: description
+            type: string
+            in: query
+            description: description of the Scheme
+            maxLength: 256
+          - name: boundary
+            type: integer
+            format: int64
+            in: query
+            description: boundary of the Scheme
+          - name: pageSize
+            type: integer
+            format: int32
+            in: query
+            description: Number of records in a per page in  the Search Results, Default value is 20
+          - name: offSet
+            type: integer
+            format: int32
+            in: query
+            description: page number of the Search Results, Default value is 0
         responses:
           200:
             description: Scheme retrieved Successfully
@@ -763,8 +1292,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: Scheme Not Found
+    /schemes/_create:
       post:
         summary: Create  new  schemes
         description: Create  new schemes
@@ -772,6 +1300,12 @@ paths:
           - Masters
           - Scheme
         parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
           - name: schemeRequest
             in: body
             description: Create  new 
@@ -786,15 +1320,20 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: Scheme Not Found
-      put:
+    /schemes/{uniqueId}/_update:
+      post:
         summary: Update any of the schemes
         description: Update any of the schemes
         tags: 
           - Masters
           - Scheme
         parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
           - name: schemeRequest
             in: body
             description: common request_info
@@ -809,32 +1348,74 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: Scheme Not Found
 
-    /subschemes:
-      get:
+    /subschemes/_search:
+      post:
         summary: Get the list of subschemes
         description: subschemes
         tags: 
           - Masters
           - SubScheme
         parameters:
-          - name: subScheme.code
+          - name: requestInfo
+            in: body
+            description: Common Request info for the Services
+            schema:
+              $ref: '#/definitions/RequestInfo'
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: ids
+            type: string
+            in: query
+            description: comma seperated list of Ids,Maximum size=50 
+          - name: scheme
+            type: integer
+            format: int64
+            in: query
+            description: scheme of the SubScheme
+          - name: code
             type: string
             in: query
             description: code of the SubScheme
-            required: true
-          - name: subScheme.name
+            maxLength: 50
+          - name: name
             type: string
             in: query
             description: name of the SubScheme
-            required: true
-          - name: subScheme.active
+            maxLength: 50
+          - name: validFrom
+            type: string
+            format: date
+            in: query
+            description: valid from of the SubScheme
+          - name: validTo
+            type: string
+            format: date
+            in: query
+            description: valid to of the SubScheme
+          - name: active
             type: boolean
             in: query
-            description: Whether SubScheme is Active or not. If the value is TRUE, then SubScheme is active,If the value is FALSE then SubScheme is inactive
-            required: true
+            description: Whether SubScheme is Active or not. If the value is TRUE, then SubScheme is active,If the value is FALSE then SubScheme is inactive,Default value is true
+          - name: departmentId
+            type: integer
+            format: int64
+            in: query
+            description: department id of the SubScheme
+          - name: pageSize
+            type: integer
+            format: int32
+            in: query
+            description: Number of records in a per page in  the Search Results, Default value is 20
+          - name: offSet
+            type: integer
+            format: int32
+            in: query
+            description: page number of the Search Results, Default value is 0
         responses:
           200:
             description: SubScheme retrieved Successfully
@@ -844,8 +1425,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: SubScheme Not Found
+    /subschemes/_create:
       post:
         summary: Create  new  subschemes
         description: Create  new subschemes
@@ -853,6 +1433,12 @@ paths:
           - Masters
           - SubScheme
         parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
           - name: subSchemeRequest
             in: body
             description: Create  new 
@@ -867,15 +1453,20 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: SubScheme Not Found
-      put:
+    /subschemes/{uniqueId}/_update:
+      post:
         summary: Update any of the subschemes
         description: Update any of the subschemes
         tags: 
           - Masters
           - SubScheme
         parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
           - name: subSchemeRequest
             in: body
             description: common request_info
@@ -890,37 +1481,104 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: SubScheme Not Found
 
-    /suppliers:
-      get:
+    /suppliers/_search:
+      post:
         summary: Get the list of suppliers
         description: suppliers
         tags: 
           - Masters
           - Supplier
         parameters:
-          - name: supplier.code
+          - name: requestInfo
+            in: body
+            description: Common Request info for the Services
+            schema:
+              $ref: '#/definitions/RequestInfo'
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: ids
+            type: string
+            in: query
+            description: comma seperated list of Ids,Maximum size=50 
+          - name: code
             type: string
             in: query
             description: code of the Supplier
-            required: true
-          - name: supplier.name
+            maxLength: 50
+          - name: name
             type: string
             in: query
             description: name of the Supplier
-            required: true
-          - name: supplier.active
+            maxLength: 50
+          - name: address
+            type: string
+            in: query
+            description: address of the Supplier
+            maxLength: 300
+          - name: mobile
+            type: string
+            in: query
+            description: mobile of the Supplier
+            maxLength: 10
+          - name: email
+            type: string
+            in: query
+            description: email of the Supplier
+            maxLength: 25
+          - name: description
+            type: string
+            in: query
+            description: description of the Supplier
+            maxLength: 250
+          - name: active
             type: boolean
             in: query
-            description: Whether Supplier is Active or not. If the value is TRUE, then Supplier is active,If the value is FALSE then Supplier is inactive
-            required: true
-          - name: supplier.bankid
+            description: Whether Supplier is Active or not. If the value is TRUE, then Supplier is active,If the value is FALSE then Supplier is inactive,Default value is true
+          - name: panNo
+            type: string
+            in: query
+            description: pan no of the Supplier
+            maxLength: 10
+          - name: tinNo
+            type: string
+            in: query
+            description: tin no of the Supplier
+            maxLength: 20
+          - name: registationNo
+            type: string
+            in: query
+            description: registation no of the Supplier
+            maxLength: 25
+          - name: bankAccount
+            type: string
+            in: query
+            description: bank account of the Supplier
+            maxLength: 25
+          - name: ifscCode
+            type: string
+            in: query
+            description: ifsc code of the Supplier
+            maxLength: 12
+          - name: bank
             type: integer
             format: int64
             in: query
             description: bank of the Supplier
+          - name: pageSize
+            type: integer
+            format: int32
+            in: query
+            description: Number of records in a per page in  the Search Results, Default value is 20
+          - name: offSet
+            type: integer
+            format: int32
+            in: query
+            description: page number of the Search Results, Default value is 0
         responses:
           200:
             description: Supplier retrieved Successfully
@@ -930,8 +1588,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: Supplier Not Found
+    /suppliers/_create:
       post:
         summary: Create  new  suppliers
         description: Create  new suppliers
@@ -939,6 +1596,12 @@ paths:
           - Masters
           - Supplier
         parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
           - name: supplierRequest
             in: body
             description: Create  new 
@@ -953,15 +1616,20 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: Supplier Not Found
-      put:
+    /suppliers/{uniqueId}/_update:
+      post:
         summary: Update any of the suppliers
         description: Update any of the suppliers
         tags: 
           - Masters
           - Supplier
         parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
           - name: supplierRequest
             in: body
             description: common request_info
@@ -976,27 +1644,74 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: Supplier Not Found
 
-    /accountdetailtypes:
-      get:
+    /accountdetailtypes/_search:
+      post:
         summary: Get the list of accountdetailtypes
         description: accountdetailtypes
         tags: 
           - Masters
           - AccountDetailType
         parameters:
-          - name: accountDetailType.name
+          - name: requestInfo
+            in: body
+            description: Common Request info for the Services
+            schema:
+              $ref: '#/definitions/RequestInfo'
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: ids
+            type: string
+            in: query
+            description: comma seperated list of Ids,Maximum size=50 
+          - name: name
             type: string
             in: query
             description: name of the AccountDetailType
-            required: true
-          - name: accountDetailType.active
+            maxLength: 50
+          - name: description
+            type: string
+            in: query
+            description: description of the AccountDetailType
+            maxLength: 50
+          - name: tableName
+            type: string
+            in: query
+            description: table name of the AccountDetailType
+            maxLength: 25
+          - name: columnName
+            type: string
+            in: query
+            description: column name of the AccountDetailType
+            maxLength: 25
+          - name: attributeName
+            type: string
+            in: query
+            description: attribute name of the AccountDetailType
+            maxLength: 50
+          - name: active
             type: boolean
             in: query
-            description: Whether AccountDetailType is Active or not. If the value is TRUE, then AccountDetailType is active,If the value is FALSE then AccountDetailType is inactive
-            required: true
+            description: Whether AccountDetailType is Active or not. If the value is TRUE, then AccountDetailType is active,If the value is FALSE then AccountDetailType is inactive,Default value is true
+          - name: fullyQualifiedName
+            type: string
+            in: query
+            description: fully qualified name of the AccountDetailType
+            maxLength: 250
+          - name: pageSize
+            type: integer
+            format: int32
+            in: query
+            description: Number of records in a per page in  the Search Results, Default value is 20
+          - name: offSet
+            type: integer
+            format: int32
+            in: query
+            description: page number of the Search Results, Default value is 0
         responses:
           200:
             description: AccountDetailType retrieved Successfully
@@ -1006,8 +1721,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: AccountDetailType Not Found
+    /accountdetailtypes/_create:
       post:
         summary: Create  new  accountdetailtypes
         description: Create  new accountdetailtypes
@@ -1015,6 +1729,12 @@ paths:
           - Masters
           - AccountDetailType
         parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
           - name: accountDetailTypeRequest
             in: body
             description: Create  new 
@@ -1029,15 +1749,20 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: AccountDetailType Not Found
-      put:
+    /accountdetailtypes/{uniqueId}/_update:
+      post:
         summary: Update any of the accountdetailtypes
         description: Update any of the accountdetailtypes
         tags: 
           - Masters
           - AccountDetailType
         parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
           - name: accountDetailTypeRequest
             in: body
             description: common request_info
@@ -1052,21 +1777,60 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: AccountDetailType Not Found
 
-    /accountdetailkeys:
-      get:
+    /accountdetailkeys/_search:
+      post:
         summary: Get the list of accountdetailkeys
         description: accountdetailkeys
         tags: 
           - Masters
           - AccountDetailKey
         parameters:
-          - name: accountDetailKey.name
+          - name: requestInfo
+            in: body
+            description: Common Request info for the Services
+            schema:
+              $ref: '#/definitions/RequestInfo'
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: ids
+            type: string
+            in: query
+            description: comma seperated list of Ids,Maximum size=50 
+          - name: groupId
+            type: integer
+            format: int32
+            in: query
+            description: group id of the AccountDetailKey
+          - name: name
             type: string
             in: query
             description: name of the AccountDetailKey
+            maxLength: 128
+          - name: key
+            type: integer
+            format: int32
+            in: query
+            description: key of the AccountDetailKey
+          - name: accountDetailType
+            type: integer
+            format: int64
+            in: query
+            description: account detail type of the AccountDetailKey
+          - name: pageSize
+            type: integer
+            format: int32
+            in: query
+            description: Number of records in a per page in  the Search Results, Default value is 20
+          - name: offSet
+            type: integer
+            format: int32
+            in: query
+            description: page number of the Search Results, Default value is 0
         responses:
           200:
             description: AccountDetailKey retrieved Successfully
@@ -1076,8 +1840,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: AccountDetailKey Not Found
+    /accountdetailkeys/_create:
       post:
         summary: Create  new  accountdetailkeys
         description: Create  new accountdetailkeys
@@ -1085,6 +1848,12 @@ paths:
           - Masters
           - AccountDetailKey
         parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
           - name: accountDetailKeyRequest
             in: body
             description: Create  new 
@@ -1099,15 +1868,20 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: AccountDetailKey Not Found
-      put:
+    /accountdetailkeys/{uniqueId}/_update:
+      post:
         summary: Update any of the accountdetailkeys
         description: Update any of the accountdetailkeys
         tags: 
           - Masters
           - AccountDetailKey
         parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
           - name: accountDetailKeyRequest
             in: body
             description: common request_info
@@ -1122,32 +1896,64 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: AccountDetailKey Not Found
 
-    /accountentities:
-      get:
+    /accountentities/_search:
+      post:
         summary: Get the list of accountentities
         description: accountentities
         tags: 
           - Masters
           - AccountEntity
         parameters:
-          - name: accountEntity.code
+          - name: requestInfo
+            in: body
+            description: Common Request info for the Services
+            schema:
+              $ref: '#/definitions/RequestInfo'
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: ids
+            type: string
+            in: query
+            description: comma seperated list of Ids,Maximum size=50 
+          - name: accountDetailType
+            type: integer
+            format: int64
+            in: query
+            description: account detail type of the AccountEntity
+          - name: code
             type: string
             in: query
             description: code of the AccountEntity
-            required: true
-          - name: accountEntity.name
+            maxLength: 25
+          - name: name
             type: string
             in: query
             description: name of the AccountEntity
-            required: true
-          - name: accountEntity.active
+            maxLength: 350
+          - name: active
             type: boolean
             in: query
-            description: Whether AccountEntity is Active or not. If the value is TRUE, then AccountEntity is active,If the value is FALSE then AccountEntity is inactive
-            required: true
+            description: Whether AccountEntity is Active or not. If the value is TRUE, then AccountEntity is active,If the value is FALSE then AccountEntity is inactive,Default value is true
+          - name: description
+            type: string
+            in: query
+            description: description of the AccountEntity
+            maxLength: 256
+          - name: pageSize
+            type: integer
+            format: int32
+            in: query
+            description: Number of records in a per page in  the Search Results, Default value is 20
+          - name: offSet
+            type: integer
+            format: int32
+            in: query
+            description: page number of the Search Results, Default value is 0
         responses:
           200:
             description: AccountEntity retrieved Successfully
@@ -1157,15 +1963,20 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: AccountEntity Not Found
+    /accountentities/_create:
       post:
-        summary: Create  new  accountentitys
-        description: Create  new accountentitys
+        summary: Create  new  accountentities
+        description: Create  new accountentities
         tags: 
           - Masters
           - AccountEntity
         parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
           - name: accountEntityRequest
             in: body
             description: Create  new 
@@ -1180,15 +1991,20 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: AccountEntity Not Found
-      put:
+    /accountentities/{uniqueId}/_update:
+      post:
         summary: Update any of the accountentities
         description: Update any of the accountentities
         tags: 
           - Masters
           - AccountEntity
         parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
           - name: accountEntityRequest
             in: body
             description: common request_info
@@ -1203,22 +2019,45 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: AccountEntity Not Found
 
-    /accountcodepurposes:
-      get:
+    /accountcodepurposes/_search:
+      post:
         summary: Get the list of accountcodepurposes
         description: accountcodepurposes
         tags: 
           - Masters
           - AccountCodePurpose
         parameters:
-          - name: accountCodePurpose.name
+          - name: requestInfo
+            in: body
+            description: Common Request info for the Services
+            schema:
+              $ref: '#/definitions/RequestInfo'
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: ids
+            type: string
+            in: query
+            description: comma seperated list of Ids,Maximum size=50 
+          - name: name
             type: string
             in: query
             description: name of the AccountCodePurpose
-            required: true
+            maxLength: 256
+          - name: pageSize
+            type: integer
+            format: int32
+            in: query
+            description: Number of records in a per page in  the Search Results, Default value is 20
+          - name: offSet
+            type: integer
+            format: int32
+            in: query
+            description: page number of the Search Results, Default value is 0
         responses:
           200:
             description: AccountCodePurpose retrieved Successfully
@@ -1228,8 +2067,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: AccountCodePurpose Not Found
+    /accountcodepurposes/_create:
       post:
         summary: Create  new  accountcodepurposes
         description: Create  new accountcodepurposes
@@ -1237,6 +2075,12 @@ paths:
           - Masters
           - AccountCodePurpose
         parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
           - name: accountCodePurposeRequest
             in: body
             description: Create  new 
@@ -1251,15 +2095,20 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: AccountCodePurpose Not Found
-      put:
+    /accountcodepurposes/{uniqueId}/_update:
+      post:
         summary: Update any of the accountcodepurposes
         description: Update any of the accountcodepurposes
         tags: 
           - Masters
           - AccountCodePurpose
         parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
           - name: accountCodePurposeRequest
             in: body
             description: common request_info
@@ -1274,22 +2123,95 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: AccountCodePurpose Not Found
 
-    /chartofaccounts:
-      get:
+    /chartofaccounts/_search:
+      post:
         summary: Get the list of chartofaccounts
         description: chartofaccounts
         tags: 
           - Masters
           - ChartOfAccount
         parameters:
-          - name: chartOfAccount.name
+          - name: requestInfo
+            in: body
+            description: Common Request info for the Services
+            schema:
+              $ref: '#/definitions/RequestInfo'
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: ids
+            type: string
+            in: query
+            description: comma seperated list of Ids,Maximum size=50 
+          - name: glcode
+            type: string
+            in: query
+            description: glcode of the ChartOfAccount
+            maxLength: 16
+          - name: name
             type: string
             in: query
             description: name of the ChartOfAccount
-            required: true
+            maxLength: 128
+          - name: accountCodePurpose
+            type: integer
+            format: int64
+            in: query
+            description: account code purpose of the ChartOfAccount
+          - name: desciption
+            type: string
+            in: query
+            description: desciption of the ChartOfAccount
+            maxLength: 256
+          - name: isActiveForPosting
+            type: boolean
+            in: query
+            description: is active for posting of the ChartOfAccount
+          - name: parentId
+            type: integer
+            format: int64
+            in: query
+            description: parent id of the ChartOfAccount
+          - name: type
+            type: string
+            in: query
+            description: type of the ChartOfAccount
+          - name: classification
+            type: integer
+            format: int64
+            in: query
+            description: classification of the ChartOfAccount
+          - name: functionRequired
+            type: boolean
+            in: query
+            description: function required of the ChartOfAccount
+          - name: budgetCheckRequired
+            type: boolean
+            in: query
+            description: budget check required of the ChartOfAccount
+          - name: majorCode
+            type: string
+            in: query
+            description: major code of the ChartOfAccount
+            maxLength: 16
+          - name: isSubLedger
+            type: boolean
+            in: query
+            description: is sub ledger of the ChartOfAccount
+          - name: pageSize
+            type: integer
+            format: int32
+            in: query
+            description: Number of records in a per page in  the Search Results, Default value is 20
+          - name: offSet
+            type: integer
+            format: int32
+            in: query
+            description: page number of the Search Results, Default value is 0
         responses:
           200:
             description: ChartOfAccount retrieved Successfully
@@ -1299,8 +2221,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: ChartOfAccount Not Found
+    /chartofaccounts/_create:
       post:
         summary: Create  new  chartofaccounts
         description: Create  new chartofaccounts
@@ -1308,6 +2229,12 @@ paths:
           - Masters
           - ChartOfAccount
         parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
           - name: chartOfAccountRequest
             in: body
             description: Create  new 
@@ -1322,15 +2249,20 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: ChartOfAccount Not Found
-      put:
+    /chartofaccounts/{uniqueId}/_update:
+      post:
         summary: Update any of the chartofaccounts
         description: Update any of the chartofaccounts
         tags: 
           - Masters
           - ChartOfAccount
         parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
           - name: chartOfAccountRequest
             in: body
             description: common request_info
@@ -1345,17 +2277,50 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: ChartOfAccount Not Found
 
-    /chartofaccountdetails:
-      get:
+    /chartofaccountdetails/_search:
+      post:
         summary: Get the list of chartofaccountdetails
         description: chartofaccountdetails
         tags: 
           - Masters
           - ChartOfAccountDetail
         parameters:
+          - name: requestInfo
+            in: body
+            description: Common Request info for the Services
+            schema:
+              $ref: '#/definitions/RequestInfo'
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: ids
+            type: string
+            in: query
+            description: comma seperated list of Ids,Maximum size=50 
+          - name: chartOfAccount
+            type: integer
+            format: int64
+            in: query
+            description: chart of account of the ChartOfAccountDetail
+          - name: accountDetailType
+            type: integer
+            format: int64
+            in: query
+            description: account detail type of the ChartOfAccountDetail
+          - name: pageSize
+            type: integer
+            format: int32
+            in: query
+            description: Number of records in a per page in  the Search Results, Default value is 20
+          - name: offSet
+            type: integer
+            format: int32
+            in: query
+            description: page number of the Search Results, Default value is 0
         responses:
           200:
             description: ChartOfAccountDetail retrieved Successfully
@@ -1365,8 +2330,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: ChartOfAccountDetail Not Found
+    /chartofaccountdetails/_create:
       post:
         summary: Create  new  chartofaccountdetails
         description: Create  new chartofaccountdetails
@@ -1374,6 +2338,12 @@ paths:
           - Masters
           - ChartOfAccountDetail
         parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
           - name: chartOfAccountDetailRequest
             in: body
             description: Create  new 
@@ -1388,15 +2358,20 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: ChartOfAccountDetail Not Found
-      put:
+    /chartofaccountdetails/{uniqueId}/_update:
+      post:
         summary: Update any of the chartofaccountdetails
         description: Update any of the chartofaccountdetails
         tags: 
           - Masters
           - ChartOfAccountDetail
         parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
           - name: chartOfAccountDetailRequest
             in: body
             description: common request_info
@@ -1411,41 +2386,79 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: ChartOfAccountDetail Not Found
 
-    /budgetgroups:
-      get:
+    /budgetgroups/_search:
+      post:
         summary: Get the list of budgetgroups
         description: budgetgroups
         tags: 
           - Masters
           - BudgetGroup
         parameters:
-          - name: budgetGroup.name
+          - name: requestInfo
+            in: body
+            description: Common Request info for the Services
+            schema:
+              $ref: '#/definitions/RequestInfo'
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: ids
+            type: string
+            in: query
+            description: comma seperated list of Ids,Maximum size=50 
+          - name: name
             type: string
             in: query
             description: name of the BudgetGroup
-          - name: budgetGroup.maxCodeid
+            maxLength: 250
+          - name: description
+            type: string
+            in: query
+            description: description of the BudgetGroup
+            maxLength: 250
+          - name: majorCode
+            type: integer
+            format: int64
+            in: query
+            description: major code of the BudgetGroup
+          - name: maxCode
             type: integer
             format: int64
             in: query
             description: max code of the BudgetGroup
-          - name: budgetGroup.minCodeid
+          - name: minCode
             type: integer
             format: int64
             in: query
             description: min code of the BudgetGroup
-          - name: budgetGroup.accountTypeid
+          - name: accountType
             type: integer
             format: int64
             in: query
             description: account type of the BudgetGroup
-          - name: budgetGroup.budgetingTypeid
+          - name: budgetingType
             type: integer
             format: int64
             in: query
             description: budgeting type of the BudgetGroup
+          - name: active
+            type: boolean
+            in: query
+            description: Whether BudgetGroup is Active or not. If the value is TRUE, then BudgetGroup is active,If the value is FALSE then BudgetGroup is inactive,Default value is true
+          - name: pageSize
+            type: integer
+            format: int32
+            in: query
+            description: Number of records in a per page in  the Search Results, Default value is 20
+          - name: offSet
+            type: integer
+            format: int32
+            in: query
+            description: page number of the Search Results, Default value is 0
         responses:
           200:
             description: BudgetGroup retrieved Successfully
@@ -1455,8 +2468,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: BudgetGroup Not Found
+    /budgetgroups/_create:
       post:
         summary: Create  new  budgetgroups
         description: Create  new budgetgroups
@@ -1464,6 +2476,12 @@ paths:
           - Masters
           - BudgetGroup
         parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
           - name: budgetGroupRequest
             in: body
             description: Create  new 
@@ -1478,15 +2496,20 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: BudgetGroup Not Found
-      put:
+    /budgetgroups/{uniqueId}/_update:
+      post:
         summary: Update any of the budgetgroups
         description: Update any of the budgetgroups
         tags: 
           - Masters
           - BudgetGroup
         parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
           - name: budgetGroupRequest
             in: body
             description: common request_info
@@ -1501,9 +2524,10 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-          404:
-            description: BudgetGroup Not Found
+
+
 definitions:
+
 
     Bank:
       type: object
@@ -1528,17 +2552,22 @@ definitions:
           maxLength: 250
         active:
           type: boolean
-          description: Whether Bank is Active or not. If the value is TRUE, then Bank is active,If the value is FALSE then Bank is inactive
+          description: Whether Bank is Active or not. If the value is TRUE, then Bank is active,If the value is FALSE then Bank is inactive,Default value is true
         type:
           type: string
           description: type of the Bank
           maxLength: 50
+          required:
+          - code
+          - name
+          - active
+          - type
     BankRequest:
       properties:
         requestInfo:
           $ref: '#/definitions/RequestInfo'
         banks:
-          type:  array
+          type: array
           items:
             $ref: '#/definitions/Bank'
     BankResponse:
@@ -1546,7 +2575,7 @@ definitions:
         responseInfo:
           $ref: '#/definitions/ResponseInfo'
         banks:
-          type:  array
+          type: array
           items:
             $ref: '#/definitions/Bank'
         page:
@@ -1607,7 +2636,7 @@ definitions:
           maxLength: 50
         active:
           type: boolean
-          description: Whether BankBranch is Active or not. If the value is TRUE, then BankBranch is active,If the value is FALSE then BankBranch is inactive
+          description: Whether BankBranch is Active or not. If the value is TRUE, then BankBranch is active,If the value is FALSE then BankBranch is inactive,Default value is true
         description:
           type: string
           description: description of the BankBranch
@@ -1616,12 +2645,18 @@ definitions:
           type: string
           description: MICR Code of the BankBranch
           maxLength: 50
+          required:
+          - bank
+          - code
+          - name
+          - address
+          - active
     BankBranchRequest:
       properties:
         requestInfo:
           $ref: '#/definitions/RequestInfo'
         bankBranchs:
-          type:  array
+          type: array
           items:
             $ref: '#/definitions/BankBranch'
     BankBranchResponse:
@@ -1629,7 +2664,7 @@ definitions:
         responseInfo:
           $ref: '#/definitions/ResponseInfo'
         bankBranchs:
-          type:  array
+          type: array
           items:
             $ref: '#/definitions/BankBranch'
         page:
@@ -1661,25 +2696,23 @@ definitions:
           maxLength: 256
         active:
           type: boolean
-          description: Whether BankAccount is Active or not. If the value is TRUE, then BankAccount is active,If the value is FALSE then BankAccount is inactive
+          description: Whether BankAccount is Active or not. If the value is TRUE, then BankAccount is active,If the value is FALSE then BankAccount is inactive,Default value is true
         payTo:
           type: string
           description: pay to of the BankAccount
           maxLength: 100
         type:
-          type: string
-          description:  Account Type of the BankAccount
-          enum:
-            - RECEIPTS
-            - PAYMENTS
-            - RECEIPTS_PAYMENTS
-          
+          $ref: "#/definitions/BankAccountType"
+          required:
+          - accountNumber
+          - active
+          - type
     BankAccountRequest:
       properties:
         requestInfo:
           $ref: '#/definitions/RequestInfo'
         bankAccounts:
-          type:  array
+          type: array
           items:
             $ref: '#/definitions/BankAccount'
     BankAccountResponse:
@@ -1687,7 +2720,7 @@ definitions:
         responseInfo:
           $ref: '#/definitions/ResponseInfo'
         bankAccounts:
-          type:  array
+          type: array
           items:
             $ref: '#/definitions/BankAccount'
         page:
@@ -1715,7 +2748,7 @@ definitions:
           description: ending date of the FinancialYear
         active:
           type: boolean
-          description: Whether FinancialYear is Active or not. If the value is TRUE, then FinancialYear is active,If the value is FALSE then FinancialYear is inactive
+          description: Whether FinancialYear is Active or not. If the value is TRUE, then FinancialYear is active,If the value is FALSE then FinancialYear is inactive,Default value is true
         isActiveForPosting:
           type: boolean
           description: is active for posting of the FinancialYear
@@ -1725,12 +2758,18 @@ definitions:
         transferClosingBalance:
           type: boolean
           description: transfer closing balance of the FinancialYear
+          required:
+          - finYearRange
+          - startingDate
+          - endingDate
+          - active
+          - isActiveForPosting
     FinancialYearRequest:
       properties:
         requestInfo:
           $ref: '#/definitions/RequestInfo'
         financialYears:
-          type:  array
+          type: array
           items:
             $ref: '#/definitions/FinancialYear'
     FinancialYearResponse:
@@ -1738,7 +2777,7 @@ definitions:
         responseInfo:
           $ref: '#/definitions/ResponseInfo'
         financialYears:
-          type:  array
+          type: array
           items:
             $ref: '#/definitions/FinancialYear'
         page:
@@ -1768,19 +2807,26 @@ definitions:
           description: ending date of the FiscalPeriod
         active:
           type: boolean
-          description: Whether FiscalPeriod is Active or not. If the value is TRUE, then FiscalPeriod is active,If the value is FALSE then FiscalPeriod is inactive
+          description: Whether FiscalPeriod is Active or not. If the value is TRUE, then FiscalPeriod is active,If the value is FALSE then FiscalPeriod is inactive,Default value is true
         isActiveForPosting:
           type: boolean
           description: is active for posting of the FiscalPeriod
         isClosed:
           type: boolean
           description: is closed of the FiscalPeriod
+          required:
+          - name
+          - financialYear
+          - startingDate
+          - endingDate
+          - active
+          - isActiveForPosting
     FiscalPeriodRequest:
       properties:
         requestInfo:
           $ref: '#/definitions/RequestInfo'
         fiscalPeriods:
-          type:  array
+          type: array
           items:
             $ref: '#/definitions/FiscalPeriod'
     FiscalPeriodResponse:
@@ -1788,7 +2834,7 @@ definitions:
         responseInfo:
           $ref: '#/definitions/ResponseInfo'
         fiscalPeriods:
-          type:  array
+          type: array
           items:
             $ref: '#/definitions/FiscalPeriod'
         page:
@@ -1817,7 +2863,7 @@ definitions:
           description: level of the Function
         active:
           type: boolean
-          description: Whether Function is Active or not. If the value is TRUE, then Function is active,If the value is FALSE then Function is inactive
+          description: Whether Function is Active or not. If the value is TRUE, then Function is active,If the value is FALSE then Function is inactive,Default value is true
         isParent:
           type: boolean
           description: is parent of the Function
@@ -1825,12 +2871,18 @@ definitions:
           type: integer
           format: int64
           description: parent id of the Function
+          required:
+          - name
+          - code
+          - level
+          - active
+          - isParent
     FunctionRequest:
       properties:
         requestInfo:
           $ref: '#/definitions/RequestInfo'
         functions:
-          type:  array
+          type: array
           items:
             $ref: '#/definitions/Function'
     FunctionResponse:
@@ -1838,7 +2890,7 @@ definitions:
         responseInfo:
           $ref: '#/definitions/ResponseInfo'
         functions:
-          type:  array
+          type: array
           items:
             $ref: '#/definitions/Function'
         page:
@@ -1863,13 +2915,17 @@ definitions:
           minLength: 1
         active:
           type: boolean
-          description: Whether Functionary is Active or not. If the value is TRUE, then Functionary is active,If the value is FALSE then Functionary is inactive
+          description: Whether Functionary is Active or not. If the value is TRUE, then Functionary is active,If the value is FALSE then Functionary is inactive,Default value is true
+          required:
+          - code
+          - name
+          - active
     FunctionaryRequest:
       properties:
         requestInfo:
           $ref: '#/definitions/RequestInfo'
         functionarys:
-          type:  array
+          type: array
           items:
             $ref: '#/definitions/Functionary'
     FunctionaryResponse:
@@ -1877,7 +2933,7 @@ definitions:
         responseInfo:
           $ref: '#/definitions/ResponseInfo'
         functionarys:
-          type:  array
+          type: array
           items:
             $ref: '#/definitions/Functionary'
         page:
@@ -1916,13 +2972,19 @@ definitions:
           description: is parent of the Fund
         active:
           type: boolean
-          description: Whether Fund is Active or not. If the value is TRUE, then Fund is active,If the value is FALSE then Fund is inactive
+          description: Whether Fund is Active or not. If the value is TRUE, then Fund is active,If the value is FALSE then Fund is inactive,Default value is true
+          required:
+          - name
+          - code
+          - identifier
+          - level
+          - active
     FundRequest:
       properties:
         requestInfo:
           $ref: '#/definitions/RequestInfo'
         funds:
-          type:  array
+          type: array
           items:
             $ref: '#/definitions/Fund'
     FundResponse:
@@ -1930,7 +2992,7 @@ definitions:
         responseInfo:
           $ref: '#/definitions/ResponseInfo'
         funds:
-          type:  array
+          type: array
           items:
             $ref: '#/definitions/Fund'
         page:
@@ -1963,20 +3025,25 @@ definitions:
           format: int64
           description: fund source of the Fundsource
         llevel:
-          type: 
+          type: number
+          format: double
           description: llevel of the Fundsource
         active:
           type: boolean
-          description: Whether Fundsource is Active or not. If the value is TRUE, then Fundsource is active,If the value is FALSE then Fundsource is inactive
+          description: Whether Fundsource is Active or not. If the value is TRUE, then Fundsource is active,If the value is FALSE then Fundsource is inactive,Default value is true
         isParent:
           type: boolean
           description: is parent of the Fundsource
+          required:
+          - code
+          - name
+          - active
     FundsourceRequest:
       properties:
         requestInfo:
           $ref: '#/definitions/RequestInfo'
         fundsources:
-          type:  array
+          type: array
           items:
             $ref: '#/definitions/Fundsource'
     FundsourceResponse:
@@ -1984,7 +3051,7 @@ definitions:
         responseInfo:
           $ref: '#/definitions/ResponseInfo'
         fundsources:
-          type:  array
+          type: array
           items:
             $ref: '#/definitions/Fundsource'
         page:
@@ -2019,7 +3086,7 @@ definitions:
           description: valid to of the Scheme
         active:
           type: boolean
-          description: Whether Scheme is Active or not. If the value is TRUE, then Scheme is active,If the value is FALSE then Scheme is inactive
+          description: Whether Scheme is Active or not. If the value is TRUE, then Scheme is active,If the value is FALSE then Scheme is inactive,Default value is true
         description:
           type: string
           description: description of the Scheme
@@ -2028,12 +3095,16 @@ definitions:
           type: integer
           format: int64
           description: boundary of the Scheme
+          required:
+          - validFrom
+          - validTo
+          - active
     SchemeRequest:
       properties:
         requestInfo:
           $ref: '#/definitions/RequestInfo'
         schemes:
-          type:  array
+          type: array
           items:
             $ref: '#/definitions/Scheme'
     SchemeResponse:
@@ -2041,7 +3112,7 @@ definitions:
         responseInfo:
           $ref: '#/definitions/ResponseInfo'
         schemes:
-          type:  array
+          type: array
           items:
             $ref: '#/definitions/Scheme'
         page:
@@ -2076,17 +3147,24 @@ definitions:
           description: valid to of the SubScheme
         active:
           type: boolean
-          description: Whether SubScheme is Active or not. If the value is TRUE, then SubScheme is active,If the value is FALSE then SubScheme is inactive
+          description: Whether SubScheme is Active or not. If the value is TRUE, then SubScheme is active,If the value is FALSE then SubScheme is inactive,Default value is true
         departmentId:
           type: integer
           format: int64
           description: department id of the SubScheme
+          required:
+          - scheme
+          - code
+          - name
+          - validFrom
+          - validTo
+          - active
     SubSchemeRequest:
       properties:
         requestInfo:
           $ref: '#/definitions/RequestInfo'
         subSchemes:
-          type:  array
+          type: array
           items:
             $ref: '#/definitions/SubScheme'
     SubSchemeResponse:
@@ -2094,7 +3172,7 @@ definitions:
         responseInfo:
           $ref: '#/definitions/ResponseInfo'
         subSchemes:
-          type:  array
+          type: array
           items:
             $ref: '#/definitions/SubScheme'
         page:
@@ -2135,7 +3213,7 @@ definitions:
           maxLength: 250
         active:
           type: boolean
-          description: Whether Supplier is Active or not. If the value is TRUE, then Supplier is active,If the value is FALSE then Supplier is inactive
+          description: Whether Supplier is Active or not. If the value is TRUE, then Supplier is active,If the value is FALSE then Supplier is inactive,Default value is true
         panNo:
           type: string
           description: pan no of the Supplier
@@ -2158,12 +3236,16 @@ definitions:
           maxLength: 12
         bank:
           $ref: "#/definitions/Bank"
+          required:
+          - code
+          - name
+          - active
     SupplierRequest:
       properties:
         requestInfo:
           $ref: '#/definitions/RequestInfo'
         suppliers:
-          type:  array
+          type: array
           items:
             $ref: '#/definitions/Supplier'
     SupplierResponse:
@@ -2171,7 +3253,7 @@ definitions:
         responseInfo:
           $ref: '#/definitions/ResponseInfo'
         suppliers:
-          type:  array
+          type: array
           items:
             $ref: '#/definitions/Supplier'
         page:
@@ -2208,18 +3290,22 @@ definitions:
           maxLength: 50
         active:
           type: boolean
-          description: Whether AccountDetailType is Active or not. If the value is TRUE, then AccountDetailType is active,If the value is FALSE then AccountDetailType is inactive
+          description: Whether AccountDetailType is Active or not. If the value is TRUE, then AccountDetailType is active,If the value is FALSE then AccountDetailType is inactive,Default value is true
         fullyQualifiedName:
           type: string
           description: fully qualified name of the AccountDetailType
           maxLength: 250
           minLength: 1
+          required:
+          - name
+          - description
+          - active
     AccountDetailTypeRequest:
       properties:
         requestInfo:
           $ref: '#/definitions/RequestInfo'
         accountDetailTypes:
-          type:  array
+          type: array
           items:
             $ref: '#/definitions/AccountDetailType'
     AccountDetailTypeResponse:
@@ -2227,7 +3313,7 @@ definitions:
         responseInfo:
           $ref: '#/definitions/ResponseInfo'
         accountDetailTypes:
-          type:  array
+          type: array
           items:
             $ref: '#/definitions/AccountDetailType'
         page:
@@ -2254,12 +3340,14 @@ definitions:
           description: key of the AccountDetailKey
         accountDetailType:
           $ref: "#/definitions/AccountDetailType"
+          required:
+          - accountDetailType
     AccountDetailKeyRequest:
       properties:
         requestInfo:
           $ref: '#/definitions/RequestInfo'
         accountDetailKeys:
-          type:  array
+          type: array
           items:
             $ref: '#/definitions/AccountDetailKey'
     AccountDetailKeyResponse:
@@ -2267,7 +3355,7 @@ definitions:
         responseInfo:
           $ref: '#/definitions/ResponseInfo'
         accountDetailKeys:
-          type:  array
+          type: array
           items:
             $ref: '#/definitions/AccountDetailKey'
         page:
@@ -2294,17 +3382,22 @@ definitions:
           minLength: 1
         active:
           type: boolean
-          description: Whether AccountEntity is Active or not. If the value is TRUE, then AccountEntity is active,If the value is FALSE then AccountEntity is inactive
+          description: Whether AccountEntity is Active or not. If the value is TRUE, then AccountEntity is active,If the value is FALSE then AccountEntity is inactive,Default value is true
         description:
           type: string
           description: description of the AccountEntity
           maxLength: 256
+          required:
+          - accountDetailType
+          - code
+          - name
+          - active
     AccountEntityRequest:
       properties:
         requestInfo:
           $ref: '#/definitions/RequestInfo'
         accountEntitys:
-          type:  array
+          type: array
           items:
             $ref: '#/definitions/AccountEntity'
     AccountEntityResponse:
@@ -2312,7 +3405,7 @@ definitions:
         responseInfo:
           $ref: '#/definitions/ResponseInfo'
         accountEntitys:
-          type:  array
+          type: array
           items:
             $ref: '#/definitions/AccountEntity'
         page:
@@ -2330,12 +3423,14 @@ definitions:
           description: name of the AccountCodePurpose
           maxLength: 256
           minLength: 3
+          required:
+          - name
     AccountCodePurposeRequest:
       properties:
         requestInfo:
           $ref: '#/definitions/RequestInfo'
         accountCodePurposes:
-          type:  array
+          type: array
           items:
             $ref: '#/definitions/AccountCodePurpose'
     AccountCodePurposeResponse:
@@ -2343,7 +3438,7 @@ definitions:
         responseInfo:
           $ref: '#/definitions/ResponseInfo'
         accountCodePurposes:
-          type:  array
+          type: array
           items:
             $ref: '#/definitions/AccountCodePurpose'
         page:
@@ -2399,12 +3494,20 @@ definitions:
         isSubLedger:
           type: boolean
           description: is sub ledger of the ChartOfAccount
+          required:
+          - glcode
+          - name
+          - isActiveForPosting
+          - type
+          - classification
+          - functionRequired
+          - budgetCheckRequired
     ChartOfAccountRequest:
       properties:
         requestInfo:
           $ref: '#/definitions/RequestInfo'
         chartOfAccounts:
-          type:  array
+          type: array
           items:
             $ref: '#/definitions/ChartOfAccount'
     ChartOfAccountResponse:
@@ -2412,7 +3515,7 @@ definitions:
         responseInfo:
           $ref: '#/definitions/ResponseInfo'
         chartOfAccounts:
-          type:  array
+          type: array
           items:
             $ref: '#/definitions/ChartOfAccount'
         page:
@@ -2429,12 +3532,15 @@ definitions:
           $ref: "#/definitions/ChartOfAccount"
         accountDetailType:
           $ref: "#/definitions/AccountDetailType"
+          required:
+          - chartOfAccount
+          - accountDetailType
     ChartOfAccountDetailRequest:
       properties:
         requestInfo:
           $ref: '#/definitions/RequestInfo'
         chartOfAccountDetails:
-          type:  array
+          type: array
           items:
             $ref: '#/definitions/ChartOfAccountDetail'
     ChartOfAccountDetailResponse:
@@ -2442,7 +3548,7 @@ definitions:
         responseInfo:
           $ref: '#/definitions/ResponseInfo'
         chartOfAccountDetails:
-          type:  array
+          type: array
           items:
             $ref: '#/definitions/ChartOfAccountDetail'
         page:
@@ -2471,29 +3577,18 @@ definitions:
         minCode:
           $ref: "#/definitions/ChartOfAccount"
         accountType:
-          type: string
-          description: name of the BudgetGroup
-          enum:
-            - REVENUE_RECEIPTS
-            - REVENUE_EXPENDITURE
-            - CAPITAL_RECEIPTS
-            - CAPITAL_EXPENDITURE
+          $ref: "#/definitions/BudgetAccountType"
         budgetingType:
-          type: string
-          description: name of the BudgetGroup
-          enum:
-            - ALL
-            - DEBIT
-            - CREDIT
-        isActive:
+          $ref: "#/definitions/BudgetingType"
+        active:
           type: boolean
-          description: is active of the BudgetGroup
+          description: Whether BudgetGroup is Active or not. If the value is TRUE, then BudgetGroup is active,If the value is FALSE then BudgetGroup is inactive,Default value is true
     BudgetGroupRequest:
       properties:
         requestInfo:
           $ref: '#/definitions/RequestInfo'
         budgetGroups:
-          type:  array
+          type: array
           items:
             $ref: '#/definitions/BudgetGroup'
     BudgetGroupResponse:
@@ -2501,11 +3596,12 @@ definitions:
         responseInfo:
           $ref: '#/definitions/ResponseInfo'
         budgetGroups:
-          type:  array
+          type: array
           items:
             $ref: '#/definitions/BudgetGroup'
         page:
           $ref: '#/definitions/Page'
+
     ResponseInfo:
      type: object
      properties:

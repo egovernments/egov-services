@@ -45,7 +45,7 @@ public class BankController {
 		if (errors.hasErrors()) {
 		  throw	new CustomBindException(errors);
 		}
-		
+		bankService.fetchRelatedContracts(bankContractRequest);
 		BankContractResponse bankContractResponse = new BankContractResponse();
 		bankContractResponse.setBanks(new ArrayList<BankContract>());
 		for(BankContract bankContract:bankContractRequest.getBanks())
@@ -73,7 +73,7 @@ public class BankController {
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
-	 
+		bankService.fetchRelatedContracts(bankContractRequest);
 		Bank bankFromDb = bankService.findOne(uniqueId);
 		
 		BankContract bank = bankContractRequest.getBank();
@@ -97,7 +97,7 @@ public class BankController {
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
-		
+		bankService.fetchRelatedContracts(bankContractRequest);
 		RequestInfo requestInfo = bankContractRequest.getRequestInfo();
 		Bank bankFromDb = bankService.findOne(uniqueId);
 		BankContract bank = bankContractRequest.getBank();
@@ -119,14 +119,13 @@ public class BankController {
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
-		
+		bankService.fetchRelatedContracts(bankContractRequest);		
  
 		BankContractResponse bankContractResponse =new  BankContractResponse();
 		bankContractResponse.setBanks(new ArrayList<BankContract>());
 		for(BankContract bankContract:bankContractRequest.getBanks())
 		{
 		Bank bankFromDb = bankService.findOne(bankContract.getId());
-		 
 		
 		ModelMapper model=new ModelMapper();
 	 	model.map(bankContract, bankFromDb);
@@ -150,6 +149,7 @@ public class BankController {
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
+		bankService.fetchRelatedContracts(bankContractRequest);
 		BankContractResponse bankContractResponse =new  BankContractResponse();
 		bankContractResponse.setBanks(new ArrayList<BankContract>());
 		bankContractResponse.setPage(new Pagination());

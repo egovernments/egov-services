@@ -1,16 +1,17 @@
 package org.egov.egf.persistence.service;
 
-
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.egov.egf.domain.exception.InvalidDataException;
 import org.egov.egf.persistence.entity.Function;
 import org.egov.egf.persistence.queue.contract.FunctionContract;
 import org.egov.egf.persistence.queue.contract.FunctionContractRequest;
 import org.egov.egf.persistence.repository.FunctionRepository;
 import org.egov.egf.persistence.specification.FunctionSpecification;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,74 +24,111 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.SmartValidator;
 
-
-@Service 
+@Service
 @Transactional(readOnly = true)
-public class FunctionService  {
+public class FunctionService {
 
-  private final FunctionRepository functionRepository;
-  @PersistenceContext
-private EntityManager entityManager;
+	private final FunctionRepository functionRepository;
+	@PersistenceContext
+	private EntityManager entityManager;
 
-  @Autowired
-public FunctionService(final FunctionRepository functionRepository) {
-   this.functionRepository = functionRepository;
-  }
+	@Autowired
+	public FunctionService(final FunctionRepository functionRepository) {
+		this.functionRepository = functionRepository;
+	}
 
-@Autowired
-	private SmartValidator validator;   @Transactional
-   public Function create(final Function function) {
-  return functionRepository.save(function);
-  } 
-   @Transactional
-   public Function update(final Function function) {
-  return functionRepository.save(function);
-    } 
-  public List<Function> findAll() {
-   return functionRepository.findAll(new Sort(Sort.Direction.ASC, "name"));
-     }
-  public Function findByName(String name){
-  return functionRepository.findByName(name);
-  }
-  public Function findByCode(String code){
-  return functionRepository.findByCode(code);
-  }
-  public Function findOne(Long id){
-  return functionRepository.findOne(id);
-  }
-  public Page<Function> search(FunctionContractRequest functionContractRequest){
-final FunctionSpecification specification = new FunctionSpecification(functionContractRequest.getFunction());
-Pageable page = new PageRequest(functionContractRequest.getPage().getOffSet(),functionContractRequest.getPage().getPageSize());
-  return functionRepository.findAll(specification,page);
-  }
-public BindingResult validate(FunctionContractRequest functionContractRequest, String method,BindingResult errors) { 
-	 
-		try { 
-			switch(method) 
-			{ 
-			case "update": 
-				Assert.notNull(functionContractRequest.getFunction(), "Function to edit must not be null"); 
-				validator.validate(functionContractRequest.getFunction(), errors); 
-				break; 
-			case "view": 
-				//validator.validate(functionContractRequest.getFunction(), errors); 
-				break; 
-			case "create": 
-				Assert.notNull(functionContractRequest.getFunctions(), "Functions to create must not be null"); 
-				for(FunctionContract b:functionContractRequest.getFunctions()) 
-				 validator.validate(b, errors); 
-				break; 
-			case "updateAll": 
-				Assert.notNull(functionContractRequest.getFunctions(), "Functions to create must not be null"); 
-				for(FunctionContract b:functionContractRequest.getFunctions()) 
-				 validator.validate(b, errors); 
-				break; 
-			default : validator.validate(functionContractRequest.getRequestInfo(), errors); 
-			} 
-		} catch (IllegalArgumentException e) { 
-			 errors.addError(new ObjectError("Missing data", e.getMessage())); 
-		} 
-		return errors; 
- 
+	@Autowired
+	private SmartValidator validator;
+	@Autowired
+	private FunctionService functionService;
+
+	@Transactional
+	public Function create(final Function function) {
+		return functionRepository.save(function);
+	}
+
+	@Transactional
+	public Function update(final Function function) {
+		return functionRepository.save(function);
+	}
+
+	public List<Function> findAll() {
+		return functionRepository.findAll(new Sort(Sort.Direction.ASC, "name"));
+	}
+
+	public Function findByName(String name) {
+		return functionRepository.findByName(name);
+	}
+
+	public Function findByCode(String code) {
+		return functionRepository.findByCode(code);
+	}
+
+	public Function findOne(Long id) {
+		return functionRepository.findOne(id);
+	}
+
+	public Page<Function> search(FunctionContractRequest functionContractRequest) {
+		final FunctionSpecification specification = new FunctionSpecification(functionContractRequest.getFunction());
+		Pageable page = new PageRequest(functionContractRequest.getPage().getOffSet(),
+				functionContractRequest.getPage().getPageSize());
+		return functionRepository.findAll(specification, page);
+	}
+
+	public BindingResult validate(FunctionContractRequest functionContractRequest, String method,
+			BindingResult errors) {
+
+		try {
+			switch (method) {
+			case "update":
+				Assert.notNull(functionContractRequest.getFunction(), "Function to edit must not be null");
+				validator.validate(functionContractRequest.getFunction(), errors);
+				break;
+			case "view":
+				// validator.validate(functionContractRequest.getFunction(),
+				// errors);
+				break;
+			case "create":
+				Assert.notNull(functionContractRequest.getFunctions(), "Functions to create must not be null");
+				for (FunctionContract b : functionContractRequest.getFunctions()) {
+					validator.validate(b, errors);
+				}
+				break;
+			case "updateAll":
+				Assert.notNull(functionContractRequest.getFunctions(), "Functions to create must not be null");
+				for (FunctionContract b : functionContractRequest.getFunctions()) {
+					validator.validate(b, errors);
+				}
+				break;
+			default:
+				validator.validate(functionContractRequest.getRequestInfo(), errors);
+			}
+		} catch (IllegalArgumentException e) {
+			errors.addError(new ObjectError("Missing data", e.getMessage()));
+		}
+		return errors;
+
+	}
+
+	public FunctionContractRequest fetchRelatedContracts(FunctionContractRequest functionContractRequest) {
+		ModelMapper model = new ModelMapper();
+		for (FunctionContract function : functionContractRequest.getFunctions()) {
+			if (function.getParentId() != null) {
+				Function parentId = functionService.findOne(function.getParentId().getId());
+				if (parentId == null) {
+					throw new InvalidDataException("parentId", "parentId.invalid", " Invalid parentId");
+				}
+				model.map(parentId, function.getParentId());
+			}
+		}
+		FunctionContract function = functionContractRequest.getFunction();
+		if (function.getParentId() != null) {
+			Function parentId = functionService.findOne(function.getParentId().getId());
+			if (parentId == null) {
+				throw new InvalidDataException("parentId", "parentId.invalid", " Invalid parentId");
+			}
+			model.map(parentId, function.getParentId());
+		}
+		return functionContractRequest;
 	}
 }

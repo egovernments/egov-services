@@ -51,6 +51,8 @@ public class  BankContract extends AuditableContract {
 
 
 	private Long id;
+	
+	private String ids;
 
 	@NotNull
 	@Length(max = 50,min=1)

@@ -7,14 +7,15 @@ import javax.validation.Valid;
 
 import org.egov.egf.domain.exception.CustomBindException;
 import org.egov.egf.persistence.entity.Scheme;
-import org.egov.egf.persistence.queue.contract.Pagination;
-import org.egov.egf.persistence.queue.contract.RequestInfo;
-import org.egov.egf.persistence.queue.contract.ResponseInfo;
 import org.egov.egf.persistence.queue.contract.SchemeContract;
 import org.egov.egf.persistence.queue.contract.SchemeContractRequest;
 import org.egov.egf.persistence.queue.contract.SchemeContractResponse;
+import org.egov.egf.persistence.queue.contract.Pagination;
+import org.egov.egf.persistence.queue.contract.RequestInfo;
+import org.egov.egf.persistence.queue.contract.ResponseInfo;
 import org.egov.egf.persistence.service.SchemeService;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.builder.SkipExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -44,7 +45,7 @@ public class SchemeController {
 		if (errors.hasErrors()) {
 		  throw	new CustomBindException(errors);
 		}
-		
+		schemeService.fetchRelatedContracts(schemeContractRequest);
 		SchemeContractResponse schemeContractResponse = new SchemeContractResponse();
 		schemeContractResponse.setSchemes(new ArrayList<SchemeContract>());
 		for(SchemeContract schemeContract:schemeContractRequest.getSchemes())
@@ -72,10 +73,12 @@ public class SchemeController {
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
-	 
+		schemeService.fetchRelatedContracts(schemeContractRequest);
 		Scheme schemeFromDb = schemeService.findOne(uniqueId);
-		SchemeContract scheme = schemeContractRequest.getScheme();
 		
+		SchemeContract scheme = schemeContractRequest.getScheme();
+		//ignoring internally passed id if the put has id in url
+	    scheme.setId(uniqueId);
 		ModelMapper model=new ModelMapper();
 	 	model.map(scheme, schemeFromDb);
 		schemeFromDb = schemeService.update(schemeFromDb);
@@ -88,19 +91,19 @@ public class SchemeController {
 	
 	@GetMapping(value = "/{uniqueId}")
 	@ResponseStatus(HttpStatus.OK)
-	public SchemeContractResponse view(@RequestBody @Valid SchemeContractRequest schemeContractRequest, BindingResult errors,
+	public SchemeContractResponse view(@ModelAttribute SchemeContractRequest schemeContractRequest, BindingResult errors,
 			@PathVariable Long uniqueId) {
-
+		schemeService.validate(schemeContractRequest,"view",errors);
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
-		schemeService.validate(schemeContractRequest,"view",errors);
+		schemeService.fetchRelatedContracts(schemeContractRequest);
 		RequestInfo requestInfo = schemeContractRequest.getRequestInfo();
 		Scheme schemeFromDb = schemeService.findOne(uniqueId);
 		SchemeContract scheme = schemeContractRequest.getScheme();
 		
 		ModelMapper model=new ModelMapper();
-	 	model.map(scheme, schemeFromDb);
+	 	model.map(schemeFromDb,scheme );
 		
 		SchemeContractResponse schemeContractResponse = new SchemeContractResponse();
 		schemeContractResponse.setScheme(scheme);  
@@ -116,14 +119,13 @@ public class SchemeController {
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
-		
+		schemeService.fetchRelatedContracts(schemeContractRequest);		
  
 		SchemeContractResponse schemeContractResponse =new  SchemeContractResponse();
 		schemeContractResponse.setSchemes(new ArrayList<SchemeContract>());
 		for(SchemeContract schemeContract:schemeContractRequest.getSchemes())
 		{
 		Scheme schemeFromDb = schemeService.findOne(schemeContract.getId());
-		 
 		
 		ModelMapper model=new ModelMapper();
 	 	model.map(schemeContract, schemeFromDb);
@@ -147,6 +149,7 @@ public class SchemeController {
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
+		schemeService.fetchRelatedContracts(schemeContractRequest);
 		SchemeContractResponse schemeContractResponse =new  SchemeContractResponse();
 		schemeContractResponse.setSchemes(new ArrayList<SchemeContract>());
 		schemeContractResponse.setPage(new Pagination());

@@ -145,7 +145,5 @@ public class BankBranch extends AbstractAuditable {
     	return this.id;
     }
 
-	
-  
-  
+
 }

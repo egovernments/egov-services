@@ -15,6 +15,7 @@ import org.egov.egf.persistence.queue.contract.RequestInfo;
 import org.egov.egf.persistence.queue.contract.ResponseInfo;
 import org.egov.egf.persistence.service.AccountDetailTypeService;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.builder.SkipExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -44,7 +45,7 @@ public class AccountDetailTypeController {
 		if (errors.hasErrors()) {
 		  throw	new CustomBindException(errors);
 		}
-		
+		accountDetailTypeService.fetchRelatedContracts(accountDetailTypeContractRequest);
 		AccountDetailTypeContractResponse accountDetailTypeContractResponse = new AccountDetailTypeContractResponse();
 		accountDetailTypeContractResponse.setAccountDetailTypes(new ArrayList<AccountDetailTypeContract>());
 		for(AccountDetailTypeContract accountDetailTypeContract:accountDetailTypeContractRequest.getAccountDetailTypes())
@@ -72,10 +73,12 @@ public class AccountDetailTypeController {
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
-	 
+		accountDetailTypeService.fetchRelatedContracts(accountDetailTypeContractRequest);
 		AccountDetailType accountDetailTypeFromDb = accountDetailTypeService.findOne(uniqueId);
-		AccountDetailTypeContract accountDetailType = accountDetailTypeContractRequest.getAccountDetailType();
 		
+		AccountDetailTypeContract accountDetailType = accountDetailTypeContractRequest.getAccountDetailType();
+		//ignoring internally passed id if the put has id in url
+	    accountDetailType.setId(uniqueId);
 		ModelMapper model=new ModelMapper();
 	 	model.map(accountDetailType, accountDetailTypeFromDb);
 		accountDetailTypeFromDb = accountDetailTypeService.update(accountDetailTypeFromDb);
@@ -88,19 +91,19 @@ public class AccountDetailTypeController {
 	
 	@GetMapping(value = "/{uniqueId}")
 	@ResponseStatus(HttpStatus.OK)
-	public AccountDetailTypeContractResponse view(@RequestBody @Valid AccountDetailTypeContractRequest accountDetailTypeContractRequest, BindingResult errors,
+	public AccountDetailTypeContractResponse view(@ModelAttribute AccountDetailTypeContractRequest accountDetailTypeContractRequest, BindingResult errors,
 			@PathVariable Long uniqueId) {
-
+		accountDetailTypeService.validate(accountDetailTypeContractRequest,"view",errors);
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
-		accountDetailTypeService.validate(accountDetailTypeContractRequest,"view",errors);
+		accountDetailTypeService.fetchRelatedContracts(accountDetailTypeContractRequest);
 		RequestInfo requestInfo = accountDetailTypeContractRequest.getRequestInfo();
 		AccountDetailType accountDetailTypeFromDb = accountDetailTypeService.findOne(uniqueId);
 		AccountDetailTypeContract accountDetailType = accountDetailTypeContractRequest.getAccountDetailType();
 		
 		ModelMapper model=new ModelMapper();
-	 	model.map(accountDetailType, accountDetailTypeFromDb);
+	 	model.map(accountDetailTypeFromDb,accountDetailType );
 		
 		AccountDetailTypeContractResponse accountDetailTypeContractResponse = new AccountDetailTypeContractResponse();
 		accountDetailTypeContractResponse.setAccountDetailType(accountDetailType);  
@@ -116,14 +119,13 @@ public class AccountDetailTypeController {
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
-		
+		accountDetailTypeService.fetchRelatedContracts(accountDetailTypeContractRequest);		
  
 		AccountDetailTypeContractResponse accountDetailTypeContractResponse =new  AccountDetailTypeContractResponse();
 		accountDetailTypeContractResponse.setAccountDetailTypes(new ArrayList<AccountDetailTypeContract>());
 		for(AccountDetailTypeContract accountDetailTypeContract:accountDetailTypeContractRequest.getAccountDetailTypes())
 		{
 		AccountDetailType accountDetailTypeFromDb = accountDetailTypeService.findOne(accountDetailTypeContract.getId());
-		 
 		
 		ModelMapper model=new ModelMapper();
 	 	model.map(accountDetailTypeContract, accountDetailTypeFromDb);
@@ -147,6 +149,7 @@ public class AccountDetailTypeController {
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
+		accountDetailTypeService.fetchRelatedContracts(accountDetailTypeContractRequest);
 		AccountDetailTypeContractResponse accountDetailTypeContractResponse =new  AccountDetailTypeContractResponse();
 		accountDetailTypeContractResponse.setAccountDetailTypes(new ArrayList<AccountDetailTypeContract>());
 		accountDetailTypeContractResponse.setPage(new Pagination());

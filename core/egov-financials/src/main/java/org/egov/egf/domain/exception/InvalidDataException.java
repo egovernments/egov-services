@@ -12,7 +12,9 @@ import lombok.Setter;
 public class InvalidDataException extends RuntimeException {
 	public static final String code ="001";
 	private String fieldName;
-	private String message;
+	private String messageKey;
+	private String defaultMessage;
+	
 	
 }
 

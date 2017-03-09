@@ -5,11 +5,14 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.egov.egf.domain.exception.InvalidDataException;
+import org.egov.egf.persistence.entity.AccountCodePurpose;
 import org.egov.egf.persistence.entity.ChartOfAccount;
 import org.egov.egf.persistence.queue.contract.ChartOfAccountContract;
 import org.egov.egf.persistence.queue.contract.ChartOfAccountContractRequest;
 import org.egov.egf.persistence.repository.ChartOfAccountRepository;
 import org.egov.egf.persistence.specification.ChartOfAccountSpecification;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -37,6 +40,10 @@ public class ChartOfAccountService {
 
 	@Autowired
 	private SmartValidator validator;
+	@Autowired
+	private ChartOfAccountService chartOfAccountService;
+	@Autowired
+	private AccountCodePurposeService accountCodePurposeService;
 
 	@Transactional
 	public ChartOfAccount create(final ChartOfAccount chartOfAccount) {
@@ -85,14 +92,16 @@ public class ChartOfAccountService {
 			case "create":
 				Assert.notNull(chartOfAccountContractRequest.getChartOfAccounts(),
 						"ChartOfAccounts to create must not be null");
-				for (ChartOfAccountContract b : chartOfAccountContractRequest.getChartOfAccounts())
+				for (ChartOfAccountContract b : chartOfAccountContractRequest.getChartOfAccounts()) {
 					validator.validate(b, errors);
+				}
 				break;
 			case "updateAll":
 				Assert.notNull(chartOfAccountContractRequest.getChartOfAccounts(),
 						"ChartOfAccounts to create must not be null");
-				for (ChartOfAccountContract b : chartOfAccountContractRequest.getChartOfAccounts())
+				for (ChartOfAccountContract b : chartOfAccountContractRequest.getChartOfAccounts()) {
 					validator.validate(b, errors);
+				}
 				break;
 			default:
 				validator.validate(chartOfAccountContractRequest.getRequestInfo(), errors);
@@ -102,5 +111,46 @@ public class ChartOfAccountService {
 		}
 		return errors;
 
+	}
+
+	public ChartOfAccountContractRequest fetchRelatedContracts(
+			ChartOfAccountContractRequest chartOfAccountContractRequest) {
+		ModelMapper model = new ModelMapper();
+		for (ChartOfAccountContract chartOfAccount : chartOfAccountContractRequest.getChartOfAccounts()) {
+			if (chartOfAccount.getAccountCodePurpose() != null) {
+				AccountCodePurpose accountCodePurpose = accountCodePurposeService
+						.findOne(chartOfAccount.getAccountCodePurpose().getId());
+				if (accountCodePurpose == null) {
+					throw new InvalidDataException("accountCodePurpose", "accountCodePurpose.invalid",
+							" Invalid accountCodePurpose");
+				}
+				model.map(accountCodePurpose, chartOfAccount.getAccountCodePurpose());
+			}
+			if (chartOfAccount.getParentId() != null) {
+				ChartOfAccount parentId = chartOfAccountService.findOne(chartOfAccount.getParentId().getId());
+				if (parentId == null) {
+					throw new InvalidDataException("parentId", "parentId.invalid", " Invalid parentId");
+				}
+				model.map(parentId, chartOfAccount.getParentId());
+			}
+		}
+		ChartOfAccountContract chartOfAccount = chartOfAccountContractRequest.getChartOfAccount();
+		if (chartOfAccount.getAccountCodePurpose() != null) {
+			AccountCodePurpose accountCodePurpose = accountCodePurposeService
+					.findOne(chartOfAccount.getAccountCodePurpose().getId());
+			if (accountCodePurpose == null) {
+				throw new InvalidDataException("accountCodePurpose", "accountCodePurpose.invalid",
+						" Invalid accountCodePurpose");
+			}
+			model.map(accountCodePurpose, chartOfAccount.getAccountCodePurpose());
+		}
+		if (chartOfAccount.getParentId() != null) {
+			ChartOfAccount parentId = chartOfAccountService.findOne(chartOfAccount.getParentId().getId());
+			if (parentId == null) {
+				throw new InvalidDataException("parentId", "parentId.invalid", " Invalid parentId");
+			}
+			model.map(parentId, chartOfAccount.getParentId());
+		}
+		return chartOfAccountContractRequest;
 	}
 }

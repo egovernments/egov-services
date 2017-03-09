@@ -29,7 +29,7 @@ public class BankService {
 	private final BankRepository bankRepository;
 	@PersistenceContext
 	private EntityManager entityManager;
-	
+
 	@Autowired
 	private SmartValidator validator;
 
@@ -71,35 +71,41 @@ public class BankService {
 		return bankRepository.findAll(specification, page);
 	}
 
-	public BindingResult validate(BankContractRequest bankContractRequest, String method,BindingResult errors) {
-	
+	public BindingResult validate(BankContractRequest bankContractRequest, String method, BindingResult errors) {
+
 		try {
-			switch(method)
-			{
+			switch (method) {
 			case "update":
 				Assert.notNull(bankContractRequest.getBank(), "Bank to edit must not be null");
 				validator.validate(bankContractRequest.getBank(), errors);
 				break;
 			case "view":
-				//validator.validate(bankContractRequest.getBank(), errors);
+				// validator.validate(bankContractRequest.getBank(), errors);
 				break;
 			case "create":
 				Assert.notNull(bankContractRequest.getBanks(), "Banks to create must not be null");
-				for(BankContract b:bankContractRequest.getBanks())
-				 validator.validate(b, errors);
+				for (BankContract b : bankContractRequest.getBanks()) {
+					validator.validate(b, errors);
+				}
 				break;
 			case "updateAll":
 				Assert.notNull(bankContractRequest.getBanks(), "Banks to create must not be null");
-				for(BankContract b:bankContractRequest.getBanks())
-				 validator.validate(b, errors);
+				for (BankContract b : bankContractRequest.getBanks()) {
+					validator.validate(b, errors);
+				}
 				break;
-			default : validator.validate(bankContractRequest.getRequestInfo(), errors);
+			default:
+				validator.validate(bankContractRequest.getRequestInfo(), errors);
 			}
 		} catch (IllegalArgumentException e) {
-			 errors.addError(new ObjectError("Missing data", e.getMessage()));
+			errors.addError(new ObjectError("Missing data", e.getMessage()));
 		}
 		return errors;
 
+	}
+
+	public BankContractRequest fetchRelatedContracts(BankContractRequest bankContractRequest) {
+		return bankContractRequest;
 	}
 
 }

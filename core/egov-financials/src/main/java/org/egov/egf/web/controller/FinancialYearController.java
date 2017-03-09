@@ -15,6 +15,7 @@ import org.egov.egf.persistence.queue.contract.RequestInfo;
 import org.egov.egf.persistence.queue.contract.ResponseInfo;
 import org.egov.egf.persistence.service.FinancialYearService;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.builder.SkipExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -44,7 +45,7 @@ public class FinancialYearController {
 		if (errors.hasErrors()) {
 		  throw	new CustomBindException(errors);
 		}
-		
+		financialYearService.fetchRelatedContracts(financialYearContractRequest);
 		FinancialYearContractResponse financialYearContractResponse = new FinancialYearContractResponse();
 		financialYearContractResponse.setFinancialYears(new ArrayList<FinancialYearContract>());
 		for(FinancialYearContract financialYearContract:financialYearContractRequest.getFinancialYears())
@@ -72,10 +73,12 @@ public class FinancialYearController {
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
-	 
+		financialYearService.fetchRelatedContracts(financialYearContractRequest);
 		FinancialYear financialYearFromDb = financialYearService.findOne(uniqueId);
-		FinancialYearContract financialYear = financialYearContractRequest.getFinancialYear();
 		
+		FinancialYearContract financialYear = financialYearContractRequest.getFinancialYear();
+		//ignoring internally passed id if the put has id in url
+	    financialYear.setId(uniqueId);
 		ModelMapper model=new ModelMapper();
 	 	model.map(financialYear, financialYearFromDb);
 		financialYearFromDb = financialYearService.update(financialYearFromDb);
@@ -88,19 +91,19 @@ public class FinancialYearController {
 	
 	@GetMapping(value = "/{uniqueId}")
 	@ResponseStatus(HttpStatus.OK)
-	public FinancialYearContractResponse view(@RequestBody @Valid FinancialYearContractRequest financialYearContractRequest, BindingResult errors,
+	public FinancialYearContractResponse view(@ModelAttribute FinancialYearContractRequest financialYearContractRequest, BindingResult errors,
 			@PathVariable Long uniqueId) {
-
+		financialYearService.validate(financialYearContractRequest,"view",errors);
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
-		financialYearService.validate(financialYearContractRequest,"view",errors);
+		financialYearService.fetchRelatedContracts(financialYearContractRequest);
 		RequestInfo requestInfo = financialYearContractRequest.getRequestInfo();
 		FinancialYear financialYearFromDb = financialYearService.findOne(uniqueId);
 		FinancialYearContract financialYear = financialYearContractRequest.getFinancialYear();
 		
 		ModelMapper model=new ModelMapper();
-	 	model.map(financialYear, financialYearFromDb);
+	 	model.map(financialYearFromDb,financialYear );
 		
 		FinancialYearContractResponse financialYearContractResponse = new FinancialYearContractResponse();
 		financialYearContractResponse.setFinancialYear(financialYear);  
@@ -116,14 +119,13 @@ public class FinancialYearController {
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
-		
+		financialYearService.fetchRelatedContracts(financialYearContractRequest);		
  
 		FinancialYearContractResponse financialYearContractResponse =new  FinancialYearContractResponse();
 		financialYearContractResponse.setFinancialYears(new ArrayList<FinancialYearContract>());
 		for(FinancialYearContract financialYearContract:financialYearContractRequest.getFinancialYears())
 		{
 		FinancialYear financialYearFromDb = financialYearService.findOne(financialYearContract.getId());
-		 
 		
 		ModelMapper model=new ModelMapper();
 	 	model.map(financialYearContract, financialYearFromDb);
@@ -147,6 +149,7 @@ public class FinancialYearController {
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
+		financialYearService.fetchRelatedContracts(financialYearContractRequest);
 		FinancialYearContractResponse financialYearContractResponse =new  FinancialYearContractResponse();
 		financialYearContractResponse.setFinancialYears(new ArrayList<FinancialYearContract>());
 		financialYearContractResponse.setPage(new Pagination());

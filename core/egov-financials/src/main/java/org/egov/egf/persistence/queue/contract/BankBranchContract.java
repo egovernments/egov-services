@@ -58,7 +58,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 
-@JsonPropertyOrder({ "id",  "code", "name","bank", "address", "address2", "city", "state", "pincode", "phone", "fax",
+@JsonPropertyOrder({ "id", "code", "name","bank", "address", "address2", "city", "state", "pincode", "phone", "fax",
 		"contactPerson", "active", "description", "micr", "bankAccounts" })
 public class BankBranchContract extends AuditableContract {
 

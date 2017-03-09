@@ -105,6 +105,6 @@ public interface EntityType {
      *
      * @return status of Entity^M
      */
-    public EgwStatus getEgwStatus();
+    public EgfStatus getEgwStatus();
 
 }

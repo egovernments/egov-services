@@ -19,8 +19,11 @@ public class Assignment {
 	@JsonProperty("id")
 	private Long id = null;
 
+	@JsonProperty("employee")
+	private String employee = null;
+	
 	@JsonProperty("position")
-	private Object position = null;
+	private String position = null;
 
 	@JsonProperty("fund")
 	private String fund = null;
@@ -47,16 +50,18 @@ public class Assignment {
 	private LocalDate toDate = null;
 
 	@JsonProperty("grade")
-	private Object grade = null;
+	private String grade = null;
 
 	@JsonProperty("govtOrderNumber")
 	private String govtOrderNumber = null;
 
 	public Assignment(org.egov.eis.persistence.entity.Assignment entityAssignment) {
 		id = entityAssignment.getId();
+		employee = entityAssignment.getEmployee()!=null ? entityAssignment.getEmployee().getName() : "" ;
 		department = entityAssignment.getDepartment() != null ? entityAssignment.getDepartment().getName() : "";
 		designation = entityAssignment.getDesignation() != null ? entityAssignment.getDesignation().getName() : "";
 		fund = entityAssignment.getFund() != null ? entityAssignment.getFund().toString() : "";
+		position = entityAssignment.getPosition() != null ? entityAssignment.getPosition().getId().toString() : "";
 	}
 
 }

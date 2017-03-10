@@ -46,9 +46,13 @@ import org.egov.user.persistence.entity.enums.Gender;
 import org.egov.user.persistence.entity.enums.GuardianRelation;
 import org.egov.user.persistence.entity.enums.UserType;
 import org.joda.time.DateTime;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import java.util.*;
+
+import static org.egov.user.persistence.entity.User.SEQ_COMPLAINT;
 
 
 @Entity
@@ -60,12 +64,14 @@ import java.util.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@SequenceGenerator(name = SEQ_COMPLAINT, sequenceName = SEQ_COMPLAINT, allocationSize = 1)
 public class User extends AbstractAuditable {
 
+    public static final String SEQ_COMPLAINT = "SEQ_EG_USER";
     private static final long serialVersionUID = 1666623645834766468L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(generator = SEQ_COMPLAINT, strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @Column(name = "username")
@@ -158,6 +164,10 @@ public class User extends AbstractAuditable {
         return null == pwdExpiryDate ? null : new DateTime(pwdExpiryDate);
     }
 
+    public void updateNextPwdExpiryDate(Integer passwordExpireInDays) {
+        this.setPwdExpiryDate(new DateTime().plusDays(passwordExpireInDays).toDate());
+    }
+
     public User fromDomain(org.egov.user.domain.model.User user) {
         this.name = user.getName();
         this.id = user.getId();
@@ -183,7 +193,7 @@ public class User extends AbstractAuditable {
         this.identificationMark = user.getIdentificationMark();
         this.signature = user.getSignature();
         this.photo = user.getPhoto();
-        this.accountLocked = user.getAccountLocked();
+        this.accountLocked = user.getAccountLocked() == null ? false : user.getAccountLocked();
         this.setLastModifiedDate(user.getLastModifiedDate());
         this.setCreatedDate(user.getCreatedDate());
         this.roles = user.getRoles();

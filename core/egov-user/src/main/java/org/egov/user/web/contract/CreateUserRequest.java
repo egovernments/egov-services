@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.egov.user.domain.model.User;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @AllArgsConstructor
 @Getter
@@ -16,7 +17,7 @@ public class CreateUserRequest {
     @JsonProperty("User")
     private UserRequest userRequest;
 
-    public User toDomainForCreate() {
-        return userRequest.toDomainForCreate();
+    public User toDomainForCreate(PasswordEncoder passwordEncoder) {
+        return userRequest.toDomainForCreate(passwordEncoder);
     }
 }

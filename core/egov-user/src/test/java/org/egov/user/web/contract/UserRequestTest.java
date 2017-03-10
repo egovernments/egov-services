@@ -5,6 +5,8 @@ import org.egov.user.persistence.entity.Address;
 import org.egov.user.persistence.entity.Role;
 import org.egov.user.persistence.entity.enums.*;
 import org.junit.Test;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.*;
 
@@ -13,6 +15,8 @@ import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.junit.Assert.*;
 
 public class UserRequestTest {
+
+    PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Test
     public void testEntityToContractConversion() throws Exception {
@@ -61,7 +65,7 @@ public class UserRequestTest {
     @Test
     public void testContractToDomainConversion() throws Exception {
         UserRequest userRequest = buildUserRequest();
-        User userForCreate = userRequest.toDomainForCreate();
+        User userForCreate = userRequest.toDomainForCreate(passwordEncoder);
         Calendar c = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
         c.set(2017, 01, 01, 01, 01, 01);
         String expectedDate = c.getTime().toString();
@@ -92,12 +96,13 @@ public class UserRequestTest {
         assertEquals("CITIZEN", userForCreate.getRoles().iterator().next().getName());
         assertEquals("ap.public", userForCreate.getTenantId());
         assertEquals("otpreference1", userForCreate.getOtpReference());
+        assertEquals(60, userForCreate.getPassword().length());
     }
 
     @Test
     public void testShouldOverrideProvidedRolesByCitizenRole() throws Exception {
         UserRequest userRequest = buildUserRequestWithRoles();
-        User userForCreate = userRequest.toDomainForCreate();
+        User userForCreate = userRequest.toDomainForCreate(passwordEncoder);
 
         assertEquals("CITIZEN", userForCreate.getRoles().iterator().next().getName());
     }
@@ -142,6 +147,7 @@ public class UserRequestTest {
                 .createdDate(dateToTest)
                 .tenantId("ap.public")
                 .otpReference("otpreference1")
+                .password("!abcd1234")
                 .roles(roles);
     }
 

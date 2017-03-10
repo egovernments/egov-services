@@ -81,4 +81,5 @@ public class User {
     public boolean isUsernameAbsent() {
         return isEmpty(username);
     }
+
 }

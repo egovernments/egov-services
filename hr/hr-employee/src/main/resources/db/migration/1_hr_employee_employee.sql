@@ -34,7 +34,7 @@ CREATE TABLE egeis_employee (
     CONSTRAINT ck_egeis_employee_dateOfAppointment CHECK (dateOfAppointment <= dateOfJoining),
     CONSTRAINT ck_egeis_employee_dateOfRetirement CHECK (dateOfRetirement >= dateOfJoining),
     CONSTRAINT ck_egeis_employee_dateOfResignation CHECK (dateOfResignation >= dateOfJoining),
-    CONSTRAINT ck_egeis_employee_dateOfTermination CHECK (dateOfTermination >= dateOfJoining),
+    CONSTRAINT ck_egeis_employee_dateOfTermination CHECK (dateOfTermination >= dateOfJoining)
 );
 
 CREATE SEQUENCE seq_egeis_employee

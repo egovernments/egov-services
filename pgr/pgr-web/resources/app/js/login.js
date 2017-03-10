@@ -64,7 +64,7 @@ $(document).ready(function()
         }
     );
 
-	$('#compsearch').click(function() {
+	$('.compsearch').click(function() {
 		var compnum=$.trim($('#compsearchtxt').val());
 		if (compnum !== "") {
 			$('.search-error-msg').addClass('display-hide');

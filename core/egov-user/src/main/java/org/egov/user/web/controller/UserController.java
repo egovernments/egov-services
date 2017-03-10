@@ -5,8 +5,10 @@ import org.egov.user.persistence.entity.User;
 import org.egov.user.web.contract.*;
 import org.egov.user.web.contract.Error;
 import org.egov.user.web.contract.auth.SecureUser;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,10 +26,12 @@ public class UserController {
 
     private UserService userService;
     private TokenStore tokenStore;
+    private PasswordEncoder passwordEncoder;
 
-    public UserController(UserService userService, TokenStore tokenStore) {
+    public UserController(UserService userService, TokenStore tokenStore, PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.tokenStore = tokenStore;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @PostMapping("/_create")
@@ -74,16 +78,16 @@ public class UserController {
     public ResponseEntity<?> getUser(@RequestParam(value = "access_token") String accessToken) {
         OAuth2Authentication authentication = tokenStore.readAuthentication(accessToken);
         if (authentication != null)
-            return new ResponseEntity<org.egov.user.web.contract.auth.User>(
+            return new ResponseEntity<>(
                     ((SecureUser) authentication.getPrincipal()).getUser(), HttpStatus.OK);
         else {
             ErrorResponse errRes = populateErrors();
-            return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
     }
 
     private ResponseEntity<UserDetailResponse> createUser(@RequestBody CreateUserRequest createUserRequest, Boolean validateUser) {
-        org.egov.user.domain.model.User user = createUserRequest.toDomainForCreate();
+        org.egov.user.domain.model.User user = createUserRequest.toDomainForCreate(passwordEncoder);
         UserRequest userRequest = new UserRequest(userService.save(createUserRequest.getRequestInfo(), user, validateUser));
         ResponseInfo responseInfo = ResponseInfo.builder().status(String.valueOf(HttpStatus.OK.value())).build();
         UserDetailResponse createdUserResponse = new UserDetailResponse(responseInfo, Arrays.asList(userRequest));

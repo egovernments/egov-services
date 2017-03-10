@@ -178,31 +178,9 @@ $(document).ready(function()
 		
 	});
 	
-	/*$('#ct-sel-jurisd').change(function(){
-		//console.log("came jursidiction"+$('#ct-sel-jurisd').val());
-		$.ajax({
-			url: "/pgr/ajax-getChildLocation",
-			type: "GET",
-			data: {
-				id : $('#ct-sel-jurisd').val()
-			},
-			dataType: "json",
-			success: function (response) {
-				//console.log("success"+response);
-				$('#location').empty();
-				
-				$('#location').append($("<option value=''>Select</option>"));
-				$.each(response, function(index, value) {
-					
-				     $('#location').append($('<option>').text(value.name).attr('value', value.id));
-				});
-				
-			}, 
-			error: function (response) {
-				//console.log("failed");
-			}
-		});
-	});*/
+	$('#ct-sel-jurisd').change(function(){
+		getLocality($(this).val())
+	});
 	
 	$('#approvalDepartment').change(function(){
 		getDesignation($(this).val());
@@ -291,7 +269,6 @@ $(document).ready(function()
 								
 								complaintType(loadDD);
 								getWard(loadDD);
-								getLocality(loadDD);
 								getDepartment(loadDD);
 							}
 
@@ -360,21 +337,31 @@ function nextStatus(loadDD){
 }
 
 function getWard(loadDD){
-	/*$.ajax({
-		url: "/v1/location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?boundaryTypeName=Ward&hierarchyTypeName=Admin",
+	$.ajax({
+		url: "/v1/location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?boundaryTypeName=Ward&hierarchyTypeName=Administration",
 		type : 'POST'
 	}).done(function(data) {
 		loadDD.load({
 			element:$('#ct-sel-jurisd'),
-			data:data,
-			keyValue:'name',
+			data:data.Boundary,
+			keyValue:'id',
 			keyDisplayName:'name'
 		});
-	});*/
+	});
 }
 
-function getLocality(loadDD){
-
+function getLocality(boundaryId){
+	$.ajax({
+		url: "/v1/location/boundarys/childLocationsByBoundaryId?boundaryId="+boundaryId,
+		type : 'POST'
+	}).done(function(data) {
+		loadDD.load({
+			element:$('#location'),
+			data:data.Boundary,
+			keyValue:'id',
+			keyDisplayName:'name'
+		});
+	});
 }
 
 function getDepartment(loadDD){
@@ -417,8 +404,8 @@ function getUser(depId, desId){
 			element:$('#approvalPosition'),
 			placeholder : 'Select Position', // default - Select(optional)
 			data:data.Assignment,
-			keyValue:'id',
-			keyDisplayName:'name'
+			keyValue:'position',
+			keyDisplayName:'employee'
 		});
 	});
 }

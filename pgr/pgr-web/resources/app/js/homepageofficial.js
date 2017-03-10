@@ -37,7 +37,7 @@
  *
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-var tableContainer;
+var tableContainer, positionId;
 $(document).ready(function()
 {	
 	$('#new-pass').popover({ trigger: "focus",placement: "bottom"});
@@ -117,6 +117,7 @@ $(document).ready(function()
 	        
 	});
 	
+	getPosition();
 	worklist();
 	
 	$("#official_inbox").on('click','tbody tr td i.inbox-history',function(e) {
@@ -415,6 +416,7 @@ function clearnow(){
 }
 //common ajax functions for worklist, drafts and notifications 
 function worklist(){
+	console.log(positionId)
 	var headers = new $.headers();
 	tableContainer1 = $("#official_inbox"); 
 	tableContainer = tableContainer1.DataTable({
@@ -424,7 +426,7 @@ function worklist(){
 		"autoWidth": false,
         "aaSorting": [],
 		"ajax": {
-			url : "/pgr/seva?jurisdiction_id=6&user_id="+localStorage.getItem("id"),
+			url : "/pgr/seva?jurisdiction_id=6&assignment_id="+positionId,
 			headers : headers.header,
 			dataSrc : "service_requests"
 		},
@@ -603,4 +605,21 @@ function inboxloadmethod(){
 	}else if(focussedmenu == 'notifications'){
 		notifications();
 	}
+}
+
+function getPosition(){
+	$.ajax({
+		url : '/eis/_assignmentByEmployeeId?employeeId='+localStorage.getItem('id'),
+		type : 'POST',
+		async : false,
+		success : function(response){
+			positionId = response.Assignment[0].position
+		},
+		error: function(){
+			bootbox.alert('Error gegtting positionId!');
+		},
+		complete : function(){
+
+		}
+	})
 }

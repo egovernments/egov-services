@@ -7,6 +7,7 @@ import org.egov.user.domain.model.User;
 import org.egov.user.persistence.entity.Address;
 import org.egov.user.persistence.entity.Role;
 import org.egov.user.persistence.entity.enums.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -167,17 +168,17 @@ public class UserRequest {
         );
     }
 
-    User toDomainForCreate() {
+    User toDomainForCreate(PasswordEncoder passwordEncoder) {
         Role citizen = new Role();
         citizen.setName("CITIZEN");
         Set<Role> roles = new HashSet<>();
         roles.add(citizen);
-        return forDomain()
+        return forDomain(passwordEncoder)
                 .roles(roles)
                 .build();
     }
 
-    private User.UserBuilder forDomain() {
+    private User.UserBuilder forDomain(PasswordEncoder passwordEncoder) {
         return User.builder()
                 .name(this.name)
                 .username(this.userName)
@@ -202,6 +203,7 @@ public class UserRequest {
                 .createdDate(new Date())
                 .otpReference(this.otpReference)
                 .tenantId(this.tenantId)
+                .password(passwordEncoder.encode(this.password))
                 .roles(this.roles != null ? this.roles.stream().map(RoleRequest::toDomain).collect(Collectors.toSet()) : null);
     }
 }

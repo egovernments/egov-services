@@ -53,7 +53,6 @@ import org.egov.eis.model.enums.MaritalStatus;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -154,7 +153,6 @@ public class Employee {
 
 	private UserInfo userInfo;
 
-	@Getter(AccessLevel.NONE)
 	@NotNull
 	private String tenantId;
 

@@ -1,0 +1,27 @@
+{
+  "ResponseInfo":{
+    "api_id":null,
+    "ver":null,
+    "ts":null,
+    "res_msg_id":null,
+    "msg_id":null,
+    "status":null
+  },
+  "Assignment":[
+    {
+      "id":2,
+      "employee":"",
+      "position":"",
+      "fund":"",
+      "functionary":null,
+      "function":null,
+      "designation":"",
+      "department":"Electrical",
+      "primary":null,
+      "fromDate":null,
+      "toDate":null,
+      "grade":null,
+      "govtOrderNumber":null
+    }
+  ]
+}

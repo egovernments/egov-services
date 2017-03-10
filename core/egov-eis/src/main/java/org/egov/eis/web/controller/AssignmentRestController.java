@@ -3,6 +3,7 @@ package org.egov.eis.web.controller;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.egov.eis.domain.service.AssignmentService;
@@ -93,6 +94,23 @@ public class AssignmentRestController {
 			}
 		}
 		return new ResponseEntity<AssignmentRes>(response, HttpStatus.BAD_REQUEST);
+	}
+
+
+	//TODO SHOULD BE CHANGED TO URL FROM HRM MODULE
+	@PostMapping(value = "/_assignmentByEmployeeId")
+	@ResponseBody
+	public ResponseEntity<AssignmentRes> getPrimaryAssignmentByEmployeeId(
+			@RequestParam(value = "employeeId", required = true) Long employeeId){
+		AssignmentRes response = AssignmentRes.builder().build();
+		if(Objects.nonNull(employeeId)){
+			org.egov.eis.persistence.entity.Assignment assignment = assignmentService.getPrimaryAssignmentForEmployee(employeeId);
+			if(Objects.nonNull(assignment))
+				response.setAssignment(Collections.singletonList(new Assignment(assignment)));
+			    response.setResponseInfo(new ResponseInfo());
+			    return new ResponseEntity<AssignmentRes>(response,HttpStatus.OK);
+		}
+		return new ResponseEntity<AssignmentRes>(response,HttpStatus.BAD_REQUEST);
 	}
 
 	@ExceptionHandler(Exception.class)

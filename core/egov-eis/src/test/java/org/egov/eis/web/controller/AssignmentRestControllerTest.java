@@ -18,6 +18,7 @@ import org.egov.eis.domain.service.AssignmentService;
 import org.egov.eis.persistence.entity.Assignment;
 import org.egov.eis.persistence.entity.Department;
 import org.egov.eis.persistence.entity.Designation;
+import org.egov.eis.persistence.entity.Position;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,6 +97,25 @@ public class AssignmentRestControllerTest {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@Test
+	public void test_should_return_assignment_when_employee_id_given() throws  Exception {
+		Department department = Department.builder().name("Electrical").build();
+		Assignment assignment = Assignment.builder()
+				.id(2L)
+				.department(department)
+				.build();
+
+		when(assignmentService.getPrimaryAssignmentForEmployee(any(Long.class)))
+				.thenReturn(assignment);
+
+		mockMvc.perform(post("/_assignmentByEmployeeId").param("employeeId","18")
+				.header("X-CORRELATION-ID", "someId")).andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(content().json(getFileContents("assignmentByEmployeeIdResponse.json")));
+
+		assertEquals("someId", RequestContext.getId());
 	}
 
 }

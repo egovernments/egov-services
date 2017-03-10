@@ -57,6 +57,16 @@ public class AssignmentServiceTest {
 	}
 
 	@Test
+	public void test_should_return_assignment_for_employeeId(){
+		when(assignmentRepository.getPrimaryAssignmentForEmployee(18L))
+				.thenReturn(Assignment.builder().id(2L).build());
+
+		final Assignment actualAssignment = assignmentService.getPrimaryAssignmentForEmployee(18L);
+
+		assertEquals(2,actualAssignment.getId().longValue());
+	}
+
+	@Test
 	public void test_should_fetch_all_assignments_for_given_deptid_or_desgnid() {
 		List<Assignment> actualAssignment = new ArrayList<>();
 		final Assignment expectedAssignment = Assignment.builder().id(1L).department(department)

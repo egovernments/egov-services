@@ -40,13 +40,11 @@
 
 package org.egov.user.domain.service;
 
-import org.apache.commons.lang3.StringUtils;
 import org.egov.user.domain.exception.OtpValidationPendingException;
 import org.egov.user.persistence.entity.Role;
 import org.egov.user.persistence.entity.User;
 import org.egov.user.persistence.repository.RoleRepository;
 import org.egov.user.persistence.repository.UserRepository;
-import org.egov.user.web.contract.Otp;
 import org.egov.user.web.contract.RequestInfo;
 import org.springframework.stereotype.Service;
 
@@ -91,7 +89,7 @@ public class UserService {
         if(userToPersist.getRoles() == null || userToPersist.getRoles().size() == 0) return;
         Set<Role> enrichedRoles = userToPersist.getRoles()
                 .stream()
-                .map((role) -> roleRepository.findByName(role.getName()))
+                .map((role) -> roleRepository.findByNameContainingIgnoreCase(role.getName()))
                 .collect(Collectors.toSet());
         userToPersist.setRoles(enrichedRoles);
     }

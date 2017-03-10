@@ -101,7 +101,7 @@ public class UserServiceTest {
         User entityUser = new User().fromDomain(domainUser);
         when(otpService.isOtpValidationComplete(requestInfo, domainUser)).thenReturn(Boolean.TRUE);
         when(userRepository.save(userCaptor.capture())).thenReturn(entityUser);
-        when(roleRepository.findByName("CITIZEN")).thenReturn(mockRole);
+        when(roleRepository.findByNameContainingIgnoreCase("CITIZEN")).thenReturn(mockRole);
         userService.save(requestInfo, domainUser, Boolean.TRUE);
 
         assertEquals(mockRole, userCaptor.getValue().getRoles().iterator().next());
@@ -113,7 +113,7 @@ public class UserServiceTest {
         when(otpService.isOtpValidationComplete(requestInfo, domainUser)).thenReturn(Boolean.TRUE);
         userService.save(requestInfo, domainUser, Boolean.TRUE);
 
-        verify(roleRepository, never()).findByName(any(String.class));
+        verify(roleRepository, never()).findByNameContainingIgnoreCase(any(String.class));
     }
 
     @Test

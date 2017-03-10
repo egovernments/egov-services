@@ -27,6 +27,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
     public void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .anyRequest().authenticated()
+                .antMatchers("/_create").permitAll()
                 .and().exceptionHandling()
                 .accessDeniedHandler(new OAuth2AccessDeniedHandler());
     }

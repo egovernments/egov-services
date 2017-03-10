@@ -2,6 +2,8 @@ package org.egov.lams.model;
 
 import java.util.Date;
 
+import javax.validation.constraints.NotNull;
+
 import org.egov.lams.model.enums.NatureOfAllotment;
 import org.egov.lams.model.enums.PaymentCycle;
 import org.egov.lams.model.enums.Status;
@@ -23,9 +25,13 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class Agreement {
 
+	@NotNull
 	private Long id;
+
+	@NotNull
 	private String agreementNumber;
 
+	@NotNull
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date agreementDate;
 	private Allottee allottee;
@@ -46,19 +52,28 @@ public class Agreement {
 
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date securityDepositDate;
+
+	@NotNull
 	private Status status;
+
+	@NotNull
 	private NatureOfAllotment natureOfAllotment;
 	private Double registrationFee;
 	private String caseNo;
 
+	@NotNull
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date commencementDate;
 
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date expiryDate;
 	private String orderDetails;
+
+	@NotNull
 	private Double rent;
 	private String tradelicenseNumber;
+
+	@NotNull
 	private PaymentCycle paymentCycle;
 	private RentIncrementType rentIncrementMethod;
 	private String orderNo;

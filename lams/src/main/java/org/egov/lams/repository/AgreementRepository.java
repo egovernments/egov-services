@@ -173,11 +173,11 @@ public class AgreementRepository {
 		logger.info("AgreementController SearchAgreementService AgreementRepository : inside Allottee API caller");
 		Allottee allottee = new Allottee();
 		allottee.setId(45l);
-		allottee.setAadhaarNo("1235509945");
-		allottee.setContactNo(9990002224l);
+		allottee.setAadhaarNumber("1235509945");
+		allottee.setMobileNumber(9990002224l);
 		allottee.setAddress("home");
 		allottee.setName("ghanshyam");
-		allottee.setPanNo("axy93jwbd");
+		allottee.setPan("axy93jwbd");
 		allottee.setEmailId("xyz.riflexions.com");
 		List<Allottee> allottees = new ArrayList<>();
 		allottees.add(allottee);

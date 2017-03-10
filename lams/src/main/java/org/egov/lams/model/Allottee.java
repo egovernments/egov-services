@@ -1,5 +1,7 @@
 package org.egov.lams.model;
 
+import javax.validation.constraints.NotNull;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,11 +16,17 @@ import lombok.ToString;
 public class Allottee {
 
 	private Long id;
+	
+	@NotNull
 	private String name;
+	
+	@NotNull
 	private String address;
-	private Long contactNo;
-	private String aadhaarNo;
-	private String panNo;
+	
+	@NotNull
+	private Long mobileNumber;
+	private String aadhaarNumber;
+	private String pan;
 	private String emailId;
 
 }

@@ -1256,7 +1256,7 @@ definitions:
     type: object
     properties:
       ResponseInfo:
-        $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ResponseInfo'
+        $ref: '#/definitions/ResponseInfo'
       Category:
         type: array
         items: 

@@ -149,8 +149,8 @@ $(document).ready(function()
 				},
 				success : function(response){
 					localStorage.setItem("auth", response.access_token);
-					localStorage.setItem("type", response.User.type);
-					localStorage.setItem("id", response.User.id);
+					localStorage.setItem("type", response.UserRequest.type);
+					localStorage.setItem("id", response.UserRequest.id);
 					if(localStorage.getItem("type") == 'CITIZEN')
 						window.open("templates/homepagecitizen.html","_self")
 					else if(localStorage.getItem("type") == 'EMPLOYEE')

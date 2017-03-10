@@ -125,7 +125,22 @@ $(document).ready(function()
 		event.preventDefault();
 		popupCenter($(this).attr('href'), 'myPop1',940,600);
 	});
+
+	loadComplaints();
+
+	$('.inboxLoad').click(function(){
+		loadComplaints();
+	});
 	
+	$(document).on('click','.open_popup',function(e){
+		var srn = $(this).data('srn');
+		openPopUp('view-complaint.html?srn='+srn,srn);
+		e.stopPropagation();
+	});
+		
+});
+
+function loadComplaints(){
 	var headers = new $.headers();
 	$.ajax({
 		url : "/pgr/seva?jurisdiction_id=6&user_id="+localStorage.getItem("id"),
@@ -134,10 +149,12 @@ $(document).ready(function()
 			showLoader();
 		},
 		success : function(response){
-
+			//$("#grievance-template").html('');
 			var source   = $("#grievance-template").html();
 			var template = Handlebars.compile(source);
-			$('.grievanceresponse').append(template(response.service_requests));
+			var html = template(response.service_requests);
+			$('.reloadtemplate').remove();
+			$('.grievanceresponse').append(html);
 		},
 		error : function(){
 			bootbox.alert('Error in loading data!')
@@ -146,15 +163,19 @@ $(document).ready(function()
 			hideLoader();
 		}
 	});
+}
 
-	$(document).on('click','.open_popup',function(e){
-		var srn = $(this).data('srn');
-		openPopUp('view-complaint.html?srn='+srn,srn);
-		e.stopPropagation();
-	})
-	
-	
-});
+function search(elem) {
+	var searchText = $(elem).val(); 
+    $(".msg").each(function() {
+         var $this = $(this)
+         if ($this.find('div').text().toUpperCase().search(searchText.toUpperCase()) === -1) {
+             $this.hide();
+         }else {
+	         $this.show();
+	     }
+    });
+};
 
 function popupCenter(url, title, w, h) {
 		var left = (screen.width/2)-(w/2);

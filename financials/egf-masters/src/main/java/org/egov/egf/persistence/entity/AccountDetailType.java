@@ -42,12 +42,11 @@ package org.egov.egf.persistence.entity;
 
 import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -55,7 +54,6 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -65,35 +63,50 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(exclude={"accountDetailType"},callSuper=false)
-
-@Table(name = "egf_accountdetailkey")
-@SequenceGenerator(name = AccountDetailKey.SEQ_ACCOUNTDETAILKEY, sequenceName = AccountDetailKey.SEQ_ACCOUNTDETAILKEY, allocationSize = 1)
+@Table(name = "egf_accountdetailtype")
+@SequenceGenerator(name = AccountDetailType.SEQ_ACCOUNTDETAILTYPE, sequenceName = AccountDetailType.SEQ_ACCOUNTDETAILTYPE, allocationSize = 1)
  
  
-public class AccountDetailKey extends AbstractAuditable {
+public class AccountDetailType extends AbstractAuditable implements java.io.Serializable {
 
-	private static final long serialVersionUID = 1L;
-	public static final String SEQ_ACCOUNTDETAILKEY = "seq_accountdetailtype";
+    private static final long serialVersionUID = 3499589983886551123L;
+
+    public static final String SEQ_ACCOUNTDETAILTYPE = "seq_accountdetailtype";
 
     @Id
-    @GeneratedValue(generator = SEQ_ACCOUNTDETAILKEY, strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(generator = SEQ_ACCOUNTDETAILTYPE, strategy = GenerationType.SEQUENCE)
    
-	private Long id;
+    private Long id;
+
     
-	private Integer groupId;
-	
-	@Length(max=128)
-	private String name;
-	
-	private Integer key;
-	@NotNull
-	@ManyToOne
-	@JoinColumn(name = "detailTypeId")
-	private AccountDetailType accountDetailType;
-	 @Override
-	    public Long getId()
-	    {
-	    	return this.id;
-	    }
+    @NotNull
+    @Length(max = 50,min=1)
+    private String name;
+
+    @NotNull
+    @Length(max = 50,min=1)
+    private String description;
+
+    @Length(max = 25)
+    private String tableName;
+
+    
+    @NotNull
+    private Boolean active;
+
+    @Column(name = "FULLY_QUALIFIED_NAME")
+    @Length(max = 250,min=1)
+    private String fullyQualifiedName;
+
+    @Override
+    public Long getId()
+    {
+    	return this.id;
+    }
+     
+
+     
+
+   
+
 }

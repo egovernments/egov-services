@@ -4,12 +4,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.egov</groupId>
-	<artifactId>financials-masters</artifactId>
+	<artifactId>egf-masters</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>financials</name>
-	<description>financials masters service for egov applications</description>
+	<name>egf-masters</name>
+	<description>financials masters service </description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>

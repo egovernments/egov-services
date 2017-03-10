@@ -89,7 +89,7 @@ public class BankController {
 		return bankContractResponse;
 	}
 	
-	@GetMapping(value = "/{uniqueId}")
+	@PostMapping(value = "/{uniqueId}")
 	@ResponseStatus(HttpStatus.OK)
 	public BankContractResponse view(@ModelAttribute BankContractRequest bankContractRequest, BindingResult errors,
 			@PathVariable Long uniqueId) {
@@ -141,14 +141,19 @@ public class BankController {
 	}
 	
 
-	@GetMapping
+	@PostMapping("/_search")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	public BankContractResponse search(@ModelAttribute BankContractRequest bankContractRequest,BindingResult errors) {
-		bankService.validate(bankContractRequest,"search",errors);
+	public BankContractResponse search(@ModelAttribute BankContract bankContracts,@RequestBody RequestInfo requestInfo, BindingResult errors) {
+	    BankContractRequest bankContractRequest=new BankContractRequest();
+	    bankContractRequest.setBank(bankContracts);
+	    bankContractRequest.setRequestInfo(requestInfo);
+	    
+	    bankService.validate(bankContractRequest,"search",errors);
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
+	       
 		bankService.fetchRelatedContracts(bankContractRequest);
 		BankContractResponse bankContractResponse =new  BankContractResponse();
 		bankContractResponse.setBanks(new ArrayList<BankContract>());

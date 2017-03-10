@@ -17,6 +17,8 @@ import org.egov.egf.persistence.entity.Bank_;
 import org.egov.egf.persistence.queue.contract.BankContract;
 import org.springframework.data.jpa.domain.Specification;
 
+import com.jayway.jsonpath.Criteria;
+
 public class BankSpecification implements Specification<Bank> {
 	private BankContract criteria;
 
@@ -32,6 +34,7 @@ public class BankSpecification implements Specification<Bank> {
 		Path<String> description = root.get(Bank_.description);
 		Path<Boolean> active = root.get(Bank_.active);
 		Path<String> type = root.get(Bank_.type);
+		
 	    Expression<Set<BankBranch>> bankBranches = root.get(Bank_.bankBranches);
 		final List<Predicate> predicates = new ArrayList<>();
 	
@@ -65,6 +68,10 @@ public class BankSpecification implements Specification<Bank> {
 			predicates.add(criteriaBuilder.equal(bankBranches, criteria.getBankBranches()));
 		}
 */
+		}
+		if(criteria.getIds() != null && !criteria.getIds().isEmpty())
+		{
+		    predicates.add(id.in(criteria.getIds()));
 		}
 		return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
 	}

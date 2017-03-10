@@ -1,0 +1,2609 @@
+# Financials Version 1 API
+swagger: 2.0
+
+# This is your document metadata
+info:
+  version: "1.0.0"
+  title: Financial Management System APIs
+  host: phoenix-qa.egovernments.org
+  description: All APIs available in the system are defined here.
+  contact:
+    name: Manikanta PT
+schemes:
+  - https
+  - http
+basePath: '/v1/egf'
+paths:
+    /banks:
+      get:
+        summary: Get the list of banks
+        description: banks
+        tags: 
+          - Masters
+          - Bank
+        parameters:
+          - name: bank.code
+            type: string
+            in: query
+            description: code of the Bank
+            required: true
+          - name: bank.name
+            type: string
+            in: query
+            description: name of the Bank
+            required: true
+          - name: bank.active
+            type: boolean
+            in: query
+            description: Whether Bank is Active or not. If the value is TRUE, then Bank is active,If the value is FALSE then Bank is inactive
+            required: true
+        responses:
+          200:
+            description: Bank retrieved Successfully
+            schema:
+              $ref: '#/definitions/BankResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: Bank Not Found
+      post:
+        summary: Create  new  banks
+        description: Create  new banks
+        tags: 
+          - Masters
+          - Bank
+        parameters:
+          - name: bankRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/BankRequest'
+        responses:
+          201:
+            description: Bank created Successfully
+            schema:
+              $ref: '#/definitions/BankResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: Bank Not Found
+      put:
+        summary: Update any of the banks
+        description: Update any of the banks
+        tags: 
+          - Masters
+          - Bank
+        parameters:
+          - name: bankRequest
+            in: body
+            description: common request_info
+            schema:
+              $ref: '#/definitions/BankRequest'
+        responses:
+          200:
+            description: Bank update Successfully
+            schema:
+              $ref: '#/definitions/BankResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: Bank Not Found
+
+    /bankbranches:
+      get:
+        summary: Get the list of bankbranches
+        description: bankbranches
+        tags: 
+          - Masters
+          - BankBranch
+        parameters:
+          - name: bankBranch.bankid
+            type: integer
+            format: int64
+            in: query
+            description: bank of the BankBranch
+            required: true
+          - name: bankBranch.code
+            type: string
+            in: query
+            description: code of the BankBranch
+            required: true
+          - name: bankBranch.name
+            type: string
+            in: query
+            description: name of the BankBranch
+            required: true
+          - name: bankBranch.active
+            type: boolean
+            in: query
+            description: Whether BankBranch is Active or not. If the value is TRUE, then BankBranch is active,If the value is FALSE then BankBranch is inactive
+            required: true
+        responses:
+          200:
+            description: BankBranch retrieved Successfully
+            schema:
+              $ref: '#/definitions/BankBranchResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: BankBranch Not Found
+      post:
+        summary: Create  new  bankbranchs
+        description: Create  new bankbranchs
+        tags: 
+          - Masters
+          - BankBranch
+        parameters:
+          - name: bankBranchRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/BankBranchRequest'
+        responses:
+          201:
+            description: BankBranch created Successfully
+            schema:
+              $ref: '#/definitions/BankBranchResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: BankBranch Not Found
+      put:
+        summary: Update any of the bankbranches
+        description: Update any of the bankbranches
+        tags: 
+          - Masters
+          - BankBranch
+        parameters:
+          - name: bankBranchRequest
+            in: body
+            description: common request_info
+            schema:
+              $ref: '#/definitions/BankBranchRequest'
+        responses:
+          200:
+            description: BankBranch update Successfully
+            schema:
+              $ref: '#/definitions/BankBranchResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: BankBranch Not Found
+
+    /bankaccounts:
+      get:
+        summary: Get the list of bankaccounts
+        description: bankaccounts
+        tags: 
+          - Masters
+          - BankAccount
+        parameters:
+          - name: bankAccount.bankBranchid
+            type: integer
+            format: int64
+            in: query
+            description: bank branch of the BankAccount
+          - name: bankAccount.accountType
+            type: string
+            in: query
+            description: account type of the BankAccount
+          - name: bankAccount.active
+            type: boolean
+            in: query
+            description: Whether BankAccount is Active or not. If the value is TRUE, then BankAccount is active,If the value is FALSE then BankAccount is inactive
+            required: true
+        responses:
+          200:
+            description: BankAccount retrieved Successfully
+            schema:
+              $ref: '#/definitions/BankAccountResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: BankAccount Not Found
+      post:
+        summary: Create  new  bankaccounts
+        description: Create  new bankaccounts
+        tags: 
+          - Masters
+          - BankAccount
+        parameters:
+          - name: bankAccountRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/BankAccountRequest'
+        responses:
+          201:
+            description: BankAccount created Successfully
+            schema:
+              $ref: '#/definitions/BankAccountResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: BankAccount Not Found
+      put:
+        summary: Update any of the bankaccounts
+        description: Update any of the bankaccounts
+        tags: 
+          - Masters
+          - BankAccount
+        parameters:
+          - name: bankAccountRequest
+            in: body
+            description: common request_info
+            schema:
+              $ref: '#/definitions/BankAccountRequest'
+        responses:
+          200:
+            description: BankAccount update Successfully
+            schema:
+              $ref: '#/definitions/BankAccountResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: BankAccount Not Found
+
+    /financialyears:
+      get:
+        summary: Get the list of financialyears
+        description: financialyears
+        tags: 
+          - Masters
+          - FinancialYear
+        parameters:
+          - name: financialYear.active
+            type: boolean
+            in: query
+            description: Whether FinancialYear is Active or not. If the value is TRUE, then FinancialYear is active,If the value is FALSE then FinancialYear is inactive
+            required: true
+        responses:
+          200:
+            description: FinancialYear retrieved Successfully
+            schema:
+              $ref: '#/definitions/FinancialYearResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: FinancialYear Not Found
+      post:
+        summary: Create  new  financialyears
+        description: Create  new financialyears
+        tags: 
+          - Masters
+          - FinancialYear
+        parameters:
+          - name: financialYearRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/FinancialYearRequest'
+        responses:
+          201:
+            description: FinancialYear created Successfully
+            schema:
+              $ref: '#/definitions/FinancialYearResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: FinancialYear Not Found
+      put:
+        summary: Update any of the financialyears
+        description: Update any of the financialyears
+        tags: 
+          - Masters
+          - FinancialYear
+        parameters:
+          - name: financialYearRequest
+            in: body
+            description: common request_info
+            schema:
+              $ref: '#/definitions/FinancialYearRequest'
+        responses:
+          200:
+            description: FinancialYear update Successfully
+            schema:
+              $ref: '#/definitions/FinancialYearResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: FinancialYear Not Found
+
+    /fiscalperiods:
+      get:
+        summary: Get the list of fiscalperiods
+        description: fiscalperiods
+        tags: 
+          - Masters
+          - FiscalPeriod
+        parameters:
+          - name: fiscalPeriod.name
+            type: string
+            in: query
+            description: name of the FiscalPeriod
+            required: true
+          - name: fiscalPeriod.active
+            type: boolean
+            in: query
+            description: Whether FiscalPeriod is Active or not. If the value is TRUE, then FiscalPeriod is active,If the value is FALSE then FiscalPeriod is inactive
+            required: true
+        responses:
+          200:
+            description: FiscalPeriod retrieved Successfully
+            schema:
+              $ref: '#/definitions/FiscalPeriodResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: FiscalPeriod Not Found
+      post:
+        summary: Create  new  fiscalperiods
+        description: Create  new fiscalperiods
+        tags: 
+          - Masters
+          - FiscalPeriod
+        parameters:
+          - name: fiscalPeriodRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/FiscalPeriodRequest'
+        responses:
+          201:
+            description: FiscalPeriod created Successfully
+            schema:
+              $ref: '#/definitions/FiscalPeriodResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: FiscalPeriod Not Found
+      put:
+        summary: Update any of the fiscalperiods
+        description: Update any of the fiscalperiods
+        tags: 
+          - Masters
+          - FiscalPeriod
+        parameters:
+          - name: fiscalPeriodRequest
+            in: body
+            description: common request_info
+            schema:
+              $ref: '#/definitions/FiscalPeriodRequest'
+        responses:
+          200:
+            description: FiscalPeriod update Successfully
+            schema:
+              $ref: '#/definitions/FiscalPeriodResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: FiscalPeriod Not Found
+
+    /functions:
+      get:
+        summary: Get the list of functions
+        description: functions
+        tags: 
+          - Masters
+          - Function
+        parameters:
+          - name: function.name
+            type: string
+            in: query
+            description: name of the Function
+            required: true
+          - name: function.code
+            type: string
+            in: query
+            description: code of the Function
+            required: true
+          - name: function.active
+            type: boolean
+            in: query
+            description: Whether Function is Active or not. If the value is TRUE, then Function is active,If the value is FALSE then Function is inactive
+            required: true
+        responses:
+          200:
+            description: Function retrieved Successfully
+            schema:
+              $ref: '#/definitions/FunctionResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: Function Not Found
+      post:
+        summary: Create  new  functions
+        description: Create  new functions
+        tags: 
+          - Masters
+          - Function
+        parameters:
+          - name: functionRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/FunctionRequest'
+        responses:
+          201:
+            description: Function created Successfully
+            schema:
+              $ref: '#/definitions/FunctionResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: Function Not Found
+      put:
+        summary: Update any of the functions
+        description: Update any of the functions
+        tags: 
+          - Masters
+          - Function
+        parameters:
+          - name: functionRequest
+            in: body
+            description: common request_info
+            schema:
+              $ref: '#/definitions/FunctionRequest'
+        responses:
+          200:
+            description: Function update Successfully
+            schema:
+              $ref: '#/definitions/FunctionResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: Function Not Found
+
+    /functionaries:
+      get:
+        summary: Get the list of functionaries
+        description: functionaries
+        tags: 
+          - Masters
+          - Functionary
+        parameters:
+          - name: functionary.code
+            type: string
+            in: query
+            description: code of the Functionary
+            required: true
+          - name: functionary.name
+            type: string
+            in: query
+            description: name of the Functionary
+            required: true
+          - name: functionary.active
+            type: boolean
+            in: query
+            description: Whether Functionary is Active or not. If the value is TRUE, then Functionary is active,If the value is FALSE then Functionary is inactive
+            required: true
+        responses:
+          200:
+            description: Functionary retrieved Successfully
+            schema:
+              $ref: '#/definitions/FunctionaryResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: Functionary Not Found
+      post:
+        summary: Create  new  functionarys
+        description: Create  new functionarys
+        tags: 
+          - Masters
+          - Functionary
+        parameters:
+          - name: functionaryRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/FunctionaryRequest'
+        responses:
+          201:
+            description: Functionary created Successfully
+            schema:
+              $ref: '#/definitions/FunctionaryResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: Functionary Not Found
+      put:
+        summary: Update any of the functionaries
+        description: Update any of the functionaries
+        tags: 
+          - Masters
+          - Functionary
+        parameters:
+          - name: functionaryRequest
+            in: body
+            description: common request_info
+            schema:
+              $ref: '#/definitions/FunctionaryRequest'
+        responses:
+          200:
+            description: Functionary update Successfully
+            schema:
+              $ref: '#/definitions/FunctionaryResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: Functionary Not Found
+
+    /funds:
+      get:
+        summary: Get the list of funds
+        description: funds
+        tags: 
+          - Masters
+          - Fund
+        parameters:
+          - name: fund.name
+            type: string
+            in: query
+            description: name of the Fund
+            required: true
+          - name: fund.code
+            type: string
+            in: query
+            description: code of the Fund
+            required: true
+          - name: fund.active
+            type: boolean
+            in: query
+            description: Whether Fund is Active or not. If the value is TRUE, then Fund is active,If the value is FALSE then Fund is inactive
+            required: true
+        responses:
+          200:
+            description: Fund retrieved Successfully
+            schema:
+              $ref: '#/definitions/FundResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: Fund Not Found
+      post:
+        summary: Create  new  funds
+        description: Create  new funds
+        tags: 
+          - Masters
+          - Fund
+        parameters:
+          - name: fundRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/FundRequest'
+        responses:
+          201:
+            description: Fund created Successfully
+            schema:
+              $ref: '#/definitions/FundResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: Fund Not Found
+      put:
+        summary: Update any of the funds
+        description: Update any of the funds
+        tags: 
+          - Masters
+          - Fund
+        parameters:
+          - name: fundRequest
+            in: body
+            description: common request_info
+            schema:
+              $ref: '#/definitions/FundRequest'
+        responses:
+          200:
+            description: Fund update Successfully
+            schema:
+              $ref: '#/definitions/FundResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: Fund Not Found
+
+    /fundsources:
+      get:
+        summary: Get the list of fundsources
+        description: fundsources
+        tags: 
+          - Masters
+          - Fundsource
+        parameters:
+          - name: fundsource.code
+            type: string
+            in: query
+            description: code of the Fundsource
+            required: true
+          - name: fundsource.name
+            type: string
+            in: query
+            description: name of the Fundsource
+            required: true
+          - name: fundsource.active
+            type: boolean
+            in: query
+            description: Whether Fundsource is Active or not. If the value is TRUE, then Fundsource is active,If the value is FALSE then Fundsource is inactive
+            required: true
+        responses:
+          200:
+            description: Fundsource retrieved Successfully
+            schema:
+              $ref: '#/definitions/FundsourceResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: Fundsource Not Found
+      post:
+        summary: Create  new  fundsources
+        description: Create  new fundsources
+        tags: 
+          - Masters
+          - Fundsource
+        parameters:
+          - name: fundsourceRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/FundsourceRequest'
+        responses:
+          201:
+            description: Fundsource created Successfully
+            schema:
+              $ref: '#/definitions/FundsourceResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: Fundsource Not Found
+      put:
+        summary: Update any of the fundsources
+        description: Update any of the fundsources
+        tags: 
+          - Masters
+          - Fundsource
+        parameters:
+          - name: fundsourceRequest
+            in: body
+            description: common request_info
+            schema:
+              $ref: '#/definitions/FundsourceRequest'
+        responses:
+          200:
+            description: Fundsource update Successfully
+            schema:
+              $ref: '#/definitions/FundsourceResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: Fundsource Not Found
+
+    /schemes:
+      get:
+        summary: Get the list of schemes
+        description: schemes
+        tags: 
+          - Masters
+          - Scheme
+        parameters:
+          - name: scheme.code
+            type: string
+            in: query
+            description: code of the Scheme
+          - name: scheme.name
+            type: string
+            in: query
+            description: name of the Scheme
+          - name: scheme.active
+            type: boolean
+            in: query
+            description: Whether Scheme is Active or not. If the value is TRUE, then Scheme is active,If the value is FALSE then Scheme is inactive
+            required: true
+        responses:
+          200:
+            description: Scheme retrieved Successfully
+            schema:
+              $ref: '#/definitions/SchemeResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: Scheme Not Found
+      post:
+        summary: Create  new  schemes
+        description: Create  new schemes
+        tags: 
+          - Masters
+          - Scheme
+        parameters:
+          - name: schemeRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/SchemeRequest'
+        responses:
+          201:
+            description: Scheme created Successfully
+            schema:
+              $ref: '#/definitions/SchemeResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: Scheme Not Found
+      put:
+        summary: Update any of the schemes
+        description: Update any of the schemes
+        tags: 
+          - Masters
+          - Scheme
+        parameters:
+          - name: schemeRequest
+            in: body
+            description: common request_info
+            schema:
+              $ref: '#/definitions/SchemeRequest'
+        responses:
+          200:
+            description: Scheme update Successfully
+            schema:
+              $ref: '#/definitions/SchemeResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: Scheme Not Found
+
+    /subschemes:
+      get:
+        summary: Get the list of subschemes
+        description: subschemes
+        tags: 
+          - Masters
+          - SubScheme
+        parameters:
+          - name: subScheme.code
+            type: string
+            in: query
+            description: code of the SubScheme
+            required: true
+          - name: subScheme.name
+            type: string
+            in: query
+            description: name of the SubScheme
+            required: true
+          - name: subScheme.active
+            type: boolean
+            in: query
+            description: Whether SubScheme is Active or not. If the value is TRUE, then SubScheme is active,If the value is FALSE then SubScheme is inactive
+            required: true
+        responses:
+          200:
+            description: SubScheme retrieved Successfully
+            schema:
+              $ref: '#/definitions/SubSchemeResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: SubScheme Not Found
+      post:
+        summary: Create  new  subschemes
+        description: Create  new subschemes
+        tags: 
+          - Masters
+          - SubScheme
+        parameters:
+          - name: subSchemeRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/SubSchemeRequest'
+        responses:
+          201:
+            description: SubScheme created Successfully
+            schema:
+              $ref: '#/definitions/SubSchemeResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: SubScheme Not Found
+      put:
+        summary: Update any of the subschemes
+        description: Update any of the subschemes
+        tags: 
+          - Masters
+          - SubScheme
+        parameters:
+          - name: subSchemeRequest
+            in: body
+            description: common request_info
+            schema:
+              $ref: '#/definitions/SubSchemeRequest'
+        responses:
+          200:
+            description: SubScheme update Successfully
+            schema:
+              $ref: '#/definitions/SubSchemeResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: SubScheme Not Found
+
+    /suppliers:
+      get:
+        summary: Get the list of suppliers
+        description: suppliers
+        tags: 
+          - Masters
+          - Supplier
+        parameters:
+          - name: supplier.code
+            type: string
+            in: query
+            description: code of the Supplier
+            required: true
+          - name: supplier.name
+            type: string
+            in: query
+            description: name of the Supplier
+            required: true
+          - name: supplier.active
+            type: boolean
+            in: query
+            description: Whether Supplier is Active or not. If the value is TRUE, then Supplier is active,If the value is FALSE then Supplier is inactive
+            required: true
+          - name: supplier.bankid
+            type: integer
+            format: int64
+            in: query
+            description: bank of the Supplier
+        responses:
+          200:
+            description: Supplier retrieved Successfully
+            schema:
+              $ref: '#/definitions/SupplierResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: Supplier Not Found
+      post:
+        summary: Create  new  suppliers
+        description: Create  new suppliers
+        tags: 
+          - Masters
+          - Supplier
+        parameters:
+          - name: supplierRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/SupplierRequest'
+        responses:
+          201:
+            description: Supplier created Successfully
+            schema:
+              $ref: '#/definitions/SupplierResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: Supplier Not Found
+      put:
+        summary: Update any of the suppliers
+        description: Update any of the suppliers
+        tags: 
+          - Masters
+          - Supplier
+        parameters:
+          - name: supplierRequest
+            in: body
+            description: common request_info
+            schema:
+              $ref: '#/definitions/SupplierRequest'
+        responses:
+          200:
+            description: Supplier update Successfully
+            schema:
+              $ref: '#/definitions/SupplierResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: Supplier Not Found
+
+    /accountdetailtypes:
+      get:
+        summary: Get the list of accountdetailtypes
+        description: accountdetailtypes
+        tags: 
+          - Masters
+          - AccountDetailType
+        parameters:
+          - name: accountDetailType.name
+            type: string
+            in: query
+            description: name of the AccountDetailType
+            required: true
+          - name: accountDetailType.active
+            type: boolean
+            in: query
+            description: Whether AccountDetailType is Active or not. If the value is TRUE, then AccountDetailType is active,If the value is FALSE then AccountDetailType is inactive
+            required: true
+        responses:
+          200:
+            description: AccountDetailType retrieved Successfully
+            schema:
+              $ref: '#/definitions/AccountDetailTypeResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: AccountDetailType Not Found
+      post:
+        summary: Create  new  accountdetailtypes
+        description: Create  new accountdetailtypes
+        tags: 
+          - Masters
+          - AccountDetailType
+        parameters:
+          - name: accountDetailTypeRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/AccountDetailTypeRequest'
+        responses:
+          201:
+            description: AccountDetailType created Successfully
+            schema:
+              $ref: '#/definitions/AccountDetailTypeResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: AccountDetailType Not Found
+      put:
+        summary: Update any of the accountdetailtypes
+        description: Update any of the accountdetailtypes
+        tags: 
+          - Masters
+          - AccountDetailType
+        parameters:
+          - name: accountDetailTypeRequest
+            in: body
+            description: common request_info
+            schema:
+              $ref: '#/definitions/AccountDetailTypeRequest'
+        responses:
+          200:
+            description: AccountDetailType update Successfully
+            schema:
+              $ref: '#/definitions/AccountDetailTypeResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: AccountDetailType Not Found
+
+    /accountdetailkeys:
+      get:
+        summary: Get the list of accountdetailkeys
+        description: accountdetailkeys
+        tags: 
+          - Masters
+          - AccountDetailKey
+        parameters:
+          - name: accountDetailKey.name
+            type: string
+            in: query
+            description: name of the AccountDetailKey
+        responses:
+          200:
+            description: AccountDetailKey retrieved Successfully
+            schema:
+              $ref: '#/definitions/AccountDetailKeyResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: AccountDetailKey Not Found
+      post:
+        summary: Create  new  accountdetailkeys
+        description: Create  new accountdetailkeys
+        tags: 
+          - Masters
+          - AccountDetailKey
+        parameters:
+          - name: accountDetailKeyRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/AccountDetailKeyRequest'
+        responses:
+          201:
+            description: AccountDetailKey created Successfully
+            schema:
+              $ref: '#/definitions/AccountDetailKeyResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: AccountDetailKey Not Found
+      put:
+        summary: Update any of the accountdetailkeys
+        description: Update any of the accountdetailkeys
+        tags: 
+          - Masters
+          - AccountDetailKey
+        parameters:
+          - name: accountDetailKeyRequest
+            in: body
+            description: common request_info
+            schema:
+              $ref: '#/definitions/AccountDetailKeyRequest'
+        responses:
+          200:
+            description: AccountDetailKey update Successfully
+            schema:
+              $ref: '#/definitions/AccountDetailKeyResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: AccountDetailKey Not Found
+
+    /accountentities:
+      get:
+        summary: Get the list of accountentities
+        description: accountentities
+        tags: 
+          - Masters
+          - AccountEntity
+        parameters:
+          - name: accountEntity.code
+            type: string
+            in: query
+            description: code of the AccountEntity
+            required: true
+          - name: accountEntity.name
+            type: string
+            in: query
+            description: name of the AccountEntity
+            required: true
+          - name: accountEntity.active
+            type: boolean
+            in: query
+            description: Whether AccountEntity is Active or not. If the value is TRUE, then AccountEntity is active,If the value is FALSE then AccountEntity is inactive
+            required: true
+        responses:
+          200:
+            description: AccountEntity retrieved Successfully
+            schema:
+              $ref: '#/definitions/AccountEntityResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: AccountEntity Not Found
+      post:
+        summary: Create  new  accountentitys
+        description: Create  new accountentitys
+        tags: 
+          - Masters
+          - AccountEntity
+        parameters:
+          - name: accountEntityRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/AccountEntityRequest'
+        responses:
+          201:
+            description: AccountEntity created Successfully
+            schema:
+              $ref: '#/definitions/AccountEntityResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: AccountEntity Not Found
+      put:
+        summary: Update any of the accountentities
+        description: Update any of the accountentities
+        tags: 
+          - Masters
+          - AccountEntity
+        parameters:
+          - name: accountEntityRequest
+            in: body
+            description: common request_info
+            schema:
+              $ref: '#/definitions/AccountEntityRequest'
+        responses:
+          200:
+            description: AccountEntity update Successfully
+            schema:
+              $ref: '#/definitions/AccountEntityResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: AccountEntity Not Found
+
+    /accountcodepurposes:
+      get:
+        summary: Get the list of accountcodepurposes
+        description: accountcodepurposes
+        tags: 
+          - Masters
+          - AccountCodePurpose
+        parameters:
+          - name: accountCodePurpose.name
+            type: string
+            in: query
+            description: name of the AccountCodePurpose
+            required: true
+        responses:
+          200:
+            description: AccountCodePurpose retrieved Successfully
+            schema:
+              $ref: '#/definitions/AccountCodePurposeResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: AccountCodePurpose Not Found
+      post:
+        summary: Create  new  accountcodepurposes
+        description: Create  new accountcodepurposes
+        tags: 
+          - Masters
+          - AccountCodePurpose
+        parameters:
+          - name: accountCodePurposeRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/AccountCodePurposeRequest'
+        responses:
+          201:
+            description: AccountCodePurpose created Successfully
+            schema:
+              $ref: '#/definitions/AccountCodePurposeResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: AccountCodePurpose Not Found
+      put:
+        summary: Update any of the accountcodepurposes
+        description: Update any of the accountcodepurposes
+        tags: 
+          - Masters
+          - AccountCodePurpose
+        parameters:
+          - name: accountCodePurposeRequest
+            in: body
+            description: common request_info
+            schema:
+              $ref: '#/definitions/AccountCodePurposeRequest'
+        responses:
+          200:
+            description: AccountCodePurpose update Successfully
+            schema:
+              $ref: '#/definitions/AccountCodePurposeResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: AccountCodePurpose Not Found
+
+    /chartofaccounts:
+      get:
+        summary: Get the list of chartofaccounts
+        description: chartofaccounts
+        tags: 
+          - Masters
+          - ChartOfAccount
+        parameters:
+          - name: chartOfAccount.name
+            type: string
+            in: query
+            description: name of the ChartOfAccount
+            required: true
+        responses:
+          200:
+            description: ChartOfAccount retrieved Successfully
+            schema:
+              $ref: '#/definitions/ChartOfAccountResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: ChartOfAccount Not Found
+      post:
+        summary: Create  new  chartofaccounts
+        description: Create  new chartofaccounts
+        tags: 
+          - Masters
+          - ChartOfAccount
+        parameters:
+          - name: chartOfAccountRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/ChartOfAccountRequest'
+        responses:
+          201:
+            description: ChartOfAccount created Successfully
+            schema:
+              $ref: '#/definitions/ChartOfAccountResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: ChartOfAccount Not Found
+      put:
+        summary: Update any of the chartofaccounts
+        description: Update any of the chartofaccounts
+        tags: 
+          - Masters
+          - ChartOfAccount
+        parameters:
+          - name: chartOfAccountRequest
+            in: body
+            description: common request_info
+            schema:
+              $ref: '#/definitions/ChartOfAccountRequest'
+        responses:
+          200:
+            description: ChartOfAccount update Successfully
+            schema:
+              $ref: '#/definitions/ChartOfAccountResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: ChartOfAccount Not Found
+
+    /chartofaccountdetails:
+      get:
+        summary: Get the list of chartofaccountdetails
+        description: chartofaccountdetails
+        tags: 
+          - Masters
+          - ChartOfAccountDetail
+        parameters:
+        responses:
+          200:
+            description: ChartOfAccountDetail retrieved Successfully
+            schema:
+              $ref: '#/definitions/ChartOfAccountDetailResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: ChartOfAccountDetail Not Found
+      post:
+        summary: Create  new  chartofaccountdetails
+        description: Create  new chartofaccountdetails
+        tags: 
+          - Masters
+          - ChartOfAccountDetail
+        parameters:
+          - name: chartOfAccountDetailRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/ChartOfAccountDetailRequest'
+        responses:
+          201:
+            description: ChartOfAccountDetail created Successfully
+            schema:
+              $ref: '#/definitions/ChartOfAccountDetailResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: ChartOfAccountDetail Not Found
+      put:
+        summary: Update any of the chartofaccountdetails
+        description: Update any of the chartofaccountdetails
+        tags: 
+          - Masters
+          - ChartOfAccountDetail
+        parameters:
+          - name: chartOfAccountDetailRequest
+            in: body
+            description: common request_info
+            schema:
+              $ref: '#/definitions/ChartOfAccountDetailRequest'
+        responses:
+          200:
+            description: ChartOfAccountDetail update Successfully
+            schema:
+              $ref: '#/definitions/ChartOfAccountDetailResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: ChartOfAccountDetail Not Found
+
+    /budgetgroups:
+      get:
+        summary: Get the list of budgetgroups
+        description: budgetgroups
+        tags: 
+          - Masters
+          - BudgetGroup
+        parameters:
+          - name: budgetGroup.name
+            type: string
+            in: query
+            description: name of the BudgetGroup
+          - name: budgetGroup.maxCodeid
+            type: integer
+            format: int64
+            in: query
+            description: max code of the BudgetGroup
+          - name: budgetGroup.minCodeid
+            type: integer
+            format: int64
+            in: query
+            description: min code of the BudgetGroup
+          - name: budgetGroup.accountTypeid
+            type: integer
+            format: int64
+            in: query
+            description: account type of the BudgetGroup
+          - name: budgetGroup.budgetingTypeid
+            type: integer
+            format: int64
+            in: query
+            description: budgeting type of the BudgetGroup
+        responses:
+          200:
+            description: BudgetGroup retrieved Successfully
+            schema:
+              $ref: '#/definitions/BudgetGroupResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: BudgetGroup Not Found
+      post:
+        summary: Create  new  budgetgroups
+        description: Create  new budgetgroups
+        tags: 
+          - Masters
+          - BudgetGroup
+        parameters:
+          - name: budgetGroupRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/BudgetGroupRequest'
+        responses:
+          201:
+            description: BudgetGroup created Successfully
+            schema:
+              $ref: '#/definitions/BudgetGroupResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: BudgetGroup Not Found
+      put:
+        summary: Update any of the budgetgroups
+        description: Update any of the budgetgroups
+        tags: 
+          - Masters
+          - BudgetGroup
+        parameters:
+          - name: budgetGroupRequest
+            in: body
+            description: common request_info
+            schema:
+              $ref: '#/definitions/BudgetGroupRequest'
+        responses:
+          200:
+            description: BudgetGroup update Successfully
+            schema:
+              $ref: '#/definitions/BudgetGroupResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+          404:
+            description: BudgetGroup Not Found
+definitions:
+
+    Bank:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the Bank
+        code:
+          type: string
+          description: code of the Bank
+          maxLength: 50
+          minLength: 1
+        name:
+          type: string
+          description: name of the Bank
+          maxLength: 100
+          minLength: 2
+        description:
+          type: string
+          description: description of the Bank
+          maxLength: 250
+        active:
+          type: boolean
+          description: Whether Bank is Active or not. If the value is TRUE, then Bank is active,If the value is FALSE then Bank is inactive
+        type:
+          type: string
+          description: type of the Bank
+          maxLength: 50
+    BankRequest:
+      properties:
+        requestInfo:
+          $ref: '#/definitions/RequestInfo'
+        banks:
+          type:  array
+          items:
+            $ref: '#/definitions/Bank'
+    BankResponse:
+      properties:
+        responseInfo:
+          $ref: '#/definitions/ResponseInfo'
+        banks:
+          type:  array
+          items:
+            $ref: '#/definitions/Bank'
+        page:
+          $ref: '#/definitions/Page'
+
+    BankBranch:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the BankBranch
+        bank:
+          $ref: "#/definitions/Bank"
+        code:
+          type: string
+          description: code of the BankBranch
+          maxLength: 50
+          minLength: 1
+        name:
+          type: string
+          description: name of the BankBranch
+          maxLength: 50
+          minLength: 1
+          pattern: '^[a-zA-Z0-9_]*$'
+        address:
+          type: string
+          description: address of the BankBranch
+          maxLength: 50
+          minLength: 1
+        address2:
+          type: string
+          description: address2 of the BankBranch
+          maxLength: 50
+        city:
+          type: string
+          description: city of the BankBranch
+          maxLength: 50
+        state:
+          type: string
+          description: state of the BankBranch
+          maxLength: 50
+        pincode:
+          type: string
+          description: pincode of the BankBranch
+          maxLength: 50
+        phone:
+          type: string
+          description: Phone number of the BankBranch
+          maxLength: 15
+        fax:
+          type: string
+          description: Fax number of the BankBranch
+          maxLength: 15
+        contactPerson:
+          type: string
+          description: contact person of the BankBranch
+          maxLength: 50
+        active:
+          type: boolean
+          description: Whether BankBranch is Active or not. If the value is TRUE, then BankBranch is active,If the value is FALSE then BankBranch is inactive
+        description:
+          type: string
+          description: description of the BankBranch
+          maxLength: 256
+        micr:
+          type: string
+          description: MICR Code of the BankBranch
+          maxLength: 50
+    BankBranchRequest:
+      properties:
+        requestInfo:
+          $ref: '#/definitions/RequestInfo'
+        bankBranchs:
+          type:  array
+          items:
+            $ref: '#/definitions/BankBranch'
+    BankBranchResponse:
+      properties:
+        responseInfo:
+          $ref: '#/definitions/ResponseInfo'
+        bankBranchs:
+          type:  array
+          items:
+            $ref: '#/definitions/BankBranch'
+        page:
+          $ref: '#/definitions/Page'
+
+    BankAccount:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the BankAccount
+        bankBranch:
+          $ref: "#/definitions/BankBranch"
+        chartOfAccount:
+          $ref: "#/definitions/ChartOfAccount"
+        fund:
+          $ref: "#/definitions/Fund"
+        accountNumber:
+          type: string
+          description: account number of the BankAccount
+          maxLength: 25
+        accountType:
+          type: string
+          description: account type of the BankAccount
+        description:
+          type: string
+          description: description of the BankAccount
+          maxLength: 256
+        active:
+          type: boolean
+          description: Whether BankAccount is Active or not. If the value is TRUE, then BankAccount is active,If the value is FALSE then BankAccount is inactive
+        payTo:
+          type: string
+          description: pay to of the BankAccount
+          maxLength: 100
+        type:
+          type: string
+          description:  Account Type of the BankAccount
+          enum:
+            - RECEIPTS
+            - PAYMENTS
+            - RECEIPTS_PAYMENTS
+          
+    BankAccountRequest:
+      properties:
+        requestInfo:
+          $ref: '#/definitions/RequestInfo'
+        bankAccounts:
+          type:  array
+          items:
+            $ref: '#/definitions/BankAccount'
+    BankAccountResponse:
+      properties:
+        responseInfo:
+          $ref: '#/definitions/ResponseInfo'
+        bankAccounts:
+          type:  array
+          items:
+            $ref: '#/definitions/BankAccount'
+        page:
+          $ref: '#/definitions/Page'
+
+    FinancialYear:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the FinancialYear
+        finYearRange:
+          type: string
+          description: fin year range of the FinancialYear
+          maxLength: 25
+          minLength: 1
+        startingDate:
+          type: string
+          format: date
+          description: starting date of the FinancialYear
+        endingDate:
+          type: string
+          format: date
+          description: ending date of the FinancialYear
+        active:
+          type: boolean
+          description: Whether FinancialYear is Active or not. If the value is TRUE, then FinancialYear is active,If the value is FALSE then FinancialYear is inactive
+        isActiveForPosting:
+          type: boolean
+          description: is active for posting of the FinancialYear
+        isClosed:
+          type: boolean
+          description: is closed of the FinancialYear
+        transferClosingBalance:
+          type: boolean
+          description: transfer closing balance of the FinancialYear
+    FinancialYearRequest:
+      properties:
+        requestInfo:
+          $ref: '#/definitions/RequestInfo'
+        financialYears:
+          type:  array
+          items:
+            $ref: '#/definitions/FinancialYear'
+    FinancialYearResponse:
+      properties:
+        responseInfo:
+          $ref: '#/definitions/ResponseInfo'
+        financialYears:
+          type:  array
+          items:
+            $ref: '#/definitions/FinancialYear'
+        page:
+          $ref: '#/definitions/Page'
+
+    FiscalPeriod:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the FiscalPeriod
+        name:
+          type: string
+          description: name of the FiscalPeriod
+          maxLength: 25
+          minLength: 1
+        financialYear:
+          $ref: "#/definitions/FinancialYear"
+        startingDate:
+          type: string
+          format: date
+          description: starting date of the FiscalPeriod
+        endingDate:
+          type: string
+          format: date
+          description: ending date of the FiscalPeriod
+        active:
+          type: boolean
+          description: Whether FiscalPeriod is Active or not. If the value is TRUE, then FiscalPeriod is active,If the value is FALSE then FiscalPeriod is inactive
+        isActiveForPosting:
+          type: boolean
+          description: is active for posting of the FiscalPeriod
+        isClosed:
+          type: boolean
+          description: is closed of the FiscalPeriod
+    FiscalPeriodRequest:
+      properties:
+        requestInfo:
+          $ref: '#/definitions/RequestInfo'
+        fiscalPeriods:
+          type:  array
+          items:
+            $ref: '#/definitions/FiscalPeriod'
+    FiscalPeriodResponse:
+      properties:
+        responseInfo:
+          $ref: '#/definitions/ResponseInfo'
+        fiscalPeriods:
+          type:  array
+          items:
+            $ref: '#/definitions/FiscalPeriod'
+        page:
+          $ref: '#/definitions/Page'
+
+    Function:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the Function
+        name:
+          type: string
+          description: name of the Function
+          maxLength: 128
+          minLength: 2
+        code:
+          type: string
+          description: code of the Function
+          maxLength: 16
+          minLength: 2
+        level:
+          type: integer
+          format: int32
+          description: level of the Function
+        active:
+          type: boolean
+          description: Whether Function is Active or not. If the value is TRUE, then Function is active,If the value is FALSE then Function is inactive
+        isParent:
+          type: boolean
+          description: is parent of the Function
+        parentId:
+          type: integer
+          format: int64
+          description: parent id of the Function
+    FunctionRequest:
+      properties:
+        requestInfo:
+          $ref: '#/definitions/RequestInfo'
+        functions:
+          type:  array
+          items:
+            $ref: '#/definitions/Function'
+    FunctionResponse:
+      properties:
+        responseInfo:
+          $ref: '#/definitions/ResponseInfo'
+        functions:
+          type:  array
+          items:
+            $ref: '#/definitions/Function'
+        page:
+          $ref: '#/definitions/Page'
+
+    Functionary:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the Functionary
+        code:
+          type: string
+          description: code of the Functionary
+          maxLength: 16
+          minLength: 1
+        name:
+          type: string
+          description: name of the Functionary
+          maxLength: 256
+          minLength: 1
+        active:
+          type: boolean
+          description: Whether Functionary is Active or not. If the value is TRUE, then Functionary is active,If the value is FALSE then Functionary is inactive
+    FunctionaryRequest:
+      properties:
+        requestInfo:
+          $ref: '#/definitions/RequestInfo'
+        functionarys:
+          type:  array
+          items:
+            $ref: '#/definitions/Functionary'
+    FunctionaryResponse:
+      properties:
+        responseInfo:
+          $ref: '#/definitions/ResponseInfo'
+        functionarys:
+          type:  array
+          items:
+            $ref: '#/definitions/Functionary'
+        page:
+          $ref: '#/definitions/Page'
+
+    Fund:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the Fund
+        name:
+          type: string
+          description: name of the Fund
+          maxLength: 50
+          minLength: 2
+        code:
+          type: string
+          description: code of the Fund
+          maxLength: 50
+          minLength: 2
+        identifier:
+          type: string
+          description: identifier of the Fund
+        level:
+          type: integer
+          format: int64
+          description: level of the Fund
+        parentId:
+          type: integer
+          format: int64
+          description: parent id of the Fund
+        isParent:
+          type: boolean
+          description: is parent of the Fund
+        active:
+          type: boolean
+          description: Whether Fund is Active or not. If the value is TRUE, then Fund is active,If the value is FALSE then Fund is inactive
+    FundRequest:
+      properties:
+        requestInfo:
+          $ref: '#/definitions/RequestInfo'
+        funds:
+          type:  array
+          items:
+            $ref: '#/definitions/Fund'
+    FundResponse:
+      properties:
+        responseInfo:
+          $ref: '#/definitions/ResponseInfo'
+        funds:
+          type:  array
+          items:
+            $ref: '#/definitions/Fund'
+        page:
+          $ref: '#/definitions/Page'
+
+    Fundsource:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the Fundsource
+        code:
+          type: string
+          description: code of the Fundsource
+          maxLength: 25
+          minLength: 1
+        name:
+          type: string
+          description: name of the Fundsource
+          maxLength: 25
+          minLength: 1
+        type:
+          type: string
+          description: type of the Fundsource
+          maxLength: 25
+          minLength: 1
+        fundSource:
+          type: integer
+          format: int64
+          description: fund source of the Fundsource
+        llevel:
+          type: 
+          description: llevel of the Fundsource
+        active:
+          type: boolean
+          description: Whether Fundsource is Active or not. If the value is TRUE, then Fundsource is active,If the value is FALSE then Fundsource is inactive
+        isParent:
+          type: boolean
+          description: is parent of the Fundsource
+    FundsourceRequest:
+      properties:
+        requestInfo:
+          $ref: '#/definitions/RequestInfo'
+        fundsources:
+          type:  array
+          items:
+            $ref: '#/definitions/Fundsource'
+    FundsourceResponse:
+      properties:
+        responseInfo:
+          $ref: '#/definitions/ResponseInfo'
+        fundsources:
+          type:  array
+          items:
+            $ref: '#/definitions/Fundsource'
+        page:
+          $ref: '#/definitions/Page'
+
+    Scheme:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the Scheme
+        fund:
+          $ref: "#/definitions/Fund"
+        code:
+          type: string
+          description: code of the Scheme
+          maxLength: 25
+          minLength: 1
+        name:
+          type: string
+          description: name of the Scheme
+          maxLength: 25
+          minLength: 1
+        validFrom:
+          type: string
+          format: date
+          description: valid from of the Scheme
+        validTo:
+          type: string
+          format: date
+          description: valid to of the Scheme
+        active:
+          type: boolean
+          description: Whether Scheme is Active or not. If the value is TRUE, then Scheme is active,If the value is FALSE then Scheme is inactive
+        description:
+          type: string
+          description: description of the Scheme
+          maxLength: 256
+        boundary:
+          type: integer
+          format: int64
+          description: boundary of the Scheme
+    SchemeRequest:
+      properties:
+        requestInfo:
+          $ref: '#/definitions/RequestInfo'
+        schemes:
+          type:  array
+          items:
+            $ref: '#/definitions/Scheme'
+    SchemeResponse:
+      properties:
+        responseInfo:
+          $ref: '#/definitions/ResponseInfo'
+        schemes:
+          type:  array
+          items:
+            $ref: '#/definitions/Scheme'
+        page:
+          $ref: '#/definitions/Page'
+
+    SubScheme:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the SubScheme
+        scheme:
+          $ref: "#/definitions/Scheme"
+        code:
+          type: string
+          description: code of the SubScheme
+          maxLength: 50
+          minLength: 1
+        name:
+          type: string
+          description: name of the SubScheme
+          maxLength: 50
+          minLength: 1
+        validFrom:
+          type: string
+          format: date
+          description: valid from of the SubScheme
+        validTo:
+          type: string
+          format: date
+          description: valid to of the SubScheme
+        active:
+          type: boolean
+          description: Whether SubScheme is Active or not. If the value is TRUE, then SubScheme is active,If the value is FALSE then SubScheme is inactive
+        departmentId:
+          type: integer
+          format: int64
+          description: department id of the SubScheme
+    SubSchemeRequest:
+      properties:
+        requestInfo:
+          $ref: '#/definitions/RequestInfo'
+        subSchemes:
+          type:  array
+          items:
+            $ref: '#/definitions/SubScheme'
+    SubSchemeResponse:
+      properties:
+        responseInfo:
+          $ref: '#/definitions/ResponseInfo'
+        subSchemes:
+          type:  array
+          items:
+            $ref: '#/definitions/SubScheme'
+        page:
+          $ref: '#/definitions/Page'
+
+    Supplier:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the Supplier
+        code:
+          type: string
+          description: code of the Supplier
+          maxLength: 50
+          minLength: 1
+        name:
+          type: string
+          description: name of the Supplier
+          maxLength: 50
+          minLength: 1
+        address:
+          type: string
+          description: address of the Supplier
+          maxLength: 300
+        mobile:
+          type: string
+          description: mobile of the Supplier
+          maxLength: 10
+        email:
+          type: string
+          description: email of the Supplier
+          maxLength: 25
+        description:
+          type: string
+          description: description of the Supplier
+          maxLength: 250
+        active:
+          type: boolean
+          description: Whether Supplier is Active or not. If the value is TRUE, then Supplier is active,If the value is FALSE then Supplier is inactive
+        panNo:
+          type: string
+          description: pan no of the Supplier
+          maxLength: 10
+        tinNo:
+          type: string
+          description: tin no of the Supplier
+          maxLength: 20
+        registationNo:
+          type: string
+          description: registation no of the Supplier
+          maxLength: 25
+        bankAccount:
+          type: string
+          description: bank account of the Supplier
+          maxLength: 25
+        ifscCode:
+          type: string
+          description: ifsc code of the Supplier
+          maxLength: 12
+        bank:
+          $ref: "#/definitions/Bank"
+    SupplierRequest:
+      properties:
+        requestInfo:
+          $ref: '#/definitions/RequestInfo'
+        suppliers:
+          type:  array
+          items:
+            $ref: '#/definitions/Supplier'
+    SupplierResponse:
+      properties:
+        responseInfo:
+          $ref: '#/definitions/ResponseInfo'
+        suppliers:
+          type:  array
+          items:
+            $ref: '#/definitions/Supplier'
+        page:
+          $ref: '#/definitions/Page'
+
+    AccountDetailType:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the AccountDetailType
+        name:
+          type: string
+          description: name of the AccountDetailType
+          maxLength: 50
+          minLength: 1
+        description:
+          type: string
+          description: description of the AccountDetailType
+          maxLength: 50
+          minLength: 1
+        tableName:
+          type: string
+          description: table name of the AccountDetailType
+          maxLength: 25
+        columnName:
+          type: string
+          description: column name of the AccountDetailType
+          maxLength: 25
+        attributeName:
+          type: string
+          description: attribute name of the AccountDetailType
+          maxLength: 50
+        active:
+          type: boolean
+          description: Whether AccountDetailType is Active or not. If the value is TRUE, then AccountDetailType is active,If the value is FALSE then AccountDetailType is inactive
+        fullyQualifiedName:
+          type: string
+          description: fully qualified name of the AccountDetailType
+          maxLength: 250
+          minLength: 1
+    AccountDetailTypeRequest:
+      properties:
+        requestInfo:
+          $ref: '#/definitions/RequestInfo'
+        accountDetailTypes:
+          type:  array
+          items:
+            $ref: '#/definitions/AccountDetailType'
+    AccountDetailTypeResponse:
+      properties:
+        responseInfo:
+          $ref: '#/definitions/ResponseInfo'
+        accountDetailTypes:
+          type:  array
+          items:
+            $ref: '#/definitions/AccountDetailType'
+        page:
+          $ref: '#/definitions/Page'
+
+    AccountDetailKey:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the AccountDetailKey
+        groupId:
+          type: integer
+          format: int32
+          description: group id of the AccountDetailKey
+        name:
+          type: string
+          description: name of the AccountDetailKey
+          maxLength: 128
+        key:
+          type: integer
+          format: int32
+          description: key of the AccountDetailKey
+        accountDetailType:
+          $ref: "#/definitions/AccountDetailType"
+    AccountDetailKeyRequest:
+      properties:
+        requestInfo:
+          $ref: '#/definitions/RequestInfo'
+        accountDetailKeys:
+          type:  array
+          items:
+            $ref: '#/definitions/AccountDetailKey'
+    AccountDetailKeyResponse:
+      properties:
+        responseInfo:
+          $ref: '#/definitions/ResponseInfo'
+        accountDetailKeys:
+          type:  array
+          items:
+            $ref: '#/definitions/AccountDetailKey'
+        page:
+          $ref: '#/definitions/Page'
+
+    AccountEntity:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the AccountEntity
+        accountDetailType:
+          $ref: "#/definitions/AccountDetailType"
+        code:
+          type: string
+          description: code of the AccountEntity
+          maxLength: 25
+          minLength: 1
+        name:
+          type: string
+          description: name of the AccountEntity
+          maxLength: 350
+          minLength: 1
+        active:
+          type: boolean
+          description: Whether AccountEntity is Active or not. If the value is TRUE, then AccountEntity is active,If the value is FALSE then AccountEntity is inactive
+        description:
+          type: string
+          description: description of the AccountEntity
+          maxLength: 256
+    AccountEntityRequest:
+      properties:
+        requestInfo:
+          $ref: '#/definitions/RequestInfo'
+        accountEntitys:
+          type:  array
+          items:
+            $ref: '#/definitions/AccountEntity'
+    AccountEntityResponse:
+      properties:
+        responseInfo:
+          $ref: '#/definitions/ResponseInfo'
+        accountEntitys:
+          type:  array
+          items:
+            $ref: '#/definitions/AccountEntity'
+        page:
+          $ref: '#/definitions/Page'
+
+    AccountCodePurpose:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the AccountCodePurpose
+        name:
+          type: string
+          description: name of the AccountCodePurpose
+          maxLength: 256
+          minLength: 3
+    AccountCodePurposeRequest:
+      properties:
+        requestInfo:
+          $ref: '#/definitions/RequestInfo'
+        accountCodePurposes:
+          type:  array
+          items:
+            $ref: '#/definitions/AccountCodePurpose'
+    AccountCodePurposeResponse:
+      properties:
+        responseInfo:
+          $ref: '#/definitions/ResponseInfo'
+        accountCodePurposes:
+          type:  array
+          items:
+            $ref: '#/definitions/AccountCodePurpose'
+        page:
+          $ref: '#/definitions/Page'
+
+    ChartOfAccount:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the ChartOfAccount
+        glcode:
+          type: string
+          description: glcode of the ChartOfAccount
+          maxLength: 16
+          minLength: 1
+        name:
+          type: string
+          description: name of the ChartOfAccount
+          maxLength: 128
+          minLength: 5
+        accountCodePurpose:
+          $ref: "#/definitions/AccountCodePurpose"
+        desciption:
+          type: string
+          description: desciption of the ChartOfAccount
+          maxLength: 256
+        isActiveForPosting:
+          type: boolean
+          description: is active for posting of the ChartOfAccount
+        parentId:
+          type: integer
+          format: int64
+          description: parent id of the ChartOfAccount
+        type:
+          type: string
+          description: type of the ChartOfAccount
+        classification:
+          type: integer
+          format: int64
+          description: classification of the ChartOfAccount
+        functionRequired:
+          type: boolean
+          description: function required of the ChartOfAccount
+        budgetCheckRequired:
+          type: boolean
+          description: budget check required of the ChartOfAccount
+        majorCode:
+          type: string
+          description: major code of the ChartOfAccount
+          maxLength: 16
+        isSubLedger:
+          type: boolean
+          description: is sub ledger of the ChartOfAccount
+    ChartOfAccountRequest:
+      properties:
+        requestInfo:
+          $ref: '#/definitions/RequestInfo'
+        chartOfAccounts:
+          type:  array
+          items:
+            $ref: '#/definitions/ChartOfAccount'
+    ChartOfAccountResponse:
+      properties:
+        responseInfo:
+          $ref: '#/definitions/ResponseInfo'
+        chartOfAccounts:
+          type:  array
+          items:
+            $ref: '#/definitions/ChartOfAccount'
+        page:
+          $ref: '#/definitions/Page'
+
+    ChartOfAccountDetail:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the ChartOfAccountDetail
+        chartOfAccount:
+          $ref: "#/definitions/ChartOfAccount"
+        accountDetailType:
+          $ref: "#/definitions/AccountDetailType"
+    ChartOfAccountDetailRequest:
+      properties:
+        requestInfo:
+          $ref: '#/definitions/RequestInfo'
+        chartOfAccountDetails:
+          type:  array
+          items:
+            $ref: '#/definitions/ChartOfAccountDetail'
+    ChartOfAccountDetailResponse:
+      properties:
+        responseInfo:
+          $ref: '#/definitions/ResponseInfo'
+        chartOfAccountDetails:
+          type:  array
+          items:
+            $ref: '#/definitions/ChartOfAccountDetail'
+        page:
+          $ref: '#/definitions/Page'
+
+    BudgetGroup:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the BudgetGroup
+        name:
+          type: string
+          description: name of the BudgetGroup
+          maxLength: 250
+          minLength: 1
+        description:
+          type: string
+          description: description of the BudgetGroup
+          maxLength: 250
+        majorCode:
+          $ref: "#/definitions/ChartOfAccount"
+        maxCode:
+          $ref: "#/definitions/ChartOfAccount"
+        minCode:
+          $ref: "#/definitions/ChartOfAccount"
+        accountType:
+          type: string
+          description: name of the BudgetGroup
+          enum:
+            - REVENUE_RECEIPTS
+            - REVENUE_EXPENDITURE
+            - CAPITAL_RECEIPTS
+            - CAPITAL_EXPENDITURE
+        budgetingType:
+          type: string
+          description: name of the BudgetGroup
+          enum:
+            - ALL
+            - DEBIT
+            - CREDIT
+        isActive:
+          type: boolean
+          description: is active of the BudgetGroup
+    BudgetGroupRequest:
+      properties:
+        requestInfo:
+          $ref: '#/definitions/RequestInfo'
+        budgetGroups:
+          type:  array
+          items:
+            $ref: '#/definitions/BudgetGroup'
+    BudgetGroupResponse:
+      properties:
+        responseInfo:
+          $ref: '#/definitions/ResponseInfo'
+        budgetGroups:
+          type:  array
+          items:
+            $ref: '#/definitions/BudgetGroup'
+        page:
+          $ref: '#/definitions/Page'
+    ResponseInfo:
+     type: object
+     properties:
+      resMsgId:
+       type: string
+       description: res msg id of the ResponseInfo
+      status:
+       type: string
+       description: status of the ResponseInfo
+      apiId:
+       type: string
+       description: api id of the ResponseInfo
+      ver:
+       type: string
+       description: ver of the ResponseInfo
+      ts:
+       type: string
+       format: date
+       description: ts of the ResponseInfo
+      key:
+       type: string
+       description: key of the ResponseInfo
+      tenantId:
+       type: string
+       description: tenant id of the ResponseInfo
+    RequestInfo:
+     type: object
+     properties:
+      action:
+       type: string
+       description: action of the RequestInfo
+      did:
+       type: string
+       description: did of the RequestInfo
+      msgId:
+       type: string
+       description: msg id of the RequestInfo
+      requesterId:
+       type: string
+       description: requester id of the RequestInfo
+      authToken:
+       type: string
+       description: auth token of the RequestInfo
+      apiId:
+       type: string
+       description: api id of the RequestInfo
+      ver:
+       type: string
+       description: ver of the RequestInfo
+      ts:
+       type: string
+       format: date
+       description: ts of the RequestInfo
+      key:
+       type: string
+       description: key of the RequestInfo
+      tenantId:
+       type: string
+       description: tenant id of the RequestInfo
+    ErrorResponse:
+     type: object
+     properties:
+      responseInfo:
+        $ref: "#/definitions/ResponseInfo"
+      error:
+        $ref: "#/definitions/Error"
+    Error:
+     type: object
+     properties:
+      code:
+       type: integer
+       format: int32
+       description: Code of the Error
+      message:
+       type: string
+       description: Message of the Error
+      description:
+       type: string
+       description: Description of the Error
+      filelds:
+       type: array
+       description: Filelds of the Error
+       items:
+         $ref: "#/definitions/FieldError"
+    FieldError:
+     type: object
+     properties:
+      code:
+       type: string
+       description: Code of the FieldError
+      description:
+       type: string
+       description: Description of the FieldError
+    Page:
+     type: object
+     properties:
+      pageSize:
+       type: integer
+       format: int32
+       description: Page Size
+

@@ -40,11 +40,16 @@
 
 package org.egov.egf.persistence.queue.contract;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -59,7 +64,9 @@ public class AccountDetailTypeContract extends AuditableContract implements java
     
            
     private Long id;
-
+    
+    @JsonProperty(access= Access.WRITE_ONLY)
+    private List<Long> ids = new ArrayList<Long>();
     
     @NotNull
     @Length(max = 50,min=1)

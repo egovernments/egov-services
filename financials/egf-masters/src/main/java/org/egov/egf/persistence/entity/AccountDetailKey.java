@@ -42,11 +42,12 @@ package org.egov.egf.persistence.entity;
 
 import java.util.Set;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -54,6 +55,7 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -63,56 +65,29 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-@Table(name = "egf_accountdetailtype")
-@SequenceGenerator(name = AccountDetailType.SEQ_ACCOUNTDETAILTYPE, sequenceName = AccountDetailType.SEQ_ACCOUNTDETAILTYPE, allocationSize = 1)
- 
- 
-public class AccountDetailType extends AbstractAuditable implements java.io.Serializable {
+@EqualsAndHashCode(exclude = { "accountDetailType" }, callSuper = false)
 
-    private static final long serialVersionUID = 3499589983886551123L;
+@Table(name = "egf_accountdetailkey")
+@SequenceGenerator(name = AccountDetailKey.SEQ_ACCOUNTDETAILKEY, sequenceName = AccountDetailKey.SEQ_ACCOUNTDETAILKEY, allocationSize = 1)
 
-    public static final String SEQ_ACCOUNTDETAILTYPE = "seq_accountdetailtype";
+public class AccountDetailKey extends AbstractAuditable {
+
+    private static final long serialVersionUID = 1L;
+    public static final String SEQ_ACCOUNTDETAILKEY = "seq_accountdetailtype";
 
     @Id
-    @GeneratedValue(generator = SEQ_ACCOUNTDETAILTYPE, strategy = GenerationType.SEQUENCE)
-   
+    @GeneratedValue(generator = SEQ_ACCOUNTDETAILKEY, strategy = GenerationType.SEQUENCE)
+
     private Long id;
 
-    
+    private Integer key;
     @NotNull
-    @Length(max = 50,min=1)
-    private String name;
-
-    @NotNull
-    @Length(max = 50,min=1)
-    private String description;
-
-    @Length(max = 25)
-    private String tableName;
-
-    @Length(max = 25)
-    private String columnName;
-
-   
-    @Length(max = 50)
-    private String attributeName;
-
-    @NotNull
-    private Boolean active;
-
-    @Column(name = "FULLY_QUALIFIED_NAME")
-    @Length(max = 250,min=1)
-    private String fullyQualifiedName;
+    @ManyToOne
+    @JoinColumn(name = "detailTypeId")
+    private AccountDetailType accountDetailType;
 
     @Override
-    public Long getId()
-    {
-    	return this.id;
+    public Long getId() {
+        return this.id;
     }
-     
-
-     
-
-   
-
 }

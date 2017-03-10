@@ -66,6 +66,11 @@ public class AccountDetailTypeSpecification implements Specification<AccountDeta
 		if (criteria.getFullyQualifiedName() != null) {
 			predicates.add(criteriaBuilder.equal(fullyQualifiedName, criteria.getFullyQualifiedName()));
 		}
+		
+                if(criteria.getIds() != null && !criteria.getIds().isEmpty())
+                {
+                    predicates.add(id.in(criteria.getIds()));
+                }		
 		}
 		return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
 	}

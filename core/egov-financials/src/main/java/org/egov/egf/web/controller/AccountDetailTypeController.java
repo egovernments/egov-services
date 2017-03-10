@@ -15,7 +15,6 @@ import org.egov.egf.persistence.queue.contract.RequestInfo;
 import org.egov.egf.persistence.queue.contract.ResponseInfo;
 import org.egov.egf.persistence.service.AccountDetailTypeService;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.builder.SkipExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -140,11 +139,15 @@ public class AccountDetailTypeController {
 		return accountDetailTypeContractResponse;
 	}
 	
-
+	@PostMapping("/_search")
 	@GetMapping
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	public AccountDetailTypeContractResponse search(@ModelAttribute AccountDetailTypeContractRequest accountDetailTypeContractRequest,BindingResult errors) {
+	public AccountDetailTypeContractResponse search(@ModelAttribute AccountDetailTypeContract accountDetailTypeContracts,@RequestBody RequestInfo requestInfo,BindingResult errors) {
+	    
+	    AccountDetailTypeContractRequest accountDetailTypeContractRequest = new AccountDetailTypeContractRequest();
+	    accountDetailTypeContractRequest.setAccountDetailType(accountDetailTypeContracts);
+	    accountDetailTypeContractRequest.setRequestInfo(requestInfo);
 		accountDetailTypeService.validate(accountDetailTypeContractRequest,"search",errors);
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);

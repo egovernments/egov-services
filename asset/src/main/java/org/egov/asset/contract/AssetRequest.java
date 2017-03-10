@@ -62,7 +62,7 @@ public class AssetRequest {
 	private String tenantId;
 	
 	@JsonProperty("RequestInfo")
-	private RequestInfo resposneInfo;
+	private RequestInfo requestInfo;
 
 	@JsonProperty("Asset")
 	private Asset asset;

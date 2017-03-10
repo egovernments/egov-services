@@ -49,7 +49,6 @@ import org.egov.asset.contract.RequestInfo;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCriteria;
 import org.egov.asset.model.Location;
-import org.egov.asset.model.enums.ModeOfAcquisition;
 import org.egov.asset.repository.builder.AssetQueryBuilder;
 import org.egov.asset.repository.rowmapper.AssetRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,7 +86,7 @@ public class AssetRepository {
 	}
 	
 	public Asset create(AssetRequest assetRequest) {
-		RequestInfo requestInfo = assetRequest.getResposneInfo();
+		RequestInfo requestInfo = assetRequest.getRequestInfo();
 		Asset asset = assetRequest.getAsset();
 		
 		

@@ -83,7 +83,7 @@ public class AssetController {
 		List<Asset> assets = assetService.getAssets(assetCriteria);
 		AssetResponse assetResponse = new AssetResponse();
 		assetResponse.setAssets(assets);
-		assetResponse.setResposneInfo(new ResponseInfo());
+		assetResponse.setResponseInfo(new ResponseInfo());
 		
 		return new ResponseEntity<AssetResponse>(assetResponse, HttpStatus.OK);
 	}
@@ -100,7 +100,6 @@ public class AssetController {
 		//AssetResponse assetResponse=assetService.create(assetRequest);
 		AssetResponse assetResponse=assetService.createAsync("save-asset-db","save-asset", assetRequest);
 		return new ResponseEntity<AssetResponse>(assetResponse, HttpStatus.CREATED);
-		
 	}
 	
 	private ErrorResponse populateErrors(BindingResult errors) {

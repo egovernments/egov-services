@@ -61,7 +61,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class AssetResponse {
 
 	@JsonProperty("ResponseInfo")
-	private ResponseInfo resposneInfo;
+	private ResponseInfo responseInfo;
 	
 	@JsonProperty("Assets")
 	private List<Asset> assets = new ArrayList<Asset>();

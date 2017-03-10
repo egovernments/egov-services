@@ -1,19 +1,25 @@
 package org.egov.user.web.contract;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
+import org.egov.user.domain.model.User;
 import org.egov.user.persistence.entity.Address;
 import org.egov.user.persistence.entity.Role;
 import org.egov.user.persistence.entity.enums.*;
 import org.junit.Test;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class UserRequestTest {
 
     @Test
-    public void test_entity_to_contract_conversion() throws Exception {
+    public void testEntityToContractConversion() throws Exception {
         org.egov.user.persistence.entity.User userEntity = getUserEntity();
         UserRequest userRequestContract = new UserRequest(userEntity);
 
@@ -54,6 +60,86 @@ public class UserRequestTest {
         assertThat(userRequestContract.getCreatedDate()).isEqualTo(userEntity.getCreatedDate());
         assertThat(userRequestContract.getLastModifiedBy()).isEqualTo(1L);
         assertThat(userRequestContract.getLastModifiedDate()).isEqualTo(userEntity.getLastModifiedDate());
+    }
+
+    @Test
+    public void testContractToDomainConversion() throws Exception {
+        UserRequest userRequest = buildUserRequest();
+        User userForCreate = userRequest.toDomainForCreate();
+
+        assertEquals("Kroorveer", userForCreate.getName());
+        assertEquals("yakku", userForCreate.getUsername());
+        assertEquals("Dr.", userForCreate.getSalutation());
+        assertEquals("8967452310", userForCreate.getMobileNumber());
+        assertEquals("kroorkool@maildrop.cc", userForCreate.getEmailId());
+        assertEquals("0987654321", userForCreate.getAltContactNumber());
+        assertEquals("KR12345J", userForCreate.getPan());
+        assertEquals("qwerty-1234567", userForCreate.getAadhaarNumber());
+        assertEquals(Boolean.TRUE, userForCreate.getActive());
+        assertEquals("Wed Feb 01 06:31:01 IST 2017", userForCreate.getDob().toString());
+        assertEquals("Wed Feb 01 06:31:01 IST 2017", userForCreate.getPwdExpiryDate().toString());
+        assertEquals("en_IN", userForCreate.getLocale());
+        assertEquals(UserType.CITIZEN, userForCreate.getType());
+        assertEquals(Boolean.FALSE, userForCreate.getAccountLocked());
+        assertEquals("signature", userForCreate.getSignature());
+        assertEquals("myPhoto", userForCreate.getPhoto());
+        assertEquals("hole in the mole", userForCreate.getIdentificationMark());
+        assertEquals(Gender.MALE, userForCreate.getGender());
+        assertEquals(BloodGroup.O_POSITIVE, userForCreate.getBloodGroup());
+        assertNotNull(userForCreate.getLastModifiedDate());
+        assertNotNull(userForCreate.getCreatedDate());
+        assertNotEquals("Wed Feb 01 06:31:01 IST 2017", userForCreate.getLastModifiedDate().toString());
+        assertNotEquals("Wed Feb 01 06:31:01 IST 2017", userForCreate.getCreatedDate().toString());
+        assertEquals("CITIZEN", userForCreate.getRoles().iterator().next().getName());
+    }
+
+    @Test
+    public void testShouldOverrideProvidedRolesByCitizenRole() throws Exception {
+        UserRequest userRequest = buildUserRequestWithRoles();
+        User userForCreate = userRequest.toDomainForCreate();
+
+        assertEquals("CITIZEN", userForCreate.getRoles().iterator().next().getName());
+    }
+
+    private UserRequest buildUserRequestWithRoles() {
+        List<RoleRequest> roles = new ArrayList<>();
+        roles.add(RoleRequest.builder().name("INSPECTOR").build());
+        return getUserBuilder(roles).build();
+    }
+
+    private UserRequest buildUserRequest() {
+        List<RoleRequest> roles = new ArrayList<>();
+        roles.add(RoleRequest.builder().name("CITIZEN").build());
+        return getUserBuilder(roles).build();
+    }
+
+    private UserRequest.UserRequestBuilder getUserBuilder(List<RoleRequest> roles) {
+        Calendar c = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+        c.set(2017, 01, 01, 01, 01, 01);
+        Date dateToTest = c.getTime();
+        return UserRequest.builder()
+                .name("Kroorveer")
+                .userName("yakku")
+                .salutation("Dr.")
+                .mobileNumber("8967452310")
+                .emailId("kroorkool@maildrop.cc")
+                .altContactNumber("0987654321")
+                .pan("KR12345J")
+                .aadhaarNumber("qwerty-1234567")
+                .active(Boolean.TRUE)
+                .dob(dateToTest)
+                .pwdExpiryDate(dateToTest)
+                .locale("en_IN")
+                .type(UserType.CITIZEN)
+                .accountLocked(Boolean.FALSE)
+                .signature("signature")
+                .photo("myPhoto")
+                .identificationMark("hole in the mole")
+                .gender("Male")
+                .bloodGroup("O_positive")
+                .lastModifiedDate(dateToTest)
+                .createdDate(dateToTest)
+                .roles(roles);
     }
 
     private org.egov.user.persistence.entity.User getUserEntity() {

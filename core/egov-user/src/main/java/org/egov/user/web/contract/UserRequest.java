@@ -167,7 +167,7 @@ public class UserRequest {
         );
     }
 
-    public User toDomainForCreate() {
+    User toDomainForCreate() {
         Role citizen = new Role();
         citizen.setName("CITIZEN");
         Set<Role> roles = new HashSet<>();

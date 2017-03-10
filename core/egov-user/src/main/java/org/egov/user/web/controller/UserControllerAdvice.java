@@ -18,4 +18,5 @@ public class UserControllerAdvice {
     public ErrorRes handleInvalidComplaintException(InvalidUserException ex) {
         return new UserRequestErrorAdapter().adapt(ex.getUser());
     }
+
 }

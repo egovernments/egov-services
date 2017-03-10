@@ -1,9 +1,11 @@
 package org.egov.user.domain.service;
 
 import org.egov.user.domain.exception.InvalidUserException;
+import org.egov.user.persistence.entity.Role;
 import org.egov.user.persistence.entity.User;
 import org.egov.user.persistence.entity.enums.Gender;
 import org.egov.user.persistence.entity.enums.UserType;
+import org.egov.user.persistence.repository.RoleRepository;
 import org.egov.user.persistence.repository.UserRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,7 +16,9 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -26,6 +30,8 @@ public class UserRequestServiceTest {
 
     @Mock
     UserRepository userRepository;
+    @Mock
+    RoleRepository roleRepository;
     @Captor
     private ArgumentCaptor<User> userCaptor;
 
@@ -37,7 +43,7 @@ public class UserRequestServiceTest {
 
     @Before
     public void setUp() {
-        userService = new UserService(userRepository);
+        userService = new UserService(userRepository, roleRepository);
     }
 
     @Test
@@ -80,6 +86,26 @@ public class UserRequestServiceTest {
         assertEquals(entityUser.getMobileNumber(), userCaptor.getValue().getMobileNumber());
     }
 
+    @Test
+    public void testShouldResolveRolesBeforeSavingUser() throws Exception {
+        Role mockRole = mock(Role.class);
+        org.egov.user.domain.model.User domainUser = validDomainUserWithRole();
+        User entityUser = new User().fromDomain(domainUser);
+        when(userRepository.save(userCaptor.capture())).thenReturn(entityUser);
+        when(roleRepository.findByName("CITIZEN")).thenReturn(mockRole);
+        userService.save(domainUser);
+
+        assertEquals(mockRole, userCaptor.getValue().getRoles().iterator().next());
+    }
+
+    @Test
+    public void shouldNotAttemptToResolveRolesWhenNonePresent() throws Exception {
+        org.egov.user.domain.model.User domainUser = validDomainUser();
+        userService.save(domainUser);
+
+        verify(roleRepository, never()).findByName(any(String.class));
+    }
+
     @Test(expected = InvalidUserException.class)
     public void shouldRaiseExceptionWhenUserIsInvalid() throws Exception {
         org.egov.user.domain.model.User domainUser = org.egov.user.domain.model.User.builder().build();
@@ -89,9 +115,21 @@ public class UserRequestServiceTest {
     }
 
     private org.egov.user.domain.model.User validDomainUser() {
+        return getUserBuilder().build();
+    }
+
+    private org.egov.user.domain.model.User validDomainUserWithRole() {
+        Role role = new Role();
+        role.setName("CITIZEN");
+        Set<Role> roles = new HashSet<>();
+        roles.add(role);
+        return getUserBuilder().roles(roles).build();
+    }
+
+    private org.egov.user.domain.model.User.UserBuilder getUserBuilder() {
         return org.egov.user.domain.model.User.builder().username("supandi_rocks")
                 .name("Supandi").gender(Gender.MALE).type(UserType.CITIZEN)
-                .active(Boolean.TRUE).mobileNumber("9988776655").accountLocked(Boolean.FALSE).build();
+                .active(Boolean.TRUE).mobileNumber("9988776655").accountLocked(Boolean.FALSE);
     }
 
     private List<User> getListOfUsers() {

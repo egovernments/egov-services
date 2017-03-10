@@ -40,32 +40,35 @@
 
 package org.egov.user.domain.service;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.user.persistence.entity.Role;
 import org.egov.user.persistence.entity.User;
 import org.egov.user.persistence.repository.RoleRepository;
 import org.egov.user.persistence.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
 
-	private UserRepository userRepository;
-	private RoleRepository roleRepository;
+    private UserRepository userRepository;
+    private RoleRepository roleRepository;
 
-	public UserService(UserRepository userRepository) {
-		this.userRepository = userRepository;
-	}
+    public UserService(UserRepository userRepository, RoleRepository roleRepository) {
+        this.roleRepository = roleRepository;
+        this.userRepository = userRepository;
+    }
 
-	public User getUserByUsername(final String userName) {
-		return userRepository.findByUsername(userName);
-	}
+    public User getUserByUsername(final String userName) {
+        return userRepository.findByUsername(userName);
+    }
 
-	public User getUserByEmailId(final String emailId) {
-		return userRepository.findByEmailId(emailId);
-	}
+    public User getUserByEmailId(final String emailId) {
+        return userRepository.findByEmailId(emailId);
+    }
 
     public List<User> getUsersById(List<Long> ids) {
         return userRepository.findAll(ids);
@@ -74,10 +77,16 @@ public class UserService {
     public User save(org.egov.user.domain.model.User user) {
         user.validate();
         User userToPersist = new User().fromDomain(user);
-//        userToPersist.getRoles().stream().map((role) ->  roleRepository.findByName(role.getName())).collect(Collection.set)
-//        for(Role role : userToPersist.getRoles()) {
-//			roleRepository.findByName(role.getName());
-//		}
+        referenceRolesById(userToPersist);
         return userRepository.save(userToPersist);
+    }
+
+    private void referenceRolesById(User userToPersist) {
+        if(userToPersist.getRoles() == null || userToPersist.getRoles().size() == 0) return;
+        Set<Role> enrichedRoles = userToPersist.getRoles()
+                .stream()
+                .map((role) -> roleRepository.findByName(role.getName()))
+                .collect(Collectors.toSet());
+        userToPersist.setRoles(enrichedRoles);
     }
 }

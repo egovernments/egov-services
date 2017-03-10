@@ -187,14 +187,7 @@ public class User extends AbstractAuditable {
         this.setLastModifiedDate(user.getLastModifiedDate());
         this.setCreatedDate(user.getCreatedDate());
         this.roles = user.getRoles();
-
-//        populateRoles(user);
         return this;
     }
 
-//    private void populateRoles(org.egov.user.domain.model.User user) {
-//        for(Role role : user.getRoles()) {
-//
-//        }
-//    }
 }

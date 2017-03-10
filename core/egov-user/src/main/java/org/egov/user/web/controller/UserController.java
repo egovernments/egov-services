@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,15 +33,9 @@ public class UserController {
     @PostMapping("/_create")
     public ResponseEntity<UserDetailResponse> createUser(@RequestBody CreateUserRequest createUserRequest) {
         org.egov.user.domain.model.User user = createUserRequest.toDomainForCreate();
-        User savedUser = userService.save(user);
-        UserRequest userRequest = new UserRequest(savedUser);
-        List<UserRequest> users = new ArrayList<UserRequest>() {
-            {
-                add(userRequest);
-            }
-        };
+        UserRequest userRequest = new UserRequest(userService.save(user));
         ResponseInfo responseInfo = ResponseInfo.builder().status(String.valueOf(HttpStatus.OK.value())).build();
-        UserDetailResponse createdUserResponse = new UserDetailResponse(responseInfo, users);
+        UserDetailResponse createdUserResponse = new UserDetailResponse(responseInfo, Arrays.asList(userRequest));
         return new ResponseEntity<>(createdUserResponse, HttpStatus.OK);
     }
 

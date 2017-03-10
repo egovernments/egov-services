@@ -21,7 +21,7 @@ public class OtpRepository {
     private final String otpSearchEndpoint;
 
     @Autowired
-    public OtpRepository(@Value("${otp.service.url}") String otpServiceHost,
+    public OtpRepository(@Value("${core.otp.service.url}") String otpServiceHost,
                          @Value("${egov.services.otp.search_otp}") String otpSearchContextEndpoint,
                          RestTemplate restTemplate) {
         this.restTemplate = restTemplate;

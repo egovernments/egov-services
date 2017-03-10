@@ -11,7 +11,7 @@ COPY /target/egov-hr-masters-0.0.1-SNAPSHOT.jar /opt/egov/egov-hr-masters.jar
 
 
 # launch standalone webapp
-CMD ["java","-jar", "/opt/egov/egov-hr-masters.jar"]
+CMD ["java","-jar", "/opt/egov/hr-masters.jar"]
 #CMD ["java", "-Xdebug", "-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8787", "-jar", "/opt/egov/egov-hr-masters.jar"]
 
 # NOTE: the two 'RUN' commands can probably be combined inside of a single

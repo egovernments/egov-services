@@ -66,6 +66,9 @@ public class UserRequestTest {
     public void testContractToDomainConversion() throws Exception {
         UserRequest userRequest = buildUserRequest();
         User userForCreate = userRequest.toDomainForCreate();
+        Calendar c = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+        c.set(2017, 01, 01, 01, 01, 01);
+        String expectedDate = c.getTime().toString();
 
         assertEquals("Kroorveer", userForCreate.getName());
         assertEquals("yakku", userForCreate.getUsername());
@@ -76,8 +79,8 @@ public class UserRequestTest {
         assertEquals("KR12345J", userForCreate.getPan());
         assertEquals("qwerty-1234567", userForCreate.getAadhaarNumber());
         assertEquals(Boolean.TRUE, userForCreate.getActive());
-        assertEquals("Wed Feb 01 06:31:01 IST 2017", userForCreate.getDob().toString());
-        assertEquals("Wed Feb 01 06:31:01 IST 2017", userForCreate.getPwdExpiryDate().toString());
+        assertEquals(expectedDate, userForCreate.getDob().toString());
+        assertEquals(expectedDate, userForCreate.getPwdExpiryDate().toString());
         assertEquals("en_IN", userForCreate.getLocale());
         assertEquals(UserType.CITIZEN, userForCreate.getType());
         assertEquals(Boolean.FALSE, userForCreate.getAccountLocked());
@@ -88,8 +91,8 @@ public class UserRequestTest {
         assertEquals(BloodGroup.O_POSITIVE, userForCreate.getBloodGroup());
         assertNotNull(userForCreate.getLastModifiedDate());
         assertNotNull(userForCreate.getCreatedDate());
-        assertNotEquals("Wed Feb 01 06:31:01 IST 2017", userForCreate.getLastModifiedDate().toString());
-        assertNotEquals("Wed Feb 01 06:31:01 IST 2017", userForCreate.getCreatedDate().toString());
+        assertNotEquals(expectedDate, userForCreate.getLastModifiedDate().toString());
+        assertNotEquals(expectedDate, userForCreate.getCreatedDate().toString());
         assertEquals("CITIZEN", userForCreate.getRoles().iterator().next().getName());
     }
 

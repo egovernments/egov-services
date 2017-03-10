@@ -1,13 +1,13 @@
 -----egpgr_complaintstatus---
-INSERT INTO egpgr_complaintstatus (id, name, version) VALUES (1, 'REGISTERED', 0);
-INSERT INTO egpgr_complaintstatus (id, name, version) VALUES (2, 'FORWARDED', 0);
-INSERT INTO egpgr_complaintstatus (id, name, version) VALUES (3, 'PROCESSING', 0);
-INSERT INTO egpgr_complaintstatus (id, name, version) VALUES (4, 'COMPLETED', 0);
-INSERT INTO egpgr_complaintstatus (id, name, version) VALUES (5, 'REJECTED', 0);
-INSERT INTO egpgr_complaintstatus (id, name, version) VALUES (6, 'NOTCOMPLETED', 0);
-INSERT INTO egpgr_complaintstatus (id, name, version) VALUES (7, 'WITHDRAWN', 0);
-INSERT INTO egpgr_complaintstatus (id, name, version) VALUES (8, 'CLOSED', 0);
-INSERT INTO egpgr_complaintstatus (id, name, version) VALUES (9, 'REOPENED', 0);
+INSERT INTO egpgr_complaintstatus (id, name, version) VALUES (nextval('SEQ_EGPGR_COMPLAINTSTATUS'), 'REGISTERED', 0);
+INSERT INTO egpgr_complaintstatus (id, name, version) VALUES (nextval('SEQ_EGPGR_COMPLAINTSTATUS'), 'FORWARDED', 0);
+INSERT INTO egpgr_complaintstatus (id, name, version) VALUES (nextval('SEQ_EGPGR_COMPLAINTSTATUS'), 'PROCESSING', 0);
+INSERT INTO egpgr_complaintstatus (id, name, version) VALUES (nextval('SEQ_EGPGR_COMPLAINTSTATUS'), 'COMPLETED', 0);
+INSERT INTO egpgr_complaintstatus (id, name, version) VALUES (nextval('SEQ_EGPGR_COMPLAINTSTATUS'), 'REJECTED', 0);
+INSERT INTO egpgr_complaintstatus (id, name, version) VALUES (nextval('SEQ_EGPGR_COMPLAINTSTATUS'), 'NOTCOMPLETED', 0);
+INSERT INTO egpgr_complaintstatus (id, name, version) VALUES (nextval('SEQ_EGPGR_COMPLAINTSTATUS'), 'WITHDRAWN', 0);
+INSERT INTO egpgr_complaintstatus (id, name, version) VALUES (nextval('SEQ_EGPGR_COMPLAINTSTATUS'), 'CLOSED', 0);
+INSERT INTO egpgr_complaintstatus (id, name, version) VALUES (nextval('SEQ_EGPGR_COMPLAINTSTATUS'), 'REOPENED', 0);
 
 -----egpgr_complaintstatus_mapping---
 INSERT INTO egpgr_complaintstatus_mapping (id, role_id, current_status_id, orderno, show_status_id, version) VALUES (1, 4, 1, 1, 1, 0);

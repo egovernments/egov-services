@@ -36,7 +36,7 @@ public class ComplaintStatusMappingServiceTest {
 	private UserRepository userRepository;
 
 	@Test
-	@Sql(scripts = { "/sql/clearComplaintStatusMapping.sql"})
+	@Sql(scripts = { "/sql/clearComplaintStatusMapping.sql", "/sql/InsertComplaintStatusMapping.sql" })
 	public void testShouldReturnComplaintStatusListByUserId() {
 		when(userRepository.findUserById(18L)).thenReturn(getUserResponse());
 		List<ComplaintStatus> complaintStatuses = complaintStatusMappingService.getStatusByRoleAndCurrentStatus(18L,

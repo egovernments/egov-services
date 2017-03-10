@@ -16,9 +16,11 @@ ENV DB_NAME=mydb \
 # "mvn clean package"
 COPY /target/pgr-location-enrichment-0.0.1-SNAPSHOT.jar /opt/egov/pgr-location-enrichment.jar
 
-# launch standalone webapp
-CMD ["java","-jar", "/opt/egov/pgr-location-enrichment.jar"]
-#CMD ["java", "-Xdebug", "-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8787", "-jar", "/opt/egov/egov-pgr-rest-spring-boot.jar"]
+COPY start.sh /usr/bin/start.sh
+
+RUN chmod +x /usr/bin/start.sh
+
+CMD ["/usr/bin/start.sh"]
 
 # NOTE: the two 'RUN' commands can probably be combined inside of a single
 # script (i.e. RUN build-and-install-app.sh) so that we can also clean up the

@@ -7,14 +7,15 @@ import javax.validation.Valid;
 
 import org.egov.egf.domain.exception.CustomBindException;
 import org.egov.egf.persistence.entity.SubScheme;
-import org.egov.egf.persistence.queue.contract.Pagination;
-import org.egov.egf.persistence.queue.contract.RequestInfo;
-import org.egov.egf.persistence.queue.contract.ResponseInfo;
 import org.egov.egf.persistence.queue.contract.SubSchemeContract;
 import org.egov.egf.persistence.queue.contract.SubSchemeContractRequest;
 import org.egov.egf.persistence.queue.contract.SubSchemeContractResponse;
+import org.egov.egf.persistence.queue.contract.Pagination;
+import org.egov.egf.persistence.queue.contract.RequestInfo;
+import org.egov.egf.persistence.queue.contract.ResponseInfo;
 import org.egov.egf.persistence.service.SubSchemeService;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.builder.SkipExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -44,7 +45,7 @@ public class SubSchemeController {
 		if (errors.hasErrors()) {
 		  throw	new CustomBindException(errors);
 		}
-		
+		subSchemeService.fetchRelatedContracts(subSchemeContractRequest);
 		SubSchemeContractResponse subSchemeContractResponse = new SubSchemeContractResponse();
 		subSchemeContractResponse.setSubSchemes(new ArrayList<SubSchemeContract>());
 		for(SubSchemeContract subSchemeContract:subSchemeContractRequest.getSubSchemes())
@@ -72,10 +73,12 @@ public class SubSchemeController {
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
-	 
+		subSchemeService.fetchRelatedContracts(subSchemeContractRequest);
 		SubScheme subSchemeFromDb = subSchemeService.findOne(uniqueId);
-		SubSchemeContract subScheme = subSchemeContractRequest.getSubScheme();
 		
+		SubSchemeContract subScheme = subSchemeContractRequest.getSubScheme();
+		//ignoring internally passed id if the put has id in url
+	    subScheme.setId(uniqueId);
 		ModelMapper model=new ModelMapper();
 	 	model.map(subScheme, subSchemeFromDb);
 		subSchemeFromDb = subSchemeService.update(subSchemeFromDb);
@@ -88,19 +91,19 @@ public class SubSchemeController {
 	
 	@GetMapping(value = "/{uniqueId}")
 	@ResponseStatus(HttpStatus.OK)
-	public SubSchemeContractResponse view(@RequestBody @Valid SubSchemeContractRequest subSchemeContractRequest, BindingResult errors,
+	public SubSchemeContractResponse view(@ModelAttribute SubSchemeContractRequest subSchemeContractRequest, BindingResult errors,
 			@PathVariable Long uniqueId) {
-
+		subSchemeService.validate(subSchemeContractRequest,"view",errors);
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
-		subSchemeService.validate(subSchemeContractRequest,"view",errors);
+		subSchemeService.fetchRelatedContracts(subSchemeContractRequest);
 		RequestInfo requestInfo = subSchemeContractRequest.getRequestInfo();
 		SubScheme subSchemeFromDb = subSchemeService.findOne(uniqueId);
 		SubSchemeContract subScheme = subSchemeContractRequest.getSubScheme();
 		
 		ModelMapper model=new ModelMapper();
-	 	model.map(subScheme, subSchemeFromDb);
+	 	model.map(subSchemeFromDb,subScheme );
 		
 		SubSchemeContractResponse subSchemeContractResponse = new SubSchemeContractResponse();
 		subSchemeContractResponse.setSubScheme(subScheme);  
@@ -116,14 +119,13 @@ public class SubSchemeController {
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
-		
+		subSchemeService.fetchRelatedContracts(subSchemeContractRequest);		
  
 		SubSchemeContractResponse subSchemeContractResponse =new  SubSchemeContractResponse();
 		subSchemeContractResponse.setSubSchemes(new ArrayList<SubSchemeContract>());
 		for(SubSchemeContract subSchemeContract:subSchemeContractRequest.getSubSchemes())
 		{
 		SubScheme subSchemeFromDb = subSchemeService.findOne(subSchemeContract.getId());
-		 
 		
 		ModelMapper model=new ModelMapper();
 	 	model.map(subSchemeContract, subSchemeFromDb);
@@ -147,6 +149,7 @@ public class SubSchemeController {
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
+		subSchemeService.fetchRelatedContracts(subSchemeContractRequest);
 		SubSchemeContractResponse subSchemeContractResponse =new  SubSchemeContractResponse();
 		subSchemeContractResponse.setSubSchemes(new ArrayList<SubSchemeContract>());
 		subSchemeContractResponse.setPage(new Pagination());

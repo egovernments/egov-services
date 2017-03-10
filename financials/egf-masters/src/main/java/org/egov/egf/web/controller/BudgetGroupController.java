@@ -15,6 +15,7 @@ import org.egov.egf.persistence.queue.contract.RequestInfo;
 import org.egov.egf.persistence.queue.contract.ResponseInfo;
 import org.egov.egf.persistence.service.BudgetGroupService;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.builder.SkipExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -44,7 +45,7 @@ public class BudgetGroupController {
 		if (errors.hasErrors()) {
 		  throw	new CustomBindException(errors);
 		}
-		
+		budgetGroupService.fetchRelatedContracts(budgetGroupContractRequest);
 		BudgetGroupContractResponse budgetGroupContractResponse = new BudgetGroupContractResponse();
 		budgetGroupContractResponse.setBudgetGroups(new ArrayList<BudgetGroupContract>());
 		for(BudgetGroupContract budgetGroupContract:budgetGroupContractRequest.getBudgetGroups())
@@ -72,10 +73,12 @@ public class BudgetGroupController {
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
-	 
+		budgetGroupService.fetchRelatedContracts(budgetGroupContractRequest);
 		BudgetGroup budgetGroupFromDb = budgetGroupService.findOne(uniqueId);
-		BudgetGroupContract budgetGroup = budgetGroupContractRequest.getBudgetGroup();
 		
+		BudgetGroupContract budgetGroup = budgetGroupContractRequest.getBudgetGroup();
+		//ignoring internally passed id if the put has id in url
+	    budgetGroup.setId(uniqueId);
 		ModelMapper model=new ModelMapper();
 	 	model.map(budgetGroup, budgetGroupFromDb);
 		budgetGroupFromDb = budgetGroupService.update(budgetGroupFromDb);
@@ -88,19 +91,19 @@ public class BudgetGroupController {
 	
 	@GetMapping(value = "/{uniqueId}")
 	@ResponseStatus(HttpStatus.OK)
-	public BudgetGroupContractResponse view(@RequestBody @Valid BudgetGroupContractRequest budgetGroupContractRequest, BindingResult errors,
+	public BudgetGroupContractResponse view(@ModelAttribute BudgetGroupContractRequest budgetGroupContractRequest, BindingResult errors,
 			@PathVariable Long uniqueId) {
-
+		budgetGroupService.validate(budgetGroupContractRequest,"view",errors);
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
-		budgetGroupService.validate(budgetGroupContractRequest,"view",errors);
+		budgetGroupService.fetchRelatedContracts(budgetGroupContractRequest);
 		RequestInfo requestInfo = budgetGroupContractRequest.getRequestInfo();
 		BudgetGroup budgetGroupFromDb = budgetGroupService.findOne(uniqueId);
 		BudgetGroupContract budgetGroup = budgetGroupContractRequest.getBudgetGroup();
 		
 		ModelMapper model=new ModelMapper();
-	 	model.map(budgetGroup, budgetGroupFromDb);
+	 	model.map(budgetGroupFromDb,budgetGroup );
 		
 		BudgetGroupContractResponse budgetGroupContractResponse = new BudgetGroupContractResponse();
 		budgetGroupContractResponse.setBudgetGroup(budgetGroup);  
@@ -116,14 +119,13 @@ public class BudgetGroupController {
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
-		
+		budgetGroupService.fetchRelatedContracts(budgetGroupContractRequest);		
  
 		BudgetGroupContractResponse budgetGroupContractResponse =new  BudgetGroupContractResponse();
 		budgetGroupContractResponse.setBudgetGroups(new ArrayList<BudgetGroupContract>());
 		for(BudgetGroupContract budgetGroupContract:budgetGroupContractRequest.getBudgetGroups())
 		{
 		BudgetGroup budgetGroupFromDb = budgetGroupService.findOne(budgetGroupContract.getId());
-		 
 		
 		ModelMapper model=new ModelMapper();
 	 	model.map(budgetGroupContract, budgetGroupFromDb);
@@ -147,6 +149,7 @@ public class BudgetGroupController {
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
+		budgetGroupService.fetchRelatedContracts(budgetGroupContractRequest);
 		BudgetGroupContractResponse budgetGroupContractResponse =new  BudgetGroupContractResponse();
 		budgetGroupContractResponse.setBudgetGroups(new ArrayList<BudgetGroupContract>());
 		budgetGroupContractResponse.setPage(new Pagination());

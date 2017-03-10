@@ -25,22 +25,12 @@ public class AccountDetailKeySpecification implements Specification<AccountDetai
 	@Override
 	public Predicate toPredicate(Root<AccountDetailKey> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
 		Path<Long> id = root.get(AccountDetailKey_.id);
-		Path<Integer> groupId = root.get(AccountDetailKey_.groupId);
-		Path<String> name = root.get(AccountDetailKey_.name);
 		Path<Integer> key = root.get(AccountDetailKey_.key);
 		Path<AccountDetailType> accountDetailType = root.get(AccountDetailKey_.accountDetailType);
 		final List<Predicate> predicates = new ArrayList<>();
 		if(criteria!=null){
 		if (criteria.getId() != null) {
 			predicates.add(criteriaBuilder.equal(id, criteria.getId()));
-		}
-
-		if (criteria.getGroupId() != null) {
-			predicates.add(criteriaBuilder.equal(groupId, criteria.getGroupId()));
-		}
-
-		if (criteria.getName() != null) {
-			predicates.add(criteriaBuilder.equal(name, criteria.getName()));
 		}
 
 		if (criteria.getKey() != null) {
@@ -50,6 +40,11 @@ public class AccountDetailKeySpecification implements Specification<AccountDetai
 		if (criteria.getAccountDetailType() != null) {
 			predicates.add(criteriaBuilder.equal(accountDetailType, criteria.getAccountDetailType()));
 		}
+		
+                if(criteria.getIds() != null && !criteria.getIds().isEmpty())
+                {
+                    predicates.add(id.in(criteria.getIds()));
+                }		
 		}
 		return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
 	}

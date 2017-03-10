@@ -15,6 +15,7 @@ import org.egov.egf.persistence.queue.contract.RequestInfo;
 import org.egov.egf.persistence.queue.contract.ResponseInfo;
 import org.egov.egf.persistence.service.AccountCodePurposeService;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.builder.SkipExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -44,7 +45,7 @@ public class AccountCodePurposeController {
 		if (errors.hasErrors()) {
 		  throw	new CustomBindException(errors);
 		}
-		
+		accountCodePurposeService.fetchRelatedContracts(accountCodePurposeContractRequest);
 		AccountCodePurposeContractResponse accountCodePurposeContractResponse = new AccountCodePurposeContractResponse();
 		accountCodePurposeContractResponse.setAccountCodePurposes(new ArrayList<AccountCodePurposeContract>());
 		for(AccountCodePurposeContract accountCodePurposeContract:accountCodePurposeContractRequest.getAccountCodePurposes())
@@ -72,10 +73,12 @@ public class AccountCodePurposeController {
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
-	 
+		accountCodePurposeService.fetchRelatedContracts(accountCodePurposeContractRequest);
 		AccountCodePurpose accountCodePurposeFromDb = accountCodePurposeService.findOne(uniqueId);
-		AccountCodePurposeContract accountCodePurpose = accountCodePurposeContractRequest.getAccountCodePurpose();
 		
+		AccountCodePurposeContract accountCodePurpose = accountCodePurposeContractRequest.getAccountCodePurpose();
+		//ignoring internally passed id if the put has id in url
+	    accountCodePurpose.setId(uniqueId);
 		ModelMapper model=new ModelMapper();
 	 	model.map(accountCodePurpose, accountCodePurposeFromDb);
 		accountCodePurposeFromDb = accountCodePurposeService.update(accountCodePurposeFromDb);
@@ -88,19 +91,19 @@ public class AccountCodePurposeController {
 	
 	@GetMapping(value = "/{uniqueId}")
 	@ResponseStatus(HttpStatus.OK)
-	public AccountCodePurposeContractResponse view(@RequestBody @Valid AccountCodePurposeContractRequest accountCodePurposeContractRequest, BindingResult errors,
+	public AccountCodePurposeContractResponse view(@ModelAttribute AccountCodePurposeContractRequest accountCodePurposeContractRequest, BindingResult errors,
 			@PathVariable Long uniqueId) {
-
+		accountCodePurposeService.validate(accountCodePurposeContractRequest,"view",errors);
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
-		accountCodePurposeService.validate(accountCodePurposeContractRequest,"view",errors);
+		accountCodePurposeService.fetchRelatedContracts(accountCodePurposeContractRequest);
 		RequestInfo requestInfo = accountCodePurposeContractRequest.getRequestInfo();
 		AccountCodePurpose accountCodePurposeFromDb = accountCodePurposeService.findOne(uniqueId);
 		AccountCodePurposeContract accountCodePurpose = accountCodePurposeContractRequest.getAccountCodePurpose();
 		
 		ModelMapper model=new ModelMapper();
-	 	model.map(accountCodePurpose, accountCodePurposeFromDb);
+	 	model.map(accountCodePurposeFromDb,accountCodePurpose );
 		
 		AccountCodePurposeContractResponse accountCodePurposeContractResponse = new AccountCodePurposeContractResponse();
 		accountCodePurposeContractResponse.setAccountCodePurpose(accountCodePurpose);  
@@ -116,14 +119,13 @@ public class AccountCodePurposeController {
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
-		
+		accountCodePurposeService.fetchRelatedContracts(accountCodePurposeContractRequest);		
  
 		AccountCodePurposeContractResponse accountCodePurposeContractResponse =new  AccountCodePurposeContractResponse();
 		accountCodePurposeContractResponse.setAccountCodePurposes(new ArrayList<AccountCodePurposeContract>());
 		for(AccountCodePurposeContract accountCodePurposeContract:accountCodePurposeContractRequest.getAccountCodePurposes())
 		{
 		AccountCodePurpose accountCodePurposeFromDb = accountCodePurposeService.findOne(accountCodePurposeContract.getId());
-		 
 		
 		ModelMapper model=new ModelMapper();
 	 	model.map(accountCodePurposeContract, accountCodePurposeFromDb);
@@ -147,6 +149,7 @@ public class AccountCodePurposeController {
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
+		accountCodePurposeService.fetchRelatedContracts(accountCodePurposeContractRequest);
 		AccountCodePurposeContractResponse accountCodePurposeContractResponse =new  AccountCodePurposeContractResponse();
 		accountCodePurposeContractResponse.setAccountCodePurposes(new ArrayList<AccountCodePurposeContract>());
 		accountCodePurposeContractResponse.setPage(new Pagination());

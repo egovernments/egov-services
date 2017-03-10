@@ -54,25 +54,25 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class EgwStatus implements java.io.Serializable {
+
+public class EgfStatus implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	private Long id;
+	
 
-	private String moduletype;
-
-	private String description;
-
-	private Date lastmodifieddate;
+	private String moduleType;
 
 	private String code;
+	
+	private String description;
 
 	private String orderId;
 	
 	@Override
 	public String toString() {
-		return "EgwStatus [id=" + id + ", moduletype=" + moduletype
+		return "EgwStatus [id=" + id + ", moduletype=" + moduleType
 				+ ", description=" + description + ", code=" + code + "]";
 	}
 
@@ -84,7 +84,7 @@ public class EgwStatus implements java.io.Serializable {
 		result = prime * result
 				+ ((description == null) ? 0 : description.hashCode());
 		result = prime * result
-				+ ((moduletype == null) ? 0 : moduletype.hashCode());
+				+ ((moduleType == null) ? 0 : moduleType.hashCode());
 		return result;
 	}
 
@@ -96,7 +96,7 @@ public class EgwStatus implements java.io.Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		EgwStatus other = (EgwStatus) obj;
+		EgfStatus other = (EgfStatus) obj;
 		if (code == null) {
 			if (other.code != null)
 				return false;
@@ -107,10 +107,10 @@ public class EgwStatus implements java.io.Serializable {
 				return false;
 		} else if (!description.equals(other.description))
 			return false;
-		if (moduletype == null) {
-			if (other.moduletype != null)
+		if (moduleType == null) {
+			if (other.moduleType != null)
 				return false;
-		} else if (!moduletype.equals(other.moduletype))
+		} else if (!moduleType.equals(other.moduleType))
 			return false;
 		return true;
 	}

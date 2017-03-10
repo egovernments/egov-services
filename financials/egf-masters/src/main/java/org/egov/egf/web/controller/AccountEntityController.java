@@ -15,6 +15,7 @@ import org.egov.egf.persistence.queue.contract.RequestInfo;
 import org.egov.egf.persistence.queue.contract.ResponseInfo;
 import org.egov.egf.persistence.service.AccountEntityService;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.builder.SkipExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -44,7 +45,7 @@ public class AccountEntityController {
 		if (errors.hasErrors()) {
 		  throw	new CustomBindException(errors);
 		}
-		
+		accountEntityService.fetchRelatedContracts(accountEntityContractRequest);
 		AccountEntityContractResponse accountEntityContractResponse = new AccountEntityContractResponse();
 		accountEntityContractResponse.setAccountEntities(new ArrayList<AccountEntityContract>());
 		for(AccountEntityContract accountEntityContract:accountEntityContractRequest.getAccountEntities())
@@ -72,10 +73,12 @@ public class AccountEntityController {
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
-	 
+		accountEntityService.fetchRelatedContracts(accountEntityContractRequest);
 		AccountEntity accountEntityFromDb = accountEntityService.findOne(uniqueId);
-		AccountEntityContract accountEntity = accountEntityContractRequest.getAccountEntity();
 		
+		AccountEntityContract accountEntity = accountEntityContractRequest.getAccountEntity();
+		//ignoring internally passed id if the put has id in url
+	    accountEntity.setId(uniqueId);
 		ModelMapper model=new ModelMapper();
 	 	model.map(accountEntity, accountEntityFromDb);
 		accountEntityFromDb = accountEntityService.update(accountEntityFromDb);
@@ -88,19 +91,19 @@ public class AccountEntityController {
 	
 	@GetMapping(value = "/{uniqueId}")
 	@ResponseStatus(HttpStatus.OK)
-	public AccountEntityContractResponse view(@RequestBody @Valid AccountEntityContractRequest accountEntityContractRequest, BindingResult errors,
+	public AccountEntityContractResponse view(@ModelAttribute AccountEntityContractRequest accountEntityContractRequest, BindingResult errors,
 			@PathVariable Long uniqueId) {
-
+		accountEntityService.validate(accountEntityContractRequest,"view",errors);
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
-		accountEntityService.validate(accountEntityContractRequest,"view",errors);
+		accountEntityService.fetchRelatedContracts(accountEntityContractRequest);
 		RequestInfo requestInfo = accountEntityContractRequest.getRequestInfo();
 		AccountEntity accountEntityFromDb = accountEntityService.findOne(uniqueId);
 		AccountEntityContract accountEntity = accountEntityContractRequest.getAccountEntity();
 		
 		ModelMapper model=new ModelMapper();
-	 	model.map(accountEntity, accountEntityFromDb);
+	 	model.map(accountEntityFromDb,accountEntity );
 		
 		AccountEntityContractResponse accountEntityContractResponse = new AccountEntityContractResponse();
 		accountEntityContractResponse.setAccountEntity(accountEntity);  
@@ -116,14 +119,13 @@ public class AccountEntityController {
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
-		
+		accountEntityService.fetchRelatedContracts(accountEntityContractRequest);		
  
 		AccountEntityContractResponse accountEntityContractResponse =new  AccountEntityContractResponse();
 		accountEntityContractResponse.setAccountEntities(new ArrayList<AccountEntityContract>());
 		for(AccountEntityContract accountEntityContract:accountEntityContractRequest.getAccountEntities())
 		{
 		AccountEntity accountEntityFromDb = accountEntityService.findOne(accountEntityContract.getId());
-		 
 		
 		ModelMapper model=new ModelMapper();
 	 	model.map(accountEntityContract, accountEntityFromDb);
@@ -147,6 +149,7 @@ public class AccountEntityController {
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
+		accountEntityService.fetchRelatedContracts(accountEntityContractRequest);
 		AccountEntityContractResponse accountEntityContractResponse =new  AccountEntityContractResponse();
 		accountEntityContractResponse.setAccountEntities(new ArrayList<AccountEntityContract>());
 		accountEntityContractResponse.setPage(new Pagination());

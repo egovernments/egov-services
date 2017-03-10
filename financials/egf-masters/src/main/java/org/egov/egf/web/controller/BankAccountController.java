@@ -15,6 +15,7 @@ import org.egov.egf.persistence.queue.contract.RequestInfo;
 import org.egov.egf.persistence.queue.contract.ResponseInfo;
 import org.egov.egf.persistence.service.BankAccountService;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.builder.SkipExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -44,7 +45,7 @@ public class BankAccountController {
 		if (errors.hasErrors()) {
 		  throw	new CustomBindException(errors);
 		}
-		
+		bankAccountService.fetchRelatedContracts(bankAccountContractRequest);
 		BankAccountContractResponse bankAccountContractResponse = new BankAccountContractResponse();
 		bankAccountContractResponse.setBankAccounts(new ArrayList<BankAccountContract>());
 		for(BankAccountContract bankAccountContract:bankAccountContractRequest.getBankAccounts())
@@ -72,10 +73,12 @@ public class BankAccountController {
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
-	 
+		bankAccountService.fetchRelatedContracts(bankAccountContractRequest);
 		BankAccount bankAccountFromDb = bankAccountService.findOne(uniqueId);
-		BankAccountContract bankAccount = bankAccountContractRequest.getBankAccount();
 		
+		BankAccountContract bankAccount = bankAccountContractRequest.getBankAccount();
+		//ignoring internally passed id if the put has id in url
+	    bankAccount.setId(uniqueId);
 		ModelMapper model=new ModelMapper();
 	 	model.map(bankAccount, bankAccountFromDb);
 		bankAccountFromDb = bankAccountService.update(bankAccountFromDb);
@@ -88,19 +91,19 @@ public class BankAccountController {
 	
 	@GetMapping(value = "/{uniqueId}")
 	@ResponseStatus(HttpStatus.OK)
-	public BankAccountContractResponse view(@RequestBody @Valid BankAccountContractRequest bankAccountContractRequest, BindingResult errors,
+	public BankAccountContractResponse view(@ModelAttribute BankAccountContractRequest bankAccountContractRequest, BindingResult errors,
 			@PathVariable Long uniqueId) {
-
+		bankAccountService.validate(bankAccountContractRequest,"view",errors);
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
-		bankAccountService.validate(bankAccountContractRequest,"view",errors);
+		bankAccountService.fetchRelatedContracts(bankAccountContractRequest);
 		RequestInfo requestInfo = bankAccountContractRequest.getRequestInfo();
 		BankAccount bankAccountFromDb = bankAccountService.findOne(uniqueId);
 		BankAccountContract bankAccount = bankAccountContractRequest.getBankAccount();
 		
 		ModelMapper model=new ModelMapper();
-	 	model.map(bankAccount, bankAccountFromDb);
+	 	model.map(bankAccountFromDb,bankAccount );
 		
 		BankAccountContractResponse bankAccountContractResponse = new BankAccountContractResponse();
 		bankAccountContractResponse.setBankAccount(bankAccount);  
@@ -116,14 +119,13 @@ public class BankAccountController {
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
-		
+		bankAccountService.fetchRelatedContracts(bankAccountContractRequest);		
  
 		BankAccountContractResponse bankAccountContractResponse =new  BankAccountContractResponse();
 		bankAccountContractResponse.setBankAccounts(new ArrayList<BankAccountContract>());
 		for(BankAccountContract bankAccountContract:bankAccountContractRequest.getBankAccounts())
 		{
 		BankAccount bankAccountFromDb = bankAccountService.findOne(bankAccountContract.getId());
-		 
 		
 		ModelMapper model=new ModelMapper();
 	 	model.map(bankAccountContract, bankAccountFromDb);
@@ -147,6 +149,7 @@ public class BankAccountController {
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
+		bankAccountService.fetchRelatedContracts(bankAccountContractRequest);
 		BankAccountContractResponse bankAccountContractResponse =new  BankAccountContractResponse();
 		bankAccountContractResponse.setBankAccounts(new ArrayList<BankAccountContract>());
 		bankAccountContractResponse.setPage(new Pagination());

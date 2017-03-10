@@ -1,5 +1,7 @@
 package org.egov.egf.persistence.queue.contract;
 
+import javax.validation.constraints.Max;
+
 import org.springframework.data.domain.Page;
 
 import lombok.Data;
@@ -14,6 +16,7 @@ public class Pagination {
 
 	private Integer totalPages;
 
+	@Max(500l)
 	private Integer pageSize= Integer.valueOf(DEFAULT_PAGE_SIZE);
 
 	private Integer currentPage;

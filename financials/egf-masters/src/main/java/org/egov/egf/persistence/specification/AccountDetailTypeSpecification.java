@@ -28,8 +28,6 @@ public class AccountDetailTypeSpecification implements Specification<AccountDeta
 		Path<String> name = root.get(AccountDetailType_.name);
 		Path<String> description = root.get(AccountDetailType_.description);
 		Path<String> tableName = root.get(AccountDetailType_.tableName);
-		Path<String> columnName = root.get(AccountDetailType_.columnName);
-		Path<String> attributeName = root.get(AccountDetailType_.attributeName);
 		Path<Boolean> active = root.get(AccountDetailType_.active);
 		Path<String> fullyQualifiedName = root.get(AccountDetailType_.fullyQualifiedName);
 		final List<Predicate> predicates = new ArrayList<>();
@@ -51,13 +49,7 @@ public class AccountDetailTypeSpecification implements Specification<AccountDeta
 			predicates.add(criteriaBuilder.equal(tableName, criteria.getTableName()));
 		}
 
-		if (criteria.getColumnName() != null) {
-			predicates.add(criteriaBuilder.equal(columnName, criteria.getColumnName()));
-		}
-
-		if (criteria.getAttributeName() != null) {
-			predicates.add(criteriaBuilder.equal(attributeName, criteria.getAttributeName()));
-		}
+		 
 
 		if (criteria.getActive() != null) {
 			predicates.add(criteriaBuilder.equal(active, criteria.getActive()));
@@ -66,6 +58,11 @@ public class AccountDetailTypeSpecification implements Specification<AccountDeta
 		if (criteria.getFullyQualifiedName() != null) {
 			predicates.add(criteriaBuilder.equal(fullyQualifiedName, criteria.getFullyQualifiedName()));
 		}
+		
+                if(criteria.getIds() != null && !criteria.getIds().isEmpty())
+                {
+                    predicates.add(id.in(criteria.getIds()));
+                }		
 		}
 		return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
 	}

@@ -40,59 +40,56 @@
 
 package org.egov.egf.persistence.queue.contract;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;@Builder@Getter@Setter@AllArgsConstructor@NoArgsConstructor
+import lombok.Setter;
 
-@JsonPropertyOrder({ "id","name","description","tableName","columnName","attributeName","active","fullyQualifiedName"})
+@Builder
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+
+@JsonPropertyOrder({ "id", "name", "description", "tableName", "columnName", "attributeName", "active", "fullyQualifiedName" })
 public class AccountDetailTypeContract extends AuditableContract implements java.io.Serializable {
 
-    
-    
-           
     private Long id;
 
-    
+    @JsonProperty(access = Access.WRITE_ONLY)
+    private List<Long> ids = new ArrayList<Long>();
+
     @NotNull
-    @Length(max = 50,min=1)
+    @Length(max = 50, min = 1)
     private String name;
 
     @NotNull
-    @Length(max = 50,min=1)
+    @Length(max = 50, min = 1)
     private String description;
 
     @Length(max = 25)
     private String tableName;
 
-    @Length(max = 25)
-    private String columnName;
-
-   
-    @Length(max = 50)
-    private String attributeName;
-
     @NotNull
     private Boolean active;
 
-        @Length(max = 250,min=1)
+    @Length(max = 250, min = 1)
     private String fullyQualifiedName;
 
-        public Long getId()
-    {
-    	return this.id;
+    public Long getId() {
+        return this.id;
     }
-     
-
-     
-
-   
 
 }

@@ -90,7 +90,13 @@ public class AccountDetailType extends AbstractAuditable implements java.io.Seri
     @Length(max = 25)
     private String tableName;
 
-    
+    @Length(max = 25)
+    private String columnName;
+
+   
+    @Length(max = 50)
+    private String attributeName;
+
     @NotNull
     private Boolean active;
 

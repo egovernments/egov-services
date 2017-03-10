@@ -65,29 +65,35 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = { "accountDetailType" }, callSuper = false)
+@EqualsAndHashCode(exclude={"accountDetailType"},callSuper=false)
 
 @Table(name = "egf_accountdetailkey")
 @SequenceGenerator(name = AccountDetailKey.SEQ_ACCOUNTDETAILKEY, sequenceName = AccountDetailKey.SEQ_ACCOUNTDETAILKEY, allocationSize = 1)
-
+ 
+ 
 public class AccountDetailKey extends AbstractAuditable {
 
-    private static final long serialVersionUID = 1L;
-    public static final String SEQ_ACCOUNTDETAILKEY = "seq_accountdetailtype";
+	private static final long serialVersionUID = 1L;
+	public static final String SEQ_ACCOUNTDETAILKEY = "seq_accountdetailtype";
 
     @Id
     @GeneratedValue(generator = SEQ_ACCOUNTDETAILKEY, strategy = GenerationType.SEQUENCE)
-
-    private Long id;
-
-    private Integer key;
-    @NotNull
-    @ManyToOne
-    @JoinColumn(name = "detailTypeId")
-    private AccountDetailType accountDetailType;
-
-    @Override
-    public Long getId() {
-        return this.id;
-    }
+   
+	private Long id;
+    
+	private Integer groupId;
+	
+	@Length(max=128)
+	private String name;
+	
+	private Integer key;
+	@NotNull
+	@ManyToOne
+	@JoinColumn(name = "detailTypeId")
+	private AccountDetailType accountDetailType;
+	 @Override
+	    public Long getId()
+	    {
+	    	return this.id;
+	    }
 }

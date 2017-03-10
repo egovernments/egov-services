@@ -10,11 +10,11 @@ EXPOSE 8080 9990
 # INSTRUCTIONS ON HOW TO BUILD JAR:
 # Move to the location where pom.xml is exist in project and build project using below command
 # "mvn clean package"
-COPY /target/financials-masters-0.0.1-SNAPSHOT.jar /opt/egov/financials-masters.jar
+COPY /target/egf-masters-0.0.1-SNAPSHOT.jar /opt/egov/egf-masters.jar
 
 
 # launch standalone webapp
-CMD ["java","-jar", "/opt/egov/financials-masters.jar"]
+CMD ["java","-jar", "/opt/egov/egf-masters.jar"]
 #CMD ["java", "-Xdebug", "-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8787", "-jar", "/opt/egov/egov-location.jar"]
 
 # NOTE: the two 'RUN' commands can probably be combined inside of a single

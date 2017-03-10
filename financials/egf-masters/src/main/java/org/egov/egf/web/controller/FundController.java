@@ -15,6 +15,7 @@ import org.egov.egf.persistence.queue.contract.RequestInfo;
 import org.egov.egf.persistence.queue.contract.ResponseInfo;
 import org.egov.egf.persistence.service.FundService;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.builder.SkipExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -44,7 +45,7 @@ public class FundController {
 		if (errors.hasErrors()) {
 		  throw	new CustomBindException(errors);
 		}
-		
+		fundService.fetchRelatedContracts(fundContractRequest);
 		FundContractResponse fundContractResponse = new FundContractResponse();
 		fundContractResponse.setFunds(new ArrayList<FundContract>());
 		for(FundContract fundContract:fundContractRequest.getFunds())
@@ -72,10 +73,12 @@ public class FundController {
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
-	 
+		fundService.fetchRelatedContracts(fundContractRequest);
 		Fund fundFromDb = fundService.findOne(uniqueId);
-		FundContract fund = fundContractRequest.getFund();
 		
+		FundContract fund = fundContractRequest.getFund();
+		//ignoring internally passed id if the put has id in url
+	    fund.setId(uniqueId);
 		ModelMapper model=new ModelMapper();
 	 	model.map(fund, fundFromDb);
 		fundFromDb = fundService.update(fundFromDb);
@@ -88,19 +91,19 @@ public class FundController {
 	
 	@GetMapping(value = "/{uniqueId}")
 	@ResponseStatus(HttpStatus.OK)
-	public FundContractResponse view(@RequestBody @Valid FundContractRequest fundContractRequest, BindingResult errors,
+	public FundContractResponse view(@ModelAttribute FundContractRequest fundContractRequest, BindingResult errors,
 			@PathVariable Long uniqueId) {
-
+		fundService.validate(fundContractRequest,"view",errors);
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
-		fundService.validate(fundContractRequest,"view",errors);
+		fundService.fetchRelatedContracts(fundContractRequest);
 		RequestInfo requestInfo = fundContractRequest.getRequestInfo();
 		Fund fundFromDb = fundService.findOne(uniqueId);
 		FundContract fund = fundContractRequest.getFund();
 		
 		ModelMapper model=new ModelMapper();
-	 	model.map(fund, fundFromDb);
+	 	model.map(fundFromDb,fund );
 		
 		FundContractResponse fundContractResponse = new FundContractResponse();
 		fundContractResponse.setFund(fund);  
@@ -116,14 +119,13 @@ public class FundController {
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
-		
+		fundService.fetchRelatedContracts(fundContractRequest);		
  
 		FundContractResponse fundContractResponse =new  FundContractResponse();
 		fundContractResponse.setFunds(new ArrayList<FundContract>());
 		for(FundContract fundContract:fundContractRequest.getFunds())
 		{
 		Fund fundFromDb = fundService.findOne(fundContract.getId());
-		 
 		
 		ModelMapper model=new ModelMapper();
 	 	model.map(fundContract, fundFromDb);
@@ -147,6 +149,7 @@ public class FundController {
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
+		fundService.fetchRelatedContracts(fundContractRequest);
 		FundContractResponse fundContractResponse =new  FundContractResponse();
 		fundContractResponse.setFunds(new ArrayList<FundContract>());
 		fundContractResponse.setPage(new Pagination());

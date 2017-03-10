@@ -15,6 +15,7 @@ import org.egov.egf.persistence.queue.contract.RequestInfo;
 import org.egov.egf.persistence.queue.contract.ResponseInfo;
 import org.egov.egf.persistence.service.FunctionaryService;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.builder.SkipExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -44,7 +45,7 @@ public class FunctionaryController {
 		if (errors.hasErrors()) {
 		  throw	new CustomBindException(errors);
 		}
-		
+		functionaryService.fetchRelatedContracts(functionaryContractRequest);
 		FunctionaryContractResponse functionaryContractResponse = new FunctionaryContractResponse();
 		functionaryContractResponse.setFunctionaries(new ArrayList<FunctionaryContract>());
 		for(FunctionaryContract functionaryContract:functionaryContractRequest.getFunctionaries())
@@ -72,10 +73,12 @@ public class FunctionaryController {
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
-	 
+		functionaryService.fetchRelatedContracts(functionaryContractRequest);
 		Functionary functionaryFromDb = functionaryService.findOne(uniqueId);
-		FunctionaryContract functionary = functionaryContractRequest.getFunctionary();
 		
+		FunctionaryContract functionary = functionaryContractRequest.getFunctionary();
+		//ignoring internally passed id if the put has id in url
+	    functionary.setId(uniqueId);
 		ModelMapper model=new ModelMapper();
 	 	model.map(functionary, functionaryFromDb);
 		functionaryFromDb = functionaryService.update(functionaryFromDb);
@@ -88,19 +91,19 @@ public class FunctionaryController {
 	
 	@GetMapping(value = "/{uniqueId}")
 	@ResponseStatus(HttpStatus.OK)
-	public FunctionaryContractResponse view(@RequestBody @Valid FunctionaryContractRequest functionaryContractRequest, BindingResult errors,
+	public FunctionaryContractResponse view(@ModelAttribute FunctionaryContractRequest functionaryContractRequest, BindingResult errors,
 			@PathVariable Long uniqueId) {
-
+		functionaryService.validate(functionaryContractRequest,"view",errors);
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
-		functionaryService.validate(functionaryContractRequest,"view",errors);
+		functionaryService.fetchRelatedContracts(functionaryContractRequest);
 		RequestInfo requestInfo = functionaryContractRequest.getRequestInfo();
 		Functionary functionaryFromDb = functionaryService.findOne(uniqueId);
 		FunctionaryContract functionary = functionaryContractRequest.getFunctionary();
 		
 		ModelMapper model=new ModelMapper();
-	 	model.map(functionary, functionaryFromDb);
+	 	model.map(functionaryFromDb,functionary );
 		
 		FunctionaryContractResponse functionaryContractResponse = new FunctionaryContractResponse();
 		functionaryContractResponse.setFunctionary(functionary);  
@@ -116,14 +119,13 @@ public class FunctionaryController {
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
-		
+		functionaryService.fetchRelatedContracts(functionaryContractRequest);		
  
 		FunctionaryContractResponse functionaryContractResponse =new  FunctionaryContractResponse();
 		functionaryContractResponse.setFunctionaries(new ArrayList<FunctionaryContract>());
 		for(FunctionaryContract functionaryContract:functionaryContractRequest.getFunctionaries())
 		{
 		Functionary functionaryFromDb = functionaryService.findOne(functionaryContract.getId());
-		 
 		
 		ModelMapper model=new ModelMapper();
 	 	model.map(functionaryContract, functionaryFromDb);
@@ -147,6 +149,7 @@ public class FunctionaryController {
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
+		functionaryService.fetchRelatedContracts(functionaryContractRequest);
 		FunctionaryContractResponse functionaryContractResponse =new  FunctionaryContractResponse();
 		functionaryContractResponse.setFunctionaries(new ArrayList<FunctionaryContract>());
 		functionaryContractResponse.setPage(new Pagination());

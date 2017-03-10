@@ -15,6 +15,7 @@ import org.egov.egf.persistence.queue.contract.RequestInfo;
 import org.egov.egf.persistence.queue.contract.ResponseInfo;
 import org.egov.egf.persistence.service.FiscalPeriodService;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.builder.SkipExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -44,7 +45,7 @@ public class FiscalPeriodController {
 		if (errors.hasErrors()) {
 		  throw	new CustomBindException(errors);
 		}
-		
+		fiscalPeriodService.fetchRelatedContracts(fiscalPeriodContractRequest);
 		FiscalPeriodContractResponse fiscalPeriodContractResponse = new FiscalPeriodContractResponse();
 		fiscalPeriodContractResponse.setFiscalPeriods(new ArrayList<FiscalPeriodContract>());
 		for(FiscalPeriodContract fiscalPeriodContract:fiscalPeriodContractRequest.getFiscalPeriods())
@@ -72,10 +73,12 @@ public class FiscalPeriodController {
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
-	 
+		fiscalPeriodService.fetchRelatedContracts(fiscalPeriodContractRequest);
 		FiscalPeriod fiscalPeriodFromDb = fiscalPeriodService.findOne(uniqueId);
-		FiscalPeriodContract fiscalPeriod = fiscalPeriodContractRequest.getFiscalPeriod();
 		
+		FiscalPeriodContract fiscalPeriod = fiscalPeriodContractRequest.getFiscalPeriod();
+		//ignoring internally passed id if the put has id in url
+	    fiscalPeriod.setId(uniqueId);
 		ModelMapper model=new ModelMapper();
 	 	model.map(fiscalPeriod, fiscalPeriodFromDb);
 		fiscalPeriodFromDb = fiscalPeriodService.update(fiscalPeriodFromDb);
@@ -88,19 +91,19 @@ public class FiscalPeriodController {
 	
 	@GetMapping(value = "/{uniqueId}")
 	@ResponseStatus(HttpStatus.OK)
-	public FiscalPeriodContractResponse view(@RequestBody @Valid FiscalPeriodContractRequest fiscalPeriodContractRequest, BindingResult errors,
+	public FiscalPeriodContractResponse view(@ModelAttribute FiscalPeriodContractRequest fiscalPeriodContractRequest, BindingResult errors,
 			@PathVariable Long uniqueId) {
-
+		fiscalPeriodService.validate(fiscalPeriodContractRequest,"view",errors);
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
-		fiscalPeriodService.validate(fiscalPeriodContractRequest,"view",errors);
+		fiscalPeriodService.fetchRelatedContracts(fiscalPeriodContractRequest);
 		RequestInfo requestInfo = fiscalPeriodContractRequest.getRequestInfo();
 		FiscalPeriod fiscalPeriodFromDb = fiscalPeriodService.findOne(uniqueId);
 		FiscalPeriodContract fiscalPeriod = fiscalPeriodContractRequest.getFiscalPeriod();
 		
 		ModelMapper model=new ModelMapper();
-	 	model.map(fiscalPeriod, fiscalPeriodFromDb);
+	 	model.map(fiscalPeriodFromDb,fiscalPeriod );
 		
 		FiscalPeriodContractResponse fiscalPeriodContractResponse = new FiscalPeriodContractResponse();
 		fiscalPeriodContractResponse.setFiscalPeriod(fiscalPeriod);  
@@ -116,14 +119,13 @@ public class FiscalPeriodController {
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
-		
+		fiscalPeriodService.fetchRelatedContracts(fiscalPeriodContractRequest);		
  
 		FiscalPeriodContractResponse fiscalPeriodContractResponse =new  FiscalPeriodContractResponse();
 		fiscalPeriodContractResponse.setFiscalPeriods(new ArrayList<FiscalPeriodContract>());
 		for(FiscalPeriodContract fiscalPeriodContract:fiscalPeriodContractRequest.getFiscalPeriods())
 		{
 		FiscalPeriod fiscalPeriodFromDb = fiscalPeriodService.findOne(fiscalPeriodContract.getId());
-		 
 		
 		ModelMapper model=new ModelMapper();
 	 	model.map(fiscalPeriodContract, fiscalPeriodFromDb);
@@ -147,6 +149,7 @@ public class FiscalPeriodController {
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
+		fiscalPeriodService.fetchRelatedContracts(fiscalPeriodContractRequest);
 		FiscalPeriodContractResponse fiscalPeriodContractResponse =new  FiscalPeriodContractResponse();
 		fiscalPeriodContractResponse.setFiscalPeriods(new ArrayList<FiscalPeriodContract>());
 		fiscalPeriodContractResponse.setPage(new Pagination());

@@ -1,6 +1,5 @@
 package org.egov.egf.persistence.service;
 
-
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -23,68 +22,88 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.SmartValidator;
 
-
-@Service 
+@Service
 @Transactional(readOnly = true)
-public class FinancialYearService  {
+public class FinancialYearService {
 
-  private final FinancialYearRepository financialYearRepository;
-  @PersistenceContext
-private EntityManager entityManager;
+	private final FinancialYearRepository financialYearRepository;
+	@PersistenceContext
+	private EntityManager entityManager;
 
-  @Autowired
-public FinancialYearService(final FinancialYearRepository financialYearRepository) {
-   this.financialYearRepository = financialYearRepository;
-  }
+	@Autowired
+	public FinancialYearService(final FinancialYearRepository financialYearRepository) {
+		this.financialYearRepository = financialYearRepository;
+	}
 
-@Autowired
-	private SmartValidator validator;   @Transactional
-   public FinancialYear create(final FinancialYear financialYear) {
-  return financialYearRepository.save(financialYear);
-  } 
-   @Transactional
-   public FinancialYear update(final FinancialYear financialYear) {
-  return financialYearRepository.save(financialYear);
-    } 
-  public List<FinancialYear> findAll() {
-   return financialYearRepository.findAll(new Sort(Sort.Direction.ASC, "name"));
-     }
-  public FinancialYear findOne(Long id){
-  return financialYearRepository.findOne(id);
-  }
-  public Page<FinancialYear> search(FinancialYearContractRequest financialYearContractRequest){
-final FinancialYearSpecification specification = new FinancialYearSpecification(financialYearContractRequest.getFinancialYear());
-Pageable page = new PageRequest(financialYearContractRequest.getPage().getOffSet(),financialYearContractRequest.getPage().getPageSize());
-  return financialYearRepository.findAll(specification,page);
-  }
-public BindingResult validate(FinancialYearContractRequest financialYearContractRequest, String method,BindingResult errors) { 
-	 
-		try { 
-			switch(method) 
-			{ 
-			case "update": 
-				Assert.notNull(financialYearContractRequest.getFinancialYear(), "FinancialYear to edit must not be null"); 
-				validator.validate(financialYearContractRequest.getFinancialYear(), errors); 
-				break; 
-			case "view": 
-				//validator.validate(financialYearContractRequest.getFinancialYear(), errors); 
-				break; 
-			case "create": 
-				Assert.notNull(financialYearContractRequest.getFinancialYears(), "FinancialYears to create must not be null"); 
-				for(FinancialYearContract b:financialYearContractRequest.getFinancialYears()) 
-				 validator.validate(b, errors); 
-				break; 
-			case "updateAll": 
-				Assert.notNull(financialYearContractRequest.getFinancialYears(), "FinancialYears to create must not be null"); 
-				for(FinancialYearContract b:financialYearContractRequest.getFinancialYears()) 
-				 validator.validate(b, errors); 
-				break; 
-			default : validator.validate(financialYearContractRequest.getRequestInfo(), errors); 
-			} 
-		} catch (IllegalArgumentException e) { 
-			 errors.addError(new ObjectError("Missing data", e.getMessage())); 
-		} 
-		return errors; 
- 
+	@Autowired
+	private SmartValidator validator;
+
+	@Transactional
+	public FinancialYear create(final FinancialYear financialYear) {
+		return financialYearRepository.save(financialYear);
+	}
+
+	@Transactional
+	public FinancialYear update(final FinancialYear financialYear) {
+		return financialYearRepository.save(financialYear);
+	}
+
+	public List<FinancialYear> findAll() {
+		return financialYearRepository.findAll(new Sort(Sort.Direction.ASC, "name"));
+	}
+
+	public FinancialYear findOne(Long id) {
+		return financialYearRepository.findOne(id);
+	}
+
+	public Page<FinancialYear> search(FinancialYearContractRequest financialYearContractRequest) {
+		final FinancialYearSpecification specification = new FinancialYearSpecification(
+				financialYearContractRequest.getFinancialYear());
+		Pageable page = new PageRequest(financialYearContractRequest.getPage().getOffSet(),
+				financialYearContractRequest.getPage().getPageSize());
+		return financialYearRepository.findAll(specification, page);
+	}
+
+	public BindingResult validate(FinancialYearContractRequest financialYearContractRequest, String method,
+			BindingResult errors) {
+
+		try {
+			switch (method) {
+			case "update":
+				Assert.notNull(financialYearContractRequest.getFinancialYear(),
+						"FinancialYear to edit must not be null");
+				validator.validate(financialYearContractRequest.getFinancialYear(), errors);
+				break;
+			case "view":
+				// validator.validate(financialYearContractRequest.getFinancialYear(),
+				// errors);
+				break;
+			case "create":
+				Assert.notNull(financialYearContractRequest.getFinancialYears(),
+						"FinancialYears to create must not be null");
+				for (FinancialYearContract b : financialYearContractRequest.getFinancialYears()) {
+					validator.validate(b, errors);
+				}
+				break;
+			case "updateAll":
+				Assert.notNull(financialYearContractRequest.getFinancialYears(),
+						"FinancialYears to create must not be null");
+				for (FinancialYearContract b : financialYearContractRequest.getFinancialYears()) {
+					validator.validate(b, errors);
+				}
+				break;
+			default:
+				validator.validate(financialYearContractRequest.getRequestInfo(), errors);
+			}
+		} catch (IllegalArgumentException e) {
+			errors.addError(new ObjectError("Missing data", e.getMessage()));
+		}
+		return errors;
+
+	}
+
+	public FinancialYearContractRequest fetchRelatedContracts(
+			FinancialYearContractRequest financialYearContractRequest) {
+		return financialYearContractRequest;
 	}
 }

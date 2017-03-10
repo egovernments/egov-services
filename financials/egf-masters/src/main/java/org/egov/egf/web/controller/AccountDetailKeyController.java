@@ -15,6 +15,7 @@ import org.egov.egf.persistence.queue.contract.RequestInfo;
 import org.egov.egf.persistence.queue.contract.ResponseInfo;
 import org.egov.egf.persistence.service.AccountDetailKeyService;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.builder.SkipExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -44,7 +45,7 @@ public class AccountDetailKeyController {
 		if (errors.hasErrors()) {
 		  throw	new CustomBindException(errors);
 		}
-		
+		accountDetailKeyService.fetchRelatedContracts(accountDetailKeyContractRequest);
 		AccountDetailKeyContractResponse accountDetailKeyContractResponse = new AccountDetailKeyContractResponse();
 		accountDetailKeyContractResponse.setAccountDetailKeys(new ArrayList<AccountDetailKeyContract>());
 		for(AccountDetailKeyContract accountDetailKeyContract:accountDetailKeyContractRequest.getAccountDetailKeys())
@@ -72,10 +73,12 @@ public class AccountDetailKeyController {
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
-	 
+		accountDetailKeyService.fetchRelatedContracts(accountDetailKeyContractRequest);
 		AccountDetailKey accountDetailKeyFromDb = accountDetailKeyService.findOne(uniqueId);
-		AccountDetailKeyContract accountDetailKey = accountDetailKeyContractRequest.getAccountDetailKey();
 		
+		AccountDetailKeyContract accountDetailKey = accountDetailKeyContractRequest.getAccountDetailKey();
+		//ignoring internally passed id if the put has id in url
+	    accountDetailKey.setId(uniqueId);
 		ModelMapper model=new ModelMapper();
 	 	model.map(accountDetailKey, accountDetailKeyFromDb);
 		accountDetailKeyFromDb = accountDetailKeyService.update(accountDetailKeyFromDb);
@@ -88,19 +91,19 @@ public class AccountDetailKeyController {
 	
 	@GetMapping(value = "/{uniqueId}")
 	@ResponseStatus(HttpStatus.OK)
-	public AccountDetailKeyContractResponse view(@RequestBody @Valid AccountDetailKeyContractRequest accountDetailKeyContractRequest, BindingResult errors,
+	public AccountDetailKeyContractResponse view(@ModelAttribute AccountDetailKeyContractRequest accountDetailKeyContractRequest, BindingResult errors,
 			@PathVariable Long uniqueId) {
-
+		accountDetailKeyService.validate(accountDetailKeyContractRequest,"view",errors);
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
-		accountDetailKeyService.validate(accountDetailKeyContractRequest,"view",errors);
+		accountDetailKeyService.fetchRelatedContracts(accountDetailKeyContractRequest);
 		RequestInfo requestInfo = accountDetailKeyContractRequest.getRequestInfo();
 		AccountDetailKey accountDetailKeyFromDb = accountDetailKeyService.findOne(uniqueId);
 		AccountDetailKeyContract accountDetailKey = accountDetailKeyContractRequest.getAccountDetailKey();
 		
 		ModelMapper model=new ModelMapper();
-	 	model.map(accountDetailKey, accountDetailKeyFromDb);
+	 	model.map(accountDetailKeyFromDb,accountDetailKey );
 		
 		AccountDetailKeyContractResponse accountDetailKeyContractResponse = new AccountDetailKeyContractResponse();
 		accountDetailKeyContractResponse.setAccountDetailKey(accountDetailKey);  
@@ -116,14 +119,13 @@ public class AccountDetailKeyController {
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
-		
+		accountDetailKeyService.fetchRelatedContracts(accountDetailKeyContractRequest);		
  
 		AccountDetailKeyContractResponse accountDetailKeyContractResponse =new  AccountDetailKeyContractResponse();
 		accountDetailKeyContractResponse.setAccountDetailKeys(new ArrayList<AccountDetailKeyContract>());
 		for(AccountDetailKeyContract accountDetailKeyContract:accountDetailKeyContractRequest.getAccountDetailKeys())
 		{
 		AccountDetailKey accountDetailKeyFromDb = accountDetailKeyService.findOne(accountDetailKeyContract.getId());
-		 
 		
 		ModelMapper model=new ModelMapper();
 	 	model.map(accountDetailKeyContract, accountDetailKeyFromDb);
@@ -139,32 +141,36 @@ public class AccountDetailKeyController {
 	}
 	
 
-	@GetMapping
+	
+	@PostMapping("/_search")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	public AccountDetailKeyContractResponse search(@ModelAttribute AccountDetailKeyContractRequest accountDetailKeyContractRequest,BindingResult errors) {
-		accountDetailKeyService.validate(accountDetailKeyContractRequest,"search",errors);
-		if (errors.hasErrors()) {
-			  throw	new CustomBindException(errors);
-			}
-		AccountDetailKeyContractResponse accountDetailKeyContractResponse =new  AccountDetailKeyContractResponse();
-		accountDetailKeyContractResponse.setAccountDetailKeys(new ArrayList<AccountDetailKeyContract>());
-		accountDetailKeyContractResponse.setPage(new Pagination());
-		Page<AccountDetailKey> allAccountDetailKeys;
-		ModelMapper model=new ModelMapper();
-	 
-		allAccountDetailKeys = accountDetailKeyService.search(accountDetailKeyContractRequest);
-		AccountDetailKeyContract accountDetailKeyContract=null;
-		for(AccountDetailKey b:allAccountDetailKeys)
-		{
-			accountDetailKeyContract=new AccountDetailKeyContract();
-			model.map(b, accountDetailKeyContract);
-			accountDetailKeyContractResponse.getAccountDetailKeys().add(accountDetailKeyContract);
-		}
-		accountDetailKeyContractResponse.getPage().map(allAccountDetailKeys);
-		accountDetailKeyContractResponse.setResponseInfo(getResponseInfo(accountDetailKeyContractRequest.getRequestInfo()));
-		accountDetailKeyContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
-		return accountDetailKeyContractResponse;
+	public AccountDetailKeyContractResponse search(@ModelAttribute AccountDetailKeyContract accountDetailKeyContracts,@RequestBody RequestInfo requestInfo,BindingResult errors) {
+	    AccountDetailKeyContractRequest accountDetailKeyContractRequest = new AccountDetailKeyContractRequest();
+	    accountDetailKeyContractRequest.setAccountDetailKey(accountDetailKeyContracts);
+	    accountDetailKeyContractRequest.setRequestInfo(requestInfo);
+	    accountDetailKeyService.validate(accountDetailKeyContractRequest,"search",errors);
+            if (errors.hasErrors()) {
+                throw new CustomBindException(errors);
+            }
+            accountDetailKeyService.fetchRelatedContracts(accountDetailKeyContractRequest);
+            AccountDetailKeyContractResponse accountDetailKeyContractResponse = new AccountDetailKeyContractResponse();
+            accountDetailKeyContractResponse.setAccountDetailKeys(new ArrayList<AccountDetailKeyContract>());
+            accountDetailKeyContractResponse.setPage(new Pagination());
+            Page<AccountDetailKey> allAccountDetailKeys;
+            ModelMapper model = new ModelMapper();
+    
+            allAccountDetailKeys = accountDetailKeyService.search(accountDetailKeyContractRequest);
+            AccountDetailKeyContract accountDetailKeyContract = null;
+            for (AccountDetailKey b : allAccountDetailKeys) {
+                accountDetailKeyContract = new AccountDetailKeyContract();
+                model.map(b, accountDetailKeyContract);
+                accountDetailKeyContractResponse.getAccountDetailKeys().add(accountDetailKeyContract);
+            }
+            accountDetailKeyContractResponse.getPage().map(allAccountDetailKeys);
+            accountDetailKeyContractResponse.setResponseInfo(getResponseInfo(accountDetailKeyContractRequest.getRequestInfo()));
+            accountDetailKeyContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
+            return accountDetailKeyContractResponse;
 	}
 
 	

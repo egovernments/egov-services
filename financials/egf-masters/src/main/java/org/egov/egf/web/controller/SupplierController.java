@@ -7,14 +7,15 @@ import javax.validation.Valid;
 
 import org.egov.egf.domain.exception.CustomBindException;
 import org.egov.egf.persistence.entity.Supplier;
-import org.egov.egf.persistence.queue.contract.Pagination;
-import org.egov.egf.persistence.queue.contract.RequestInfo;
-import org.egov.egf.persistence.queue.contract.ResponseInfo;
 import org.egov.egf.persistence.queue.contract.SupplierContract;
 import org.egov.egf.persistence.queue.contract.SupplierContractRequest;
 import org.egov.egf.persistence.queue.contract.SupplierContractResponse;
+import org.egov.egf.persistence.queue.contract.Pagination;
+import org.egov.egf.persistence.queue.contract.RequestInfo;
+import org.egov.egf.persistence.queue.contract.ResponseInfo;
 import org.egov.egf.persistence.service.SupplierService;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.builder.SkipExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -44,7 +45,7 @@ public class SupplierController {
 		if (errors.hasErrors()) {
 		  throw	new CustomBindException(errors);
 		}
-		
+		supplierService.fetchRelatedContracts(supplierContractRequest);
 		SupplierContractResponse supplierContractResponse = new SupplierContractResponse();
 		supplierContractResponse.setSuppliers(new ArrayList<SupplierContract>());
 		for(SupplierContract supplierContract:supplierContractRequest.getSuppliers())
@@ -72,10 +73,12 @@ public class SupplierController {
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
-	 
+		supplierService.fetchRelatedContracts(supplierContractRequest);
 		Supplier supplierFromDb = supplierService.findOne(uniqueId);
-		SupplierContract supplier = supplierContractRequest.getSupplier();
 		
+		SupplierContract supplier = supplierContractRequest.getSupplier();
+		//ignoring internally passed id if the put has id in url
+	    supplier.setId(uniqueId);
 		ModelMapper model=new ModelMapper();
 	 	model.map(supplier, supplierFromDb);
 		supplierFromDb = supplierService.update(supplierFromDb);
@@ -88,19 +91,19 @@ public class SupplierController {
 	
 	@GetMapping(value = "/{uniqueId}")
 	@ResponseStatus(HttpStatus.OK)
-	public SupplierContractResponse view(@RequestBody @Valid SupplierContractRequest supplierContractRequest, BindingResult errors,
+	public SupplierContractResponse view(@ModelAttribute SupplierContractRequest supplierContractRequest, BindingResult errors,
 			@PathVariable Long uniqueId) {
-
+		supplierService.validate(supplierContractRequest,"view",errors);
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
-		supplierService.validate(supplierContractRequest,"view",errors);
+		supplierService.fetchRelatedContracts(supplierContractRequest);
 		RequestInfo requestInfo = supplierContractRequest.getRequestInfo();
 		Supplier supplierFromDb = supplierService.findOne(uniqueId);
 		SupplierContract supplier = supplierContractRequest.getSupplier();
 		
 		ModelMapper model=new ModelMapper();
-	 	model.map(supplier, supplierFromDb);
+	 	model.map(supplierFromDb,supplier );
 		
 		SupplierContractResponse supplierContractResponse = new SupplierContractResponse();
 		supplierContractResponse.setSupplier(supplier);  
@@ -116,14 +119,13 @@ public class SupplierController {
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
-		
+		supplierService.fetchRelatedContracts(supplierContractRequest);		
  
 		SupplierContractResponse supplierContractResponse =new  SupplierContractResponse();
 		supplierContractResponse.setSuppliers(new ArrayList<SupplierContract>());
 		for(SupplierContract supplierContract:supplierContractRequest.getSuppliers())
 		{
 		Supplier supplierFromDb = supplierService.findOne(supplierContract.getId());
-		 
 		
 		ModelMapper model=new ModelMapper();
 	 	model.map(supplierContract, supplierFromDb);
@@ -147,6 +149,7 @@ public class SupplierController {
 		if (errors.hasErrors()) {
 			  throw	new CustomBindException(errors);
 			}
+		supplierService.fetchRelatedContracts(supplierContractRequest);
 		SupplierContractResponse supplierContractResponse =new  SupplierContractResponse();
 		supplierContractResponse.setSuppliers(new ArrayList<SupplierContract>());
 		supplierContractResponse.setPage(new Pagination());

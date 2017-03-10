@@ -42,7 +42,6 @@ package org.egov.eis.model;
 
 import javax.validation.constraints.NotNull;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -64,7 +63,6 @@ public class HODDepartment {
 	@NotNull
 	private Long department;
 
-	@Getter(AccessLevel.NONE)
 	@NotNull
 	private String tenantId;
 

@@ -65,6 +65,9 @@ public class DepartmentalTest {
 	private Long id;
 
 	@NotNull
+	private Long employeeId;
+
+	@NotNull
 	private String test;
 
 	@NotNull

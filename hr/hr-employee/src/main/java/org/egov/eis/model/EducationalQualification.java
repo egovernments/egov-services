@@ -65,6 +65,9 @@ public class EducationalQualification {
 	private Long id;
 
 	@NotNull
+	private Long employeeId;
+
+	@NotNull
 	private String qualification;
 
 	private String majorSubject;

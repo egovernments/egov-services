@@ -65,6 +65,9 @@ public class ServiceHistory {
 	private Long id;
 
 	@NotNull
+	private Long employeeId;
+
+	@NotNull
 	private String serviceInfo;
 
 	@NotNull

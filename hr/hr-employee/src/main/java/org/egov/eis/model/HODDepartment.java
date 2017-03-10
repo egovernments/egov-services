@@ -61,6 +61,9 @@ public class HODDepartment {
 	private Long id;
 
 	@NotNull
+	private Long assignmentId;
+
+	@NotNull
 	private Long department;
 
 	@NotNull

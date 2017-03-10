@@ -64,6 +64,9 @@ public class Regularisation {
 	@NotNull
 	private Long id;
 
+	@NotNull
+	private Long employeeId;
+
 	private Long designation;
 
 	@NotNull

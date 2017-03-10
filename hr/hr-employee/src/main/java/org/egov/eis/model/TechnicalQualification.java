@@ -65,6 +65,9 @@ public class TechnicalQualification {
 	private Long id;
 
 	@NotNull
+	private Long employeeId;
+
+	@NotNull
 	private String skill;
 
 	private String grade;

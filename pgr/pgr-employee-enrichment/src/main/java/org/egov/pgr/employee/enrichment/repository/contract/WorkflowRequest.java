@@ -15,7 +15,7 @@ import java.util.Objects;
 public class WorkflowRequest {
 
     public enum Action {
-        CREATE("create"), END("close");
+        CREATE("create"), END("close") ,UPDATE("update");
 
         private String strValue;
 
@@ -37,7 +37,7 @@ public class WorkflowRequest {
             } else if (complaintStatus.equalsIgnoreCase("COMPLETED") || complaintStatus.equalsIgnoreCase("REJECTED") || complaintStatus.equalsIgnoreCase("WITHDRAWN")) {
                 return END.strValue;
             }
-            return CREATE.strValue;
+            return UPDATE.strValue;
         }
     }
 
@@ -77,6 +77,9 @@ public class WorkflowRequest {
 
     @JsonProperty("values")
     private Map<String, Attribute> values;
+    
+    @JsonProperty("service_request_id")
+    private String crn;
 
     public String getValueForKey(String key) {
         if (Objects.nonNull(values.get(key)))

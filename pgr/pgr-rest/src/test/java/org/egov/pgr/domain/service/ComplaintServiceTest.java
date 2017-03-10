@@ -67,7 +67,7 @@ public class ComplaintServiceTest {
 		final Complaint complaint = mock(Complaint.class);
 		when(complaint.getAuthenticatedUser()).thenReturn(getCitizen());
 		final SevaRequest sevaRequest = getSevaRequest();
-
+		when(userRepository.getUserByUserName("anonymous")).thenReturn(populateUser());
 		complaintService.update(complaint, sevaRequest);
 
 		verify(complaint, times(1)).validate();
@@ -87,7 +87,7 @@ public class ComplaintServiceTest {
 	public void testShouldUpdateSevaRequestWithDomainComplaintOnUpdate() {
 		final Complaint complaint = getComplaint();
 		final SevaRequest sevaRequest = mock(SevaRequest.class);
-
+		when(userRepository.getUserByUserName("anonymous")).thenReturn(populateUser());
 		complaintService.update(complaint, sevaRequest);
 
 		verify(sevaRequest).update(complaint);
@@ -121,7 +121,7 @@ public class ComplaintServiceTest {
 		final Complaint complaint = getComplaint();
 		final ServiceRequest serviceRequest = getServiceRequest();
 		final SevaRequest sevaRequest = new SevaRequest(new RequestInfo(), serviceRequest);
-
+		when(userRepository.getUserByUserName("anonymous")).thenReturn(populateUser());
 		complaintService.update(complaint, sevaRequest);
 
 		verify(complaintRepository).update(sevaRequest);

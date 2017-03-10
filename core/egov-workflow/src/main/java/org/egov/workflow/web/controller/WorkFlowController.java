@@ -38,5 +38,11 @@ public class WorkFlowController {
     public List<Task> getHistory(@RequestParam final String tenantId , @RequestParam final String workflowId) {
         return workflow.getHistoryDetail(tenantId,workflowId);
     }
+    
+    @PostMapping(value = "/task")
+    public Task createTask(@RequestBody final Task task) {
+        String tenantId = task.getRequestInfo().getTenantId();
+        return workflow.update(tenantId, task);
+    }
 
 }

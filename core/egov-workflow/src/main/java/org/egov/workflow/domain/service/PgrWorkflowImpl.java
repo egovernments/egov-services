@@ -33,6 +33,7 @@ public class PgrWorkflowImpl implements Workflow {
 	private final StateService stateService;
 	private final EmployeeRepository employeeRepository;
 	private final UserRepository userRepository;
+	public static final String STATE_DETAILS = "stateDetails";
 
 	@Autowired
 	public PgrWorkflowImpl(final ComplaintRouterService complaintRouterService, final StateService stateService,
@@ -175,6 +176,30 @@ public class PgrWorkflowImpl implements Workflow {
 		final Attribute attribute = Attribute.builder().values(values).build();
 
 		return attribute;
+	}
+
+	@Override
+	public Task update(final String tenantId, final Task task) {
+		final Long stateId = Long.valueOf(task.getValueForKey(STATE_ID));
+		final State state = stateService.getStateById(stateId);
+		if (Objects.nonNull(state)) {
+			state.addStateHistory(new StateHistory(state));
+			state.setValue(task.getStatus());
+			state.setComments(task.getValueForKey("approvalComments"));
+			state.setSenderName(task.getSender());
+			state.setOwnerPosition(Long.valueOf(task.getAssignee()));
+			state.setExtraInfo(task.getValueForKey(STATE_DETAILS));
+			state.setDateInfo(task.getCreatedDate());
+			// TODO - Get these values from request info
+			state.setLastModifiedBy(00L);
+			state.setLastModifiedDate(new Date());
+			stateService.update(state);
+			if (state.getId() != null) {
+				task.setId(state.getId().toString());
+				task.setAssignee(state.getOwnerPosition().toString());
+			}
+		}
+		return task;
 	}
 
 }

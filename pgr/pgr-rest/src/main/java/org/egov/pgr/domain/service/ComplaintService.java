@@ -87,6 +87,7 @@ public class ComplaintService {
 	public void update(Complaint complaint, SevaRequest sevaRequest) {
 		complaint.validate();
 		sevaRequest.update(complaint);
+		populateRequesterId(sevaRequest, complaint);
 		complaintRepository.update(sevaRequest);
 	}
 

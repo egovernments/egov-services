@@ -1,0 +1,52 @@
+{
+  "RequestInfo":{
+    "tenant_id":"tenantId",
+    "api_id":"apiId",
+    "ver":"1",
+    "msg_id" : ""
+  },
+  "status":"PROCESSING",
+  "assignee":"2",
+  "sender_name":"narasappa",
+  "values":{
+    "approvalComments":{
+      "varible":true,
+      "code":"",
+      "datatype":"String",
+      "required":true,
+      "datatypeDescription": "",
+      "values":[
+        {
+          "key":"approvalComments",
+          "name":"complaint is updated"
+        }
+      ]
+    },
+    "stateId": {
+      "variable": true,
+      "code": "stateId",
+      "datatype": "String",
+      "required": true,
+      "datatypeDescription": "This is the id of state",
+      "values": [
+        {
+          "key": "stateId",
+          "name": "2"
+        }
+      ]
+    },
+    "stateDetails": {
+      "variable": true,
+      "code": "",
+      "datatype": "String",
+      "required": true,
+      "datatypeDescription": "",
+      "values": [
+        {
+          "key": "stateDetails",
+          "name": "Complaint is updated"
+        }
+      ]
+    }
+  }
+}

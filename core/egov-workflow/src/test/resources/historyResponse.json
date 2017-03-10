@@ -1,32 +1,44 @@
 [
   {
+   "RequestInfo":{
+    "tenant_id":"ap.public",
+    "api_id":"",
+    "ver":"1",
+    "msg_id" : ""
+  },
   "type":null,
-  "lastupdatedSince":null,
+  "last_updated":null,
   "owner":"Owner1",
   "assignee":null,
   "module":null,
   "state":null,
   "status":"Created",
   "url":null,
-  "sender":"sender1",
+  "sender_name":"sender1",
   "comments":"Got workflow history 1",
   "extraInfo":null,
   "natureOfTask":null,
-  "attributes":null
+  "values":null
   },
 
   {
+   "RequestInfo":{
+    "tenant_id":"ap.public",
+    "api_id":"",
+    "ver":"1",
+     "msg_id" : ""
+  },
   "type":null,
-  "lastupdatedSince":null,
+  "last_updated":null,
   "owner":"Owner2",
   "assignee":null,
   "module":null,
   "state":null,
   "status":"Closed",
   "url":null,
-  "sender":"sender2",
+  "sender_name":"sender2",
   "comments":"Got workflow history 2",
   "natureOfTask":null,
-  "attributes":null
+  "values":null
   }
  ]

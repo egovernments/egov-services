@@ -31,11 +31,12 @@ public class WorkflowRepositoryTest {
     private final String workflowHostname = "http://host/";
     private final String workflowCreatePath = "workflow/create";
     private final String workflowClosePath = "workflow/close";
+    private final String workflowUpdate="workflow/update";
 
     @Before
     public void before() {
         RestTemplate restTemplate = new RestTemplate();
-        workflowRepository = new WorkflowRepository(workflowHostname, workflowCreatePath, workflowClosePath, restTemplate);
+        workflowRepository = new WorkflowRepository(workflowHostname, workflowCreatePath, workflowClosePath,workflowUpdate, restTemplate);
         server = MockRestServiceServer.bindTo(restTemplate).build();
     }
 
@@ -66,6 +67,18 @@ public class WorkflowRepositoryTest {
         server.verify();
     }
 
+    @Test
+    public void testShouldSendRequestToUpdateWorkflow() {
+        server.expect(once(), requestTo("http://host/workflow/update"))
+                .andExpect(method(HttpMethod.POST))
+                .andExpect(content().string(getFileContents("updateWorkflowRequest.json")))
+                .andRespond(
+                        withSuccess(getFileContents("updateWorkflowResponse.json"),
+                                MediaType.APPLICATION_JSON_UTF8));
+        workflowRepository.update(getCreateWorkflowRequest());
+
+        server.verify();
+    }
     private WorkflowRequest getCreateWorkflowRequest() {
         Map<String, Attribute> valuesToSet = new HashMap<>();
         valuesToSet.put("complaintTypeCode", Attribute.asStringAttr("complaintTypeCode", "PKMG"));

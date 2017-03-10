@@ -45,6 +45,8 @@ public class PgrWorkflowImplTest {
 	private static final String TENANT_ID = "tenantId";
 	private static final String COMPLAINT_TYPE_CODE = "complaintTypeCode";
 	private static final String BOUNDARY_ID = "boundaryId";
+	  public static final String STATE_ID = "stateId";
+	    public static final String STATE_DETAILS = "stateDetails";
 
 	@MockBean
 	private PgrWorkflowImpl pgrWorkflowImpl;
@@ -200,4 +202,38 @@ public class PgrWorkflowImplTest {
 		stateHistory.setOwnerUser(null);
 		return stateHistory;
 	}
+	
+	@Test
+    public void testCreateTaskShouldUpdateWorkflow() {
+        Task task = getTask();
+        State state = prepareState();
+        when(stateService.update(new State())).thenReturn(state);
+        when(stateService.getStateById(2l)).thenReturn(state);
+        Task actualResponse = pgrWorkflowImpl.update("ap.public", task);
+        assertEquals(actualResponse.getId(), state.getId().toString());
+    }
+    
+    private Task getTask() {
+        final Map<String, Attribute> valuesMap = new HashMap<String, Attribute>();
+        final RequestInfo requestInfo = new RequestInfo("apiId", "ver", new Date(), "start", "did", "key", "msgId", "1", null, "tenantId");
+        final Value stateId = new Value(STATE_ID, "2");
+        final Value stateDetails = new Value(STATE_DETAILS, "1");
+        final Value comments = new Value("approvalComments", "1");
+        
+        final List<Value> value1 = Collections.singletonList(stateId);
+        final Attribute attributeStateId = new Attribute(false, "", "", true, "", value1);
+        
+        final List<Value> value2 = Collections.singletonList(stateDetails);
+        final Attribute attributeStateDetails = new Attribute(false, "", "", true, "", value2);
+        
+        final List<Value> value3 = Collections.singletonList(comments);
+        final Attribute attributeComments = new Attribute(false, "", "", true, "", value3);
+        
+        valuesMap.put(STATE_ID, attributeStateId);
+        valuesMap.put(STATE_DETAILS, attributeStateDetails);
+        valuesMap.put("approvalComments", attributeComments);
+        Task task = Task.builder().attributes(valuesMap).assignee("3").id("1").sender("narasappa").status("PROCESSING").requestInfo(requestInfo)
+                .createdDate(new Date()).build();
+        return task;
+    }
 }

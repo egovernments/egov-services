@@ -12,16 +12,19 @@ public class WorkflowRepository {
 
     private RestTemplate restTemplate;
     private String createWorkflowUrl;
-    private String closeWorkflowUrl;
+    private String closeWorkflowUrl; 
+    private String updateWorkflowUrl; 
 
     @Autowired
     public WorkflowRepository(@Value("${egov.services.workflow.hostname}") String workflowHostname,
                               @Value("${egov.services.workflow.create_workflow}") String createPath,
                               @Value("${egov.services.workflow.close_workflow}") String closePath,
+                              @Value("${egov.services.workflow.update_workflow}") String updatePath,
                               RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
         this.createWorkflowUrl = workflowHostname + createPath;
         this.closeWorkflowUrl = workflowHostname + closePath;
+        this.updateWorkflowUrl = workflowHostname + updatePath;
     }
 
     public WorkflowResponse create(WorkflowRequest workflowRequest) {
@@ -30,5 +33,9 @@ public class WorkflowRepository {
 
     public WorkflowResponse close(WorkflowRequest workflowRequest) {
         return restTemplate.postForObject(closeWorkflowUrl, workflowRequest, WorkflowResponse.class);
+    }
+    
+    public WorkflowResponse update(WorkflowRequest workflowRequest) {
+        return restTemplate.postForObject(updateWorkflowUrl, workflowRequest, WorkflowResponse.class);
     }
 }

@@ -16,10 +16,11 @@ import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 import org.egov.workflow.domain.model.RequestContext;
-import org.egov.workflow.persistence.entity.Task;
 import org.egov.workflow.domain.service.Workflow;
+import org.egov.workflow.persistence.entity.Task;
 import org.egov.workflow.web.contract.Attribute;
 import org.egov.workflow.web.contract.ProcessInstance;
+import org.egov.workflow.web.contract.RequestInfo;
 import org.egov.workflow.web.contract.Value;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,6 +37,10 @@ import org.springframework.test.web.servlet.MockMvc;
 public class WorkFlowControllerTest {
 
     private static final String TENANT_ID = "tenantId";
+    public static final String STATE_ID = "stateId";
+    public static final String STATE_DETAILS = "stateDetails";
+    public static final String APPROVAL_COMMENTS = "approvalComments";
+    
     @Autowired
     private MockMvc mockMvc;
 
@@ -194,6 +199,7 @@ public class WorkFlowControllerTest {
 
     private List<Task> getWorkFlowHistory() {
         final Task history1 = Task.builder()
+                .requestInfo(getRequestInfo())
                 .owner("Owner1")
                 .sender("sender1")
                 .status("Created")
@@ -201,6 +207,7 @@ public class WorkFlowControllerTest {
                 // .createdDate(new Date("2016-08-31T10:46:22.083"))
                 .build();
         final Task history2 = Task.builder()
+                .requestInfo(getRequestInfo())
                 .owner("Owner2")
                 .sender("sender2")
                 .status("Closed")
@@ -209,5 +216,62 @@ public class WorkFlowControllerTest {
                 .build();
         return Arrays.asList(history1, history2);
     }
+    
+    private RequestInfo getRequestInfo() {
+        return RequestInfo.builder().tenantId("ap.public").ver("1").apiId("").msgId("").build();
+    }
+    
+    @Test
+    public void testShouldUpdateWorkflow() throws Exception {
+        Task task = getTask();
+        when(workflow.update(eq(TENANT_ID), argThat(new TaskMatcherForUpdateWorkflow(task))))
+        .thenReturn(task);
+                mockMvc.perform(post("/task")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(getFileContents("updateWorkflowRequest.json"))
+                        .header("X-CORRELATION-ID", "someId"))
+                        .andExpect(status().isOk())
+                        .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
+                assertEquals("someId", RequestContext.getId());
+    }
+    
+    
+    class TaskMatcherForUpdateWorkflow extends ArgumentMatcher<Task> {
 
+        private Task expectedTaskInstance;
+
+        public TaskMatcherForUpdateWorkflow(Task expectedTaskInstance) {
+
+            this.expectedTaskInstance = expectedTaskInstance;
+        }
+
+        @Override
+        public boolean matches(Object o) {
+            final Task actualTaskInstance = (Task) o;
+            return expectedTaskInstance.getStatus().equals(actualTaskInstance.getStatus()) &&
+                    expectedTaskInstance.getAssignee().equals(actualTaskInstance.getAssignee()) &&
+                    expectedTaskInstance.getSender().equals(actualTaskInstance.getSender()) &&
+                     isValuesValid(actualTaskInstance);
+        }
+        
+        private boolean isValuesValid(Task task) {
+            Map<String, Attribute> attributesMap = task.getAttributes();
+            if (attributesMap.get(APPROVAL_COMMENTS).getValues().size() != 1)
+                return false;
+            Value comments = attributesMap.get(APPROVAL_COMMENTS).getValues().get(0);
+            if (attributesMap.get(STATE_ID).getValues().size() != 1)
+                return false;
+            Value state = attributesMap.get(STATE_ID).getValues().get(0);
+            return (comments.getName().equals("complaint is updated") && state.getName().equals("2"));
+        }
+    
+    }
+    
+    
+   private Task getTask() {
+            final RequestInfo requestInfo = RequestInfo.builder().tenantId("tenantId").ver("1").apiId("apiId").msgId("").build();;
+            Task task = Task.builder().assignee("2").sender("narasappa").status("PROCESSING").requestInfo(requestInfo)
+                    .build();
+            return task;
+    }      
 }

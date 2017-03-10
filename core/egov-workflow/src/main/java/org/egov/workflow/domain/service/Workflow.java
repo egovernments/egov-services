@@ -17,7 +17,7 @@ public interface Workflow {
 
     // ProcessInstance update(String jurisdiction, ProcessInstance processInstance);
 
-    // Task update(String jurisdiction, Task task);
+    Task update(String jurisdiction, Task task);
 
     List<Task> getHistoryDetail(String tenantId,String workflowId);
 

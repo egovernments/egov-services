@@ -30,6 +30,7 @@ public class SevaRequest {
     public static final String MSG_ID = "msg_id";
     public static final String VALUES_APPROVAL_COMMENT = "approvalComments";
     public static final String USER_ROLE = "userRole";
+    public static final String SERVICE_REQUEST_ID = "service_request_id";
 
     private HashMap<String, Object> sevaRequestMap;
 
@@ -71,6 +72,7 @@ public class SevaRequest {
         RequestInfo requestInfo = getRequestInfo();
         HashMap<String, String> values = (HashMap<String, String>) serviceRequest.get(VALUES);
         String complaintType = (String) serviceRequest.get(SERVICE_CODE);
+		String crn = (String) serviceRequest.get(SERVICE_REQUEST_ID);
         Map<String, Attribute> valuesToSet = getWorkFlowRequestValues(values, complaintType);
         WorkflowRequest.WorkflowRequestBuilder workflowRequestBuilder = WorkflowRequest.builder()
                 .assignee(getCurrentAssignee(values))
@@ -79,7 +81,8 @@ public class SevaRequest {
                 .values(valuesToSet)
                 .status(values.get(STATUS))
                 .type(WORKFLOW_TYPE)
-                .businessKey(WORKFLOW_TYPE);
+                .businessKey(WORKFLOW_TYPE)
+                .crn(crn);
 
         return workflowRequestBuilder.build();
     }

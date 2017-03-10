@@ -7,12 +7,13 @@ MAINTAINER kaviyarasan<kaviyarasan.p@riflexions.com>
 # INSTRUCTIONS ON HOW TO BUILD JAR:
 # Move to the location where pom.xml is exist in project and build project using below command
 # "mvn clean package"
-COPY /target/egov-asset-0.0.1-SNAPSHOT.jar /opt/egov/egov-asset.jar
+COPY /target/egov-asset-0.0.1-SNAPSHOT.jar /opt/egov/asset.jar
 
+COPY start.sh /usr/bin/start.sh
 
-# launch standalone webapp
-CMD ["java","-jar", "/opt/egov/egov-asset.jar"]
-#CMD ["java", "-Xdebug", "-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8787", "-jar", "/opt/egov/egov-asset.jar"]
+RUN chmod +x /usr/bin/start.sh
+
+CMD ["/usr/bin/start.sh"]
 
 # NOTE: the two 'RUN' commands can probably be combined inside of a single
 # script (i.e. RUN build-and-install-app.sh) so that we can also clean up the

@@ -9,9 +9,11 @@ MAINTAINER Rajat<rajat.kaushal@riflexions.com>
 # "mvn clean package"
 COPY /target/hr-employee-0.0.1-SNAPSHOT.jar /opt/egov/hr-employee.jar
 
+COPY start.sh /usr/bin/start.sh
 
-# launch standalone webapp
-CMD ["java","-jar", "/opt/egov/hr-employee.jar"]
+RUN chmod +x /usr/bin/start.sh
+
+CMD ["/usr/bin/start.sh"]
 
 # NOTE: the two 'RUN' commands can probably be combined inside of a single
 # script (i.e. RUN build-and-install-app.sh) so that we can also clean up the

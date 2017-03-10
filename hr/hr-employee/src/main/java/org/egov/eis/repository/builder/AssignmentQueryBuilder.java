@@ -61,7 +61,7 @@ public class AssignmentQueryBuilder {
 			+ " a.functionaryId as a_functionaryId, a.functionId as a_functionId, a.designationId as a_designationId,"
 			+ " a.departmentId as a_departmentId, a.isPrimary as a_isPrimary, a.fromDate as a_fromDate,"
 			+ " a.toDate as a_toDate, a.gradeId as a_gradeId, a.govtOrderNumber as a_govtOrderNumber,"
-			+ " a.documents as a_documents, a.createdBy as a_createdBy, a.createdDate as a_createdDate,"
+			+ " a.createdBy as a_createdBy, a.createdDate as a_createdDate,"
 			+ " a.lastModifiedBy as a_lastModifiedBy, a.lastModifiedDate as a_lastModifiedDate,"
 			+ " a.tenantId as a_tenantId,"
 			+ " hod.id as hod_id, hod.departmentId as hod_departmentId"

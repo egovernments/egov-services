@@ -99,8 +99,6 @@ public class Assignment {
 
 	private String govtOrderNumber;
 
-	private String documents;
-
 	@NotNull
 	private Long createdBy;
 

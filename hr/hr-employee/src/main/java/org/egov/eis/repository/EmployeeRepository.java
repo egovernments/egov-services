@@ -41,6 +41,7 @@
 package org.egov.eis.repository;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.egov.eis.model.EmployeeInfo;
@@ -67,6 +68,7 @@ public class EmployeeRepository {
 	@Autowired
 	private EmployeeQueryBuilder employeeQueryBuilder;
 
+	@SuppressWarnings("unchecked")
 	public List<EmployeeInfo> findForCriteria(EmployeeGetRequest employeeGetRequest) {
 		List<Object> preparedStatementValuesForListOfEmployeeIds = new ArrayList<Object>();
 		String queryStrForListOfEmployeeIds = employeeQueryBuilder.getQueryForListOfEmployeeIds(employeeGetRequest,
@@ -74,6 +76,10 @@ public class EmployeeRepository {
 
 		List<Long> listOfIds = jdbcTemplate.query(queryStrForListOfEmployeeIds,
 				preparedStatementValuesForListOfEmployeeIds.toArray(), employeeIdsRowMapper);
+
+		if (listOfIds.isEmpty()) {
+			return Collections.EMPTY_LIST;
+		}
 
 		List<Object> preparedStatementValues = new ArrayList<Object>();
 		String queryStr = employeeQueryBuilder.getQuery(employeeGetRequest, preparedStatementValues, listOfIds);

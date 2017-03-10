@@ -110,8 +110,6 @@ public class EmployeeInfo {
 	@Size(max=20)
 	private String bankAccount;
 
-	private String documents;
-
 	@Getter(AccessLevel.NONE)
 	@NotNull
 	private String tenantId;

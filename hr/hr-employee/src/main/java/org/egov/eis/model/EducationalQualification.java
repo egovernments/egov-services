@@ -74,8 +74,6 @@ public class EducationalQualification {
 
 	private String university;
 
-	private String documents;
-
 	@NotNull
 	private Long createdBy;
 

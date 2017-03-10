@@ -73,8 +73,6 @@ public class TechnicalQualification {
 
 	private String remarks;
 
-	private String documents;
-
 	@NotNull
 	private Long createdBy;
 

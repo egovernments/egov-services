@@ -96,7 +96,9 @@ public class EmployeeInfoRowMapper implements ResultSetExtractor<List<EmployeeIn
 				empInfo.setBank(rs.getLong("e_bankId"));
 				empInfo.setBankBranch(rs.getLong("e_bankBranchId"));
 				empInfo.setBankAccount(rs.getString("e_bankAccount"));
+/*
 				empInfo.setDocuments(rs.getString("e_documents"));
+*/
 				empInfo.setTenantId(rs.getString("e_tenantId"));
 				empInfoMap.put(employeeId, empInfo);
 			}
@@ -121,7 +123,9 @@ public class EmployeeInfoRowMapper implements ResultSetExtractor<List<EmployeeIn
 				assignmentInfo.setToDate(rs.getDate("a_toDate"));
 				assignmentInfo.setGrade(rs.getLong("a_gradeId"));
 				assignmentInfo.setGovtOrderNumber(rs.getString("a_govtOrderNumber"));
+/*
 				assignmentInfo.setDocuments(rs.getString("a_documents"));
+*/
 				assignmentInfo.setCreatedBy(rs.getLong("a_createdBy"));
 				assignmentInfo.setCreatedDate(rs.getDate("a_createdDate"));
 				assignmentInfo.setLastModifiedBy(rs.getLong("a_lastModifiedBy"));
@@ -167,7 +171,7 @@ public class EmployeeInfoRowMapper implements ResultSetExtractor<List<EmployeeIn
 			EmployeeInfo employeeInfo = EmployeeInfo.builder().id(empInfo.getId()).code(empInfo.getCode())
 					.employeeStatus(empInfo.getEmployeeStatus()).employeeType(empInfo.getEmployeeType())
 					.bank(empInfo.getBank()).bankBranch(empInfo.getBankBranch()).bankAccount(empInfo.getBankAccount())
-					.documents(empInfo.getDocuments()).tenantId(empInfo.getTenantId()).build();
+					/*.documents(empInfo.getDocuments())*/.tenantId(empInfo.getTenantId()).build();
 
 			List<Assignment> assignmentList = new ArrayList<>();
 			for (Map.Entry<Long, AssignmentInfo> assignmentInfoEntry : empInfo.getAssignments().entrySet()) {
@@ -179,7 +183,10 @@ public class EmployeeInfoRowMapper implements ResultSetExtractor<List<EmployeeIn
 						.department(assignmentInfo.getDepartment()).designation(assignmentInfo.getDesignation())
 						.isPrimary(assignmentInfo.getIsPrimary()).fromDate(assignmentInfo.getFromDate())
 						.toDate(assignmentInfo.getToDate()).grade(assignmentInfo.getGrade())
-						.govtOrderNumber(assignmentInfo.getGovtOrderNumber()).documents(assignmentInfo.getDocuments())
+						.govtOrderNumber(assignmentInfo.getGovtOrderNumber())
+/*
+						.documents(assignmentInfo.getDocuments())
+*/
 						.createdBy(assignmentInfo.getCreatedBy()).createdDate(assignmentInfo.getCreatedDate())
 						.lastModifiedBy(assignmentInfo.getLastModifiedBy())
 						.lastModifiedDate(assignmentInfo.getLastModifiedDate()).build();
@@ -221,7 +228,6 @@ public class EmployeeInfoRowMapper implements ResultSetExtractor<List<EmployeeIn
 		private Long bank;
 		private Long bankBranch;
 		private String bankAccount;
-		private String documents;
 		private String tenantId;
 	}
 
@@ -240,7 +246,6 @@ public class EmployeeInfoRowMapper implements ResultSetExtractor<List<EmployeeIn
 		private Date toDate;
 		private Long grade;
 		private String govtOrderNumber;
-		private String documents;
 		private Long createdBy;
 		private Date createdDate;
 		private Long lastModifiedBy;

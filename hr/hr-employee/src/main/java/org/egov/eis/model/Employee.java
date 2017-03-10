@@ -104,8 +104,6 @@ public class Employee {
 
 	private Long employeeType;
 
-	private Long position;
-
 	private List<Assignment> assignments = new ArrayList<Assignment>();
 
 	private List<Long> jurisdictions = new ArrayList<Long>();
@@ -141,8 +139,6 @@ public class Employee {
 
 	@Size(max=200)
 	private String placeOfBirth;
-
-	private String documents;
 
 	private List<ServiceHistory> serviceHistory = new ArrayList<ServiceHistory>();
 

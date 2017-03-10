@@ -65,11 +65,11 @@ public class EmployeeQueryBuilder {
 
 	private static final String BASE_QUERY = "SELECT e.id as e_id, e.code as e_code, e.employeeStatus as e_employeeStatus,"
 			+ " e.employeeTypeId as e_employeeTypeId, e.bankId as e_bankId, e.bankBranchId as e_bankBranchId,"
-			+ " e.bankAccount as e_bankAccount, e.documents as e_documents, e.tenantId as e_tenantId,"
+			+ " e.bankAccount as e_bankAccount, e.tenantId as e_tenantId,"
 			+ " a.id as a_id, a.positionId as a_positionId, a.fundId as a_fundId, a.functionaryId as a_functionaryId,"
 			+ " a.functionId as a_functionId, a.designationId as a_designationId, a.departmentId as a_departmentId,"
 			+ " a.isPrimary as a_isPrimary, a.fromDate as a_fromDate, a.toDate as a_toDate, a.gradeId as a_gradeId,"
-			+ " a.govtOrderNumber as a_govtOrderNumber, a.documents as a_documents, a.createdBy as a_createdBy,"
+			+ " a.govtOrderNumber as a_govtOrderNumber, a.createdBy as a_createdBy,"
 			+ " a.createdDate as a_createdDate, a.lastModifiedBy as a_lastModifiedBy,"
 			+ " a.lastModifiedDate as a_lastModifiedDate, a.employeeId as a_employeeId,"
 			+ " hod.id as hod_id, hod.departmentId as hod_departmentId,"

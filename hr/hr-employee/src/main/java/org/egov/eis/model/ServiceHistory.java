@@ -75,8 +75,6 @@ public class ServiceHistory {
 
 	private String orderNo;
 
-	private String documents;
-
 	@NotNull
 	private Long createdBy;
 

@@ -77,8 +77,6 @@ public class Regularisation {
 
 	private String remarks;
 
-	private String documents;
-
 	@NotNull
 	private Long createdBy;
 

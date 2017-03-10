@@ -14,7 +14,7 @@ ENV DB_NAME=mydb \
 # INSTRUCTIONS ON HOW TO BUILD JAR:
 # Move to the location where pom.xml is exist in project and build project using below command
 # "mvn clean package"
-COPY /target/egov-filestore-0.0.1-SNAPSHOT.jar /opt/egov/egov-filestore-0.0.1-SNAPSHOT.jar
+COPY /target/egov-filestore-0.0.1-SNAPSHOT.jar /opt/egov/egov-filestore.jar
 
 COPY start.sh /usr/bin/start.sh
 

@@ -1047,9 +1047,9 @@ paths:
     # This is a HTTP operation
     post:
       # Describe this verb here. Note: you can use markdown 
-      summary: Get the list of configuration paramaters defined in the system for entire HR module.
+      summary: Get the list of configuration paramaters along with the values defined in the system for entire HR module.
       description: |
-        Get the configuration key data. To get a particular configuration key one can pass the key name.
+        Get the configuration key data and the list of  values for each key. To get a particular configuration key values one can pass the key name. Date also needs to be passed along to get the appropriate values.
       # This is array of GET operation parameters:
       parameters:
         - name: requestInfo
@@ -1086,16 +1086,17 @@ paths:
           
         - name: sort
           in: query
-          description: Configuration Key search results will be sorted by key name ascending by default.
+          description: Configuration Key search results will be sorted by key name ascending and effectiveFrom descending by default.
           type: array
           uniqueItems: true
           minItems: 1
-          maxItems: 1
+          maxItems: 3
           items:
              type: string
-          pattern: '[-+](keyname)'
+          pattern: '[-+](keyname,values,effectiveFrom)'
           default:
             - +keyname 
+            - -effectiveFrom
       # Expected responses for this operation:
       responses:
         # Response code

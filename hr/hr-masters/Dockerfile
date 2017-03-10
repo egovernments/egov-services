@@ -7,7 +7,7 @@ MAINTAINER Rajat<rajat.kaushal@riflexions.com>
 # INSTRUCTIONS ON HOW TO BUILD JAR:
 # Move to the location where pom.xml is exist in project and build project using below command
 # "mvn clean package"
-COPY /target/egov-hr-masters-0.0.1-SNAPSHOT.jar /opt/egov/hr-masters.jar
+COPY /target/hr-masters-0.0.1-SNAPSHOT.jar /opt/egov/hr-masters.jar
 
 
 # launch standalone webapp

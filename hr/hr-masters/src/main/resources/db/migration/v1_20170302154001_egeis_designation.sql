@@ -8,7 +8,7 @@ CREATE TABLE egeis_designation (
 	tenantId CHARACTER VARYING(250) NOT NULL,
 
 	CONSTRAINT pk_egeis_designation PRIMARY KEY (id),
-	CONSTRAINT uk_egeis_designation_code UNIQUE KEY (code)
+	CONSTRAINT uk_egeis_designation_code UNIQUE (code)
 );
 
 CREATE SEQUENCE seq_egeis_designation

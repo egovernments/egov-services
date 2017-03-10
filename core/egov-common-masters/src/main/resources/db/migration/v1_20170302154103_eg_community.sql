@@ -6,7 +6,7 @@ CREATE TABLE eg_community (
 	tenantId CHARACTER VARYING(250) NOT NULL,
 
 	CONSTRAINT pk_eg_community PRIMARY KEY (id),
-	CONSTRAINT uk_eg_community_name UNIQUE KEY (name)
+	CONSTRAINT uk_eg_community_name UNIQUE (name)
 );
 
 CREATE SEQUENCE seq_eg_community

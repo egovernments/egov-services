@@ -6,7 +6,7 @@ CREATE TABLE eg_religion (
 	tenantId CHARACTER VARYING(250) NOT NULL,
 
 	CONSTRAINT pk_eg_religion PRIMARY KEY (id),
-	CONSTRAINT uk_eg_religion_name UNIQUE KEY (name)
+	CONSTRAINT uk_eg_religion_name UNIQUE (name)
 );
 
 CREATE SEQUENCE seq_eg_religion

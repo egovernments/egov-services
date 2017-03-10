@@ -6,7 +6,7 @@ CREATE TABLE egeis_objectType (
 	tenantId CHARACTER VARYING(250) NOT NULL,
 
 	CONSTRAINT pk_egeis_objectType PRIMARY KEY (id),
-	CONSTRAINT uk_egeis_objectType_type UNIQUE KEY (type)
+	CONSTRAINT uk_egeis_objectType_type UNIQUE (type)
 );
 
 CREATE SEQUENCE seq_egeis_objectType

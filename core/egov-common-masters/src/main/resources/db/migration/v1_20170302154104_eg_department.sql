@@ -6,8 +6,8 @@ CREATE TABLE eg_department (
 	tenantId CHARACTER VARYING(250) NOT NULL,
 
 	CONSTRAINT pk_eg_department PRIMARY KEY (id),
-	CONSTRAINT uk_eg_department_code UNIQUE KEY (code),
-	CONSTRAINT uk_eg_department_name UNIQUE KEY (name)
+	CONSTRAINT uk_eg_department_code UNIQUE (code),
+	CONSTRAINT uk_eg_department_name UNIQUE (name)
 );
 
 CREATE SEQUENCE seq_eg_department

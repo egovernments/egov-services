@@ -6,7 +6,7 @@ CREATE TABLE eg_category (
 	tenantId CHARACTER VARYING(250) NOT NULL,
 
 	CONSTRAINT pk_eg_category PRIMARY KEY (id),
-	CONSTRAINT uk_eg_category_name UNIQUE KEY (name)
+	CONSTRAINT uk_eg_category_name UNIQUE (name)
 );
 
 CREATE SEQUENCE seq_eg_category

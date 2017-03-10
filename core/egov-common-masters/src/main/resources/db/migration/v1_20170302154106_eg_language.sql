@@ -6,7 +6,7 @@ CREATE TABLE eg_language (
 	tenantId CHARACTER VARYING(250) NOT NULL,
 
 	CONSTRAINT pk_eg_language PRIMARY KEY (id),
-	CONSTRAINT uk_eg_language_name UNIQUE KEY (name)
+	CONSTRAINT uk_eg_language_name UNIQUE (name)
 );
 
 CREATE SEQUENCE seq_eg_language

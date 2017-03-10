@@ -7,7 +7,7 @@ CREATE TABLE eg_calendarYear (
 	tenantId CHARACTER VARYING(250) NOT NULL,
 
 	CONSTRAINT pk_eg_calendarYear PRIMARY KEY (id),
-	CONSTRAINT uk_eg_calendarYear_name UNIQUE KEY (name)
+	CONSTRAINT uk_eg_calendarYear_name UNIQUE (name)
 );
 
 CREATE SEQUENCE seq_eg_calendarYear

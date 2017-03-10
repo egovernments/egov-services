@@ -41,10 +41,13 @@
 package org.egov.user.domain.service;
 
 import org.apache.commons.lang3.StringUtils;
+import org.egov.user.domain.exception.OtpValidationPendingException;
 import org.egov.user.persistence.entity.Role;
 import org.egov.user.persistence.entity.User;
 import org.egov.user.persistence.repository.RoleRepository;
 import org.egov.user.persistence.repository.UserRepository;
+import org.egov.user.web.contract.Otp;
+import org.egov.user.web.contract.RequestInfo;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -56,10 +59,12 @@ public class UserService {
 
     private UserRepository userRepository;
     private RoleRepository roleRepository;
+    private OtpService otpService;
 
-    public UserService(UserRepository userRepository, RoleRepository roleRepository) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, OtpService otpService) {
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
+        this.otpService = otpService;
     }
 
     public User getUserByUsername(final String userName) {
@@ -74,8 +79,9 @@ public class UserService {
         return userRepository.findAll(ids);
     }
 
-    public User save(org.egov.user.domain.model.User user) {
+    public User save(RequestInfo requestInfo, org.egov.user.domain.model.User user, Boolean ensureOtpValidation) {
         user.validate();
+        if(ensureOtpValidation && !otpService.isOtpValidationComplete(requestInfo, user)) throw new OtpValidationPendingException(user);
         User userToPersist = new User().fromDomain(user);
         referenceRolesById(userToPersist);
         return userRepository.save(userToPersist);

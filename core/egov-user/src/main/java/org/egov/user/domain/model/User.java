@@ -21,6 +21,7 @@ import static org.springframework.util.ObjectUtils.isEmpty;
 public class User {
 
     private Long id;
+    private String tenantId;
     private String username;
     private String title;
     private String password;
@@ -48,6 +49,7 @@ public class User {
     private Boolean accountLocked;
     private Date lastModifiedDate;
     private Date createdDate;
+    private String otpReference;
 
     public void validate() {
         if (isUsernameAbsent() || isNameAbsent() || isGenderAbsent() || isMobileNumberAbsent()

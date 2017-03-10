@@ -1,12 +1,14 @@
 package org.egov.user.domain.service;
 
 import org.egov.user.domain.exception.InvalidUserException;
+import org.egov.user.domain.exception.OtpValidationPendingException;
 import org.egov.user.persistence.entity.Role;
 import org.egov.user.persistence.entity.User;
 import org.egov.user.persistence.entity.enums.Gender;
 import org.egov.user.persistence.entity.enums.UserType;
 import org.egov.user.persistence.repository.RoleRepository;
 import org.egov.user.persistence.repository.UserRepository;
+import org.egov.user.web.contract.RequestInfo;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,16 +24,21 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class UserRequestServiceTest {
+public class UserServiceTest {
 
     @Mock
     UserRepository userRepository;
     @Mock
     RoleRepository roleRepository;
+    @Mock
+    RequestInfo requestInfo;
+    @Mock
+    OtpService otpService;
     @Captor
     private ArgumentCaptor<User> userCaptor;
 
@@ -43,7 +50,7 @@ public class UserRequestServiceTest {
 
     @Before
     public void setUp() {
-        userService = new UserService(userRepository, roleRepository);
+        userService = new UserService(userRepository, roleRepository, otpService);
     }
 
     @Test
@@ -78,8 +85,9 @@ public class UserRequestServiceTest {
     public void shouldSaveAValidUser() throws Exception {
         org.egov.user.domain.model.User domainUser = validDomainUser();
         User entityUser = new User().fromDomain(domainUser);
+        when(otpService.isOtpValidationComplete(requestInfo, domainUser)).thenReturn(Boolean.TRUE);
         when(userRepository.save(userCaptor.capture())).thenReturn(entityUser);
-        User returnedUser = userService.save(domainUser);
+        User returnedUser = userService.save(requestInfo, domainUser, Boolean.TRUE);
 
         assertEquals(entityUser, returnedUser);
         assertEquals(entityUser.getUsername(), userCaptor.getValue().getUsername());
@@ -91,9 +99,10 @@ public class UserRequestServiceTest {
         Role mockRole = mock(Role.class);
         org.egov.user.domain.model.User domainUser = validDomainUserWithRole();
         User entityUser = new User().fromDomain(domainUser);
+        when(otpService.isOtpValidationComplete(requestInfo, domainUser)).thenReturn(Boolean.TRUE);
         when(userRepository.save(userCaptor.capture())).thenReturn(entityUser);
         when(roleRepository.findByName("CITIZEN")).thenReturn(mockRole);
-        userService.save(domainUser);
+        userService.save(requestInfo, domainUser, Boolean.TRUE);
 
         assertEquals(mockRole, userCaptor.getValue().getRoles().iterator().next());
     }
@@ -101,16 +110,47 @@ public class UserRequestServiceTest {
     @Test
     public void shouldNotAttemptToResolveRolesWhenNonePresent() throws Exception {
         org.egov.user.domain.model.User domainUser = validDomainUser();
-        userService.save(domainUser);
+        when(otpService.isOtpValidationComplete(requestInfo, domainUser)).thenReturn(Boolean.TRUE);
+        userService.save(requestInfo, domainUser, Boolean.TRUE);
 
         verify(roleRepository, never()).findByName(any(String.class));
+    }
+
+    @Test
+    public void testShouldEnsureOtpHasBeenValidated() throws Exception {
+        org.egov.user.domain.model.User domainUser = validDomainUserWithRole();
+        when(otpService.isOtpValidationComplete(requestInfo, domainUser)).thenReturn(Boolean.TRUE);
+        userService.save(requestInfo, domainUser, Boolean.TRUE);
+
+        verify(otpService, atLeastOnce()).isOtpValidationComplete(requestInfo, domainUser);
+    }
+
+    @Test(expected = OtpValidationPendingException.class)
+    public void testIfOtpIsNotValidatedExceptionIsRaised() throws Exception {
+        org.egov.user.domain.model.User domainUser = validDomainUserWithRole();
+        when(otpService.isOtpValidationComplete(requestInfo, domainUser)).thenReturn(Boolean.FALSE);
+
+        userService.save(requestInfo, domainUser, Boolean.TRUE);
+    }
+
+    @Test
+    public void testOtpIsNotValidatedWhenEnsureValidationFlagIsValue() throws Exception {
+        try {
+            org.egov.user.domain.model.User domainUser = validDomainUserWithRole();
+            when(otpService.isOtpValidationComplete(requestInfo, domainUser)).thenReturn(Boolean.FALSE);
+            userService.save(requestInfo, domainUser, Boolean.FALSE);
+
+            verify(otpService, never()).isOtpValidationComplete(requestInfo, domainUser);
+        } catch(OtpValidationPendingException ovpe) {
+            fail();
+        }
     }
 
     @Test(expected = InvalidUserException.class)
     public void shouldRaiseExceptionWhenUserIsInvalid() throws Exception {
         org.egov.user.domain.model.User domainUser = org.egov.user.domain.model.User.builder().build();
 
-        userService.save(domainUser);
+        userService.save(requestInfo, domainUser, Boolean.TRUE);
         verify(userRepository, never()).save(any(User.class));
     }
 

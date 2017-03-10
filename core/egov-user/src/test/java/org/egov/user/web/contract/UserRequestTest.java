@@ -1,6 +1,5 @@
 package org.egov.user.web.contract;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.egov.user.domain.model.User;
 import org.egov.user.persistence.entity.Address;
 import org.egov.user.persistence.entity.Role;
@@ -8,13 +7,10 @@ import org.egov.user.persistence.entity.enums.*;
 import org.junit.Test;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Java6Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 public class UserRequestTest {
 
@@ -94,6 +90,8 @@ public class UserRequestTest {
         assertNotEquals(expectedDate, userForCreate.getLastModifiedDate().toString());
         assertNotEquals(expectedDate, userForCreate.getCreatedDate().toString());
         assertEquals("CITIZEN", userForCreate.getRoles().iterator().next().getName());
+        assertEquals("ap.public", userForCreate.getTenantId());
+        assertEquals("otpreference1", userForCreate.getOtpReference());
     }
 
     @Test
@@ -142,6 +140,8 @@ public class UserRequestTest {
                 .bloodGroup("O_positive")
                 .lastModifiedDate(dateToTest)
                 .createdDate(dateToTest)
+                .tenantId("ap.public")
+                .otpReference("otpreference1")
                 .roles(roles);
     }
 
@@ -247,7 +247,7 @@ public class UserRequestTest {
         role2.setLastModifiedBy(user);
         role2.setLastModifiedDate(calendar.getTime());
 
-        return new HashSet<Role>(){{
+        return new HashSet<Role>() {{
             add(role1);
             add(role2);
         }};

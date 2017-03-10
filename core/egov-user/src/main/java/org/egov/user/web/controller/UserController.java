@@ -31,12 +31,15 @@ public class UserController {
     }
 
     @PostMapping("/_create")
-    public ResponseEntity<UserDetailResponse> createUser(@RequestBody CreateUserRequest createUserRequest) {
-        org.egov.user.domain.model.User user = createUserRequest.toDomainForCreate();
-        UserRequest userRequest = new UserRequest(userService.save(user));
-        ResponseInfo responseInfo = ResponseInfo.builder().status(String.valueOf(HttpStatus.OK.value())).build();
-        UserDetailResponse createdUserResponse = new UserDetailResponse(responseInfo, Arrays.asList(userRequest));
-        return new ResponseEntity<>(createdUserResponse, HttpStatus.OK);
+    public ResponseEntity<UserDetailResponse> createUserWithValidation(@RequestBody CreateUserRequest createUserRequest) {
+        Boolean validateUser = Boolean.TRUE;
+        return createUser(createUserRequest, validateUser);
+    }
+
+    @PostMapping("/_createnovalidate")
+    public ResponseEntity<UserDetailResponse> createUserWithoutValidation(@RequestBody CreateUserRequest createUserRequest) {
+        Boolean validateUser = Boolean.FALSE;
+        return createUser(createUserRequest, validateUser);
     }
 
     @PostMapping("/_search")
@@ -77,6 +80,14 @@ public class UserController {
             ErrorResponse errRes = populateErrors();
             return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
         }
+    }
+
+    private ResponseEntity<UserDetailResponse> createUser(@RequestBody CreateUserRequest createUserRequest, Boolean validateUser) {
+        org.egov.user.domain.model.User user = createUserRequest.toDomainForCreate();
+        UserRequest userRequest = new UserRequest(userService.save(createUserRequest.getRequestInfo(), user, validateUser));
+        ResponseInfo responseInfo = ResponseInfo.builder().status(String.valueOf(HttpStatus.OK.value())).build();
+        UserDetailResponse createdUserResponse = new UserDetailResponse(responseInfo, Arrays.asList(userRequest));
+        return new ResponseEntity<>(createdUserResponse, HttpStatus.OK);
     }
 
     private ErrorResponse populateErrors() {

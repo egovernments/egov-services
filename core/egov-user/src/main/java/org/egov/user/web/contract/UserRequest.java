@@ -200,6 +200,8 @@ public class UserRequest {
                 .bloodGroup(this.bloodGroup != null ? BloodGroup.valueOf(this.bloodGroup.toUpperCase()) : null)
                 .lastModifiedDate(new Date())
                 .createdDate(new Date())
+                .otpReference(this.otpReference)
+                .tenantId(this.tenantId)
                 .roles(this.roles != null ? this.roles.stream().map(RoleRequest::toDomain).collect(Collectors.toSet()) : null);
     }
 }

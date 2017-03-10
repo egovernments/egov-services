@@ -2,6 +2,7 @@ package org.egov.user.web.controller;
 
 import org.apache.commons.io.IOUtils;
 import org.egov.user.domain.exception.InvalidUserException;
+import org.egov.user.domain.exception.OtpValidationPendingException;
 import org.egov.user.domain.service.UserService;
 import org.egov.user.persistence.entity.Address;
 import org.egov.user.persistence.entity.Role;
@@ -10,6 +11,7 @@ import org.egov.user.persistence.entity.enums.*;
 import org.egov.user.security.SecurityConfig;
 import org.egov.user.security.oauth2.custom.CustomAuthenticationProvider;
 import org.egov.user.security.oauth2.custom.CustomUserDetailService;
+import org.egov.user.web.contract.RequestInfo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,7 @@ import java.util.*;
 
 import static java.util.Arrays.asList;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -77,7 +80,7 @@ public class UserRequestControllerTest {
 
     @Test
     public void testShouldRegisterACitizen() throws Exception {
-        when(userService.save(any(org.egov.user.domain.model.User.class))).thenReturn(buildUser());
+        when(userService.save(any(RequestInfo.class), any(org.egov.user.domain.model.User.class), eq(Boolean.TRUE))).thenReturn(buildUser());
 
         String fileContents = getFileContents("createValidatedCitizenSuccessRequest.json");
         mockMvc.perform(post("/_create/")
@@ -92,7 +95,7 @@ public class UserRequestControllerTest {
     @Test
     public void testShouldThrowErrorWhileRegisteringWithInvalidCitizen() throws Exception {
         InvalidUserException exception = new InvalidUserException(org.egov.user.domain.model.User.builder().build());
-        when(userService.save(any(org.egov.user.domain.model.User.class))).thenThrow(exception);
+        when(userService.save(any(RequestInfo.class), any(org.egov.user.domain.model.User.class), eq(Boolean.TRUE))).thenThrow(exception);
 
         String fileContents = getFileContents("createCitizenUnsuccessfulRequest.json");
         mockMvc.perform(post("/_create/")
@@ -102,6 +105,21 @@ public class UserRequestControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(content().json(getFileContents("createCitizenUnsuccessfulResponse.json")));
+    }
+
+    @Test
+    public void testShouldThrowErrorWhileRegisteringWithPendingOtpValidation() throws Exception {
+        OtpValidationPendingException exception = new OtpValidationPendingException(org.egov.user.domain.model.User.builder().build());
+        when(userService.save(any(RequestInfo.class), any(org.egov.user.domain.model.User.class), eq(Boolean.TRUE))).thenThrow(exception);
+
+        String fileContents = getFileContents("createValidatedCitizenSuccessRequest.json");
+        mockMvc.perform(post("/_create/")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(fileContents)
+        )
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().json(getFileContents("createCitizenOtpFailureResponse.json")));
     }
 
     private User buildUser() {

@@ -37,21 +37,21 @@ public class AgreementService {
 		 * isAllotteeNull declared to indicate whether criteria arguments for
 		 * each of the Agreement,Asset and Allottee objects are given or not.
 		 */
-		boolean isAgreementNull = (agreementCriteria.getAgreementId() == null
+		boolean isAgreementNull = agreementCriteria.getAgreementId() == null
 				&& agreementCriteria.getAgreementNumber() == null && agreementCriteria.getStatus() == null
 				&& (agreementCriteria.getFromDate() == null && agreementCriteria.getToDate() == null)
 				&& agreementCriteria.getTenderNumber() == null && agreementCriteria.getTinNumber() == null
 				&& agreementCriteria.getTradelicenseNumber() == null && agreementCriteria.getAsset() == null
-				&& agreementCriteria.getAllottee() == null);
+				&& agreementCriteria.getAllottee() == null;
 
-		boolean isAllotteeNull = (agreementCriteria.getAllotteeName() == null
-				&& agreementCriteria.getMobilenumber() == null);
+		boolean isAllotteeNull = agreementCriteria.getAllotteeName() == null
+				&& agreementCriteria.getMobilenumber() == null;
 
-		boolean isAssetNull = (agreementCriteria.getAssetCategory() == null
+		boolean isAssetNull = agreementCriteria.getAssetCategory() == null
 				&& agreementCriteria.getShoppingComplexNo() == null && agreementCriteria.getAssetCode() == null
 				&& agreementCriteria.getLocality() == null && agreementCriteria.getRevenueWard() == null
 				&& agreementCriteria.getElectionWard() == null && agreementCriteria.getTenantId() == null
-				&& agreementCriteria.getDoorno() == null);
+				&& agreementCriteria.getDoorno() == null;
 
 		if (!isAgreementNull && !isAssetNull && !isAllotteeNull) {
 			logger.info("agreementRepository.findByAllotee");

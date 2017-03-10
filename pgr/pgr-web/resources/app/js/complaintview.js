@@ -201,7 +201,7 @@ $(document).ready(function()
 			showLoader();
 		},
 		success : function(response){
-			//console.log('Get complaint done!'+JSON.stringify(response));
+			console.log('Get complaint done!'+JSON.stringify(response));
 
 			updateResponse = response;
 
@@ -266,10 +266,19 @@ $(document).ready(function()
 							}
 
 							if(localStorage.getItem('type') == 'EMPLOYEE'){
-								
+								var wardId = response.service_requests[0].values.LocationId;
+								var localityid = response.service_requests[0].values.ChildLocationId;
 								complaintType(loadDD);
+								$('#complaintType option').each(function(){
+									if($(this).text() == (response.service_requests[0].service_name)){
+										$(this).attr('selected', 'selected');
+									}
+								});
 								getWard(loadDD);
 								getDepartment(loadDD);
+								$('#ct-sel-jurisd').val(wardId);
+								getLocality(wardId);
+								$('#location').val(localityid);
 							}
 
 						},
@@ -312,6 +321,7 @@ $(document).ready(function()
 function complaintType(loadDD){
 	$.ajax({
 		url: "/pgr/services?type=all&tenantId=ap.public",
+		async : false
 	}).done(function(data) {
 		loadDD.load({
 			element:$('#complaintType'),
@@ -339,7 +349,8 @@ function nextStatus(loadDD){
 function getWard(loadDD){
 	$.ajax({
 		url: "/v1/location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?boundaryTypeName=Ward&hierarchyTypeName=Administration",
-		type : 'POST'
+		type : 'POST',
+		async : false
 	}).done(function(data) {
 		loadDD.load({
 			element:$('#ct-sel-jurisd'),
@@ -353,7 +364,8 @@ function getWard(loadDD){
 function getLocality(boundaryId){
 	$.ajax({
 		url: "/v1/location/boundarys/childLocationsByBoundaryId?boundaryId="+boundaryId,
-		type : 'POST'
+		type : 'POST',
+		async : false
 	}).done(function(data) {
 		loadDD.load({
 			element:$('#location'),

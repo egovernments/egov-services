@@ -8,4 +8,6 @@ postgres_pod=$(kubectl get pods --namespace=backbone | grep postgres | awk {'pri
 
 #Execute command to take db dump
 local_dump="mydb_$(date +"%d-%m-%y").sql"
+local_dump_hr="mydb_hr_$(date +"%d-%m-%y").sql"
 kubectl exec -it --namespace=backbone ${postgres_pod} -- pg_dump -U postgres -d mydb > /tmp/${local_dump}
+kubectl exec -it --namespace=backbone ${postgres_pod} -- pg_dump -U postgres -d mydb_hr > /tmp/${local_dump_hr}

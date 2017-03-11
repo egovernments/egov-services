@@ -4,9 +4,11 @@ package org.egov.filters.pre;
 import com.netflix.client.ClientException;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
+import org.egov.model.AuthRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.netflix.ribbon.support.RibbonRequestCustomizer;
 import org.springframework.cloud.netflix.zuul.filters.ProxyRequestHelper;
 import org.springframework.cloud.netflix.zuul.filters.route.RibbonCommandFactory;
 import org.springframework.cloud.netflix.zuul.filters.route.RibbonRoutingFilter;
@@ -16,9 +18,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -30,13 +30,14 @@ public class AuthFilter extends ZuulFilter {
 
     private ProxyRequestHelper helper = new ProxyRequestHelper();
     private RibbonRoutingFilter delegateFilter;
+    private List<RibbonRequestCustomizer> requestCustomizers = new ArrayList<>();
 
     @Autowired
     RibbonCommandFactory<?> ribbonCommandFactory;
 
     @PostConstruct
     void initDelegateFilter() {
-        delegateFilter = new RibbonRoutingFilter(helper, ribbonCommandFactory, null);
+        delegateFilter = new RibbonRoutingFilter(helper, ribbonCommandFactory, requestCustomizers);
     }
 
     @Override
@@ -51,46 +52,44 @@ public class AuthFilter extends ZuulFilter {
 
     @Override
     public boolean shouldFilter() {
-        return true;
+        return !RequestContext.getCurrentContext().getRequest().getRequestURI().contains("/user");
     }
 
     @Override
     public Object run() {
         RequestContext ctx = RequestContext.getCurrentContext();
         HttpServletRequest request = ctx.getRequest();
-        log.info(String.format("%s fuuuuubaaarrreedd  request to %s", request.getMethod(), request.getRequestURL().toString()));
         String authToken = ctx.getRequest().getHeader("auth_token");
-        log.info(String.format("$$$$$$$$$$$$$$$$$$$$$$$$$$ %s", ctx.getRequest().getRequestURI()));
-        log.info(String.format("$$$$$$$$$$$$$$$$$$$$$$$$$$ %s", ctx.getRouteHost()));
-        log.info(String.format("$$$$$$$$$$$$$$$$$$$$$$$$$$ %s", ctx.getRequest().getQueryString()));
         if (authToken != null) {
             try {
-                URL originalRouteHost = ctx.getRouteHost();
                 String originalServiceId = (String) ctx.get("serviceId");
-                URL authRouteHost = new URL("http", "localhost", 8082, "");
-                ctx.setRouteHost(authRouteHost);
-                ctx.set("serviceId", "localhost:8082");
-                log.info(String.format("$$$$$$$$$$$$$$$$$$$$$$$$$$ %s", authRouteHost.getPath()));
+                HashMap<String, List<String>> originalRequestQueryParms = (HashMap<String, List<String>>) ctx.getRequestQueryParams();
+                String originalRequestUri = (String) ctx.get("requestURI");
+                AuthRequest authRequest = new AuthRequest();
                 HashMap<String, List<String>> parameters = new HashMap<>();
+
                 List<String> paramValues = new ArrayList<>();
                 paramValues.add(authToken);
                 parameters.put("access_token", paramValues);
+
+                ctx.set("serviceId", "users");
                 ctx.setRequestQueryParams(parameters);
                 ctx.set("requestURI", "/user/_details");
+                ctx.setRequest(authRequest);
+
                 ClientHttpResponse authResponse = (ClientHttpResponse) delegateFilter.run();
-                log.info("+++++++++++");
+
                 ctx.set("serviceId", originalServiceId);
-                ctx.setRouteHost(originalRouteHost);
-                log.info(ctx.get("error.status_code").toString());
-                log.info(new Exception((Throwable) ctx.get("error.exception")).getMessage());
-                log.info(String.format("@@@@@@@@@@@@@, %s", authResponse));
+                ctx.setRequestQueryParams(originalRequestQueryParms);
+                ctx.set("requestURI", originalRequestUri);
+                ctx.setRequest(request);
+
                 if (isAuthenticationSuccessful(authResponse)) {
                     return delegateFilter.run();
                 }
 
                 setResponse(authResponse);
-
-                return authResponse;
+                ctx.setSendZuulResponse(false);
             } catch (Exception e) {
                 ctx.set("error.status_code", SC_INTERNAL_SERVER_ERROR);
                 ctx.set("error.exception", e);

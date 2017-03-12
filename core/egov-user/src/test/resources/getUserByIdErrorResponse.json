@@ -10,8 +10,8 @@
 
   "error": {
     "code": 400,
-    "message": "User ids or username cannot be empty",
-    "description": null,
+    "message": "Bad search request",
+    "description": "",
     "fields": null
   }
 }

@@ -3,6 +3,9 @@ package org.egov.user.domain.service;
 import org.egov.user.domain.exception.InvalidUserException;
 import org.egov.user.domain.exception.OtpValidationPendingException;
 import org.egov.user.persistence.entity.Role;
+import org.egov.user.domain.model.UserSearch;
+import org.egov.user.domain.search.SearchStrategy;
+import org.egov.user.domain.search.UserSearchStrategyFactory;
 import org.egov.user.persistence.entity.User;
 import org.egov.user.persistence.entity.enums.Gender;
 import org.egov.user.persistence.entity.enums.UserType;
@@ -27,6 +30,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UserServiceTest {
@@ -42,6 +47,9 @@ public class UserServiceTest {
     @Captor
     private ArgumentCaptor<User> userCaptor;
 
+    @Mock
+    UserSearchStrategyFactory userSearchStrategyFactory;
+
     UserService userService;
 
     private final List<Long> ID = Arrays.asList(1L, 2L);
@@ -50,18 +58,9 @@ public class UserServiceTest {
 
     @Before
     public void setUp() {
-        userService = new UserService(userRepository, roleRepository, otpService);
+        userService = new UserService(userRepository, roleRepository, otpService, userSearchStrategyFactory);
     }
 
-    @Test
-    public void shouldGetUsersById() throws Exception {
-        when(userRepository.findAll(ID)).thenReturn(getListOfUsers());
-
-        List<User> user = userService.getUsersById(ID);
-
-        assertThat(user.get(0).getId()).isEqualTo(ID.get(0));
-        assertThat(user.get(1).getId()).isEqualTo(ID.get(1));
-    }
 
     @Test
     public void shouldGetUserByEmail() throws Exception {
@@ -79,6 +78,19 @@ public class UserServiceTest {
         User actualUser = userService.getUserByUsername(USER_NAME);
 
         assertThat(actualUser.getUsername()).isEqualTo(USER_NAME);
+    }
+
+    @Test
+    public void shouldSearchUser() throws Exception {
+        UserSearch userSearch = new UserSearch();
+        List<User> expectedListOfUsers = getListOfUsers();
+        SearchStrategy searchStrategy = mock(SearchStrategy.class);
+        when(userSearchStrategyFactory.getSearchStrategy(userSearch)).thenReturn(searchStrategy);
+        when(searchStrategy.search(userSearch)).thenReturn(expectedListOfUsers);
+
+        List<User> actualResult = userService.searchUsers(userSearch);
+
+        assertThat(expectedListOfUsers).isEqualTo(actualResult);
     }
 
     @Test

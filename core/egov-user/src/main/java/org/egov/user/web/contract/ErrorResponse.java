@@ -1,14 +1,14 @@
 package org.egov.user.web.contract;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-@Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class ErrorResponse {
 
-	private ResponseInfo responseInfo;
-	private Error error;
+    private ResponseInfo responseInfo;
+    private Error error;
 }

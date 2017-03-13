@@ -16,7 +16,7 @@ import static org.egov.audit.persistence.entity.Audit.SEQ_AUDIT;
 @Table(name = "audit")
 @SequenceGenerator(name = SEQ_AUDIT, sequenceName = SEQ_AUDIT, allocationSize = 1)
 public class Audit {
-    public static final String SEQ_AUDIT = "SEQ_EGPGR_COMPLAINT";
+    public static final String SEQ_AUDIT = "SEQ_AUDIT";
 
     @Id
     @GeneratedValue(generator = SEQ_AUDIT, strategy = GenerationType.SEQUENCE)
@@ -38,7 +38,7 @@ public class Audit {
     private String eventName;
 
     @Column(name = "event_date")
-    private Date escalationDate;
+    private Date eventDate;
 
     @Column(name = "os_version", length = 32)
     private String osVersion;

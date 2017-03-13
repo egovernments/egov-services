@@ -1,11 +1,15 @@
 package org.egov.web.contract;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
+@AllArgsConstructor
 public class OtpResponse {
     private ResponseInfo responseInfo;
-    private Otp otp;
+    @JsonProperty("isSuccessful")
+    private boolean successful;
 }
 
 

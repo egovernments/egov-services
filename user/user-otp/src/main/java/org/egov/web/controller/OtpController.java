@@ -4,6 +4,7 @@ import org.egov.domain.service.OtpService;
 import org.egov.web.contract.OtpRequest;
 import org.egov.web.contract.OtpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,9 +18,10 @@ public class OtpController {
         this.otpService = otpService;
     }
 
+    @PostMapping("/v1/_send")
     public OtpResponse sendOtp(@RequestBody OtpRequest otpRequest) {
         otpService.sendOtp(otpRequest.toDomain());
-        return null;
+        return new OtpResponse(null, true);
     }
 
 }

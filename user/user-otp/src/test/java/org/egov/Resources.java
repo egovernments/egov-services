@@ -9,7 +9,11 @@ public class Resources {
         try {
             return IOUtils.toString(this.getClass().getClassLoader()
                     .getResourceAsStream(fileName), "UTF-8")
-                    .replace(" ", "").replace("\n", "");
+                    .replaceAll("\\s*\\{\\s*", "\\{")
+                    .replaceAll("\\s*\\}\\s*", "\\}")
+                    .replaceAll("\\s*,\\s*", ",")
+                    .replaceAll("\\s*:\\s*", ":")
+                    .replace("\n", "");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

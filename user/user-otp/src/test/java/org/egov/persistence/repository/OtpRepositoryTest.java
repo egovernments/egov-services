@@ -38,9 +38,9 @@ public class OtpRepositoryTest {
     public void test_should_return_otp_for_given_request() {
         server.expect(once(), requestTo("http://host/otp/_create"))
                 .andExpect(method(HttpMethod.POST))
-                .andExpect(content().string(resources.getFileContents("otpTokenRequest.json")))
+                .andExpect(content().string(resources.getFileContents("otpRequest.json")))
                 .andRespond(
-                        withSuccess(resources.getFileContents("otpTokenResponse.json"),
+                        withSuccess(resources.getFileContents("otpSuccessResponse.json"),
                                 MediaType.APPLICATION_JSON_UTF8));
         final OtpRequest domainOtpRequest = OtpRequest.builder()
                 .tenantId("tenantId")

@@ -15,7 +15,7 @@ import static java.lang.String.format;
 
 @Service
 public class OtpMessageRepository {
-    private static final String SMS_OTP_MESSAGE = "Use OTP {0} for portal registration.";
+    private static final String SMS_OTP_MESSAGE = "Use OTP %s for portal registration.";
     private static final String OTP_SEND_FAILURE_MESSAGE = "Sending of User OTP message failed";
     private KafkaTemplate<String, SMSRequest> kafkaTemplate;
     private String smsTopic;

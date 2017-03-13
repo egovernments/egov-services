@@ -1,5 +1,7 @@
 package org.egov.pgr;
 
+import java.util.TimeZone;
+
 import org.egov.pgr.persistence.repository.UserRepository;
 import org.egov.pgr.web.interceptor.CorrelationIdAwareRestTemplate;
 import org.egov.pgr.web.interceptor.CorrelationIdInterceptor;
@@ -35,6 +37,8 @@ public class PgrRestSpringBootApplication {
 	@Value("${egov.services.user.get_user_by_username}")
 	private String getUserByUserNameUrl;
 
+	private static final String IST = "Asia/Calcutta";
+
 	@Bean
 	public UserRepository userRepository(RestTemplate restTemplate) {
 		return new UserRepository(restTemplate, userServiceHost, getUserDetailsUrl, getUserByUserNameUrl);
@@ -67,6 +71,7 @@ public class PgrRestSpringBootApplication {
 	}
 
 	public static void main(String[] args) {
+		TimeZone.setDefault(TimeZone.getTimeZone(IST));
 		SpringApplication.run(PgrRestSpringBootApplication.class, args);
 	}
 }

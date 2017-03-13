@@ -13,14 +13,17 @@ info:
 externalDocs: 
   description: Complete documentation describing the functionality of attendance.
   url: http://182.74.137.193/docs/products/eGov%20EIS/ProdSpecs/eGov%20EIS_PSD_OS.doc
+schemes:
+  - https
+basePath: '/hr-attendance/[API endpoint]'
 # Describe your paths here
 paths:
   # This is a path endpoint. Change it.
-  /attendances:
+  /attendances/_search:
     # This is a HTTP operation
-    get:
+    post:
       # Describe this verb here. Note: you can use markdown 
-      summary: Get the list of attendances for any date for any employee based on the input.
+      summary: Get the list of attendances for any filter criteria like month, year or date for any employee based on the input.
       description: |
         Get the attendance list based on the input parameters. If one need attendance for month, then pass month and year, if one needs for a certain date, then pass only the applicable on.
       # This is array of GET operation parameters:
@@ -30,17 +33,17 @@ paths:
           description: Commmon request info for getting attendance.
           required: true
           schema:
-            $ref: 'http://localhost:8081/swagger-yaml/hr-masters.yaml/#/definitions/RequestInfo'
+            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/RequestInfo'
         - name: applicableOn
           in: query
           required: false
-          description: The date for which the attendance is needed.
+          description: The date for which the attendance is searched for.
           type: string
           format: date
         - name: month
           in: query
           required: false
-          description: The month for which the attendance is needed.
+          description: The month for which the attendance is searched for.
           type: string
         - name: year
           in: query
@@ -69,9 +72,12 @@ paths:
           format: int64
         - name: id
           in: query
-          description: Unique Id of attendance data.
+          description: List of Unique Id of attendance data.
           required: false
-          type: integer
+          type: array
+          items:
+            type: integer
+          maxItems: 300
           format: int64
         - $ref: "#/parameters/pageSize"
         - $ref: "#/parameters/pageNumber"
@@ -90,12 +96,11 @@ paths:
         '400':
           description: Invalid input.
           schema:
-            $ref: 'http://localhost:8081/swagger-yaml/hr-masters.yaml/#/definitions/ErrorRes'
-        '404':
-          $ref: "#/responses/AttendanceDoesNotExistResponse"
+            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ErrorRes'
+
       tags: 
        - Attendance
-       
+  /attendances/_create:       
     post:
       summary: Create a new attendance data for an employee or set of employees for any given date or date range.
       description: This API will be used to create an attendance data for employee(s) for a given date(s).
@@ -106,8 +111,6 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/AttendanceReq'
-
-        - $ref: "http://localhost:8081/swagger-yaml/hr-masters.yaml/#/parameters/tenantId"
       tags:
         - Attendance
       responses:
@@ -117,15 +120,16 @@ paths:
             $ref: '#/definitions/AttendanceRes'
         '400':
           description: Invalid Input.
-
-  /attendances/{employeeCode}:  
+          schema:
+            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ErrorRes'
+  
+  /attendances/{employeeId}/_update:  
     parameters:
-      - $ref: "#/parameters/code"
-    put:
+      - $ref: "#/parameters/employeeId"
+    post:
       summary: Update attendance data for a particular employee on a particular date or for any number of days.
       description: Any employee's attendance can be modified for a given date or for mutlipe days using this API.
       parameters:
-        - $ref: "http://localhost:8081/swagger-yaml/hr-masters.yaml/#/parameters/tenantId"
         - name: attendance
           in: body
           description: Request header for the attendance with new of values.
@@ -142,35 +146,8 @@ paths:
         '400':
           description: Invalid input.
           schema:
-            $ref: 'http://localhost:8081/swagger-yaml/hr-masters.yaml/#/definitions/ErrorRes'
-        '404':
-          $ref: "#/responses/EmployeeDoesNotExistResponse"
-         
-    delete:
-      summary: Delete the attendance data for the employee code passed for any number of days.
-      description: Attendance data for an employee for any specified dates can be removed using this API.
-      parameters:
-        - $ref: "http://localhost:8081/swagger-yaml/hr-masters.yaml/#/parameters/tenantId"
-        - name: attendance
-          in: body
-          description: Request header for the attendance to be deleted
-          required: true
-          schema:
-            $ref: 'http://localhost:8081/swagger-yaml/hr-masters.yaml/#/definitions/RequestInfo'
-      tags:
-        - Attendance
-      responses:
-        '204':
-          description: Attendance deleted.
-        '400':
-          description: Invalid input.
-          schema:
-            $ref: 'http://localhost:8081/swagger-yaml/hr-masters.yaml/#/definitions/ErrorRes'
-        '404':
-          $ref: "#/responses/EmployeeDoesNotExistResponse"
-
-
-
+            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ErrorRes'
+        
 definitions:
   Attendance:
     title: Attendance of an employee
@@ -181,7 +158,7 @@ definitions:
        type: integer
        format: int64
        description : Unique identifier of the attendance.
-      date:
+      attendanceDate:
         type: string
         format: date
         description: Date of attendance of the employee.
@@ -243,16 +220,17 @@ definitions:
         type: string
         format: date
         description: Date on which the role master data was last modified.
+      tenantId:
+        type: string
+        description: This is to identify which tenant this data is marked for
+        maxLength: 256
     required:
-      - id
-      - date
+      - attendanceDate
       - employee
       - month
       - year
       - type
-      - createdDate
-      - createdBy
-  
+      - tenantId
   AttendanceType:
     description: This is a set up object which contains the different types of attendance marking that is possible in the system. Based on holiday, present, leave etc, the value will change.
     properties:
@@ -270,16 +248,19 @@ definitions:
         description: The description of the attendance type.
         minLength: 3
         maxLength: 100
+      tenantId:
+        type: string
+        description: This is to identify which tenant this data is marked for
+        maxLength: 256
     required:
-      - id
       - code
       - description
-
+      - tenantId
   AttendanceReq:
     type: object
     properties:
       RequestInfo:
-        $ref: 'http://localhost:8081/swagger-yaml/hr-masters.yaml/#/definitions/RequestInfo'
+        $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/RequestInfo'
       Attendance:
         type: array
         items:
@@ -289,7 +270,7 @@ definitions:
     type: object
     properties:
       ResponseInfo:
-        $ref: 'http://localhost:8081/swagger-yaml/hr-masters.yaml/#/definitions/ResponseInfo'
+        $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ResponseInfo'
       Attendance:
         type: array
         items:
@@ -297,19 +278,14 @@ definitions:
           
 
 parameters:
-  code:
-    name: employeeCode
+  employeeId:
+    name: employeeId
     in: path
     required: true
-    description: The employee's code.
-    type: string
-    minLength: 0
-    maxLength: 256
-    exclusiveMinimum: true
-    exclusiveMaximum: false
+    description: The employee's unique Id.
+    type: integer
+    format: int64
     
-
-
   sortAttendance:
     name: sort
     in: query
@@ -321,9 +297,9 @@ parameters:
     collectionFormat: pipes
     items:
       type: string
-      pattern: '[-+](date|employee|type)'
+      pattern: '[-+](attendanceDate|employee|type)'
     default:
-      - +date
+      - +attendanceDate
       - +employee
       
   pageSize:
@@ -343,13 +319,7 @@ parameters:
     description: Page number
     type: integer
     default: 1
-#  $ref: http://localhost:8081/swagger-yaml/leave.yaml
-responses:
-  EmployeeDoesNotExistResponse:
-    description: Employee does not exist.
-  AttendanceDoesNotExistResponse:
-    description: Attendance does not exist.
+
 tags:
   - name: Attendance
     description: Everything you need to handle Employee attendance.
-

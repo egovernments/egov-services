@@ -8,8 +8,6 @@ import org.egov.asset.contract.AssetCategoryRequest;
 import org.egov.asset.contract.RequestInfo;
 import org.egov.asset.model.AssetCategory;
 import org.egov.asset.model.AssetCategoryCriteria;
-import org.egov.asset.model.enums.AssetCategoryType;
-import org.egov.asset.model.enums.DepreciationMethod;
 import org.egov.asset.repository.builder.AssetCategoryQueryBuilder;
 import org.egov.asset.repository.rowmapper.AssetCategoryRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,6 +69,7 @@ public class AssetCategoryRepository {
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
+		
 		//TODO depreciationrate as of now hardcoded as  3L
 		Object[] obj = new Object[] {assetCategory.getName(), assetCategory.getCode(), assetCategory.getParent(),
 				assetCategoryType, depreciationMethod,3L, assetCategory.getAssetAccount(), assetCategory.getAccumulatedDepreciationAccount(),

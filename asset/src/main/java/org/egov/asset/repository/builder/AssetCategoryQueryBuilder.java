@@ -18,6 +18,7 @@ public class AssetCategoryQueryBuilder {
 		//addOrderByClause(selectQuery, assetCategoryCriteria);
 		//addPagingClause(selectQuery, preparedStatementValues, assetCategoryCriteria);
 		System.out.println("selectQuery::"+selectQuery);
+		System.out.println(preparedStatementValues);
 		return selectQuery.toString();
 	}
 	
@@ -35,7 +36,8 @@ public class AssetCategoryQueryBuilder {
 			AssetCategoryCriteria assetCategoryCriteria) {
 		
 		if (assetCategoryCriteria.getId() == null && assetCategoryCriteria.getName() == null
-				&& assetCategoryCriteria.getCode() == null&& assetCategoryCriteria.getAssetCategoryType().isEmpty())
+				&& assetCategoryCriteria.getCode() == null && assetCategoryCriteria.getTenantId() == null
+				&& assetCategoryCriteria.getAssetCategoryType().isEmpty())
 			return;
 		
 		selectQuery.append(" WHERE");
@@ -52,6 +54,19 @@ public class AssetCategoryQueryBuilder {
 			selectQuery.append(" assetcategory.id = ?");
 			preparedStatementValues.add(assetCategoryCriteria.getId());
 		}
+		
+		if (assetCategoryCriteria.getName() != null) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" assetcategory.name = ?");
+			preparedStatementValues.add(assetCategoryCriteria.getName());
+		}
+		
+		if (assetCategoryCriteria.getCode() != null) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" assetcategory.code = ?");
+			preparedStatementValues.add(assetCategoryCriteria.getCode());
+		}
+		
 		if (assetCategoryCriteria.getAssetCategoryType() != null && assetCategoryCriteria.getAssetCategoryType().size()!=0) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" assetcategory.assetcategorytype IN ("+getAssetCategoryTypeQuery(assetCategoryCriteria.getAssetCategoryType()));

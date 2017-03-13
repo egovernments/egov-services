@@ -12,7 +12,7 @@ public class AssetProducer {
     private KafkaTemplate<String, Object> kafkaTemplate;
 
     public void sendMessage(String topic, String key, Object message) {
-        ListenableFuture<SendResult<String, Object>> future = kafkaTemplate.send(topic, key ,message);
+        ListenableFuture<SendResult<String, Object>> future = kafkaTemplate.send(topic, key, message);
         future.addCallback(
                 new ListenableFutureCallback<SendResult<String, Object>>() {
                     @Override

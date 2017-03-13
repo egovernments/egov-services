@@ -70,8 +70,8 @@ public class AssetConsumerConfig {
 	    }
 
 	    @Bean
-	    public SaveAssetCategoryConsumer listener() {
-	        return new SaveAssetCategoryConsumer();
+	    public AssetConsumers listener() {
+	        return new AssetConsumers();
 	    }
 	    
 	    

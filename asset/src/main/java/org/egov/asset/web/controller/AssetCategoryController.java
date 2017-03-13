@@ -28,44 +28,47 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/assetCategories")
 public class AssetCategoryController {
 	private static final Logger logger = LoggerFactory.getLogger(AssetCategoryController.class);
-	
+
 	@Autowired
-	private AssetCategoryService  assetCategoryService;
-	
+	private AssetCategoryService assetCategoryService;
+
 	@Autowired
 	private ApplicationProperties applicationProperties;
-	
-	
+
 	@PostMapping("/_search")
 	@ResponseBody
-	public ResponseEntity<?> search(@RequestBody RequestInfo requestInfo ,@ModelAttribute AssetCategoryCriteria assetCategoryCriteria,BindingResult bindingResult){
-		if(bindingResult.hasErrors()){
+	public ResponseEntity<?> search(@RequestBody RequestInfo requestInfo,
+			@ModelAttribute AssetCategoryCriteria assetCategoryCriteria, BindingResult bindingResult) {
+		
+		if (bindingResult.hasErrors()) {
 			return null;
 		}
-		List<AssetCategory> assetCategories=assetCategoryService.search(assetCategoryCriteria);
-		AssetCategoryResponse response=new AssetCategoryResponse();
+		List<AssetCategory> assetCategories = assetCategoryService.search(assetCategoryCriteria);
+		AssetCategoryResponse response = new AssetCategoryResponse();
 		response.setAssetCategory(assetCategories);
-		
+
 		return new ResponseEntity<AssetCategoryResponse>(response, HttpStatus.OK);
 	}
-	
+
 	@PostMapping("/_create")
 	@ResponseBody
-	public ResponseEntity<?> create(@RequestBody @Valid AssetCategoryRequest assetCategoryRequest,BindingResult bindingResult){
-		logger.info("AssetCategory create::"+assetCategoryRequest);
-		if(bindingResult.hasErrors()){
+	public ResponseEntity<?> create(@RequestBody @Valid AssetCategoryRequest assetCategoryRequest,
+			BindingResult bindingResult) {
+		logger.info("AssetCategory create::" + assetCategoryRequest);
+		if (bindingResult.hasErrors()) {
 			System.out.println("has error");
 			return null;
 		}
-		Boolean isAsync=applicationProperties.getAssetCategoryAsync();
-		AssetCategoryResponse response=null;
-		
-		if(isAsync) {
-			response=assetCategoryService.createAsync("save-assetcategory-db","assetCategoryInsert",assetCategoryRequest);
+		Boolean isAsync = applicationProperties.getAssetCategoryAsync();
+		AssetCategoryResponse response = null;
+
+		if (isAsync) {
+			response = assetCategoryService.createAsync("save-assetcategory-db", "assetCategoryInsert",
+					assetCategoryRequest);
 		} else {
-			response=assetCategoryService.create(assetCategoryRequest);
+			response = assetCategoryService.create(assetCategoryRequest);
 		}
-		
+
 		return new ResponseEntity<AssetCategoryResponse>(response, HttpStatus.CREATED);
 	}
 }

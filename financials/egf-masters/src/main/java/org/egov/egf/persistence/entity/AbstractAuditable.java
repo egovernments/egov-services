@@ -41,7 +41,6 @@
 package org.egov.egf.persistence.entity;
 
 import java.util.Date;
-import java.util.Set;
 
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
@@ -49,6 +48,7 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -56,20 +56,16 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@MappedSuperclass 
+@MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public abstract @Data class AbstractAuditable extends AbstractPersistable<Long> {
 
     private static final long serialVersionUID = 7138056997693406739L;
-   
+
     public abstract Long getId();
-    
+
     @CreatedBy
     private Long createdBy;
 
@@ -84,47 +80,48 @@ public abstract @Data class AbstractAuditable extends AbstractPersistable<Long> 
     @LastModifiedDate
     private Date lastModifiedDate;
 
-	public Long getCreatedBy() {
-		return createdBy;
-	}
+    @NotNull
+    private String tenantId;
 
-	public void setCreatedBy(Long createdBy) {
-		this.createdBy = createdBy;
-	}
+    public Long getCreatedBy() {
+        return createdBy;
+    }
 
-	public Date getCreatedDate() {
-		return createdDate;
-	}
+    public void setCreatedBy(Long createdBy) {
+        this.createdBy = createdBy;
+    }
 
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
+    public Date getCreatedDate() {
+        return createdDate;
+    }
 
-	public Long getLastModifiedBy() {
-		return lastModifiedBy;
-	}
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
 
-	public void setLastModifiedBy(Long lastModifiedBy) {
-		this.lastModifiedBy = lastModifiedBy;
-	}
+    public Long getLastModifiedBy() {
+        return lastModifiedBy;
+    }
 
-	public Date getLastModifiedDate() {
-		return lastModifiedDate;
-	}
+    public void setLastModifiedBy(Long lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
 
-	public void setLastModifiedDate(Date lastModifiedDate) {
-		this.lastModifiedDate = lastModifiedDate;
-	}
-   
-	@PrePersist
-	@PreUpdate
-	public void addAuditFields()
-	{
-		if(getId()==null)
-		{
-			this.createdDate=new Date();
-		}
-		this.lastModifiedDate=new Date();
-	}
-	
+    public Date getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(Date lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
+
+    @PrePersist
+    @PreUpdate
+    public void addAuditFields() {
+        if (getId() == null) {
+            this.createdDate = new Date();
+        }
+        this.lastModifiedDate = new Date();
+    }
+
 }

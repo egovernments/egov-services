@@ -51,7 +51,7 @@ import org.egov.eis.web.contract.AssignmentResponse;
 import org.egov.eis.web.contract.RequestInfo;
 import org.egov.eis.web.contract.ResponseInfo;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
-import org.egov.eis.web.errorhandlers.ErrorHandler;
+import org.egov.eis.web.errorhandler.ErrorHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -135,6 +135,8 @@ $(document).ready(function()
 			req_obj.ServiceRequest.values['ComplaintStatus'] = $('#status').val();
 			req_obj.ServiceRequest.values['approvalComments'] = $('#approvalComment').val();
 			req_obj.ServiceRequest.values['userId'] = 67;
+			req_obj.ServiceRequest.values['assignment_id'] = req_obj.ServiceRequest.values['assigneeId'];
+			delete req_obj.ServiceRequest.values['assigneeId'];
 			req_obj.ServiceRequest.values['locationId'] = req_obj.ServiceRequest.values['LocationId'];
 			delete req_obj.ServiceRequest.values['LocationId'];
 			req_obj.ServiceRequest.values['childLocationId'] = req_obj.ServiceRequest.values['ChildLocationId'];

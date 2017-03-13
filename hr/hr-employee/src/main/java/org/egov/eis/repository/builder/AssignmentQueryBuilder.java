@@ -61,9 +61,8 @@ public class AssignmentQueryBuilder {
 			+ " a.functionaryId as a_functionaryId, a.functionId as a_functionId, a.designationId as a_designationId,"
 			+ " a.departmentId as a_departmentId, a.isPrimary as a_isPrimary, a.fromDate as a_fromDate,"
 			+ " a.toDate as a_toDate, a.gradeId as a_gradeId, a.govtOrderNumber as a_govtOrderNumber,"
-			+ " a.createdBy as a_createdBy, a.createdDate as a_createdDate,"
-			+ " a.lastModifiedBy as a_lastModifiedBy, a.lastModifiedDate as a_lastModifiedDate,"
-			+ " a.tenantId as a_tenantId,"
+			+ " a.createdBy as a_createdBy, a.createdDate as a_createdDate, a.lastModifiedBy as a_lastModifiedBy,"
+			+ " a.lastModifiedDate as a_lastModifiedDate, a.tenantId as a_tenantId,"
 			+ " hod.id as hod_id, hod.departmentId as hod_departmentId"
 			+ " FROM egeis_employee e"
 			+ " JOIN egeis_assignment a ON a.employeeId = e.id"
@@ -123,9 +122,9 @@ public class AssignmentQueryBuilder {
 	}
 
 	private void addOrderByClause(StringBuilder selectQuery, AssignmentGetRequest assignmentGetRequest) {
-		String sortBy = (assignmentGetRequest.getSortBy() == null ? "a.fromDate" : assignmentGetRequest.getSortBy());
+		String sortBy = (assignmentGetRequest.getSortBy() == null ? "fromDate" : assignmentGetRequest.getSortBy());
 		String sortOrder = (assignmentGetRequest.getSortOrder() == null ? "DESC" : assignmentGetRequest.getSortOrder());
-		selectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);
+		selectQuery.append(" ORDER BY a." + sortBy + " " + sortOrder);
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })

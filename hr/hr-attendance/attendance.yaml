@@ -1,0 +1,325 @@
+# Example YAML to get you started quickly.
+# Be aware that YAML has indentation based scoping.
+# Code completion support is available so start typing for available options.
+swagger: '2.0'
+
+# This is your document metadata
+info:
+  version: "1.0.0"
+  title: Employee Information System APIs- Attendance
+  description: All APIs related to employee attendance are listed here.
+  contact:
+    name: Elzan Mathew
+externalDocs: 
+  description: Complete documentation describing the functionality of attendance.
+  url: http://182.74.137.193/docs/products/eGov%20EIS/ProdSpecs/eGov%20EIS_PSD_OS.doc
+schemes:
+  - https
+basePath: '/hr-attendance/[API endpoint]'
+# Describe your paths here
+paths:
+  # This is a path endpoint. Change it.
+  /attendances/_search:
+    # This is a HTTP operation
+    post:
+      # Describe this verb here. Note: you can use markdown 
+      summary: Get the list of attendances for any filter criteria like month, year or date for any employee based on the input.
+      description: |
+        Get the attendance list based on the input parameters. If one need attendance for month, then pass month and year, if one needs for a certain date, then pass only the applicable on.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Commmon request info for getting attendance.
+          required: true
+          schema:
+            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/RequestInfo'
+        - name: applicableOn
+          in: query
+          required: false
+          description: The date for which the attendance is searched for.
+          type: string
+          format: date
+        - name: month
+          in: query
+          required: false
+          description: The month for which the attendance is searched for.
+          type: string
+        - name: year
+          in: query
+          required: false
+          description: The calander year name for which the attendance is needed.
+          type: integer
+        - name: code
+          in: query
+          required: false
+          description: The employee's code for whom the attendance is requested.
+          type: string
+          maxLength: 256
+          exclusiveMinimum: true
+          exclusiveMaximum: false
+        - name: departmentId
+          in: query
+          description: Unique Department Id for which the employee belongs to as primary assignment.
+          required: false
+          type: integer
+          format: int64
+        - name: designationId
+          in: query
+          description: Unique Designation Id for which the employee belongs to as primary assignment.
+          required: false
+          type: integer
+          format: int64
+        - name: id
+          in: query
+          description: List of Unique Id of attendance data.
+          required: false
+          type: array
+          items:
+            type: integer
+          maxItems: 300
+          format: int64
+        - $ref: "#/parameters/pageSize"
+        - $ref: "#/parameters/pageNumber"
+        - $ref: "http://localhost:8081/swagger-yaml/hr-masters.yaml/#/parameters/tenantId"
+        - $ref: "#/parameters/sortAttendance"
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Successful response
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "#/definitions/AttendanceRes"
+ 
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ErrorRes'
+
+      tags: 
+       - Attendance
+  /attendances/_create:       
+    post:
+      summary: Create a new attendance data for an employee or set of employees for any given date or date range.
+      description: This API will be used to create an attendance data for employee(s) for a given date(s).
+      parameters:
+        - name: attendance
+          in: body
+          description: Details for the new attendance.
+          required: true
+          schema:
+            $ref: '#/definitions/AttendanceReq'
+      tags:
+        - Attendance
+      responses:
+        '201':
+          description: Attendance created sucessfully.
+          schema:
+            $ref: '#/definitions/AttendanceRes'
+        '400':
+          description: Invalid Input.
+          schema:
+            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ErrorRes'
+  
+  /attendances/{employeeId}/_update:  
+    parameters:
+      - $ref: "#/parameters/employeeId"
+    post:
+      summary: Update attendance data for a particular employee on a particular date or for any number of days.
+      description: Any employee's attendance can be modified for a given date or for mutlipe days using this API.
+      parameters:
+        - name: attendance
+          in: body
+          description: Request header for the attendance with new of values.
+          required: true
+          schema:
+            $ref: '#/definitions/AttendanceReq'
+      tags:
+        - Attendance
+      responses:
+        '200':
+          description: Attendance updated.
+          schema:
+            $ref: '#/definitions/AttendanceRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ErrorRes'
+        
+definitions:
+  Attendance:
+    title: Attendance of an employee
+    description: Employee attendance will be marked day wise. Holidays will be marked as `H` and present will be marked as `P`.
+    type: object
+    properties:
+      id:
+       type: integer
+       format: int64
+       description : Unique identifier of the attendance.
+      attendanceDate:
+        type: string
+        format: date
+        description: Date of attendance of the employee.
+      employee:
+        type: integer
+        format: int64
+        description: Unique Employee Id to whom this attendance data belongs to.
+      month:
+        type: string 
+        description: The month for which this attendance belongs to.
+        minLength: 3
+        maxLength: 20
+      year:
+        type: string
+        description: Calander year for which this attendance belongs to.
+        minLength: 4
+        maxLength: 4
+      type:
+        type: object
+        description: |
+        
+          The attendance type applicable to this employee as on this date, based on if he/she was on leave or absent or holiday etc. Various types available in the system are-
+          
+          type  | definition
+          ----- |-----------
+              1 |Present
+              2	|Absent
+              3 |CompOff
+              4	|LeavePaid
+              5	|HalfPresent
+              6	|HalfLeavePaid
+              7	|TwoHalfLeavesPaid
+              8	|LeaveUnpaid
+              9	|HalfLeaveUnpaid
+              10|TwoHalfLeavesUnpaid
+              11|OverTime
+              12|CompOffElligibe
+              13|Holiday
+
+        items:
+         $ref: "#/definitions/AttendanceType"
+      remarks:
+        type: string
+        description: any general remark regarding that day attendance.
+        maxLength: 200
+      createdBy:
+        type: integer
+        format: int64
+        description: Id of the user who created the record. 
+      createdDate:
+        type: string
+        format: date
+        description: Date on which the role master data was added into the system.
+      lastModifiedBy:
+        type: integer
+        format: int64
+        description: Id of the user who last modified the record. 
+      lastModifiedDate:
+        type: string
+        format: date
+        description: Date on which the role master data was last modified.
+      tenantId:
+        type: string
+        description: This is to identify which tenant this data is marked for
+        maxLength: 256
+    required:
+      - attendanceDate
+      - employee
+      - month
+      - year
+      - type
+      - tenantId
+  AttendanceType:
+    description: This is a set up object which contains the different types of attendance marking that is possible in the system. Based on holiday, present, leave etc, the value will change.
+    properties:
+      id:
+       type: integer
+       format: int64
+       description : Unique identifier of the attendance.
+      code:
+        type: string
+        description: The unique code to identify the attendance type.
+        minLength: 1
+        maxLength: 3
+      description:
+        type: string
+        description: The description of the attendance type.
+        minLength: 3
+        maxLength: 100
+      tenantId:
+        type: string
+        description: This is to identify which tenant this data is marked for
+        maxLength: 256
+    required:
+      - code
+      - description
+      - tenantId
+  AttendanceReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/RequestInfo'
+      Attendance:
+        type: array
+        items:
+          $ref: '#/definitions/Attendance'
+
+  AttendanceRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ResponseInfo'
+      Attendance:
+        type: array
+        items:
+          $ref: '#/definitions/Attendance'
+          
+
+parameters:
+  employeeId:
+    name: employeeId
+    in: path
+    required: true
+    description: The employee's unique Id.
+    type: integer
+    format: int64
+    
+  sortAttendance:
+    name: sort
+    in: query
+    description: Result will be sorted by date and employee code ascending by default if this parameter is not provided.
+    type: array
+    uniqueItems: true
+    minItems: 1
+    maxItems: 3
+    collectionFormat: pipes
+    items:
+      type: string
+      pattern: '[-+](attendanceDate|employee|type)'
+    default:
+      - +attendanceDate
+      - +employee
+      
+  pageSize:
+    name: pageSize
+    in: query
+    description: Number of records returned.
+    type: integer
+    minimum: 0
+    exclusiveMinimum: true
+    maximum: 1000
+    exclusiveMaximum: false
+    multipleOf: 10
+    default: 50
+  pageNumber:
+    name: pageNumber
+    in: query
+    description: Page number
+    type: integer
+    default: 1
+
+tags:
+  - name: Attendance
+    description: Everything you need to handle Employee attendance.

@@ -119,12 +119,13 @@
                                     <excludes>
                                         <exclude>org.egov.UserOtpApplication</exclude>
                                         <exclude>org.egov.web.contract.*</exclude>
+                                        <exclude>org.egov.persistence.contract.*</exclude>
                                     </excludes>
                                     <limits>
                                         <limit>
                                             <counter>LINE</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.00</minimum>
+                                            <minimum>0.90</minimum>
                                         </limit>
                                     </limits>
                                 </rule>
@@ -135,7 +136,7 @@
                                         <limit>
                                             <counter>COMPLEXITY</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.2</minimum>
+                                            <minimum>0.5</minimum>
                                         </limit>
                                     </limits>
                                 </rule>

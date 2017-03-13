@@ -40,9 +40,6 @@
 
 package org.egov.eis.web.contract;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.egov.eis.model.Employee;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -66,6 +63,6 @@ public class EmployeeRequest {
 	private RequestInfo requestInfo;
 
 	@JsonProperty("Employee")
-	private List<Employee> employee = new ArrayList<Employee>();
+	private Employee employee;
 
 }

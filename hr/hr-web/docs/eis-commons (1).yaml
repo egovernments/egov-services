@@ -1,0 +1,1879 @@
+# Example YAML to get you started quickly.
+# Be aware that YAML has indentation based scoping.
+# Code completion support is available so start typing for available options.
+swagger: '2.0'
+
+# This is your document metadata
+info:
+  version: "1.0.0"
+  title: Employee Information System APIs
+  description: All APIs available from common definitions.
+  contact:
+    name: Elzan Mathew
+
+# Describe your paths here
+paths:
+  # This is a path endpoint. Change it.
+  /languages:
+    # This is a HTTP operation
+    get:
+      # Describe this verb here. Note: you can use markdown 
+      summary: Get the list of language defined.
+      description: |
+        Get the language master data.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: request_info
+          in: body
+          description: Commmon request info for getting language.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - $ref: "#/parameters/tenantId"
+        - name: name
+          in: query
+          required: false
+          type: string
+          format: varchar
+          description: Name of the language.
+        - name: active
+          in: query
+          description: True will be set in cases where only active languages are needed and False will be set when inactive languages are needed and no value will be set when all languages are needed.
+          required: false
+          type: boolean
+          format: varchar
+          default: true
+          allowEmptyValue: true
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Successful response
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "#/definitions/LanguageRes"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        '404':
+          description: language not found.
+
+      tags: 
+       - Language
+       
+    post:
+      summary: Create a new Language.
+      description: To create a new Language we can use POST and set all the required and non-mandatory parameters.
+      parameters:
+        - name: language
+          in: body
+          description: Details for the new language .
+          required: true
+          schema:
+            $ref: '#/definitions/LanguageReq'
+
+        - $ref: "#/parameters/tenantId"
+      tags:
+        - Language
+      responses:
+        '201':
+          description: Language created sucessfully.
+          schema:
+            $ref: '#/definitions/LanguageRes'
+        '400':
+          description: Invalid input.
+          
+  /languages/{name}:   
+    parameters:
+      - $ref: "#/parameters/languageName"
+    put:
+      summary: Update existing language data for the name
+      description: To update an existing language master data.
+      parameters:
+        - $ref: "#/parameters/tenantId"
+        - name: language
+          in: body
+          description: Request header for the language with new of values.
+          required: true
+          schema:
+            $ref: '#/definitions/LanguageReq'
+      tags:
+        - Language
+      responses:
+        '200':
+          description: Language updated.
+          schema:
+            $ref: '#/definitions/LanguageRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        '404':
+          description: Language not found.
+        
+    delete:
+      summary: Delete the language data for the name.
+      description: To delete an existing language, mark the data as inactive and not physically remove it.
+      parameters:
+        - $ref: "#/parameters/tenantId"
+        - name: language
+          in: body
+          description: Request header for the language to be deleted
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+      tags:
+        - Language
+      responses:
+        '204':
+          description: Language deleted.
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        '404':
+          description: Language not found.
+                     
+  /religions:
+    # This is a HTTP operation
+    get:
+      # Describe this verb here. Note: you can use markdown 
+      summary: Get the list of religion defined.
+      description: |
+        Get the religion master data.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: request_info
+          in: body
+          description: Commmon request info for getting religion.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - $ref: "#/parameters/tenantId"
+        - name: name
+          in: query
+          required: false
+          description: The name of the religion.
+          type: string
+          minLength: 0
+          maxLength: 256
+          exclusiveMinimum: true
+          exclusiveMaximum: false 
+        - name: active
+          in: query
+          description: True will be set in cases where only active religions are needed and False will be set when inactive religions are needed and no value will be set when all religions are needed.
+          required: false
+          type: boolean
+          format: varchar
+          default: true
+          allowEmptyValue: true
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Successful response.
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "#/definitions/ReligionRes"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        '404':
+          description: Religion not found.
+
+      tags: 
+       - Religion
+    post:
+      summary: Create a new religion.
+      description: To create a new religion we can use POST and set all the required and non-mandatory parameters.
+      parameters:
+        - name: religion
+          in: body
+          description: Details for the new religion .
+          required: true
+          schema:
+            $ref: '#/definitions/ReligionReq'
+        - $ref: "#/parameters/tenantId"
+      tags:
+        - Religion
+      responses:
+        '201':
+          description: Religion created sucessfully.
+          schema:
+            $ref: '#/definitions/ReligionRes'
+        '400':
+          description: Invalid input.
+          
+  /religion/{name}: 
+    parameters:
+      - $ref: "#/parameters/religionName"
+    put:
+      summary: Update existing religion data for the name passed
+      description: To update an existing religion master data.
+      parameters:
+        - $ref: "#/parameters/tenantId"
+        - name: religion
+          in: body
+          description: Request header for the religion with new of values.
+          required: true
+          schema:
+            $ref: '#/definitions/ReligionReq'
+      tags:
+        - Religion
+      responses:
+        '200':
+          description: Religion updated.
+          schema:
+            $ref: '#/definitions/ReligionRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        '404':
+          description: Religion not found.
+        
+    delete:
+      summary: Delete the religion data for the name.
+      description: To delete an existing religion for the religion name passed system will mark this record as inactive.
+      parameters:
+        - $ref: "#/parameters/tenantId"
+        - name: religion
+          in: body
+          description: Request header for the religion to be deleted
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+      tags:
+        - Religion  
+      responses:
+        '204':
+          description: Religion deleted.
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        '404':
+          description: Religion not found.
+                                 
+  /communities:
+    # This is a HTTP operation
+    get:
+      # Describe this verb here. Note: you can use markdown 
+      summary: Get the list of community defined.
+      description: |
+        Get the community master data.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: request_info
+          in: body
+          description: Commmon request info for getting community.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - $ref: "#/parameters/tenantId"
+        - name: name
+          in: query
+          description: Name of the community.
+          required: false
+          type: string
+          format: varchar 
+        - name: active
+          in: query
+          description: True will be set in cases where only active communities are needed and False will be set when inactive communities are needed and no value will be set when all communities are needed.
+          required: false
+          type: boolean
+          format: varchar
+          default: true
+          allowEmptyValue: true    
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Successful response
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "#/definitions/CommunityRes"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        '404':
+          description: Communities not found.
+
+      tags: 
+       - Community
+       
+    post:
+      summary: Create a new community.
+      description: To create a new community we can use POST and set all the required and non-mandatory parameters.
+      parameters:
+        - name: community
+          in: body
+          description: Details for the new community .
+          required: true
+          schema:
+            $ref: '#/definitions/CommunityReq'
+        - $ref: "#/parameters/tenantId"
+      tags:
+        - Community
+      responses:
+        '201':
+          description: Community created sucessfully.
+          schema:
+            $ref: '#/definitions/CommunityRes'
+        '400':
+          description: Invalid input.
+  
+  /community/{name}:
+    parameters:
+      - $ref: "#/parameters/communityName"
+    put:
+      summary: Update existing community
+      description: To update an existing community master data.
+      parameters:
+        - $ref: "#/parameters/tenantId"
+        - name: community
+          in: body
+          description: Request header for the community with new of values.
+          required: true
+          schema:
+            $ref: '#/definitions/CommunityReq'
+      tags:
+        - Community
+      responses:
+        '200':
+          description: Community updated.
+          schema:
+            $ref: '#/definitions/CommunityRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        '404':
+          description: Community not found.
+        
+    delete:
+      summary: Delete the community data.
+      description: To delete an existing community data one needs to set it as inactive.
+      parameters:
+        - $ref: "#/parameters/tenantId"
+        - name: community
+          in: body
+          description: Request header for the community to be deleted
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+      tags:
+        - Community  
+      responses:
+        '204':
+          description: Community deleted.
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        '404':
+          description: Community not found.
+
+  /departments:
+    # This is a HTTP operation
+    get:
+      # Describe this verb here. Note: you can use markdown 
+      summary: Get the list of departments defined in the system or a particular department.
+      description: Get the department master data for the parameter values.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: request_info
+          in: body
+          description: Commmon request info for getting department.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - $ref: "#/parameters/tenantId"
+        - name: code
+          in: query
+          description: Code of the department.
+          required: false
+          type: string
+          format: varchar
+        - name: active
+          in: query
+          description: True will be set in cases where only active departments are needed and False will be set when inactive departments are needed and no value will be set when all departments are needed.
+          required: false
+          type: boolean
+          format: varchar
+          default: true
+          allowEmptyValue: true
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Successful response
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "#/definitions/DepartmentRes"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        '404':
+          description: Department not found.
+
+      tags: 
+       - Department
+       
+    post:
+      summary: Create a new Department.
+      description: To create a new department we need to call POST.
+      parameters:
+        - name: department
+          in: body
+          description: Details for the new department .
+          required: true
+          schema:
+            $ref: '#/definitions/DepartmentReq'
+
+        - $ref: "#/parameters/tenantId"
+      tags:
+        - Department
+      responses:
+        '201':
+          description: Department created sucessfully.
+          schema:
+            $ref: '#/definitions/DepartmentRes'
+        '400':
+          description: Invalid input.
+          
+  /department/{code}: 
+   parameters:
+    - $ref: "#/parameters/departmentCode"
+   put:
+      summary: Update existing department data for the code passed
+      description: To update an existing department master data.
+      parameters:
+        - $ref: "#/parameters/tenantId"
+        - name: department
+          in: body
+          description: Request header for the department with new of values.
+          required: true
+          schema:
+            $ref: '#/definitions/DepartmentReq'
+      tags:
+        - Department
+      responses:
+        '200':
+          description: Department updated.
+          schema:
+            $ref: '#/definitions/DepartmentRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        '404':
+          description: Department not found.
+   delete:
+      summary: Delete a particular department master data.
+      description: To delete an existing department master data one nees to make it inactive. System should not allow physical deletion of data.
+      parameters:
+        - $ref: "#/parameters/tenantId"
+        - name: department
+          in: body
+          description: Request header for the department to be deleted
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+      tags:
+        - Department
+      responses:
+        '204':
+          description: Department deleted.
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        '404':
+          description: Department not found.
+  
+  /designations:
+    # This is a HTTP operation
+    get:
+      # Describe this verb here. Note: you can use markdown 
+      summary: Get the list of designations defined in the system or a particular designation.
+      description: Get the designation master data for the parameter values.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: request_info
+          in: body
+          description: Commmon request info for getting designation.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - $ref: "#/parameters/tenantId"
+        - $ref: "#/parameters/sortDesignations"
+        - name: code
+          in: query
+          description: Code of the designation.
+          required: false
+          type: string
+          format: varchar
+        - name: name
+          in: query
+          description: Name of the designation.
+          required: false
+          type: string
+          format: varchar
+        - name: active
+          in: query
+          description: True will be set in cases where only active designation are needed and False will be set when inactive designation are needed and no value will be set when all designation are needed.
+          required: false
+          type: boolean
+          format: varchar
+          default: true
+          allowEmptyValue: true
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Successful response
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "#/definitions/DesignationRes"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        '404':
+          description: Designation not found.
+
+      tags: 
+       - Designation
+       
+    post:
+      summary: Create a new Designation.
+      description: To create a new designation we need to call POST.
+      parameters:
+        - name: designation
+          in: body
+          description: Details for the new designation .
+          required: true
+          schema:
+            $ref: '#/definitions/DesignationReq'
+
+        - $ref: "#/parameters/tenantId"
+      tags:
+        - Designation
+      responses:
+        '201':
+          description: Designation created sucessfully.
+          schema:
+            $ref: '#/definitions/DesignationRes'
+        '400':
+          description: Invalid input.
+          
+  /designation/{code}: 
+   parameters:
+    - $ref: "#/parameters/designationCode"
+   put:
+      summary: Update existing designation data for the code passed
+      description: To update an existing designation master data.
+      parameters:
+        - $ref: "#/parameters/tenantId"
+        - name: designation
+          in: body
+          description: Request header for the designation with new of values.
+          required: true
+          schema:
+            $ref: '#/definitions/DesignationReq'
+      tags:
+        - Designation
+      responses:
+        '200':
+          description: Designation updated.
+          schema:
+            $ref: '#/definitions/DesignationRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        '404':
+          description: Designation not found.
+   delete:
+      summary: Delete a particular designation master data.
+      description: To delete an existing designation master data one needs to make it inactive. System should not allow physical deletion of data.
+      parameters:
+        - $ref: "#/parameters/tenantId"
+        - name: designation
+          in: body
+          description: Request header for the designation to be deleted.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+      tags:
+        - Designation
+      responses:
+        '204':
+          description: Designation deleted.
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        '404':
+          description: Designation not found.                   
+  /positions:
+    # This is a HTTP operation
+    get:
+      # Describe this verb here. Note: you can use markdown 
+      summary: Get the list of positions defined in the system or a particular position.
+      description: Get the position master data for the parameter values.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: request_info
+          in: body
+          description: Commmon request info for getting position.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - $ref: "#/parameters/tenantId"
+        - name: name
+          in: query
+          description: Code of the position.
+          required: false
+          type: string
+          format: varchar
+        - name: deptdesig.department_code
+          in: query
+          description: Code of the department associated with the position.
+          required: false
+          type: string
+          format: varchar
+        - name: deptdesig.designation_code
+          in: query
+          description: Code of the designation associated with the position.
+          required: false
+          type: string
+          format: varchar
+        - name: active
+          in: query
+          description: True will be set in cases where only active position are needed and False will be set when inactive position are needed and no value will be set when all positions are needed.
+          required: false
+          type: boolean
+          format: varchar
+          default: true
+          allowEmptyValue: true
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Successful response
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "#/definitions/PositionRes"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        '404':
+          description: Position not found.
+
+      tags: 
+       - Position
+       
+    post:
+      summary: Create a new Position.
+      description: To create a new position we need to call POST.
+      parameters:
+        - name: position
+          in: body
+          description: Details for the new position .
+          required: true
+          schema:
+            $ref: '#/definitions/PositionReq'
+
+        - $ref: "#/parameters/tenantId"
+      tags:
+        - Position
+      responses:
+        '201':
+          description: Position created sucessfully.
+          schema:
+            $ref: '#/definitions/PositionRes'
+        '400':
+          description: Invalid input.
+          
+  /position/{name}: 
+   parameters:
+    - $ref: "#/parameters/positionName"
+   put:
+      summary: Update existing position data for the name passed
+      description: To update an existing position master data.
+      parameters:
+        - $ref: "#/parameters/tenantId"
+        - name: position
+          in: body
+          description: Request header for the position with new of values.
+          required: true
+          schema:
+            $ref: '#/definitions/PositionReq'
+      tags:
+        - Position
+      responses:
+        '200':
+          description: Position updated.
+          schema:
+            $ref: '#/definitions/PositionRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        '404':
+          description: Position not found.
+   delete:
+      summary: Delete a particular position master data.
+      description: To delete an existing position master data one needs to make it inactive. System should not allow physical deletion of data.
+      parameters:
+        - $ref: "#/parameters/tenantId"
+        - name: position
+          in: body
+          description: Request header for the position to be deleted.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+      tags:
+        - Position
+      responses:
+        '204':
+          description: Position deleted.
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        '404':
+          description: Position not found.                             
+  /positionhierarchies:
+    # This is a HTTP operation
+    get:
+      # Describe this verb here. Note: you can use markdown 
+      summary: Get the list of position hierarchies defined in the system for a particular Object type. 
+      description: Get the position hierarchies master data for the parameter values.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: request_info
+          in: body
+          description: Commmon request info for getting position hierarchies.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - $ref: "#/parameters/tenantId"
+        - name: object_type
+          in: query
+          description: Objecttype type data for which position hierarchies are needed.
+          required: false
+          type: string
+          format: varchar
+        - name: object_subtype
+          in: query
+          description: Objecttype sub type data for which position hierarchies are needed.
+          required: false
+          type: string
+          format: varchar
+        - name: from_position
+          in: query
+          description: Name of the position for whom the position hierarchy needs to be listed.
+          required: false
+          type: string
+          format: varchar
+        - name: to_position
+          in: query
+          description: Name of the position to whom the position hierarchy falls for a particular object type.
+          required: false
+          type: string
+          format: varchar
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Successful response
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "#/definitions/PositionHierarchyRes"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        '404':
+          description: Position Hierarchy not found.
+
+      tags: 
+       - Position Hierarchy
+       
+    post:
+      summary: Create a new Position hierarchy master data.
+      description: To create a new position hierarchy master data we need to call POST.
+      parameters:
+        - name: position_hierarchy
+          in: body
+          description: Details for the new position hierarchy .
+          required: true
+          schema:
+            $ref: '#/definitions/PositionHierarchyReq'
+
+        - $ref: "#/parameters/tenantId"
+      tags:
+        - Position Hierarchy
+      responses:
+        '201':
+          description: Position hierarchy created sucessfully.
+          schema:
+            $ref: '#/definitions/PositionHierarchyRes'
+        '400':
+          description: Invalid input.
+          
+  /positionhierarchies/{object_type}: 
+   put:
+      summary: Update existing position data for the name passed
+      description: To update an existing position master data.
+      parameters:
+        - $ref: "#/parameters/tenantId"
+        - name: position_hierarchy
+          in: body
+          description: Request header for the position hierarchy with new of values.
+          required: true
+          schema:
+            $ref: '#/definitions/PositionHierarchyReq'
+        - name: object_type
+          in: path
+          required: true
+          description: The type value of the object type.
+          type: string
+          minLength: 0
+          maxLength: 256
+          exclusiveMinimum: true
+          exclusiveMaximum: false 
+      tags:
+        - Position Hierarchy
+      responses:
+        '200':
+          description: Position Hierarchy updated.
+          schema:
+            $ref: '#/definitions/PositionHierarchyRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        '404':
+          description: Position Hierarchy not found.
+   delete:
+      summary: Delete a particular set of position hierarchy master data.
+      description: One can delete an existing set of position hierarchy master data for an object type or a single entry in an object type.
+      parameters:
+        - $ref: "#/parameters/tenantId"
+        - name: object_type
+          in: path
+          required: true
+          description: The type value of the object type.
+          type: string
+          minLength: 0
+          maxLength: 256
+          exclusiveMinimum: true
+          exclusiveMaximum: false 
+        - name: position_hierarchy
+          in: body
+          description: Request header for the position hierarchy to be deleted.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - name: object_subtype
+          in: query
+          description: Object sub type data for the Object type for which position hierarchies are to be deleted.
+          required: false
+          type: string
+          format: varchar
+        - name: from_position
+          in: query
+          description: Name of the position for which the position hierarchy needs to be deleted.
+          required: false
+          type: string
+          format: varchar
+      tags:
+        - Position Hierarchy
+      responses:
+        '204':
+          description: Position hierarchy deleted.
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        '404':
+          description: Position hierarchy not found. 
+  
+  /calendarYears:
+    # This is a HTTP operation
+    get:
+      # Describe this verb here. Note: you can use markdown 
+      summary: Get the list of calendar years defined in the system.
+      description: |
+        Get the calendar year master data.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: request_info
+          in: body
+          description: Commmon request info for getting calendar year.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - $ref: "#/parameters/tenantId"
+        - $ref: "#/parameters/sortCalendarYear"
+        - name: name
+          in: query
+          required: false
+          type: string
+          format: varchar
+          description: Name of the calendar year.
+        - name: active
+          in: query
+          description: True will be set in cases where only active calendar year are needed and False will be set when inactive calendar year are needed and no value will be set when all calendar year are needed.
+          required: false
+          type: boolean
+          format: varchar
+          default: true
+          allowEmptyValue: true
+
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Successful response
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "#/definitions/CalendarYearRes"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        '404':
+          description: Calendar year not found.
+
+      tags: 
+       - Calendar Year
+       
+    post:
+      summary: Create a new calendar year data in the system.
+      description: To create a new calendar year we can use POST and set all the required and non-mandatory parameters.
+      parameters:
+        - name: calendar_year
+          in: body
+          description: Details for the new calendar year .
+          required: true
+          schema:
+            $ref: '#/definitions/CalendarYearReq'
+
+        - $ref: "#/parameters/tenantId"
+      tags:
+        - Calendar Year
+      responses:
+        '201':
+          description: Calendar year created sucessfully.
+          schema:
+            $ref: '#/definitions/CalendarYearRes'
+        '400':
+          description: Invalid input.
+          
+  /calendarYear/{name}:   
+    parameters:
+      - $ref: "#/parameters/calendarYearName"
+    put:
+      summary: Update existing calendar year data for the name
+      description: To update an existing calendar year master data.
+      parameters:
+        - $ref: "#/parameters/tenantId"
+        - name: calendar_year
+          in: body
+          description: Request header for the calendar year with new of values.
+          required: true
+          schema:
+            $ref: '#/definitions/CalendarYearReq'
+      tags:
+        - Calendar Year
+      responses:
+        '200':
+          description: Calendar Year updated.
+          schema:
+            $ref: '#/definitions/CalendarYearRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        '404':
+          description: Calendar year not found.
+        
+    delete:
+      summary: Delete the calendar year data for the name.
+      description: To delete an existing calendar year, mark the data as inactive and not physically remove it.
+      parameters:
+        - $ref: "#/parameters/tenantId"
+        - name: calendar_year
+          in: body
+          description: Request header for the calendar year to be deleted
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+      tags:
+        - Calendar Year
+      responses:
+        '204':
+          description: Calendar year deleted.
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        '404':
+          description: Calendar year not found.
+
+  /holidays:
+    # This is a HTTP operation
+    get:
+      # Describe this verb here. Note: you can use markdown 
+      summary: Get the list of holidays defined in the system for a particular year or across years.
+      description: Get the holidays defined for the year and based on the parameter values.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: request_info
+          in: body
+          description: Commmon request info for getting holidays.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - $ref: "#/parameters/tenantId"
+        - $ref: "#/parameters/sortHolidays"
+        - name: year
+          in: query
+          description: Name of the calendar year.
+          required: false
+          type: string
+          format: varchar
+        - name: applicableOn
+          in: query
+          description: Date on which a particular holiday is defined.
+          required: false
+          type: string
+          format: date
+        - name: name
+          in: query
+          description: Name of the holiday.
+          required: false
+          type: string
+          format: varchar
+        - name: fromDate
+          in: query
+          description: Date from which holidays needs to be listed
+          required: false
+          type: string
+          format: date
+        - name: toDate
+          in: query
+          description: Date till which holidays needs to be listed.
+          required: false
+          type: string
+          format: date
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Successful response
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "#/definitions/HolidayRes"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        '404':
+          description: Holidays not defined.
+
+      tags: 
+       - Holiday
+       
+    post:
+      summary: Create a new holiday master data for a calendar year.
+      description: To create a holiday in the system we need to call POST.
+      parameters:
+        - name: holiday
+          in: body
+          description: Details for the new holiday .
+          required: true
+          schema:
+            $ref: '#/definitions/HolidayReq'
+
+        - $ref: "#/parameters/tenantId"
+      tags:
+        - Holiday
+      responses:
+        '201':
+          description: Holiday created sucessfully.
+          schema:
+            $ref: '#/definitions/HolidayRes'
+        '400':
+          description: Invalid input.
+    
+    delete:
+      summary: Delete the complete list of holidays defined for a calendar year.
+      description: One can delete the complete set of holidays defined for a calendar year.
+      parameters:
+        - $ref: "#/parameters/tenantId"
+        - name: holiday
+          in: body
+          description: Request header for the holiday to be deleted.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - name: calendar_year
+          in: query
+          description: Unique id of the calendar year.
+          required: true
+          type: integer
+          format: int64
+      tags:
+        - Holiday
+      responses:
+        '204':
+          description: Holidays deleted.
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        '404':
+          description: Holiday not defined.           
+          
+  /holiday/{applicable_on}: 
+   parameters:
+      - $ref: "#/parameters/applicableOn"
+   put:
+      summary: Update existing holiday data for the date passed
+      description: To update an existing holiday data.
+      parameters:
+        - $ref: "#/parameters/tenantId"
+        - name: holiday
+          in: body
+          description: Request header for the holiday with new of values.
+          required: true
+          schema:
+            $ref: '#/definitions/HolidayReq'
+
+      tags:
+        - Holiday
+      responses:
+        '200':
+          description: Holiday updated.
+          schema:
+            $ref: '#/definitions/HolidayRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        '404':
+          description: Holiday not defined for the given date.
+   delete:
+      summary: Delete a particular holiday master data from the holiday master list.
+      description: Will be used to delete an existing holiday master data for a particular date.
+      parameters:
+        - $ref: "#/parameters/tenantId"
+        - name: holiday
+          in: body
+          description: Request header for the holiday to be deleted.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+
+      tags:
+        - Holiday
+      responses:
+        '204':
+          description: Holiday deleted.
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        '404':
+          description: Holiday not defined for the given date.           
+
+definitions:
+  Paging:
+    properties:
+      totalItems:
+        type: integer
+      totalPages:
+        type: integer
+      pageSize:
+        type: integer
+      currentPage:
+        type: integer  
+        
+  Position:
+    type: object
+    properties:
+      id:
+       type: integer
+       format: int64
+       description : Unique identifier of the position.
+      name:
+        type: string
+        description: Unique Position name.
+      deptdesig:
+        type: object
+        description: Department and designation associated with this position.
+        items:
+          $ref: "#/definitions/DepartmentDesignation"
+      isPostOutsourced:
+        type: boolean
+        description: if this post is outsouced then value will be TRUE, else value will be FALSE.
+    required:
+      - id
+      - name
+      - deptdesig
+  DepartmentDesignation:
+    type: object
+    properties:
+      id:
+       type: integer
+       format: int64
+       description : Unique identifier of the department designation mapping.
+      department:
+        type: object
+        description: Department to which this mapping data.
+        items:
+          $ref: "#/definitions/Department"
+      designation:
+        type: object
+        description: reference of the designation.
+        items:
+          $ref: "#/definitions/Designation"
+    required:
+      - id
+      - department
+      - designation
+
+  Language:
+    type: object
+    properties:
+      id: 
+       type: integer
+       format: int64
+       description : Unique identifier of the language.
+      name:
+        type: string
+        description: The Name of the language.  
+      description:
+        type: string
+        description: The description of the language.
+      active:
+        type: boolean
+        format: varchar
+        description: TRUE for active languages and FALSE for inactive languages.
+        default: true
+    required:
+      - id
+      - name
+      - active
+
+  RequestInfo:
+    type: object
+    properties:
+      api_id:
+        type: string
+        description: unique API ID
+      ver:
+        type: string
+        description: API version
+      ts:
+        type: string
+        description: >-
+          response timestamp YYYY-MM-DDThh:mm:ss+/-nn:nn (timezone defaulted to
+          +5.30)
+      action:
+        type: string
+        description: api action like GET/POST/PUT/DELETE in case of http calls
+      did:
+        type: string
+        description: device UUID from which API is called
+      key:
+        type: string
+        description: API key (dynamic)
+      msg_id:
+        type: string
+        description: 'unique request message id, UUID, for handling API idempotency'
+      requester_id:
+        type: string
+        description: UserId of the user calling
+      auth_token:
+        type: string
+        description: //session/jwt/saml token/oauth token
+    required:
+      - api_id
+      - ver
+      - ts
+  ResponseInfo:
+    type: object
+    properties:
+      api_id:
+        type: string
+        description: unique API ID
+      ver:
+        type: string
+        description: API version
+      ts:
+        type: string
+        description: >-
+          response timestamp YYYY-MM-DDThh:mm:ss+/-nn:nn (timezone defaulted to
+          +5.30)
+      res_msg_id:
+        type: string
+        description: unique response message id (UUID)
+      msg_id:
+        type: string
+        description: message id of the request
+      status:
+        type: string
+        description: 'status of request e.g. successful, failed etc'
+    required:
+      - api_id
+      - ver
+      - ts
+      - status
+      
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+      description:
+        type: string
+      fields:
+        type: object
+    required:
+      - code
+      - message
+  ErrorRes:
+    properties:
+      ResponseInfo:
+        $ref: '#/definitions/ResponseInfo'
+      Error:
+        $ref: '#/definitions/Error'
+    type: object
+
+  PositionRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: '#/definitions/ResponseInfo'
+      Position:
+        type: array
+        items: 
+         $ref: '#/definitions/Position'  
+  PositionReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: '#/definitions/RequestInfo'
+      Position:
+        $ref: '#/definitions/Position'
+
+        
+  Religion:
+    type: object
+    properties:
+      id: 
+       type: integer
+       format: int64
+       description : Unique identifier of the religion.
+      name:
+        type: string
+        description: The Name of the religion.  
+      description:
+        type: string
+        description: The description of the religion.
+      active:
+        type: boolean
+        format: varchar
+        description: TRUE for active religions and FALSE for inactive religions.
+    required:
+      - id
+      - name
+      - active
+      
+  Community:
+    type: object
+    properties:
+      id: 
+       type: integer
+       format: int64
+       description : Unique identifier of the community.
+      name:
+        type: string
+        description: The Name of the community.  
+      description:
+        type: string
+        description: The description of the community.
+      active:
+        type: boolean
+        format: varchar
+        description: TRUE for active community and FALSE for inactive community.
+    required:
+      - id
+      - name
+      - active
+
+  LanguageRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: '#/definitions/ResponseInfo'
+      Language:
+        type: array
+        items: 
+         $ref: '#/definitions/Language'  
+  LanguageReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: '#/definitions/RequestInfo'
+      Language:
+        $ref: '#/definitions/Language'    
+        
+  ReligionRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: '#/definitions/ResponseInfo'
+      Religion:
+        type: array
+        items: 
+         $ref: '#/definitions/Religion'  
+  ReligionReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: '#/definitions/RequestInfo'
+      Religion:
+        $ref: '#/definitions/Religion'
+        
+  CommunityRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: '#/definitions/ResponseInfo'
+      Community:
+        type: array
+        items: 
+         $ref: '#/definitions/Community'  
+         
+  CommunityReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: '#/definitions/RequestInfo'
+      Community:
+        $ref: '#/definitions/Community'
+
+  Department:
+    type: object
+    properties:
+      id:
+       type: integer
+       format: int64
+       description : Unique identifier of the department.
+      name:
+        type: string
+        description: Unique Department name.
+      code:
+        type: string
+        description: Unique name of the department.
+      active:
+        type: boolean
+        format: varchar
+        description: TRUE for active departments and FALSE for inactive departments.
+    required:
+      - id
+      - name
+      - code
+      - active
+      
+  Designation:
+    type: object
+    properties:
+      id:
+       type: integer
+       format: int64
+       description : Unique identifier of the designation.
+      name:
+        type: string
+        description: Unique Designation name.
+      code:
+        type: string
+        description: Unique name of the designation.
+      description:
+        type: string
+        description: Brief description of Designation .
+      chartOfAccounts:
+        type: string
+        description: Unique account code of the chartofaccounts master.
+      active:
+        type: boolean
+        format: varchar
+        description: TRUE for active designation and FALSE for inactive designation.
+    required:
+      - id
+      - name
+      - code 
+      - active
+
+  DepartmentRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: '#/definitions/ResponseInfo'
+      Department:
+        type: array
+        items: 
+         $ref: '#/definitions/Department' 
+         
+  DepartmentReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: '#/definitions/RequestInfo'
+      Department:
+        $ref: '#/definitions/Department'
+  DesignationRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: '#/definitions/ResponseInfo'
+      Designation:
+        type: array
+        items: 
+         $ref: '#/definitions/Designation' 
+  DesignationReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: '#/definitions/RequestInfo'
+      Designation:
+        $ref: '#/definitions/Designation'   
+        
+  ObjectType:
+    type: object
+    properties:
+      id:
+       type: integer
+       format: int64
+       description : Unique identifier of the object type.
+      type:
+        type: string
+        description: Unique name of the object type name.
+      description:
+        type: string
+        description: Breif description of what this object type is used for.
+      lastmodifieddate:
+        type: string
+        format: date
+        description: Latest date of which the data was modified.
+    required:
+      - id
+      - type
+  
+  PositionHierarchy:
+    type: object
+    properties:
+      id:
+       type: integer
+       format: int64
+       description : Unique identifier of the position hierarchy.
+      fromPosition:
+        type: object
+        description: Position data from whom.
+        items:
+          $ref: "#/definitions/Position"
+      toPosition:
+        type: object
+        description: Position date to whom in hierarchy.
+        items:
+          $ref: "#/definitions/Position"
+      objectType:
+        type: object
+        description: Position hierarchy is defined for which type of Object.
+        items:
+          $ref: "#/definitions/ObjectType"
+      objectSubType:
+        type: string
+        description: what sub types of the specified object type.
+    required:
+      - id
+      - fromPosition
+      - toPosition
+      - objectType
+  PositionHierarchyRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: '#/definitions/ResponseInfo'
+      PositionHierarchy:
+        type: array
+        items: 
+         $ref: '#/definitions/PositionHierarchy' 
+  PositionHierarchyReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: '#/definitions/RequestInfo'
+      PositionHierarchy:
+        $ref: '#/definitions/PositionHierarchy'       
+ 
+  CalendarYear:
+    type: object
+    properties:
+      id:
+       type: integer
+       format: int64
+       description : Unique identifier of the calendar.
+      name:
+        type: string
+        description: Unique Name of the year. For example 2000, 2017 etc.
+      startDate:
+        type: string
+        format: date
+        description: Starting date of the year. It should be always January 1st.
+      endDate:
+        type: string
+        format: date
+        description: Last date of the year. It should be always December 31st.
+      active:
+        type: boolean
+        description: if this year is active then value will be TRUE, else value will be FALSE.
+    required:
+      - id
+      - name
+      - startDate
+      - endDate
+      - active
+  CalendarYearRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: '#/definitions/ResponseInfo'
+      CalendarYear:
+        type: array
+        items: 
+         $ref: '#/definitions/CalendarYear' 
+  CalendarYearReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: '#/definitions/RequestInfo'
+      CalendarYear:
+        $ref: '#/definitions/CalendarYear'       
+  Holiday:
+    type: object
+    properties:
+      id:
+       type: integer
+       format: int64
+       description : Unique identifier of the holiday list.
+      calendarYear:
+        type: object
+        description: Year for which the holiday belongs to.
+        items:
+          $ref: "#/definitions/CalendarYear"
+      name:
+        type: string
+        description: Name of the holiday, for example Diwali, Ramzan etc.
+      applicableOn:
+        type: string
+        format: date
+        description: Date on which the holiday is applicable.
+
+    required:
+      - id
+      - calendarYear
+      - name
+      - applicableOn
+  HolidayRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: '#/definitions/ResponseInfo'
+      Holiday:
+        type: array
+        items: 
+         $ref: '#/definitions/Holiday' 
+  HolidayReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: '#/definitions/RequestInfo'
+      Holiday:
+        $ref: '#/definitions/Holiday'            
+parameters:
+
+  pageSize:
+    name: pageSize
+    in: query
+    description: Number of records returned.
+    type: integer
+    minimum: 0
+    exclusiveMinimum: true
+    maximum: 100
+    exclusiveMaximum: false
+    multipleOf: 10
+    default: 20
+  pageNumber:
+    name: pageNumber
+    in: query
+    description: Page number
+    type: integer
+    default: 1
+  tenantId:
+    name: tenantId
+    in: query
+    description: Unique id for for a tenant.
+    required: true
+    type: string
+    format: varchar
+  departmentCode:
+    name: code
+    in: path
+    required: true
+    description: The code of the department master.
+    type: string
+    minLength: 0
+    maxLength: 256
+    exclusiveMinimum: true
+    exclusiveMaximum: false
+  designationCode:
+    name: code
+    in: path
+    required: true
+    description: The code of the designation master.
+    type: string
+    minLength: 0
+    maxLength: 256
+    exclusiveMinimum: true
+    exclusiveMaximum: false
+  languageName:
+    name: name
+    in: path
+    required: true
+    description: The language name.
+    type: string
+    minLength: 0
+    maxLength: 256
+    exclusiveMinimum: true
+    exclusiveMaximum: false    
+  religionName:
+    name: name
+    in: path
+    required: true
+    description: The name of the religion.
+    type: string
+    minLength: 0
+    maxLength: 256
+    exclusiveMinimum: true
+    exclusiveMaximum: false   
+  communityName:
+    name: name
+    in: path
+    required: true
+    description: The name of the community.
+    type: string
+    minLength: 0
+    maxLength: 256
+    exclusiveMinimum: true
+    exclusiveMaximum: false 
+  positionName:
+    name: name
+    in: path
+    required: true
+    description: The name of the position.
+    type: string
+    minLength: 0
+    maxLength: 256
+    exclusiveMinimum: true
+    exclusiveMaximum: false   
+  sortDesignations:
+    name: sort
+    in: query
+    description: Designation results will be sorted by name ascending by default if this parameter is not provided.
+    type: array
+    uniqueItems: true
+    minItems: 1
+    maxItems: 2
+    collectionFormat: pipes
+    items:
+      type: string
+      pattern: '[-+](code|name)'
+    default:
+      - +name
+  calendarYearName:
+    name: name
+    in: path
+    required: true
+    description: The name of the calendar year.
+    type: string
+    minLength: 0
+    maxLength: 4
+    exclusiveMinimum: true
+    exclusiveMaximum: false 
+  sortCalendarYear:
+    name: sort
+    in: query
+    description: Calendar data results will be sorted by name descending by default if this parameter is not provided.
+    type: array
+    uniqueItems: true
+    minItems: 1
+    maxItems: 2
+    collectionFormat: pipes
+    items:
+      type: string
+      pattern: '[-+](name|startDate)'
+    default:
+      - -name
+
+  applicableOn:
+    name: applicable_on
+    in: path
+    required: true
+    description: The date on which a particualr holiday is defined.
+    type: string
+    format: date
+    minLength: 0
+    maxLength: 10
+    exclusiveMinimum: true
+    exclusiveMaximum: false 
+  sortHolidays:
+    name: sort
+    in: query
+    description: Holiday results will be sorted by calendar year and applicable on descending by default if this parameter is not provided.
+    type: array
+    uniqueItems: true
+    minItems: 1
+    maxItems: 3
+    collectionFormat: pipes
+    items:
+      type: string
+      pattern: '[-+](calendarYear|applicableOn|name)'
+    default:
+      - -calendarYear
+      - -applicableOn

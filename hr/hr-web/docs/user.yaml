@@ -1,0 +1,547 @@
+# Example YAML to get you started quickly.
+# Be aware that YAML has indentation based scoping.
+# Code completion support is available so start typing for available options.
+swagger: '2.0'
+
+# This is your document metadata
+info:
+  version: "1.0.0"
+  title: User service APIs
+  description: All APIs available from User services.
+  contact:
+    name: Elzan Mathew
+
+# Describe your paths here
+paths:
+  # This is a path endpoint. Change it.
+  /users:
+    # This is a HTTP operation
+    get:
+      # Describe this verb here. Note: you can use markdown 
+      summary: Get the list of users defined in the system.
+      description: |
+        Get the user list based on the input parameters.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: request_info
+          in: body
+          description: Commmon request info for getting user.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - name: user_name
+          in: query
+          required: false
+          description: The unique user name of the User.
+          type: string
+          minLength: 0
+          maxLength: 256
+          exclusiveMinimum: true
+          exclusiveMaximum: false
+        - name: active
+          in: query
+          description: True will be set in cases where only active users are needed and False will be set when inactive users are needed and no value will be set when all users are needed.
+          required: false
+          type: boolean
+          format: varchar
+          default: true
+          allowEmptyValue: true
+        - $ref: "#/parameters/pageSize"
+        - $ref: "#/parameters/pageNumber"
+        - $ref: "#/parameters/tenantId"
+        - $ref: "#/parameters/sortUser"
+        
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Successful response
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "#/definitions/UserRes"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        '404':
+          description: User does not exist.
+      tags: 
+       - User
+    post:
+      summary: Create a new User.
+      description: To create a new User in the system.
+      parameters:
+        - name: user
+          in: body
+          description: Details for the new user .
+          required: true
+          schema:
+            $ref: '#/definitions/UserReq'
+        - $ref: "#/parameters/tenantId"
+      tags:
+        - User
+      responses:
+        '201':
+          description: User created sucessfully.
+          schema:
+            $ref: '#/definitions/UserRes'
+        '400':
+          description: Invalid input.
+          
+  /user/{user_name}:   
+    parameters:
+      - $ref: "#/parameters/userName"
+    put:
+      summary: Update existing user master data for the User using the unique user name.
+      description: To update an existing User master data.
+      parameters:
+        - $ref: "#/parameters/tenantId"
+        - name: user
+          in: body
+          description: Request header for the user with new of values.
+          required: true
+          schema:
+            $ref: '#/definitions/UserReq'
+      tags:
+        - User
+      responses:
+        '200':
+          description: User updated.
+          schema:
+            $ref: '#/definitions/UserRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        '404':
+          description: User not found.
+  /user/_login:
+    post:
+      summary: Login a user based on username and password auth and return oAuth tokens.
+      description: Login a user based on username and password auth and return oAuth tokens.
+      parameters:
+        - $ref: "#/parameters/tenantId"
+        - name: user_name
+          in: query
+          required: true
+          description: The unique user name of the User.
+          type: string
+          minLength: 0
+          maxLength: 256
+        - name: password
+          in: query
+          required: true
+          description: The password of the user name to login to the system.
+          type: string
+          format: password
+          minLength: 0
+          maxLength: 256
+
+      tags:
+        - User
+      responses:
+        '200':
+          description: User logged in.
+          schema:
+            $ref: '#/definitions/LoginResponse'
+        '400':
+          description: Could not login - Invalid Credentials.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        default:
+          description: Login failed.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+            
+  /user/_logout:
+    post:
+      summary: Logout a user based on access token auth
+      description:  Logout a user based on access token auth
+      parameters:
+        - $ref: "#/parameters/tenantId"
+        - name: logout_request
+          in: body
+          description: Request for logout using access token
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+      tags:
+        - User
+      responses:
+        '200':
+          description: User logged out successfully.
+          schema:
+            $ref: '#/definitions/ResponseInfo'
+        default:
+          description: Logout failed.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        
+
+
+definitions:
+
+  User:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: The unique id an user.
+      userName:
+        type: string
+        description: The unique username used for user login.
+      password:
+        type: string
+        format: password
+        description: Password for user login.
+      salutation:
+        type: string
+        description: The salutation of user name. Example- Mr, Miss, Mrs
+      name:
+        type: string
+        description: The full name of the user.
+      gender:
+        type: array
+        description: Gender of the user.
+        items:
+          type: string
+          enum:
+           - MALE
+           - FEMALE
+           - OTHERS
+      mobileNumber:
+        type: string
+        description: Mobile number ofuser the user
+      emailId:
+        type: string
+        description: Email address of the user
+      altContactNumber:
+        type: string
+        description: Alternate contact number of the user
+      pan:
+        type: string
+        description: PAN number of the user
+      aadhaarNumber:
+        type: string
+        description: Aadhaar number of the user
+      permanentAddress:
+        type: string
+        description: Permanent address of the user.
+      permanentCity:
+        type: string
+        description: City of the permanent address.
+      permanentPincode:
+        type: string
+        description: Permanent address pincode.
+      correspondenceCity:
+        type: string
+        description: City of the correspondence address.
+      CorrespondencePincode:
+        type: string
+        description: Permanent address pincode.
+      correspondenceAddress:
+        type: string
+        description: Correspondence address of the user.
+      active:
+        type: boolean
+        description: True if the user is active and False if the user is inactive.
+      dob:
+        type: string
+        format: date
+        description: Data of bith of the user in mm/dd/yyyy format.
+      pwdExpiryDate:
+        type: string
+        format: date
+        description: Date on which the password registered will expire.
+      locale:
+        type: string
+        description: Value will be set to "en_IN".
+      type:
+        type: array
+        description : System set value internally. For employee value will be always "EMPLOYEE". For citizen value will be "CITIZEN".
+        items:
+          type: string
+          enum:
+           - EMPLOYEE
+           - CITIZEN
+           - SYSTEM
+      signature:
+        type: string
+        format: byte
+        description : Image to be loaded for the signature of the employee
+      accountLocked:
+        type: boolean
+        description: Set to True if account is locked after several incorrect password attempt. False if account is not locked.
+      roles:
+        type: array
+        items:
+         $ref: "#/definitions/Role"
+        description: List of roles that are attached to the user.
+      fatherOrHusbandName:
+        type: string
+        description: Name of user's father or husband.
+      bloodGroup:
+        type: string
+        description: Blood group of the user.
+        items:
+          type: string
+          enum:
+           - A+
+           - B+
+           - O+
+           - AB+
+           - A-
+           - B-
+           - AB-
+           - O-
+      identificationMark:
+        type: string
+        description: Any identification mark of the person.
+      photo:
+        type: string
+        format: byte
+        description : Image to be loaded for the photo of the user
+      createdBy:
+        type: integer
+        format: int64
+        description: Id of the user who created the record. 
+      createdDate:
+        type: string
+        format: date
+        description: Date on which the user master data was added into the system.
+      lastModifiedBy:
+        type: integer
+        format: int64
+        description: Id of the user who last modified the record. 
+      lastModifiedDate:
+        type: string
+        format: date
+        description: Date on which the user master data was last modified.
+    required:
+     - id
+     - userName
+     - name
+     - gender
+     - mobileNumber
+     - active
+     - pwdExpiryDate
+     - locale
+     - type
+     - createdDate
+     - createdBy
+     
+
+  Role:
+    type: object
+    properties:
+      id: 
+       type: integer
+       format: int64
+       description : Unique identifier of the role.
+      name:
+        type: string
+        description: The Name of the Role.  
+      description:
+        type: string
+        description: The description of the Role.
+      createdBy:
+        type: integer
+        format: int64
+        description: Id of the user who created the record. 
+      createdDate:
+        type: string
+        format: date
+        description: Date on which the role master data was added into the system.
+      lastModifiedBy:
+        type: integer
+        format: int64
+        description: Id of the user who last modified the record. 
+      lastModifiedDate:
+        type: string
+        format: date
+        description: Date on which the role master data was last modified.
+    required:
+      - id
+      - name
+      - createdBy
+      - createdDate
+      
+  UserRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: '#/definitions/ResponseInfo'
+      User:
+        type: array
+        items: 
+         $ref: '#/definitions/User'  
+  UserReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: '#/definitions/RequestInfo'
+      User:
+        $ref: '#/definitions/User'
+
+  RequestInfo:
+    type: object
+    properties:
+      api_id:
+        type: string
+        description: unique API ID
+      ver:
+        type: string
+        description: API version
+      ts:
+        type: string
+        description: >-
+          response timestamp YYYY-MM-DDThh:mm:ss+/-nn:nn (timezone defaulted to
+          +5.30)
+      action:
+        type: string
+        description: api action like GET/POST/PUT/DELETE in case of http calls
+      did:
+        type: string
+        description: device UUID from which API is called
+      key:
+        type: string
+        description: API key (dynamic)
+      msg_id:
+        type: string
+        description: 'unique request message id, UUID, for handling API idempotency'
+      requester_id:
+        type: string
+        description: UserId of the user calling
+      auth_token:
+        type: string
+        description: //session/jwt/saml token/oauth token
+    required:
+      - api_id
+      - ver
+      - ts
+  ResponseInfo:
+    type: object
+    properties:
+      api_id:
+        type: string
+        description: unique API ID
+      ver:
+        type: string
+        description: API version
+      ts:
+        type: string
+        description: >-
+          response timestamp YYYY-MM-DDThh:mm:ss+/-nn:nn (timezone defaulted to
+          +5.30)
+      res_msg_id:
+        type: string
+        description: unique response message id (UUID)
+      msg_id:
+        type: string
+        description: message id of the request
+      status:
+        type: string
+        description: 'status of request e.g. successful, failed etc'
+    required:
+      - api_id
+      - ver
+      - ts
+      - status
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+      description:
+        type: string
+      fields:
+        type: object
+    required:
+      - code
+      - message
+  ErrorRes:
+    properties:
+      ResponseInfo:
+        $ref: '#/definitions/ResponseInfo'
+      Error:
+        $ref: '#/definitions/Error'
+    type: object
+  LoginResponse:
+    type: object
+    properties:
+      access_token:
+        type: string
+      token_type: 
+        type: string
+      refresh_token:
+        type: string
+      expires_in: 
+        type: string
+      scope: 
+        type: string
+      ResponseInfo:
+        $ref: '#/definitions/ResponseInfo'
+      User:
+        $ref: '#/definitions/User'
+    required:
+      - access_token
+      - token_type
+      - refresh_token
+      - expires_in
+      - scope
+      
+parameters:
+  userName:
+    name: user_name
+    in: path
+    required: true
+    description: The unique user name with which the user login.
+    type: string
+    minLength: 0
+    maxLength: 256
+    exclusiveMinimum: true
+    exclusiveMaximum: false
+  pageSize:
+    name: pageSize
+    in: query
+    description: Number of records returned.
+    type: integer
+    minimum: 0
+    exclusiveMinimum: true
+    maximum: 100
+    exclusiveMaximum: false
+    multipleOf: 10
+    default: 20
+  pageNumber:
+    name: pageNumber
+    in: query
+    description: Page number
+    type: integer
+    default: 1
+  tenantId:
+    name: tenantId
+    in: query
+    description: Unique id for for a tenant.
+    required: true
+    type: string
+    format: varchar
+
+  sortUser:
+    name: sort
+    in: query
+    description: User results will be sorted by name ascending by default if this parameter is not provided.
+    type: array
+    uniqueItems: true
+    minItems: 1
+    maxItems: 3
+    collectionFormat: pipes
+    items:
+      type: string
+      pattern: '[-+](userName|name)'
+    default:
+      - +name

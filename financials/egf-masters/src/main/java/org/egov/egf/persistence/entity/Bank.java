@@ -57,7 +57,6 @@ import org.hibernate.annotations.FetchMode;
 import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -96,7 +95,6 @@ public class  Bank extends AbstractAuditable {
 	@NotNull
 	private Boolean active;
 // is this required?
-	@NotNull
 	@Length(max = 50)
 	private String type;
 

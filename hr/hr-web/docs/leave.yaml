@@ -1,0 +1,626 @@
+# Example YAML to get you started quickly.
+# Be aware that YAML has indentation based scoping.
+# Code completion support is available so start typing for available options.
+swagger: '2.0'
+
+# This is your document metadata
+info:
+  version: "1.0.0"
+  title: Employee Information System- Leave
+  contact:
+    name: Elzan Mathew
+externalDocs: 
+  description: Complete documentation describing how to use these API
+  url: http://182.74.137.193/docs/products/eGov%20EIS/ProdSpecs/eGov%20EIS_PSD_OS.doc
+# Describe your paths here
+paths:
+  # This is a path endpoint. Change it.
+  /leavetypes:
+    # This is a HTTP operation
+    get:
+      # Describe this verb here. Note: you can use markdown
+      summary: Get the Leave Types defined in the system.
+      description: |
+        All the leave type master data can be fetched one shot using GET, or else by passing name/id one can get a specific leave data.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: request_info
+          in: body
+          description: Commmon request info for getting leave types.
+          required: true
+          schema:
+            $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/RequestInfo'
+        - $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/parameters/tenantId"
+        - name: id
+          description: Unique id for leave type.
+          in: query
+          required: false
+          type: string
+        - $ref: "#/parameters/sortLeaveTypes"
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Successful response
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "#/definitions/LeaveTypeRes"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/ErrorRes'
+        '404':
+          description: Leave Type not found.
+      tags: 
+       - Leave Type
+       
+    post:
+      summary: Create a new leave type.
+      description: To create a leave type master data we can use POST and set all the required and non-mandatory parameters.
+      parameters:
+        - name: leave_type
+          in: body
+          description: Details for the new leave type .
+          required: true
+          schema:
+            $ref: '#/definitions/LeaveTypeReq'
+        - $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/parameters/tenantId"
+      tags:
+        - Leave Type
+      responses:
+        '201':
+          description: Leave Type created sucessfully.
+          schema:
+            $ref: '#/definitions/LeaveTypeRes'
+        '400':
+          description: Invalid input.
+          
+  /leavetype/{leavetype_id}:
+    parameters:
+      - $ref: "#/parameters/leaveType"
+    put:
+      summary: Update existing leave type details.
+      description: To update an existing leave type master data.
+      parameters:
+        - $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/parameters/tenantId"
+        - name: leave_type
+          in: body
+          description: Request header for the leave type with new of values.
+          required: true
+          schema:
+            $ref: '#/definitions/LeaveTypeReq'
+      tags:
+        - Leave Type
+      responses:
+        '200':
+          description: Leave Type updated.
+          schema:
+            $ref: '#/definitions/LeaveTypeRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/ErrorRes'
+        '404':
+          description: Leave type not found.
+          
+
+  /leaveallotments:
+    # This is a HTTP operation
+    get:
+      # Describe this verb here. Note: you can use markdown
+      summary: Get the leave allocation defined in the system.
+      description: |
+        Get the leave allocation defined in the system for each leave type for each designation.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: request_info
+          in: body
+          description: Commmon request info for getting leave allocation.
+          required: true
+          schema:
+            $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/RequestInfo'
+        - $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/parameters/tenantId"
+        - name: leave_type
+          description: Unique id of the leave type.
+          in: query
+          required: false
+          type: string
+        - name: designation
+          description: Unique id for designation.
+          in: query
+          required: false
+          type: string
+        - $ref: "#/parameters/sortLeaveTypes"
+        - $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/parameters/pageSize"
+        - $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/parameters/pageNumber"
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Successful response
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "#/definitions/LeaveAllotmentRes"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/ErrorRes'
+        '404':
+          description: Leave Allotment not found.
+      tags: 
+       - Leave Allotment
+    post:
+      summary: Create new set of leave allocation.
+      description: To create a new set of leave allocation designation wise one can use POST.
+      parameters:
+        - name: leave_allotment
+          in: body
+          description: Details for the new set of leave allotment data designation wise.
+          required: true
+          schema:
+            $ref: '#/definitions/LeaveAllotmentReq'
+        - $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/parameters/tenantId"
+      tags:
+        - Leave Allotment
+      responses:
+        '201':
+          description: Leave allotment created sucessfully.
+          schema:
+            $ref: '#/definitions/LeaveAllotmentRes'
+        '400':
+          description: Invalid input.            
+ 
+  /leavesallotments/{leavetype_id}: 
+    parameters:
+      - $ref: "#/parameters/leaveType"
+    put:
+      summary: Update existing leave details for the designation and leave type
+      description: To update a set of leave allocation for a particular leave type or for updating a specific leave types' data for a specific designation we can use PUT.
+      parameters:
+        - $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/parameters/tenantId"         
+        - $ref: "#/parameters/designation"
+        - name: leave_allocation
+          in: body
+          description: Request header for the leave allotment with new set of values.
+          required: true
+          schema:
+            $ref: '#/definitions/LeaveAllotmentReq'
+      tags:
+        - Leave Allotment
+      responses:
+        '200':
+          description: Leave Allotment updated.
+          schema:
+            $ref: '#/definitions/LeaveAllotmentRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/ErrorRes'
+        '404':
+          description: Leave Allotment details not found.
+        
+    delete:
+      summary: Delete the leaves allocation for a particular leave type.
+      description: To delete a set of existing leave allocation data for a leave type or for deleting the leave allocation for a specific combination of designation and leave type we can use DELETE.
+      parameters:
+        - $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/parameters/tenantId" 
+        - $ref: "#/parameters/designation"
+        - name: leave_allocation
+          in: body
+          description: Request header for the leave allotment to be deleted
+          required: true
+          schema:
+            $ref: '#/definitions/LeaveAllotmentReq'
+      tags:
+        - Leave Allotment
+      responses:
+        '204':
+          description: Leave allotment deleted.
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/ErrorRes'
+        '404':
+          description: Leave allotment not found.
+          
+  /leaveopeningbalances:
+    # This is a HTTP operation
+    get:
+      # Describe this verb here. Note: you can use markdown
+      summary: Get the employee leave opening balances defined in the system.
+      description: |
+        Get the employee leave opening balances defined in the system for a year for each leave type for each employee.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: request_info
+          in: body
+          description: Commmon request info for getting leave opening balance.
+          required: true
+          schema:
+            $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/RequestInfo'
+        - $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/parameters/tenantId"
+        - name: leave_type
+          description: Unique id of the leave type.
+          in: query
+          required: false
+          type: string
+        - name: employee
+          description: Unique id for employee.
+          in: query
+          required: false
+          type: string
+        - name: year
+          description: Unique id for calendar year.
+          in: query
+          required: false
+          type: string
+
+        - $ref: "#/parameters/sortLeaveOpeningBalance"
+        - $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/parameters/pageSize"
+        - $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/parameters/pageNumber"
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Successful response
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "#/definitions/LeaveOpeningBalanceRes"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/ErrorRes'
+        '404':
+          description: Leave Opening balance not found.
+      tags: 
+       - Leave Opening Balance
+    post:
+      summary: Create a new set of leave opening balances for an employee for a year.
+      description: To create a new set of leave opening balance leave type wise for an employee for any year one can use POST.
+      parameters:
+        - name: leave_openingbalance
+          in: body
+          description: Details for the new set of leave opening balance data leave type and employee wise.
+          required: true
+          schema:
+            $ref: '#/definitions/LeaveOpeningBalanceReq'
+        - $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/parameters/tenantId"
+      tags:
+        - Leave Opening Balance
+      responses:
+        '201':
+          description: Leave opening balance created sucessfully.
+          schema:
+            $ref: '#/definitions/LeaveOpeningBalanceRes'
+        '400':
+          description: Invalid input.            
+ 
+  /leaveopeningbalances/{employee}: 
+    parameters:
+      - $ref: "#/parameters/employee"
+    put:
+      summary: Update existing leave opening balances for an employee
+      description: To update a set of leave the leave opening balances for a specific employee for any year and for any leave types.
+      parameters:
+        - $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/parameters/tenantId"         
+        - name: leave_openingbalance
+          in: body
+          description: Request header for the leave opening balance with new set of values.
+          required: true
+          schema:
+            $ref: '#/definitions/LeaveOpeningBalanceReq'
+        - name: year
+          description: Unique id for calendar year.
+          in: query
+          required: false
+          type: string
+
+        - name: leave_type
+          description: Unique id of the leave type.
+          in: query
+          required: false
+          type: string
+
+      tags:
+        - Leave Opening Balance
+      responses:
+        '200':
+          description: Leave Opening balance updated.
+          schema:
+            $ref: '#/definitions/LeaveOpeningBalanceRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/ErrorRes'
+        '404':
+          description: Leave opening balance details not found.
+        
+    delete:
+      summary: Delete the leave opening balance for an employee for a year.
+      description: To delete a set of existing leave opening balance for an employee for any specified year and leave type one can use DELETE.
+      parameters:
+        - $ref: "http://localhost:8081/swagger-yaml/eis-commons.yaml/#/parameters/tenantId" 
+        - name: leave_openingbalance
+          in: body
+          description: Request header for the leave opening balance with new set of values.
+          required: true
+          schema:
+            $ref: '#/definitions/LeaveOpeningBalanceReq'
+        - name: year
+          description: Unique id for calendar year.
+          in: query
+          required: false
+          type: string
+        - name: leave_type
+          description: Unique id of the leave type.
+          in: query
+          required: false
+          type: string
+
+      tags:
+        - Leave Opening Balance
+      responses:
+        '204':
+          description: Leave opening balance deleted.
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/ErrorRes'
+        '404':
+          description: Leave opening balance not found. 
+                        
+       
+definitions:
+  LeaveType:
+    type: object
+    properties:
+      id:
+        type: string
+        description: The unique id a leave type.
+      name:
+        type: string
+        description: The unique name of Leave type.
+      halfday_allowed:
+        type: boolean
+        description: If half day leave is allowed for this leave type then the value will be TRUE, else the value will be FALSE.
+      pay_eligible:
+        type: boolean
+        description: Indicates if the leave type created is eligible for pay or not. This decides if the salary has to be deducted for this kind of leave. Set TRUE in case of pay eligible and FALSE if pay not eligible.
+      accumulative:
+        type: boolean
+        description: Indicates if the leave type is accumulative or unused days in employees account expire on closure of the year. Set TRUE if leave can be accumuated and FALSE if leave cannot be accumulated to next year.
+      encashable:
+        type: boolean
+        description: Indicates if the leave type created is eligible for encashment. Set TRUE in case it is encashable and FALSE if not encashable.
+      createdBy:
+        type: string
+        description: Id of the user who created the record. 
+      createdDate:
+        type: string
+        format: date
+        description: Date on which the user master data was added into the system.
+      lastModifiedBy:
+        type: string
+        description: Id of the user who last modified the record. 
+      lastModifiedDate:
+        type: string
+        format: date
+        description: Date on which the user master data was last modified.
+    required:
+      - id
+      - name
+      - halfday_allowed
+      - pay_eligible
+      - accumulative
+      - encashable
+      - createdBy
+      - createdDate
+      
+  LeaveTypeRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/ResponseInfo'
+      LeaveType:
+        type: array
+        items: 
+         $ref: "#/definitions/LeaveType"
+         
+  LeaveTypeReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/RequestInfo'
+      LeaveType:
+        $ref: "#/definitions/LeaveType"  
+        
+  LeaveAllotment:
+    type: object
+    properties:
+      id:
+        type: string
+        description: The unique id of leave allotment.
+      designation:
+        type: string
+        description: Unique Designation id
+      leaveType:
+        type: object
+        description: which leave type the leaves are allocated.
+        items:
+          $ref: "#/definitions/LeaveType"
+      noOfDays:
+        type: number
+        format: float
+        description: Number of days of leaves allocated.
+      createdBy:
+        type: string
+        description: Id of the user who created the record. 
+      createdDate:
+        type: string
+        format: date
+        description: Date on which the user master data was added into the system.
+      lastModifiedBy:
+        type: string
+        description: Id of the user who last modified the record. 
+      lastModifiedDate:
+        type: string
+        format: date
+        description: Date on which the user master data was last modified.
+    required:
+      - id
+      - leaveType
+      - noOfDays
+      - createdBy
+      - createdDate
+      
+  LeaveAllotmentRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/ResponseInfo'
+      LeaveAllotment:
+        type: array
+        items: 
+         $ref: '#/definitions/LeaveAllotment'  
+  LeaveAllotmentReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/RequestInfo'
+      LeaveAllotment:
+        type: array
+        items:
+          $ref: '#/definitions/LeaveAllotment'
+          
+  LeaveOpeningBalance:
+    type: object
+    properties:
+      id:
+        type: string
+        description: The unique id of leave opening balance.
+      employee:
+        type: string
+        description: Unique id of the employee
+      calendarYear:
+        type: string
+        description: Unique id of the calandar year for which leave opening balance is captured.
+      leaveType:
+        type: object
+        description: which leave type the leaves are allocated.
+        items:
+          $ref: "#/definitions/LeaveType"
+      noOfDays:
+        type: number
+        format: float
+        description: Available number of years as of the year.
+      createdBy:
+        type: string
+        description: Id of the user who created the record. 
+      createdDate:
+        type: string
+        format: date
+        description: Date on which the user master data was added into the system.
+      lastModifiedBy:
+        type: string
+        description: Id of the user who last modified the record. 
+      lastModifiedDate:
+        type: string
+        format: date
+        description: Date on which the user master data was last modified.
+    required:
+      - id
+      - employee
+      - calendarYear
+      - leaveType
+      - noOfDays
+      - createdBy
+      - createdDate
+  LeaveOpeningBalanceRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/ResponseInfo'
+      LeaveOpeningBalance:
+        type: array
+        items: 
+         $ref: '#/definitions/LeaveOpeningBalance'  
+  LeaveOpeningBalanceReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: 'http://localhost:8081/swagger-yaml/eis-commons.yaml/#/definitions/RequestInfo'
+      LeaveOpeningBalance:
+        type: array
+        items:
+          $ref: '#/definitions/LeaveOpeningBalance'
+          
+parameters:
+  sortLeaveTypes:
+    name: sort
+    in: query
+    description: Result will be sorted by leave name ascending by default if this parameter is not provided.
+    type: array
+    uniqueItems: true
+    minItems: 1
+    maxItems: 2
+    collectionFormat: pipes
+    items:
+      type: string
+      pattern: '[-+](name|id)'
+    default:
+      - +name
+  sortLeaveOpeningBalance:
+    name: sort
+    in: query
+    description: Result will be sorted by year and  leave type ascending by default if this parameter is not provided.
+    type: array
+    uniqueItems: true
+    minItems: 1
+    maxItems: 3
+    collectionFormat: pipes
+    items:
+      type: string
+      pattern: '[-+](year|employee|leaveType)'
+    default:
+      - +year
+      
+  designation:
+    name: designation
+    in: query
+    required: false
+    description: The id of the designation master.
+    type: string
+    minLength: 0
+    maxLength: 50
+    exclusiveMinimum: true
+    exclusiveMaximum: false
+  leaveType:
+    name: leavetype_id
+    in: path
+    required: true
+    description: The id of the leave type master.
+    type: string
+    minLength: 0
+    maxLength: 50
+    exclusiveMinimum: true
+    exclusiveMaximum: false
+  employee:
+    name: employee
+    in: path
+    required: true
+    description: The unique id of the employee master.
+    type: string
+    minLength: 0
+    maxLength: 50
+    exclusiveMinimum: true
+    exclusiveMaximum: false
+tags:
+  - name: Leave Type
+    description: Everything you need to handle Leave Type master.
+  - name: Leave Allotment
+    description: Everything you need to handle Leave Allotment designation wise for each leave type.
+  - name: Leave Opening Balance
+    description: Everything you need to handle for employee Leave opening balance.

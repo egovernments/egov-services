@@ -1,5 +1,5 @@
 {
-  "responseInfo": {
+  "ResponseInfo": {
     "apiId": null,
     "ver": null,
     "ts": null,
@@ -8,9 +8,9 @@
     "status": "400"
   },
 
-  "error": {
+  "Error": {
     "code": 400,
-    "message": "User ids or username cannot be empty",
+    "message": "Invalid user search request",
     "description": null,
     "fields": null
   }

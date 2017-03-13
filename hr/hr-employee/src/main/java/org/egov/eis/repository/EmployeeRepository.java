@@ -44,17 +44,31 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.egov.eis.model.Employee;
 import org.egov.eis.model.EmployeeInfo;
 import org.egov.eis.repository.builder.EmployeeQueryBuilder;
 import org.egov.eis.repository.rowmapper.EmployeeIdsRowMapper;
 import org.egov.eis.repository.rowmapper.EmployeeInfoRowMapper;
 import org.egov.eis.web.contract.EmployeeGetRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class EmployeeRepository {
+
+	public static final Logger LOGGER = LoggerFactory.getLogger(EmployeeRepository.class);
+
+	// FIXME Employee sequence
+	public static final String INSERT_EMPLOYEE_QUERY = "INSERT INTO egeis_employee"
+			+ " (id, code, dateOfAppointment, dateofjoining, dateofretirement, employeestatus, recruitmentmodeId,"
+			+ " recruitmenttypeId, recruitmentquotaId, retirementage, dateofresignation, dateoftermination,"
+			+ " employeetypeId, mothertongueId, religionId, communityId, categoryId, physicallydisabled,"
+			+ " medicalreportproduced, maritalstatus, passportno, gpfno, bankId, bankbranchId, bankaccount, groupId,"
+			+ " placeofbirth, tenantId)"
+			+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -87,5 +101,43 @@ public class EmployeeRepository {
 		List<EmployeeInfo> employeesInfo = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
 				employeeInfoRowMapper);
 		return employeesInfo;
+	}
+
+	// FIXME put tenantId
+	public void save(Employee employee) {
+		System.out.println("Received Employee: " + employee);
+
+		Object[] obj = new Object[] {
+				employee.getId(),
+				employee.getCode(),
+				employee.getDateOfAppointment(),
+				employee.getDateOfJoining(),
+				employee.getDateOfRetirement(),
+				employee.getEmployeeStatus(),
+				employee.getRecruitmentMode(),
+				employee.getRecruitmentType(),
+				employee.getRecruitmentQuota(),
+				employee.getRetirementAge(),
+				employee.getDateOfResignation(),
+				employee.getDateOfTermination(),
+				employee.getEmployeeType(),
+				employee.getMotherTongue(),
+				employee.getReligion(),
+				employee.getCommunity(),
+				employee.getCategory(),
+				employee.getPhysicallyDisabled(),
+				employee.getMedicalReportProduced(),
+				employee.getMaritalStatus().toString(),
+				employee.getPassportNo(),
+				employee.getGpfNo(),
+				employee.getBank(),
+				employee.getBankBranch(),
+				employee.getBankAccount(),
+				employee.getGroup(),
+				employee.getPlaceOfBirth(),
+				"1"
+		};
+
+		jdbcTemplate.update(INSERT_EMPLOYEE_QUERY, obj);
 	}
 }

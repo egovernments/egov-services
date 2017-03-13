@@ -73,7 +73,7 @@ public class  BankContract extends AuditableContract {
 	@NotNull
 	private Boolean active;
 	// is this required?
-	@NotNull
+
 	@Length(max = 50)
 	private String type;
 	

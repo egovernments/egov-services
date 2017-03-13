@@ -40,14 +40,12 @@
 
 package org.egov.eis.web.contract;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
+import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -68,8 +66,8 @@ public class PositionGetRequest {
 
 	private List<Long> id;
 
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date asOnDate;
+	@Size(min = 2, max = 100)
+	private String name;
 
 	private Boolean isPrimary;
 

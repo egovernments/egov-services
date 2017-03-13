@@ -68,6 +68,7 @@ public class Token extends AbstractAuditable {
                 .tenantId(tenant)
                 .timeToLiveInSeconds(timeToLiveInSeconds)
                 .expiryDateTime(getExpiryDateTime())
+                .validated(isValidated())
                 .build();
     }
 

@@ -202,10 +202,10 @@
 										{{#workflow}}
 										<div class="row  add-border">
 											<div class="col-sm-2 col-xs-12 add-margin currDate">
-												{{createdDate}}
+												{{created_Date}}
 											</div>
 											<div class="col-sm-2 col-xs-12 add-margin">
-												{{sender}}
+												{{sender_name}}
 											</div>
 											<div class="col-sm-2 col-xs-12 add-margin">
 												{{status}}
@@ -214,9 +214,9 @@
 												{{owner}}
 											</div>
 											<div class="col-sm-2 col-xs-12 add-margin">
-												{{#attributes.department.values}}
+												{{#values.department.values}}
 													{{name}}
-												{{/attributes.department.values}}										
+												{{/values.department.values}}										
 											</div>
 											<div class="col-sm-2 col-xs-12 add-margin">
 												{{comments}}
@@ -291,8 +291,6 @@
 								</div>
 								<div class="col-md-3 col-xs-6 add-margin">
 									<select id="status" name="status" class="form-control" required="">
-										<option value="">Select</option>
-										<option value="COMPLETED">COMPLETED</option>
 									</select>
 								</div>
 								<div class="col-md-3 col-xs-6 add-margin employee-action">

@@ -34,7 +34,6 @@ public class AuthFilter extends ZuulFilter {
     private ProxyRequestHelper helper = new ProxyRequestHelper();
     private RibbonRoutingFilter delegateFilter;
     private HttpServletRequest originalRequest;
-    private String authToken;
     private String originalRequestUri;
     private URL originalRouteHost;
     private HashMap<String, List<String>> originalRequestQueryParams;
@@ -98,7 +97,6 @@ public class AuthFilter extends ZuulFilter {
         originalRequest = ctx.getRequest();
         originalRequestUri = originalRequest.getRequestURI();
         originalRouteHost = ctx.getRouteHost();
-        authToken = originalRequest.getHeader("auth_token");
     }
 
     private void logError(RequestContext ctx) {
@@ -132,7 +130,7 @@ public class AuthFilter extends ZuulFilter {
         AuthRequestWrapper authRequestWrapper = new AuthRequestWrapper(ctx.getRequest());
         HashMap<String, List<String>> parameters = new HashMap<>();
         List<String> paramValues = new ArrayList<>();
-        paramValues.add(authToken);
+        paramValues.add(authRequestWrapper.getHeader("auth_token"));
         parameters.put("access_token", paramValues);
 
         ctx.set("serviceId", "user");

@@ -61,25 +61,25 @@ $.ajaxPrefilter(function( options ) {
 
 // console.log(window.location.origin);
 
-// $.ajax({
-//             url: baseUrl+"/egov-common-masters"+"/departments"+"/_search?tenantId="+tenantId,
-//             type: 'POST',
-//             // dataType: 'json',
-//             data:JSON.stringify(requestInfo),
-//             crossDomain: true, // set this to ensure our $.ajaxPrefilter hook fires
-//             processData: false, // We want this to remain an object for  $.ajaxPrefilter
-//             // headers: {
-//             //     'Content-Type': 'application/json'
-//             // },
-//             // contentType: 'application/json',
-//             success: function (result) {
-//                 console.log(result);
-//                // CallBack(result);
-//             },
-//             error: function (error) {
-//                 console.log(error);
-//             }
-//         });
+$.ajax({
+            url: baseUrl+"/egov-common-masters"+"/departments"+"/_search?tenantId="+tenantId,
+            type: 'POST',
+            // dataType: 'json',
+            data:JSON.stringify(requestInfo),
+            crossDomain: true, // set this to ensure our $.ajaxPrefilter hook fires
+            processData: false, // We want this to remain an object for  $.ajaxPrefilter
+            // headers: {
+            //     'Content-Type': 'application/json'
+            // },
+            // contentType: 'application/json',
+            success: function (result) {
+                console.log(result);
+               // CallBack(result);
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
 
 $.post("http://egov-micro-dev.egovernments.org"+"/egov-common-masters"+"/departments"+"/_search?tenantId="+tenantId,JSON.stringify(requestInfo),function(data, status){
         alert("Data: " + data + "\nStatus: " + status);

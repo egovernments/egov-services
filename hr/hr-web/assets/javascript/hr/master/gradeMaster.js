@@ -19,7 +19,7 @@ class GradeMaster extends React.Component{
           description:"",
           orderno:"",
           active:""
-      },isClicked:false   }
+      }   }
         this.handleChange=this.handleChange.bind(this);
         this.addOrUpdate=this.addOrUpdate.bind(this);
     }
@@ -27,15 +27,15 @@ class GradeMaster extends React.Component{
 
     handleChange(e,name)
     {
-
         this.setState({
             gradeSet:{
                 ...this.state.gradeSet,
                 [name]:e.target.value
             }
         })
-
     }
+
+
     componentDidMount(){
       if(getUrlVars()["type"]==="view")
       {
@@ -107,8 +107,8 @@ class GradeMaster extends React.Component{
                         <label for="">Description<span> *</span> </label>
                         </div>
                             <div className="col-sm-6">
-                            <input type="text" name="description" id="description" value={description} onChange={(e)=>{
-                                handleChange(e,"description")}} required/>
+                            <input type="text" name="description" id="description" value={description}
+                                onChange={(e)=>{handleChange(e,"description")}} required/>
                             </div>
                       </div>
                 </div>
@@ -122,8 +122,8 @@ class GradeMaster extends React.Component{
                   <label for="">Order No <span>* </span></label>
               </div>
               <div className="col-sm-6">
-                  <input type="number" name="orderno" id="orderno"  value={orderno} onChange={(e)=>{
-                      handleChange(e,"orderno")}}required/>
+                  <input type="number" name="orderno" id="orderno"  value={orderno}
+                      onChange={(e)=>{ handleChange(e,"orderno")}}required/>
               </div>
           </div>
       </div>
@@ -133,23 +133,21 @@ class GradeMaster extends React.Component{
           <div className="row">
               <div className="col-sm-6 col-sm-offset-6">
                     <label className="radioUi">
-                      <input type="checkbox" name="active" id="active" value="true"  onChange={(e)=>{
-                          handleChange(e,"active")}}required/> Active
+                      <input type="checkbox" name="active" id="active" value="true"
+                          onChange={(e)=>{ handleChange(e,"active")}}required/> Active
                     </label>
               </div>
           </div>
         </div>
     </div>
 
-
-
-              <div className="text-center">
-                    {showActionButton()}
-                    <button type="button" className="btn btn-submit" onClick={(e)=>{this.close()}}>Close</button>
+                  <div className="text-center">
+                        {showActionButton()}
+                        <button type="button" className="btn btn-submit" onClick={(e)=>{this.close()}}>Close</button>
+                </div>
+                </fieldset>
+                </form>
             </div>
-            </fieldset>
-            </form>
-        </div>
     );
   }
 }

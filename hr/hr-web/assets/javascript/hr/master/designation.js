@@ -54,12 +54,12 @@ class Designation extends React.Component{
 
 
       componentDidMount(){
-        if(getUrlVars()["type"]==="view"){
+        if(getUrlVars()["type"]==="view")
+        {
           for (var variable in this.state.designationSet)
-            document.getElementById(variable).disabled=true;
-        }
+            document.getElementById(variable).disabled = true;
+          }
       }
-
 
       addOrUpdate(e,mode){
            console.log(this.state.designationSet);

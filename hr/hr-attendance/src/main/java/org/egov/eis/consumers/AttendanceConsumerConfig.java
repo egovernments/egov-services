@@ -1,4 +1,4 @@
-package org.egov.hr.consumers;
+package org.egov.eis.consumers;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -69,8 +69,8 @@ public class AttendanceConsumerConfig {
     }
 
     @Bean
-    public SaveAttendanceConsumer listener() {
-        return new SaveAttendanceConsumer();
+    public AttendanceConsumers listener() {
+        return new AttendanceConsumers();
     }
 
 }

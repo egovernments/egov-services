@@ -40,8 +40,10 @@
 
 package org.egov.eis.web.contract;
 
+import java.util.Collection;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.egov.eis.model.Attendance;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -65,4 +67,11 @@ public class AttendanceRequest {
     @JsonProperty("Attendance")
     private List<Attendance> attendances;
 
+    public Collection<Attendance> getSavedAttendances() {
+        return CollectionUtils.select(attendances, attendance -> ((Attendance) attendance).getId() != null);
+    }
+
+    public Collection<Attendance> getNewAttendances() {
+        return CollectionUtils.select(attendances, attendance -> ((Attendance) attendance).getId() == null);
+    }
 }

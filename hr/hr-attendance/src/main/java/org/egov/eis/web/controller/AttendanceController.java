@@ -109,7 +109,7 @@ public class AttendanceController {
         return getSuccessResponse(attendancesList, requestInfo);
     }
 
-    @PostMapping("_create")
+    @PostMapping({ "_create", "_update" })
     @ResponseBody
     public ResponseEntity<?> create(@RequestBody @Valid final AttendanceRequest attendanceRequest,
             final BindingResult errors) {
@@ -120,7 +120,7 @@ public class AttendanceController {
         }
         logger.info("attendanceRequest::" + attendanceRequest);
 
-        final List<Attendance> attendances = attendanceService.create(attendanceRequest);
+        final List<Attendance> attendances = attendanceService.createAsync(attendanceRequest);
 
         return getSuccessResponse(attendances, attendanceRequest.getRequestInfo());
     }

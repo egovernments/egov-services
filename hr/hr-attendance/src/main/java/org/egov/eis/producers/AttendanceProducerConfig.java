@@ -19,6 +19,18 @@ public class AttendanceProducerConfig {
     @Value("${kafka.config.bootstrap_server_config}")
     private String serverConfig;
 
+    @Value("${kafka.producer.config.retries_config}")
+    private Integer retriesConfig;
+
+    @Value("${kafka.producer.config.batch_size_config}")
+    private Integer batchSizeConfig;
+
+    @Value("${kafka.producer.config.linger_ms_config}")
+    private Integer lingerMsConfig;
+
+    @Value("${kafka.producer.config.buffer_memory_config}")
+    private Integer bufferMemoryConfig;
+
     @Bean
     public ProducerFactory<String, Object> producerFactory() {
         return new DefaultKafkaProducerFactory<>(producerConfigs());
@@ -29,10 +41,10 @@ public class AttendanceProducerConfig {
         final Map<String, Object> props = new HashMap<>();
 
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, serverConfig);
-        props.put(ProducerConfig.RETRIES_CONFIG, 0);
-        props.put(ProducerConfig.BATCH_SIZE_CONFIG, 16384);
-        props.put(ProducerConfig.LINGER_MS_CONFIG, 1);
-        props.put(ProducerConfig.BUFFER_MEMORY_CONFIG, 33554432);
+        props.put(ProducerConfig.RETRIES_CONFIG, retriesConfig);
+        props.put(ProducerConfig.BATCH_SIZE_CONFIG, batchSizeConfig);
+        props.put(ProducerConfig.LINGER_MS_CONFIG, lingerMsConfig);
+        props.put(ProducerConfig.BUFFER_MEMORY_CONFIG, bufferMemoryConfig);
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         return props;

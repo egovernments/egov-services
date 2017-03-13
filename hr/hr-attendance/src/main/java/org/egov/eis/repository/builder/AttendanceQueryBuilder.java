@@ -188,4 +188,17 @@ public class AttendanceQueryBuilder {
         }
         return query.append(")").toString();
     }
+
+    public static String insertAttendanceQuery() {
+        final String query = "INSERT INTO egeis_attendance values "
+                + "(nextval('seq_egeis_attendance'),?,?,?,?,?,?,?,?,?,?,?)";
+        return query;
+    }
+
+    public static String updateAttendanceQuery() {
+        final String query = "UPDATE egeis_attendance SET date = ?, employee = ?,"
+                + " month = ?, year = ?, type = ?, remarks = ?, lastmodifiedby = ?, lastmodifieddate = ?,"
+                + " tenantid = ? where id = ? ";
+        return query;
+    }
 }

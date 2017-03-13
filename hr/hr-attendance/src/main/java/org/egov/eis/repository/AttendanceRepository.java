@@ -40,6 +40,9 @@
 
 package org.egov.eis.repository;
 
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,12 +50,19 @@ import org.egov.eis.model.Attendance;
 import org.egov.eis.repository.builder.AttendanceQueryBuilder;
 import org.egov.eis.repository.rowmapper.AttendanceRowMapper;
 import org.egov.eis.web.contract.AttendanceGetRequest;
+import org.egov.eis.web.contract.AttendanceRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class AttendanceRepository {
+
+    public static final Logger LOGGER = LoggerFactory.getLogger(AttendanceRepository.class);
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -69,5 +79,78 @@ public class AttendanceRepository {
         final List<Attendance> attendances = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
                 attendanceRowMapper);
         return attendances;
+    }
+
+    public void saveAttendance(final AttendanceRequest attendanceRequest) {
+
+        LOGGER.info("AgreementDao agreement::" + attendanceRequest);
+
+        createAttendance(attendanceRequest);
+        updateAttendance(attendanceRequest);
+    }
+
+    private void createAttendance(final AttendanceRequest attendanceRequest) {
+        final String attendanceinsert = AttendanceQueryBuilder.insertAttendanceQuery();
+        final List<Attendance> attendances = (List<Attendance>) attendanceRequest.getNewAttendances();
+        try {
+            jdbcTemplate.batchUpdate(attendanceinsert, new BatchPreparedStatementSetter() {
+
+                @Override
+                public void setValues(final PreparedStatement ps, final int i) throws SQLException {
+                    final Attendance attendance = attendances.get(i);
+                    ps.setDate(1, new Date(attendance.getDate().getTime()));
+                    ps.setLong(2, attendance.getEmployee());
+                    ps.setString(3, attendance.getMonth());
+                    ps.setString(4, attendance.getYear());
+                    ps.setLong(5, attendance.getType().getId());
+                    ps.setString(6, attendance.getRemarks());
+                    ps.setLong(7, Long.valueOf(attendanceRequest.getRequestInfo().getMsgId()));
+                    ps.setDate(8, new Date(new java.util.Date().getTime()));
+                    ps.setLong(9, Long.valueOf(attendanceRequest.getRequestInfo().getMsgId()));
+                    ps.setDate(10, new Date(new java.util.Date().getTime()));
+                    ps.setString(11, attendance.getTenantId());
+                }
+
+                @Override
+                public int getBatchSize() {
+                    return attendances.size();
+                }
+            });
+        } catch (final DataAccessException ex) {
+            ex.printStackTrace();
+            throw new RuntimeException(ex.getMessage());
+        }
+    }
+
+    private void updateAttendance(final AttendanceRequest attendanceRequest) {
+        final String attendanceinsert = AttendanceQueryBuilder.updateAttendanceQuery();
+        final List<Attendance> attendances = (List<Attendance>) attendanceRequest.getSavedAttendances();
+        try {
+            jdbcTemplate.batchUpdate(attendanceinsert, new BatchPreparedStatementSetter() {
+
+                @Override
+                public void setValues(final PreparedStatement ps, final int i) throws SQLException {
+                    final Attendance attendance = attendances.get(i);
+                    ps.setDate(1, new Date(attendance.getDate().getTime()));
+                    ps.setLong(2, attendance.getEmployee());
+                    ps.setString(3, attendance.getMonth());
+                    ps.setString(4, attendance.getYear());
+                    ps.setLong(5, attendance.getType().getId());
+                    ps.setString(6, attendance.getRemarks());
+                    ps.setLong(7, Long.valueOf(attendanceRequest.getRequestInfo().getMsgId()));
+                    ps.setDate(8, new Date(new java.util.Date().getTime()));
+                    ps.setString(9, attendance.getTenantId());
+                    ps.setLong(10, attendance.getId());
+                }
+
+                @Override
+                public int getBatchSize() {
+                    return attendances.size();
+                }
+            });
+        } catch (final DataAccessException ex) {
+            ex.printStackTrace();
+            throw new RuntimeException(ex.getMessage());
+        }
     }
 }

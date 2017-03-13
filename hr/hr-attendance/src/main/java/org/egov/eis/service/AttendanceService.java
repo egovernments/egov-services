@@ -75,7 +75,7 @@ public class AttendanceService {
      * @param attendance, hold attendance details
      */
 
-    public List<Attendance> create(final AttendanceRequest attendanceRequest) {
+    public List<Attendance> createAsync(final AttendanceRequest attendanceRequest) {
         final ObjectMapper mapper = new ObjectMapper();
         String attendanceValue = null;
         try {
@@ -86,11 +86,15 @@ public class AttendanceService {
             e.printStackTrace();
         }
         try {
-            attendanceProducer.sendMessage("attendance-save-db", "save-attendance", attendanceValue);
+            attendanceProducer.sendMessage("egov-hr-attendance", "save-attendance", attendanceValue);
         } catch (final Exception ex) {
             ex.printStackTrace();
         }
         return attendanceRequest.getAttendances();
+    }
+
+    public void create(final AttendanceRequest attendanceRequest) {
+        attendanceRepository.saveAttendance(attendanceRequest);
     }
 
 }

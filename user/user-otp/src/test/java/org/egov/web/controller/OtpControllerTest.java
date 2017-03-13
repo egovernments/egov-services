@@ -39,7 +39,7 @@ public class OtpControllerTest {
 
         mockMvc.perform(post("/v1/_send").contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(resources.getFileContents("otpSendRequest.json")))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(content().json(resources.getFileContents("otpSendSuccessResponse.json")));
 
         final OtpRequest expectedOtpRequest = new OtpRequest("mobileNumber", "tenantId");
@@ -55,8 +55,6 @@ public class OtpControllerTest {
                 .content(resources.getFileContents("otpRequestWithoutMandatoryFields.json")))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(resources.getFileContents("otpMandatoryFieldsErrorResponse.json")));
-
-
     }
 
     @Test

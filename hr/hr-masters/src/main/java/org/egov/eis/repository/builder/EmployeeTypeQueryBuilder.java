@@ -108,7 +108,7 @@ public class EmployeeTypeQueryBuilder {
 				: employeeTypeGetRequest.getSortBy());
 		String sortOrder = (employeeTypeGetRequest.getSortOrder() == null ? "ASC"
 				: employeeTypeGetRequest.getSortOrder());
-		selectQuery.append(" ORDER BY employeetype." + sortBy + " " + sortOrder);
+		selectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })

@@ -36,7 +36,7 @@ public class AgreementController {
 	@Autowired
 	AgreementService agreementService;
 
-	@PostMapping
+	@PostMapping("_search")
 	@ResponseBody
 	public ResponseEntity<?> search(@ModelAttribute @Valid AgreementCriteria agreementCriteria,@RequestBody RequestInfo requestInfo,
 			 BindingResult bindingResult) {
@@ -59,7 +59,7 @@ public class AgreementController {
 		return new ResponseEntity<AgreementResponse>(agreementResponse, HttpStatus.OK);
 	}
 
-	@PostMapping("/_Post_Create_Agreement")
+	@PostMapping("/_create")
 	@ResponseBody
 	public ResponseEntity<?> create(@RequestBody @Valid AgreementRequest agreementRequest,BindingResult errors){
 		

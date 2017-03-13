@@ -9,6 +9,7 @@ import org.egov.lams.model.Agreement;
 import org.egov.lams.model.AgreementCriteria;
 import org.egov.lams.model.Allottee;
 import org.egov.lams.model.Asset;
+import org.egov.lams.model.RequestInfo;
 import org.egov.lams.repository.builder.AgreementQueryBuilder;
 import org.egov.lams.repository.helper.AgreementHelper;
 import org.egov.lams.repository.helper.AllotteeHelper;
@@ -189,12 +190,12 @@ public class AgreementRepository {
 	 */
 	public List<Asset> getAssets(AgreementCriteria agreementCriteria) {
 		String queryString = assetHelper.getAssetUrl(agreementCriteria);
-		URI url = null;
+		String url = null;
 		AssetResponse AssetResponse = null;
 		try {
-			url = new URI(propertiesManager.getAssetServiceHostName() + "?" + queryString);
+			url = propertiesManager.getAssetServiceHostName() + "?" + queryString;
 			logger.info(url.toString());
-			AssetResponse = restTemplate.getForObject(url, AssetResponse.class);
+			AssetResponse = restTemplate.postForObject(url,new RequestInfo(), AssetResponse.class);
 		} catch (Exception e) {
 			// FIXME log error to getstacktrace
 			throw new RuntimeException("check if entered asset API url is correct or the asset service is running");

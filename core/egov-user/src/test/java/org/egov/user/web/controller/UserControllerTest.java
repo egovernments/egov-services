@@ -1,14 +1,15 @@
 package org.egov.user.web.controller;
 
 import org.apache.commons.io.IOUtils;
+import org.egov.user.domain.exception.InvalidUserSearchException;
 import org.egov.user.domain.model.UserSearch;
-import org.egov.user.domain.search.NoSearchStrategyFoundException;
 import org.egov.user.domain.service.UserService;
 import org.egov.user.persistence.entity.Address;
 import org.egov.user.persistence.entity.Role;
 import org.egov.user.persistence.entity.User;
 import org.egov.user.persistence.entity.enums.*;
 import org.egov.user.security.oauth2.custom.CustomUserDetailService;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,9 +40,6 @@ public class UserControllerTest {
     @MockBean
     UserService userService;
 
-    @MockBean
-    CustomUserDetailService customUserDetailService;
-
     @Test
     @WithMockUser
     public void testUserSearch() throws Exception {
@@ -56,10 +54,10 @@ public class UserControllerTest {
     @Test
     @WithMockUser
     public void testShouldReturnErrorForBadRequest() throws Exception {
-        when(userService.searchUsers(any(UserSearch.class))).thenThrow(NoSearchStrategyFoundException.class);
+        when(userService.searchUsers(any(UserSearch.class))).thenThrow(InvalidUserSearchException.class);
 
         mockMvc.perform(post("/_search/").contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(getFileContents("getUserByIdBadRequest.json"))).andExpect(status().isOk())
+                .content(getFileContents("getUserByIdBadRequest.json"))).andExpect(status().isBadRequest())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(content().json(getFileContents("getUserByIdErrorResponse.json")));
     }

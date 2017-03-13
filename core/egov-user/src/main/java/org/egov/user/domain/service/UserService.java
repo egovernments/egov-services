@@ -42,12 +42,13 @@ package org.egov.user.domain.service;
 
 import org.egov.user.domain.exception.OtpValidationPendingException;
 import org.egov.user.domain.model.UserSearch;
-import org.egov.user.domain.search.UserSearchStrategyFactory;
+import org.egov.user.domain.search.UserSearchSpecificationFactory;
 import org.egov.user.persistence.entity.Role;
 import org.egov.user.persistence.entity.User;
 import org.egov.user.persistence.repository.RoleRepository;
 import org.egov.user.persistence.repository.UserRepository;
 import org.egov.user.web.contract.RequestInfo;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -60,18 +61,18 @@ public class UserService {
     private RoleRepository roleRepository;
     private OtpService otpService;
     private UserRepository userRepository;
-    private UserSearchStrategyFactory userSearchStrategyFactory;
+    private UserSearchSpecificationFactory userSearchSpecificationFactory;
 
     public UserService(UserRepository userRepository,
                        RoleRepository roleRepository,
                        OtpService otpService,
-                       UserSearchStrategyFactory userSearchStrategyFactory) {
+                       UserSearchSpecificationFactory userSearchSpecificationFactory) {
 
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.otpService = otpService;
         this.userRepository = userRepository;
-        this.userSearchStrategyFactory = userSearchStrategyFactory;
+        this.userSearchSpecificationFactory = userSearchSpecificationFactory;
     }
 
     public User getUserByUsername(final String userName) {
@@ -101,7 +102,7 @@ public class UserService {
     }
 
     public List<User> searchUsers(UserSearch userSearch) {
-        return userSearchStrategyFactory.getSearchStrategy(userSearch).search(userSearch);
+        Specification specification = userSearchSpecificationFactory.getSpecification(userSearch);
+        return userRepository.findAll(specification);
     }
-
 }

@@ -1,5 +1,5 @@
 {
-  "responseInfo": {
+  "ResponseInfo": {
     "apiId": null,
     "ver": null,
     "ts": null,
@@ -8,10 +8,10 @@
     "status": "400"
   },
 
-  "error": {
+  "Error": {
     "code": 400,
-    "message": "Bad search request",
-    "description": "",
+    "message": "Invalid user search request",
+    "description": null,
     "fields": null
   }
 }

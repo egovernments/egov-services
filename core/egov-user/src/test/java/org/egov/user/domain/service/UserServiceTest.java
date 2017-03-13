@@ -2,10 +2,9 @@ package org.egov.user.domain.service;
 
 import org.egov.user.domain.exception.InvalidUserException;
 import org.egov.user.domain.exception.OtpValidationPendingException;
-import org.egov.user.persistence.entity.Role;
 import org.egov.user.domain.model.UserSearch;
-import org.egov.user.domain.search.SearchStrategy;
-import org.egov.user.domain.search.UserSearchStrategyFactory;
+import org.egov.user.domain.search.UserSearchSpecificationFactory;
+import org.egov.user.persistence.entity.Role;
 import org.egov.user.persistence.entity.User;
 import org.egov.user.persistence.entity.enums.Gender;
 import org.egov.user.persistence.entity.enums.UserType;
@@ -19,6 +18,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -30,8 +30,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UserServiceTest {
@@ -44,11 +42,10 @@ public class UserServiceTest {
     RequestInfo requestInfo;
     @Mock
     OtpService otpService;
+    @Mock
+    UserSearchSpecificationFactory userSearchSpecificationFactory;
     @Captor
     private ArgumentCaptor<User> userCaptor;
-
-    @Mock
-    UserSearchStrategyFactory userSearchStrategyFactory;
 
     UserService userService;
 
@@ -58,9 +55,8 @@ public class UserServiceTest {
 
     @Before
     public void setUp() {
-        userService = new UserService(userRepository, roleRepository, otpService, userSearchStrategyFactory);
+        userService = new UserService(userRepository, roleRepository, otpService, userSearchSpecificationFactory);
     }
-
 
     @Test
     public void shouldGetUserByEmail() throws Exception {
@@ -84,9 +80,9 @@ public class UserServiceTest {
     public void shouldSearchUser() throws Exception {
         UserSearch userSearch = new UserSearch();
         List<User> expectedListOfUsers = getListOfUsers();
-        SearchStrategy searchStrategy = mock(SearchStrategy.class);
-        when(userSearchStrategyFactory.getSearchStrategy(userSearch)).thenReturn(searchStrategy);
-        when(searchStrategy.search(userSearch)).thenReturn(expectedListOfUsers);
+        Specification specification = mock(Specification.class);
+        when(userSearchSpecificationFactory.getSpecification(userSearch)).thenReturn(specification);
+        when(userRepository.findAll(specification)).thenReturn(expectedListOfUsers);
 
         List<User> actualResult = userService.searchUsers(userSearch);
 
@@ -153,7 +149,7 @@ public class UserServiceTest {
             userService.save(requestInfo, domainUser, Boolean.FALSE);
 
             verify(otpService, never()).isOtpValidationComplete(requestInfo, domainUser);
-        } catch(OtpValidationPendingException ovpe) {
+        } catch (OtpValidationPendingException ovpe) {
             fail();
         }
     }

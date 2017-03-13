@@ -7,8 +7,7 @@ import com.netflix.client.ClientException;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import org.apache.commons.io.IOUtils;
-import org.egov.model.AuthRequest;
-import org.egov.model.CustomHttpServletRequestWrapper;
+import org.egov.model.AuthRequestWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +21,8 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.*;
 
 import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
@@ -32,17 +33,22 @@ public class AuthFilter extends ZuulFilter {
 
     private ProxyRequestHelper helper = new ProxyRequestHelper();
     private RibbonRoutingFilter delegateFilter;
-    private HttpServletRequest request;
-    private CustomHttpServletRequestWrapper customHttpServletRequestWrapper;
-    private List<RibbonRequestCustomizer> requestCustomizers = new ArrayList<>();
+    private HttpServletRequest originalRequest;
+    private String authToken;
+    private String originalRequestUri;
+    private URL originalRouteHost;
+    private HashMap<String, List<String>> originalRequestQueryParams;
+        private List<RibbonRequestCustomizer> requestCustomizers = new ArrayList<>();
 
     @Autowired
     RibbonCommandFactory<?> ribbonCommandFactory;
 
+    public AuthFilter() {
+    }
+
     @PostConstruct
     void initDelegateFilter() {
         delegateFilter = new RibbonRoutingFilter(helper, ribbonCommandFactory, requestCustomizers);
-        customHttpServletRequestWrapper =
     }
 
     @Override
@@ -58,52 +64,81 @@ public class AuthFilter extends ZuulFilter {
     @Override
     public boolean shouldFilter() {
         HttpServletRequest request = RequestContext.getCurrentContext().getRequest();
-        String requestUri = request.getRequestURI();
-        return delegateFilter.shouldFilter() && !requestUri.contains("/user");
+        return !request.getRequestURI().contains("/user") && request.getHeader("auth_token") != null;
     }
 
     @Override
     public Object run() {
         RequestContext ctx = RequestContext.getCurrentContext();
-        HttpServletRequest originalRequest = ctx.getRequest();
-        String authToken = originalRequest.getHeader("auth_token");
-        if (authToken != null) {
-            try {
-                HashMap<String, List<String>> originalRequestQueryParams = (HashMap<String, List<String>>) ctx.getRequestQueryParams();
-                String originalRequestUri = (String) ctx.get("requestURI");
-                AuthRequest authRequest = new AuthRequest();
-                HashMap<String, List<String>> parameters = new HashMap<>();
+        try {
+            saveOriginalRequestItems(ctx);
+            prepareToRouteToAuthService(ctx);
+            ClientHttpResponse authResponse = (ClientHttpResponse) delegateFilter.run();
+            prepareToRouteToOriginalService(ctx);
 
-                List<String> paramValues = new ArrayList<>();
-                paramValues.add(authToken);
-                parameters.put("access_token", paramValues);
-
-                ctx.set("serviceId", "users");
-                ctx.setRequestQueryParams(parameters);
-                ctx.set("requestURI", "/user/_details");
-                ctx.setRequest(authRequest);
-
-                ClientHttpResponse authResponse = (ClientHttpResponse) delegateFilter.run();
-
-                ctx.setRequestQueryParams(originalRequestQueryParams);
-                ctx.set("requestURI", originalRequestUri);
-                ctx.setRequest(originalRequest);
-
-                if (isAuthenticationSuccessful(authResponse)) {
-                    Integer userId = getUserIdFromAuthResponse(authResponse);
-                    ctx.addZuulRequestHeader("requester_id", userId.toString());
-                    return delegateFilter.run();
-                }
-
-                setResponse(authResponse);
-                ctx.setSendZuulResponse(false);
-            } catch (Exception e) {
-                ctx.set("error.status_code", SC_INTERNAL_SERVER_ERROR);
-                ctx.set("error.exception", e);
+            if (isAuthenticationSuccessful(authResponse)) {
+                Integer userId = getUserIdFromAuthResponse(authResponse);
+                ctx.addZuulRequestHeader("requester_id", userId.toString());
+                return delegateFilter.run();
+            } else {
+                logError(ctx);
+                abort(ctx, authResponse);
             }
+        } catch (Exception e) {
+            ctx.set("error.status_code", SC_INTERNAL_SERVER_ERROR);
+            ctx.set("error.exception", e);
+            logError(ctx);
         }
 
         return null;
+    }
+
+    private void saveOriginalRequestItems(RequestContext ctx) {
+        originalRequestQueryParams = (HashMap<String, List<String>>) ctx.getRequestQueryParams();
+        originalRequest = ctx.getRequest();
+        originalRequestUri = originalRequest.getRequestURI();
+        originalRouteHost = ctx.getRouteHost();
+        authToken = originalRequest.getHeader("auth_token");
+    }
+
+    private void logError(RequestContext ctx) {
+        log.error("ERROR");
+        log.error(String.format("STATUS_CODE: %s", ctx.get("error.status_code")));
+        log.error(String.format("ERROR_MESSAGE: %s", ctx.get("error.message")));
+        if (ctx.get("error.exception") != null) {
+            Exception ex = (Exception) ctx.get("error.exception");
+            String stackTrace = Arrays.toString(ex.getStackTrace());
+            log.error(String.format("TRACE: %s", stackTrace));
+        }
+    }
+
+    private void abort(RequestContext ctx, ClientHttpResponse authResponse) throws ClientException, IOException {
+        if (authResponse != null) {
+            setResponse(authResponse);
+        }
+        ctx.setSendZuulResponse(false);
+    }
+
+    private void prepareToRouteToOriginalService(RequestContext ctx) throws MalformedURLException {
+        ctx.setRouteHost(new URL(originalRouteHost.getProtocol(), originalRouteHost.getHost(),
+                originalRouteHost.getPort(), "/"));
+        ctx.setRequestQueryParams(originalRequestQueryParams);
+        ctx.set("requestURI", originalRequestUri);
+        ctx.setRequest(originalRequest);
+
+    }
+
+    private void prepareToRouteToAuthService(RequestContext ctx) {
+        AuthRequestWrapper authRequestWrapper = new AuthRequestWrapper(ctx.getRequest());
+        HashMap<String, List<String>> parameters = new HashMap<>();
+        List<String> paramValues = new ArrayList<>();
+        paramValues.add(authToken);
+        parameters.put("access_token", paramValues);
+
+        ctx.set("serviceId", "user");
+        ctx.setRequestQueryParams(parameters);
+        ctx.set("requestURI", "/user/_details");
+        ctx.setRequest(authRequestWrapper);
     }
 
     private Integer getUserIdFromAuthResponse(ClientHttpResponse authResponse) throws IOException {

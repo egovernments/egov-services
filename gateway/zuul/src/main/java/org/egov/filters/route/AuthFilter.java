@@ -1,10 +1,14 @@
-package org.egov.filters.pre;
+package org.egov.filters.route;
 
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netflix.client.ClientException;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
+import org.apache.commons.io.IOUtils;
 import org.egov.model.AuthRequest;
+import org.egov.model.CustomHttpServletRequestWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +25,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 
@@ -58,12 +63,11 @@ public class AuthFilter extends ZuulFilter {
     @Override
     public Object run() {
         RequestContext ctx = RequestContext.getCurrentContext();
-        HttpServletRequest request = ctx.getRequest();
-        String authToken = ctx.getRequest().getHeader("auth_token");
+        HttpServletRequest originalRequest = ctx.getRequest();
+        String authToken = originalRequest.getHeader("auth_token");
         if (authToken != null) {
             try {
-                String originalServiceId = (String) ctx.get("serviceId");
-                HashMap<String, List<String>> originalRequestQueryParms = (HashMap<String, List<String>>) ctx.getRequestQueryParams();
+                HashMap<String, List<String>> originalRequestQueryParams = (HashMap<String, List<String>>) ctx.getRequestQueryParams();
                 String originalRequestUri = (String) ctx.get("requestURI");
                 AuthRequest authRequest = new AuthRequest();
                 HashMap<String, List<String>> parameters = new HashMap<>();
@@ -79,12 +83,20 @@ public class AuthFilter extends ZuulFilter {
 
                 ClientHttpResponse authResponse = (ClientHttpResponse) delegateFilter.run();
 
-                ctx.set("serviceId", originalServiceId);
-                ctx.setRequestQueryParams(originalRequestQueryParms);
+                ctx.setRequestQueryParams(originalRequestQueryParams);
                 ctx.set("requestURI", originalRequestUri);
-                ctx.setRequest(request);
+                ctx.setRequest(originalRequest);
 
                 if (isAuthenticationSuccessful(authResponse)) {
+                    String userId = getUserIdFromAuthResponse(authResponse);
+                    log.info(String.format("$$$$$$$$$$$$$$$ %s", userId));
+                    CustomHttpServletRequestWrapper customHttpServletRequestWrapper = new CustomHttpServletRequestWrapper(originalRequest);
+                    String requestBody = IOUtils.toString(customHttpServletRequestWrapper.getInputStream());
+                    ObjectMapper mapper = new ObjectMapper();
+                    Map<String, Object> requestMap = mapper.readValue(requestBody, new TypeReference<Map<String, Object>>() {
+                    });
+
+                    log.info(String.format("--------------- %s", requestMap));
                     return delegateFilter.run();
                 }
 
@@ -97,6 +109,14 @@ public class AuthFilter extends ZuulFilter {
         }
 
         return null;
+    }
+
+    private String getUserIdFromAuthResponse(ClientHttpResponse authResponse) throws IOException {
+        String authResponseBody = IOUtils.toString(authResponse.getBody(), "utf-8");
+        ObjectMapper mapper = new ObjectMapper();
+        Map<String, Object> requestMap = mapper.readValue(authResponseBody, new TypeReference<Map<String, Object>>() {
+        });
+        return (String) requestMap.get("id");
     }
 
     private boolean isAuthenticationSuccessful(ClientHttpResponse response) throws IOException {

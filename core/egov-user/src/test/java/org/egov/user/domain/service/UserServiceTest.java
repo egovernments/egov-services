@@ -2,6 +2,8 @@ package org.egov.user.domain.service;
 
 import org.egov.user.domain.exception.InvalidUserException;
 import org.egov.user.domain.exception.OtpValidationPendingException;
+import org.egov.user.domain.model.UserSearch;
+import org.egov.user.domain.search.UserSearchSpecificationFactory;
 import org.egov.user.persistence.entity.Role;
 import org.egov.user.persistence.entity.User;
 import org.egov.user.persistence.entity.enums.Gender;
@@ -16,6 +18,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -39,6 +42,8 @@ public class UserServiceTest {
     RequestInfo requestInfo;
     @Mock
     OtpService otpService;
+    @Mock
+    UserSearchSpecificationFactory userSearchSpecificationFactory;
     @Captor
     private ArgumentCaptor<User> userCaptor;
 
@@ -50,17 +55,7 @@ public class UserServiceTest {
 
     @Before
     public void setUp() {
-        userService = new UserService(userRepository, roleRepository, otpService);
-    }
-
-    @Test
-    public void shouldGetUsersById() throws Exception {
-        when(userRepository.findAll(ID)).thenReturn(getListOfUsers());
-
-        List<User> user = userService.getUsersById(ID);
-
-        assertThat(user.get(0).getId()).isEqualTo(ID.get(0));
-        assertThat(user.get(1).getId()).isEqualTo(ID.get(1));
+        userService = new UserService(userRepository, roleRepository, otpService, userSearchSpecificationFactory);
     }
 
     @Test
@@ -79,6 +74,19 @@ public class UserServiceTest {
         User actualUser = userService.getUserByUsername(USER_NAME);
 
         assertThat(actualUser.getUsername()).isEqualTo(USER_NAME);
+    }
+
+    @Test
+    public void shouldSearchUser() throws Exception {
+        UserSearch userSearch = new UserSearch();
+        List<User> expectedListOfUsers = getListOfUsers();
+        Specification specification = mock(Specification.class);
+        when(userSearchSpecificationFactory.getSpecification(userSearch)).thenReturn(specification);
+        when(userRepository.findAll(specification)).thenReturn(expectedListOfUsers);
+
+        List<User> actualResult = userService.searchUsers(userSearch);
+
+        assertThat(expectedListOfUsers).isEqualTo(actualResult);
     }
 
     @Test
@@ -141,7 +149,7 @@ public class UserServiceTest {
             userService.save(requestInfo, domainUser, Boolean.FALSE);
 
             verify(otpService, never()).isOtpValidationComplete(requestInfo, domainUser);
-        } catch(OtpValidationPendingException ovpe) {
+        } catch (OtpValidationPendingException ovpe) {
             fail();
         }
     }

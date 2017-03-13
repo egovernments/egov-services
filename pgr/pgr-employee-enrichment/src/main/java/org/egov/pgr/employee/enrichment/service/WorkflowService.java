@@ -50,7 +50,7 @@ public class WorkflowService {
 			}
 
 		}
-		sevaRequest.update(workflowResponse);
+		if(workflowResponse != null) sevaRequest.update(workflowResponse);
 
 		return sevaRequest;
 	}

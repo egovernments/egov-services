@@ -97,7 +97,7 @@ public class AttendanceQueryBuilder {
 
         if (attendanceGetRequest.getId() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" id IN " + getIdQuery(attendanceGetRequest.getId()));
+            selectQuery.append(" a.id IN " + getIdQuery(attendanceGetRequest.getId()));
         }
 
         if (attendanceGetRequest.getApplicableOn() != null) {
@@ -120,20 +120,20 @@ public class AttendanceQueryBuilder {
 
         if (attendanceGetRequest.getDesignationId() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" employee = (select employee from egeis_assignment where designation = ? and isprimary = 't')");
+            selectQuery.append(" employee = (select employee from egeis_assignment where designationId = ? and isprimary = 't')");
             preparedStatementValues.add(attendanceGetRequest.getDesignationId());
         }
 
         if (attendanceGetRequest.getDepartmentId() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" employee = (select employee from egeis_assignment where department = ? and isprimary = 't')");
+            selectQuery.append(" employee = (select employee from egeis_assignment where departmentId = ? and isprimary = 't')");
             preparedStatementValues.add(attendanceGetRequest.getDepartmentId());
         }
 
         if (attendanceGetRequest.getCode() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" employee = (select id from egeis_employee where code = ?)");
-            preparedStatementValues.add(attendanceGetRequest.getCode());
+            selectQuery.append(" employee = (select id from egeis_employee where upper(code) = ?)");
+            preparedStatementValues.add(attendanceGetRequest.getCode().toUpperCase());
         }
     }
 

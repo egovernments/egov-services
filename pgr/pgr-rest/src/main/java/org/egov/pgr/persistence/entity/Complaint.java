@@ -189,7 +189,7 @@ public class Complaint extends AbstractAuditable {
 		final Coordinates coordinates = new Coordinates(latitude, longitude);
 		final String locationId = Objects.isNull(location) ? StringUtils.EMPTY : String.valueOf(location.getId());
 		final org.egov.pgr.domain.model.ComplaintType complaintType = new org.egov.pgr.domain.model.ComplaintType(
-				this.complaintType.getName(), complainant.getId().toString());
+				this.complaintType.getName(), this.complaintType.getCode());
 		return org.egov.pgr.domain.model.Complaint.builder()
 				.complaintLocation(new ComplaintLocation(coordinates, getCrossHierarchyId(), locationId))
 				.additionalValues(getAdditionalValues()).complaintType(complaintType)

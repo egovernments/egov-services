@@ -4,7 +4,7 @@
     <logger name="org.springframework.web" level="ERROR"/>
     <appender name="CUSTOM_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <layout>
-            <Pattern>%X{X-CORRELATION-ID} %d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</Pattern>
         </layout>
     </appender>
     <root level="INFO">

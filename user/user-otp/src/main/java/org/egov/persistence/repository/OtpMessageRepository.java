@@ -23,7 +23,7 @@ public class OtpMessageRepository {
 
     @Autowired
     public OtpMessageRepository(KafkaTemplate<String, SMSRequest> kafkaTemplate,
-                                @Value("sms.topic") String smsTopic) {
+                                @Value("${sms.topic}") String smsTopic) {
         this.kafkaTemplate = kafkaTemplate;
         this.smsTopic = smsTopic;
     }

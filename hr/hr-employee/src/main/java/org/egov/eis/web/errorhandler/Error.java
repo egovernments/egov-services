@@ -38,38 +38,40 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.service;
+package org.egov.eis.web.errorhandler;
 
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-import org.egov.eis.model.UserInfo;
-import org.egov.eis.service.helper.UserSearchURLHelper;
-import org.egov.eis.web.contract.EmployeeGetRequest;
-import org.egov.eis.web.contract.UserRequest;
-import org.egov.eis.web.contract.UserResponse;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+import javax.validation.constraints.NotNull;
 
-@Service
-public class UserService {
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-//	@Autowired
-//	private RestTemplate restTemplate;
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@EqualsAndHashCode
+public class Error {
 
-	@Autowired
-	private UserSearchURLHelper userSearchURLHelper;
+	@NotNull
+	private Integer code;
 
-	public List<UserInfo> getUsers(EmployeeGetRequest userGetRequest) {
-		ResponseEntity<UserResponse> userResponseEntity = new RestTemplate()
-				.getForEntity(userSearchURLHelper.searchURL(userGetRequest), UserResponse.class);
+	@NotNull
+	private String message;
 
-		return userResponseEntity.getBody().getUser();
-	}
-	
-	public Long createUser(UserRequest userRequest) {
-		// FIXME use restTemplate to call user service and get id and return the same;
-		return 0L;
-	}
+	private String description;
+
+	/**
+	 * FIXME : If we take List of Object, it will generate twice the actual result.
+	 * 		   On first line, the key & on next line the value.
+	 * PROPOSITION : Can take Map instead where Key is fieldName, Value is Error description
+	 */
+	private Map<String, Object> fields = new LinkedHashMap<String, Object>();
 }

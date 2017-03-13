@@ -38,12 +38,11 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.web.errorhandlers;
+package org.egov.eis.web.contract;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import org.egov.eis.model.Employee;
 
-import javax.validation.constraints.NotNull;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -52,26 +51,18 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Getter
-@Setter
-@NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @EqualsAndHashCode
-public class Error {
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+public class UserRequest {
 
-	@NotNull
-	private Integer code;
+	@JsonProperty("RequestInfo")
+	private RequestInfo requestInfo;
 
-	@NotNull
-	private String message;
+	@JsonProperty("Employee")
+	private Employee employee;
 
-	private String description;
-
-	/**
-	 * FIXME : If we take List of Object, it will generate twice the actual result.
-	 * 		   On first line, the key & on next line the value.
-	 * PROPOSITION : Can take Map instead where Key is fieldName, Value is Error description
-	 */
-	private Map<String, Object> fields = new LinkedHashMap<String, Object>();
 }

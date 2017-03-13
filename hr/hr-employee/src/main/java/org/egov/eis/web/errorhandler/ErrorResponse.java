@@ -38,7 +38,7 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.web.errorhandlers;
+package org.egov.eis.web.errorhandler;
 
 import org.egov.eis.web.contract.ResponseInfo;
 

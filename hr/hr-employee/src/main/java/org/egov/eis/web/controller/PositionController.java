@@ -51,7 +51,7 @@ import org.egov.eis.web.contract.PositionResponse;
 import org.egov.eis.web.contract.RequestInfo;
 import org.egov.eis.web.contract.ResponseInfo;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
-import org.egov.eis.web.errorhandlers.ErrorHandler;
+import org.egov.eis.web.errorhandler.ErrorHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,9 +86,6 @@ public class PositionController {
 	public ResponseEntity<?> search(@ModelAttribute @Valid PositionGetRequest positionGetRequest,
 			BindingResult bindingResult, @PathVariable Long id, @RequestBody RequestInfo requestInfo) {
 
-		// FIXME : By strange behavior positionId is set to 1 by default. So setting it to null. Needs to check
-		positionGetRequest.setId(null);
-
 		// validate header
 		if(requestInfo.getApiId() == null || requestInfo.getVer() == null || requestInfo.getTs() == null ) {
 			return errHandler.getErrorResponseEntityForMissingRequestInfo(requestInfo);
@@ -102,7 +99,6 @@ public class PositionController {
 		// Call service
 		List<Position> positionsList = null;
 		try {
-			System.out.println(positionGetRequest.getId());
 			positionsList = positionService.getPositions(id, positionGetRequest, requestInfo);
 		} catch (Exception exception) {
 			logger.error("Error while processing request " + positionGetRequest, exception);

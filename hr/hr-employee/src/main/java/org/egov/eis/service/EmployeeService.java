@@ -41,27 +41,88 @@
 package org.egov.eis.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import org.egov.eis.broker.EmployeeProducer;
+import org.egov.eis.model.Employee;
 import org.egov.eis.model.EmployeeInfo;
 import org.egov.eis.model.UserInfo;
+import org.egov.eis.repository.AssignmentRepository;
+import org.egov.eis.repository.DepartmentalTestRepository;
+import org.egov.eis.repository.EducationalQualificationRepository;
+import org.egov.eis.repository.EmployeeJurisdictionRepository;
+import org.egov.eis.repository.EmployeeLanguageRepository;
 import org.egov.eis.repository.EmployeeRepository;
+import org.egov.eis.repository.HODDepartmentRepository;
+import org.egov.eis.repository.ProbationRepository;
+import org.egov.eis.repository.RegularisationRepository;
+import org.egov.eis.repository.ServiceHistoryRepository;
+import org.egov.eis.repository.TechnicalQualificationRepository;
 import org.egov.eis.service.helper.EmployeeUserMapper;
 import org.egov.eis.web.contract.EmployeeGetRequest;
+import org.egov.eis.web.contract.UserRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class EmployeeService {
+	
+	public static final Logger LOGGER = LoggerFactory.getLogger(EmployeeService.class);
 
 	@Autowired
 	private EmployeeRepository employeeRepository;
-/*
+
+	@Autowired
+	private AssignmentRepository assignmentRepository;
+
+	@Autowired
+	private HODDepartmentRepository hodDepartmentRepository;
+
+	@Autowired
+	private ServiceHistoryRepository serviceHistoryRepository;
+
+	@Autowired
+	private ProbationRepository probationRepository;
+
+	@Autowired
+	private RegularisationRepository regularisationRepository;
+
+	@Autowired
+	private TechnicalQualificationRepository technicalQualificationRepository;
+
+	@Autowired
+	private EducationalQualificationRepository educationalQualificationRepository;
+
+	@Autowired
+	private DepartmentalTestRepository departmentalTestRepository;
+
+	@Autowired
+	private EmployeeJurisdictionRepository employeeJurisdictionRepository;
+
+	@Autowired
+	private EmployeeLanguageRepository employeeLanguageRepository;
+
 	@Autowired
 	private UserService userService;
-*/
+
 	@Autowired
 	private EmployeeUserMapper employeeUserMapper;
+	
+	@Autowired
+	EmployeeProducer employeeProducer;
+	
+	@Value("${kafka.topics.employee.savedb.name}")
+	String employeeSaveTopic;
+	
+	@Value("${kafka.topics.employee.savedb.key}")
+	String employeeSaveKey;
 
 	public List<EmployeeInfo> getEmployees(EmployeeGetRequest employeeGetRequest) {
 		List<EmployeeInfo> employeeInfoList = employeeRepository.findForCriteria(employeeGetRequest);
@@ -72,5 +133,56 @@ public class EmployeeService {
 		employeeUserMapper.mapUsersWithEmployees(employeeInfoList, userInfoList);
 
 		return employeeInfoList;
+	}
+
+	public void createEmployee(Employee employee) {
+		// create user For Employee by REST API call and get the Id for the user.
+		UserRequest userRequest = getUserRequest(employee);
+		userService.createUser(userRequest);
+		// get code generated for employee by calling employee code generator service
+
+		String employeeJson = null;
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			employeeJson = mapper.writeValueAsString(employee);
+			LOGGER.info("employeeJson::" + employeeJson);
+		} catch (JsonProcessingException e) {
+			LOGGER.error("Error while converting Employee to JSON", e);
+				e.printStackTrace();
+		}
+		try {
+			employeeProducer.sendMessage(employeeSaveTopic, employeeSaveKey, employeeJson);
+		} catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		
+	}
+
+	private UserRequest getUserRequest(Employee employee) {
+		return null;
+	}
+
+	public void saveEmployee(Employee employee) {
+		Long employeeId = new Date().getTime();
+		String code = "EMP" + employeeId;
+
+		employee.setId(employeeId);
+		employee.setCode(code);
+		employeeRepository.save(employee);
+		employeeJurisdictionRepository.save(employeeId, employee.getJurisdictions());
+		employeeLanguageRepository.save(employeeId, employee.getLanguagesKnown());
+		for (int i = 0; i < employee.getAssignments().size(); i++) {
+			employee.getAssignments().get(i).setId(new Date().getTime() + i);
+		};
+		assignmentRepository.save(employeeId, employee.getAssignments());
+		employee.getAssignments().forEach((assignment) -> {
+			hodDepartmentRepository.save(assignment.getId(), assignment.getHod());
+		});
+		serviceHistoryRepository.save(employeeId, employee.getServiceHistory());
+		probationRepository.save(employeeId, employee.getProbation());
+		regularisationRepository.save(employeeId, employee.getRegularisation());
+		technicalQualificationRepository.save(employeeId, employee.getTechnical());
+		educationalQualificationRepository.save(employeeId, employee.getEducation());
+		departmentalTestRepository.save(employeeId, employee.getTest());
 	}
 }

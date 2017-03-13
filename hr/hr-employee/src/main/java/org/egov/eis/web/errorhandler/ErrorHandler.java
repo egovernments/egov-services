@@ -38,7 +38,7 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.web.errorhandlers;
+package org.egov.eis.web.errorhandler;
 
 import org.egov.eis.web.contract.RequestInfo;
 import org.egov.eis.web.contract.ResponseInfo;
@@ -77,6 +77,27 @@ public class ErrorHandler {
 		error.setCode(400);
 		error.setMessage("Missing Request Parameter");
 		error.setDescription("Error While Binding Request");
+		if (bindingResult.hasFieldErrors()) {
+			for (FieldError fieldError : bindingResult.getFieldErrors()) {
+				error.getFields().put(fieldError.getField(), fieldError.getRejectedValue());
+			}
+		}
+
+		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, false);
+
+		ErrorResponse errorResponse = new ErrorResponse();
+		errorResponse.setResponseInfo(responseInfo);
+		errorResponse.setError(error);
+
+		return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
+	}
+	
+	public ResponseEntity<ErrorResponse> getErrorResponseEntityForBindingErrors(BindingResult bindingResult,
+			RequestInfo requestInfo) {
+		Error error = new Error();
+		error.setCode(400);
+		error.setDescription("Binding Error");
+		
 		if (bindingResult.hasFieldErrors()) {
 			for (FieldError fieldError : bindingResult.getFieldErrors()) {
 				error.getFields().put(fieldError.getField(), fieldError.getRejectedValue());

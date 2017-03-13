@@ -68,7 +68,7 @@ public class Assignment {
 	@NotNull
 	private Long id;
 
-	private Long employeeId;
+	private Long employee;
 
 	private Long position;
 

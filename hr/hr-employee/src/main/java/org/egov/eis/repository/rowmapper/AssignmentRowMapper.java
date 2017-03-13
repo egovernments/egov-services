@@ -79,9 +79,6 @@ public class AssignmentRowMapper implements ResultSetExtractor<List<Assignment>>
 				assignment.setToDate(rs.getDate("a_toDate"));
 				assignment.setGrade(rs.getLong("a_gradeId"));
 				assignment.setGovtOrderNumber(rs.getString("a_govtOrderNumber"));
-/*
-				assignment.setDocuments(rs.getString("a_documents"));
-*/
 				assignment.setCreatedBy(rs.getLong("a_createdBy"));
 				assignment.setCreatedDate(rs.getDate("a_createdDate"));
 				assignment.setLastModifiedBy(rs.getLong("a_lastModifiedBy"));

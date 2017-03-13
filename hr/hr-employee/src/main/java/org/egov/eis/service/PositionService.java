@@ -43,7 +43,6 @@ package org.egov.eis.service;
 import java.util.List;
 
 import org.egov.eis.model.Position;
-import org.egov.eis.repository.PositionAssignmentRepository;
 import org.egov.eis.service.helper.PositionSearchURLHelper;
 import org.egov.eis.web.contract.PositionGetRequest;
 import org.egov.eis.web.contract.PositionResponse;
@@ -54,22 +53,18 @@ import org.springframework.web.client.RestTemplate;
 
 @Service
 public class PositionService {
-
+/*
 	@Autowired
-	private PositionAssignmentRepository positionAssignmentRepository;
-
+	private RestTemplate restTemplate;
+*/
 	@Autowired
 	private PositionSearchURLHelper positionSearchURLHelper;
 
-	public List<Position> getPositions(Long employeeId, PositionGetRequest positionGetRequest,
-			RequestInfo requestInfo) {
+	public List<Position> getPositions(Long employeeId, PositionGetRequest positionGetRequest, RequestInfo requestInfo) {
+		String url = positionSearchURLHelper.searchURL(positionGetRequest);
 
-		// hit repository to get list of positionIds based on criteria
-
-		List<Long> positionIdList = positionAssignmentRepository.findForCriteria(employeeId, positionGetRequest);
-		String url = positionSearchURLHelper.searchURL(positionIdList, positionGetRequest.getTenantId());
-
-		PositionResponse positionResponse = new RestTemplate().postForObject(url, requestInfo, PositionResponse.class);
+		PositionResponse positionResponse = new RestTemplate()
+				.postForObject(url, requestInfo, PositionResponse.class);
 
 		return positionResponse.getPosition();
 	}

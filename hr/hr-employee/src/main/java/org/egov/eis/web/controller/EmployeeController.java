@@ -44,14 +44,17 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.egov.eis.model.Employee;
 import org.egov.eis.model.EmployeeInfo;
 import org.egov.eis.service.EmployeeService;
 import org.egov.eis.web.contract.EmployeeGetRequest;
+import org.egov.eis.web.contract.EmployeeGetResponse;
+import org.egov.eis.web.contract.EmployeeRequest;
 import org.egov.eis.web.contract.EmployeeResponse;
 import org.egov.eis.web.contract.RequestInfo;
 import org.egov.eis.web.contract.ResponseInfo;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
-import org.egov.eis.web.errorhandlers.ErrorHandler;
+import org.egov.eis.web.errorhandler.ErrorHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,7 +72,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/employees")
 public class EmployeeController {
 
-	private static final Logger logger = LoggerFactory.getLogger(EmployeeController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(EmployeeController.class);
 
 	@Autowired
 	private EmployeeService employeeService;
@@ -100,11 +103,28 @@ public class EmployeeController {
 		try {
 			employeesList = employeeService.getEmployees(employeeGetRequest);
 		} catch (Exception exception) {
-			logger.error("Error while processing request " + employeeGetRequest, exception);
+			LOGGER.error("Error while processing request " + employeeGetRequest, exception);
 			return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
 		}
 
-		return getSuccessResponse(employeesList, requestInfo);
+		return getSuccessResponseForSearch(employeesList, requestInfo);
+	}
+
+	@PostMapping("/_create")
+	@ResponseBody
+	public ResponseEntity<?> create(@RequestBody @Valid EmployeeRequest employeeRequest, BindingResult bindingResult){
+		System.out.println("Entered create");
+		// validate input params
+		if (bindingResult.hasErrors()) {
+			return errHandler.getErrorResponseEntityForBindingErrors(bindingResult, employeeRequest.getRequestInfo());
+		}
+
+		LOGGER.info("employeeRequest::" + employeeRequest);
+		Employee employee = employeeRequest.getEmployee();
+		//agreementValidator.validateAgreement(agreement);
+		employeeService.createEmployee(employee);
+
+		return getSuccessResponse(employee, employeeRequest.getRequestInfo());
 	}
 
 	/**
@@ -113,14 +133,23 @@ public class EmployeeController {
 	 * @param employeesList
 	 * @return
 	 */
-	private ResponseEntity<?> getSuccessResponse(List<EmployeeInfo> employeesList, RequestInfo requestInfo) {
+	private ResponseEntity<?> getSuccessResponse(Employee employee, RequestInfo requestInfo) {
 		EmployeeResponse employeeRes = new EmployeeResponse();
-		employeeRes.setEmployee(employeesList);
+		employeeRes.setEmployee(employee);
+
 		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 		responseInfo.setStatus(HttpStatus.OK.toString());
 		employeeRes.setResponseInfo(responseInfo);
 		return new ResponseEntity<EmployeeResponse>(employeeRes, HttpStatus.OK);
-
+	}
+	
+	private ResponseEntity<?> getSuccessResponseForSearch(List<EmployeeInfo> employeesList, RequestInfo requestInfo) {
+		EmployeeGetResponse employeeRes = new EmployeeGetResponse();
+		employeeRes.setEmployees(employeesList);
+		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+		responseInfo.setStatus(HttpStatus.OK.toString());
+		employeeRes.setResponseInfo(responseInfo);
+		return new ResponseEntity<EmployeeGetResponse>(employeeRes, HttpStatus.OK);
 	}
 
 }

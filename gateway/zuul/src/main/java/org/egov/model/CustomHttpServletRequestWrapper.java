@@ -12,7 +12,7 @@ import java.io.*;
 public class CustomHttpServletRequestWrapper extends HttpServletRequestWrapper {
 
     private static Logger log = LoggerFactory.getLogger(CustomHttpServletRequestWrapper.class);
-    private final String body;
+    private String body;
 
     public CustomHttpServletRequestWrapper(HttpServletRequest request) {
         super(request);
@@ -74,5 +74,9 @@ public class CustomHttpServletRequestWrapper extends HttpServletRequestWrapper {
                 return byteArrayInputStream.read();
             }
         };
+    }
+
+    public void setBody(String s) {
+        this.body = s;
     }
 }

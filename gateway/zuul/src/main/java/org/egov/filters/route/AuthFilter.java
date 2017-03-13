@@ -22,10 +22,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 
@@ -35,6 +32,8 @@ public class AuthFilter extends ZuulFilter {
 
     private ProxyRequestHelper helper = new ProxyRequestHelper();
     private RibbonRoutingFilter delegateFilter;
+    private HttpServletRequest request;
+    private CustomHttpServletRequestWrapper customHttpServletRequestWrapper;
     private List<RibbonRequestCustomizer> requestCustomizers = new ArrayList<>();
 
     @Autowired
@@ -43,6 +42,7 @@ public class AuthFilter extends ZuulFilter {
     @PostConstruct
     void initDelegateFilter() {
         delegateFilter = new RibbonRoutingFilter(helper, ribbonCommandFactory, requestCustomizers);
+        customHttpServletRequestWrapper =
     }
 
     @Override
@@ -57,7 +57,9 @@ public class AuthFilter extends ZuulFilter {
 
     @Override
     public boolean shouldFilter() {
-        return !RequestContext.getCurrentContext().getRequest().getRequestURI().contains("/user");
+        HttpServletRequest request = RequestContext.getCurrentContext().getRequest();
+        String requestUri = request.getRequestURI();
+        return delegateFilter.shouldFilter() && !requestUri.contains("/user");
     }
 
     @Override
@@ -88,15 +90,8 @@ public class AuthFilter extends ZuulFilter {
                 ctx.setRequest(originalRequest);
 
                 if (isAuthenticationSuccessful(authResponse)) {
-                    String userId = getUserIdFromAuthResponse(authResponse);
-                    log.info(String.format("$$$$$$$$$$$$$$$ %s", userId));
-                    CustomHttpServletRequestWrapper customHttpServletRequestWrapper = new CustomHttpServletRequestWrapper(originalRequest);
-                    String requestBody = IOUtils.toString(customHttpServletRequestWrapper.getInputStream());
-                    ObjectMapper mapper = new ObjectMapper();
-                    Map<String, Object> requestMap = mapper.readValue(requestBody, new TypeReference<Map<String, Object>>() {
-                    });
-
-                    log.info(String.format("--------------- %s", requestMap));
+                    Integer userId = getUserIdFromAuthResponse(authResponse);
+                    ctx.addZuulRequestHeader("requester_id", userId.toString());
                     return delegateFilter.run();
                 }
 
@@ -111,12 +106,12 @@ public class AuthFilter extends ZuulFilter {
         return null;
     }
 
-    private String getUserIdFromAuthResponse(ClientHttpResponse authResponse) throws IOException {
+    private Integer getUserIdFromAuthResponse(ClientHttpResponse authResponse) throws IOException {
         String authResponseBody = IOUtils.toString(authResponse.getBody(), "utf-8");
         ObjectMapper mapper = new ObjectMapper();
         Map<String, Object> requestMap = mapper.readValue(authResponseBody, new TypeReference<Map<String, Object>>() {
         });
-        return (String) requestMap.get("id");
+        return (Integer) requestMap.get("id");
     }
 
     private boolean isAuthenticationSuccessful(ClientHttpResponse response) throws IOException {

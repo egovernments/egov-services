@@ -1,0 +1,1961 @@
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingOne">
+            <h4 class="panel-title">
+            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+              Employee Details
+            </a>
+          </h4>
+        </div>
+        <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+            <div class="panel-body">
+                <!-- Employee Details  -->
+                <div class="form-section" id="employeeDetails">
+                    <h3>Employee Details </h3>
+                    <div class="form-section-inner">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6 label-text">
+                                        <label for="user.name">Employee Name</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input id="user.name" name="user.name" type="text">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6 label-text">
+                                        <label for="employeeType">Employee Type</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="styled-select">
+                                            <select id="employeeType" name="employeeType">
+                                              <option>Select</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6 label-text">
+                                        <label for="code">Employee Code</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input id="code" name="code" type="text">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6 label-text">
+                                        <label for="employeeStatus">Status</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="styled-select">
+                                            <select id="employeeStatus" name="employeeStatus">
+                                           <option>Select</option>
+                                    </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6 label-text">
+                                        <label for="group">Employee Group</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="styled-select">
+                                            <select id="group" name="group">
+                                           <option>Select</option>
+                                    </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6 label-text">
+                                        <label for="user.dob">Date Of Birth</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="text-no-ui">
+                                            <span><i class="glyphicon glyphicon-calendar"></i></span>
+                                            <input id="user.dob" name="user.dob" type="date">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6 label-text">
+                                        <label for="user.gender">Gender</label>
+                                    </div>
+                                    <div class="col-sm-6">
+
+                                        <label class="radio-inline radioUi">
+                                          <input type="radio" name="user.gender" id="user.gender" value="Male"> Male
+                                        </label>
+                                        <label class="radio-inline radioUi">
+                                          <input type="radio" name="user.gender" id="user.gender" value="Female"> Female
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6 label-text">
+                                        <label for="maritalStatus">Marital Status</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="styled-select">
+                                            <select id="maritalStatus" name="maritalStatus">
+                                            <option>Select</option>
+                                      </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6 label-text">
+                                        <label for="user.fatherOrHusbandName">Father’s/Husbands Name </label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input id="user.fatherOrHusbandName" name="user.fatherOrHusbandName" type="text">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6 label-text">
+                                        <label for="placeOfBirth">Native/Birth Place</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input id="placeOfBirth" name="placeOfBirth" type="text">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6 label-text">
+                                        <label for="user.bloodGroup">Blood Group</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="styled-select">
+                                            <select id="user.bloodGroup" name="user.bloodGroup">
+                                              <option>Select</option>
+                                      </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6 label-text">
+                                        <label for="motherTounge">Mother Tongue</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="styled-select">
+                                            <select id="motherTounge" name="motherTounge">
+                                              <option>Select</option>
+                                      </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6 label-text">
+                                        <label for="religion">Religion</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="styled-select">
+                                            <select id="religion" name="religion">
+                                            <option>Select</option>
+                                      </select>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6 label-text">
+                                        <label for="community">Community</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="styled-select">
+                                            <select id="community" name="community">
+                                            <option>Select</option>
+                                      </select>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6 label-text">
+                                        <label for="category">Category</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="styled-select">
+                                            <select id="category" name="category">
+                                            <option>Select</option>
+                                      </select>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6 label-text">
+                                        <label for="physicallyDisabled">Is Physically Handicapped?</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label class="radio-inline radioUi">
+                                          <input type="radio" name="inlineRadioOptions" id="physicallyDisabled" value="Yes"> Yes
+                                          </label>
+                                        <label class="radio-inline radioUi">
+                                        <input type="radio" name="inlineRadioOptions" id="physicallyDisabled" value="No"> No
+                                      </label>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6 label-text">
+                                        <label for="medicalReportProduced">Is Medical Report Available?</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label class="radio-inline radioUi">
+                                          <input type="radio" name="inlineRadioOptions" id="medicalReportProduced" value="Yes"> Yes
+                                          </label>
+                                        <label class="radio-inline radioUi">
+                                        <input type="radio" name="inlineRadioOptions" id="medicalReportProduced" value="No"> No
+                                      </label>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6 label-text">
+                                        <label for="user.identificationMark">Identification Mark</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input id="user.identificationMark" name="user.identificationMark" type="text">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6 label-text">
+                                        <label for="user.pan">PAN </label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input id="user.pan" name="user.pan" type="text">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6 label-text">
+                                        <label for="passportNo">Passport Number</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input id="passportNo" name="passportNo" type="text">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6 label-text">
+                                        <label for="gpfNo">GPF Number</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input id="gpfNo" name="gpfNo" type="text">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6 label-text">
+                                        <label for="user.aadhaarNumber">Aadhaar Number </label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input id="user.aadhaarNumber" name="user.aadhaarNumber" type="number">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6 label-text">
+                                        <label for="bank">Bank </label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="styled-select">
+                                            <select id="bank" name="bank">
+                                              <option>Select</option>
+                                      </select>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6 label-text">
+                                        <label for="bank">Branch </label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="styled-select">
+                                            <select id="bankBranch" name="bankBranch">
+                                              <option>Select</option>
+                                      </select>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6 label-text">
+                                        <label for="bankAccount">Account number  </label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input id="bankAccount" name="bankAccount" type="number">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6 label-text">
+                                        <label for="user.emailId">Email ID  </label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input id="user.emailId" name="user.emailId" type="email">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6 label-text">
+                                        <label for="user.mobileNumber">Phone number  </label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input id="user.mobileNumber" name="user.mobileNumber" type="number">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6 label-text">
+                                        <label for="user.altContactNumber">Phone number (Emergency/Res)  </label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input id="user.altContactNumber" name="user.altContactNumber" type="number">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="well">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label for="user.permanentAddress">Permanent Address </label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <textarea id="user.permanentAddress" name="user.permanentAddress"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label for="user.permanentCity">City </label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <input id="user.permanentCity" name="user.permanentCity" type="text">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label for="user.permanentPincode">Pin code </label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <input id="user.permanentPincode" name="user.permanentPincode" type="text">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="well">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label for="user.correspondenceAddress">Correspondence Address </label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <textarea id="user.correspondenceAddress" name="user.correspondenceAddress"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label for="user.correspondenceCity">City </label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <input id="user.correspondenceCity" name="user.correspondenceCity" type="text">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label for="user.correspondencePincode">Pin code </label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <input id="user.correspondencePincode" name="user.correspondencePincode" type="text">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6 label-text">
+                                        <label for="languagesKnow">Languages Known </label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="styled-select multiple">
+                                            <select multiple id="languagesKnow" name="languagesKnow">
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6 label-text">
+                                        <label for="user.locale">Local Language Qualified</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="styled-select">
+                                            <select id="user.locale" name="user.locale">
+                                              <option>Select</option>
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6 label-text">
+                                        <label for="recruitmentMode">Recruitment Mode</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="styled-select">
+                                            <select id="recruitmentMode" name="recruitmentMode">
+                                            <option>Select</option>
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6 label-text">
+                                        <label for="recruitmentType">Recruitment Type</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="styled-select">
+                                            <select id="recruitmentType" name="recruitmentType">
+                                              <option>Select</option>
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6 label-text">
+                                        <label for="recruitmentQuota">Recruitment Quota</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="styled-select">
+                                            <select id="recruitmentQuota" name="recruitmentQuota">
+                                            <option>Select</option>
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6 label-text">
+                                        <label for="dateOfAppointment">Date of Appointment</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="text-no-ui">
+                                            <span><i class="glyphicon glyphicon-calendar"></i></span>
+                                            <input id="dateOfAppointment" name="dateOfAppointment" type="date">
+                                        <!-- </div> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6 label-text">
+                                        <label for="dateOfJoining">Date of Joining/Deputation</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="text-no-ui">
+                                            <span><i class="glyphicon glyphicon-calendar"></i></span>
+                                            <input id="dateOfJoining" name="dateOfJoining" type="date">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6 label-text">
+                                        <label for="retirementAge">Retirement Age</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input id="retirementAge" name="retirementAge" type="number">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6 label-text">
+                                        <label for="dateOfRetirement">Retirement Date</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="text-no-ui">
+                                            <span><i class="glyphicon glyphicon-calendar"></i></span>
+                                            <input id="dateOfRetirement" name="dateOfRetirement" type="date">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6 label-text">
+                                        <label for="dateOfTermination">Termination Date</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="text-no-ui">
+                                            <span><i class="glyphicon glyphicon-calendar"></i></span>
+                                            <input id="dateOfTermination" name="dateOfTermination" type="date">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6 label-text">
+                                        <label for="dateOfResignation">Resignation Date</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="text-no-ui">
+                                            <span><i class="glyphicon glyphicon-calendar"></i></span>
+                                            <input id="dateOfResignation" name="dateOfResignation" type="date">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6 label-text">
+                                        <label for="user.active">Is user Active?</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label class="radio-inline radioUi">
+                                          <input type="radio" name="inlineRadioOptions" id="user.active" value="Yes" checked="true"> Yes
+                                          </label>
+                                        <label class="radio-inline radioUi">
+                                        <input type="radio" name="inlineRadioOptions" id="user.active" value="No"> No
+                                      </label>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6 label-text">
+                                        <label for="user.userName">User Name</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input id="user.userName" name="user.userName" type="text">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6 label-text">
+                                        <label for="user.photo">Employee Photo</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <span class="btn btn-default btn-file">
+                                            Select from file
+                                            <input id="user.photo" name="user.photo" type="file">
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6 label-text">
+                                        <label for="user.signature">Employee Signature</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <span class="btn btn-default btn-file">
+                                            Select from file
+                                            <input id="user.signature" name="user.signature" type="file">
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6 label-text">
+                                        <label for="documents">Other Attachments</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <span class="btn btn-default btn-file">
+                                            Select from file
+                                            <input id="documents" name="documents" type="file">
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /Employee Details -->
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingTwo">
+            <h4 class="panel-title">
+                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                  Assignment Details
+                </a>
+              </h4>
+        </div>
+        <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+            <div class="panel-body">
+                <!-- Employee Details  -->
+                <div class="form-section" id="employeeDetails">
+                    <h3 class="pull-left">Assignment Details </h3>
+                    <a href="#" class="btn btn-default btn-action pull-right" data-toggle="modal" data-target="#assignmentDetailModal"><span class="glyphicon glyphicon-plus"></span></a>
+                    <div class="clearfix"></div>
+
+                    <div class="land-table">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>From Date</th>
+                                    <th>To Date</th>
+                                    <th>Fund</th>
+                                    <th>Function</th>
+                                    <th>Grade</th>
+                                    <th>Designation</th>
+                                    <th>Position</th>
+                                    <th>Functionality</th>
+                                    <th>Departments</th>
+                                    <th>Is HOD</th>
+                                    <th>Main Department</th>
+                                    <th>Govt Order No</th>
+                                    <th>Primary</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="agreementTableBody">
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="assignmentDetailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <form class="assignmentDetail" id="assignmentDetail">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title" id="myModalLabel">Add/Edit</h4>
+                                    </div>
+                                    <div class="modal-body">
+
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <div class="row">
+                                                    <div class="col-sm-6 label-text">
+                                                        <label for="assignments.is_primary">Is Primary?</label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <label class="radio-inline radioUi">
+                                                  <input type="radio" name="assignments.is_primary" id="assignments.is_primary" value="Yes"> Yes
+                                                    </label>
+                                                        <label class="radio-inline radioUi">
+                                                    <input type="radio" name="assignments.is_primary" id="assignments.is_primary" value="No" checked="checked"> No
+                                                </label>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+
+
+
+                                            <div class="col-sm-6">
+                                                <div class="row">
+                                                    <div class="col-sm-6 label-text">
+                                                        <label for="assignments.fromDate">From Date</label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <input id="assignments.fromDate" name="assignments.fromDate" type="date">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <div class="row">
+                                                    <div class="col-sm-6 label-text">
+                                                        <label for="assignments.toDate">To Date</label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <input id="assignments.toDate" name="assignments.toDate" type="date">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-6">
+                                                <div class="row">
+                                                    <div class="col-sm-6 label-text">
+                                                        <label for="assignments.fund">Fund</label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="styled-select">
+                                                            <select id="assignments.fund" name="assignments.fund">
+                                                <option>Select</option>
+                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <div class="row">
+                                                    <div class="col-sm-6 label-text">
+                                                        <label for="assignments.function">Function</label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="styled-select">
+                                                            <select id="assignments.function" name="assignments.function">
+                                                <option>Select</option>
+                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-6">
+                                                <div class="row">
+                                                    <div class="col-sm-6 label-text">
+                                                        <label for="assignments.grade">Grade</label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="styled-select">
+                                                            <select id="assignments.grade" name="assignments.grade">
+                                                      <option>Select</option>
+                                                    </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <div class="row">
+                                                    <div class="col-sm-6 label-text">
+                                                        <label for="assignments.designation">Designation</label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="styled-select">
+                                                            <select id="assignments.designation" name="assignments.designation">
+                                                      <option>Select</option>
+                                                    </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-6">
+                                                <div class="row">
+                                                    <div class="col-sm-6 label-text">
+                                                        <label for="assignments.position">Position</label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="styled-select">
+                                                            <select id="assignments.position" name="assignments.position">
+                                                        <option>Select</option>
+                                                    </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <div class="row">
+                                                    <div class="col-sm-6 label-text">
+                                                        <label for="assignments.functionary">Functionary</label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="styled-select">
+                                                            <select id="assignments.functionary" name="assignments.functionary">
+                                                        <option>Select</option>
+                                                    </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-6">
+                                                <div class="row">
+                                                    <div class="col-sm-6 label-text">
+                                                        <label for="assignments.department">Main Department</label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="styled-select">
+                                                            <select id="assignments.department" name="assignments.department">
+                                                      <option>Select</option>
+                                                    </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <div class="row">
+                                                    <div class="col-sm-6 label-text">
+                                                        <label for="assignments.hod">If HOD?</label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <label class="radio-inline radioUi">
+                                                  <input type="radio" name="assignments.hod" id="assignments.hod" value="Yes" onchange="enableAndDisable('departments')"> Yes
+                                                  </label>
+                                                        <label class="radio-inline radioUi">
+                                                  <input type="radio" name="assignments.hod" id="assignments.hod" value="No" onchange="enableAndDisable('departments')" checked="checked"> No
+                                                  </label>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-6" id="departments">
+                                                <div class="row">
+                                                    <div class="col-sm-6 label-text">
+                                                        <label for="assignments.mainDepartments">Departments</label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="styled-select multiple">
+                                                            <select multiple id="assignments.mainDepartments" name="assignments.mainDepartments">
+
+                                                      </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <div class="row">
+                                                    <div class="col-sm-6 label-text">
+                                                        <label for="assignments.govtOrderNumber">Govt Order No</label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <input id="assignments.govtOrderNumber" name="assignments.govtOrderNumber" type="text">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-6">
+                                                <div class="row">
+                                                    <div class="col-sm-6 label-text">
+                                                        <label for="assignments.documents ">Attachment </label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="styled-file">
+                                                            <input id="assignments.documents " name="assignments.documents " type="file">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                        <button type="button" data-dismiss="modal" class="btn btn-primary" onclick="commonAddAndUpdate('agreementTableBody','assignmentDetailModal','assignments')">Add/Edit</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- assignment modal -->
+
+                </div>
+                <!-- /Employee Details -->
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingJurisdiction">
+            <h4 class="panel-title">
+              <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseJurisdiction" aria-expanded="false" aria-controls="collapseJurisdiction">
+                Jurisdiction List
+              </a>
+            </h4>
+        </div>
+        <div id="collapseJurisdiction" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingJurisdiction">
+            <div class="panel-body">
+                <div class="form-section" id="employeeDetails">
+                    <!-- <h3>Service Section </h3> -->
+                    <h3 class="pull-left">Jurisdiction List </h3>
+                    <a href="#" class="btn btn-default btn-action pull-right" data-toggle="modal" data-target="#jurisdictionDetailModal"><span class="glyphicon glyphicon-plus"></span></a>
+                    <div class="clearfix"></div>
+                    <div class="land-table">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Boundary</th>
+                                    <th>Action</th>
+
+                                </tr>
+                            </thead>
+
+                            <tbody id="jurisdictionTableBody">
+
+                            </tbody>
+
+                        </table>
+                    </div>
+
+
+
+                    <div class="modal fade" id="jurisdictionDetailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <form class="jurisdictionDetail" id="jurisdictionDetail">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title" id="myModalLabel">Add/Edit</h4>
+                                    </div>
+                                    <div class="modal-body">
+
+                                        <div class="form-section-inner">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="jurisdictions.jurisdictionsType">Jurisdiction Type</label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <div class="styled-select">
+                                                                <select id="jurisdictions.jurisdictionsType" name="jurisdictions.jurisdictionsType">
+                                                  <option>Select</option>
+                                              </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="jurisdictions.boundary">Jurisdiction List</label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <div class="styled-select">
+                                                                <select id="jurisdictions.boundary" name="jurisdictions.boundary">
+                                                  <option value="">select</option>
+                                              </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                        <button type="button" data-dismiss="modal" id="jurisdictionAddOrUpdate" class="btn btn-primary" onclick="commonAddAndUpdate('jurisdictionTableBody','jurisdictionDetailModal','jurisdictions')">Add/Edit</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingThree">
+            <h4 class="panel-title">
+              <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                Service Section
+              </a>
+            </h4>
+        </div>
+        <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+            <div class="panel-body">
+                <div class="form-section" id="employeeDetails">
+                    <!-- <h3>Service Section </h3> -->
+                    <h3 class="pull-left">Service Details/history/ledger </h3>
+                    <a href="#" class="btn btn-default btn-action pull-right" data-toggle="modal" data-target="#serviceHistoryDetailModal"><span class="glyphicon glyphicon-plus"></span></a>
+                    <div class="clearfix"></div>
+
+                    <div class="land-table">
+                        <table class="table table-border">
+                            <thead>
+                                <tr>
+                                    <th>Serail No</th>
+                                    <th>Service Entry Description</th>
+                                    <th>Date</th>
+                                    <th>Remarks/Comments</th>
+                                    <th>Order No</th>
+                                    <th>Documents</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="serviceHistoryTableBody">
+
+                            </tbody>
+                        </table>
+
+                        <div class="modal fade" id="serviceHistoryDetailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <form class="serviceHistoryDetail" id="serviceHistoryDetail">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title" id="myModalLabel">Add/Edit</h4>
+                                        </div>
+                                        <div class="modal-body">
+
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="serviceHistory.id">Serieal No</label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <input id="serviceHistory.id" name="serviceHistory.id" type="number">
+
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="serviceHistory.serviceInfo">Service Entry Description</label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <textarea id="serviceHistory.serviceInfo" name="serviceHistory.serviceInfo" type="text"></textarea>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="serviceHistory.serviceFrom">Date</label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <input id="serviceHistory.serviceFrom" name="serviceHistory.serviceFrom" type="date">
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="serviceHistory.remarks">Remarks/Comments</label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <textarea id="serviceHistory.remarks" name="serviceHistory.remarks" type="text"></textarea>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="serviceHistory.orderNo">Order No</label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <input id="serviceHistory.orderNo" name="serviceHistory.orderNo" type="text">
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="serviceHistory.documents">Grade</label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <div class="styled-file">
+                                                                <input id="serviceHistory.documents" name="serviceHistory.documents" type="file">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                            <button type="button" data-dismiss="modal" id="serviceHistoryAddOrUpdate" class="btn btn-primary" onclick="commonAddAndUpdate('serviceHistoryTableBody','serviceHistoryDetailModal','serviceHistory')">Add/Edit</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <h3 class="pull-left">Probation</h3>
+                    <a href="#" class="btn btn-default btn-action pull-right" data-toggle="modal" data-target="#probationDetailModal"><span class="glyphicon glyphicon-plus"></span></a>
+                    <div class="clearfix"></div>
+
+                    <div class="land-table">
+                        <table class="table table-border">
+                            <thead>
+                                <tr>
+                                    <th>In which post?</th>
+                                    <th>Probation Declared date</th>
+                                    <th>Order no</th>
+                                    <th>Order Date</th>
+                                    <th>Remarks</th>
+                                    <th>Documents</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="probationTableBody">
+
+                            </tbody>
+                        </table>
+
+                        <div class="modal fade" id="probationDetailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <form class="probationDetail" id="probationDetail">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title" id="myModalLabel">Add/Edit</h4>
+                                        </div>
+                                        <div class="modal-body">
+
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="probation.designation">In which probation?</label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <div class="styled-select multiple">
+                                                                <select multiple id="probation.designation" name="probation.designation">
+
+                                                      </select>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="probation.declaredOn">Probation Declared Date</label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <input id="probation.declaredOn" name="probation.declaredOn" type="date">
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="probation.orderNo">Order No</label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <input id="probation.orderNo" name="probation.orderNo" type="text">
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="probation.orderDate">Order Date</label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <input id="probation.orderDate" name="probation.orderDate" type="date">
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="probation.remarks">Remarks</label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <textarea id="probation.remarks" name="probation.remarks"></textarea>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="probation.documents">Documents</label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <div class="styled-file">
+                                                                <input id="probation.documents" name="probation.documents" type="file">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                            <button type="button" data-dismiss="modal" id="probationAddOrUpdate" class="btn btn-primary" onclick="commonAddAndUpdate('probationTableBody','probationDetailModal','probation')">Add/Edit</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <br>
+
+                    <h3 class="pull-left">Regularisation</h3>
+                    <a href="#" class="btn btn-default btn-action pull-right" data-toggle="modal" data-target="#regularisationDetailModal"><span class="glyphicon glyphicon-plus"></span></a>
+                    <div class="clearfix"></div>
+
+                    <div class="land-table">
+                        <table class="table table-border">
+                            <thead>
+                                <tr>
+                                    <th>In which post?</th>
+                                    <th>Regularisation Declared date</th>
+                                    <th>Order no</th>
+                                    <th>Order Date</th>
+                                    <th>Remarks</th>
+                                    <th>Documents</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="regularisationTableBody">
+
+                            </tbody>
+                        </table>
+
+                        <div class="modal fade" id="regularisationDetailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <form class="regularisationDetail" id="regularisationDetail">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title" id="myModalLabel">Add/Edit</h4>
+                                        </div>
+                                        <div class="modal-body">
+
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="regularisation.designation">In which regularisation?</label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <div class="styled-select multiple">
+                                                                <select multiple id="regularisation.designation" name="regularisation.designation">
+
+                                                        </select>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="regularisation.declaredOn">Regularisation Declared Date</label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <input id="regularisation.declaredOn" name="regularisation.declaredOn" type="date">
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="regularisation.orderNo">Order No</label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <input id="regularisation.orderNo" name="regularisation.orderNo" type="text">
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="regularisation.orderDate">Order Date</label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <input id="regularisation.orderDate" name="regularisation.orderDate" type="date">
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="regularisation.remarks">Remarks</label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <textarea id="regularisation.remarks" name="regularisation.remarks"></textarea>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="regularisation.documents">Documents</label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <div class="styled-file">
+                                                                <input id="regularisation.documents" name="regularisation.documents" type="file">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                            <button type="button" data-dismiss="modal" id="regularisationAddOrUpdate" class="btn btn-primary" onclick="commonAddAndUpdate('regularisationTableBody','regularisationDetailModal','regularisation')">Add/Edit</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingFour">
+            <h4 class="panel-title">
+              <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                Other Details
+              </a>
+            </h4>
+        </div>
+        <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
+            <div class="panel-body">
+                <div class="form-section" id="employeeDetails">
+                    <!-- <h3>Other Details </h3> -->
+                    <h3 class="pull-left">Educational Qualification </h3>
+                    <a href="#" class="btn btn-default btn-action pull-right" data-toggle="modal" data-target="#educationDetailModal"><span class="glyphicon glyphicon-plus"></span></a>
+                    <div class="clearfix"></div>
+
+                    <div class="land-table">
+                        <table class="table table-border">
+                            <thead>
+                                <tr>
+                                    <th>Qualification</th>
+                                    <th>Major Subject</th>
+                                    <th>Year of Completion </th>
+                                    <th>University/Board</th>
+                                    <th>Doc Attachment</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="educationTableBody">
+
+                            </tbody>
+                        </table>
+
+                        <div class="modal fade" id="educationDetailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <form class="educationDetail" id="educationDetail">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title" id="myModalLabel">Add/Edit</h4>
+                                        </div>
+                                        <div class="modal-body">
+
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="education.qualification">Qualification</label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <input id="education.qualification" name="education.qualification" type="text">
+
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="education.majorSubject">Major Subject</label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <input id="education.majorSubject" name="education.majorSubject" type="text">
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="education.yearOfPassing">Year of Passing</label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <input id="education.yearOfPassing" name="education.yearOfPassing" type="date">
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="education.university">University/Board</label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <input id="education.university" name="education.university" type="text">
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="education.documents">Doc Attachment</label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <div class="styled-file">
+                                                                <input id="education.documents" name="education.documents" type="file">
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                            <button type="button" data-dismiss="modal" id="educationAddOrUpdate" class="btn btn-primary" onclick="commonAddAndUpdate('educationTableBody','educationDetailModal','education')">Add/Edit</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <h3 class="pull-left">Technical Qualification </h3>
+                    <a href="#" class="btn btn-default btn-action pull-right" data-toggle="modal" data-target="#technicalDetailModal"><span class="glyphicon glyphicon-plus"></span></a>
+                    <div class="clearfix"></div>
+
+                    <div class="land-table">
+                        <table class="table table-border">
+                            <thead>
+                                <tr>
+                                    <th>Skills</th>
+                                    <th>Grade</th>
+                                    <th>Year of Completion </th>
+                                    <th>Remarks</th>
+                                    <th>Doc Attachment</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="technicalTableBody">
+
+                            </tbody>
+                        </table>
+
+                        <div class="modal fade" id="technicalDetailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <form class="technicalDetail" id="technicalDetail">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title" id="myModalLabel">Add/Edit</h4>
+                                        </div>
+                                        <div class="modal-body">
+
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="technical.skill">Skills</label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <textarea id="technical.skill" name="technical.skill" type="text"></textarea>
+
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="technical.grade"> Grade</label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <input id="technical.grade" name="technical.grade" type="text">
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="technical.yearOfPassing">Year of Completion</label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <input id="technical.yearOfPassing" name="technical.yearOfPassing" type="date">
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="technical.remarks">   Remarks</label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <textarea id="technical.remarks" name="technical.remarks" type="text"></textarea>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="technical.documents">Doc Attachment</label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <div class="styled-file">
+                                                                <input id="technical.documents" name="technical.documents" type="file">
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                            <button type="button" data-dismiss="modal" id="technicalAddOrUpdate" class="btn btn-primary" onclick="commonAddAndUpdate('technicalTableBody','technicalDetailModal','technical')">Add/Edit</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3 class="pull-left">Departmental Test Details</h3>
+                    <a href="#" class="btn btn-default btn-action pull-right" data-toggle="modal" data-target="#testDetailModal"><span class="glyphicon glyphicon-plus"></span></a>
+                    <div class="clearfix"></div>
+
+                    <div class="land-table">
+                        <table class="table table-border">
+                            <thead>
+                                <tr>
+                                    <th>Name of the Test</th>
+
+                                    <th>Year of Completion </th>
+                                    <th>Remarks</th>
+                                    <th>Doc Attachment</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="testTableBody">
+
+                            </tbody>
+                        </table>
+                        <div class="modal fade" id="testDetailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <form class="testDetail" id="testDetail">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title" id="myModalLabel">Add/Edit</h4>
+                                        </div>
+                                        <div class="modal-body">
+
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="test.test">Name of the Test</label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <textarea id="test.test" name="test.test" type="text"></textarea>
+
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="test.yearOfPassing">Year of Completion</label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <input id="test.yearOfPassing" name="test.yearOfPassing" type="date">
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="test.remarks">Remarks</label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <textarea id="test.remarks" name="test.remarks" type="text"></textarea>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="test.documents">Doc Attachment</label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <div class="styled-file">
+                                                                <input id="test.documents" name="test.documents" type="file">
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                            <button type="button" data-dismiss="modal" id="testAddOrUpdate" class="btn btn-primary" onclick="commonAddAndUpdate('testTableBody','testDetailModal','test')">Add/Edit</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- <h3>Immovable Property Details</h3>
+                    <div class="land-table">
+                        <a href="#" class="btn btn-default btn-action pull-right"><span class="glyphicon glyphicon-plus"></span></a>
+                        <div class="clearfix"></div>
+                        <table class="table table-border">
+                            <thead>
+                                <tr>
+                                    <th>Property Description </th>
+
+                                    <th>Place</th>
+                                    <th>How acquired</th>
+                                    <th>Present value</th>
+                                    <th>Permission obtained</th>
+                                    <th>Order No</th>
+                                    <th>Order Date</th>
+                                    <th>Doc Attachment</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                  <tr>
+                                    <td data-label="Property Description">
+                                        <textarea id="immovableProperty.description" name="immovableProperty.description" type="text"></textarea>
+                                      </td>
+
+                                      <td data-label="Place">
+                                            <input id="immovableProperty.place" name="immovableProperty.place" type="text">
+                                      </td>
+                                      <td data-label="How acquired">
+                                            <div class="styled-select">
+                                                <select id="immovableProperty.plamodeOfAcquisitionce" name="immovableProperty.plamodeOfAcquisitionce">
+                                                              <option>Select</option>
+                                                            </select>
+                                                    </div>
+                                      </td>
+
+                                      <td data-label="Present value">
+                                            <input id="immovableProperty.presentValue" name="immovableProperty.presentValue" type="number">
+                                      </td>
+
+                                      <td data-label="Permission obtained">
+                                            <label class="radio-inline">
+                                                <input type="radio" name="immovableProperty.permissionObtained" id="immovableProperty.permissionObtained" value="Yes"> Yes
+                                                </label>
+                                                <label class="radio-inline">
+                                            <input type="radio" name="immovableProperty.permissionObtained" id="immovableProperty.permissionObtained" value="No"> No
+                                            </label>
+                                      </td>
+
+                                      <td data-label="Order No">
+                                            <input id="immovableProperty.orderNo" name="immovableProperty.orderNo" type="text">
+                                      </td>
+
+                                      <td data-label="Order Date">
+                                            <input id="immovableProperty.orderDate" name="immovableProperty.orderDate" type="date">
+                                      </td>
+                                      <td data-label="Doc Attachment">
+                                            <input id="immovableProperty.documents" name="immovableProperty.documents" type="file">
+                                      </td>
+                                      <td data-label="Action">
+                                        <a href="#" class="btn btn-default btn-action"><span class="glyphicon glyphicon-pencil"></span></a>
+                                        <a href="#" class="btn btn-default btn-action"><span class="glyphicon glyphicon-trash"></span></a>
+                                    </td>
+                                  </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3>Movable Property Details</h3>
+                    <div class="land-table">
+                      <a href="#" class="btn btn-default btn-action pull-right"><span class="glyphicon glyphicon-plus"></span></a>
+                      <div class="clearfix"></div>
+                      <table class="table table-border">
+                        <thead>
+                            <tr>
+                                <th>Property Description </th>
+
+                                <th>Value at time of Purchase</th>
+                                <th>How acquired</th>
+                                <th>Permission obtained</th>
+                                <th>Order No</th>
+                                <th>Order Date</th>
+                                <th>Doc Attachment</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                              <tr>
+
+                                  <td data-label="Property Description">
+                                            <textarea id="movableProperty.description" name="movableProperty.description" type="text"></textarea>
+                                  </td>
+
+                                  <td data-label="Value at time of Purchase">
+                                              <input id="movableProperty.presentValue" name="movableProperty.presentValue" type="number">
+                                  </td>
+                                  <td data-label="How acquired">
+
+                                    <div class="styled-select">
+                                        <select id="movableProperty.plamodeOfAcquisitionce" name="movableProperty.plamodeOfAcquisitionce">
+                                            <option>Select</option>
+                                        </select>
+                                     </div>
+                                  </td>
+
+
+
+                                  <td data-label="Permission obtained">
+                                        <label class="radio-inline">
+                                            <input type="radio" name="movableProperty.permissionObtained" id="movableProperty.permissionObtained" value="Yes"> Yes
+                                            </label>
+                                            <label class="radio-inline">
+                                          <input type="radio" name="movableProperty.permissionObtained" id="movableProperty.permissionObtained" value="No"> No
+                                        </label>
+                                  </td>
+
+                                  <td data-label="Order No">
+                                        <input id="movableProperty.orderNo" name="movableProperty.orderNo" type="text">
+                                  </td>
+
+                                  <td data-label="Order Date">
+                                        <input id="movableProperty.orderDate" name="movableProperty.orderDate" type="date">
+                                  </td>
+                                  <td data-label="Doc Attachment">
+                                        <input id="movableProperty.documents" name="movableProperty.documents" type="file">
+                                  </td>
+                                  <td data-label="Action">
+                                      <a href="#" class="btn btn-default btn-action"><span class="glyphicon glyphicon-pencil"></span></a>
+                                      <a href="#" class="btn btn-default btn-action"><span class="glyphicon glyphicon-trash"></span></a>
+                                  </td>
+                              </tr>
+                        </tbody>
+                    </table> -->
+                </div>
+
+
+
+            </div>
+
+        </div>
+    </div>
+</div>

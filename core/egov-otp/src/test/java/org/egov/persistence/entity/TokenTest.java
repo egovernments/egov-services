@@ -3,7 +3,6 @@ package org.egov.persistence.entity;
 import org.egov.domain.model.TokenRequest;
 import org.junit.Test;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;

@@ -80,7 +80,7 @@ public class SevaSpecification implements Specification<Complaint> {
 		}
 
 		if (criteria.getLastModifiedDatetime() != null) {
-			predicates.add(criteriaBuilder.lessThanOrEqualTo(lastModifiedDate, criteria.getLastModifiedDatetime()));
+			predicates.add(criteriaBuilder.greaterThan(lastModifiedDate,criteria.getLastModifiedDatetime()));
 		}
 		if (criteria.getUserId() != null) {
 

@@ -88,16 +88,16 @@ search(e){
         }
     }
 
-    const renderAction=function(type,name){
+    const renderAction=function(type,id){
       if (type==="update") {
 
               return (
-                      <a href={`../../../../app/hr/master/calendar-holidays-setup.html?name=${name}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-pencil"></span></a>
+                      <a href={`../../../../app/hr/master/calendar-holidays-setup.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-pencil"></span></a>
               );
 
     }else {
             return (
-                    <a href={`../../../../app/hr/master/calendar-holidays-setup.html?name=${name}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-modal-window"></span></a>
+                    <a href={`../../../../app/hr/master/calendar-holidays-setup.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-modal-window"></span></a>
             );
         }
 }
@@ -114,7 +114,7 @@ search(e){
                     <td data-label="name">{item.name}</td>
                     <td data-label="active">{item.active?"true":"false"}</td>
                     <td data-label="action">
-                    {renderAction(getUrlVars()["type"],item.name)}
+                    {renderAction(getUrlVars()["type"],item.id)}
                     </td>
                 </tr>
             );

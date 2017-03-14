@@ -53,3 +53,30 @@ function getUrlVars() {
     }
     return vars;
 }
+
+function getCommonMasterById(mainRoute,resource,returnObject,id) {
+    return $.ajax({
+              url: baseUrl+"/"+mainRoute+"/"+resource+"/_search?tenantId="+tenantId+"&"+"id="+id,
+              type: 'POST',
+              dataType: 'json',
+              data:JSON.stringify(requestInfo),
+              async: false,
+              // crossDomain: true, // set this to ensure our $.ajaxPrefilter hook fires
+              // processData: false, // We want this to remain an object for  $.ajaxPrefilter
+              // headers: {
+              //     'Content-Type': 'application/json'
+              // },
+              contentType: 'application/json'
+              // ,
+              // success: function (result) {
+              //     return result[returnObject];
+              //     // console.log(result);
+              //    // CallBack(result);
+              // },
+              // error: function (error) {
+              //     return [];
+              //     // console.log(error);
+              // }
+          });
+    // return response.statusText==="Ok"?response.responseJSON[returnObject]:[];
+}

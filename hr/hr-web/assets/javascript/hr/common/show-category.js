@@ -51,16 +51,16 @@ class ShowCategory extends React.Component {
     let {list}=this.state;
     let {name,description,active}=this.state.categorySet;
 
-    const renderAction=function(type,name){
+    const renderAction=function(type,id){
       if (type==="update") {
 
               return (
-                      <a href={`../../../../app/hr/master/category.html?name=${name}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-pencil"></span></a>
+                      <a href={`../../../../app/hr/master/category.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-pencil"></span></a>
               );
 
     }else {
             return (
-                    <a href={`../../../../app/hr/master/category.html?name=${name}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-modal-window"></span></a>
+                    <a href={`../../../../app/hr/master/category.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-modal-window"></span></a>
             );
         }
 }
@@ -75,7 +75,7 @@ class ShowCategory extends React.Component {
                     <td data-label="description">{item.description}</td>
                     <td data-label="active">{item.active?"true":"false"}</td>
                     <td data-label="action">
-                    {renderAction(getUrlVars()["type"],item.name)}
+                    {renderAction(getUrlVars()["type"],item.id)}
                     </td>
                 </tr>
             );

@@ -12,10 +12,23 @@ class Community extends React.Component{
 
 
     componentDidMount(){
+
+      var type=getUrlVars()["type"];
+      var id=getUrlVars()["id"];
+
+
       if(getUrlVars()["type"]==="view")
       {
         for (var variable in this.state.communitySet)
           document.getElementById(variable).disabled = true;
+        }
+
+        if(type==="view"||type==="update")
+        {
+            console.log(getCommonMasterById("egov-common-masters","communities","Community",id).responseJSON["Community"][0]);
+            this.setState({
+              communitySet:getCommonMasterById("egov-common-masters","communities","Community",id).responseJSON["Community"][0]
+            })
         }
     }
 

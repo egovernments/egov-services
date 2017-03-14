@@ -61,11 +61,24 @@ class PositionMaster extends React.Component{
 
 
     componentDidMount(){
+      var type=getUrlVars()["type"];
+      var id=getUrlVars()["id"];
+
       if(getUrlVars()["type"]==="view")
       {
         for (var variable in this.state.positionSet)
           document.getElementById(variable).disabled = true;
         }
+
+        if(type==="view"||type==="update")
+        {
+            console.log("fired");
+            console.log(getCommonMasterById("hr-masters","positions","Position",id).responseJSON["Position"][0]);
+            this.setState({
+              positionSet:getCommonMasterById("hr-masters","positions","Position",id).responseJSON["Position"][0]
+            })
+        }
+
     }
 
 

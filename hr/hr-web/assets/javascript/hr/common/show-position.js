@@ -49,16 +49,16 @@ class ShowPosition extends React.Component {
     let {list}=this.state;
     let {department,designation,name,isPostOutsourced,active}=this.state.positionSet;
 
-    const renderAction=function(type,name){
+    const renderAction=function(type,id){
       if (type==="update") {
 
               return (
-                      <a href={`../../../../app/hr/master/position.html?name=${name}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-pencil"></span></a>
+                      <a href={`../../../../app/hr/master/position.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-pencil"></span></a>
               );
 
     }else {
             return (
-                    <a href={`../../../../app/hr/master/position.html?name=${name}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-modal-window"></span></a>
+                    <a href={`../../../../app/hr/master/position.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-modal-window"></span></a>
             );
         }
 }
@@ -76,7 +76,7 @@ class ShowPosition extends React.Component {
                     <td data-label="active">{item.active?"true":"false"}</td>
 
                     <td data-label="action">
-                    {renderAction(getUrlVars()["type"],item.name)}
+                    {renderAction(getUrlVars()["type"],item.id)}
                     </td>
                 </tr>
             );

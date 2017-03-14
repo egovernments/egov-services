@@ -44,16 +44,16 @@ class ShowDesignation extends React.Component {
     let {list}=this.state;
     let {name,code,description,active}=this.state.designationSet;
 
-    const renderAction=function(type,name){
+    const renderAction=function(type,id){
       if (type==="update") {
 
               return (
-                      <a href={`../../../../app/hr/master/designation.html?name=${name}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-pencil"></span></a>
+                      <a href={`../../../../app/hr/master/designation.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-pencil"></span></a>
               );
 
     }else {
             return (
-                    <a href={`../../../../app/hr/master/designation.html?name=${name}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-modal-window"></span></a>
+                    <a href={`../../../../app/hr/master/designation.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-modal-window"></span></a>
             );
         }
 }
@@ -69,7 +69,7 @@ class ShowDesignation extends React.Component {
                     <td data-label="description">{item.description}</td>
                     <td data-label="active">{item.active?"true":"false"}</td>
                     <td data-label="action">
-                    {renderAction(getUrlVars()["type"],item.name)}
+                    {renderAction(getUrlVars()["type"],item.id)}
                     </td>
                 </tr>
             );

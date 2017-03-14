@@ -26,11 +26,24 @@ class Calender_setup extends React.Component{
     }
 
     componentDidMount(){
+      var type=getUrlVars()["type"];
+      var id=getUrlVars()["id"];
+
       if(getUrlVars()["type"]==="view")
       {
         for (var variable in this.state.calenderSet)
           document.getElementById(variable).disabled = true;
         }
+
+        if(type==="view"||type==="update")
+        {
+            console.log("fired");
+            console.log(getCommonMasterById("egov-common-masters","calendaryears","CalendarYear",id).responseJSON["CalendarYear"][0]);
+            this.setState({
+              calenderSet:getCommonMasterById("egov-common-masters","calendaryears","CalendarYear",id).responseJSON["CalendarYear"][0]
+            })
+        }
+
     }
 
     close(){

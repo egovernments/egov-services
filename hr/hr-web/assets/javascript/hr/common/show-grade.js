@@ -1,4 +1,3 @@
-
 class ShowGrade extends React.Component {
   constructor(props) {
     super(props);
@@ -56,7 +55,7 @@ class ShowGrade extends React.Component {
 
   render() {
     console.log(this.state.gradeSet);
-    let {isSearchClicked,grades}=this.state;
+    let {grades}=this.state;
     let {name,description,orderNo,active}=this.state.gradeSet;
 
     const renderAction=function(type,id){

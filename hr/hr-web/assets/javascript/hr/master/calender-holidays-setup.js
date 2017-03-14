@@ -32,11 +32,25 @@ componentWillMount(){
     }
 
     componentDidMount(){
+      var type=getUrlVars()["type"];
+      var id=getUrlVars()["id"];
+
       if(getUrlVars()["type"]==="view")
       {
         for (var variable in this.state.holiday)
           document.getElementById(variable).disabled = true;
-        }
+      }
+
+
+            if(type==="view"||type==="update")
+            {
+                console.log("fired");
+                console.log(getCommonMasterById("egov-common-masters","holidays","Holiday",id).responseJSON["Holiday"][0]);
+                this.setState({
+                  holiday:getCommonMasterById("egov-common-masters","holidays","Holiday",id).responseJSON["Holiday"][0]
+                })
+            }
+
     }
 
 

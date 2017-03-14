@@ -10,7 +10,7 @@ CREATE TABLE egeis_hrConfigurationValues (
 	tenantId CHARACTER VARYING(250) NOT NULL,
 
 	CONSTRAINT pk_egeis_hrConfigurationValues PRIMARY KEY (Id),
-	CONSTRAINT uk_egeis_hrConfigurationValues_keyId UNIQUE (keyId)
+	--CONSTRAINT uk_egeis_hrConfigurationValues_keyId UNIQUE (keyId)
 );
 
 CREATE SEQUENCE seq_egeis_hrConfigurationValues

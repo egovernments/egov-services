@@ -1,0 +1,31 @@
+package org.egov.lams.config;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import lombok.Getter;
+import lombok.ToString;
+
+@Component
+@Getter
+@ToString
+public class PropertiesManager {
+	
+	@Value("${egov.services.asset_service.hostname}")
+	private String assetServiceHostName;
+
+	@Value("${egov.services.allottee_service.hostname}")
+	private String allotteeServiceHostName;
+	
+	@Value("${egov.services.lams.ulb_number}")
+	private String ulbNumber;
+
+	@Value("${egov.services.lams.agreementnumber_sequence}")
+	private String agreementNumberSequence;
+
+	@Value("${egov.services.lams.agreementnumber_prefix}")
+	private String lamsPrefix;
+	
+	@Value("${egov.services.lams.acknowledgementnumber_sequence}")
+	private String acknowledgementNumberSequence;
+}

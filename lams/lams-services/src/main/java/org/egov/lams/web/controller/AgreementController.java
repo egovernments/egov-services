@@ -14,7 +14,6 @@ import org.egov.lams.model.Agreement;
 import org.egov.lams.model.AgreementCriteria;
 import org.egov.lams.model.RequestInfo;
 import org.egov.lams.model.ResponseInfo;
-import org.egov.lams.service.AgreementNumberService;
 import org.egov.lams.service.AgreementService;
 import org.egov.lams.validator.AgreementValidator;
 import org.slf4j.Logger;
@@ -37,9 +36,6 @@ public class AgreementController {
 	@Autowired
 	private AgreementService agreementService;
 	
-	@Autowired
-	private AgreementNumberService agreementNumberService;
-
 	@PostMapping("_search")
 	@ResponseBody
 	public ResponseEntity<?> search(@ModelAttribute @Valid AgreementCriteria agreementCriteria,@RequestBody RequestInfo requestInfo,

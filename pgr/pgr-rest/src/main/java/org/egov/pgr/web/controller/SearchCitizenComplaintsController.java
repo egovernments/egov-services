@@ -36,10 +36,8 @@ public class SearchCitizenComplaintsController {
 	public ServiceResponse getComplaints(@RequestParam(value = "userId", required = true) Long userId) {
 		List<Complaint> complaints = new ArrayList<>();
 		GetUserByIdResponse user = userRepository.findUserById(userId);
-		if (!user.getUser().isEmpty()) {
-			if (user.getUser().get(0).getType().equalsIgnoreCase("CITIZEN")) {
-				complaints = complaintService.getAllModifiedCitizenComplaints(userId);
-			}
+		if (!user.getUser().isEmpty() && user.getUser().get(0).getType().equalsIgnoreCase("CITIZEN")) {
+			complaints = complaintService.getAllModifiedCitizenComplaints(userId);
 		}
 		return createResponse(complaints);
 	}

@@ -105,7 +105,7 @@ function getCommonMaster(mainRoute,resource,returnObject) {
 //common object
 var commonObject = {
     employeeType: getCommonMaster("hr-masters","employeetypes","EmployeeType").responseJSON["EmployeeType"] || [],
-    employeeStatus: ["EMPLOYEED", "RETAIRED", "RESIGNED", "TERMINTED", "DESEASED", "SUSPEPEND", "TRANSFERRED"],
+    employeeStatus: ["EMPLOYED", "RETIRED", "RESIGNED", "TERMINATED", "DECEASED", "SUSPENDED", "TRANSFERRED"],
     group: getCommonMaster("hr-masters","groups","Group").responseJSON["Group"] || [],
     maritalStatus: ["MARRIED", "UNMARRIED", "DISCOVERED", "WIDROW", "WIDOW"],
     user_bloodGroup: ["O-", "O+", "A-", "A+", "B-", "B+", "AB-", "AB+"],
@@ -187,16 +187,20 @@ var commonObject = {
     assignments_department: getCommonMaster("egov-common-masters","departments","Department").responseJSON["Department"] || [],
     jurisdictions_jurisdictionsType: [{
             id: 1,
-            name: "Juniour Engineer",
+            name: "City",
             description: "",
-            orderno: "1",
             active: true
         },
         {
             id: 2,
-            name: "Assistance Engineer",
+            name: "Ward",
             description: "",
-            orderno: "1",
+            active: true
+        },
+        {
+            id: 3,
+            name: "Zone",
+            description: "",
             active: true
         }
     ],
@@ -720,7 +724,8 @@ function markEditIndex(index = -1, modalName = "", object = "") {
 
 //common add and update
 function commonAddAndUpdate(tableName, modalName, object) {
-    if(switchValidation(object))
+    // if(switchValidation(object))
+    if(true)
     {
       if (editIndex != -1) {
           employee[object][editIndex] = employeeSubObject[object];
@@ -1080,13 +1085,13 @@ $("#createEmployeeForm").validate({
         // form.submit();
 
         // console.log(agreement);
-        // $.post(`${baseUrl}agreements?tenant_id=kul.am`, {
-        //     RequestInfo: requestInfo,
-        //     Agreement: agreement
-        // }, function(response) {
-        //     // alert("submit");
-        //     window.open("../../../../app/search-assets/create-agreement-ack.html?&agreement_id=aeiou", "", "width=1200,height=800")
-        //     console.log(response);
-        // })
+        $.post(`${baseUrl}agreements?tenant_id=kul.am`, {
+            RequestInfo: requestInfo,
+            Agreement: agreement
+        }, function(response) {
+            // alert("submit");
+            window.open("../../../../app/search-assets/create-agreement-ack.html?&agreement_id=aeiou", "", "width=1200,height=800")
+            console.log(response);
+        })
     }
 })

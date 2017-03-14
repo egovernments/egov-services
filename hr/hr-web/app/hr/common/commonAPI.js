@@ -1,0 +1,82 @@
+var baseUrl = window.location.origin;
+
+//request info from cookies
+var requestInfo = {
+    "apiId":"org.egov.pgr",
+    "ver":"1.0",
+    "ts": "sdfs",
+    "action":"asd",
+    "did":"4354648646",
+    "key":"xyz",
+    "msgId":"654654",
+    "requesterId":"61",
+    "authToken":"sdfsdfsdf"
+};
+
+var tenantId=1;
+
+function getCommonMaster(mainRoute,resource,returnObject) {
+    return $.ajax({
+              url: baseUrl+"/"+mainRoute+"/"+resource+"/_search?tenantId="+tenantId,
+              type: 'POST',
+              dataType: 'json',
+              data:JSON.stringify(requestInfo),
+              async: false,
+              // crossDomain: true, // set this to ensure our $.ajaxPrefilter hook fires
+              // processData: false, // We want this to remain an object for  $.ajaxPrefilter
+              // headers: {
+              //     'Content-Type': 'application/json'
+              // },
+              contentType: 'application/json'
+              // ,
+              // success: function (result) {
+              //     return result[returnObject];
+              //     // console.log(result);
+              //    // CallBack(result);
+              // },
+              // error: function (error) {
+              //     return [];
+              //     // console.log(error);
+              // }
+          });
+    // return response.statusText==="Ok"?response.responseJSON[returnObject]:[];
+}
+
+function getUrlVars() {
+    var vars = [],
+        hash;
+    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+    for (var i = 0; i < hashes.length; i++) {
+        hash = hashes[i].split('=');
+        vars.push(hash[0]);
+        vars[hash[0]] = hash[1];
+    }
+    return vars;
+}
+
+function getCommonMaster(mainRoute,resource,returnObject) {
+    return $.ajax({
+              url: baseUrl+"/"+mainRoute+"/"+resource+"/_search?tenantId="+tenantId,
+              type: 'POST',
+              dataType: 'json',
+              data:JSON.stringify(requestInfo),
+              async: false,
+              // crossDomain: true, // set this to ensure our $.ajaxPrefilter hook fires
+              // processData: false, // We want this to remain an object for  $.ajaxPrefilter
+              // headers: {
+              //     'Content-Type': 'application/json'
+              // },
+              contentType: 'application/json'
+              // ,
+              // success: function (result) {
+              //     return result[returnObject];
+              //     // console.log(result);
+              //    // CallBack(result);
+              // },
+              // error: function (error) {
+              //     return [];
+              //     // console.log(error);
+              // }
+          });
+    // return response.statusText==="Ok"?response.responseJSON[returnObject]:[];
+}

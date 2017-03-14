@@ -97,8 +97,13 @@ $(document).ready(function()
 			//console.log('Get complaint done!'+JSON.stringify(response));
 
 			var status = response.service_requests[0].values.ComplaintStatus;
-			if(status == 'COMPLETED' || status == 'REJECTED' || status == 'WITHDRAWN')
-				$('.action-section').remove();
+			if(localStorage.getItem('type') == 'EMPLOYEE'){
+				if(status == 'COMPLETED' || status == 'REJECTED')
+					$('.action-section').remove();
+			}else if(localStorage.getItem('type') == 'CITIZEN'){
+				if(status == 'WITHDRAWN')
+					$('.action-section').remove();
+			}
 
 			updateResponse = response;
 

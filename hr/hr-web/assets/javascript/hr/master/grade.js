@@ -15,6 +15,7 @@ class GradeMaster extends React.Component{
 
     handleChange(e,name)
     {
+      console.log(name);
         this.setState({
             gradeSet:{
                 ...this.state.gradeSet,
@@ -25,11 +26,27 @@ class GradeMaster extends React.Component{
 
 
     componentDidMount(){
+      var type=getUrlVars()["type"];
+      var id=getUrlVars()["id"];
+
       if(getUrlVars()["type"]==="view")
       {
         for (var variable in this.state.gradeSet)
           document.getElementById(variable).disabled = true;
         }
+
+
+      if(type==="view"||type==="update")
+      {
+          console.log("fired");
+          console.log(getCommonMasterById("hr-masters","grades","Grade",id).responseJSON["Grade"][0]);
+          this.setState({
+            gradeSet:getCommonMasterById("hr-masters","grades","Grade",id).responseJSON["Grade"][0]
+          })
+      }
+
+
+
     }
 
     close(){
@@ -119,7 +136,7 @@ class GradeMaster extends React.Component{
           <div className="row">
               <div className="col-sm-6 col-sm-offset-6">
                     <label className="radioUi">
-                      <input type="checkbox" name="active" id="active" value="true"
+                      <input type="checkbox" name="active" id="active" 
                           onChange={(e)=>{ handleChange(e,"active")}}required/> Active
                     </label>
               </div>

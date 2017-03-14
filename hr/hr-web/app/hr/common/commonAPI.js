@@ -54,9 +54,9 @@ function getUrlVars() {
     return vars;
 }
 
-function getCommonMaster(mainRoute,resource,returnObject) {
+function getCommonMasterById(mainRoute,resource,returnObject,id) {
     return $.ajax({
-              url: baseUrl+"/"+mainRoute+"/"+resource+"/_search?tenantId="+tenantId,
+              url: baseUrl+"/"+mainRoute+"/"+resource+"/_search?tenantId="+tenantId+"&"+"id="+id,
               type: 'POST',
               dataType: 'json',
               data:JSON.stringify(requestInfo),

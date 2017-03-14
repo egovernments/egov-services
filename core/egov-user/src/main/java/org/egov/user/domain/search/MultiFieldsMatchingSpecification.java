@@ -27,6 +27,7 @@ public class MultiFieldsMatchingSpecification implements Specification<User> {
         Path<String> aadhaarNumber = root.get(User_.aadhaarNumber);
         Path<String> pan = root.get(User_.pan);
         Path<String> emailId = root.get(User_.emailId);
+        Path<Boolean> active = root.get(User_.active);
 
         List<Predicate> predicates = new ArrayList<>();
 
@@ -57,6 +58,8 @@ public class MultiFieldsMatchingSpecification implements Specification<User> {
         if (isPanPresent(userSearch)) {
             predicates.add(criteriaBuilder.equal(pan, userSearch.getPan()));
         }
+
+        predicates.add(criteriaBuilder.equal(active, userSearch.isActive()));
 
 
         return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));

@@ -69,6 +69,7 @@ public class UserRequestRepositoryTest {
                 .id(asList(1L, 2L))
                 .name("Ram")
                 .fuzzyLogic(true)
+                .active(true)
                 .build();
         FuzzyNameMatchingSpecification fuzzyNameMatchingSpecification = new FuzzyNameMatchingSpecification(userSearch);
         List<User> userList = userRepository.findAll(fuzzyNameMatchingSpecification);
@@ -93,6 +94,7 @@ public class UserRequestRepositoryTest {
                 .emailId("email5@gmail.com")
                 .pan("ABCDE1234F")
                 .aadhaarNumber("12346789011")
+                .active(true)
                 .build();
         MultiFieldsMatchingSpecification multiFieldsMatchingSpecification =
                 new MultiFieldsMatchingSpecification(userSearch);
@@ -113,7 +115,7 @@ public class UserRequestRepositoryTest {
     })
     public void multiFieldMatchingQueryUserIdMatchingTest() {
         UserSearch userSearch = UserSearch.builder()
-                .id(asList(1L, 2L)).build();
+                .id(asList(1L, 2L)).active(true).build();
 
         MultiFieldsMatchingSpecification multiFieldsMatchingSpecification =
                 new MultiFieldsMatchingSpecification(userSearch);
@@ -146,6 +148,7 @@ public class UserRequestRepositoryTest {
                 .emailId("email5@gmail.com")
                 .pan("ABCDE1234F")
                 .aadhaarNumber("notMatching")
+                .active(true)
                 .build();
         MultiFieldsMatchingSpecification multiFieldsMatchingSpecification =
                 new MultiFieldsMatchingSpecification(userSearch);
@@ -164,7 +167,7 @@ public class UserRequestRepositoryTest {
             "/sql/createUser.sql"
     })
     public void multiFieldMatchingEmptyRequestTest() {
-        UserSearch userSearch = new UserSearch();
+        UserSearch userSearch = UserSearch.builder().active(true).build();
         MultiFieldsMatchingSpecification multiFieldsMatchingSpecification =
                 new MultiFieldsMatchingSpecification(userSearch);
 

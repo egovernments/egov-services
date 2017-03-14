@@ -137,7 +137,7 @@ $(document).ready(function()
 				"dataSrc":"",
 			},
 			"columns": [
-						{ "title":"Date", "data": "createdDate","width": "20%" },
+						{ "title":"Date", "data": "created_Date","width": "20%" },
 						{ "title":"Sender", "data": "owner","width": "15%" },
 						{ "title":"Nature of Work", "natureOfTask": "task","width": "20%" },
 						{ "title":"Status", "data": "status","width": "20%" },
@@ -168,8 +168,7 @@ $(document).ready(function()
 	});
 	
 	$('.search-table').keyup(function(){
-		//console.log($(this).attr('id')+ ' triggered by class');
-		tableContainer1.fnFilter(this.value);
+		tableContainer.search( this.value ).draw();
 	});
 
 	$("#official_inbox").on('click','tbody tr',function(event) {
@@ -394,7 +393,6 @@ $(document).ready(function()
 	
 	$('#inboxsearch, #draftsearch').keyup(function(e) {
 	     if (e.keyCode == 27) { // escape key maps to keycode `27`
-	        console.log('came here');
 	        $(this).val('');
 	        $('#'+$(this).attr('id')).trigger('keyup');
 	    }
@@ -416,7 +414,7 @@ function clearnow(){
 }
 //common ajax functions for worklist, drafts and notifications 
 function worklist(){
-	console.log(positionId)
+	//console.log(positionId)
 	var headers = new $.headers();
 	tableContainer1 = $("#official_inbox"); 
 	tableContainer = tableContainer1.DataTable({
@@ -436,7 +434,7 @@ function worklist(){
 		{ "title":"Nature of Work", "width": "20%", "render": function ( data, type, full, meta ) {
 			return 'Grievance';
 	    } },
-		{ "title":"Status", "data": "values.ComplaintStatus","width": "24%" },
+		{ "title":"Status", "data": "values.ComplaintStatus","width": "24%"},
 		{ "title":"Comments", "width": "20%", "render": function ( data, type, full, meta ) {
 			var text = 'Complaint Number '+(full.service_request_id)+' for '+(full.service_name)+' filed on '+(full.requested_datetime)+'. Date of Resolution is '+(full.expected_datetime);
 			return text;
@@ -485,7 +483,6 @@ function worklist(){
 	          }
 	     }*/
 	});
-	
 }
 
 function drafts(){
@@ -613,7 +610,8 @@ function getPosition(){
 		type : 'POST',
 		async : false,
 		success : function(response){
-			positionId = response.Assignment[0].position
+			positionId = response.Assignment[0].position;
+			$('.profile-text').text(response.Assignment[0].employee);
 		},
 		error: function(){
 			bootbox.alert('Error gegtting positionId!');
@@ -623,3 +621,10 @@ function getPosition(){
 		}
 	})
 }
+
+$.fn.dataTableExt.afnFiltering.push(function(oSettings, aData, iDataIndex) {
+	if(aData[3] == 'COMPLETED' || aData[3] == 'WITHDRAWN' || aData[3] == 'REJECTED')
+		return false;
+	else
+		return true;
+});

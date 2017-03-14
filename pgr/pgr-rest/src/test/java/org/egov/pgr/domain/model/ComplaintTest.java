@@ -163,50 +163,6 @@ public class ComplaintTest {
         complaint.validate();
     }
 
-    @Test(expected = InvalidComplaintException.class)
-    public void test_should_fail_validation_when_email_is_not_present_when_creating_an_anonymous_complaint() {
-        final ComplaintLocation complaintLocation = ComplaintLocation.builder()
-                .coordinates(new Coordinates(1.1, 2.2))
-                .build();
-        final Complainant complainant = Complainant.builder()
-                .firstName("first name")
-                .mobile("mobile number")
-                .email(null)
-                .build();
-        Complaint complaint = Complaint.builder()
-                .complainant(complainant)
-                .authenticatedUser(AuthenticatedUser.createAnonymousUser())
-                .complaintLocation(complaintLocation)
-                .complaintType(new ComplaintType(null, null))
-                .build();
-
-        assertTrue(complaint.isComplainantAbsent());
-        assertTrue(complaint.isComplainantEmailAbsent());
-        complaint.validate();
-    }
-
-    @Test(expected = InvalidComplaintException.class)
-    public void test_should_fail_validation_when_email_is_not_present_when_employee_creates_a_complaint() {
-        final ComplaintLocation complaintLocation = ComplaintLocation.builder()
-                .coordinates(new Coordinates(1.1, 2.2))
-                .build();
-        final Complainant complainant = Complainant.builder()
-                .firstName("first name")
-                .mobile("mobile number")
-                .email(null)
-                .build();
-        Complaint complaint = Complaint.builder()
-                .complainant(complainant)
-                .authenticatedUser(getEmployee())
-                .complaintLocation(complaintLocation)
-                .complaintType(new ComplaintType(null, null))
-                .build();
-
-        assertTrue(complaint.isComplainantAbsent());
-        assertTrue(complaint.isComplainantEmailAbsent());
-        complaint.validate();
-    }
-
     @Test
     public void test_should_not_fail_validation_when_mandatory_complainant_attributes_are_present_when_creating_an_anonymous_complaint() {
         final ComplaintLocation complaintLocation = ComplaintLocation.builder()

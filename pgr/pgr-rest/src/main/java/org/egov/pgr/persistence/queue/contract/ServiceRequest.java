@@ -79,6 +79,7 @@ public class ServiceRequest {
     @JsonProperty("media_urls")
     private List<String> mediaUrls;
 
+    @Setter
     @JsonProperty("first_name")
     private String firstName;
 

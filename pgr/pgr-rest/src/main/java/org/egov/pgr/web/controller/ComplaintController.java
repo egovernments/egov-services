@@ -3,6 +3,7 @@ package org.egov.pgr.web.controller;
 import org.egov.pgr.domain.model.AuthenticatedUser;
 import org.egov.pgr.domain.model.Complaint;
 import org.egov.pgr.domain.model.ComplaintSearchCriteria;
+import org.egov.pgr.domain.model.UserType;
 import org.egov.pgr.domain.service.ComplaintService;
 
 import org.egov.pgr.persistence.queue.contract.RequestInfo;
@@ -43,6 +44,9 @@ public class ComplaintController {
 		final Complaint complaint = request.toDomainForCreateRequest(user);
 		complaintService.save(complaint, request);
 		ResponseInfo responseInfo = getResponseInfo(request);
+		//This is for UI to display name of ctizen
+		if(user.getType().equals(UserType.CITIZEN))
+			request.getServiceRequest().setFirstName(user.getName());
 		return new ServiceResponse(responseInfo, Collections.singletonList(request.getServiceRequest()));
 	}
 

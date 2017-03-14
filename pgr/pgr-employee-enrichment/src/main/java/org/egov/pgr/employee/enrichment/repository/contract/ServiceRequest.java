@@ -13,12 +13,14 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 public class ServiceRequest {
-	
-	 @JsonProperty("service_code")
-	    private String complaintTypeCode;
-	 
-	 @JsonProperty("values")
-	    private Map<String, String> values = new HashMap<>();
-	
+
+	@JsonProperty("service_code")
+	private String complaintTypeCode;
+
+	@JsonProperty("description")
+	private String description;
+
+	@JsonProperty("values")
+	private Map<String, String> values = new HashMap<>();
 
 }

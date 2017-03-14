@@ -1,76 +1,43 @@
-function getUrlVars() {
-    var vars = [],
-        hash;
-    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-    for (var i = 0; i < hashes.length; i++) {
-        hash = hashes[i].split('=');
-        vars.push(hash[0]);
-        vars[hash[0]] = hash[1];
-    }
-    return vars;
-}
 
 
 class ShowGrade extends React.Component {
   constructor(props) {
     super(props);
-    this.state={employees:[],gradeSet:{
+    this.state={grades:[],gradeSet:{
         name:"",
         description:"",
         orderno:"",
         active:""
     }
   }
-    this.handleChange=this.handleChange.bind(this);
 
   }
 
   componentWillMount()
-  {console.log(getUrlVars()["type"]);}
+  {
+    console.log(getUrlVars()["type"]);
+    // console.log(getCommonMaster("hr-masters","grades","Grade").responseJSON["Grade"]);
+
+    this.setState({
+      grades:getCommonMaster("hr-masters","grades","Grade").responseJSON["Grade"]
+    });
+  }
 
 
 
   componentDidMount()
   {
-    let {
-      name,sdate,edate,age}=this.state.gradeSet;
-      // e.preventDefault();
-      //call api call
-      var employees=[];
-      for(var i=1;i<=10;i++)
-      {
-          employees.push({
-              name:"isaurabh",description:"good",orderno:20
-          })
-      }
-      this.setState({
-        employees
-      })
-
-      // $('#employeeTable').DataTable().draw();
-      // console.log($('#employeeTable').length);
-
-
-    // $('#employeeTable').DataTable({
-    //   dom: 'Bfrtip',
-    //   buttons: [
-    //            'copy', 'csv', 'excel', 'pdf', 'print'
-    //    ],
-    //    ordering: false
-    // });
-
-    // console.log($('#employeeTable').length);
-
+  
   }
 
   componentDidUpdate(prevProps, prevState)
   {
-      if (prevState.employees.length!=this.state.employees.length) {
+      if (prevState.grades.length!=this.state.grades.length) {
           // $('#employeeTable').DataTable().draw();
-          // alert(prevState.employees.length);
-          // alert(this.state.employees.length);
+          // alert(prevState.grades.length);
+          // alert(this.state.grades.length);
           // alert('updated');
-          $('#employeeTable').DataTable({
+          $('#gradeTable').DataTable({
             dom: 'Bfrtip',
             buttons: [
                      'copy', 'csv', 'excel', 'pdf', 'print'
@@ -80,17 +47,6 @@ class ShowGrade extends React.Component {
       }
   }
 
-  handleChange(e,name)
-  {
-
-      this.setState({
-          gradeSet:{
-              ...this.state.gradeSet,
-              [name]:e.target.value
-          }
-      })
-
-  }
 
 
   close(){
@@ -98,74 +54,13 @@ class ShowGrade extends React.Component {
       open(location, '_self').close();
   }
 
-  // updateTable()
-  // {
-  //   $('#employeeTable').DataTable({
-  //     dom: 'Bfrtip',
-  //     buttons: [
-  //              'copy', 'csv', 'excel', 'pdf', 'print'
-  //      ],
-  //      ordering: false
-  //   });
-  //
-  // }
 
   render() {
     console.log(this.state.gradeSet);
     let {handleChange,search,updateTable}=this;
-    let {isSearchClicked,employees}=this.state;
+    let {isSearchClicked,grades}=this.state;
     let {name,description,orderno,action}=this.state.gradeSet;
-    const renderOption=function(list)
-    {
-        if(list)
-        {
-            return list.map((item)=>
-            {
-                return (<option key={item.id} value={item.id}>
-                        {item.name}
-                  </option>)
-            })
-        }
-    }
-    // const showTable=function()
-    // {
-    //   if(isSearchClicked)
-    //   {
-    //       return (
-    //         <table id="employeeTable" className="table table-bordered">
-    //             <thead>
-    //                 <tr>
-    //                     <th>Name</th>
-    //                     <th>Age</th>
-    //                     <th>Start date</th>
-    //                     <th>End date</th>
-    //                     <th>Action</th>
-    //
-    //                 </tr>
-    //             </thead>
-    //
-    //             <tbody id="employeeSearchResultTableBody">
-    //                 {
-    //                     renderBody()
-    //                 }
-    //             </tbody>
-    //
-    //         </table>
-    //
-    //       )
-    //
-    //       // updateTable();
-    //       // $('#employeeTable').DataTable({
-    //       //   dom: 'Bfrtip',
-    //       //   buttons: [
-    //       //            'copy', 'csv', 'excel', 'pdf', 'print'
-    //       //    ],
-    //       //    ordering: false
-    //       // });
-    //         // alert("hai");
-    //   }
-    //
-    // }
+
     const renderAction=function(type,name){
       if (type==="update") {
 
@@ -183,12 +78,12 @@ class ShowGrade extends React.Component {
 
     const renderBody=function()
     {
-      return employees.map((item,index)=>
+      return grades.map((item,index)=>
       {
             return (<tr key={index}>
                     <td data-label="name">{item.name}</td>
                     <td data-label="description">{item.description}</td>
-                    <td data-label="orderno">{item.orderno}</td>
+                    <td data-label="orderno">{item.orderNo}</td>
                     <td data-label="action">
                     {renderAction(getUrlVars()["type"],item.name)}
                     </td>
@@ -199,7 +94,7 @@ class ShowGrade extends React.Component {
     }
 
       return (<div>
-        <table id="employeeTable" className="table table-bordered">
+        <table id="gradeTable" className="table table-bordered">
             <thead>
                 <tr>
                     <th>Name</th>
@@ -209,7 +104,7 @@ class ShowGrade extends React.Component {
                 </tr>
             </thead>
 
-            <tbody id="employeeSearchResultTableBody">
+            <tbody id="gradesearchResultTableBody">
                 {
                     renderBody()
                 }

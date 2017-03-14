@@ -25,7 +25,7 @@ public class ComplaintRepositoryTest {
 	private ComplaintRepository complaintRepository;
 
 	@Test
-	@Sql(scripts = {"/sql/clearComplaintStatusMapping.sql","/sql/InsertComplaintStatusMapping.sql","/sql/clearComplaint.sql",
+	@Sql(scripts = {"/sql/addLastAccessedTime.sql","/sql/clearComplaintStatusMapping.sql","/sql/InsertComplaintStatusMapping.sql","/sql/clearComplaint.sql",
 			"/sql/InsertComplaintData.sql" })
 
 	public void testShouldFindAllComplaints() {

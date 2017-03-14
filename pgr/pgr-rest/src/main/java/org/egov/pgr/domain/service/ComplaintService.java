@@ -10,6 +10,7 @@ import org.egov.pgr.domain.model.Complaint;
 import org.egov.pgr.domain.model.ComplaintSearchCriteria;
 import org.egov.pgr.persistence.queue.contract.RequestInfo;
 import org.egov.pgr.persistence.queue.contract.SevaRequest;
+import org.egov.pgr.persistence.repository.ComplaintJpaRepository;
 import org.egov.pgr.persistence.repository.ComplaintRepository;
 import org.egov.pgr.persistence.repository.DepartmentRepository;
 import org.egov.pgr.persistence.repository.UserRepository;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 public class ComplaintService {
 
 	private ComplaintRepository complaintRepository;
+	private ComplaintJpaRepository complaintJpaRepository;
 	private DepartmentRepository departmentRepository;
 	private UserRepository userRepository;
 	private SevaNumberGeneratorService sevaNumberGeneratorService;
@@ -28,11 +30,12 @@ public class ComplaintService {
 	@Autowired
 	public ComplaintService(ComplaintRepository complaintRepository,
 			SevaNumberGeneratorService sevaNumberGeneratorService, DepartmentRepository departmentRepository,
-			UserRepository userRepository) {
+			UserRepository userRepository, ComplaintJpaRepository complaintJpaRepository) {
 		this.complaintRepository = complaintRepository;
 		this.departmentRepository = departmentRepository;
 		this.sevaNumberGeneratorService = sevaNumberGeneratorService;
 		this.userRepository = userRepository;
+		this.complaintJpaRepository = complaintJpaRepository;
 	}
 
 	public List<Complaint> findAll(ComplaintSearchCriteria complaintSearchCriteria) {
@@ -89,6 +92,10 @@ public class ComplaintService {
 		sevaRequest.update(complaint);
 		populateRequesterId(sevaRequest, complaint);
 		complaintRepository.update(sevaRequest);
+	}
+
+	public void updateLastAccessedTime(String crn) {
+		complaintJpaRepository.updateLastAccessedTime(new Date(), crn);
 	}
 
 }

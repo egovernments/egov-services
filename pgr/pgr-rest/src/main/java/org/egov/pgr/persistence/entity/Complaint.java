@@ -123,12 +123,12 @@ public class Complaint extends AbstractAuditable {
 	@SafeHtml
 	private String details;
 
-	@Column(name="landmarkdetails")
+	@Column(name = "landmarkdetails")
 	@Length(max = 200)
 	@SafeHtml
 	private String landmarkDetails;
 
-	@Column(name="receivingmode")
+	@Column(name = "receivingmode")
 	@Enumerated(EnumType.ORDINAL)
 	@NotNull
 	private ReceivingMode receivingMode = ReceivingMode.WEBSITE;
@@ -149,7 +149,7 @@ public class Complaint extends AbstractAuditable {
 	private Date escalationDate;
 
 	private Long department;
-    @Column(name="citizenfeedback")
+	@Column(name = "citizenfeedback")
 	@Enumerated(EnumType.ORDINAL)
 	private CitizenFeedback citizenFeedback;
 
@@ -165,6 +165,9 @@ public class Complaint extends AbstractAuditable {
 
 	@Column(name = "state_id")
 	private Long stateId;
+
+	@Column(name = "lastaccessedtime")
+	private Date lastAccessedTime;
 
 	@Override
 	public Long getId() {

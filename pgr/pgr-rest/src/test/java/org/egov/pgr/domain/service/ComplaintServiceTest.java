@@ -6,6 +6,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Date;
 import java.util.Collections;
 import java.util.List;
 
@@ -20,6 +21,7 @@ import org.egov.pgr.domain.model.UserType;
 import org.egov.pgr.persistence.queue.contract.RequestInfo;
 import org.egov.pgr.persistence.queue.contract.ServiceRequest;
 import org.egov.pgr.persistence.queue.contract.SevaRequest;
+import org.egov.pgr.persistence.repository.ComplaintJpaRepository;
 import org.egov.pgr.persistence.repository.ComplaintRepository;
 import org.egov.pgr.persistence.repository.DepartmentRepository;
 import org.egov.pgr.persistence.repository.UserRepository;
@@ -47,6 +49,9 @@ public class ComplaintServiceTest {
 
 	@Mock
 	private SevaNumberGeneratorService sevaNumberGeneratorService;
+	
+	@Mock
+	private ComplaintJpaRepository complaintJpaRepository;
 
 	@InjectMocks
 	private ComplaintService complaintService;
@@ -139,6 +144,13 @@ public class ComplaintServiceTest {
 
 		assertEquals(1, actualComplaints.size());
 		assertEquals(expectedComplaint, actualComplaints.get(0));
+	}
+	
+	@Test
+	public void testShouldUpdateLastAccessedTime() {
+		Date currentDate = new Date();
+		complaintService.updateLastAccessedTime("crn");
+		verify(complaintJpaRepository).updateLastAccessedTime(currentDate, "crn");
 	}
 
 	private Complaint getComplaint() {

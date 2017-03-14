@@ -41,7 +41,8 @@ CREATE TABLE eg_user (
     type character varying(50),
     version numeric DEFAULT 0,
     guardian character varying(100),
-    guardianrelation character varying(32)
+    guardianrelation character varying(32),
+    signature character varying(36)
 );
 CREATE SEQUENCE seq_eg_user
     START WITH 1

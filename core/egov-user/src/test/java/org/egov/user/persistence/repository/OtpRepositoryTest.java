@@ -1,7 +1,6 @@
 package org.egov.user.persistence.repository;
 
 import org.egov.user.domain.model.User;
-import org.egov.user.web.contract.RequestInfo;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,26 +11,24 @@ import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.springframework.test.web.client.ExpectedCount.once;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.*;
-import static org.springframework.test.web.client.response.MockRestResponseCreators.withServerError;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
 @RunWith(MockitoJUnitRunner.class)
 public class OtpRepositoryTest {
 
     private OtpRepository otpRepository;
-    private String otpHost = "http://otp-host.com/";
-    private String otpSearchContext = "otp/_search";
     private MockRestServiceServer server;
-    private RequestInfo requestInfo;
 
     @Before
     public void setUp() throws Exception {
         RestTemplate restTemplate = new RestTemplate();
         server = MockRestServiceServer.bindTo(restTemplate).build();
+        final String otpSearchContext = "otp/_search";
+        final String otpHost = "http://otp-host.com/";
         this.otpRepository = new OtpRepository(otpHost, otpSearchContext, restTemplate);
-        this.requestInfo = buildRequestInfo();
     }
 
     @Test
@@ -42,7 +39,7 @@ public class OtpRepositoryTest {
                 .andRespond(withSuccess(new Resources().getFileContents("otpSearchValidatedResponse.json"),
                         MediaType.APPLICATION_JSON_UTF8));
 
-        Boolean isOtpValidated = otpRepository.isOtpValidationComplete(requestInfo, buildUser());
+        Boolean isOtpValidated = otpRepository.isOtpValidationComplete(buildUser());
         server.verify();
         assertEquals(Boolean.TRUE, isOtpValidated);
     }
@@ -55,9 +52,9 @@ public class OtpRepositoryTest {
                 .andRespond(withSuccess(new Resources().getFileContents("otpSearchNonValidatedResponse.json"),
                         MediaType.APPLICATION_JSON_UTF8));
 
-        Boolean isOtpValidated = otpRepository.isOtpValidationComplete(requestInfo, buildUser());
+        boolean isOtpValidated = otpRepository.isOtpValidationComplete(buildUser());
         server.verify();
-        assertEquals(Boolean.FALSE, isOtpValidated);
+        assertFalse(isOtpValidated);
     }
 
     @Test
@@ -68,38 +65,17 @@ public class OtpRepositoryTest {
                 .andRespond(withSuccess(new Resources().getFileContents("otpSearchIdentityDifferentResponse.json"),
                         MediaType.APPLICATION_JSON_UTF8));
 
-        Boolean isOtpValidated = otpRepository.isOtpValidationComplete(requestInfo, buildUser());
+        boolean isOtpValidated = otpRepository.isOtpValidationComplete(buildUser());
         server.verify();
-        assertEquals(Boolean.FALSE, isOtpValidated);
-    }
-
-    @Test
-    public void testShouldReturnFalseAnExceptionIsRaised() throws Exception {
-        server.expect(once(), requestTo("http://otp-host.com/otp/_search"))
-                .andExpect(method(HttpMethod.POST))
-                .andExpect(content().string(new Resources().getFileContents("otpSearchSuccessRequest.json")))
-                .andRespond(withServerError());
-
-        Boolean isOtpValidated = otpRepository.isOtpValidationComplete(requestInfo, buildUser());
-        server.verify();
-        assertEquals(Boolean.FALSE, isOtpValidated);
+        assertFalse(isOtpValidated);
     }
 
     private User buildUser() {
-        return User.builder().otpReference("2b936aae-c3b6-4c89-b3b3-a098cdcbb706").mobileNumber("9988776655").build();
-    }
-
-    private RequestInfo buildRequestInfo() {
-        RequestInfo requestInfo = new RequestInfo();
-        requestInfo.setAction("POST");
-        requestInfo.setApiId("api.userauth");
-        requestInfo.setAuthToken("long_auth_token");
-        requestInfo.setDid("123");
-        requestInfo.setKey("key");
-        requestInfo.setMsgId("1234567890");
-        requestInfo.setRequesterId("21");
-        requestInfo.setVer("1");
-        return requestInfo;
+        return User.builder()
+                .otpReference("2b936aae-c3b6-4c89-b3b3-a098cdcbb706")
+                .mobileNumber("9988776655")
+                .tenantId("tenantId")
+                .build();
     }
 
 }

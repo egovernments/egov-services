@@ -36,7 +36,7 @@ public class User {
     private String pan;
     private String aadhaarNumber;
     private List<Address> address = new ArrayList<>();
-    private Boolean active;
+    private boolean active;
     private Set<Role> roles = new HashSet<>();
     private Date dob;
     private Date pwdExpiryDate = new Date();
@@ -46,7 +46,7 @@ public class User {
     private String identificationMark;
     private String signature;
     private String photo;
-    private Boolean accountLocked;
+    private boolean accountLocked;
     private Date lastModifiedDate;
     private Date createdDate;
     private String otpReference;

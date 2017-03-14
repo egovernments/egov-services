@@ -52,20 +52,6 @@ public class UserTest {
     }
 
     @Test(expected = InvalidUserException.class)
-    public void testUserWithEmptyActiveFlagIsInvalid() throws Exception {
-        User user = User.builder()
-                .username("foolan_devi")
-                .name("foolan")
-                .mobileNumber("9988776655")
-                .gender(Gender.FEMALE)
-                .type(UserType.CITIZEN)
-                .build();
-
-        assertTrue(user.isActiveIndicatorAbsent());
-        user.validate();
-    }
-
-    @Test(expected = InvalidUserException.class)
     public void testUserWithEmptyGenderIsInvalid() throws Exception {
         User user = User.builder()
                 .username("foolan_devi")

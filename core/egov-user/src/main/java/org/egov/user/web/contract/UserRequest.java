@@ -7,7 +7,6 @@ import org.egov.user.domain.model.User;
 import org.egov.user.persistence.entity.Address;
 import org.egov.user.persistence.entity.Role;
 import org.egov.user.persistence.entity.enums.*;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -125,7 +124,7 @@ public class UserRequest {
                 .findFirst();
     }
 
-    private String convertAddressEntityToString(org.egov.user.persistence.entity.Address address) {
+    private String convertAddressEntityToString(Address address) {
         final String ADDRESS_SEPARATOR = "%s, ";
         final String PIN_CODE_FORMATTER = "PIN: %s";
 
@@ -162,23 +161,22 @@ public class UserRequest {
     }
 
     private boolean isGuardianRelationFatherOrHusband(GuardianRelation guardianRelation) {
-        return (guardianRelation != null &&
+        return guardianRelation != null &&
                 (guardianRelation.equals(GuardianRelation.Father)
-                        || guardianRelation.equals(GuardianRelation.Husband))
-        );
+                        || guardianRelation.equals(GuardianRelation.Husband));
     }
 
-    User toDomainForCreate(PasswordEncoder passwordEncoder) {
+    User toDomain() {
         Role role = new Role();
         role.setName(String.valueOf(type));
         Set<Role> roles = new HashSet<>();
         roles.add(role);
-        return forDomain(passwordEncoder)
+        return forDomain()
                 .roles(roles)
                 .build();
     }
 
-    private User.UserBuilder forDomain(PasswordEncoder passwordEncoder) {
+    private User.UserBuilder forDomain() {
         return User.builder()
                 .name(this.name)
                 .username(this.userName)
@@ -203,7 +201,7 @@ public class UserRequest {
                 .createdDate(new Date())
                 .otpReference(this.otpReference)
                 .tenantId(this.tenantId)
-                .password(passwordEncoder.encode(this.password))
+                .password(this.password)
                 .roles(this.roles != null ? this.roles.stream().map(RoleRequest::toDomain).collect(Collectors.toSet()) : null);
     }
 }

@@ -6,7 +6,7 @@ import org.egov.user.web.contract.ErrorField;
 import org.egov.user.web.contract.ErrorRes;
 import org.springframework.http.HttpStatus;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class OtpValidationErrorAdapter implements ErrorAdapter<User> {
@@ -17,11 +17,11 @@ public class OtpValidationErrorAdapter implements ErrorAdapter<User> {
     private static final String OTP_VALIDATION_PENDING = "Otp validation is pending.";
 
     public ErrorRes adapt(User user) {
-        final Error error = getError(user);
+        final Error error = getError();
         return new ErrorRes(null, error);
     }
 
-    private Error getError(User user) {
+    private Error getError() {
         return Error.builder()
                 .code(HttpStatus.BAD_REQUEST.value())
                 .message(OTP_VALIDATION_PENDING)
@@ -30,7 +30,7 @@ public class OtpValidationErrorAdapter implements ErrorAdapter<User> {
     }
 
     private List<ErrorField> getOtpFieldError() {
-        return Arrays.asList(
+        return Collections.singletonList(
                 ErrorField.builder().
                         field(OTP_FIELD).
                         code(OTP_VALIDATION_CODE).

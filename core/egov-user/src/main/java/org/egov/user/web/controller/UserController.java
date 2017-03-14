@@ -7,7 +7,6 @@ import org.egov.user.web.contract.Error;
 import org.egov.user.web.contract.auth.SecureUser;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,24 +23,21 @@ public class UserController {
 
     private UserService userService;
     private TokenStore tokenStore;
-    private PasswordEncoder passwordEncoder;
 
     public UserController(UserService userService,
-                          TokenStore tokenStore,
-                          PasswordEncoder passwordEncoder) {
+                          TokenStore tokenStore) {
         this.userService = userService;
         this.tokenStore = tokenStore;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @PostMapping("/users/_create")
-    public ResponseEntity<UserDetailResponse> createUserWithValidation(
+    public UserDetailResponse createUserWithValidation(
             @RequestBody CreateUserRequest createUserRequest) {
         return createUser(createUserRequest, true);
     }
 
     @PostMapping("/users/_createnovalidate")
-    public ResponseEntity<UserDetailResponse> createUserWithoutValidation(
+    public UserDetailResponse createUserWithoutValidation(
             @RequestBody CreateUserRequest createUserRequest) {
         return createUser(createUserRequest, false);
     }
@@ -50,8 +46,8 @@ public class UserController {
     public ResponseEntity<?> get(@RequestBody UserSearchRequest request) {
         List<User> userEntities = userService.searchUsers(request.toDomain());
 
-        List<org.egov.user.web.contract.UserRequest> userContracts = userEntities.stream()
-                        .map(org.egov.user.web.contract.UserRequest::new)
+        List<UserRequest> userContracts = userEntities.stream()
+                        .map(UserRequest::new)
                         .collect(Collectors.toList());
         ResponseInfo responseInfo = ResponseInfo.builder().status(String.valueOf(HttpStatus.OK.value())).build();
         UserResponse searchUserResponse = new UserResponse(responseInfo, userContracts);
@@ -76,20 +72,18 @@ public class UserController {
         return new ErrorResponse(responseInfo, error);
     }
 
-    private ResponseEntity<UserDetailResponse> createUser(@RequestBody CreateUserRequest createUserRequest,
+    private UserDetailResponse createUser(@RequestBody CreateUserRequest createUserRequest,
                                                           boolean validateUser) {
-        org.egov.user.domain.model.User user = createUserRequest.toDomainForCreate(passwordEncoder);
-        final User newUser = userService.save(createUserRequest.getRequestInfo(), user, validateUser);
+        org.egov.user.domain.model.User user = createUserRequest.toDomain();
+        final User newUser = userService.save(user, validateUser);
         return createResponse(newUser);
     }
 
-    private ResponseEntity<UserDetailResponse> createResponse(User newUser) {
+    private UserDetailResponse createResponse(User newUser) {
         UserRequest userRequest = new UserRequest(newUser);
         ResponseInfo responseInfo = ResponseInfo.builder()
                 .status(String.valueOf(HttpStatus.OK.value()))
                 .build();
-        UserDetailResponse createdUserResponse =
-                new UserDetailResponse(responseInfo, Collections.singletonList(userRequest));
-        return new ResponseEntity<>(createdUserResponse, HttpStatus.OK);
+        return new UserDetailResponse(responseInfo, Collections.singletonList(userRequest));
     }
 }

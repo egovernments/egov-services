@@ -11,19 +11,15 @@ import java.util.List;
 
 public class UserRequestErrorAdapter implements ErrorAdapter<User> {
 
-    public static final String INVALID_USER_OBJECT = "Invalid user object";
+    private static final String INVALID_USER_OBJECT = "Invalid user object";
 
-    public static final String USER_GENDER = "User.gender";
+    private static final String USER_GENDER = "User.gender";
     private static final String GENDER_MISSING_CODE = "core-user.001";
     private static final String GENDER_MISSING_ERROR = "Gender is required";
 
     private static final String TYPE_MISSING_CODE = "core-user.002";
     private static final String USER_TYPE = "User.type";
     private static final String TYPE_MISSING_ERROR = "Type is required";
-
-    private static final String ACTIVE_FLAG_MISSING_CODE = "core-user.003";
-    private static final String USER_ACTIVE_FLAG = "User.active";
-    private static final String ACTIVE_FLAG_MISSING_ERROR = "Active flag is required";
 
     private static final String MOBILE_MISSING_CODE = "core-user.004";
     private static final String USER_MOBILE = "User.mobile";
@@ -55,7 +51,6 @@ public class UserRequestErrorAdapter implements ErrorAdapter<User> {
         List<ErrorField> errorFields = new ArrayList<>();
         addGenderMissingError(user, errorFields);
         addTypeMissingError(user, errorFields);
-        addIsActiveIndicatorMissingError(user, errorFields);
         addMobileNumberMissingError(user, errorFields);
         addUsernameMissingError(user, errorFields);
         addNameMissingError(user, errorFields);
@@ -73,13 +68,6 @@ public class UserRequestErrorAdapter implements ErrorAdapter<User> {
         if (user.isUsernameAbsent()) {
             errorFields.add(ErrorField.builder()
                     .code(USERNAME_MISSING_CODE).field(USER_USERNAME).message(USERNAME_MISSING_ERROR).build());
-        }
-    }
-
-    private void addIsActiveIndicatorMissingError(User user, List<ErrorField> errorFields) {
-        if (user.isActiveIndicatorAbsent()) {
-            errorFields.add(ErrorField.builder()
-                    .code(ACTIVE_FLAG_MISSING_CODE).field(USER_ACTIVE_FLAG).message(ACTIVE_FLAG_MISSING_ERROR).build());
         }
     }
 

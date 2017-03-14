@@ -16,11 +16,6 @@
         "field": "User.type"
       },
       {
-        "code": "core-user.003",
-        "message": "Active flag is required",
-        "field": "User.active"
-      },
-      {
         "code": "core-user.004",
         "message": "Mobile number is required",
         "field": "User.mobile"

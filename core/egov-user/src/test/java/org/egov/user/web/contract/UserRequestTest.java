@@ -5,8 +5,6 @@ import org.egov.user.persistence.entity.Address;
 import org.egov.user.persistence.entity.Role;
 import org.egov.user.persistence.entity.enums.*;
 import org.junit.Test;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.*;
 
@@ -15,8 +13,6 @@ import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.junit.Assert.*;
 
 public class UserRequestTest {
-
-    PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Test
     public void testEntityToContractConversion() throws Exception {
@@ -65,7 +61,7 @@ public class UserRequestTest {
     @Test
     public void testContractToDomainConversion() throws Exception {
         UserRequest userRequest = buildUserRequest();
-        User userForCreate = userRequest.toDomainForCreate(passwordEncoder);
+        User userForCreate = userRequest.toDomain();
         Calendar c = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
         c.set(2017, 01, 01, 01, 01, 01);
         String expectedDate = c.getTime().toString();
@@ -78,12 +74,12 @@ public class UserRequestTest {
         assertEquals("0987654321", userForCreate.getAltContactNumber());
         assertEquals("KR12345J", userForCreate.getPan());
         assertEquals("qwerty-1234567", userForCreate.getAadhaarNumber());
-        assertEquals(Boolean.TRUE, userForCreate.getActive());
+        assertTrue(userForCreate.isActive());
         assertEquals(expectedDate, userForCreate.getDob().toString());
         assertEquals(expectedDate, userForCreate.getPwdExpiryDate().toString());
         assertEquals("en_IN", userForCreate.getLocale());
         assertEquals(UserType.CITIZEN, userForCreate.getType());
-        assertEquals(Boolean.FALSE, userForCreate.getAccountLocked());
+        assertFalse(userForCreate.isAccountLocked());
         assertEquals("signature", userForCreate.getSignature());
         assertEquals("myPhoto", userForCreate.getPhoto());
         assertEquals("hole in the mole", userForCreate.getIdentificationMark());
@@ -96,13 +92,13 @@ public class UserRequestTest {
         assertEquals("CITIZEN", userForCreate.getRoles().iterator().next().getName());
         assertEquals("ap.public", userForCreate.getTenantId());
         assertEquals("otpreference1", userForCreate.getOtpReference());
-        assertEquals(60, userForCreate.getPassword().length());
+        assertEquals("!abcd1234", userForCreate.getPassword());
     }
 
     @Test
     public void testShouldOverrideProvidedRolesByCitizenRole() throws Exception {
         UserRequest userRequest = buildUserRequestWithRoles();
-        User userForCreate = userRequest.toDomainForCreate(passwordEncoder);
+        User userForCreate = userRequest.toDomain();
 
         assertEquals("CITIZEN", userForCreate.getRoles().iterator().next().getName());
     }

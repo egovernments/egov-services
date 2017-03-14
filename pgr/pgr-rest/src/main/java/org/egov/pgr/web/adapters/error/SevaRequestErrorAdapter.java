@@ -36,10 +36,6 @@ public class SevaRequestErrorAdapter implements ErrorAdapter<Complaint> {
     private static final String PHONE_FIELD_NAME = "ServiceRequest.phone";
     private static final String PHONE_MANDATORY_MESSAGE = "Phone is required";
 
-    private static final String MANDATORY_EMAIL_CODE = "pgr.0007";
-    private static final String EMAIL_FIELD_NAME = "ServiceRequest.email";
-    private static final String EMAIL_MANDATORY_MESSAGE = "Email is required";
-
     private static final String MANDATORY_USER_ID_CODE = "pgr.0008";
     private static final String USER_ID_FIELD_NAME = "ServiceRequest.values.userId";
     private static final String USER_ID_MANDATORY_MESSAGE = "User id is required";
@@ -88,7 +84,6 @@ public class SevaRequestErrorAdapter implements ErrorAdapter<Complaint> {
         addRawLocationValidationErrors(model, errorFields);
         addLocationIdValidationErrors(model, errorFields);
         addComplainantFirstNameValidationErrors(model, errorFields);
-        addComplainantEmailValidationErrors(model, errorFields);
         addComplainantMobileValidationErrors(model, errorFields);
         addComplainantUserIdValidationErrors(model, errorFields);
         addReceivingModeValidationErrors(model, errorFields);
@@ -180,18 +175,6 @@ public class SevaRequestErrorAdapter implements ErrorAdapter<Complaint> {
                 .code(MANDATORY_FIRST_NAME_CODE)
                 .message(FIRST_NAME_MANDATORY_MESSAGE)
                 .field(FIRST_NAME_FIELD_NAME)
-                .build();
-        errorFields.add(errorField);
-    }
-
-    private void addComplainantEmailValidationErrors(Complaint model, List<ErrorField> errorFields) {
-        if (!(model.isComplainantAbsent() && model.isComplainantEmailAbsent())) {
-            return;
-        }
-        final ErrorField errorField = ErrorField.builder()
-                .code(MANDATORY_EMAIL_CODE)
-                .message(EMAIL_MANDATORY_MESSAGE)
-                .field(EMAIL_FIELD_NAME)
                 .build();
         errorFields.add(errorField);
     }

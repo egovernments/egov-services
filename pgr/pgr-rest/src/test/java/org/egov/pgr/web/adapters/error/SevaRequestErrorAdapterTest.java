@@ -92,21 +92,6 @@ public class SevaRequestErrorAdapterTest {
     }
 
     @Test
-    public void test_should_set_error_when_email_is_not_present() {
-        when(complaint.isComplainantAbsent()).thenReturn(true);
-        when(complaint.isComplainantEmailAbsent()).thenReturn(true);
-
-        final ErrorResponse errorResponse = errorAdapter.adapt(complaint);
-
-        final List<ErrorField> errorFields = errorResponse.getErrorFields();
-        assertNotNull(errorFields);
-        assertEquals(1, errorFields.size());
-        assertEquals("pgr.0007", errorFields.get(0).getCode());
-        assertEquals("ServiceRequest.email", errorFields.get(0).getField());
-        assertEquals("Email is required", errorFields.get(0).getMessage());
-    }
-
-    @Test
     public void test_should_set_error_when_complainant_user_id_is_not_present() {
         when(complaint.isComplainantAbsent()).thenReturn(true);
         when(complaint.isComplainantIdAbsent()).thenReturn(true);

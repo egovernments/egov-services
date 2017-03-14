@@ -169,10 +169,10 @@ public class UserRequest {
     }
 
     User toDomainForCreate(PasswordEncoder passwordEncoder) {
-        Role citizen = new Role();
-        citizen.setName("CITIZEN");
+        Role role = new Role();
+        role.setName(String.valueOf(type));
         Set<Role> roles = new HashSet<>();
-        roles.add(citizen);
+        roles.add(role);
         return forDomain(passwordEncoder)
                 .roles(roles)
                 .build();

@@ -3,7 +3,6 @@ package org.egov.user.domain.service;
 import org.egov.user.domain.exception.InvalidUserException;
 import org.egov.user.domain.exception.OtpValidationPendingException;
 import org.egov.user.domain.model.UserSearch;
-import org.egov.user.domain.search.UserSearchSpecificationFactory;
 import org.egov.user.persistence.entity.Role;
 import org.egov.user.persistence.entity.User;
 import org.egov.user.persistence.entity.enums.Gender;
@@ -18,7 +17,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.data.jpa.domain.Specification;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -42,8 +40,7 @@ public class UserServiceTest {
     RequestInfo requestInfo;
     @Mock
     OtpService otpService;
-    @Mock
-    UserSearchSpecificationFactory userSearchSpecificationFactory;
+
     @Captor
     private ArgumentCaptor<User> userCaptor;
 
@@ -55,7 +52,7 @@ public class UserServiceTest {
 
     @Before
     public void setUp() {
-        userService = new UserService(userRepository, roleRepository, otpService, userSearchSpecificationFactory);
+        userService = new UserService(userRepository, roleRepository, otpService);
     }
 
     @Test
@@ -80,9 +77,7 @@ public class UserServiceTest {
     public void shouldSearchUser() throws Exception {
         UserSearch userSearch = new UserSearch();
         List<User> expectedListOfUsers = getListOfUsers();
-        Specification specification = mock(Specification.class);
-        when(userSearchSpecificationFactory.getSpecification(userSearch)).thenReturn(specification);
-        when(userRepository.findAll(specification)).thenReturn(expectedListOfUsers);
+        when(userRepository.findAll(userSearch)).thenReturn(expectedListOfUsers);
 
         List<User> actualResult = userService.searchUsers(userSearch);
 

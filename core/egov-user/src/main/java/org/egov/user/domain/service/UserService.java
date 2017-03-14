@@ -42,13 +42,11 @@ package org.egov.user.domain.service;
 
 import org.egov.user.domain.exception.OtpValidationPendingException;
 import org.egov.user.domain.model.UserSearch;
-import org.egov.user.domain.search.UserSearchSpecificationFactory;
 import org.egov.user.persistence.entity.Role;
 import org.egov.user.persistence.entity.User;
 import org.egov.user.persistence.repository.RoleRepository;
 import org.egov.user.persistence.repository.UserRepository;
 import org.egov.user.web.contract.RequestInfo;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -58,21 +56,16 @@ import java.util.stream.Collectors;
 @Service
 public class UserService {
 
+    private UserRepository userRepository;
     private RoleRepository roleRepository;
     private OtpService otpService;
-    private UserRepository userRepository;
-    private UserSearchSpecificationFactory userSearchSpecificationFactory;
 
     public UserService(UserRepository userRepository,
                        RoleRepository roleRepository,
-                       OtpService otpService,
-                       UserSearchSpecificationFactory userSearchSpecificationFactory) {
-
+                       OtpService otpService) {
+        this.userRepository = userRepository;
         this.roleRepository = roleRepository;
-        this.userRepository = userRepository;
         this.otpService = otpService;
-        this.userRepository = userRepository;
-        this.userSearchSpecificationFactory = userSearchSpecificationFactory;
     }
 
     public User getUserByUsername(final String userName) {
@@ -102,7 +95,6 @@ public class UserService {
     }
 
     public List<User> searchUsers(UserSearch userSearch) {
-        Specification<User> specification = userSearchSpecificationFactory.getSpecification(userSearch);
-        return userRepository.findAll(specification);
+        return userRepository.findAll(userSearch);
     }
 }

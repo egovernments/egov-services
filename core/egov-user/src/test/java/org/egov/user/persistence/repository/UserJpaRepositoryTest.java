@@ -2,12 +2,12 @@ package org.egov.user.persistence.repository;
 
 
 import org.egov.user.domain.model.UserSearch;
-import org.egov.user.domain.search.FuzzyNameMatchingSpecification;
-import org.egov.user.domain.search.MultiFieldsMatchingSpecification;
 import org.egov.user.persistence.entity.User;
 import org.egov.user.persistence.entity.enums.BloodGroup;
 import org.egov.user.persistence.entity.enums.Gender;
 import org.egov.user.persistence.entity.enums.UserType;
+import org.egov.user.persistence.specification.FuzzyNameMatchingSpecification;
+import org.egov.user.persistence.specification.MultiFieldsMatchingSpecification;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +25,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RunWith(SpringRunner.class)
 @DataJpaTest
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
-public class UserRequestRepositoryTest {
+public class UserJpaRepositoryTest {
 
     @Autowired
-    UserRepository userRepository;
+    UserJpaRepository userJpaRepository;
 
     @Test
     @Sql(scripts = {
@@ -39,7 +39,7 @@ public class UserRequestRepositoryTest {
             "/sql/createUser.sql"
     })
     public void shouldFetchUserByName() {
-        User user = userRepository.findByUsername("userName1");
+        User user = userJpaRepository.findByUsername("userName1");
         assertThat(user.getId()).isEqualTo(1L);
     }
 
@@ -52,7 +52,7 @@ public class UserRequestRepositoryTest {
             "/sql/createUser.sql"
     })
     public void shouldFetchUserByEmail() {
-        User user = userRepository.findByEmailId("email2@gmail.com");
+        User user = userJpaRepository.findByEmailId("email2@gmail.com");
         assertThat(user.getId()).isEqualTo(2L);
     }
 
@@ -72,7 +72,7 @@ public class UserRequestRepositoryTest {
                 .active(true)
                 .build();
         FuzzyNameMatchingSpecification fuzzyNameMatchingSpecification = new FuzzyNameMatchingSpecification(userSearch);
-        List<User> userList = userRepository.findAll(fuzzyNameMatchingSpecification);
+        List<User> userList = userJpaRepository.findAll(fuzzyNameMatchingSpecification);
 
         assertThat(userList.get(0).getId()).isEqualTo(3);
         assertThat(userList.get(1).getId()).isEqualTo(4);
@@ -99,7 +99,7 @@ public class UserRequestRepositoryTest {
         MultiFieldsMatchingSpecification multiFieldsMatchingSpecification =
                 new MultiFieldsMatchingSpecification(userSearch);
 
-        List<User> userList = userRepository.findAll(multiFieldsMatchingSpecification);
+        List<User> userList = userJpaRepository.findAll(multiFieldsMatchingSpecification);
 
         assertThat(userList.size()).isEqualTo(1);
         assertThat(userList.get(0).getId()).isEqualTo(5);
@@ -120,7 +120,7 @@ public class UserRequestRepositoryTest {
         MultiFieldsMatchingSpecification multiFieldsMatchingSpecification =
                 new MultiFieldsMatchingSpecification(userSearch);
 
-        List<User> users = userRepository.findAll(multiFieldsMatchingSpecification);
+        List<User> users = userJpaRepository.findAll(multiFieldsMatchingSpecification);
 
         assertThat(users.get(0).getId()).isNotNull();
         assertThat(users.get(0).getGender()).isEqualTo(Gender.FEMALE);
@@ -153,7 +153,7 @@ public class UserRequestRepositoryTest {
         MultiFieldsMatchingSpecification multiFieldsMatchingSpecification =
                 new MultiFieldsMatchingSpecification(userSearch);
 
-        List<User> userList = userRepository.findAll(multiFieldsMatchingSpecification);
+        List<User> userList = userJpaRepository.findAll(multiFieldsMatchingSpecification);
 
         assertThat(userList).isEmpty();
     }
@@ -171,7 +171,7 @@ public class UserRequestRepositoryTest {
         MultiFieldsMatchingSpecification multiFieldsMatchingSpecification =
                 new MultiFieldsMatchingSpecification(userSearch);
 
-        List<User> userList = userRepository.findAll(multiFieldsMatchingSpecification);
+        List<User> userList = userJpaRepository.findAll(multiFieldsMatchingSpecification);
 
         assertThat(userList).hasSize(5);
     }

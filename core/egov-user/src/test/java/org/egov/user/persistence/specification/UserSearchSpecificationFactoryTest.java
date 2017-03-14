@@ -1,4 +1,4 @@
-package org.egov.user.domain.search;
+package org.egov.user.persistence.specification;
 
 import org.egov.user.domain.model.UserSearch;
 import org.junit.Test;

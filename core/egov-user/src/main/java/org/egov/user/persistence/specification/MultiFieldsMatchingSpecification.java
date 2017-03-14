@@ -1,4 +1,4 @@
-package org.egov.user.domain.search;
+package org.egov.user.persistence.specification;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.user.domain.model.UserSearch;

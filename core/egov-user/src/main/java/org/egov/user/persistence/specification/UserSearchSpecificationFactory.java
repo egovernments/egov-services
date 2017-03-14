@@ -1,4 +1,4 @@
-package org.egov.user.domain.search;
+package org.egov.user.persistence.specification;
 
 import org.egov.user.domain.model.UserSearch;
 import org.egov.user.persistence.entity.User;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class UserSearchSpecificationFactory {
 
     public Specification<User> getSpecification(UserSearch userSearch) {
-        if(userSearch.isFuzzyLogic()) {
+        if (userSearch.isFuzzyLogic()) {
             return new FuzzyNameMatchingSpecification(userSearch);
         }
         return new MultiFieldsMatchingSpecification(userSearch);

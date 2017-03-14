@@ -8,6 +8,8 @@ import org.egov.pgr.domain.model.ComplaintSearchCriteria;
 import org.egov.pgr.persistence.queue.contract.SevaRequest;
 import org.egov.pgr.persistence.specification.SevaSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -31,7 +33,7 @@ public class ComplaintRepository {
 
 	public List<Complaint> findAll(ComplaintSearchCriteria complaintSearchCriteria) {
 		final SevaSpecification specification = new SevaSpecification(complaintSearchCriteria);
-		return this.complaintJpaRepository.findAll(specification).stream()
+		return this.complaintJpaRepository.findAll(specification, new Sort(Direction.DESC, "lastModifiedDate")).stream()
 				.map(org.egov.pgr.persistence.entity.Complaint::toDomain).collect(Collectors.toList());
 	}
 

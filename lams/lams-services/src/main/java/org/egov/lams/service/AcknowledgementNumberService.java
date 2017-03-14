@@ -1,6 +1,7 @@
 package org.egov.lams.service;
 
 import java.time.LocalDateTime;
+import java.util.Random;
 
 import org.egov.lams.config.PropertiesManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,19 +19,22 @@ public class AcknowledgementNumberService {
 
 	public String generateAcknowledgeNumber() {
 
-		StringBuilder baseValue = new StringBuilder();
-
 		String ackNumberSeq = propertiesManager.getAcknowledgementNumberSequence();
 		String sql = "SELECT nextval('" + ackNumberSeq + "')";
 
 		LocalDateTime localDateTime = LocalDateTime.now();
 		Integer year = localDateTime.getYear();
-
+		
+		Random random = new Random();
+		int k=random.nextInt(25)+65;
+		int l = random.nextInt(25)+65;
+		String suffix = new String((char)k+""+(char)l);
+	
 		String resultSet = jdbcTemplate.queryForObject(sql, String.class);
-		baseValue.append(String.format("%05d", resultSet));
+		StringBuilder baseValue = new StringBuilder(String.format("%05d", resultSet));
 		baseValue.append("-" + year);
-		// baseValue.append();
-
+		baseValue.append(suffix);
+		
 		return baseValue.toString();
 	}
 

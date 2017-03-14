@@ -1085,12 +1085,12 @@ $("#createEmployeeForm").validate({
         // form.submit();
 
         // console.log(agreement);
-        $.post(`${baseUrl}agreements?tenant_id=kul.am`, {
+        $.post(`${baseUrl}hr-employee/employees/_create?tenantId=1`, {
             RequestInfo: requestInfo,
-            Agreement: agreement
+            Employee: employee
         }, function(response) {
-            // alert("submit");
-            window.open("../../../../app/search-assets/create-agreement-ack.html?&agreement_id=aeiou", "", "width=1200,height=800")
+            alert("submit");
+            // window.open("../../../../app/search-assets/create-agreement-ack.html?&agreement_id=aeiou", "", "width=1200,height=800")
             console.log(response);
         })
     }

@@ -52,22 +52,6 @@ $(document).ready(function()
 	}else{
 		$('.action-section').remove();
 	}
-
-	/*$("#btn_submit").click(function(){
-		if($("#btn_submit").name=='Close')
-			{
-			return true;
-			}
-		if($('#inc_messge').val() == '')
-		{
-			$('#inc_messge').addClass('error');
-		}else
-		{
-			document.forms[0].submit();
-			$('#inc_messge').removeClass('error');
-		}
-		
-	});*/
 	
 	$('.slide-history-menu').click(function(){
 		$('.history-slide').slideToggle();
@@ -81,109 +65,13 @@ $(document).ready(function()
 		}
 	});
 
-	$('#update-complaint').click(function(){
-		if($('form').valid()){
-			
-			var filefilledlength = Object.keys(filefilled).length;
-			
-			if(filefilledlength > 0){
-				var formData=new FormData();
-				formData.append('jurisdictionId', 'ap.public');
-				formData.append('module', 'PGR');
-				formData.append('tag', srn);
-				// Main magic with files here
+	$('#status').change(function(){
+		if($(this).val() == 'FORWARDED')
+			$('#approvalDepartment, #approvalDesignation, #approvalPosition').attr('required', 'required');
+		else
+			$('#approvalDepartment, #approvalDesignation, #approvalPosition').removeAttr('required');
+	})
 
-				$('input[name=file]').each(function(){
-					var file = $(this)[0].files[0];
-					formData.append('file', file); 
-				});
-
-				$.ajax({
-					url: "/filestore/files",
-					type : 'POST',
-					beforeSend : function(){
-						showLoader();
-					},
-					// THIS MUST BE DONE FOR FILE UPLOADING
-					contentType: false,
-					processData : false,
-					data : formData,
-					success: function(fileresponse){
-						//console.log('file upload success');
-					},
-					error: function(){
-						bootbox.alert('Media file failed!');
-					},
-					complete : function(){
-						hideLoader();
-						//console.log('Complete function called!');
-					}
-				});
-			}
-
-			var req_obj = {};
-			req_obj['RequestInfo'] = updateResponse.response_info;
-			req_obj['ServiceRequest'] = updateResponse.service_requests[0];
-
-			req_obj['RequestInfo']['auth_token'] = localStorage.getItem('auth');
-
-			var dat = new Date().toLocaleDateString();
-			var time = new Date().toLocaleTimeString();
-			var date = dat.split("/").join("-");
-			req_obj.ServiceRequest['updated_datetime'] = date+' '+time;
-			req_obj.ServiceRequest['tenantId'] = 'ap.public';
-			req_obj.ServiceRequest.values['ComplaintStatus'] = $('#status').val();
-			req_obj.ServiceRequest.values['approvalComments'] = $('#approvalComment').val();
-			req_obj.ServiceRequest.values['userId'] = 67;
-			req_obj.ServiceRequest.values['assignment_id'] = req_obj.ServiceRequest.values['assigneeId'];
-			delete req_obj.ServiceRequest.values['assigneeId'];
-			req_obj.ServiceRequest.values['locationId'] = req_obj.ServiceRequest.values['LocationId'];
-			delete req_obj.ServiceRequest.values['LocationId'];
-			req_obj.ServiceRequest.values['childLocationId'] = req_obj.ServiceRequest.values['ChildLocationId'];
-			delete req_obj.ServiceRequest.values['ChildLocationId'];
-			req_obj.ServiceRequest.values['childLocationName'] = req_obj.ServiceRequest.values['ChildLocationName'];
-			delete req_obj.ServiceRequest.values['ChildLocationName'];
-			req_obj.ServiceRequest.values['receivingMode'] = req_obj.ServiceRequest.values['ReceivingMode'];
-			delete req_obj.ServiceRequest.values['ReceivingMode'];
-			req_obj.ServiceRequest.values['status'] = req_obj.ServiceRequest.values['ComplaintStatus'];
-			delete req_obj.ServiceRequest.values['ComplaintStatus'];
-			req_obj.ServiceRequest.values['locationName'] = req_obj.ServiceRequest.values['LocationName'];
-			delete req_obj.ServiceRequest.values['LocationName'];
-			if($("#approvalDepartment").val())
-				req_obj.ServiceRequest.values['departmentName'] = $("#approvalDepartment option:selected").text();
-			if($("#approvalPosition").val())
-				req_obj.ServiceRequest.values['assignment_id'] = $("#approvalPosition").val();
-			//console.log(JSON.stringify(updateResponse));
-
-			console.log(JSON.stringify(req_obj));
-
-
-			$.ajax({
-				url: "/pgr/seva?jurisdiction_id=ap.public",
-				type : 'PUT',
-				dataType: 'json',
-				processData : false,
-				contentType: "application/json",
-				beforeSend : function(){
-					showLoader();
-				},
-				data : JSON.stringify(req_obj),
-				success : function(response){
-					bootbox.alert('Grievance updated succesfully!', function(){ 
-						window.location.reload();
-					});
-				},
-				error : function(){
-					bootbox.alert('Error while update!');
-				},
-				complete : function(){
-					hideLoader();
-				}
-			});
-		}
-		
-	});
-	
 	$('#ct-sel-jurisd').change(function(){
 		getLocality($(this).val())
 	});
@@ -207,7 +95,7 @@ $(document).ready(function()
 			showLoader();
 		},
 		success : function(response){
-			console.log('Get complaint done!'+JSON.stringify(response));
+			//console.log('Get complaint done!'+JSON.stringify(response));
 
 			updateResponse = response;
 
@@ -321,8 +209,112 @@ $(document).ready(function()
 		initialize();
 		resizeMap();
 	});
-	
+
+	$('#update-complaint').click(function(){
+		if($('form').valid()){
+			var obj = $(this);
+			obj.attr("disabled", "disabled");
+			complaintUpdate(obj);
+		}
+	});
 });
+
+function complaintUpdate(obj){
+	var req_obj = {};
+	req_obj['RequestInfo'] = updateResponse.response_info;
+	req_obj['ServiceRequest'] = updateResponse.service_requests[0];
+
+	req_obj['RequestInfo']['auth_token'] = localStorage.getItem('auth');
+
+	var dat = new Date().toLocaleDateString();
+	var time = new Date().toLocaleTimeString();
+	var date = dat.split("/").join("-");
+	req_obj.ServiceRequest['updated_datetime'] = date+' '+time;
+	req_obj.ServiceRequest['tenantId'] = 'ap.public';
+	req_obj.ServiceRequest.values['ComplaintStatus'] = $('#status').val();
+	req_obj.ServiceRequest.values['approvalComments'] = $('#approvalComment').val();
+	req_obj.ServiceRequest.values['userId'] = localStorage.getItem('id');
+	req_obj.ServiceRequest.values['assignment_id'] = req_obj.ServiceRequest.values['assigneeId'];
+	delete req_obj.ServiceRequest.values['assigneeId'];
+	req_obj.ServiceRequest.values['locationId'] = req_obj.ServiceRequest.values['LocationId'];
+	delete req_obj.ServiceRequest.values['LocationId'];
+	req_obj.ServiceRequest.values['childLocationId'] = req_obj.ServiceRequest.values['ChildLocationId'];
+	delete req_obj.ServiceRequest.values['ChildLocationId'];
+	req_obj.ServiceRequest.values['childLocationName'] = req_obj.ServiceRequest.values['ChildLocationName'];
+	delete req_obj.ServiceRequest.values['ChildLocationName'];
+	req_obj.ServiceRequest.values['receivingMode'] = req_obj.ServiceRequest.values['ReceivingMode'];
+	delete req_obj.ServiceRequest.values['ReceivingMode'];
+	req_obj.ServiceRequest.values['status'] = req_obj.ServiceRequest.values['ComplaintStatus'];
+	delete req_obj.ServiceRequest.values['ComplaintStatus'];
+	req_obj.ServiceRequest.values['locationName'] = req_obj.ServiceRequest.values['LocationName'];
+	delete req_obj.ServiceRequest.values['LocationName'];
+	if($("#approvalDepartment").val())
+		req_obj.ServiceRequest.values['departmentName'] = $("#approvalDepartment option:selected").text();
+	if($("#approvalPosition").val())
+		req_obj.ServiceRequest.values['assignment_id'] = $("#approvalPosition").val();
+	//console.log(JSON.stringify(req_obj));
+	$.ajax({
+		url: "/pgr/seva?jurisdiction_id=ap.public",
+		type : 'PUT',
+		dataType: 'json',
+		processData : false,
+		contentType: "application/json",
+		beforeSend : function(){
+			showLoader();
+		},
+		data : JSON.stringify(req_obj),
+		success : function(response){
+
+			var filefilledlength = Object.keys(filefilled).length;
+			
+			if(filefilledlength > 0){
+				
+				var formData=new FormData();
+				formData.append('jurisdictionId', 'ap.public');
+				formData.append('module', 'PGR');
+				formData.append('tag', srn);
+				// Main magic with files here
+
+				$('input[name=file]').each(function(){
+					var file = $(this)[0].files[0];
+					formData.append('file', file); 
+				});
+
+				$.ajax({
+					url: "/filestore/files",
+					type : 'POST',
+					async : false,
+					// THIS MUST BE DONE FOR FILE UPLOADING
+					contentType: false,
+					processData : false,
+					data : formData,
+					success: function(fileresponse){
+						//console.log('file upload success');
+						bootbox.alert('Grievance updated succesfully!', function(){ 
+							window.location.reload();
+						});
+					},
+					error: function(){
+						bootbox.alert('Media file failed!');
+						obj.removeAttr("disabled");
+						hideLoader();
+					}
+				});
+			}else{
+				bootbox.alert('Grievance updated succesfully!', function(){ 
+					window.location.reload();
+				});
+			}
+		},
+		error : function(){
+			bootbox.alert('Error while update!');
+		},
+		complete : function(){
+			obj.removeAttr("disabled");
+			hideLoader();
+		}
+	});
+}
 
 function complaintType(loadDD){
 	$.ajax({
@@ -413,7 +405,7 @@ function getDesignation(depId){
 }
 
 function getUser(depId, desId){
-	console.log(depId, desId);
+	//console.log(depId, desId);
 	$.ajax({
 		url: "/eis/assignmentsByDeptOrDesignId?deptId="+depId+"&desgnId="+desId,
 		type : 'POST'

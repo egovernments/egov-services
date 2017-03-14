@@ -255,7 +255,8 @@ $(document).ready(function()
 		var RequestInfo = new $.RequestInfo(localStorage.getItem("auth"));
 		
 		if($('form').valid()){
-
+			var obj = $(this);
+			obj.attr("disabled", "disabled");
 			if(captcha.validateCaptcha($('#captcha').val())){
 				//ajax to submit
 
@@ -290,7 +291,7 @@ $(document).ready(function()
 				request['RequestInfo'] = RequestInfo.requestInfo;
 				request['ServiceRequest'] = data;
 
-				console.log(JSON.stringify(request));
+				//console.log(JSON.stringify(request));
 
 				$.ajax({
 					url: "/pgr/seva?jurisdiction_id=ap.public",
@@ -304,7 +305,7 @@ $(document).ready(function()
 					data : JSON.stringify(request),
 					success : function(response){
 						//console.log(JSON.stringify(response));
-						console.log('complaint Created');
+						//console.log('complaint Created');
 
 						var filefilledlength = Object.keys(filefilled).length;
 
@@ -329,7 +330,7 @@ $(document).ready(function()
 								processData : false,
 								data : formData,
 								success: function(fileresponse){
-									console.log('file upload success');
+									//console.log('file upload success');
 									//Ack page shown
 									doAck(response);
 								},
@@ -338,18 +339,20 @@ $(document).ready(function()
 								},
 								complete : function(){
 									hideLoader();
-									console.log('Complete function called!');
+									obj.removeAttr("disabled");
+									//console.log('Complete function called!');
 								}
 							});
 						}else{
-							console.log('File not uploaded');
+							//console.log('File is empty');
 							//Ack page shown
 							doAck(response);
 							hideLoader();
 						}
 					},
 					error : function(jqXHR, textStatus){
-						alert( "Request failed: " + textStatus );
+						bootbox.alert( "Create grievance failed!" );
+						obj.removeAttr("disabled");
 						hideLoader();
 						$('.acknowledgement, .breadcrumb').addClass('hide');
 						$('.createcrn, .tour-section').removeClass('hide');
@@ -391,7 +394,7 @@ function doAck(response){
 	$('.acknowledgement #firstname').html('Dear '+response.service_requests[0].first_name+',');
 	$('.acknowledgement #crn').html(response.service_requests[0].service_request_id);
 	$('.createcrn, .tour-section').addClass('hide');
-	console.log('Complaint Acknowledgement Done');
+	//console.log('Complaint Acknowledgement Done');
 }
 
 function typingfeel(text, input){

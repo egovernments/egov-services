@@ -63,9 +63,9 @@
 									<div class="input-group-addon style-label">
 										<i class="fa fa-mobile fa-fw theme-color style-color"></i>
 									</div>
-									<input id="mobileNumber" name="mobileNumber" class="form-control style-form is_valid_number" title="Enter valid mobile number!" minlength="10" placeholder="Mobile number" required="required" type="text" value="" maxlength="10" autocomplete="off">
+									<input id="mobileNumber" name="mobileNumber" class="form-control style-form mobilevalidate patternvalidation" data-pattern="number" placeholder="Mobile number" required="required" type="text" autocomplete="off">
+									<label id="mobileNumber-error" class="error display-hide pull-right" for="mobileNumber">Required</label>
 									<span class="mandatory set-mandatory"></span>
-									<input id="username" name="username" type="hidden" value="" data-original-title="" title="">
                                     <div class="text-right error-msg display-hide mobile-error" style="margin:0;">
                                 		Please enter your mobile number
 									</div>
@@ -80,24 +80,21 @@
 										<div class="input-group-addon style-label">
 											<i class="fa fa-key fa-fw theme-color style-color"></i>
 										</div>
-										<input id="password" name="password" class="form-control style-form check-password" data-toggle="popover" data-container="#wrap" placeholder="Password" data-content="Password should be 8 to 32 characters long and should contain upper and lower case alphabet, number and special character except [&amp; < > # % &quot; ' / \ and space]" required="required" type="password" value="" maxlength="32" autocomplete="new-password" data-original-title="" title="">
+										<input id="password" name="password" class="form-control style-form check-password passwordvalidate" data-toggle="popover" data-container="#wrap" placeholder="Password" data-content="Use atleast 8 characters.Should contain upper and lower case alphabet, number and special character except [&amp; < > # % &quot; ' / \ and space]" type="password" value="" maxlength="32" autocomplete="new-password" data-original-title="" title="">
 										<span class="mandatory set-mandatory"></span>
 										<div class="input-group-addon" style="background:#fff;border:none;border-bottom:1px solid #D0D2D7;cursor:default;">
 											<i class="fa fa-eye show password-view" data-view="show" aria-hidden="true"></i>
 										</div>
 									</div>
 									<label id="password-error" class="error align-top pull-right display-hide" for="password">Required</label>
-									<label class="text-right align-top add-margin error-msg display-hide password-invalid" style="margin:0;">
-										Password should be 8 to 32 characters long and should contain upper and lower case alphabet, number and special character except [&amp; &lt; &gt; # % " ' / \ and space]
 									</label>
-									<div class="text-right" style="margin:0;"></div>
 							</div>
 							<div class="form-group">
 								<div class="input-group">
 									<div class="input-group-addon style-label">
 										<i class="fa fa-key fa-fw theme-color style-color"></i>
 									</div>
-									<input type="password" class="form-control style-form check-password" name="con-password" id="con-password" placeholder="Confirm password" autocomplete="new-password" required="required" maxlength="32">
+									<input type="password" class="form-control style-form check-password" id="con-password" placeholder="Confirm password" autocomplete="new-password" maxlength="32">
 									<span class="mandatory set-mandatory"></span>
 									<label id="con-password-error" class="error pull-right display-hide" for="con-password">Required</label>
 									<div class="text-right add-margin error-msg display-hide password-error" style="margin:0;">
@@ -110,7 +107,7 @@
 									<div class="input-group-addon style-label">
 										<i class="fa fa-user fa-fw theme-color style-color"></i>
 									</div>
-									<input id="name" name="name" class="form-control style-form patternvalidation" data-pattern="alphabetwithspace" minlength="2" placeholder="Full name" required="required" type="text" value="" maxlength="100" autocomplete="off">
+									<input id="name" name="name" class="form-control style-form patternvalidation" data-pattern="alphabetwithspace" minlength="2" placeholder="Full name" type="text" value="" maxlength="100" autocomplete="off">
 									<span class="mandatory set-mandatory"></span>
 									<label id="name-error" class="error pull-right display-hide" for="name">Required</label>
 									<div class="text-right" style="margin:0;"></div>
@@ -125,12 +122,12 @@
 									
 								</div>
 							</div>
-							<div class="form-group overflow" id="otp-section" style="display: none;">
+							<div class="form-group overflow display-hide" id="otp-section">
 								<div class="input-group">
 									<div class="input-group-addon style-label">
 										<i class="fa fa-key fa-fw theme-color style-color"></i>
 									</div>
-									<input id="activationcode" name="activationCode" class="form-control style-form" minlength="5" placeholder="OTP" required="required" type="password" value="" maxlength="5" autocomplete="off">
+									<input id="activationcode" name="activationCode" data-extra class="form-control style-form" minlength="5" placeholder="OTP" type="password" value="" maxlength="5" autocomplete="off">
 									<span class="mandatory set-mandatory"></span>
 									<div class="input-group-addon" style="background:#fff;border:none;border-bottom:1px solid #D0D2D7;cursor:default;">
 										<i class="fa fa-eye show otp-view" data-view="show" aria-hidden="true"></i>
@@ -139,13 +136,12 @@
 								<label id="activationcode-error" class="error align-top pull-right display-hide" for="activationcode">Required</label>
 							</div>
                             <div class="form-group signup-leftpadding text-center" id="otpbtn-section">
-                                
 								<button type="button" class="btn btn-primary btn-block" id="otpbtn">
                                         <i class="fa fa-key" aria-hidden="true"></i> Generate OTP
                                 </button>
 							</div>
-							<div class="form-group signup-leftpadding" id="signup-section" style="display: none;">
-								<button type="submit" class="btn btn-custom btn-block btn-login signup-submit" id="signupbtn">
+							<div class="form-group signup-leftpadding display-hide" id="signup-section">
+								<button type="button" class="btn btn-custom btn-block btn-login signup-submit" id="signupbtn">
 									<i class="fa fa-sign-out"></i> Sign up
 								</button>
 							</div>
@@ -341,6 +337,7 @@
             </div>
         </div>
         <script src="../resources/global/js/bootstrap/bootstrap.js" type="text/javascript"></script>
+        <script src="../resources/global/js/bootstrap/bootbox.min.js"></script>
         <script src="../resources/global/js/egov/patternvalidation.js"></script>
         <script src="../resources/global/js/jquery/plugins/jquery.validate.min.js"></script>
 		<script src="../resources/global/js/egov/custom.js" type="text/javascript"></script>

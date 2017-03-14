@@ -40,9 +40,7 @@
 
 $(document).ready(function(){
 	
-	$('#otp-section,#signup-section').hide();
-	
-   $('#mobileNumber').blur(function(){
+   /*$('#mobileNumber').blur(function(){
 		if($('#mobileNumber').val().length>0 && $('#mobileNumber').val().length<10){
 			$('#mobnumberValid').show();
 			$('#mobileNumber').val("");
@@ -60,15 +58,19 @@ $(document).ready(function(){
 		}else{
 			$('#emailValid').hide();
 		}
-	});
+	});*/
+
+	var password = false;
 	
 	$('.check-password').blur(function(){
 		if(($('#password').val()!="") && ($('#con-password').val()!=""))
 		{
 			if ($('#password').val() === $('#con-password').val()) {
+				password = true;
 				$('.password-error').hide();
 				$('.check-password').removeClass('error');
 			}else{
+				password = false;
 				$('.password-error').show();
 				$('.check-password').addClass('error');
 				if($('.error-check').is(':visible')){
@@ -78,7 +80,7 @@ $(document).ready(function(){
 		}
 	});
 
-	$('#password').blur(
+	/*$('#password').blur(
 		function () {
             $('.password-invalid').hide();
 			if($(this).val()) {
@@ -99,7 +101,7 @@ $(document).ready(function(){
 				});
 			}
 		}
-	);
+	);*/
 
 	$('#name').keyup(function(){
 		var arr = $(this).val().split(' ');
@@ -108,44 +110,116 @@ $(document).ready(function(){
         result+=arr[x].substring(0,1).toUpperCase()+arr[x].substring(1)+' ';
 	    $(this).val(result.substring(0, result.length-1));
 	});
+
+	var RI = new $.RequestInfo(localStorage.getItem("auth"));
+
+	$('#otpbtn').click(function () {
+		if($('form').valid()){
+			var obj = {};
+			obj['RequestInfo'] = RI.requestInfo;
+			var data={};
+			data['tenantId']  = 'ap.public';
+			data['mobileNumber'] = $('#mobileNumber').val();
+			obj['otp'] = data;
+			//user_otp
+			$.ajax({
+				url : "/user-otp/v1/_send",
+				type : 'POST',
+				contentType: "application/json",
+				beforeSend : function(){
+					$('#otpbtn-section').hide();
+				},
+				processData : false,
+				data : JSON.stringify(obj),
+				success : function(response){
+					console.log('OTP success:', JSON.stringify(response));
+					if(response.isSuccessful){
+						$('#signup-section, #otp-section').show();
+						//Add required fields
+						$('#password, #con-password, #name, #activationcode').attr("required", true);
+					}
+				},
+				error : function(){
+					bootbox.alert('OTP Creation failed!');
+				}
+			});
+		}
+	});
 	
 	$('#signupbtn').click(function(e){
-		if($('form').valid()){
-			$('#username').val($('#mobileNumber').val());
-			$('#signupform').trigger('submit');
+
+		$.validator.addMethod("passwordvalidate",function(value){
+		    return /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[?!@$^*-`(){}])(?!.*[&<>#%"'/\\ ]).{8,32}$/.test(value);
+		},"Use atleast 8 characters.Should contain upper and lower case alphabet, number and special character except [&amp; < > # % &quot; ' / \ and space]");
+
+		jQuery.validator.addClassRules({
+			passwordvalidate : { passwordvalidate : true }    
+		});
+
+		if($('form').valid() && password){
+			//validate otp
+			var obj = {};
+			obj['RequestInfo'] = RI.requestInfo;
+			var data={};
+			data['tenantId']  = 'ap.public';
+			data['identity'] = $('#mobileNumber').val();
+			data['otp'] = $('#activationcode').val();
+			obj['otp'] = data;
+			$.ajax({
+				url : "/otp/v1/_validate",
+				type : 'POST',
+				contentType: "application/json",
+				processData : false,
+				data : JSON.stringify(obj),
+				success : function(response){
+					console.log('OTP validated:', JSON.stringify(response));
+					//create user
+					var RI = new $.newRequestInfo(localStorage.getItem("auth"));
+					var reqObj = {};
+					reqObj['RequestInfo'] = RI.requestInfo;
+					//form serialize
+					var $form = $("form");
+					var data = getFormData($form);
+					data['userName'] = $('#mobileNumber').val();
+					data['gender'] = 'MALE';
+					data['active'] = true;
+					data['type'] = 'CITIZEN';
+					data['otpReference'] =  response.otp.UUID;
+					data['tenantId'] = 'ap.public'
+					reqObj['User'] = data;
+					console.log(JSON.stringify(reqObj));
+
+					$.ajax({
+						url : "/user/users/_create",
+						type : 'POST',
+						processData : false,
+						data : JSON.stringify(reqObj),
+						contentType: "application/json",
+						success : function(userResponse){
+							console.log('userReponse:'+JSON.stringify(userResponse));
+							bootbox.alert('Your account created successfully', function(){ 
+								window.open("../index.html","_self");
+							});
+						},
+						error : function(){
+							bootbox.alert('User registration failed!');
+						},
+						complete : function(){
+	
+						}
+					});
+				},
+				error : function(){
+					bootbox.alert('OTP validation failed!');
+				}
+			});
+			
 		}else{
 			e.preventDefault();
 		}
 	});
 
-	$('#password, #username').popover({ trigger: "focus",placement: "bottom"})
-
-	$('#otpbtn').click(function () {
-		console.log('came!!!')
-		if (!$('#mobileNumber').val()) {
-            $(".mobile-error").show();
-            return false;
-        } else {
-            $(".mobile-error").hide();
-            $(this).hide();
-        }
-		$.ajax({
-			url: "signup/otp/"+$('#mobileNumber').val(),
-			dataType: "json",
-			success: function(data) {
-				if(data){
-					console.log('OTP sent');
-					$('#activationcode').val('');
-					$('#signup-section,#otp-section').show();
-					$('#otpbtn-section').hide();
-				}
-			},
-			error: function() {
-				console.error('Error while sending otp');
-				$(this).show();
-			}
-		});
-	});
+	$('#password, #username').popover({ trigger: "focus",placement: "bottom"});
 	
 	$(document).on('click','.password-view,.otp-view',function(){
 		//console.log($(this).data('view'));

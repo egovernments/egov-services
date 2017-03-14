@@ -161,20 +161,23 @@ function loadComplaints(){
 		},
 		complete : function(){
 			hideLoader();
+			search($('.searchinbox'));
 		}
 	});
 }
 
 function search(elem) {
 	var searchText = $(elem).val(); 
-    $(".msg").each(function() {
-         var $this = $(this)
-         if ($this.find('div').text().toUpperCase().search(searchText.toUpperCase()) === -1) {
-             $this.hide();
-         }else {
-	         $this.show();
-	     }
-    });
+	if($.trim(searchText)){
+		$(".reloadtemplate").each(function() {
+	         var $this = $(this)
+	         if ($this.find('div').text().toUpperCase().search(searchText.toUpperCase()) === -1) {
+	             $this.hide();
+	         }else {
+		         $this.show();
+		     }
+	    });
+	}
 };
 
 function popupCenter(url, title, w, h) {

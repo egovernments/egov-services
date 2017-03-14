@@ -32,21 +32,21 @@ public class UserController {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @PostMapping("/_create")
+    @PostMapping("/users/_create")
     public ResponseEntity<UserDetailResponse> createUserWithValidation(
             @RequestBody CreateUserRequest createUserRequest) {
         Boolean validateUser = Boolean.TRUE;
         return createUser(createUserRequest, validateUser);
     }
 
-    @PostMapping("/_createnovalidate")
+    @PostMapping("/users/_createnovalidate")
     public ResponseEntity<UserDetailResponse> createUserWithoutValidation(
             @RequestBody CreateUserRequest createUserRequest) {
         Boolean validateUser = Boolean.FALSE;
         return createUser(createUserRequest, validateUser);
     }
 
-    @PostMapping("/_search")
+    @PostMapping("/users/_search")
     public ResponseEntity<?> get(@RequestBody UserSearchRequest request) {
         List<User> userEntities = userService.searchUsers(request.toDomain());
 

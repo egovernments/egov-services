@@ -45,7 +45,7 @@ public class UserControllerTest {
     public void testUserSearch() throws Exception {
         when(userService.searchUsers(any(UserSearch.class))).thenReturn(getUserEntities());
 
-        mockMvc.perform(post("/_search/").contentType(MediaType.APPLICATION_JSON_UTF8)
+        mockMvc.perform(post("/users/_search/").contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(getFileContents("getUserByIdRequest.json"))).andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(content().json(getFileContents("multiUserResponse.json")));
@@ -56,7 +56,7 @@ public class UserControllerTest {
     public void testShouldReturnErrorForBadRequest() throws Exception {
         when(userService.searchUsers(any(UserSearch.class))).thenThrow(InvalidUserSearchException.class);
 
-        mockMvc.perform(post("/_search/").contentType(MediaType.APPLICATION_JSON_UTF8)
+        mockMvc.perform(post("/users/_search/").contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(getFileContents("getUserByIdBadRequest.json"))).andExpect(status().isBadRequest())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(content().json(getFileContents("getUserByIdErrorResponse.json")));

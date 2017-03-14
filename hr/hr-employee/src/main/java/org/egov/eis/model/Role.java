@@ -38,30 +38,55 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.web.contract;
+package org.egov.eis.model;
 
-import java.util.List;
+import java.util.Date;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+@Builder
 @AllArgsConstructor
 @EqualsAndHashCode
 @Getter
 @NoArgsConstructor
 @Setter
 @ToString
-public class UserRequest {
+public class Role {
 
-	@JsonProperty("RequestInfo")
-	private RequestInfo requestInfo;
+	@NotNull
+	private Long id;
 
-	private List<Long> id;
+	@NotNull
+	@Size(min=2, max=100)
+    private String name;
+
+	@Size(max=256)
+    private String description;
+
+	@NotNull
+	private Long createdBy;
+
+	@NotNull
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date createdDate;
+
+	private Long lastModifiedBy;
+
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date lastModifiedDate;
+
+	@NotNull
+	private String tenantId;
 
 }

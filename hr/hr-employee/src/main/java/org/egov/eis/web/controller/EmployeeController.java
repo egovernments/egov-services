@@ -101,7 +101,7 @@ public class EmployeeController {
 		// Call service
 		List<EmployeeInfo> employeesList = null;
 		try {
-			employeesList = employeeService.getEmployees(employeeGetRequest);
+			employeesList = employeeService.getEmployees(employeeGetRequest, requestInfo);
 		} catch (Exception exception) {
 			LOGGER.error("Error while processing request " + employeeGetRequest, exception);
 			return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);

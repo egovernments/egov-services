@@ -48,7 +48,7 @@ import org.egov.eis.model.Employee;
 import org.egov.eis.model.EmployeeInfo;
 import org.egov.eis.service.EmployeeService;
 import org.egov.eis.web.contract.EmployeeGetRequest;
-import org.egov.eis.web.contract.EmployeeGetResponse;
+import org.egov.eis.web.contract.EmployeeInfoResponse;
 import org.egov.eis.web.contract.EmployeeRequest;
 import org.egov.eis.web.contract.EmployeeResponse;
 import org.egov.eis.web.contract.RequestInfo;
@@ -144,12 +144,12 @@ public class EmployeeController {
 	}
 	
 	private ResponseEntity<?> getSuccessResponseForSearch(List<EmployeeInfo> employeesList, RequestInfo requestInfo) {
-		EmployeeGetResponse employeeRes = new EmployeeGetResponse();
+		EmployeeInfoResponse employeeRes = new EmployeeInfoResponse();
 		employeeRes.setEmployees(employeesList);
 		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 		responseInfo.setStatus(HttpStatus.OK.toString());
 		employeeRes.setResponseInfo(responseInfo);
-		return new ResponseEntity<EmployeeGetResponse>(employeeRes, HttpStatus.OK);
+		return new ResponseEntity<EmployeeInfoResponse>(employeeRes, HttpStatus.OK);
 	}
 
 }

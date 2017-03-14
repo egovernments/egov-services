@@ -50,7 +50,7 @@ public class UserRequestControllerTest {
         when(userService.save(any(RequestInfo.class), any(org.egov.user.domain.model.User.class), eq(Boolean.TRUE))).thenReturn(buildUser());
 
         String fileContents = getFileContents("createValidatedCitizenSuccessRequest.json");
-        mockMvc.perform(post("/_create/")
+        mockMvc.perform(post("/users/_create/")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(fileContents)
         )
@@ -66,7 +66,7 @@ public class UserRequestControllerTest {
         when(userService.save(any(RequestInfo.class), any(org.egov.user.domain.model.User.class), eq(Boolean.TRUE))).thenThrow(exception);
 
         String fileContents = getFileContents("createCitizenUnsuccessfulRequest.json");
-        mockMvc.perform(post("/_create/")
+        mockMvc.perform(post("/users/_create/")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(fileContents)
         )
@@ -82,7 +82,7 @@ public class UserRequestControllerTest {
         when(userService.save(any(RequestInfo.class), any(org.egov.user.domain.model.User.class), eq(Boolean.TRUE))).thenThrow(exception);
 
         String fileContents = getFileContents("createValidatedCitizenSuccessRequest.json");
-        mockMvc.perform(post("/_create/")
+        mockMvc.perform(post("/users/_create/")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(fileContents)
         )

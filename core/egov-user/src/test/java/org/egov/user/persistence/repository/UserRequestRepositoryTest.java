@@ -154,4 +154,22 @@ public class UserRequestRepositoryTest {
 
         assertThat(userList).isEmpty();
     }
+
+    @Test
+    @Sql(scripts = {
+            "/sql/clearUserRoles.sql",
+            "/sql/clearAddresses.sql",
+            "/sql/clearRoles.sql",
+            "/sql/clearUsers.sql",
+            "/sql/createUser.sql"
+    })
+    public void multiFieldMatchingEmptyRequestTest() {
+        UserSearch userSearch = new UserSearch();
+        MultiFieldsMatchingSpecification multiFieldsMatchingSpecification =
+                new MultiFieldsMatchingSpecification(userSearch);
+
+        List<User> userList = userRepository.findAll(multiFieldsMatchingSpecification);
+
+        assertThat(userList).hasSize(5);
+    }
 }

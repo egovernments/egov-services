@@ -53,7 +53,7 @@ import javax.transaction.Transactional;
 import static org.hibernate.jpa.QueryHints.HINT_CACHEABLE;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long>, QueryDslPredicateExecutor<User>, JpaSpecificationExecutor<User> {
+public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
     @QueryHints({ @QueryHint(name = HINT_CACHEABLE, value = "true") })
     User findByUsername(String userName);
 

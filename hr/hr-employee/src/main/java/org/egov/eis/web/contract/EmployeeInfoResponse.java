@@ -66,6 +66,6 @@ public class EmployeeInfoResponse {
 	private ResponseInfo responseInfo;
 
 	@JsonProperty("Employee")
-	private List<EmployeeInfo> employee = new ArrayList<EmployeeInfo>();
+	private List<EmployeeInfo> employees = new ArrayList<EmployeeInfo>();
 
 }

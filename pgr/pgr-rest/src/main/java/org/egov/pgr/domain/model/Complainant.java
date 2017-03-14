@@ -19,7 +19,7 @@ public class Complainant {
     private String userId;
 
     public boolean isAbsent() {
-        return isFirstNameAbsent() || isMobileAbsent() || isEmailAbsent();
+        return isFirstNameAbsent() || isMobileAbsent();
     }
 
     public boolean isEmailAbsent() {

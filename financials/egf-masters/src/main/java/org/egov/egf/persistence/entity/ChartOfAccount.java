@@ -100,7 +100,7 @@ public class ChartOfAccount extends AbstractAuditable {
 	private AccountCodePurpose accountCodePurpose;
 
 	@Length(max = 256)
-	private String desciption;
+	private String description;
 	
 	@NotNull
 	private Boolean isActiveForPosting;
@@ -123,7 +123,7 @@ public class ChartOfAccount extends AbstractAuditable {
 	@Transient
 	private Boolean isSubLedger;
 
-	@OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "chartOfAccount", targetEntity = ChartOfAccountDetail.class)
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "chartOfAccount", targetEntity = ChartOfAccountDetail.class)
 	private Set<ChartOfAccountDetail> chartOfAccountDetails = new HashSet<ChartOfAccountDetail>();
 
 	 

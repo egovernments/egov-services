@@ -28,107 +28,119 @@ import org.springframework.validation.SmartValidator;
 @Transactional(readOnly = true)
 public class FunctionService {
 
-	private final FunctionRepository functionRepository;
-	@PersistenceContext
-	private EntityManager entityManager;
+    private final FunctionRepository functionRepository;
+    @PersistenceContext
+    private EntityManager entityManager;
 
-	@Autowired
-	public FunctionService(final FunctionRepository functionRepository) {
-		this.functionRepository = functionRepository;
-	}
+    @Autowired
+    public FunctionService(final FunctionRepository functionRepository) {
+        this.functionRepository = functionRepository;
+    }
 
-	@Autowired
-	private SmartValidator validator;
-	@Autowired
-	private FunctionService functionService;
+    @Autowired
+    private SmartValidator validator;
+    @Autowired
+    private FunctionService functionService;
 
-	@Transactional
-	public Function create(final Function function) {
-		return functionRepository.save(function);
-	}
+    @Transactional
+    public Function create(final Function function) {
+        setFunction(function);
+        return functionRepository.save(function);
+    }
 
-	@Transactional
-	public Function update(final Function function) {
-		return functionRepository.save(function);
-	}
+    private void setFunction(final Function function) {
+        if (function.getParentId() != null) {
+            Function parentId = functionService.findOne(function.getParentId().getId());
+            if (parentId == null) {
+                throw new InvalidDataException("parentId", "parentId.invalid", " Invalid parentId");
+            }
+            function.setParentId(parentId);
+        }
+    }
 
-	public List<Function> findAll() {
-		return functionRepository.findAll(new Sort(Sort.Direction.ASC, "name"));
-	}
+    @Transactional
+    public Function update(final Function function) {
+        setFunction(function);
+        return functionRepository.save(function);
+    }
 
-	public Function findByName(String name) {
-		return functionRepository.findByName(name);
-	}
+    public List<Function> findAll() {
+        return functionRepository.findAll(new Sort(Sort.Direction.ASC, "name"));
+    }
 
-	public Function findByCode(String code) {
-		return functionRepository.findByCode(code);
-	}
+    public Function findByName(String name) {
+        return functionRepository.findByName(name);
+    }
 
-	public Function findOne(Long id) {
-		return functionRepository.findOne(id);
-	}
+    public Function findByCode(String code) {
+        return functionRepository.findByCode(code);
+    }
 
-	public Page<Function> search(FunctionContractRequest functionContractRequest) {
-		final FunctionSpecification specification = new FunctionSpecification(functionContractRequest.getFunction());
-		Pageable page = new PageRequest(functionContractRequest.getPage().getOffSet(),
-				functionContractRequest.getPage().getPageSize());
-		return functionRepository.findAll(specification, page);
-	}
+    public Function findOne(Long id) {
+        return functionRepository.findOne(id);
+    }
 
-	public BindingResult validate(FunctionContractRequest functionContractRequest, String method,
-			BindingResult errors) {
+    public Page<Function> search(FunctionContractRequest functionContractRequest) {
+        final FunctionSpecification specification = new FunctionSpecification(functionContractRequest.getFunction());
+        Pageable page = new PageRequest(functionContractRequest.getPage().getOffSet(),
+                functionContractRequest.getPage().getPageSize());
+        return functionRepository.findAll(specification, page);
+    }
 
-		try {
-			switch (method) {
-			case "update":
-				Assert.notNull(functionContractRequest.getFunction(), "Function to edit must not be null");
-				validator.validate(functionContractRequest.getFunction(), errors);
-				break;
-			case "view":
-				// validator.validate(functionContractRequest.getFunction(),
-				// errors);
-				break;
-			case "create":
-				Assert.notNull(functionContractRequest.getFunctions(), "Functions to create must not be null");
-				for (FunctionContract b : functionContractRequest.getFunctions()) {
-					validator.validate(b, errors);
-				}
-				break;
-			case "updateAll":
-				Assert.notNull(functionContractRequest.getFunctions(), "Functions to create must not be null");
-				for (FunctionContract b : functionContractRequest.getFunctions()) {
-					validator.validate(b, errors);
-				}
-				break;
-			default:
-				validator.validate(functionContractRequest.getRequestInfo(), errors);
-			}
-		} catch (IllegalArgumentException e) {
-			errors.addError(new ObjectError("Missing data", e.getMessage()));
-		}
-		return errors;
+    public BindingResult validate(FunctionContractRequest functionContractRequest, String method,
+            BindingResult errors) {
 
-	}
+        try {
+            switch (method) {
+            case "update":
+                Assert.notNull(functionContractRequest.getFunction(), "Function to edit must not be null");
+                validator.validate(functionContractRequest.getFunction(), errors);
+                break;
+            case "view":
+                // validator.validate(functionContractRequest.getFunction(),
+                // errors);
+                break;
+            case "create":
+                Assert.notNull(functionContractRequest.getFunctions(), "Functions to create must not be null");
+                for (FunctionContract b : functionContractRequest.getFunctions()) {
+                    validator.validate(b, errors);
+                }
+                break;
+            case "updateAll":
+                Assert.notNull(functionContractRequest.getFunctions(), "Functions to create must not be null");
+                for (FunctionContract b : functionContractRequest.getFunctions()) {
+                    validator.validate(b, errors);
+                }
+                break;
+            default:
+                validator.validate(functionContractRequest.getRequestInfo(), errors);
+            }
+        } catch (IllegalArgumentException e) {
+            errors.addError(new ObjectError("Missing data", e.getMessage()));
+        }
+        return errors;
 
-	public FunctionContractRequest fetchRelatedContracts(FunctionContractRequest functionContractRequest) {
-		ModelMapper model = new ModelMapper();
-		for (FunctionContract function : functionContractRequest.getFunctions()) {
-			if (function.getParentId() != null) {
-				Function parentId = functionService.findOne(function.getParentId().getId());
-				if (parentId == null) {
-					throw new InvalidDataException("parentId", "parentId.invalid", " Invalid parentId");
-				}
-				model.map(parentId, function.getParentId());
-			}
-		}
-		FunctionContract function = functionContractRequest.getFunction();
-		if (function.getParentId() != null) {
-			Function parentId = functionService.findOne(function.getParentId().getId());
-			if (parentId == null) {
-				throw new InvalidDataException("parentId", "parentId.invalid", " Invalid parentId");
-			}
-			model.map(parentId, function.getParentId());
-		}
-		return functionContractRequest;
-	}
+    }
+
+    public FunctionContractRequest fetchRelatedContracts(FunctionContractRequest functionContractRequest) {
+        ModelMapper model = new ModelMapper();
+        for (FunctionContract function : functionContractRequest.getFunctions()) {
+            if (function.getParentId() != null) {
+                Function parentId = functionService.findOne(function.getParentId().getId());
+                if (parentId == null) {
+                    throw new InvalidDataException("parentId", "parentId.invalid", " Invalid parentId");
+                }
+                model.map(parentId, function.getParentId());
+            }
+        }
+        FunctionContract function = functionContractRequest.getFunction();
+        if (function.getParentId() != null) {
+            Function parentId = functionService.findOne(function.getParentId().getId());
+            if (parentId == null) {
+                throw new InvalidDataException("parentId", "parentId.invalid", " Invalid parentId");
+            }
+            model.map(parentId, function.getParentId());
+        }
+        return functionContractRequest;
+    }
 }

@@ -30,129 +30,152 @@ import org.springframework.validation.SmartValidator;
 @Transactional(readOnly = true)
 public class ChartOfAccountDetailService {
 
-	private final ChartOfAccountDetailRepository chartOfAccountDetailRepository;
-	@PersistenceContext
-	private EntityManager entityManager;
+    private final ChartOfAccountDetailRepository chartOfAccountDetailRepository;
+    @PersistenceContext
+    private EntityManager entityManager;
 
-	@Autowired
-	public ChartOfAccountDetailService(final ChartOfAccountDetailRepository chartOfAccountDetailRepository) {
-		this.chartOfAccountDetailRepository = chartOfAccountDetailRepository;
-	}
+    @Autowired
+    public ChartOfAccountDetailService(final ChartOfAccountDetailRepository chartOfAccountDetailRepository) {
+        this.chartOfAccountDetailRepository = chartOfAccountDetailRepository;
+    }
 
-	@Autowired
-	private SmartValidator validator;
-	@Autowired
-	private ChartOfAccountService chartOfAccountService;
-	@Autowired
-	private AccountDetailTypeService accountDetailTypeService;
+    @Autowired
+    private SmartValidator validator;
+    @Autowired
+    private ChartOfAccountService chartOfAccountService;
+    @Autowired
+    private AccountDetailTypeService accountDetailTypeService;
 
-	@Transactional
-	public ChartOfAccountDetail create(final ChartOfAccountDetail chartOfAccountDetail) {
-		return chartOfAccountDetailRepository.save(chartOfAccountDetail);
-	}
+    @Transactional
+    public ChartOfAccountDetail create(final ChartOfAccountDetail chartOfAccountDetail) {
+        setChartOfAccountDetail(chartOfAccountDetail);
+        return chartOfAccountDetailRepository.save(chartOfAccountDetail);
+    }
 
-	@Transactional
-	public ChartOfAccountDetail update(final ChartOfAccountDetail chartOfAccountDetail) {
-		return chartOfAccountDetailRepository.save(chartOfAccountDetail);
-	}
+    private void setChartOfAccountDetail(final ChartOfAccountDetail chartOfAccountDetail) {
+        if (chartOfAccountDetail.getChartOfAccount() != null) {
+            ChartOfAccount chartOfAccount = chartOfAccountService
+                    .findOne(chartOfAccountDetail.getChartOfAccount().getId());
+            if (chartOfAccount == null) {
+                throw new InvalidDataException("chartOfAccount", "chartOfAccount.invalid",
+                        " Invalid chartOfAccount");
+            }
+            chartOfAccountDetail.setChartOfAccount(chartOfAccount);
+        }
+        if (chartOfAccountDetail.getAccountDetailType() != null) {
+            AccountDetailType accountDetailType = accountDetailTypeService
+                    .findOne(chartOfAccountDetail.getAccountDetailType().getId());
+            if (accountDetailType == null) {
+                throw new InvalidDataException("accountDetailType", "accountDetailType.invalid",
+                        " Invalid accountDetailType");
+            }
+            chartOfAccountDetail.setAccountDetailType(accountDetailType);
+        }
+    }
 
-	public List<ChartOfAccountDetail> findAll() {
-		return chartOfAccountDetailRepository.findAll(new Sort(Sort.Direction.ASC, "name"));
-	}
+    @Transactional
+    public ChartOfAccountDetail update(final ChartOfAccountDetail chartOfAccountDetail) {
+        setChartOfAccountDetail(chartOfAccountDetail);
+        return chartOfAccountDetailRepository.save(chartOfAccountDetail);
+    }
 
-	public ChartOfAccountDetail findOne(Long id) {
-		return chartOfAccountDetailRepository.findOne(id);
-	}
+    public List<ChartOfAccountDetail> findAll() {
+        return chartOfAccountDetailRepository.findAll(new Sort(Sort.Direction.ASC, "name"));
+    }
 
-	public Page<ChartOfAccountDetail> search(ChartOfAccountDetailContractRequest chartOfAccountDetailContractRequest) {
-		final ChartOfAccountDetailSpecification specification = new ChartOfAccountDetailSpecification(
-				chartOfAccountDetailContractRequest.getChartOfAccountDetail());
-		Pageable page = new PageRequest(chartOfAccountDetailContractRequest.getPage().getOffSet(),
-				chartOfAccountDetailContractRequest.getPage().getPageSize());
-		return chartOfAccountDetailRepository.findAll(specification, page);
-	}
+    public ChartOfAccountDetail findOne(Long id) {
+        return chartOfAccountDetailRepository.findOne(id);
+    }
 
-	public BindingResult validate(ChartOfAccountDetailContractRequest chartOfAccountDetailContractRequest,
-			String method, BindingResult errors) {
+    public Page<ChartOfAccountDetail> search(ChartOfAccountDetailContractRequest chartOfAccountDetailContractRequest) {
+        final ChartOfAccountDetailSpecification specification = new ChartOfAccountDetailSpecification(
+                chartOfAccountDetailContractRequest.getChartOfAccountDetail());
+        Pageable page = new PageRequest(chartOfAccountDetailContractRequest.getPage().getOffSet(),
+                chartOfAccountDetailContractRequest.getPage().getPageSize());
+        return chartOfAccountDetailRepository.findAll(specification, page);
+    }
 
-		try {
-			switch (method) {
-			case "update":
-				Assert.notNull(chartOfAccountDetailContractRequest.getChartOfAccountDetail(),
-						"ChartOfAccountDetail to edit must not be null");
-				validator.validate(chartOfAccountDetailContractRequest.getChartOfAccountDetail(), errors);
-				break;
-			case "view":
-				// validator.validate(chartOfAccountDetailContractRequest.getChartOfAccountDetail(),
-				// errors);
-				break;
-			case "create":
-				Assert.notNull(chartOfAccountDetailContractRequest.getChartOfAccountDetails(),
-						"ChartOfAccountDetails to create must not be null");
-				for (ChartOfAccountDetailContract b : chartOfAccountDetailContractRequest.getChartOfAccountDetails()) {
-					validator.validate(b, errors);
-				}
-				break;
-			case "updateAll":
-				Assert.notNull(chartOfAccountDetailContractRequest.getChartOfAccountDetails(),
-						"ChartOfAccountDetails to create must not be null");
-				for (ChartOfAccountDetailContract b : chartOfAccountDetailContractRequest.getChartOfAccountDetails()) {
-					validator.validate(b, errors);
-				}
-				break;
-			default:
-				validator.validate(chartOfAccountDetailContractRequest.getRequestInfo(), errors);
-			}
-		} catch (IllegalArgumentException e) {
-			errors.addError(new ObjectError("Missing data", e.getMessage()));
-		}
-		return errors;
+    public BindingResult validate(ChartOfAccountDetailContractRequest chartOfAccountDetailContractRequest,
+            String method, BindingResult errors) {
 
-	}
+        try {
+            switch (method) {
+            case "update":
+                Assert.notNull(chartOfAccountDetailContractRequest.getChartOfAccountDetail(),
+                        "ChartOfAccountDetail to edit must not be null");
+                validator.validate(chartOfAccountDetailContractRequest.getChartOfAccountDetail(), errors);
+                break;
+            case "view":
+                // validator.validate(chartOfAccountDetailContractRequest.getChartOfAccountDetail(),
+                // errors);
+                break;
+            case "create":
+                Assert.notNull(chartOfAccountDetailContractRequest.getChartOfAccountDetails(),
+                        "ChartOfAccountDetails to create must not be null");
+                for (ChartOfAccountDetailContract b : chartOfAccountDetailContractRequest.getChartOfAccountDetails()) {
+                    validator.validate(b, errors);
+                }
+                break;
+            case "updateAll":
+                Assert.notNull(chartOfAccountDetailContractRequest.getChartOfAccountDetails(),
+                        "ChartOfAccountDetails to create must not be null");
+                for (ChartOfAccountDetailContract b : chartOfAccountDetailContractRequest.getChartOfAccountDetails()) {
+                    validator.validate(b, errors);
+                }
+                break;
+            default:
+                validator.validate(chartOfAccountDetailContractRequest.getRequestInfo(), errors);
+            }
+        } catch (IllegalArgumentException e) {
+            errors.addError(new ObjectError("Missing data", e.getMessage()));
+        }
+        return errors;
 
-	public ChartOfAccountDetailContractRequest fetchRelatedContracts(
-			ChartOfAccountDetailContractRequest chartOfAccountDetailContractRequest) {
-		ModelMapper model = new ModelMapper();
-		for (ChartOfAccountDetailContract chartOfAccountDetail : chartOfAccountDetailContractRequest
-				.getChartOfAccountDetails()) {
-			if (chartOfAccountDetail.getChartOfAccount() != null) {
-				ChartOfAccount chartOfAccount = chartOfAccountService
-						.findOne(chartOfAccountDetail.getChartOfAccount().getId());
-				if (chartOfAccount == null) {
-					throw new InvalidDataException("chartOfAccount", "chartOfAccount.invalid",
-							" Invalid chartOfAccount");
-				}
-				model.map(chartOfAccount, chartOfAccountDetail.getChartOfAccount());
-			}
-			if (chartOfAccountDetail.getAccountDetailType() != null) {
-				AccountDetailType accountDetailType = accountDetailTypeService
-						.findOne(chartOfAccountDetail.getAccountDetailType().getId());
-				if (accountDetailType == null) {
-					throw new InvalidDataException("accountDetailType", "accountDetailType.invalid",
-							" Invalid accountDetailType");
-				}
-				model.map(accountDetailType, chartOfAccountDetail.getAccountDetailType());
-			}
-		}
-		ChartOfAccountDetailContract chartOfAccountDetail = chartOfAccountDetailContractRequest
-				.getChartOfAccountDetail();
-		if (chartOfAccountDetail.getChartOfAccount() != null) {
-			ChartOfAccount chartOfAccount = chartOfAccountService
-					.findOne(chartOfAccountDetail.getChartOfAccount().getId());
-			if (chartOfAccount == null) {
-				throw new InvalidDataException("chartOfAccount", "chartOfAccount.invalid", " Invalid chartOfAccount");
-			}
-			model.map(chartOfAccount, chartOfAccountDetail.getChartOfAccount());
-		}
-		if (chartOfAccountDetail.getAccountDetailType() != null) {
-			AccountDetailType accountDetailType = accountDetailTypeService
-					.findOne(chartOfAccountDetail.getAccountDetailType().getId());
-			if (accountDetailType == null) {
-				throw new InvalidDataException("accountDetailType", "accountDetailType.invalid",
-						" Invalid accountDetailType");
-			}
-			model.map(accountDetailType, chartOfAccountDetail.getAccountDetailType());
-		}
-		return chartOfAccountDetailContractRequest;
-	}
+    }
+
+    public ChartOfAccountDetailContractRequest fetchRelatedContracts(
+            ChartOfAccountDetailContractRequest chartOfAccountDetailContractRequest) {
+        ModelMapper model = new ModelMapper();
+        for (ChartOfAccountDetailContract chartOfAccountDetail : chartOfAccountDetailContractRequest
+                .getChartOfAccountDetails()) {
+            if (chartOfAccountDetail.getChartOfAccount() != null) {
+                ChartOfAccount chartOfAccount = chartOfAccountService
+                        .findOne(chartOfAccountDetail.getChartOfAccount().getId());
+                if (chartOfAccount == null) {
+                    throw new InvalidDataException("chartOfAccount", "chartOfAccount.invalid",
+                            " Invalid chartOfAccount");
+                }
+                model.map(chartOfAccount, chartOfAccountDetail.getChartOfAccount());
+            }
+            if (chartOfAccountDetail.getAccountDetailType() != null) {
+                AccountDetailType accountDetailType = accountDetailTypeService
+                        .findOne(chartOfAccountDetail.getAccountDetailType().getId());
+                if (accountDetailType == null) {
+                    throw new InvalidDataException("accountDetailType", "accountDetailType.invalid",
+                            " Invalid accountDetailType");
+                }
+                model.map(accountDetailType, chartOfAccountDetail.getAccountDetailType());
+            }
+        }
+        ChartOfAccountDetailContract chartOfAccountDetail = chartOfAccountDetailContractRequest
+                .getChartOfAccountDetail();
+        if (chartOfAccountDetail.getChartOfAccount() != null) {
+            ChartOfAccount chartOfAccount = chartOfAccountService
+                    .findOne(chartOfAccountDetail.getChartOfAccount().getId());
+            if (chartOfAccount == null) {
+                throw new InvalidDataException("chartOfAccount", "chartOfAccount.invalid", " Invalid chartOfAccount");
+            }
+            model.map(chartOfAccount, chartOfAccountDetail.getChartOfAccount());
+        }
+        if (chartOfAccountDetail.getAccountDetailType() != null) {
+            AccountDetailType accountDetailType = accountDetailTypeService
+                    .findOne(chartOfAccountDetail.getAccountDetailType().getId());
+            if (accountDetailType == null) {
+                throw new InvalidDataException("accountDetailType", "accountDetailType.invalid",
+                        " Invalid accountDetailType");
+            }
+            model.map(accountDetailType, chartOfAccountDetail.getAccountDetailType());
+        }
+        return chartOfAccountDetailContractRequest;
+    }
 }

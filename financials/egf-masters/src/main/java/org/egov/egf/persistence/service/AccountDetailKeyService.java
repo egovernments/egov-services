@@ -29,112 +29,120 @@ import org.springframework.validation.SmartValidator;
 @Transactional(readOnly = true)
 public class AccountDetailKeyService {
 
-	private final AccountDetailKeyRepository accountDetailKeyRepository;
-	@PersistenceContext
-	private EntityManager entityManager;
+    private final AccountDetailKeyRepository accountDetailKeyRepository;
+    @PersistenceContext
+    private EntityManager entityManager;
 
-	@Autowired
-	public AccountDetailKeyService(final AccountDetailKeyRepository accountDetailKeyRepository) {
-		this.accountDetailKeyRepository = accountDetailKeyRepository;
-	}
+    @Autowired
+    public AccountDetailKeyService(final AccountDetailKeyRepository accountDetailKeyRepository) {
+        this.accountDetailKeyRepository = accountDetailKeyRepository;
+    }
 
-	@Autowired
-	private SmartValidator validator;
-	@Autowired
-	private AccountDetailTypeService accountDetailTypeService;
+    @Autowired
+    private SmartValidator validator;
+    @Autowired
+    private AccountDetailTypeService accountDetailTypeService;
 
-	@Transactional
-	public AccountDetailKey create(final AccountDetailKey accountDetailKey) {
-		return accountDetailKeyRepository.save(accountDetailKey);
-	}
+    @Transactional
+    public AccountDetailKey create(final AccountDetailKey accountDetailKey) {
+        setAccountDetailKey(accountDetailKey);
+        return accountDetailKeyRepository.save(accountDetailKey);
+    }
 
-	@Transactional
-	public AccountDetailKey update(final AccountDetailKey accountDetailKey) {
-		return accountDetailKeyRepository.save(accountDetailKey);
-	}
+    private void setAccountDetailKey(final AccountDetailKey accountDetailKey) {
+        if (accountDetailKey.getAccountDetailType() != null) {
+            final AccountDetailType accountDetailType = accountDetailTypeService
+                    .findOne(accountDetailKey.getAccountDetailType().getId());
+            if (accountDetailType == null)
+                throw new InvalidDataException("accountDetailType", "accountDetailType.invalid",
+                        " Invalid accountDetailType");
+            accountDetailKey.setAccountDetailType(accountDetailType);
+        }
+    }
 
-	public List<AccountDetailKey> findAll() {
-		return accountDetailKeyRepository.findAll(new Sort(Sort.Direction.ASC, "name"));
-	}
+    @Transactional
+    public AccountDetailKey update(final AccountDetailKey accountDetailKey) {
+        setAccountDetailKey(accountDetailKey);
+        return accountDetailKeyRepository.save(accountDetailKey);
+    }
 
-	public AccountDetailKey findByName(String name) {
-		return accountDetailKeyRepository.findByName(name);
-	}
+    public List<AccountDetailKey> findAll() {
+        return accountDetailKeyRepository.findAll(new Sort(Sort.Direction.ASC, "name"));
+    }
 
-	public AccountDetailKey findOne(Long id) {
-		return accountDetailKeyRepository.findOne(id);
-	}
+    public AccountDetailKey findByName(final String name) {
+        return accountDetailKeyRepository.findByName(name);
+    }
 
-	public Page<AccountDetailKey> search(AccountDetailKeyContractRequest accountDetailKeyContractRequest) {
-		final AccountDetailKeySpecification specification = new AccountDetailKeySpecification(
-				accountDetailKeyContractRequest.getAccountDetailKey());
-		Pageable page = new PageRequest(accountDetailKeyContractRequest.getPage().getOffSet(),
-				accountDetailKeyContractRequest.getPage().getPageSize());
-		return accountDetailKeyRepository.findAll(specification, page);
-	}
+    public AccountDetailKey findOne(final Long id) {
+        return accountDetailKeyRepository.findOne(id);
+    }
 
-	public BindingResult validate(AccountDetailKeyContractRequest accountDetailKeyContractRequest, String method,
-			BindingResult errors) {
+    public Page<AccountDetailKey> search(final AccountDetailKeyContractRequest accountDetailKeyContractRequest) {
+        final AccountDetailKeySpecification specification = new AccountDetailKeySpecification(
+                accountDetailKeyContractRequest.getAccountDetailKey());
+        final Pageable page = new PageRequest(accountDetailKeyContractRequest.getPage().getOffSet(),
+                accountDetailKeyContractRequest.getPage().getPageSize());
+        return accountDetailKeyRepository.findAll(specification, page);
+    }
 
-		try {
-			switch (method) {
-			case "update":
-				Assert.notNull(accountDetailKeyContractRequest.getAccountDetailKey(),
-						"AccountDetailKey to edit must not be null");
-				validator.validate(accountDetailKeyContractRequest.getAccountDetailKey(), errors);
-				break;
-			case "view":
-				// validator.validate(accountDetailKeyContractRequest.getAccountDetailKey(),
-				// errors);
-				break;
-			case "create":
-				Assert.notNull(accountDetailKeyContractRequest.getAccountDetailKeys(),
-						"AccountDetailKeys to create must not be null");
-				for (AccountDetailKeyContract b : accountDetailKeyContractRequest.getAccountDetailKeys()) {
-					validator.validate(b, errors);
-				}
-				break;
-			case "updateAll":
-				Assert.notNull(accountDetailKeyContractRequest.getAccountDetailKeys(),
-						"AccountDetailKeys to create must not be null");
-				for (AccountDetailKeyContract b : accountDetailKeyContractRequest.getAccountDetailKeys()) {
-					validator.validate(b, errors);
-				}
-				break;
-			default:
-				validator.validate(accountDetailKeyContractRequest.getRequestInfo(), errors);
-			}
-		} catch (IllegalArgumentException e) {
-			errors.addError(new ObjectError("Missing data", e.getMessage()));
-		}
-		return errors;
+    public BindingResult validate(final AccountDetailKeyContractRequest accountDetailKeyContractRequest, final String method,
+            final BindingResult errors) {
 
-	}
+        try {
+            switch (method) {
+            case "update":
+                Assert.notNull(accountDetailKeyContractRequest.getAccountDetailKey(),
+                        "AccountDetailKey to edit must not be null");
+                validator.validate(accountDetailKeyContractRequest.getAccountDetailKey(), errors);
+                break;
+            case "view":
+                // validator.validate(accountDetailKeyContractRequest.getAccountDetailKey(),
+                // errors);
+                break;
+            case "create":
+                Assert.notNull(accountDetailKeyContractRequest.getAccountDetailKeys(),
+                        "AccountDetailKeys to create must not be null");
+                for (final AccountDetailKeyContract b : accountDetailKeyContractRequest.getAccountDetailKeys())
+                    validator.validate(b, errors);
+                break;
+            case "updateAll":
+                Assert.notNull(accountDetailKeyContractRequest.getAccountDetailKeys(),
+                        "AccountDetailKeys to create must not be null");
+                for (final AccountDetailKeyContract b : accountDetailKeyContractRequest.getAccountDetailKeys())
+                    validator.validate(b, errors);
+                break;
+            default:
+                validator.validate(accountDetailKeyContractRequest.getRequestInfo(), errors);
+            }
+        } catch (final IllegalArgumentException e) {
+            errors.addError(new ObjectError("Missing data", e.getMessage()));
+        }
+        return errors;
 
-	public AccountDetailKeyContractRequest fetchRelatedContracts(
-			AccountDetailKeyContractRequest accountDetailKeyContractRequest) {
-		ModelMapper model = new ModelMapper();
-		for (AccountDetailKeyContract accountDetailKey : accountDetailKeyContractRequest.getAccountDetailKeys()) {
-			if (accountDetailKey.getAccountDetailType() != null) {
-				AccountDetailType accountDetailType = accountDetailTypeService
-						.findOne(accountDetailKey.getAccountDetailType().getId());
-				if (accountDetailType == null) {
-					throw new InvalidDataException("accountDetailType", "accountDetailType.invalid",
-							" Invalid accountDetailType");
-				}
-				model.map(accountDetailType, accountDetailKey.getAccountDetailType());
-			}
-		}
-		AccountDetailKeyContract accountDetailKey = accountDetailKeyContractRequest.getAccountDetailKey();
-		if (accountDetailKey.getAccountDetailType() != null) {
-			AccountDetailType accountDetailType = accountDetailTypeService
-					.findOne(accountDetailKey.getAccountDetailType().getId());
-			if (accountDetailType == null) {
-				throw new InvalidDataException("accountDetailType", "accountDetailType.invalid",
-						" Invalid accountDetailType");
-			}
-			model.map(accountDetailType, accountDetailKey.getAccountDetailType());
-		}
-		return accountDetailKeyContractRequest;
-	}
+    }
+
+    public AccountDetailKeyContractRequest fetchRelatedContracts(
+            final AccountDetailKeyContractRequest accountDetailKeyContractRequest) {
+        final ModelMapper model = new ModelMapper();
+        for (final AccountDetailKeyContract accountDetailKey : accountDetailKeyContractRequest.getAccountDetailKeys())
+            if (accountDetailKey.getAccountDetailType() != null) {
+                final AccountDetailType accountDetailType = accountDetailTypeService
+                        .findOne(accountDetailKey.getAccountDetailType().getId());
+                if (accountDetailType == null)
+                    throw new InvalidDataException("accountDetailType", "accountDetailType.invalid",
+                            " Invalid accountDetailType");
+                model.map(accountDetailType, accountDetailKey.getAccountDetailType());
+            }
+        final AccountDetailKeyContract accountDetailKey = accountDetailKeyContractRequest.getAccountDetailKey();
+        if (accountDetailKey.getAccountDetailType() != null) {
+            final AccountDetailType accountDetailType = accountDetailTypeService
+                    .findOne(accountDetailKey.getAccountDetailType().getId());
+            if (accountDetailType == null)
+                throw new InvalidDataException("accountDetailType", "accountDetailType.invalid",
+                        " Invalid accountDetailType");
+            model.map(accountDetailType, accountDetailKey.getAccountDetailType());
+        }
+        return accountDetailKeyContractRequest;
+    }
 }

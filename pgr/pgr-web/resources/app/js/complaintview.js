@@ -96,7 +96,8 @@ $(document).ready(function()
 		success : function(response){
 			//console.log('Get complaint done!'+JSON.stringify(response));
 
-			var status = response.service_requests[0].values.ComplaintStatus;
+			status = response.service_requests[0].values.ComplaintStatus;
+			
 			if(localStorage.getItem('type') == 'EMPLOYEE'){
 				if(status == 'COMPLETED' || status == 'REJECTED')
 					$('.action-section').remove();
@@ -137,9 +138,7 @@ $(document).ready(function()
 							lat = response.service_requests[0].lat;
 							lng = response.service_requests[0].lng;
 
-							status = response.service_requests[0].values.ComplaintStatus;
-
-							if(localStorage.getItem('type') == 'CITIZEN' && response.service_requests[0].values.ComplaintStatus != 'COMPLETED')
+							if(localStorage.getItem('type') == 'CITIZEN' && status != 'COMPLETED')
 								$('.feedback').remove();
 
 							if (lat != '0' && lng != '0'){

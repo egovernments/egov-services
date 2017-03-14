@@ -139,7 +139,11 @@ $(document).ready(function()
 				}
 			},
 			error : function(){
-				bootbox.alert('signout failed!');
+				bootbox.confirm("Sign out failed. Will redirect to login page. Try logging in once again.", function(result){ 
+					if(result){
+						window.open("../index.html","_self");
+					}
+				});
 			},
 			complete: function(){
 

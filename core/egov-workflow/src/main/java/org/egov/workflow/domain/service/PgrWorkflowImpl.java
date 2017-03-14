@@ -190,9 +190,7 @@ public class PgrWorkflowImpl implements Workflow {
 			state.setOwnerPosition(Long.valueOf(task.getAssignee()));
 			state.setExtraInfo(task.getValueForKey(STATE_DETAILS));
 			state.setDateInfo(task.getCreatedDate());
-			// TODO - Get these values from request info
-			state.setLastModifiedBy(00L);
-			state.setLastModifiedDate(new Date());
+			setAuditableFields(state, Long.valueOf(task.getRequestInfo().getRequesterId()));
 			stateService.update(state);
 			if (state.getId() != null) {
 				task.setId(state.getId().toString());

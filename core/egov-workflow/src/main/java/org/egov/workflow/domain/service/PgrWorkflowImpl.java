@@ -82,7 +82,7 @@ public class PgrWorkflowImpl implements Workflow {
 		if (Objects.nonNull(state)) {
 			state.addStateHistory(new StateHistory(state));
 			state.setStatus(State.StateStatus.ENDED);
-			state.setValue("closed");
+			state.setValue(processInstance.getStatus());
 			state.setComments(processInstance.getComments());
 			state.setSenderName(processInstance.getSenderName());
 			state.setDateInfo(processInstance.getCreatedDate());

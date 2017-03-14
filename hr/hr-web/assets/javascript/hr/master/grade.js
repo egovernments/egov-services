@@ -1,15 +1,3 @@
-function getUrlVars() {
-    var vars = [],
-        hash;
-    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-    for (var i = 0; i < hashes.length; i++) {
-        hash = hashes[i].split('=');
-        vars.push(hash[0]);
-        vars[hash[0]] = hash[1];
-    }
-    return vars;
-}
-
 class GradeMaster extends React.Component{
 
     constructor(props){
@@ -17,7 +5,7 @@ class GradeMaster extends React.Component{
       this.state={gradeSet:{
           name:"",
           description:"",
-          orderno:"",
+          orderNo:"",
           active:""
       }   }
         this.handleChange=this.handleChange.bind(this);
@@ -61,7 +49,7 @@ class GradeMaster extends React.Component{
           this.setState({gradeSet:{
             name:"",
             description:"",
-            orderno:"",
+            orderNo:"",
             active:""
           } })
         }
@@ -73,9 +61,7 @@ class GradeMaster extends React.Component{
 
     let {handleChange,addOrUpdate}=this;
     let mode=getUrlVars()["type"];
-    let {name,description,orderno,active}=this.state.gradeSet;
-    let {isClicked}=this.state;
-
+    let {name,description,orderNo,active}=this.state.gradeSet;
 
 
     const showActionButton=function() {
@@ -122,8 +108,8 @@ class GradeMaster extends React.Component{
                   <label for="">Order No <span>* </span></label>
               </div>
               <div className="col-sm-6">
-                  <input type="number" name="orderno" id="orderno"  value={orderno}
-                      onChange={(e)=>{ handleChange(e,"orderno")}}required/>
+                  <input type="number" name="orderNo" id="orderNo"  value={orderNo}
+                      onChange={(e)=>{ handleChange(e,"orderNo")}}required/>
               </div>
           </div>
       </div>

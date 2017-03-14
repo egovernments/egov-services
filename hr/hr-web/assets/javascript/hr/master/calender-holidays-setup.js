@@ -1,24 +1,10 @@
-function getUrlVars() {
-    var vars = [],
-        hash;
-    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-    for (var i = 0; i < hashes.length; i++) {
-        hash = hashes[i].split('=');
-        vars.push(hash[0]);
-        vars[hash[0]] = hash[1];
-    }
-    return vars;
-}
-
-
-
 class Calenderholiday extends React.Component{
 constructor(props){
   super(props);
   this.state={holiday:
       {CalendarYear:"",
       name:"",
-      applicableOn:""
+      applicableOn:"", active:""
     },
         year:[], holidays:[]
       }
@@ -69,51 +55,14 @@ componentWillMount(){
         this.setState({holiday:{
           name:"",
           applicableOn:"",
-          CalendarYear:""},year:""})
+          CalendarYear:"",active:""},year:""})
       }
 
     }
 
-  //   addHoliday(){
-  //     var {isEdit,index,holidays,holiday}= this.state;
-  //     if (isEdit) {
-  //       console.log(isEdit,index);
-  //       //update holidays with current holiday
-  //       holidays[index]=holiday
-  //       this.setState({
-  //         holidays
-  //       })
-  //       this.setState({isEdit:false})
-   //
-  //     } else {
-  //       let holiday={year:"",
-  //       name:"",
-  //       date:""}
-  //       this.setState({
-  //                 holidays:[
-  //                     ...this.state.holidays,
-  //                     this.state.holiday
-  //                 ],holiday
-  //             })
-  //     }
-  //   }
-   //
-  //    renderDelEvent (index) {
-  //     var holidays = this.state.holidays;
-  //       holidays.splice(index,1);
-  //         this.setState({holidays});
-   //
-  //  }
-   //
-  //  renderUpdate(index){
-   //
-  //   this.setState({holiday:this.state.holidays[index], isEdit:true,index})
-  //   $('#calHoiday').modal('show')
-  //  }
-
   render(){
     let {handleChange,addOrUpdate}=this;
-    let {name,CalendarYear,applicableOn}=this.state.holiday;
+    let {name,CalendarYear,applicableOn,active}=this.state.holiday;
     let holidays=this.state.holidays;
     let mode=getUrlVars()["type"];
 
@@ -192,6 +141,20 @@ componentWillMount(){
                   </div>
               </div>
             </div>
+
+            <div className="row">
+              <div className="col-sm-6">
+                  <div className="row">
+                      <div className="col-sm-6 col-sm-offset-6">
+                            <label className="radioUi">
+                              <input type="checkbox" name="active" id="active" value="true" onChange={(e)=>{
+                                  handleChange(e,"active")}}required/> Active
+                            </label>
+                      </div>
+                  </div>
+                </div>
+            </div>
+
 
     <div className="text-center">
         {showActionButton()}

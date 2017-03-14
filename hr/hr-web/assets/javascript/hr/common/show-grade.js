@@ -1,14 +1,13 @@
 
-
 class ShowGrade extends React.Component {
   constructor(props) {
     super(props);
     this.state={grades:[],gradeSet:{
         name:"",
         description:"",
-        orderno:"",
+        orderNo:"",
         active:""
-    }
+      }
   }
 
   }
@@ -18,16 +17,16 @@ class ShowGrade extends React.Component {
     console.log(getUrlVars()["type"]);
     // console.log(getCommonMaster("hr-masters","grades","Grade").responseJSON["Grade"]);
 
-    this.setState({
-      grades:getCommonMaster("hr-masters","grades","Grade").responseJSON["Grade"]
-    });
+
   }
 
 
 
   componentDidMount()
   {
-  
+    this.setState({
+      grades:getCommonMaster("hr-masters","grades","Grade").responseJSON["Grade"]
+    });
   }
 
   componentDidUpdate(prevProps, prevState)
@@ -57,9 +56,8 @@ class ShowGrade extends React.Component {
 
   render() {
     console.log(this.state.gradeSet);
-    let {handleChange,search,updateTable}=this;
     let {isSearchClicked,grades}=this.state;
-    let {name,description,orderno,action}=this.state.gradeSet;
+    let {name,description,orderNo,active}=this.state.gradeSet;
 
     const renderAction=function(type,name){
       if (type==="update") {
@@ -83,7 +81,8 @@ class ShowGrade extends React.Component {
             return (<tr key={index}>
                     <td data-label="name">{item.name}</td>
                     <td data-label="description">{item.description}</td>
-                    <td data-label="orderno">{item.orderNo}</td>
+                    <td data-label="orderNo">{item.orderNo}</td>
+                    <td data-label="active">{item.active?"true":"false"}</td>
                     <td data-label="action">
                     {renderAction(getUrlVars()["type"],item.name)}
                     </td>
@@ -100,6 +99,7 @@ class ShowGrade extends React.Component {
                     <th>Name</th>
                     <th>Description</th>
                     <th>Order No</th>
+                    <th>Active</th>
                     <th>Action</th>
                 </tr>
             </thead>

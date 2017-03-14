@@ -38,36 +38,37 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.config;
+package org.egov.eis.repository;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import org.egov.eis.repository.builder.HRConfigurationQueryBuilder;
+import org.egov.eis.repository.rowmapper.HRConfigurationKeyValuesRowMapper;
+import org.egov.eis.web.contract.HRConfigurationGetRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.annotation.Order;
-import org.springframework.core.env.Environment;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
-@Configuration
-@PropertySource(value = { "classpath:config/application-config.properties" }, ignoreResourceNotFound = true)
-@Order(0)
-public class ApplicationProperties {
-
-	private static final String HR_SEARCH_PAGESIZE_DEFAULT = "hr.search.pagesize.default";
-	public static final String HR_SEARCH_PAGENO_MAX = "hr.search.pageno.max";
-	public static final String HR_SEARCH_PAGESIZE_MAX = "hr.search.pagesize.max";
+@Repository
+public class HRConfigurationRepository {
 
 	@Autowired
-	private Environment environment;
+	private JdbcTemplate jdbcTemplate;
 
-	public String hrSearchPageSizeDefault() {
-		return this.environment.getProperty(HR_SEARCH_PAGESIZE_DEFAULT);
-	}
+	@Autowired
+	private HRConfigurationKeyValuesRowMapper hrConfigurationKeyValuesRowMapper;
 
-	public String hrSearchPageNumberMax() {
-		return this.environment.getProperty(HR_SEARCH_PAGENO_MAX);
-	}
+	@Autowired
+	private HRConfigurationQueryBuilder hrConfigurationQueryBuilder;
 
-	public String hrSearchPageSizeMax() {
-		return this.environment.getProperty(HR_SEARCH_PAGESIZE_MAX);
+	public Map<String, List<String>> findForCriteria(HRConfigurationGetRequest hrConfigurationGetRequest) {
+		List<Object> preparedStatementValues = new ArrayList<Object>();
+		String queryStr = hrConfigurationQueryBuilder.getQuery(hrConfigurationGetRequest, preparedStatementValues);
+		Map<String, List<String>> hrConfigurationKeyValues = jdbcTemplate.query(queryStr,
+				preparedStatementValues.toArray(), hrConfigurationKeyValuesRowMapper);
+
+		return hrConfigurationKeyValues;
 	}
-	
 }

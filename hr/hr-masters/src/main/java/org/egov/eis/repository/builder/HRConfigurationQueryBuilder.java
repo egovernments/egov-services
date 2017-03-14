@@ -43,31 +43,30 @@ package org.egov.eis.repository.builder;
 import java.util.List;
 
 import org.egov.eis.config.ApplicationProperties;
-import org.egov.eis.web.contract.RecruitmentTypeGetRequest;
+import org.egov.eis.web.contract.HRConfigurationGetRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RecruitmentTypeQueryBuilder {
+public class HRConfigurationQueryBuilder {
 
-	private static final Logger logger = LoggerFactory.getLogger(RecruitmentTypeQueryBuilder.class);
+	private static final Logger logger = LoggerFactory.getLogger(HRConfigurationQueryBuilder.class);
 
 	@Autowired
 	private ApplicationProperties applicationProperties;
 
-	private static final String BASE_QUERY = "SELECT id, name, description, tenantId"
-			+ " FROM egeis_recruitmentType";
+	private static final String BASE_QUERY = "SELECT ck.keyName as key, cv.value as value"
+			+ " FROM egeis_hrConfiguration ck JOIN egeis_hrConfigurationValues cv ON ck.id = cv.keyId";
 
 	@SuppressWarnings("rawtypes")
-	public String getQuery(RecruitmentTypeGetRequest recruitmentTypeGetRequest,
-			List preparedStatementValues) {
+	public String getQuery(HRConfigurationGetRequest hrConfigurationGetRequest, List preparedStatementValues) {
 		StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
 
-		addWhereClause(selectQuery, preparedStatementValues, recruitmentTypeGetRequest);
-		addOrderByClause(selectQuery, recruitmentTypeGetRequest);
-		addPagingClause(selectQuery, preparedStatementValues, recruitmentTypeGetRequest);
+		addWhereClause(selectQuery, preparedStatementValues, hrConfigurationGetRequest);
+		addOrderByClause(selectQuery, hrConfigurationGetRequest);
+		addPagingClause(selectQuery, preparedStatementValues, hrConfigurationGetRequest);
 
 		logger.debug("Query : " + selectQuery);
 		return selectQuery.toString();
@@ -75,57 +74,65 @@ public class RecruitmentTypeQueryBuilder {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void addWhereClause(StringBuilder selectQuery, List preparedStatementValues,
-			RecruitmentTypeGetRequest recruitmentTypeGetRequest) {
+			HRConfigurationGetRequest hrConfigurationGetRequest) {
 
-		if (recruitmentTypeGetRequest.getId() == null && recruitmentTypeGetRequest.getName() == null
-				&& recruitmentTypeGetRequest.getTenantId() == null)
+		if (hrConfigurationGetRequest.getId() == null && hrConfigurationGetRequest.getEffectiveFrom() == null
+				&& hrConfigurationGetRequest.getName() == null && hrConfigurationGetRequest.getTenantId() == null)
 			return;
 
 		selectQuery.append(" WHERE");
 		boolean isAppendAndClause = false;
 
-		if (recruitmentTypeGetRequest.getTenantId() != null) {
+		if (hrConfigurationGetRequest.getTenantId() != null) {
 			isAppendAndClause = true;
-			selectQuery.append(" tenantId = ?");
-			preparedStatementValues.add(recruitmentTypeGetRequest.getTenantId());
+			selectQuery.append(" ck.tenantId = ?");
+			preparedStatementValues.add(hrConfigurationGetRequest.getTenantId());
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" cv.tenantId = ?");
+			preparedStatementValues.add(hrConfigurationGetRequest.getTenantId());
 		}
 
-		if (recruitmentTypeGetRequest.getId() != null) {
+		if (hrConfigurationGetRequest.getId() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" id IN " + getIdQuery(recruitmentTypeGetRequest.getId()));
+			selectQuery.append(" ck.id IN " + getIdQuery(hrConfigurationGetRequest.getId()));
 		}
 
-		if (recruitmentTypeGetRequest.getName() != null) {
+		if (hrConfigurationGetRequest.getName() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" name = ?");
-			preparedStatementValues.add(recruitmentTypeGetRequest.getName());
+			selectQuery.append(" ck.keyName = ?");
+			preparedStatementValues.add(hrConfigurationGetRequest.getName());
+		}
+
+		if (hrConfigurationGetRequest.getEffectiveFrom() != null) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" cv.effectiveFrom = ?");
+			preparedStatementValues.add(hrConfigurationGetRequest.getEffectiveFrom());
 		}
 	}
 
-	private void addOrderByClause(StringBuilder selectQuery,
-			RecruitmentTypeGetRequest recruitmentTypeGetRequest) {
-		String sortBy = (recruitmentTypeGetRequest.getSortBy() == null ? "name"
-				: recruitmentTypeGetRequest.getSortBy());
-		String sortOrder = (recruitmentTypeGetRequest.getSortOrder() == null ? "ASC"
-				: recruitmentTypeGetRequest.getSortOrder());
+	private void addOrderByClause(StringBuilder selectQuery, HRConfigurationGetRequest hrConfigurationGetRequest) {
+		String sortBy = (hrConfigurationGetRequest.getSortBy() == null ? "keyName"
+				: hrConfigurationGetRequest.getSortBy());
+		String sortOrder = (hrConfigurationGetRequest.getSortOrder() == null ? "ASC"
+				: hrConfigurationGetRequest.getSortOrder());
 		selectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void addPagingClause(StringBuilder selectQuery, List preparedStatementValues,
-			RecruitmentTypeGetRequest recruitmentTypeGetRequest) {
+			HRConfigurationGetRequest hrConfigurationGetRequest) {
 		// handle limit(also called pageSize) here
 		selectQuery.append(" LIMIT ?");
 		long pageSize = Integer.parseInt(applicationProperties.hrSearchPageSizeDefault());
-		if (recruitmentTypeGetRequest.getPageSize() != null)
-			pageSize = recruitmentTypeGetRequest.getPageSize();
+		if (hrConfigurationGetRequest.getPageSize() != null)
+			pageSize = hrConfigurationGetRequest.getPageSize();
 		preparedStatementValues.add(pageSize); // Set limit to pageSize
 
 		// handle offset here
 		selectQuery.append(" OFFSET ?");
 		int pageNumber = 0; // Default pageNo is zero meaning first page
-		if (recruitmentTypeGetRequest.getPageNumber() != null)
-			pageNumber = recruitmentTypeGetRequest.getPageNumber() - 1;
+		if (hrConfigurationGetRequest.getPageNumber() != null)
+			pageNumber = hrConfigurationGetRequest.getPageNumber() - 1;
 		preparedStatementValues.add(pageNumber * pageSize); // Set offset to pageNo * pageSize
 	}
 

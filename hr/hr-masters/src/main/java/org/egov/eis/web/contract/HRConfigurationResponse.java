@@ -38,36 +38,33 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.config;
+package org.egov.eis.web.contract;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.annotation.Order;
-import org.springframework.core.env.Environment;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-@Configuration
-@PropertySource(value = { "classpath:config/application-config.properties" }, ignoreResourceNotFound = true)
-@Order(0)
-public class ApplicationProperties {
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-	private static final String HR_SEARCH_PAGESIZE_DEFAULT = "hr.search.pagesize.default";
-	public static final String HR_SEARCH_PAGENO_MAX = "hr.search.pageno.max";
-	public static final String HR_SEARCH_PAGESIZE_MAX = "hr.search.pagesize.max";
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-	@Autowired
-	private Environment environment;
+@AllArgsConstructor
+@EqualsAndHashCode
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+public class HRConfigurationResponse {
 
-	public String hrSearchPageSizeDefault() {
-		return this.environment.getProperty(HR_SEARCH_PAGESIZE_DEFAULT);
-	}
+	@JsonProperty("ResponseInfo")
+	private ResponseInfo responseInfo;
 
-	public String hrSearchPageNumberMax() {
-		return this.environment.getProperty(HR_SEARCH_PAGENO_MAX);
-	}
+	@JsonProperty("HRConfiguration")
+	private Map<String, List<String>> hrConfiguration = new HashMap<>();
 
-	public String hrSearchPageSizeMax() {
-		return this.environment.getProperty(HR_SEARCH_PAGESIZE_MAX);
-	}
-	
 }

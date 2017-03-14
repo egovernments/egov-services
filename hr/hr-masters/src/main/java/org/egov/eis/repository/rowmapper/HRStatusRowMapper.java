@@ -38,36 +38,26 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.config;
+package org.egov.eis.repository.rowmapper;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.annotation.Order;
-import org.springframework.core.env.Environment;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-@Configuration
-@PropertySource(value = { "classpath:config/application-config.properties" }, ignoreResourceNotFound = true)
-@Order(0)
-public class ApplicationProperties {
+import org.egov.eis.model.HRStatus;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
-	private static final String HR_SEARCH_PAGESIZE_DEFAULT = "hr.search.pagesize.default";
-	public static final String HR_SEARCH_PAGENO_MAX = "hr.search.pageno.max";
-	public static final String HR_SEARCH_PAGESIZE_MAX = "hr.search.pagesize.max";
+@Component
+public class HRStatusRowMapper implements RowMapper<HRStatus> {
 
-	@Autowired
-	private Environment environment;
-
-	public String hrSearchPageSizeDefault() {
-		return this.environment.getProperty(HR_SEARCH_PAGESIZE_DEFAULT);
+	@Override
+	public HRStatus mapRow(ResultSet rs, int rowNum) throws SQLException {
+		HRStatus hrStatus = new HRStatus();
+		hrStatus.setId(rs.getLong("id"));
+		hrStatus.setObjectName(rs.getString("objectName"));
+		hrStatus.setCode(rs.getString("code"));
+		hrStatus.setDescription(rs.getString("description"));
+		hrStatus.setTenantId(rs.getString("tenantId"));
+		return hrStatus;
 	}
-
-	public String hrSearchPageNumberMax() {
-		return this.environment.getProperty(HR_SEARCH_PAGENO_MAX);
-	}
-
-	public String hrSearchPageSizeMax() {
-		return this.environment.getProperty(HR_SEARCH_PAGESIZE_MAX);
-	}
-	
 }

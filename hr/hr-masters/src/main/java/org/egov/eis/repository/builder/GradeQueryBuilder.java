@@ -118,7 +118,7 @@ public class GradeQueryBuilder {
 			GradeGetRequest gradeGetRequest) {
 		// handle limit(also called pageSize) here
 		selectQuery.append(" LIMIT ?");
-		long pageSize = Integer.parseInt(applicationProperties.commonsSearchPageSizeDefault());
+		long pageSize = Integer.parseInt(applicationProperties.hrSearchPageSizeDefault());
 		if (gradeGetRequest.getPageSize() != null)
 			pageSize = gradeGetRequest.getPageSize();
 		preparedStatementValues.add(pageSize); // Set limit to pageSize

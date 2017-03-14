@@ -38,36 +38,37 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.config;
+package org.egov.eis.repository.rowmapper;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.annotation.Order;
-import org.springframework.core.env.Environment;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-@Configuration
-@PropertySource(value = { "classpath:config/application-config.properties" }, ignoreResourceNotFound = true)
-@Order(0)
-public class ApplicationProperties {
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.stereotype.Component;
 
-	private static final String HR_SEARCH_PAGESIZE_DEFAULT = "hr.search.pagesize.default";
-	public static final String HR_SEARCH_PAGENO_MAX = "hr.search.pageno.max";
-	public static final String HR_SEARCH_PAGESIZE_MAX = "hr.search.pagesize.max";
+@Component
+public class HRConfigurationKeyValuesRowMapper implements ResultSetExtractor<Map<String, List<String>>> {
 
-	@Autowired
-	private Environment environment;
+	@Override
+	public Map<String, List<String>> extractData(ResultSet rs) throws SQLException, DataAccessException {
+		Map<String, List<String>> hrConfKeyValMap = new HashMap<>();
 
-	public String hrSearchPageSizeDefault() {
-		return this.environment.getProperty(HR_SEARCH_PAGESIZE_DEFAULT);
+		while (rs.next()) {
+			String hrConfKey = rs.getString("key");
+
+			if(!hrConfKeyValMap.containsKey(hrConfKey)) {
+				hrConfKeyValMap.put(hrConfKey, new ArrayList<>());
+			}
+
+			List<String> hrConfKeyVal = hrConfKeyValMap.get(hrConfKey);
+			hrConfKeyVal.add(rs.getString("value"));
+		}
+
+		return hrConfKeyValMap;
 	}
-
-	public String hrSearchPageNumberMax() {
-		return this.environment.getProperty(HR_SEARCH_PAGENO_MAX);
-	}
-
-	public String hrSearchPageSizeMax() {
-		return this.environment.getProperty(HR_SEARCH_PAGESIZE_MAX);
-	}
-	
 }

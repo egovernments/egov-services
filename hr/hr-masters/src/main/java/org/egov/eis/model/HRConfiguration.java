@@ -38,36 +38,54 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.config;
+package org.egov.eis.model;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.annotation.Order;
-import org.springframework.core.env.Environment;
+import java.util.Date;
 
-@Configuration
-@PropertySource(value = { "classpath:config/application-config.properties" }, ignoreResourceNotFound = true)
-@Order(0)
-public class ApplicationProperties {
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
-	private static final String HR_SEARCH_PAGESIZE_DEFAULT = "hr.search.pagesize.default";
-	public static final String HR_SEARCH_PAGENO_MAX = "hr.search.pageno.max";
-	public static final String HR_SEARCH_PAGESIZE_MAX = "hr.search.pagesize.max";
+import com.fasterxml.jackson.annotation.JsonFormat;
 
-	@Autowired
-	private Environment environment;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-	public String hrSearchPageSizeDefault() {
-		return this.environment.getProperty(HR_SEARCH_PAGESIZE_DEFAULT);
-	}
+@AllArgsConstructor
+@EqualsAndHashCode
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+public class HRConfiguration {
 
-	public String hrSearchPageNumberMax() {
-		return this.environment.getProperty(HR_SEARCH_PAGENO_MAX);
-	}
+	@NotNull
+	private Long id;
 
-	public String hrSearchPageSizeMax() {
-		return this.environment.getProperty(HR_SEARCH_PAGESIZE_MAX);
-	}
-	
+	@NotNull
+	@Size(min=3, max=50)
+	private String keyName;
+
+	@NotNull
+	@Size(min=3, max=250)
+	private String description;
+
+	@NotNull
+	private Long createdBy;
+
+	@NotNull
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date createdDate;
+
+	private Long lastModifiedBy;
+
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date lastModifiedDate;
+
+	@NotNull
+	private String tenantId;
+
 }

@@ -116,7 +116,7 @@ public class RecruitmentModeQueryBuilder {
 			RecruitmentModeGetRequest recruitmentModeGetRequest) {
 		// handle limit(also called pageSize) here
 		selectQuery.append(" LIMIT ?");
-		long pageSize = Integer.parseInt(applicationProperties.commonsSearchPageSizeDefault());
+		long pageSize = Integer.parseInt(applicationProperties.hrSearchPageSizeDefault());
 		if (recruitmentModeGetRequest.getPageSize() != null)
 			pageSize = recruitmentModeGetRequest.getPageSize();
 		preparedStatementValues.add(pageSize); // Set limit to pageSize

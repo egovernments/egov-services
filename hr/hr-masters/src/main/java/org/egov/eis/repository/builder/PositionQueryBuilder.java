@@ -84,7 +84,7 @@ public class PositionQueryBuilder {
 			PositionGetRequest positionGetRequest) {
 
 		if (positionGetRequest.getId() == null && positionGetRequest.getName() == null
-				&& positionGetRequest.getDepartmentId() == null && positionGetRequest.getActive() == null
+				&& positionGetRequest.getActive() == null && positionGetRequest.getDepartmentId() == null
 				&& positionGetRequest.getDesignationId() == null && positionGetRequest.getTenantId() == null)
 			return;
 
@@ -114,22 +114,22 @@ public class PositionQueryBuilder {
 			preparedStatementValues.add(positionGetRequest.getName());
 		}
 
-		if (positionGetRequest.getActive() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" p.active = ?");
-			preparedStatementValues.add(positionGetRequest.getActive());
-		}
-
-		if (positionGetRequest.getActive() != null) {
+		if (positionGetRequest.getDepartmentId() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" depDes.departmentId = ?");
 			preparedStatementValues.add(positionGetRequest.getDepartmentId());
 		}
 
-		if (positionGetRequest.getActive() != null) {
+		if (positionGetRequest.getDesignationId() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" depDes.designationId = ?");
 			preparedStatementValues.add(positionGetRequest.getDepartmentId());
+		}
+
+		if (positionGetRequest.getActive() != null) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" p.active = ?");
+			preparedStatementValues.add(positionGetRequest.getActive());
 		}
 	}
 
@@ -146,7 +146,7 @@ public class PositionQueryBuilder {
 			PositionGetRequest positionGetRequest) {
 		// handle limit(also called pageSize) here
 		selectQuery.append(" LIMIT ?");
-		long pageSize = Integer.parseInt(applicationProperties.commonsSearchPageSizeDefault());
+		long pageSize = Integer.parseInt(applicationProperties.hrSearchPageSizeDefault());
 		if (positionGetRequest.getPageSize() != null)
 			pageSize = positionGetRequest.getPageSize();
 		preparedStatementValues.add(pageSize); // Set limit to pageSize

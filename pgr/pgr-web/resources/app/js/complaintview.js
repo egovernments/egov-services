@@ -149,6 +149,10 @@ $(document).ready(function()
 			delete req_obj.ServiceRequest.values['ComplaintStatus'];
 			req_obj.ServiceRequest.values['locationName'] = req_obj.ServiceRequest.values['LocationName'];
 			delete req_obj.ServiceRequest.values['LocationName'];
+			if($("#approvalDepartment").val())
+				req_obj.ServiceRequest.values['departmentName'] = $("#approvalDepartment option:selected").text();
+			if($("#approvalPosition").val())
+				req_obj.ServiceRequest.values['assignment_id'] = $("#approvalPosition").val();
 			//console.log(JSON.stringify(updateResponse));
 
 			console.log(JSON.stringify(req_obj));

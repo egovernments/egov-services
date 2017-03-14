@@ -26,6 +26,8 @@ public class Agreement {
 
 	@NotNull
 	private String agreementNumber;
+	private String acknowledgementNumber;
+	private String StateId;
 
 	@NotNull
 	@JsonFormat(pattern = "dd/MM/yyyy")

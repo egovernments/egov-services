@@ -58,6 +58,15 @@ paths:
           items: 
             type: integer
           format: int64
+        - name: userType
+          in: query
+          required: false
+          description: Defines what type of user this is.Possible values as "CITIZEN", "EMPLOYEE", "SYSTEM".
+          type: string
+          minLength: 0
+          maxLength: 64
+          exclusiveMinimum: true
+          exclusiveMaximum: false  
       # Expected responses for this operation:
       responses:
         # Response code

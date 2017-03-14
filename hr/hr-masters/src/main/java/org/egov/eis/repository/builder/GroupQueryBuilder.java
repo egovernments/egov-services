@@ -112,7 +112,7 @@ public class GroupQueryBuilder {
 			GroupGetRequest groupGetRequest) {
 		// handle limit(also called pageSize) here
 		selectQuery.append(" LIMIT ?");
-		long pageSize = Integer.parseInt(applicationProperties.commonsSearchPageSizeDefault());
+		long pageSize = Integer.parseInt(applicationProperties.hrSearchPageSizeDefault());
 		if (groupGetRequest.getPageSize() != null)
 			pageSize = groupGetRequest.getPageSize();
 		preparedStatementValues.add(pageSize); // Set limit to pageSize

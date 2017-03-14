@@ -34,12 +34,12 @@ var requestInfo = {
 };
 
 var tenantId=1;
-$.ajaxPrefilter(function( options ) {
-  if ( options.crossDomain ) {
-    options.url = "http://127.0.0.1:61136/" + encodeURIComponent( options.url );
-    options.crossDomain = false;
-  }
-});
+// $.ajaxPrefilter(function( options ) {
+//   if ( options.crossDomain ) {
+//     options.url = "http://127.0.0.1:61136/" + encodeURIComponent( options.url );
+//     options.crossDomain = false;
+//   }
+// });
 
 // $.ajaxPrefilter( function( options ) {
 //   if ( options.crossDomain ) {
@@ -61,29 +61,42 @@ $.ajaxPrefilter(function( options ) {
 
 // console.log(window.location.origin);
 
-$.ajax({
-            url: baseUrl+"/egov-common-masters"+"/departments"+"/_search?tenantId="+tenantId,
-            type: 'POST',
-            // dataType: 'json',
-            data:JSON.stringify(requestInfo),
-            crossDomain: true, // set this to ensure our $.ajaxPrefilter hook fires
-            processData: false, // We want this to remain an object for  $.ajaxPrefilter
-            // headers: {
-            //     'Content-Type': 'application/json'
-            // },
-            // contentType: 'application/json',
-            success: function (result) {
-                console.log(result);
-               // CallBack(result);
-            },
-            error: function (error) {
-                console.log(error);
-            }
-        });
 
-$.post("http://egov-micro-dev.egovernments.org"+"/egov-common-masters"+"/departments"+"/_search?tenantId="+tenantId,JSON.stringify(requestInfo),function(data, status){
-        alert("Data: " + data + "\nStatus: " + status);
-    });
+
+function getCommonMaster(mainRoute,resource,returnObject) {
+    return $.ajax({
+              url: baseUrl+"/"+mainRoute+"/"+resource+"/_search?tenantId="+tenantId,
+              type: 'POST',
+              dataType: 'json',
+              data:JSON.stringify(requestInfo),
+              async: false,
+              // crossDomain: true, // set this to ensure our $.ajaxPrefilter hook fires
+              // processData: false, // We want this to remain an object for  $.ajaxPrefilter
+              // headers: {
+              //     'Content-Type': 'application/json'
+              // },
+              contentType: 'application/json'
+              // ,
+              // success: function (result) {
+              //     return result[returnObject];
+              //     // console.log(result);
+              //    // CallBack(result);
+              // },
+              // error: function (error) {
+              //     return [];
+              //     // console.log(error);
+              // }
+          });
+    // return response.statusText==="Ok"?response.responseJSON[returnObject]:[];
+}
+
+// console.log(getCommonMaster("egov-common-masters","departments","Department"));
+
+// console.log("hai");
+
+// $.post("http://egov-micro-dev.egovernments.org"+"/egov-common-masters"+"/departments"+"/_search?tenantId="+tenantId,JSON.stringify(requestInfo),function(data, status){
+//         alert("Data: " + data + "\nStatus: " + status);
+//     });
 
 // $.get(baseUrl+"/"+departments+"/_search?tenantId="+tenantId, function(data, status){
 //         alert("Data: " + data + "\nStatus: " + status);
@@ -91,121 +104,15 @@ $.post("http://egov-micro-dev.egovernments.org"+"/egov-common-masters"+"/departm
 
 //common object
 var commonObject = {
-    employeeType: [{
-            id: 1,
-            name: "Deputation",
-            chartOfAccounts: ""
-        },
-        {
-            id: 2,
-            name: "Permanent",
-            chartOfAccounts: ""
-        },
-        {
-            id: 3,
-            name: "Daily Wages`",
-            chartOfAccounts: ""
-        },
-        {
-            id: 4,
-            name: "Temporary",
-            chartOfAccounts: ""
-        },
-        {
-            id: 5,
-            name: "Contract",
-            chartOfAccounts: ""
-        }
-    ],
-    employeeStatus: ["EMPLOYEED", "RETAIRED", "RESIGNED", "TERMINTED", "DESEASED", "SUSPEPEND", "TRANSFERRED"],
-    group: [{
-            id: 1,
-            name: "State",
-            description: ""
-        },
-        {
-            id: 2,
-            name: "Central",
-            description: ""
-        },
-        {
-            id: 3,
-            name: "Local",
-            description:""
-        }
-    ],
+    employeeType: getCommonMaster("hr-masters","employeetypes","EmployeeType").responseJSON["EmployeeType"] || [],
+    employeeStatus: ["EMPLOYED", "RETIRED", "RESIGNED", "TERMINATED", "DECEASED", "SUSPENDED", "TRANSFERRED"],
+    group: getCommonMaster("hr-masters","groups","Group").responseJSON["Group"] || [],
     maritalStatus: ["MARRIED", "UNMARRIED", "DISCOVERED", "WIDROW", "WIDOW"],
     user_bloodGroup: ["O-", "O+", "A-", "A+", "B-", "B+", "AB-", "AB+"],
-    motherTounge: [{
-            id: 1,
-            name: "Kannada",
-            description: "",
-            active: true
-        },
-        {
-            id: 2,
-            name: "Hindi",
-            description: "",
-            active: true
-        },
-        {
-            id: 3,
-            name: "Tamil",
-            description: "",
-            active: true
-        },
-        {
-            id: 4,
-            name: "Telagu",
-            description: "",
-            active: true
-        }
-    ],
-    religion: [{
-            id: 1,
-            name: "Hindu",
-            description: "",
-            active: true,
-        },
-        {
-            id: 2,
-            name: "Muslim",
-            description: "",
-            active: true
-        }
-    ],
-    community: [{
-            id: 1,
-            name: "Hindu",
-            description: "",
-            active: true
-        },
-        {
-            id: 2,
-            name: "Muslim",
-            description: "",
-            active: true
-        }
-    ],
-    category: [{
-            id: 1,
-            name: "SC",
-            description: "",
-            active: true
-        },
-        {
-            id: 2,
-            name: "ST",
-            description: "",
-            active: true
-        },
-        {
-            id: 3,
-            name: "OBC",
-            description: "",
-            active: true
-        }
-    ],
+    motherTounge: getCommonMaster("egov-common-masters","languages","Language").responseJSON["Language"] || [],
+    religion: getCommonMaster("egov-common-masters","religions","Religion").responseJSON["Religion"] || [],
+    community: getCommonMaster("egov-common-masters","communities","Community").responseJSON["Community"] || [],
+    category: getCommonMaster("egov-common-masters","categories","Category").responseJSON["Category"] || [],
     bank: [{
             id: 1,
             name: "HDFC",
@@ -238,54 +145,9 @@ var commonObject = {
             description: ""
         }
     ],
-    recruitmentMode: [{
-            id: 1,
-            name: "UPSC",
-            description: ""
-        },
-        {
-            id: 2,
-            name: "Department",
-            description: ""
-        },
-        {
-            id: 3,
-            name: "Exams",
-            description: ""
-        }
-    ],
-    recruitmentType: [{
-            id: 1,
-            name: "Direct",
-            description: ""
-        },
-        {
-            id: 2,
-            name: "Transfer",
-            description: ""
-        },
-        {
-            id: 3,
-            name: "Compensatory ",
-            description: ""
-        }
-    ],
-    recruitmentQuota: [{
-            id: 1,
-            name: "Sports",
-            description: ""
-        },
-        {
-            id: 2,
-            name: "Ex-Serviceman",
-            description: ""
-        },
-        {
-            id: 3,
-            name: "Handicapped ",
-            description: ""
-        }
-    ],
+    recruitmentMode: getCommonMaster("hr-masters","recruitmentmodes","RecruitmentMode").responseJSON["RecruitmentMode"] || [],
+    recruitmentType: getCommonMaster("hr-masters","recruitmenttypes","RecruitmentType").responseJSON["RecruitmentType"] || [],
+    recruitmentQuota: getCommonMaster("hr-masters","recruitmentquotas","RecruitmentQuota").responseJSON["RecruitmentQuota"] || [],
     assignments_fund: [{
             id: 1,
             name: "Own",
@@ -319,78 +181,26 @@ var commonObject = {
             description: ""
         }
     ],
-    assignments_grade: [{
-            id: 1,
-            name: "1st",
-            description: "",
-            orderno: "1",
-            active: true
-        },
-        {
-            id: 2,
-            name: "2nd",
-            description: "",
-            orderno: "1",
-            active: true
-        }
-    ],
-    assignments_designation: [{
-            id: 1,
-            name: "Juniour Engineer",
-            description: "",
-            orderno: "1",
-            active: true
-        },
-        {
-            id: 2,
-            name: "Assistance Engineer",
-            description: "",
-            orderno: "1",
-            active: true
-        }
-    ],
-    assignments_position: [{
-            id: 1,
-            name: "Juniour Engineer",
-            description: "",
-            orderno: "1",
-            active: true
-        },
-        {
-            id: 2,
-            name: "Assistance Engineer",
-            description: "",
-            orderno: "1",
-            active: true
-        }
-    ],
-    assignments_department: [{
-            id: 1,
-            name: "Juniour Engineer",
-            description: "",
-            orderno: "1",
-            active: true
-        },
-        {
-            id: 2,
-            name: "Assistance Engineer",
-            description: "",
-            orderno: "1",
-            active: true
-        }
-    ],
+    assignments_grade: getCommonMaster("hr-masters","grades","Grade").responseJSON["Grade"] || [],
+    assignments_designation: getCommonMaster("hr-masters","designations","Designation").responseJSON["Designation"] || [],
+    assignments_position: getCommonMaster("hr-masters","positions","Position").responseJSON["Position"] || [],
+    assignments_department: getCommonMaster("egov-common-masters","departments","Department").responseJSON["Department"] || [],
     jurisdictions_jurisdictionsType: [{
             id: 1,
-            name: "Juniour Engineer",
+            name: "City",
             description: "",
-            orderno: "1",
             active: true
         },
         {
             id: 2,
-            name: "Assistance Engineer",
+            name: "Ward",
             description: "",
-            orderno: "1",
+            active: true
+        },
+        {
+            id: 3,
+            name: "Zone",
+            description: "",
             active: true
         }
     ],
@@ -914,7 +724,8 @@ function markEditIndex(index = -1, modalName = "", object = "") {
 
 //common add and update
 function commonAddAndUpdate(tableName, modalName, object) {
-    if(switchValidation(object))
+    // if(switchValidation(object))
+    if(true)
     {
       if (editIndex != -1) {
           employee[object][editIndex] = employeeSubObject[object];
@@ -1274,13 +1085,13 @@ $("#createEmployeeForm").validate({
         // form.submit();
 
         // console.log(agreement);
-        // $.post(`${baseUrl}agreements?tenant_id=kul.am`, {
-        //     RequestInfo: requestInfo,
-        //     Agreement: agreement
-        // }, function(response) {
-        //     // alert("submit");
-        //     window.open("../../../../app/search-assets/create-agreement-ack.html?&agreement_id=aeiou", "", "width=1200,height=800")
-        //     console.log(response);
-        // })
+        $.post(`${baseUrl}hr-employee/employees/_create?tenantId=1`, {
+            RequestInfo: requestInfo,
+            Employee: employee
+        }, function(response) {
+            alert("submit");
+            // window.open("../../../../app/search-assets/create-agreement-ack.html?&agreement_id=aeiou", "", "width=1200,height=800")
+            console.log(response);
+        })
     }
 })

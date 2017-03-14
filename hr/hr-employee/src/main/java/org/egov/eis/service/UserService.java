@@ -44,28 +44,31 @@ import java.util.List;
 
 import org.egov.eis.model.UserInfo;
 import org.egov.eis.service.helper.UserSearchURLHelper;
-import org.egov.eis.web.contract.EmployeeGetRequest;
+import org.egov.eis.web.contract.RequestInfo;
 import org.egov.eis.web.contract.UserRequest;
 import org.egov.eis.web.contract.UserResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
 public class UserService {
 
-//	@Autowired
-//	private RestTemplate restTemplate;
-
 	@Autowired
 	private UserSearchURLHelper userSearchURLHelper;
 
-	public List<UserInfo> getUsers(EmployeeGetRequest userGetRequest) {
-		ResponseEntity<UserResponse> userResponseEntity = new RestTemplate()
-				.getForEntity(userSearchURLHelper.searchURL(userGetRequest), UserResponse.class);
+	public List<UserInfo> getUsers(List<Long> ids, String tenantId, RequestInfo requestInfo) {
+		String url = userSearchURLHelper.searchURL(ids, tenantId);
 
-		return userResponseEntity.getBody().getUser();
+		UserRequest userRequest = new UserRequest();
+		userRequest.setId(ids);
+		userRequest.setRequestInfo(requestInfo);
+
+ 		UserResponse userResponse = new RestTemplate().postForObject(url, userRequest, UserResponse.class);
+
+		System.err.println("User Info: " + userResponse.getUser());
+
+		return userResponse.getUser();
 	}
 	
 	public Long createUser(UserRequest userRequest) {

@@ -52,7 +52,6 @@ import org.egov.eis.model.enums.UserType;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -104,22 +103,21 @@ public class UserInfo {
 
 	private Boolean active;
 
-	@JsonFormat(pattern = "dd/MM/yyyy")
+	@JsonFormat(pattern = "yyyy-mm-dd")
 	private Date dob;
 
-	@JsonFormat(pattern = "dd/MM/yyyy")
+	@JsonFormat(pattern = "dd-MM-yyyy hh:mm:ss")
 	private Date pwdExpiryDate;
 
 	private String locale;
 
-	@Setter(AccessLevel.NONE)
 	private UserType type = UserType.EMPLOYEE;
 
 	private String signature;
 
 	private Boolean accountLocked;
 
-	private List<Long> roles = new ArrayList<Long>();
+	private List<Role> roles = new ArrayList<Role>();
 
 	private String fatherOrHusbandName;
 
@@ -131,12 +129,12 @@ public class UserInfo {
 
 	private Long createdBy;
 
-	@JsonFormat(pattern = "dd/MM/yyyy")
+	@JsonFormat(pattern = "dd-MM-yyyy hh:mm:ss")
 	private Date createdDate;
 
 	private Long lastModifiedBy;
 
-	@JsonFormat(pattern = "dd/MM/yyyy")
+	@JsonFormat(pattern = "dd-MM-yyyy hh:mm:ss")
 	private Date lastModifiedDate;
 
 	@NotNull

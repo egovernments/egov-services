@@ -828,6 +828,102 @@ paths:
           schema:
             $ref: '#/definitions/ErrorRes'
 
+  /module/_search:
+    post:
+      summary: Get the list of module defined in the system.
+      description: |
+        Get the calendar year master data.
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Commmon request info for getting calendar year.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - $ref: "#/parameters/tenantId"
+        - $ref: "#/parameters/sortModule"
+        - name: name
+          in: query
+          required: false
+          type: string
+          description: Name of the module.
+        - name: enabled
+          in: query
+          description: True will be set in cases where only enabled modules are needed and False will be set when disabled modules are needed and no value will be set when all module are needed.
+          required: false
+          type: boolean
+          format: varchar
+          default: true
+          allowEmptyValue: true
+        - name: id
+          in: query
+          description: Unique Id of module.
+          required: false
+          type: array
+          items:
+            type: integer
+          format: int64
+          maxItems: 50
+
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: "#/definitions/ModuleRes"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+
+      tags: 
+       - Module
+
+  /module/_create:      
+    post:
+      summary: Create a new module in the system.
+      description: To create a module we can use POST and set all the required and non-mandatory parameters.
+      parameters:
+        - name: module
+          in: body
+          description: Details for the module.
+          required: true
+          schema:
+            $ref: '#/definitions/ModuleReq'
+      tags:
+        - Module
+      responses:
+        '201':
+          description: module created sucessfully.
+          schema:
+            $ref: '#/definitions/CalendarYearRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+            
+  /module/_update:
+    post:
+      summary: Update existing module for the name
+      description: To update an existing module master data.
+      parameters:
+        - name: module
+          in: body
+          description: Request header for the module with new of values.
+          required: true
+          schema:
+            $ref: '#/definitions/ModuleReq'
+      tags:
+        - Module
+      responses:
+        '200':
+          description: module updated.
+          schema:
+            $ref: '#/definitions/ModuleRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+            
 definitions:
   Language:
     title: Language in the system
@@ -1271,8 +1367,65 @@ definitions:
     required:
       - RequestInfo
       - Category
-parameters:
+      
+  Module:
+    title: Module in the system
+    type: object
+    properties:
+      id: 
+       type: integer
+       format: int64
+       description : Unique identifier of the module.
+      name:
+        type: string
+        description: The Name of the module.
+        minLength: 2
+        maxLength: 100
+      contextRoot:
+        type: string
+        description: The context root of the module for a application.
+        maxLength: 10
+      enabled:
+        type: boolean
+        format: varchar
+        description: TRUE for active module and FALSE for inactive module.
+      parentmodule: 
+        type: integer
+        format: int64
+        description : There can be sub modules, this is parent module id.
+      orderNumber: 
+        type: integer
+        format: int64
+        description : order bumber
+      tenantId:
+        description: Unique id for for a tenant.
+        type: string
+    required:
+      - tenantId
+      - name
 
+  ModuleRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: '#/definitions/ResponseInfo'
+      Module:
+        type: array
+        items: 
+         $ref: '#/definitions/Module'  
+         
+  ModuleReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: '#/definitions/RequestInfo'
+      Module:
+        $ref: '#/definitions/Module'  
+    required:
+      - RequestInfo
+      - Module
+      
+parameters:
   tenantId:
     name: tenantid
     in: query
@@ -1383,3 +1536,18 @@ parameters:
     default:
       - -calendarYear
       - -applicableOn
+      
+  sortModule:
+    name: sort
+    in: query
+    description: Module will be sorted by orderNumber descending by default if this parameter is not provided.
+    type: array
+    uniqueItems: true
+    minItems: 1
+    maxItems: 3
+    collectionFormat: pipes
+    items:
+      type: string
+      pattern: '[-+](name|contextRoot|orderNumber)'
+    default:
+      - -orderNumber

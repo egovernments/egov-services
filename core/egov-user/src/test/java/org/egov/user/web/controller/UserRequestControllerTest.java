@@ -9,7 +9,6 @@ import org.egov.user.persistence.entity.User;
 import org.egov.user.persistence.entity.enums.BloodGroup;
 import org.egov.user.persistence.entity.enums.Gender;
 import org.egov.user.persistence.entity.enums.UserType;
-import org.egov.user.web.contract.RequestInfo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +46,7 @@ public class UserRequestControllerTest {
     @Test
     @WithMockUser
     public void testShouldRegisterACitizen() throws Exception {
-        when(userService.save(any(RequestInfo.class), any(org.egov.user.domain.model.User.class), eq(Boolean.TRUE))).thenReturn(buildUser());
+        when(userService.save(any(org.egov.user.domain.model.User.class), eq(Boolean.TRUE))).thenReturn(buildUser());
 
         String fileContents = getFileContents("createValidatedCitizenSuccessRequest.json");
         mockMvc.perform(post("/users/_create/")
@@ -63,7 +62,7 @@ public class UserRequestControllerTest {
     @WithMockUser
     public void testShouldThrowErrorWhileRegisteringWithInvalidCitizen() throws Exception {
         InvalidUserException exception = new InvalidUserException(org.egov.user.domain.model.User.builder().build());
-        when(userService.save(any(RequestInfo.class), any(org.egov.user.domain.model.User.class), eq(Boolean.TRUE))).thenThrow(exception);
+        when(userService.save(any(org.egov.user.domain.model.User.class), eq(Boolean.TRUE))).thenThrow(exception);
 
         String fileContents = getFileContents("createCitizenUnsuccessfulRequest.json");
         mockMvc.perform(post("/users/_create/")
@@ -79,7 +78,7 @@ public class UserRequestControllerTest {
     @WithMockUser
     public void testShouldThrowErrorWhileRegisteringWithPendingOtpValidation() throws Exception {
         OtpValidationPendingException exception = new OtpValidationPendingException(org.egov.user.domain.model.User.builder().build());
-        when(userService.save(any(RequestInfo.class), any(org.egov.user.domain.model.User.class), eq(Boolean.TRUE))).thenThrow(exception);
+        when(userService.save(any(org.egov.user.domain.model.User.class), eq(Boolean.TRUE))).thenThrow(exception);
 
         String fileContents = getFileContents("createValidatedCitizenSuccessRequest.json");
         mockMvc.perform(post("/users/_create/")

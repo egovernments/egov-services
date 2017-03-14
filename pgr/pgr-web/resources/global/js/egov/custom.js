@@ -80,16 +80,6 @@ $(document).ready(function()
 		//console.log('No select2');
 	}
 	
-	/*$("a.open-popup").click(function(e) {
-		window.open(this.href, ''+$(this).attr('data-strwindname')+'', 'width=900, height=700, top=300, left=260,scrollbars=yes'); 
-		return false;
-	});
-	
-	$(document).on('click', 'a.open-popup', function(e) {
-		window.open(this.href, ''+$(this).attr('data-strwindname')+'', 'width=900, height=700, top=300, left=260,scrollbars=yes'); 
-		return false;
-	});*/
-	
 	$("form.form-horizontal[data-ajaxsubmit!='true']").submit(function( event ) {
 		$('.loader-class').modal('show', {backdrop: 'static'});
 	});
@@ -100,6 +90,19 @@ $(document).ready(function()
 	});
 	
 	try{
+
+		$('form').validate({
+			showErrors: function (errorMap, errorList) {
+			  if (typeof errorList[0] != "undefined") {
+			      var position = $(errorList[0].element).offset().top-($('.navbar-header').height()+40);
+			      $('html, body').animate({
+			          scrollTop: position
+			      }, 300);
+			  }
+			  this.defaultShowErrors();
+			}
+		});
+			
 		jQuery.extend(jQuery.validator.messages, {
 			required: "Required"
 		});
@@ -117,23 +120,9 @@ $(document).ready(function()
 			}
 		});
 
-
 	}catch(e){
 		//console.warn("No validation involved");
 	}
-
-	$('form').validate({
-		showErrors: function (errorMap, errorList) {
-		  if (typeof errorList[0] != "undefined") {
-		      var position = $(errorList[0].element).offset().top-($('.navbar-header').height()+40);
-		      $('html, body').animate({
-		          scrollTop: position
-		      }, 300);
-		  }
-		  this.defaultShowErrors();
-		  
-		}
-	});
 	
 	$('.signout').click(function(){
 		$.ajax({
@@ -150,7 +139,11 @@ $(document).ready(function()
 				}
 			},
 			error : function(){
-				bootbox.alert('signout failed!');
+				bootbox.confirm("Sign out failed. Will redirect to login page. Try logging in once again.", function(result){ 
+					if(result){
+						window.open("../index.html","_self");
+					}
+				});
 			},
 			complete: function(){
 
@@ -396,6 +389,37 @@ var RI = function(auth){
 }
 
 $.RequestInfo = RI;
+
+var newRI = function(auth){
+	this.apiId = 'org.egov.pgr';
+    this.ver = '1.0';
+    var dat = new Date().toLocaleDateString();
+	var time = new Date().toLocaleTimeString();
+	var date = dat.split("/").join("-");
+    this.ts = date+' '+time;
+    this.action = 'POST';
+    this.did = '4354648646';
+    this.key = 'xyz';
+    this.msgId = '654654';
+    this.requesterId = '61';
+    this.authToken = auth;
+
+    var requestInfo={};
+
+    requestInfo['apiId']=this.apiId;
+    requestInfo['ver']=this.ver;
+    requestInfo['ts']=this.ts;
+    requestInfo['action']=this.action;
+    requestInfo['did']=this.did;
+    requestInfo['key']=this.key;
+    requestInfo['msgId']=this.msgId;
+    requestInfo['requesterId']=this.requesterId;
+    requestInfo['authToken']=this.authToken;
+
+    this.requestInfo = requestInfo;
+}
+
+$.newRequestInfo = newRI;
 
 var headers = function(){
 	this.api_id = 'org.egov.pgr';

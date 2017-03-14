@@ -3,22 +3,17 @@ package org.egov.user.domain.service;
 import org.egov.user.domain.exception.InvalidUserException;
 import org.egov.user.domain.exception.OtpValidationPendingException;
 import org.egov.user.domain.model.UserSearch;
-import org.egov.user.domain.search.UserSearchSpecificationFactory;
 import org.egov.user.persistence.entity.Role;
 import org.egov.user.persistence.entity.User;
 import org.egov.user.persistence.entity.enums.Gender;
 import org.egov.user.persistence.entity.enums.UserType;
-import org.egov.user.persistence.repository.RoleRepository;
+import org.egov.user.persistence.repository.OtpRepository;
 import org.egov.user.persistence.repository.UserRepository;
-import org.egov.user.web.contract.RequestInfo;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.data.jpa.domain.Specification;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -27,7 +22,6 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
@@ -37,26 +31,13 @@ public class UserServiceTest {
     @Mock
     UserRepository userRepository;
     @Mock
-    RoleRepository roleRepository;
-    @Mock
-    RequestInfo requestInfo;
-    @Mock
-    OtpService otpService;
-    @Mock
-    UserSearchSpecificationFactory userSearchSpecificationFactory;
-    @Captor
-    private ArgumentCaptor<User> userCaptor;
-
+    OtpRepository otpRepository;
+    @InjectMocks
     UserService userService;
 
     private final List<Long> ID = Arrays.asList(1L, 2L);
     private final String EMAIL = "email@gmail.com";
     private final String USER_NAME = "userName";
-
-    @Before
-    public void setUp() {
-        userService = new UserService(userRepository, roleRepository, otpService, userSearchSpecificationFactory);
-    }
 
     @Test
     public void shouldGetUserByEmail() throws Exception {
@@ -80,9 +61,7 @@ public class UserServiceTest {
     public void shouldSearchUser() throws Exception {
         UserSearch userSearch = new UserSearch();
         List<User> expectedListOfUsers = getListOfUsers();
-        Specification specification = mock(Specification.class);
-        when(userSearchSpecificationFactory.getSpecification(userSearch)).thenReturn(specification);
-        when(userRepository.findAll(specification)).thenReturn(expectedListOfUsers);
+        when(userRepository.findAll(userSearch)).thenReturn(expectedListOfUsers);
 
         List<User> actualResult = userService.searchUsers(userSearch);
 
@@ -92,74 +71,48 @@ public class UserServiceTest {
     @Test
     public void shouldSaveAValidUser() throws Exception {
         org.egov.user.domain.model.User domainUser = validDomainUser();
-        User entityUser = new User().fromDomain(domainUser);
-        when(otpService.isOtpValidationComplete(requestInfo, domainUser)).thenReturn(Boolean.TRUE);
-        when(userRepository.save(userCaptor.capture())).thenReturn(entityUser);
-        User returnedUser = userService.save(requestInfo, domainUser, Boolean.TRUE);
+        when(otpRepository.isOtpValidationComplete(domainUser)).thenReturn(true);
+        final User expectedEntityUser = new User();
+        when(userRepository.save(domainUser)).thenReturn(expectedEntityUser);
 
-        assertEquals(entityUser, returnedUser);
-        assertEquals(entityUser.getUsername(), userCaptor.getValue().getUsername());
-        assertEquals(entityUser.getMobileNumber(), userCaptor.getValue().getMobileNumber());
-    }
+        User returnedUser = userService.save(domainUser, Boolean.TRUE);
 
-    @Test
-    public void testShouldResolveRolesBeforeSavingUser() throws Exception {
-        Role mockRole = mock(Role.class);
-        org.egov.user.domain.model.User domainUser = validDomainUserWithRole();
-        User entityUser = new User().fromDomain(domainUser);
-        when(otpService.isOtpValidationComplete(requestInfo, domainUser)).thenReturn(Boolean.TRUE);
-        when(userRepository.save(userCaptor.capture())).thenReturn(entityUser);
-        when(roleRepository.findByNameContainingIgnoreCase("CITIZEN")).thenReturn(mockRole);
-        userService.save(requestInfo, domainUser, Boolean.TRUE);
-
-        assertEquals(mockRole, userCaptor.getValue().getRoles().iterator().next());
-    }
-
-    @Test
-    public void shouldNotAttemptToResolveRolesWhenNonePresent() throws Exception {
-        org.egov.user.domain.model.User domainUser = validDomainUser();
-        when(otpService.isOtpValidationComplete(requestInfo, domainUser)).thenReturn(Boolean.TRUE);
-        userService.save(requestInfo, domainUser, Boolean.TRUE);
-
-        verify(roleRepository, never()).findByNameContainingIgnoreCase(any(String.class));
+        assertEquals(expectedEntityUser, returnedUser);
     }
 
     @Test
     public void testShouldEnsureOtpHasBeenValidated() throws Exception {
         org.egov.user.domain.model.User domainUser = validDomainUserWithRole();
-        when(otpService.isOtpValidationComplete(requestInfo, domainUser)).thenReturn(Boolean.TRUE);
-        userService.save(requestInfo, domainUser, Boolean.TRUE);
+        when(otpRepository.isOtpValidationComplete(domainUser)).thenReturn(true);
+        userService.save(domainUser, true);
 
-        verify(otpService, atLeastOnce()).isOtpValidationComplete(requestInfo, domainUser);
+        verify(otpRepository, atLeastOnce()).isOtpValidationComplete(domainUser);
     }
 
     @Test(expected = OtpValidationPendingException.class)
     public void testIfOtpIsNotValidatedExceptionIsRaised() throws Exception {
         org.egov.user.domain.model.User domainUser = validDomainUserWithRole();
-        when(otpService.isOtpValidationComplete(requestInfo, domainUser)).thenReturn(Boolean.FALSE);
+        when(otpRepository.isOtpValidationComplete(domainUser)).thenReturn(false);
 
-        userService.save(requestInfo, domainUser, Boolean.TRUE);
+        userService.save(domainUser, true);
     }
 
     @Test
     public void testOtpIsNotValidatedWhenEnsureValidationFlagIsValue() throws Exception {
-        try {
-            org.egov.user.domain.model.User domainUser = validDomainUserWithRole();
-            when(otpService.isOtpValidationComplete(requestInfo, domainUser)).thenReturn(Boolean.FALSE);
-            userService.save(requestInfo, domainUser, Boolean.FALSE);
+        org.egov.user.domain.model.User domainUser = validDomainUserWithRole();
+        when(otpRepository.isOtpValidationComplete(domainUser)).thenReturn(false);
 
-            verify(otpService, never()).isOtpValidationComplete(requestInfo, domainUser);
-        } catch (OtpValidationPendingException ovpe) {
-            fail();
-        }
+        userService.save(domainUser, false);
+
+        verify(otpRepository, never()).isOtpValidationComplete(domainUser);
     }
 
     @Test(expected = InvalidUserException.class)
     public void shouldRaiseExceptionWhenUserIsInvalid() throws Exception {
         org.egov.user.domain.model.User domainUser = org.egov.user.domain.model.User.builder().build();
 
-        userService.save(requestInfo, domainUser, Boolean.TRUE);
-        verify(userRepository, never()).save(any(User.class));
+        userService.save(domainUser, true);
+        verify(userRepository, never()).save(any(org.egov.user.domain.model.User.class));
     }
 
     private org.egov.user.domain.model.User validDomainUser() {
@@ -177,7 +130,7 @@ public class UserServiceTest {
     private org.egov.user.domain.model.User.UserBuilder getUserBuilder() {
         return org.egov.user.domain.model.User.builder().username("supandi_rocks")
                 .name("Supandi").gender(Gender.MALE).type(UserType.CITIZEN)
-                .active(Boolean.TRUE).mobileNumber("9988776655").accountLocked(Boolean.FALSE);
+                .active(Boolean.TRUE).mobileNumber("9988776655").accountLocked(false);
     }
 
     private List<User> getListOfUsers() {

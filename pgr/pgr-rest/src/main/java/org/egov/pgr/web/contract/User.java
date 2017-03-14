@@ -34,6 +34,9 @@ public class User {
 	@JsonProperty("emailId")
 	private String emailId;
 
+	@JsonProperty("type")
+	private String type;
+
 	@JsonProperty("roles")
-    private Set<Role> roles = null;
+	private Set<Role> roles = null;
 }

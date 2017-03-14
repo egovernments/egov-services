@@ -71,7 +71,7 @@ public class AccountDetailType extends AbstractAuditable implements java.io.Seri
 
     private static final long serialVersionUID = 3499589983886551123L;
 
-    public static final String SEQ_ACCOUNTDETAILTYPE = "seq_accountdetailtype";
+    public static final String SEQ_ACCOUNTDETAILTYPE = "seq_egf_accountdetailtype";
 
     @Id
     @GeneratedValue(generator = SEQ_ACCOUNTDETAILTYPE, strategy = GenerationType.SEQUENCE)

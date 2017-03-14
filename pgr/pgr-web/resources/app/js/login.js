@@ -124,7 +124,6 @@ $(document).ready(function()
 	
 	$("#signin-action").click(function(e){
 		var obj = $(this);
-		obj.attr("disabled", "disabled");
 		if($('#signform').valid()){
 			//console.log('Form valid');
 			if(!checklocation){
@@ -135,6 +134,7 @@ $(document).ready(function()
 				url : '/user/_login?jurisdiction_id=ap.public',
 				type: 'POST',
 				beforeSend : function(){
+					obj.attr("disabled", "disabled");
 					showLoader();
 				},
 				headers : {
@@ -160,7 +160,7 @@ $(document).ready(function()
 					bootbox.alert('User Auth failed!');
 				},
 				complete : function(){
-					obj.removeAttr("disabled")
+					obj.removeAttr("disabled");
 					hideLoader();
 				}
 			});

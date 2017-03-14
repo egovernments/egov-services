@@ -3,7 +3,6 @@ package org.egov.eis.service.helper;
 import java.util.List;
 
 import org.egov.eis.config.ApplicationProperties;
-import org.egov.eis.web.contract.EmployeeGetRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,23 +12,23 @@ public class UserSearchURLHelper {
 	@Autowired
 	private ApplicationProperties applicationProperties;
 
-	public String searchURL(EmployeeGetRequest employeeGetRequest) {
+	public String searchURL(List<Long> ids, String tenantId) {
 		String BASE_URL = applicationProperties.empServicesUsersServiceGetUsersHostname();
 		StringBuilder searchURL = new StringBuilder(BASE_URL + "?");
 
-		if (employeeGetRequest.getId() == null && employeeGetRequest.getTenantId() == null)
+		if (ids == null && tenantId == null)
 			return searchURL.toString();
 
 		boolean isAppendAndSeperator = false;
 
-		if (employeeGetRequest.getTenantId() != null) {
+		if (tenantId != null) {
 			isAppendAndSeperator = true;
-			searchURL.append("tenantId=" + employeeGetRequest.getTenantId());
+			searchURL.append("tenantId=" + tenantId);
 		}
 
-		if (employeeGetRequest.getId() != null) {
+		if (ids != null) {
 			isAppendAndSeperator = addAndIfRequired(isAppendAndSeperator, searchURL);
-			searchURL.append("id=" + getCommaSeperatedIds(employeeGetRequest.getId()));
+			searchURL.append("id=" + getCommaSeperatedIds(ids));
 		}
 
 		searchURL.append("&pageSize=" + applicationProperties.empSearchPageSizeMax());

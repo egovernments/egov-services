@@ -8,17 +8,13 @@ import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import org.apache.commons.io.IOUtils;
 import org.egov.model.AuthRequestWrapper;
+import org.egov.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.netflix.ribbon.support.RibbonRequestCustomizer;
 import org.springframework.cloud.netflix.zuul.filters.ProxyRequestHelper;
-import org.springframework.cloud.netflix.zuul.filters.route.RibbonCommandFactory;
 import org.springframework.cloud.netflix.zuul.filters.route.RibbonRoutingFilter;
 import org.springframework.http.client.ClientHttpResponse;
-import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -27,7 +23,6 @@ import java.util.*;
 
 import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 
-@Component
 public class AuthFilter extends ZuulFilter {
     private static Logger log = LoggerFactory.getLogger(AuthFilter.class);
 
@@ -37,17 +32,9 @@ public class AuthFilter extends ZuulFilter {
     private String originalRequestUri;
     private URL originalRouteHost;
     private HashMap<String, List<String>> originalRequestQueryParams;
-        private List<RibbonRequestCustomizer> requestCustomizers = new ArrayList<>();
 
-    @Autowired
-    RibbonCommandFactory<?> ribbonCommandFactory;
-
-    public AuthFilter() {
-    }
-
-    @PostConstruct
-    void initDelegateFilter() {
-        delegateFilter = new RibbonRoutingFilter(helper, ribbonCommandFactory, requestCustomizers);
+    public AuthFilter(RibbonRoutingFilter delegateFilter) {
+        this.delegateFilter = delegateFilter;
     }
 
     @Override
@@ -76,8 +63,8 @@ public class AuthFilter extends ZuulFilter {
             prepareToRouteToOriginalService(ctx);
 
             if (isAuthenticationSuccessful(authResponse)) {
-                Integer userId = getUserIdFromAuthResponse(authResponse);
-                ctx.addZuulRequestHeader("requester_id", userId.toString());
+                String user = getUserFromAuthResponse(authResponse);
+                ctx.addZuulRequestHeader("user_info", user);
                 return delegateFilter.run();
             } else {
                 logError(ctx);
@@ -139,12 +126,11 @@ public class AuthFilter extends ZuulFilter {
         ctx.setRequest(authRequestWrapper);
     }
 
-    private Integer getUserIdFromAuthResponse(ClientHttpResponse authResponse) throws IOException {
+    private String getUserFromAuthResponse(ClientHttpResponse authResponse) throws IOException {
         String authResponseBody = IOUtils.toString(authResponse.getBody(), "utf-8");
         ObjectMapper mapper = new ObjectMapper();
-        Map<String, Object> requestMap = mapper.readValue(authResponseBody, new TypeReference<Map<String, Object>>() {
-        });
-        return (Integer) requestMap.get("id");
+        User authenticatedUser = mapper.readValue(authResponseBody, User.class);
+        return mapper.writeValueAsString(authenticatedUser);
     }
 
     private boolean isAuthenticationSuccessful(ClientHttpResponse response) throws IOException {

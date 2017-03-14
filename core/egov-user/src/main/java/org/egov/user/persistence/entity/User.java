@@ -46,8 +46,6 @@ import org.egov.user.persistence.entity.enums.Gender;
 import org.egov.user.persistence.entity.enums.GuardianRelation;
 import org.egov.user.persistence.entity.enums.UserType;
 import org.joda.time.DateTime;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import java.util.*;
@@ -168,7 +166,7 @@ public class User extends AbstractAuditable {
         this.setPwdExpiryDate(new DateTime().plusDays(passwordExpireInDays).toDate());
     }
 
-    public User fromDomain(org.egov.user.domain.model.User user) {
+    public User (org.egov.user.domain.model.User user) {
         this.name = user.getName();
         this.id = user.getId();
         this.username = user.getUsername();
@@ -184,7 +182,7 @@ public class User extends AbstractAuditable {
         this.altContactNumber = user.getAltContactNumber();
         this.pan = user.getPan();
         this.aadhaarNumber = user.getAadhaarNumber();
-        this.active = user.getActive();
+        this.active = user.isActive();
         this.dob = user.getDob();
         this.pwdExpiryDate = user.getPwdExpiryDate();
         this.locale = user.getLocale();
@@ -193,11 +191,10 @@ public class User extends AbstractAuditable {
         this.identificationMark = user.getIdentificationMark();
         this.signature = user.getSignature();
         this.photo = user.getPhoto();
-        this.accountLocked = user.getAccountLocked() == null ? false : user.getAccountLocked();
+        this.accountLocked = user.isAccountLocked();
         this.setLastModifiedDate(user.getLastModifiedDate());
         this.setCreatedDate(user.getCreatedDate());
         this.roles = user.getRoles();
-        return this;
     }
 
 }

@@ -63,8 +63,7 @@ public class PositionService {
 	public List<Position> getPositions(Long employeeId, PositionGetRequest positionGetRequest, RequestInfo requestInfo) {
 		String url = positionSearchURLHelper.searchURL(positionGetRequest);
 
-		PositionResponse positionResponse = new RestTemplate()
-				.postForObject(url, requestInfo, PositionResponse.class);
+		PositionResponse positionResponse = new RestTemplate().postForObject(url, requestInfo, PositionResponse.class);
 
 		return positionResponse.getPosition();
 	}

@@ -1,0 +1,161 @@
+class GradeMaster extends React.Component{
+
+    constructor(props){
+      super(props);
+      this.state={gradeSet:{
+          name:"",
+          description:"",
+          orderNo:"",
+          active:""
+      }   }
+        this.handleChange=this.handleChange.bind(this);
+        this.addOrUpdate=this.addOrUpdate.bind(this);
+    }
+
+
+    handleChange(e,name)
+    {
+      console.log(name);
+        this.setState({
+            gradeSet:{
+                ...this.state.gradeSet,
+                [name]:e.target.value
+            }
+        })
+    }
+
+
+    componentDidMount(){
+      var type=getUrlVars()["type"];
+      var id=getUrlVars()["id"];
+
+      if(getUrlVars()["type"]==="view")
+      {
+        for (var variable in this.state.gradeSet)
+          document.getElementById(variable).disabled = true;
+        }
+
+
+      if(type==="view"||type==="update")
+      {
+          console.log("fired");
+          console.log(getCommonMasterById("hr-masters","grades","Grade",id).responseJSON["Grade"][0]);
+          this.setState({
+            gradeSet:getCommonMasterById("hr-masters","grades","Grade",id).responseJSON["Grade"][0]
+          })
+      }
+
+
+
+    }
+
+    close(){
+        // widow.close();
+        open(location, '_self').close();
+    }
+
+
+    addOrUpdate(e,mode){
+         console.log(this.state.gradeSet);
+        e.preventDefault();
+        // console.log(mode);
+        if (mode==="update") {
+            console.log("update");
+        } else {
+
+          this.setState({gradeSet:{
+            name:"",
+            description:"",
+            orderNo:"",
+            active:""
+          } })
+        }
+      }
+
+
+
+  render(){
+
+    let {handleChange,addOrUpdate}=this;
+    let mode=getUrlVars()["type"];
+    let {name,description,orderNo,active}=this.state.gradeSet;
+
+
+    const showActionButton=function() {
+      if((!mode) ||mode==="update")
+      {
+        return (<button type="submit" className="btn btn-submit">{mode?"Update":"Add"}</button>);
+      }
+    };
+
+    return (<div>
+      <form onSubmit={(e)=>{addOrUpdate(e,mode)}}>
+
+      <fieldset>
+      <div className="row">
+        <div className="col-sm-6">
+            <div className="row">
+                <div className="col-sm-6 label-text">
+                    <label for="Grade">Grade Name <span>* </span></label>
+                </div>
+                    <div className="col-sm-6">
+                      <input type="text" name="name" id="name" value={name}
+                          onChange={(e)=>{handleChange(e,"name")}} required/>
+                    </div>
+                </div>
+            </div>
+            <div className="col-sm-6">
+                <div className="row">
+                    <div className="col-sm-6 label-text">
+                        <label for="">Description<span> *</span> </label>
+                        </div>
+                            <div className="col-sm-6">
+                            <input type="text" name="description" id="description" value={description}
+                                onChange={(e)=>{handleChange(e,"description")}} required/>
+                            </div>
+                      </div>
+                </div>
+            </div>
+
+
+    <div className="row">
+      <div className="col-sm-6">
+          <div className="row">
+              <div className="col-sm-6 label-text">
+                  <label for="">Order No <span>* </span></label>
+              </div>
+              <div className="col-sm-6">
+                  <input type="number" name="orderNo" id="orderNo"  value={orderNo}
+                      onChange={(e)=>{ handleChange(e,"orderNo")}}required/>
+              </div>
+          </div>
+      </div>
+    </div>
+    <div className="row">
+      <div className="col-sm-6">
+          <div className="row">
+              <div className="col-sm-6 col-sm-offset-6">
+                    <label className="radioUi">
+                      <input type="checkbox" name="active" id="active"
+                          onChange={(e)=>{ handleChange(e,"active")}}required/> Active
+                    </label>
+              </div>
+          </div>
+        </div>
+    </div>
+
+                  <div className="text-center">
+                        {showActionButton()}
+                        <button type="button" className="btn btn-submit" onClick={(e)=>{this.close()}}>Close</button>
+                </div>
+                </fieldset>
+                </form>
+            </div>
+    );
+  }
+}
+
+ReactDOM.render(
+  <GradeMaster />,
+  document.getElementById('root')
+);

@@ -1,16 +1,17 @@
 package org.egov.pgr.domain.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NonNull;
-import org.egov.pgr.domain.exception.InvalidComplaintException;
+import static org.springframework.util.StringUtils.isEmpty;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import static org.springframework.util.StringUtils.isEmpty;
+import org.egov.pgr.domain.exception.InvalidComplaintException;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NonNull;
 
 @AllArgsConstructor
 @Builder
@@ -40,6 +41,7 @@ public class Complaint {
 	private String receivingMode;
 	private String receivingCenter;
 	private Long department;
+	private Date lastAccessedTime;
 
 	public boolean isComplainantAbsent() {
 		if (authenticatedUser.isAnonymousUser() || authenticatedUser.isEmployee()) {

@@ -15,12 +15,10 @@ import org.egov.egf.persistence.queue.contract.RequestInfo;
 import org.egov.egf.persistence.queue.contract.ResponseInfo;
 import org.egov.egf.persistence.service.BankService;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.builder.SkipExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,7 +35,7 @@ public class BankController {
 	@Autowired
 	private BankService  bankService;
 
-	@PostMapping
+	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.CREATED)
 	public  BankContractResponse create(@RequestBody @Valid BankContractRequest bankContractRequest, BindingResult errors) {
 		ModelMapper modelMapper=new ModelMapper();
@@ -63,7 +61,7 @@ public class BankController {
 		return bankContractResponse;
 	}
 
-	@PutMapping(value = "/{uniqueId}")
+	@PostMapping(value = "/{uniqueId}/_update")
 	@ResponseStatus(HttpStatus.OK)
 	public BankContractResponse update(@RequestBody @Valid BankContractRequest bankContractRequest, BindingResult errors,
 			@PathVariable Long uniqueId) {

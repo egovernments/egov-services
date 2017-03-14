@@ -37,12 +37,14 @@ public class WorkflowService {
 			String locationId = values.get("LocationId");
 			String department = values.get("departmentName");
 			String assigneeId = values.get("assigneeId");
+			String status = values.get("ComplaintStatus");
 			boolean isUpdate = false;
 			if (!responseFromDB.getComplaintTypeCode().equals(request.getValueForKey("complaintTypeCode")) ||
 			 !locationId.equals(request.getValueForKey("boundaryId"))
 					 || !assigneeId.equals(request.getAssignee().toString())) {
 				isUpdate = true;
-			} else if(!department.equals(request.getValueForKey("departmentName"))  && !isUpdate) {
+			} else if((!department.equals(request.getValueForKey("departmentName")) || !status.equals(request.getStatus()) || 
+					!responseFromDB.getDescription().equals(request.getValueForKey("approvalComments")))   && !isUpdate) {
 				isUpdate = true;
 			}
 			if(isUpdate) {
@@ -50,7 +52,8 @@ public class WorkflowService {
 			}
 
 		}
-		if(workflowResponse != null) sevaRequest.update(workflowResponse);
+		if(workflowResponse != null)
+			sevaRequest.update(workflowResponse);
 
 		return sevaRequest;
 	}

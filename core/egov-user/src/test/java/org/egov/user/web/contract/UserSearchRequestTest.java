@@ -33,5 +33,6 @@ public class UserSearchRequestTest {
         assertThat(userSearch.getEmailId()).isEqualTo("emailId");
         assertThat(userSearch.getPan()).isEqualTo("pan");
         assertThat(userSearch.isFuzzyLogic()).isFalse();
+        assertThat(userSearch.isActive()).isTrue();
     }
 }

@@ -42,6 +42,27 @@ $(document).ready(function()
 {	
 
 	preventBack();
+
+	var obj = {};
+	var RI = new $.RequestInfo(localStorage.getItem('auth'));
+	var userArray = [localStorage.getItem('id')]
+
+	obj['requestInfo'] = RI.requestInfo;
+	obj['id'] = userArray;
+
+	$.ajax({
+		url : "/user/_search",
+		type : 'POST',
+		processData : false,
+		contentType: "application/json",
+		data : JSON.stringify(obj),
+		success : function(response){
+			$('.profile-text').html(response.user[0].userName);
+		},
+		error : function(){
+			bootbox.alert('User api failed');
+		}
+	});
 	
 	$('.menu-item').click(function(e)
 	{
@@ -161,20 +182,23 @@ function loadComplaints(){
 		},
 		complete : function(){
 			hideLoader();
+			search($('.searchinbox'));
 		}
 	});
 }
 
 function search(elem) {
 	var searchText = $(elem).val(); 
-    $(".msg").each(function() {
-         var $this = $(this)
-         if ($this.find('div').text().toUpperCase().search(searchText.toUpperCase()) === -1) {
-             $this.hide();
-         }else {
-	         $this.show();
-	     }
-    });
+	if($.trim(searchText)){
+		$(".reloadtemplate").each(function() {
+	         var $this = $(this)
+	         if ($this.find('div').text().toUpperCase().search(searchText.toUpperCase()) === -1) {
+	             $this.hide();
+	         }else {
+		         $this.show();
+		     }
+	    });
+	}
 };
 
 function popupCenter(url, title, w, h) {

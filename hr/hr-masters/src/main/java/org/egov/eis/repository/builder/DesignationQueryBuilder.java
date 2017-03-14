@@ -128,7 +128,7 @@ public class DesignationQueryBuilder {
 			DesignationGetRequest designationGetRequest) {
 		// handle limit(also called pageSize) here
 		selectQuery.append(" LIMIT ?");
-		long pageSize = Integer.parseInt(applicationProperties.commonsSearchPageSizeDefault());
+		long pageSize = Integer.parseInt(applicationProperties.hrSearchPageSizeDefault());
 		if (designationGetRequest.getPageSize() != null)
 			pageSize = designationGetRequest.getPageSize();
 		preparedStatementValues.add(pageSize); // Set limit to pageSize

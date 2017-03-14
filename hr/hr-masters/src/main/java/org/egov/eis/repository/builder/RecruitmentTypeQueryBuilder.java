@@ -116,7 +116,7 @@ public class RecruitmentTypeQueryBuilder {
 			RecruitmentTypeGetRequest recruitmentTypeGetRequest) {
 		// handle limit(also called pageSize) here
 		selectQuery.append(" LIMIT ?");
-		long pageSize = Integer.parseInt(applicationProperties.commonsSearchPageSizeDefault());
+		long pageSize = Integer.parseInt(applicationProperties.hrSearchPageSizeDefault());
 		if (recruitmentTypeGetRequest.getPageSize() != null)
 			pageSize = recruitmentTypeGetRequest.getPageSize();
 		preparedStatementValues.add(pageSize); // Set limit to pageSize

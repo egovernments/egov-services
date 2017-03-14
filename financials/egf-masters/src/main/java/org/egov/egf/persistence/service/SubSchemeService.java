@@ -29,108 +29,120 @@ import org.springframework.validation.SmartValidator;
 @Transactional(readOnly = true)
 public class SubSchemeService {
 
-	private final SubSchemeRepository subSchemeRepository;
-	@PersistenceContext
-	private EntityManager entityManager;
+    private final SubSchemeRepository subSchemeRepository;
+    @PersistenceContext
+    private EntityManager entityManager;
 
-	@Autowired
-	public SubSchemeService(final SubSchemeRepository subSchemeRepository) {
-		this.subSchemeRepository = subSchemeRepository;
-	}
+    @Autowired
+    public SubSchemeService(final SubSchemeRepository subSchemeRepository) {
+        this.subSchemeRepository = subSchemeRepository;
+    }
 
-	@Autowired
-	private SmartValidator validator;
-	@Autowired
-	private SchemeService schemeService;
+    @Autowired
+    private SmartValidator validator;
+    @Autowired
+    private SchemeService schemeService;
 
-	@Transactional
-	public SubScheme create(final SubScheme subScheme) {
-		return subSchemeRepository.save(subScheme);
-	}
+    @Transactional
+    public SubScheme create(final SubScheme subScheme) {
+        setSubScheme(subScheme);
+        return subSchemeRepository.save(subScheme);
+    }
 
-	@Transactional
-	public SubScheme update(final SubScheme subScheme) {
-		return subSchemeRepository.save(subScheme);
-	}
+    private void setSubScheme(final SubScheme subScheme) {
+        if (subScheme.getScheme() != null) {
+            Scheme scheme = schemeService.findOne(subScheme.getScheme().getId());
+            if (scheme == null) {
+                throw new InvalidDataException("scheme", "scheme.invalid", " Invalid scheme");
+            }
+            subScheme.setScheme(scheme);
+        }
+    }
 
-	public List<SubScheme> findAll() {
-		return subSchemeRepository.findAll(new Sort(Sort.Direction.ASC, "name"));
-	}
+    @Transactional
+    public SubScheme update(final SubScheme subScheme) {
+        setSubScheme(subScheme);
+        return subSchemeRepository.save(subScheme);
+    }
 
-	public SubScheme findByName(String name) {
-		return subSchemeRepository.findByName(name);
-	}
+    public List<SubScheme> findAll() {
+        return subSchemeRepository.findAll(new Sort(Sort.Direction.ASC, "name"));
+    }
 
-	public SubScheme findByCode(String code) {
-		return subSchemeRepository.findByCode(code);
-	}
+    public SubScheme findByName(String name) {
+        return subSchemeRepository.findByName(name);
+    }
 
-	public SubScheme findOne(Long id) {
-		return subSchemeRepository.findOne(id);
-	}
+    public SubScheme findByCode(String code) {
+        return subSchemeRepository.findByCode(code);
+    }
 
-	public Page<SubScheme> search(SubSchemeContractRequest subSchemeContractRequest) {
-		final SubSchemeSpecification specification = new SubSchemeSpecification(
-				subSchemeContractRequest.getSubScheme());
-		Pageable page = new PageRequest(subSchemeContractRequest.getPage().getOffSet(),
-				subSchemeContractRequest.getPage().getPageSize());
-		return subSchemeRepository.findAll(specification, page);
-	}
+    public SubScheme findOne(Long id) {
+        return subSchemeRepository.findOne(id);
+    }
 
-	public BindingResult validate(SubSchemeContractRequest subSchemeContractRequest, String method,
-			BindingResult errors) {
+    public Page<SubScheme> search(SubSchemeContractRequest subSchemeContractRequest) {
+        final SubSchemeSpecification specification = new SubSchemeSpecification(
+                subSchemeContractRequest.getSubScheme());
+        Pageable page = new PageRequest(subSchemeContractRequest.getPage().getOffSet(),
+                subSchemeContractRequest.getPage().getPageSize());
+        return subSchemeRepository.findAll(specification, page);
+    }
 
-		try {
-			switch (method) {
-			case "update":
-				Assert.notNull(subSchemeContractRequest.getSubScheme(), "SubScheme to edit must not be null");
-				validator.validate(subSchemeContractRequest.getSubScheme(), errors);
-				break;
-			case "view":
-				// validator.validate(subSchemeContractRequest.getSubScheme(),
-				// errors);
-				break;
-			case "create":
-				Assert.notNull(subSchemeContractRequest.getSubSchemes(), "SubSchemes to create must not be null");
-				for (SubSchemeContract b : subSchemeContractRequest.getSubSchemes()) {
-					validator.validate(b, errors);
-				}
-				break;
-			case "updateAll":
-				Assert.notNull(subSchemeContractRequest.getSubSchemes(), "SubSchemes to create must not be null");
-				for (SubSchemeContract b : subSchemeContractRequest.getSubSchemes()) {
-					validator.validate(b, errors);
-				}
-				break;
-			default:
-				validator.validate(subSchemeContractRequest.getRequestInfo(), errors);
-			}
-		} catch (IllegalArgumentException e) {
-			errors.addError(new ObjectError("Missing data", e.getMessage()));
-		}
-		return errors;
+    public BindingResult validate(SubSchemeContractRequest subSchemeContractRequest, String method,
+            BindingResult errors) {
 
-	}
+        try {
+            switch (method) {
+            case "update":
+                Assert.notNull(subSchemeContractRequest.getSubScheme(), "SubScheme to edit must not be null");
+                validator.validate(subSchemeContractRequest.getSubScheme(), errors);
+                break;
+            case "view":
+                // validator.validate(subSchemeContractRequest.getSubScheme(),
+                // errors);
+                break;
+            case "create":
+                Assert.notNull(subSchemeContractRequest.getSubSchemes(), "SubSchemes to create must not be null");
+                for (SubSchemeContract b : subSchemeContractRequest.getSubSchemes()) {
+                    validator.validate(b, errors);
+                }
+                break;
+            case "updateAll":
+                Assert.notNull(subSchemeContractRequest.getSubSchemes(), "SubSchemes to create must not be null");
+                for (SubSchemeContract b : subSchemeContractRequest.getSubSchemes()) {
+                    validator.validate(b, errors);
+                }
+                break;
+            default:
+                validator.validate(subSchemeContractRequest.getRequestInfo(), errors);
+            }
+        } catch (IllegalArgumentException e) {
+            errors.addError(new ObjectError("Missing data", e.getMessage()));
+        }
+        return errors;
 
-	public SubSchemeContractRequest fetchRelatedContracts(SubSchemeContractRequest subSchemeContractRequest) {
-		ModelMapper model = new ModelMapper();
-		for (SubSchemeContract subScheme : subSchemeContractRequest.getSubSchemes()) {
-			if (subScheme.getScheme() != null) {
-				Scheme scheme = schemeService.findOne(subScheme.getScheme().getId());
-				if (scheme == null) {
-					throw new InvalidDataException("scheme", "scheme.invalid", " Invalid scheme");
-				}
-				model.map(scheme, subScheme.getScheme());
-			}
-		}
-		SubSchemeContract subScheme = subSchemeContractRequest.getSubScheme();
-		if (subScheme.getScheme() != null) {
-			Scheme scheme = schemeService.findOne(subScheme.getScheme().getId());
-			if (scheme == null) {
-				throw new InvalidDataException("scheme", "scheme.invalid", " Invalid scheme");
-			}
-			model.map(scheme, subScheme.getScheme());
-		}
-		return subSchemeContractRequest;
-	}
+    }
+
+    public SubSchemeContractRequest fetchRelatedContracts(SubSchemeContractRequest subSchemeContractRequest) {
+        ModelMapper model = new ModelMapper();
+        for (SubSchemeContract subScheme : subSchemeContractRequest.getSubSchemes()) {
+            if (subScheme.getScheme() != null) {
+                Scheme scheme = schemeService.findOne(subScheme.getScheme().getId());
+                if (scheme == null) {
+                    throw new InvalidDataException("scheme", "scheme.invalid", " Invalid scheme");
+                }
+                model.map(scheme, subScheme.getScheme());
+            }
+        }
+        SubSchemeContract subScheme = subSchemeContractRequest.getSubScheme();
+        if (subScheme.getScheme() != null) {
+            Scheme scheme = schemeService.findOne(subScheme.getScheme().getId());
+            if (scheme == null) {
+                throw new InvalidDataException("scheme", "scheme.invalid", " Invalid scheme");
+            }
+            model.map(scheme, subScheme.getScheme());
+        }
+        return subSchemeContractRequest;
+    }
 }

@@ -1,15 +1,3 @@
-function getUrlVars() {
-    var vars = [],
-        hash;
-    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-    for (var i = 0; i < hashes.length; i++) {
-        hash = hashes[i].split('=');
-        vars.push(hash[0]);
-        vars[hash[0]] = hash[1];
-    }
-    return vars;
-}
-
 
 class Designation extends React.Component{
   constructor(props){
@@ -26,14 +14,21 @@ class Designation extends React.Component{
       this.setState({
         descriptionList:[{
                 id: 1,
-                name: "Juniour Engineer",
-                orderno: "1",
+                name: "Section Manager",
+                description: "Section Manager",
+                active: true
+            },
+            {
+                id: 3,
+                name: "Accounts Assistant",
+                description: "Accounts Assistant",
                 active: true
             },
             {
                 id: 2,
-                name: "Assistance Engineer",
-                orderno: "1",
+                name: "Junior Assistant",
+                description: "Junior Assistant",
+
                 active: true
             }]
       })
@@ -52,12 +47,23 @@ class Designation extends React.Component{
           open(location, '_self').close();
       }
 
-
       componentDidMount(){
+        var type=getUrlVars()["type"];
+        var id=getUrlVars()["id"];
+
         if(getUrlVars()["type"]==="view")
         {
           for (var variable in this.state.designationSet)
             document.getElementById(variable).disabled = true;
+          }
+
+          if(type==="view"||type==="update")
+          {
+              console.log("fired");
+              console.log(getCommonMasterById("hr-masters","designations","Designation",id).responseJSON["Designation"][0]);
+              this.setState({
+                designationSet:getCommonMasterById("hr-masters","designations","Designation",id).responseJSON["Designation"][0]
+              })
           }
       }
 
@@ -90,7 +96,7 @@ class Designation extends React.Component{
             return list.map((item)=>
             {
                 return (<option key={item.id} value={item.id}>
-                        {item.name}
+                        {item.description}
                   </option>)
             })
           }
@@ -143,7 +149,7 @@ class Designation extends React.Component{
                     </div>
                     <div className="col-sm-6">
                           <div className="styled-select">
-                          <select id="description" name="description" onChange={(e)=>{
+                          <select id="description" name="description" value={description} onChange={(e)=>{
                               handleChange(e,"description")
                           }}required>
                               <option>Select description</option>
@@ -177,7 +183,6 @@ class Designation extends React.Component{
           </form>
         </div>
         );
-
     }
 
   }

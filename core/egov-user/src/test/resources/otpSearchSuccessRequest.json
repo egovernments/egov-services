@@ -1,19 +1,8 @@
 {
-  "RequestInfo": {
-    "apiId": "api.userauth",
-    "ver": "1",
-    "ts": null,
-    "action": "POST",
-    "did": "123",
-    "key": "key",
-    "msgId": "1234567890",
-    "requesterId": "21",
-    "authToken": "long_auth_token"
-  },
   "otp": {
-    "isValidationSuccessful": null,
+    "isValidationSuccessful": false,
     "UUID": "2b936aae-c3b6-4c89-b3b3-a098cdcbb706",
-    "tenantId": null,
+    "tenantId": "tenantId",
     "identity": null
   }
 }

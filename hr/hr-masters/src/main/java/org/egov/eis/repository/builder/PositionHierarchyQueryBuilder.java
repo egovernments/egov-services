@@ -178,7 +178,7 @@ public class PositionHierarchyQueryBuilder {
 			PositionHierarchyGetRequest positionHierarchyGetRequest) {
 		// handle limit(also called pageSize) here
 		selectQuery.append(" LIMIT ?");
-		long pageSize = Integer.parseInt(applicationProperties.commonsSearchPageSizeDefault());
+		long pageSize = Integer.parseInt(applicationProperties.hrSearchPageSizeDefault());
 		if (positionHierarchyGetRequest.getPageSize() != null)
 			pageSize = positionHierarchyGetRequest.getPageSize();
 		preparedStatementValues.add(pageSize); // Set limit to pageSize

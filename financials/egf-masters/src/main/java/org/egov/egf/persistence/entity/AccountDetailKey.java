@@ -74,7 +74,7 @@ import lombok.Setter;
 public class AccountDetailKey extends AbstractAuditable {
 
 	private static final long serialVersionUID = 1L;
-	public static final String SEQ_ACCOUNTDETAILKEY = "seq_accountdetailtype";
+	public static final String SEQ_ACCOUNTDETAILKEY = "seq_egf_accountdetailtype";
 
     @Id
     @GeneratedValue(generator = SEQ_ACCOUNTDETAILKEY, strategy = GenerationType.SEQUENCE)

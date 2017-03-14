@@ -29,108 +29,120 @@ import org.springframework.validation.SmartValidator;
 @Transactional(readOnly = true)
 public class BankBranchService {
 
-	private final BankBranchRepository bankBranchRepository;
-	@PersistenceContext
-	private EntityManager entityManager;
+    private final BankBranchRepository bankBranchRepository;
+    @PersistenceContext
+    private EntityManager entityManager;
 
-	@Autowired
-	public BankBranchService(final BankBranchRepository bankBranchRepository) {
-		this.bankBranchRepository = bankBranchRepository;
-	}
+    @Autowired
+    public BankBranchService(final BankBranchRepository bankBranchRepository) {
+        this.bankBranchRepository = bankBranchRepository;
+    }
 
-	@Autowired
-	private SmartValidator validator;
-	@Autowired
-	private BankService bankService;
+    @Autowired
+    private SmartValidator validator;
+    @Autowired
+    private BankService bankService;
 
-	@Transactional
-	public BankBranch create(final BankBranch bankBranch) {
-		return bankBranchRepository.save(bankBranch);
-	}
+    @Transactional
+    public BankBranch create(final BankBranch bankBranch) {
+        setBankBranch(bankBranch);
+        return bankBranchRepository.save(bankBranch);
+    }
 
-	@Transactional
-	public BankBranch update(final BankBranch bankBranch) {
-		return bankBranchRepository.save(bankBranch);
-	}
+    @Transactional
+    public BankBranch update(final BankBranch bankBranch) {
+        setBankBranch(bankBranch);
+        return bankBranchRepository.save(bankBranch);
+    }
 
-	public List<BankBranch> findAll() {
-		return bankBranchRepository.findAll(new Sort(Sort.Direction.ASC, "name"));
-	}
+    private void setBankBranch(final BankBranch bankBranch) {
+        if (bankBranch.getBank() != null) {
+            Bank bank = bankService.findOne(bankBranch.getBank().getId());
+            if (bank == null) {
+                throw new InvalidDataException("bank", "bank.invalid", " Invalid bank");
+            }
+            bankBranch.setBank(bank);
+        }
+    }
 
-	public BankBranch findByName(String name) {
-		return bankBranchRepository.findByName(name);
-	}
+    public List<BankBranch> findAll() {
+        return bankBranchRepository.findAll(new Sort(Sort.Direction.ASC, "name"));
+    }
 
-	public BankBranch findByCode(String code) {
-		return bankBranchRepository.findByCode(code);
-	}
+    public BankBranch findByName(String name) {
+        return bankBranchRepository.findByName(name);
+    }
 
-	public BankBranch findOne(Long id) {
-		return bankBranchRepository.findOne(id);
-	}
+    public BankBranch findByCode(String code) {
+        return bankBranchRepository.findByCode(code);
+    }
 
-	public Page<BankBranch> search(BankBranchContractRequest bankBranchContractRequest) {
-		final BankBranchSpecification specification = new BankBranchSpecification(
-				bankBranchContractRequest.getBankBranch());
-		Pageable page = new PageRequest(bankBranchContractRequest.getPage().getOffSet(),
-				bankBranchContractRequest.getPage().getPageSize());
-		return bankBranchRepository.findAll(specification, page);
-	}
+    public BankBranch findOne(Long id) {
+        return bankBranchRepository.findOne(id);
+    }
 
-	public BindingResult validate(BankBranchContractRequest bankBranchContractRequest, String method,
-			BindingResult errors) {
+    public Page<BankBranch> search(BankBranchContractRequest bankBranchContractRequest) {
+        final BankBranchSpecification specification = new BankBranchSpecification(
+                bankBranchContractRequest.getBankBranch());
+        Pageable page = new PageRequest(bankBranchContractRequest.getPage().getOffSet(),
+                bankBranchContractRequest.getPage().getPageSize());
+        return bankBranchRepository.findAll(specification, page);
+    }
 
-		try {
-			switch (method) {
-			case "update":
-				Assert.notNull(bankBranchContractRequest.getBankBranch(), "BankBranch to edit must not be null");
-				validator.validate(bankBranchContractRequest.getBankBranch(), errors);
-				break;
-			case "view":
-				// validator.validate(bankBranchContractRequest.getBankBranch(),
-				// errors);
-				break;
-			case "create":
-				Assert.notNull(bankBranchContractRequest.getBankBranches(), "BankBranches to create must not be null");
-				for (BankBranchContract b : bankBranchContractRequest.getBankBranches()) {
-					validator.validate(b, errors);
-				}
-				break;
-			case "updateAll":
-				Assert.notNull(bankBranchContractRequest.getBankBranches(), "BankBranches to create must not be null");
-				for (BankBranchContract b : bankBranchContractRequest.getBankBranches()) {
-					validator.validate(b, errors);
-				}
-				break;
-			default:
-				validator.validate(bankBranchContractRequest.getRequestInfo(), errors);
-			}
-		} catch (IllegalArgumentException e) {
-			errors.addError(new ObjectError("Missing data", e.getMessage()));
-		}
-		return errors;
+    public BindingResult validate(BankBranchContractRequest bankBranchContractRequest, String method,
+            BindingResult errors) {
 
-	}
+        try {
+            switch (method) {
+            case "update":
+                Assert.notNull(bankBranchContractRequest.getBankBranch(), "BankBranch to edit must not be null");
+                validator.validate(bankBranchContractRequest.getBankBranch(), errors);
+                break;
+            case "view":
+                // validator.validate(bankBranchContractRequest.getBankBranch(),
+                // errors);
+                break;
+            case "create":
+                Assert.notNull(bankBranchContractRequest.getBankBranches(), "BankBranches to create must not be null");
+                for (BankBranchContract b : bankBranchContractRequest.getBankBranches()) {
+                    validator.validate(b, errors);
+                }
+                break;
+            case "updateAll":
+                Assert.notNull(bankBranchContractRequest.getBankBranches(), "BankBranches to create must not be null");
+                for (BankBranchContract b : bankBranchContractRequest.getBankBranches()) {
+                    validator.validate(b, errors);
+                }
+                break;
+            default:
+                validator.validate(bankBranchContractRequest.getRequestInfo(), errors);
+            }
+        } catch (IllegalArgumentException e) {
+            errors.addError(new ObjectError("Missing data", e.getMessage()));
+        }
+        return errors;
 
-	public BankBranchContractRequest fetchRelatedContracts(BankBranchContractRequest bankBranchContractRequest) {
-		ModelMapper model = new ModelMapper();
-		for (BankBranchContract bankBranch : bankBranchContractRequest.getBankBranches()) {
-			if (bankBranch.getBank() != null) {
-				Bank bank = bankService.findOne(bankBranch.getBank().getId());
-				if (bank == null) {
-					throw new InvalidDataException("bank", "bank.invalid", " Invalid bank");
-				}
-				model.map(bank, bankBranch.getBank());
-			}
-		}
-		BankBranchContract bankBranch = bankBranchContractRequest.getBankBranch();
-		if (bankBranch.getBank() != null) {
-			Bank bank = bankService.findOne(bankBranch.getBank().getId());
-			if (bank == null) {
-				throw new InvalidDataException("bank", "bank.invalid", " Invalid bank");
-			}
-			model.map(bank, bankBranch.getBank());
-		}
-		return bankBranchContractRequest;
-	}
+    }
+
+    public BankBranchContractRequest fetchRelatedContracts(BankBranchContractRequest bankBranchContractRequest) {
+        ModelMapper model = new ModelMapper();
+        for (BankBranchContract bankBranch : bankBranchContractRequest.getBankBranches()) {
+            if (bankBranch.getBank() != null) {
+                Bank bank = bankService.findOne(bankBranch.getBank().getId());
+                if (bank == null) {
+                    throw new InvalidDataException("bank", "bank.invalid", " Invalid bank");
+                }
+                model.map(bank, bankBranch.getBank());
+            }
+        }
+        BankBranchContract bankBranch = bankBranchContractRequest.getBankBranch();
+        if (bankBranch.getBank() != null) {
+            Bank bank = bankService.findOne(bankBranch.getBank().getId());
+            if (bank == null) {
+                throw new InvalidDataException("bank", "bank.invalid", " Invalid bank");
+            }
+            model.map(bank, bankBranch.getBank());
+        }
+        return bankBranchContractRequest;
+    }
 }

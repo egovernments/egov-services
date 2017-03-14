@@ -62,7 +62,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 
-@JsonPropertyOrder({ "id", "glcode", "name", "accountCodePurpose", "desciption", "isActiveForPosting", "parentId",
+@JsonPropertyOrder({ "id", "glcode", "name", "accountCodePurpose", "description", "isActiveForPosting", "parentId",
 		"type", "classification", "functionRequired", "budgetCheckRequired", "majorCode", "isSubLedger",
 		"chartOfAccountDetails" })
 public class ChartOfAccountContract extends AuditableContract {
@@ -79,7 +79,7 @@ public class ChartOfAccountContract extends AuditableContract {
 	private AccountCodePurposeContract accountCodePurpose;
 
 	@Length(max = 256)
-	private String desciption;
+	private String description;
 
 	@NotNull
 	private Boolean isActiveForPosting;

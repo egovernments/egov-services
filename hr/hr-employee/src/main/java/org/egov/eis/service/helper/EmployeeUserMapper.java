@@ -6,8 +6,6 @@ import java.util.Map;
 
 import org.egov.eis.model.EmployeeInfo;
 import org.egov.eis.model.UserInfo;
-import org.egov.eis.model.enums.Gender;
-import org.egov.eis.model.enums.UserType;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -21,7 +19,6 @@ public class EmployeeUserMapper {
 		}
 
 		for (EmployeeInfo employeeInfo : employeeInfoList) {
-/*
 			if (userInfoMap.containsKey(employeeInfo.getId())) {
 				UserInfo userInfo = userInfoMap.get(employeeInfo.getId());
 
@@ -36,17 +33,6 @@ public class EmployeeUserMapper {
 				employeeInfo.setType(userInfo.getType());
 				employeeInfo.setActive(userInfo.getActive());
 			}
-*/		
-			employeeInfo.setSalutation("Mr.");
-			employeeInfo.setName("Abhishek");
-			employeeInfo.setUserName("abhi");
-			employeeInfo.setGender(Gender.MALE);
-			employeeInfo.setMobileNumber("9080706050");
-			employeeInfo.setEmailId("abhi@egov.org");
-			employeeInfo.setPan("WERTY2056B");
-			employeeInfo.setAadhaarNumber(123456789012L);
-			employeeInfo.setType(UserType.EMPLOYEE);
-			employeeInfo.setActive(true);
 		}
 		return employeeInfoList;
 	}

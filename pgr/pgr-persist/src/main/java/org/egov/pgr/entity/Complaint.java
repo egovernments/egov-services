@@ -42,6 +42,7 @@ package org.egov.pgr.entity;
 
 import org.egov.pgr.entity.enums.CitizenFeedback;
 import org.egov.pgr.entity.enums.ReceivingMode;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.SafeHtml;
 
@@ -130,6 +131,9 @@ public class Complaint extends AbstractAuditable {
 
     @Transient
     private Long crossHierarchyId;
+    
+    @Column(name = "lastaccessedtime")
+    private Date lastAccessedTime;
 
     @Override
     public Long getId() {

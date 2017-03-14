@@ -73,12 +73,20 @@ import org.egov.pgr.persistence.entity.enums.ReceivingMode;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.SafeHtml;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
 @Table(name = "egpgr_complaint")
 @SequenceGenerator(name = SEQ_COMPLAINT, sequenceName = SEQ_COMPLAINT, allocationSize = 1)
 public class Complaint extends AbstractAuditable {
@@ -123,12 +131,12 @@ public class Complaint extends AbstractAuditable {
 	@SafeHtml
 	private String details;
 
-	@Column(name="landmarkdetails")
+	@Column(name = "landmarkdetails")
 	@Length(max = 200)
 	@SafeHtml
 	private String landmarkDetails;
 
-	@Column(name="receivingmode")
+	@Column(name = "receivingmode")
 	@Enumerated(EnumType.ORDINAL)
 	@NotNull
 	private ReceivingMode receivingMode = ReceivingMode.WEBSITE;
@@ -149,7 +157,7 @@ public class Complaint extends AbstractAuditable {
 	private Date escalationDate;
 
 	private Long department;
-    @Column(name="citizenfeedback")
+	@Column(name = "citizenfeedback")
 	@Enumerated(EnumType.ORDINAL)
 	private CitizenFeedback citizenFeedback;
 
@@ -165,6 +173,9 @@ public class Complaint extends AbstractAuditable {
 
 	@Column(name = "state_id")
 	private Long stateId;
+
+	@Column(name = "lastaccessedtime")
+	private Date lastAccessedTime;
 
 	@Override
 	public Long getId() {
@@ -196,7 +207,8 @@ public class Complaint extends AbstractAuditable {
 				.authenticatedUser(AuthenticatedUser.createAnonymousUser()).complainant(complainant.toDomain())
 				.address(landmarkDetails).description(details).crn(crn).createdDate(getCreatedDate())
 				.lastModifiedDate(getLastModifiedDate()).mediaUrls(Collections.emptyList())
-				.escalationDate(getEscalationDate()).closed(isCompleted()).department(department).build();
+				.escalationDate(getEscalationDate()).closed(isCompleted()).department(department)
+				.lastAccessedTime(lastAccessedTime).build(); 
 	}
 
 	private Map<String, String> getAdditionalValues() {

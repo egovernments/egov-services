@@ -2,6 +2,7 @@ package org.egov.pgr.web.controller;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -26,7 +27,6 @@ import org.egov.pgr.domain.model.Coordinates;
 import org.egov.pgr.domain.model.Role;
 import org.egov.pgr.domain.model.UserType;
 import org.egov.pgr.domain.service.ComplaintService;
-
 import org.egov.pgr.persistence.queue.contract.SevaRequest;
 import org.egov.pgr.persistence.repository.UserRepository;
 import org.junit.Test;
@@ -68,7 +68,7 @@ public class ComplaintControllerTest {
 
 	public Complaint getComplaintWithNoTenantId() {
 		final ComplaintLocation complaintLocation = ComplaintLocation.builder()
-				.coordinates(new Coordinates(11.22d,12.22d)).build();
+				.coordinates(new Coordinates(11.22d, 12.22d)).build();
 		final Complainant complainant = Complainant.builder().userId("userId").build();
 		return Complaint.builder().complainant(complainant).authenticatedUser(getCitizen())
 				.complaintLocation(complaintLocation).tenantId(null).description("description")
@@ -91,20 +91,20 @@ public class ComplaintControllerTest {
 		String stateId = "1";
 		String assigneeId = "2";
 		String departmentName = "Accounts";
-		String address=null;
-		List<String> mediaUrls=new ArrayList<>();
-        mediaUrls.add(null);
-        mediaUrls.add(null);
-        String jurisdictionId="1";
-        String description=null;
-        String mobileNumber = null;
-        String emailId = null;
-        String name = "kumar";
-        Integer id =67;
-        boolean anonymousUser = false;
-        List<Role> roles=new ArrayList<>();
-        roles.add(new Role(1L,"Citizen"));
-        roles.add(new Role(2L,"Employee"));
+		String address = null;
+		List<String> mediaUrls = new ArrayList<>();
+		mediaUrls.add(null);
+		mediaUrls.add(null);
+		String jurisdictionId = "1";
+		String description = null;
+		String mobileNumber = null;
+		String emailId = null;
+		String name = "kumar";
+		Integer id = 67;
+		boolean anonymousUser = false;
+		List<Role> roles = new ArrayList<>();
+		roles.add(new Role(1L, "Citizen"));
+		roles.add(new Role(2L, "Employee"));
 
 		final HashMap<String, String> additionalValues = new HashMap<>();
 		additionalValues.put("ReceivingMode", receivingMode);
@@ -114,20 +114,18 @@ public class ComplaintControllerTest {
 		additionalValues.put("StateId", stateId);
 		additionalValues.put("AssigneeId", assigneeId);
 		additionalValues.put("DepartmentName", departmentName);
-		AuthenticatedUser user=AuthenticatedUser.builder().mobileNumber(mobileNumber).emailId(emailId).name(name).id(id).anonymousUser(anonymousUser).roles(roles).type(UserType.CITIZEN).build();
-		Complaint complaint=Complaint.builder()
-		        .authenticatedUser(user)
-		        .crn(crn)
-		         .complaintType(new ComplaintType("abc","complaintCode"))
-		         .additionalValues(additionalValues)
-		         .address(address)
-		         .mediaUrls(mediaUrls)
-		         .complaintLocation(new ComplaintLocation(new Coordinates(0.0,0.0),null,"34"))
-		         .complainant(new Complainant("kumar",null,null,"mico layout","user"))
-		         .tenantId(jurisdictionId)
-		         .description(description).build();
-		ComplaintSearchCriteria criteria=ComplaintSearchCriteria.builder().assignmentId(10L).endDate(null).lastModifiedDatetime(null).serviceCode("serviceCode_123").serviceRequestId("serid_123").startDate(null).status("registered").userId(10L).emailId("abc@gmail.com").mobileNumber("74742487428").name(name).locationId(4L).childLocationId(5L).receivingMode(5L).build();
-
+		AuthenticatedUser user = AuthenticatedUser.builder().mobileNumber(mobileNumber).emailId(emailId).name(name)
+				.id(id).anonymousUser(anonymousUser).roles(roles).type(UserType.CITIZEN).build();
+		Complaint complaint = Complaint.builder().authenticatedUser(user).crn(crn)
+				.complaintType(new ComplaintType("abc", "complaintCode")).additionalValues(additionalValues)
+				.address(address).mediaUrls(mediaUrls)
+				.complaintLocation(new ComplaintLocation(new Coordinates(0.0, 0.0), null, "34"))
+				.complainant(new Complainant("kumar", null, null, "mico layout", "user")).tenantId(jurisdictionId)
+				.description(description).build();
+		ComplaintSearchCriteria criteria = ComplaintSearchCriteria.builder().assignmentId(10L).endDate(null)
+				.lastModifiedDatetime(null).serviceCode("serviceCode_123").serviceRequestId("serid_123").startDate(null)
+				.status("registered").userId(10L).emailId("abc@gmail.com").mobileNumber("74742487428").name(name)
+				.locationId(4L).childLocationId(5L).receivingMode(5L).build();
 
 		List<Complaint> complaints = new ArrayList<>(Collections.singletonList(complaint));
 		when(complaintService.findAll(criteria)).thenReturn(complaints);
@@ -136,10 +134,12 @@ public class ComplaintControllerTest {
 		String expectedContent = String.format(content, crn, complaintType, complainant, receivingMode, receivingCenter,
 				location, childLocation);
 
-		mockMvc.perform(get("/seva?jurisdiction_id=1&service_request_id=serid_123&service_code=serviceCode_123&status=registered&assignment_id=10&user_id=10&name=kumar&email_id=abc@gmail.com&mobile_number=74742487428&receiving_mode=5&location_id=4&child_location_id=5")
-				.accept(MediaType.parseMediaType("application/json;charset=UTF-8")).header("api_id", "api_id")
-				.header("ver", "ver").header("ts", "ts").header("action", "action").header("did", "did")
-				.header("msg_id", "msg_id").header("requester_id", "requester_id").header("auth_token", "auth_token"))
+		mockMvc.perform(
+				get("/seva?jurisdiction_id=1&service_request_id=serid_123&service_code=serviceCode_123&status=registered&assignment_id=10&user_id=10&name=kumar&email_id=abc@gmail.com&mobile_number=74742487428&receiving_mode=5&location_id=4&child_location_id=5")
+						.accept(MediaType.parseMediaType("application/json;charset=UTF-8")).header("api_id", "api_id")
+						.header("ver", "ver").header("ts", "ts").header("action", "action").header("did", "did")
+						.header("msg_id", "msg_id").header("requester_id", "requester_id")
+						.header("auth_token", "auth_token"))
 				.andExpect(status().isOk()).andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 				.andExpect(content().json(expectedContent));
 	}
@@ -160,5 +160,11 @@ public class ComplaintControllerTest {
 						.header("ts", "ts").header("action", "action").header("did", "did").header("msg_id", "msg_id")
 						.header("auth_token", "auth_token"))
 				.andExpect(status().isNotFound());
+	}
+
+	@Test
+	public void testShouldUpdateLastAccessedTime() throws Exception {
+		mockMvc.perform(post("/seva/updateLastAccessedTime?serviceRequestId=crn")).andExpect(status().isOk());
+		verify(complaintService).updateLastAccessedTime("crn");
 	}
 }

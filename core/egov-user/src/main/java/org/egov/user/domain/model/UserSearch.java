@@ -29,4 +29,6 @@ public class UserSearch {
 
     private boolean fuzzyLogic;
 
+    private boolean active;
+
 }

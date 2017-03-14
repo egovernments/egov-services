@@ -40,9 +40,9 @@
 
 package org.egov.eis.service;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.egov.eis.broker.EmployeeProducer;
 import org.egov.eis.model.Employee;
@@ -61,6 +61,7 @@ import org.egov.eis.repository.ServiceHistoryRepository;
 import org.egov.eis.repository.TechnicalQualificationRepository;
 import org.egov.eis.service.helper.EmployeeUserMapper;
 import org.egov.eis.web.contract.EmployeeGetRequest;
+import org.egov.eis.web.contract.RequestInfo;
 import org.egov.eis.web.contract.UserRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -124,13 +125,13 @@ public class EmployeeService {
 	@Value("${kafka.topics.employee.savedb.key}")
 	String employeeSaveKey;
 
-	public List<EmployeeInfo> getEmployees(EmployeeGetRequest employeeGetRequest) {
+	public List<EmployeeInfo> getEmployees(EmployeeGetRequest employeeGetRequest, RequestInfo requestInfo) {
 		List<EmployeeInfo> employeeInfoList = employeeRepository.findForCriteria(employeeGetRequest);
-/*
- 		List<UserInfo> userInfoList = userService.getUsers(employeeGetRequest);
-*/
-		List<UserInfo> userInfoList = new ArrayList<>();
-		employeeUserMapper.mapUsersWithEmployees(employeeInfoList, userInfoList);
+
+		List<Long> ids = employeeInfoList.stream().map(employeeInfo -> employeeInfo.getId()).collect(Collectors.toList());
+
+		List<UserInfo> usersList = userService.getUsers(ids, employeeGetRequest.getTenantId(), requestInfo);
+		employeeUserMapper.mapUsersWithEmployees(employeeInfoList, usersList);
 
 		return employeeInfoList;
 	}
@@ -163,7 +164,7 @@ public class EmployeeService {
 	}
 
 	public void saveEmployee(Employee employee) {
-		Long employeeId = new Date().getTime();
+		Long employeeId = 5L;
 		String code = "EMP" + employeeId;
 
 		employee.setId(employeeId);

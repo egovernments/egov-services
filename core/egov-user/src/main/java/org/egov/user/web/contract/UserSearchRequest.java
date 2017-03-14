@@ -38,6 +38,12 @@ public class UserSearchRequest {
     @JsonProperty("fuzzyLogic")
     private boolean fuzzyLogic;
 
+    @JsonProperty("active")
+    private boolean active = true;
+
+    @JsonProperty("tenantId")
+    private String tenantId;
+
     public UserSearch toDomain() {
         return UserSearch.builder()
                 .id(id)
@@ -48,6 +54,7 @@ public class UserSearchRequest {
                 .pan(pan)
                 .emailId(emailId)
                 .fuzzyLogic(fuzzyLogic)
+                .active(active)
                 .build();
     }
 }

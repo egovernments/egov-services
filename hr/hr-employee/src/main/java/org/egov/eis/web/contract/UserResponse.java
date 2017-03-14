@@ -45,8 +45,6 @@ import java.util.List;
 
 import org.egov.eis.model.UserInfo;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -62,10 +60,8 @@ import lombok.ToString;
 @ToString
 public class UserResponse {
 
-	@JsonProperty("ResponseInfo")
 	private ResponseInfo responseInfo;
 
-	@JsonProperty("User")
 	private List<UserInfo> user = new ArrayList<UserInfo>();
 
 }

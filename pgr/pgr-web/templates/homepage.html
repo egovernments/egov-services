@@ -115,7 +115,7 @@
 						
 						<li class="hidden-xs menu-responsive">
 							<a href="javascript:void(0);" class="profile-name">
-								<i class="fa fa-user img-circle"></i> narasappa
+								<i class="fa fa-user img-circle"></i> <span class="profile-text"></span>
 							</a>
 							<ul>
 								<!-- <li>
@@ -216,12 +216,17 @@
 				</div>
 				<div class="inline-main-content">
 					<div class="row main-space" id="worklist">
-						<div class="col-xs-12">
-							<div class="table-header">
-								Worklist
+						<div class="col-md-9 col-xs-9 table-header">
+							Worklist
+						</div>
+						<div class="col-md-3 col-xs-3 add-margin text-right">
+							<div class="input-group">
+							  <input type="text" class="form-control input-sm search-table" id="inboxsearch">
+							  <span class="input-group-addon"><i class="fa fa-search" aria-hidden="true"></i></span>
 							</div>
-							<table class="table table-bordered datatable" id="official_inbox">
-							</table>
+						</div>
+						<div class="col-md-12">
+							<table class="table table-bordered datatable" id="official_inbox"></table>
 						</div>
 					</div>
 				</div>

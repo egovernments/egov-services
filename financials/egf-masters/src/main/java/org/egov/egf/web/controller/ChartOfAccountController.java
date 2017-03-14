@@ -15,7 +15,6 @@ import org.egov.egf.persistence.queue.contract.RequestInfo;
 import org.egov.egf.persistence.queue.contract.ResponseInfo;
 import org.egov.egf.persistence.service.ChartOfAccountService;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.builder.SkipExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -37,7 +36,7 @@ public class ChartOfAccountController {
 	@Autowired
 	private ChartOfAccountService  chartOfAccountService;
 
-	@PostMapping
+	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.CREATED)
 	public  ChartOfAccountContractResponse create(@RequestBody @Valid ChartOfAccountContractRequest chartOfAccountContractRequest, BindingResult errors) {
 		ModelMapper modelMapper=new ModelMapper();
@@ -63,7 +62,7 @@ public class ChartOfAccountController {
 		return chartOfAccountContractResponse;
 	}
 
-	@PutMapping(value = "/{uniqueId}")
+	@PostMapping(value = "/{uniqueId}/_update")
 	@ResponseStatus(HttpStatus.OK)
 	public ChartOfAccountContractResponse update(@RequestBody @Valid ChartOfAccountContractRequest chartOfAccountContractRequest, BindingResult errors,
 			@PathVariable Long uniqueId) {
@@ -78,7 +77,7 @@ public class ChartOfAccountController {
 		
 		ChartOfAccountContract chartOfAccount = chartOfAccountContractRequest.getChartOfAccount();
 		//ignoring internally passed id if the put has id in url
-	    chartOfAccount.setId(uniqueId);
+	        chartOfAccount.setId(uniqueId);
 		ModelMapper model=new ModelMapper();
 	 	model.map(chartOfAccount, chartOfAccountFromDb);
 		chartOfAccountFromDb = chartOfAccountService.update(chartOfAccountFromDb);
@@ -141,34 +140,37 @@ public class ChartOfAccountController {
 	}
 	
 
-	@GetMapping
-	@ResponseBody
-	@ResponseStatus(HttpStatus.OK)
-	public ChartOfAccountContractResponse search(@ModelAttribute ChartOfAccountContractRequest chartOfAccountContractRequest,BindingResult errors) {
-		chartOfAccountService.validate(chartOfAccountContractRequest,"search",errors);
-		if (errors.hasErrors()) {
-			  throw	new CustomBindException(errors);
-			}
-		chartOfAccountService.fetchRelatedContracts(chartOfAccountContractRequest);
-		ChartOfAccountContractResponse chartOfAccountContractResponse =new  ChartOfAccountContractResponse();
-		chartOfAccountContractResponse.setChartOfAccounts(new ArrayList<ChartOfAccountContract>());
-		chartOfAccountContractResponse.setPage(new Pagination());
-		Page<ChartOfAccount> allChartOfAccounts;
-		ModelMapper model=new ModelMapper();
-	 
-		allChartOfAccounts = chartOfAccountService.search(chartOfAccountContractRequest);
-		ChartOfAccountContract chartOfAccountContract=null;
-		for(ChartOfAccount b:allChartOfAccounts)
-		{
-			chartOfAccountContract=new ChartOfAccountContract();
-			model.map(b, chartOfAccountContract);
-			chartOfAccountContractResponse.getChartOfAccounts().add(chartOfAccountContract);
-		}
-		chartOfAccountContractResponse.getPage().map(allChartOfAccounts);
-		chartOfAccountContractResponse.setResponseInfo(getResponseInfo(chartOfAccountContractRequest.getRequestInfo()));
-		chartOfAccountContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
-		return chartOfAccountContractResponse;
-	}
+    @PostMapping("/_search")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public ChartOfAccountContractResponse search(@ModelAttribute ChartOfAccountContract chartOfAccountContracts,
+            @RequestBody RequestInfo requestInfo, BindingResult errors) {
+        final ChartOfAccountContractRequest chartOfAccountContractRequest = new ChartOfAccountContractRequest();
+        chartOfAccountContractRequest.setChartOfAccount(chartOfAccountContracts);
+        chartOfAccountContractRequest.setRequestInfo(requestInfo);
+        chartOfAccountService.validate(chartOfAccountContractRequest, "search", errors);
+        if (errors.hasErrors()) {
+            throw new CustomBindException(errors);
+        }
+        chartOfAccountService.fetchRelatedContracts(chartOfAccountContractRequest);
+        ChartOfAccountContractResponse chartOfAccountContractResponse = new ChartOfAccountContractResponse();
+        chartOfAccountContractResponse.setChartOfAccounts(new ArrayList<ChartOfAccountContract>());
+        chartOfAccountContractResponse.setPage(new Pagination());
+        Page<ChartOfAccount> allChartOfAccounts;
+        ModelMapper model = new ModelMapper();
+
+        allChartOfAccounts = chartOfAccountService.search(chartOfAccountContractRequest);
+        ChartOfAccountContract chartOfAccountContract = null;
+        for (ChartOfAccount b : allChartOfAccounts) {
+            chartOfAccountContract = new ChartOfAccountContract();
+            model.map(b, chartOfAccountContract);
+            chartOfAccountContractResponse.getChartOfAccounts().add(chartOfAccountContract);
+        }
+        chartOfAccountContractResponse.getPage().map(allChartOfAccounts);
+        chartOfAccountContractResponse.setResponseInfo(getResponseInfo(chartOfAccountContractRequest.getRequestInfo()));
+        chartOfAccountContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
+        return chartOfAccountContractResponse;
+    }
 
 	
 	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {

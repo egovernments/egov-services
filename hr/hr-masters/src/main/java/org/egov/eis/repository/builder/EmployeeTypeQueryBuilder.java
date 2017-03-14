@@ -116,7 +116,7 @@ public class EmployeeTypeQueryBuilder {
 			EmployeeTypeGetRequest employeeTypeGetRequest) {
 		// handle limit(also called pageSize) here
 		selectQuery.append(" LIMIT ?");
-		long pageSize = Integer.parseInt(applicationProperties.commonsSearchPageSizeDefault());
+		long pageSize = Integer.parseInt(applicationProperties.hrSearchPageSizeDefault());
 		if (employeeTypeGetRequest.getPageSize() != null)
 			pageSize = employeeTypeGetRequest.getPageSize();
 		preparedStatementValues.add(pageSize); // Set limit to pageSize

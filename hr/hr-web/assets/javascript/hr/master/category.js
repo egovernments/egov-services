@@ -1,16 +1,3 @@
-function getUrlVars() {
-    var vars = [],
-        hash;
-    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-    for (var i = 0; i < hashes.length; i++) {
-        hash = hashes[i].split('=');
-        vars.push(hash[0]);
-        vars[hash[0]] = hash[1];
-    }
-    return vars;
-}
-
-
 class Category extends React.Component{
 
     constructor(props){
@@ -26,10 +13,21 @@ class Category extends React.Component{
 
 
     componentDidMount(){
+      var type=getUrlVars()["type"];
+      var id=getUrlVars()["id"];
+
       if(getUrlVars()["type"]==="view")
       {
         for (var variable in this.state.categorySet)
           document.getElementById(variable).disabled = true;
+        }
+
+        if(type==="view"||type==="update")
+        {
+            console.log(getCommonMasterById("egov-common-masters","categories","Category",id).responseJSON["Category"][0]);
+            this.setState({
+              categorySet:getCommonMasterById("egov-common-masters","categories","Category",id).responseJSON["Category"][0]
+            })
         }
     }
 

@@ -51,23 +51,23 @@ import org.springframework.core.env.Environment;
 @Order(0)
 public class ApplicationProperties {
 
-	private static final String COMMONS_SEARCH_PAGESIZE_DEFAULT = "commons.search.pagesize.default";
-	public static final String COMMONS_SEARCH_PAGENO_MAX = "commons.search.pageno.max";
-	public static final String COMMONS_SEARCH_PAGESIZE_MAX = "commons.search.pagesize.max";
+	private static final String HR_SEARCH_PAGESIZE_DEFAULT = "hr.search.pagesize.default";
+	public static final String HR_SEARCH_PAGENO_MAX = "hr.search.pageno.max";
+	public static final String HR_SEARCH_PAGESIZE_MAX = "hr.search.pagesize.max";
 
 	@Autowired
 	private Environment environment;
 
-	public String commonsSearchPageSizeDefault() {
-		return this.environment.getProperty(COMMONS_SEARCH_PAGESIZE_DEFAULT);
+	public String hrSearchPageSizeDefault() {
+		return this.environment.getProperty(HR_SEARCH_PAGESIZE_DEFAULT);
 	}
 
-	public String commonsSearchPageNumberMax() {
-		return this.environment.getProperty(COMMONS_SEARCH_PAGENO_MAX);
+	public String hrSearchPageNumberMax() {
+		return this.environment.getProperty(HR_SEARCH_PAGENO_MAX);
 	}
 
-	public String commonsSearchPageSizeMax() {
-		return this.environment.getProperty(COMMONS_SEARCH_PAGESIZE_MAX);
+	public String hrSearchPageSizeMax() {
+		return this.environment.getProperty(HR_SEARCH_PAGESIZE_MAX);
 	}
 	
 }

@@ -36,7 +36,7 @@ values('L-JUNIOR ENGINEER-1',1,1,'2015-01-01 00:00:00','2015-01-01 00:00:00',1,1
 INSERT into egpgr_complaint(id,crn,complaintType,complainant,assignee,location,childlocation,
 status,details,landmarkDetails,receivingMode,receivingCenter,lng,lat,escalation_date,department,
 citizenFeedback,latlngAddress,crossHierarchyId,state_id,createdby,createddate,lastmodifiedby,lastmodifieddate)VALUES(1,'0005-2017-AB',6,1,1,1,null,
-1,'This is a huge problem','Near Temple',5,5,0,0,'2016-12-22 00:00:00',18,5,null,2,5,2,'2016-12-20 00:00:00',2,'2016-12-20 00:00:00');
+1,'This is a huge problem','Near Temple',5,5,0,0,'2016-12-22 00:00:00',18,5,null,2,5,2,'2016-12-20 00:00:00',2,'2016-12-21 00:00:00');
 
 
 

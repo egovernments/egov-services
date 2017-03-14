@@ -29,106 +29,118 @@ import org.springframework.validation.SmartValidator;
 @Transactional(readOnly = true)
 public class FiscalPeriodService {
 
-	private final FiscalPeriodRepository fiscalPeriodRepository;
-	@PersistenceContext
-	private EntityManager entityManager;
+    private final FiscalPeriodRepository fiscalPeriodRepository;
+    @PersistenceContext
+    private EntityManager entityManager;
 
-	@Autowired
-	public FiscalPeriodService(final FiscalPeriodRepository fiscalPeriodRepository) {
-		this.fiscalPeriodRepository = fiscalPeriodRepository;
-	}
+    @Autowired
+    public FiscalPeriodService(final FiscalPeriodRepository fiscalPeriodRepository) {
+        this.fiscalPeriodRepository = fiscalPeriodRepository;
+    }
 
-	@Autowired
-	private SmartValidator validator;
-	@Autowired
-	private FinancialYearService financialYearService;
+    @Autowired
+    private SmartValidator validator;
+    @Autowired
+    private FinancialYearService financialYearService;
 
-	@Transactional
-	public FiscalPeriod create(final FiscalPeriod fiscalPeriod) {
-		return fiscalPeriodRepository.save(fiscalPeriod);
-	}
+    @Transactional
+    public FiscalPeriod create(final FiscalPeriod fiscalPeriod) {
+        setFiscalPeriod(fiscalPeriod);
+        return fiscalPeriodRepository.save(fiscalPeriod);
+    }
 
-	@Transactional
-	public FiscalPeriod update(final FiscalPeriod fiscalPeriod) {
-		return fiscalPeriodRepository.save(fiscalPeriod);
-	}
+    private void setFiscalPeriod(final FiscalPeriod fiscalPeriod) {
+        if (fiscalPeriod.getFinancialYear() != null) {
+            FinancialYear financialYear = financialYearService.findOne(fiscalPeriod.getFinancialYear().getId());
+            if (financialYear == null) {
+                throw new InvalidDataException("financialYear", "financialYear.invalid", " Invalid financialYear");
+            }
+            fiscalPeriod.setFinancialYear(financialYear);
+        }
+    }
 
-	public List<FiscalPeriod> findAll() {
-		return fiscalPeriodRepository.findAll(new Sort(Sort.Direction.ASC, "name"));
-	}
+    @Transactional
+    public FiscalPeriod update(final FiscalPeriod fiscalPeriod) {
+        setFiscalPeriod(fiscalPeriod);
+        return fiscalPeriodRepository.save(fiscalPeriod);
+    }
 
-	public FiscalPeriod findByName(String name) {
-		return fiscalPeriodRepository.findByName(name);
-	}
+    public List<FiscalPeriod> findAll() {
+        return fiscalPeriodRepository.findAll(new Sort(Sort.Direction.ASC, "name"));
+    }
 
-	public FiscalPeriod findOne(Long id) {
-		return fiscalPeriodRepository.findOne(id);
-	}
+    public FiscalPeriod findByName(String name) {
+        return fiscalPeriodRepository.findByName(name);
+    }
 
-	public Page<FiscalPeriod> search(FiscalPeriodContractRequest fiscalPeriodContractRequest) {
-		final FiscalPeriodSpecification specification = new FiscalPeriodSpecification(
-				fiscalPeriodContractRequest.getFiscalPeriod());
-		Pageable page = new PageRequest(fiscalPeriodContractRequest.getPage().getOffSet(),
-				fiscalPeriodContractRequest.getPage().getPageSize());
-		return fiscalPeriodRepository.findAll(specification, page);
-	}
+    public FiscalPeriod findOne(Long id) {
+        return fiscalPeriodRepository.findOne(id);
+    }
 
-	public BindingResult validate(FiscalPeriodContractRequest fiscalPeriodContractRequest, String method,
-			BindingResult errors) {
+    public Page<FiscalPeriod> search(FiscalPeriodContractRequest fiscalPeriodContractRequest) {
+        final FiscalPeriodSpecification specification = new FiscalPeriodSpecification(
+                fiscalPeriodContractRequest.getFiscalPeriod());
+        Pageable page = new PageRequest(fiscalPeriodContractRequest.getPage().getOffSet(),
+                fiscalPeriodContractRequest.getPage().getPageSize());
+        return fiscalPeriodRepository.findAll(specification, page);
+    }
 
-		try {
-			switch (method) {
-			case "update":
-				Assert.notNull(fiscalPeriodContractRequest.getFiscalPeriod(), "FiscalPeriod to edit must not be null");
-				validator.validate(fiscalPeriodContractRequest.getFiscalPeriod(), errors);
-				break;
-			case "view":
-				// validator.validate(fiscalPeriodContractRequest.getFiscalPeriod(),
-				// errors);
-				break;
-			case "create":
-				Assert.notNull(fiscalPeriodContractRequest.getFiscalPeriods(),
-						"FiscalPeriods to create must not be null");
-				for (FiscalPeriodContract b : fiscalPeriodContractRequest.getFiscalPeriods()) {
-					validator.validate(b, errors);
-				}
-				break;
-			case "updateAll":
-				Assert.notNull(fiscalPeriodContractRequest.getFiscalPeriods(),
-						"FiscalPeriods to create must not be null");
-				for (FiscalPeriodContract b : fiscalPeriodContractRequest.getFiscalPeriods()) {
-					validator.validate(b, errors);
-				}
-				break;
-			default:
-				validator.validate(fiscalPeriodContractRequest.getRequestInfo(), errors);
-			}
-		} catch (IllegalArgumentException e) {
-			errors.addError(new ObjectError("Missing data", e.getMessage()));
-		}
-		return errors;
+    public BindingResult validate(FiscalPeriodContractRequest fiscalPeriodContractRequest, String method,
+            BindingResult errors) {
 
-	}
+        try {
+            switch (method) {
+            case "update":
+                Assert.notNull(fiscalPeriodContractRequest.getFiscalPeriod(), "FiscalPeriod to edit must not be null");
+                validator.validate(fiscalPeriodContractRequest.getFiscalPeriod(), errors);
+                break;
+            case "view":
+                // validator.validate(fiscalPeriodContractRequest.getFiscalPeriod(),
+                // errors);
+                break;
+            case "create":
+                Assert.notNull(fiscalPeriodContractRequest.getFiscalPeriods(),
+                        "FiscalPeriods to create must not be null");
+                for (FiscalPeriodContract b : fiscalPeriodContractRequest.getFiscalPeriods()) {
+                    validator.validate(b, errors);
+                }
+                break;
+            case "updateAll":
+                Assert.notNull(fiscalPeriodContractRequest.getFiscalPeriods(),
+                        "FiscalPeriods to create must not be null");
+                for (FiscalPeriodContract b : fiscalPeriodContractRequest.getFiscalPeriods()) {
+                    validator.validate(b, errors);
+                }
+                break;
+            default:
+                validator.validate(fiscalPeriodContractRequest.getRequestInfo(), errors);
+            }
+        } catch (IllegalArgumentException e) {
+            errors.addError(new ObjectError("Missing data", e.getMessage()));
+        }
+        return errors;
 
-	public FiscalPeriodContractRequest fetchRelatedContracts(FiscalPeriodContractRequest fiscalPeriodContractRequest) {
-		ModelMapper model = new ModelMapper();
-		for (FiscalPeriodContract fiscalPeriod : fiscalPeriodContractRequest.getFiscalPeriods()) {
-			if (fiscalPeriod.getFinancialYear() != null) {
-				FinancialYear financialYear = financialYearService.findOne(fiscalPeriod.getFinancialYear().getId());
-				if (financialYear == null) {
-					throw new InvalidDataException("financialYear", "financialYear.invalid", " Invalid financialYear");
-				}
-				model.map(financialYear, fiscalPeriod.getFinancialYear());
-			}
-		}
-		FiscalPeriodContract fiscalPeriod = fiscalPeriodContractRequest.getFiscalPeriod();
-		if (fiscalPeriod.getFinancialYear() != null) {
-			FinancialYear financialYear = financialYearService.findOne(fiscalPeriod.getFinancialYear().getId());
-			if (financialYear == null) {
-				throw new InvalidDataException("financialYear", "financialYear.invalid", " Invalid financialYear");
-			}
-			model.map(financialYear, fiscalPeriod.getFinancialYear());
-		}
-		return fiscalPeriodContractRequest;
-	}
+    }
+
+    public FiscalPeriodContractRequest fetchRelatedContracts(FiscalPeriodContractRequest fiscalPeriodContractRequest) {
+        ModelMapper model = new ModelMapper();
+        for (FiscalPeriodContract fiscalPeriod : fiscalPeriodContractRequest.getFiscalPeriods()) {
+            if (fiscalPeriod.getFinancialYear() != null) {
+                FinancialYear financialYear = financialYearService.findOne(fiscalPeriod.getFinancialYear().getId());
+                if (financialYear == null) {
+                    throw new InvalidDataException("financialYear", "financialYear.invalid", " Invalid financialYear");
+                }
+                model.map(financialYear, fiscalPeriod.getFinancialYear());
+            }
+        }
+        FiscalPeriodContract fiscalPeriod = fiscalPeriodContractRequest.getFiscalPeriod();
+        if (fiscalPeriod.getFinancialYear() != null) {
+            FinancialYear financialYear = financialYearService.findOne(fiscalPeriod.getFinancialYear().getId());
+            if (financialYear == null) {
+                throw new InvalidDataException("financialYear", "financialYear.invalid", " Invalid financialYear");
+            }
+            model.map(financialYear, fiscalPeriod.getFinancialYear());
+        }
+        return fiscalPeriodContractRequest;
+    }
 }

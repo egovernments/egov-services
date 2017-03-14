@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,7 +26,9 @@ public class UserController {
     private TokenStore tokenStore;
     private PasswordEncoder passwordEncoder;
 
-    public UserController(UserService userService, TokenStore tokenStore, PasswordEncoder passwordEncoder) {
+    public UserController(UserService userService,
+                          TokenStore tokenStore,
+                          PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.tokenStore = tokenStore;
         this.passwordEncoder = passwordEncoder;
@@ -35,15 +37,13 @@ public class UserController {
     @PostMapping("/users/_create")
     public ResponseEntity<UserDetailResponse> createUserWithValidation(
             @RequestBody CreateUserRequest createUserRequest) {
-        Boolean validateUser = Boolean.TRUE;
-        return createUser(createUserRequest, validateUser);
+        return createUser(createUserRequest, true);
     }
 
     @PostMapping("/users/_createnovalidate")
     public ResponseEntity<UserDetailResponse> createUserWithoutValidation(
             @RequestBody CreateUserRequest createUserRequest) {
-        Boolean validateUser = Boolean.FALSE;
-        return createUser(createUserRequest, validateUser);
+        return createUser(createUserRequest, false);
     }
 
     @PostMapping("/_search")
@@ -72,18 +72,24 @@ public class UserController {
 
     private ErrorResponse populateErrors() {
         ResponseInfo responseInfo = ResponseInfo.builder().status(HttpStatus.BAD_REQUEST.toString()).apiId("").build();
-
         Error error = Error.builder().code(1).description("Error while fetching user details").build();
-
         return new ErrorResponse(responseInfo, error);
     }
 
-    private ResponseEntity<UserDetailResponse> createUser(
-            @RequestBody CreateUserRequest createUserRequest, Boolean validateUser) {
+    private ResponseEntity<UserDetailResponse> createUser(@RequestBody CreateUserRequest createUserRequest,
+                                                          boolean validateUser) {
         org.egov.user.domain.model.User user = createUserRequest.toDomainForCreate(passwordEncoder);
-        UserRequest userRequest = new UserRequest(userService.save(createUserRequest.getRequestInfo(), user, validateUser));
-        ResponseInfo responseInfo = ResponseInfo.builder().status(String.valueOf(HttpStatus.OK.value())).build();
-        UserDetailResponse createdUserResponse = new UserDetailResponse(responseInfo, Arrays.asList(userRequest));
+        final User newUser = userService.save(createUserRequest.getRequestInfo(), user, validateUser);
+        return createResponse(newUser);
+    }
+
+    private ResponseEntity<UserDetailResponse> createResponse(User newUser) {
+        UserRequest userRequest = new UserRequest(newUser);
+        ResponseInfo responseInfo = ResponseInfo.builder()
+                .status(String.valueOf(HttpStatus.OK.value()))
+                .build();
+        UserDetailResponse createdUserResponse =
+                new UserDetailResponse(responseInfo, Collections.singletonList(userRequest));
         return new ResponseEntity<>(createdUserResponse, HttpStatus.OK);
     }
 }

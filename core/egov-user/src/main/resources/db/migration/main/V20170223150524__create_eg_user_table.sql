@@ -1,5 +1,5 @@
 CREATE TABLE eg_user (
-    id serial not null primary key,
+    id bigint NOT NULL,
     title character varying(8),
     salutation character varying(5),
     dob timestamp,
@@ -27,6 +27,14 @@ CREATE TABLE eg_user (
     accountlocked boolean DEFAULT false,
     bloodgroup character varying(32),
     photo character varying(36),
-    identificationmark character varying(300),
-    CONSTRAINT eg_user_user_name_key UNIQUE (username)
+    identificationmark character varying(300)
 );
+
+CREATE SEQUENCE seq_eg_user
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+ALTER TABLE eg_user ADD CONSTRAINT eg_user_pkey PRIMARY KEY (id);
+ALTER TABLE eg_user ADD CONSTRAINT eg_user_user_name_key UNIQUE (username);

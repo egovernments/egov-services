@@ -48,6 +48,7 @@ import org.egov.user.persistence.entity.User;
 import org.egov.user.persistence.repository.RoleRepository;
 import org.egov.user.persistence.repository.UserRepository;
 import org.egov.user.web.contract.RequestInfo;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -102,7 +103,7 @@ public class UserService {
     }
 
     public List<User> searchUsers(UserSearch userSearch) {
-        Specification specification = userSearchSpecificationFactory.getSpecification(userSearch);
+        Specification<User> specification = userSearchSpecificationFactory.getSpecification(userSearch);
         return userRepository.findAll(specification);
     }
 }

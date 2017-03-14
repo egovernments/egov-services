@@ -42,6 +42,27 @@ $(document).ready(function()
 {	
 
 	preventBack();
+
+	var obj = {};
+	var RI = new $.RequestInfo(localStorage.getItem('auth'));
+	var userArray = [localStorage.getItem('id')]
+
+	obj['requestInfo'] = RI.requestInfo;
+	obj['id'] = userArray;
+
+	$.ajax({
+		url : "/user/_search",
+		type : 'POST',
+		processData : false,
+		contentType: "application/json",
+		data : JSON.stringify(obj),
+		success : function(response){
+			$('.profile-text').html(response.user[0].userName);
+		},
+		error : function(){
+			bootbox.alert('User api failed');
+		}
+	});
 	
 	$('.menu-item').click(function(e)
 	{

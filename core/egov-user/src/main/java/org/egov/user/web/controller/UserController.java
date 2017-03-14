@@ -46,7 +46,7 @@ public class UserController {
         return createUser(createUserRequest, validateUser);
     }
 
-    @PostMapping("/users/_search")
+    @PostMapping("/_search")
     public ResponseEntity<?> get(@RequestBody UserSearchRequest request) {
         List<User> userEntities = userService.searchUsers(request.toDomain());
 

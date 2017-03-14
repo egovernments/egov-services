@@ -44,7 +44,6 @@ var departmentId, designationId;
 var loadDD = new $.loadDD();
 $(document).ready(function()
 {
-
 	if(localStorage.getItem('type') == 'CITIZEN'){
 		$('.employee-action').remove();
 	}else if(localStorage.getItem('type') == 'EMPLOYEE'){
@@ -96,6 +95,10 @@ $(document).ready(function()
 		},
 		success : function(response){
 			//console.log('Get complaint done!'+JSON.stringify(response));
+
+			var status = response.service_requests[0].values.ComplaintStatus;
+			if(status == 'COMPLETED' || status == 'REJECTED' || status == 'WITHDRAWN')
+				$('.action-section').remove();
 
 			updateResponse = response;
 

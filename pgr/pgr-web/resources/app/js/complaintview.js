@@ -72,7 +72,7 @@ $(document).ready(function()
 	})
 
 	$('#ct-sel-jurisd').change(function(){
-		getLocality($(this).val())
+		getLocality($(this).val());
 	});
 	
 	$('#approvalDepartment').change(function(){
@@ -163,6 +163,7 @@ $(document).ready(function()
 							if(localStorage.getItem('type') == 'EMPLOYEE' || localStorage.getItem('type') == 'CITIZEN'){
 								var loadDD = new $.loadDD();
 								nextStatus(loadDD);
+								$('#status').val(status);
 							}
 
 							if(localStorage.getItem('type') == 'EMPLOYEE'){
@@ -339,7 +340,8 @@ function complaintType(loadDD){
 function nextStatus(loadDD){
 	$.ajax({
 		url: "/pgr/_getnextstatuses?userId="+localStorage.getItem("id")+"&currentStatus="+status+"&tenantId=ap.public",
-		type : 'POST'
+		type : 'POST',
+		async : false
 	}).done(function(data) {
 		loadDD.load({
 			element:$('#status'),

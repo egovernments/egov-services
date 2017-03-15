@@ -162,10 +162,6 @@ public class User extends AbstractAuditable {
         return null == pwdExpiryDate ? null : new DateTime(pwdExpiryDate);
     }
 
-    public void updateNextPwdExpiryDate(Integer passwordExpireInDays) {
-        this.setPwdExpiryDate(new DateTime().plusDays(passwordExpireInDays).toDate());
-    }
-
     public User (org.egov.user.domain.model.User user) {
         this.name = user.getName();
         this.id = user.getId();

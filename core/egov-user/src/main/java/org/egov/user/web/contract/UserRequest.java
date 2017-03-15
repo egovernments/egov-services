@@ -41,7 +41,7 @@ public class UserRequest {
     private Boolean active;
     private String locale;
     private UserType type;
-    private Boolean accountLocked;
+    private boolean accountLocked;
     private String fatherOrHusbandName;
     private String signature;
     private String bloodGroup;

@@ -152,7 +152,7 @@ public class Employee {
 
 	private List<DepartmentalTest> test = new ArrayList<DepartmentalTest>();
 
-	private UserInfo userInfo;
+	private User user;
 
 	@NotNull
 	private String tenantId;

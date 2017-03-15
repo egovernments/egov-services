@@ -1,5 +1,6 @@
 package org.egov.user.domain.service;
 
+import org.egov.user.domain.exception.DuplicateUserNameException;
 import org.egov.user.domain.exception.OtpValidationPendingException;
 import org.egov.user.domain.model.UserSearch;
 import org.egov.user.persistence.entity.User;
@@ -32,7 +33,14 @@ public class UserService {
     public User save(org.egov.user.domain.model.User user, boolean ensureOtpValidation) {
         user.validate();
         validateOtp(user, ensureOtpValidation);
+        validateDuplicateUserName(user);
         return persistNewUser(user);
+    }
+
+    private void validateDuplicateUserName(org.egov.user.domain.model.User user) {
+        if( userRepository.isUserPresent(user.getUsername())) {
+            throw new DuplicateUserNameException(user);
+        }
     }
 
     public List<User> searchUsers(UserSearch userSearch) {

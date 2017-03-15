@@ -65,12 +65,15 @@ import lombok.ToString;
 @NoArgsConstructor
 @Setter
 @ToString
-public class UserInfo {
+public class User {
 
 	@NotNull
 	private Long id;
 
 	private String userName;
+
+	@NotNull
+	private String password;
 
 	private String salutation;
 

@@ -1,24 +1,35 @@
 package org.egov.pgr.model;
 
+import static org.egov.pgr.contracts.grievance.ServiceRequest.CHILD_LOCATION_ID;
+import static org.egov.pgr.contracts.grievance.ServiceRequest.LOCATION_ID;
+import static org.egov.pgr.contracts.grievance.ServiceRequest.LOCATION_NAME;
+import static org.egov.pgr.contracts.grievance.ServiceRequest.USER_ID;
+import static org.egov.pgr.contracts.grievance.ServiceRequest.VALUES_ASSIGNEE_ID;
+import static org.egov.pgr.contracts.grievance.ServiceRequest.VALUES_COMPLAINANT_ADDRESS;
+import static org.egov.pgr.contracts.grievance.ServiceRequest.VALUES_RECEIVING_CENTER;
+import static org.egov.pgr.contracts.grievance.ServiceRequest.VALUES_RECIEVING_MODE;
+import static org.egov.pgr.contracts.grievance.ServiceRequest.VALUES_STATE_ID;
+import static org.egov.pgr.contracts.grievance.ServiceRequest.VALUES_STATUS;
+
+import java.util.Date;
+import java.util.Objects;
+
 import org.egov.pgr.contracts.grievance.ServiceRequest;
 import org.egov.pgr.contracts.grievance.SevaRequest;
 import org.egov.pgr.contracts.user.GetUserByIdResponse;
 import org.egov.pgr.entity.Complaint;
 import org.egov.pgr.entity.ComplaintStatus;
 import org.egov.pgr.entity.ComplaintType;
+import org.egov.pgr.entity.ReceivingCenter;
 import org.egov.pgr.entity.enums.ReceivingMode;
 import org.egov.pgr.repository.PositionRepository;
 import org.egov.pgr.repository.UserRepository;
 import org.egov.pgr.service.ComplaintStatusService;
 import org.egov.pgr.service.ComplaintTypeService;
 import org.egov.pgr.service.EscalationService;
+import org.egov.pgr.service.ReceivingCenterService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Date;
-import java.util.Objects;
-
-import static org.egov.pgr.contracts.grievance.ServiceRequest.*;
 
 public class ComplaintBuilder {
 
@@ -31,11 +42,12 @@ public class ComplaintBuilder {
     private final UserRepository userRepository;
     private final Complaint complaint;
     private final ServiceRequest serviceRequest;
-
+    private final ReceivingCenterService receivingCenterService;
+    
     public ComplaintBuilder(Complaint complaint, SevaRequest sevaRequest,
                             ComplaintTypeService complaintTypeService, ComplaintStatusService complaintStatusService,
                             EscalationService escalationService, PositionRepository positionRepository,
-                            UserRepository userRepository) {
+                            UserRepository userRepository,ReceivingCenterService receivingCenterService) {
         this.requesterId = sevaRequest.getRequesterId();
         this.serviceRequest = sevaRequest.getServiceRequest();
         this.complaintStatusService = complaintStatusService;
@@ -44,6 +56,7 @@ public class ComplaintBuilder {
         this.complaint = complaint == null ? new Complaint() : complaint;
         this.complaintTypeService = complaintTypeService;
         this.userRepository = userRepository;
+        this.receivingCenterService=receivingCenterService;
     }
 
     public Complaint build() {
@@ -58,6 +71,7 @@ public class ComplaintBuilder {
         setEscalationDate();
         setWorkflowDetails();
         setDepartmentId();
+        setReceivingCenter();
         return this.complaint;
     }
 
@@ -153,6 +167,14 @@ public class ComplaintBuilder {
 
     }
 
+    private void setReceivingCenter(){
+    	String receivingCenter=this.serviceRequest.getValues().get(VALUES_RECEIVING_CENTER);
+    	if(receivingCenter!=null && !receivingCenter.isEmpty()){
+    		ReceivingCenter receivingCenterDB=receivingCenterService.getReceivingCenterById(Long.valueOf(receivingCenter));
+    		this.complaint.setReceivingCenter(receivingCenterDB);
+    	}
+    }
+    
     private void setComplaintType() {
         if (Objects.isNull(serviceRequest.getComplaintTypeCode()))
             return;

@@ -40,11 +40,19 @@
 
 package org.egov.eis;
 
+import org.egov.eis.indexer.http.CorrelationIdAwareRestTemplate;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
 public class EgovHRAttendanceApplication {
+
+    @Bean
+    public RestTemplate getRestTemplate() {
+        return new CorrelationIdAwareRestTemplate();
+    }
 
     public static void main(final String[] args) {
         SpringApplication.run(EgovHRAttendanceApplication.class, args);

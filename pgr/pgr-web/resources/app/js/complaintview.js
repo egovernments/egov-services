@@ -72,7 +72,7 @@ $(document).ready(function()
 	})
 
 	$('#ct-sel-jurisd').change(function(){
-		getLocality($(this).val())
+		getLocality($(this).val());
 	});
 	
 	$('#approvalDepartment').change(function(){
@@ -163,9 +163,11 @@ $(document).ready(function()
 							if(localStorage.getItem('type') == 'EMPLOYEE' || localStorage.getItem('type') == 'CITIZEN'){
 								var loadDD = new $.loadDD();
 								nextStatus(loadDD);
+								$('#status').val(status);
 							}
 
 							if(localStorage.getItem('type') == 'EMPLOYEE'){
+								$('#status').attr('required','required');
 								var wardId = response.service_requests[0].values.LocationId;
 								var localityid = response.service_requests[0].values.ChildLocationId;
 								complaintType(loadDD);
@@ -237,9 +239,10 @@ function complaintUpdate(obj){
 	var date = dat.split("/").join("-");
 	req_obj.ServiceRequest['updated_datetime'] = date+' '+time;
 	req_obj.ServiceRequest['tenantId'] = 'ap.public';
-	req_obj.ServiceRequest.values['ComplaintStatus'] = $('#status').val();
+	req_obj.ServiceRequest.values['ComplaintStatus'] = $('#status').val() ? $('#status').val() : status;
 	req_obj.ServiceRequest.values['approvalComments'] = $('#approvalComment').val();
-	req_obj.ServiceRequest.values['userId'] = localStorage.getItem('id');
+	if(localStorage.getItem('type') == 'CITIZEN')
+		req_obj.ServiceRequest.values['userId'] = localStorage.getItem('id');
 	req_obj.ServiceRequest.values['assignment_id'] = req_obj.ServiceRequest.values['assigneeId'];
 	delete req_obj.ServiceRequest.values['assigneeId'];
 	req_obj.ServiceRequest.values['locationId'] = req_obj.ServiceRequest.values['LocationId'];
@@ -339,7 +342,8 @@ function complaintType(loadDD){
 function nextStatus(loadDD){
 	$.ajax({
 		url: "/pgr/_getnextstatuses?userId="+localStorage.getItem("id")+"&currentStatus="+status+"&tenantId=ap.public",
-		type : 'POST'
+		type : 'POST',
+		async : false
 	}).done(function(data) {
 		loadDD.load({
 			element:$('#status'),

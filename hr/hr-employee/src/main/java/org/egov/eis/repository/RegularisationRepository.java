@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.egov.eis.model.Employee;
 import org.egov.eis.model.Regularisation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,12 +29,14 @@ public class RegularisationRepository {
 	private JdbcTemplate jdbcTemplate;
 
 	// FIXME put tenantId
-	public void save(Long employeeId, List<Regularisation> regularisations) {
+	public void save(Employee employee) {
+		List<Regularisation> regularisations = employee.getRegularisation();
+
 		jdbcTemplate.batchUpdate(INSERT_REGULARISATION_QUERY, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
 				Regularisation regularisation = regularisations.get(i);
-				ps.setLong(1, employeeId);
+				ps.setLong(1, employee.getId());
 				ps.setLong(2, regularisation.getDesignation());
 				ps.setDate(3, new Date(regularisation.getDeclaredOn().getTime()));
 				ps.setString(4, regularisation.getOrderNo());
@@ -43,7 +46,7 @@ public class RegularisationRepository {
 				ps.setDate(8, new Date(regularisation.getCreatedDate().getTime()));
 				ps.setLong(9, regularisation.getLastModifiedBy());
 				ps.setDate(10, new Date(regularisation.getLastModifiedDate().getTime()));
-				ps.setString(11, "1");
+				ps.setString(11, employee.getTenantId());
 			}
 
 			@Override

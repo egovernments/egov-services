@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import org.egov.eis.model.DepartmentalTest;
+import org.egov.eis.model.Employee;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,12 +29,14 @@ public class DepartmentalTestRepository {
 	private JdbcTemplate jdbcTemplate;
 
 	// FIXME put tenantId
-	public void save(Long employeeId, List<DepartmentalTest> departmentalTests) {
+	public void save(Employee employee) {
+		List<DepartmentalTest> departmentalTests = employee.getTest();
+
 		jdbcTemplate.batchUpdate(INSERT_DEPARTMENTAL_TEST_QUERY, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
 				DepartmentalTest departmentalTest = departmentalTests.get(i);
-				ps.setLong(1, employeeId);
+				ps.setLong(1, employee.getId());
 				ps.setString(2, departmentalTest.getTest());
 				ps.setInt(3, departmentalTest.getYearOfPassing());
 				ps.setString(4, departmentalTest.getRemarks());
@@ -41,7 +44,7 @@ public class DepartmentalTestRepository {
 				ps.setDate(6, new Date(departmentalTest.getCreatedDate().getTime()));
 				ps.setLong(7, departmentalTest.getLastModifiedBy());
 				ps.setDate(8, new Date(departmentalTest.getLastModifiedDate().getTime()));
-				ps.setString(9, "1");
+				ps.setString(9, employee.getTenantId());
 			}
 
 			@Override

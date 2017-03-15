@@ -107,6 +107,10 @@ $(document).ready(function()
 			required: "Required"
 		});
 
+		$.validator.addMethod("emailvalidate",function(value){
+		    return /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(value);
+		},"Enter valid Email ID");
+
 	    jQuery.validator.addClassRules({
 			mobilevalidate: {
 				required: true,
@@ -114,10 +118,7 @@ $(document).ready(function()
 		        maxlength : 10,
 		        digits : true
 			},
-			emailvalidate: {
-				required: true,
-				email: true,
-			}
+			emailvalidate: { emailvalidate : true }  
 		});
 
 	}catch(e){

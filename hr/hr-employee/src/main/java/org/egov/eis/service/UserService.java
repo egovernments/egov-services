@@ -42,37 +42,53 @@ package org.egov.eis.service;
 
 import java.util.List;
 
-import org.egov.eis.model.UserInfo;
+import org.egov.eis.config.ApplicationProperties;
+import org.egov.eis.model.User;
 import org.egov.eis.service.helper.UserSearchURLHelper;
 import org.egov.eis.web.contract.RequestInfo;
+import org.egov.eis.web.contract.UserGetRequest;
 import org.egov.eis.web.contract.UserRequest;
 import org.egov.eis.web.contract.UserResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 @Service
 public class UserService {
 
 	@Autowired
 	private UserSearchURLHelper userSearchURLHelper;
+	
+	@Autowired
+	private ApplicationProperties applicationProperties;
 
-	public List<UserInfo> getUsers(List<Long> ids, String tenantId, RequestInfo requestInfo) {
+	public List<User> getUsers(List<Long> ids, String tenantId, RequestInfo requestInfo) {
 		String url = userSearchURLHelper.searchURL(ids, tenantId);
 
-		UserRequest userRequest = new UserRequest();
-		userRequest.setId(ids);
-		userRequest.setRequestInfo(requestInfo);
+		UserGetRequest userGetRequest = new UserGetRequest();
+		userGetRequest.setId(ids);
+		userGetRequest.setRequestInfo(requestInfo);
+		userGetRequest.setTenantId(tenantId);
 
- 		UserResponse userResponse = new RestTemplate().postForObject(url, userRequest, UserResponse.class);
-
-		System.err.println("User Info: " + userResponse.getUser());
+ 		UserResponse userResponse = new RestTemplate().postForObject(url, userGetRequest, UserResponse.class);
 
 		return userResponse.getUser();
 	}
-	
+
 	public Long createUser(UserRequest userRequest) {
-		// FIXME use restTemplate to call user service and get id and return the same;
-		return 0L;
+		String url = applicationProperties.empServicesUsersServiceCreateUsersHostURL();
+		String userJson = null;
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			userJson = mapper.writeValueAsString(userRequest);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		System.err.println("User Is: " + userJson);
+		UserResponse userResponse = new RestTemplate().postForObject(url, userRequest, UserResponse.class);
+		return userResponse.getUser().get(0).getId();
 	}
 }

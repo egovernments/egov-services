@@ -44,7 +44,7 @@ public class UserRequestTest {
         assertThat(userRequestContract.getPwdExpiryDate()).isEqualTo(userEntity.getPwdExpiryDate().toDate());
         assertThat(userRequestContract.getLocale()).isEqualTo(userEntity.getLocale());
         assertThat(userRequestContract.getType()).isEqualTo(userEntity.getType());
-        assertThat(userRequestContract.getAccountLocked()).isEqualTo(userEntity.isAccountLocked());
+        assertThat(userRequestContract.isAccountLocked()).isEqualTo(userEntity.isAccountLocked());
         assertThat(userRequestContract.getFatherOrHusbandName()).isEqualTo(userEntity.getGuardian());
         assertThat(userRequestContract.getSignature()).isEqualTo(userEntity.getSignature());
         assertThat(userRequestContract.getBloodGroup()).isEqualTo(userEntity.getBloodGroup().getValue());

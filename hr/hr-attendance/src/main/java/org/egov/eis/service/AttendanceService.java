@@ -93,8 +93,8 @@ public class AttendanceService {
         return attendanceRequest.getAttendances();
     }
 
-    public void create(final AttendanceRequest attendanceRequest) {
-        attendanceRepository.saveAttendance(attendanceRequest);
+    public AttendanceRequest create(final AttendanceRequest attendanceRequest) {
+        return attendanceRepository.saveAttendance(attendanceRequest);
     }
 
 }

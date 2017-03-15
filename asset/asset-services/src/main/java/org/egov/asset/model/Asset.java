@@ -76,4 +76,5 @@ public class Asset {
 	private String width;
 	private String totalArea;
 	private Map<String, String> properties;
+	 private String tenantId;
 }

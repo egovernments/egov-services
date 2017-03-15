@@ -3,6 +3,8 @@ package org.egov.lams.model;
 
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,7 +21,8 @@ public class Asset {
 	private Long id;
 	
 	@NotNull
-	private Long category;
+	@JsonProperty("assetCategory")
+	private AssetCategory category;
 	
 	@NotNull
 	private String name;

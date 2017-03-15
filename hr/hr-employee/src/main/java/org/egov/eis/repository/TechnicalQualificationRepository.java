@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.egov.eis.model.Employee;
 import org.egov.eis.model.TechnicalQualification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,12 +29,14 @@ public class TechnicalQualificationRepository {
 	private JdbcTemplate jdbcTemplate;
 
 	// FIXME put tenantId
-	public void save(Long employeeId, List<TechnicalQualification> technicalQualifications) {
+	public void save(Employee employee) {
+		List<TechnicalQualification> technicalQualifications = employee.getTechnical();
+
 		jdbcTemplate.batchUpdate(INSERT_TECHNICAL_QUALIFICATION_QUERY, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
 				TechnicalQualification technicalQualification = technicalQualifications.get(i);
-				ps.setLong(1, employeeId);
+				ps.setLong(1, employee.getId());
 				ps.setString(2, technicalQualification.getSkill());
 				ps.setString(3, technicalQualification.getGrade());
 				ps.setInt(4, technicalQualification.getYearOfPassing());
@@ -42,7 +45,7 @@ public class TechnicalQualificationRepository {
 				ps.setDate(7, new Date(technicalQualification.getCreatedDate().getTime()));
 				ps.setLong(8, technicalQualification.getLastModifiedBy());
 				ps.setDate(9, new Date(technicalQualification.getLastModifiedDate().getTime()));
-				ps.setString(10, "1");
+				ps.setString(10, employee.getTenantId());
 			}
 
 			@Override

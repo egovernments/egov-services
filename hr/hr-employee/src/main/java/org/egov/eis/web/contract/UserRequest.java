@@ -40,7 +40,7 @@
 
 package org.egov.eis.web.contract;
 
-import java.util.List;
+import org.egov.eis.model.User;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -62,6 +62,7 @@ public class UserRequest {
 	@JsonProperty("RequestInfo")
 	private RequestInfo requestInfo;
 
-	private List<Long> id;
+	@JsonProperty("User")
+	private User user;
 
 }

@@ -10,6 +10,9 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -19,6 +22,8 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.*;
@@ -34,7 +39,7 @@ public class UserRepositoryTest {
 
     @Mock
     private RoleRepository roleRepository;
-    
+
     @Mock
     private PasswordEncoder passwordEncoder;
 
@@ -42,9 +47,26 @@ public class UserRepositoryTest {
     private UserRepository userRepository;
 
     @Test
-    public void test_get_user_by_userName() throws Exception {
-        User expectedUser = mock(User.class);
+    public void test_should_return_true_when_user_exists_with_given_user_name() {
+        when(userJpaRepository.isUserPresent("userName")).thenReturn(1L);
 
+        boolean isPresent = userRepository.isUserPresent("userName");
+
+        assertTrue(isPresent);
+    }
+
+    @Test
+    public void test_should_return_false_when_user_does_not_exist_with_given_user_name() {
+        when(userJpaRepository.isUserPresent("userName")).thenReturn(null);
+
+        boolean isPresent = userRepository.isUserPresent("userName");
+
+        assertFalse(isPresent);
+    }
+
+    @Test
+    public void test_get_user_by_userName() {
+        User expectedUser = mock(User.class);
         when(userJpaRepository.findByUsername("userName")).thenReturn(expectedUser);
 
         User actualUser = userRepository.findByUsername("userName");
@@ -53,9 +75,8 @@ public class UserRepositoryTest {
     }
 
     @Test
-    public void test_get_user_by_emailId() throws Exception {
+    public void test_get_user_by_emailId() {
         User expectedUser = mock(User.class);
-
         when(userJpaRepository.findByEmailId("userName")).thenReturn(expectedUser);
 
         User actualUser = userRepository.findByEmailId("userName");
@@ -64,7 +85,7 @@ public class UserRepositoryTest {
     }
 
     @Test
-    public void test_should_save_entity_user() throws Exception {
+    public void test_should_save_entity_user() {
         User expectedUser = mock(User.class);
         when(userJpaRepository.save(any(User.class))).thenReturn(expectedUser);
         final HashSet<Role> roles = new HashSet<>();
@@ -82,7 +103,7 @@ public class UserRepositoryTest {
     }
 
     @Test
-    public void test_should_set_encrypted_password_to_new_user() throws Exception {
+    public void test_should_set_encrypted_password_to_new_user() {
         User expectedUser = mock(User.class);
         when(userJpaRepository.save(any(User.class))).thenReturn(expectedUser);
         final HashSet<Role> roles = new HashSet<>();
@@ -104,7 +125,7 @@ public class UserRepositoryTest {
     }
 
     @Test
-    public void test_should_save_new_user_when_enriched_roles() throws Exception {
+    public void test_should_save_new_user_when_enriched_roles() {
         User expectedUser = mock(User.class);
         when(userJpaRepository.save(any(User.class))).thenReturn(expectedUser);
         final HashSet<Role> roles = new HashSet<>();
@@ -127,13 +148,19 @@ public class UserRepositoryTest {
     }
 
     @Test
-    public void test_search_user() throws Exception {
+    public void test_search_user() {
+        Page<User> page = mock(Page.class);
         List<User> expectedList = mock(List.class);
         UserSearch userSearch = mock(UserSearch.class);
         Specification<User> userSpecification = mock(Specification.class);
-
+        when(userSearch.getPageNumber()).thenReturn(1);
+        when(userSearch.getPageSize()).thenReturn(20);
+        when(userSearch.getSort()).thenReturn(Arrays.asList("name", "userName", "unknownField", "fourthField"));
+        Sort sort = new Sort(Sort.Direction.ASC, "name", "username");
+        PageRequest pageRequest = new PageRequest(1, 20, sort);
         when(userSearchSpecificationFactory.getSpecification(userSearch)).thenReturn(userSpecification);
-        when(userJpaRepository.findAll(userSpecification)).thenReturn(expectedList);
+        when(userJpaRepository.findAll(userSpecification, pageRequest)).thenReturn(page);
+        when(page.getContent()).thenReturn(expectedList);
 
         List<User> actualList = userRepository.findAll(userSearch);
 

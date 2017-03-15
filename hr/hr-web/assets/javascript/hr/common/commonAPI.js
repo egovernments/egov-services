@@ -80,3 +80,20 @@ function getCommonMasterById(mainRoute,resource,returnObject,id) {
           });
     // return response.statusText==="Ok"?response.responseJSON[returnObject]:[];
 }
+
+function commonApiPost(context,resource="",action="",queryObject={}) {
+  var url=baseUrl+"/"+context+(resource?"/"+resource:"")+(action?"/"+action:"")+(queryObject?"?":"");
+  for (var variable in queryObject) {
+      if (queryObject[variable]) {
+        url+="&"+variable+"="+queryObject[variable];
+      }
+  }
+  return $.ajax({
+            url: url,
+            type: 'POST',
+            dataType: 'json',
+            data:JSON.stringify(requestInfo),
+            async: false,
+            contentType: 'application/json'
+        });
+}

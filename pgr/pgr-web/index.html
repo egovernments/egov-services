@@ -46,10 +46,10 @@
 			</header>
 			<div class="main-content">
 				<div class="row">
-					<div class="col-md-offset-8 col-md-2 text-right view-content">
+					<div class="col-md-offset-8 col-md-2 col-sm-offset-6 col-sm-3 col-xs-8 text-right view-content">
 						<label for="" class="text-right" style="line-height: 2.5;">Select Locale</label>
 					</div>
-					<div class="col-md-2">
+					<div class="col-md-2 col-sm-3 col-xs-4">
 						<select name="" id="lang-dropdown" class="form-control">
 							<option value="mr_IN">Marathi</option>
 							<option value="en_IN" selected>English</option>
@@ -139,17 +139,15 @@
 										<label id="locationId-error" class="error pull-right" for="locationId"></label>
 									</div>
 								</div>
-								
-								
+								<div class="error-msg text-center invalidUser display-hide">
+									<label>Username or Password is incorrect</label>
+								</div>
 								<div class="form-group signin-leftpadding">
 									<button type="button"
 										class="btn btn-custom btn-block btn-login preventDS" id="signin-action">
 										<i class="fa fa-sign-in"></i> Sign in
 									</button>
 								</div>
-								<input type="hidden" id="ipAddress" name="ipAddress" value="172.16.2.202" /> 
-								<input type="hidden" id="loginType" name="loginType" />
-								<input type="hidden"  name="userAgentInfo" value="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36" /> 
 							</form>
 						</div>
 					</div>

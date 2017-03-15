@@ -50,9 +50,6 @@ import org.egov.eis.web.contract.UserGetRequest;
 import org.egov.eis.web.contract.UserRequest;
 import org.egov.eis.web.contract.UserResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -74,6 +71,7 @@ public class UserService {
 		UserGetRequest userGetRequest = new UserGetRequest();
 		userGetRequest.setId(ids);
 		userGetRequest.setRequestInfo(requestInfo);
+		userGetRequest.setTenantId(tenantId);
 
  		UserResponse userResponse = new RestTemplate().postForObject(url, userGetRequest, UserResponse.class);
 
@@ -82,23 +80,15 @@ public class UserService {
 
 	public Long createUser(UserRequest userRequest) {
 		String url = applicationProperties.empServicesUsersServiceCreateUsersHostURL();
-
-		String userRequestJson = null;
+		String userJson = null;
 		try {
 			ObjectMapper mapper = new ObjectMapper();
-			userRequestJson = mapper.writeValueAsString(userRequest);
+			userJson = mapper.writeValueAsString(userRequest);
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
-		System.err.println("UserRequest JSON : " + userRequestJson);
-
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		HttpEntity<String> userEntity = new HttpEntity<String>(userRequestJson, headers);
-
-		UserResponse userResponse = new RestTemplate().postForObject(url, userEntity, UserResponse.class);
-		System.err.println("Users: " + userResponse.getUser());
-
+		System.err.println("User Is: " + userJson);
+		UserResponse userResponse = new RestTemplate().postForObject(url, userRequest, UserResponse.class);
 		return userResponse.getUser().get(0).getId();
 	}
 }

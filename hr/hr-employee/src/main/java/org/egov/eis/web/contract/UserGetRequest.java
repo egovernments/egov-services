@@ -64,4 +64,6 @@ public class UserGetRequest {
 
 	private List<Long> id;
 
+	private String tenantId;
+
 }

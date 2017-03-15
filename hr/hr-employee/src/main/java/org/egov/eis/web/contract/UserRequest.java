@@ -60,9 +60,9 @@ import lombok.ToString;
 public class UserRequest {
 
 	@JsonProperty("RequestInfo")
-	private RequestInfo RequestInfo;
+	private RequestInfo requestInfo;
 
 	@JsonProperty("User")
-	private User User;
+	private User user;
 
 }

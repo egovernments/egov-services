@@ -120,6 +120,7 @@ public class EmployeeController {
 
 		LOGGER.info("employeeRequest::" + employeeRequest);
 		employeeService.createEmployee(employeeRequest);
+		employeeRequest.getEmployee().getUser().setPassword(null);
 
 		return getSuccessResponse(employeeRequest.getEmployee(), employeeRequest.getRequestInfo());
 	}

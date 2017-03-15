@@ -138,11 +138,9 @@ public class EmployeeService {
 	}
 
 	public void createEmployee(EmployeeRequest employeeRequest) {
-		// create user For Employee by REST API call and get the Id for the user.
 		UserRequest userRequest = getUserRequest(employeeRequest);
 		Long id = userService.createUser(userRequest);
 
-		// get code generated for employee by calling employee code generator service
 		String code = getEmployeeCode(id);
 		Employee employee = employeeRequest.getEmployee();
 		employee.setId(id);
@@ -155,7 +153,7 @@ public class EmployeeService {
 			LOGGER.info("employeeJson::" + employeeJson);
 		} catch (JsonProcessingException e) {
 			LOGGER.error("Error while converting Employee to JSON", e);
-				e.printStackTrace();
+			e.printStackTrace();
 		}
 		try {
 			employeeProducer.sendMessage(employeeSaveTopic, employeeSaveKey, employeeJson);

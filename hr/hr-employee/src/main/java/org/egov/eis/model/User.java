@@ -72,6 +72,9 @@ public class User {
 
 	private String userName;
 
+	@NotNull
+	private String password;
+
 	private String salutation;
 
 	@Size(min=2, max=100)

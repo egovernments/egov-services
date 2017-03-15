@@ -64,8 +64,9 @@ public class UserControllerTest {
                 .fuzzyLogic(true)
                 .active(true)
                 .pageSize(20)
-                .pageNumber(1)
+                .pageNumber(0)
                 .sort(singletonList("name"))
+                .type("CITIZEN")
                 .build();
     }
 
@@ -171,7 +172,8 @@ public class UserControllerTest {
                     userSearch.isActive() == expectedUserSearch.isActive() &&
                     userSearch.getPageSize() == expectedUserSearch.getPageSize() &&
                     userSearch.getPageNumber() == expectedUserSearch.getPageNumber() &&
-                    userSearch.getSort().equals(expectedUserSearch.getSort());
+                    userSearch.getSort().equals(expectedUserSearch.getSort()) &&
+                    userSearch.getType().equals(expectedUserSearch.getType());
         }
     }
 }

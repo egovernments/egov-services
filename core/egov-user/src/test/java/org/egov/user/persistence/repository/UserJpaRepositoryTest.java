@@ -39,8 +39,8 @@ public class UserJpaRepositoryTest {
             "/sql/createUser.sql"
     })
     public void shouldFetchUserByName() {
-        User user = userJpaRepository.findByUsername("userName1");
-        assertThat(user.getId()).isEqualTo(1L);
+        User user = userJpaRepository.findByUsername("greenfish424");
+        assertThat(user.getId()).isEqualTo(2L);
     }
 
     @Test
@@ -52,8 +52,8 @@ public class UserJpaRepositoryTest {
             "/sql/createUser.sql"
     })
     public void shouldFetchUserByEmail() {
-        User user = userJpaRepository.findByEmailId("email2@gmail.com");
-        assertThat(user.getId()).isEqualTo(2L);
+        User user = userJpaRepository.findByEmailId("email3@gmail.com");
+        assertThat(user.getId()).isEqualTo(3L);
     }
 
     @Test
@@ -174,5 +174,23 @@ public class UserJpaRepositoryTest {
         List<User> userList = userJpaRepository.findAll(multiFieldsMatchingSpecification);
 
         assertThat(userList).hasSize(5);
+    }
+
+    @Test
+    @Sql(scripts = {
+            "/sql/clearUserRoles.sql",
+            "/sql/clearAddresses.sql",
+            "/sql/clearRoles.sql",
+            "/sql/clearUsers.sql",
+            "/sql/createUser.sql"
+    })
+    public void multiFieldMatchingUserTypeTest() {
+        UserSearch userSearch = UserSearch.builder().active(true).type("EMPLOYEE").build();
+        MultiFieldsMatchingSpecification multiFieldsMatchingSpecification =
+                new MultiFieldsMatchingSpecification(userSearch);
+
+        List<User> userList = userJpaRepository.findAll(multiFieldsMatchingSpecification);
+
+        assertThat(userList).hasSize(2);
     }
 }

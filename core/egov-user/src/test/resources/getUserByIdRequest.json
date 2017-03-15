@@ -19,5 +19,6 @@
   "pan": "pan",
   "emailId": "emailId",
   "fuzzyLogic": true,
-  "active": true
+  "active": true,
+  "userType": "CITIZEN"
 }

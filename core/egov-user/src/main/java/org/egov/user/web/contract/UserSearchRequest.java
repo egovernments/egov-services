@@ -48,11 +48,14 @@ public class UserSearchRequest {
     @JsonProperty("pageSize")
     private int pageSize = 20;
 
-    @JsonProperty("offSet")
-    private int pageNumber = 1;
+    @JsonProperty("pageNumber")
+    private int pageNumber = 0;
 
     @JsonProperty("sort")
     private List<String> sort = Collections.singletonList("name");
+
+    @JsonProperty("userType")
+    private String userType;
 
     public UserSearch toDomain() {
         return UserSearch.builder()
@@ -68,6 +71,7 @@ public class UserSearchRequest {
                 .pageSize(pageSize)
                 .pageNumber(pageNumber)
                 .sort(sort)
+                .type(userType)
                 .build();
     }
 }

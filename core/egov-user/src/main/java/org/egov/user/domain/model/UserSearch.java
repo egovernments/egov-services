@@ -36,4 +36,6 @@ public class UserSearch {
     private int pageNumber;
 
     private List<String> sort;
+
+    private String type;
 }

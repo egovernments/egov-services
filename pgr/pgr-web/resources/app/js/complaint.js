@@ -119,21 +119,8 @@ $(document).ready(function()
 				required : 'required'
 			});
 		}else{
-			$('#recenter,#regnoblock').addClass('hide');
-			$('#receivingCenter,#service_request_id').removeAttr('name required');
-		}
-	});
-
-	$('#receivingCenter').change(function(){
-		if($(this).val()){
-			$('#regnoblock').removeClass('hide');
-			$('#service_request_id').attr({
-				name: 'service_request_id',
-				required : 'required'
-			});
-		}else{
-			$('#regnoblock').addClass('hide');
-			$('#service_request_id').removeAttr('name required');
+			$('#recenter').addClass('hide');
+			$('#receivingCenter').removeAttr('name required');
 		}
 	});
 	
@@ -263,7 +250,7 @@ $(document).ready(function()
 				var $form = $("form");
 				var data = getFormData($form);
 
-				data['service_request_id'] = $('#service_request_id').val() ? $('#service_request_id').val() : '';
+				data['service_request_id'] = '';
 				data['first_name'] = $('#first_name').val() ? $('#first_name').val() : '';
 				data['phone'] = $('#phone').val() ? $('#phone').val() : '';
 				data['email'] = $('#email').val() ? $('#email').val() : '';

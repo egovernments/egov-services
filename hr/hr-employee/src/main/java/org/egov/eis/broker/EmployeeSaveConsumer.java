@@ -20,19 +20,14 @@ public class EmployeeSaveConsumer {
 	@Autowired
 	private EmployeeService employeeService;
 	
-/*	@Value("${kafka.topics.employee.savedb.name}")
-	String employeeSaveTopic;*/
-
-	@KafkaListener(containerFactory = "kafkaListenerContainerFactory",topics = "employee-save-db")
+	@KafkaListener(containerFactory = "kafkaListenerContainerFactory", topics = "${kafka.topics.employee.savedb.name}")
 	public void listen(ConsumerRecord<String, String> record) {
 		LOGGER.info("key:"+ record.key() +":"+ "value:" +record.value());
 		ObjectMapper objectMapper = new ObjectMapper();
 		try {
 			employeeService.saveEmployee(objectMapper.readValue(record.value(), Employee.class));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 	}
 }

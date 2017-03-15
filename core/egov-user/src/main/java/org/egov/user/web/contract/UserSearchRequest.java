@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.egov.user.domain.model.UserSearch;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 

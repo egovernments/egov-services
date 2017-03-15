@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.egov.eis.model.Assignment;
 import org.egov.eis.model.HODDepartment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,14 +27,16 @@ public class HODDepartmentRepository {
 	private JdbcTemplate jdbcTemplate;
 
 	// FIXME put tenantId
-	public void save(Long assignmentId, List<HODDepartment> hodDepartments) {
+	public void save(Assignment assignment) {
+		List<HODDepartment> hodDepartments = assignment.getHod();
+
 		jdbcTemplate.batchUpdate(INSERT_HOD_DEPARTMENT_QUERY, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
 				HODDepartment hodDepartment = hodDepartments.get(i);
-				ps.setLong(1, assignmentId);
+				ps.setLong(1, assignment.getId());
 				ps.setLong(2, hodDepartment.getDepartment());
-				ps.setString(3, "1");
+				ps.setString(3, assignment.getTenantId());
 			}
 
 			@Override

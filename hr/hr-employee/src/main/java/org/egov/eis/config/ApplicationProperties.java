@@ -54,10 +54,9 @@ public class ApplicationProperties {
 	private static final String EMP_SEARCH_PAGESIZE_DEFAULT = "emp.search.pagesize.default";
 	public static final String EMP_SEARCH_PAGENO_MAX = "emp.search.pageno.max";
 	public static final String EMP_SEARCH_PAGESIZE_MAX = "emp.search.pagesize.max";
-	private static final String EMP_SERVICES_HR_MASTERS_SERVICE_SEARCH_POSITIONS_HOSTNAME
-		= "emp.services.hr_masters_service.search_positions.hostname";
-	private static final String EMP_SERVICES_USERS_SERVICE_SEARCH_USERS_HOSTNAME
-		= "emp.services.users_service.search_users.hostname";
+	private static final String EMP_SERVICES_HR_MASTERS_SERVICE_SEARCH_POSITIONS_HOST_URL = "emp.services.hr_masters_service.search.positions.host.url";
+	private static final String EMP_SERVICES_USERS_SERVICE_SEARCH_USERS_HOST_URL = "emp.services.users_service.search.users.host.url";
+	private static final String EMP_SERVICES_USERS_SERVICE_CREATE_USERS_HOST_URL = "emp.services.users_service.create.users.host.url";
 
 	@Autowired
 	private Environment environment;
@@ -74,12 +73,16 @@ public class ApplicationProperties {
 		return this.environment.getProperty(EMP_SEARCH_PAGESIZE_MAX);
 	}
 
-	public String empServicesHrMastersServiceGetPositionsHostname() {
-		return this.environment.getProperty(EMP_SERVICES_HR_MASTERS_SERVICE_SEARCH_POSITIONS_HOSTNAME);
+	public String empServicesHrMastersServiceSearchPositionsHostURL() {
+		return this.environment.getProperty(EMP_SERVICES_HR_MASTERS_SERVICE_SEARCH_POSITIONS_HOST_URL);
 	}
 
-	public String empServicesUsersServiceGetUsersHostname() {
-		return this.environment.getProperty(EMP_SERVICES_USERS_SERVICE_SEARCH_USERS_HOSTNAME);
+	public String empServicesUsersServiceSearchUsersHostURL() {
+		return this.environment.getProperty(EMP_SERVICES_USERS_SERVICE_SEARCH_USERS_HOST_URL);
 	}
-	
+
+	public String empServicesUsersServiceCreateUsersHostURL() {
+		return this.environment.getProperty(EMP_SERVICES_USERS_SERVICE_CREATE_USERS_HOST_URL);
+	}
+
 }

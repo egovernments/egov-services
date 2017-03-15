@@ -40,7 +40,7 @@
 
 package org.egov.eis.web.contract;
 
-import org.egov.eis.model.User;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -57,12 +57,11 @@ import lombok.ToString;
 @NoArgsConstructor
 @Setter
 @ToString
-public class UserRequest {
+public class UserGetRequest {
 
 	@JsonProperty("RequestInfo")
-	private RequestInfo RequestInfo;
+	private RequestInfo requestInfo;
 
-	@JsonProperty("User")
-	private User User;
+	private List<Long> id;
 
 }

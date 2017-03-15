@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import org.egov.eis.model.EducationalQualification;
+import org.egov.eis.model.Employee;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,12 +29,14 @@ public class EducationalQualificationRepository {
 	private JdbcTemplate jdbcTemplate;
 
 	// FIXME put tenantId
-	public void save(Long employeeId, List<EducationalQualification> educationalQualifications) {
+	public void save(Employee employee) {
+		List<EducationalQualification> educationalQualifications = employee.getEducation();
+
 		jdbcTemplate.batchUpdate(INSERT_EDUCATIONAL_QUALIFICATION_QUERY, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
 				EducationalQualification educationalQualification = educationalQualifications.get(i);
-				ps.setLong(1, employeeId);
+				ps.setLong(1, employee.getId());
 				ps.setString(2, educationalQualification.getQualification());
 				ps.setString(3, educationalQualification.getMajorSubject());
 				ps.setInt(4, educationalQualification.getYearOfPassing());
@@ -42,7 +45,7 @@ public class EducationalQualificationRepository {
 				ps.setDate(7, new Date(educationalQualification.getCreatedDate().getTime()));
 				ps.setLong(8, educationalQualification.getLastModifiedBy());
 				ps.setDate(9, new Date(educationalQualification.getLastModifiedDate().getTime()));
-				ps.setString(10, "1");
+				ps.setString(10, employee.getTenantId());
 			}
 
 			@Override

@@ -38,19 +38,11 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.model;
+package org.egov.eis.web.contract;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
-import org.egov.eis.model.enums.MaritalStatus;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -65,96 +57,13 @@ import lombok.ToString;
 @NoArgsConstructor
 @Setter
 @ToString
-public class Employee {
+public class UserGetRequest {
 
-	@NotNull
-	private Long id;
+	@JsonProperty("RequestInfo")
+	private RequestInfo requestInfo;
 
-	@NotNull
-	@Size(min=1, max=256)
-	private String code;
+	private List<Long> id;
 
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date dateOfAppointment;
-
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date dateOfJoining;
-
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date dateOfRetirement;
-
-	@NotNull
-	private String employeeStatus;
-
-	private Long recruitmentMode;
-
-	private Long recruitmentType;
-
-	private Long recruitmentQuota;
-
-	@Max(100)
-	private Short retirementAge;
-
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date dateOfResignation;
-
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date dateOfTermination;
-
-	@NotNull
-	private Long employeeType;
-
-	private List<Assignment> assignments = new ArrayList<Assignment>();
-
-	private List<Long> jurisdictions = new ArrayList<Long>();
-
-	private Long motherTongue;
-
-	private Long religion;
-
-	private Long community;
-
-	private Long category;
-
-	private Boolean physicallyDisabled;
-
-	private Boolean medicalReportProduced;
-
-	private List<Long> languagesKnown = new ArrayList<Long>();
-
-	private MaritalStatus maritalStatus;
-
-	private String passportNo;
-
-	private String gpfNo;
-
-	private Long bank;
-
-	private Long bankBranch;
-
-	@Size(max=20)
-	private String bankAccount;
-
-	private Long group;
-
-	@Size(max=200)
-	private String placeOfBirth;
-
-	private List<ServiceHistory> serviceHistory = new ArrayList<ServiceHistory>();
-
-	private List<Probation> probation = new ArrayList<Probation>();
-
-	private List<Regularisation> regularisation = new ArrayList<Regularisation>();
-
-	private List<TechnicalQualification> technical = new ArrayList<TechnicalQualification>();
-
-	private List<EducationalQualification> education = new ArrayList<EducationalQualification>();
-
-	private List<DepartmentalTest> test = new ArrayList<DepartmentalTest>();
-
-	private User user;
-
-	@NotNull
 	private String tenantId;
 
 }

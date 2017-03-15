@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.egov.eis.model.Employee;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,14 +26,15 @@ public class EmployeeLanguageRepository {
 	private JdbcTemplate jdbcTemplate;
 
 	// FIXME put tenantId
-	public void save(Long employeeId, List<Long> employeeLanguages) {
+	public void save(Employee employee) {
+		List<Long> employeeLanguages = employee.getLanguagesKnown();
 		jdbcTemplate.batchUpdate(INSERT_EMPLOYEE_LANGUAGE_QUERY, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
 				Long languageId = employeeLanguages.get(i);
-				ps.setLong(1, employeeId);
+				ps.setLong(1, employee.getId());
 				ps.setLong(2, languageId);
-				ps.setString(3, "1");
+				ps.setString(3, employee.getTenantId());
 			}
 
 			@Override

@@ -13,7 +13,7 @@ public class UserSearchURLHelper {
 	private ApplicationProperties applicationProperties;
 
 	public String searchURL(List<Long> ids, String tenantId) {
-		String BASE_URL = applicationProperties.empServicesUsersServiceGetUsersHostname();
+		String BASE_URL = applicationProperties.empServicesUsersServiceSearchUsersHostURL();
 		StringBuilder searchURL = new StringBuilder(BASE_URL + "?");
 
 		if (ids == null && tenantId == null)

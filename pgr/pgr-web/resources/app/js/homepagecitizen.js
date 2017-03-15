@@ -141,11 +141,6 @@ $(document).ready(function()
 	$(".ico-menu").bind('mouseout', function () { 
 		$(this).removeClass('open');
 	});
-	
-	$('a[data-open-popup]').click(function(event){
-		event.preventDefault();
-		popupCenter($(this).attr('href'), 'myPop1',940,600);
-	});
 
 	loadComplaints();
 
@@ -200,9 +195,3 @@ function search(elem) {
 	    });
 	}
 };
-
-function popupCenter(url, title, w, h) {
-		var left = (screen.width/2)-(w/2);
-		var top = (screen.height/2)-(h/2);
-		return window.open(url, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
-	} 

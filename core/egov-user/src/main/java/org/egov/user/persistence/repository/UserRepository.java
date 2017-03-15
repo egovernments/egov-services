@@ -4,10 +4,13 @@ import org.egov.user.domain.model.UserSearch;
 import org.egov.user.persistence.entity.Role;
 import org.egov.user.persistence.entity.User;
 import org.egov.user.persistence.specification.UserSearchSpecificationFactory;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -53,7 +56,25 @@ public class UserRepository {
 
     public List<User> findAll(UserSearch userSearch) {
         Specification<User> specification = userSearchSpecificationFactory.getSpecification(userSearch);
-        return userJpaRepository.findAll(specification);
+        PageRequest pageRequest = createPageRequest(userSearch);
+        return userJpaRepository.findAll(specification, pageRequest).getContent();
+    }
+
+    private PageRequest createPageRequest(UserSearch userSearch) {
+        Sort sort = createSort(userSearch);
+        return new PageRequest(userSearch.getPageNumber(), userSearch.getPageSize(), sort);
+    }
+
+    private Sort createSort(UserSearch userSearch) {
+        List<String> sortFields = Arrays.asList("username", "name", "gender");
+        List<Sort.Order> orders = userSearch.getSort()
+                .stream()
+                .limit(3)
+                .map(String::toLowerCase)
+                .filter(sortFields::contains)
+                .map(property -> new Sort.Order(Sort.Direction.ASC, property))
+                .collect(Collectors.toList());
+        return new Sort(orders);
     }
 
     private Set<Role> fetchRolesByName(User user) {

@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.egov.user.domain.model.UserSearch;
 import org.egov.user.persistence.entity.User;
 import org.egov.user.persistence.entity.User_;
+import org.egov.user.persistence.entity.enums.UserType;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
@@ -28,6 +29,7 @@ public class MultiFieldsMatchingSpecification implements Specification<User> {
         Path<String> pan = root.get(User_.pan);
         Path<String> emailId = root.get(User_.emailId);
         Path<Boolean> active = root.get(User_.active);
+        Path<UserType> type = root.get(User_.type);
 
         List<Predicate> predicates = new ArrayList<>();
 
@@ -59,10 +61,18 @@ public class MultiFieldsMatchingSpecification implements Specification<User> {
             predicates.add(criteriaBuilder.equal(pan, userSearch.getPan()));
         }
 
+        if(isUserTypePresent(userSearch)) {
+            predicates.add(criteriaBuilder.equal(type, UserType.valueOf(userSearch.getType())));
+        }
+
         predicates.add(criteriaBuilder.equal(active, userSearch.isActive()));
 
 
         return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+    }
+
+    private boolean isUserTypePresent(UserSearch userSearch) {
+        return StringUtils.isNotBlank(userSearch.getType());
     }
 
     private boolean isIdPresent(UserSearch userSearch) {

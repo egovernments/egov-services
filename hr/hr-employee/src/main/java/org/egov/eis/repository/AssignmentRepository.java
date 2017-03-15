@@ -47,6 +47,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.eis.model.Assignment;
+import org.egov.eis.model.Employee;
 import org.egov.eis.repository.builder.AssignmentQueryBuilder;
 import org.egov.eis.repository.rowmapper.AssignmentRowMapper;
 import org.egov.eis.web.contract.AssignmentGetRequest;
@@ -87,13 +88,15 @@ public class AssignmentRepository {
 	}
 
 	// FIXME put tenantId
-	public void save(Long employeeId, List<Assignment> assignments) {
+	public void save(Employee employee) {
+		List<Assignment> assignments = employee.getAssignments();
+
 		jdbcTemplate.batchUpdate(INSERT_ASSIGNMENT_QUERY, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
 				Assignment assignment = assignments.get(i);
 				ps.setLong(1, assignment.getId());
-				ps.setLong(2, employeeId);
+				ps.setLong(2, employee.getId());
 				ps.setLong(3, assignment.getPosition());
 				ps.setLong(4, assignment.getFund());
 				ps.setLong(5, assignment.getFunctionary());
@@ -109,7 +112,7 @@ public class AssignmentRepository {
 				ps.setDate(15, new Date(assignment.getCreatedDate().getTime()));
 				ps.setLong(16, assignment.getLastModifiedBy());
 				ps.setDate(17, new Date(assignment.getLastModifiedDate().getTime()));
-				ps.setString(18, "1");
+				ps.setString(18, employee.getTenantId());
 			}
 
 			@Override

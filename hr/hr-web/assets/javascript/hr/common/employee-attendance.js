@@ -14,10 +14,10 @@ class EmployeeSearch extends React.Component {
 
   search(e)
   {
-    let {month,year,designationCode,departmentCode,code,type}=this.state.searchSet;
+    let {month,year,designationCode,departmentCode,code,employeeType}=this.state.searchSet;
     e.preventDefault();
     // console.log(e.target.value);
-    window.location=`../../../../app/hr/attendance/attendance.html?month=${month}&year=${year}&designationCode=${designationCode}&departmentCode=${departmentCode}&code=${code}&type=${type}`;
+    window.location=`../../../app/hr/attendance/attendance.html?month=${month}&year=${year}&designationCode=${designationCode}&departmentCode=${departmentCode}&code=${code}&type=${employeeType}`;
 
     // console.log("fired");
   }
@@ -25,66 +25,15 @@ class EmployeeSearch extends React.Component {
   componentWillMount()
   {
     var date=new Date();
-    var year=[{id:"2017",name:"2017"},{id:"2016",name:"2016"},{id:"2015",name:"2015"},{id:"2014",name:"2014"}];
     var month=[{id:0,name:"January"},{id:1,name:"February"}, {id:2,name:"March"}, {id:3,name:"April"}, {id:4,name:"May"},
          {id:5,name:"June"}, {id:6,name:"July"}, {id:7,name:"August"}, {id:8,name:"September"}, {id:9,name:"October"},
          {id:10,name:"November"}, {id:11,name:"December"}]
     this.setState({
-      employeeType:[{
-              id: 1,
-              name: "Deputation",
-              chartOfAccounts: ""
-          },
-          {
-              id: 2,
-              name: "Permanent",
-              chartOfAccounts: ""
-          },
-          {
-              id: 3,
-              name: "Daily Wages`",
-              chartOfAccounts: ""
-          },
-          {
-              id: 4,
-              name: "Temporary",
-              chartOfAccounts: ""
-          },
-          {
-              id: 5,
-              name: "Contract",
-              chartOfAccounts: ""
-          }],
-      departments:[{
-              id: 1,
-              name: "Juniour Engineer",
-              description: "",
-              orderno: "1",
-              active: true
-          },
-          {
-              id: 2,
-              name: "Assistance Engineer",
-              description: "",
-              orderno: "1",
-              active: true
-          }],
-      designation:[{
-              id: 1,
-              name: "Juniour Engineer",
-              description: "",
-              orderno: "1",
-              active: true
-          },
-          {
-              id: 2,
-              name: "Assistance Engineer",
-              description: "",
-              orderno: "1",
-              active: true
-          }],
+      employeeType:getCommonMaster("hr-masters","employeetypes","EmployeeType").responseJSON["EmployeeType"] || [],
+      departments:getCommonMaster("egov-common-masters","departments","Department").responseJSON["Department"] || [],
+      designation:getCommonMaster("hr-masters","designations","Designation").responseJSON["Designation"] || [] ,
       month,
-      year
+      year:getCommonMaster("egov-common-masters","calendaryears","CalendarYear").responseJSON["CalendarYear"] || []
     })
   }
 
@@ -109,17 +58,27 @@ class EmployeeSearch extends React.Component {
   render() {
     console.log(this.state.searchSet);
     let {handleChange,search}=this;
-    let {month,year,designationCode,departmentCode,code,type}=this.state.searchSet;
-    const renderOption=function(list)
+    let {month,year,designationCode,departmentCode,code,employeeType}=this.state.searchSet;
+    const renderOption=function(list,listName="")
     {
         if(list)
         {
-            return list.map((item)=>
-            {
-                return (<option key={item.id} value={item.id}>
-                        {item.name}
-                  </option>)
-            })
+            if (listName==="year") {
+              return list.map((item)=>
+              {
+                  return (<option key={item.id} value={item.name}>
+                          {item.name}
+                    </option>)
+              })
+            }
+            else {
+              return list.map((item)=>
+              {
+                  return (<option key={item.id} value={item.id}>
+                          {item.name}
+                    </option>)
+              })
+            }
         }
     }
     return (
@@ -139,7 +98,7 @@ class EmployeeSearch extends React.Component {
                                 handleChange(e,"year")
                             }} required>
                             <option value="">Select Year</option>
-                            {renderOption(this.state.year)}
+                            {renderOption(this.state.year,"year")}
                            </select>
                         </div>
                         </div>
@@ -223,7 +182,7 @@ class EmployeeSearch extends React.Component {
                         <div className="col-sm-6">
                         <div className="styled-select">
                             <select id="employeeType" name="employeeType" onChange={(e)=>{
-                                handleChange(e,"type")
+                                handleChange(e,"employeeType")
                             }}>
                                 <option>Select Type</option>
                                 {renderOption(this.state.employeeType)}

@@ -1,7 +1,6 @@
 package org.egov.filters.route;
 
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netflix.client.ClientException;
 import com.netflix.zuul.ZuulFilter;
@@ -13,13 +12,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.netflix.zuul.filters.ProxyRequestHelper;
 import org.springframework.cloud.netflix.zuul.filters.route.RibbonRoutingFilter;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 
@@ -32,9 +35,13 @@ public class AuthFilter extends ZuulFilter {
     private String originalRequestUri;
     private URL originalRouteHost;
     private HashMap<String, List<String>> originalRequestQueryParams;
+    private String userInfoHeader;
+    private String openEndpointsWhitelist;
 
-    public AuthFilter(RibbonRoutingFilter delegateFilter) {
+    public AuthFilter(RibbonRoutingFilter delegateFilter, String userInfoHeader, String openEndpointsWhitelist) {
         this.delegateFilter = delegateFilter;
+        this.userInfoHeader = userInfoHeader;
+        this.openEndpointsWhitelist = openEndpointsWhitelist;
     }
 
     @Override
@@ -50,12 +57,25 @@ public class AuthFilter extends ZuulFilter {
     @Override
     public boolean shouldFilter() {
         HttpServletRequest request = RequestContext.getCurrentContext().getRequest();
-        return !request.getRequestURI().contains("/user") && request.getHeader("auth_token") != null;
+        return !isRoutingToWhiltelistedOpenEndpoints(request);
+    }
+
+    private boolean isRoutingToWhiltelistedOpenEndpoints(HttpServletRequest request) {
+        for (String openEndpoint : openEndpointsWhitelist.split(",")) {
+            if (request.getRequestURI().contains(openEndpoint)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
     public Object run() {
         RequestContext ctx = RequestContext.getCurrentContext();
+        if (ctx.getRequest().getHeader("auth_token") == null) {
+            abortWithStatus(ctx, HttpStatus.UNAUTHORIZED);
+            return null;
+        }
         try {
             saveOriginalRequestItems(ctx);
             prepareToRouteToAuthService(ctx);
@@ -64,7 +84,7 @@ public class AuthFilter extends ZuulFilter {
 
             if (isAuthenticationSuccessful(authResponse)) {
                 String user = getUserFromAuthResponse(authResponse);
-                ctx.addZuulRequestHeader("user_info", user);
+                ctx.addZuulRequestHeader(userInfoHeader, user);
                 return delegateFilter.run();
             } else {
                 logError(ctx);
@@ -74,6 +94,7 @@ public class AuthFilter extends ZuulFilter {
             ctx.set("error.status_code", SC_INTERNAL_SERVER_ERROR);
             ctx.set("error.exception", e);
             logError(ctx);
+            abortWithStatus(ctx, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         return null;
@@ -97,10 +118,17 @@ public class AuthFilter extends ZuulFilter {
         }
     }
 
-    private void abort(RequestContext ctx, ClientHttpResponse authResponse) throws ClientException, IOException {
-        if (authResponse != null) {
+    private void abort(RequestContext ctx, ClientHttpResponse authResponse) {
+        try {
             setResponse(authResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        ctx.setSendZuulResponse(false);
+    }
+
+    private void abortWithStatus(RequestContext ctx, HttpStatus status) {
+        ctx.set("responseStatusCode", status.value());
         ctx.setSendZuulResponse(false);
     }
 
@@ -110,7 +138,6 @@ public class AuthFilter extends ZuulFilter {
         ctx.setRequestQueryParams(originalRequestQueryParams);
         ctx.set("requestURI", originalRequestUri);
         ctx.setRequest(originalRequest);
-
     }
 
     private void prepareToRouteToAuthService(RequestContext ctx) {

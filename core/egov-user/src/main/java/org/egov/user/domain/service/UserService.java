@@ -43,7 +43,7 @@ public class UserService {
         }
     }
 
-    public List<User> searchUsers(UserSearch userSearch) {
+    public List<org.egov.user.domain.model.User> searchUsers(UserSearch userSearch) {
         return userRepository.findAll(userSearch);
     }
 

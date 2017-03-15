@@ -2,10 +2,14 @@ package org.egov.user.web.contract;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.egov.user.domain.model.User;
-import org.egov.user.domain.model.enums.*;
-import org.egov.user.persistence.entity.Address;
+import org.egov.user.domain.model.enums.AddressType;
+import org.egov.user.domain.model.enums.GuardianRelation;
+import org.egov.user.domain.model.enums.UserType;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -15,11 +19,10 @@ import static org.apache.commons.lang3.StringUtils.trim;
 
 @Setter
 @Getter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UserRequest {
+public class UserSearchResponseContent {
 
     private Long id;
     private String userName;
@@ -47,8 +50,6 @@ public class UserRequest {
     private String photo;
     private String identificationMark;
     private Long createdBy;
-    private String password;
-    private String otpReference;
     private Long lastModifiedBy;
     private String tenantId;
     private List<RoleRequest> roles;
@@ -62,7 +63,7 @@ public class UserRequest {
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "IST")
     private Date pwdExpiryDate;
 
-    public UserRequest(org.egov.user.persistence.entity.User user) {
+    public UserSearchResponseContent(User user) {
 
         this.id = user.getId();
         this.userName = user.getUsername();
@@ -84,12 +85,12 @@ public class UserRequest {
         this.bloodGroup = user.getBloodGroup() != null ? user.getBloodGroup().getValue() : null;
         this.photo = user.getPhoto();
         this.identificationMark = user.getIdentificationMark();
-        this.createdBy = user.getCreatedBy() != null ? user.getCreatedBy().getId() : null;
+        this.createdBy = user.getCreatedBy() != null ? user.getCreatedBy() : null;
         this.createdDate = user.getCreatedDate();
-        this.lastModifiedBy = user.getLastModifiedBy() != null ? user.getLastModifiedBy().getId() : null;
+        this.lastModifiedBy = user.getLastModifiedBy() != null ? user.getLastModifiedBy() : null;
         this.lastModifiedDate = user.getLastModifiedDate();
 
-        this.roles = convertRoleEntitiesToContract(user.getRoles());
+        this.roles = convertDomainRolesToContract(user.getRoles());
 
         if (isGuardianRelationFatherOrHusband(user.getGuardianRelation())) {
             this.fatherOrHusbandName = user.getGuardian();
@@ -98,12 +99,12 @@ public class UserRequest {
         convertAndSetAddressesToContract(user.getAddress());
     }
 
-    private void convertAndSetAddressesToContract(List<Address> addresses) {
+    private void convertAndSetAddressesToContract(List<org.egov.user.domain.model.Address> addresses) {
         if (addresses == null) return;
 
-        Optional<org.egov.user.persistence.entity.Address> permanentAddress =
+        Optional<org.egov.user.domain.model.Address> permanentAddress =
                 getAddressOfType(addresses, AddressType.PERMANENT);
-        Optional<Address> correspondenceAddress = getAddressOfType(addresses, AddressType.CORRESPONDENCE);
+        Optional<org.egov.user.domain.model.Address> correspondenceAddress = getAddressOfType(addresses, AddressType.CORRESPONDENCE);
         permanentAddress.ifPresent(address -> {
             this.permanentAddress = convertAddressEntityToString(address);
             this.permanentCity = address.getCityTownVillage();
@@ -117,13 +118,13 @@ public class UserRequest {
         });
     }
 
-    private Optional<Address> getAddressOfType(List<Address> addressList, AddressType addressType) {
+    private Optional<org.egov.user.domain.model.Address> getAddressOfType(List<org.egov.user.domain.model.Address> addressList, AddressType addressType) {
         return addressList.stream()
                 .filter(address -> address.getType().equals(addressType))
                 .findFirst();
     }
 
-    private String convertAddressEntityToString(Address address) {
+    private String convertAddressEntityToString(org.egov.user.domain.model.Address address) {
         final String ADDRESS_SEPARATOR = "%s, ";
         final String PIN_CODE_FORMATTER = "PIN: %s";
 
@@ -154,7 +155,7 @@ public class UserRequest {
         return formatter.toString();
     }
 
-    private List<RoleRequest> convertRoleEntitiesToContract(Set<org.egov.user.persistence.entity.Role> roleEntities) {
+    private List<RoleRequest> convertDomainRolesToContract(Set<org.egov.user.domain.model.Role> roleEntities) {
         if (roleEntities == null) return new ArrayList<>();
         return roleEntities.stream().map(RoleRequest::new).collect(Collectors.toList());
     }
@@ -163,44 +164,5 @@ public class UserRequest {
         return guardianRelation != null &&
                 (guardianRelation.equals(GuardianRelation.Father)
                         || guardianRelation.equals(GuardianRelation.Husband));
-    }
-
-    User toDomain() {
-        org.egov.user.domain.model.Role role = org.egov.user.domain.model.Role.builder()
-                .name(String.valueOf(type)).build();
-        Set<org.egov.user.domain.model.Role> roles = new HashSet<>();
-        roles.add(role);
-        return forDomain()
-                .roles(roles)
-                .build();
-    }
-
-    private User.UserBuilder forDomain() {
-        return User.builder()
-                .name(this.name)
-                .username(this.userName)
-                .salutation(this.salutation)
-                .mobileNumber(this.mobileNumber)
-                .emailId(this.emailId)
-                .altContactNumber(this.altContactNumber)
-                .pan(this.pan)
-                .aadhaarNumber(this.aadhaarNumber)
-                .active(this.active)
-                .dob(this.dob)
-                .pwdExpiryDate(this.pwdExpiryDate)
-                .locale(this.locale)
-                .type(this.type)
-                .accountLocked(this.accountLocked)
-                .signature(this.signature)
-                .photo(this.photo)
-                .identificationMark(this.identificationMark)
-                .gender(this.gender != null ? Gender.valueOf(this.gender.toUpperCase()) : null)
-                .bloodGroup(this.bloodGroup != null ? BloodGroup.valueOf(this.bloodGroup.toUpperCase()) : null)
-                .lastModifiedDate(new Date())
-                .createdDate(new Date())
-                .otpReference(this.otpReference)
-                .tenantId(this.tenantId)
-                .password(this.password)
-                .roles(this.roles != null ? this.roles.stream().map(RoleRequest::toDomain).collect(Collectors.toSet()) : null);
     }
 }

@@ -9,6 +9,7 @@ import org.egov.user.persistence.entity.User;
 import org.egov.user.persistence.entity.enums.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -21,8 +22,11 @@ import java.io.IOException;
 import java.util.*;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -40,12 +44,29 @@ public class UserControllerTest {
     @Test
     @WithMockUser
     public void testUserSearch() throws Exception {
-        when(userService.searchUsers(any(UserSearch.class))).thenReturn(getUserEntities());
+        when(userService.searchUsers(argThat(new UserSearchMatcher(getUserSearch())))).thenReturn(getUserEntities());
 
         mockMvc.perform(post("/_search/").contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(getFileContents("getUserByIdRequest.json"))).andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(content().json(getFileContents("multiUserResponse.json")));
+    }
+
+    private UserSearch getUserSearch() {
+        return UserSearch.builder()
+                .id(asList(1L, 2L))
+                .userName("userName")
+                .name("name")
+                .mobileNumber("mobileNumber")
+                .aadhaarNumber("aadhaarNumber")
+                .pan("pan")
+                .emailId("emailId")
+                .fuzzyLogic(true)
+                .active(true)
+                .pageSize(20)
+                .pageNumber(1)
+                .sort(singletonList("name"))
+                .build();
     }
 
     private List<User> getUserEntities() {
@@ -125,6 +146,32 @@ public class UserControllerTest {
             return IOUtils.toString(this.getClass().getClassLoader().getResourceAsStream(fileName), "UTF-8");
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    class UserSearchMatcher extends ArgumentMatcher<UserSearch> {
+
+        private UserSearch expectedUserSearch;
+
+        public UserSearchMatcher(UserSearch expectedUserSearch) {
+            this.expectedUserSearch = expectedUserSearch;
+        }
+
+        @Override
+        public boolean matches(Object o) {
+            UserSearch userSearch = (UserSearch) o;
+            return userSearch.getId().equals(expectedUserSearch.getId()) &&
+                    userSearch.getUserName().equals(expectedUserSearch.getUserName()) &&
+                    userSearch.getName().equals(expectedUserSearch.getName()) &&
+                    userSearch.getMobileNumber().equals(expectedUserSearch.getMobileNumber()) &&
+                    userSearch.getAadhaarNumber().equals(expectedUserSearch.getAadhaarNumber()) &&
+                    userSearch.getPan().equals(expectedUserSearch.getPan()) &&
+                    userSearch.getEmailId().equals(expectedUserSearch.getEmailId()) &&
+                    userSearch.isFuzzyLogic() == expectedUserSearch.isFuzzyLogic() &&
+                    userSearch.isActive() == expectedUserSearch.isActive() &&
+                    userSearch.getPageSize() == expectedUserSearch.getPageSize() &&
+                    userSearch.getPageNumber() == expectedUserSearch.getPageNumber() &&
+                    userSearch.getSort().equals(expectedUserSearch.getSort());
         }
     }
 }

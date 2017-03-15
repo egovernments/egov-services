@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.egov.user.domain.model.UserSearch;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Getter
@@ -44,6 +46,15 @@ public class UserSearchRequest {
     @JsonProperty("tenantId")
     private String tenantId;
 
+    @JsonProperty("pageSize")
+    private int pageSize = 20;
+
+    @JsonProperty("offSet")
+    private int pageNumber = 1;
+
+    @JsonProperty("sort")
+    private List<String> sort = Collections.singletonList("name");
+
     public UserSearch toDomain() {
         return UserSearch.builder()
                 .id(id)
@@ -55,6 +66,9 @@ public class UserSearchRequest {
                 .emailId(emailId)
                 .fuzzyLogic(fuzzyLogic)
                 .active(active)
+                .pageSize(pageSize)
+                .pageNumber(pageNumber)
+                .sort(sort)
                 .build();
     }
 }

@@ -10,6 +10,9 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -34,7 +37,7 @@ public class UserRepositoryTest {
 
     @Mock
     private RoleRepository roleRepository;
-    
+
     @Mock
     private PasswordEncoder passwordEncoder;
 
@@ -128,12 +131,21 @@ public class UserRepositoryTest {
 
     @Test
     public void test_search_user() throws Exception {
+        Page<User> page = mock(Page.class);
         List<User> expectedList = mock(List.class);
         UserSearch userSearch = mock(UserSearch.class);
         Specification<User> userSpecification = mock(Specification.class);
 
+        when(userSearch.getPageNumber()).thenReturn(1);
+        when(userSearch.getPageSize()).thenReturn(20);
+        when(userSearch.getSort()).thenReturn(Arrays.asList("name", "userName", "unknownField", "fourthField"));
+
+        Sort sort = new Sort(Sort.Direction.ASC, "name", "username");
+        PageRequest pageRequest = new PageRequest(1, 20, sort);
+
         when(userSearchSpecificationFactory.getSpecification(userSearch)).thenReturn(userSpecification);
-        when(userJpaRepository.findAll(userSpecification)).thenReturn(expectedList);
+        when(userJpaRepository.findAll(userSpecification, pageRequest)).thenReturn(page);
+        when(page.getContent()).thenReturn(expectedList);
 
         List<User> actualList = userRepository.findAll(userSearch);
 

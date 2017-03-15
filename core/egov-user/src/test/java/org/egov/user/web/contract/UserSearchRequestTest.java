@@ -34,5 +34,8 @@ public class UserSearchRequestTest {
         assertThat(userSearch.getPan()).isEqualTo("pan");
         assertThat(userSearch.isFuzzyLogic()).isFalse();
         assertThat(userSearch.isActive()).isTrue();
+        assertThat(userSearch.getPageSize()).isEqualTo(20);
+        assertThat(userSearch.getPageNumber()).isEqualTo(1);
+        assertThat(userSearch.getSort()).isEqualTo(Arrays.asList("name"));
     }
 }

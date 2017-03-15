@@ -11,5 +11,13 @@
     "authToken": "authToken"
   },
 
-  "id": [1, 2]
+  "id": [1, 2],
+  "userName": "userName",
+  "name": "name",
+  "mobileNumber": "mobileNumber",
+  "aadhaarNumber": "aadhaarNumber",
+  "pan": "pan",
+  "emailId": "emailId",
+  "fuzzyLogic": true,
+  "active": true
 }

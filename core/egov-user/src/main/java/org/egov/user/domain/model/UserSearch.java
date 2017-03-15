@@ -31,4 +31,9 @@ public class UserSearch {
 
     private boolean active;
 
+    private int pageSize;
+
+    private int pageNumber;
+
+    private List<String> sort;
 }

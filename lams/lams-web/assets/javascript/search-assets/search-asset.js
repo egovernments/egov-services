@@ -1,111 +1,403 @@
-$(document).ready(function() {
+class AssetSearch extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state={list:[],searchSet:{
+    locality:"",
+    doorNo:"",
+    category:"",
+    name:"",
+    electionWard:"",
+    code:""},isSearchClicked:false,assetCategories:[],locality:[],electionwards:[]}
+    this.handleChange=this.handleChange.bind(this);
+    this.search=this.search.bind(this);
+  }
 
-    let user = {};
-
-    // if (Cookies.get('loginDetails')) {
-    //   console.log(Cookies.get('loginDetails'));
-    //   $("#dashboard").show();
-    // } else {
-    //   console.log("hi2");
-    //   $("#login").show();
-    // }
-    // $("input").on("keyup", function() {
-    //     console.log(this.value);
-    //     user[this.id] = this.value;
-    // });
-
-
-    $('#myOptions').change(function() {
-        var val = $("#myOptions option:selected").val();
-        // alert(val);
-        // window.location="./create-agreement.html";
-        window.open("../../../app/agreements/new.html?type=" + val, "fs", "width=1200,height=800")
-    });
-
-
-    $('#close').on("click", function() {
-        window.close();
+  search(e)
+  {
+    e.preventDefault();
+    //call api call
+     var list=commonApiPost("asset","","_search",this.state.searchSet).responseJSON["Assets"];
+      console.log(commonApiPost("asset","","_search",this.state.searchSet).responseJSON["Assets"]);
+    this.setState({
+      isSearchClicked:true,
+      list
     })
 
+    // $('#agreementTable').DataTable().draw();
+    // console.log($('#agreementTable').length);
 
-    $("#logout").on("click", function() {
-        //clear cookies and logout
-        $("#login").hide();
-        $("#dashboard").show();
-    });
+  }
 
-    $("#table").hide();
+  componentWillMount()
+  {
 
 
-    var agreement = {};
-    //Getting data for user input
-    $("input").on("keyup", function() {
-        // console.log(this.value);
-        agreement[this.id] = this.value;
-    });
+  }
 
-    //Getting data for user input
-    $("select").on("change", function() {
-        // console.log(this.value);
-        if(this.selectedIndex!=0)
+
+
+  componentDidMount()
+  {
+   console.log(commonApiPost("asset","assetCategories","_search",{}).responseJSON["AssetCategory"]);
+
+     this.setState({
+      assetCategories:commonApiPost("asset","assetCategories","_search",{}).responseJSON["AssetCategory"],
+      locality:commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"LOCALITY",hierarchyTypeName:"LOCATION"}).responseJSON["Boundary"],
+      electionwards:commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"WARD",hierarchyTypeName:"ADMINISTRATION"}).responseJSON["Boundary"]
+    })
+  }
+
+  componentDidUpdate(prevProps, prevState)
+  {
+      if (prevState.list.length!=this.state.list.length) {
+          // $('#agreementTable').DataTable().draw();
+          // alert(prevState.list.length);
+          // alert(this.state.list.length);
+          // alert('updated');
+          $('#agreementTable').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                     'copy', 'csv', 'excel', 'pdf', 'print'
+             ],
+             ordering: false
+          });
+      }
+  }
+
+  handleChange(e,name)
+  {
+
+      this.setState({
+          searchSet:{
+              ...this.state.searchSet,
+              [name]:e.target.value
+          }
+      })
+
+  }
+
+  handleSelectChange(type)
+  {
+    console.log(type);
+    if (type === "view") {
+                window.open("../../../../app/search-agreement/view-renew-agreement.html", "fs", "fullscreen=yes")
+             }
+             else {
+
+                window.open("../../../../app/search-agreement/renew-agreement.html", "fs", "fullscreen=yes")
+            }
+  }
+
+
+  close(){
+      // widow.close();
+      open(location, '_self').close();
+  }
+
+
+
+  render() {
+    let {handleChange,search,updateTable,handleSelectChange}=this;
+    let {isSearchClicked,list}=this.state;
+    let {
+    locality,
+    doorNo,
+    category,
+    name,
+    electionWard,
+    code}=this.state.searchSet;
+
+    const renderOption=function(list)
+    {
+        if(list)
         {
-          agreement[this.id] = this.value;
-
+            return list.map((item)=>
+            {
+                return (<option key={item.id} value={item.id}>
+                        {item.name}
+                  </option>)
+            })
         }
-    });
+    }
+    const showTable=function()
+    {
+      if(isSearchClicked)
+      {
+          return (
+            <table id="agreementTable" className="table table-bordered">
+                <thead>
+                <tr>
+                    <th>Sl No </th>
+                    <th>Asset Category </th>
+                    <th>Asset Name </th>
+                    <th>Asset Code </th>
+                    <th>Election Ward No </th>
+                    <th>Action </th>
+                  </tr>
+                </thead>
 
-    //file change handle for file upload
-    $("input[type=file]").on("change", function(evt) {
-        // console.log(this.value);
-        // agreement[this.id] = this.value;
-        var file = evt.currentTarget.files[0];
+                <tbody id="agreementSearchResultTableBody">
+                    {
+                        renderBody()
+                    }
+                </tbody>
+            </table>
 
-        //call post api update and update that url in pur agrement object
-    });
+          )
 
-    var validation_rules = {};
-    var final_validatin_rules = {};
-    var commom_fields_rules = {
-        asset_category: {
-            required: true
+
+      }
+
+    }
+    const renderBody=function()
+    {
+      return list.map((item,index)=>
+      {
+            return (<tr key={index}>
+              <td>{index+1}</td>
+                                <td>{item.assetCategory.assetCategoryType?item.assetCategory.assetCategoryType:"Null"}</td>
+                                <td>{item.name}</td>
+                                <td>{item.code}</td>
+                                <td>{item.locationDetails.electionWard}</td>
+                                <td>
+                                    <div className="styled-select">
+                                        <select id="myOptions" onChange={(e)=>{
+                                          handleSelectChange(e.target.value)
+                                        }}>
+                                            <option value="">Select Action</option>
+                                            <option value="view">View</option>
+
+                                        </select>
+                                    </div>
+                                </td>
+
+                </tr>
+            );
+
+      })
+    }
+    const disbaled=function(type) {
+        if (type==="view") {
+              return "ture";
+        } else {
+            return "false";
         }
     }
 
-    final_validatin_rules = Object.assign({}, commom_fields_rules);
+    return (
+    <div>
+    <div className="form-section">
+        <div className="form-section-inner">
+            <form onSubmit={(e)=>{search(e)}}>
+                <div className="">
+                  <div className="form-section">
+                    <div className="row">
+                      <div className="col-sm-3 col-sm-offset-5">
+                            <label for="asset_category">Asset category<span> *</span></label>
+                            <div className="styled-select">
+                                <select id="asset_category" name="asset_category" required="true" value={category} onChange={(e)=>{
+                                handleChange(e,"category")}}>
 
-    for (var key in final_validatin_rules) {
-        if (final_validatin_rules[key].required) {
-            $(`label[for=${key}]`).append(`<span> *</span>`);
-        }
-        // $(`#${key}`).attr("disabled",true);
-    };
+                                    <option value="">Select Asset Category</option>
+                                    {renderOption(this.state.assetCategories)}
+                                  </select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
-    final_validatin_rules["messages"] = {
-        asset_category: {
-            required: "Select name of category to search"
-        }
+                <div className="form-section">
+                    <div className="row">
+                      <div className="col-sm-6">
+                          <div className="row">
+                              <div className="col-sm-6 label-text">
+                                  <label for="">Asset Code <span> * </span></label>
+                              </div>
+                              <div className="col-sm-6">
+                                      <input type="text" name="code" id="code" value={code}
+                                      onChange={(e)=>{handleChange(e,"code")}}required/>
+                              </div>
+                          </div>
+                        </div>
+                        <div className="col-sm-6">
+                            <div className="row">
+                                <div className="col-sm-6 label-text">
+                                    <label for="">Asset Name</label>
+                                </div>
+                                <div className="col-sm-6">
+                                    <input type="text" name="name" id="name" value={name}
+                                    onChange={(e)=>{handleChange(e,"name")}}/>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                <div className="row">
+                    <div className="col-sm-6">
+                        <div className="row">
+                            <div className="col-sm-6 label-text">
+                                <label for="locality">Locality</label>
+                            </div>
+                            <div className="col-sm-6">
+                                <div className="styled-select">
+                                    <select id="locality" name="locality" value={locality}
+                      onChange={(e)=>{  handleChange(e,"locality")}}>
+
+                                      <option value="">Choose locality</option>
+                                      {renderOption(this.state.locality)}
+
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div className="col-sm-6">
+                          <div className="row">
+                              <div className="col-sm-6 label-text">
+                                  <label for="door_no">Door No </label>
+                              </div>
+                              <div className="col-sm-6">
+                                  <input type="text" name="door_no" id="door_no" value={doorNo} onChange={(e)=>{
+                            handleChange(e,"doorNo")
+                        }}/>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+
+                      <div className="row">
+                          <div className="col-sm-6">
+                              <div className="row">
+                                  <div className="col-sm-6 label-text">
+                                      <label for="electionWard">Election Ward no </label>
+                                  </div>
+                                  <div className="col-sm-6">
+                                      <div className="styled-select">
+                                          <select id="electionWard" name="electionWard" value={electionWard} onChange={(e)=>{
+                              handleChange(e,"electionWard")
+                          }}>
+                                          <option value="">Choose Election Wards</option>
+                                          {renderOption(this.state.electionwards)}
+                                          </select>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+
+
+                    <div className="text-right text-danger">
+                          Note: Any one field is mandatory other than Asset category.
+                    </div>
+                    <br/>
+                    <div className="text-center">
+                        <button type="submit" className="btn btn-submit">Search</button>
+                        <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>
+                    </div>
+                    </form>
+                </div>
+            </div>
+            <div className="table-cont" id="table">
+                {showTable()}
+
+            </div>
+
+          </div>
+          );
       }
-
-    $("#searchAssestForm").validate({
-        rules: final_validatin_rules,
-        messages: final_validatin_rules["messages"],
-        submitHandler: function(form) {
-              $("#table").show();
-            // form.submit();
-
-            // console.log(agreement);
-            // $.post(`${baseUrl}agreements?tenant_id=kul.am`, {
-            //     RequestInfo: requestInfo,
-            //     Agreement: agreement
-            // }, function(response) {
-            //     // alert("submit");
-            //     window.open("../../../../app/search-assets/create-agreement-ack.html?&agreement_id=aeiou", "", "width=1200,height=800")
-            //     console.log(response);
-            // })
-        }
-    })
+}
 
 
+ReactDOM.render(
+  <AssetSearch />,
+  document.getElementById('root')
+);
 
 
-});
+//     <!-- Table -->
+//     <div className="table-cont" id="table">
+//         <table id="ast-srch" className="display responsive nowrap datatable dt-responsive" cellspacing="0" width="100%">
+//             <thead>
+//                 <tr>
+//                     <th>Sl No </th>
+//                     <th>Asset Category </th>
+//                     <th>Asset Name </th>
+//                     <th>Asset Code </th>
+//                     <th>Election Ward No </th>
+//                     <th>Action </th>
+//                 </tr>
+//             </thead>
+//             <tbody>
+//                 <tr>
+//                     <td>1</td>
+//                     <td>Land </td>
+//                     <td>Open land in gandhi nagar extension</td>
+//                     <td>033/1458/125698-12/19</td>
+//                     <td>N001</td>
+//                     <td>
+//                         <div className="styled-select">
+//                             <select id="myOptions">
+//                               <option value="">Select Action</option>
+//                               <option value="land">Land Agreement</option>
+//                               <option value="shop">Shops in Shopping Complex Agreement</option>
+//                               <option value="market">Markets Agreement</option>
+//                               <option value="kalyanamandapam">Kalyana mandapams Agreement</option>
+//                               <option value="parking_space">Parking Spaces Agreement</option>
+//                               <option value="slaughter_house">Slaughter Houses Agreement</option>
+//                               <option value="usfructs">Usfructs Agreement</option>
+//                               <option value="community">Community Agreement</option>
+//                               <option value="fish_tank">Fish Tank Agreement</option>
+//                             </select>
+//                         </div>
+//                     </td>
+//                 </tr>
+//                 <tr>
+//                     <td>2</td>
+//                     <td>Pond </td>
+//                     <td>Beside sukanta nagar extension</td>
+//                     <td>033/1458/365998-12/19</td>
+//                     <td>N02</td>
+//                     <td>
+//                         <div className="styled-select">
+//                             <select>
+//                               <option>Create Agreement</option>
+//                             </select>
+//                         </div>
+//                     </td>
+//                 </tr>
+//                 <tr>
+//                     <td>3</td>
+//                     <td>Land </td>
+//                     <td>Open land in gandhi nagar extension</td>
+//                     <td>033/1458/125698-12/19</td>
+//                     <td>N01</td>
+//                     <td>
+//                         <div className="styled-select">
+//                             <select>
+// <option>Create Agreement</option>
+// </select>
+//                         </div>
+//                     </td>
+//                 </tr>
+//                 <tr>
+//                     <td>4</td>
+//                     <td>Pond </td>
+//                     <td>Beside sukanta nagar extension</td>
+//                     <td>033/1458/365998-12/19</td>
+//                     <td>N02</td>
+//                     <td>
+//                         <div className="styled-select">
+//                             <select>
+//                               <option>Create Agreement</option>
+//                               </select>
+//                         </div>
+//                     </td>
+//                 </tr>
+//
+//             </tbody>
+//         </table>

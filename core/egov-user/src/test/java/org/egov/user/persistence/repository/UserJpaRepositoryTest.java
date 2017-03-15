@@ -14,17 +14,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-@Transactional(propagation = Propagation.NOT_SUPPORTED)
 public class UserJpaRepositoryTest {
 
     @Autowired
@@ -38,7 +37,33 @@ public class UserJpaRepositoryTest {
             "/sql/clearUsers.sql",
             "/sql/createUser.sql"
     })
-    public void shouldFetchUserByName() {
+    public void test_should_return_id_for_user_with_given_user_name() {
+        Long id = userJpaRepository.isUserPresent("bigcat399");
+        assertEquals(Long.valueOf(1), id);;
+    }
+
+    @Test
+    @Sql(scripts = {
+            "/sql/clearUserRoles.sql",
+            "/sql/clearAddresses.sql",
+            "/sql/clearRoles.sql",
+            "/sql/clearUsers.sql",
+            "/sql/createUser.sql"
+    })
+    public void test_should_return_null_when_user_does_not_exist_for_given_user_name() {
+        Long id = userJpaRepository.isUserPresent("unknown");
+        assertNull(id);
+    }
+
+    @Test
+    @Sql(scripts = {
+            "/sql/clearUserRoles.sql",
+            "/sql/clearAddresses.sql",
+            "/sql/clearRoles.sql",
+            "/sql/clearUsers.sql",
+            "/sql/createUser.sql"
+    })
+    public void should_fetch_user_by_name() {
         User user = userJpaRepository.findByUsername("greenfish424");
         assertThat(user.getId()).isEqualTo(2L);
     }
@@ -51,7 +76,7 @@ public class UserJpaRepositoryTest {
             "/sql/clearUsers.sql",
             "/sql/createUser.sql"
     })
-    public void shouldFetchUserByEmail() {
+    public void should_fetch_user_by_email() {
         User user = userJpaRepository.findByEmailId("email3@gmail.com");
         assertThat(user.getId()).isEqualTo(3L);
     }
@@ -64,7 +89,7 @@ public class UserJpaRepositoryTest {
             "/sql/clearUsers.sql",
             "/sql/createUser.sql"
     })
-    public void fuzzyNameMatchingQueryTest() {
+    public void fuzzy_name_matching_query_test() {
         UserSearch userSearch = UserSearch.builder()
                 .id(asList(1L, 2L))
                 .name("Ram")
@@ -87,7 +112,7 @@ public class UserJpaRepositoryTest {
             "/sql/clearUsers.sql",
             "/sql/createUser.sql"
     })
-    public void multiFieldMatchingQueryTest() {
+    public void multi_field_matching_query_test() {
         UserSearch userSearch = UserSearch.builder()
                 .name("Sreerama Krishnan")
                 .mobileNumber("9731123456")
@@ -113,7 +138,7 @@ public class UserJpaRepositoryTest {
             "/sql/clearUsers.sql",
             "/sql/createUser.sql"
     })
-    public void multiFieldMatchingQueryUserIdMatchingTest() {
+    public void multi_field_matching_query_user_id_matching_test() {
         UserSearch userSearch = UserSearch.builder()
                 .id(asList(1L, 2L)).active(true).build();
 
@@ -141,7 +166,7 @@ public class UserJpaRepositoryTest {
             "/sql/clearUsers.sql",
             "/sql/createUser.sql"
     })
-    public void multiFieldMatchingNegativeTest() {
+    public void multi_field_matching_negative_test() {
         UserSearch userSearch = UserSearch.builder()
                 .name("Sreerama Krishnan")
                 .mobileNumber("9731123456")
@@ -166,7 +191,7 @@ public class UserJpaRepositoryTest {
             "/sql/clearUsers.sql",
             "/sql/createUser.sql"
     })
-    public void multiFieldMatchingEmptyRequestTest() {
+    public void multi_field_matching_empty_request_test() {
         UserSearch userSearch = UserSearch.builder().active(true).build();
         MultiFieldsMatchingSpecification multiFieldsMatchingSpecification =
                 new MultiFieldsMatchingSpecification(userSearch);
@@ -184,7 +209,7 @@ public class UserJpaRepositoryTest {
             "/sql/clearUsers.sql",
             "/sql/createUser.sql"
     })
-    public void multiFieldMatchingUserTypeTest() {
+    public void multi_field_matching_user_type_test() {
         UserSearch userSearch = UserSearch.builder().active(true).type("EMPLOYEE").build();
         MultiFieldsMatchingSpecification multiFieldsMatchingSpecification =
                 new MultiFieldsMatchingSpecification(userSearch);

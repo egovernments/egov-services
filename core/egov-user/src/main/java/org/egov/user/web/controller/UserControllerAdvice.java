@@ -1,7 +1,9 @@
 package org.egov.user.web.controller;
 
+import org.egov.user.domain.exception.DuplicateUserNameException;
 import org.egov.user.domain.exception.InvalidUserException;
 import org.egov.user.domain.exception.OtpValidationPendingException;
+import org.egov.user.web.adapters.errors.DuplicateUserNameErrorHandler;
 import org.egov.user.web.adapters.errors.OtpValidationErrorAdapter;
 import org.egov.user.web.adapters.errors.UserRequestErrorAdapter;
 import org.egov.user.web.contract.ErrorRes;
@@ -19,6 +21,12 @@ public class UserControllerAdvice {
     @ExceptionHandler(InvalidUserException.class)
     public ErrorRes handleInvalidComplaintException(InvalidUserException ex) {
         return new UserRequestErrorAdapter().adapt(ex.getUser());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(DuplicateUserNameException.class)
+    public ErrorRes handleDuplicateUserNameException(DuplicateUserNameException ex) {
+        return new DuplicateUserNameErrorHandler().adapt(ex.getUser());
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

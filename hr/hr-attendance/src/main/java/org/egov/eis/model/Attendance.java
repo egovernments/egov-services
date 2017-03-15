@@ -61,9 +61,11 @@ public class Attendance {
 
     private Long id;
 
+    @NotNull
     @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date date;
+    private Date attendanceDate;
 
+    @NotNull
     private Long employee;
 
     private String month;

@@ -38,23 +38,25 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis;
+package org.egov.eis.repository.rowmapper;
 
-import org.egov.eis.indexer.http.CorrelationIdAwareRestTemplate;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-import org.springframework.web.client.RestTemplate;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-@SpringBootApplication
-public class EgovHRAttendanceApplication {
+import org.egov.eis.model.AttendanceType;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
-    @Bean
-    public RestTemplate getRestTemplate() {
-        return new CorrelationIdAwareRestTemplate();
-    }
+@Component
+public class AttendanceTypeRowMapper implements RowMapper<AttendanceType> {
 
-    public static void main(final String[] args) {
-        SpringApplication.run(EgovHRAttendanceApplication.class, args);
+    @Override
+    public AttendanceType mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+        final AttendanceType type = new AttendanceType();
+        type.setId(rs.getLong("id"));
+        type.setCode("code");
+        type.setDescription("description");
+
+        return type;
     }
 }

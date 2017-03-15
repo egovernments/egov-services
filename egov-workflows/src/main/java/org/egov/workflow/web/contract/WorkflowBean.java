@@ -41,6 +41,7 @@ package org.egov.workflow.web.contract;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,6 +76,7 @@ public class WorkflowBean implements Serializable {
     protected List<Designation> designationList;
     protected List<User> userList;
     private Map<String,Attribute> attributes = new HashMap<String,Attribute>();
+    protected Date createdDate;
    
     
     //add attruibute List here to pass from processInstance
@@ -241,12 +243,12 @@ public class WorkflowBean implements Serializable {
             pi.setId(workflowEntity.getWorkflowId());
         }
         pi.setBusinessKey(this.getBusinessKey());
-        pi.setEntity(workflowEntity);
+       // pi.setEntity(workflowEntity);
         pi.setStatus(this.getCurrentState());
-        pi.setAction(this.getWorkflowAction());
+       // pi.setAction(this.getWorkflowAction());
        /* if(this.getApproverPositionId()!=null)  
             pi.setAssignee(this.getApproverPositionId().toString());*/
-        pi.setDescription(this.getWorkflowComments());
+        pi.setComments(this.getWorkflowComments());
        
         Attribute attrib;
         if(additionalRule!=null)
@@ -281,20 +283,22 @@ public class WorkflowBean implements Serializable {
         {
             task.setId(workflowEntity.getWorkflowId());
         }
+      Position p=  new Position();
+    		  p.setId(this.getApproverPositionId());
         task.setBusinessKey(this.getBusinessKey());
-        task.setEntity(workflowEntity);
+      //  task.setEntity(workflowEntity);
         task.setStatus(this.getCurrentState());
         task.setAction(this.getWorkflowAction());
         if(this.getApproverPositionId()!=null)  
-            task.setAssignee(this.getApproverPositionId().toString());
-        task.setDescription(this.getWorkflowComments());
+            task.setAssignee(p);
+        task.setComments(this.getWorkflowComments());
         task.setAttributes(this.getAttributes()); 
         return task;     
     }
     public void map(ProcessInstance processInstance) {
         
         this.setBusinessKey(processInstance.getBusinessKey());
-        this.setWorkflowAction(processInstance.getAction());
+        //this.setWorkflowAction(processInstance.getAction());
         this.setWorkflowId(processInstance.getId());
         this.setCurrentState(processInstance.getStatus());
        /* if(processInstance.getAssignee()!=null)
@@ -312,4 +316,10 @@ public class WorkflowBean implements Serializable {
          
          
     }
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
 }

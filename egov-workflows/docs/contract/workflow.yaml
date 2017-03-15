@@ -1,0 +1,543 @@
+# eGov Work flow Version 1 API
+swagger: '2.0'
+
+# This is your document metadata
+info:
+  version: "1.0.0"
+  title: Work flow Management System APIs
+  description: All APIs available in the system are defined here.
+  contact:
+    name: Manikanta PT
+schemes:
+  - https
+  - http
+basePath: '/workflow'
+paths:
+    /process/_start:
+      post:
+        summary: Create  new  processinstance 
+        description: Create  new processinstances
+        tags: 
+          - Process
+        parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: processInstanceRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/ProcessInstanceRequest'
+        responses:
+          201:
+            description: ProcessInstance created Successfully
+            schema:
+              $ref: '#/definitions/ProcessInstanceResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+
+    /tasks/_search:
+      post:
+        summary: Get the list of tasks
+        description: tasks
+        tags: 
+          - Task
+        parameters:
+          - name: requestInfo
+            in: body
+            description: Common Request info for the Services
+            schema:
+              $ref: '#/definitions/RequestInfo'
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: ids
+            type: array
+            items: 
+              type: integer
+            format: int64
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids 
+          - name: businessKey
+            type: string
+            in: query
+            description: business key of the Task
+            maxLength: 128
+          - name: type
+            type: string
+            in: query
+            description: type of the Task
+            maxLength: 128
+          - name: assignee
+            type: integer
+            format: int64
+            in: query
+            description: assignee of the Task
+          - name: comments
+            type: string
+            in: query
+            description: comments of the Task
+            maxLength: 1024
+          - name: createdDate
+            type: string
+            format: date
+            in: query
+            description: created date of the Task
+          - name: lastupdatedSince
+            type: string
+            format: date
+            in: query
+            description: lastupdated since of the Task
+          - name: owner
+            type: integer
+            format: int64
+            in: query
+            description: owner of the Task
+          - name: state
+            type: string
+            in: query
+            description: state of the Task
+            maxLength: 128
+          - name: status
+            type: string
+            in: query
+            description: status of the Task
+            maxLength: 128
+          - name: url
+            type: string
+            in: query
+            description: url of the Task
+            maxLength: 256
+          - name: action
+            type: string
+            in: query
+            description: action of the Task
+            maxLength: 128
+          - name: senderName
+            type: string
+            in: query
+            description: sender name of the Task
+            maxLength: 128
+          - name: extraInfo
+            type: string
+            in: query
+            description: extra info of the Task
+            maxLength: 128
+          - name: natureOfTask
+            type: string
+            in: query
+            description: nature of task of the Task
+            maxLength: 128
+          - name: entity
+            type: string
+            in: query
+            description: entity of the Task
+          - name: pageSize
+            type: integer
+            format: int32
+            in: query
+            description: Number of records in a per page in  the Search Results, Default value is 20
+          - name: offSet
+            type: integer
+            format: int32
+            in: query
+            description: page number of the Search Results, Default value is 0
+        responses:
+          200:
+            description: Task retrieved Successfully
+            schema:
+              $ref: '#/definitions/TaskResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+
+    /tasks/{id}/_update:
+      post:
+        summary: Update any of the tasks
+        description: Update any of the tasks
+        tags: 
+          - Task
+        parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: id
+            in: path
+            description: Unique id of the Task
+            required: true
+            type: integer
+            format: int64
+          - name: taskRequest
+            in: body
+            description: common Request info
+            schema:
+              $ref: '#/definitions/TaskRequest'
+        responses:
+          200:
+            description: Task updated Successfully
+            schema:
+              $ref: '#/definitions/TaskResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+
+
+
+definitions:
+    Task:
+      type: object
+      properties:
+        id:
+          type: string
+          description: | 
+            Unique Identifier of the Task . This field Maps to
+            Id of the Task or ProcessInstance in case of eGov internal Work
+            flow or the Work flow Matrix based implementation .
+        businessKey:
+          type: string
+          description: |
+            businessKey is the name representing the process flow of the 
+            particular Item. For example For Financial vouchers work flow 
+            process may be defined with a businessKey of "voucher_workflow" . 
+            For eGov internal work flow implementation it is same as the 
+            class name of the java object under  going work flow. 
+            example businessKey "Voucher" 
+          maxLength: 128
+          minLength: 1
+        type:
+          type: string
+          description: |
+            type field can be used to further divide the work flow processes. For
+            example Voucher might have 4 different flows 1. Expense Work flow 2.
+            Contractor Journal Work flow 3. Supplier Journal Work flow 4. General JV
+            Work flow Each process is different .Another example is Property might
+            have different flows like 1.Create,Transfer,Bifurcation,Update etc.
+          maxLength: 128
+          minLength: 1
+        assignee:
+          $ref: "#/definitions/Position"
+        comments:
+          type: string
+          description: |
+            comments is the comment provided by the user while he
+            is initiating,forward,approve,cancelling a  task
+          maxLength: 1024
+          minLength: 1
+        createdDate:
+          type: string
+          format: date
+          description: created date of the Task
+        lastupdatedSince:
+          type: string
+          format: date
+          description: lastupdated since of the Task
+        owner:
+          $ref: "#/definitions/Position"
+        state:
+          type: string
+          description: state of the Task
+          maxLength: 128
+          minLength: 1
+        status:
+          type: string
+          description: status of the Task
+          maxLength: 128
+          minLength: 1
+        url:
+          type: string
+          description: url of the Task
+          maxLength: 256
+          minLength: 1
+        action:
+          type: string
+          description: action of the Task
+          maxLength: 128
+          minLength: 1
+        senderName:
+          type: string
+          description: sender name of the Task
+          maxLength: 128
+          minLength: 1
+        extraInfo:
+          type: string
+          description: extra info of the Task
+          maxLength: 128
+          minLength: 1
+        natureOfTask:
+          type: string
+          description: nature of task of the Task
+          maxLength: 128
+          minLength: 1
+        entity:
+          type: string
+          description: entity of the Task
+      required:
+      - id
+      - businessKey
+      - assignee
+      - action
+    TaskRequest:
+      description: Contract class to receive request. Array of Task items  are used in case of create . Where as single Task item is used for update
+      properties:
+        requestInfo:
+          $ref: '#/definitions/RequestInfo'
+        tasks:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/Task'
+        task:
+          $ref: '#/definitions/Task'
+    TaskResponse:
+      description: Contract class to send response. Array of Task items  are used in case of search results or response for create. Where as single Task item is used for update
+      properties:
+        responseInfo:
+          $ref: '#/definitions/ResponseInfo'
+        tasks:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/Task'
+        task:
+          $ref: '#/definitions/Task'
+        page:
+          $ref: '#/definitions/Page'
+
+    ProcessInstance:
+      type: object
+      properties:
+        id:
+          type: string
+          description: |
+            Unique Identifier of the Task . This field Maps to
+            Id of the Task or ProcessInstance in case of eGov internal Work
+            flow or the Work flow Matrix based implementation .
+        businessKey:
+          type: string
+          description: |
+            businessKey is the name representing the process flow of the 
+            particular Item. For example For Financial vouchers work flow 
+            process may be defined with a businessKey of "voucher_workflow" . 
+            For eGov internal work flow implementation it is same as the 
+            class name of the java object under  going work flow. 
+            example businessKey "Voucher"
+          maxLength: 128
+          minLength: 1
+        type:
+          type: string
+          description: |
+            type field can be used to further divide the work flow processes. For
+            example Voucher might have 4 different flows 1. Expense Work flow 2.
+            Contractor Journal Work flow 3. Supplier Journal Work flow 4. General JV
+            Work flow Each process is different .Another example is Property might
+            have different flows like 1.Create,Transfer,Bifurcation,Update etc.
+          maxLength: 128
+          minLength: 1
+        assignee:
+          $ref: "#/definitions/Position"
+        comments:
+          type: string
+          description: |
+            comments is the comment provided by the user while he
+            is initiating,forward,approve,cancelling a  task
+          maxLength: 1024
+          minLength: 1
+        createdDate:
+          type: string
+          format: date
+          description: created date of the ProcessInstance
+        lastupdatedSince:
+          type: string
+          format: date
+          description: lastupdated since of the ProcessInstance
+        owner:
+          $ref: "#/definitions/Position"
+        state:
+          type: string
+          description: state of the ProcessInstance
+          maxLength: 128
+          minLength: 1
+        status:
+          type: string
+          description: status of the ProcessInstance
+          maxLength: 128
+          minLength: 1
+        senderName:
+          type: string
+          description: sender name of the ProcessInstance
+          maxLength: 128
+          minLength: 1
+      required:
+      - businessKey
+      - assignee
+    ProcessInstanceRequest:
+      description: Contract class to receive request. Array of ProcessInstance items  are used in case of create . Where as single ProcessInstance item is used for update
+      properties:
+        requestInfo:
+          $ref: '#/definitions/RequestInfo'
+        processInstances:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/ProcessInstance'
+        processInstance:
+          $ref: '#/definitions/ProcessInstance'
+    ProcessInstanceResponse:
+      description: Contract class to send response. Array of ProcessInstance items  are used in case of search results or response for create. Where as single ProcessInstance item is used for update
+      properties:
+        responseInfo:
+          $ref: '#/definitions/ResponseInfo'
+        processInstances:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/ProcessInstance'
+        processInstance:
+          $ref: '#/definitions/ProcessInstance'
+        page:
+          $ref: '#/definitions/Page'
+    ResponseInfo:
+      type: object
+      properties:
+        resMsgId:
+         type: string
+         description: res msg id of the ResponseInfo
+        status:
+         type: string
+         description: status of the ResponseInfo
+        apiId:
+         type: string
+         description: api id of the ResponseInfo
+        ver:
+         type: string
+         description: ver of the ResponseInfo
+        ts:
+         type: string
+         format: date
+         description: ts of the ResponseInfo
+        key:
+         type: string
+         description: key of the ResponseInfo
+        tenantId:
+         type: string
+         description: tenant id of the ResponseInfo
+    RequestInfo:
+      type: object
+      properties:
+        action:
+         type: string
+         description: action of the RequestInfo
+        did:
+         type: string
+         description: did of the RequestInfo
+        msgId:
+         type: string
+         description: msg id of the RequestInfo
+        requesterId:
+         type: string
+         description: requester id of the RequestInfo
+        authToken:
+         type: string
+         description: auth token of the RequestInfo
+        apiId:
+         type: string
+         description: api id of the RequestInfo
+        ver:
+         type: string
+         description: ver of the RequestInfo
+        ts:
+         type: string
+         format: date
+         description: ts of the RequestInfo
+        key:
+         type: string
+         description: key of the RequestInfo
+        tenantId:
+         type: string
+         description: tenant id of the RequestInfo
+    ErrorResponse:
+      type: object
+      properties:
+        responseInfo:
+          $ref: "#/definitions/ResponseInfo"
+        error:
+          $ref: "#/definitions/Error"
+    Error:
+      type: object
+      properties:
+        code:
+         type: integer
+         format: int32
+         description: Code of the Error
+        message:
+         type: string
+         description: Message of the Error
+        description:
+         type: string
+         description: Description of the Error
+        filelds:
+         type: array
+         description: Filelds of the Error
+         items:
+           $ref: "#/definitions/FieldError"
+    FieldError:
+      type: object
+      properties:
+        code:
+         type: string
+         description: Code of the FieldError
+        description:
+         type: string
+         description: Description of the FieldError
+    Page:
+      type: object
+      properties:
+        totalResults:
+          type: integer
+          format: int32
+          description: total results of the Pagination
+        totalPages:
+          type: integer
+          format: int32
+          description: total pages of the Pagination
+        pageSize:
+          type: integer
+          format: int32
+          description: Number of records in a per page in  the Pagination, Default value is 20
+        currentPage:
+          type: integer
+          format: int32
+          description: current page of the Pagination
+        offSet:
+          type: integer
+          format: int32
+          description: page number of the Pagination, Default value is 0
+    Position:
+      type: object
+      description: |
+            Position represents position of the user to be set while creating a
+            instantiating of Process. For Automatic work flow this comes from the
+            process definition for manual work flow it is the position selected from
+            the UI.
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: id of the position
+        name:
+          type: string
+          description: name of the position

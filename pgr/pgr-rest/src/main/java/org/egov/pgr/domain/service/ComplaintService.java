@@ -1,5 +1,6 @@
 package org.egov.pgr.domain.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -96,6 +97,22 @@ public class ComplaintService {
 
 	public void updateLastAccessedTime(String crn) {
 		complaintJpaRepository.updateLastAccessedTime(new Date(), crn);
+	}
+	
+	public Date getMaxLastAccessTimeForCitizenComplaints(Long userId) {
+		List<Complaint> complaints = complaintRepository.getAllComplaintsForGivenUser(userId);
+		if (!complaints.isEmpty()) { 
+			return complaints.get(0).getLastAccessedTime();
+		} else
+			return null;
+	}
+
+	public List<Complaint> getAllModifiedCitizenComplaints(Long userId) {
+		Date latestLastAccessedTime = getMaxLastAccessTimeForCitizenComplaints(userId);
+		if (latestLastAccessedTime != null) {
+			return complaintRepository.getAllModifiedComplaintsForCitizen(latestLastAccessedTime, userId);
+		}
+		return new ArrayList<>();
 	}
 
 }

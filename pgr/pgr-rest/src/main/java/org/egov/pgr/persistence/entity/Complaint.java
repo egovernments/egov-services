@@ -73,12 +73,20 @@ import org.egov.pgr.persistence.entity.enums.ReceivingMode;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.SafeHtml;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
 @Table(name = "egpgr_complaint")
 @SequenceGenerator(name = SEQ_COMPLAINT, sequenceName = SEQ_COMPLAINT, allocationSize = 1)
 public class Complaint extends AbstractAuditable {
@@ -199,7 +207,8 @@ public class Complaint extends AbstractAuditable {
 				.authenticatedUser(AuthenticatedUser.createAnonymousUser()).complainant(complainant.toDomain())
 				.address(landmarkDetails).description(details).crn(crn).createdDate(getCreatedDate())
 				.lastModifiedDate(getLastModifiedDate()).mediaUrls(Collections.emptyList())
-				.escalationDate(getEscalationDate()).closed(isCompleted()).department(department).build();
+				.escalationDate(getEscalationDate()).closed(isCompleted()).department(department)
+				.lastAccessedTime(lastAccessedTime).build(); 
 	}
 
 	private Map<String, String> getAdditionalValues() {

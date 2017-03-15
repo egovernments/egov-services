@@ -40,16 +40,35 @@
 
 package org.egov.pgr.persistence.entity;
 
+import static org.egov.pgr.persistence.entity.Complainant.SEQ_COMPLAINANT;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.validation.constraints.Pattern;
+
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.SafeHtml;
 
-import javax.persistence.*;
-import javax.validation.constraints.Pattern;
-
-import static org.egov.pgr.persistence.entity.Complainant.SEQ_COMPLAINANT;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
+@Builder
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 @Table(name = "egpgr_complainant")
 @SequenceGenerator(name = SEQ_COMPLAINANT, sequenceName = SEQ_COMPLAINANT, allocationSize = 1)
 public class Complainant extends AbstractPersistable<Long> {
@@ -92,47 +111,7 @@ public class Complainant extends AbstractPersistable<Long> {
     protected void setId(final Long id) {
         this.id = id;
     }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
-
-    public String getMobile() {
-        return mobile;
-    }
-
-    public void setMobile(final String mobile) {
-        this.mobile = mobile;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(final String email) {
-        this.email = email;
-    }
-
-    public Long getUserDetail() {
-        return userDetail;
-    }
-
-    public void setUserDetail(final Long userDetail) {
-        this.userDetail = userDetail;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(final String address) {
-        this.address = address;
-    }
-
+    
     public org.egov.pgr.domain.model.Complainant toDomain() {
         return new org.egov.pgr.domain.model.Complainant(name, mobile, email,address, null);
     }

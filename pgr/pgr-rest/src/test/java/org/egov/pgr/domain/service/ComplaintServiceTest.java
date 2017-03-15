@@ -1,13 +1,15 @@
 package org.egov.pgr.domain.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import org.egov.pgr.domain.model.AuthenticatedUser;
@@ -49,7 +51,7 @@ public class ComplaintServiceTest {
 
 	@Mock
 	private SevaNumberGeneratorService sevaNumberGeneratorService;
-	
+
 	@Mock
 	private ComplaintJpaRepository complaintJpaRepository;
 
@@ -145,12 +147,32 @@ public class ComplaintServiceTest {
 		assertEquals(1, actualComplaints.size());
 		assertEquals(expectedComplaint, actualComplaints.get(0));
 	}
-	
+
 	@Test
 	public void testShouldUpdateLastAccessedTime() {
 		Date currentDate = new Date();
 		complaintService.updateLastAccessedTime("crn");
 		verify(complaintJpaRepository).updateLastAccessedTime(currentDate, "crn");
+	}
+
+	public void test_should_fetch_all_modified_citizen_complaints_by_userid() {
+		final Complaint expectedComplaint = getComplaint();
+		when(complaintRepository.getAllComplaintsForGivenUser(any(Long.class)))
+				.thenReturn(Collections.singletonList(expectedComplaint));
+		when(complaintRepository.getAllModifiedComplaintsForCitizen(any(Date.class), any(Long.class)))
+				.thenReturn(Collections.singletonList(expectedComplaint));
+		final List<Complaint> actualComplaints = complaintService.getAllModifiedCitizenComplaints(1L);
+		assertEquals(1, actualComplaints.size());
+		assertEquals(expectedComplaint, actualComplaints.get(0));
+	}
+
+	@Test
+	public void test_should_fetch_empty_list_for_invalid_userid() {
+		when(complaintRepository.getAllComplaintsForGivenUser(any(Long.class))).thenReturn(new ArrayList<Complaint>());
+		when(complaintRepository.getAllModifiedComplaintsForCitizen(any(Date.class), any(Long.class)))
+				.thenReturn(new ArrayList<Complaint>());
+		final List<Complaint> actualComplaints = complaintService.getAllModifiedCitizenComplaints(1L);
+		assertEquals(0, actualComplaints.size());
 	}
 
 	private Complaint getComplaint() {
@@ -159,7 +181,8 @@ public class ComplaintServiceTest {
 		final Complainant complainant = Complainant.builder().userId("userId").build();
 		return Complaint.builder().complainant(complainant).authenticatedUser(getCitizen())
 				.complaintLocation(complaintLocation).tenantId(TENANT_ID).description("description").crn("crn")
-				.department(2L).complaintType(new ComplaintType(null, "complaintCode")).build();
+				.lastAccessedTime(new Date()).department(2L).complaintType(new ComplaintType(null, "complaintCode"))
+				.build();
 	}
 
 	private Department getDepartment() {

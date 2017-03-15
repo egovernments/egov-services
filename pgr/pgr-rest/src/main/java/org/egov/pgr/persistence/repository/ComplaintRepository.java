@@ -1,5 +1,6 @@
 package org.egov.pgr.persistence.repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,5 +41,16 @@ public class ComplaintRepository {
 	public void update(SevaRequest sevaRequest) {
 		sevaRequest.getRequestInfo().setAction(UPDATE);
 		this.complaintMessageQueueRepository.save(sevaRequest);
+	}
+
+	public List<Complaint> getAllComplaintsForGivenUser(Long userId) {
+		return this.complaintJpaRepository.findByCreatedByOrderByLastAccessedTimeDesc(userId).stream()
+				.map(org.egov.pgr.persistence.entity.Complaint::toDomain).collect(Collectors.toList());
+
+	}
+
+	public List<Complaint> getAllModifiedComplaintsForCitizen(Date lastAccessedTime, Long userId) {
+		return this.complaintJpaRepository.getAllModifiedComplaintsForCitizen(lastAccessedTime, userId).stream()
+				.map(org.egov.pgr.persistence.entity.Complaint::toDomain).collect(Collectors.toList());
 	}
 }

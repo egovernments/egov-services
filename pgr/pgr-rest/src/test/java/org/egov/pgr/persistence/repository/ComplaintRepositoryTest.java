@@ -7,7 +7,6 @@ import java.util.List;
 import org.egov.pgr.domain.model.Complaint;
 import org.egov.pgr.domain.model.ComplaintSearchCriteria;
 import org.joda.time.DateTime;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +22,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class ComplaintRepositoryTest {
 	@Autowired
 	private ComplaintRepository complaintRepository;
+	
+	@Autowired
+	private ComplaintJpaRepository complaintJpaRepository;
 
 	@Test
 	@Sql(scripts = {"/sql/addLastAccessedTime.sql","/sql/clearComplaintStatusMapping.sql","/sql/InsertComplaintStatusMapping.sql","/sql/clearComplaint.sql",
-			"/sql/InsertComplaintData.sql" })
-
+	"/sql/InsertComplaintData.sql" })
 	public void testShouldFindAllComplaints() {
 
 		DateTime date = new DateTime();
@@ -67,4 +68,29 @@ public class ComplaintRepositoryTest {
 		assertThat(complaints.get(0).getAdditionalValues().get("stateId")).isEqualTo("5");
 		assertThat(complaints.get(0).getDepartment()).isEqualTo(18L);
 	}
+	
+	/*@Test
+	public void test_should_fetch_all_complaints_by_userid() {
+		final org.egov.pgr.persistence.entity.Complaint expectedComplaint = getComplaint();
+	//	when(complaintJpaRepository.findByCreatedByOrderByLastAccessedTimeDesc(any(Long.class))).thenReturn(Collections.singletonList(expectedComplaint));
+		final List<Complaint> actualComplaints = complaintRepository.getAllComplaintsForGivenUser(1L);
+		assertEquals(1, actualComplaints.size());
+		assertEquals(expectedComplaint, actualComplaints.get(0));
+	}
+	
+	@Test
+	public void test_should_fetch_all_modified_complaints_for_citizen() {
+		final org.egov.pgr.persistence.entity.Complaint expectedComplaint = getComplaint();
+		//when(complaintJpaRepository.getAllModifiedComplaintsForCitizen(any(Date.class),any(Long.class))).thenReturn(Collections.singletonList(expectedComplaint));
+		final List<Complaint> actualComplaints = complaintRepository.getAllModifiedComplaintsForCitizen(new Date(),1L);
+		assertEquals(1, actualComplaints.size());
+		assertEquals(expectedComplaint, actualComplaints.get(0));
+	}
+	
+	private org.egov.pgr.persistence.entity.Complaint getComplaint() {
+		return org.egov.pgr.persistence.entity.Complaint.builder().id(1L).details("details").crn("crn")
+				.lastAccessedTime(new Date())
+				.department(2L).build();
+	}*/
+	
 }

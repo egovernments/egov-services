@@ -170,7 +170,7 @@ ul{padding: 0; margin: 0; list-style-type: none;}
     font-family: 'robotoregular';
 }
 .sectionBody input.location{
-    background: #fff url(./location-icon.png) no-repeat 98% 50%;
+    background: #fff url(location-icon.png) no-repeat 98% 50%;
 }
 .sectionBody textarea{
     resize: none;
@@ -296,7 +296,7 @@ ul{padding: 0; margin: 0; list-style-type: none;}
   }
   .div-or{
     text-align: center;
-    background: url(./or-bg.gif) repeat-x 0 50%;
+    background: url(or-bg.gif) repeat-x 0 50%;
     font-size: 26px;
     color: #939393;
     line-height: 29px;
@@ -399,11 +399,11 @@ ul{padding: 0; margin: 0; list-style-type: none;}
     margin-right: 9px;
 }
 .mseva-dash-blue-link li a span.logoimg.pic01{
-    background: #324a5e url(./icon-01.jpg) no-repeat 50% 50%;
+    background: #324a5e url(icon-01.jpg) no-repeat 50% 50%;
     background-size: auto;
 }
 .mseva-dash-blue-link li a span.logoimg.pic02{
-    background: #324a5e url(./icon-02.jpg) no-repeat 50% 50%;
+    background: #324a5e url(icon-02.jpg) no-repeat 50% 50%;
     background-size: auto;
 }
 .mseva-dash-blue-link li a:hover{text-decoration: none;}
@@ -448,7 +448,7 @@ ul{padding: 0; margin: 0; list-style-type: none;}
 }
 .link-right ul li a:hover{text-decoration: none;}
 .complaint-bg{
-    background: url(./complaint-bg.jpg) no-repeat 50% 50%;
+    background: url(complaint-bg.jpg) no-repeat 50% 50%;
     color: #fff;
     font-weight: bold;
     font-size: 20px;
@@ -502,7 +502,7 @@ ul{padding: 0; margin: 0; list-style-type: none;}
 .work-flow-text li img{position: relative; z-index: 9;}
 .work-flow-text li:nth-child(1){margin-left: 0;}
 .work-flow-text li.arrow{
-    background: url(./how-it-work-arrow.jpg) repeat-x 0 0;
+    background: url(how-it-work-arrow.jpg) repeat-x 0 0;
     position: absolute;
     top: 24px;
     left: 15%;
@@ -510,7 +510,7 @@ ul{padding: 0; margin: 0; list-style-type: none;}
 }
 .work-flow-text{position: relative;}
 .platform{
-    background: url(./our-platform-bg.jpg) no-repeat 0 0;
+    background: url(our-platform-bg.jpg) no-repeat 0 0;
     background-size: auto 100%;
     border-radius: 5px;
     margin-bottom: 15px;
@@ -533,7 +533,7 @@ ul{padding: 0; margin: 0; list-style-type: none;}
     font-size: 26px;
     margin: 0 0 24px 0;
     padding-bottom: 24px;
-    background: url(./white-bar.jpg) no-repeat 50% 100%;
+    background: url(white-bar.jpg) no-repeat 50% 100%;
 }
 .left-arrow{
     position: absolute;
@@ -570,7 +570,7 @@ ul{padding: 0; margin: 0; list-style-type: none;}
     width: 31px;
     height: 15px;
     top: -15px;
-    background: url(./top-arrow.png) no-repeat 0 0;
+    background: url(top-arrow.png) no-repeat 0 0;
 }
 
 .btn-file{
@@ -690,7 +690,7 @@ ul{padding: 0; margin: 0; list-style-type: none;}
 }
 .comp-history ul li{
     position: relative;
-    background: url(./comp-hist-bg.gif) repeat-y 22px 0;
+    background: url(comp-hist-bg.gif) repeat-y 22px 0;
     color: #373636;
     font-size: 15px;
     padding-left: 64px;
@@ -715,16 +715,16 @@ ul{padding: 0; margin: 0; list-style-type: none;}
     box-shadow: 0 0 20px 2px rgba(0,0,0,.1);
 }
 .comp-history ul li.hist-text:before{
-    background: #fff url(./hist-icon-text.png) no-repeat 50% 50%;
+    background: #fff url(hist-icon-text.png) no-repeat 50% 50%;
 }
 .comp-history ul li.hist-flyer:before{
-    background: #fff url(./hist-icon-flyer.png) no-repeat 50% 50%;
+    background: #fff url(hist-icon-flyer.png) no-repeat 50% 50%;
 }
 .comp-history ul li.hist-photo:before{
-    background: #fff url(./hist-icon-photo.png) no-repeat 50% 50%;
+    background: #fff url(hist-icon-photo.png) no-repeat 50% 50%;
 }
 .comp-history ul li.hist-reset:before{
-    background: #fff url(./hist-icon-reset.png) no-repeat 50% 50%;
+    background: #fff url(hist-icon-reset.png) no-repeat 50% 50%;
 }
 .comp-history ul li h5{
     font-family: 'robotoregular';
@@ -809,7 +809,7 @@ ul{padding: 0; margin: 0; list-style-type: none;}
 .imageCheckbox{width: 142px; margin: 6px 0;}
 .imageCheckbox input[type=checkbox] {display:none;}
 .imageCheckbox input[type=checkbox] + label{
-    background: url(./check-deselected.png) no-repeat 0 0;
+    background: url(check-deselected.png) no-repeat 0 0;
     height: 19px;
     width: 19px;
     display:inline-block;
@@ -818,7 +818,7 @@ ul{padding: 0; margin: 0; list-style-type: none;}
     float: right;
 }
 .imageCheckbox input[type=checkbox]:checked + label{
-    background: url(./check-selected.png) no-repeat 0 0;
+    background: url(check-selected.png) no-repeat 0 0;
     height: 19px;
     width: 19px;
     display:inline-block;
@@ -889,13 +889,13 @@ ul{padding: 0; margin: 0; list-style-type: none;}
     font-family: 'robotoregular';
 }
 .login-input.mobile{
-    background: url(./call-icon.png) no-repeat 0 50%;
+    background: url(call-icon.png) no-repeat 0 50%;
 }
 .login-input.password{
-    background: url(./password-icon.png) no-repeat 0 50%;
+    background: url(password-icon.png) no-repeat 0 50%;
 }
 .login-input.user{
-    background: url(./user-icon.png) no-repeat 0 50%;
+    background: url(user-icon.png) no-repeat 0 50%;
 }
 .login-modal a{
     font-size: 14px;

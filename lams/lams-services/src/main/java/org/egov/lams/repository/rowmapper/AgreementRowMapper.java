@@ -67,6 +67,7 @@ public class AgreementRowMapper implements RowMapper<Agreement> {
 		Asset asset = new Asset();
 		asset.setId(rs.getLong("asset"));
 		agreement.setAsset(asset);
+		
 
 		return agreement;
 	}

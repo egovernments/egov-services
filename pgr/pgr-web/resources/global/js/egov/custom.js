@@ -111,10 +111,6 @@ $(document).ready(function()
 		    return /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(value);
 		},"Enter valid Email ID");
 
-		jQuery.validator.addClassRules({
-			passwordvalidate : { passwordvalidate : true }    
-		});
-
 	    jQuery.validator.addClassRules({
 			mobilevalidate: {
 				required: true,

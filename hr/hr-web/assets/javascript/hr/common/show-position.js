@@ -5,7 +5,7 @@ class ShowPosition extends React.Component {
     department:"",
     designation:"",
     name:"",
-    isPostOutsourced:"",active:""},
+    isPostOutsourced:"",active:""}
     }
 
   }
@@ -14,7 +14,6 @@ class ShowPosition extends React.Component {
   {
 
   }
-
 
 
   componentDidMount()
@@ -69,10 +68,11 @@ class ShowPosition extends React.Component {
       return list.map((item,index)=>
       {
             return (<tr key={index}>
-                    <td data-label="department">{item.department}</td>
-                    <td data-label="designation">{item.designation}</td>
+                    <td>{index+1}</td>
+                    <td data-label="department">{item.deptdesig.department}</td>
+                    <td data-label="designation">{item.deptdesig.designation.name}</td>
                     <td data-label="name">{item.name}</td>
-                    <td data-label="isPostOutsourced">{item.isPostOutsourced}</td>
+                    <td data-label="isPostOutsourced">{item.isPostOutsourced?item.isPostOutsourced:"false"}</td>
                     <td data-label="active">{item.active?"true":"false"}</td>
 
                     <td data-label="action">
@@ -88,6 +88,7 @@ class ShowPosition extends React.Component {
         <table id="positionTable" className="table table-bordered">
             <thead>
                 <tr>
+                    <th>Sl No.</th>
                     <th>Department</th>
                     <th>Designation</th>
                     <th>Position</th>

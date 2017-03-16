@@ -60,4 +60,8 @@ public class ReceivingCenterService {
 	public List<ReceivingCenter> getAllReceivingCenters(String tenantId) {
 		return receivingCenterRepository.findAll();
 	}
+
+	public ReceivingCenter getReceivingCenterById(String tenantId,Long id) {
+		return receivingCenterRepository.findById(id);
+	}
 }

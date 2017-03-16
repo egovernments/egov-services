@@ -7,8 +7,19 @@ import java.util.*;
 
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertNull;
 
 public class UserTest {
+
+    @Test
+    public void test_should_return_last_updated_by_as_null_when_not_present() throws Exception {
+        User userEntity = getUserEntity();
+        userEntity.setLastModifiedBy(null);
+
+        org.egov.user.domain.model.User userModel = userEntity.toDomain();
+
+        assertNull(userModel.getLastModifiedBy());
+    }
 
     @Test
     public void test_entity_should_convert_itself_to_domain() throws Exception {

@@ -1,47 +1,21 @@
 class PositionMaster extends React.Component{
     constructor(props){
       super(props);
-      this.state={positionSet:{
-      departmentCode:"",
-      designationCode:"",
+      this.state={list:[],positionSet:{
+      department:"",
+      designation:"",
       name:"",
       isPostOutsourced:""},
-      departments:[],designation:[]}
+      departmentList:[],designationList:[]}
       this.handleChange=this.handleChange.bind(this);
       this.addOrUpdate=this.addOrUpdate.bind(this);
 }
     componentWillMount()
     {
       this.setState({
-        departments:[{
-                id: 1,
-                name: "Juniour Engineer",
-                description: "",
-                orderno: "1",
-                active: true
-            },
-            {
-                id: 2,
-                name: "Assistance Engineer",
-                description: "",
-                orderno: "1",
-                active: true
-            }],
-        designation:[{
-                id: 1,
-                name: "Juniour Engineer",
-                description: "",
-                orderno: "1",
-                active: true
-            },
-            {
-                id: 2,
-                name: "Assistance Engineer",
-                description: "",
-                orderno: "1",
-                active: true
-            }]
-      })
+      departmentList:commonApiPost("hr-masters","positions","_search",{tenantId}).responseJSON["Position"],
+      designationList:commonApiPost("hr-masters","positions","_search",{tenantId}).responseJSON["Position"],
+    })
     }
 
     handleChange(e,name){
@@ -72,35 +46,33 @@ class PositionMaster extends React.Component{
 
         if(type==="view"||type==="update")
         {
-            console.log("fired");
             console.log(getCommonMasterById("hr-masters","positions","Position",id).responseJSON["Position"][0]);
             this.setState({
               positionSet:getCommonMasterById("hr-masters","positions","Position",id).responseJSON["Position"][0]
             })
         }
-
     }
 
 
 
     addOrUpdate(e,mode){
       e.preventDefault();
-      console.log({name:this.state.positionSet.name,deptdesig:{designation:this.state.positionSet.designationCode,department:this.state.positionSet.departmentCode},isPostOutsourced:this.state.positionSet.isPostOutsourced});
+      console.log({name:this.state.positionSet.name,deptdesig:{designationList:this.state.positionSet.designation,departmentList:this.state.positionSet.department},isPostOutsourced:this.state.positionSet.isPostOutsourced});
       if (mode==="update") {
           console.log("update");
       } else {
       this.setState({positionSet:{
-      departmentCode:"",
-      designationCode:"",
+      department:"",
+      designation:"",
       name:"",
-      isPostOutsourced:""},departments:"",designation:""})
+      isPostOutsourced:""},departmentList:"",designationList:""})
     }
   }
 
     render(){
 
       let {handleChange,addOrUpdate}=this;
-      let {departments,designation,name,isPostOutsourced,designationCode,departmentCode}=this.state.positionSet;
+      let {department,designation,name,isPostOutsourced,designationList,departmentList}=this.state.positionSet;
       let mode =getUrlVars()["type"];
       const renderOption=function(list)
       {
@@ -108,8 +80,21 @@ class PositionMaster extends React.Component{
         {
           return list.map((item)=>
           {
-              return (<option key={item.id} value={item.id}>
-                      {item.name}
+              return (<option key={item.deptdesig.designation.name} value={item.deptdesig.designation.name}>
+                      {item.deptdesig.designation.name}
+                </option>)
+          })
+        }
+
+      }
+      const renderOption1=function(list)
+      {
+        if(list)
+        {
+          return list.map((item)=>
+          {
+              return (<option key={item.deptdesig.department} value={item.department}>
+                      {item.deptdesig.department}
                 </option>)
           })
         }
@@ -135,11 +120,11 @@ class PositionMaster extends React.Component{
                   </div>
                   <div className="col-sm-6">
                     <div className="styled-select">
-                    <select id="departmentCode" name="departmentCode" value={departmentCode} onChange={(e)=>{
-                        handleChange(e,"departmentCode")
+                    <select id="department" name="department" value={department} required="true" onChange={(e)=>{
+                        handleChange(e,"department")
                     }} required>
                       <option>Select Department</option>
-                      {renderOption(this.state.departments)}
+                      {renderOption1(this.state.departmentList)}
                    </select>
                     </div>
                   </div>
@@ -152,11 +137,11 @@ class PositionMaster extends React.Component{
                     </div>
                     <div className="col-sm-6">
                         <div className="styled-select">
-                        <select id="designationCode" name="designationCode" value={designationCode} onChange={(e)=>{
-                            handleChange(e,"designationCode")
+                        <select id="designation" name="designation" value={designation} required="true" onChange={(e)=>{
+                            handleChange(e,"designation")
                         }}required>
                         <option>Select Designation</option>
-                        {renderOption(this.state.designation)}
+                        {renderOption(this.state.designationList)}
                        </select>
                         </div>
                     </div>

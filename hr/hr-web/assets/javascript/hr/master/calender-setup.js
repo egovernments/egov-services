@@ -92,7 +92,7 @@ class Calender_setup extends React.Component{
                     <label for="">Year <span>*</span></label>
                 </div>
                   <div className="col-sm-6">
-                    <input type="text" name="name" id="name" value={name} onChange={(e)=>{handleChange(e,"name")}}required/>
+                    <input type="number" min= "1000" max="9999" name="name" id="name" value={name} onChange={(e)=>{handleChange(e,"name")}}required/>
                   </div>
               </div>
           </div>

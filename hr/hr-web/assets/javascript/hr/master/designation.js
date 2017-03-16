@@ -1,4 +1,3 @@
-
 class Designation extends React.Component{
   constructor(props){
     super(props);
@@ -12,26 +11,9 @@ class Designation extends React.Component{
 
     componentWillMount(){
       this.setState({
-        descriptionList:[{
-                id: 1,
-                name: "Section Manager",
-                description: "Section Manager",
-                active: true
-            },
-            {
-                id: 3,
-                name: "Accounts Assistant",
-                description: "Accounts Assistant",
-                active: true
-            },
-            {
-                id: 2,
-                name: "Junior Assistant",
-                description: "Junior Assistant",
+      descriptionList:commonApiPost("hr-masters","designations","_search",{tenantId}).responseJSON["Designation"]
+    })
 
-                active: true
-            }]
-      })
     }
       handleChange(e,name){
         this.setState({
@@ -47,19 +29,22 @@ class Designation extends React.Component{
           open(location, '_self').close();
       }
 
+
       componentDidMount(){
+
         var type=getUrlVars()["type"];
         var id=getUrlVars()["id"];
 
         if(getUrlVars()["type"]==="view")
         {
           for (var variable in this.state.designationSet)
+          if(variable!="active")
             document.getElementById(variable).disabled = true;
           }
 
           if(type==="view"||type==="update")
           {
-              console.log("fired");
+               console.log("fired");
               console.log(getCommonMasterById("hr-masters","designations","Designation",id).responseJSON["Designation"][0]);
               this.setState({
                 designationSet:getCommonMasterById("hr-masters","designations","Designation",id).responseJSON["Designation"][0]
@@ -84,8 +69,8 @@ class Designation extends React.Component{
           }
         }
 
-      render(){
 
+      render(){
         let {handleChange,addOrUpdate}=this;
         let mode=getUrlVars()["type"];
         let {name,code,description,chartOfAccounts,active}=this.state.designationSet;
@@ -95,14 +80,13 @@ class Designation extends React.Component{
           {
             return list.map((item)=>
             {
-                return (<option key={item.id} value={item.id}>
+                return (<option key={item.description} value={item.description}>
                         {item.description}
                   </option>)
             })
           }
 
         }
-
 
         const showActionButton=function() {
           if((!mode) ||mode==="update")
@@ -149,9 +133,9 @@ class Designation extends React.Component{
                     </div>
                     <div className="col-sm-6">
                           <div className="styled-select">
-                          <select id="description" name="description" value={description} onChange={(e)=>{
-                              handleChange(e,"description")
-                          }}required>
+                          <select id="description" name="description" value={description} required="true"
+                            onChange={(e)=>{  handleChange(e,"description")}}>
+
                               <option>Select description</option>
                               {renderOption(this.state.descriptionList)}
                          </select>
@@ -166,7 +150,7 @@ class Designation extends React.Component{
                 <div className="row">
                     <div className="col-sm-6 col-sm-offset-6">
                           <label className="radioUi">
-                            <input type="checkbox" name="active" id="active" value="true" onChange={(e)=>{
+                            <input type="checkbox" name="active" id="active"  onChange={(e)=>{
                                 handleChange(e,"active")}}required/> Active
                           </label>
                     </div>

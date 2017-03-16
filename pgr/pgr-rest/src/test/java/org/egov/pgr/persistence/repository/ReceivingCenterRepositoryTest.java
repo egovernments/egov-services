@@ -1,5 +1,6 @@
 package org.egov.pgr.persistence.repository;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 import java.util.List;
@@ -27,5 +28,13 @@ public class ReceivingCenterRepositoryTest {
 	public void shouldFetchAllReceingCenters() {
 		final List<ReceivingCenter> actualResult = receivingCenterRepository.findAll();
 		assertFalse(actualResult.isEmpty());
+	}
+
+	@Test
+	@Sql(scripts = { "/sql/clearReceivingCenter.sql", "/sql/InsertReceivingCenterData.sql" })
+	public void shouldFetchReceivingCenterById() {
+		final ReceivingCenter actualResult = receivingCenterRepository.findById(1L);
+		assertEquals(Long.valueOf(1), actualResult.getId());
+		assertEquals("Complaint Cell", actualResult.getName());
 	}
 }

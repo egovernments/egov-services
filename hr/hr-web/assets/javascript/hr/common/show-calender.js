@@ -72,6 +72,7 @@ class ShowCalender extends React.Component {
       return list.map((item,index)=>
       {
             return (<tr key={index}>
+                    <td>{index+1}</td>
                     <td data-label="name">{item.name}</td>
                     <td data-label="startDate">{item.startDate}</td>
                     <td data-label="endDate">{item.endDate}</td>
@@ -89,6 +90,7 @@ class ShowCalender extends React.Component {
         <table id="calenderTable" className="table table-bordered">
             <thead>
                 <tr>
+                    <th>Sl No.</th>
                     <th>Year</th>
                     <th>From date</th>
                     <th>To date</th>

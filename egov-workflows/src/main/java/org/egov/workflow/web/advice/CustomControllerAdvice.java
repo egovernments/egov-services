@@ -4,9 +4,10 @@ import java.util.List;
 
 import org.egov.workflow.domain.exception.CustomBindException;
 import org.egov.workflow.domain.exception.InvalidDataException;
+import org.egov.workflow.domain.exception.NoDataFoundException;
 import org.egov.workflow.domain.exception.UnauthorizedAccessException;
-import org.egov.workflow.web.contract.ErrorResponse;
 import org.egov.workflow.web.contract.Error;
+import org.egov.workflow.web.contract.ErrorResponse;
 import org.egov.workflow.web.contract.FieldError;
 import org.egov.workflow.web.contract.ResponseInfo;
 import org.springframework.http.HttpStatus;
@@ -69,6 +70,24 @@ public class CustomControllerAdvice {
 		Error error = new Error();
 		error.setCode(InvalidDataException.code);
 		error.setMessage(ex.getFieldName());
+		error.setDescription(ex.getMessage());
+		errRes.setError(error);
+		
+		return errRes;
+    }
+    
+    
+    @ResponseStatus(HttpStatus.OK)
+    @ExceptionHandler(NoDataFoundException.class)
+    public ErrorResponse handleBindingErrors(NoDataFoundException ex) {
+    	ErrorResponse errRes = new ErrorResponse();
+     
+		ResponseInfo responseInfo = new ResponseInfo();
+		responseInfo.setStatus(HttpStatus.OK.toString());
+		errRes.setResponseInfo(responseInfo);
+		Error error = new Error();
+		error.setCode(NoDataFoundException.code);
+		error.setMessage(ex.getMessage());
 		error.setDescription(ex.getMessage());
 		errRes.setError(error);
 		

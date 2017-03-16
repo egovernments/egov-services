@@ -303,7 +303,8 @@ public class WorkflowBean implements Serializable {
         this.setCurrentState(processInstance.getStatus());
        /* if(processInstance.getAssignee()!=null)
             this.setApproverPositionId(Long.valueOf(processInstance.getAssignee()));*/
-        
+        if(processInstance.getAttributes()!=null)
+        {
         if(processInstance.getAttributes().get("amountRule")!=null)
         {
             this.setAmountRule(BigDecimal.valueOf(Long.valueOf(processInstance.getAttributes().get("amountRule").getCode())));
@@ -312,6 +313,7 @@ public class WorkflowBean implements Serializable {
         if(processInstance.getAttributes().get("additionalRule")!=null)
         {
             this.setAdditionalRule( processInstance.getAttributes().get("additionalRule").getCode() );
+        }
         }
          
          

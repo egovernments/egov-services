@@ -107,7 +107,7 @@ $(document).ready(function(){
 		if(e.target.files.length>0)
 		{
 			filefilled[$(this).attr('id')]=this.files[0].name;
-			console.log("File filled array:"+JSON.stringify(filefilled));
+			//console.log("File filled array:"+JSON.stringify(filefilled));
 			readURL(this, this.files[0].name);
 			var index = removedarray.indexOf(fileid);
 			if (index > -1) {
@@ -216,7 +216,7 @@ $(document).ready(function(){
 		    };
 
 		    lat = latLng.lat, lng = latLng.lng;
-		    console.log("User confirmed! Location found: " + latLng.lat + ", " + latLng.lng);
+		    //console.log("User confirmed! Location found: " + latLng.lat + ", " + latLng.lng);
 
 		    setlatlong(latLng.lat, latLng.lng);
 
@@ -233,7 +233,7 @@ $(document).ready(function(){
 
 		    lat = latLng.lat, lng = latLng.lng;
 
-		    console.log("User not confirmed! : 20.5937, 78.9629");
+		    //console.log("User not confirmed! : 20.5937, 78.9629");
 
 		    setlatlong(latLng.lat, latLng.lng);
 
@@ -258,10 +258,10 @@ $(document).ready(function(){
 
 		setTimeout(function () {
 		    if(!latLng){
-		        console.log("No confirmation from user, using fallback");
+		        //console.log("No confirmation from user, using fallback");
 		        userLocationNotFound();
 		    }else{
-		        console.log("Location was set");
+		        //console.log("Location was set");
 		    }
 		}, mapOptions.timeout + 500); // Wait extra second
 		
@@ -319,7 +319,6 @@ $(document).ready(function(){
 
 	function setlatlong(citylat , citylng){
 		var userLatLng = new google.maps.LatLng(citylat, citylng);
-		console.log(citylat, citylng);
 		getAddress(citylat, citylng);
 		map.setCenter(userLatLng);
 	}

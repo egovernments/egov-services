@@ -30,7 +30,7 @@ public class AttendanceConsumers {
     @KafkaListener(containerFactory = "kafkaListenerContainerFactory", topics = "egov-hr-attendance")
     public void listen(final ConsumerRecord<String, String> record) {
         LOGGER.info("key:" + record.key() + ":" + "value:" + record.value() + "thread:" + Thread.currentThread());
-        final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        final SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         if (record.topic().equals("egov-hr-attendance")) {
             final ObjectMapper objectMapper = new ObjectMapper();
             try {
@@ -39,7 +39,7 @@ public class AttendanceConsumers {
                         .create(objectMapper.readValue(record.value(), AttendanceRequest.class));
                 for (final Attendance attendance : attendanceRequest.getAttendances())
                     elasticSearchRepository.index(OBJECT_TYPE_ATENDANCE,
-                            attendance.getEmployee() + " - " + sdf.format(attendance.getAttendanceDate()), attendance);
+                            attendance.getEmployee() + "-" + sdf.format(attendance.getAttendanceDate()), attendance);
             } catch (final IOException e) {
                 e.printStackTrace();
             }

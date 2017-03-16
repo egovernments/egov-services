@@ -221,9 +221,11 @@ $(document).ready(function()
 });
 
 function complaintUpdate(obj){
+	var duplicateResponse = {};
+	duplicateResponse =  updateResponse;
 	var req_obj = {};
-	req_obj['RequestInfo'] = updateResponse.response_info;
-	req_obj['ServiceRequest'] = updateResponse.service_requests[0];
+	req_obj['RequestInfo'] = duplicateResponse.response_info;
+	req_obj['ServiceRequest'] = duplicateResponse.service_requests[0];
 
 	req_obj['RequestInfo']['auth_token'] = localStorage.getItem('auth');
 

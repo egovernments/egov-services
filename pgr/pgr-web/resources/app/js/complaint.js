@@ -435,7 +435,7 @@ function loadReceivingCenter(){
 			loadDD.load({
 				element:$('#receivingCenter'),
 				data:response,
-				keyValue:'name',
+				keyValue:'id',
 				keyDisplayName:'name'
 			});
 			$('#recenter').removeClass('hide');

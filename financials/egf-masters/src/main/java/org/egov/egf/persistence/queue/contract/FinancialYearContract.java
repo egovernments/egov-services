@@ -56,19 +56,24 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;@Builder@Getter@Setter@AllArgsConstructor@NoArgsConstructor
+import lombok.Setter;
 
-@JsonPropertyOrder({ "id","finYearRange","startingDate","endingDate","active","isActiveForPosting","isClosed","transferClosingBalance","fiscalPeriodList"})
+@Builder
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+
+@JsonPropertyOrder({ "id", "finYearRange", "startingDate", "endingDate", "active", "isActiveForPosting", "isClosed",
+        "transferClosingBalance", "fiscalPeriodList" })
 public class FinancialYearContract extends AuditableContract {
 
-        
-            private Long id;
+    private Long id;
 
     @Length(min = 1, max = 25)
     @NotBlank
-        private String finYearRange;
+    private String finYearRange;
 
-  
     @NotNull
     private Date startingDate;
 
@@ -78,25 +83,30 @@ public class FinancialYearContract extends AuditableContract {
     private Boolean active;
     @NotNull
     private Boolean isActiveForPosting;
-   
+
     private Boolean isClosed;
- 
+
     private Boolean transferClosingBalance;
-    
-        @OrderBy("id DESC ")
+
+    @OrderBy("id DESC ")
     private List<FiscalPeriod> fiscalPeriodList = new ArrayList<FiscalPeriod>(0);
-   
+
     public void setFiscalPeriod(final List<FiscalPeriod> fiscalPeriod) {
         this.fiscalPeriodList.clear();
         if (fiscalPeriod != null)
             this.fiscalPeriodList.addAll(fiscalPeriod);
     }
-    
+
     public void addFiscalPeriod(final FiscalPeriod fiscalPeriod) {
-    	this.fiscalPeriodList.add(fiscalPeriod);
+        this.fiscalPeriodList.add(fiscalPeriod);
     }
-        public Long getId()
-    {
-    	return this.id;
+
+    public Long getId() {
+        return this.id;
+    }
+
+    public FinancialYearContract(final String id) {
+        super();
+        this.id = Long.valueOf(id);
     }
 }

@@ -51,40 +51,40 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;@Builder@Getter@Setter@AllArgsConstructor@NoArgsConstructor
+import lombok.Setter;
 
-@JsonPropertyOrder({ "id","name","financialYear","startingDate","endingDate","active","isActiveForPosting","isClosed"})
+@Builder
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+
+@JsonPropertyOrder({ "id", "name", "financialYear", "startingDate", "endingDate", "active", "isActiveForPosting", "isClosed" })
 public class FiscalPeriodContract extends AuditableContract {
 
-        
-        
-                        private Long id;
-                       
-        @Length(min = 1, max = 25)
-        @NotNull
-        private String name = "";
-        
-        @NotNull
-                        private FinancialYearContract financialYear ;
-        
-        @NotNull
-        private Date startingDate;
-        
-        @NotNull
-        private Date endingDate;
-        @NotNull
-        private Boolean active;
-        @NotNull
-        private Boolean isActiveForPosting;
-        
-        private Boolean isClosed ;
+    private Long id;
 
-                public Long getId()
-        {
-        	return this.id;
-        }
-       
+    @Length(min = 1, max = 25)
+    @NotNull
+    private String name = "";
 
-        
+    @NotNull
+    private FinancialYearContract financialYear;
+
+    @NotNull
+    private Date startingDate;
+
+    @NotNull
+    private Date endingDate;
+    @NotNull
+    private Boolean active;
+    @NotNull
+    private Boolean isActiveForPosting;
+
+    private Boolean isClosed;
+
+    public Long getId() {
+        return this.id;
+    }
 
 }

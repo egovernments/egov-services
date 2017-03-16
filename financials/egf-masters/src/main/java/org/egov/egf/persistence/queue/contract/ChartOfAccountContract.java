@@ -63,43 +63,47 @@ import lombok.Setter;
 @NoArgsConstructor
 
 @JsonPropertyOrder({ "id", "glcode", "name", "accountCodePurpose", "description", "isActiveForPosting", "parentId",
-		"type", "classification", "functionRequired", "budgetCheckRequired", "majorCode", "isSubLedger",
-		"chartOfAccountDetails" })
+        "type", "classification", "functionRequired", "budgetCheckRequired", "majorCode", "isSubLedger",
+        "chartOfAccountDetails" })
 public class ChartOfAccountContract extends AuditableContract {
 
-	private Long id;
+    private Long id;
 
-	@NotNull
-	@Length(max = 16, min = 1)
-	private String glcode;
-	@NotNull
-	@Length(max = 128, min = 5)
-	private String name;
+    @NotNull
+    @Length(max = 16, min = 1)
+    private String glcode;
+    @NotNull
+    @Length(max = 128, min = 5)
+    private String name;
 
-	private AccountCodePurposeContract accountCodePurpose;
+    private AccountCodePurposeContract accountCodePurpose;
 
-	@Length(max = 256)
-	private String description;
+    @Length(max = 256)
+    private String description;
 
-	@NotNull
-	private Boolean isActiveForPosting;
+    @NotNull
+    private Boolean isActiveForPosting;
 
-	private ChartOfAccountContract parentId;
-	@NotNull
-	private Character type;
-	@NotNull
-	private Long classification;
-	@NotNull
-	private Boolean functionRequired;
-	@NotNull
-	private Boolean budgetCheckRequired;
+    private ChartOfAccountContract parentId;
+    @NotNull
+    private Character type;
+    @NotNull
+    private Long classification;
+    @NotNull
+    private Boolean functionRequired;
+    @NotNull
+    private Boolean budgetCheckRequired;
 
-	@Length(max = 16)
-	private String majorCode;
+    @Length(max = 16)
+    private String majorCode;
 
-	@Transient
-	private Boolean isSubLedger;
+    @Transient
+    private Boolean isSubLedger;
 
-	private Set<ChartOfAccountDetailContract> chartOfAccountDetails = new HashSet<ChartOfAccountDetailContract>();
+    private Set<ChartOfAccountDetailContract> chartOfAccountDetails = new HashSet<ChartOfAccountDetailContract>();
 
+    public ChartOfAccountContract(final String id) {
+        super();
+        this.id = Long.valueOf(id);
+    }
 }

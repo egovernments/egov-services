@@ -15,7 +15,6 @@ import org.egov.egf.persistence.queue.contract.RequestInfo;
 import org.egov.egf.persistence.queue.contract.ResponseInfo;
 import org.egov.egf.persistence.service.AccountDetailKeyService;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.builder.SkipExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -37,7 +36,7 @@ public class AccountDetailKeyController {
 	@Autowired
 	private AccountDetailKeyService  accountDetailKeyService;
 
-	@PostMapping
+	@PostMapping("_create")
 	@ResponseStatus(HttpStatus.CREATED)
 	public  AccountDetailKeyContractResponse create(@RequestBody @Valid AccountDetailKeyContractRequest accountDetailKeyContractRequest, BindingResult errors) {
 		ModelMapper modelMapper=new ModelMapper();
@@ -63,7 +62,7 @@ public class AccountDetailKeyController {
 		return accountDetailKeyContractResponse;
 	}
 
-	@PutMapping(value = "/{uniqueId}")
+	@PostMapping(value = "/{uniqueId}/_update")
 	@ResponseStatus(HttpStatus.OK)
 	public AccountDetailKeyContractResponse update(@RequestBody @Valid AccountDetailKeyContractRequest accountDetailKeyContractRequest, BindingResult errors,
 			@PathVariable Long uniqueId) {

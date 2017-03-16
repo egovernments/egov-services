@@ -45,7 +45,7 @@ public class FiscalPeriodSpecification implements Specification<FiscalPeriod> {
 		}
 
 		if (criteria.getFinancialYear() != null) {
-			predicates.add(criteriaBuilder.equal(financialYear, criteria.getFinancialYear()));
+			predicates.add(criteriaBuilder.equal(financialYear, criteria.getFinancialYear().getId()));
 		}
 
 		if (criteria.getStartingDate() != null) {

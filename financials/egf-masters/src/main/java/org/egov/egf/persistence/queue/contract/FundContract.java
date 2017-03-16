@@ -50,12 +50,18 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;@Builder@Getter@Setter@AllArgsConstructor@NoArgsConstructor
+import lombok.Setter;
 
-@JsonPropertyOrder({ "id","name","code","identifier","level","parentId","isParent","active"})
+@Builder
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+
+@JsonPropertyOrder({ "id", "name", "code", "identifier", "level", "parentId", "isParent", "active" })
 public class FundContract extends AuditableContract {
 
-                    private Long id;
+    private Long id;
 
     @Length(max = 50, min = 2)
     @NotNull
@@ -66,19 +72,23 @@ public class FundContract extends AuditableContract {
     private String code;
     @NotNull
     private Character identifier;
-    
+
     @NotNull
     private Long level = Long.valueOf(1l);
 
-            private FundContract parentId;
+    private FundContract parentId;
 
     private Boolean isParent;
     @NotNull
     private Boolean active;
 
-        public Long getId()
-    {
-    	return this.id;
+    public Long getId() {
+        return this.id;
+    }
+
+    public FundContract(final String id) {
+        super();
+        this.id = Long.valueOf(id);
     }
 
 }

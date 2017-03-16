@@ -38,7 +38,7 @@ public class AccountDetailKeySpecification implements Specification<AccountDetai
 		}
 
 		if (criteria.getAccountDetailType() != null) {
-			predicates.add(criteriaBuilder.equal(accountDetailType, criteria.getAccountDetailType()));
+			predicates.add(criteriaBuilder.equal(accountDetailType, criteria.getAccountDetailType().getId()));
 		}
 		
                 if(criteria.getIds() != null && !criteria.getIds().isEmpty())

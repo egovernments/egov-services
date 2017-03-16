@@ -36,7 +36,7 @@ public class AccountDetailTypeController {
 	@Autowired
 	private AccountDetailTypeService  accountDetailTypeService;
 
-	@PostMapping
+	@PostMapping("_create")
 	@ResponseStatus(HttpStatus.CREATED)
 	public  AccountDetailTypeContractResponse create(@RequestBody @Valid AccountDetailTypeContractRequest accountDetailTypeContractRequest, BindingResult errors) {
 		ModelMapper modelMapper=new ModelMapper();
@@ -62,7 +62,7 @@ public class AccountDetailTypeController {
 		return accountDetailTypeContractResponse;
 	}
 
-	@PutMapping(value = "/{uniqueId}")
+	@PostMapping(value = "/{uniqueId}/_update")
 	@ResponseStatus(HttpStatus.OK)
 	public AccountDetailTypeContractResponse update(@RequestBody @Valid AccountDetailTypeContractRequest accountDetailTypeContractRequest, BindingResult errors,
 			@PathVariable Long uniqueId) {

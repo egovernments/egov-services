@@ -48,8 +48,8 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -90,6 +90,11 @@ public class AccountDetailTypeContract extends AuditableContract implements java
 
     public Long getId() {
         return this.id;
+    }
+
+    public AccountDetailTypeContract(final String id) {
+        super();
+        this.id = Long.valueOf(id);
     }
 
 }

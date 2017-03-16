@@ -43,7 +43,7 @@ public class SchemeSpecification implements Specification<Scheme> {
 		}
 
 		if (criteria.getFund() != null) {
-			predicates.add(criteriaBuilder.equal(fund, criteria.getFund()));
+			predicates.add(criteriaBuilder.equal(fund, criteria.getFund().getId()));
 		}
 
 		if (criteria.getCode() != null) {

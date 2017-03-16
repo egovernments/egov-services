@@ -49,33 +49,38 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;@Builder@Getter@Setter@AllArgsConstructor@NoArgsConstructor
+import lombok.Setter;
 
-@JsonPropertyOrder({ "id","accountDetailType","code","name","active","description"})
+@Builder
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+
+@JsonPropertyOrder({ "id", "accountDetailType", "code", "name", "active", "description" })
 public class AccountEntityContract extends AuditableContract {
 
-		
-			private Long id;
+    private Long id;
 
-	@NotNull
-			private AccountDetailTypeContract accountDetailType;
+    @NotNull
+    private AccountDetailTypeContract accountDetailType;
 
-	@NotNull
-	@Length(max = 25, min = 1)
-	private String code;
+    @NotNull
+    @Length(max = 25, min = 1)
+    private String code;
 
-	@NotNull
-	@Length(max = 350, min = 1)
-	private String name;
-	
-	@NotNull
-	private Boolean active;
+    @NotNull
+    @Length(max = 350, min = 1)
+    private String name;
 
-	@Length(max = 256)
-	private String description;
+    @NotNull
+    private Boolean active;
 
-		public Long getId() {
-		return this.id;
-	}
+    @Length(max = 256)
+    private String description;
+
+    public Long getId() {
+        return this.id;
+    }
 
 }

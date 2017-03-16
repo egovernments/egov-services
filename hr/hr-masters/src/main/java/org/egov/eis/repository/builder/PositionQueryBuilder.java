@@ -123,7 +123,7 @@ public class PositionQueryBuilder {
 		if (positionGetRequest.getDesignationId() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" depDes.designationId = ?");
-			preparedStatementValues.add(positionGetRequest.getDepartmentId());
+			preparedStatementValues.add(positionGetRequest.getDesignationId());
 		}
 
 		if (positionGetRequest.getActive() != null) {

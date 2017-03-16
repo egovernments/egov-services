@@ -86,7 +86,6 @@ class EmployeeSearch extends React.Component {
           <form onSubmit={(e)=>{search(e)}}>
           <fieldset>
             <div className="row">
-
                 <div className="col-sm-6">
                     <div className="row">
                         <div className="col-sm-6 label-text">

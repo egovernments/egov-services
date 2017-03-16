@@ -35,14 +35,13 @@ class Designation extends React.Component{
         var type=getUrlVars()["type"];
         var id=getUrlVars()["id"];
 
-        if(getUrlVars()["type"]==="view")
-        {
-          for (var variable in this.state.designationSet)
-          if(variable!="active")
-            document.getElementById(variable).disabled = true;
-          }
+        // if(getUrlVars()["type"]==="view")
+        // {
+        //   for (var variable in this.state.designationSet)
+        //     document.getElementById(variable).disabled = true;
+        //   }
 
-          if(type==="view"||type==="update")
+          if(type==="update"||type==="view")
           {
                console.log("fired");
               console.log(getCommonMasterById("hr-masters","designations","Designation",id).responseJSON["Designation"][0]);
@@ -96,7 +95,8 @@ class Designation extends React.Component{
         };
 
 
-        return(<div>
+        return(
+        <div>
           <form  onSubmit={(e)=>{addOrUpdate(e,mode)}}>
           <fieldset>
           <div className="row">
@@ -106,9 +106,9 @@ class Designation extends React.Component{
                         <label for="">Name<span>*</span></label>
                     </div>
                     <div className="col-sm-6">
-                    <input type="text" name="name" value={name} id="name" onChange={(e)=>{
-                        handleChange(e,"name")
-                    }} required/>
+                      <input type="text" name="name" value={name} id="name" onChange={(e)=>{
+                          handleChange(e,"name")
+                      }} required/>
                     </div>
                 </div>
               </div>
@@ -118,28 +118,27 @@ class Designation extends React.Component{
                           <label for="">Code <span>*</span></label>
                       </div>
                       <div className="col-sm-6">
-                      <input type="text" name="code" value={code} id="code"  onChange={(e)=>{
-                          handleChange(e,"code")
-                      }}required/>
+                      <input type="text" name="code" value={code} id="code"
+                        onChange={(e)=>{  handleChange(e,"code")}}required/>
                       </div>
                   </div>
               </div>
           </div>
-          <div className="row">
+        <div className="row">
             <div className="col-sm-6">
                 <div className="row">
                     <div className="col-sm-6 label-text">
                         <label for="">Description <span>*</span></label>
                     </div>
                     <div className="col-sm-6">
-                          <div className="styled-select">
+                        <div className="styled-select">
                           <select id="description" name="description" value={description} required="true"
                             onChange={(e)=>{  handleChange(e,"description")}}>
 
                               <option>Select description</option>
                               {renderOption(this.state.descriptionList)}
                          </select>
-                          </div>
+                        </div>
                     </div>
                 </div>
               </div>
@@ -150,7 +149,7 @@ class Designation extends React.Component{
                 <div className="row">
                     <div className="col-sm-6 col-sm-offset-6">
                           <label className="radioUi">
-                            <input type="checkbox" name="active" id="active"  onChange={(e)=>{
+                            <input type="checkbox" name="active" id="active" value="true" onChange={(e)=>{
                                 handleChange(e,"active")}}required/> Active
                           </label>
                     </div>
@@ -158,14 +157,13 @@ class Designation extends React.Component{
               </div>
           </div>
 
-
           <div className="text-center">
-              {showActionButton()}
-              <button type="button" className="btn btn-submit" onClick={(e)=>{this.close()}}>Close</button>
-          </div>
-          </fieldset>
-          </form>
+                {showActionButton()}
+                <button type="button" className="btn btn-submit" onClick={(e)=>{this.close()}}>Close</button>
         </div>
+        </fieldset>
+        </form>
+    </div>
         );
     }
 

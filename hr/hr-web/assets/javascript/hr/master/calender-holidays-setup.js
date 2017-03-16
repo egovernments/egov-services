@@ -4,7 +4,8 @@ constructor(props){
   this.state={list:[],holiday:
       {CalendarYear:"",
       name:"",
-      applicableOn:"", active:""
+      applicableOn:"",
+      active:""
     },
         year:[], holidays:[]
       }
@@ -17,7 +18,7 @@ constructor(props){
 
 componentWillMount(){
   this.setState({
-  year:commonApiPost("egov-common-masters","calendarYears","_search",{tenantId}).responseJSON["CalendarYear"]
+    year:getCommonMaster("egov-common-masters","calendaryears","CalendarYear").responseJSON["CalendarYear"] || []
 })
 }
     handleChange(e,name)

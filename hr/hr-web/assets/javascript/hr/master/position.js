@@ -2,19 +2,19 @@ class PositionMaster extends React.Component{
     constructor(props){
       super(props);
       this.state={list:[],positionSet:{
-      department:"",
-      designation:"",
+        departmentCode:"",
+        designationCode:"",
       name:"",
       isPostOutsourced:""},
-      departmentList:[],designationList:[]}
+      departments:[],designation:[]}
       this.handleChange=this.handleChange.bind(this);
       this.addOrUpdate=this.addOrUpdate.bind(this);
 }
     componentWillMount()
     {
       this.setState({
-      departmentList:commonApiPost("hr-masters","positions","_search",{tenantId}).responseJSON["Position"],
-      designationList:commonApiPost("hr-masters","positions","_search",{tenantId}).responseJSON["Position"],
+        departments:getCommonMaster("egov-common-masters","departments","Department").responseJSON["Department"] || [],
+        designation:getCommonMaster("hr-masters","designations","Designation").responseJSON["Designation"] || []
     })
     }
 
@@ -57,50 +57,37 @@ class PositionMaster extends React.Component{
 
     addOrUpdate(e,mode){
       e.preventDefault();
-      console.log({name:this.state.positionSet.name,deptdesig:{designationList:this.state.positionSet.designation,departmentList:this.state.positionSet.department},isPostOutsourced:this.state.positionSet.isPostOutsourced});
+      console.log({name:this.state.positionSet.name,deptdesig:{designation:this.state.positionSet.designationCode,departments:this.state.positionSet.departmentCode},isPostOutsourced:this.state.positionSet.isPostOutsourced});
       if (mode==="update") {
           console.log("update");
       } else {
       this.setState({positionSet:{
-      department:"",
-      designation:"",
+      departmentCode:"",
+      designationCode:"",
       name:"",
-      isPostOutsourced:""},departmentList:"",designationList:""})
+      isPostOutsourced:""},departments:"",designation:""})
     }
   }
 
     render(){
 
       let {handleChange,addOrUpdate}=this;
-      let {department,designation,name,isPostOutsourced,designationList,departmentList}=this.state.positionSet;
+      let {departmentCode,designationCode,name,isPostOutsourced}=this.state.positionSet;
       let mode =getUrlVars()["type"];
+
+
       const renderOption=function(list)
       {
-        if(list)
-        {
-          return list.map((item)=>
+          if(list)
           {
-              return (<option key={item.deptdesig.designation.name} value={item.deptdesig.designation.name}>
-                      {item.deptdesig.designation.name}
-                </option>)
-          })
-        }
-
+              return list.map((item)=>
+              {
+                  return (<option key={item.name} value={item.name}>
+                          {item.name}
+                    </option>)
+              })
+          }
       }
-      const renderOption1=function(list)
-      {
-        if(list)
-        {
-          return list.map((item)=>
-          {
-              return (<option key={item.deptdesig.department} value={item.department}>
-                      {item.deptdesig.department}
-                </option>)
-          })
-        }
-
-      }
-
       const showActionButton=function() {
         if((!mode) ||mode==="update")
         {
@@ -116,37 +103,37 @@ class PositionMaster extends React.Component{
           <div className="col-sm-6">
               <div className="row">
                   <div className="col-sm-6 label-text">
-                      <label for="">Department<span>*</span></label>
+                    <label for="">Department  </label>
                   </div>
                   <div className="col-sm-6">
-                    <div className="styled-select">
-                    <select id="department" name="department" value={department} required="true" onChange={(e)=>{
-                        handleChange(e,"department")
-                    }} required>
-                      <option>Select Department</option>
-                      {renderOption1(this.state.departmentList)}
-                   </select>
-                    </div>
+                  <div className="styled-select">
+                      <select id="department" name="department" onChange={(e)=>{
+                          handleChange(e,"departmentCode")
+                      }}>
+                        <option>Select Department</option>
+                        {renderOption(this.state.departments)}
+                     </select>
+                  </div>
                   </div>
               </div>
             </div>
             <div className="col-sm-6">
                 <div className="row">
                     <div className="col-sm-6 label-text">
-                        <label for="">Designation<span>*</span> </label>
+                      <label for="">Designation  </label>
                     </div>
                     <div className="col-sm-6">
-                        <div className="styled-select">
-                        <select id="designation" name="designation" value={designation} required="true" onChange={(e)=>{
-                            handleChange(e,"designation")
-                        }}required>
+                    <div className="styled-select">
+                        <select id="designation" name="designation" onChange={(e)=>{
+                            handleChange(e,"designationCode")
+                        }}>
                         <option>Select Designation</option>
-                        {renderOption(this.state.designationList)}
+                        {renderOption(this.state.designation)}
                        </select>
-                        </div>
+                    </div>
                     </div>
                 </div>
-            </div>
+              </div>
         </div>
         <div className="row">
           <div className="col-sm-6">

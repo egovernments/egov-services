@@ -49,7 +49,7 @@ public class AgreementRowMapper implements RowMapper<Agreement> {
 		String status = rs.getString("status");
 		agreement.setStatus(Status.fromValue(status));
 		agreement.setTinNumber(rs.getString("tin_number"));
-		//agreement.setTenantId(rs.getString("tenant_id"));
+		agreement.setTenantId(rs.getString("tenant_id"));
 		agreement.setTenderDate(rs.getTimestamp("tender_date"));
 		agreement.setTenderNumber(rs.getString("tender_number"));
 		agreement.setSecurityDeposit(rs.getDouble("security_deposit"));

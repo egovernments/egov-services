@@ -5,6 +5,7 @@ import java.util.List;
 import org.egov.lams.config.PropertiesManager;
 import org.egov.lams.contract.AllotteeResponse;
 import org.egov.lams.contract.AssetResponse;
+import org.egov.lams.contract.UserSearchRequest;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.AgreementCriteria;
 import org.egov.lams.model.Allottee;
@@ -135,7 +136,8 @@ public class AgreementRepository {
 		}catch (DataAccessException e) {
 			throw new RuntimeException(e.getMessage());
 		}
-		if(agreements.isEmpty()) throw new RuntimeException("The criteria provided did not match any agreements");
+		if(agreements.isEmpty())
+			throw new RuntimeException("The criteria provided did not match any agreements");
 		agreementCriteria.setAllottee(allotteeHelper.getAllotteeIdListByAgreements(agreements));
 		List<Allottee> allottees = getAllottees(agreementCriteria);
 		agreementCriteria.setAsset(assetHelper.getAssetIdListByAgreements(agreements));
@@ -176,12 +178,15 @@ public class AgreementRepository {
 		String url = null;
 		AllotteeResponse allotteeResponse = null;
 		try {
-			url = propertiesManager.getAllotteeServiceHostName()+"/_search"+ "?" + queryString;
+			url = propertiesManager.getAllotteeServiceHostName()+"/_search";
+			UserSearchRequest userSearchRequest = new UserSearchRequest();
+			userSearchRequest.setMobileNumber("9999999999");
 			logger.info(url.toString());
-			allotteeResponse = restTemplate.postForObject(url,new RequestInfo(), AllotteeResponse.class);
+			allotteeResponse = restTemplate.postForObject(url,userSearchRequest, AllotteeResponse.class);
 		} catch (Exception e) {
 			// FIXME log error to getstacktrace
-			throw new RuntimeException("check if entered allottee API url is correct or the allottee service is running");
+			System.err.println(e);
+			throw new RuntimeException(e.getMessage());
 		}
 		System.err.println(allotteeResponse);
 		if (allotteeResponse.getAllottee() == null || allotteeResponse.getAllottee().size()<=0)

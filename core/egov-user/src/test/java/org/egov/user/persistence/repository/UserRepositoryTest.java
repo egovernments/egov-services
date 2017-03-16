@@ -96,7 +96,7 @@ public class UserRepositoryTest {
                 .roles(roles)
                 .build();
         final Role role = new Role();
-        when(roleRepository.findByNameContainingIgnoreCase(roleName)).thenReturn(role);
+        when(roleRepository.findByNameIgnoreCase(roleName)).thenReturn(role);
 
         User actualUser = userRepository.save(domainUser);
 
@@ -116,7 +116,7 @@ public class UserRepositoryTest {
                 .password(rawPassword)
                 .build();
         final Role role = new Role();
-        when(roleRepository.findByNameContainingIgnoreCase(roleName)).thenReturn(role);
+        when(roleRepository.findByNameIgnoreCase(roleName)).thenReturn(role);
         final String expectedEncodedPassword = "encodedPassword";
         when(passwordEncoder.encode(rawPassword)).thenReturn(expectedEncodedPassword);
 
@@ -139,8 +139,8 @@ public class UserRepositoryTest {
                 .build();
         final Role role1 = Role.builder().id(1L).build();
         final Role role2 = Role.builder().id(2L).build();
-        when(roleRepository.findByNameContainingIgnoreCase(roleName1)).thenReturn(role1);
-        when(roleRepository.findByNameContainingIgnoreCase(roleName2)).thenReturn(role2);
+        when(roleRepository.findByNameIgnoreCase(roleName1)).thenReturn(role1);
+        when(roleRepository.findByNameIgnoreCase(roleName2)).thenReturn(role2);
 
         userRepository.save(domainUser);
 

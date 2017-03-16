@@ -1,4 +1,4 @@
-FROM openjdk:8u121-jre-alpine
+FROM egovio/apline-jre:8u121
 
 MAINTAINER Manikanta<manikanta@egovernments.org>
 

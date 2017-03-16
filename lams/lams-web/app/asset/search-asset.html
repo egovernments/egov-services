@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Lease & Agreement</title>
+    <title>EIS</title>
 
     <!-- Bootstrap -->
     <link rel="stylesheet" type="text/css" href="../../../assets/stylesheet/bootstrap.min.css">
@@ -19,6 +19,8 @@
     <link rel="stylesheet" type="text/css" href="../../../assets/stylesheet/jquery.dataTables.min.css">
     <link rel="stylesheet" type="text/css" href="../../../assets/stylesheet/responsive.bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../../assets/stylesheet/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" type="text/css" href="../../../assets/stylesheet/buttons.dataTables.min.css">
+    <!-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.13/css/dataTables.bootstrap.min.css"> -->
 
     <style>
         body {
@@ -86,10 +88,30 @@
     <script type="text/javascript" src="../../../assets/javascript/dataTables.responsive.min.js"></script>
     <script type="text/javascript" src="../../../assets/javascript/moment.js"></script>
     <script type="text/javascript" src="../../../assets/javascript/bootstrap-datetimepicker.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.2.4/js/dataTables.buttons.min.js">
+
+    </script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.2.4/js/buttons.flash.min.js">
+
+    </script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js">
+
+    </script>
+    <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js" charset="utf-8"></script>
+    <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js" charset="utf-8"></script>
+    <script src="https://cdn.datatables.net/buttons/1.2.4/js/buttons.html5.min.js" charset="utf-8"></script>
+    <script src="https://cdn.datatables.net/buttons/1.2.4/js/buttons.print.min.js" charset="utf-8"></script>
+    <!-- <script src="https://cdn.datatables.net/1.10.13/js/dataTables.bootstrap.min.js" charset="utf-8"></script> -->
+    <script type="text/javascript" src="../../../assets/javascript/dataTables.responsive.min.js"></script>
+
     <!-- Jquery form validator -->
     <script type="text/javascript" src="../../../assets/javascript/global/jquery-validation/jquery.validate.min.js"></script>
     <script type="text/javascript" src="../../../assets/javascript/global/jquery-validation/additional-methods.min.js"></script>
+    <script src="https://unpkg.com/react@15/dist/react.min.js"></script>
+    <script src="https://unpkg.com/react-dom@15/dist/react-dom.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.js"></script>
 </head>
+
 
 <body class="page-body">
     <!-- for showing loading spinner -->
@@ -204,138 +226,22 @@
                                 <div class="body-cont-inner">
                                    <div class="form-section" id="shopAssetDetailsBlock">
                                         <h3>Search Asset  </h3>
-                                        <div class="form-section-inner">
-                                            <div class="row">
-                                              <div class="col-sm-6">
-                                                  <div class="row">
-                                                      <div class="col-sm-6 label-text">
-                                                          <label for="assetCode"> Code  </label>
-                                                      </div>
-                                                      <div class="col-sm-6">
-                                                          <input id="assetCode" name="assetCode" type="text" required/>
-                                                      </div>
-                                                  </div>
-                                              </div>
-                                                <div class="col-sm-6">
-                                                    <div class="row">
-                                                        <div class="col-sm-6 label-text">
-                                                            <label for="assetName"> Name  </label>
-                                                        </div>
-                                                        <div class="col-sm-6">
-                                                            <input id="assetName" name="assetName" type="text"/>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                              </div>
-
-                                              <div class="row">
-                                                <div class="col-sm-6">
-                                                    <div class="row">
-                                                        <div class="col-sm-6 label-text">
-                                                            <label for="shopAreaUom">Asset Category Type  </label>
-                                                        </div>
-                                                        <div class="col-sm-6">
-                                                            <div class="styled-select">
-                                                                <select id="shopAreaUom" name="shopAreaUom">
-                                                                <option>Land</option>
-                                                                <option>Market</option>
-                                                                <option>Shopping Complex</option>
-                                                            </select>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-sm-6">
-                                                    <div class="row">
-                                                        <div class="col-sm-6 label-text">
-                                                            <label for="shopAreaUom">Department  </label>
-                                                        </div>
-                                                        <div class="col-sm-6">
-                                                            <div class="styled-select">
-                                                                <select id="shopAreaUom" name="shopAreaUom" >
-                                                                <option>Accounts</option>
-                                                                <option>Education</option>
-                                                                <option>Revenue</option>
-                                                            </select>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-
-                                              </div>
-
-
-                                              <div class="row">
-                                                <div class="col-sm-6">
-                                                    <div class="row">
-                                                        <div class="col-sm-6 label-text">
-                                                            <label for="status">Status  </label>
-                                                        </div>
-                                                        <div class="col-sm-6">
-                                                            <div class="styled-select">
-                                                                <select id="status" name="status" multiple row="5" cols="10">
-                                                                <option>Created</option>
-                                                                <option>CWIP</option>
-                                                                <option>Revaluated</option>
-                                                            </select>
-
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                              </div>
-
-                                              <div class="text-center">
-                                                <button type="button" class="btn btn-submit" id="search">Search</button>
-                                                  <button type="submit" class="btn btn-submit">close</button>
-                                              </div>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>
+                                        <div id="root"></div>
+                                        <script type="text/babel"  src="../../../assets/javascript/asset/search-asset.js"></script>
                                     </div>
                                   </div>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
 
-                                    <div role="tabpanel" class="tab-pane" id="assignmentDetails">
-                                    <div class="form-section" >
-                                            <h3 class="pull-left">Asset Search Result </h3>
-                                            <div class="clearfix"></div>
 
-                                            <div class="land-table">
-                                                <table class="table table-bordered">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Code</th>
-                                                            <th>Name</th>
-                                                            <th>Asset Category Type</th>
-                                                            <th>Department</th>
-                                                            <th>Status</th>
-                                                            <th>Asset Details</th>
-                                                            <th>Action</th>
-                                                        </tr>
-                                                    </thead>
 
-                                                    <tbody>
-                                                      <tr>
-                                                        <td> 001 </td>
-                                                        <td> Land</td>
-                                                      <td> Land </td>
-                                                      <td>  Land</td>
-                                                      <td> Buying</td>
-                                                      <td>400 sq.ft</td> 
 
-                                                      <td> <button class="btn btn-default btn-action"><span class="glyphicon glyphicon-trash"></button></span>
-                                                        <button class="btn btn-default btn-action"><span class="glyphicon glyphicon-pencil"></button></span>
-                                                      </td>
-                                                      </tr>
 
-                                                    </tbody>
 
-                                                </table>
-
-                                            </div>
 
 
 
@@ -350,7 +256,6 @@
 
     <script src="../../../assets/javascript/egov/custom.js"></script>
     <script src="../../../assets/javascript/js.cookies.js"></script>
-    <script src="../../../assets/javascript/agreements/agreements.js"></script>
 
     <script type="text/javascript">
         $(window).load(function() {

@@ -53,10 +53,11 @@ public class UserRepository {
         return userJpaRepository.save(entityUser);
     }
 
-    public List<User> findAll(UserSearch userSearch) {
+    public List<org.egov.user.domain.model.User> findAll(UserSearch userSearch) {
         Specification<User> specification = userSearchSpecificationFactory.getSpecification(userSearch);
         PageRequest pageRequest = createPageRequest(userSearch);
-        return userJpaRepository.findAll(specification, pageRequest).getContent();
+        List<User> userEntities = userJpaRepository.findAll(specification, pageRequest).getContent();
+        return userEntities.stream().map(User::toDomain).collect(Collectors.toList());
     }
 
     private void encryptPassword(User entityUser) {
@@ -84,7 +85,7 @@ public class UserRepository {
     private Set<Role> fetchRolesByName(User user) {
         return user.getRoles()
                 .stream()
-                .map((role) -> roleRepository.findByNameContainingIgnoreCase(role.getName()))
+                .map((role) -> roleRepository.findByNameIgnoreCase(role.getName()))
                 .collect(Collectors.toSet());
     }
 

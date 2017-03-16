@@ -216,7 +216,7 @@ public class Complaint extends AbstractAuditable {
 		map.put("ReceivingMode", getReceivingMode().toString());
 		map.put("ComplaintStatus", getStatus().getName());
 		if (getReceivingCenter() != null) {
-			map.put("ReceivingCenter", getReceivingCenter().getName());
+			map.put("receivingCenter", getReceivingCenter().getId().toString());
 		}
 		if (getLocation() != null) {
 			map.put("LocationName", getLocation().getName());

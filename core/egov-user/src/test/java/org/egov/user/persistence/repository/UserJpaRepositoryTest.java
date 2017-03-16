@@ -3,9 +3,9 @@ package org.egov.user.persistence.repository;
 
 import org.egov.user.domain.model.UserSearch;
 import org.egov.user.persistence.entity.User;
-import org.egov.user.persistence.entity.enums.BloodGroup;
-import org.egov.user.persistence.entity.enums.Gender;
-import org.egov.user.persistence.entity.enums.UserType;
+import org.egov.user.domain.model.enums.BloodGroup;
+import org.egov.user.domain.model.enums.Gender;
+import org.egov.user.domain.model.enums.UserType;
 import org.egov.user.persistence.specification.FuzzyNameMatchingSpecification;
 import org.egov.user.persistence.specification.MultiFieldsMatchingSpecification;
 import org.junit.Test;

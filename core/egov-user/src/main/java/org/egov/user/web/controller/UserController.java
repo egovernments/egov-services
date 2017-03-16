@@ -43,15 +43,16 @@ public class UserController {
     }
 
     @PostMapping("/_search")
-    public ResponseEntity<?> get(@RequestBody UserSearchRequest request) {
-        List<User> userEntities = userService.searchUsers(request.toDomain());
+    public ResponseEntity<UserSearchResponse> get(@RequestBody UserSearchRequest request) {
+        List<org.egov.user.domain.model.User> userModels = userService.searchUsers(request.toDomain());
 
-        List<UserRequest> userContracts = userEntities.stream()
-                        .map(UserRequest::new)
-                        .collect(Collectors.toList());
+        List<UserSearchResponseContent> userContracts = userModels.stream()
+                .map(UserSearchResponseContent::new)
+                .collect(Collectors.toList());
         ResponseInfo responseInfo = ResponseInfo.builder().status(String.valueOf(HttpStatus.OK.value())).build();
-        UserResponse searchUserResponse = new UserResponse(responseInfo, userContracts);
-        return new ResponseEntity<>(searchUserResponse, HttpStatus.OK);
+        UserSearchResponse userSearchResponse = new UserSearchResponse(responseInfo, userContracts);
+
+        return new ResponseEntity<>(userSearchResponse, HttpStatus.OK);
     }
 
     @PostMapping("/_details")
@@ -73,7 +74,7 @@ public class UserController {
     }
 
     private UserDetailResponse createUser(@RequestBody CreateUserRequest createUserRequest,
-                                                          boolean validateUser) {
+                                          boolean validateUser) {
         org.egov.user.domain.model.User user = createUserRequest.toDomain();
         final User newUser = userService.save(user, validateUser);
         return createResponse(newUser);

@@ -1,8 +1,8 @@
 package org.egov.user.domain.model;
 
 import org.egov.user.domain.exception.InvalidUserException;
-import org.egov.user.persistence.entity.enums.Gender;
-import org.egov.user.persistence.entity.enums.UserType;
+import org.egov.user.domain.model.enums.Gender;
+import org.egov.user.domain.model.enums.UserType;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

@@ -23,6 +23,8 @@ public class Agreement {
 
 	@NotNull
 	private Long id;
+
+	@NotNull
 	private String tenantId;
 
 	@NotNull

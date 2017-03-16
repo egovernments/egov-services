@@ -17,6 +17,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
@@ -88,14 +89,14 @@ public class UserRepositoryTest {
     public void test_should_save_entity_user() {
         User expectedUser = mock(User.class);
         when(userJpaRepository.save(any(User.class))).thenReturn(expectedUser);
-        final HashSet<Role> roles = new HashSet<>();
+        final HashSet<org.egov.user.domain.model.Role> roles = new HashSet<>();
         final String roleName = "roleName1";
-        roles.add(Role.builder().name(roleName).build());
+        roles.add(org.egov.user.domain.model.Role.builder().name(roleName).build());
         org.egov.user.domain.model.User domainUser = org.egov.user.domain.model.User.builder()
                 .roles(roles)
                 .build();
         final Role role = new Role();
-        when(roleRepository.findByNameContainingIgnoreCase(roleName)).thenReturn(role);
+        when(roleRepository.findByNameIgnoreCase(roleName)).thenReturn(role);
 
         User actualUser = userRepository.save(domainUser);
 
@@ -106,16 +107,16 @@ public class UserRepositoryTest {
     public void test_should_set_encrypted_password_to_new_user() {
         User expectedUser = mock(User.class);
         when(userJpaRepository.save(any(User.class))).thenReturn(expectedUser);
-        final HashSet<Role> roles = new HashSet<>();
+        final HashSet<org.egov.user.domain.model.Role> roles = new HashSet<>();
         final String roleName = "roleName1";
-        roles.add(Role.builder().name(roleName).build());
+        roles.add(org.egov.user.domain.model.Role.builder().name(roleName).build());
         final String rawPassword = "rawPassword";
         org.egov.user.domain.model.User domainUser = org.egov.user.domain.model.User.builder()
                 .roles(roles)
                 .password(rawPassword)
                 .build();
         final Role role = new Role();
-        when(roleRepository.findByNameContainingIgnoreCase(roleName)).thenReturn(role);
+        when(roleRepository.findByNameIgnoreCase(roleName)).thenReturn(role);
         final String expectedEncodedPassword = "encodedPassword";
         when(passwordEncoder.encode(rawPassword)).thenReturn(expectedEncodedPassword);
 
@@ -128,18 +129,18 @@ public class UserRepositoryTest {
     public void test_should_save_new_user_when_enriched_roles() {
         User expectedUser = mock(User.class);
         when(userJpaRepository.save(any(User.class))).thenReturn(expectedUser);
-        final HashSet<Role> roles = new HashSet<>();
+        final HashSet<org.egov.user.domain.model.Role> roles = new HashSet<>();
         final String roleName1 = "roleName1";
         final String roleName2 = "roleName2";
-        roles.add(Role.builder().name(roleName1).build());
-        roles.add(Role.builder().name(roleName2).build());
+        roles.add(org.egov.user.domain.model.Role.builder().name(roleName1).build());
+        roles.add(org.egov.user.domain.model.Role.builder().name(roleName2).build());
         org.egov.user.domain.model.User domainUser = org.egov.user.domain.model.User.builder()
                 .roles(roles)
                 .build();
         final Role role1 = Role.builder().id(1L).build();
         final Role role2 = Role.builder().id(2L).build();
-        when(roleRepository.findByNameContainingIgnoreCase(roleName1)).thenReturn(role1);
-        when(roleRepository.findByNameContainingIgnoreCase(roleName2)).thenReturn(role2);
+        when(roleRepository.findByNameIgnoreCase(roleName1)).thenReturn(role1);
+        when(roleRepository.findByNameIgnoreCase(roleName2)).thenReturn(role2);
 
         userRepository.save(domainUser);
 
@@ -150,7 +151,11 @@ public class UserRepositoryTest {
     @Test
     public void test_search_user() {
         Page<User> page = mock(Page.class);
-        List<User> expectedList = mock(List.class);
+        User mockUserEntity = mock(User.class);
+        org.egov.user.domain.model.User mockUserModel = mock(org.egov.user.domain.model.User.class);
+        when(mockUserEntity.toDomain()).thenReturn(mockUserModel);
+        List<User> listOfEntities = Collections.singletonList(mockUserEntity);
+        List<org.egov.user.domain.model.User> listOfModels = Collections.singletonList(mockUserModel);
         UserSearch userSearch = mock(UserSearch.class);
         Specification<User> userSpecification = mock(Specification.class);
         when(userSearch.getPageNumber()).thenReturn(1);
@@ -160,11 +165,11 @@ public class UserRepositoryTest {
         PageRequest pageRequest = new PageRequest(1, 20, sort);
         when(userSearchSpecificationFactory.getSpecification(userSearch)).thenReturn(userSpecification);
         when(userJpaRepository.findAll(userSpecification, pageRequest)).thenReturn(page);
-        when(page.getContent()).thenReturn(expectedList);
+        when(page.getContent()).thenReturn(listOfEntities);
 
-        List<User> actualList = userRepository.findAll(userSearch);
+        List<org.egov.user.domain.model.User> actualList = userRepository.findAll(userSearch);
 
-        assertThat(expectedList).isEqualTo(actualList);
+        assertThat(listOfModels).isEqualTo(actualList);
     }
 
     private class UserWithPasswordMatcher extends CustomMatcher<User> {

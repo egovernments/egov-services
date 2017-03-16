@@ -42,6 +42,7 @@ package org.egov.asset.web.controller;
 
 import java.util.List;
 
+import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.contract.AssetRequest;
 import org.egov.asset.contract.AssetResponse;
 import org.egov.asset.contract.RequestInfo;
@@ -59,6 +60,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -71,15 +73,20 @@ public class AssetController {
 
 	@Autowired
 	private AssetService assetService;
+	
+	@Autowired
+	private ApplicationProperties applicationProperties;
 
 	@PostMapping("_search")
 	@ResponseBody
 	public ResponseEntity<?> search(@RequestBody RequestInfo requestInfo, @ModelAttribute AssetCriteria assetCriteria,BindingResult bindingResult) {
 		logger.info("assetCriteria::"+assetCriteria);
+		
 		if(bindingResult.hasErrors()){
 			ErrorResponse errorResponse=populateErrors(bindingResult);
 			return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
+		
 		List<Asset> assets = assetService.getAssets(assetCriteria);
 		AssetResponse assetResponse = new AssetResponse();
 		assetResponse.setAssets(assets);
@@ -97,10 +104,31 @@ public class AssetController {
 			ErrorResponse errorResponse=populateErrors(bindingResult);
 			return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
-		//AssetResponse assetResponse=assetService.create(assetRequest);
-		AssetResponse assetResponse=assetService.createAsync("save-asset-db","save-asset", assetRequest);
+		//TODO Input field validation, it will be a part of phash-2
+		
+		AssetResponse assetResponse=assetService.createAsync(applicationProperties.getCreateAssetTopicName(),"save-asset", assetRequest);
 		return new ResponseEntity<AssetResponse>(assetResponse, HttpStatus.CREATED);
 	}
+	
+	@PostMapping("_update/{code}")
+	@ResponseBody
+	public ResponseEntity<?> update(@PathVariable("code") String code, @RequestBody AssetRequest assetRequest, BindingResult bindingResult) {
+		
+		if(bindingResult.hasErrors()){
+			ErrorResponse errorResponse=populateErrors(bindingResult);
+			return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
+		}
+		
+		if(!code.equals(assetRequest.getAsset().getCode())){
+			throw new RuntimeException("Invalid asset code");
+		}
+		//TODO Input field validation, it will be a part of phash-2
+		
+		AssetResponse assetResponse=assetService.updateAsync(applicationProperties.getUpdateAssetTopicName(),"update-asset",assetRequest);
+		
+		return new ResponseEntity<AssetResponse>(assetResponse, HttpStatus.OK);
+	}
+	
 	
 	private ErrorResponse populateErrors(BindingResult errors) {
 		ErrorResponse errRes = new ErrorResponse();
@@ -120,6 +148,4 @@ public class AssetController {
 		errRes.setError(error);
 		return errRes;
 	}
-
-
 }

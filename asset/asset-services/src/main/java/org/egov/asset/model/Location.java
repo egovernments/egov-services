@@ -40,6 +40,8 @@
 
 package org.egov.asset.model;
 
+import javax.validation.constraints.NotNull;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -55,6 +57,7 @@ import lombok.ToString;
 @ToString
 public class Location {
 	
+	@NotNull
 	private Long locality;
 	private Long zone;
 	private Long revenueWard;

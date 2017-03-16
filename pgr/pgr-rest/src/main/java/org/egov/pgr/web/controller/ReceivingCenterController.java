@@ -6,6 +6,7 @@ import org.egov.pgr.domain.service.ReceivingCenterService;
 import org.egov.pgr.persistence.entity.ReceivingCenter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,6 +21,11 @@ public class ReceivingCenterController {
 	@GetMapping
 	public List<ReceivingCenter> getAllReceivingCenters(@RequestParam String tenantId) {
 		return receivingCenterService.getAllReceivingCenters(tenantId);
+	}
+
+	@PostMapping("/_getreceivingcenterbyid")
+	public ReceivingCenter getReceivingCenterById(@RequestParam String tenantId, @RequestParam Long id) {
+		return receivingCenterService.getReceivingCenterById(tenantId, id);
 	}
 
 }

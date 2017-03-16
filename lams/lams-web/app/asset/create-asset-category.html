@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Lease & Agreement</title>
+    <title>EIS</title>
 
     <!-- Bootstrap -->
     <link rel="stylesheet" type="text/css" href="../../../assets/stylesheet/bootstrap.min.css">
@@ -19,6 +19,8 @@
     <link rel="stylesheet" type="text/css" href="../../../assets/stylesheet/jquery.dataTables.min.css">
     <link rel="stylesheet" type="text/css" href="../../../assets/stylesheet/responsive.bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../../assets/stylesheet/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" type="text/css" href="../../../assets/stylesheet/buttons.dataTables.min.css">
+    <!-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.13/css/dataTables.bootstrap.min.css"> -->
 
     <style>
         body {
@@ -86,9 +88,28 @@
     <script type="text/javascript" src="../../../assets/javascript/dataTables.responsive.min.js"></script>
     <script type="text/javascript" src="../../../assets/javascript/moment.js"></script>
     <script type="text/javascript" src="../../../assets/javascript/bootstrap-datetimepicker.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.2.4/js/dataTables.buttons.min.js">
+
+    </script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.2.4/js/buttons.flash.min.js">
+
+    </script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js">
+
+    </script>
+    <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js" charset="utf-8"></script>
+    <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js" charset="utf-8"></script>
+    <script src="https://cdn.datatables.net/buttons/1.2.4/js/buttons.html5.min.js" charset="utf-8"></script>
+    <script src="https://cdn.datatables.net/buttons/1.2.4/js/buttons.print.min.js" charset="utf-8"></script>
+    <!-- <script src="https://cdn.datatables.net/1.10.13/js/dataTables.bootstrap.min.js" charset="utf-8"></script> -->
+    <script type="text/javascript" src="../../../assets/javascript/dataTables.responsive.min.js"></script>
+
     <!-- Jquery form validator -->
     <script type="text/javascript" src="../../../assets/javascript/global/jquery-validation/jquery.validate.min.js"></script>
     <script type="text/javascript" src="../../../assets/javascript/global/jquery-validation/additional-methods.min.js"></script>
+    <script src="https://unpkg.com/react@15/dist/react.min.js"></script>
+    <script src="https://unpkg.com/react-dom@15/dist/react-dom.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.js"></script>
 </head>
 
 <body class="page-body">
@@ -191,295 +212,28 @@
                 </ul>
             </div>
         </header>
-
-        <!-- Multi level menu content -->
-        <!-- <div class="home-container"> -->
+        <div class="home-container">
             <!-- <div id="menu" class="homepage" style="min-height: 242px; width: 250px; height: 242px; min-width: 250px;"></div> -->
-            <!-- <div class="inline-main-content" style="width:100%">
+            <div class="inline-main-content" style="width:100%">
                 <div class="row main-space" id="worklist">
                     <div class="col-xs-12">
                         <!-- Middle Section -->
-                        <!-- <div class="body-cont">
+                        <div class="body-cont">
                             <form  id="createAgreementForm" name="createAgreementForm" >
                                 <div class="body-cont-inner">
-                                                                      <!-- Allottee Details -->
-                                    <!-- <div class="form-section" id="allotteeDetailsBlock">
-                                        <h3 class="categoryType">Asset Category </h3>
-                                        <div class="form-section-inner">
-                                            <!-- Row 1 -->
-                                            <!--
+                                   <div class="form-section" id="shopAssetDetailsBlock">
+                                        <h3 > Asset  </h3>
+                                        <div id="root"></div>
+                                        <script type="text/babel"  src="../../../assets/javascript/asset/create-asset-category.js"></script>
+                                    </div>
+                                  </div>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
 
-                                             -->
-
-                                              <!-- <div class="form-section" id="allotteeDetailsBlock"> -->
-                                              <!-- <h3 class="categoryType">Custom Fields </h3>
-                                              <div class="land-table" id="asset-category">
-                                                <table id="asset-category" cellspacing="0" width="100%">
-                                                  <thead>
-                                                    <tr>
-                                                      <th id="name">Name </th>
-                                                      <th id="dataType">Data Type</th>
-                                                      <th>RegEx format</th>
-                                                      <th>Active </th>
-                                                      <th>Mandetory </th>
-                                                      <th> Values </th>
-                                                      <th> Local Text </th>
-                                                      <th> Action </th>
-                                                    </tr>
-                                                  </thead>
-                                                  <tbody>
-                                                    <tr>
-                                                      <td> <input type="text" name="name"> </td>
-                                                      <td><select id="dataType" name="dataType">
-                                                      <option>String</option>
-                                                      <option>Number</option>
-                                                      <option>Date</option>
-                                                  </select>
-                                                </td>
-
-                                                <td><input type="text" name="name"> </td>
-                                                <td><input type="checkbox"> </td>
-                                                <td><input type="checkbox"></td>
-                                                <td><textarea rows="2" cols="10"> </textarea> </td>
-                                                <td> <input type="text" name="name"> </td>
-                                                <td><button type="submit" class="btn btn-submit">Delect</button></td>
-                                                </tr>
-                                                </tbody>
-                                                </div>
-                                                </div>
-                                                </div>
-                                                </div>
-                                               </div>
-                                                <div class="text-center">
-                                                <button type="button" class="btn btn-submit" id="create">Add Row</button>
-                                              </div>
-
-                                            </form>
-                                            </div>
-                                            </div>
-                                            </div>
-                                            </div> -->
-                                            <div role="tabpanel" class="tab-pane" id="assignmentDetails">
-                                            <div class="form-section" >
-                                          <!-- <h3 class="pull-left">Assignment Details </h3> -->
-                                          <a href="#" class="btn btn-default btn-action pull-right" data-toggle="modal" data-target="#assignmentDetailModal"><span class="glyphicon glyphicon-plus"></span></a>
-                                          <div class="clearfix"></div>
-
-                                          <div class="land-table">
-                                              <table class="table table-bordered">
-                                                  <thead>
-                                                      <tr>
-                                                          <th>Name</th>
-                                                          <th>Data Type</th>
-                                                          <th>RegEx format</th>
-                                                          <th>Active</th>
-                                                          <th>Mandatory</th>
-                                                          <th>Values</th>
-                                                          <th>Local Text</th>
-                                                          <th>Action</th>
-                                                      </tr>
-                                                  </thead>
-
-                                                  <tbody>
-                                                    <tr>
-                                                      <td> Kumaresh </td>
-                                                      <td>   String</td>
-                                                    <td> cdccdbch </td>
-                                                    <td>  Yes</td>
-                                                    <td> yes</td>
-                                                    <td> 100 </td>
-                                                    <td> vcavckjaa</td>
-                                                    <td> <button class="btn btn-default btn-action"><span class="glyphicon glyphicon-trash"></button></span> </td>
-                                                    </tr>
-
-                                                  </tbody>
-
-                                              </table>
-
-                                          </div>
-
-
-
-                                          <!-- Modal -->
-                                          <div class="modal fade" id="assignmentDetailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                                              <div class="modal-dialog" role="document">
-                                                  <div class="modal-content">
-                                                      <form class="assignmentDetail" id="assignmentDetail">
-                                                          <div class="modal-header">
-                                                              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                                              <h4 class="modal-title" id="myModalLabel">Asset Category</h4>
-                                                          </div>
-                                                          <div class="modal-body">
-
-                                                            <div class="row">
-                                                                  <div class="col-sm-6">
-                                                                      <div class="row">
-                                                                          <div class="col-sm-6 label-text">
-                                                                              <label for="name">Name</label>
-                                                                          </div>
-                                                                          <div class="col-sm-6">
-                                                                              <input type="text" id="name" name="name" >
-                                                                          </div>
-                                                                      </div>
-                                                                  </div>
-                                                          </div>
-
-
-
-
-
-
-                                                          <div class="row">
-                                                            <div class="col-sm-6">
-                                                                <div class="row">
-                                                                    <div class="col-sm-6 label-text">
-                                                                        <label for="categoryType"> Asset Category Type <span> * </span> </label>
-                                                                    </div>
-                                                                    <div class="col-sm-6">
-                                                                        <div class="styled-select">
-                                                                            <select id="categoryType" name="categoryType" required>
-                                                                            <option>Land </option>
-                                                                            <option>Movable </option>
-                                                                            <option>Immovable </option>
-                                                                        </select>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                              </div>
-                                                              <div class="col-sm-6">
-                                                                    <div class="row">
-                                                                        <div class="col-sm-6 label-text">
-                                                                            <label for="parentCategory"> Parent Category  </label>
-                                                                        </div>
-                                                                        <div class="col-sm-6">
-                                                                            <div class="styled-select">
-                                                                                <select id="parentCategory" name="parentCategory">
-                                                                                <option>Land/<option>
-                                                                                <option>Market</option>
-                                                                                <option>Fish Tank</option>
-                                                                            </select>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                  </div>
-                                                             </div>
-
-                                                             <div class="row">
-                                                               <div class="col-sm-6">
-                                                                   <div class="row">
-                                                                       <div class="col-sm-6 label-text">
-                                                                           <label for="descriptionMethod"> Description Method  </label>
-                                                                       </div>
-                                                                       <div class="col-sm-6">
-                                                                           <div class="styled-select">
-                                                                               <select id="descriptionMethod" name="descriptionMethod">
-                                                                                 <option> Select</option>
-                                                                               <option>Straight Line Method</option>
-                                                                               <option>Written Down Value Method</option>
-                                                                           </select>
-                                                                           </div>
-                                                                       </div>
-                                                                   </div>
-                                                                 </div>
-                                                                   <div class="col-sm-6">
-                                                                       <div class="row">
-                                                                           <div class="col-sm-6 label-text">
-                                                                               <label for="assetAccount"> Asset Account <span> *</span>  </label>
-                                                                           </div>
-                                                                           <div class="col-sm-6">
-                                                                               <div class="styled-select">
-                                                                                   <select id="assetAccount" name="assetAccount" reqired>
-                                                                                   <option>Open Source</option>
-                                                                                   <option>Ground</option>
-                                                                               </select>
-                                                                               </div>
-                                                                           </div>
-                                                                       </div>
-                                                             </div>
-                                                         </div>
-
-                                                         <div class="row">
-                                                           <div class="col-sm-6">
-                                                               <div class="row">
-                                                                   <div class="col-sm-6 label-text">
-                                                                       <label for="depreciationAccount"> Accumulated Depreciation Account  </label>
-                                                                   </div>
-                                                                   <div class="col-sm-6">
-                                                                       <div class="styled-select">
-                                                                           <select id="depreciationAccount" name="depreciationAccount">
-                                                                             <option> Select</option>
-                                                                           <option>Commercial Complex</option>
-                                                                           <option>Tanker</option>
-                                                                           <option>Computer</option>
-                                                                       </select>
-                                                                       </div>
-                                                                   </div>
-                                                               </div>
-                                                             </div>
-                                                                 <div class="col-sm-6">
-                                                                   <div class="row">
-                                                                       <div class="col-sm-6 label-text">
-                                                                           <label for="reserveAccount"> Revaluation Reserve Account <span> *<span>  </label>
-                                                                       </div>
-                                                                       <div class="col-sm-6">
-                                                                           <div class="styled-select">
-                                                                               <select id="reserveAccount" name="reserveAccount" required>
-                                                                                 <option> Select </option>
-                                                                               <option>Special Development Fund</option>
-                                                                               <option>City Challange Fund</option>
-                                                                               <option>Fixed Assets</option>
-                                                                           </select>
-                                                                           </div>
-                                                                       </div>
-                                                                   </div>
-                                                                 </div>
-                                                               </div>
-                                                             <div class="row">
-                                                               <div class="col-sm-6">
-                                                                 <div class="row">
-                                                                     <div class="col-sm-6 label-text">
-                                                                         <label for="expenseAccount"> Depreciation Expense Account  </label>
-                                                                     </div>
-                                                                     <div class="col-sm-6">
-                                                                         <div class="styled-select">
-                                                                             <select id="expenseAccount" name="expenseAccount">
-                                                                             <option>B-143 </option>
-                                                                             <option>K-152</option>
-                                                                             <option>M-461</option>
-                                                                         </select>
-                                                                         </div>
-                                                                     </div>
-                                                                 </div>
-                                                               </div>
-                                                               <div class="col-sm-6">
-                                                                 <div class="row">
-                                                                     <div class="col-sm-6 label-text">
-                                                                         <label for="unitMeasurment"> Unit Of Measurment <span> *</span>  </label>
-                                                                     </div>
-                                                                     <div class="col-sm-6">
-                                                                         <div class="styled-select">
-                                                                             <select id="unitMeasurment" name="unitMeasurment" required>
-                                                                             <option>Sq. Ft</option>
-
-                                                                         </select>
-                                                                         </div>
-                                                                     </div>
-                                                                 </div>
-                                                               </div>
-                                                             </div>
-                                                          <div class="modal-footer">
-                                                              <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                                                              <button type="button" class="btn btn-primary" >Add Row</button>
-                                                          </div>
-                                                        </div>
-
-                                                      </form>
-                                                  </div>
-                                              </div>
-                                          </div>
-                                          <div class="text-center">
-                                            <button type="button" class="btn btn-primary">Close</button>
-                                          </div>
 
         <footer class="clearfix simple">
         <div class="constrain">

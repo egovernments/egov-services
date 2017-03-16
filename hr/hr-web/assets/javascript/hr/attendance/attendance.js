@@ -35,7 +35,7 @@ class Attendance extends React.Component {
       for (var emp in employees) {
           for (var att in employees[emp].attendance) {
                 // console.log(employees[emp].attendance[att].split("-")[1]);
-                attendance.push({date:new Date(year,month,1),employee:emp,month,year,type:this.isValidType(employees[emp].attendance[att]),remarks:""});
+                attendance.push({date:new Date(year,month,1),employee:emp,month,year,type:{id:employees[emp].attendance[att]},remarks:""});
           }
       }
 
@@ -48,6 +48,11 @@ class Attendance extends React.Component {
 
   componentWillMount()
   {
+
+  }
+
+  componentDidMount()
+  {
     //call employee api and get employees
     // console.log(getUrlVars()["month"]);
     var queryParam=getUrlVars();
@@ -59,127 +64,19 @@ class Attendance extends React.Component {
     var now = new Date();
     // var startDate=new Date((typeof(queryParam["year"])==="undefined")?now.getFullYear():parseInt(queryParam["year"]), (typeof(queryParam["month"])==="undefined")?now.getMonth():parseInt(queryParam["month"]), 1);
     // console.log(startDate);
-    var employees={}
-    // {
-    //   "123":{
-    //     name:"murali",
-    //     month:"jun",
-    //     year:"2017",
-    //     attendance:{}
-    //   },
-    //   "124":{
-    //     name:"Tharu",
-    //     month:"jun",
-    //     year:"2017",
-    //     attendance:{}
-    //   },
-    //   "125":{
-    //     name:"mimmu",
-    //     month:"jun",
-    //     year:"2017",
-    //     attendance:{}
-    //   },
-    //   "126":{
-    //     name:"murali",
-    //     month:"jun",
-    //     year:"2017",
-    //     attendance:{}
-    //   },
-    //   "127":{
-    //     name:"Tharu",
-    //     month:"jun",
-    //     year:"2017",
-    //     attendance:{}
-    //   },
-    //   "128":{
-    //     name:"mimmu",
-    //     month:"jun",
-    //     year:"2017",
-    //     attendance:{}
-    //   },
-    //   "129":{
-    //     name:"murali",
-    //     month:"jun",
-    //     year:"2017",
-    //     attendance:{}
-    //   },
-    //   "130":{
-    //     name:"Tharu",
-    //     month:"jun",
-    //     year:"2017",
-    //     attendance:{}
-    //   },
-    //   "131":{
-    //     name:"mimmu",
-    //     month:"jun",
-    //     year:"2017",
-    //     attendance:{}
-    //   },
-    //   "132":{
-    //     name:"murali",
-    //     month:"jun",
-    //     year:"2017",
-    //     attendance:{}
-    //   },
-    //   "133":{
-    //     name:"Tharu",
-    //     month:"jun",
-    //     year:"2017",
-    //     attendance:{}
-    //   },
-    //   "134":{
-    //     name:"mimmu",
-    //     month:"jun",
-    //     year:"2017",
-    //     attendance:{}
-    //   },
-    //   "135":{
-    //     name:"murali",
-    //     month:"jun",
-    //     year:"2017",
-    //     attendance:{}
-    //   },
-    //   "136":{
-    //     name:"Tharu",
-    //     month:"jun",
-    //     year:"2017",
-    //     attendance:{}
-    //   },
-    //   "137":{
-    //     name:"mimmu",
-    //     month:"jun",
-    //     year:"2017",
-    //     attendance:{}
-    //   },
-    //   "138":{
-    //     name:"murali",
-    //     month:"jun",
-    //     year:"2017",
-    //     attendance:{}
-    //   },
-    //   "139":{
-    //     name:"Tharu",
-    //     month:"jun",
-    //     year:"2017",
-    //     attendance:{}
-    //   },
-    //   "140":{
-    //     name:"mimmu",
-    //     month:"jun",
-    //     year:"2017",
-    //     attendance:{}
-    //   }
-    // }
-    // var empTemp=[];
-    for(var i=1;i<=300;i++)
+    var employeesTemp=commonApiPost("hr-employee","employees","_search",{tenantId,department:queryParam["departmentCode"],designation:queryParam["designationCode"],employeeType:queryParam["type"],code:queryParam["code"]}).responseJSON["Employee"] || [];
+    var employees=[];
+    for(var i=0;i<employeesTemp.length;i++)
     {
-        employees[i]={
-          name:"murali"+i,
-          month:"jun",
-          year:"2017",
+        employees.push({
+          name:employeesTemp[i].name,
+          month:queryParam["month"],
+          year:queryParam["year"],
           attendance:{}
-        }
+        });
     }
+
+    // console.log(employeesTemp);
     //merge employee with attendance
 
     for(var emp in employees)
@@ -206,19 +103,6 @@ class Attendance extends React.Component {
         endDate,
         employees
     })
-    //update calender
-    // console.log(this.state.employees);
-  }
-
-  componentDidMount()
-  {
-    // $('#attendanceTable').DataTable({
-    //   dom: 'Bfrtip',
-    //   buttons: [
-    //            'copy', 'csv', 'excel', 'pdf', 'print'
-    //    ],
-    //    ordering: true
-    // });
   }
 
   componentDidUpdate(nextprops,nextState)

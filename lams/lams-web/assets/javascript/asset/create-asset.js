@@ -1,851 +1,475 @@
-function getUrlVars() {
-    var vars = [],
-        hash;
-    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-    for (var i = 0; i < hashes.length; i++) {
-        hash = hashes[i].split('=');
-        vars.push(hash[0]);
-        vars[hash[0]] = hash[1];
-    }
-    return vars;
+
+
+
+
+
+class CreateAsset extends React.Component {
+
+  close(){
+      // widow.close();
+      open(location, '_self').close();
+  }
+
+
+  render() {
+    return (
+      <div>
+              <div className="form-section-inner">
+                <div className="row">
+                  <div className="col-sm-6">
+                    <div className="row">
+                      <div className="col-sm-6 label-text">
+                        <label for="Name">Name  <span> * </span></label>
+                      </div>
+                      <div className="col-sm-6">
+                        <input id="shoppingComplexName" name="shoppingComplexName" type="text" required/>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="col-sm-6">
+                    <div className="row">
+                      <div className="col-sm-6 label-text">
+                          <label for="shopAreaUom">Asset Category <span> *</span> </label>
+                        </div>
+                      <div className="col-sm-6">
+                         <div className="styled-select">
+                          <select id="shopAreaUom" name="shopAreaUom" required>
+                          <option>Land</option>
+                          <option>Shopping Complex</option>
+                          <option>Park</option>
+                          </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="row">
+                <div className="col-sm-6">
+                <div className="row">
+                <div className="col-sm-6 label-text">
+                    <label for="department">Department  </label>
+                </div>
+                <div className="col-sm-6">
+                <div className="styled-select">
+                    <select id="department" name="department" >
+                    <option>Accounts</option>
+                    <option>Education</option>
+                    <option>Administration</option>
+                    </select>
+                </div>
+                </div>
+                </div>
+                </div>
+
+                <div className="col-sm-6">
+                <div className="row">
+                <div className="col-sm-6 label-text">
+                    <label for="shopAreaUom">Mode Of Acquisition <span> * </span>  </label>
+                </div>
+                <div className="col-sm-6">
+                <div className="styled-select">
+                    <select id="shopAreaUom" name="shopAreaUom">
+                    <option>mts</option>
+                    <option>feet</option>
+                    <option>yards</option>
+                    </select>
+                </div>
+                </div>
+                </div>
+                </div>
+                </div>
+                </div>
+                <div className="row">
+                <div className="col-sm-6">
+                <div className="row">
+                <div className="col-sm-6 label-text">
+                  <label for="shopAreaUom"> Date Of Creation </label>
+                </div>
+                <div className="col-sm-6">
+                <div className="text-no-ui">
+                  <span>
+                  <i className="glyphicon glyphicon-calendar"></i>
+                  </span>
+                  <input type="date" name="dateofcreation" id="dateofcreation"/>
+                </div>
+                </div>
+                </div>
+                </div>
+                <div className="col-sm-6">
+                <div className="row">
+                <div className="col-sm-6 label-text">
+                  <label for="assetAssetAddress">Asset Details</label>
+                </div>
+                <div className="col-sm-6">
+                  <textarea id="assetAssetAddress" name="assetAssetAddress" type="text"></textarea>
+                </div>
+                </div>
+                </div>
+                </div>
+
+                <div className="row">
+                <div className="col-sm-6">
+                <div className="row">
+                <div className="col-sm-6 label-text">
+                  <label for="length">Length  </label>
+                </div>
+                <div className="col-sm-6">
+                  <input id="length" name="length" type="text" />
+                </div>
+                </div>
+                </div>
+                <div className="col-sm-6">
+                <div className="row">
+                <div className="col-sm-6 label-text">
+                  <label for="width">Width  </label>
+                </div>
+                <div className="col-sm-6">
+                  <input id="width" name="width" type="text" />
+                </div>
+                </div>
+                </div>
+                </div>
+
+                <div className="row">
+                <div className="col-sm-6">
+                <div className="row">
+                <div className="col-sm-6 label-text">
+                <label for="area">TOtal Area  </label>
+                </div>
+                <div className="col-sm-6">
+                <input id="area" name="area" type="text" />
+                </div>
+                </div>
+                </div>
+                </div>
+                </div>
+
+                <div className="form-section" id="allotteeDetailsBlock">
+                <h3 className="categoryType">Location Details </h3>
+                <div className="form-section-inner">
+
+                  <div className="row">
+                  <div className="col-sm-6">
+                  <div className="row">
+                  <div className="col-sm-6 label-text">
+                        <label for="shopAreaUom"> Location <span> * </span> </label>
+                  </div>
+                  <div className="col-sm-6">
+                  <div className="styled-select">
+                            <select id="shopAreaUom" name="shopAreaUom">
+                            <option>Bangalore</option>
+                            <option>Kolkata</option>
+                            <option>Mumbai</option>
+                        </select>
+                  </div>
+                  </div>
+                  </div>
+                  </div>
+
+                    <div className="col-sm-6">
+                    <div className="row">
+                    <div className="col-sm-6 label-text">
+                            <label for="shopAreaUom"> Revenue Ward <span> * </span> </label>
+                     </div>
+                      <div className="col-sm-6">
+                      <div className="styled-select">
+                                <select id="shopAreaUom" name="shopAreaUom">
+                                <option>121</option>
+                                <option>199</option>
+                                <option>122</option>
+                            </select>
+                      </div>
+                      </div>
+                      </div>
+                      </div>
+                      </div>
+                      <div className="row">
+                            <div className="col-sm-6">
+                            <div className="row">
+                            <div className="col-sm-6 label-text">
+                                <label for="shopAreaUom"> Block Number  </label>
+                            </div>
+                            <div className="col-sm-6">
+                            <div className="styled-select">
+                                  <select id="shopAreaUom" name="shopAreaUom">
+                                  <option>Bangalore</option>
+                                  <option>Kolkata</option>
+                                  <option>Mumbai</option>
+                              </select>
+                            </div>
+                            </div>
+                            </div>
+                            </div>
+
+                            <div className="col-sm-6">
+                            <div className="row">
+                            <div className="col-sm-6 label-text">
+                                  <label for="shopAreaUom"> Street  </label>
+                            </div>
+                            <div className="col-sm-6">
+                            <div className="styled-select">
+                                      <select id="shopAreaUom" name="shopAreaUom">
+                                      <option>Bangalore</option>
+                                      <option>Kolkata</option>
+                                      <option>Mumbai</option>
+                                  </select>
+                            </div>
+                            </div>
+                            </div>
+                            </div>
+                            </div>
+
+                            <div className="row">
+                                  <div className="col-sm-6">
+                                  <div className="row">
+                                  <div className="col-sm-6 label-text">
+                                        <label for="shopAreaUom"> Election Ward No  </label>
+                                  </div>
+                                  <div className="col-sm-6">
+                                  <div className="styled-select">
+                                      <select id="shopAreaUom" name="shopAreaUom">
+                                      <option>22</option>
+                                      <option>23</option>
+                                      <option>24</option>
+                                </select>
+                              </div>
+                              </div>
+                              </div>
+                              </div>
+
+                                <div className="col-sm-6">
+                                <div className="row">
+                                <div className="col-sm-6 label-text">
+                                    <label for="shopAreaUom"> Door Number  </label>
+                                </div>
+                                <div className="col-sm-6">
+                                <input type="text" name="doorno" />
+                                </div>
+                                </div>
+                                </div>
+                                </div>
+
+                                <div className="row">
+                                    <div className="col-sm-6">
+                                    <div className="row">
+                                    <div className="col-sm-6 label-text">
+                                        <label for="shopAreaUom"> Zone Number  </label>
+                                  </div>
+                                  <div className="col-sm-6">
+                                  <div className="styled-select">
+                                          <select id="shopAreaUom" name="shopAreaUom">
+                                          <option>B-143</option>
+                                          <option>K-152</option>
+                                          <option>M-461</option>
+                                      </select>
+                                  </div>
+                                  </div>
+                                  </div>
+                                  </div>
+
+                                  <div className="col-sm-6">
+                                  <div className="row">
+                                  <div className="col-sm-6 label-text">
+                                        <label for="pin">PIN No.</label>
+                                  </div>
+                                  <div className="col-sm-6">
+                                        <input type="number" name="numberr" id="number" />
+                                  </div>
+                                  </div>
+                                  </div>
+                                  </div>
+
+
+</div>
+</div>
+
+
+
+</div>
+
+
+    );
+  }
 }
 
-$('#close').on("click", function() {
-    window.close();
-})
 
-$().ready(function() {
-
-    //base url for api_id
-    var baseUrl = "https://peaceful-headland-36194.herokuapp.com/v1/mSevaAndLA/";
-    //request info from cookies
-    var requestInfo = {
-        "apiId": "string",
-        "ver": "string",
-        "ts": "2017-01-18T07:18:23.130Z",
-        "action": "string",
-        "did": "string",
-        "key": "string",
-        "msgId": "string",
-        "requesterId": "string",
-        "authToken": "aeiou"
-    };
-
-    // $.validator.addMethod(
-    //     "regex",
-    //     function(value, element, regexp) {
-    //         var re = new RegExp(regexp);
-    //         return this.optional(element) || re.test(value);
-    //     },
-    //     "Please check your input."
-    // );
+ReactDOM.render(
+  <CreateAsset />,
+  document.getElementById('root')
+);
 
 
-    // $("#contactNumber").rules("add", { regex: "^[0-9]{5,10}$" })
-
-    var agreement = {};
-    $(".disabled").attr("disabled", true);
-    //Getting data for user input
-    $("input").on("keyup", function() {
-        // console.log(this.value);
-        agreement[this.id] = this.value;
-    });
-
-    //Getting data for user input
-    $("select").on("change", function() {
-        // console.log(this.value);
-        if (this.id=="natureOfAllotment") {
-            if(this.value=="Direct")
-            {
-               $(".disabled").attr("disabled", false);
-
-            }
-            else {
-              $(".disabled").attr("disabled", true);
-
-            }
-        }
-        agreement[this.id] = this.value;
-    });
-
-    //file change handle for file upload
-    $("input[type=file]").on("change", function(evt) {
-        // console.log(this.value);
-        // agreement[this.id] = this.value;
-        var file = evt.currentTarget.files[0];
-
-        //call post api update and update that url in pur agrement object
-    });
-
-
-    $(".onlyNumber").on("keydown", function(e) {
-        var key = e.keyCode ? e.keyCode : e.which;
-
-        if (!([8, 9, 13, 27, 46, 110, 190].indexOf(key) !== -1 ||
-                (key == 65 && (e.ctrlKey || e.metaKey)) ||
-                (key >= 35 && key <= 40) ||
-                (key >= 48 && key <= 57 && !(e.shiftKey || e.altKey)) ||
-                (key >= 96 && key <= 105)
-            )) {
-            e.preventDefault();
-        }
-        if(this.value.length>11)
-        {
-          e.preventDefault();
-        }
-    });
-
-    var validationRules = {};
-    var finalValidatinRules = {};
-    var commomFieldsRules = {
-        name: {
-            required: true
-        },
-        address: {
-            required: true
-        },
-        natureOfAllotment: {
-            required: true
-        },
-        aadhaarNumber: {
-            required: false,
-            aadhar: true
-        },
-      panNumber: {
-            required: false,
-          panNumber: true
-        },
-        emailid: {
-            required: true,
-            email: true
-        },
-        contactNumber: {
-            required: true,
-            phone: true
-        },
-        tenderNumber: {
-            required: true
-        },
-        tenderDate: {
-            required: true
-        },
-        tin: {
-            required: false
-        },
-        tradeLicenseNumber: {
-            required: false
-        },
-        caseNumber: {
-            required: true
-        },
-        orderDetails: {
-            required: true
-        },
-        rrReadingNumber: {
-            required: getUrlVars()["type"] != "land" ? true : false
-        },
-        registrationFee: {
-            required: true
-        },
-        councilNumber: {
-            required: true
-        },
-        councilDate: {
-            required: true
-        },
-        bankGuaranteeAmount: {
-            required: true
-        },
-        bankGuaranteeDate: {
-            required: true
-        },
-        agreementNumber: {
-            required: true
-        },
-        agreementDate: {
-            required: true
-        },
-        securityDepositDate: {
-            required: true
-        },
-        securityDeposit: {
-            required: true
-        },
-        commencementDate: {
-            required: true
-        },
-        expiryDate: {
-            required: true
-        },
-        rent: {
-            required: true
-        },
-        paymentCycle: {
-            required: true
-        },
-        rentIncrementMethod: {
-            required: (getUrlVars()["type"] == "land" || getUrlVars()["type"] == "shop") ? true : false
-        },
-        remarks: {
-            required: false
-        },
-        solvencyCertificateNo: {
-            required: true
-        },
-        solvencyCertificateDate: {
-            required: true
-        }
-    };
-    if (getUrlVars()["type"] == "land") {
-        // validation rules for land agreement
-        validationRules = {
-            landRegisterNumber: {
-                required: true
-            },
-            particularsOfLand: {
-                required: true
-            },
-            resurveyNumber: {
-                required: true
-            },
-            landAddress: {
-                required: true
-            },
-            townSurveyNumber: {
-                required: true
-            },
-            assetCategory: {
-                required: true
-            },
-            assetName: {
-                required: true
-            },
-            assetCode: {
-                required: true
-            },
-            assetArea: {
-                required: true
-            },
-            assetLocality: {
-                required: true
-            },
-            assetStreet: {
-                required: true
-            },
-            assetRevenueZone: {
-                required: true
-            },
-            assetRevenueWard: {
-                required: true
-            },
-            assetRevenueBlock: {
-                required: true
-            },
-            assetElectionWard: {
-                required: true
-            },
-            assetAssetAddress: {
-                required: true
-            }
-        }
-        // remove all other Asset Details block from DOM except land asset related fields
-        $("#shopAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
-        //remove agreement template two and three from screen
-        $("#agreementDetailsBlockTemplateTwo,#agreementDetailsBlockTemplateThree").remove();
-        //disabling input tag of asset details
-        $("#landAssetDetailsBlock input").attr("disabled", true);
-        //disabling text tag of asset details
-        $("#landAssetDetailsBlock textarea").attr("disabled", true);
-
-        //append category text
-        $(".categoryType").prepend("Land ");
-    } else if (getUrlVars()["type"] == "shop") {
-        // validation rules for shop agreement
-        validationRules = {
-            shoppingComplexName: {
-                required: true
-            },
-            shoppingComplexNo: {
-                required: true
-            },
-            shoppingComplexShopNo: {
-                required: true
-            },
-            shoppingComplexFloorNo: {
-                required: true
-            },
-            shopArea: {
-                required: true
-            },
-            shoppingComplexAddress: {
-                required: true
-            },
-            assetCategory: {
-                required: true
-            },
-            assetName: {
-                required: true
-            },
-            assetCode: {
-                required: true
-            },
-            assetLocality: {
-                required: true
-            },
-            assetStreet: {
-                required: true
-            },
-            assetRevenueZone: {
-                required: true
-            },
-            assetRevenueWard: {
-                required: true
-            },
-            assetRevenueBlock: {
-                required: true
-            },
-            assetElectionWard: {
-                required: true
-            },
-            assetAssetAddress: {
-                required: true
-            }
-        }
-
-        // remove all other Asset Details block from DOM except shop asset related fields
-        $("#landAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
-        //remove agreement template two and three from screen
-        $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateThree").remove();
-        //disabling input tag of asset details
-        $("#shopAssetDetailsBlock input").attr("disabled", true);
-        //disabling textarea tag of asset details
-        $("#shopAssetDetailsBlock textarea").attr("disabled", true);
-        //disabling select tag of asset details
-        $("#shopAssetDetailsBlock select").attr("disabled", true);
-        //append category text
-        $(".categoryType").prepend("Shop ");
-    } else if (getUrlVars()["type"] == "market") {
-        // validation rules for shop agreement
-        validationRules = {
-            assetCategory: {
-                required: true
-            },
-            assetName: {
-                required: true
-            },
-            assetCode: {
-                required: true
-            },
-            assetArea: {
-                required: true
-            },
-            assetLocality: {
-                required: true
-            },
-            assetStreet: {
-                required: true
-            },
-            assetRevenueZone: {
-                required: true
-            },
-            assetRevenueWard: {
-                required: true
-            },
-            assetRevenueBlock: {
-                required: true
-            },
-            assetElectionWard: {
-                required: true
-            },
-            assetAssetAddress: {
-                required: true
-            }
-        }
-
-        // remove all other Asset Details block from DOM except shop asset related fields
-        $("#rendCalculatedMethod,#shopAssetDetailsBlock, #landAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
-        //remove agreement template two and three from screen
-        $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo").remove();
-        //disabling input tag of asset details
-        $("#marketAssetDetailsBlock input").attr("disabled", true);
-        $("#marketAssetDetailsBlock textarea").attr("disabled", true);
-        //append category text
-        $(".categoryType").prepend("Market ");
-    } else if (getUrlVars()["type"] == "kalyanamandapam") {
-        // validation rules for shop agreement
-        validationRules = {
-            kalyanamandapamName: {
-                required: true
-            },
-            assetCategory: {
-                required: true
-            },
-            assetName: {
-                required: true
-            },
-            assetCode: {
-                required: true
-            },
-            assetLocality: {
-                required: true
-            },
-            assetStreet: {
-                required: true
-            },
-            assetRevenueZone: {
-                required: true
-            },
-            assetRevenueWard: {
-                required: true
-            },
-            assetRevenueBlock: {
-                required: true
-            },
-            assetElectionWard: {
-                required: true
-            },
-            assetAssetAddress: {
-                required: true
-            }
-        }
-
-        // remove all other Asset Details block from DOM except shop asset related fields
-        $("#rendCalculatedMethod,#shopAssetDetailsBlock, #landAssetDetailsBlock, #marketAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
-        //remove agreement template two and three from screen
-        $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo").remove();
-        //disabling input tag of asset details
-        $("#kalyanamandapamAssetDetailsBlock input").attr("disabled", true);
-        $("#kalyanamandapamAssetDetailsBlock textarea").attr("disabled", true);
-        //append category text
-        $(".categoryType").prepend("Kalyanamandapam ");
-    } else if (getUrlVars()["type"] == "parking_space") {
-        // validation rules for shop agreement
-        validationRules = {
-            parkingSpaceName: {
-                required: true
-            },
-            assetCategory: {
-                required: true
-            },
-            assetName: {
-                required: true
-            },
-            assetCode: {
-                required: true
-            },
-            assetArea: {
-                required: true
-            },
-            assetLocality: {
-                required: true
-            },
-            assetStreet: {
-                required: true
-            },
-            assetRevenueZone: {
-                required: true
-            },
-            assetRevenueWard: {
-                required: true
-            },
-            assetRevenueBlock: {
-                required: true
-            },
-            assetElectionWard: {
-                required: true
-            },
-            assetAssetAddress: {
-                required: true
-            }
-        }
-
-        // remove all other Asset Details block from DOM except shop asset related fields
-        $("#rendCalculatedMethod,#shopAssetDetailsBlock, #landAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
-        //remove agreement template two and three from screen
-        $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo").remove();
-        //disabling input tag of asset details
-        $("#parkingSpaceAssetDetailsBlock input").attr("disabled", true);
-        $("#parkingSpaceAssetDetailsBlock textarea").attr("disabled", true);
-
-        //append category text
-        $(".categoryType").prepend("Parking Space ");
-
-    } else if (getUrlVars()["type"] == "slaughter_house") {
-        // validation rules for shop agreement
-        validationRules = {
-            slaughterHouseName: {
-                required: true
-            },
-            assetCategory: {
-                required: true
-            },
-            assetName: {
-                required: true
-            },
-            assetCode: {
-                required: true
-            },
-            assetLocality: {
-                required: true
-            },
-            assetStreet: {
-                required: true
-            },
-            assetRevenueZone: {
-                required: true
-            },
-            assetRevenueWard: {
-                required: true
-            },
-            assetRevenueBlock: {
-                required: true
-            },
-            assetElectionWard: {
-                required: true
-            },
-            assetAssetAddress: {
-                required: true
-            }
-        }
-
-        // remove all other Asset Details block from DOM except shop asset related fields
-        $("#rendCalculatedMethod,#shopAssetDetailsBlock, #landAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
-        //remove agreement template two and three from screen
-        $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo").remove();
-        //disabling input tag of asset details
-        $("#slaughterHousesAssetDetailsBlock input").attr("disabled", true);
-        $("#slaughterHousesAssetDetailsBlock textarea").attr("disabled", true);
-        //append category text
-        $(".categoryType").prepend("Slaughter House ");
-    } else if (getUrlVars()["type"] == "usfructs") {
-        // validation rules for shop agreement
-        validationRules = {
-            usfructName: {
-                required: true
-            },
-            assetCategory: {
-                required: true
-            },
-            assetName: {
-                required: true
-            },
-            assetCode: {
-                required: true
-            },
-            assetLocality: {
-                required: true
-            },
-            assetStreet: {
-                required: true
-            },
-            assetRevenueZone: {
-                required: true
-            },
-            assetRevenueWard: {
-                required: true
-            },
-            assetRevenueBlock: {
-                required: true
-            },
-            assetElectionWard: {
-                required: true
-            },
-            assetAssetAddress: {
-                required: true
-            }
-        }
-
-        // remove all other Asset Details block from DOM except shop asset related fields
-        $("#rendCalculatedMethod,#shopAssetDetailsBlock, #landAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
-        //remove agreement template two and three from screen
-        $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo").remove();
-        //disabling input tag of asset details
-        $("#usfructsAssetDetailsBlock input").attr("disabled", true);
-        $("#usfructsAssetDetailsBlock textarea").attr("disabled", true);
-
-        //append category text
-        $(".categoryType").prepend("Usfructs ");
-    } else if (getUrlVars()["type"] == "community") {
-        // validation rules for shop agreement
-        validationRules = {
-            toiletComplexName: {
-                required: true
-            },
-            assetCategory: {
-                required: true
-            },
-            assetName: {
-                required: true
-            },
-            assetCode: {
-                required: true
-            },
-            assetLocality: {
-                required: true
-            },
-            assetStreet: {
-                required: true
-            },
-            assetRevenueZone: {
-                required: true
-            },
-            assetRevenueWard: {
-                required: true
-            },
-            assetRevenueBlock: {
-                required: true
-            },
-            assetElectionWard: {
-                required: true
-            },
-            assetAssetAddress: {
-                required: true
-            }
-        }
-
-        // remove all other Asset Details block from DOM except shop asset related fields
-        $("#rendCalculatedMethod,#shopAssetDetailsBlock, #landAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
-        //remove agreement template two and three from screen
-        $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo").remove();
-        //disabling input tag of asset details
-        $("#communityAssetDetailsBlock input").attr("disabled", true);
-        $("#communityAssetDetailsBlock textarea").attr("disabled", true);
-        //append category text
-        $(".categoryType").prepend("Community ");
-    } else if (getUrlVars()["type"] == "fish_tank") {
-        // validation rules for shop agreement
-        validationRules = {
-            fishTankName: {
-                required: true
-            },
-            assetCategory: {
-                required: true
-            },
-            assetName: {
-                required: true
-            },
-            assetCode: {
-                required: true
-            },
-            assetLocality: {
-                required: true
-            },
-            assetStreet: {
-                required: true
-            },
-            assetRevenueZone: {
-                required: true
-            },
-            assetRevenueWard: {
-                required: true
-            },
-            assetRevenueBlock: {
-                required: true
-            },
-            assetElectionWard: {
-                required: true
-            },
-            assetAssetAddress: {
-                required: true
-            }
-        }
-
-        // remove all other Asset Details block from DOM except shop asset related fields
-        $("#rendCalculatedMethod,#shopAssetDetailsBlock, #landAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #parkAssetDetailsBlock").remove();
-        //remove agreement template two and three from screen
-        $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo").remove();
-        //disabling input tag of asset details
-        $("#fishTankAssetDetailsBlock input").attr("disabled", true);
-        $("#fishTankAssetDetailsBlock textarea").attr("disabled", true);
-        //append category text
-        $(".categoryType").prepend("Fish Tank ");
-    } else if (getUrlVars()["type"] == "park") {
-        // validation rules for shop agreement
-        validationRules = {
-            park_name: {
-                required: true
-            },
-            assetCategory: {
-                required: true
-            },
-            assetName: {
-                required: true
-            },
-            assetCode: {
-                required: true
-            },
-            assetLocality: {
-                required: true
-            },
-            assetStreet: {
-                required: true
-            },
-            assetRevenueZone: {
-                required: true
-            },
-            assetRevenueWard: {
-                required: true
-            },
-            assetRevenueBlock: {
-                required: true
-            },
-            assetElectionWard: {
-                required: true
-            },
-            assetAssetAddress: {
-                required: true
-            }
-        }
-
-        // remove all other Asset Details block from DOM except shop asset related fields
-        $("#rendCalculatedMethod,#shopAssetDetailsBlock, #landAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock").remove();
-        //remove agreement template two and three from screen
-        $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo").remove();
-        //disabling input tag of asset details
-        $("#parkingSpaceAssetDetailsBlock input").attr("disabled", true);
-        $("#parkingSpaceAssetDetailsBlock textarea").attr("disabled", true);
-        //append category text
-        $(".categoryType").prepend("Park ");
-    }
-    // finalValidatinRules = Object.assign(validationRules, commomFieldsRules);
-    finalValidatinRules = Object.assign({}, commomFieldsRules);
-
-    for (var key in finalValidatinRules) {
-        if (finalValidatinRules[key].required) {
-            $(`label[for=${key}]`).append(`<span> *</span>`);
-        }
-        // $(`#${key}`).attr("disabled",true);
-    };
-
-
-
-    $.validator.addMethod('phone', function(value) {
-        return /^[0-9]{10}$/.test(value);
-    }, 'Please enter a valid phone number.');
-
-    $.validator.addMethod('aadhar', function(value) {
-        return /^[0-9]{12}$/.test(value);
-    }, 'Please enter a valid aadhar.');
-
-    $.validator.addMethod('pan_no', function(value) {
-        return /^[0-9a-zA-Z]{10}$/.test(value);
-    }, 'Please enter a valid pan.');
-
-    finalValidatinRules["messages"] = {
-        name: {
-            required: "Enter Name of the Allottee/Lessee"
-        },
-        address: {
-            required: "Enter Address of the Allottee/Lessee"
-        },
-        natureOfAllotment: {
-            required: "Enter Nature of allotment of the agreement"
-        },
-        aadhaarNumber: {
-            required: "Enter Aadhar no. of Allottee"
-        },
-      panNumber: {
-            required: "Enter PAN no. of Allottee"
-        },
-        emailid: {
-            required: "Enter Email ID of Allottee to get Notifications"
-        },
-        contactNumber: {
-            required: "Enter Mobile number of the Allottee to get Notifications"
-        },
-        tenderNumber: {
-            required: "Enter Tender/Auction no. of the agreement"
-        },
-        tenderDate: {
-            required: "Enter Tender/Auction date of the agreement"
-        },
-        tin: {
-            required: "Enter valid TIN number"
-        },
-        tradeLicenseNumber: {
-            required: "Enter respective Trade license number"
-        },
-        // caseNumber: {
-        //     required: true
-        // },
-        // orderDetails: {
-        //     required: true
-        // },
-        rrReadingNumber: {
-            required: getUrlVars()["type"] != "land" ? "Enter Electricity reading number" : ""
-        },
-        registrationFee: {
-            required: "Enter Registration fee paid"
-        },
-        councilNumber: {
-            required: "Enter Council/Standing committee resolution number"
-        },
-        councilDate: {
-            required: "Enter Council/Standing committee resolution date"
-        },
-        bankGuaranteeAmount: {
-            required: "Enter Bank guarantee amount"
-        },
-        bankGuaranteeDate: {
-            required: "Enter Bank guarantee date"
-        },
-        agreementNumber: {
-            required: "Enter Agreement Number"
-        },
-        agreementDate: {
-            required: "Enter Agreement Date"
-        },
-        securityDepositDate: {
-            required: "Enter security deposit received date by ULB"
-        },
-        securityDeposit: {
-            required: "Enter Security deposit for Agreement"
-        },
-        commencementDate: {
-            required: "Enter Date of commencement of asset"
-        },
-        // expiryDate: {
-        //     required: true
-        // },
-        rent: {
-            required: "Enter shop rent per month"
-        },
-        // paymentCycle: {
-        //     required: true
-        // },
-        rentIncrementMethod: {
-            required: getUrlVars()["type"] == "land" || getUrlVars()["type"] == "shop" ? "Select increase in monthly rent at the time of renewal" : ""
-        },
-        // remarks: {
-        //     required: "Enter Remarks if any"
-        // },
-        solvencyCertificateNo: {
-            required: "Enter Solvency certificate date"
-        },
-        solvencyCertificateDate: {
-            required: "Enter Solvency certificate date"
-        }
-
-
-    }
-
-
-    // Adding Jquery validation dynamically
-    $("#createAgreementForm").validate({
-        rules: finalValidatinRules,
-        messages: finalValidatinRules["messages"],
-        submitHandler: function(form) {
-            // form.submit();
-
-            // console.log(agreement);
-            $.post(`${baseUrl}agreements?tenant_id=kul.am`, {
-                RequestInfo: requestInfo,
-                Agreement: agreement
-            }, function(response) {
-                // alert("submit");
-                window.open("../../../../app/search-assets/create-agreement-ack.html?&agreement_id=aeiou", "", "width=1200,height=800")
-                console.log(response);
-            })
-        }
-    })
-})
+// //
+// //
+//
+//
+//
+// //
+//
+//
+//
+//     //
+//   <div className="form-section" id="agreementDetailsBlockTemplateThree">
+//   <h3 className="categoryType">Shopping Complex  Details </h3>
+//   <div className="form-section-inner">
+//
+//         <div className="row">
+//         <div className="col-sm-6">
+//         <div className="row">
+//         <div className="col-sm-6 label-text">
+//                   <label for="acuquisition">MOde Of Acquisition <span> * </span> </label>
+//          </div>
+//          <div className="col-sm-6">
+//           <div className="styled-select">
+//                       <select name="acuquisition" id="acuquisition">
+//                     <option>Purchase</option>
+//                     <option>Tender</option>
+//                     <option>Connstruction</option>
+//                     <option value="Direct">Donation</option>
+//
+//                     </select>
+//             </div>
+//             </div>
+//             </div>
+//             </div>
+//
+//               <div className="col-sm-6">
+//               <div className="row">
+//               <div className="col-sm-6 label-text">
+//                     <label for="name">Shopping COmplex Name.</label>
+//               </div>
+//               <div className="col-sm-6">
+//                     <input type="text" name="name" id="name" />
+//               </div>
+//               </div>
+//               </div>
+//               </div>
+//
+//               <div className="row">
+//               <div className="col-sm-6">
+//               <div className="row">
+//               <div className="col-sm-6 label-text">
+//                   <label for="complexNo">Shopping Complex No  </label>
+//               </div>
+//               <div className="col-sm-6">
+//                   <input type="text" name="complexNO" id="complexNO" />
+//               </div>
+//               </div>
+//               </div>
+//
+//               <div className="col-sm-6">
+//               <div className="row">
+//               <div className="col-sm-6 label-text">
+//                       <label for="doorNo">Door No  </label>
+//               </div>
+//               <div className="col-sm-6">
+//                 <input type="number" name="doorNO" id="doorNO" />
+//               </div>
+//               </div>
+//               </div>
+//
+//               <div className="row">
+//               <div className="col-sm-6">
+//               <div className="row">
+//               <div className="col-sm-6 label-text">
+//                     <label for="complexNo"> Number of floor  </label>
+//               </div>
+//               <div className="col-sm-6">
+//                     <input type="text" name="floorNO" id="floorNO" />
+//               </div>
+//               </div>
+//               </div>
+//
+//               <div className="col-sm-6">
+//               <div className="row">
+//               <div className="col-sm-6 label-text">
+//                   <label for="noofShop">Total Number of Shop  </label>
+//             </div>
+//             <div className="col-sm-6">
+//                 <input type="text" name="noofShop" id="noofShop" />
+//             </div>
+//             </div>
+//             </div>
+//             </div>
+//
+//             <div className="row">
+//             <div className="col-sm-6">
+//             <div className="row">
+//             <div className="col-sm-6 label-text">
+//                 <label for="floorNo">Floor No </label>
+//             </div>
+//             <div className="col-sm-6">
+//             <div className="styled-select">
+//                   <select name="floorNo" id="floorNo">
+//                   <option>1</option>
+//                   <option>2</option>
+//                   <option>3</option>
+//                   <option value="Direct">4</option>
+//
+//                 </select>
+//             </div>
+//             </div>
+//             </div>
+//             </div>
+//             <div className="col-sm-6">
+//             <div className="row">
+//             <div className="col-sm-6 label-text">
+//                   <label for="noShop">Number Of Shop.</label>
+//             </div>
+//             <div className="col-sm-6">
+//                   <input type="text" name="noShop" id="noShop" />
+//             </div>
+//             </div>
+//             </div>
+//             </div>
+//
+//             <div className="row">
+//             <div className="col-sm-6">
+//             <div className="row">
+//             <div className="col-sm-6 label-text">
+//                 <label for="status">Status <span> * </span> </label>
+//             </div>
+//             <div className="col-sm-6">
+//             <div className="styled-select">
+//                   <select name="status" id="status">
+//                   <option>1</option>
+//                   <option>2</option>
+//                   <option>3</option>
+//                   <option value="Direct">4</option>
+//
+//                 </select>
+//           </div>
+//           </div>
+//           </div>
+//           </div>
+//           <div className="col-sm-6">
+//           <div className="row">
+//           <div className="col-sm-6 label-text">
+//                   <label for="value">Value</label>
+//            </div>
+//            <div className="col-sm-6">
+//                   <input type="text" name="value" id="value" />
+//           </div>
+//           </div>
+//           </div>
+//           </div>
+//
+//           <div className="row">
+//           <div className="col-sm-6">
+//           <div className="row">
+//           <div className="col-sm-6 label-text">
+//               <label for="remarks">Remarks </label>
+//         </div>
+//         <div className="col-sm-6">
+//               <textarea name="remarks" id="remarks"></textarea>
+//       </div>
+//       </div>
+//       </div>
+//       </div>
+//
+//       <div className="text-center">
+//           <button type="button" className="btn btn-submit" >Create</button>
+//           <button type="button" className="btn btn-submit">close</button>
+//       </div>
+//       </div>
+//       </div>

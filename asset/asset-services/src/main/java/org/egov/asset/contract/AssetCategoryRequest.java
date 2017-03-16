@@ -20,8 +20,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class AssetCategoryRequest   {
-  @JsonProperty("tenantId")
-  private String tenantId = null;
+ 
 
   @JsonProperty("RequestInfo")
   private RequestInfo requestInfo = null;
@@ -29,6 +28,4 @@ public class AssetCategoryRequest   {
   @JsonProperty("AssetCategory")
   @Valid
   private AssetCategory assetCategory = null;
-
 }
-

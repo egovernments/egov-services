@@ -1,3 +1,4 @@
+
 package org.egov.asset.repository;
 
 import java.util.ArrayList;
@@ -41,6 +42,20 @@ public class AssetCategoryRepository {
 	   return assetCategory;
 	}
 	
+	public String getAssetCategoryCode(){
+		String query = "SELECT nextval('seq_egasset_categorycode')";
+		Integer result = jdbcTemplate.queryForObject(query,Integer.class);
+		System.out.println("result:"+result);
+		//String code=String.format("%03d", result);
+		StringBuilder code=null;
+		try{
+		 code = new StringBuilder(String.format("%03d", result));
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+		return code.toString();
+	}
+	
 	public AssetCategory create(AssetCategoryRequest assetCategoryRequest){
 		
 		RequestInfo requestInfo=assetCategoryRequest.getRequestInfo();
@@ -74,7 +89,7 @@ public class AssetCategoryRepository {
 		Object[] obj = new Object[] {assetCategory.getName(), assetCategory.getCode(), assetCategory.getParent(),
 				assetCategoryType, depreciationMethod,3L, assetCategory.getAssetAccount(), assetCategory.getAccumulatedDepreciationAccount(),
 				assetCategory.getRevaluationReserveAccount(), assetCategory.getDepreciationExpenseAccount(), assetCategory.getUnitOfMeasurement(),
-				customFields, assetCategoryRequest.getTenantId(), requestInfo.getMsgId(), new Date(), requestInfo.getMsgId(), new Date()};
+				customFields, assetCategory.getTenantId(), requestInfo.getMsgId(), new Date(), requestInfo.getMsgId(), new Date()};
 
 		try {
 			 jdbcTemplate.update(queryStr, obj);

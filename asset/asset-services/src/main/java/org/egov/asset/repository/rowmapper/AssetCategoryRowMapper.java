@@ -1,3 +1,4 @@
+
 package org.egov.asset.repository.rowmapper;
 
 import java.io.IOException;
@@ -20,8 +21,8 @@ public class AssetCategoryRowMapper implements RowMapper<AssetCategory>{
 	public AssetCategory mapRow(ResultSet rs, int rowNum) throws SQLException {
 		
 		AssetCategory assetCategory=new AssetCategory();
-		assetCategory.setAccumulatedDepreciationAccount(rs.getLong("accumulateddepreciationaccount"));
-		assetCategory.setAssetAccount(rs.getLong("assetaccount"));
+		assetCategory.setAccumulatedDepreciationAccount((Long)rs.getObject("accumulateddepreciationaccount"));
+		assetCategory.setAssetAccount((Long)rs.getObject("assetaccount"));
 		assetCategory.setAssetCategoryType(AssetCategoryType.fromValue(rs.getString("assetcategorytype")));
 		assetCategory.setCode(rs.getString("code"));
 		String json=rs.getString("customfields");
@@ -31,28 +32,25 @@ public class AssetCategoryRowMapper implements RowMapper<AssetCategory>{
 		try {
 			obj = objectMapper.readValue(json, AssetCategory.class);
 		} catch (JsonParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		if(obj!=null) 
 		assetCategory.setCustomFields(obj.getCustomFields());
 		
-		assetCategory.setDepreciationExpenseAccount(rs.getLong("depreciationexpenseaccount"));
+		assetCategory.setDepreciationExpenseAccount((Long)rs.getObject("depreciationexpenseaccount"));
 		assetCategory.setDepreciationMethod(DepreciationMethod.fromValue(rs.getString("depreciationmethod")));
-		//Todo
+		//Todo DepreciationRate
 		//	assetCategory.setDepreciationRate(rs.getInt("depreciationrate"));
-		assetCategory.setId(rs.getLong("id"));
+		assetCategory.setId((Long)rs.getObject("id"));
 		assetCategory.setName(rs.getString("name"));
-		assetCategory.setParent(rs.getLong("parentid"));
-		assetCategory.setRevaluationReserveAccount(rs.getLong("revaluationreserveaccount"));
-		assetCategory.setUnitOfMeasurement(rs.getLong("unitofmeasurement"));
+		assetCategory.setParent((Long)rs.getObject("parentid"));
+		assetCategory.setRevaluationReserveAccount((Long)rs.getObject("revaluationreserveaccount"));
+		assetCategory.setUnitOfMeasurement((Long)rs.getObject("unitofmeasurement"));
 		
 		return assetCategory;
 	}

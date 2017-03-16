@@ -32,21 +32,24 @@ public class AgreementRowMapper implements RowMapper<Agreement> {
 		agreement.setCouncilDate(rs.getTimestamp("council_date"));
 		agreement.setCouncilNumber(rs.getString("council_number"));
 		agreement.setExpiryDate(rs.getTimestamp("expiry_date"));
-		String natureOfAllotment = (rs.getString("nature_of_allotment"));
+		
+		String natureOfAllotment = rs.getString("nature_of_allotment");
 		agreement.setNatureOfAllotment(NatureOfAllotment.fromValue(natureOfAllotment));
 		agreement.setOrderDate(rs.getTimestamp("order_date"));
 		agreement.setOrderDetails(rs.getString("order_details"));
 		agreement.setOrderNo(rs.getString("order_no"));
-		String PaymentCycleValue = (rs.getString("payment_cycle"));
+		
+		String PaymentCycleValue = rs.getString("payment_cycle");
 		agreement.setPaymentCycle(PaymentCycle.fromValue(PaymentCycleValue));
 		agreement.setRegistrationFee(rs.getDouble("registration_fee"));
 		agreement.setRemarks(rs.getString("remarks"));
 		agreement.setRent(rs.getDouble("rent"));
 		agreement.setRrReadingNo(rs.getString("rr_reading_no"));
-		String status = (rs.getString("status"));
+		
+		String status = rs.getString("status");
 		agreement.setStatus(Status.fromValue(status));
 		agreement.setTinNumber(rs.getString("tin_number"));
-		// agreement.setTenantId(rs.getString("tenant_id"));
+		agreement.setTenantId(rs.getString("tenant_id"));
 		agreement.setTenderDate(rs.getTimestamp("tender_date"));
 		agreement.setTenderNumber(rs.getString("tender_number"));
 		agreement.setSecurityDeposit(rs.getDouble("security_deposit"));
@@ -67,7 +70,6 @@ public class AgreementRowMapper implements RowMapper<Agreement> {
 		Asset asset = new Asset();
 		asset.setId(rs.getLong("asset"));
 		agreement.setAsset(asset);
-		
 
 		return agreement;
 	}

@@ -74,7 +74,7 @@ public class WorkflowMatrixImpl implements Workflow {
 		state.setSenderName(getEmp(1l).getName());
 		state.setStatus(StateStatus.INPROGRESS);
 		state.setValue(wfMatrix.getNextState());
-		state.setComments(processInstance.getDescription());
+		state.setComments(processInstance.getComments());
 		state.setOwnerPosition(owner.getId());
 		state.setNextAction(wfMatrix.getNextAction());
 		state.setType(processInstance.getBusinessKey());
@@ -142,7 +142,7 @@ public class WorkflowMatrixImpl implements Workflow {
 		Position owner = null;
 		Long ownerId = null;
 		if (task.getAssignee() != null)
-			owner = positionRepository.getById(Long.valueOf(task.getAssignee()));
+			owner = positionRepository.getById(Long.valueOf(task.getAssignee().getId()));
 		// final WorkflowEntity entity = task.getEntity();
 		String dept = null;
 		if (task.getAttributes()!=null && task.getAttributes().get("department") != null)
@@ -160,7 +160,11 @@ public class WorkflowMatrixImpl implements Workflow {
 		if (task.getAction().equalsIgnoreCase(WorkflowConstants.ACTION_REJECT)) {
 			ownerId = state.getInitiatorPosition();
 			if (ownerId != null)
-				task.setAssignee(ownerId.toString());
+			{
+				Position p=new Position();
+				p.setId(ownerId);
+				task.setAssignee(p);
+			}
 			else
 				owner = getInitiator();
 
@@ -189,7 +193,7 @@ public class WorkflowMatrixImpl implements Workflow {
 		state.addStateHistory(new StateHistory(state));
 
 		state.setValue(nextState);
-		state.setComments(task.getDescription());
+		state.setComments(task.getComments());
 		state.setSenderName(getEmp(1l).getName());
 		if (owner != null)
 			state.setOwnerPosition(owner.getId());
@@ -214,18 +218,17 @@ public class WorkflowMatrixImpl implements Workflow {
 		return approverName;
 	}
 
-	private String getNextAction(final WorkflowEntity model, final WorkflowBean container) {
+	private String getNextAction(  final WorkflowBean workflowBean) {
 
 		WorkFlowMatrix wfMatrix = null;
-		if (null != model && null != model.getId())
-			if (null != model.getProcessInstance())
-				wfMatrix = workflowService.getWfMatrix(model.getProcessInstance().getBusinessKey(),
-						container.getWorkflowDepartment(), container.getAmountRule(), container.getAdditionalRule(),
-						container.getCurrentState(), container.getPendingActions(), model.getCreatedDate());
+		if (null != workflowBean && null != workflowBean.getWorkflowId())
+				wfMatrix = workflowService.getWfMatrix(workflowBean.getBusinessKey(),
+						workflowBean.getWorkflowDepartment(), workflowBean.getAmountRule(), workflowBean.getAdditionalRule(),
+						workflowBean.getCurrentState(), workflowBean.getPendingActions(), workflowBean.getCreatedDate());
 			else
-				wfMatrix = workflowService.getWfMatrix(model.getProcessInstance().getBusinessKey(),
-						container.getWorkflowDepartment(), container.getAmountRule(), container.getAdditionalRule(),
-						State.DEFAULT_STATE_VALUE_CREATED, container.getPendingActions(), model.getCreatedDate());
+				wfMatrix = workflowService.getWfMatrix(workflowBean.getBusinessKey(),
+						workflowBean.getWorkflowDepartment(), workflowBean.getAmountRule(), workflowBean.getAdditionalRule(),
+						State.DEFAULT_STATE_VALUE_CREATED, workflowBean.getPendingActions(), workflowBean.getCreatedDate());
 		return wfMatrix == null ? "" : wfMatrix.getNextAction();
 	}
 
@@ -235,17 +238,17 @@ public class WorkflowMatrixImpl implements Workflow {
 	 * @return List of WorkFlow Buttons From Matrix By Passing parametres
 	 *         Type,CurrentState,CreatedDate
 	 */
-	private List<?> getValidActions(final WorkflowEntity model, final WorkflowBean workflowBean) {
+	private List<?> getValidActions( final WorkflowBean workflowBean) {
 		List<String> validActions = Collections.emptyList();
-		if (null == model || model.getWorkflowId() == null)
+		if (null == workflowBean || workflowBean.getWorkflowId() == null)
 			validActions = workflowService.getNextValidActions(workflowBean.getBusinessKey(),
 					workflowBean.getWorkflowDepartment(), workflowBean.getAmountRule(),
-					workflowBean.getAdditionalRule(), "NEW", workflowBean.getPendingActions(), model.getCreatedDate());
-		else if (null != model.getProcessInstance())
+					workflowBean.getAdditionalRule(), "NEW", workflowBean.getPendingActions(), workflowBean.getCreatedDate());
+		else if (null != workflowBean.getWorkflowId())
 			validActions = workflowService.getNextValidActions(workflowBean.getBusinessKey(),
 					workflowBean.getWorkflowDepartment(), workflowBean.getAmountRule(),
-					workflowBean.getAdditionalRule(), model.getProcessInstance().getStatus(),
-					workflowBean.getPendingActions(), model.getCreatedDate());
+					workflowBean.getAdditionalRule(), workflowBean.getCurrentState(),
+					workflowBean.getPendingActions(), workflowBean.getCreatedDate());
 		return validActions;
 	}
 
@@ -264,13 +267,13 @@ public class WorkflowMatrixImpl implements Workflow {
 				processInstance.setAssignee(positionRepository.getById(state.getOwnerUser()));
 			processInstance.setStatus(state.getValue());
 		}
-		processInstance.getEntity().setProcessInstance(processInstance);
+		//processInstance.getEntity().setProcessInstance(processInstance);
 		wfbean.map(processInstance);
 		final Attribute validActions = new Attribute();
-		validActions.setVals((List<Object>) getValidActions(processInstance.getEntity(), wfbean));
+		validActions.setVals((List<Object>) getValidActions(wfbean));
 		processInstance.getAttributes().put("validActions", validActions);
 		final Attribute nextAction = new Attribute();
-		nextAction.setCode(getNextAction(processInstance.getEntity(), wfbean));
+		nextAction.setCode(getNextAction( wfbean));
 		processInstance.getAttributes().put("nextAction", nextAction);
 		return processInstance;
 	}

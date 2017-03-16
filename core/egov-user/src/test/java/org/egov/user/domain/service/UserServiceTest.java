@@ -6,8 +6,8 @@ import org.egov.user.domain.exception.OtpValidationPendingException;
 import org.egov.user.domain.model.UserSearch;
 import org.egov.user.persistence.entity.Role;
 import org.egov.user.persistence.entity.User;
-import org.egov.user.persistence.entity.enums.Gender;
-import org.egov.user.persistence.entity.enums.UserType;
+import org.egov.user.domain.model.enums.Gender;
+import org.egov.user.domain.model.enums.UserType;
 import org.egov.user.persistence.repository.OtpRepository;
 import org.egov.user.persistence.repository.UserRepository;
 import org.junit.Test;
@@ -63,10 +63,10 @@ public class UserServiceTest {
     @Test
     public void test_should_search_user() throws Exception {
         UserSearch userSearch = new UserSearch();
-        List<User> expectedListOfUsers = getListOfUsers();
+        List<org.egov.user.domain.model.User> expectedListOfUsers = mock(List.class);
         when(userRepository.findAll(userSearch)).thenReturn(expectedListOfUsers);
 
-        List<User> actualResult = userService.searchUsers(userSearch);
+        List<org.egov.user.domain.model.User> actualResult = userService.searchUsers(userSearch);
 
         assertThat(expectedListOfUsers).isEqualTo(actualResult);
     }
@@ -128,7 +128,7 @@ public class UserServiceTest {
         role.setName("CITIZEN");
         Set<Role> roles = new HashSet<>();
         roles.add(role);
-        return getUserBuilder().roles(roles).build();
+        return getUserBuilder().build();
     }
 
     private org.egov.user.domain.model.User.UserBuilder getUserBuilder() {

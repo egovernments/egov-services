@@ -1,3 +1,4 @@
+
 /*
  * eGov suite of products aim to improve the internal efficiency,transparency,
  * accountability and the service delivery of the government  organizations.
@@ -43,6 +44,9 @@ package org.egov.asset.model;
 import java.util.Date;
 import java.util.Map;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
 import org.egov.asset.model.enums.ModeOfAcquisition;
 import org.egov.asset.model.enums.Status;
 import lombok.AllArgsConstructor;
@@ -60,21 +64,31 @@ import lombok.ToString;
 @ToString
 public class Asset {
 
+	@NotNull
+	private String tenantId;
 	private Long id;
+	
+	@NotNull
 	private String name;
 	private String code;
+	
+	@Valid
 	private Department department;
+	
+	@NotNull
 	private AssetCategory assetCategory;
 	private String assetDetails;
 	private ModeOfAcquisition modeOfAcquisition;
 	private Status status;
 	private String description;
 	private Date dateOfCreation;
+	
+	@Valid
 	private Location locationDetails;
+	
 	private String remarks;
 	private String length;
 	private String width;
 	private String totalArea;
 	private Map<String, String> properties;
-	 private String tenantId;
 }

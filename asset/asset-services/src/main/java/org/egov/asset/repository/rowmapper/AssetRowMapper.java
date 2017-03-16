@@ -1,3 +1,4 @@
+
 /*
  * eGov suite of products aim to improve the internal efficiency,transparency,
  * accountability and the service delivery of the government  organizations.
@@ -47,6 +48,7 @@ import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCategory;
 import org.egov.asset.model.Department;
 import org.egov.asset.model.Location;
+import org.egov.asset.model.enums.AssetCategoryType;
 import org.egov.asset.model.enums.DepreciationMethod;
 import org.egov.asset.model.enums.ModeOfAcquisition;
 import org.egov.asset.model.enums.Status;
@@ -66,13 +68,13 @@ public class AssetRowMapper implements RowMapper<Asset> {
 	public Asset mapRow(ResultSet rs, int rowNum) throws SQLException {
 		Asset asset = new Asset();
 		
-		asset.setId(rs.getLong("assetId"));
+		asset.setId((Long)rs.getObject("assetId"));
 		asset.setName(rs.getString("assetname"));
 		asset.setCode(rs.getString("assetcode"));
 		asset.setAssetDetails(rs.getString("assetDetails"));
-		//TODO asset.setTenantId(rs.getString("tenantId"));
+		asset.setTenantId(rs.getString("tenantId"));
 		asset.setModeOfAcquisition(ModeOfAcquisition.fromValue(rs.getString("modeofacquisition"))); 
-		asset.setStatus(Status.fromValue("status"));
+		asset.setStatus(Status.fromValue(rs.getString("status")));
 		asset.setDescription(rs.getString("description"));
 		asset.setDateOfCreation(rs.getDate("dateOfCreation"));
 		asset.setRemarks(rs.getString("remarks"));
@@ -100,32 +102,33 @@ public class AssetRowMapper implements RowMapper<Asset> {
 		asset.setProperties(asset2.getProperties());
 		
 		Department department=new Department();
-		department.setId(rs.getLong("department"));
+		department.setId((Long)rs.getObject("department"));
 		asset.setDepartment(department);
 		
 		Location location=new Location();
-		location.setBlock(rs.getLong("block"));
-		location.setLocality(rs.getLong("locality"));
-		location.setDoorNo(rs.getLong("doorNo"));
-		location.setElectionWard(rs.getLong("electionWard"));
-		location.setRevenueWard(rs.getLong("revenueWard"));
-		location.setPinCode(rs.getLong("pincode"));
-		location.setZone(rs.getLong("zone"));
-		location.setStreet(rs.getLong("street"));
+		location.setBlock((Long)rs.getObject("block"));
+		location.setLocality((Long)rs.getObject("locality"));
+		location.setDoorNo((Long)rs.getObject("doorNo"));
+		location.setElectionWard((Long)rs.getObject("electionWard"));
+		location.setRevenueWard((Long)rs.getObject("revenueWard"));
+		location.setPinCode((Long)rs.getObject("pincode"));
+		location.setZone((Long)rs.getObject("zone"));
+		location.setStreet((Long)rs.getObject("street"));
 		asset.setLocationDetails(location);
 		
 		AssetCategory assetCategory=new AssetCategory();
-		assetCategory.setId(rs.getLong("assetcategoryId"));
-		assetCategory.setAccumulatedDepreciationAccount(rs.getLong("accumulatedDepreciationAccount"));
-		assetCategory.setAssetAccount(rs.getLong("assetAccount"));
+		assetCategory.setId((Long)rs.getObject("assetcategoryId"));
+		assetCategory.setAccumulatedDepreciationAccount((Long)rs.getObject("accumulatedDepreciationAccount"));
+		assetCategory.setAssetCategoryType(AssetCategoryType.fromValue(rs.getString("assetcategorytype")));
+		assetCategory.setAssetAccount((Long)rs.getObject("assetAccount"));
 		assetCategory.setName(rs.getString("assetCategoryName"));
 		assetCategory.setCode(rs.getString("assetcategorycode"));
-		assetCategory.setParent(rs.getLong("parentId"));
-		assetCategory.setDepreciationExpenseAccount(rs.getLong("depreciationExpenseAccount"));
+		assetCategory.setParent((Long)rs.getObject("parentId"));
+		assetCategory.setDepreciationExpenseAccount((Long)rs.getObject("depreciationExpenseAccount"));
 		assetCategory.setDepreciationMethod(DepreciationMethod.fromValue(rs.getString("depreciationMethod")));
-		assetCategory.setAccumulatedDepreciationAccount(rs.getLong("accumulatedDepreciationAccount"));
-		assetCategory.setRevaluationReserveAccount(rs.getLong("revaluationReserveAccount"));
-		assetCategory.setUnitOfMeasurement(rs.getLong("unitOfMeasurement"));
+		assetCategory.setAccumulatedDepreciationAccount((Long)rs.getObject("accumulatedDepreciationAccount"));
+		assetCategory.setRevaluationReserveAccount((Long)rs.getObject("revaluationReserveAccount"));
+		assetCategory.setUnitOfMeasurement((Long)rs.getObject("unitOfMeasurement"));
 		//assetCategory.setCustomFields(rs.getString("customFields"));
 		
 		

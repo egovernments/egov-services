@@ -72,7 +72,7 @@ $(document).ready(function()
 	})
 
 	$('#ct-sel-jurisd').change(function(){
-		getLocality($(this).val());
+		getLocality($(this).val(),'');
 	});
 	
 	$('#approvalDepartment').change(function(){
@@ -163,24 +163,17 @@ $(document).ready(function()
 							if(localStorage.getItem('type') == 'EMPLOYEE' || localStorage.getItem('type') == 'CITIZEN'){
 								var loadDD = new $.loadDD();
 								nextStatus(loadDD);
-								$('#status').val(status);
 							}
 
 							if(localStorage.getItem('type') == 'EMPLOYEE'){
 								$('#status').attr('required','required');
 								var wardId = response.service_requests[0].values.LocationId;
 								var localityid = response.service_requests[0].values.ChildLocationId;
-								complaintType(loadDD);
-								$('#complaintType option').each(function(){
-									if($(this).text() == (response.service_requests[0].service_name)){
-										$(this).attr('selected', 'selected');
-									}
-								});
-								getWard(loadDD);
+								var serviceName = response.service_requests[0].service_name;
+								complaintType(loadDD, serviceName);
+								getWard(loadDD, wardId);
+								getLocality(wardId, localityid);
 								getDepartment(loadDD);
-								$('#ct-sel-jurisd').val(wardId);
-								getLocality(wardId);
-								$('#location').val(localityid);
 							}
 
 						},
@@ -228,9 +221,11 @@ $(document).ready(function()
 });
 
 function complaintUpdate(obj){
+	var duplicateResponse = {};
+	duplicateResponse =  updateResponse;
 	var req_obj = {};
-	req_obj['RequestInfo'] = updateResponse.response_info;
-	req_obj['ServiceRequest'] = updateResponse.service_requests[0];
+	req_obj['RequestInfo'] = duplicateResponse.response_info;
+	req_obj['ServiceRequest'] = duplicateResponse.service_requests[0];
 
 	req_obj['RequestInfo']['auth_token'] = localStorage.getItem('auth');
 
@@ -325,10 +320,9 @@ function complaintUpdate(obj){
 	});
 }
 
-function complaintType(loadDD){
+function complaintType(loadDD, serviceName){
 	$.ajax({
-		url: "/pgr/services?type=all&tenantId=ap.public",
-		async : false
+		url: "/pgr/services?type=all&tenantId=ap.public"
 	}).done(function(data) {
 		loadDD.load({
 			element:$('#complaintType'),
@@ -336,14 +330,18 @@ function complaintType(loadDD){
 			keyValue:'serviceCode',
 			keyDisplayName:'serviceName'
 		});
+		$('#complaintType option').each(function(){
+			if($(this).text() == serviceName){
+				$(this).attr('selected', 'selected');
+			}
+		});
 	});
 }
 
 function nextStatus(loadDD){
 	$.ajax({
 		url: "/pgr/_getnextstatuses?userId="+localStorage.getItem("id")+"&currentStatus="+status+"&tenantId=ap.public",
-		type : 'POST',
-		async : false
+		type : 'POST'
 	}).done(function(data) {
 		loadDD.load({
 			element:$('#status'),
@@ -351,14 +349,15 @@ function nextStatus(loadDD){
 			keyValue:'name',
 			keyDisplayName:'name'
 		});
+		$('#status').val(status);
+		$('#status').val() ? $('#status').val() : $('#status').val('');
 	});
 }
 
-function getWard(loadDD){
+function getWard(loadDD, wardId){
 	$.ajax({
 		url: "/v1/location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?boundaryTypeName=Ward&hierarchyTypeName=Administration",
-		type : 'POST',
-		async : false
+		type : 'POST'
 	}).done(function(data) {
 		loadDD.load({
 			element:$('#ct-sel-jurisd'),
@@ -366,14 +365,15 @@ function getWard(loadDD){
 			keyValue:'id',
 			keyDisplayName:'name'
 		});
+		$('#ct-sel-jurisd').val(wardId);
+		$('#ct-sel-jurisd').val() ? $('#ct-sel-jurisd').val() : $('#ct-sel-jurisd').val('');
 	});
 }
 
-function getLocality(boundaryId){
+function getLocality(boundaryId, localityid){
 	$.ajax({
 		url: "/v1/location/boundarys/childLocationsByBoundaryId?boundaryId="+boundaryId,
-		type : 'POST',
-		async : false
+		type : 'POST'
 	}).done(function(data) {
 		loadDD.load({
 			element:$('#location'),
@@ -381,6 +381,10 @@ function getLocality(boundaryId){
 			keyValue:'id',
 			keyDisplayName:'name'
 		});
+		if(localityid){
+			$('#location').val(localityid);
+			$('#location').val() ? $('#location').val() : $('#location').val('');	
+		}
 	});
 }
 

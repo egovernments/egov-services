@@ -90,8 +90,7 @@
 												placeholder="SRN" />
 										</div>
 										<div class="col-md-3 add-margin">
-											<input type="text" name="location" class="form-control" id="ct-location"
-												placeholder="Location " />
+											<select name="location_id" id="ct-location" class="form-control"></select>
 										</div>
 									</div>
 									<div class="form-group">
@@ -128,16 +127,16 @@
 									<div class="form-group show-searchcomp-more display-hide">
 										<div class="col-md-3 add-margin">
 											<label for="">Name</label>	
-											<input type="text" name="complainantName" class="form-control patternvalidation" data-pattern="alphabetwithspace" id="ct-name" />
+											<input type="text" name="name" class="form-control patternvalidation" data-pattern="alphabetwithspace" id="ct-name" />
 										</div>
 										<div class="col-md-3 add-margin">
 											<label for="">Mobile Number</label>	
-											<input type="text" name="complainantPhoneNumber" class="form-control patternvalidation" data-pattern="number" id="ct-mobno"
+											<input type="text" name="mobile_number" class="form-control patternvalidation" data-pattern="number" id="ct-mobno"
 												maxlength="10"/>
 										</div>
 										<div class="col-md-3 add-margin">
 											<label for="">Email</label>	
-											<input type="text" name="complainantEmail" class="form-control" id="ct-email"/>
+											<input type="text" name="email_id" class="form-control" id="ct-email"/>
 										</div>
 										<div class="col-md-3 add-margin">
 											<label for="">Complaint Type</label>					
@@ -148,12 +147,12 @@
 									<div class="form-group show-searchcomp-more display-hide">
 										<div class="col-md-3 add-margin">
 											<label for="">Status</label>
-											<select class="form-control" name="status">
+											<select class="form-control" name="status" id="status">
 											</select>
 										</div>
 										<div class="col-md-3 add-margin">
 											<label for="">Receiving Mode</label>
-											<select class="form-control" id="receivingMode" name="receivingmode">
+											<select class="form-control" id="receivingMode" name="receiving_mode">
 											</select>
 										</div>
 									</div>

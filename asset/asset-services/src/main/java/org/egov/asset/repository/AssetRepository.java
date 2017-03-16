@@ -1,3 +1,4 @@
+
 /*
  * eGov suite of products aim to improve the internal efficiency,transparency,
  * accountability and the service delivery of the government  organizations.
@@ -41,6 +42,7 @@
 package org.egov.asset.repository;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -72,6 +74,7 @@ public class AssetRepository {
 	private AssetQueryBuilder assetQueryBuilder;
 	
 	public List<Asset> findForCriteria(AssetCriteria assetCriteria) {
+
 		List<Object> preparedStatementValues = new ArrayList<Object>();
 		String queryStr = assetQueryBuilder.getQuery(assetCriteria, preparedStatementValues);
 		List<Asset> assets = null;
@@ -83,6 +86,20 @@ public class AssetRepository {
 			ex.printStackTrace();
 		}
 		return assets;
+	}
+	
+	public String getAssetCode(){
+		String query = "SELECT nextval('seq_egasset_assetcode')";
+		Integer result = jdbcTemplate.queryForObject(query,Integer.class);
+		System.out.println("result:"+result);
+		//String code=String.format("%03d", result);
+		StringBuilder code=null;
+		try{
+		 code = new StringBuilder(String.format("%06d", result));
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+		return code.toString();
 	}
 	
 	public Asset create(AssetRequest assetRequest) {
@@ -118,11 +135,61 @@ public class AssetRepository {
 		Object[] obj = new Object[] {asset.getAssetCategory().getId(), asset.getName(), asset.getCode(),asset.getDepartment().getId(),
 				asset.getAssetDetails(), asset.getDescription(),asset.getDateOfCreation(), asset.getRemarks(), 
 				asset.getLength(),asset.getWidth(),asset.getTotalArea(),modeOfAcquisition,
-				status,assetRequest.getTenantId(),location.getZone(),location.getRevenueWard(),location.getStreet(),
+				status,asset.getTenantId(),location.getZone(),location.getRevenueWard(),location.getStreet(),
 				location.getElectionWard(),location.getDoorNo(),location.getPinCode(),location.getLocality(),location.getBlock(),
 				property,requestInfo.getMsgId(), new Date(), requestInfo.getMsgId(), new Date()};
 		try{
 			 jdbcTemplate.update(query, obj);
+		} catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		return asset;
+	}
+	
+	public Asset update(AssetRequest assetRequest) {
+		
+		RequestInfo requestInfo = assetRequest.getRequestInfo();
+		Asset asset = assetRequest.getAsset();
+		
+		String property=null;
+		try {
+			
+			 ObjectMapper objectMapper=new ObjectMapper();
+			 objectMapper.setSerializationInclusion(Include.NON_NULL);
+			 Asset asset2=new Asset();
+			 asset2.setProperties(asset.getProperties());
+			 property = objectMapper.writeValueAsString(asset2);
+		
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		
+		String query=assetQueryBuilder.getUpdateQuery();
+		
+		System.out.println("query::"+query);
+		
+		String modeOfAcquisition=null;
+		String status=null;
+		
+		if(asset.getModeOfAcquisition()!=null)
+		modeOfAcquisition=asset.getModeOfAcquisition().toString();
+		
+		if(asset.getStatus()!=null)
+		status = asset.getStatus().toString();
+
+		Location location = asset.getLocationDetails();
+		
+		Object[] obj = new Object[] {asset.getAssetCategory().getId(), asset.getName(),asset.getDepartment().getId(),
+				asset.getAssetDetails(), asset.getDescription(), asset.getRemarks(), 
+				asset.getLength(),asset.getWidth(),asset.getTotalArea(),modeOfAcquisition,
+				status,location.getZone(),location.getRevenueWard(),location.getStreet(),
+				location.getElectionWard(),location.getDoorNo(),location.getPinCode(),location.getLocality(),location.getBlock(),
+				property,requestInfo.getMsgId(), new Date(),asset.getCode(),asset.getTenantId()};
+		try{
+			System.out.println("query1::"+query+","+Arrays.toString(obj));
+			int i= jdbcTemplate.update(query, obj);
+			System.out.println("i:"+i);
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}

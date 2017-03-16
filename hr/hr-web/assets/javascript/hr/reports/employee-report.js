@@ -14,56 +14,218 @@
 
 
 class EmployeeReport extends React.Component {
+  
+  constructor(props) {
+    super(props);
+    this.state = {
+        "result": [],
+        "searchSet": {
+            "employeeCode": "",
+            "department": "",
+            "designation": "",
+            "employeeType": "",
+            "employeeStatus": ""
+        },
+        "employeeTypes": [],
+        "departments": [],
+        "designations": [],
+        "isSearchClicked": false
+    };
+    this.handleChange = this.handleChange.bind(this);
+    this.searchEmployee = this.searchEmployee.bind(this);
+    this.closeWindow = this.closeWindow.bind(this);
+  }
+
+  componentWillMount() {
+     this.setState({
+         ...this.state,
+         departments: commonApiPost("egov-common-masters", "departments", "_search", {tenantId}).responseJSON["Department"] || [],
+         designations: commonApiPost("hr-masters", "designations", "_search", {tenantId}).responseJSON["Designation"] || [],
+         employeeTypes: commonApiPost("hr-masters", "employeetypes", "_search", {tenantId}).responseJSON["EmployeeType"] || []
+     });
+  }
+
+  componentDidUpdate(prevProps, prevState)
+  {
+      if (prevState.result.length!=this.state.result.length) {
+          $('#employeeTable').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                     'copy', 'csv', 'excel', 'pdf', 'print'
+             ],
+             ordering: false
+          });
+      }
+  }
+
+  handleChange(e, name)
+  {
+      this.setState({
+          ...this.state,
+          searchSet:{
+              ...this.state.searchSet,
+              [name]:e.target.value
+          }
+      })
+  }
+
+  closeWindow ()
+  {
+      open(location, '_self').close();
+  }
+
+  searchEmployee (e) 
+  {
+    e.preventDefault();
+    this.setState({
+        ...this.state,
+        isSearchClicked: true,
+        result: commonApiPost("hr-employee", "employees", "_search", {...this.state.searchSet, tenantId}).responseJSON["Employee"] || []
+    })
+  } 
 
   render() {
+    let {handleChange, searchEmployee, closeWindow} = this;
+    let {result, employeeTypes, departments, designations} = this.state;
+    let {employeeCode, department, designation, employeeType, employeeStatus} = this.state.searchSet;
+    
+    const renderOptions = function(list)
+    {
+        if(list && list.constructor == Array)
+        {
+            return list.map((item)=>
+            {
+                return (<option key={item.id} value={item.id}>
+                        {item.name}
+                    </option>)
+            })
+        }
+    }
+
+    const renderTr = () => {
+        return result.map((item, ind) => {
+            return (
+                <tr key={ind}>
+                    <td>{item.code}</td>
+                    <td>{item.name}</td>
+                    <td></td>
+                    <td></td>
+                    <td><a href="#" Employee>Employee </a></td>
+                </tr>
+            )
+        })
+    }
+
+    const showTable = () => {
+        if(this.state.isSearchClicked) {
+            return (
+                <div className="form-section" >
+                    <h3 className="pull-left">Employee Details </h3>
+                    <div className="clearfix"></div>
+                    <div className="land-table">
+                        <table id="employeeTable" className="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th>Employee Code</th>
+                                <th>Employee Name</th>
+                                <th>Employee Designation</th>
+                                <th>Employee Department</th>
+                                <th>Reports</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                {renderTr()}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            )
+        }
+    }
 
     return (
-                <div>
-
-                                                <div className="form-section" >
-                                                    <h3 className="pull-left">Employee Details </h3>
-                                                    <div className="clearfix"></div>
-
-
-                                                    <div className="land-table">
-                                                        <table className="table table-bordered">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>Employee Code</th>
-                                                                    <th>Employee Name</th>
-                                                                    <th>Employee Designation</th>
-                                                                    <th>Employee Deaprtment</th>
-                                                                    <th>Reports</th>
-
-                                                                </tr>
-                                                            </thead>
-                                                            <tr>
-                                                                <td>89 </td>
-                                                                <td>Kumaresh</td>
-                                                                <td>Ui</td>
-                                                                <td>EGov</td>
-                                                                <td><a href="#" Employee>Employee </a></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>90 </td>
-                                                                <td>hfhjnl </td>
-                                                                <td>Ui</td>
-                                                                <td>EGov</td>
-                                                                <td><a href="#" Employee>Employee </a></td>
-
-                                                            </tr>
-
-                                                        </table>
-                                                        </div>
-                                                        </div>
-
-
-
-
-
-
-
-      </div>
+        <div>
+            <div className="form-section">
+                <h3 className="pull-left">Employee Search </h3>
+                <div className="clearfix"></div>
+                <form onSubmit={(e)=>
+                    {searchEmployee(e)}}>
+                    <fieldset>
+                        <div className="row">
+                            <div className="col-sm-6">
+                                <div className="row">
+                                    <div className="col-sm-6 label-text">
+                                        <label for="">Department </label>
+                                    </div>
+                                    <div className="col-sm-6">
+                                        <select id="department" value={department} onChange={(e) => {handleChange(e, "department")}}>
+                                            <option value="" selected></option>
+                                            {renderOptions(departments)}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-sm-6">
+                                <div className="row">
+                                    <div className="col-sm-6 label-text">
+                                        <label for="">Designation </label>
+                                    </div>
+                                    <div className="col-sm-6">
+                                        <select id="designation" value={designation} onChange={(e) => {handleChange(e, "designation")}}>
+                                            <option value="" selected></option>
+                                            {renderOptions(designations)}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-sm-6">
+                                <div className="row">
+                                    <div className="col-sm-6 label-text">
+                                        <label for="">Employee Code/Name </label>
+                                    </div>
+                                    <div className="col-sm-6">
+                                        <input id="employeeCode" type="text" value={employeeCode} onChange={(e) => {handleChange(e, "employeeCode")}}/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-sm-6">
+                                <div className="row">
+                                    <div className="col-sm-6 label-text">
+                                        <label for="">Employee Type </label>
+                                    </div>
+                                    <div className="col-sm-6">
+                                        <select id="employeeType" value={employeeType} onChange={(e) => {handleChange(e, "employeeType")}}>
+                                            <option value="" selected></option>
+                                            {renderOptions(employeeTypes)}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-sm-6">
+                                <div className="row">
+                                    <div className="col-sm-6 label-text">
+                                        <label for="">Status </label>
+                                    </div>
+                                    <div className="col-sm-6">
+                                        <input id="employeeStatus" type="text" value={employeeStatus} onChange={(e) => {handleChange(e, "employeeStatus")}}/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="text-center">
+                            <button type="button" className="btn btn-submit" onClick={(e)=>{this.closeWindow()}}>Close</button>
+                            &nbsp;&nbsp;
+                            <button type="submit" className="btn btn-submit">Search</button>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+            {showTable()}
+        </div>
     );
   }
 }

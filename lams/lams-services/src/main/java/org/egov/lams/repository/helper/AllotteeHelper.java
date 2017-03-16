@@ -19,7 +19,7 @@ public class AllotteeHelper {
 		StringBuilder allotteeParams = new StringBuilder();
 
 		if (searchAllottee.getAllottee() != null) {
-			allotteeParams.append("allotteeId=" + getIdParams(searchAllottee.getAllottee()));
+			allotteeParams.append("id=" + getIdParams(searchAllottee.getAllottee()));
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, allotteeParams);
 		}
 

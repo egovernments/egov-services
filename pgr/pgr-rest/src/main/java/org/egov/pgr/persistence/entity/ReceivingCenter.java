@@ -40,9 +40,24 @@
 
 package org.egov.pgr.persistence.entity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+
 
 @Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "egpgr_receiving_center", uniqueConstraints = @UniqueConstraint(columnNames = { "name" }) )
 @SequenceGenerator(name = ReceivingCenter.SEQ_RECEIVINGCENTER, sequenceName = ReceivingCenter.SEQ_RECEIVINGCENTER, allocationSize = 1)
 public class ReceivingCenter extends AbstractPersistable<Long> {

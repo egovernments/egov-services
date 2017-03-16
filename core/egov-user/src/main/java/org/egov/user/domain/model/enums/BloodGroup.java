@@ -1,4 +1,4 @@
-package org.egov.user.persistence.entity.enums;
+package org.egov.user.domain.model.enums;
 
 import lombok.Getter;
 

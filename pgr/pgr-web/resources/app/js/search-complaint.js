@@ -46,11 +46,16 @@
 		/*Show loader*/
 		showLoader(),
 
+		//Location
+		loadWard(),
+
 		//load receiving mode
 		loadReceivingMode(),
 
 		/*load complaint types*/
-		complaintType()
+		complaintType(),
+
+		loadStatus()
 
 	).then(function() {
 		//Hide Loader
@@ -198,7 +203,7 @@ function loadReceivingMode(){
 			loadDD.load({
 				element:$('#receivingMode'),
 				data:response,
-				keyValue:'code',
+				keyValue:'id',
 				keyDisplayName:'name'
 			});
 		},
@@ -210,7 +215,7 @@ function loadReceivingMode(){
 
 function complaintType(){
 	$.ajax({
-		url: "/pgr/services?type=all&tenantId=ap.public",
+		url: "/pgr/services?type=all&tenantId=ap.public"
 	}).done(function(data) {
 		loadDD.load({
 			element:$('#complaintType'),
@@ -219,253 +224,33 @@ function complaintType(){
 			keyDisplayName:'serviceName'
 		});
 	});
-}
-	
-    
-    /*function validateEmail($email) {
-	  var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
-	  return emailReg.test( $email );
-	}*/
-    
-    
-    
-   /*tableContainer = $("#csearch").dataTable({
-		"sDom": "<'row'<'col-xs-12 hidden col-right'f>r>t<'row'<'col-md-6 col-xs-12'i><'col-md-3 col-xs-6'l><'col-md-3 col-xs-6 text-right'p>>",
-		//"sDom": "<'row'<'col-xs-12 hidden col-right'f>r>t<'row'<'col-xs-6 col-md-3 col-left'i><'col-xs-6 col-md-3 text-right col-left'l><'col-xs-12 col-md-3 col-right'<'export-data'T>><'col-xs-12 col-md-3 col-right'p>>",
-		"aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-		"autoWidth": false,
-		"oTableTools": {
-			"sSwfPath": "../../../../../../egi/resources/global/swf/copy_csv_xls_pdf.swf",
-			"aButtons": ["copy", "csv", "xls", "pdf", "print"]
-		}
-	});*/
-	
-	/*tableContainer.columnFilter({
-		"sPlaceHolder": "head:after"
-	});*/
-	
-	/*$("#complaintSearchResults").on('click','tbody tr',function(event) {
-		
-		//bootbox.alert(tableContainer1.fnGetData(this,0));
-		var crn=tableContainer1.fnGetData(this,0);
-		var currentOwner=tableContainer1.fnGetData(this,7);
-		var currentStatus=tableContainer1.fnGetData(this,4);
-		var CurrentPosition=$('#employeeposition').val();
-		var isgorole= $('#isgorole').val();
-		if(((currentStatus == 'COMPLETED' && isgorole == 'false') || currentStatus == 'REJECTED'|| currentStatus == 'WITHDRAWN') && CurrentPosition != "0")
-			window.open("/pgr/complaint/view/"+crn);
-		else if (currentOwner == CurrentPosition || isgorole == 'true')
-			window.open("/pgr/complaint/update/"+crn);
-		else
-			window.open("/pgr/complaint/view/"+crn);
-	});*/
-	
-	/*$(".checkdate").focus(function () {
-		
-        $(".checkdate").change(function () {
-			console.log("custom dates");
-		//	$("select#when_date").prop('selectedIndex', 4);
+}					
+
+function loadStatus(){
+	$.ajax({
+		url: "/pgr/_statuses?tenantId=ap-public",
+		type : 'POST'
+	}).done(function(data) {
+		loadDD.load({
+			element:$('#status'),
+			data:data,
+			keyValue:'name',
+			keyDisplayName:'name'
 		});
-		
-	});*/
-	
-	/*$("form").submit(function(event){
-		if($("select#when_date option:selected").index() == 0){
-			
-			}else{
-			
-			if($('#start_date').val() != '' && $('#end_date').val() != ''){
-				var start = $('#start_date').val();
-				var end = $('#end_date').val();
-				
-				if (start != "" && end != "") {
-					var stsplit = start.split("/");
-					var ensplit = end.split("/");
-					
-					start = stsplit[1] + "/" + stsplit[0] + "/" + stsplit[2];
-					end = ensplit[1] + "/" + ensplit[0] + "/" + ensplit[2];
-					
-					ValidRange(start, end);
-				}
-				}else{
-					bootbox.alert("Select the date");
-			}
-			
-			event.preventDefault();
-		}
-	});*/
-	
-	/*$("#region").dataTable({
-		"sDom": "<'row'<'col-xs-12 hidden col-right'f>r>t<'row'<'col-md-3 col-xs-12'i><'col-md-3 col-xs-6 col-right'l><'col-xs-12 col-md-3 col-right'<'export-data'T>><'col-md-3 col-xs-6 text-right'p>>",
-		//"sDom": "<'row'<'col-xs-12 hidden col-right'f>r>t<'row'<'col-xs-6 col-md-3 col-left'i><'col-xs-6 col-md-3 text-right col-left'l><'col-xs-12 col-md-3 col-right'<'export-data'T>><'col-xs-12 col-md-3 col-right'p>>",
-		"aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-		"autoWidth": false,
-		"oTableTools": {
-			"sSwfPath": "../../../../../../egi/resources/global/swf/copy_csv_xls_pdf.swf",
-			"aButtons": ["xls", "pdf", "print"]
-		},
-		"footerCallback": function ( row, data, start, end, display ) {
-		    var api = this.api(), data;
-		    updateTotalFooter(2, api);
-		    updateTotalFooter(3, api);
-		    updateTotalFooter(4, api);
-		    updateTotalFooter(5, api);
-		    updateTotalFooter(6, api);
-		},
-                "aoColumnDefs": [ {
-		      "aTargets": [2,3,4,5,6],
-		      "mRender": function ( data, type, full ) {
-			return formatNumberInr(data);
-		      }
-		} ]
-	});*/
-	
-	
-	/*$("#department").dataTable({
-		"sDom": "<'row'<'col-xs-12 hidden col-right'f>r>t<'row'<'col-md-3 col-xs-12'i><'col-md-3 col-xs-6 col-right'l><'col-xs-12 col-md-3 col-right'<'export-data'T>><'col-md-3 col-xs-6 text-right'p>>",
-		//"sDom": "<'row'<'col-xs-12 hidden col-right'f>r>t<'row'<'col-xs-6 col-md-3 col-left'i><'col-xs-6 col-md-3 text-right col-left'l><'col-xs-12 col-md-3 col-right'<'export-data'T>><'col-xs-12 col-md-3 col-right'p>>",
-		"aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-		"autoWidth": false,
-		"oTableTools": {
-			"sSwfPath": "../../../../../../egi/resources/global/swf/copy_csv_xls_pdf.swf",
-			"aButtons": ["xls", "pdf", "print"]
-		},
-		"footerCallback": function ( row, data, start, end, display ) {
-		    var api = this.api(), data;
-		    updateTotalFooter(2, api);
-		    updateTotalFooter(3, api);
-		    updateTotalFooter(4, api);
-		    updateTotalFooter(5, api);
-		    updateTotalFooter(6, api);
-		},
-                "aoColumnDefs": [ {
-		      "aTargets": [2,3,4,5,6],
-		      "mRender": function ( data, type, full ) {
-			return formatNumberInr(data);
-		      }
-		} ]
-	});*/
-
-    /*$('#department_wrapper').hide();*/
-    
-    /*$('#region a').click(function(e){
-       $('#region_wrapper').hide();
-       $('#department_wrapper').show();
-       $('.panel-title').html('Department Wise Report');
-    });
-	
-    $("#agingtable").dataTable({
-		"sDom": "<'row'<'col-xs-12 hidden col-right'f>r>t<'row'<'col-md-3 col-xs-12'i><'col-md-3 col-xs-6 col-right'l><'col-xs-12 col-md-3 col-right'<'export-data'T>><'col-md-3 col-xs-6 text-right'p>>",
-		//"sDom": "<'row'<'col-xs-12 hidden col-right'f>r>t<'row'<'col-xs-6 col-md-3 col-left'i><'col-xs-6 col-md-3 text-right col-left'l><'col-xs-12 col-md-3 col-right'<'export-data'T>><'col-xs-12 col-md-3 col-right'p>>",
-		"aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-		"autoWidth": false,
-		"oTableTools": {
-			"sSwfPath": "../../../../../../egi/resources/global/swf/copy_csv_xls_pdf.swf",
-			"aButtons": ["xls", "pdf", "print"]
-		},
-		"footerCallback": function ( row, data, start, end, display ) {
-		    var api = this.api(), data;
-		    updateTotalFooter(2, api);
-		    updateTotalFooter(3, api);
-		    updateTotalFooter(4, api);
-		    updateTotalFooter(5, api);
-		    updateTotalFooter(6, api);
-		    updateTotalFooter(7, api);
-		},
-                "aoColumnDefs": [ {
-		      "aTargets": [2,3,4,5,6,7],
-		      "mRender": function ( data, type, full ) {
-			return formatNumberInr(data);
-		      }
-		} ]
 	});
-    
-    $("#complaintgrouptable").dataTable({
-		"sDom": "<'row'<'col-xs-12 hidden col-right'f>r>t<'row'<'col-md-3 col-xs-12'i><'col-md-3 col-xs-6 col-right'l><'col-xs-12 col-md-3 col-right'<'export-data'T>><'col-md-3 col-xs-6 text-right'p>>",
-		//"sDom": "<'row'<'col-xs-12 hidden col-right'f>r>t<'row'<'col-xs-6 col-md-3 col-left'i><'col-xs-6 col-md-3 text-right col-left'l><'col-xs-12 col-md-3 col-right'<'export-data'T>><'col-xs-12 col-md-3 col-right'p>>",
-		"aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-		"autoWidth": false,
-		"oTableTools": {
-			"sSwfPath": "../../../../../../egov-egiweb/src/main/webapp/resources/global/swf/copy_csv_xls_pdf.swf",
-			"aButtons": [
-                                {
-				    "sExtends": "csv",
-				    "sFileName": "TableTools - *.csv"
-				},
-                                {
-				    "sExtends": "pdf",
-				    "sPdfMessage": "Your custom message would go here."
-				},
-                               "print"]
-		},
-		"footerCallback": function ( row, data, start, end, display ) {
-		    var api = this.api(), data;
-		    updateTotalFooter(1, api);
-		    updateTotalFooter(2, api);
-		    updateTotalFooter(3, api);
-		    updateTotalFooter(4, api);
-		    updateTotalFooter(5, api);
-		    updateTotalFooter(6, api);
-		},
-                "aoColumnDefs": [ {
-		      "aTargets": [1,2,3,4,5,6],
-		      "mRender": function ( data, type, full ) {
-			return formatNumberInr(data);
-		      }
-		} ]
+}
+
+function loadWard(){
+	$.ajax({
+		url: "/v1/location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?boundaryTypeName=Ward&hierarchyTypeName=Administration",
+		type : 'POST'
+	}).done(function(data) {
+		loadDD.load({
+			element:$('#ct-location'),
+			placeholder : 'Select Location', // default - Select(optional)
+			data:data.Boundary,
+			keyValue:'id',
+			keyDisplayName:'name'
+		});
 	});
-    
-    function updateTotalFooter(colidx, api)
-    {
-    	// Remove the formatting to get integer data for summation
-        var intVal = function ( i ) {
-            return typeof i === 'string' ?
-                i.replace(/[\$,]/g, '')*1 :
-                typeof i === 'number' ?
-                    i : 0;
-        };
-
-        // Total over all pages
-        total = api
-            .column(colidx)
-            .data()
-            .reduce( function (a, b) {
-                return intVal(a) + intVal(b);
-            } );
-
-        // Total over this page
-        pageTotal = api
-            .column( colidx, { page: 'current'} )
-            .data()
-            .reduce( function (a, b) {
-                return intVal(a) + intVal(b);
-            }, 0 );
-
-        // Update footer
-        $( api.column( colidx ).footer() ).html(
-            '<b>'+formatNumberInr(pageTotal) +' ('+ formatNumberInr(total) +')</b>'
-        );
-    }*/
-
-
-
-//inr formatting number
-/*function formatNumberInr(x){
-	   if(x)
-	   {
-			x=x.toString();
-			var afterPoint = '';
-			if(x.indexOf('.') > 0)
-			   afterPoint = x.substring(x.indexOf('.'),x.length);
-			x = Math.floor(x);
-			x=x.toString();
-			var lastThree = x.substring(x.length-3);
-			var otherNumbers = x.substring(0,x.length-3);
-			if(otherNumbers != '')
-			    lastThree = ',' + lastThree;
-			var res = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree + afterPoint;
-		    return res;
-	   }
-	   return x;
-}*/
-						
+}

@@ -66,7 +66,7 @@ public class GrievancePersistenceListener {
 
     private void triggerIndexing(SevaRequest record) {
         logger.debug("Triggering Indexing for" + record.getServiceRequest().getCrn());
-        kafkaProducer.sendMessage(persistenceProperties.getIndexingTopic(), record);
+        kafkaProducer.sendMessage(persistenceProperties.getIndexingTopic(), record.getSevaRequestMap());
     }
 
     private void triggerEmail(Complaint complaint) {

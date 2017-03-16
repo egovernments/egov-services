@@ -1,3 +1,4 @@
+
 /*
  * eGov suite of products aim to improve the internal efficiency,transparency,
  * accountability and the service delivery of the government  organizations.
@@ -228,5 +229,14 @@ public class AssetQueryBuilder {
 		String INSERT_QUERY="INSERT into egasset_asset values"
 				+"(nextval('seq_egasset_asset'),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		return INSERT_QUERY;
+	}
+
+	public String getUpdateQuery(){
+		String UPDATE_QUERY="UPDATE egasset_asset SET assetcategory=?,name=?,department=?,assetdetails=?,description=?,remarks=?,length=?,"
+				+ "width=?,totalarea=?,modeofacquisition=?,status=?,zone=?,revenueward=?,street=?,electionward=?,doorno=?,pincode=?,locality=?,"
+				+ "block=?,properties=?,lastmodifiedby=?,lastmodifieddate=? "
+				+ "WHERE code=? and tenantid=?";
+				
+		return UPDATE_QUERY;
 	}
 }

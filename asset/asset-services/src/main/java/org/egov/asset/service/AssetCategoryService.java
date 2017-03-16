@@ -1,3 +1,4 @@
+
 package org.egov.asset.service;
 
 import java.util.ArrayList;
@@ -41,6 +42,7 @@ public class AssetCategoryService {
 	
 	public AssetCategoryResponse createAsync(String topic,String key,AssetCategoryRequest assetCategoryRequest){
 		
+		assetCategoryRequest.getAssetCategory().setCode(assetCategoryRepository.getAssetCategoryCode());
 		ObjectMapper objectMapper=new ObjectMapper();
 		String value=null;
 		try {
@@ -64,6 +66,4 @@ public class AssetCategoryService {
 		
 	  return assetCategoryResponse;
 	}
-	
-
 }

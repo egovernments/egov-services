@@ -1,3 +1,4 @@
+
 package org.egov.asset.model.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -5,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum DepreciationMethod {
 	
-    STRAIGHT_LINE_METHOD("STRAIGHT LINE METHOD"), WRITTEN_DOWN_VALUE_METHOD("WRITTEN DOWN VALUE METHOD");
+    STRAIGHT_LINE_METHOD("STRAIGHT_LINE_METHOD"), WRITTEN_DOWN_VALUE_METHOD("WRITTEN_DOWN_VALUE_METHOD");
 
     private String value;
 
@@ -28,4 +29,4 @@ public enum DepreciationMethod {
       }
       return null;
     }
-  }
+}

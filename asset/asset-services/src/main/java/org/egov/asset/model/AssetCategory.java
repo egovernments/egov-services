@@ -1,6 +1,9 @@
+
 package org.egov.asset.model;
 
 import java.util.List;
+
+import javax.validation.constraints.NotNull;
 
 import org.egov.asset.model.enums.AssetCategoryType;
 import org.egov.asset.model.enums.DepreciationMethod;
@@ -24,10 +27,15 @@ import lombok.ToString;
 @ToString
 public class AssetCategory   {
 	
+  @JsonProperty("tenantId")
+  @NotNull
+  private String tenantId;
+	
   @JsonProperty("id")
   private Long id;
 
   @JsonProperty("name")
+  @NotNull
   private String name;
 
   @JsonProperty("code")
@@ -62,10 +70,5 @@ public class AssetCategory   {
 
   @JsonProperty("customFields")
   private List<AssetCategoryCustomFields> customFields;
-  
-  @JsonProperty("tenantId")
-  private String tenantId;
-
-
 }
 

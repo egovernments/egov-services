@@ -1,3 +1,4 @@
+
 /*
  * eGov suite of products aim to improve the internal efficiency,transparency,
  * accountability and the service delivery of the government  organizations.
@@ -59,6 +60,15 @@ public class ApplicationProperties {
 	@Value("${egov.assetcategory.async}")
 	private Boolean assetCategoryAsync;
 	
+	@Value("${kafka.topics.save.asset}")
+	private String createAssetTopicName;
+	
+	@Value("${kafka.topics.update.asset}")
+	private String updateAssetTopicName;
+	
+	@Value("${kafka.topics.save.assetcategory}")
+	private String createAssetCategoryTopicName;
+	
 	@Autowired
 	private Environment environment;
 
@@ -77,8 +87,14 @@ public class ApplicationProperties {
 	public Boolean getAssetCategoryAsync() {
 		return assetCategoryAsync;
 	}
-	public void setAssetCategoryAsync(Boolean assetCategoryAsync) {
-		this.assetCategoryAsync = assetCategoryAsync;
+	public String getCreateAssetCategoryTopicName() {
+		return createAssetCategoryTopicName;
 	}
-	
+	public String getCreateAssetTopicName() {
+		return createAssetTopicName;
+	}
+	public String getUpdateAssetTopicName() {
+		return updateAssetTopicName;
+	}
+
 }

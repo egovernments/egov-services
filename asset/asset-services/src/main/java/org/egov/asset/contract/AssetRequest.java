@@ -48,6 +48,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.validation.Valid;
+
 import org.egov.asset.model.Asset;
 
 @AllArgsConstructor
@@ -58,13 +60,11 @@ import org.egov.asset.model.Asset;
 @ToString
 public class AssetRequest {
 	
-	@JsonProperty("tenantId")
-	private String tenantId;
-	
 	@JsonProperty("RequestInfo")
 	private RequestInfo requestInfo;
 
 	@JsonProperty("Asset")
+	@Valid
 	private Asset asset;
 
 }

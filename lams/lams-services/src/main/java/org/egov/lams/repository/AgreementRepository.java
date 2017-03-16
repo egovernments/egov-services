@@ -176,7 +176,7 @@ public class AgreementRepository {
 		String url = null;
 		AllotteeResponse allotteeResponse = null;
 		try {
-			url = propertiesManager.getAllotteeServiceHostName()+ "?" + queryString;
+			url = propertiesManager.getAllotteeServiceHostName()+"/_search"+ "?" + queryString;
 			logger.info(url.toString());
 			allotteeResponse = restTemplate.postForObject(url,new RequestInfo(), AllotteeResponse.class);
 		} catch (Exception e) {

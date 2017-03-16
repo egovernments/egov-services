@@ -47,7 +47,7 @@ import java.util.stream.Collectors;
 import org.egov.eis.broker.EmployeeProducer;
 import org.egov.eis.model.Employee;
 import org.egov.eis.model.EmployeeInfo;
-import org.egov.eis.model.UserInfo;
+import org.egov.eis.model.User;
 import org.egov.eis.repository.AssignmentRepository;
 import org.egov.eis.repository.DepartmentalTestRepository;
 import org.egov.eis.repository.EducationalQualificationRepository;
@@ -61,6 +61,7 @@ import org.egov.eis.repository.ServiceHistoryRepository;
 import org.egov.eis.repository.TechnicalQualificationRepository;
 import org.egov.eis.service.helper.EmployeeUserMapper;
 import org.egov.eis.web.contract.EmployeeGetRequest;
+import org.egov.eis.web.contract.EmployeeRequest;
 import org.egov.eis.web.contract.RequestInfo;
 import org.egov.eis.web.contract.UserRequest;
 import org.slf4j.Logger;
@@ -130,17 +131,20 @@ public class EmployeeService {
 
 		List<Long> ids = employeeInfoList.stream().map(employeeInfo -> employeeInfo.getId()).collect(Collectors.toList());
 
-		List<UserInfo> usersList = userService.getUsers(ids, employeeGetRequest.getTenantId(), requestInfo);
+		List<User> usersList = userService.getUsers(ids, employeeGetRequest.getTenantId(), requestInfo);
 		employeeUserMapper.mapUsersWithEmployees(employeeInfoList, usersList);
 
 		return employeeInfoList;
 	}
 
-	public void createEmployee(Employee employee) {
-		// create user For Employee by REST API call and get the Id for the user.
-		UserRequest userRequest = getUserRequest(employee);
-		userService.createUser(userRequest);
-		// get code generated for employee by calling employee code generator service
+	public void createEmployee(EmployeeRequest employeeRequest) {
+		UserRequest userRequest = getUserRequest(employeeRequest);
+		Long id = userService.createUser(userRequest);
+
+		String code = getEmployeeCode(id);
+		Employee employee = employeeRequest.getEmployee();
+		employee.setId(id);
+		employee.setCode(code);
 
 		String employeeJson = null;
 		try {
@@ -149,41 +153,45 @@ public class EmployeeService {
 			LOGGER.info("employeeJson::" + employeeJson);
 		} catch (JsonProcessingException e) {
 			LOGGER.error("Error while converting Employee to JSON", e);
-				e.printStackTrace();
+			e.printStackTrace();
 		}
 		try {
 			employeeProducer.sendMessage(employeeSaveTopic, employeeSaveKey, employeeJson);
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}
-		
 	}
 
-	private UserRequest getUserRequest(Employee employee) {
-		return null;
+	private String getEmployeeCode(Long id) {
+		return "EMP" + id;
+	}
+
+	private UserRequest getUserRequest(EmployeeRequest employeeRequest) {
+		UserRequest userRequest = new UserRequest();
+		userRequest.setRequestInfo(employeeRequest.getRequestInfo());
+		User user = employeeRequest.getEmployee().getUser();
+		user.setTenantId(employeeRequest.getEmployee().getTenantId());
+		userRequest.setUser(user);
+
+		return userRequest;
 	}
 
 	public void saveEmployee(Employee employee) {
-		Long employeeId = 5L;
-		String code = "EMP" + employeeId;
-
-		employee.setId(employeeId);
-		employee.setCode(code);
 		employeeRepository.save(employee);
-		employeeJurisdictionRepository.save(employeeId, employee.getJurisdictions());
-		employeeLanguageRepository.save(employeeId, employee.getLanguagesKnown());
+		employeeJurisdictionRepository.save(employee);
+		employeeLanguageRepository.save(employee);
 		for (int i = 0; i < employee.getAssignments().size(); i++) {
 			employee.getAssignments().get(i).setId(new Date().getTime() + i);
 		};
-		assignmentRepository.save(employeeId, employee.getAssignments());
+		assignmentRepository.save(employee);
 		employee.getAssignments().forEach((assignment) -> {
-			hodDepartmentRepository.save(assignment.getId(), assignment.getHod());
+			hodDepartmentRepository.save(assignment);
 		});
-		serviceHistoryRepository.save(employeeId, employee.getServiceHistory());
-		probationRepository.save(employeeId, employee.getProbation());
-		regularisationRepository.save(employeeId, employee.getRegularisation());
-		technicalQualificationRepository.save(employeeId, employee.getTechnical());
-		educationalQualificationRepository.save(employeeId, employee.getEducation());
-		departmentalTestRepository.save(employeeId, employee.getTest());
+		serviceHistoryRepository.save(employee);
+		probationRepository.save(employee);
+		regularisationRepository.save(employee);
+		technicalQualificationRepository.save(employee);
+		educationalQualificationRepository.save(employee);
+		departmentalTestRepository.save(employee);
 	}
 }

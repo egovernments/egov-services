@@ -43,7 +43,7 @@ package org.egov.eis.web.contract;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.egov.eis.model.UserInfo;
+import org.egov.eis.model.User;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -62,6 +62,6 @@ public class UserResponse {
 
 	private ResponseInfo responseInfo;
 
-	private List<UserInfo> user = new ArrayList<UserInfo>();
+	private List<User> user = new ArrayList<User>();
 
 }

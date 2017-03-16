@@ -59,6 +59,7 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
 import org.egov.workflow.web.contract.Attribute;
+import org.egov.workflow.web.contract.Position;
 import org.egov.workflow.web.contract.Task;
 import org.hibernate.annotations.Immutable;
 
@@ -274,15 +275,17 @@ public class StateHistory implements Serializable {
     }
 
     public Task map() {
+    	Position p=new Position();
+    	p.setId(this.ownerPosition);
         Task t = Task.builder().businessKey(this.getState().getType()).
                 comments(this.comments == null ? "" : this.comments)
                 .createdDate(this.getCreatedDate())
                 .id(this.getId().toString())
                 .status(this.getValue())
-                .description(this.getNatureOfTask())
-                .owner(this.getOwnerPosition().toString())
-                .details(this.extraInfo == null ? "" : this.extraInfo)
-                .sender(this.senderName == null ? "" : this.senderName)
+                .natureOfTask(this.getNatureOfTask())
+                .owner(p)
+                .extraInfo(this.extraInfo == null ? "" : this.extraInfo)
+                .senderName(this.senderName == null ? "" : this.senderName)
                 .action(this.nextAction == null ? "" : this.nextAction)
                 .attributes(new HashMap<String,Attribute>()).build();
         return t;

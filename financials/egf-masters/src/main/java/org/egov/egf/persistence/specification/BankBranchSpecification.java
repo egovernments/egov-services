@@ -47,7 +47,7 @@ public class BankBranchSpecification implements Specification<BankBranch> {
 		}
 
 		if (criteria.getBank() != null) {
-			predicates.add(criteriaBuilder.equal(bank, criteria.getBank()));
+			predicates.add(criteriaBuilder.equal(bank, criteria.getBank().getId()));
 		}
 
 		if (criteria.getCode() != null) {

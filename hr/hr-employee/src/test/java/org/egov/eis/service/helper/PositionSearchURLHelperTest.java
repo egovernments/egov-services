@@ -1,12 +1,6 @@
 package org.egov.eis.service.helper;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import org.egov.eis.config.ApplicationProperties;
-import org.egov.eis.web.contract.PositionGetRequest;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -29,9 +23,10 @@ public class PositionSearchURLHelperTest {
 
 	@Test
 	public void testGetBlankQuery() {
-		Mockito.when(applicationProperties.empServicesHrMastersServiceGetPositionsHostname())
+		Mockito.when(applicationProperties.empServicesHrMastersServiceSearchPositionsHostURL())
 			.thenReturn("http://localhost:7777/hr-masters/positions/_search");
 		Mockito.when(applicationProperties.empSearchPageSizeMax()).thenReturn("500");
+/*
 		PositionGetRequest positionGetRequest = getNewPositionGetRequest();
 		String url = testingObject.searchURL(positionGetRequest);
 		System.out.println(url);
@@ -45,6 +40,7 @@ public class PositionSearchURLHelperTest {
 		positionIdList.add(15L);
 		positionIdList.add(16L);
 		return PositionGetRequest.builder().id(positionIdList).tenantId("1").build();
+*/
 	}
 
 }

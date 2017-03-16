@@ -120,13 +120,14 @@ public class AttendanceQueryBuilder {
 
         if (attendanceGetRequest.getDesignationId() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" employee = (select employee from egeis_assignment where designationId = ? and isprimary = 't')");
+            selectQuery
+                    .append(" employee in (select employee from egeis_assignment where designationId = ? and isprimary = 't')");
             preparedStatementValues.add(attendanceGetRequest.getDesignationId());
         }
 
         if (attendanceGetRequest.getDepartmentId() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" employee = (select employee from egeis_assignment where departmentId = ? and isprimary = 't')");
+            selectQuery.append(" employee in (select employee from egeis_assignment where departmentId = ? and isprimary = 't')");
             preparedStatementValues.add(attendanceGetRequest.getDepartmentId());
         }
 
@@ -200,5 +201,9 @@ public class AttendanceQueryBuilder {
                 + " month = ?, year = ?, type = ?, remarks = ?, lastmodifiedby = ?, lastmodifieddate = ?,"
                 + " tenantid = ? where id = ? ";
         return query;
+    }
+
+    public static String selectTypeByCodeQuery() {
+        return "select * from egeis_attendance_type where upper(code) = ?";
     }
 }

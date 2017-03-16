@@ -3,7 +3,7 @@ package org.egov.user.web.contract;
 import org.egov.user.domain.model.User;
 import org.egov.user.persistence.entity.Address;
 import org.egov.user.persistence.entity.Role;
-import org.egov.user.persistence.entity.enums.*;
+import org.egov.user.domain.model.enums.*;
 import org.junit.Test;
 
 import java.util.*;
@@ -41,10 +41,10 @@ public class UserRequestTest {
         assertThat(userRequestContract.getCorrespondencePinCode()).isEqualTo("pincode 2");
         assertThat(userRequestContract.getActive()).isEqualTo(userEntity.isActive());
         assertThat(userRequestContract.getDob()).isEqualTo(userEntity.getDob());
-        assertThat(userRequestContract.getPwdExpiryDate()).isEqualTo(userEntity.getPwdExpiryDate().toDate());
+        assertThat(userRequestContract.getPwdExpiryDate()).isEqualTo(userEntity.getPwdExpiryDate());
         assertThat(userRequestContract.getLocale()).isEqualTo(userEntity.getLocale());
         assertThat(userRequestContract.getType()).isEqualTo(userEntity.getType());
-        assertThat(userRequestContract.getAccountLocked()).isEqualTo(userEntity.isAccountLocked());
+        assertThat(userRequestContract.isAccountLocked()).isEqualTo(userEntity.isAccountLocked());
         assertThat(userRequestContract.getFatherOrHusbandName()).isEqualTo(userEntity.getGuardian());
         assertThat(userRequestContract.getSignature()).isEqualTo(userEntity.getSignature());
         assertThat(userRequestContract.getBloodGroup()).isEqualTo(userEntity.getBloodGroup().getValue());

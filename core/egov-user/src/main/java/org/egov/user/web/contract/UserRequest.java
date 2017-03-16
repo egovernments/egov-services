@@ -4,9 +4,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.egov.user.domain.model.User;
+import org.egov.user.domain.model.enums.*;
 import org.egov.user.persistence.entity.Address;
-import org.egov.user.persistence.entity.Role;
-import org.egov.user.persistence.entity.enums.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -41,7 +40,7 @@ public class UserRequest {
     private Boolean active;
     private String locale;
     private UserType type;
-    private Boolean accountLocked;
+    private boolean accountLocked;
     private String fatherOrHusbandName;
     private String signature;
     private String bloodGroup;
@@ -77,7 +76,7 @@ public class UserRequest {
         this.aadhaarNumber = user.getAadhaarNumber();
         this.active = user.isActive();
         this.dob = user.getDob();
-        this.pwdExpiryDate = user.getPwdExpiryDate() != null ? user.getPwdExpiryDate().toDate() : null;
+        this.pwdExpiryDate = user.getPwdExpiryDate() != null ? user.getPwdExpiryDate() : null;
         this.locale = user.getLocale();
         this.type = user.getType();
         this.accountLocked = user.isAccountLocked();
@@ -167,9 +166,9 @@ public class UserRequest {
     }
 
     User toDomain() {
-        Role role = new Role();
-        role.setName(String.valueOf(type));
-        Set<Role> roles = new HashSet<>();
+        org.egov.user.domain.model.Role role = org.egov.user.domain.model.Role.builder()
+                .name(String.valueOf(type)).build();
+        Set<org.egov.user.domain.model.Role> roles = new HashSet<>();
         roles.add(role);
         return forDomain()
                 .roles(roles)

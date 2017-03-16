@@ -5,22 +5,22 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.eis.model.EmployeeInfo;
-import org.egov.eis.model.UserInfo;
+import org.egov.eis.model.User;
 import org.springframework.stereotype.Component;
 
 @Component
 public class EmployeeUserMapper {
 
-	public List<EmployeeInfo> mapUsersWithEmployees(List<EmployeeInfo> employeeInfoList, List<UserInfo> userInfoList) {
-		Map<Long, UserInfo> userInfoMap = new HashMap<Long, UserInfo>();
+	public List<EmployeeInfo> mapUsersWithEmployees(List<EmployeeInfo> employeeInfoList, List<User> userInfoList) {
+		Map<Long, User> userInfoMap = new HashMap<Long, User>();
 
-		for (UserInfo userInfo : userInfoList) {
+		for (User userInfo : userInfoList) {
 			userInfoMap.put(userInfo.getId(), userInfo);
 		}
 
 		for (EmployeeInfo employeeInfo : employeeInfoList) {
 			if (userInfoMap.containsKey(employeeInfo.getId())) {
-				UserInfo userInfo = userInfoMap.get(employeeInfo.getId());
+				User userInfo = userInfoMap.get(employeeInfo.getId());
 
 				employeeInfo.setSalutation(userInfo.getSalutation());
 				employeeInfo.setName(userInfo.getName());

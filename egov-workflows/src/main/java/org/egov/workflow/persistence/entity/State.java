@@ -40,18 +40,33 @@
 
 package org.egov.workflow.persistence.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import org.egov.workflow.web.contract.Attribute;
-import org.egov.workflow.web.contract.Task;
-import org.hibernate.validator.constraints.Length;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
+import org.egov.workflow.web.contract.Attribute;
+import org.egov.workflow.web.contract.Position;
+import org.egov.workflow.web.contract.Task;
+import org.hibernate.validator.constraints.Length;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 
 @Builder
 @AllArgsConstructor
@@ -249,15 +264,17 @@ public class State extends AbstractAuditable {
     }
 
     public Task map() {
+    	Position p=new Position();
+    	p.setId(this.getOwnerPosition());
         Task t = Task.builder().businessKey(this.type).
                 comments(this.comments == null ? "" : this.comments)
                 .createdDate(this.getCreatedDate())
                 .id(this.getId().toString())
                 .status(this.getValue())
-                .description(this.getNatureOfTask())
-                .owner(this.getOwnerPosition().toString())
-                .details(this.extraInfo == null ? "" : this.extraInfo)
-                .sender(this.senderName == null ? "" : this.senderName)
+                .natureOfTask(this.getNatureOfTask())
+                .owner(p)
+                .extraInfo(this.extraInfo == null ? "" : this.extraInfo)
+                .senderName(this.senderName == null ? "" : this.senderName)
                 .action(this.nextAction == null ? "" : this.nextAction)
                 .attributes(new HashMap<String,Attribute>()).build();
         return t;

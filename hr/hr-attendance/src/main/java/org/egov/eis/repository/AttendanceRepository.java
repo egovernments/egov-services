@@ -47,8 +47,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.eis.model.Attendance;
+import org.egov.eis.model.AttendanceType;
 import org.egov.eis.repository.builder.AttendanceQueryBuilder;
 import org.egov.eis.repository.rowmapper.AttendanceRowMapper;
+import org.egov.eis.repository.rowmapper.AttendanceTypeRowMapper;
 import org.egov.eis.web.contract.AttendanceGetRequest;
 import org.egov.eis.web.contract.AttendanceRequest;
 import org.slf4j.Logger;
@@ -71,6 +73,9 @@ public class AttendanceRepository {
     private AttendanceRowMapper attendanceRowMapper;
 
     @Autowired
+    private AttendanceTypeRowMapper attendanceTypeRowMapper;
+
+    @Autowired
     private AttendanceQueryBuilder attendanceQueryBuilder;
 
     public List<Attendance> findForCriteria(final AttendanceGetRequest attendanceGetRequest) {
@@ -81,28 +86,45 @@ public class AttendanceRepository {
         return attendances;
     }
 
-    public void saveAttendance(final AttendanceRequest attendanceRequest) {
+    @SuppressWarnings("static-access")
+    public AttendanceType findAttendanceTypeByCode(final String code) {
+        final List<Object> preparedStatementValues = new ArrayList<Object>();
+        preparedStatementValues.add(code.toUpperCase());
+        final String query = AttendanceQueryBuilder.selectTypeByCodeQuery();
+        final List<AttendanceType> attendanceTypes = jdbcTemplate.query(query, preparedStatementValues.toArray(),
+                attendanceTypeRowMapper);
+        if (!attendanceTypes.isEmpty())
+            return attendanceTypes.get(0);
 
-        LOGGER.info("AgreementDao agreement::" + attendanceRequest);
+        return null;
+    }
+
+    public AttendanceRequest saveAttendance(final AttendanceRequest attendanceRequest) {
+
+        LOGGER.info("AttendanceDao attendanceRequest::" + attendanceRequest);
 
         createAttendance(attendanceRequest);
         updateAttendance(attendanceRequest);
+
+        return attendanceRequest;
     }
 
     private void createAttendance(final AttendanceRequest attendanceRequest) {
         final String attendanceinsert = AttendanceQueryBuilder.insertAttendanceQuery();
-        final List<Attendance> attendances = (List<Attendance>) attendanceRequest.getNewAttendances();
         try {
             jdbcTemplate.batchUpdate(attendanceinsert, new BatchPreparedStatementSetter() {
 
                 @Override
                 public void setValues(final PreparedStatement ps, final int i) throws SQLException {
-                    final Attendance attendance = attendances.get(i);
-                    ps.setDate(1, new Date(attendance.getDate().getTime()));
+                    final Attendance attendance = ((List<Attendance>) attendanceRequest.getNewAttendances()).get(i);
+                    AttendanceType type = findAttendanceTypeByCode(attendance.getType().getCode());
+                    if (type == null)
+                        type = findAttendanceTypeByCode("A");
+                    ps.setDate(1, new Date(attendance.getAttendanceDate().getTime()));
                     ps.setLong(2, attendance.getEmployee());
                     ps.setString(3, attendance.getMonth());
                     ps.setString(4, attendance.getYear());
-                    ps.setLong(5, attendance.getType().getId());
+                    ps.setLong(5, type.getId());
                     ps.setString(6, attendance.getRemarks());
                     ps.setLong(7, Long.valueOf(attendanceRequest.getRequestInfo().getMsgId()));
                     ps.setDate(8, new Date(new java.util.Date().getTime()));
@@ -113,7 +135,7 @@ public class AttendanceRepository {
 
                 @Override
                 public int getBatchSize() {
-                    return attendances.size();
+                    return attendanceRequest.getNewAttendances().size();
                 }
             });
         } catch (final DataAccessException ex) {
@@ -123,19 +145,21 @@ public class AttendanceRepository {
     }
 
     private void updateAttendance(final AttendanceRequest attendanceRequest) {
-        final String attendanceinsert = AttendanceQueryBuilder.updateAttendanceQuery();
-        final List<Attendance> attendances = (List<Attendance>) attendanceRequest.getSavedAttendances();
+        final String attendanceUpdate = AttendanceQueryBuilder.updateAttendanceQuery();
         try {
-            jdbcTemplate.batchUpdate(attendanceinsert, new BatchPreparedStatementSetter() {
+            jdbcTemplate.batchUpdate(attendanceUpdate, new BatchPreparedStatementSetter() {
 
                 @Override
                 public void setValues(final PreparedStatement ps, final int i) throws SQLException {
-                    final Attendance attendance = attendances.get(i);
-                    ps.setDate(1, new Date(attendance.getDate().getTime()));
+                    final Attendance attendance = ((List<Attendance>) attendanceRequest.getSavedAttendances()).get(i);
+                    AttendanceType type = findAttendanceTypeByCode(attendance.getType().getCode());
+                    if (type == null)
+                        type = findAttendanceTypeByCode("A");
+                    ps.setDate(1, new Date(attendance.getAttendanceDate().getTime()));
                     ps.setLong(2, attendance.getEmployee());
                     ps.setString(3, attendance.getMonth());
                     ps.setString(4, attendance.getYear());
-                    ps.setLong(5, attendance.getType().getId());
+                    ps.setLong(5, type.getId());
                     ps.setString(6, attendance.getRemarks());
                     ps.setLong(7, Long.valueOf(attendanceRequest.getRequestInfo().getMsgId()));
                     ps.setDate(8, new Date(new java.util.Date().getTime()));
@@ -145,7 +169,7 @@ public class AttendanceRepository {
 
                 @Override
                 public int getBatchSize() {
-                    return attendances.size();
+                    return attendanceRequest.getSavedAttendances().size();
                 }
             });
         } catch (final DataAccessException ex) {

@@ -10,6 +10,7 @@ import org.egov.pgr.repository.UserRepository;
 import org.egov.pgr.service.ComplaintStatusService;
 import org.egov.pgr.service.ComplaintTypeService;
 import org.egov.pgr.service.EscalationService;
+import org.egov.pgr.service.ReceivingCenterService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -36,6 +37,8 @@ public class ComplaintBuilderTest {
     private EscalationService escalationService;
     @Mock
     private PositionRepository positionRepository;
+    @Mock 
+    private ReceivingCenterService receivingCenterService;
 
     @Mock
     private UserRepository userRepository;
@@ -166,7 +169,7 @@ public class ComplaintBuilderTest {
 
     private ComplaintBuilder complaintBuilderWithComplaint(Complaint complaint, SevaRequest sevaRequest) {
         return new ComplaintBuilder(complaint, sevaRequest, complaintTypeService, complaintStatusService,
-                escalationService, positionRepository,userRepository);
+                escalationService, positionRepository,userRepository,receivingCenterService);
     }
 
     private Date getDateFor(int year, int month, int date) {

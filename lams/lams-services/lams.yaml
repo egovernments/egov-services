@@ -173,12 +173,6 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/AgreementRequest'
-        - name: tenantId
-          in: query
-          description: Unique id for tenant.
-          required: true
-          type: string
-          format: varchar
       tags:
         - Agreement
       responses:
@@ -334,9 +328,8 @@ definitions:
         type: integer
         format: int64
         description: unique id of the asset.
-      category:
-        type: string
-        description: ULB Categorize assets into different categories
+      assetCategory:
+        $ref: '#/definitions/AssetCategory'
       name:
         type: string
         description: Name of the Asset
@@ -346,13 +339,13 @@ definitions:
       code:
         type: string
         description: ULB assign unique code to each asset to find it out easily
-      location:
-        $ref: '#/definitions/Location'
+      locationDetails:
+        $ref: '#/definitions/LocationDetails'
     required:
-      - category
+      - assetCategory
       - name
       
-  Location:
+  LocationDetails:
     type: object
     properties:
       id:
@@ -550,6 +543,9 @@ definitions:
       stateId:
         type: string
         description: Work flow ref id.
+      tenantId:
+        type: string
+        description: Unique Identifier of which tenant this data is defined. For example, AP, AP-Kurnool etc.
     required:
       - id
       - agreementNumber
@@ -630,6 +626,15 @@ definitions:
       fileStore:
         type: string
         description: File store reference key.
+        
+  AssetCategory:
+    type: object
+    description: This object holds asset category info
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: unique id of the asset category.
     
   AgreementRequest:
     properties:

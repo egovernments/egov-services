@@ -4,12 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import org.egov.user.domain.exception.InvalidUserException;
-import org.egov.user.persistence.entity.Address;
-import org.egov.user.persistence.entity.Role;
-import org.egov.user.persistence.entity.enums.BloodGroup;
-import org.egov.user.persistence.entity.enums.Gender;
-import org.egov.user.persistence.entity.enums.GuardianRelation;
-import org.egov.user.persistence.entity.enums.UserType;
+import org.egov.user.domain.model.enums.BloodGroup;
+import org.egov.user.domain.model.enums.Gender;
+import org.egov.user.domain.model.enums.GuardianRelation;
+import org.egov.user.domain.model.enums.UserType;
 
 import java.util.*;
 
@@ -50,6 +48,8 @@ public class User {
     private Date lastModifiedDate;
     private Date createdDate;
     private String otpReference;
+    private Long createdBy;
+    private Long lastModifiedBy;
 
     public void validate() {
         if (isUsernameAbsent() || isNameAbsent() || isGenderAbsent() || isMobileNumberAbsent()

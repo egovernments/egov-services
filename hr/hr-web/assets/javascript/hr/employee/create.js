@@ -1,150 +1,33 @@
 //getting current guerry strings
-function getUrlVars() {
-    var vars = [],
-        hash;
-    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-    for (var i = 0; i < hashes.length; i++) {
-        hash = hashes[i].split('=');
-        vars.push(hash[0]);
-        vars[hash[0]] = hash[1];
-    }
-    return vars;
-}
+
 
 //closing current window
 $('#close').on("click", function() {
     window.close();
 })
 
+function returnObject(alies) {
+    switch (alies) {
+      case "assignments":
+        return "assignments_department";
+        break;
+      default:
 
-//base url for api_id
-var baseUrl = window.location.origin;
-
-//request info from cookies
-var requestInfo = {
-    "apiId":"org.egov.pgr",
-    "ver":"1.0",
-    "ts": "sdfs",
-    "action":"asd",
-    "did":"4354648646",
-    "key":"xyz",
-    "msgId":"654654",
-    "requesterId":"61",
-    "authToken":"sdfsdfsdf"
-};
-
-var tenantId=1;
-// $.ajaxPrefilter(function( options ) {
-//   if ( options.crossDomain ) {
-//     options.url = "http://127.0.0.1:61136/" + encodeURIComponent( options.url );
-//     options.crossDomain = false;
-//   }
-// });
-
-// $.ajaxPrefilter( function( options ) {
-//   if ( options.crossDomain ) {
-//     var newData = {};
-//     // Copy the options.data object to the newData.data property.
-//     // We need to do this because javascript doesn't deep-copy variables by default.
-//     newData.data = $.extend({}, options.data);
-//     newData.url = options.url;
-//
-//     // Reset the options object - we'll re-populate in the following lines.
-//     options = {};
-//
-//     // Set the proxy URL
-//     options.url = "http://egov-micro-dev.egovernments.org";
-//     options.data = $.param(newData);
-//     options.crossDomain = false;
-//   }
-// });
-
-// console.log(window.location.origin);
-
-
-
-function getCommonMaster(mainRoute,resource,returnObject) {
-    return $.ajax({
-              url: baseUrl+"/"+mainRoute+"/"+resource+"/_search?tenantId="+tenantId,
-              type: 'POST',
-              dataType: 'json',
-              data:JSON.stringify(requestInfo),
-              async: false,
-              // crossDomain: true, // set this to ensure our $.ajaxPrefilter hook fires
-              // processData: false, // We want this to remain an object for  $.ajaxPrefilter
-              // headers: {
-              //     'Content-Type': 'application/json'
-              // },
-              contentType: 'application/json'
-              // ,
-              // success: function (result) {
-              //     return result[returnObject];
-              //     // console.log(result);
-              //    // CallBack(result);
-              // },
-              // error: function (error) {
-              //     return [];
-              //     // console.log(error);
-              // }
-          });
-    // return response.statusText==="Ok"?response.responseJSON[returnObject]:[];
+    }
 }
-
-// console.log(getCommonMaster("egov-common-masters","departments","Department"));
-
-// console.log("hai");
-
-// $.post("http://egov-micro-dev.egovernments.org"+"/egov-common-masters"+"/departments"+"/_search?tenantId="+tenantId,JSON.stringify(requestInfo),function(data, status){
-//         alert("Data: " + data + "\nStatus: " + status);
-//     });
-
-// $.get(baseUrl+"/"+departments+"/_search?tenantId="+tenantId, function(data, status){
-//         alert("Data: " + data + "\nStatus: " + status);
-//     });
-
 //common object
 var commonObject = {
     employeeType: getCommonMaster("hr-masters","employeetypes","EmployeeType").responseJSON["EmployeeType"] || [],
     employeeStatus: ["EMPLOYED", "RETIRED", "RESIGNED", "TERMINATED", "DECEASED", "SUSPENDED", "TRANSFERRED"],
     group: getCommonMaster("hr-masters","groups","Group").responseJSON["Group"] || [],
-    maritalStatus: ["MARRIED", "UNMARRIED", "DISCOVERED", "WIDROW", "WIDOW"],
+    maritalStatus: ["MARRIED", "UNMARRIED", "DIVORCED", "WIDOWER", "WIDOW"],
     user_bloodGroup: ["O-", "O+", "A-", "A+", "B-", "B+", "AB-", "AB+"],
     motherTounge: getCommonMaster("egov-common-masters","languages","Language").responseJSON["Language"] || [],
     religion: getCommonMaster("egov-common-masters","religions","Religion").responseJSON["Religion"] || [],
     community: getCommonMaster("egov-common-masters","communities","Community").responseJSON["Community"] || [],
     category: getCommonMaster("egov-common-masters","categories","Category").responseJSON["Category"] || [],
-    bank: [{
-            id: 1,
-            name: "HDFC",
-            description: ""
-        },
-        {
-            id: 2,
-            name: "SBI",
-            description: ""
-        },
-        {
-            id: 3,
-            name: "ICIC",
-            description: ""
-        }
-    ],
-    bankBranch: [{
-            id: 1,
-            name: "domlur",
-            description: ""
-        },
-        {
-            id: 2,
-            name: "mathalli",
-            description: ""
-        },
-        {
-            id: 3,
-            name: "varhur",
-            description: ""
-        }
-    ],
+    bank: getCommonMaster("egf-masters","banks","banks").responseJSON["banks"] || [],
+    bankBranch: getCommonMaster("egf-masters","bankbranches","bankbranches").responseJSON["bankbranches"] || [],
     recruitmentMode: getCommonMaster("hr-masters","recruitmentmodes","RecruitmentMode").responseJSON["RecruitmentMode"] || [],
     recruitmentType: getCommonMaster("hr-masters","recruitmenttypes","RecruitmentType").responseJSON["RecruitmentType"] || [],
     recruitmentQuota: getCommonMaster("hr-masters","recruitmentquotas","RecruitmentQuota").responseJSON["RecruitmentQuota"] || [],
@@ -221,6 +104,8 @@ var commonObject = {
     ]
 }
 
+
+
 //common shared object
 commonObject["assignments_mainDepartments"]=commonObject["assignments_department"];
 commonObject["languagesKnow"]=commonObject["motherTounge"];
@@ -255,6 +140,18 @@ for(var key in commonObject)
 }
 
 
+function getNameById(object,id) {
+  // console.log(commonObject[object].length);
+  // return commonObject[object].length
+    object=returnObject(object);
+    for(var i=0;i<commonObject[object].length;i++)
+    {
+      if(commonObject[object][i].id==id)
+      {
+        return commonObject[object][i].name;
+      }
+    }
+}
 //final post object
 var employee = {
     code: "",
@@ -334,10 +231,10 @@ var employeeSubObject = {
         hod: "No",
         mainDepartments: "",
         govtOrderNumber: "",
-        is_primary: "No"
+        isPrimary: "No"
     },
     jurisdictions:{
-        id:1,
+        jurisdictionsType:"",
         boundary:""
     },
     serviceHistory:{
@@ -442,7 +339,7 @@ var commom_fields_rules = {
         required: false
     },
     recruitmentType: {
-        required: true
+        required: false
     },
     recruitmentQuota: {
         required: false
@@ -457,12 +354,6 @@ var commom_fields_rules = {
         required: false
     },
     employeeType: {
-        required: false
-    },
-    assignments: {
-        required: false
-    },
-    jurisdictions: {
         required: false
     },
     motherTounge: {
@@ -513,279 +404,164 @@ var commom_fields_rules = {
     documents: {
         required: false
     },
-    serviceHistory: {
-        required: false
+    "assignments.fromDate":{
+        required:true
     },
-    probation: {
-        required: false
+    "assignments.toDate": {
+        required:true
     },
-    regularisation: {
-        required: false
+    "assignments.fund": {
+        required:false
     },
-    technical: {
-        required: false
+    "assignments.function": {
+        required:false
     },
-    education: {
-        required: false
+    "assignments.grade": {
+        required:false
     },
-    test: {
-        required: false
+    "assignments.designation": {
+        required:true
+    },
+    "assignments.position": {
+        required:true
+    },
+    "assignments.functionary": {
+        required:false
+    },
+    "assignments.department": {
+        required:true
+    },
+    "assignments.hod": {
+        required:true
+    },
+    "assignments.mainDepartments": {
+        required:true
+    },
+    "assignments.govtOrderNumber": {
+        required:false
+    },
+    "assignments.is_primary": {
+        required:true
+    },
+    "jurisdictions.jurisdictionsType":{
+        required:true
+    },
+    "jurisdictions.boundary":{
+        required:true
+    },
+    "education.qualification":{
+        required:true
+    },
+    "education.majorSubject":{
+        required:false
+    },
+    "education.yearOfPassing":	{
+        required:true
+    },
+    "education.university":	{
+        required:true
+    },
+    "education.documents":	{
+        required:false
+    },
+    "serviceHistory.id":	{
+        required:true
+    },
+    "serviceHistory.serviceInfo":{
+        required:true
+    }	,
+    "serviceHistory.serviceFrom":	{
+        required:true
+    },
+    "serviceHistory.remarks":{
+        required:true
+    },
+    "serviceHistory.orderNo":	{
+        required:true
+    },
+    "serviceHistory.documents":{
+        required:false
+    },
+    "probation.designation":	{
+        required:true
+    },
+    "probation.declaredOn":	{
+        required:true
+    },
+    "probation.orderNo":	{
+        required:false
+    },
+    "probation.orderDate":	{
+        required:false
+    },
+    "probation.remarks":	{
+        required:false
+    },
+    "probation.documents":{
+        required:false
+    },
+    "regularisation.designation":	{
+        required:true
+    },
+    "regularisation.declaredOn":	{
+        required:true
+    },
+    "regularisation.orderNo":	{
+        required:false
+    },
+    "regularisation.orderDate":	{
+        required:false
+    },
+    "regularisation.remarks":	{
+        required:false
+    },
+    "regularisation.documents":{
+        required:false
+    },
+    "education.qualification":{
+        required:true
+    },
+    "education.majorSubject":{
+        required:false
+    },
+    "education.yearOfPassing":	{
+        required:true
+    },
+    "education.university":	{
+        required:true
+    },
+    "education.documents":	{
+        required:false
+    },
+    "technical.skill":{
+        required:true
+    }	,
+    "technical.grade":{
+        required:true
+    },
+    "technical.yearOfPassing":	{
+        required:true
+    },
+    "technical.remarks":	{
+        required:false
+    },
+    "technical.documents":	{
+        required:false
+    },
+    "test.test":{
+        required:true
+    },
+    "test.yearOfPassing":	{
+        required:true
+    },
+    "test.remarks":	{
+        required:false
+    },
+    "test.documents":	{
+        required:false
     }
+
 }
-
-
-//Getting data for user input
-$("input").on("keyup change", function() {
-    fillValueToObject(this);
-});
-
-//Getting data for user input
-$("select").on("change", function() {
-    if(this.id=="jurisdictions.jurisdictionsType") return;
-    else {
-
-        fillValueToObject(this);
-    }
-});
-
-//Getting data for user input
-$("textarea").on("keyup change", function() {
-    fillValueToObject(this);
-})
-
-//file change handle for file upload
-$("input[type=file]").on("change", function(evt) {
-    // console.log(this.value);
-    // agreement[this.id] = this.value;
-    var file = evt.currentTarget.files[0];
-
-    //call post api update and update that url in pur agrement object
-});
-
-//initial setup
-$("#departments").hide();
-
-//it will split object string where it has .
-function fillValueToObject(currentState) {
-    if (currentState.id.includes(".")) {
-
-        var splitResult = currentState.id.split(".");
-        if(splitResult[0]==="user")
-        {
-            employee[splitResult[0]][splitResult[1]]=currentState.value;
-        }
-        else {
-              employeeSubObject[splitResult[0]][splitResult[1]] = currentState.value;
-        }
-
-    } else {
-        employee[currentState.id] = currentState.value;
-    }
-}
-
-//need to cleat editIndex and temprory pbject
-$('#assignmentDetailModal').on('hidden.bs.modal', function(e) {
-    editIndex = -1;
-    employeeSubObject["assignments"] = {
-        fromDate: "",
-        toDate: "",
-        fund: "",
-        function: "",
-        grade: "",
-        designation: "",
-        position: "",
-        functionary: "",
-        department: "",
-        hod: "",
-        mainDepartments: "",
-        govtOrderNumber: "",
-        is_primary: ""
-    };
-})
-
-$('#jurisdictionDetailModal').on('hidden.bs.modal', function(e) {
-    editIndex = -1;
-    employeeSubObject["jurisdictions"] = {
-        id:1,
-        boundary:""
-    }
-})
-
-$('#serviceHistoryDetailModal').on('hidden.bs.modal', function(e) {
-    editIndex = -1;
-    employeeSubObject["serviceHistory"] = {
-      id:	0,
-      serviceInfo:""	,
-      serviceFrom:	"",
-      remarks:""	,
-      orderNo:	"",
-      documents:""
-    }
-})
-
-$('#probationDetailModal').on('hidden.bs.modal', function(e) {
-    editIndex = -1;
-    employeeSubObject["probation"] = {
-      designation:	"",
-      declaredOn:	"",
-      orderNo:	"",
-      orderDate:	"",
-      remarks:	"",
-      documents:""
-    }
-})
-
-$('#regularisationDetailModal').on('hidden.bs.modal', function(e) {
-    editIndex = -1;
-    employeeSubObject["regularisation"] = {
-      designation:	"",
-      declaredOn:	"",
-      orderNo:	"",
-      orderDate:	"",
-      remarks:	"",
-      documents:""
-    }
-})
-
-$('#technicalDetailModal').on('hidden.bs.modal', function(e) {
-    editIndex = -1;
-    employeeSubObject["technical"] = {
-      skill:""	,
-      grade:"",
-      yearOfPassing:	"",
-      remarks:	"",
-      documents:	""
-    }
-})
-
-$('#educationDetailModal').on('hidden.bs.modal', function(e) {
-    editIndex = -1;
-    employeeSubObject["education"] = {
-      qualification:""	,
-      majorSubject:"",
-      yearOfPassing:	"",
-      university:	"",
-      documents:	""
-    }
-})
-
-$('#testDetailModal').on('hidden.bs.modal', function(e) {
-    editIndex = -1;
-    employeeSubObject["test"] = {
-      test:""	,
-      yearOfPassing:	"",
-      remarks:	"",
-      documents:	""
-    }
-})
-
-
-function enableAndDisable(id) {
-    $(`#${id}`).toggle();
-}
-
-//common update
-function updateTable(tableName, modalName, object) {
-    $(tableName).html(``);
-    for (var i = 0; i < employee[object].length; i++) {
-        $(tableName).append(`<tr>`);
-        for (var key in employee[object][i]) {
-            $(tableName).append(`<td data-label=${key}>
-                                ${employee[object][i][key]}
-                          </td>`)
-        }
-        $(tableName).append(`<td data-label="Action">
-                    <a href="#" onclick="markEditIndex(${i},'${modalName}','${object}')" class="btn btn-default btn-action"><span class="glyphicon glyphicon-pencil"></span></a>
-                    <a href="#" onclick="commonDeleteFunction('${tableName}','${modalName}','${object}',${i})" class="btn btn-default btn-action"><span class="glyphicon glyphicon-trash"></span></a>
-                  </td>`);
-        $(tableName).append(`</tr>`);
-    }
-}
-
-//common edit mark index
-function markEditIndex(index = -1, modalName = "", object = "") {
-    editIndex = index;
-    $('#' + modalName).modal('show');
-    //assignments  details modal when it edit modalName
-    $('#' + modalName).on('shown.bs.modal', function(e) {
-        if (editIndex != -1) {
-            employeeSubObject[object] = Object.assign({}, employee[object][editIndex]);
-
-            for (var key in employeeSubObject[object]) {
-                // if($(`#${object}\\.${key}`).length == 0) {
-                //       alert("not there");
-                //   }
-                $(`#${object}\\.${key}`).val(employeeSubObject[object][key]);
-            }
-        }
-    })
-    // alert("fired");
-}
-
-//common add and update
-function commonAddAndUpdate(tableName, modalName, object) {
-    // if(switchValidation(object))
-    if(true)
-    {
-      if (editIndex != -1) {
-          employee[object][editIndex] = employeeSubObject[object];
-          updateTable("#" + tableName, modalName, object);
-      } else {
-          employee[object].push(Object.assign({}, employeeSubObject[object]));
-          updateTable("#" + tableName, modalName, object);
-      }
-      $(`#${modalName}`).modal("hide");
-    }
-    else {
-        return;
-    }
-}
-
-//common Delete
-function commonDeleteFunction(tableName, modalName, object, index) {
-    employee[object].splice(index, 1);
-    updateTable(tableName, modalName, object);
-}
-
-//show reslut event
-// $("#showResultEvent").on("click",function() {
-//     // $("#showResult").text(employee);
-//     console.log(employee);
-// })
-
-
-
-
-
-//
-final_validatin_rules = Object.assign(validation_rules, commom_fields_rules);
-for (var key in final_validatin_rules) {
-    if (final_validatin_rules[key].required) {
-        $(`label[for=${key}]`).append(`<span> *</span>`);
-    }
-    // $(`#${key}`).attr("disabled",true);
-};
-
-$.validator.addMethod('phone', function(value) {
-    return /^[0-9]{10}$/.test(value);
-}, 'Please enter a valid phone number.');
-
-$.validator.addMethod('aadhar', function(value) {
-    return /^[0-9]{12}$/.test(value);
-}, 'Please enter a valid aadhar.');
-
-$.validator.addMethod('pan_no', function(value) {
-    return /^[0-9a-zA-Z]{10}$/.test(value);
-}, 'Please enter a valid pan.');
-
-$("#addEmployee").on("click",function() {
-      //  $("#createEmployeeForm").submit();
-      switchValidation("final_validatin_rules");
-})
-
-
-
-
 
 var assignmentDetailValidation={
   fromDate:{
@@ -954,6 +730,299 @@ var test={
 
 
 
+//Getting data for user input
+$("input").on("keyup change", function() {
+    fillValueToObject(this);
+});
+
+//Getting data for user input
+$("select").on("change", function() {
+    if(this.id=="jurisdictions.jurisdictionsType") return;
+    else {
+
+        fillValueToObject(this);
+    }
+});
+
+//Getting data for user input
+$("textarea").on("keyup change", function() {
+    fillValueToObject(this);
+})
+
+//file change handle for file upload
+$("input[type=file]").on("change", function(evt) {
+    // console.log(this.value);
+    // agreement[this.id] = this.value;
+    var file = evt.currentTarget.files[0];
+
+    //call post api update and update that url in pur agrement object
+});
+
+//initial setup
+$("#departments").hide();
+
+//it will split object string where it has .
+function fillValueToObject(currentState) {
+    if (currentState.id.includes(".")) {
+
+        var splitResult = currentState.id.split(".");
+        if(splitResult[0]==="user")
+        {
+            employee[splitResult[0]][splitResult[1]]=currentState.value;
+        }
+        else {
+              employeeSubObject[splitResult[0]][splitResult[1]] = currentState.value;
+        }
+
+    } else {
+        employee[currentState.id] = currentState.value;
+    }
+}
+
+function clearModalInput(object,properties) {
+    for (var variable in properties) {
+      if (properties.hasOwnProperty(variable)) {
+          $("#"+object+"\\."+variable).val(properties[variable]);
+      }
+    }
+}
+
+//need to cleat editIndex and temprory pbject
+$('#assignmentDetailModal').on('hidden.bs.modal', function(e) {
+    editIndex = -1;
+    employeeSubObject["assignments"] = {
+        fromDate: "",
+        toDate: "",
+        fund: "",
+        function: "",
+        grade: "",
+        designation: "",
+        position: "No",
+        functionary: "",
+        department: "",
+        hod: "No",
+        mainDepartments: "",
+        govtOrderNumber: "",
+        is_primary: ""
+    };
+    clearModalInput("assignments",employeeSubObject["assignments"]);
+})
+
+$('#jurisdictionDetailModal').on('hidden.bs.modal', function(e) {
+    editIndex = -1;
+    employeeSubObject["jurisdictions"] = {
+        jurisdictionsType:"",
+        boundary:""
+    }
+    clearModalInput("jurisdictions",employeeSubObject["jurisdictions"]);
+
+})
+
+$('#serviceHistoryDetailModal').on('hidden.bs.modal', function(e) {
+    editIndex = -1;
+    employeeSubObject["serviceHistory"] = {
+      id:	0,
+      serviceInfo:""	,
+      serviceFrom:	"",
+      remarks:""	,
+      orderNo:	"",
+      documents:""
+    }
+    clearModalInput("serviceHistory",employeeSubObject["serviceHistory"]);
+
+})
+
+$('#probationDetailModal').on('hidden.bs.modal', function(e) {
+    editIndex = -1;
+    employeeSubObject["probation"] = {
+      designation:	"",
+      declaredOn:	"",
+      orderNo:	"",
+      orderDate:	"",
+      remarks:	"",
+      documents:""
+    }
+    clearModalInput("probation",employeeSubObject["probation"]);
+
+})
+
+$('#regularisationDetailModal').on('hidden.bs.modal', function(e) {
+    editIndex = -1;
+    employeeSubObject["regularisation"] = {
+      designation:	"",
+      declaredOn:	"",
+      orderNo:	"",
+      orderDate:	"",
+      remarks:	"",
+      documents:""
+    }
+    clearModalInput("regularisation",employeeSubObject["regularisation"]);
+
+})
+
+$('#technicalDetailModal').on('hidden.bs.modal', function(e) {
+    editIndex = -1;
+    employeeSubObject["technical"] = {
+      skill:""	,
+      grade:"",
+      yearOfPassing:	"",
+      remarks:	"",
+      documents:	""
+    }
+    clearModalInput("technical",employeeSubObject["technical"]);
+
+})
+
+$('#educationDetailModal').on('hidden.bs.modal', function(e) {
+    editIndex = -1;
+    employeeSubObject["education"] = {
+      qualification:""	,
+      majorSubject:"",
+      yearOfPassing:	"",
+      university:	"",
+      documents:	""
+    }
+    clearModalInput("education",employeeSubObject["education"]);
+
+})
+
+$('#testDetailModal').on('hidden.bs.modal', function(e) {
+    editIndex = -1;
+    employeeSubObject["test"] = {
+      test:""	,
+      yearOfPassing:	"",
+      remarks:	"",
+      documents:	""
+    }
+    clearModalInput("test",employeeSubObject["test"]);
+
+})
+
+
+function enableAndDisable(id) {
+    $(`#${id}`).toggle();
+}
+
+//common update
+function updateTable(tableName, modalName, object) {
+    $(tableName).html(``);
+    for (var i = 0; i < employee[object].length; i++) {
+        $(tableName).append(`<tr>`);
+        for (var key in employee[object][i]) {
+            if(key==="department")
+            {
+              $(tableName).append(`<td data-label=${key}>
+                                  ${getNameById(object,employee[object][i][key])}
+                            </td>`)
+            }
+            else {
+              $(tableName).append(`<td data-label=${key}>
+                                  ${employee[object][i][key]}
+                            </td>`)
+            }
+
+        }
+        $(tableName).append(`<td data-label="Action">
+                    <a href="#" onclick="markEditIndex(${i},'${modalName}','${object}')" class="btn btn-default btn-action"><span class="glyphicon glyphicon-pencil"></span></a>
+                    <a href="#" onclick="commonDeleteFunction('${tableName}','${modalName}','${object}',${i})" class="btn btn-default btn-action"><span class="glyphicon glyphicon-trash"></span></a>
+                  </td>`);
+        $(tableName).append(`</tr>`);
+    }
+}
+
+//common edit mark index
+function markEditIndex(index = -1, modalName = "", object = "") {
+    editIndex = index;
+    $('#' + modalName).modal('show');
+    //assignments  details modal when it edit modalName
+    $('#' + modalName).on('shown.bs.modal', function(e) {
+        if (editIndex != -1) {
+            employeeSubObject[object] = Object.assign({}, employee[object][editIndex]);
+
+            for (var key in employeeSubObject[object]) {
+                // if($(`#${object}\\.${key}`).length == 0) {
+                //       alert("not there");
+                //   }
+                $(`#${object}\\.${key}`).val(employeeSubObject[object][key]);
+            }
+        }
+    })
+    // alert("fired");
+}
+
+//common add and update
+function commonAddAndUpdate(tableName, modalName, object) {
+    // if(switchValidation(object))
+    if($("#createEmployeeForm").valid())
+    {
+      if (editIndex != -1) {
+          employee[object][editIndex] = employeeSubObject[object];
+          updateTable("#" + tableName, modalName, object);
+      } else {
+          employee[object].push(Object.assign({}, employeeSubObject[object]));
+          updateTable("#" + tableName, modalName, object);
+      }
+      $(`#${modalName}`).modal("hide");
+    }
+    else {
+        return;
+    }
+}
+
+//common Delete
+function commonDeleteFunction(tableName, modalName, object, index) {
+    employee[object].splice(index, 1);
+    updateTable(tableName, modalName, object);
+}
+
+//show reslut event
+// $("#showResultEvent").on("click",function() {
+//     // $("#showResult").text(employee);
+//     console.log(employee);
+// })
+
+
+
+
+
+//
+final_validatin_rules = Object.assign(validation_rules, commom_fields_rules);
+for (var key in final_validatin_rules) {
+    if (final_validatin_rules[key].required) {
+      // console.log(key.split("."));
+      if(key.split(".").length==1)
+      {
+        $(`label[for=${key}]`).append(`<span> *</span>`);
+
+      }
+    }
+    // $(`#${key}`).attr("disabled",true);
+};
+
+$.validator.addMethod('phone', function(value) {
+    return /^[0-9]{10}$/.test(value);
+}, 'Please enter a valid phone number.');
+
+$.validator.addMethod('aadhar', function(value) {
+    return /^[0-9]{12}$/.test(value);
+}, 'Please enter a valid aadhar.');
+
+$.validator.addMethod('pan_no', function(value) {
+    return /^[0-9a-zA-Z]{10}$/.test(value);
+}, 'Please enter a valid pan.');
+
+$("#addEmployee").on("click",function() {
+      //  $("#createEmployeeForm").submit();
+      switchValidation("final_validatin_rules");
+})
+
+
+
+
+
+
+
+
 function addMandatoryStart(validationObject,prefix="") {
   for (var key in validationObject) {
       if (prefix==="") {
@@ -1077,6 +1146,7 @@ $("#createEmployeeForm").validate({
         if(employee.assignments.length>0 && employee.assignments.jurisdictions.length>0)
         {
             //call api
+            console.log("calling api");
         }
         else {
             alert("Please enter atleast assignment and jurisdiction");
@@ -1085,13 +1155,13 @@ $("#createEmployeeForm").validate({
         // form.submit();
 
         // console.log(agreement);
-        $.post(`${baseUrl}hr-employee/employees/_create?tenantId=1`, {
-            RequestInfo: requestInfo,
-            Employee: employee
-        }, function(response) {
-            alert("submit");
-            // window.open("../../../../app/search-assets/create-agreement-ack.html?&agreement_id=aeiou", "", "width=1200,height=800")
-            console.log(response);
-        })
+        // $.post(`${baseUrl}hr-employee/employees/_create?tenantId=1`, {
+        //     RequestInfo: requestInfo,
+        //     Employee: employee
+        // }, function(response) {
+        //     alert("submit");
+        //     // window.open("../../../../app/search-assets/create-agreement-ack.html?&agreement_id=aeiou", "", "width=1200,height=800")
+        //     console.log(response);
+        // })
     }
 })

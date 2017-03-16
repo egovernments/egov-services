@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.egov.eis.model.Employee;
 import org.egov.eis.model.Probation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,12 +29,14 @@ public class ProbationRepository {
 	private JdbcTemplate jdbcTemplate;
 
 	// FIXME put tenantId
-	public void save(Long employeeId, List<Probation> probations) {
+	public void save(Employee employee) {
+		List<Probation> probations = employee.getProbation();
+
 		jdbcTemplate.batchUpdate(INSERT_PROBATION_QUERY, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
 				Probation probation = probations.get(i);
-				ps.setLong(1, employeeId);
+				ps.setLong(1, employee.getId());
 				ps.setLong(2, probation.getDesignation());
 				ps.setDate(3, new Date(probation.getDeclaredOn().getTime()));
 				ps.setString(4, probation.getOrderNo());
@@ -43,7 +46,7 @@ public class ProbationRepository {
 				ps.setDate(8, new Date(probation.getCreatedDate().getTime()));
 				ps.setLong(9, probation.getLastModifiedBy());
 				ps.setDate(10, new Date(probation.getLastModifiedDate().getTime()));
-				ps.setString(11, "1");
+				ps.setString(11, employee.getTenantId());
 			}
 
 			@Override

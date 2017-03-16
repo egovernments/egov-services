@@ -14,7 +14,7 @@ public class PositionSearchURLHelper {
 	private ApplicationProperties applicationProperties;
 
 	public String searchURL(PositionGetRequest positionGetRequest) {
-		String BASE_URL = applicationProperties.empServicesHrMastersServiceGetPositionsHostname();
+		String BASE_URL = applicationProperties.empServicesHrMastersServiceSearchPositionsHostURL();
 		StringBuilder searchURL = new StringBuilder(BASE_URL + "?");
 
 		if (positionGetRequest.getId() == null && positionGetRequest.getTenantId() == null)

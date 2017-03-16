@@ -55,6 +55,14 @@ import javax.persistence.*;
 public class Role extends AbstractAuditable {
     private static final long serialVersionUID = -3174785753813418004L;
 
+    public Role(org.egov.user.domain.model.Role domainRole) {
+        this.id = domainRole.getId();
+        this.name = domainRole.getName();
+        this.description = domainRole.getDescription();
+        this.setLastModifiedDate(domainRole.getLastModifiedDate());
+        this.setCreatedDate(domainRole.getCreatedDate());
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -64,4 +72,15 @@ public class Role extends AbstractAuditable {
 
     @Column(name = "description")
     private String description;
+
+    public org.egov.user.domain.model.Role toDomain() {
+        return org.egov.user.domain.model.Role.builder()
+                .id(id)
+                .name(name)
+                .description(description)
+                .createdDate(getCreatedDate())
+                .lastModifiedDate(getLastModifiedDate())
+                .createdBy(getCreatedBy().getId())
+                .lastModifiedBy(getLastModifiedBy().getId()).build();
+    }
 }

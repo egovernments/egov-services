@@ -3,6 +3,7 @@ package org.egov.lams.repository;
 import java.util.ArrayList;
 import java.util.List;
 import org.egov.lams.config.PropertiesManager;
+import org.egov.lams.contract.AllotteeResponse;
 import org.egov.lams.contract.AssetResponse;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.AgreementCriteria;
@@ -102,7 +103,7 @@ public class AgreementRepository {
 
 	public List<Agreement> findByAgreement(AgreementCriteria fetchAgreementsModel) {
 		logger.info("AgreementController SearchAgreementService AgreementRepository : inside findByAgreement");
-		List<Object> preparedStatementValues = new ArrayList<Object>();
+		List<Object> preparedStatementValues = new ArrayList<>();
 		List<Agreement> agreements = null;
 		
 		
@@ -169,20 +170,25 @@ public class AgreementRepository {
 	 * method to return a list of Allottee objects by making an API call to Allottee API 
 	 */
 	public List<Allottee> getAllottees(AgreementCriteria agreementCriteria) {
-		//String queryString = allotteeBuilder.getAllotteeUrl(agreementCriteria);
+		String queryString = allotteeHelper.getAllotteeUrl(agreementCriteria);
 		logger.info("AgreementController SearchAgreementService AgreementRepository : inside Allottee API caller");
-		Allottee allottee = new Allottee();
-		allottee.setId(45l);
-		allottee.setAadhaarNumber("1235509945");
-		allottee.setMobileNumber(9990002224l);
-		allottee.setAddress("home");
-		allottee.setName("ghanshyam");
-		allottee.setPan("axy93jwbd");
-		allottee.setEmailId("xyz.riflexions.com");
-		List<Allottee> allottees = new ArrayList<>();
-		allottees.add(allottee);
+	
+		String url = null;
+		AllotteeResponse allotteeResponse = null;
+		try {
+			url = propertiesManager.getAllotteeServiceHostName()+ "?" + queryString;
+			logger.info(url.toString());
+			allotteeResponse = restTemplate.postForObject(url,new RequestInfo(), AllotteeResponse.class);
+		} catch (Exception e) {
+			// FIXME log error to getstacktrace
+			throw new RuntimeException("check if entered allottee API url is correct or the allottee service is running");
+		}
+		System.err.println(allotteeResponse);
+		if (allotteeResponse.getAllottee() == null || allotteeResponse.getAllottee().size()<=0)
+			throw new RuntimeException("No assets found for given criteria");
+		System.err.println(allotteeResponse.getAllottee().size());
 		
-		return allottees;
+		return allotteeResponse.getAllottee();
 	}
 	/*
 	 * method to return a list of Asset objects by making an API call to Asset API 

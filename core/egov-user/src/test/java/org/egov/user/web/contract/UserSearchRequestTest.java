@@ -22,6 +22,7 @@ public class UserSearchRequestTest {
         userSearchRequest.setEmailId("emailId");
         userSearchRequest.setPan("pan");
         userSearchRequest.setFuzzyLogic(false);
+        userSearchRequest.setUserType("CITIZEN");
 
         UserSearch userSearch = userSearchRequest.toDomain();
 
@@ -34,5 +35,9 @@ public class UserSearchRequestTest {
         assertThat(userSearch.getPan()).isEqualTo("pan");
         assertThat(userSearch.isFuzzyLogic()).isFalse();
         assertThat(userSearch.isActive()).isTrue();
+        assertThat(userSearch.getPageSize()).isEqualTo(20);
+        assertThat(userSearch.getPageNumber()).isEqualTo(0);
+        assertThat(userSearch.getSort()).isEqualTo(Arrays.asList("name"));
+        assertThat(userSearch.getType()).isEqualTo("CITIZEN");
     }
 }

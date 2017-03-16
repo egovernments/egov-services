@@ -23,7 +23,7 @@ public class UserSearchURLHelperTest {
 
 	@Test
 	public void testGetBlankQuery() {
-		Mockito.when(applicationProperties.empServicesUsersServiceGetUsersHostname())
+		Mockito.when(applicationProperties.empServicesUsersServiceSearchUsersHostURL())
 			.thenReturn("http://localhost:8080/v1/users/_search");
 		Mockito.when(applicationProperties.empSearchPageSizeMax()).thenReturn("500");
 /*
@@ -31,9 +31,8 @@ public class UserSearchURLHelperTest {
 		String url = testingObject.searchURL(employeeGetRequest);
 		System.out.println(url);
 		assertEquals("http://localhost:8080/v1/users/_search?tenantId=1&id=10,12,15,16&pageSize=500&sortBy=id&sortOrder=ASC", url);
-*/
 	}
-/*
+
 	private EmployeeGetRequest getNewEmployeeGetRequest() {
 		List<Long> userIdList = new ArrayList<Long>();
 		userIdList.add(10L);
@@ -41,6 +40,6 @@ public class UserSearchURLHelperTest {
 		userIdList.add(15L);
 		userIdList.add(16L);
 		return EmployeeGetRequest.builder().id(userIdList).tenantId("1").build();
-	}
 */
+	}
 }

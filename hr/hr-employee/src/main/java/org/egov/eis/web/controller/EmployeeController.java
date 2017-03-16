@@ -89,7 +89,7 @@ public class EmployeeController {
 			BindingResult bindingResult, @RequestBody RequestInfo requestInfo) {
 
 		// validate header
-		if(requestInfo.getApiId() == null || requestInfo.getVer() == null || requestInfo.getTs() == null ) {
+		if (requestInfo.getApiId() == null || requestInfo.getVer() == null || requestInfo.getTs() == null) {
 			return errHandler.getErrorResponseEntityForMissingRequestInfo(requestInfo);
 		}
 
@@ -112,23 +112,21 @@ public class EmployeeController {
 
 	@PostMapping("/_create")
 	@ResponseBody
-	public ResponseEntity<?> create(@RequestBody @Valid EmployeeRequest employeeRequest, BindingResult bindingResult){
-		System.out.println("Entered create");
+	public ResponseEntity<?> create(@RequestBody @Valid EmployeeRequest employeeRequest, BindingResult bindingResult) {
 		// validate input params
 		if (bindingResult.hasErrors()) {
 			return errHandler.getErrorResponseEntityForBindingErrors(bindingResult, employeeRequest.getRequestInfo());
 		}
 
 		LOGGER.info("employeeRequest::" + employeeRequest);
-		Employee employee = employeeRequest.getEmployee();
-		//agreementValidator.validateAgreement(agreement);
-		employeeService.createEmployee(employee);
+		employeeService.createEmployee(employeeRequest);
+		employeeRequest.getEmployee().getUser().setPassword(null);
 
-		return getSuccessResponse(employee, employeeRequest.getRequestInfo());
+		return getSuccessResponse(employeeRequest.getEmployee(), employeeRequest.getRequestInfo());
 	}
 
 	/**
-	 * Populate Response object and returnemployeesList
+	 * Populate Response object and returnEmployeesList
 	 * 
 	 * @param employeesList
 	 * @return
@@ -142,7 +140,7 @@ public class EmployeeController {
 		employeeRes.setResponseInfo(responseInfo);
 		return new ResponseEntity<EmployeeResponse>(employeeRes, HttpStatus.OK);
 	}
-	
+
 	private ResponseEntity<?> getSuccessResponseForSearch(List<EmployeeInfo> employeesList, RequestInfo requestInfo) {
 		EmployeeInfoResponse employeeRes = new EmployeeInfoResponse();
 		employeeRes.setEmployees(employeesList);

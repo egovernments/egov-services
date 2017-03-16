@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.egov.eis.model.Employee;
 import org.egov.eis.model.ServiceHistory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,12 +29,14 @@ public class ServiceHistoryRepository {
 	private JdbcTemplate jdbcTemplate;
 
 	// FIXME put tenantId
-	public void save(Long employeeId, List<ServiceHistory> serviceHistories) {
+	public void save(Employee employee) {
+		List<ServiceHistory> serviceHistories = employee.getServiceHistory();
+
 		jdbcTemplate.batchUpdate(INSERT_SERVICE_HISTORY_QUERY, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
 				ServiceHistory serviceHistory = serviceHistories.get(i);
-				ps.setLong(1, employeeId);
+				ps.setLong(1, employee.getId());
 				ps.setString(2, serviceHistory.getServiceInfo());
 				ps.setDate(3, new Date(serviceHistory.getServiceFrom().getTime()));
 				ps.setString(4, serviceHistory.getRemarks());
@@ -42,7 +45,7 @@ public class ServiceHistoryRepository {
 				ps.setDate(7, new Date(serviceHistory.getCreatedDate().getTime()));
 				ps.setLong(8, serviceHistory.getLastModifiedBy());
 				ps.setDate(9, new Date(serviceHistory.getLastModifiedDate().getTime()));
-				ps.setString(10, "1");
+				ps.setString(10, employee.getTenantId());
 			}
 
 			@Override

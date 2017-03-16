@@ -246,6 +246,70 @@ paths:
           schema:
             $ref: '#/definitions/ErrorRes'
 
+  /vacantpositions/_search:
+    # This is a HTTP operation
+    post:
+      # Describe this verb here. Note: you can use markdown 
+      summary: Get the list of positions defined in the system that are vacant as on a given date.
+      description: Get the position master data for the parameter values that are not been held by an employee as his primary assignment as on any given date. If for a given date all the positions are already held by an employee, then the response will return empty.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Commmon request info for getting position.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - $ref: "#/parameters/tenantId"
+        - name: name
+          in: query
+          description: Name of the position.
+          required: false
+          type: string
+          format: varchar
+        - name: id
+          in: query
+          description: Unique Id of position
+          required: false
+          type: array
+          items: 
+            type: integer
+          format: int64
+          maxItems: 50
+        - name: departmentId
+          in: query
+          description: Unique id of the department associated with the position.
+          required: true
+          type: integer
+          format: int64
+        - name: designationId
+          in: query
+          description: Unique id of the designation associated with the position.
+          required: true
+          type: integer
+          format: int64
+        - name: asOnDate
+          in: query
+          description: The date as on which employee assignment has to be checked against. Assignment will be for a date range and hence `as_on_date` should fall within the assignment from_date and to_date.
+          required: true
+          type: string
+          format: date
+        - $ref: "#/parameters/sortPosition"
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Successful response
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "#/definitions/PositionRes"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+      tags: 
+       - Position
   /positionhierarchies/_search:
     # This is a HTTP operation
     post:

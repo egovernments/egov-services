@@ -62,6 +62,9 @@ public class AssetCategory   {
 
   @JsonProperty("customFields")
   private List<AssetCategoryCustomFields> customFields;
+  
+  @JsonProperty("tenantId")
+  private String tenantId;
 
 
 }

@@ -1,4 +1,4 @@
-FROM egovio/openjdk:8-jre-headless
+FROM openjdk:8u121-jre-alpine
 
 MAINTAINER Manikanta<manikanta@egovernments.org>
 

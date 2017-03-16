@@ -13,6 +13,12 @@ import java.util.Collections;
 @Slf4j
 public class LogAwareRestTemplate extends RestTemplate {
 
+    private static final String EMPTY_MESSAGE = "<EMPTY>";
+    private static final String REQUEST_MESSAGE = "Sending request to {} with verb {} with body {}";
+    private static final String RESPONSE_MESSAGE = "Received response code {} and body {}: ";
+    private static final String UTF_8 = "UTF-8";
+    private static final String RESPONSE_ERROR_MESSAGE = "Error reading response";
+
     public LogAwareRestTemplate() {
         this.setInterceptors(Collections.singletonList(logRequestAndResponse()));
     }
@@ -27,26 +33,23 @@ public class LogAwareRestTemplate extends RestTemplate {
     }
 
     private void logResponse(ClientHttpResponse response) {
-        if(!log.isInfoEnabled()) {
+        if (!log.isInfoEnabled()) {
             return;
         }
-        String body = getBodyString(response);
         try {
-            log.info("Received response code {} and body {}: ", response.getStatusCode(), body);
+            String body = getBodyString(response);
+            log.info(RESPONSE_MESSAGE, response.getStatusCode(), body);
         } catch (IOException e) {
-           throw new RuntimeException(e);
+            log.error(RESPONSE_ERROR_MESSAGE, e);
+            throw new RuntimeException(e);
         }
     }
 
-    private String getBodyString(ClientHttpResponse response) {
-        try {
-            if (response != null && response.getBody() != null) {
-                return IOUtils.toString(response.getBody(), "UTF-8");
-            } else {
-                return "<EMPTY>";
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+    private String getBodyString(ClientHttpResponse response) throws IOException {
+        if (response != null && response.getBody() != null) {
+            return IOUtils.toString(response.getBody(), UTF_8);
+        } else {
+            return EMPTY_MESSAGE;
         }
     }
 
@@ -54,12 +57,10 @@ public class LogAwareRestTemplate extends RestTemplate {
         if (!log.isInfoEnabled()) {
             return;
         }
-        log.info("Sending request to {} with verb {} with body {}",
-                httpRequest.getURI(),
-                httpRequest .getMethod().name(), getBody(body));
+        log.info(REQUEST_MESSAGE, httpRequest.getURI(), httpRequest.getMethod().name(), getBody(body));
     }
 
     private String getBody(byte[] body) {
-        return body == null ? "<EMPTY>" : new String(body);
+        return body == null ? EMPTY_MESSAGE : new String(body);
     }
 }

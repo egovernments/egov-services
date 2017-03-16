@@ -132,7 +132,7 @@ $(document).ready(function(){
 				processData : false,
 				data : JSON.stringify(obj),
 				success : function(response){
-					console.log('OTP success:', JSON.stringify(response));
+					//console.log('OTP success:', JSON.stringify(response));
 					if(response.isSuccessful){
 						$('#signup-section, #otp-section').show();
 						//Add required fields
@@ -147,7 +147,7 @@ $(document).ready(function(){
 	});
 	
 	$('#signupbtn').click(function(e){
-
+		var currentObj = $(this);
 		$.validator.addMethod("passwordvalidate",function(value){
 		    return /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[?!@$^*-`(){}])(?!.*[&<>#%"'/\\ ]).{8,32}$/.test(value);
 		},"Use atleast 8 characters.Should contain upper and lower case alphabet, number and special character except [&amp; < > # % &quot; ' / \ and space]");
@@ -157,6 +157,7 @@ $(document).ready(function(){
 		});
 
 		if($('form').valid() && password){
+			currentObj.prop('disabled', true);
 			//validate otp
 			var obj = {};
 			obj['RequestInfo'] = RI.requestInfo;
@@ -172,7 +173,7 @@ $(document).ready(function(){
 				processData : false,
 				data : JSON.stringify(obj),
 				success : function(response){
-					console.log('OTP validated:', JSON.stringify(response));
+					//console.log('OTP validated:', JSON.stringify(response));
 					//create user
 					var RI = new $.newRequestInfo(localStorage.getItem("auth"));
 					var reqObj = {};
@@ -187,7 +188,6 @@ $(document).ready(function(){
 					data['otpReference'] =  response.otp.UUID;
 					data['tenantId'] = 'ap.public'
 					reqObj['User'] = data;
-					console.log(JSON.stringify(reqObj));
 
 					$.ajax({
 						url : "/user/users/_create",
@@ -196,13 +196,16 @@ $(document).ready(function(){
 						data : JSON.stringify(reqObj),
 						contentType: "application/json",
 						success : function(userResponse){
-							console.log('userReponse:'+JSON.stringify(userResponse));
 							bootbox.alert('Your account created successfully', function(){ 
 								window.open("../index.html","_self");
 							});
 						},
-						error : function(){
-							bootbox.alert('User registration failed!');
+						error : function(xhr, status, error){
+							var response = JSON.parse(xhr.responseText);
+							var errorMsg = response.Error.message;
+							bootbox.alert(errorMsg, function(){ 
+								window.location.reload();
+							});
 						},
 						complete : function(){
 	
@@ -210,7 +213,9 @@ $(document).ready(function(){
 					});
 				},
 				error : function(){
-					bootbox.alert('OTP validation failed!');
+					bootbox.alert('OTP validation failed!', function(){ 
+						currentObj.prop('disabled', false);
+					});
 				}
 			});
 			

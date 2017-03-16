@@ -58,10 +58,10 @@ public class GrievancePersistenceListener {
     public void processMessage(HashMap<String, Object> sevaRequestMap) {
         logger.debug("Received seva request");
         SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
-        triggerIndexing(sevaRequest);
         Complaint complaint = persistComplaint(sevaRequest);
         triggerSms(complaint);
         triggerEmail(complaint);
+        triggerIndexing(sevaRequest);
     }
 
     private void triggerIndexing(SevaRequest record) {

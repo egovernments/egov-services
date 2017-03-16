@@ -85,9 +85,9 @@ public class UserSearchResponseContent {
         this.bloodGroup = user.getBloodGroup() != null ? user.getBloodGroup().getValue() : null;
         this.photo = user.getPhoto();
         this.identificationMark = user.getIdentificationMark();
-        this.createdBy = user.getCreatedBy() != null ? user.getCreatedBy() : null;
+        this.createdBy = user.getCreatedBy();
         this.createdDate = user.getCreatedDate();
-        this.lastModifiedBy = user.getLastModifiedBy() != null ? user.getLastModifiedBy() : null;
+        this.lastModifiedBy = user.getLastModifiedBy();
         this.lastModifiedDate = user.getLastModifiedDate();
 
         this.roles = convertDomainRolesToContract(user.getRoles());

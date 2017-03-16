@@ -40,6 +40,8 @@
 
 package org.egov.eis.repository.builder;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import org.egov.eis.config.ApplicationProperties;
@@ -65,7 +67,8 @@ public class AttendanceQueryBuilder {
             + " FROM egeis_attendance AS a JOIN egeis_attendance_type AS t ON a.type = t.id";
 
     @SuppressWarnings("rawtypes")
-    public String getQuery(final AttendanceGetRequest attendanceGetRequest, final List preparedStatementValues) {
+    public String getQuery(final AttendanceGetRequest attendanceGetRequest, final List preparedStatementValues)
+            throws ParseException {
         final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
 
         addWhereClause(selectQuery, preparedStatementValues, attendanceGetRequest);
@@ -78,7 +81,7 @@ public class AttendanceQueryBuilder {
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
-            final AttendanceGetRequest attendanceGetRequest) {
+            final AttendanceGetRequest attendanceGetRequest) throws ParseException {
 
         if (attendanceGetRequest.getId() == null && attendanceGetRequest.getApplicableOn() == null
                 && attendanceGetRequest.getCode() == null && attendanceGetRequest.getMonth() == null
@@ -101,9 +104,10 @@ public class AttendanceQueryBuilder {
         }
 
         if (attendanceGetRequest.getApplicableOn() != null) {
+            final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" date = ?");
-            preparedStatementValues.add(attendanceGetRequest.getApplicableOn());
+            preparedStatementValues.add(sdf.parse(attendanceGetRequest.getApplicableOn()));
         }
 
         if (attendanceGetRequest.getMonth() != null) {

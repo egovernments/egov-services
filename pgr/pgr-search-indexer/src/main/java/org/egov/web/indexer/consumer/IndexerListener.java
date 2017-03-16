@@ -35,7 +35,7 @@ public class IndexerListener {
 		SevaRequest sevaRequest = record.value();
 		RequestContext.setId(sevaRequest.getCorrelationId());
 		if (sevaRequest.getServiceRequest() != null && !sevaRequest.getServiceRequest().getValues().isEmpty()
-				&& sevaRequest.getServiceRequest().getValues().get("complaintStatus").equalsIgnoreCase("REGISTERED")) {
+				&& sevaRequest.getServiceRequest().getValues().get("status").equalsIgnoreCase("REGISTERED")) {
 			ComplaintIndex complaintIndex = complaintAdapter.indexOnCreate(sevaRequest.getServiceRequest());
 			elasticSearchRepository.index(OBJECT_TYPE_COMPLAINT, complaintIndex.getCrn(), complaintIndex);
 		}

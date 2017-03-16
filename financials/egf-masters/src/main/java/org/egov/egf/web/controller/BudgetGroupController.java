@@ -144,8 +144,11 @@ public class BudgetGroupController {
     @PostMapping("/_search")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    public BudgetGroupContractResponse search(@ModelAttribute BudgetGroupContractRequest budgetGroupContractRequest,
-            BindingResult errors) {
+    public BudgetGroupContractResponse search(@ModelAttribute BudgetGroupContract budgetGroupContracts,
+            @RequestBody RequestInfo requestInfo, BindingResult errors) {
+        BudgetGroupContractRequest budgetGroupContractRequest = new BudgetGroupContractRequest();
+        budgetGroupContractRequest.setBudgetGroup(budgetGroupContracts);
+        budgetGroupContractRequest.setRequestInfo(requestInfo);
         budgetGroupService.validate(budgetGroupContractRequest, "search", errors);
         if (errors.hasErrors()) {
             throw new CustomBindException(errors);

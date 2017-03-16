@@ -1,6 +1,7 @@
 package org.egov.persistence.repository;
 
 import org.egov.domain.model.OtpRequest;
+import org.egov.persistence.LogAwareKafkaTemplate;
 import org.egov.persistence.contract.SMSRequest;
 import org.hamcrest.CustomMatcher;
 import org.junit.Before;
@@ -8,9 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
-import org.springframework.util.concurrent.SettableListenableFuture;
 
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
@@ -21,7 +20,7 @@ import static org.mockito.Mockito.when;
 public class OtpMessageRepositoryTest {
     private static final String SMS_TOPIC = "sms.topic";
     @Mock
-    private KafkaTemplate<String, SMSRequest> kafkaTemplate;
+    private LogAwareKafkaTemplate<String, SMSRequest> kafkaTemplate;
     private OtpMessageRepository otpMessageRepository;
 
     @Before
@@ -35,12 +34,11 @@ public class OtpMessageRepositoryTest {
         final String tenantId = "tenantId";
         final String otpNumber = "otpNumber";
         final OtpRequest otpRequest = new OtpRequest(mobileNumber, tenantId);
-        final SettableListenableFuture<SendResult<String, SMSRequest>> response = new SettableListenableFuture<>();
-        response.set(new SendResult<>(null, null));
         final String expectedMessage = "Use OTP otpNumber for portal registration.";
         final SMSRequest expectedSmsRequest = new SMSRequest(mobileNumber, expectedMessage);
-
-        when(kafkaTemplate.send(eq(SMS_TOPIC), argThat(new SmsRequestMatcher(expectedSmsRequest)))).thenReturn(response);
+        final SendResult<String, SMSRequest> sendResult = new SendResult<>(null, null);
+        when(kafkaTemplate.send(eq(SMS_TOPIC), argThat(new SmsRequestMatcher(expectedSmsRequest))))
+                .thenReturn(sendResult);
 
         otpMessageRepository.send(otpRequest, otpNumber);
 
@@ -53,12 +51,10 @@ public class OtpMessageRepositoryTest {
         final String tenantId = "tenantId";
         final String otpNumber = "otpNumber";
         final OtpRequest otpRequest = new OtpRequest(mobileNumber, tenantId);
-        final SettableListenableFuture<SendResult<String, SMSRequest>> response = new SettableListenableFuture<>();
-        response.setException(new InterruptedException());
         final String expectedMessage = "Use OTP otpNumber for portal registration.";
         final SMSRequest expectedSmsRequest = new SMSRequest(mobileNumber, expectedMessage);
         when(kafkaTemplate.send(eq(SMS_TOPIC), argThat(new SmsRequestMatcher(expectedSmsRequest))))
-                .thenReturn(response);
+                .thenThrow(new InterruptedException());
 
         otpMessageRepository.send(otpRequest, otpNumber);
     }

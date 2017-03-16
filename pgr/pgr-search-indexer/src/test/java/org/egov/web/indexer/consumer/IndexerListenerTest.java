@@ -54,7 +54,7 @@ public class IndexerListenerTest {
 	public void test_should_index_complaint_instande() {
 		final RequestInfo requestInfo = RequestInfo.builder().msgId("correlationId").build();
 		Map<String, String> valueMap = new HashMap<String, String>();
-		valueMap.put("complaintStatus", "REGISTERED");
+		valueMap.put("status", "REGISTERED");
 		final ServiceRequest serviceRequest = ServiceRequest.builder().crn(CRN).values(valueMap).build();
 		final SevaRequest sevaRequest = new SevaRequest(requestInfo, serviceRequest);
 		final ConsumerRecord<String, SevaRequest> consumerRecord = new ConsumerRecord<>(TOPIC_NAME, 0, 0, "key",

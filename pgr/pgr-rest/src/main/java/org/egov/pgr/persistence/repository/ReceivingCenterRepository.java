@@ -46,4 +46,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ReceivingCenterRepository extends JpaRepository<ReceivingCenter, Long> {
+	ReceivingCenter findById(Long id);
 }

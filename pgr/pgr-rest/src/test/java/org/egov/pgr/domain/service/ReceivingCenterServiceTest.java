@@ -38,4 +38,13 @@ public class ReceivingCenterServiceTest {
 
 	}
 
+	@Test
+	public void testShouldFindReceivingCenterById() {
+		ReceivingCenter expectedResult = ReceivingCenter.builder().id(1L).name("Complaint Cell").isCrnRequired(true)
+				.orderNo(8L).build();
+		when(receivingCenterRepository.findById(1L)).thenReturn(expectedResult);
+		final ReceivingCenter receivingCenter = receivingCenterService.getReceivingCenterById("ap.public", 1L);
+
+		assertEquals(receivingCenter, expectedResult);
+	}
 }

@@ -1,5 +1,6 @@
 package org.egov;
 
+import org.egov.persistence.LogAwareRestTemplate;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -13,7 +14,7 @@ public class UserOtpApplication {
 
 	@Bean
 	public RestTemplate restTemplate() {
-		return new RestTemplate();
+		return new LogAwareRestTemplate();
 	}
 
 	@Bean

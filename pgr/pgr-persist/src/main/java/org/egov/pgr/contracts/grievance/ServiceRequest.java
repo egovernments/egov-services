@@ -13,6 +13,7 @@ public class ServiceRequest {
     public static final String VALUES_STATE_ID = "stateId";
     public static final String VALUES_STATUS = "status";
     public static final String VALUES_RECIEVING_MODE = "receivingMode";
+    public static final String VALUES_RECEIVING_CENTER="receivingCenter";
     public static final String VALUES_COMPLAINANT_ADDRESS = "complainantAddress";
     public static final String CRN = "service_request_id";
     public static final String TENANT_ID = "tenantId";

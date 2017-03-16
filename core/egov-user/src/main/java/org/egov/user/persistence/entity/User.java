@@ -41,14 +41,14 @@
 package org.egov.user.persistence.entity;
 
 import lombok.*;
-import org.egov.user.persistence.entity.enums.BloodGroup;
-import org.egov.user.persistence.entity.enums.Gender;
-import org.egov.user.persistence.entity.enums.GuardianRelation;
-import org.egov.user.persistence.entity.enums.UserType;
-import org.joda.time.DateTime;
+import org.egov.user.domain.model.enums.BloodGroup;
+import org.egov.user.domain.model.enums.Gender;
+import org.egov.user.domain.model.enums.GuardianRelation;
+import org.egov.user.domain.model.enums.UserType;
 
 import javax.persistence.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.egov.user.persistence.entity.User.SEQ_COMPLAINT;
 
@@ -158,10 +158,6 @@ public class User extends AbstractAuditable {
     @Column(name = "accountlocked")
     private boolean accountLocked;
 
-    public DateTime getPwdExpiryDate() {
-        return null == pwdExpiryDate ? null : new DateTime(pwdExpiryDate);
-    }
-
     public User (org.egov.user.domain.model.User user) {
         this.name = user.getName();
         this.id = user.getId();
@@ -171,7 +167,6 @@ public class User extends AbstractAuditable {
         this.salutation = user.getSalutation();
         this.guardian = user.getGuardian();
         this.guardianRelation = user.getGuardianRelation();
-        this.name = user.getName();
         this.gender = user.getGender();
         this.mobileNumber = user.getMobileNumber();
         this.emailId = user.getEmailId();
@@ -190,7 +185,53 @@ public class User extends AbstractAuditable {
         this.accountLocked = user.isAccountLocked();
         this.setLastModifiedDate(user.getLastModifiedDate());
         this.setCreatedDate(user.getCreatedDate());
-        this.roles = user.getRoles();
+        this.roles = convertDomainRolesToEntity(user.getRoles());
     }
 
+    private Set<Role> convertDomainRolesToEntity(Set<org.egov.user.domain.model.Role> domainRoles) {
+        return domainRoles.stream().map(Role::new).collect(Collectors.toSet());
+    }
+
+    public org.egov.user.domain.model.User toDomain() {
+        return
+        org.egov.user.domain.model.User.builder()
+                .id(id)
+                .username(username)
+                .title(title)
+                .password(password)
+                .salutation(salutation)
+                .guardian(guardian)
+                .guardianRelation(guardianRelation)
+                .name(name)
+                .gender(gender)
+                .mobileNumber(mobileNumber)
+                .emailId(emailId)
+                .altContactNumber(altContactNumber)
+                .pan(pan)
+                .aadhaarNumber(aadhaarNumber)
+                .address(convertEntityAddressToDomain(address))
+                .active(active)
+                .roles(convertEntityRoleToDomain(roles))
+                .dob(dob)
+                .pwdExpiryDate(dob)
+                .locale(locale)
+                .type(type)
+                .bloodGroup(bloodGroup)
+                .identificationMark(identificationMark)
+                .signature(signature)
+                .photo(photo)
+                .accountLocked(accountLocked)
+                .lastModifiedDate(getLastModifiedDate())
+                .createdDate(getCreatedDate())
+                .lastModifiedBy(getLastModifiedBy().getId())
+                .createdBy(getCreatedBy().getId()).build();
+    }
+
+    private Set<org.egov.user.domain.model.Role> convertEntityRoleToDomain(Set<Role> entityRoles) {
+        return entityRoles.stream().map(Role::toDomain).collect(Collectors.toSet());
+    }
+
+    private List<org.egov.user.domain.model.Address> convertEntityAddressToDomain(List<Address> entityAddress) {
+        return entityAddress.stream().map(Address::toDomain).collect(Collectors.toList());
+    }
 }

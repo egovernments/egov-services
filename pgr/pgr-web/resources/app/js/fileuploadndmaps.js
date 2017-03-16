@@ -43,7 +43,7 @@ var fileid;
 var fileSize = 5e+6;
 $(document).ready(function(){
 	
-	var fileformats = ['jpg', 'jpeg', 'gif', 'png',  '3g2', '3gp', '3gp2', '3gpp', 'avi', 'divx', 'flv', 'mov', 'mp4', 'mpeg4', 'mpg4', 'mpeg', 'mpg', 'm4v', 'wmv' ];
+	var fileformats = ['jpg', 'jpeg', 'gif', 'png',  '3g2', '3gp', '3gp2', '3gpp', 'divx', 'flv', 'mov', 'mp4', 'mpeg4', 'mpg4', 'mpeg', 'mpg', 'm4v', 'wmv' ];
 	var myCenter;
 	
 	fileinputid = ['file1','file2','file3'];//assigning file id
@@ -181,7 +181,7 @@ $(document).ready(function(){
 	}
 	
 	
-	var map, geocoder, geolocate, marker, address, citylat, citylng;    
+	var map, geocoder, geolocate, marker, address, citylat, citylng, lat, lng;    
 	
 	function initialize() {
 		
@@ -196,6 +196,7 @@ $(document).ready(function(){
 		var setCity = function(){
 
 			citylat = 15.82223689, citylng = 78.02439864;
+			lat = 15.82223689, lng = 78.02439864;
 			latLng = {
 		        lat: citylat, // fallback lat 
 		        lng: citylng  // fallback lng
@@ -213,6 +214,8 @@ $(document).ready(function(){
 		        lat: position.coords.latitude,
 		        lng: position.coords.longitude
 		    };
+
+		    lat = latLng.lat, lng = latLng.lng;
 		    console.log("User confirmed! Location found: " + latLng.lat + ", " + latLng.lng);
 
 		    setlatlong(latLng.lat, latLng.lng);
@@ -227,6 +230,8 @@ $(document).ready(function(){
 		        lat: 20.5937,
 		        lng: 78.9629
 		    };
+
+		    lat = latLng.lat, lng = latLng.lng;
 
 		    console.log("User not confirmed! : 20.5937, 78.9629");
 
@@ -306,14 +311,15 @@ $(document).ready(function(){
 	function mapcenterchangeevent(){
 		google.maps.event.addListener(map, 'center_changed', function() {
 			var NewMapCenter = map.getCenter();
-			var lat = NewMapCenter.lat();
-			var lng = NewMapCenter.lng();
-			getAddress(lat, lng);
+			var customLat = NewMapCenter.lat();
+			var customLng = NewMapCenter.lng();
+			getAddress(customLat, customLng);
 		});
 	}
 
 	function setlatlong(citylat , citylng){
 		var userLatLng = new google.maps.LatLng(citylat, citylng);
+		console.log(citylat, citylng);
 		getAddress(citylat, citylng);
 		map.setCenter(userLatLng);
 	}

@@ -41,7 +41,6 @@
 package org.egov.workflow.web.contract;
 
 import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 
  

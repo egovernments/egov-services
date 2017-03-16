@@ -38,8 +38,9 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.user.persistence.entity.enums;
+package org.egov.user.domain.model.enums;
 
-public enum GuardianRelation {
-   Father,Mother,Husband,Other;
+public enum AddressType {
+	// This order should not be interrupted
+	PERMANENT, CORRESPONDENCE, USUALADDRESS, EVENTADDRESS, PRESENTADDRESS, PROPERTYADDRESS;
 }

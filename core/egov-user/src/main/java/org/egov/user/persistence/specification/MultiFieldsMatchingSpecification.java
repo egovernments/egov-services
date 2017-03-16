@@ -4,7 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.egov.user.domain.model.UserSearch;
 import org.egov.user.persistence.entity.User;
 import org.egov.user.persistence.entity.User_;
-import org.egov.user.persistence.entity.enums.UserType;
+import org.egov.user.domain.model.enums.UserType;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;

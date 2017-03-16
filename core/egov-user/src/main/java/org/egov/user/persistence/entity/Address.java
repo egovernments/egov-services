@@ -41,7 +41,7 @@
 package org.egov.user.persistence.entity;
 
 import lombok.*;
-import org.egov.user.persistence.entity.enums.AddressType;
+import org.egov.user.domain.model.enums.AddressType;
 
 import javax.persistence.*;
 
@@ -101,4 +101,22 @@ public class Address extends AbstractPersistable<Long> {
     @Column(name = "type")
     @Enumerated(EnumType.STRING)
     private AddressType type;
+
+    public org.egov.user.domain.model.Address toDomain() {
+        return org.egov.user.domain.model.Address.builder()
+                .id(id)
+                .houseNoBldgApt(houseNoBldgApt)
+                .streetRoadLine(streetRoadLine)
+                .landmark(landmark)
+                .areaLocalitySector(areaLocalitySector)
+                .cityTownVillage(cityTownVillage)
+                .district(district)
+                .subDistrict(subDistrict)
+                .postOffice(postOffice)
+                .state(state)
+                .country(country)
+                .pinCode(pinCode)
+                .type(type)
+                .build();
+    }
 }

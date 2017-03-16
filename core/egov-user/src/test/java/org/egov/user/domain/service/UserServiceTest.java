@@ -1,12 +1,13 @@
 package org.egov.user.domain.service;
 
+import org.egov.user.domain.exception.DuplicateUserNameException;
 import org.egov.user.domain.exception.InvalidUserException;
 import org.egov.user.domain.exception.OtpValidationPendingException;
 import org.egov.user.domain.model.UserSearch;
 import org.egov.user.persistence.entity.Role;
 import org.egov.user.persistence.entity.User;
-import org.egov.user.persistence.entity.enums.Gender;
-import org.egov.user.persistence.entity.enums.UserType;
+import org.egov.user.domain.model.enums.Gender;
+import org.egov.user.domain.model.enums.UserType;
 import org.egov.user.persistence.repository.OtpRepository;
 import org.egov.user.persistence.repository.UserRepository;
 import org.junit.Test;
@@ -29,18 +30,20 @@ import static org.mockito.Mockito.*;
 public class UserServiceTest {
 
     @Mock
-    UserRepository userRepository;
+    private UserRepository userRepository;
+
     @Mock
-    OtpRepository otpRepository;
+    private OtpRepository otpRepository;
+
     @InjectMocks
-    UserService userService;
+    private UserService userService;
 
     private final List<Long> ID = Arrays.asList(1L, 2L);
     private final String EMAIL = "email@gmail.com";
     private final String USER_NAME = "userName";
 
     @Test
-    public void shouldGetUserByEmail() throws Exception {
+    public void test_should_get_user_by_email() throws Exception {
         when(userRepository.findByEmailId(EMAIL)).thenReturn(getUserObject());
 
         User actualUser = userService.getUserByEmailId(EMAIL);
@@ -49,7 +52,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void shouldGetUserByUsername() throws Exception {
+    public void test_should_get_user_by_username() throws Exception {
         when(userRepository.findByUsername(USER_NAME)).thenReturn(getUserObject());
 
         User actualUser = userService.getUserByUsername(USER_NAME);
@@ -58,18 +61,18 @@ public class UserServiceTest {
     }
 
     @Test
-    public void shouldSearchUser() throws Exception {
+    public void test_should_search_user() throws Exception {
         UserSearch userSearch = new UserSearch();
-        List<User> expectedListOfUsers = getListOfUsers();
+        List<org.egov.user.domain.model.User> expectedListOfUsers = mock(List.class);
         when(userRepository.findAll(userSearch)).thenReturn(expectedListOfUsers);
 
-        List<User> actualResult = userService.searchUsers(userSearch);
+        List<org.egov.user.domain.model.User> actualResult = userService.searchUsers(userSearch);
 
         assertThat(expectedListOfUsers).isEqualTo(actualResult);
     }
 
     @Test
-    public void shouldSaveAValidUser() throws Exception {
+    public void test_should_save_a_valid_user() throws Exception {
         org.egov.user.domain.model.User domainUser = validDomainUser();
         when(otpRepository.isOtpValidationComplete(domainUser)).thenReturn(true);
         final User expectedEntityUser = new User();
@@ -80,17 +83,18 @@ public class UserServiceTest {
         assertEquals(expectedEntityUser, returnedUser);
     }
 
-    @Test
-    public void testShouldEnsureOtpHasBeenValidated() throws Exception {
-        org.egov.user.domain.model.User domainUser = validDomainUserWithRole();
+    @Test(expected = DuplicateUserNameException.class)
+    public void test_should_raise_exception_when_duplicate_user_name_exists() throws Exception {
+        org.egov.user.domain.model.User domainUser = validDomainUser();
         when(otpRepository.isOtpValidationComplete(domainUser)).thenReturn(true);
-        userService.save(domainUser, true);
+        when(userRepository.isUserPresent("supandi_rocks")).thenReturn(true);
 
-        verify(otpRepository, atLeastOnce()).isOtpValidationComplete(domainUser);
+        userService.save(domainUser, true);
     }
 
+
     @Test(expected = OtpValidationPendingException.class)
-    public void testIfOtpIsNotValidatedExceptionIsRaised() throws Exception {
+    public void test_exception_is_raised_when_otp_validation_fails() throws Exception {
         org.egov.user.domain.model.User domainUser = validDomainUserWithRole();
         when(otpRepository.isOtpValidationComplete(domainUser)).thenReturn(false);
 
@@ -98,7 +102,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testOtpIsNotValidatedWhenEnsureValidationFlagIsValue() throws Exception {
+    public void test_otp_is_not_validated_when_validation_flag_is_false() throws Exception {
         org.egov.user.domain.model.User domainUser = validDomainUserWithRole();
         when(otpRepository.isOtpValidationComplete(domainUser)).thenReturn(false);
 
@@ -108,7 +112,7 @@ public class UserServiceTest {
     }
 
     @Test(expected = InvalidUserException.class)
-    public void shouldRaiseExceptionWhenUserIsInvalid() throws Exception {
+    public void test_should_raise_exception_when_user_is_invalid() throws Exception {
         org.egov.user.domain.model.User domainUser = org.egov.user.domain.model.User.builder().build();
 
         userService.save(domainUser, true);
@@ -124,7 +128,7 @@ public class UserServiceTest {
         role.setName("CITIZEN");
         Set<Role> roles = new HashSet<>();
         roles.add(role);
-        return getUserBuilder().roles(roles).build();
+        return getUserBuilder().build();
     }
 
     private org.egov.user.domain.model.User.UserBuilder getUserBuilder() {

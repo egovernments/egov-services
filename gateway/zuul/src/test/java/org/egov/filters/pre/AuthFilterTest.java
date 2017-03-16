@@ -12,7 +12,6 @@ import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,7 +35,7 @@ public class AuthFilterTest {
     @Before
     public void init() {
         initMocks(this);
-        authFilter = new AuthFilter(delegateFilter);
+        authFilter = new AuthFilter(delegateFilter, "x-user-info", "user/_login,anonymous");
         RequestContext ctx = RequestContext.getCurrentContext();
         ctx.clear();
         ctx.setRequest(request);
@@ -58,7 +57,8 @@ public class AuthFilterTest {
     }
 
     @Test
-    public void testThatFilterShouldNotBeAppliedWhenNoAuthTokenInHeader() {
+    public void testThatFilterShouldNotBeAppliedForAnonymous() {
+        MockHttpServletRequest request = new MockHttpServletRequest("POST", "/pgr/anonymous");
         RequestContext.getCurrentContext().setRequest(request);
         assertFalse(authFilter.shouldFilter());
     }
@@ -73,6 +73,7 @@ public class AuthFilterTest {
 
     @Test
     public void testThatFilterSetsUserInfoInHeaderAfterValidationAuthToken() throws IOException {
+        request.addHeader("auth_token", "dummy-auth-token");
         RequestContext ctx = RequestContext.getCurrentContext();
         ClientHttpResponse response = mock(ClientHttpResponse.class);
         ctx.setRouteHost(new URL("http", "localhost", 8080, "/"));
@@ -84,12 +85,21 @@ public class AuthFilterTest {
         when(response.getStatusCode()).thenReturn(HttpStatus.OK);
         when(delegateFilter.run()).thenReturn(response).thenReturn(null);
         authFilter.run();
-        System.out.println(ctx.get("error.status_code"));
-        assertThat(ctx.getZuulRequestHeaders().get("user_info"), is("{\"id\":30,\"userName\":\"malathi\",\"name\":\"malathi\",\"type\":\"EMPLOYEE\",\"mobileNumber\":\"9686602042\",\"emailId\":\"fu@bar.com\",\"roles\":[{\"name\":\"Employee\"},{\"name\":\"ULB Operator\"}]}"));
+        assertThat(ctx.getZuulRequestHeaders().get("x-user-info"), is("{\"id\":30,\"userName\":\"malathi\",\"name\":\"malathi\",\"type\":\"EMPLOYEE\",\"mobileNumber\":\"9686602042\",\"emailId\":\"fu@bar.com\",\"roles\":[{\"name\":\"Employee\"},{\"name\":\"ULB Operator\"}]}"));
+    }
+
+    @Test
+    public void testThatFilterAbortsWhenThereIsNoAuthToken() {
+        RequestContext ctx = RequestContext.getCurrentContext();
+        authFilter.run();
+        assertThat(ctx.getResponseStatusCode(), is(401));
+        assertFalse(ctx.sendZuulResponse());
+        assertNull(ctx.getZuulRequestHeaders().get("x-user-info"));
     }
 
     @Test
     public void testThatFilterAbortsOnInvalidAuthToken() throws IOException {
+        request.addHeader("auth_token", "dummy-auth-token");
         RequestContext ctx = RequestContext.getCurrentContext();
         ClientHttpResponse response = mock(ClientHttpResponse.class);
         ctx.setRouteHost(new URL("http", "localhost", 8080, "/"));
@@ -103,6 +113,6 @@ public class AuthFilterTest {
         authFilter.run();
         assertThat(ctx.getResponse().getStatus(), is(401));
         assertFalse(ctx.sendZuulResponse());
-        assertNull(ctx.getZuulRequestHeaders().get("requester_id"));
+        assertNull(ctx.getZuulRequestHeaders().get("x-user-info"));
     }
 }

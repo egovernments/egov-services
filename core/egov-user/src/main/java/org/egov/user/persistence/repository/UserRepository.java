@@ -8,14 +8,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Repository
+@Service
 public class UserRepository {
 
     private UserJpaRepository userJpaRepository;
@@ -38,6 +38,10 @@ public class UserRepository {
         return userJpaRepository.findByUsername(userName);
     }
 
+    public boolean isUserPresent(String userName) {
+        return userJpaRepository.isUserPresent(userName) != null;
+    }
+
     public User findByEmailId(String emailId) {
         return userJpaRepository.findByEmailId(emailId);
     }
@@ -49,15 +53,16 @@ public class UserRepository {
         return userJpaRepository.save(entityUser);
     }
 
+    public List<org.egov.user.domain.model.User> findAll(UserSearch userSearch) {
+        Specification<User> specification = userSearchSpecificationFactory.getSpecification(userSearch);
+        PageRequest pageRequest = createPageRequest(userSearch);
+        List<User> userEntities = userJpaRepository.findAll(specification, pageRequest).getContent();
+        return userEntities.stream().map(User::toDomain).collect(Collectors.toList());
+    }
+
     private void encryptPassword(User entityUser) {
         final String encodedPassword = passwordEncoder.encode(entityUser.getPassword());
         entityUser.setPassword(encodedPassword);
-    }
-
-    public List<User> findAll(UserSearch userSearch) {
-        Specification<User> specification = userSearchSpecificationFactory.getSpecification(userSearch);
-        PageRequest pageRequest = createPageRequest(userSearch);
-        return userJpaRepository.findAll(specification, pageRequest).getContent();
     }
 
     private PageRequest createPageRequest(UserSearch userSearch) {

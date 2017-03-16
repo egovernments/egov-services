@@ -157,7 +157,7 @@ $(document).ready(function()
 						window.open("templates/homepage.html","_self")
 				},
 				error : function(){
-					bootbox.alert('User Auth failed!');
+					$('.invalidUser').show();
 				},
 				complete : function(){
 					obj.removeAttr("disabled");

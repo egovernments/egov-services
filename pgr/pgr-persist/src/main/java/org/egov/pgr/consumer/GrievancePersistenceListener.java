@@ -31,13 +31,14 @@ public class GrievancePersistenceListener {
     private UserRepository userRepository;
     private TemplateService templateService;
     private PersistenceProperties persistenceProperties;
+    private ReceivingCenterService receivingCenterService;
 
     @Autowired
     public GrievancePersistenceListener(ComplaintTypeService complaintTypeService, ComplaintStatusService complaintStatusService,
                                         ComplaintService complaintService, EscalationService escalationService,
                                         GrievanceProducer grievanceProducer, PositionRepository positionRepository,
                                         UserRepository userRepository, TemplateService templateService,
-                                        PersistenceProperties persistenceProperties) {
+                                        PersistenceProperties persistenceProperties,ReceivingCenterService receivingCenterService) {
         this.complaintService = complaintService;
         this.complaintTypeService = complaintTypeService;
         this.complaintStatusService = complaintStatusService;
@@ -48,6 +49,7 @@ public class GrievancePersistenceListener {
         this.templateService = templateService;
         this.persistenceProperties = persistenceProperties;
         this.userRepository = userRepository;
+        this.receivingCenterService=receivingCenterService;
     }
 
     @KafkaListener(id = "${kafka.topics.pgr.workflowupdated.id}",
@@ -81,7 +83,7 @@ public class GrievancePersistenceListener {
         logger.debug("Saving record in database for" + sevaRequest.getServiceRequest().getCrn());
         String complaintCrn = sevaRequest.getServiceRequest().getCrn();
         Complaint complaintByCrn = complaintService.findByCrn(complaintCrn);
-        Complaint complaint = new ComplaintBuilder(complaintByCrn, sevaRequest, complaintTypeService, complaintStatusService, escalationService, positionRepository,userRepository).build();
+        Complaint complaint = new ComplaintBuilder(complaintByCrn, sevaRequest, complaintTypeService, complaintStatusService, escalationService, positionRepository,userRepository,receivingCenterService).build();
         complaint = complaintService.save(complaint);
         return complaint;
     }

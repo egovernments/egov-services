@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Set;
 
 import org.egov.user.persistence.entity.Role;
-import org.egov.user.persistence.entity.enums.UserType;
+import org.egov.user.domain.model.enums.UserType;
 
 import lombok.Builder;
 import lombok.Getter;

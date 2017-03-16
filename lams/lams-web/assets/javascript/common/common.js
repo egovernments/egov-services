@@ -99,3 +99,5 @@ function getCommonMasterById(mainRoute,resource,returnObject,id) {
           });
     // return response.statusText==="Ok"?response.responseJSON[returnObject]:[];
 }
+
+// commonApiPost("asset","assetCategories","",{boundaryTypeName:"LOCALITY",hierarchyTypeName:"LOCATION"})

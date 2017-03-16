@@ -38,9 +38,25 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.user.persistence.entity.enums;
+package org.egov.eis.repository.rowmapper;
 
-public enum Gender {
-    //This order should not be interrupted
-    FEMALE, MALE, OTHERS;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import org.egov.eis.model.AttendanceType;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
+
+@Component
+public class AttendanceTypeRowMapper implements RowMapper<AttendanceType> {
+
+    @Override
+    public AttendanceType mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+        final AttendanceType type = new AttendanceType();
+        type.setId(rs.getLong("id"));
+        type.setCode("code");
+        type.setDescription("description");
+
+        return type;
+    }
 }

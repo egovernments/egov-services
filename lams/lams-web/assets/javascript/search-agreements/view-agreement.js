@@ -182,9 +182,7 @@ $(document).ready(function() {
     })
 
 
-
-
-    $.post(`${baseUrl}agreements?tenant_id=kul.am&agreement_id=${getUrlVars()["agreement_id"]}`, {
+    $.post(`http://egov-micro-dev.egovernments.org/agreements_search?agreementNumber=${getUrlVars()["agreementNumber"]}`, {
         request_info: requestInfo
     }, function(response) {
         // console.log(response.Agreements[0]);

@@ -4,7 +4,7 @@ var baseUrl = window.location.origin;
 var requestInfo = {
     "apiId":"org.egov.pgr",
     "ver":"1.0",
-    "ts": "sdfs",
+    "ts": "2017-12-01",
     "action":"asd",
     "did":"4354648646",
     "key":"xyz",

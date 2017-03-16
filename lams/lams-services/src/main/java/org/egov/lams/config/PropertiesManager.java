@@ -3,24 +3,17 @@ package org.egov.lams.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-<<<<<<< d852f719e2afdbe653d81b070e62b33569ebf856
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-=======
-import lombok.Getter;
->>>>>>> setting removed
 import lombok.ToString;
 
 @Component
 @Getter
-<<<<<<< d852f719e2afdbe653d81b070e62b33569ebf856
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-=======
->>>>>>> setting removed
 @ToString
 public class PropertiesManager {
 	
@@ -29,11 +22,7 @@ public class PropertiesManager {
 
 	@Value("${egov.services.allottee_service.hostname}")
 	private String allotteeServiceHostName;
-<<<<<<< d852f719e2afdbe653d81b070e62b33569ebf856
 
-=======
-	
->>>>>>> setting removed
 	@Value("${egov.services.lams.ulb_number}")
 	private String ulbNumber;
 
@@ -44,9 +33,6 @@ public class PropertiesManager {
 	private String lamsPrefix;
 	
 	@Value("${egov.services.lams.acknowledgementnumber_sequence}")
-<<<<<<< d852f719e2afdbe653d81b070e62b33569ebf856
 	private String acknowledgementNumberSequence;
-=======
-	private String acknowledgementNumberSequence;
->>>>>>> setting removed
+
 }

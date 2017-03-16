@@ -1,9 +1,5 @@
 package org.egov.lams.repository;
 
-<<<<<<< d852f719e2afdbe653d81b070e62b33569ebf856
-import java.net.URI;
-=======
->>>>>>> setting removed
 import java.util.ArrayList;
 import java.util.List;
 import org.egov.lams.config.PropertiesManager;

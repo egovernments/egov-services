@@ -1,7 +1,7 @@
 class Calenderholiday extends React.Component{
 constructor(props){
   super(props);
-  this.state={holiday:
+  this.state={list:[],holiday:
       {CalendarYear:"",
       name:"",
       applicableOn:"", active:""
@@ -16,9 +16,9 @@ constructor(props){
 
 
 componentWillMount(){
-
-  var year=[{id:"2017",name:"2017"},{id:"2016",name:"2016"},{id:"2015",name:"2015"},{id:"2014",name:"2014"}];
-  this.setState({year})
+  this.setState({
+  year:commonApiPost("egov-common-masters","calendarYears","_search",{tenantId}).responseJSON["CalendarYear"]
+})
 }
     handleChange(e,name)
     {
@@ -62,6 +62,8 @@ componentWillMount(){
     addOrUpdate(e,mode){
       console.log(this.state.holiday);
       e.preventDefault();
+      var list=commonApiPost("egov-common-masters","holidays","_search",this.state.holiday).responseJSON["Holiday"];
+      console.log(commonApiPost("egov-common-masters","holidays","_search",this.state.holiday).responseJSON["Holiday"]);
       if(mode==="update"){
         console.log("update");
       }
@@ -86,7 +88,7 @@ componentWillMount(){
         {
             return list.map((item)=>
             {
-                return (<option key={item.id} value={item.id}>
+                return (<option key={item.name} value={item.name}>
                         {item.name}
                   </option>)
             })
@@ -112,8 +114,8 @@ componentWillMount(){
                   </div>
                   <div className="col-sm-6">
                     <div className="styled-select">
-                    <select id="CalendarYear" name="CalendarYear" onChange={(e)=>{
-                        handleChange(e,"CalendarYear")  }}required>
+                    <select id="CalendarYear" name="CalendarYear" value= {CalendarYear} required="true"
+                        onChange={(e)=>{handleChange(e,"CalendarYear")  }}>
                     <option>Select Year</option>
                     {renderOption(this.state.year)}
                    </select>

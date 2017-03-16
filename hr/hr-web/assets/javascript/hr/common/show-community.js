@@ -72,6 +72,7 @@ class ShowCommunity extends React.Component {
       return list.map((item,index)=>
       {
             return (<tr key={index}>
+                    <td>{index+1}</td>
                     <td data-label="name">{item.name}</td>
                     <td data-label="description">{item.description}</td>
                     <td data-label="active">{item.active?"true":"false"}</td>
@@ -88,6 +89,7 @@ class ShowCommunity extends React.Component {
         <table id="communityTable" className="table table-bordered">
             <thead>
                 <tr>
+                    <th>Sl No.</th>
                     <th>Community Name</th>
                     <th>Description</th>
                     <th>Active</th>

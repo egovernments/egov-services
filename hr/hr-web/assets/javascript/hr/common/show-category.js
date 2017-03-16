@@ -71,6 +71,7 @@ class ShowCategory extends React.Component {
       return list.map((item,index)=>
       {
             return (<tr key={index}>
+                    <td>{index+1}</td>
                     <td data-label="name">{item.name}</td>
                     <td data-label="description">{item.description}</td>
                     <td data-label="active">{item.active?"true":"false"}</td>
@@ -87,6 +88,7 @@ class ShowCategory extends React.Component {
         <table id="categoryTable" className="table table-bordered">
             <thead>
                 <tr>
+                    <th>Sl No.</th>
                     <th>Category Name</th>
                     <th>Description</th>
                     <th>Active</th>

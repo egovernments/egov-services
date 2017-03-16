@@ -64,6 +64,7 @@ class ShowDesignation extends React.Component {
       return list.map((item,index)=>
       {
             return (<tr key={index}>
+                    <td>{index+1}</td>
                     <td data-label="name">{item.name}</td>
                     <td data-label="code">{item.code}</td>
                     <td data-label="description">{item.description}</td>
@@ -81,6 +82,7 @@ class ShowDesignation extends React.Component {
         <table id="designationTable" className="table table-bordered">
             <thead>
                 <tr>
+                    <th>Sl No.</th>
                     <th>Name</th>
                     <th>Code</th>
                     <th>Description</th>

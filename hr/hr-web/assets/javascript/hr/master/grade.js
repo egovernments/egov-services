@@ -38,7 +38,6 @@ class GradeMaster extends React.Component{
 
       if(type==="view"||type==="update")
       {
-          console.log("fired");
           console.log(getCommonMasterById("hr-masters","grades","Grade",id).responseJSON["Grade"][0]);
           this.setState({
             gradeSet:getCommonMasterById("hr-masters","grades","Grade",id).responseJSON["Grade"][0]
@@ -56,8 +55,8 @@ class GradeMaster extends React.Component{
 
 
     addOrUpdate(e,mode){
-         console.log(this.state.gradeSet);
         e.preventDefault();
+         console.log(this.state.gradeSet);
         // console.log(mode);
         if (mode==="update") {
             console.log("update");
@@ -136,14 +135,13 @@ class GradeMaster extends React.Component{
           <div className="row">
               <div className="col-sm-6 col-sm-offset-6">
                     <label className="radioUi">
-                      <input type="checkbox" name="active" id="active"
-                          onChange={(e)=>{ handleChange(e,"active")}}required/> Active
+                      <input type="checkbox" name="active" id="active" value="true" onChange={(e)=>{
+                          handleChange(e,"active")}}required/> Active
                     </label>
               </div>
           </div>
         </div>
     </div>
-
                   <div className="text-center">
                         {showActionButton()}
                         <button type="button" className="btn btn-submit" onClick={(e)=>{this.close()}}>Close</button>

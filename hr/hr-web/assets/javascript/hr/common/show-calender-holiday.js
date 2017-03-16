@@ -1,11 +1,11 @@
 class ShowCalenderHoliday extends React.Component {
   constructor(props) {
     super(props);
-    this.state={list:[],holiday:
-        {CalendarYear:"",
+    this.state={list:[],holidaySet:
+        {calendarYear:"",
         name:"",
         applicableOn:""
-      },year:[]
+      },isSearchClicked:false,year:[]
   }
     this.handleChange=this.handleChange.bind(this);
     this.search=this.search.bind(this);
@@ -14,10 +14,9 @@ class ShowCalenderHoliday extends React.Component {
 
 
   componentWillMount(){
-    console.log(getUrlVars()["type"]);
-    var year=[{id:"2017",name:"2017"},{id:"2016",name:"2016"},{id:"2015",name:"2015"},{id:"2014",name:"2014"}];
-    this.setState({year})
-
+    this.setState({
+    year:commonApiPost("egov-common-masters","holidays","_search",{tenantId}).responseJSON["Holiday"]
+  })
   }
 
   componentDidMount()
@@ -46,8 +45,8 @@ class ShowCalenderHoliday extends React.Component {
   {
 
       this.setState({
-          holiday:{
-              ...this.state.holiday,
+          holidaySet:{
+              ...this.state.holidaySet,
               [name]:e.target.value
           }
       })
@@ -60,34 +59,36 @@ class ShowCalenderHoliday extends React.Component {
       open(location, '_self').close();
   }
 
-search(e){
-  let {name,CalendarYear,applicableOn,active}=this.state.holiday;
+search(e)
+  {
     e.preventDefault();
+    //call api call
+     var list=commonApiPost("egov-common-masters","holidays","_search",{tenantId,year:this.state.holidaySet.calendarYear}).responseJSON["Holiday"];
+      console.log(commonApiPost("egov-common-masters","holidays","_search",{tenantId,year:this.state.holidaySet.calendarYear}).responseJSON["Holiday"]);
     this.setState({
-      list:getCommonMaster("egov-common-masters","holidays","Holiday").responseJSON["Holiday"]
-    });
-
-}
-
+      isSearchClicked:true,
+      list
+    })
+  }
 
   render() {
-    console.log(this.state.holiday);
     let {handleChange,search}=this;
-    let {list}=this.state;
-    let {name,CalendarYear,applicableOn,active}=this.state.holiday;
+    let {list,isSearchClicked}=this.state;
+    let {name,calendarYear,applicableOn,active}=this.state.holidaySet;
+
+
     const renderOption=function(list)
     {
         if(list)
         {
             return list.map((item)=>
             {
-                return (<option key={item.id} value={item.id}>
-                        {item.name}
+                return (<option key={item.calendarYear.name} value={item.calendarYear.name}>
+                        {item.calendarYear.name}
                   </option>)
             })
         }
     }
-
     const renderAction=function(type,id){
       if (type==="update") {
 
@@ -102,14 +103,39 @@ search(e){
         }
 }
 
+const showTable=function()
+    {
+      if(isSearchClicked)
+      {
+          return (
+            <table id="employeeTable" className="table table-bordered">
+                <thead>
+                    <tr>
+                      <th>Sl NO.</th>
+                        <th>Holiday Date</th>
+                        <th>Holiday Name</th>
+                        <th>Active</th>
+                        <th>Action</th>
 
+                    </tr>
+                </thead>
+
+                <tbody id="employeeSearchResultTableBody">
+                    {
+                        renderBody()
+                    }
+                </tbody>
+
+            </table>  )
+      }
+  }
 
     const renderBody=function()
     {
       return list.map((item,index)=>
       {
             return (<tr key={index}>
-
+                    <td>{index+1}</td>
                     <td data-label="applicableOn">{item.applicableOn}</td>
                     <td data-label="name">{item.name}</td>
                     <td data-label="active">{item.active?"true":"false"}</td>
@@ -132,8 +158,8 @@ search(e){
                   </div>
                   <div className="col-sm-6">
                     <div className="styled-select">
-                    <select id="CalendarYear" name="CalendarYear" value={CalendarYear}
-                    onChange={(e)=>{handleChange(e,"CalendarYear")}}required>
+                    <select id="calendarYear" name="calendarYear" required="true" value={calendarYear}
+                    onChange={(e)=>{handleChange(e,"calendarYear")}}>
                     <option>Select Year</option>
                     {renderOption(this.state.year)}
                    </select>
@@ -154,24 +180,10 @@ search(e){
         <br/>
         <br/>
         <br/>
-        <table id="employeeTable" className="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Holiday Date</th>
-                    <th>Holiday Name</th>
-                    <th>Active</th>
-                    <th>Action</th>
+        <div className="table-cont" id="table">
+              {showTable()}
 
-                </tr>
-            </thead>
-
-            <tbody id="employeeSearchResultTableBody">
-                {
-                    renderBody()
-                }
-            </tbody>
-
-        </table>
+          </div>
       </div>
     );
   }

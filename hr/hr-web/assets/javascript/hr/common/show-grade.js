@@ -78,6 +78,7 @@ class ShowGrade extends React.Component {
       return grades.map((item,index)=>
       {
             return (<tr key={index}>
+                    <td>{index+1}</td>
                     <td data-label="name">{item.name}</td>
                     <td data-label="description">{item.description}</td>
                     <td data-label="orderNo">{item.orderNo}</td>
@@ -95,6 +96,7 @@ class ShowGrade extends React.Component {
         <table id="gradeTable" className="table table-bordered">
             <thead>
                 <tr>
+                    <th>Sl No.</th>
                     <th>Name</th>
                     <th>Description</th>
                     <th>Order No</th>

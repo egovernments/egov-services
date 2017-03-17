@@ -1,0 +1,285 @@
+		/tasks/_search:
+			post:
+				summary: Get the list of tasks
+				description: tasks
+				tags: 
+					- Masters
+					- Task
+				parameters:
+					- name: requestInfo
+					  in: body
+					  description: Common Request info for the Services
+					  schema:
+					  	$ref: '#/definitions/RequestInfo'
+					- name: tenantId
+					  in: query
+					  description: Unique id for  a tenant.
+					  required: true
+					  type: string
+					  format: varchar
+					- name: ids
+					  type: array
+					  items: 
+						  type: integer
+					  format: int64
+					  in: query
+					  maxItems: 50
+					  description: comma seperated list of Ids 
+					- name: businessKey
+					  type: string
+					  in: query
+					  description: business key of the Task
+					  maxLength: 128
+					- name: type
+					  type: string
+					  in: query
+					  description: type of the Task
+					  maxLength: 128
+					- name: assignee
+					  type: integer
+					  format: int64
+					  in: query
+					  description: assignee of the Task
+					- name: comments
+					  type: string
+					  in: query
+					  description: comments of the Task
+					  maxLength: 1024
+					- name: createdDate
+					  type: string
+					  format: date
+					  in: query
+					  description: created date of the Task
+					- name: lastupdatedSince
+					  type: string
+					  format: date
+					  in: query
+					  description: lastupdated since of the Task
+					- name: owner
+					  type: integer
+					  format: int64
+					  in: query
+					  description: owner of the Task
+					- name: state
+					  type: string
+					  in: query
+					  description: state of the Task
+					  maxLength: 128
+					- name: status
+					  type: string
+					  in: query
+					  description: status of the Task
+					  maxLength: 128
+					- name: url
+					  type: string
+					  in: query
+					  description: url of the Task
+					  maxLength: 256
+					- name: action
+					  type: string
+					  in: query
+					  description: action of the Task
+					  maxLength: 128
+					- name: senderName
+					  type: string
+					  in: query
+					  description: sender name of the Task
+					  maxLength: 128
+					- name: extraInfo
+					  type: string
+					  in: query
+					  description: extra info of the Task
+					  maxLength: 128
+					- name: natureOfTask
+					  type: string
+					  in: query
+					  description: nature of task of the Task
+					  maxLength: 128
+					- name: entity
+					  type: string
+					  in: query
+					  description: entity of the Task
+					- name: pageSize
+					  type: integer
+					  format: int32
+					  in: query
+					  description: Number of records in a per page in  the Search Results, Default value is 20
+					- name: offSet
+					  type: integer
+					  format: int32
+					  in: query
+					  description: page number of the Search Results, Default value is 0
+				responses:
+					200:
+						description: Task retrieved Successfully
+						schema:
+							$ref: '#/definitions/TaskResponse'
+					400:
+						description: Invalid Input
+						schema:
+							$ref: '#/definitions/ErrorResponse'
+		/tasks/_create:
+			post:
+				summary: Create  new  tasks
+				description: Create  new tasks
+				tags: 
+					- Masters
+					- Task
+				parameters:
+					- name: tenantId
+					  in: query
+					  description: Unique id for  a tenant.
+					  required: true
+					  type: string
+					  format: varchar
+					- name: taskRequest
+					  in: body
+					  description: Create  new 
+					  schema:
+					  	$ref: '#/definitions/TaskRequest'
+				responses:
+					201:
+						description: Task created Successfully
+						schema:
+							$ref: '#/definitions/TaskResponse'
+					400:
+						description: Invalid Input
+						schema:
+							$ref: '#/definitions/ErrorResponse'
+		/tasks/{id}/_update:
+			post:
+				summary: Update any of the tasks
+				description: Update any of the tasks
+				tags: 
+					- Masters
+					- Task
+				parameters:
+					- name: tenantId
+					  in: query
+					  description: Unique id for  a tenant.
+					  required: true
+					  type: string
+					  format: varchar
+					- name: id
+					  in: path
+					  description: Unique id of the Task
+					  required: true
+					  type: integer
+					  format: int64
+					- name: taskRequest
+					  in: body
+					  description: common Request info
+					  schema:
+					  	$ref: '#/definitions/TaskRequest'
+				responses:
+					200:
+						description: Task updated Successfully
+						schema:
+							$ref: '#/definitions/TaskResponse'
+					400:
+						description: Invalid Input
+						schema:
+							$ref: '#/definitions/ErrorResponse'
+definitions:
+		Task:
+			type: object
+			properties:
+				id:
+					type: string
+					description: Unique Identifier of the Task
+				businessKey:
+					type: string
+					description: business key of the Task
+					maxLength: 128
+					minLength: 1
+				type:
+					type: string
+					description: type of the Task
+					maxLength: 128
+					minLength: 1
+				assignee:
+					$ref: "#/definitions/Position"
+				comments:
+					type: string
+					description: comments of the Task
+					maxLength: 1024
+					minLength: 1
+				createdDate:
+					type: string
+					format: date
+					description: created date of the Task
+				lastupdatedSince:
+					type: string
+					format: date
+					description: lastupdated since of the Task
+				owner:
+					$ref: "#/definitions/Position"
+				state:
+					type: string
+					description: state of the Task
+					maxLength: 128
+					minLength: 1
+				status:
+					type: string
+					description: status of the Task
+					maxLength: 128
+					minLength: 1
+				url:
+					type: string
+					description: url of the Task
+					maxLength: 256
+					minLength: 1
+				action:
+					type: string
+					description: action of the Task
+					maxLength: 128
+					minLength: 1
+				senderName:
+					type: string
+					description: sender name of the Task
+					maxLength: 128
+					minLength: 1
+				extraInfo:
+					type: string
+					description: extra info of the Task
+					maxLength: 128
+					minLength: 1
+				natureOfTask:
+					type: string
+					description: nature of task of the Task
+					maxLength: 128
+					minLength: 1
+				entity:
+					type: string
+					description: entity of the Task
+			required:
+			- id
+			- businessKey
+			- assignee
+			- action
+		TaskRequest:
+			description: Contract class to receive request. Array of Task items  are used in case of create . Where as single Task item is used for update
+			properties:
+				requestInfo:
+					$ref: '#/definitions/RequestInfo'
+				tasks:
+					description: Used for search result and create only
+					type:	array
+					items:
+						$ref: '#/definitions/Task'
+				task:
+					$ref: '#/definitions/Task'
+		TaskResponse:
+			description: Contract class to send response. Array of Task items  are used in case of search results or response for create. Where as single Task item is used for update
+			properties:
+				responseInfo:
+					$ref: '#/definitions/ResponseInfo'
+				tasks:
+					description: Used for search result and create only
+					type:	array
+					items:
+						$ref: '#/definitions/Task'
+				task:
+					$ref: '#/definitions/Task'
+				page:
+					$ref: '#/definitions/Page'

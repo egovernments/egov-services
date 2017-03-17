@@ -105,15 +105,15 @@ public class GrievancePersistenceListenerTest {
     }
 
     @Test
-    public void testIndexerIsNotifiedWithASevaRequest() throws Exception {
+    public void testIndexerIsNotifiedWithASevaRequestMap() throws Exception {
         String sevaRequestStr = new Resources().getFileContents("sevaRequest.json");
         HashMap<String, Object> sevaRequestMap = new ObjectMapper().readValue(sevaRequestStr, HashMap.class);
         listener.processMessage(sevaRequestMap);
-        ArgumentCaptor<SevaRequest> captor = ArgumentCaptor.forClass(SevaRequest.class);
+        ArgumentCaptor<HashMap> captor = ArgumentCaptor.forClass(HashMap.class);
 
         verify(producer, atLeastOnce()).sendMessage(eq("indexingTopic"), captor.capture());
-        SevaRequest value = captor.getValue();
-        assertEquals("12-1532-AA", value.getServiceRequest().getCrn());
+        HashMap<String, HashMap> value = captor.getValue();
+        assertEquals("12-1532-AA", value.get("ServiceRequest").get("service_request_id"));
     }
 
 

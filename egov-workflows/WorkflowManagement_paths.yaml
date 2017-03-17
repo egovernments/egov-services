@@ -1,0 +1,342 @@
+		/tasks/_search:
+			post:
+				summary: Get the list of tasks
+				description: tasks
+				tags: 
+					- Masters
+					- Task
+				parameters:
+					- name: requestInfo
+					  in: body
+					  description: Common Request info for the Services
+					  schema:
+					  	$ref: '#/definitions/RequestInfo'
+					- name: tenantId
+					  in: query
+					  description: Unique id for  a tenant.
+					  required: true
+					  type: string
+					  format: varchar
+					- name: ids
+					  type: array
+					  items: 
+						  type: integer
+					  format: int64
+					  in: query
+					  maxItems: 50
+					  description: comma seperated list of Ids 
+					- name: businessKey
+					  type: string
+					  in: query
+					  description: business key of the Task
+					  maxLength: 128
+					- name: type
+					  type: string
+					  in: query
+					  description: type of the Task
+					  maxLength: 128
+					- name: assignee
+					  type: integer
+					  format: int64
+					  in: query
+					  description: assignee of the Task
+					- name: comments
+					  type: string
+					  in: query
+					  description: comments of the Task
+					  maxLength: 1024
+					- name: createdDate
+					  type: string
+					  format: date
+					  in: query
+					  description: created date of the Task
+					- name: lastupdatedSince
+					  type: string
+					  format: date
+					  in: query
+					  description: lastupdated since of the Task
+					- name: owner
+					  type: integer
+					  format: int64
+					  in: query
+					  description: owner of the Task
+					- name: state
+					  type: string
+					  in: query
+					  description: state of the Task
+					  maxLength: 128
+					- name: status
+					  type: string
+					  in: query
+					  description: status of the Task
+					  maxLength: 128
+					- name: url
+					  type: string
+					  in: query
+					  description: url of the Task
+					  maxLength: 256
+					- name: action
+					  type: string
+					  in: query
+					  description: action of the Task
+					  maxLength: 128
+					- name: senderName
+					  type: string
+					  in: query
+					  description: sender name of the Task
+					  maxLength: 128
+					- name: extraInfo
+					  type: string
+					  in: query
+					  description: extra info of the Task
+					  maxLength: 128
+					- name: natureOfTask
+					  type: string
+					  in: query
+					  description: nature of task of the Task
+					  maxLength: 128
+					- name: entity
+					  type: string
+					  in: query
+					  description: entity of the Task
+					- name: pageSize
+					  type: integer
+					  format: int32
+					  in: query
+					  description: Number of records in a per page in  the Search Results, Default value is 20
+					- name: offSet
+					  type: integer
+					  format: int32
+					  in: query
+					  description: page number of the Search Results, Default value is 0
+				responses:
+					200:
+						description: Task retrieved Successfully
+						schema:
+							$ref: '#/definitions/TaskResponse'
+					400:
+						description: Invalid Input
+						schema:
+							$ref: '#/definitions/ErrorResponse'
+		/tasks/_create:
+			post:
+				summary: Create  new  tasks
+				description: Create  new tasks
+				tags: 
+					- Masters
+					- Task
+				parameters:
+					- name: tenantId
+					  in: query
+					  description: Unique id for  a tenant.
+					  required: true
+					  type: string
+					  format: varchar
+					- name: taskRequest
+					  in: body
+					  description: Create  new 
+					  schema:
+					  	$ref: '#/definitions/TaskRequest'
+				responses:
+					201:
+						description: Task created Successfully
+						schema:
+							$ref: '#/definitions/TaskResponse'
+					400:
+						description: Invalid Input
+						schema:
+							$ref: '#/definitions/ErrorResponse'
+		/tasks/{id}/_update:
+			post:
+				summary: Update any of the tasks
+				description: Update any of the tasks
+				tags: 
+					- Masters
+					- Task
+				parameters:
+					- name: tenantId
+					  in: query
+					  description: Unique id for  a tenant.
+					  required: true
+					  type: string
+					  format: varchar
+					- name: id
+					  in: path
+					  description: Unique id of the Task
+					  required: true
+					  type: integer
+					  format: int64
+					- name: taskRequest
+					  in: body
+					  description: common Request info
+					  schema:
+					  	$ref: '#/definitions/TaskRequest'
+				responses:
+					200:
+						description: Task updated Successfully
+						schema:
+							$ref: '#/definitions/TaskResponse'
+					400:
+						description: Invalid Input
+						schema:
+							$ref: '#/definitions/ErrorResponse'
+
+		/processinstances/_search:
+			post:
+				summary: Get the list of processinstances
+				description: processinstances
+				tags: 
+					- Masters
+					- ProcessInstance
+				parameters:
+					- name: requestInfo
+					  in: body
+					  description: Common Request info for the Services
+					  schema:
+					  	$ref: '#/definitions/RequestInfo'
+					- name: tenantId
+					  in: query
+					  description: Unique id for  a tenant.
+					  required: true
+					  type: string
+					  format: varchar
+					- name: ids
+					  type: array
+					  items: 
+						  type: integer
+					  format: int64
+					  in: query
+					  maxItems: 50
+					  description: comma seperated list of Ids 
+					- name: businessKey
+					  type: string
+					  in: query
+					  description: business key of the ProcessInstance
+					  maxLength: 128
+					- name: type
+					  type: string
+					  in: query
+					  description: type of the ProcessInstance
+					  maxLength: 128
+					- name: assignee
+					  type: integer
+					  format: int64
+					  in: query
+					  description: assignee of the ProcessInstance
+					- name: comments
+					  type: string
+					  in: query
+					  description: comments of the ProcessInstance
+					  maxLength: 1024
+					- name: createdDate
+					  type: string
+					  format: date
+					  in: query
+					  description: created date of the ProcessInstance
+					- name: lastupdatedSince
+					  type: string
+					  format: date
+					  in: query
+					  description: lastupdated since of the ProcessInstance
+					- name: owner
+					  type: integer
+					  format: int64
+					  in: query
+					  description: owner of the ProcessInstance
+					- name: state
+					  type: string
+					  in: query
+					  description: state of the ProcessInstance
+					  maxLength: 128
+					- name: status
+					  type: string
+					  in: query
+					  description: status of the ProcessInstance
+					  maxLength: 128
+					- name: senderName
+					  type: string
+					  in: query
+					  description: sender name of the ProcessInstance
+					  maxLength: 128
+					- name: pageSize
+					  type: integer
+					  format: int32
+					  in: query
+					  description: Number of records in a per page in  the Search Results, Default value is 20
+					- name: offSet
+					  type: integer
+					  format: int32
+					  in: query
+					  description: page number of the Search Results, Default value is 0
+				responses:
+					200:
+						description: ProcessInstance retrieved Successfully
+						schema:
+							$ref: '#/definitions/ProcessInstanceResponse'
+					400:
+						description: Invalid Input
+						schema:
+							$ref: '#/definitions/ErrorResponse'
+		/processinstances/_create:
+			post:
+				summary: Create  new  processinstances
+				description: Create  new processinstances
+				tags: 
+					- Masters
+					- ProcessInstance
+				parameters:
+					- name: tenantId
+					  in: query
+					  description: Unique id for  a tenant.
+					  required: true
+					  type: string
+					  format: varchar
+					- name: processInstanceRequest
+					  in: body
+					  description: Create  new 
+					  schema:
+					  	$ref: '#/definitions/ProcessInstanceRequest'
+				responses:
+					201:
+						description: ProcessInstance created Successfully
+						schema:
+							$ref: '#/definitions/ProcessInstanceResponse'
+					400:
+						description: Invalid Input
+						schema:
+							$ref: '#/definitions/ErrorResponse'
+		/processinstances/{id}/_update:
+			post:
+				summary: Update any of the processinstances
+				description: Update any of the processinstances
+				tags: 
+					- Masters
+					- ProcessInstance
+				parameters:
+					- name: tenantId
+					  in: query
+					  description: Unique id for  a tenant.
+					  required: true
+					  type: string
+					  format: varchar
+					- name: id
+					  in: path
+					  description: Unique id of the ProcessInstance
+					  required: true
+					  type: integer
+					  format: int64
+					- name: processInstanceRequest
+					  in: body
+					  description: common Request info
+					  schema:
+					  	$ref: '#/definitions/ProcessInstanceRequest'
+				responses:
+					200:
+						description: ProcessInstance updated Successfully
+						schema:
+							$ref: '#/definitions/ProcessInstanceResponse'
+					400:
+						description: Invalid Input
+						schema:
+							$ref: '#/definitions/ErrorResponse'
+

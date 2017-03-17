@@ -22,6 +22,9 @@
 
 
     <style>
+        /*.modal{
+          width:70%
+        }*/
         body {
             padding: 0;
         }
@@ -221,6 +224,38 @@
                                             <div class="form-section">
                                                 <!-- <h3>Employee Details </h3> -->
                                                 <div class="form-section-inner">
+
+                                                  <div class="row">
+                                                          <div class="col-sm-6">
+                                                              <div class="row">
+                                                                  <div class="col-sm-6 label-text">
+                                                                      <label for="user.userName">User Name</label>
+                                                                  </div>
+                                                                  <div class="col-sm-6">
+                                                                      <input id="user.userName" name="user.userName" type="text">
+                                                                  </div>
+                                                              </div>
+                                                          </div>
+
+                                                          <div class="col-sm-6">
+                                                              <div class="row">
+                                                                  <div class="col-sm-6 label-text">
+                                                                      <label for="user.active">Is user Active?</label>
+                                                                  </div>
+                                                                  <div class="col-sm-6">
+                                                                      <label class="radio-inline radioUi">
+                                                                        <input type="radio" name="inlineRadioOptions" id="user.active" value="Yes" checked="true"> Yes
+                                                                      </label>
+                                                                      <label class="radio-inline radioUi">
+                                                                    <input type="radio" name="inlineRadioOptions" id="user.active" value="No"> No
+                                                                </label>
+
+                                                                  </div>
+                                                              </div>
+                                                          </div>
+
+                                                        </div>
+
                                                     <div class="row">
                                                         <div class="col-sm-6">
                                                             <div class="row">
@@ -529,7 +564,7 @@
                                                                     <label for="user.aadhaarNumber">Aadhaar Number </label>
                                                                 </div>
                                                                 <div class="col-sm-6">
-                                                                    <input id="user.aadhaarNumber" name="user.aadhaarNumber" type="number">
+                                                                    <input id="user.aadhaarNumber" name="user.aadhaarNumber" type="number" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -574,7 +609,7 @@
                                                                     <label for="bankAccount">Account number  </label>
                                                                 </div>
                                                                 <div class="col-sm-6">
-                                                                    <input id="bankAccount" name="bankAccount" type="number">
+                                                                    <input id="bankAccount" name="bankAccount" type="number" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -594,10 +629,10 @@
                                                         <div class="col-sm-6">
                                                             <div class="row">
                                                                 <div class="col-sm-6 label-text">
-                                                                    <label for="user.mobileNumber">Phone number  </label>
+                                                                    <label for="user.mobileNumber">Mobile number  </label>
                                                                 </div>
                                                                 <div class="col-sm-6">
-                                                                    <input id="user.mobileNumber" name="user.mobileNumber" type="number">
+                                                                    <input id="user.mobileNumber" name="user.mobileNumber" type="number" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -608,7 +643,7 @@
                                                                     <label for="user.altContactNumber">Phone number (Emergency/Res)  </label>
                                                                 </div>
                                                                 <div class="col-sm-6">
-                                                                    <input id="user.altContactNumber" name="user.altContactNumber" type="number">
+                                                                    <input id="user.altContactNumber" name="user.altContactNumber" type="number" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -791,7 +826,7 @@
                                                                         <label for="retirementAge">Retirement Age</label>
                                                                     </div>
                                                                     <div class="col-sm-6">
-                                                                        <input id="retirementAge" name="retirementAge" type="number">
+                                                                        <input id="retirementAge" name="retirementAge" type="number" min="0">
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -843,35 +878,6 @@
                                                             <div class="col-sm-6">
                                                                 <div class="row">
                                                                     <div class="col-sm-6 label-text">
-                                                                        <label for="user.active">Is user Active?</label>
-                                                                    </div>
-                                                                    <div class="col-sm-6">
-                                                                        <label class="radio-inline radioUi">
-                                                                <input type="radio" name="inlineRadioOptions" id="user.active" value="Yes" checked="true"> Yes
-                                                                </label>
-                                                                        <label class="radio-inline radioUi">
-                                                              <input type="radio" name="inlineRadioOptions" id="user.active" value="No"> No
-                                                            </label>
-
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col-sm-6">
-                                                                <div class="row">
-                                                                    <div class="col-sm-6 label-text">
-                                                                        <label for="user.userName">User Name</label>
-                                                                    </div>
-                                                                    <div class="col-sm-6">
-                                                                        <input id="user.userName" name="user.userName" type="text">
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="col-sm-6">
-                                                                <div class="row">
-                                                                    <div class="col-sm-6 label-text">
                                                                         <label for="user.photo">Employee Photo</label>
                                                                     </div>
                                                                     <div class="col-sm-6">
@@ -882,7 +888,10 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
+
                                                         </div>
+
+
                                                         <div class="row">
                                                             <div class="col-sm-6">
                                                                 <div class="row">
@@ -960,7 +969,7 @@
                                                         <div class="modal-content">
                                                             <div class="modal-header">
                                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                                                <h4 class="modal-title" id="myModalLabel">Add/Edit</h4>
+                                                                <h4 class="modal-title" id="myModalLabel">Assignments Add/Edit</h4>
                                                             </div>
                                                             <div class="modal-body">
 
@@ -1190,8 +1199,9 @@
 
                                                             </div>
                                                             <div class="modal-footer">
-                                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                                                 <button type="button" class="btn btn-primary" onclick="commonAddAndUpdate('agreementTableBody','assignmentDetailModal','assignments')">Add/Edit</button>
+                                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
                                                             </div>
 
                                                         </div>
@@ -1234,7 +1244,7 @@
 
                                                             <div class="modal-header">
                                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                                                <h4 class="modal-title" id="myModalLabel">Add/Edit</h4>
+                                                                <h4 class="modal-title" id="myModalLabel">Jurisdiction Add/Edit</h4>
                                                             </div>
                                                             <div class="modal-body">
 
@@ -1277,8 +1287,9 @@
 
                                                             </div>
                                                             <div class="modal-footer">
-                                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                                                 <button type="button" id="jurisdictionAddOrUpdate" class="btn btn-primary" onclick="commonAddAndUpdate('jurisdictionTableBody','jurisdictionDetailModal','jurisdictions')">Add/Edit</button>
+                                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
                                                             </div>
 
                                                         </div>
@@ -1316,7 +1327,7 @@
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
                                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                                                    <h4 class="modal-title" id="myModalLabel">Add/Edit</h4>
+                                                                    <h4 class="modal-title" id="myModalLabel">Service History Add/Edit</h4>
                                                                 </div>
                                                                 <div class="modal-body">
 
@@ -1327,7 +1338,7 @@
                                                                                     <label for="serviceHistory.id">Serieal No</label>
                                                                                 </div>
                                                                                 <div class="col-sm-6">
-                                                                                    <input id="serviceHistory.id" name="serviceHistory.id" type="number">
+                                                                                    <input id="serviceHistory.id" name="serviceHistory.id" type="number" min="1" value="1">
 
 
                                                                                 </div>
@@ -1386,7 +1397,7 @@
                                                                         <div class="col-sm-6">
                                                                             <div class="row">
                                                                                 <div class="col-sm-6 label-text">
-                                                                                    <label for="serviceHistory.documents">Grade</label>
+                                                                                    <label for="serviceHistory.documents">Document</label>
                                                                                 </div>
                                                                                 <div class="col-sm-6">
                                                                                     <div class="styled-file">
@@ -1399,8 +1410,9 @@
 
                                                                 </div>
                                                                 <div class="modal-footer">
-                                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                                                     <button type="button" id="serviceHistoryAddOrUpdate" class="btn btn-primary" onclick="commonAddAndUpdate('serviceHistoryTableBody','serviceHistoryDetailModal','serviceHistory')">Add/Edit</button>
+                                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1435,7 +1447,7 @@
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
                                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                                                    <h4 class="modal-title" id="myModalLabel">Add/Edit</h4>
+                                                                    <h4 class="modal-title" id="myModalLabel">Probation Add/Edit</h4>
                                                                 </div>
                                                                 <div class="modal-body">
 
@@ -1522,8 +1534,9 @@
                                                                 </div>
 
                                                                 <div class="modal-footer">
-                                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                                                     <button type="button" id="probationAddOrUpdate" class="btn btn-primary" onclick="commonAddAndUpdate('probationTableBody','probationDetailModal','probation')">Add/Edit</button>
+                                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1559,7 +1572,7 @@
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
                                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                                                    <h4 class="modal-title" id="myModalLabel">Add/Edit</h4>
+                                                                    <h4 class="modal-title" id="myModalLabel">Regularisation Add/Edit</h4>
                                                                 </div>
                                                                 <div class="modal-body">
 
@@ -1572,7 +1585,7 @@
                                                                                 <div class="col-sm-6">
                                                                                     <!-- <div class="styled-select multiple"> -->
                                                                                         <select  id="regularisation.designation" name="regularisation.designation">
-
+                                                                                          <option value="">Select</option>
                                                                               </select>
 
                                                                                     <!-- </div> -->
@@ -1646,8 +1659,9 @@
                                                                 </div>
 
                                                                 <div class="modal-footer">
-                                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                                                     <button type="button" id="regularisationAddOrUpdate" class="btn btn-primary" onclick="commonAddAndUpdate('regularisationTableBody','regularisationDetailModal','regularisation')">Add/Edit</button>
+                                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1685,7 +1699,7 @@
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
                                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                                                    <h4 class="modal-title" id="myModalLabel">Add/Edit</h4>
+                                                                    <h4 class="modal-title" id="myModalLabel">Educational Qualification Add/Edit</h4>
                                                                 </div>
                                                                 <div class="modal-body">
 
@@ -1759,8 +1773,9 @@
 
                                                                 </div>
                                                                 <div class="modal-footer">
-                                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                                                     <button type="button" id="educationAddOrUpdate" class="btn btn-primary" onclick="commonAddAndUpdate('educationTableBody','educationDetailModal','education')">Add/Edit</button>
+                                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1794,7 +1809,7 @@
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
                                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                                                    <h4 class="modal-title" id="myModalLabel">Add/Edit</h4>
+                                                                    <h4 class="modal-title" id="myModalLabel">Technical Qualification Add/Edit</h4>
                                                                 </div>
                                                                 <div class="modal-body">
 
@@ -1869,8 +1884,9 @@
 
                                                                 </div>
                                                                 <div class="modal-footer">
-                                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                                                     <button type="button" id="technicalAddOrUpdate" class="btn btn-primary" onclick="commonAddAndUpdate('technicalTableBody','technicalDetailModal','technical')">Add/Edit</button>
+                                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1902,7 +1918,7 @@
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
                                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                                                    <h4 class="modal-title" id="myModalLabel">Add/Edit</h4>
+                                                                    <h4 class="modal-title" id="myModalLabel">Departmental Test Add/Edit</h4>
                                                                 </div>
                                                                 <div class="modal-body">
 
@@ -1964,8 +1980,9 @@
 
                                                                 </div>
                                                                 <div class="modal-footer">
-                                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                                                     <button type="button" id="testAddOrUpdate" class="btn btn-primary" onclick="commonAddAndUpdate('testTableBody','testDetailModal','test')">Add/Edit</button>
+                                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2115,8 +2132,9 @@
 
 
                                     <div class="text-center">
-                                        <button type="button" class="btn btn-submit" id="close">Close</button>
-                                        <button type="button" id="addEmployee" class="btn btn-submit">Submit</button>
+                                        <button type="submit" id="addEmployee" class="btn btn-submit">Submit</button>
+                                        <button type="button" class="btn btn-close" id="close">Close</button>
+
                                     </div>
 
                                     <!-- <div class="modal fade" id="showResultDetailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">

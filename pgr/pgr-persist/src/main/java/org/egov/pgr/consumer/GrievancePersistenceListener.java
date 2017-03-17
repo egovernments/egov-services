@@ -1,5 +1,6 @@
 package org.egov.pgr.consumer;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.pgr.config.PersistenceProperties;
 import org.egov.pgr.contracts.grievance.SevaRequest;
 import org.egov.pgr.entity.Complaint;
@@ -70,8 +71,10 @@ public class GrievancePersistenceListener {
     }
 
     private void triggerEmail(Complaint complaint) {
-        logger.debug("Triggering email for" + complaint.getCrn());
-        kafkaProducer.sendMessage(persistenceProperties.getEmailTopic(), new EmailComposer(complaint, templateService).compose());
+        if(StringUtils.isNotEmpty(complaint.getComplainant().getEmail())) {
+            logger.debug("Triggering email for" + complaint.getCrn());
+            kafkaProducer.sendMessage(persistenceProperties.getEmailTopic(), new EmailComposer(complaint, templateService).compose());
+        }
     }
 
     private void triggerSms(Complaint complaint) {
@@ -87,5 +90,4 @@ public class GrievancePersistenceListener {
         complaint = complaintService.save(complaint);
         return complaint;
     }
-
 }

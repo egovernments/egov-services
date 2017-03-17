@@ -126,18 +126,17 @@
 											</div>
 										</div>
 										<div class="form-group">
-											<label class="col-sm-3 control-label" data-translate="mobile.number">Mobile Number<span class="mandatory"></span></label>
-											<div class="col-sm-2 add-margin">
+											<label class="col-sm-3 col-md-3 control-label" data-translate="mobile.number">Mobile Number<span class="mandatory"></span></label>
+											<div class="col-sm-6 col-md-2 add-margin">
 												<div class="input-group">
 													<span class="input-group-addon">+91</span>
 													  	<input id="phone" name="phone" data-extra class="form-control mobilevalidate patternvalidation" data-pattern="number" required="required" type="text" value=""/>
 												</div>
-												<label id="mob-no-error" class="error display-hide" for="mob-no">Required</label>
+												<label id="phone-error" class="error display-hide" for="phone">Required</label>
 											</div>
-											<div class="col-sm-1">
-												<label for="field-1" class="control-label" data-translate="email">Email<span class="mandatory"></span></label>
-											</div>
-											<div class="col-sm-3">
+											<div class="clearfix visible-sm hidden-md" style="margin:0"></div>
+											<label for="field-1" class="control-label col-sm-3 col-md-1" data-translate="email">Email<span class="mandatory"></span></label>
+											<div class="col-sm-6 col-md-3">
 												<input id="email" name="email" data-extra required="required" type="email" class="form-control emailvalidate" value=""/>
 												
 											</div>
@@ -228,18 +227,17 @@
 										
 										<div class="form-group">
 											<label class="col-sm-3 control-label" data-translate="grievance.location">Grievance Location<span class="mandatory"></span></label>
-											<div class="col-sm-6">
+											<div class="col-sm-6" style="margin:0;">
 												<div class="input-group"  id="location-tour">
-													<input id="location" name="locationtext" data-extra="" type="text" class="form-control low-width" data-translate="grievance.location.plh" placeholder="Start typing your Grievance location or select it from location icon" autocomplete="off" required="required"/>
+													<input id="location" name="locationtext" data-extra="" type="text" class="form-control" data-translate="grievance.location.plh" placeholder="Start typing your Grievance location or select it from location icon" autocomplete="off" required="required"/>
 													<span class="input-group-addon map-class btn-secondary" title="See on map" onclick="jQuery('#modal-6').modal('show', {backdrop: 'static'});"><i class="fa fa-map-marker specific"></i></span>
-													<input id="locationid" type="hidden" value=""/>
 													<input id="address_id" name="address_id" type="hidden" value=""/>
 									   				<input id="lat" name="lat" type="hidden" value="0.0"/>
 					                   				<input id="lng" name="lng" type="hidden" value="0.0"/>
 												</div>
+												<label id="location-error" class="error display-hide" for="location">Required</label>
 											</div>
 										</div>
-										
 										<div class="form-group">
 											<label class="col-sm-3 control-label" data-translate="landmark">Landmark</label>
 											<div class="col-sm-6">
@@ -256,7 +254,7 @@
 									</div>
 								</div>
 								<div class="row">
-									<div class="col-sm-offset-4 col-md-4" id="captcha-section">
+									<div class="col-md-offset-4 col-md-4 col-sm-offset-4 col-sm-4" id="captcha-section">
 										<input type="text" name="captcha" data-extra class="form-control" id="captcha" placeholder="Enter the above text" required="required">
 									</div>
 								</div><br>

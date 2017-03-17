@@ -95,9 +95,9 @@ public class WorkFlowController {
 	}
 	
 	
-	@PostMapping(value = "/process/{id}/_search")
+	@PostMapping(value = "/process/_search")
 	public  ProcessInstanceResponse getProcess(@RequestBody RequestInfo requestInfo,
-			@RequestParam String tenantId ,@PathVariable String id) {
+			@RequestParam String tenantId ,@RequestParam String id) {
 		
 		ProcessInstance p=new ProcessInstance();
 		ProcessInstanceResponse pres=new ProcessInstanceResponse();

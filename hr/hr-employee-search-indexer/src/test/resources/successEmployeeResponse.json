@@ -1,0 +1,26 @@
+{
+ "ResponseInfo" : {
+  "api_id" : "",
+  "ver" : "",
+  "ts" : "",
+  "res_msg_id" : "",
+  "msg_id" : "",
+  "status" : "Successfull message"
+  },
+ "Employees" : [{
+    "id" : "1",
+    "name" : "narasappa",
+    "mobileNumber" : "9432743423",
+    "assignments" : [{
+         "id" : "1",
+         "department" : {
+              "id" : "1",
+              "name" : "Accounts",
+              "code" : "A"
+        },
+        "designation" : {
+              "name" : "Accounts Officer"
+        }
+    }]
+  }]
+}

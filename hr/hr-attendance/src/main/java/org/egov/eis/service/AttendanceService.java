@@ -40,6 +40,7 @@
 
 package org.egov.eis.service;
 
+import java.text.ParseException;
 import java.util.List;
 
 import org.egov.eis.model.Attendance;
@@ -65,7 +66,7 @@ public class AttendanceService {
     @Autowired
     private AttendanceProducer attendanceProducer;
 
-    public List<Attendance> getAttendances(final AttendanceGetRequest attendanceGetRequest) {
+    public List<Attendance> getAttendances(final AttendanceGetRequest attendanceGetRequest) throws ParseException {
         return attendanceRepository.findForCriteria(attendanceGetRequest);
     }
 

@@ -15,7 +15,7 @@ class ShowCalenderHoliday extends React.Component {
 
   componentWillMount(){
     this.setState({
-    year:commonApiPost("egov-common-masters","holidays","_search",{tenantId}).responseJSON["Holiday"]
+    year:getCommonMaster("egov-common-masters","calendaryears","CalendarYear").responseJSON["CalendarYear"] || []
   })
   }
 
@@ -81,12 +81,12 @@ search(e)
     {
         if(list)
         {
-            return list.map((item)=>
-            {
-                return (<option key={item.calendarYear.name} value={item.calendarYear.name}>
-                        {item.calendarYear.name}
-                  </option>)
-            })
+          return list.map((item)=>
+          {
+              return (<option key={item.id} value={item.name}>
+                      {item.name}
+                </option>)
+          })
         }
     }
     const renderAction=function(type,id){

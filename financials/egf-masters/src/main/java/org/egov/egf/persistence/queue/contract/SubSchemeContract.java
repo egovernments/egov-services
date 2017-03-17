@@ -51,40 +51,42 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;@Builder@Getter@Setter@AllArgsConstructor@NoArgsConstructor
+import lombok.Setter;
 
-@JsonPropertyOrder({ "id","scheme","code","name","validFrom","validTo","active","departmentId"})
-public class SubSchemeContract extends AuditableContract
-{
-    	    	private Long id;
-	
-	@NotNull
-	private SchemeContract scheme;
+@Builder
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 
-	@NotNull
-	@Length(max=50,min=1)
-	private String code;
+@JsonPropertyOrder({ "id", "scheme", "code", "name", "validFrom", "validTo", "active", "departmentId" })
+public class SubSchemeContract extends AuditableContract {
+    private Long id;
 
-	@NotNull
-	@Length(max=50,min=1)
-	private String name;
+    @NotNull
+    private SchemeContract scheme;
 
-	@NotNull
-	private Date validFrom;
-	
-	@NotNull
-	private Date validTo;
-	
-	@NotNull
-	private Boolean active;
+    @NotNull
+    @Length(max = 50, min = 1)
+    private String code;
 
- 	private Long departmentId;
- 	
- 
- 
-	 	    public Long getId()
-	    {
-	    	return this.id;
-	    }
+    @NotNull
+    @Length(max = 50, min = 1)
+    private String name;
+
+    @NotNull
+    private Date validFrom;
+
+    @NotNull
+    private Date validTo;
+
+    @NotNull
+    private Boolean active;
+
+    private Long departmentId;
+
+    public Long getId() {
+        return this.id;
+    }
 
 }

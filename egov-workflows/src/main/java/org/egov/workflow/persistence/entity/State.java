@@ -62,6 +62,7 @@ import javax.validation.constraints.NotNull;
 
 import org.egov.workflow.web.contract.Attribute;
 import org.egov.workflow.web.contract.Position;
+import org.egov.workflow.web.contract.ProcessInstance;
 import org.egov.workflow.web.contract.Task;
 import org.hibernate.validator.constraints.Length;
 
@@ -270,6 +271,7 @@ public class State extends AbstractAuditable {
                 comments(this.comments == null ? "" : this.comments)
                 .createdDate(this.getCreatedDate())
                 .id(this.getId().toString())
+                .state(this.getStatus().name())
                 .status(this.getValue())
                 .natureOfTask(this.getNatureOfTask())
                 .owner(p)
@@ -278,6 +280,20 @@ public class State extends AbstractAuditable {
                 .action(this.nextAction == null ? "" : this.nextAction)
                 .attributes(new HashMap<String,Attribute>()).build();
         return t;
+    }
+    
+    public ProcessInstance mapToProcess(ProcessInstance pi) {
+    	Position p=new Position();
+    	p.setId(this.getOwnerPosition());
+    	pi = pi.builder().businessKey(this.type).
+                comments(this.comments == null ? "" : this.comments)
+                .createdDate(this.getCreatedDate())
+                .id(this.getId().toString())
+                .status(this.getValue())
+                .owner(p)
+                .senderName(this.senderName == null ? "" : this.senderName)
+                .attributes(new HashMap<String,Attribute>()).build();
+        return pi;
     }
 
 	public String getMyLinkId() {

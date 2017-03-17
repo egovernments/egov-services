@@ -38,7 +38,7 @@ public class AccountEntitySpecification implements Specification<AccountEntity> 
 		}
 
 		if (criteria.getAccountDetailType() != null) {
-			predicates.add(criteriaBuilder.equal(accountDetailType, criteria.getAccountDetailType()));
+			predicates.add(criteriaBuilder.equal(accountDetailType, criteria.getAccountDetailType().getId()));
 		}
 
 		if (criteria.getCode() != null) {

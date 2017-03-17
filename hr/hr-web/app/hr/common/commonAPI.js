@@ -2,15 +2,15 @@ var baseUrl = window.location.origin;
 
 //request info from cookies
 var requestInfo = {
-    "apiId":"org.egov.pgr",
-    "ver":"1.0",
-    "ts": "sdfs",
-    "action":"asd",
-    "did":"4354648646",
-    "key":"xyz",
-    "msgId":"654654",
-    "requesterId":"61",
-    "authToken":"sdfsdfsdf"
+  "apiId":"org.egov.pgr",
+  "ver":"1.0",
+  "ts": "2017-12-01",
+  "action":"asd",
+  "did":"4354648646",
+  "key":"xyz",
+  "msgId":"654654",
+  "requesterId":"61",
+  "authToken":"sdfsdfsdf"
 };
 
 var tenantId=1;

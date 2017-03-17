@@ -45,6 +45,8 @@ class AgreementSearch extends React.Component {
     //   agreements
     // })
 
+    // console.log(commonApiGet("asset","","GET_MODE_OF_ACQUISITION",{}).responseJSON);
+
     this.setState({
       employeeType:[{
               id: 1,

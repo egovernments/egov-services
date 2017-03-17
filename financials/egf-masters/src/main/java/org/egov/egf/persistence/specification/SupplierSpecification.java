@@ -94,7 +94,7 @@ public class SupplierSpecification implements Specification<Supplier> {
 		}
 
 		if (criteria.getBank() != null) {
-			predicates.add(criteriaBuilder.equal(bank, criteria.getBank()));
+			predicates.add(criteriaBuilder.equal(bank, criteria.getBank().getId()));
 		}
 		}
 		return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));

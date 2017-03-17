@@ -50,15 +50,15 @@ public class BudgetGroupSpecification implements Specification<BudgetGroup> {
 			}
 
 			if (criteria.getMajorCode() != null) {
-				predicates.add(criteriaBuilder.equal(majorCode, criteria.getMajorCode()));
+				predicates.add(criteriaBuilder.equal(majorCode, criteria.getMajorCode().getId()));
 			}
 
 			if (criteria.getMaxCode() != null) {
-				predicates.add(criteriaBuilder.equal(maxCode, criteria.getMaxCode()));
+				predicates.add(criteriaBuilder.equal(maxCode, criteria.getMaxCode().getId()));
 			}
 
 			if (criteria.getMinCode() != null) {
-				predicates.add(criteriaBuilder.equal(minCode, criteria.getMinCode()));
+				predicates.add(criteriaBuilder.equal(minCode, criteria.getMinCode().getId()));
 			}
 
 			if (criteria.getAccountType() != null) {

@@ -45,15 +45,15 @@ public class BankAccountSpecification implements Specification<BankAccount> {
 		}
 
 		if (criteria.getBankBranch() != null) {
-			predicates.add(criteriaBuilder.equal(bankBranch, criteria.getBankBranch()));
+			predicates.add(criteriaBuilder.equal(bankBranch, criteria.getBankBranch().getId()));
 		}
 
 		if (criteria.getChartOfAccount() != null) {
-			predicates.add(criteriaBuilder.equal(chartOfAccount, criteria.getChartOfAccount()));
+			predicates.add(criteriaBuilder.equal(chartOfAccount, criteria.getChartOfAccount().getId()));
 		}
 
 		if (criteria.getFund() != null) {
-			predicates.add(criteriaBuilder.equal(fund, criteria.getFund()));
+			predicates.add(criteriaBuilder.equal(fund, criteria.getFund().getId()));
 		}
 
 		if (criteria.getAccountNumber() != null) {

@@ -2,7 +2,7 @@ class ShowDesignation extends React.Component {
   constructor(props) {
     super(props);
     this.state={list:[],designationSet:{name:"",
-    code:"",description:"", chartOfAccounts:"",active:""},descriptionList:[]}
+    code:"",description:"", chartOfAccounts:"",active:""}}
 
   }
 

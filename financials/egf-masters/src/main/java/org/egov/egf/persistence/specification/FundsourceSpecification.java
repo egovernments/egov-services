@@ -52,7 +52,7 @@ public class FundsourceSpecification implements Specification<Fundsource> {
 		}
 
 		if (criteria.getFundSource() != null) {
-			predicates.add(criteriaBuilder.equal(fundSource, criteria.getFundSource()));
+			predicates.add(criteriaBuilder.equal(fundSource, criteria.getFundSource().getId()));
 		}
 
 		if (criteria.getLlevel() != null) {

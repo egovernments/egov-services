@@ -31,151 +31,151 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/bankbranches")  
+@RequestMapping("/bankbranches")
 public class BankBranchController {
-	@Autowired
-	private BankBranchService  bankBranchService;
+    @Autowired
+    private BankBranchService bankBranchService;
 
-	@PostMapping("/_create")
-	@ResponseStatus(HttpStatus.CREATED)
-	public  BankBranchContractResponse create(@RequestBody @Valid BankBranchContractRequest bankBranchContractRequest, BindingResult errors) {
-		ModelMapper modelMapper=new ModelMapper();
-		bankBranchService.validate(bankBranchContractRequest,"create",errors);
-		if (errors.hasErrors()) {
-		  throw	new CustomBindException(errors);
-		}
-		bankBranchService.fetchRelatedContracts(bankBranchContractRequest);
-		BankBranchContractResponse bankBranchContractResponse = new BankBranchContractResponse();
-		bankBranchContractResponse.setBankBranches(new ArrayList<BankBranchContract>());
-		for(BankBranchContract bankBranchContract:bankBranchContractRequest.getBankBranches())
-		{
-		
-		BankBranch	bankBranchEntity=	modelMapper.map(bankBranchContract, BankBranch.class);
-		bankBranchEntity = bankBranchService.create(bankBranchEntity);
-		BankBranchContract resp=modelMapper.map(bankBranchEntity, BankBranchContract.class);
-		bankBranchContract.setId(bankBranchEntity.getId());
-		bankBranchContractResponse.getBankBranches().add(resp);
-		}
+    @PostMapping("/_create")
+    @ResponseStatus(HttpStatus.CREATED)
+    public BankBranchContractResponse create(@RequestBody @Valid BankBranchContractRequest bankBranchContractRequest,
+            BindingResult errors) {
+        ModelMapper modelMapper = new ModelMapper();
+        bankBranchService.validate(bankBranchContractRequest, "create", errors);
+        if (errors.hasErrors()) {
+            throw new CustomBindException(errors);
+        }
+        bankBranchService.fetchRelatedContracts(bankBranchContractRequest);
+        BankBranchContractResponse bankBranchContractResponse = new BankBranchContractResponse();
+        bankBranchContractResponse.setBankBranches(new ArrayList<BankBranchContract>());
+        for (BankBranchContract bankBranchContract : bankBranchContractRequest.getBankBranches()) {
 
-		bankBranchContractResponse.setResponseInfo(getResponseInfo(bankBranchContractRequest.getRequestInfo()));
-		 
-		return bankBranchContractResponse;
-	}
+            BankBranch bankBranchEntity = modelMapper.map(bankBranchContract, BankBranch.class);
+            bankBranchEntity = bankBranchService.create(bankBranchEntity);
+            BankBranchContract resp = modelMapper.map(bankBranchEntity, BankBranchContract.class);
+            bankBranchContract.setId(bankBranchEntity.getId());
+            bankBranchContractResponse.getBankBranches().add(resp);
+        }
 
-	@PostMapping(value = "/{uniqueId}/_update")
-	@ResponseStatus(HttpStatus.OK)
-	public BankBranchContractResponse update(@RequestBody @Valid BankBranchContractRequest bankBranchContractRequest, BindingResult errors,
-			@PathVariable Long uniqueId) {
-		
-		bankBranchService.validate(bankBranchContractRequest,"update",errors);
-		
-		if (errors.hasErrors()) {
-			  throw	new CustomBindException(errors);
-			}
-		bankBranchService.fetchRelatedContracts(bankBranchContractRequest);
-		BankBranch bankBranchFromDb = bankBranchService.findOne(uniqueId);
-		
-		BankBranchContract bankBranch = bankBranchContractRequest.getBankBranch();
-		//ignoring internally passed id if the put has id in url
-	    bankBranch.setId(uniqueId);
-		ModelMapper model=new ModelMapper();
-	 	model.map(bankBranch, bankBranchFromDb);
-		bankBranchFromDb = bankBranchService.update(bankBranchFromDb);
-		BankBranchContractResponse bankBranchContractResponse = new BankBranchContractResponse();
-		bankBranchContractResponse.setBankBranch(bankBranch);  
-		bankBranchContractResponse.setResponseInfo(getResponseInfo(bankBranchContractRequest.getRequestInfo()));
-		bankBranchContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
-		return bankBranchContractResponse;
-	}
-	
-	@GetMapping(value = "/{uniqueId}")
-	@ResponseStatus(HttpStatus.OK)
-	public BankBranchContractResponse view(@ModelAttribute BankBranchContractRequest bankBranchContractRequest, BindingResult errors,
-			@PathVariable Long uniqueId) {
-		bankBranchService.validate(bankBranchContractRequest,"view",errors);
-		if (errors.hasErrors()) {
-			  throw	new CustomBindException(errors);
-			}
-		bankBranchService.fetchRelatedContracts(bankBranchContractRequest);
-		RequestInfo requestInfo = bankBranchContractRequest.getRequestInfo();
-		BankBranch bankBranchFromDb = bankBranchService.findOne(uniqueId);
-		BankBranchContract bankBranch = bankBranchContractRequest.getBankBranch();
-		
-		ModelMapper model=new ModelMapper();
-	 	model.map(bankBranchFromDb,bankBranch );
-		
-		BankBranchContractResponse bankBranchContractResponse = new BankBranchContractResponse();
-		bankBranchContractResponse.setBankBranch(bankBranch);  
-		bankBranchContractResponse.setResponseInfo(getResponseInfo(bankBranchContractRequest.getRequestInfo()));
-		bankBranchContractResponse.getResponseInfo().setStatus(HttpStatus.CREATED.toString());
-		return bankBranchContractResponse ;
-	}
-	
-	@PutMapping
-	@ResponseStatus(HttpStatus.OK)
-	public BankBranchContractResponse updateAll(@RequestBody @Valid BankBranchContractRequest bankBranchContractRequest, BindingResult errors) {
-		bankBranchService.validate(bankBranchContractRequest,"updateAll",errors);
-		if (errors.hasErrors()) {
-			  throw	new CustomBindException(errors);
-			}
-		bankBranchService.fetchRelatedContracts(bankBranchContractRequest);		
- 
-		BankBranchContractResponse bankBranchContractResponse =new  BankBranchContractResponse();
-		bankBranchContractResponse.setBankBranches(new ArrayList<BankBranchContract>());
-		for(BankBranchContract bankBranchContract:bankBranchContractRequest.getBankBranches())
-		{
-		BankBranch bankBranchFromDb = bankBranchService.findOne(bankBranchContract.getId());
-		
-		ModelMapper model=new ModelMapper();
-	 	model.map(bankBranchContract, bankBranchFromDb);
-		bankBranchFromDb = bankBranchService.update(bankBranchFromDb);
-		model.map(bankBranchFromDb,bankBranchContract);
-		bankBranchContractResponse.getBankBranches().add(bankBranchContract);  
-		}
+        bankBranchContractResponse.setResponseInfo(getResponseInfo(bankBranchContractRequest.getRequestInfo()));
 
-		bankBranchContractResponse.setResponseInfo(getResponseInfo(bankBranchContractRequest.getRequestInfo()));
-		bankBranchContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
-		
-		return bankBranchContractResponse;
-	}
-	
+        return bankBranchContractResponse;
+    }
 
-	@PostMapping("/_search")
-	@ResponseBody
-	@ResponseStatus(HttpStatus.OK)
-	public BankBranchContractResponse search(@ModelAttribute BankBranchContract bankBranchContracts,@RequestBody RequestInfo requestInfo,BindingResult errors) {
-		final BankBranchContractRequest bankBranchContractRequest = new BankBranchContractRequest();
-		bankBranchContractRequest.setBankBranch(bankBranchContracts);
-		bankBranchContractRequest.setRequestInfo(requestInfo);
-		bankBranchService.validate(bankBranchContractRequest,"search",errors);
-		if (errors.hasErrors()) {
-			  throw	new CustomBindException(errors);
-			}
-		bankBranchService.fetchRelatedContracts(bankBranchContractRequest);
-		BankBranchContractResponse bankBranchContractResponse =new  BankBranchContractResponse();
-		bankBranchContractResponse.setBankBranches(new ArrayList<BankBranchContract>());
-		bankBranchContractResponse.setPage(new Pagination());
-		Page<BankBranch> allBankBranches;
-		ModelMapper model=new ModelMapper();
-	 
-		allBankBranches = bankBranchService.search(bankBranchContractRequest);
-		BankBranchContract bankBranchContract=null;
-		for(BankBranch b:allBankBranches)
-		{
-			bankBranchContract=new BankBranchContract();
-			model.map(b, bankBranchContract);
-			bankBranchContractResponse.getBankBranches().add(bankBranchContract);
-		}
-		bankBranchContractResponse.getPage().map(allBankBranches);
-		bankBranchContractResponse.setResponseInfo(getResponseInfo(bankBranchContractRequest.getRequestInfo()));
-		bankBranchContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
-		return bankBranchContractResponse;
-	}
+    @PostMapping(value = "/{uniqueId}/_update")
+    @ResponseStatus(HttpStatus.OK)
+    public BankBranchContractResponse update(@RequestBody @Valid BankBranchContractRequest bankBranchContractRequest,
+            BindingResult errors,
+            @PathVariable Long uniqueId) {
 
-	
-	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
+        bankBranchService.validate(bankBranchContractRequest, "update", errors);
+
+        if (errors.hasErrors()) {
+            throw new CustomBindException(errors);
+        }
+        bankBranchService.fetchRelatedContracts(bankBranchContractRequest);
+        BankBranch bankBranchFromDb = bankBranchService.findOne(uniqueId);
+
+        BankBranchContract bankBranch = bankBranchContractRequest.getBankBranch();
+        // ignoring internally passed id if the put has id in url
+        bankBranch.setId(uniqueId);
+        ModelMapper model = new ModelMapper();
+        model.map(bankBranch, bankBranchFromDb);
+        bankBranchFromDb = bankBranchService.update(bankBranchFromDb);
+        BankBranchContractResponse bankBranchContractResponse = new BankBranchContractResponse();
+        bankBranchContractResponse.setBankBranch(bankBranch);
+        bankBranchContractResponse.setResponseInfo(getResponseInfo(bankBranchContractRequest.getRequestInfo()));
+        bankBranchContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
+        return bankBranchContractResponse;
+    }
+
+    @GetMapping(value = "/{uniqueId}")
+    @ResponseStatus(HttpStatus.OK)
+    public BankBranchContractResponse view(@ModelAttribute BankBranchContractRequest bankBranchContractRequest,
+            BindingResult errors,
+            @PathVariable Long uniqueId) {
+        bankBranchService.validate(bankBranchContractRequest, "view", errors);
+        if (errors.hasErrors()) {
+            throw new CustomBindException(errors);
+        }
+        bankBranchService.fetchRelatedContracts(bankBranchContractRequest);
+        RequestInfo requestInfo = bankBranchContractRequest.getRequestInfo();
+        BankBranch bankBranchFromDb = bankBranchService.findOne(uniqueId);
+        BankBranchContract bankBranch = bankBranchContractRequest.getBankBranch();
+
+        ModelMapper model = new ModelMapper();
+        model.map(bankBranchFromDb, bankBranch);
+
+        BankBranchContractResponse bankBranchContractResponse = new BankBranchContractResponse();
+        bankBranchContractResponse.setBankBranch(bankBranch);
+        bankBranchContractResponse.setResponseInfo(getResponseInfo(bankBranchContractRequest.getRequestInfo()));
+        bankBranchContractResponse.getResponseInfo().setStatus(HttpStatus.CREATED.toString());
+        return bankBranchContractResponse;
+    }
+
+    @PutMapping
+    @ResponseStatus(HttpStatus.OK)
+    public BankBranchContractResponse updateAll(@RequestBody @Valid BankBranchContractRequest bankBranchContractRequest,
+            BindingResult errors) {
+        bankBranchService.validate(bankBranchContractRequest, "updateAll", errors);
+        if (errors.hasErrors()) {
+            throw new CustomBindException(errors);
+        }
+        bankBranchService.fetchRelatedContracts(bankBranchContractRequest);
+
+        BankBranchContractResponse bankBranchContractResponse = new BankBranchContractResponse();
+        bankBranchContractResponse.setBankBranches(new ArrayList<BankBranchContract>());
+        for (BankBranchContract bankBranchContract : bankBranchContractRequest.getBankBranches()) {
+            BankBranch bankBranchFromDb = bankBranchService.findOne(bankBranchContract.getId());
+
+            ModelMapper model = new ModelMapper();
+            model.map(bankBranchContract, bankBranchFromDb);
+            bankBranchFromDb = bankBranchService.update(bankBranchFromDb);
+            model.map(bankBranchFromDb, bankBranchContract);
+            bankBranchContractResponse.getBankBranches().add(bankBranchContract);
+        }
+
+        bankBranchContractResponse.setResponseInfo(getResponseInfo(bankBranchContractRequest.getRequestInfo()));
+        bankBranchContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
+
+        return bankBranchContractResponse;
+    }
+
+    @PostMapping("/_search")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public BankBranchContractResponse search(@ModelAttribute BankBranchContract bankBranchContracts,
+            @RequestBody RequestInfo requestInfo, BindingResult errors) {
+        final BankBranchContractRequest bankBranchContractRequest = new BankBranchContractRequest();
+        bankBranchContractRequest.setBankBranch(bankBranchContracts);
+        bankBranchContractRequest.setRequestInfo(requestInfo);
+        bankBranchService.validate(bankBranchContractRequest, "search", errors);
+        if (errors.hasErrors()) {
+            throw new CustomBindException(errors);
+        }
+        bankBranchService.fetchRelatedContracts(bankBranchContractRequest);
+        BankBranchContractResponse bankBranchContractResponse = new BankBranchContractResponse();
+        bankBranchContractResponse.setBankBranches(new ArrayList<BankBranchContract>());
+        bankBranchContractResponse.setPage(new Pagination());
+        Page<BankBranch> allBankBranches;
+        ModelMapper model = new ModelMapper();
+
+        allBankBranches = bankBranchService.search(bankBranchContractRequest);
+        BankBranchContract bankBranchContract = null;
+        for (BankBranch b : allBankBranches) {
+            bankBranchContract = new BankBranchContract();
+            model.map(b, bankBranchContract);
+            bankBranchContractResponse.getBankBranches().add(bankBranchContract);
+        }
+        bankBranchContractResponse.getPage().map(allBankBranches);
+        bankBranchContractResponse.setResponseInfo(getResponseInfo(bankBranchContractRequest.getRequestInfo()));
+        bankBranchContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
+        return bankBranchContractResponse;
+    }
+
+    private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
         new ResponseInfo();
-		return ResponseInfo.builder()
+        return ResponseInfo.builder()
                 .apiId(requestInfo.getApiId())
                 .ver(requestInfo.getVer())
                 .ts(new Date())

@@ -52,47 +52,47 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;@Builder@Getter@Setter@AllArgsConstructor@NoArgsConstructor
+import lombok.Setter;
 
-@JsonPropertyOrder({ "id","bankBranch","chartOfAccount","fund","accountNumber","accountType","description","active","payTo","type"})
+@Builder
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+
+@JsonPropertyOrder({ "id", "bankBranch", "chartOfAccount", "fund", "accountNumber", "accountType", "description", "active",
+        "payTo", "type" })
 public class BankAccountContract extends AuditableContract implements java.io.Serializable {
 
+    private Long id;
 
+    private BankBranchContract bankBranch;
 
-	private Long id;
+    private ChartOfAccountContract chartOfAccount;
 
-	private BankBranchContract bankBranch;
+    private FundContract fund;
 
+    @NotNull
+    @Length(max = 25)
+    private String accountNumber;
 
-	private ChartOfAccountContract chartOfAccount;
+    // is this required ?
+    private String accountType;
+    @Length(max = 256)
+    private String description;
 
-	private FundContract fund;
+    @NotNull
+    private Boolean active;
 
-	@NotNull
-	@Length(max=25)
-	private String accountNumber;
+    @Length(max = 100)
+    private String payTo;
 
-	// is this required ?
-			private String accountType;
-			@Length(max=256)
-			private String description;
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private BankAccountType type;
 
-			@NotNull
-			private Boolean active;
-
-			@Length(max=100)
-			private String payTo;  
-
-			@NotNull
-			@Enumerated(EnumType.STRING)
-			private BankAccountType type;
-
-			public Long getId()
-			{
-				return this.id;
-			}
-
-
-
+    public Long getId() {
+        return this.id;
+    }
 
 }

@@ -1,7 +1,10 @@
 package org.egov.workflow.persistence.repository;
 
+import static org.springframework.util.StringUtils.isEmpty;
+
 import java.util.Collections;
 
+import org.egov.workflow.domain.model.AuthenticatedUser;
 import org.egov.workflow.web.contract.RequestInfo;
 import org.egov.workflow.web.contract.UserRequest;
 import org.egov.workflow.web.contract.UserResponse;
@@ -31,4 +34,23 @@ public class UserRepository {
 		return restTemplate.postForObject(url, userRequest, UserResponse.class);
 	}
 
+	
+	public AuthenticatedUser getUser(String token) {
+		if (isEmpty(token)) {
+			return AuthenticatedUser.createAnonymousUser();
+		}
+		return findUser(token);
+	}
+
+	public AuthenticatedUser findUser(String token) {
+		String url = String.format("%s%s", userHost + userServiceUrl, token);
+		return restTemplate.postForObject(url, null, AuthenticatedUser.class);
+	}
+
+	/*public User getUserByUserName(String userName) {
+		UserRequest request = new UserRequest();
+		request.setUserName(userName);
+		String url = userHost + getUserByUserNameUrl;
+		return restTemplate.postForObject(url, request, UserResponse.class).getUser().get(0);
+	}*/
 }

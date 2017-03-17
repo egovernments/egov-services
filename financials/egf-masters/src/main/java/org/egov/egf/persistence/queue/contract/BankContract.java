@@ -44,72 +44,60 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
+import org.egov.egf.persistence.entity.Bank;
 import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import lombok.Data;
+
 @Data
 
-public class  BankContract extends AuditableContract {
+public class BankContract extends AuditableContract {
 
-	private Long id;
-	
-	@JsonProperty(access= Access.WRITE_ONLY)
-	private List<Long> ids = new ArrayList<Long>();
+    private Long id;
 
-	@NotNull
-	@Length(max = 50,min=1)
-	private String code;
+    @JsonProperty(access = Access.WRITE_ONLY)
+    private List<Long> ids = new ArrayList<Long>();
 
-	@NotNull
-	@Length(max = 100,min=2)
-	private String name;
+    @NotNull
+    @Length(max = 50, min = 1)
+    private String code;
 
-	@Length(max = 250)
-	private String description;
+    @NotNull
+    @Length(max = 100, min = 2)
+    private String name;
 
-	@NotNull
-	private Boolean active;
-	// is this required?
+    @Length(max = 250)
+    private String description;
 
-	@Length(max = 50)
-	private String type;
-	
+    @NotNull
+    private Boolean active;
+    // is this required?
 
-	public Long getId() {
-		return id;
-	}
+    @Length(max = 50)
+    private String type;
 
+    public Long getId() {
+        return id;
+    }
 
+    public BankContract() {
+        super();
+    }
 
+    public BankContract(final String id) {
+        super();
+        this.id = Long.valueOf(id);
+    }
 
-	/*public void map(BankContractContract bank)
-	{
-		if(bank!=null)
-		{
-		if(bank.getActive()!=null)
-		this.setActive(bank.getActive());
-		if(bank.getName()!=null)
-		this.setName(bank.getName());
-		if(bank.getCode()!=null)
-		this.setCode(bank.getCode());
-		if(bank.getDescription()!=null)
-		this.setDescription(bank.getDescription());
-
-		}
-
-
-	}
-
-	public BankContractContract mapContract(BankContractContract bank) {
-		 bank.setId(id);
-		 bank.setCode(code);
-		 bank.setName(name);
-		 bank.setActive(active);
-		 bank.setDescription(description);
-		return bank;
-	}*/
+    /*
+     * public void map(BankContractContract bank) { if(bank!=null) { if(bank.getActive()!=null) this.setActive(bank.getActive());
+     * if(bank.getName()!=null) this.setName(bank.getName()); if(bank.getCode()!=null) this.setCode(bank.getCode());
+     * if(bank.getDescription()!=null) this.setDescription(bank.getDescription()); } } public BankContractContract
+     * mapContract(BankContractContract bank) { bank.setId(id); bank.setCode(code); bank.setName(name); bank.setActive(active);
+     * bank.setDescription(description); return bank; }
+     */
 
 }

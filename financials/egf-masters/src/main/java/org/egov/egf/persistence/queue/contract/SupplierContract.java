@@ -49,57 +49,61 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;@Builder@Getter@Setter@AllArgsConstructor@NoArgsConstructor
+import lombok.Setter;
 
-@JsonPropertyOrder({ "id","code","name","address","mobile","email","description","active","panNo","tinNo","registationNo","bankAccount","ifscCode","bank"})
+@Builder
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+
+@JsonPropertyOrder({ "id", "code", "name", "address", "mobile", "email", "description", "active", "panNo", "tinNo",
+        "registationNo", "bankAccount", "ifscCode", "bank" })
 public class SupplierContract extends AuditableContract {
 
-	
-	
-			private Long id;
+    private Long id;
 
-		@NotNull
-	@Length(max = 50,min=1)
-	private String code;
+    @NotNull
+    @Length(max = 50, min = 1)
+    private String code;
 
-	@NotNull
-	@Length(max = 50,min=1)
-	private String name;
+    @NotNull
+    @Length(max = 50, min = 1)
+    private String name;
 
-	@Length(max = 300)
-	private String address;
+    @Length(max = 300)
+    private String address;
 
-	@Length(max = 10)
-	private String mobile;
+    @Length(max = 10)
+    private String mobile;
 
-	@Length(max = 25)
-	private String email;
-	
-	@Length(max = 250)
-	private String description;
-	@NotNull
-	private Boolean active;
+    @Length(max = 25)
+    private String email;
 
-	@Length(max = 10)
-	private String panNo;
+    @Length(max = 250)
+    private String description;
+    @NotNull
+    private Boolean active;
 
-	@Length(max = 20)
-	private String tinNo;
+    @Length(max = 10)
+    private String panNo;
 
-	@Length(max = 25)
-	private String registationNo;
+    @Length(max = 20)
+    private String tinNo;
 
-	@Length(max = 25)
-	private String bankAccount;
+    @Length(max = 25)
+    private String registationNo;
 
-	@Length(max = 12)
-	private String ifscCode;
+    @Length(max = 25)
+    private String bankAccount;
 
-			private BankContract bank;
+    @Length(max = 12)
+    private String ifscCode;
 
-	 	    public Long getId()
-	    {
-	    	return this.id;
-	    }
+    private BankContract bank;
+
+    public Long getId() {
+        return this.id;
+    }
 
 }

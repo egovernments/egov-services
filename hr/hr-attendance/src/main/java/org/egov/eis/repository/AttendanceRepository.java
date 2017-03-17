@@ -43,6 +43,7 @@ package org.egov.eis.repository;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,7 +79,7 @@ public class AttendanceRepository {
     @Autowired
     private AttendanceQueryBuilder attendanceQueryBuilder;
 
-    public List<Attendance> findForCriteria(final AttendanceGetRequest attendanceGetRequest) {
+    public List<Attendance> findForCriteria(final AttendanceGetRequest attendanceGetRequest) throws ParseException {
         final List<Object> preparedStatementValues = new ArrayList<Object>();
         final String queryStr = attendanceQueryBuilder.getQuery(attendanceGetRequest, preparedStatementValues);
         final List<Attendance> attendances = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),

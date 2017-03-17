@@ -58,15 +58,15 @@ public class GrievancePersistenceListener {
     public void processMessage(HashMap<String, Object> sevaRequestMap) {
         logger.debug("Received seva request");
         SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
-        triggerIndexing(sevaRequest);
         Complaint complaint = persistComplaint(sevaRequest);
         triggerSms(complaint);
         triggerEmail(complaint);
+        triggerIndexing(sevaRequest);
     }
 
     private void triggerIndexing(SevaRequest record) {
         logger.debug("Triggering Indexing for" + record.getServiceRequest().getCrn());
-        kafkaProducer.sendMessage(persistenceProperties.getIndexingTopic(), record);
+        kafkaProducer.sendMessage(persistenceProperties.getIndexingTopic(), record.getSevaRequestMap());
     }
 
     private void triggerEmail(Complaint complaint) {

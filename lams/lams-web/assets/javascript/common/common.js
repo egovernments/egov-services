@@ -61,6 +61,23 @@ function commonApiPost(context,resource="",action="",queryObject={}) {
         });
 }
 
+function commonApiGet(context,resource="",action="",queryObject={}) {
+  var url=baseUrl+"/"+context+(resource?"/"+resource:"")+(action?"/"+action:"")+(queryObject?"?":"");
+  for (var variable in queryObject) {
+      if (queryObject[variable]) {
+        url+="&"+variable+"="+queryObject[variable];
+      }
+  }
+  return $.ajax({
+            url: url,
+            type: 'GET',
+            dataType: 'json',
+            // data:JSON.stringify(requestInfo),
+            async: false,
+            contentType: 'application/json'
+        });
+}
+
 function getUrlVars() {
     var vars = [],
         hash;

@@ -11,6 +11,11 @@ public class SevaRequest {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private static final String SERVICE_REQUEST = "ServiceRequest";
     private static final String REQUEST_INFO = "RequestInfo";
+
+    public HashMap<String, Object> getSevaRequestMap() {
+        return sevaRequestMap;
+    }
+
     private HashMap<String, Object> sevaRequestMap;
 
     public SevaRequest(HashMap<String, Object> sevaRequestMap) {

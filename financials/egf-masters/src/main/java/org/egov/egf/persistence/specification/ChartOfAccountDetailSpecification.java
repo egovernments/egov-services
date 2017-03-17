@@ -37,11 +37,11 @@ public class ChartOfAccountDetailSpecification implements Specification<ChartOfA
 		}
 
 		if (criteria.getChartOfAccount() != null) {
-			predicates.add(criteriaBuilder.equal(chartOfAccount, criteria.getChartOfAccount()));
+			predicates.add(criteriaBuilder.equal(chartOfAccount, criteria.getChartOfAccount().getId()));
 		}
 
 		if (criteria.getAccountDetailType() != null) {
-			predicates.add(criteriaBuilder.equal(accountDetailType, criteria.getAccountDetailType()));
+			predicates.add(criteriaBuilder.equal(accountDetailType, criteria.getAccountDetailType().getId()));
 		}
 		}
 		return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));

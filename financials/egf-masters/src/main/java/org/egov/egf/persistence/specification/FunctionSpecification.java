@@ -58,7 +58,7 @@ public class FunctionSpecification implements Specification<Function> {
 		}
 
 		if (criteria.getParentId() != null) {
-			predicates.add(criteriaBuilder.equal(parentId, criteria.getParentId()));
+			predicates.add(criteriaBuilder.equal(parentId, criteria.getParentId().getId()));
 		}
 		}
 		return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));

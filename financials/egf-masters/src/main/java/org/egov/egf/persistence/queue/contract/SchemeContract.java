@@ -51,49 +51,57 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;@Builder@Getter@Setter@AllArgsConstructor@NoArgsConstructor
+import lombok.Setter;
 
-@JsonPropertyOrder({ "id","fund","code","name","validFrom","validTo","active","description","boundary"})
-public class SchemeContract extends  AuditableContract {
+@Builder
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 
-        	        private Long id;
+@JsonPropertyOrder({ "id", "fund", "code", "name", "validFrom", "validTo", "active", "description", "boundary" })
+public class SchemeContract extends AuditableContract {
 
-	
-		    private FundContract fund;
+    private Long id;
 
-	@Length(max=25,min=1)
+    private FundContract fund;
+
+    @Length(max = 25, min = 1)
     private String code;
-	
-	@Length(max=25,min=1)
+
+    @Length(max = 25, min = 1)
     private String name;
 
-	@NotNull
+    @NotNull
     private Date validFrom;
-	
-	@NotNull
+
+    @NotNull
     private Date validTo;
-	
-	@NotNull
+
+    @NotNull
     private Boolean active;
-	
-	@Length(max=256)
+
+    @Length(max = 256)
     private String description;
 
-   
     private Long boundary;
 
-  /*      private Set<SubSchemeContract> subSchemeContracts = new LinkedHashSet<SubSchemeContract>(0);
-*/
-    
+    /*
+     * private Set<SubSchemeContract> subSchemeContracts = new LinkedHashSet<SubSchemeContract>(0);
+     */
 
-        @Override
-		public String toString() {
+    @Override
+    public String toString() {
 
         return "id:" + id + ",Code:" + code + "," + "isActive:" + active;
     }
 
-        public Long getId()
-    {
-    	return this.id;
+    public Long getId() {
+        return this.id;
+    }
+
+    public SchemeContract(final String id) {
+        super();
+        this.id = Long.valueOf(id);
     }
 }

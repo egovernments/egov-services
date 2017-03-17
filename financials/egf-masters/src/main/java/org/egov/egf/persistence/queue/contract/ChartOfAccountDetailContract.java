@@ -48,25 +48,32 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;@Builder@Getter@Setter@AllArgsConstructor@NoArgsConstructor
+import lombok.Setter;
 
-@JsonPropertyOrder({ "id","chartOfAccount","accountDetailType"})
+@Builder
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+
+@JsonPropertyOrder({ "id", "chartOfAccount", "accountDetailType" })
 public class ChartOfAccountDetailContract extends AuditableContract {
 
-    
-    
-            private Long id;
-   
-    @NotNull
-            private ChartOfAccountContract chartOfAccount;
+    private Long id;
 
     @NotNull
-            private AccountDetailTypeContract accountDetailType;
-        public Long getId()
-    {
-    	return this.id;
+    private ChartOfAccountContract chartOfAccount;
+
+    @NotNull
+    private AccountDetailTypeContract accountDetailType;
+
+    public Long getId() {
+        return this.id;
     }
-    
 
-    
+    public ChartOfAccountDetailContract(final String id) {
+        super();
+        this.id = Long.valueOf(id);
+    }
+
 }

@@ -55,7 +55,7 @@ public class FundSpecification implements Specification<Fund> {
 		}
 
 		if (criteria.getParentId() != null) {
-			predicates.add(criteriaBuilder.equal(parentId, criteria.getParentId()));
+			predicates.add(criteriaBuilder.equal(parentId, criteria.getParentId().getId()));
 		}
 
 		if (criteria.getIsParent() != null) {

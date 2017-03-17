@@ -58,7 +58,7 @@ $(document).ready(function()
 	});
 	
 	//TODO not yet implemented at backend
-	$('#feedback-form').on('submit', function(e){
+	/*$('#feedback-form').on('submit', function(e){
         e.preventDefault();
         $.ajax({
                 url: 'home/feedback/sent',
@@ -74,9 +74,9 @@ $(document).ready(function()
                 }
         });
         
-	});
+	});*/
 
-	$('#password-form').on('submit', function(e){
+	/*$('#password-form').on('submit', function(e){
 	       e.preventDefault();
 	       $.ajax({
 	                url: 'home/password/update',
@@ -115,7 +115,7 @@ $(document).ready(function()
 	                }
 	        });
 	        
-	});
+	});*/
 	
 	getPosition();
 	worklist();
@@ -139,7 +139,7 @@ $(document).ready(function()
 			"columns": [
 						{ "title":"Date", "data": "created_Date","width": "20%" },
 						{ "title":"Sender", "data": "owner","width": "15%" },
-						{ "title":"Nature of Work", "natureOfTask": "task","width": "20%" },
+						{ "title":"Nature of Work", "data": "natureOfTask","width": "20%" },
 						{ "title":"Status", "data": "status","width": "20%" },
 						{ "title":"Comments", "data": "comments","width": "20%" }
 					]

@@ -1,0 +1,233 @@
+# this is an example of the Localization API
+swagger: '2.0'
+info:
+  title: Localization API 
+  description: API's to create,update and search messages for different module and locale
+  version: "1.0.0"
+# will be prefixed to all paths
+basePath: /messages
+produces:
+  - application/json
+paths:
+  /v1/_search:
+    post:
+      summary: Get messages by locale and tenantId
+      description: |
+       Returns all the messages by locale and tenantId.
+      parameters:
+        - name: tenantId
+          in: query
+          description: Unique id for ulb.
+          required: true
+          type: string
+          format: varchar
+        - name: locale
+          in: query
+          description: locale for message.
+          required: true
+          type: string
+          format: varchar
+        - name : lastupdateddate
+          in : query
+          description : Last updated date for message
+          type : string
+          format : varchar
+        - name : module
+          in : query
+          description : Module name for message
+          type : string
+          format : varchar
+      tags:
+        - Messages
+      responses:
+        200:
+          description: An array of Messages
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/MessagesResponse'
+        '400':
+          description: tenantId,locale  or module is not present
+          schema:
+            $ref: '#/definitions/Error'              
+        '404':
+          description: tenantId,locale  or module provided were not found
+          schema:
+            $ref: '#/definitions/Error'
+  /v1/_create:
+    post:
+      summary: Create messages for different locale
+      description: |
+        Create messages for different locale.
+      parameters:
+        - name: messageRequest
+          in: body
+          description: Message Object to create messages for different locale
+          required: true
+          schema:
+            $ref: '#/definitions/MessagesRequest'
+      tags:
+        - Messages
+      responses:
+        200:
+          description: MessagesResponse as object
+          schema:
+            type: object
+            items:
+                $ref: '#/definitions/MessagesResponse'
+        '400':
+          description: Invalid message request input
+          schema:
+            $ref: '#/definitions/Error'
+    
+  /v1/_update:
+    post:
+      summary: update messages for different locale
+      description: |
+        update messages for different locale.
+      parameters:
+        - name: messageRequest
+          in: body
+          description: Message Object to update messages for different locale
+          required: true
+          schema:
+            $ref: '#/definitions/MessagesRequest'
+      tags:
+        - Messages
+      responses:
+        200:
+          description: MessagesResponse as object
+          schema:
+            type: object
+            items:
+                $ref: '#/definitions/MessagesResponse'
+        '400':
+          description: Invalid message request input
+          schema:
+            $ref: '#/definitions/Error'
+    
+
+definitions:
+  MessagesResponse:
+    type: object
+    properties:
+      messages:
+        type: array
+        items:
+          $ref: '#/definitions/Message'
+      responseInfo :
+        type: object
+        items : 
+          $ref: '#/definitions/ResponseInfo'
+  Message:
+    type: object
+    properties:
+      id :
+        type : integer
+        description : message id
+      code:
+        type: string
+        description: Code of message.
+      message:
+        type: string
+        description: Description of Message.
+      module :
+        type : string
+        description : module for message
+      createddate :
+        type : string
+        description : message created date with timestamp
+      lastupdateddate :
+        type : string
+        description : message last update date
+  MessagesRequest:
+    type: object
+    properties:
+      requestInfo:
+        type: object
+        items:
+          $ref: '#/definitions/RequestInfo'
+      locale :
+        type: string
+        description: Locale of message.
+      messages: 
+         type: array
+         items:
+          $ref: '#/definitions/Message'
+      tenantId :
+         type : string
+         description : Unique tenant id.
+  
+      
+  RequestInfo :
+    type: object
+    properties:
+      apiId :
+         type: string
+         description: unique API ID.
+      ver :
+         type : string
+         description :  API version.
+      ts :
+         type : string
+         description : response timestamp YYYY-MM-DDThh:mm:ss+/-nn:nn (timezone defaulted to +5.30) .
+      action :
+         type : string
+         description: api action like GET/POST/PUT/DELETE in case of http calls.
+      did :
+         type : string
+         description : device UUID from which API is called.
+      key :
+         type : string
+         description : API key (dynamic).
+      msgId :
+         type : string 
+         description : unique request message id, UUID, for handling API idempotency.
+      requesterId :
+         type : string
+         description : UserId of the user calling.
+      authToken :
+         type : string
+         description : //session/jwt/saml token/oauth token.
+    required :
+       - apiId
+       - ver
+       - ts
+         
+  ResponseInfo :
+    type : object
+    properties :
+      apiId :
+        type : string
+        description : unique API ID.
+      ver :
+        type : string
+        description : .
+      ts :
+        type : string
+        description : response timestamp YYYY-MM-DDThh:mm:ss+/-nn:nn (timezone defaulted to +5.30).
+      resMsgId :
+        type : string
+        description : unique response message id (UUID).
+      msgId :
+        type : string
+        description : message id of the request.
+      status :
+        type : string
+        description : status of request e.g. successful, failed etc.
+    required : 
+        - apiId
+        - ver
+        - ts
+        - status
+         
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+      fields:
+        type: string

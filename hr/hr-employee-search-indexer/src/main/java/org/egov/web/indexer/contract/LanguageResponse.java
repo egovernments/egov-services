@@ -38,16 +38,16 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.index.model;
+package org.egov.web.indexer.contract;
 
+import java.util.ArrayList;
+import java.util.List;
 
-import java.util.Date;
+import org.egov.web.indexer.model.Language;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -55,79 +55,17 @@ import lombok.Setter;
 import lombok.ToString;
 
 @AllArgsConstructor
-@Builder
 @EqualsAndHashCode
 @Getter
 @NoArgsConstructor
 @Setter
 @ToString
-public class EmployeeAssignment {
+public class LanguageResponse {
 
-	@JsonProperty("ulbname")
-	private String ulbName;
+	@JsonProperty("ResponseInfo")
+	private ResponseInfo responseInfo;
 
-	@JsonProperty("ulbcode")
-	private String ulbCode;
-
-	@JsonProperty("distname")
-	private String distName;
-
-	@JsonProperty("regname")
-	private String regName;
-
-	@JsonProperty("ulbgrade")
-	private String ulbGrade;
-
-	@JsonProperty("employeeid")
-	private long employeeId;
-
-	@JsonProperty("employeecode")
-	private String employeeCode;
-
-	@JsonProperty("assignmentid")
-	private String assignmentId;
-
-	@JsonProperty("fund")
-	private String fund;
-
-	@JsonProperty("function")
-	private String function;
-
-	@JsonProperty("designation")
-	private String designation;
-
-	@JsonProperty("functionary")
-	private String functionary;
-
-	@JsonProperty("department")
-	private String department;
-
-	@JsonProperty("position")
-	private String position;
-
-	@JsonProperty("grade")
-	private String grade;
-
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	@JsonProperty("fromdate")
-	private Date fromDate;
-
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	@JsonProperty("todate")
-	private Date todate;
-
-	@JsonProperty("primaryassignment")
-	private String primaryAssignment;
-
-	@JsonProperty("headofdepartmentcode")
-	private String headOfDepartmentCode;
-
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	@JsonProperty("assignmentcreateddate")
-	private Date assignmentCreatedDate;
-
-	@JsonProperty("assignmentcreatedby")
-	private String assignmentCreatedBy;
-
+	@JsonProperty("Language")
+	private List<Language> language = new ArrayList<Language>();
 
 }

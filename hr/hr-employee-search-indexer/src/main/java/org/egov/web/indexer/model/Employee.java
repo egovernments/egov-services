@@ -38,16 +38,21 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.index.model;
+package org.egov.web.indexer.model;
 
-
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
+import javax.validation.constraints.Max;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import org.egov.eis.model.enums.MaritalStatus;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -55,79 +60,101 @@ import lombok.Setter;
 import lombok.ToString;
 
 @AllArgsConstructor
-@Builder
 @EqualsAndHashCode
 @Getter
 @NoArgsConstructor
 @Setter
 @ToString
-public class EmployeeAssignment {
+public class Employee {
 
-	@JsonProperty("ulbname")
-	private String ulbName;
+	@NotNull
+	private Long id;
 
-	@JsonProperty("ulbcode")
-	private String ulbCode;
-
-	@JsonProperty("distname")
-	private String distName;
-
-	@JsonProperty("regname")
-	private String regName;
-
-	@JsonProperty("ulbgrade")
-	private String ulbGrade;
-
-	@JsonProperty("employeeid")
-	private long employeeId;
-
-	@JsonProperty("employeecode")
-	private String employeeCode;
-
-	@JsonProperty("assignmentid")
-	private String assignmentId;
-
-	@JsonProperty("fund")
-	private String fund;
-
-	@JsonProperty("function")
-	private String function;
-
-	@JsonProperty("designation")
-	private String designation;
-
-	@JsonProperty("functionary")
-	private String functionary;
-
-	@JsonProperty("department")
-	private String department;
-
-	@JsonProperty("position")
-	private String position;
-
-	@JsonProperty("grade")
-	private String grade;
+	@NotNull
+	@Size(min=1, max=256)
+	private String code;
 
 	@JsonFormat(pattern = "dd/MM/yyyy")
-	@JsonProperty("fromdate")
-	private Date fromDate;
+	private Date dateOfAppointment;
 
 	@JsonFormat(pattern = "dd/MM/yyyy")
-	@JsonProperty("todate")
-	private Date todate;
-
-	@JsonProperty("primaryassignment")
-	private String primaryAssignment;
-
-	@JsonProperty("headofdepartmentcode")
-	private String headOfDepartmentCode;
+	private Date dateOfJoining;
 
 	@JsonFormat(pattern = "dd/MM/yyyy")
-	@JsonProperty("assignmentcreateddate")
-	private Date assignmentCreatedDate;
+	private Date dateOfRetirement;
 
-	@JsonProperty("assignmentcreatedby")
-	private String assignmentCreatedBy;
+	@NotNull
+	private String employeeStatus;
 
+	private Long recruitmentMode;
+
+	private Long recruitmentType;
+
+	private Long recruitmentQuota;
+
+	@Max(100)
+	private Short retirementAge;
+
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date dateOfResignation;
+
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date dateOfTermination;
+
+	@NotNull
+	private Long employeeType;
+
+	private List<Assignment> assignments = new ArrayList<Assignment>();
+
+	private List<Long> jurisdictions = new ArrayList<Long>();
+
+	private Long motherTongue;
+
+	private Long religion;
+
+	private Long community;
+
+	private Long category;
+
+	private Boolean physicallyDisabled;
+
+	private Boolean medicalReportProduced;
+
+	private List<Long> languagesKnown = new ArrayList<Long>();
+
+	private MaritalStatus maritalStatus;
+
+	private String passportNo;
+
+	private String gpfNo;
+
+	private Long bank;
+
+	private Long bankBranch;
+
+	@Size(max=20)
+	private String bankAccount;
+
+	private Long group;
+
+	@Size(max=200)
+	private String placeOfBirth;
+
+	private List<ServiceHistory> serviceHistory = new ArrayList<ServiceHistory>();
+
+	private List<Probation> probation = new ArrayList<Probation>();
+
+	private List<Regularisation> regularisation = new ArrayList<Regularisation>();
+
+	private List<TechnicalQualification> technical = new ArrayList<TechnicalQualification>();
+
+	private List<EducationalQualification> education = new ArrayList<EducationalQualification>();
+
+	private List<DepartmentalTest> test = new ArrayList<DepartmentalTest>();
+
+	private User user;
+
+	@NotNull
+	private String tenantId;
 
 }

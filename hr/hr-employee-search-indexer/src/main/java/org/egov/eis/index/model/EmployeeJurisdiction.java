@@ -2,8 +2,7 @@ package org.egov.eis.index.model;
 
 import java.util.Date;
 
-
-
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -51,6 +50,7 @@ public class EmployeeJurisdiction {
 	@JsonProperty("boundaryname")
 	private String boundaryName;
 
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	@JsonProperty("jurisdictioncreateddate")
 	private Date jurisdictionCreatedDate;
 

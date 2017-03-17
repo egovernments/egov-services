@@ -2,17 +2,16 @@ package org.egov.web.indexer.eis.service;
 
 import java.net.URI;
 
-import org.egov.eis.model.Category;
-import org.egov.eis.model.Community;
-import org.egov.eis.model.Language;
-import org.egov.eis.model.Religion;
-import org.egov.web.contract.CategoryResponse;
-import org.egov.web.contract.CommunityResponse;
-
-import org.egov.web.contract.LanguageResponse;
-import org.egov.web.contract.ReligionResponse;
-import org.egov.web.contract.RequestInfo;
 import org.egov.web.indexer.config.PropertiesManager;
+import org.egov.web.indexer.contract.CategoryResponse;
+import org.egov.web.indexer.contract.CommunityResponse;
+import org.egov.web.indexer.contract.LanguageResponse;
+import org.egov.web.indexer.contract.ReligionResponse;
+import org.egov.web.indexer.contract.RequestInfo;
+import org.egov.web.indexer.model.Category;
+import org.egov.web.indexer.model.Community;
+import org.egov.web.indexer.model.Language;
+import org.egov.web.indexer.model.Religion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,14 +22,14 @@ import org.springframework.web.client.RestTemplate;
 public class CommonMasterService {
 	
 	@Autowired
-	PropertiesManager propertiesManager;
+	private PropertiesManager propertiesManager;
 
 	@Autowired
-	RestTemplate restTemplate;
+	private RestTemplate restTemplate;
 	
 	public static final Logger logger = LoggerFactory.getLogger(BoundaryService.class);
 	
-	public Religion getReligion(Long id) {
+	public Religion getReligion(Long id, RequestInfo requestInfo) {
 		
 			URI url = null;
 			ReligionResponse religionResponse = null;
@@ -40,7 +39,7 @@ public class CommonMasterService {
 						+ propertiesManager.getReligionSearchContextPath() 
 						+ "?id=" + id + "&tenantId=1");
 				logger.info(url.toString());
-				religionResponse = restTemplate.postForObject(url, getRequestInfo(), ReligionResponse.class);
+				religionResponse = restTemplate.postForObject(url, requestInfo, ReligionResponse.class);
 			} catch (Exception e) {
 				// FIXME log error to getstacktrace
 				e.printStackTrace();
@@ -50,7 +49,7 @@ public class CommonMasterService {
 		}
 		
 //Language
-	public Language getLanguage(Long id) {
+	public Language getLanguage(Long id, RequestInfo requestInfo) {
 		
 		URI url = null;
 		LanguageResponse languageResponse = null;
@@ -60,7 +59,7 @@ public class CommonMasterService {
 					+ propertiesManager.getLanguageSearchContextPath() 
 					+ "?id=" + id + "&tenantId=1");
 			logger.info(url.toString());
-			languageResponse = restTemplate.postForObject(url, getRequestInfo(), LanguageResponse.class);
+			languageResponse = restTemplate.postForObject(url, requestInfo, LanguageResponse.class);
 		} catch (Exception e) {
 			// FIXME log error to getstacktrace
 			return null;
@@ -71,7 +70,7 @@ public class CommonMasterService {
 	
 	
 	// Community
-	public Community getCommunity(Long id) {
+	public Community getCommunity(Long id, RequestInfo requestInfo) {
 		
 		URI url = null;
 		CommunityResponse communityResponse = null;
@@ -81,7 +80,7 @@ public class CommonMasterService {
 					+ propertiesManager.getCommunitySearchContextPath() 
 					+ "?id=" + id + "&tenantId=1");
 			logger.info(url.toString());
-			communityResponse = restTemplate.postForObject(url, getRequestInfo(), CommunityResponse.class);
+			communityResponse = restTemplate.postForObject(url, requestInfo, CommunityResponse.class);
 		} catch (Exception e) {
 			// FIXME log error to getstacktrace
 			return null;
@@ -90,7 +89,7 @@ public class CommonMasterService {
 	}
 	
 	//Category
-	public Category getCategory(Long id) {
+	public Category getCategory(Long id, RequestInfo requestInfo) {
 		
 		URI url = null;
 		CategoryResponse categoryResponse = null;
@@ -100,7 +99,7 @@ public class CommonMasterService {
 					+ propertiesManager.getCategoryrSearchContextPath()
 					+ "?id=" + id + "&tenantId=1");
 			logger.info(url.toString());
-			categoryResponse = restTemplate.postForObject(url, getRequestInfo(), CategoryResponse.class);
+			categoryResponse = restTemplate.postForObject(url, requestInfo, CategoryResponse.class);
 		} catch (Exception e) {
 			// FIXME log error to getstacktrace
 			return null;
@@ -108,20 +107,7 @@ public class CommonMasterService {
 		return categoryResponse.getCategory().get(0);
 	}
 	
-	private RequestInfo getRequestInfo() {
-		RequestInfo requestInfo = new RequestInfo();
-		requestInfo.setApiId("emp");
-		requestInfo.setVer("1.0");
-		requestInfo.setTs("10/03/2017");
-		requestInfo.setAction("create");
-		requestInfo.setDid("1");
-		requestInfo.setKey("abcdkey");
-		requestInfo.setMsgId("20170310130900");
-		requestInfo.setRequesterId("rajesh");
-		requestInfo.setAuthToken("123");
-		
-		return requestInfo;
-	}
+
 	
 
 }

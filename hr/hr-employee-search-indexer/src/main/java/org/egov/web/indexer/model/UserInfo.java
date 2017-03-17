@@ -38,16 +38,22 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.index.model;
+package org.egov.web.indexer.model;
 
-
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import org.egov.eis.model.enums.Gender;
+import org.egov.eis.model.enums.UserType;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -55,79 +61,85 @@ import lombok.Setter;
 import lombok.ToString;
 
 @AllArgsConstructor
-@Builder
 @EqualsAndHashCode
 @Getter
 @NoArgsConstructor
 @Setter
 @ToString
-public class EmployeeAssignment {
+public class UserInfo {
 
-	@JsonProperty("ulbname")
-	private String ulbName;
+	@NotNull
+	private Long id;
 
-	@JsonProperty("ulbcode")
-	private String ulbCode;
+	private String userName;
 
-	@JsonProperty("distname")
-	private String distName;
+	private String salutation;
 
-	@JsonProperty("regname")
-	private String regName;
+	@Size(min=2, max=100)
+	private String name;
 
-	@JsonProperty("ulbgrade")
-	private String ulbGrade;
+	private Gender gender;
 
-	@JsonProperty("employeeid")
-	private long employeeId;
+	private String mobileNumber;
 
-	@JsonProperty("employeecode")
-	private String employeeCode;
+	private String emailId;
 
-	@JsonProperty("assignmentid")
-	private String assignmentId;
+	private String altContactNumber;
 
-	@JsonProperty("fund")
-	private String fund;
+	private String pan;
 
-	@JsonProperty("function")
-	private String function;
+	private Long aadhaarNumber;
 
-	@JsonProperty("designation")
-	private String designation;
+	private String permanentAddress;
 
-	@JsonProperty("functionary")
-	private String functionary;
+	private String permanentCity;
 
-	@JsonProperty("department")
-	private String department;
+	private String permanentPincode;
 
-	@JsonProperty("position")
-	private String position;
+	private String correspondenceCity;
 
-	@JsonProperty("grade")
-	private String grade;
+	private String correspondencePincode;
+
+	private String correspondenceAddress;
+
+	private Boolean active;
 
 	@JsonFormat(pattern = "dd/MM/yyyy")
-	@JsonProperty("fromdate")
-	private Date fromDate;
+	private Date dob;
 
 	@JsonFormat(pattern = "dd/MM/yyyy")
-	@JsonProperty("todate")
-	private Date todate;
+	private Date pwdExpiryDate;
 
-	@JsonProperty("primaryassignment")
-	private String primaryAssignment;
+	private String locale;
 
-	@JsonProperty("headofdepartmentcode")
-	private String headOfDepartmentCode;
+	@Setter(AccessLevel.NONE)
+	private UserType type = UserType.EMPLOYEE;
+
+	private String signature;
+
+	private Boolean accountLocked;
+
+	private List<Long> roles = new ArrayList<Long>();
+
+	private String fatherOrHusbandName;
+
+	private String bloodGroup;
+
+	private String identificationMark;
+
+	private String photo;
+
+	private Long createdBy;
 
 	@JsonFormat(pattern = "dd/MM/yyyy")
-	@JsonProperty("assignmentcreateddate")
-	private Date assignmentCreatedDate;
+	private Date createdDate;
 
-	@JsonProperty("assignmentcreatedby")
-	private String assignmentCreatedBy;
+	private Long lastModifiedBy;
 
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date lastModifiedDate;
+
+	@NotNull
+	private String tenantId;
 
 }

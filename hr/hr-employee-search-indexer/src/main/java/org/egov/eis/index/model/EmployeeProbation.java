@@ -2,8 +2,7 @@ package org.egov.eis.index.model;
 
 import java.util.Date;
 
-
-
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -48,6 +47,7 @@ public class EmployeeProbation {
 	@JsonProperty("probationdesignation")
 	private String probationDesignation;
 
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	@JsonProperty("probationdeclareddate")
 	private Date probationDeclareDdate;
 
@@ -57,9 +57,11 @@ public class EmployeeProbation {
 	@JsonProperty("probationremarks")
 	private String probationRemarks;
 
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	@JsonProperty("probationorderdate")
 	private Date probationOrderDate;
 
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	@JsonProperty("probationcreateddate")
 	private Date probationCreatedDate;
 

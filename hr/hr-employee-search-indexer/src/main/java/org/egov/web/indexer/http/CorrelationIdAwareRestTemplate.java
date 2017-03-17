@@ -1,12 +1,12 @@
 package org.egov.web.indexer.http;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.egov.web.indexer.models.RequestContext;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.Collections;
-import java.util.List;
 
 public class CorrelationIdAwareRestTemplate extends RestTemplate {
 

@@ -38,16 +38,15 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.index.model;
-
+package org.egov.web.indexer.model;
 
 import java.util.Date;
 
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -55,79 +54,41 @@ import lombok.Setter;
 import lombok.ToString;
 
 @AllArgsConstructor
-@Builder
 @EqualsAndHashCode
 @Getter
 @NoArgsConstructor
 @Setter
 @ToString
-public class EmployeeAssignment {
+public class TechnicalQualification {
 
-	@JsonProperty("ulbname")
-	private String ulbName;
+	@NotNull
+	private Long id;
 
-	@JsonProperty("ulbcode")
-	private String ulbCode;
+	@NotNull
+	private Long employeeId;
 
-	@JsonProperty("distname")
-	private String distName;
+	@NotNull
+	private String skill;
 
-	@JsonProperty("regname")
-	private String regName;
-
-	@JsonProperty("ulbgrade")
-	private String ulbGrade;
-
-	@JsonProperty("employeeid")
-	private long employeeId;
-
-	@JsonProperty("employeecode")
-	private String employeeCode;
-
-	@JsonProperty("assignmentid")
-	private String assignmentId;
-
-	@JsonProperty("fund")
-	private String fund;
-
-	@JsonProperty("function")
-	private String function;
-
-	@JsonProperty("designation")
-	private String designation;
-
-	@JsonProperty("functionary")
-	private String functionary;
-
-	@JsonProperty("department")
-	private String department;
-
-	@JsonProperty("position")
-	private String position;
-
-	@JsonProperty("grade")
 	private String grade;
 
+	private Integer yearOfPassing;
+
+	private String remarks;
+
+	@NotNull
+	private Long createdBy;
+
+	@NotNull
 	@JsonFormat(pattern = "dd/MM/yyyy")
-	@JsonProperty("fromdate")
-	private Date fromDate;
+	private Date createdDate;
+
+	private Long lastModifiedBy;
 
 	@JsonFormat(pattern = "dd/MM/yyyy")
-	@JsonProperty("todate")
-	private Date todate;
+	private Date lastModifiedDate;
 
-	@JsonProperty("primaryassignment")
-	private String primaryAssignment;
-
-	@JsonProperty("headofdepartmentcode")
-	private String headOfDepartmentCode;
-
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	@JsonProperty("assignmentcreateddate")
-	private Date assignmentCreatedDate;
-
-	@JsonProperty("assignmentcreatedby")
-	private String assignmentCreatedBy;
-
+	@NotNull
+	private String tenantId;
 
 }

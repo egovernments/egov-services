@@ -1,4 +1,4 @@
-FROM egovio/apline-jre:8u121
+FROM egovio/openjdk:8-jre-headless
 
 MAINTAINER Malathi<malathi@egovernments.org>
 

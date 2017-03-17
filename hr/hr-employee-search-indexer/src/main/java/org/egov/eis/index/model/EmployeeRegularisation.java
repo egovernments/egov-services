@@ -2,8 +2,7 @@ package org.egov.eis.index.model;
 
 import java.util.Date;
 
-
-
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -48,6 +47,7 @@ public class EmployeeRegularisation {
 	@JsonProperty("regularisationdesignation")
 	private String regularisationDesignation;
 	
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	@JsonProperty("regularisationdeclareddate")
 	private Date regularisationDeclaredDate;
 	
@@ -57,9 +57,11 @@ public class EmployeeRegularisation {
 	@JsonProperty("regularisationremarks")
 	private String regularisationRemarks;
 
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	@JsonProperty("regularisationorderdate")
 	private Date regularisationOrderDate;
 
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	@JsonProperty("regularisationcreateddate")
 	private Date regularisationCreatedDate;
 

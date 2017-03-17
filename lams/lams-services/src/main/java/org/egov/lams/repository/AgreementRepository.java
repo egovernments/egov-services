@@ -181,7 +181,7 @@ public class AgreementRepository {
 		String url = null;
 		AllotteeResponse allotteeResponse = null;
 		try {
-			url = propertiesManager.getAllotteeServiceHostName() +"/"+ propertiesManager.getAllotteeServiceBasePAth()
+			url = propertiesManager.getAllotteeServiceHostName() + propertiesManager.getAllotteeServiceBasePAth()
 			+propertiesManager.getAllotteeServiceSearchPath();
 			UserSearchRequest userSearchRequest = new UserSearchRequest();
 			logger.info(url.toString());
@@ -208,7 +208,7 @@ public class AgreementRepository {
 		String url = null;
 		AssetResponse AssetResponse = null;
 		try {
-			url = propertiesManager.getAssetServiceHostName() +"/"+ propertiesManager.getAssetServiceBasePAth()
+			url = propertiesManager.getAssetServiceHostName() + propertiesManager.getAssetServiceBasePAth()
 					+ propertiesManager.getAssetServiceSearchPath() + "?" + queryString;
 			logger.info(url.toString());
 			AssetResponse = restTemplate.postForObject(url, new RequestInfo(), AssetResponse.class);

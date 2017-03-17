@@ -1,8 +1,8 @@
 package org.egov.user.web.contract;
 
+import org.egov.user.domain.model.Address;
+import org.egov.user.domain.model.Role;
 import org.egov.user.domain.model.User;
-import org.egov.user.persistence.entity.Address;
-import org.egov.user.persistence.entity.Role;
 import org.egov.user.domain.model.enums.*;
 import org.junit.Test;
 
@@ -16,7 +16,7 @@ public class UserRequestTest {
 
     @Test
     public void testEntityToContractConversion() throws Exception {
-        org.egov.user.persistence.entity.User userEntity = getUserEntity();
+        User userEntity = getUser();
         UserRequest userRequestContract = new UserRequest(userEntity);
 
         assertThat(userRequestContract.getId()).isEqualTo(userEntity.getId());
@@ -54,7 +54,7 @@ public class UserRequestTest {
         assertThat(userRequestContract.getRoles().get(1).getName()).isEqualTo("name of the role 2");
         assertThat(userRequestContract.getCreatedBy()).isEqualTo(1L);
         assertThat(userRequestContract.getCreatedDate()).isEqualTo(userEntity.getCreatedDate());
-        assertThat(userRequestContract.getLastModifiedBy()).isEqualTo(1L);
+        assertThat(userRequestContract.getLastModifiedBy()).isEqualTo(2L);
         assertThat(userRequestContract.getLastModifiedDate()).isEqualTo(userEntity.getLastModifiedDate());
     }
 
@@ -147,12 +147,12 @@ public class UserRequestTest {
                 .roles(roles);
     }
 
-    private org.egov.user.persistence.entity.User getUserEntity() {
+    private User getUser() {
         Calendar calendar = Calendar.getInstance();
         calendar.set(1990, Calendar.JULY, 1);
         Date date = calendar.getTime();
 
-        org.egov.user.persistence.entity.User userEntity = org.egov.user.persistence.entity.User.builder()
+        return User.builder()
                 .id(1L)
                 .username("userName")
                 .salutation("salutation")
@@ -177,19 +177,15 @@ public class UserRequestTest {
                 .bloodGroup(BloodGroup.A_POSITIVE)
                 .photo("3b26fb49-e43d-401b-899a-f8f0a1572de0")
                 .identificationMark("identification mark")
+                .createdBy(1L)
+                .createdDate(date)
+                .lastModifiedBy(2L)
+                .lastModifiedDate(date)
                 .build();
-
-        userEntity.setCreatedBy(userEntity);
-        userEntity.setCreatedDate(date);
-        userEntity.setLastModifiedBy(userEntity);
-        userEntity.setLastModifiedDate(date);
-
-        return userEntity;
     }
 
-    private List<org.egov.user.persistence.entity.Address> getAddressList() {
-        return asList(
-                org.egov.user.persistence.entity.Address.builder()
+    private List<Address> getAddressList() {
+        return asList(Address.builder()
                         .id(1L)
                         .type(AddressType.PERMANENT)
                         .houseNoBldgApt("house number 1")
@@ -224,34 +220,31 @@ public class UserRequestTest {
         );
     }
 
-    private Set<org.egov.user.persistence.entity.Role> getListOfRoles() {
-        org.egov.user.persistence.entity.User user = org.egov.user.persistence.entity.User.builder().id(0L).build();
+    private List<Role> getListOfRoles() {
+        User user = User.builder().id(0L).build();
         Calendar calendar = Calendar.getInstance();
         calendar.set(1990, Calendar.JULY, 1);
 
-        org.egov.user.persistence.entity.Role role1 = org.egov.user.persistence.entity.Role.builder()
+        Role role1 = Role.builder()
                 .id(1L)
                 .name("name of the role 1")
                 .description("description")
+                .createdBy(1L)
+                .createdDate(calendar.getTime())
+                .lastModifiedBy(1L)
+                .lastModifiedDate(calendar.getTime())
                 .build();
-        role1.setCreatedBy(user);
-        role1.setCreatedDate(calendar.getTime());
-        role1.setLastModifiedBy(user);
-        role1.setLastModifiedDate(calendar.getTime());
 
-        org.egov.user.persistence.entity.Role role2 = org.egov.user.persistence.entity.Role.builder()
+        Role role2 = Role.builder()
                 .id(2L)
                 .name("name of the role 2")
                 .description("description")
+                .createdBy(1L)
+                .createdDate(calendar.getTime())
+                .lastModifiedBy(1L)
+                .lastModifiedDate(calendar.getTime())
                 .build();
-        role2.setCreatedBy(user);
-        role2.setCreatedDate(calendar.getTime());
-        role2.setLastModifiedBy(user);
-        role2.setLastModifiedDate(calendar.getTime());
 
-        return new HashSet<Role>() {{
-            add(role1);
-            add(role2);
-        }};
+        return Arrays.asList(role1, role2);
     }
 }

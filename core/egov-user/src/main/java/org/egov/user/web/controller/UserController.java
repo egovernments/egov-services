@@ -1,7 +1,7 @@
 package org.egov.user.web.controller;
 
+import org.egov.user.domain.model.User;
 import org.egov.user.domain.service.UserService;
-import org.egov.user.persistence.entity.User;
 import org.egov.user.web.contract.*;
 import org.egov.user.web.contract.Error;
 import org.egov.user.web.contract.auth.SecureUser;
@@ -75,7 +75,7 @@ public class UserController {
 
     private UserDetailResponse createUser(@RequestBody CreateUserRequest createUserRequest,
                                           boolean validateUser) {
-        org.egov.user.domain.model.User user = createUserRequest.toDomain();
+        User user = createUserRequest.toDomain();
         final User newUser = userService.save(user, validateUser);
         return createResponse(newUser);
     }

@@ -13,16 +13,10 @@ import java.util.Date;
 @NoArgsConstructor
 public class Role {
     private Long id;
-
     private String name;
-
     private String description;
-
     private Long createdBy;
-
     private Date createdDate;
-
     private Long lastModifiedBy;
-
     private Date lastModifiedDate;
 }

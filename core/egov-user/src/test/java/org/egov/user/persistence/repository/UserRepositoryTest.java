@@ -1,8 +1,8 @@
 package org.egov.user.persistence.repository;
 
+import org.egov.user.domain.model.User;
 import org.egov.user.domain.model.UserSearch;
 import org.egov.user.persistence.entity.Role;
-import org.egov.user.persistence.entity.User;
 import org.egov.user.persistence.specification.UserSearchSpecificationFactory;
 import org.hamcrest.CustomMatcher;
 import org.junit.Test;
@@ -16,15 +16,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.*;
@@ -68,7 +63,9 @@ public class UserRepositoryTest {
     @Test
     public void test_get_user_by_userName() {
         User expectedUser = mock(User.class);
-        when(userJpaRepository.findByUsername("userName")).thenReturn(expectedUser);
+        final org.egov.user.persistence.entity.User entityUser = mock(org.egov.user.persistence.entity.User.class);
+        when(entityUser.toDomain()).thenReturn(expectedUser);
+        when(userJpaRepository.findByUsername("userName")).thenReturn(entityUser);
 
         User actualUser = userRepository.findByUsername("userName");
 
@@ -78,7 +75,9 @@ public class UserRepositoryTest {
     @Test
     public void test_get_user_by_emailId() {
         User expectedUser = mock(User.class);
-        when(userJpaRepository.findByEmailId("userName")).thenReturn(expectedUser);
+        final org.egov.user.persistence.entity.User entityUser = mock(org.egov.user.persistence.entity.User.class);
+        when(entityUser.toDomain()).thenReturn(expectedUser);
+        when(userJpaRepository.findByEmailId("userName")).thenReturn(entityUser);
 
         User actualUser = userRepository.findByEmailId("userName");
 
@@ -87,9 +86,11 @@ public class UserRepositoryTest {
 
     @Test
     public void test_should_save_entity_user() {
-        User expectedUser = mock(User.class);
-        when(userJpaRepository.save(any(User.class))).thenReturn(expectedUser);
-        final HashSet<org.egov.user.domain.model.Role> roles = new HashSet<>();
+        org.egov.user.persistence.entity.User entityUser = mock(org.egov.user.persistence.entity.User.class);
+        when(userJpaRepository.save(any(org.egov.user.persistence.entity.User.class))).thenReturn(entityUser);
+        final User expectedUser = mock(User.class);
+        when(entityUser.toDomain()).thenReturn(expectedUser);
+        final List<org.egov.user.domain.model.Role> roles = new ArrayList<>();
         final String roleName = "roleName1";
         roles.add(org.egov.user.domain.model.Role.builder().name(roleName).build());
         org.egov.user.domain.model.User domainUser = org.egov.user.domain.model.User.builder()
@@ -105,9 +106,9 @@ public class UserRepositoryTest {
 
     @Test
     public void test_should_set_encrypted_password_to_new_user() {
-        User expectedUser = mock(User.class);
-        when(userJpaRepository.save(any(User.class))).thenReturn(expectedUser);
-        final HashSet<org.egov.user.domain.model.Role> roles = new HashSet<>();
+        org.egov.user.persistence.entity.User expectedUser = mock(org.egov.user.persistence.entity.User.class);
+        when(userJpaRepository.save(any(org.egov.user.persistence.entity.User.class))).thenReturn(expectedUser);
+        final List<org.egov.user.domain.model.Role> roles = new ArrayList<>();
         final String roleName = "roleName1";
         roles.add(org.egov.user.domain.model.Role.builder().name(roleName).build());
         final String rawPassword = "rawPassword";
@@ -127,9 +128,9 @@ public class UserRepositoryTest {
 
     @Test
     public void test_should_save_new_user_when_enriched_roles() {
-        User expectedUser = mock(User.class);
-        when(userJpaRepository.save(any(User.class))).thenReturn(expectedUser);
-        final HashSet<org.egov.user.domain.model.Role> roles = new HashSet<>();
+        org.egov.user.persistence.entity.User expectedUser = mock(org.egov.user.persistence.entity.User.class);
+        when(userJpaRepository.save(any(org.egov.user.persistence.entity.User.class))).thenReturn(expectedUser);
+        final List<org.egov.user.domain.model.Role> roles = new ArrayList<>();
         final String roleName1 = "roleName1";
         final String roleName2 = "roleName2";
         roles.add(org.egov.user.domain.model.Role.builder().name(roleName1).build());
@@ -150,14 +151,14 @@ public class UserRepositoryTest {
 
     @Test
     public void test_search_user() {
-        Page<User> page = mock(Page.class);
-        User mockUserEntity = mock(User.class);
+        Page<org.egov.user.persistence.entity.User> page = mock(Page.class);
+        org.egov.user.persistence.entity.User mockUserEntity = mock(org.egov.user.persistence.entity.User.class);
         org.egov.user.domain.model.User mockUserModel = mock(org.egov.user.domain.model.User.class);
         when(mockUserEntity.toDomain()).thenReturn(mockUserModel);
-        List<User> listOfEntities = Collections.singletonList(mockUserEntity);
+        List<org.egov.user.persistence.entity.User> listOfEntities = Collections.singletonList(mockUserEntity);
         List<org.egov.user.domain.model.User> listOfModels = Collections.singletonList(mockUserModel);
         UserSearch userSearch = mock(UserSearch.class);
-        Specification<User> userSpecification = mock(Specification.class);
+        Specification<org.egov.user.persistence.entity.User> userSpecification = mock(Specification.class);
         when(userSearch.getPageNumber()).thenReturn(1);
         when(userSearch.getPageSize()).thenReturn(20);
         when(userSearch.getSort()).thenReturn(Arrays.asList("name", "userName", "unknownField", "fourthField"));
@@ -172,7 +173,7 @@ public class UserRepositoryTest {
         assertThat(listOfModels).isEqualTo(actualList);
     }
 
-    private class UserWithPasswordMatcher extends CustomMatcher<User> {
+    private class UserWithPasswordMatcher extends CustomMatcher<org.egov.user.persistence.entity.User> {
 
         private String expectedPassword;
 
@@ -183,12 +184,12 @@ public class UserRepositoryTest {
 
         @Override
         public boolean matches(Object o) {
-            final User actualUser = (User) o;
+            final org.egov.user.persistence.entity.User actualUser = (org.egov.user.persistence.entity.User) o;
             return expectedPassword.equals(actualUser.getPassword());
         }
     }
 
-    private class UserWithRolesMatcher extends CustomMatcher<User> {
+    private class UserWithRolesMatcher extends CustomMatcher<org.egov.user.persistence.entity.User> {
 
         private HashSet<Role> expectedRoles;
 
@@ -199,7 +200,7 @@ public class UserRepositoryTest {
 
         @Override
         public boolean matches(Object o) {
-            final User acutalUser = (User) o;
+            final org.egov.user.persistence.entity.User acutalUser = (org.egov.user.persistence.entity.User) o;
             return expectedRoles.equals(acutalUser.getRoles());
         }
     }

@@ -3,9 +3,9 @@ package org.egov.user.domain.service;
 import org.egov.user.domain.exception.DuplicateUserNameException;
 import org.egov.user.domain.exception.InvalidUserException;
 import org.egov.user.domain.exception.OtpValidationPendingException;
+import org.egov.user.domain.model.Role;
+import org.egov.user.domain.model.User;
 import org.egov.user.domain.model.UserSearch;
-import org.egov.user.persistence.entity.Role;
-import org.egov.user.persistence.entity.User;
 import org.egov.user.domain.model.enums.Gender;
 import org.egov.user.domain.model.enums.UserType;
 import org.egov.user.persistence.repository.OtpRepository;
@@ -75,7 +75,7 @@ public class UserServiceTest {
     public void test_should_save_a_valid_user() throws Exception {
         org.egov.user.domain.model.User domainUser = validDomainUser();
         when(otpRepository.isOtpValidationComplete(domainUser)).thenReturn(true);
-        final User expectedEntityUser = new User();
+        final User expectedEntityUser = User.builder().build();
         when(userRepository.save(domainUser)).thenReturn(expectedEntityUser);
 
         User returnedUser = userService.save(domainUser, Boolean.TRUE);
@@ -124,8 +124,7 @@ public class UserServiceTest {
     }
 
     private org.egov.user.domain.model.User validDomainUserWithRole() {
-        Role role = new Role();
-        role.setName("CITIZEN");
+        Role role = Role.builder().name("CITIZEN").build();
         Set<Role> roles = new HashSet<>();
         roles.add(role);
         return getUserBuilder().build();

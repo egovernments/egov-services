@@ -3,9 +3,10 @@ package org.egov.user.web.contract;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
+import org.egov.user.domain.model.Address;
+import org.egov.user.domain.model.Role;
 import org.egov.user.domain.model.User;
 import org.egov.user.domain.model.enums.*;
-import org.egov.user.persistence.entity.Address;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -62,7 +63,7 @@ public class UserRequest {
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "IST")
     private Date pwdExpiryDate;
 
-    public UserRequest(org.egov.user.persistence.entity.User user) {
+    public UserRequest(User user) {
 
         this.id = user.getId();
         this.userName = user.getUsername();
@@ -84,9 +85,9 @@ public class UserRequest {
         this.bloodGroup = user.getBloodGroup() != null ? user.getBloodGroup().getValue() : null;
         this.photo = user.getPhoto();
         this.identificationMark = user.getIdentificationMark();
-        this.createdBy = user.getCreatedBy() != null ? user.getCreatedBy().getId() : null;
+        this.createdBy = user.getCreatedBy();
         this.createdDate = user.getCreatedDate();
-        this.lastModifiedBy = user.getLastModifiedBy() != null ? user.getLastModifiedBy().getId() : null;
+        this.lastModifiedBy = user.getLastModifiedBy();
         this.lastModifiedDate = user.getLastModifiedDate();
 
         this.roles = convertRoleEntitiesToContract(user.getRoles());
@@ -101,7 +102,7 @@ public class UserRequest {
     private void convertAndSetAddressesToContract(List<Address> addresses) {
         if (addresses == null) return;
 
-        Optional<org.egov.user.persistence.entity.Address> permanentAddress =
+        Optional<Address> permanentAddress =
                 getAddressOfType(addresses, AddressType.PERMANENT);
         Optional<Address> correspondenceAddress = getAddressOfType(addresses, AddressType.CORRESPONDENCE);
         permanentAddress.ifPresent(address -> {
@@ -154,9 +155,9 @@ public class UserRequest {
         return formatter.toString();
     }
 
-    private List<RoleRequest> convertRoleEntitiesToContract(Set<org.egov.user.persistence.entity.Role> roleEntities) {
-        if (roleEntities == null) return new ArrayList<>();
-        return roleEntities.stream().map(RoleRequest::new).collect(Collectors.toList());
+    private List<RoleRequest> convertRoleEntitiesToContract(List<Role> domainRoles) {
+        if (domainRoles == null) return new ArrayList<>();
+        return domainRoles.stream().map(RoleRequest::new).collect(Collectors.toList());
     }
 
     private boolean isGuardianRelationFatherOrHusband(GuardianRelation guardianRelation) {
@@ -166,12 +167,10 @@ public class UserRequest {
     }
 
     User toDomain() {
-        org.egov.user.domain.model.Role role = org.egov.user.domain.model.Role.builder()
+        Role role = Role.builder()
                 .name(String.valueOf(type)).build();
-        Set<org.egov.user.domain.model.Role> roles = new HashSet<>();
-        roles.add(role);
         return forDomain()
-                .roles(roles)
+                .roles(Collections.singletonList(role))
                 .build();
     }
 
@@ -201,6 +200,12 @@ public class UserRequest {
                 .otpReference(this.otpReference)
                 .tenantId(this.tenantId)
                 .password(this.password)
-                .roles(this.roles != null ? this.roles.stream().map(RoleRequest::toDomain).collect(Collectors.toSet()) : null);
+                .roles(toDomainRoles());
+    }
+
+    private List<Role> toDomainRoles() {
+        return this.roles != null
+                ? this.roles.stream().map(RoleRequest::toDomain).collect(Collectors.toList())
+                : null;
     }
 }

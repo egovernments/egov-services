@@ -26,9 +26,10 @@ class CreateAsset extends React.Component {
      "width": "",
      "totalArea": "",
      "properties": {}
-     },assetCategories:[],locality:[],electionwards:[],departments:[],acquisitionList:[],zoneList:[],streetList:[],WardList:[]}
+   },assetCategories:[],locality:[],electionwards:[],departments:[],acquisitionList:[],zoneList:[],streetList:[],WardList:[],blockList:[]}
     this.handleChange=this.handleChange.bind(this);
     this.handleChangeTwoLevel=this.handleChangeTwoLevel.bind(this);
+    this.addOrUpdate=this.addOrUpdate.bind(this);
 
   }
   close(){
@@ -48,15 +49,47 @@ class CreateAsset extends React.Component {
 
   }
 
+  addOrUpdate(e){
+        e.preventDefault();
+        console.log(zone);
+        console.log(this.state.assetSet);
+        this.setState({assetSet:{
+         "tenantId": "",
+         "name": "",
+         "department": "",
+         "assetCategory": "",
+         "assetDetails": "",
+         "modeOfAcquisition": "",
+         "status": "",
+         "description": "",
+         "dateOfCreation": "",
+         "locationDetails": {
+           "locality": "",
+           "zone": "",
+           "revenueWard": "",
+           "block": "",
+           "street": "",
+           "electionWard": "",
+           "doorNo": "",
+           "pinCode": ""
+         },
+         "remarks": "",
+         "length": "",
+         "width": "",
+         "totalArea": "",
+         "properties": {}
+       } })
+    }
+
+
   handleChangeTwoLevel(e,pName,name)
   {
-
       this.setState({
           assetSet:{
               ...this.state.assetSet,
               [pName]:{
                 ...this.state.assetSet[pName],
-                name:e.target.value
+                [name]:e.target.value
               }
           }
       })
@@ -65,13 +98,13 @@ class CreateAsset extends React.Component {
 
   componentDidMount()
   {
-    //console.log(commonApiGet("asset","","GET_MODE_OF_ACQUISITION",{}).responseJSON);
+    //console.log(commonApiGet("asset-services","","GET_MODE_OF_ACQUISITION",{}).responseJSON);
 
 
      this.setState({
-      assetCategories:commonApiPost("asset","assetCategories","_search",{}).responseJSON["AssetCategory"],
+      assetCategories:commonApiPost("asset-services","assetCategories","_search",{}).responseJSON["AssetCategory"],
       departments:commonApiPost("egov-common-masters","departments","_search",{tenantId}).responseJSON["Department"],
-      //acquisitionList:getCommonMaster("asset","GET_MODE_OF_ACQUISITION","",{}).responseJSON,
+      acquisitionList:commonApiGet("asset-services","","GET_MODE_OF_ACQUISITION",{}).responseJSON || [],
       locality:commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"LOCALITY",hierarchyTypeName:"LOCATION"}).responseJSON["Boundary"],
       electionwards:commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"WARD",hierarchyTypeName:"ADMINISTRATION"}).responseJSON["Boundary"],
       zoneList:commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"ZONE",hierarchyTypeName:"REVENUE"}).responseJSON["Boundary"],
@@ -82,25 +115,37 @@ class CreateAsset extends React.Component {
   }
 
   render() {
-    let {handleChange,search,updateTable,handleSelectChange}=this;
+    let {handleChange,addOrUpdate,handleChangeTwoLevel}=this;
     let {isSearchClicked,list}=this.state;
-    let {locality,doorNo,assetCategory,name,pinCode,street,electionWard,dateOfCreation,assetAddress,zone,area,code,department,modeOfAcquisition,length,width,revenueWard}=this.state.assetSet;
+    let {assetCategory,locationDetails,locality,doorNo,name,pinCode,street,electionWard,dateOfCreation,assetAddress,block,zone,totalArea,code,department,assetDetails,modeOfAcquisition,length,width,revenueWard}=this.state.assetSet;
 
     const renderOption=function(list)
     {
         if(list)
         {
-            return list.map((item)=>
-            {
-                return (<option key={item.id} value={item.id}>
-                        {item.name}
+            if (list.length) {
+              return list.map((item)=>
+              {
+                  return (<option key={item.id} value={item.id}>
+                          {item.name}
+                    </option>)
+              })
+
+            } else {
+              return Object.keys(list).map((k, index)=>
+              {
+                return (<option key={index} value={k}>
+                        {list[k]}
                   </option>)
-            })
+
+               })
+            }
+
         }
     }
     return (
       <div>
-        <form onSubmit={(e)=>{addorUpdate(e)}}>
+        <form onSubmit={(e)=>{addOrUpdate(e)}}>
               <div className="form-section-inner">
                 <div className="row">
                   <div className="col-sm-6">
@@ -110,7 +155,7 @@ class CreateAsset extends React.Component {
                       </div>
                       <div className="col-sm-6">
                         <input id="name" name="name"  id="name" value={name} type="text"
-                          onChange={(e)=>{handleChange(e,"name")}} />
+                          onChange={(e)=>{handleChange(e,"name")}} required/>
                       </div>
                     </div>
                   </div>
@@ -157,10 +202,10 @@ class CreateAsset extends React.Component {
                 </div>
                 <div className="col-sm-6">
                 <div className="styled-select">
-                <select id="modeOfAcquisition" name="modeOfAcquisition" required="true" value={modeOfAcquisition} onChange={(e)=>{
+                <select id="modeOfAcquisition" name="modeOfAcquisition"  value={modeOfAcquisition} onChange={(e)=>{
                         handleChange(e,"modeOfAcquisition")
                     }}>
-                      <option>Select Department</option>
+                      <option>Select Acquisition</option>
                       {renderOption(this.state.acquisitionList)}
                    </select>
                 </div>
@@ -189,11 +234,11 @@ class CreateAsset extends React.Component {
                 <div className="col-sm-6">
                 <div className="row">
                 <div className="col-sm-6 label-text">
-                  <label for="assetAddress">Asset Details</label>
+                  <label for="assetDetails">Asset Details</label>
                 </div>
                 <div className="col-sm-6">
-                  <textarea id="assetAddress" name="assetAddress" value= {assetAddress}
-                  onChange={(e)=>{handleChange(e,"assetAddress")}}></textarea>
+                  <textarea id="assetDetails" name="assetDetails" value= {assetDetails}
+                  onChange={(e)=>{handleChange(e,"assetDetails")}}></textarea>
                 </div>
                 </div>
                 </div>
@@ -206,7 +251,7 @@ class CreateAsset extends React.Component {
                   <label for="length">Length  </label>
                 </div>
                 <div className="col-sm-6">
-                  <input id="length" name="length" type="text" value= {length}
+                  <input id="length" name="length" type="number" value= {length}
                   onChange={(e)=>{handleChange(e,"length")}}/>
                 </div>
                 </div>
@@ -228,11 +273,11 @@ class CreateAsset extends React.Component {
                 <div className="col-sm-6">
                 <div className="row">
                 <div className="col-sm-6 label-text">
-                <label for="area">Total Area  </label>
+                <label for="totalArea">Total Area  </label>
                 </div>
                 <div className="col-sm-6">
-                <input type="number" id="area" name="area" value= {width}
-                onChange={(e)=>{handleChange(e,"area")}}/>
+                <input type="number" id="totalArea" name="totalArea" value= {totalArea}
+                onChange={(e)=>{handleChange(e,"totalArea")}}/>
                 </div>
                 </div>
                 </div>
@@ -251,8 +296,8 @@ class CreateAsset extends React.Component {
                   </div>
                   <div className="col-sm-6">
                   <div className="styled-select">
-                  <select id="locality" name="locality" value={locality}
-                    onChange={(e)=>{  handleChange(e,"locality")}}>
+                  <select id="locality" name="locality" required="true" value={locality}
+                    onChange={(e)=>{  handleChangeTwoLevel(e,"locationDetails","locality")}}>
                     <option value="">Choose locality</option>
                     {renderOption(this.state.locality)}
 
@@ -269,9 +314,9 @@ class CreateAsset extends React.Component {
                      </div>
                       <div className="col-sm-6">
                       <div className="styled-select">
-                      <select id="revenueWard" name="revenueWard" value={revenueWard}
-                        onChange={(e)=>{  handleChange(e,"revenueWard")}}>
-                        <option value="">Choose locality</option>
+                      <select id="revenueWard" name="revenueWard" required="true" value={revenueWard}
+                        onChange={(e)=>{  handleChangeTwoLevel(e,"locationDetails","revenueWard")}}>
+                        <option value="">Choose RevenueWard</option>
                         {renderOption(this.state.WardList)}
 
                       </select>
@@ -284,13 +329,13 @@ class CreateAsset extends React.Component {
                             <div className="col-sm-6">
                             <div className="row">
                             <div className="col-sm-6 label-text">
-                                <label for="shopAreaUom"> Block Number  </label>
+                                <label for="block"> Block Number  </label>
                             </div>
                             <div className="col-sm-6">
                             <div className="styled-select">
-                            <select id="block" name="block" value={locality}
-                              onChange={(e)=>{  handleChange(e,"block")}}>
-                              <option value="">Choose locality</option>
+                            <select id="block" name="block" value={block}
+                              onChange={(e)=>{  handleChangeTwoLevel(e,"locationDetails","block")}}>
+                              <option value="">Choose Block</option>
                               {renderOption(this.state.blockList)}
 
                             </select>
@@ -302,13 +347,13 @@ class CreateAsset extends React.Component {
                             <div className="col-sm-6">
                             <div className="row">
                             <div className="col-sm-6 label-text">
-                                  <label for="shopAreaUom"> Street  </label>
+                                  <label for="street"> Street  </label>
                             </div>
                             <div className="col-sm-6">
                             <div className="styled-select">
                             <select id="street" name="street" value={street}
-                              onChange={(e)=>{  handleChange(e,"street")}}>
-                              <option value="">Choose locality</option>
+                              onChange={(e)=>{  handleChangeTwoLevel(e,"locationDetails","street")}}>
+                              <option value="">Choose Street</option>
                               {renderOption(this.state.streetList)}
 
                             </select>
@@ -327,7 +372,7 @@ class CreateAsset extends React.Component {
                                   <div className="col-sm-6">
                                   <div className="styled-select">
                                   <select id="electionWard" name="electionWard" value={electionWard}
-                                    onChange={(e)=>{ handleChange(e,"electionWard")}}>
+                                    onChange={(e)=>{ handleChangeTwoLevel(e,"locationDetails","electionWard")}}>
                                   <option value="">Choose Election Wards</option>
                                   {renderOption(this.state.electionwards)}
                                   </select>
@@ -343,7 +388,7 @@ class CreateAsset extends React.Component {
                                 </div>
                                 <div className="col-sm-6">
                                 <input type="text" name="doorNo" id= "doorNo" value= {doorNo}
-                                onChange={(e)=>{handleChange(e,"doorNo")}}/>
+                                onChange={(e)=>{handleChangeTwoLevel(e,"locationDetails","doorNo")}}/>
                                 </div>
                                 </div>
                                 </div>
@@ -358,8 +403,8 @@ class CreateAsset extends React.Component {
                                   <div className="col-sm-6">
                                   <div className="styled-select">
                                   <select id="zone" name="zone" value={zone}
-                                    onChange={(e)=>{ handleChange(e,"zone")}}>
-                                  <option value="">Choose Election Wards</option>
+                                    onChange={(e)=>{ handleChangeTwoLevel(e,"locationDetails","zone")}}>
+                                  <option value="">Choose Zone Number</option>
                                   {renderOption(this.state.zoneList)}
                                   </select>
                                   </div>
@@ -373,8 +418,8 @@ class CreateAsset extends React.Component {
                                         <label for="pin">PIN No.</label>
                                   </div>
                                   <div className="col-sm-6">
-                                        <input type="number" name="pinCode" id="pinCode" value= {pinCode}
-                                        onChange={(e)=>{handleChange(e,"pinCode")}}/>
+                                        <input type="number" name="pinCode" id="pinCode" value={pinCode}
+                                        onChange={(e)=>{handleChangeTwoLevel(e,"locationDetails","pinCode")}}/>
 
                                   </div>
                                   </div>

@@ -16,8 +16,8 @@ class AssetSearch extends React.Component {
   {
     e.preventDefault();
     //call api call
-     var list=commonApiPost("asset","","_search",this.state.searchSet).responseJSON["Assets"];
-      console.log(commonApiPost("asset","","_search",this.state.searchSet).responseJSON["Assets"]);
+     var list=commonApiPost("asset-services","","_search",this.state.searchSet).responseJSON["Assets"];
+      console.log(commonApiPost("asset-services","","_search",this.state.searchSet).responseJSON["Assets"]);
     this.setState({
       isSearchClicked:true,
       list
@@ -38,10 +38,10 @@ class AssetSearch extends React.Component {
 
   componentDidMount()
   {
-   console.log(commonApiPost("asset","assetCategories","_search",{}).responseJSON["AssetCategory"]);
+   console.log(commonApiPost("asset-services","assetCategories","_search",{}).responseJSON["AssetCategory"]);
 
      this.setState({
-      assetCategories:commonApiPost("asset","assetCategories","_search",{}).responseJSON["AssetCategory"],
+      assetCategories:commonApiPost("asset-services","assetCategories","_search",{}).responseJSON["AssetCategory"],
       locality:commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"LOCALITY",hierarchyTypeName:"LOCATION"}).responseJSON["Boundary"],
       electionwards:commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"WARD",hierarchyTypeName:"ADMINISTRATION"}).responseJSON["Boundary"]
     })
@@ -155,7 +155,7 @@ class AssetSearch extends React.Component {
       {
             return (<tr key={index}>
               <td>{index+1}</td>
-                                <td>{item.assetCategory.assetCategoryType?item.assetCategory.assetCategoryType:"Null"}</td>
+                                <td>{item.assetCategory.name}</td>
                                 <td>{item.name}</td>
                                 <td>{item.code}</td>
                                 <td>{item.locationDetails.electionWard}</td>
@@ -212,11 +212,11 @@ class AssetSearch extends React.Component {
                       <div className="col-sm-6">
                           <div className="row">
                               <div className="col-sm-6 label-text">
-                                  <label for="">Asset Code </label>
+                                  <label for="">Asset Code <span> *</span></label>
                               </div>
                               <div className="col-sm-6">
                                       <input type="text" name="code" id="code" value={code}
-                                      onChange={(e)=>{handleChange(e,"code")}} />
+                                      onChange={(e)=>{handleChange(e,"code")}} required/>
                               </div>
                           </div>
                         </div>

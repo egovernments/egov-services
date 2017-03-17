@@ -1,4 +1,4 @@
-FROM egovio/openjdk:8-jre-headless
+FROM egovio/apline-jre:8u121
 
 EXPOSE 8088
 

@@ -3,9 +3,9 @@ package org.egov.user.web.controller;
 import org.apache.commons.io.IOUtils;
 import org.egov.user.domain.exception.InvalidUserException;
 import org.egov.user.domain.exception.OtpValidationPendingException;
+import org.egov.user.domain.model.Role;
+import org.egov.user.domain.model.User;
 import org.egov.user.domain.service.UserService;
-import org.egov.user.persistence.entity.Role;
-import org.egov.user.persistence.entity.User;
 import org.egov.user.domain.model.enums.BloodGroup;
 import org.egov.user.domain.model.enums.Gender;
 import org.egov.user.domain.model.enums.UserType;
@@ -35,13 +35,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class UserRequestControllerTest {
 
     @Autowired
-    MockMvc mockMvc;
+    private MockMvc mockMvc;
 
     @MockBean
-    PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
 
     @MockBean
-    UserService userService;
+    private UserService userService;
 
     @Test
     @WithMockUser
@@ -77,7 +77,8 @@ public class UserRequestControllerTest {
     @Test
     @WithMockUser
     public void testShouldThrowErrorWhileRegisteringWithPendingOtpValidation() throws Exception {
-        OtpValidationPendingException exception = new OtpValidationPendingException(org.egov.user.domain.model.User.builder().build());
+        OtpValidationPendingException exception = new OtpValidationPendingException(org.egov.user.domain.model.User
+                .builder().build());
         when(userService.save(any(org.egov.user.domain.model.User.class), eq(Boolean.TRUE))).thenThrow(exception);
 
         String fileContents = getFileContents("createValidatedCitizenSuccessRequest.json");
@@ -98,35 +99,37 @@ public class UserRequestControllerTest {
         Date createdDate = c.getTime();
         c.set(2018, Calendar.FEBRUARY, 8, 11, 15, 36);
         Date pwdExpiryDate = c.getTime();
-        Role role = new Role(12L, "CITIZEN", "Citizen role");
-        Set<Role> roles = new HashSet<>();
+        Role role = Role.builder()
+                .id(12L)
+                .name("CITIZEN")
+                .description("Citizen role")
+                .build();
+        List<Role> roles = new ArrayList<>();
         roles.add(role);
-        User createdBy = new User();
-        createdBy.setId(22L);
-        User user = new User();
-        user.setId(12L);
-        user.setName("Jamaal Bhai");
-        user.setUsername("jamaalbhai");
-        user.setSalutation("dawakhana@charminar");
-        user.setGender(Gender.MALE);
-        user.setMobileNumber("9988776655");
-        user.setEmailId("jamalbhai@maildrop.cc");
-        user.setPan("AITGC5624P");
-        user.setAadhaarNumber("96a70a9a-03bd-11e7-93ae-92361f002671");
-        user.setActive(Boolean.TRUE);
-        user.setDob(dateOfBirth);
-        user.setPwdExpiryDate(pwdExpiryDate);
-        user.setLocale("en_IN");
-        user.setType(UserType.CITIZEN);
-        user.setAccountLocked(Boolean.FALSE);
-        user.setBloodGroup(BloodGroup.O_POSITIVE);
-        user.setIdentificationMark("Head is missing on the body");
-        user.setCreatedDate(createdDate);
-        user.setLastModifiedDate(createdDate);
-        user.setCreatedBy(createdBy);
-        user.setLastModifiedBy(createdBy);
-        user.setRoles(roles);
-        return user;
+        return User.builder()
+                .id(12L)
+                .name("Jamaal Bhai")
+                .username("jamaalbhai")
+                .salutation("dawakhana@charminar")
+                .gender(Gender.MALE)
+                .mobileNumber("9988776655")
+                .emailId("jamalbhai@maildrop.cc")
+                .pan("AITGC5624P")
+                .aadhaarNumber("96a70a9a-03bd-11e7-93ae-92361f002671")
+                .active(Boolean.TRUE)
+                .dob(dateOfBirth)
+                .pwdExpiryDate(pwdExpiryDate)
+                .locale("en_IN")
+                .type(UserType.CITIZEN)
+                .accountLocked(Boolean.FALSE)
+                .bloodGroup(BloodGroup.O_POSITIVE)
+                .identificationMark("Head is missing on the body")
+                .createdDate(createdDate)
+                .lastModifiedDate(createdDate)
+                .createdBy(22L)
+                .lastModifiedBy(22L)
+                .roles(roles)
+                .build();
     }
 
     private String getFileContents(String fileName) {

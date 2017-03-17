@@ -40,7 +40,6 @@
 
 package org.egov.user.persistence.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedBy;
@@ -60,8 +59,7 @@ public abstract class AbstractAuditable extends AbstractPersistable<Long> {
 
 	private static final long serialVersionUID = -3061749263902787420L;
 
-	@JsonIgnore
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "createdby")
 	@CreatedBy
 	private User createdBy;
@@ -71,8 +69,7 @@ public abstract class AbstractAuditable extends AbstractPersistable<Long> {
 	@Column(name = "createddate")
 	private Date createdDate;
 
-	@JsonIgnore
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "lastmodifiedby")
 	@LastModifiedBy
 	private User lastModifiedBy;

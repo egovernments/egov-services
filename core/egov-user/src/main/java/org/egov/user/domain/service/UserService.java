@@ -2,8 +2,8 @@ package org.egov.user.domain.service;
 
 import org.egov.user.domain.exception.DuplicateUserNameException;
 import org.egov.user.domain.exception.OtpValidationPendingException;
+import org.egov.user.domain.model.User;
 import org.egov.user.domain.model.UserSearch;
-import org.egov.user.persistence.entity.User;
 import org.egov.user.persistence.repository.OtpRepository;
 import org.egov.user.persistence.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -30,14 +30,14 @@ public class UserService {
         return userRepository.findByEmailId(emailId);
     }
 
-    public User save(org.egov.user.domain.model.User user, boolean ensureOtpValidation) {
+    public User save(User user, boolean ensureOtpValidation) {
         user.validate();
         validateOtp(user, ensureOtpValidation);
         validateDuplicateUserName(user);
         return persistNewUser(user);
     }
 
-    private void validateDuplicateUserName(org.egov.user.domain.model.User user) {
+    private void validateDuplicateUserName(User user) {
         if( userRepository.isUserPresent(user.getUsername())) {
             throw new DuplicateUserNameException(user);
         }
@@ -47,11 +47,11 @@ public class UserService {
         return userRepository.findAll(userSearch);
     }
 
-    private User persistNewUser(org.egov.user.domain.model.User user) {
+    private User persistNewUser(User user) {
         return userRepository.save(user);
     }
 
-    private void validateOtp(org.egov.user.domain.model.User user, boolean ensureOtpValidation) {
+    private void validateOtp(User user, boolean ensureOtpValidation) {
         if (ensureOtpValidation && !otpRepository.isOtpValidationComplete(user))
             throw new OtpValidationPendingException(user);
     }

@@ -40,7 +40,129 @@ paths:
             description: Invalid Input
             schema:
               $ref: '#/definitions/ErrorResponse'
-
+    /process/_search:
+      post:
+        summary: Get the details  of a process
+        description: | 
+          This must be called before any update to get necessary data . Incase of Workflow matrix based
+          implementation this api provides "validactions" a set of operation that can be performed by a
+          user in the current state. Also this api provides information on what is the "nextaction" 
+          to be performed. 
+        tags: 
+          - Task
+        parameters:
+          - name: requestInfo
+            in: body
+            description: Common Request info for the Services
+            schema:
+              $ref: '#/definitions/RequestInfo'
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: id
+            type: string
+            in: query
+            description: |
+              Id of the process instance which is returned from the process/_start api
+        responses:
+          200:
+            description: Process retrieved Successfully
+            schema:
+              $ref: '#/definitions/ProcessInstanceResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+    /designations/_search:
+      post:
+        summary: Get the allowed designations
+        description: | 
+          this api provides the list of designation configured for the current state of the process. 
+          All the properties are mandatory but can be null. This is kept not to miss any of the
+           additional properties getting missed. 
+        tags: 
+          - designation
+        parameters:
+          - name: requestInfo
+            in: body
+            description: Common Request info for the Services
+            schema:
+              $ref: '#/definitions/RequestInfo'
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: id
+            type: string
+            in: query
+            description: |
+              Id of the process instance which is returned from the process/_start api
+          - name: departmentRule
+            in: query
+            required: true
+            type: string
+            description: |
+              Any department rule applicable for this state of the workflow item
+          - name: currentStatus
+            in: query
+            required: true
+            type: string
+            description: |
+              currentstatus of the workflow item got from /process/_search api
+          - name: businessKey
+            in: query
+            required: true
+            type: string
+            description: |
+             businessKey of the process
+          - name: amountRule
+            in: query
+            required: true
+            type: number
+            format: double
+            description: |
+              If amount rule is configured pass the amount in this field
+          - name: additionalRule
+            in: query
+            required: true
+            type: string
+            description: |
+              If additional rule is configured pass the in this field
+          - name: pendingAction
+            in: query
+            required: true
+            type: string
+            description: |
+              pendingAction of the workflow item got from /process/_search api
+          - name: approvalDepartmentName
+            in: query
+            required: true
+            type: string
+            format: double
+            description: |
+             name of the department. Designations will be fetched which are mapped to the department in the workflow matrix 
+          - name: designation
+            in: query
+            required: true
+            type: string
+            format: double
+            description: |
+              selected designation of .
+        responses:
+          200:
+            description: Process retrieved Successfully
+            schema:
+              $ref: '#/definitions/ProcessInstanceResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'              
+        
     /tasks/_search:
       post:
         summary: Get the list of tasks
@@ -164,7 +286,7 @@ paths:
     /tasks/{id}/_update:
       post:
         summary: Update any of the tasks
-        description: Update any of the tasks
+        description: Update any of the tasks . This one api lets you to complete the workflow by specifying the status and action 
         tags: 
           - Task
         parameters:
@@ -249,12 +371,17 @@ definitions:
           $ref: "#/definitions/Position"
         state:
           type: string
-          description: state of the Task
-          maxLength: 128
-          minLength: 1
+          description: | 
+            state of the Task. This is internal to the system . This can be used to fetch inprogress or completed tasks.
+            enum:
+             - STARTED
+             - INPROGRESS
+             - ENDED
         status:
           type: string
-          description: status of the Task
+          description: |
+            This is also set internal. This field denotes the 
+            status of the workflow item . Also this must be provided in case of update task. This detail can be fetched from /process/_search api
           maxLength: 128
           minLength: 1
         url:
@@ -264,12 +391,13 @@ definitions:
           minLength: 1
         action:
           type: string
-          description: action of the Task
+          description: |
+            action represents the action done by the user like create,forward,approve,or cancel. this field data is mandatory in case of task update .
           maxLength: 128
           minLength: 1
         senderName:
           type: string
-          description: sender name of the Task
+          description: sender name of the Task. This is internally set which is decided by logged in user.
           maxLength: 128
           minLength: 1
         extraInfo:

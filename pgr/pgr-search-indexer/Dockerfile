@@ -1,4 +1,4 @@
-FROM egovio/openjdk:8-jre-headless
+FROM egovio/apline-jre:8u121
 
 MAINTAINER Malathi<malathi@egovernments.org>
 
@@ -16,9 +16,11 @@ ENV DB_NAME=mydb \
 # "mvn clean package"
 COPY /target/pgr-search-indexer-0.0.1-SNAPSHOT.jar /opt/egov/pgr-search-indexer.jar
 
-# launch standalone webapp
-CMD ["java","-jar", "/opt/egov/pgr-search-indexer.jar"]
-#CMD ["java", "-Xdebug", "-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8787", "-jar", "/opt/egov/egov-search-indexer.jar"]
+COPY start.sh /usr/bin/start.sh
+
+RUN chmod +x /usr/bin/start.sh
+
+CMD ["/usr/bin/start.sh"]
 
 # NOTE: the two 'RUN' commands can probably be combined inside of a single
 # script (i.e. RUN build-and-install-app.sh) so that we can also clean up the

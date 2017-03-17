@@ -36,26 +36,26 @@ public class AgreementRepository {
 
 	@Autowired
 	RestTemplate restTemplate;
-	
+
 	@Autowired
 	AssetHelper assetHelper;
 
 	@Autowired
 	AllotteeHelper allotteeHelper;
-	
+
 	@Autowired
 	AgreementHelper agreementHelper;
 
 	/**
-	 * Allottee criteria is on name or mobile number which is expected to return 1 or 2 records.
-	 * With this, we make the agreementQuery. so, the result set also is like 1 or 2 records.
-	 * Then, we get all the assets for given asset criteria in a list and then
-	 * filter agreement results based on the asset. 
+	 * Allottee criteria is on name or mobile number which is expected to return
+	 * 1 or 2 records. With this, we make the agreementQuery. so, the result set
+	 * also is like 1 or 2 records. Then, we get all the assets for given asset
+	 * criteria in a list and then filter agreement results based on the asset.
 	 */
 	public List<Agreement> findByAllotee(AgreementCriteria agreementCriteria) {
 		List<Object> preparedStatementValues = new ArrayList<Object>();
 		List<Agreement> agreements = null;
-		
+
 		List<Allottee> allottees = getAllottees(agreementCriteria);
 		agreementCriteria.setAllottee(allotteeHelper.getAllotteeIdList(allottees));
 		String queryStr = AgreementQueryBuilder.agreementQueryBuilder(agreementCriteria, preparedStatementValues);
@@ -66,14 +66,15 @@ public class AgreementRepository {
 			// FIXME see if it can be better than RunTimeException rethrown
 			throw new RuntimeException(e.getMessage());
 		}
-		if (agreements.isEmpty()) 
+		if (agreements.isEmpty())
 			return agreements; // empty agreement list is returned
-			//throw new RuntimeException("The criteria provided did not match any agreements");
+		// throw new RuntimeException("The criteria provided did not match any
+		// agreements");
 		agreementCriteria.setAsset(assetHelper.getAssetIdListByAgreements(agreements));
-		
+
 		List<Asset> assets = getAssets(agreementCriteria);
 		agreements = agreementHelper.filterAndEnrichAgreements(agreements, allottees, assets);
-		
+
 		return agreements;
 	}
 
@@ -81,19 +82,19 @@ public class AgreementRepository {
 		logger.info("AgreementController SearchAgreementService AgreementRepository : inside findByAsset");
 		List<Object> preparedStatementValues = new ArrayList<Object>();
 		List<Agreement> agreements = null;
-		
+
 		List<Asset> assets = getAssets(agreementCriteria);
 		if (assets.size() > 1000) // FIXME
 			throw new RuntimeException("Asset criteria is too big");
 		agreementCriteria.setAsset(assetHelper.getAssetIdList(assets));
 		String queryStr = AgreementQueryBuilder.agreementQueryBuilder(agreementCriteria, preparedStatementValues);
-		try{
+		try {
 			agreements = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), new AgreementRowMapper());
-		}catch (DataAccessException e) {
+		} catch (DataAccessException e) {
 			// FIXME log exception
 			throw new RuntimeException(e.getMessage());
 		}
-		if(agreements.isEmpty()) 
+		if (agreements.isEmpty())
 			return agreements;
 		agreementCriteria.setAllottee(allotteeHelper.getAllotteeIdListByAgreements(agreements));
 		List<Allottee> allottees = getAllottees(agreementCriteria);
@@ -106,44 +107,44 @@ public class AgreementRepository {
 		logger.info("AgreementController SearchAgreementService AgreementRepository : inside findByAgreement");
 		List<Object> preparedStatementValues = new ArrayList<>();
 		List<Agreement> agreements = null;
-		
-		
 
 		String queryStr = AgreementQueryBuilder.agreementQueryBuilder(fetchAgreementsModel, preparedStatementValues);
-		try{
+		try {
 			agreements = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), new AgreementRowMapper());
-		}catch (DataAccessException e) {
+		} catch (DataAccessException e) {
 			throw new RuntimeException(e.getMessage());
 		}
-		if(agreements.isEmpty()) throw new RuntimeException("The criteria provided did not match any agreements");
+		if (agreements.isEmpty())
+			throw new RuntimeException("The criteria provided did not match any agreements");
 		fetchAgreementsModel.setAsset(assetHelper.getAssetIdListByAgreements(agreements));
 		fetchAgreementsModel.setAllottee(allotteeHelper.getAllotteeIdListByAgreements(agreements));
 		List<Asset> assets = getAssets(fetchAgreementsModel);
 		List<Allottee> allottees = getAllottees(fetchAgreementsModel);
 		agreements = agreementHelper.filterAndEnrichAgreements(agreements, allottees, assets);
-		
+
 		return agreements;
 	}
 
 	public List<Agreement> findByAgreementAndAllotee(AgreementCriteria agreementCriteria) {
-		logger.info("AgreementController SearchAgreementService AgreementRepository : inside findByAgreementAndAllotee");
+		logger.info(
+				"AgreementController SearchAgreementService AgreementRepository : inside findByAgreementAndAllotee");
 		List<Object> preparedStatementValues = new ArrayList<Object>();
 		List<Agreement> agreements = null;
 
 		String queryStr = AgreementQueryBuilder.agreementQueryBuilder(agreementCriteria, preparedStatementValues);
-		try{
+		try {
 			agreements = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), new AgreementRowMapper());
-		}catch (DataAccessException e) {
+		} catch (DataAccessException e) {
 			throw new RuntimeException(e.getMessage());
 		}
-		if(agreements.isEmpty())
+		if (agreements.isEmpty())
 			throw new RuntimeException("The criteria provided did not match any agreements");
 		agreementCriteria.setAllottee(allotteeHelper.getAllotteeIdListByAgreements(agreements));
 		List<Allottee> allottees = getAllottees(agreementCriteria);
 		agreementCriteria.setAsset(assetHelper.getAssetIdListByAgreements(agreements));
-		List<Asset> assets  = getAssets(agreementCriteria);
+		List<Asset> assets = getAssets(agreementCriteria);
 		agreements = agreementHelper.filterAndEnrichAgreements(agreements, allottees, assets);
-		
+
 		return agreements;
 	}
 
@@ -151,67 +152,72 @@ public class AgreementRepository {
 		logger.info("AgreementController SearchAgreementService AgreementRepository : inside findByAgreementAndAsset");
 		List<Object> preparedStatementValues = new ArrayList<Object>();
 		List<Agreement> agreements = null;
-		
+
 		String queryStr = AgreementQueryBuilder.agreementQueryBuilder(fetchAgreementsModel, preparedStatementValues);
-		try{
+		try {
 			agreements = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), new AgreementRowMapper());
-		}catch (DataAccessException e) {
+		} catch (DataAccessException e) {
 			throw new RuntimeException(e.getMessage());
 		}
-		if(agreements.isEmpty()) throw new RuntimeException("The criteria provided did not match any agreements");
+		if (agreements.isEmpty())
+			throw new RuntimeException("The criteria provided did not match any agreements");
 		fetchAgreementsModel.setAsset(assetHelper.getAssetIdListByAgreements(agreements));
-		List<Asset> assets  = getAssets(fetchAgreementsModel);
+		List<Asset> assets = getAssets(fetchAgreementsModel);
 		fetchAgreementsModel.setAllottee(allotteeHelper.getAllotteeIdListByAgreements(agreements));
 		List<Allottee> allottees = getAllottees(fetchAgreementsModel);
 		agreements = agreementHelper.filterAndEnrichAgreements(agreements, allottees, assets);
-		
+
 		return agreements;
 	}
-	
+
 	/*
-	 * method to return a list of Allottee objects by making an API call to Allottee API 
+	 * method to return a list of Allottee objects by making an API call to
+	 * Allottee API
 	 */
 	public List<Allottee> getAllottees(AgreementCriteria agreementCriteria) {
 		String queryString = allotteeHelper.getAllotteeUrl(agreementCriteria);
 		logger.info("AgreementController SearchAgreementService AgreementRepository : inside Allottee API caller");
-	
+
 		String url = null;
 		AllotteeResponse allotteeResponse = null;
 		try {
-			url = propertiesManager.getAllotteeServiceHostName()+"/_search";
+			url = propertiesManager.getAllotteeServiceHostName() + propertiesManager.getAllotteeServiceBasePAth()
+			+propertiesManager.getAllotteeServiceSearchPath();
 			UserSearchRequest userSearchRequest = new UserSearchRequest();
-			userSearchRequest.setMobileNumber("9999999999");
 			logger.info(url.toString());
-			allotteeResponse = restTemplate.postForObject(url,userSearchRequest, AllotteeResponse.class);
+			allotteeResponse = restTemplate.postForObject(url, userSearchRequest, AllotteeResponse.class);
 		} catch (Exception e) {
 			// FIXME log error to getstacktrace
 			System.err.println(e);
 			throw new RuntimeException(e.getMessage());
 		}
 		System.err.println(allotteeResponse);
-		if (allotteeResponse.getAllottee() == null || allotteeResponse.getAllottee().size()<=0)
+		if (allotteeResponse.getAllottee() == null || allotteeResponse.getAllottee().size() <= 0)
 			throw new RuntimeException("No assets found for given criteria");
 		System.err.println(allotteeResponse.getAllottee().size());
-		
+
 		return allotteeResponse.getAllottee();
 	}
+
 	/*
-	 * method to return a list of Asset objects by making an API call to Asset API 
+	 * method to return a list of Asset objects by making an API call to Asset
+	 * API
 	 */
 	public List<Asset> getAssets(AgreementCriteria agreementCriteria) {
 		String queryString = assetHelper.getAssetUrl(agreementCriteria);
 		String url = null;
 		AssetResponse AssetResponse = null;
 		try {
-			url = propertiesManager.getAssetServiceHostName() +"/_search"+ "?" + queryString;
+			url = propertiesManager.getAssetServiceHostName() + propertiesManager.getAssetServiceBasePAth()
+					+ propertiesManager.getAssetServiceSearchPath() + "?" + queryString;
 			logger.info(url.toString());
-			AssetResponse = restTemplate.postForObject(url,new RequestInfo(), AssetResponse.class);
+			AssetResponse = restTemplate.postForObject(url, new RequestInfo(), AssetResponse.class);
 		} catch (Exception e) {
 			// FIXME log error to getstacktrace
 			throw new RuntimeException("check if entered asset API url is correct or the asset service is running");
 		}
 		System.err.println(AssetResponse);
-		if (AssetResponse.getAssets() == null || AssetResponse.getAssets().size()<=0)
+		if (AssetResponse.getAssets() == null || AssetResponse.getAssets().size() <= 0)
 			throw new RuntimeException("No assets found for given criteria");
 
 		return AssetResponse.getAssets();

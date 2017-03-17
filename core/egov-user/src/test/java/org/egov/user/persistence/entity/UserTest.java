@@ -67,8 +67,8 @@ public class UserTest {
         assertThat(entityUser.getPassword()).isEqualTo(domainUser.getPassword());
         assertThat(entityUser.getSalutation()).isEqualTo(domainUser.getSalutation());
         assertThat(entityUser.getGuardian()).isEqualTo(domainUser.getGuardian());
-        assertThat(entityUser.getGuardianRelation()).isEqualTo(domainUser.getGuardianRelation());
-        assertThat(entityUser.getGender()).isEqualTo(domainUser.getGender());
+        assertThat(entityUser.getGuardianRelation()).isEqualTo(org.egov.user.persistence.enums.GuardianRelation.Father);
+        assertThat(entityUser.getGender()).isEqualTo(org.egov.user.persistence.enums.Gender.FEMALE);
         assertThat(entityUser.getMobileNumber()).isEqualTo(domainUser.getMobileNumber());
         assertThat(entityUser.getEmailId()).isEqualTo(domainUser.getEmailId());
         assertThat(entityUser.getAltContactNumber()).isEqualTo(domainUser.getAltContactNumber());
@@ -78,8 +78,8 @@ public class UserTest {
         assertThat(entityUser.getDob()).isEqualTo(domainUser.getDob());
         assertThat(entityUser.getPwdExpiryDate()).isEqualTo(domainUser.getPwdExpiryDate());
         assertThat(entityUser.getLocale()).isEqualTo(domainUser.getLocale());
-        assertThat(entityUser.getType()).isEqualTo(domainUser.getType());
-        assertThat(entityUser.getBloodGroup()).isEqualTo(domainUser.getBloodGroup());
+        assertThat(entityUser.getType()).isEqualTo(org.egov.user.persistence.enums.UserType.CITIZEN);
+        assertThat(entityUser.getBloodGroup()).isEqualTo(org.egov.user.persistence.enums.BloodGroup.A_POSITIVE);
         assertThat(entityUser.getIdentificationMark()).isEqualTo(domainUser.getIdentificationMark());
         assertThat(entityUser.getSignature()).isEqualTo(domainUser.getSignature());
         assertThat(entityUser.getPhoto()).isEqualTo(domainUser.getPhoto());
@@ -99,7 +99,7 @@ public class UserTest {
                 .username("userName")
                 .salutation("salutation")
                 .name("name")
-                .gender(Gender.FEMALE)
+                .gender(org.egov.user.persistence.enums.Gender.FEMALE)
                 .mobileNumber("mobileNumber1")
                 .emailId("email")
                 .altContactNumber("mobileNumber2")
@@ -110,13 +110,13 @@ public class UserTest {
                 .dob(date)
                 .pwdExpiryDate(date)
                 .locale("en_IN")
-                .type(UserType.CITIZEN)
+                .type(org.egov.user.persistence.enums.UserType.CITIZEN)
                 .accountLocked(false)
                 .roles(getListOfRoles())
                 .guardian("name of relative")
-                .guardianRelation(GuardianRelation.Father)
+                .guardianRelation(org.egov.user.persistence.enums.GuardianRelation.Father)
                 .signature("7a9d7f12-bdcb-4487-9d43-709838a0ad39")
-                .bloodGroup(BloodGroup.A_POSITIVE)
+                .bloodGroup(org.egov.user.persistence.enums.BloodGroup.A_POSITIVE)
                 .photo("3b26fb49-e43d-401b-899a-f8f0a1572de0")
                 .identificationMark("identification mark")
                 .build();
@@ -229,7 +229,7 @@ public class UserTest {
                 .build();
     }
 
-    private Set<org.egov.user.domain.model.Role> getListOfDomainRoles() {
+    private List<org.egov.user.domain.model.Role> getListOfDomainRoles() {
         org.egov.user.domain.model.Role userRole = org.egov.user.domain.model.Role.builder()
                 .name("USER")
                 .description("Role Description")
@@ -240,8 +240,6 @@ public class UserTest {
                 .description("Role Description")
                 .build();
 
-        return new HashSet<org.egov.user.domain.model.Role>() {{
-            add(userRole); add(adminRole);
-        }};
+        return Arrays.asList(userRole, adminRole);
     }
 }

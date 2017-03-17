@@ -152,6 +152,19 @@ $(document).ready(function()
 								});
 							}
 
+							var receivingcenter = response.service_requests[0].values.receivingCenter;
+
+							if(receivingcenter){
+								$.ajax({
+									url : "/pgr/receivingcenter/_getreceivingcenterbyid?tenantId=1&id="+receivingcenter,
+									type: 'POST',
+									async : false,
+									success : function(centerReponse){
+										response.service_requests[0].values['recCenterText'] = centerReponse.name;
+									}
+								})
+							}
+
 							response['files'] = fileresponse.files;
 							var source   = $("#viewcomplaint-script").html();
 							var template = Handlebars.compile(source);

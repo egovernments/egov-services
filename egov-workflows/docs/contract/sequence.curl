@@ -1,0 +1,113 @@
+curl -X POST -H "Content-Type: application/json" -H "Cache-Control: no-cache" -H "Postman-Token: 6170d4ca-349a-fcf2-c930-49ec879c9552" -d '{
+  "requestInfo": {
+    "apiId": null,
+    "ver": null,
+    "ts": null,
+    "resMsgId": null,
+    "msgId": null,
+    "status": "200"
+  },
+   
+   "processInstance":
+   {
+  	"businessKey":"EgBillregister",
+  	"type":"EgBillregister",
+  	"assignee":{
+  		"id":1
+  	},
+  	"comments":"creating first worflow"
+   }
+  
+}' "http://localhost:8086/workflow/_start" >89.log
+
+
+
+curl -X POST -H "Content-Type: application/json" -H "Cache-Control: no-cache" -H "Postman-Token: 1108f938-cc42-de90-ad7f-1b373855f36f"  -d ' {
+  "apiId": null,
+    "ver": null,
+    "ts": null,
+    "resMsgId": null,
+    "msgId": null,
+    "status": "200"
+  }
+' "http://localhost:8086/workflow/process/_search?tenantId=1&id=89" >>89.log
+
+
+
+curl -X POST -H "Content-Type: application/json" -H "Cache-Control: no-cache" -H "Postman-Token: e81253e5-da93-21ea-a314-5bb4bcf72c21" -d '{
+  "requestInfo": {
+    "apiId": null,
+    "ver": null,
+    "ts": null,
+    "resMsgId": null,
+    "msgId": null,
+    "status": "200"
+  },
+   "task":{
+  	"businessKey":"EgBillregister",
+  	"type":"EgBillregister",
+  	"assignee":{"id":1},
+  	"id":89,
+  	"status":"Examinor of Accounts Approved",
+  	"action":"forward"
+  }	
+  
+}' "http://localhost:8086/workflow/tasks/89/_update" >>82.log
+
+
+
+curl -X POST -H "Content-Type: application/json" -H "Cache-Control: no-cache" -H "Postman-Token: e81253e5-da93-21ea-a314-5bb4bcf72c21" -d '{
+  "requestInfo": {
+    "apiId": null,
+    "ver": null,
+    "ts": null,
+    "resMsgId": null,
+    "msgId": null,
+    "status": "200"
+  },
+   "task":{
+  	"businessKey":"EgBillregister",
+  	"type":"EgBillregister",
+  	"assignee":{"id":1},
+  	"id":89,
+  	"status":"Accounts Officer Approved",
+  	"action":"approve"
+  }	
+  	
+  
+}' "http://localhost:8086/workflow/tasks/89/_update" >>82.log
+
+
+curl -X POST -H "Content-Type: application/json" -H "Cache-Control: no-cache" -H "Postman-Token: e81253e5-da93-21ea-a314-5bb4bcf72c21" -d '{
+  "requestInfo": {
+    "apiId": null,
+    "ver": null,
+    "ts": null,
+    "resMsgId": null,
+    "msgId": null,
+    "status": "200"
+  },
+   
+  	"task":{
+  	"businessKey":"EgBillregister",
+  	"type":"EgBillregister",
+  	"assignee":{"id":1},
+  	"id":89,
+  	"status":"Accounts Officer Approved",
+  	"action":"forward"
+  }	
+  
+}' "http://localhost:8086/workflow/tasks/89/_update" >>82.log
+
+
+
+curl -X POST -H "Content-Type: application/json" -H "Cache-Control: no-cache" -H "Postman-Token: 9d518a56-49c3-c141-0fa7-ec03c3c9755f" -d ' {
+    "apiId": null,
+    "ver": null,
+    "ts": null,
+    "resMsgId": null,
+    "msgId": null,
+    "status": "200",
+    "authtoken":"1111"
+  
+}' "http://localhost:8086/workflow/designations/_search?businessKey=EgBillregister&approvalDepartmentName=Accounts&departmentRule=&currentState=&additionalRule=&pendingAction=&designation=&amountRule="

@@ -38,42 +38,59 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.config;
+package org.egov.eis.web.contract;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.annotation.Order;
-import org.springframework.core.env.Environment;
+import java.util.Date;
+import java.util.List;
 
-@Configuration
-@PropertySource(value = { "classpath:config/application-config.properties" }, ignoreResourceNotFound = true)
-@Order(0)
-public class ApplicationProperties {
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
-	private static final String HR_SEARCH_PAGESIZE_DEFAULT = "hr.search.pagesize.default";
-	public static final String HR_SEARCH_PAGENO_MAX = "hr.search.pageno.max";
-	public static final String HR_SEARCH_PAGESIZE_MAX = "hr.search.pagesize.max";
-	public static final String HR_SERVICES_HR_EMPLOYEE_SERVICE_NON_VACANT_POSITIONS_HOST_URL
-		= "hr.services.hr_employee_service.non.vacant.positions.host.url";
+import org.springframework.format.annotation.DateTimeFormat;
 
-	@Autowired
-	private Environment environment;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-	public String hrSearchPageSizeDefault() {
-		return this.environment.getProperty(HR_SEARCH_PAGESIZE_DEFAULT);
-	}
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@EqualsAndHashCode
+public class VacantPositionsGetRequest {
 
-	public String hrSearchPageNumberMax() {
-		return this.environment.getProperty(HR_SEARCH_PAGENO_MAX);
-	}
+	private List<Long> id;
 
-	public String hrSearchPageSizeMax() {
-		return this.environment.getProperty(HR_SEARCH_PAGESIZE_MAX);
-	}
+	@Size(min=3, max=100)
+	private String name;
 
-	public String hrServicesHREmployeeServiceEmployeeHostRequest() {
-		return this.environment.getProperty(HR_SERVICES_HR_EMPLOYEE_SERVICE_NON_VACANT_POSITIONS_HOST_URL);
-	}
+	@NotNull
+	private Long departmentId;
+
+	@NotNull
+	private Long designationId;
+
+	@NotNull
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
+	private Date asOnDate;
+
+    private String sortBy;
+
+	private String sortOrder;
+
+	@NotNull
+	private String tenantId;
+
+	@Min(1)
+	@Max(500)
+	private Short pageSize;
+
+	private Short pageNumber;
 
 }

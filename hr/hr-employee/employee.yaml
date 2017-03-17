@@ -270,6 +270,59 @@ paths:
       tags: 
        - Assignment       
 
+  /nonvacantpositions/_search:
+    # This is a HTTP operation
+    post:
+      # Describe this verb here. Note: you can use markdown 
+      summary: Get the list of vacant positions. This will be required when creating a new employee assignment.
+      description: |
+        For a given department and designation and for an given date, it will return the list of vacant positions. For checking a position is vacant, system should check against primary assignments alone.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Commmon request info for getting vacant position.
+          required: true
+          schema:
+            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/RequestInfo'
+        - $ref: "#/parameters/pageSize"
+        - $ref: "#/parameters/pageNumber"
+        - $ref: "swagger-yaml/hr-masters.yaml/#/parameters/tenantId"
+        - $ref: "#/parameters/sortPositions"
+        - name: asOnDate
+          in: query
+          description: The date as on which a position needs to be checked for vacant or not.
+          required: true
+          type: string
+          format: date
+        - name: departmentId
+          in: query
+          description: Unique Department id for the position belongs to.
+          required: true
+          type: integer
+          format: int64
+        - name: designationId
+          in: query
+          description: Unique Designation Id for the designation belongs to.
+          required: true
+          type: integer
+          format: int64
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Successful response
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "swagger-yaml/hr-masters.yaml/#/definitions/PositionRes"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ErrorRes'
+
+      tags: 
+       - Assignment
 definitions:
 
   Employee:
@@ -1371,6 +1424,20 @@ parameters:
     default:
       - -fromDate
       - -primary
+  sortPositions:
+    name: sort
+    in: query
+    description: Result will be sorted by psotion name ascending.
+    type: array
+    uniqueItems: true
+    minItems: 1
+    maxItems: 1
+    collectionFormat: pipes
+    items:
+      type: string
+      pattern: '[-+](name)'
+    default:
+      - -name
 
 tags:
   - name: Employee

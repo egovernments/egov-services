@@ -35,13 +35,36 @@ class Attendance extends React.Component {
       for (var emp in employees) {
           for (var att in employees[emp].attendance) {
                 // console.log(employees[emp].attendance[att].split("-")[1]);
-                attendance.push({date:new Date(year,month,1),employee:emp,month,year,type:{id:employees[emp].attendance[att]},remarks:""});
+                attendance.push({date:new Date(year,month,1).getDate()+"/"+(new Date(year,month,1).getMonth()+1)+"/"+new Date(year,month,1).getFullYear(),employee:emp,month,year,type:{code:employees[emp].attendance[att]},remarks:"",tenantId});
           }
       }
 
       this.setState({
         attendance
       });
+
+      var body={
+        "RequestInfo":requestInfo,
+        "Attendance":attendance
+      };
+      var response=$.ajax({
+                url:baseUrl+"/hr-attendance/attendances/_create?tenantId=1",
+                type: 'POST',
+                dataType: 'json',
+                data:JSON.stringify(body),
+                async: false,
+                contentType: 'application/json'
+            });
+
+      // console.log(response);
+      if(response["statusText"]==="OK")
+      {
+        alert("Successfully added");
+      }
+      else {
+        alert(response["statusText"]);
+      }
+
   }
 
 
@@ -342,8 +365,9 @@ class Attendance extends React.Component {
 
 
             <div className="text-center">
-                <button type="button" className="btn btn-submit" onClick={(e)=>{this.close()}}>Close</button>
                 <button type="button" id="addEmployee" className="btn btn-submit" onClick={(e)=>{save()}}>Save</button>
+                <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>
+
             </div>
 
 

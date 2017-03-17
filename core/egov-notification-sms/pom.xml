@@ -50,6 +50,18 @@
         </dependency>
 
         <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+            <version>1.8.10</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>1.8.10</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
@@ -114,6 +126,7 @@
                                     <excludes>
                                         <exclude>org.egov.web.notification.sms.consumer.contract.*</exclude>
                                         <exclude>org.egov.web.notification.sms.EgovNotificationSmsApplication</exclude>
+                                        <exclude>org.egov.web.notification.sms.consumer.KafkaListenerLoggingAspect</exclude>
                                         <exclude>org.egov.pgr.model.RequestContext</exclude>
                                         <exclude>org.egov.web.notification.sms.services.ConsoleSMSService</exclude>
                                         <exclude>org.egov.web.notification.sms.config.SmsProperties</exclude>

@@ -61,7 +61,7 @@ public abstract class AbstractAuditable extends AbstractPersistable<Long> {
 	private static final long serialVersionUID = -3061749263902787420L;
 
 	@JsonIgnore
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "createdby")
 	@CreatedBy
 	private User createdBy;
@@ -72,7 +72,7 @@ public abstract class AbstractAuditable extends AbstractPersistable<Long> {
 	private Date createdDate;
 
 	@JsonIgnore
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "lastmodifiedby")
 	@LastModifiedBy
 	private User lastModifiedBy;

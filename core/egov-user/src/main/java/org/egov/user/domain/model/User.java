@@ -35,7 +35,7 @@ public class User {
     private String aadhaarNumber;
     private List<Address> address = new ArrayList<>();
     private boolean active;
-    private Set<Role> roles = new HashSet<>();
+    private List<Role> roles = new ArrayList<>();
     private Date dob;
     private Date pwdExpiryDate = new Date();
     private String locale = "en_IN";

@@ -119,8 +119,14 @@
 									</div>
 								</div>
 								<div class="row add-border">
+								{{#if values.recCenterText}}
+									<div class="col-md-3 col-xs-6 add-margin">Receiving Center</div>
+									<div class="col-md-3 col-xs-6 add-margin view-content">
+										{{values.recCenterText}}
+									</div>
+								{{/if}}
 									<div class="col-md-3 col-xs-6 add-margin">Grievance Details</div>
-									<div class="col-md-9 col-xs-6 add-margin view-content">
+									<div class="col-md-3 col-xs-6 add-margin view-content">
 										{{description}}
 									</div>
 								</div>

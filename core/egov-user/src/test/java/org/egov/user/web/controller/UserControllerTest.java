@@ -2,11 +2,9 @@ package org.egov.user.web.controller;
 
 import org.apache.commons.io.IOUtils;
 import org.egov.user.domain.model.UserSearch;
-import org.egov.user.domain.service.UserService;
-import org.egov.user.persistence.entity.Address;
-import org.egov.user.persistence.entity.Role;
-import org.egov.user.persistence.entity.User;
 import org.egov.user.domain.model.enums.*;
+import org.egov.user.domain.service.UserService;
+import org.egov.user.persistence.entity.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatcher;
@@ -23,11 +21,8 @@ import java.util.*;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.argThat;
-import static org.mockito.Matchers.doubleThat;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -37,10 +32,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class UserControllerTest {
 
     @Autowired
-    MockMvc mockMvc;
+    private MockMvc mockMvc;
 
     @MockBean
-    UserService userService;
+    private UserService userService;
 
     @Test
     @WithMockUser
@@ -125,7 +120,7 @@ public class UserControllerTest {
                         .pinCode("pincode 2").build());
     }
 
-    private Set<org.egov.user.domain.model.Role> getListOfRoles() {
+    private List<org.egov.user.domain.model.Role> getListOfRoles() {
         User user = User.builder().id(0L).build();
         Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("IST"));
         calendar.set(1990, Calendar.JULY, 1, 16, 41, 11);
@@ -140,11 +135,7 @@ public class UserControllerTest {
                 .lastModifiedDate(calendar.getTime())
                 .build();
 
-        return new HashSet<org.egov.user.domain.model.Role>() {
-            {
-                add(role1);
-            }
-        };
+        return Collections.singletonList(role1);
     }
 
     private String getFileContents(String fileName) {

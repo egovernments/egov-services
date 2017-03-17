@@ -34,23 +34,25 @@ public class UserRepository {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User findByUsername(String userName) {
-        return userJpaRepository.findByUsername(userName);
+    public org.egov.user.domain.model.User findByUsername(String userName) {
+        final User entityUser = userJpaRepository.findByUsername(userName);
+        return entityUser != null ? entityUser.toDomain() : null;
     }
 
     public boolean isUserPresent(String userName) {
         return userJpaRepository.isUserPresent(userName) != null;
     }
 
-    public User findByEmailId(String emailId) {
-        return userJpaRepository.findByEmailId(emailId);
+    public org.egov.user.domain.model.User findByEmailId(String emailId) {
+        final User entityUser = userJpaRepository.findByEmailId(emailId);
+        return entityUser != null ? entityUser.toDomain() : null;
     }
 
-    public User save(org.egov.user.domain.model.User domainUser) {
+    public org.egov.user.domain.model.User save(org.egov.user.domain.model.User domainUser) {
         User entityUser = new User(domainUser);
         setEnrichedRolesToUser(entityUser);
         encryptPassword(entityUser);
-        return userJpaRepository.save(entityUser);
+        return userJpaRepository.save(entityUser).toDomain();
     }
 
     public List<org.egov.user.domain.model.User> findAll(UserSearch userSearch) {

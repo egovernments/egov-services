@@ -1,55 +1,16 @@
-/*
- * eGov suite of products aim to improve the internal efficiency,transparency,
- * accountability and the service delivery of the government  organizations.
- *
- *  Copyright (C) 2016  eGovernments Foundation
- *
- *  The updated version of eGov suite of products as by eGovernments Foundation
- *  is available at http://www.egovernments.org
- *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program. If not, see http://www.gnu.org/licenses/ or
- *  http://www.gnu.org/licenses/gpl.html .
- *
- *  In addition to the terms of the GPL license to be adhered to in using this
- *  program, the following additional terms are to be complied with:
- *
- *      1) All versions of this program, verbatim or modified must carry this
- *         Legal Notice.
- *
- *      2) Any misrepresentation of the origin of the material is prohibited. It
- *         is required that all modified versions of this material be marked in
- *         reasonable ways as different from the original version.
- *
- *      3) This license does not grant any rights to any user of the program
- *         with regards to rights under trademark law for use of the trade names
- *         or trademarks of eGovernments Foundation.
- *
- *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
- */
-
 package org.egov.user.persistence.entity;
 
 import lombok.*;
-import org.egov.user.domain.model.enums.BloodGroup;
-import org.egov.user.domain.model.enums.Gender;
-import org.egov.user.domain.model.enums.GuardianRelation;
-import org.egov.user.domain.model.enums.UserType;
+import org.egov.user.persistence.enums.BloodGroup;
+import org.egov.user.persistence.enums.Gender;
+import org.egov.user.persistence.enums.GuardianRelation;
+import org.egov.user.persistence.enums.UserType;
 
 import javax.persistence.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static org.egov.user.persistence.entity.EnumConverter.toEnumType;
 import static org.egov.user.persistence.entity.User.SEQ_COMPLAINT;
 
 
@@ -166,8 +127,8 @@ public class User extends AbstractAuditable {
         this.password = user.getPassword();
         this.salutation = user.getSalutation();
         this.guardian = user.getGuardian();
-        this.guardianRelation = user.getGuardianRelation();
-        this.gender = user.getGender();
+        this.guardianRelation = toEntityGuardianRelation(user.getGuardianRelation());
+        this.gender = toEntityGender(user.getGender());
         this.mobileNumber = user.getMobileNumber();
         this.emailId = user.getEmailId();
         this.altContactNumber = user.getAltContactNumber();
@@ -177,8 +138,8 @@ public class User extends AbstractAuditable {
         this.dob = user.getDob();
         this.pwdExpiryDate = user.getPwdExpiryDate();
         this.locale = user.getLocale();
-        this.type = user.getType();
-        this.bloodGroup = user.getBloodGroup();
+        this.type = toEntityUserType(user.getType());
+        this.bloodGroup = toEntityBloodGroup(user.getBloodGroup());
         this.identificationMark = user.getIdentificationMark();
         this.signature = user.getSignature();
         this.photo = user.getPhoto();
@@ -188,7 +149,9 @@ public class User extends AbstractAuditable {
         this.roles = convertDomainRolesToEntity(user.getRoles());
     }
 
-    private Set<Role> convertDomainRolesToEntity(Set<org.egov.user.domain.model.Role> domainRoles) {
+
+
+    private Set<Role> convertDomainRolesToEntity(List<org.egov.user.domain.model.Role> domainRoles) {
         return domainRoles.stream().map(Role::new).collect(Collectors.toSet());
     }
 
@@ -201,9 +164,9 @@ public class User extends AbstractAuditable {
                 .password(password)
                 .salutation(salutation)
                 .guardian(guardian)
-                .guardianRelation(guardianRelation)
+                .guardianRelation(toDomainGuardianRelation())
                 .name(name)
-                .gender(gender)
+                .gender(toDomainGender())
                 .mobileNumber(mobileNumber)
                 .emailId(emailId)
                 .altContactNumber(altContactNumber)
@@ -215,8 +178,8 @@ public class User extends AbstractAuditable {
                 .dob(dob)
                 .pwdExpiryDate(dob)
                 .locale(locale)
-                .type(type)
-                .bloodGroup(bloodGroup)
+                .type(toDomainUserType())
+                .bloodGroup(toDomainBloodGroup())
                 .identificationMark(identificationMark)
                 .signature(signature)
                 .photo(photo)
@@ -227,6 +190,41 @@ public class User extends AbstractAuditable {
                 .createdBy(getCreatedById()).build();
     }
 
+    private org.egov.user.domain.model.enums.GuardianRelation toDomainGuardianRelation() {
+        return toEnumType(org.egov.user.domain.model.enums.GuardianRelation.class, guardianRelation);
+    }
+
+    private GuardianRelation toEntityGuardianRelation(
+            org.egov.user.domain.model.enums.GuardianRelation guardianRelation) {
+        return toEnumType(GuardianRelation.class, guardianRelation);
+    }
+
+    private org.egov.user.domain.model.enums.Gender toDomainGender() {
+        return toEnumType(org.egov.user.domain.model.enums.Gender.class, gender);
+    }
+
+    private Gender toEntityGender(
+            org.egov.user.domain.model.enums.Gender gender) {
+        return toEnumType(Gender.class, gender);
+    }
+
+    private org.egov.user.domain.model.enums.BloodGroup toDomainBloodGroup() {
+        return toEnumType(org.egov.user.domain.model.enums.BloodGroup.class, bloodGroup);
+    }
+
+    private BloodGroup toEntityBloodGroup(
+            org.egov.user.domain.model.enums.BloodGroup bloodGroup) {
+        return toEnumType(BloodGroup.class, bloodGroup);
+    }
+
+    private org.egov.user.domain.model.enums.UserType toDomainUserType() {
+        return toEnumType(org.egov.user.domain.model.enums.UserType.class, type);
+    }
+
+    private UserType toEntityUserType(org.egov.user.domain.model.enums.UserType type) {
+        return toEnumType(UserType.class, type);
+    }
+
     private Long getLastModifiedId() {
         return getLastModifiedBy() == null ? null : getLastModifiedBy().getId();
     }
@@ -235,8 +233,8 @@ public class User extends AbstractAuditable {
         return getCreatedBy() == null ? null : getCreatedBy().getId();
     }
 
-    private Set<org.egov.user.domain.model.Role> convertEntityRoleToDomain(Set<Role> entityRoles) {
-        return entityRoles.stream().map(Role::toDomain).collect(Collectors.toSet());
+    private List<org.egov.user.domain.model.Role> convertEntityRoleToDomain(Set<Role> entityRoles) {
+        return entityRoles.stream().map(Role::toDomain).collect(Collectors.toList());
     }
 
     private List<org.egov.user.domain.model.Address> convertEntityAddressToDomain(List<Address> entityAddress) {

@@ -108,32 +108,6 @@ $(document).ready(function()
 		}
 	});
 	
-	$('#password-form').on('submit', function(e){
-	       e.preventDefault();
-	       $.ajax({
-               url: '/egi/home/password/update',
-               type: 'GET',
-               data: {'currentPwd': $("#old-pass").val(), 'newPwd':$("#new-pass").val(),'retypeNewPwd':$("#retype-pass").val()},
-               success: function(data) {
-               	var msg = "";
-               	if (data == "SUCCESS") {
-               		msg = "Your password has been updated."
-               	} else if (data == "NEWPWD_UNMATCH") {
-               		msg = "New password you have entered does not match with retyped password."
-               	} else if (data == "CURRPWD_UNMATCH") {
-               		msg = "Old password you have entered is incorrect."
-               	} 
-               	bootbox.alert(msg);
-               },
-               error: function() {
-               	bootbox.alert("Internal server error occurred, please try after sometime.");
-               }, complete : function() {
-               	$('.change-password, .loader-class').modal('hide');
-               }
-       }); 
-	});
-	
-	
 	$(".ico-menu").bind('mouseover', function () {
 		$(this).addClass('open');
 	});
@@ -173,7 +147,7 @@ function loadComplaints(){
 			$('.grievanceresponse').append(html);
 		},
 		error : function(){
-			bootbox.alert('Error in loading data!')
+			bootbox.alert('Error!')
 		},
 		complete : function(){
 			hideLoader();

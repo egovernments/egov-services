@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.egov.user.domain.model.Role;
 import org.egov.user.domain.model.User;
 import org.egov.user.domain.model.enums.AddressType;
 import org.egov.user.domain.model.enums.GuardianRelation;
@@ -155,7 +156,7 @@ public class UserSearchResponseContent {
         return formatter.toString();
     }
 
-    private List<RoleRequest> convertDomainRolesToContract(Set<org.egov.user.domain.model.Role> roleEntities) {
+    private List<RoleRequest> convertDomainRolesToContract(List<Role> roleEntities) {
         if (roleEntities == null) return new ArrayList<>();
         return roleEntities.stream().map(RoleRequest::new).collect(Collectors.toList());
     }

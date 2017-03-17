@@ -40,11 +40,8 @@
 
 package org.egov.user.security.oauth2.custom;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import org.egov.user.domain.model.User;
 import org.egov.user.domain.service.UserService;
-import org.egov.user.persistence.entity.User;
 import org.egov.user.web.contract.auth.SecureUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -55,6 +52,10 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class CustomAuthenticationProvider implements AuthenticationProvider {
@@ -97,17 +98,35 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 			 */
 			List<GrantedAuthority> grantedAuths = new ArrayList<>();
 			grantedAuths.add(new SimpleGrantedAuthority("ROLE_" + user.getType()));
-			return new UsernamePasswordAuthenticationToken(new SecureUser(org.egov.user.web.contract.auth.User.builder()
-					.id(user.getId()).userName(user.getUsername()).name(user.getName())
-					.mobileNumber(user.getMobileNumber()).emailId(user.getEmailId()).locale(user.getLocale())
-					.active(user.isActive()).type(user.getType()).roles(user.getRoles()).build()), password,
+			final SecureUser secureUser = new SecureUser(getUser(user));
+			return new UsernamePasswordAuthenticationToken(secureUser, password,
 					grantedAuths);
 		} else {
 			throw new OAuth2Exception("Invalid login credentials");
 		}
 	}
 
-	@Override
+	private org.egov.user.web.contract.auth.User getUser(User user) {
+		return org.egov.user.web.contract.auth.User.builder()
+                .id(user.getId())
+				.userName(user.getUsername())
+				.name(user.getName())
+                .mobileNumber(user.getMobileNumber())
+				.emailId(user.getEmailId())
+				.locale(user.getLocale())
+                .active(user.isActive())
+				.type(user.getType().name())
+				.roles(toAuthRole(user.getRoles()))
+				.build();
+	}
+
+	private List<org.egov.user.web.contract.auth.Role> toAuthRole(List<org.egov.user.domain.model.Role> domainRoles) {
+		if (domainRoles == null) return new ArrayList<>();
+		return domainRoles.stream().map(org.egov.user.web.contract.auth.Role::new)
+				.collect(Collectors.toList());
+	}
+
+    @Override
 	public boolean supports(final Class<?> authentication) {
 		return authentication.equals(UsernamePasswordAuthenticationToken.class);
 	}

@@ -38,60 +38,27 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.web.contract;
+package org.egov.eis.service;
 
-import java.util.Date;
 import java.util.List;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import org.egov.eis.repository.NonVacantPositionsRepository;
+import org.egov.eis.web.contract.NonVacantPositionsGetRequest;
+import org.egov.eis.web.contract.RequestInfo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import org.springframework.format.annotation.DateTimeFormat;
+@Service
+public class NonVacantPositionsService {
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+	@Autowired
+	private NonVacantPositionsRepository nonVacantPositionsRepository;
 
-@Builder
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
-@EqualsAndHashCode
-public class PositionGetRequest {
+	public List<Long> getNonVacantPositions(NonVacantPositionsGetRequest nonVacantPositionsGetRequest,
+			RequestInfo requestInfo) {
 
-	private List<Long> id;
+		List<Long> positionIds = nonVacantPositionsRepository.findForCriteria(nonVacantPositionsGetRequest);
 
-	@Size(min = 2, max = 100)
-	private String name;
-
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	private Date asOnDate;
-
-	private Boolean isPrimary;
-
-	private Long designationId;
-
-	private Long departmentId;
-
-	private String sortBy;
-
-	private String sortOrder;
-
-	@NotNull
-	private String tenantId;
-
-	@Min(1)
-	@Max(500)
-	private Short pageSize;
-
-	private Short pageNumber;
-
+		return positionIds;
+	}
 }

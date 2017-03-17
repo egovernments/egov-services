@@ -40,58 +40,30 @@
 
 package org.egov.eis.web.contract;
 
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
-import org.springframework.format.annotation.DateTimeFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Builder
-@Getter
-@Setter
-@NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @EqualsAndHashCode
-public class PositionGetRequest {
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+public class NonVacantPositionsResponse {
 
-	private List<Long> id;
+	@JsonProperty("ResponseInfo")
+	private ResponseInfo responseInfo;
 
-	@Size(min = 2, max = 100)
-	private String name;
-
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	private Date asOnDate;
-
-	private Boolean isPrimary;
-
-	private Long designationId;
-
-	private Long departmentId;
-
-	private String sortBy;
-
-	private String sortOrder;
-
-	@NotNull
-	private String tenantId;
-
-	@Min(1)
-	@Max(500)
-	private Short pageSize;
-
-	private Short pageNumber;
+	@JsonProperty("Positions")
+	private List<Long> positions = new ArrayList<Long>();
 
 }

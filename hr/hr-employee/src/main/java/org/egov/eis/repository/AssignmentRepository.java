@@ -57,8 +57,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
+@Transactional
 public class AssignmentRepository {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(AssignmentRepository.class);
@@ -66,8 +68,8 @@ public class AssignmentRepository {
 	// FIXME Assignment Sequence, Employee ID
 	public static final String INSERT_ASSIGNMENT_QUERY = "INSERT INTO egeis_assignment"
 			+ " (id, employeeId, positionId, fundId, functionaryId, functionId, departmentId, designationId,"
-			+ " isprimary, fromdate, todate, gradeId, govtordernumber, createdby, createddate,"
-			+ " lastmodifiedby, lastmodifieddate, tenantId)"
+			+ " isPrimary, fromDate, toDate, gradeId, govtOrderNumber, createdBy, createdDate,"
+			+ " lastModifiedBy, lastModifiedDate, tenantId)"
 			+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
 	@Autowired
@@ -79,6 +81,7 @@ public class AssignmentRepository {
 	@Autowired
 	private AssignmentQueryBuilder assignmentQueryBuilder;
 
+	@Transactional(readOnly = true)
 	public List<Assignment> findForCriteria(Long employeeId, AssignmentGetRequest assignmentGetRequest) {
 		List<Object> preparedStatementValues = new ArrayList<Object>();
 		String queryStr = assignmentQueryBuilder.getQuery(employeeId, assignmentGetRequest, preparedStatementValues);
@@ -87,7 +90,6 @@ public class AssignmentRepository {
 		return assignments;
 	}
 
-	// FIXME put tenantId
 	public void save(Employee employee) {
 		List<Assignment> assignments = employee.getAssignments();
 

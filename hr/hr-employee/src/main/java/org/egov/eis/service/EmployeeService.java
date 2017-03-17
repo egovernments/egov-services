@@ -140,23 +140,22 @@ public class EmployeeService {
 	public void createEmployee(EmployeeRequest employeeRequest) {
 		UserRequest userRequest = getUserRequest(employeeRequest);
 		Long id = userService.createUser(userRequest);
-
 		String code = getEmployeeCode(id);
 		Employee employee = employeeRequest.getEmployee();
 		employee.setId(id);
 		employee.setCode(code);
 
-		String employeeJson = null;
+		String employeeRequestJson = null;
 		try {
 			ObjectMapper mapper = new ObjectMapper();
-			employeeJson = mapper.writeValueAsString(employee);
-			LOGGER.info("employeeJson::" + employeeJson);
+			employeeRequestJson = mapper.writeValueAsString(employeeRequest);
+			LOGGER.info("employeeJson::" + employeeRequestJson);
 		} catch (JsonProcessingException e) {
 			LOGGER.error("Error while converting Employee to JSON", e);
 			e.printStackTrace();
 		}
 		try {
-			employeeProducer.sendMessage(employeeSaveTopic, employeeSaveKey, employeeJson);
+			employeeProducer.sendMessage(employeeSaveTopic, employeeSaveKey, employeeRequestJson);
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}
@@ -176,7 +175,9 @@ public class EmployeeService {
 		return userRequest;
 	}
 
-	public void saveEmployee(Employee employee) {
+	public void saveEmployee(EmployeeRequest employeeRequest) {
+		Employee employee = employeeRequest.getEmployee();
+
 		employeeRepository.save(employee);
 		employeeJurisdictionRepository.save(employee);
 		employeeLanguageRepository.save(employee);

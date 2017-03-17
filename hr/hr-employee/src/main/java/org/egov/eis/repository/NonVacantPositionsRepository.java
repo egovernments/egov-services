@@ -38,60 +38,39 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.web.contract;
+package org.egov.eis.repository;
 
-import java.util.Date;
 import java.util.List;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import org.egov.eis.web.contract.NonVacantPositionsGetRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
-import org.springframework.format.annotation.DateTimeFormat;
+@Repository
+public class NonVacantPositionsRepository {
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+	public static final String SEARCH_ASSIGNMENT_FOR_POSITION_IDS_QUERY = "SELECT DISTINCT positionId"
+			+ " FROM egeis_assignment"
+			+ " WHERE departmentId = ? AND designationId = ? AND ? BETWEEN fromDate AND toDate AND tenantId = ?";
 
-@Builder
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
-@EqualsAndHashCode
-public class PositionGetRequest {
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
 
-	private List<Long> id;
+	public List<Long> findForCriteria(NonVacantPositionsGetRequest nonVacantPositionsGetRequest) {
+		Object[] searchConditions = { nonVacantPositionsGetRequest.getDepartmentId(),
+									  nonVacantPositionsGetRequest.getDesignationId(),
+									  nonVacantPositionsGetRequest.getAsOnDate(),
+									  nonVacantPositionsGetRequest.getTenantId() };
 
-	@Size(min = 2, max = 100)
-	private String name;
+		List<Long> positionIds = jdbcTemplate.queryForList(SEARCH_ASSIGNMENT_FOR_POSITION_IDS_QUERY,
+				searchConditions, Long.class);
 
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	private Date asOnDate;
+		System.err.println(SEARCH_ASSIGNMENT_FOR_POSITION_IDS_QUERY);
 
-	private Boolean isPrimary;
+		for(int i = 0; i < searchConditions.length; i++)
+			System.err.println(searchConditions[i]);
 
-	private Long designationId;
-
-	private Long departmentId;
-
-	private String sortBy;
-
-	private String sortOrder;
-
-	@NotNull
-	private String tenantId;
-
-	@Min(1)
-	@Max(500)
-	private Short pageSize;
-
-	private Short pageNumber;
-
+		return positionIds;
+	}
 }

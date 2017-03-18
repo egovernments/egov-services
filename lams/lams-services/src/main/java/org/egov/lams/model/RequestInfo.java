@@ -1,7 +1,5 @@
 package org.egov.lams.model;
 
-import java.util.Date;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +15,7 @@ public class RequestInfo {
 
 	private String apiId;	
 	private String ver;	
-	private Date ts;	
+	private String ts;	
 	private String action;	
 	private String did;	
 	private String key;	

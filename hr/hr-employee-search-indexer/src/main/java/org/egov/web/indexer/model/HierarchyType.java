@@ -47,7 +47,9 @@ import lombok.Setter;
 @Setter
 public class HierarchyType extends AbstractAuditable  {
 
-    public static final String SEQ_HIERARCHY_TYPE = "SEQ_EG_HIERARCHY_TYPE";
+	private static final long serialVersionUID = -632869466288718895L;
+
+	public static final String SEQ_HIERARCHY_TYPE = "SEQ_EG_HIERARCHY_TYPE";
 
     private Long id;
 

@@ -49,6 +49,8 @@ import lombok.Setter;
 @Setter
 public class BoundaryType extends AbstractAuditable {
 
+	private static final long serialVersionUID = 2733418425252960862L;
+
 	public static final String SEQ_BOUNDARY_TYPE = "SEQ_EG_BOUNDARY_TYPE";
 
 	private Long id;

@@ -18,7 +18,8 @@ public class ElasticSearchRepository {
         this.indexServiceHost = indexServiceHost;
     }
 
-    public void index(String indexName, String typeName, long i, Object indexObject) {
+    @SuppressWarnings("rawtypes")
+	public void index(String indexName, String typeName, long i, Object indexObject) {
         String url = this.indexServiceHost + indexName + "/" + typeName + "/" + i;
         Map response = restTemplate.postForObject(url, indexObject, Map.class);
         System.out.println("response=" + response);

@@ -51,25 +51,36 @@ import lombok.Setter;
 @Setter
 public class Boundary extends AbstractAuditable {
 
+	private static final long serialVersionUID = 5408777344136656829L;
+
 	private Long id;
-    private String name;
-private Long boundaryNum;
+
+	private String name;
+
+	private Long boundaryNum;
+
 	private BoundaryType boundaryType;
+
 	private Boundary parent;
+
 	private Set<Boundary> children = new HashSet<>();
+
 	private Date fromDate;
+
 	private Date toDate;
+
 	private boolean isHistory;
+
 	private Long bndryId;
+
 	private String localName;
+
 	private Float longitude;
+
 	private Float latitude;
+
 	private String materializedPath;
+
 	private String tenantid;
-	public Long getId() {
-		return id;
-	}
-	public void setId(final Long id) {
-		this.id = id;
-	}
+
 }

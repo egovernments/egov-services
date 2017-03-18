@@ -49,6 +49,8 @@ import lombok.Setter;
 @Setter
 public abstract class AbstractPersistable<PK extends Serializable> implements Serializable {
 
-    private Long version;
+	private static final long serialVersionUID = 1378351558791631842L;
+
+	private Long version;
 	
 }

@@ -49,6 +49,8 @@ import lombok.Setter;
 @Setter
 public abstract class AbstractAuditable extends AbstractPersistable<Long> {
 
+	private static final long serialVersionUID = 4110674150668756126L;
+
 	private Long createdBy;
 
 	private Date createdDate;

@@ -22,7 +22,7 @@ import org.egov.pgr.persistence.entity.ComplaintStatus_;
 import org.egov.pgr.persistence.entity.ComplaintType;
 import org.egov.pgr.persistence.entity.ComplaintType_;
 import org.egov.pgr.persistence.entity.Complaint_;
-import org.egov.pgr.persistence.entity.ReceivingMode;
+import org.egov.pgr.persistence.entity.enums.ReceivingMode;
 import org.springframework.data.jpa.domain.Specification;
 
 

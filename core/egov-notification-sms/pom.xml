@@ -121,6 +121,7 @@
                                         <exclude>org.egov.web.notification.sms.consumer.contract.*</exclude>
                                         <exclude>org.egov.web.notification.sms.EgovNotificationSmsApplication</exclude>
                                         <exclude>org.egov.web.notification.sms.consumer.KafkaListenerLoggingAspect</exclude>
+                                        <exclude>org.egov.web.notification.sms.consumer.KakfaListenerLoggingConfiguration</exclude>
                                         <exclude>org.egov.pgr.model.RequestContext</exclude>
                                         <exclude>org.egov.web.notification.sms.services.ConsoleSMSService</exclude>
                                         <exclude>org.egov.web.notification.sms.config.SmsProperties</exclude>

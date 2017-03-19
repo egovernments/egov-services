@@ -69,7 +69,6 @@ import org.egov.pgr.domain.model.AuthenticatedUser;
 import org.egov.pgr.domain.model.ComplaintLocation;
 import org.egov.pgr.domain.model.Coordinates;
 import org.egov.pgr.persistence.entity.enums.CitizenFeedback;
-import org.egov.pgr.persistence.entity.enums.ReceivingMode;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.SafeHtml;
 
@@ -136,10 +135,10 @@ public class Complaint extends AbstractAuditable {
 	@SafeHtml
 	private String landmarkDetails;
 
-	@Column(name = "receivingmode")
-	@Enumerated(EnumType.ORDINAL)
 	@NotNull
-	private ReceivingMode receivingMode = ReceivingMode.WEBSITE;
+	@ManyToOne
+	@JoinColumn(name = "receivingmode")
+	private ReceivingMode receivingMode;
 
 	@ManyToOne
 	@JoinColumn(name = "receivingcenter", nullable = true)

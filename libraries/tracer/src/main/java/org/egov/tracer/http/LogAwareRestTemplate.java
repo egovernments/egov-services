@@ -2,6 +2,8 @@ package org.egov.tracer.http;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
+import org.egov.tracer.model.RequestContext;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
@@ -9,7 +11,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 @Slf4j
 @Component("logAwareRestTemplate")
@@ -22,10 +26,21 @@ public class LogAwareRestTemplate extends RestTemplate {
     private static final String RESPONSE_ERROR_MESSAGE = "Error reading response";
 
     public LogAwareRestTemplate() {
-        this.setInterceptors(Collections.singletonList(logRequestAndResponse()));
+        final List<ClientHttpRequestInterceptor> interceptors =
+                Arrays.asList(correlationIdInterceptor(), loggingInterceptor());
+        this.setInterceptors(interceptors);
     }
 
-    private ClientHttpRequestInterceptor logRequestAndResponse() {
+    private ClientHttpRequestInterceptor correlationIdInterceptor() {
+        return (httpRequest, bytes, clientHttpRequestExecution) -> {
+            final HttpHeaders headers = httpRequest.getHeaders();
+            headers.put(RequestContext.CORRELATION_ID, Collections.singletonList(RequestContext.getId()));
+
+            return clientHttpRequestExecution.execute(httpRequest, bytes);
+        };
+    }
+
+    private ClientHttpRequestInterceptor loggingInterceptor() {
         return (httpRequest, body, clientHttpRequestExecution) -> {
             logRequest(httpRequest, body);
             final ClientHttpResponse response = clientHttpRequestExecution.execute(httpRequest, body);

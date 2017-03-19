@@ -4,7 +4,7 @@ package org.egov.eis.index.model;
 
 import java.util.Date;
 
-
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -43,9 +43,11 @@ public class EmployeeDetails {
 	@JsonProperty("employeecode")
 	private String employeeCode;
 
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	@JsonProperty("dateofappointment")
 	private Date dateOfAppointment;
 
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	@JsonProperty("dateofretirement")
 	private Date dateOfRetirement;
 
@@ -58,6 +60,7 @@ public class EmployeeDetails {
 	@JsonProperty("username")
 	private String userName;
 
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	@JsonProperty("pwdexpirydate")
 	private Date pwdExpiryDate;
 
@@ -91,9 +94,11 @@ public class EmployeeDetails {
 	@JsonProperty("aadharnumber")
 	private String aadharNumber;
 
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	@JsonProperty("dateofbirth")
 	private Date dateOfBirth;
 
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	@JsonProperty("employeecreateddate")
 	private Date employeeCreatedDate;
 
@@ -112,9 +117,11 @@ public class EmployeeDetails {
 	@JsonProperty("retirementage")
 	private int retirementAge;
 
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	@JsonProperty("dateofresignation")
 	private Date dateOfResignation;
 
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	@JsonProperty("dateoftermination")
 	private Date dateOfTermination;
 

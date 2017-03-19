@@ -43,7 +43,7 @@ package org.egov.eis.index.model;
 
 import java.util.Date;
 
-
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -108,9 +108,11 @@ public class EmployeeAssignment {
 	@JsonProperty("grade")
 	private String grade;
 
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	@JsonProperty("fromdate")
 	private Date fromDate;
 
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	@JsonProperty("todate")
 	private Date todate;
 
@@ -120,6 +122,7 @@ public class EmployeeAssignment {
 	@JsonProperty("headofdepartmentcode")
 	private String headOfDepartmentCode;
 
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	@JsonProperty("assignmentcreateddate")
 	private Date assignmentCreatedDate;
 

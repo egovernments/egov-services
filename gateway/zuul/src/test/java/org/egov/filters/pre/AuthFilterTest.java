@@ -1,41 +1,43 @@
 package org.egov.filters.pre;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.netflix.zuul.context.RequestContext;
-import org.egov.filters.route.AuthFilter;
+import org.egov.contract.Role;
+import org.egov.contract.User;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.springframework.cloud.netflix.zuul.filters.route.RibbonRoutingFilter;
-import org.springframework.http.HttpHeaders;
+import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
 
 public class AuthFilterTest {
     private MockHttpServletRequest request = new MockHttpServletRequest();
 
     @Mock
-    private RibbonRoutingFilter delegateFilter;
+    private RestTemplate restTemplate;
 
     private AuthFilter authFilter;
 
+    private String authServiceHost = "http://localhost:8082/";
+    private String authUri = "user/_details?access_token=";
+    private String userInfoHeader = "x-user-info";
+
     @Before
     public void init() {
-        initMocks(this);
-        authFilter = new AuthFilter(delegateFilter, "x-user-info", "user/_login,anonymous");
+        MockitoAnnotations.initMocks(this);
+        authFilter = new AuthFilter(restTemplate, authServiceHost, authUri, userInfoHeader);
         RequestContext ctx = RequestContext.getCurrentContext();
         ctx.clear();
         ctx.setRequest(request);
@@ -43,76 +45,83 @@ public class AuthFilterTest {
 
     @Test
     public void testBasicProperties() {
-        when(delegateFilter.filterOrder()).thenReturn(1);
-
-        assertThat(authFilter.filterType(), is("route"));
-        assertThat(authFilter.filterOrder(), is(1));
+        assertThat(authFilter.filterType(), is("pre"));
+        assertThat(authFilter.filterOrder(), is(2));
     }
 
     @Test
-    public void testThatFilterShouldNotBeAppliedForUserApi() {
-        MockHttpServletRequest request = new MockHttpServletRequest("POST", "/user/_login");
-        RequestContext.getCurrentContext().setRequest(request);
+    public void testThatFilterShouldBeAppliedBasedOnContext() {
+        RequestContext ctx = RequestContext.getCurrentContext();
+        ctx.set("shouldDoAuth", false);
         assertFalse(authFilter.shouldFilter());
-    }
 
-    @Test
-    public void testThatFilterShouldNotBeAppliedForAnonymous() {
-        MockHttpServletRequest request = new MockHttpServletRequest("POST", "/pgr/anonymous");
-        RequestContext.getCurrentContext().setRequest(request);
-        assertFalse(authFilter.shouldFilter());
-    }
-
-    @Test
-    public void testThatFilterShouldApplyForNonUserApisWithAuthToken() {
-        MockHttpServletRequest request = new MockHttpServletRequest("POST", "/pgr");
-        request.addHeader("auth_token", "fubar");
-        RequestContext.getCurrentContext().setRequest(request);
+        ctx.set("shouldDoAuth", true);
         assertTrue(authFilter.shouldFilter());
     }
 
     @Test
-    public void testThatFilterSetsUserInfoInHeaderAfterValidationAuthToken() throws IOException {
-        request.addHeader("auth_token", "dummy-auth-token");
+    public void testThatFilterShouldSetUserInfoInHeaderAfterValidatingAuthToken() throws IOException {
+        String authToken = "dummy-auth-token";
+        request.addHeader("auth_token", authToken);
         RequestContext ctx = RequestContext.getCurrentContext();
-        ClientHttpResponse response = mock(ClientHttpResponse.class);
-        ctx.setRouteHost(new URL("http", "localhost", 8080, "/"));
-        ctx.setRequestQueryParams(new HashMap<>());
-        String responseBody = "{\"id\":30,\"userName\":\"malathi\",\"name\":\"malathi\",\"mobileNumber\":\"9686602042\",\"emailId\":\"fu@bar.com\",\"locale\":\"en_IN\",\"type\":\"EMPLOYEE\",\"roles\":[{\"id\":15,\"name\":\"Employee\",\"description\":\"Default role for all employees\",\"version\":0,\"createdDate\":1440720000000,\"lastModifiedDate\":1440720000000,\"new\":false},{\"id\":16,\"name\":\"ULB Operator\",\"description\":\"ULB Operator\",\"version\":0,\"createdDate\":1440758717567,\"lastModifiedDate\":1440758717567,\"new\":false}],\"active\":true}";
-        InputStream is = new ByteArrayInputStream(responseBody.getBytes());
+        ctx.setRequest(request);
 
-        when(response.getBody()).thenReturn(is);
-        when(response.getStatusCode()).thenReturn(HttpStatus.OK);
-        when(delegateFilter.run()).thenReturn(response).thenReturn(null);
+        String authUrl = String.format("%s%s%s", authServiceHost, authUri, authToken);
+        User mockUser = new User();
+        mockUser.setId(30);
+        mockUser.setUserName("userName");
+        mockUser.setName("name");
+        mockUser.setMobileNumber("1234567890");
+        mockUser.setEmailId("fu@bar.com");
+        mockUser.setType("EMPLOYEE");
+
+        Role mockRole1 = new Role();
+        mockRole1.setName("Employee");
+
+        Role mockRole2 = new Role();
+        mockRole2.setName("ULB Operator");
+
+        List<Role> roles = new ArrayList<>();
+        roles.add(mockRole1);
+        roles.add(mockRole2);
+
+        mockUser.setRoles(roles);
+
+        when(restTemplate.postForObject(authUrl, null, User.class)).thenReturn(mockUser);
+
         authFilter.run();
-        assertThat(ctx.getZuulRequestHeaders().get("x-user-info"), is("{\"id\":30,\"userName\":\"malathi\",\"name\":\"malathi\",\"type\":\"EMPLOYEE\",\"mobileNumber\":\"9686602042\",\"emailId\":\"fu@bar.com\",\"roles\":[{\"name\":\"Employee\"},{\"name\":\"ULB Operator\"}]}"));
+        assertThat(ctx.getZuulRequestHeaders().get(userInfoHeader), is("{\"id\":30,\"userName\":\"userName\",\"name\":\"name\",\"type\":\"EMPLOYEE\",\"mobileNumber\":\"1234567890\",\"emailId\":\"fu@bar.com\",\"roles\":[{\"name\":\"Employee\"},{\"name\":\"ULB Operator\"}]}"));
+        assertTrue(ctx.sendZuulResponse());
     }
 
     @Test
-    public void testThatFilterAbortsWhenThereIsNoAuthToken() {
+    public void testThatFilterShouldAbortIfValidatingAuthTokenFails() throws IOException {
         RequestContext ctx = RequestContext.getCurrentContext();
-        authFilter.run();
-        assertThat(ctx.getResponseStatusCode(), is(401));
-        assertFalse(ctx.sendZuulResponse());
-        assertNull(ctx.getZuulRequestHeaders().get("x-user-info"));
-    }
-
-    @Test
-    public void testThatFilterAbortsOnInvalidAuthToken() throws IOException {
-        request.addHeader("auth_token", "dummy-auth-token");
-        RequestContext ctx = RequestContext.getCurrentContext();
-        ClientHttpResponse response = mock(ClientHttpResponse.class);
-        ctx.setRouteHost(new URL("http", "localhost", 8080, "/"));
-        ctx.setRequestQueryParams(new HashMap<>());
+        String authToken = "dummy-auth-token";
+        request.addHeader("auth_token", authToken);
+        ctx.setRequest(request);
         ctx.setResponse(new MockHttpServletResponse());
+        String authUrl = String.format("%s%s%s", authServiceHost, authUri, authToken);
 
-        when(response.getBody()).thenReturn(null);
-        when(response.getStatusCode()).thenReturn(HttpStatus.UNAUTHORIZED);
-        when(response.getHeaders()).thenReturn(new HttpHeaders());
-        when(delegateFilter.run()).thenReturn(response);
+        when(restTemplate.postForObject(authUrl, null, User.class)).thenThrow(new HttpClientErrorException(HttpStatus.UNAUTHORIZED));
+
         authFilter.run();
-        assertThat(ctx.getResponse().getStatus(), is(401));
         assertFalse(ctx.sendZuulResponse());
-        assertNull(ctx.getZuulRequestHeaders().get("x-user-info"));
+        assertThat(ctx.getResponseStatusCode(), is(401));
+    }
+
+    @Test
+    public void testThatFilterShouldAbortIfCannotParseAuthResponse() throws IOException {
+        RequestContext ctx = RequestContext.getCurrentContext();
+        String authToken = "dummy-auth-token";
+        request.addHeader("auth_token", authToken);
+        ctx.setRequest(request);
+        ctx.setResponse(new MockHttpServletResponse());
+        String authUrl = String.format("%s%s%s", authServiceHost, authUri, authToken);
+
+        when(restTemplate.postForObject(authUrl, null, User.class)).thenThrow(JsonProcessingException.class);
+
+        authFilter.run();
+        assertFalse(ctx.sendZuulResponse());
     }
 }

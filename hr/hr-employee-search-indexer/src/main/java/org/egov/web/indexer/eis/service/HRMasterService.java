@@ -2,22 +2,19 @@ package org.egov.web.indexer.eis.service;
 
 import java.net.URI;
 
-import org.egov.eis.model.EmployeeType;
-import org.egov.eis.model.RecruitmentMode;
-import org.egov.eis.model.RecruitmentQuota;
-import org.egov.eis.model.RecruitmentType;
-
-import org.egov.web.contract.EmployeeTypeResponse;
-import org.egov.web.contract.RecruitmentModeResponse;
-import org.egov.web.contract.RecruitmentQuotaResponse;
-import org.egov.web.contract.RecruitmentTypeResponse;
-import org.egov.web.contract.RequestInfo;
 import org.egov.web.indexer.config.PropertiesManager;
-
+import org.egov.web.indexer.contract.EmployeeTypeResponse;
+import org.egov.web.indexer.contract.RecruitmentModeResponse;
+import org.egov.web.indexer.contract.RecruitmentQuotaResponse;
+import org.egov.web.indexer.contract.RecruitmentTypeResponse;
+import org.egov.web.indexer.contract.RequestInfo;
+import org.egov.web.indexer.model.EmployeeType;
+import org.egov.web.indexer.model.RecruitmentMode;
+import org.egov.web.indexer.model.RecruitmentQuota;
+import org.egov.web.indexer.model.RecruitmentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -28,12 +25,12 @@ public class HRMasterService {
 	private PropertiesManager propertiesManager;
 	
 	@Autowired
-	RestTemplate restTemplate;
+	private RestTemplate restTemplate;
 	
 	public static final Logger logger = LoggerFactory.getLogger(BoundaryService.class);
 	
 	// EmployeeType
-	public EmployeeType getEmployeeType(Long id) {
+	public EmployeeType getEmployeeType(Long id, RequestInfo requestInfo) {
 		URI url = null;
 		EmployeeTypeResponse employeeTypeResponse = null;
 		try { //http://egov-micro-dev.egovernments.org/user/_search
@@ -42,33 +39,17 @@ public class HRMasterService {
 					+ propertiesManager.getEmployeetypeSearchContextPath() 
 					+ "?id=" + id + "&tenantId=1");
 			logger.info(url.toString());
-			employeeTypeResponse = restTemplate.postForObject(url, getRequestInfo(), EmployeeTypeResponse.class);
+			employeeTypeResponse = restTemplate.postForObject(url, requestInfo, EmployeeTypeResponse.class);
 		} catch (Exception e) {
 			e.printStackTrace();
 			// FIXME log error to getstacktrace
 			return null;
 		}
 		return employeeTypeResponse.getEmployeeType().get(0);
-	}
-	
-	private RequestInfo getRequestInfo() {
-		RequestInfo requestInfo = new RequestInfo();
-		requestInfo.setApiId("emp");
-		requestInfo.setVer("1.0");
-		requestInfo.setTs("10/03/2017");
-		requestInfo.setAction("create");
-		requestInfo.setDid("1");
-		requestInfo.setKey("abcdkey");
-		requestInfo.setMsgId("20170310130900");
-		requestInfo.setRequesterId("rajesh");
-		requestInfo.setAuthToken("123");
-		
-		return requestInfo;
-	}
-	
+	}	
 	
 	// RecruitmentMode
-	public RecruitmentMode getRecruitmentMode(Long id) {
+	public RecruitmentMode getRecruitmentMode(Long id, RequestInfo requestInfo) {
 		URI url = null;
 		RecruitmentModeResponse recruitmentModeResponse = null;
 		try { //http://egov-micro-dev.egovernments.org/user/_search
@@ -77,7 +58,7 @@ public class HRMasterService {
 					+ propertiesManager.getRecruitmentmodeSearchContextPath()
 					+ "?id=" + id + "&tenantId=1");
 			logger.info(url.toString());
-			recruitmentModeResponse = restTemplate.postForObject(url, getRequestInfo(), RecruitmentModeResponse.class);
+			recruitmentModeResponse = restTemplate.postForObject(url, requestInfo, RecruitmentModeResponse.class);
 		} catch (Exception e) {
 			// FIXME log error to getstacktrace
 			return null;
@@ -86,7 +67,7 @@ public class HRMasterService {
 	}
 	
 	// RecruitmentQuota
-	public RecruitmentQuota getRecruitmentQuota(Long id) {
+	public RecruitmentQuota getRecruitmentQuota(Long id, RequestInfo requestInfo) {
 		URI url = null;
 		RecruitmentQuotaResponse recruitmentQuotaResponse = null;
 		try { //http://egov-micro-dev.egovernments.org/user/_search
@@ -95,7 +76,7 @@ public class HRMasterService {
 					+ propertiesManager.getRecruitmentquotaSearchContextPath()
 					+ "?id=" + id + "&tenantId=1");
 			logger.info(url.toString());
-			recruitmentQuotaResponse = restTemplate.postForObject(url, getRequestInfo(), RecruitmentQuotaResponse.class);
+			recruitmentQuotaResponse = restTemplate.postForObject(url, requestInfo, RecruitmentQuotaResponse.class);
 		} catch (Exception e) {
 			// FIXME log error to getstacktrace
 			return null;
@@ -105,7 +86,7 @@ public class HRMasterService {
 	
 	
 	// getRecruitmentType
-	public RecruitmentType getRecruitmentType(Long id) {
+	public RecruitmentType getRecruitmentType(Long id, RequestInfo requestInfo) {
 		URI url = null;
 		RecruitmentTypeResponse recruitmentTypeResponse = null;
 		try { //http://egov-micro-dev.egovernments.org/user/_search
@@ -114,7 +95,7 @@ public class HRMasterService {
 					+ propertiesManager.getRecruitmenttypeSearchContextPath()
 					+ "?id=" + id + "&tenantId=1");
 			logger.info(url.toString());
-			recruitmentTypeResponse = restTemplate.postForObject(url, getRequestInfo(), RecruitmentTypeResponse.class);
+			recruitmentTypeResponse = restTemplate.postForObject(url, requestInfo, RecruitmentTypeResponse.class);
 		} catch (Exception e) {
 			// FIXME log error to getstacktrace
 			return null;

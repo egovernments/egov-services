@@ -2,8 +2,7 @@ package org.egov.eis.index.model;
 
 import java.util.Date;
 
-
-
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -57,6 +56,7 @@ public class EmployeeEducation {
 	@JsonProperty("qualificationremarks")
 	private String qualificationRemarks;
 
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	@JsonProperty("qualificationcreateddate")
 	private Date qualificationCreatedDate;
 

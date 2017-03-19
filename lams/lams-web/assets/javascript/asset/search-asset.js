@@ -59,21 +59,11 @@ class SearchAsset extends React.Component {
   }
 
 
-  handleSelectChange(type)
-  {
-    console.log(type);
-    if (type === "view") {
-                window.open("../../../../app/search-agreement/view-renew-agreement.html", "fs", "fullscreen=yes")
-             }
-             else {
 
-                window.open("../../../../app/search-agreement/renew-agreement.html", "fs", "fullscreen=yes")
-            }
-  }
 
   componentDidMount()
   {
-    console.log(commonApiGet("asset-services","","GET_STATUS",{}).responseJSON);
+    //console.log(commonApiGet("asset-services","","GET_STATUS",{}).responseJSON);
 
 
      this.setState({

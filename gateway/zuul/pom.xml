@@ -83,12 +83,16 @@
                         <configuration>
                             <rules>
                                 <rule>
-                                    <element>BUNDLE</element>
+                                    <element>CLASS</element>
+                                    <excludes>
+                                        <exclude>org.egov.ZuulGatewayApplication</exclude>
+                                        <exclude>org.egov.contract.*</exclude>
+                                    </excludes>
                                     <limits>
                                         <limit>
                                             <counter>COMPLEXITY</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.7</minimum>
+                                            <minimum>0.9</minimum>
                                         </limit>
                                     </limits>
                                 </rule>

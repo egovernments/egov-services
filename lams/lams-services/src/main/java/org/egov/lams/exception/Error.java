@@ -19,5 +19,5 @@ public class Error {
 	private Integer code = null;
 	private String message = null;
 	private String description = null;
-	private List<Object> filelds = new ArrayList<Object>();
+	private List<Object> fields = new ArrayList<>();
 }

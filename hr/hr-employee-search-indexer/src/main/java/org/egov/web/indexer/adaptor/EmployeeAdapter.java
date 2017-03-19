@@ -1,6 +1,7 @@
 package org.egov.web.indexer.adaptor;
 
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -8,21 +9,26 @@ import org.egov.eis.index.model.EmployeeAssignment;
 import org.egov.eis.index.model.EmployeeDetails;
 import org.egov.eis.index.model.EmployeeEducation;
 import org.egov.eis.index.model.EmployeeIndex;
+import org.egov.eis.index.model.EmployeeJurisdiction;
 import org.egov.eis.index.model.EmployeeProbation;
 import org.egov.eis.index.model.EmployeeRegularisation;
 import org.egov.eis.index.model.EmployeeServiceHistory;
 import org.egov.eis.index.model.EmployeeTechnical;
 import org.egov.eis.index.model.EmployeeTest;
-import org.egov.eis.model.Assignment;
-import org.egov.eis.model.DepartmentalTest;
-import org.egov.eis.model.EducationalQualification;
-import org.egov.eis.model.Employee;
-import org.egov.eis.model.Probation;
-import org.egov.eis.model.Regularisation;
-import org.egov.eis.model.ServiceHistory;
-import org.egov.eis.model.TechnicalQualification;
+import org.egov.web.indexer.contract.EmployeeRequest;
+import org.egov.web.indexer.contract.RequestInfo;
+import org.egov.web.indexer.eis.service.BoundaryService;
 import org.egov.web.indexer.eis.service.CommonMasterService;
 import org.egov.web.indexer.eis.service.HRMasterService;
+import org.egov.web.indexer.model.Assignment;
+import org.egov.web.indexer.model.Boundary;
+import org.egov.web.indexer.model.DepartmentalTest;
+import org.egov.web.indexer.model.EducationalQualification;
+import org.egov.web.indexer.model.Employee;
+import org.egov.web.indexer.model.Probation;
+import org.egov.web.indexer.model.Regularisation;
+import org.egov.web.indexer.model.ServiceHistory;
+import org.egov.web.indexer.model.TechnicalQualification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,66 +41,70 @@ public class EmployeeAdapter {
 	@Autowired
 	private CommonMasterService commonMasterService;
 	
-
-
-	public EmployeeIndex indexOnCreate(Employee employee) {
+	@Autowired
+	private BoundaryService boundaryService;
+	
+	public EmployeeIndex indexOnCreate(EmployeeRequest employeeRequest) {
 
 		EmployeeIndex employeeIndex = new EmployeeIndex();
-		System.out.println("employee =" + employee);
-		employeeIndex.setEmployeeDetails(getEmployeeDetails(employee));
-		employeeIndex.setEmployeeAssignment(getEmployeeAssignments(employee));
-		employeeIndex.setEmployeeEducation(getEmployeeEducation(employee));
-		//employeeIndex.setEmployeeJurisdiction(getEmployeeJurisdiction(employee));
-		employeeIndex.setEmployeeprobation(getEmployeeprobation(employee));
-		employeeIndex.setEmployeeRegularisation(getEmployeeRegularisation(employee));
-		employeeIndex.setEmployeeService(getEmployeeService(employee));
-		employeeIndex.setEmployeeTechnical(getEmployeeTechnical(employee));
-		employeeIndex.setEmployeeTest(getEmployeeTest(employee));
+		System.out.println("employee =" + employeeRequest.getEmployee());
+		employeeIndex.setEmployeeDetails(getEmployeeDetails(employeeRequest));
+		employeeIndex.setEmployeeAssignment(getEmployeeAssignments(employeeRequest.getEmployee()));
+		employeeIndex.setEmployeeEducation(getEmployeeEducation(employeeRequest.getEmployee()));
+		employeeIndex.setEmployeeJurisdiction(getEmployeeJurisdiction(employeeRequest));
+		employeeIndex.setEmployeeprobation(getEmployeeProbation(employeeRequest.getEmployee()));
+		employeeIndex.setEmployeeRegularisation(getEmployeeRegularisation(employeeRequest.getEmployee()));
+		employeeIndex.setEmployeeService(getEmployeeService(employeeRequest.getEmployee()));
+		employeeIndex.setEmployeeTechnical(getEmployeeTechnical(employeeRequest.getEmployee()));
+		employeeIndex.setEmployeeTest(getEmployeeTest(employeeRequest.getEmployee()));
 
 
 		return employeeIndex;
 	}
 
-	private EmployeeDetails getEmployeeDetails(Employee employee) {
+	private EmployeeDetails getEmployeeDetails(EmployeeRequest employeeRequest) {
 		
 		EmployeeDetails employeeDetails = new EmployeeDetails();
-		if (employee.getUserInfo() != null) {
-			if (employee.getUserInfo().getAadhaarNumber()!= null) {
-				employeeDetails.setAadharNumber(employee.getUserInfo().getAadhaarNumber().toString()); // FIXME Long toString()
+		Employee employee = employeeRequest.getEmployee();
+		RequestInfo requestInfo = employeeRequest.getRequestInfo();
+		
+		if (employee.getUser() != null) {
+			if (employee.getUser().getAadhaarNumber()!= null) {
+				employeeDetails.setAadharNumber(employee.getUser().getAadhaarNumber().toString()); // FIXME Long toString()
 			}
-			employeeDetails.setUserName(employee.getUserInfo().getName());
-			employeeDetails.setPwdExpiryDate(employee.getUserInfo().getPwdExpiryDate()); 
-			employeeDetails.setMobileNumber(employee.getUserInfo().getMobileNumber());
-			employeeDetails.setAlternateNumber(employee.getUserInfo().getAltContactNumber());
-			employeeDetails.setEmailId(employee.getUserInfo().getEmailId()); 
-			employeeDetails.setEmployeeActive(employee.getUserInfo().getActive());
-			employeeDetails.setSalutation(employee.getUserInfo().getSalutation());
-			employeeDetails.setEmployeeName(employee.getUserInfo().getUserName());
-			if (employee.getUserInfo().getType()!= null) {
-				employeeDetails.setUserType(employee.getUserInfo().getType().toString());
+			employeeDetails.setUserName(employee.getUser().getName());
+			employeeDetails.setPwdExpiryDate(employee.getUser().getPwdExpiryDate()); 
+			employeeDetails.setMobileNumber(employee.getUser().getMobileNumber());
+			employeeDetails.setAlternateNumber(employee.getUser().getAltContactNumber());
+			employeeDetails.setEmailId(employee.getUser().getEmailId()); 
+			employeeDetails.setEmployeeActive(employee.getUser().getActive());
+			employeeDetails.setSalutation(employee.getUser().getSalutation());
+			employeeDetails.setEmployeeName(employee.getUser().getUserName());
+			if (employee.getUser().getType()!= null) {
+				employeeDetails.setUserType(employee.getUser().getType().toString());
 			}
-			if (employee.getUserInfo().getGender()!= null) {
-				employeeDetails.setGender(employee.getUserInfo().getGender().toString());
+			if (employee.getUser().getGender()!= null) {
+				employeeDetails.setGender(employee.getUser().getGender().toString());
 			}
-			employeeDetails.setPanNumber(employee.getUserInfo().getPan());
-			if (employee.getUserInfo().getAadhaarNumber()!= null) {
-				employeeDetails.setAadharNumber(employee.getUserInfo().getAadhaarNumber().toString()); // FIXME Long toString()
+			employeeDetails.setPanNumber(employee.getUser().getPan());
+			if (employee.getUser().getAadhaarNumber()!= null) {
+				employeeDetails.setAadharNumber(employee.getUser().getAadhaarNumber().toString()); // FIXME Long toString()
 			}
 			//employeeDetails.setDateOfBirth(employee.getUserInfo());dateOfBirth; FIXME Date of birth not included
-			employeeDetails.setEmployeeCreatedDate(employee.getUserInfo().getCreatedDate());
-			if (employee.getUserInfo().getCreatedBy()!= null) {
-				employeeDetails.setEmployeeCreatedBy(employee.getUserInfo().getCreatedBy().toString());
+			employeeDetails.setEmployeeCreatedDate(employee.getUser().getCreatedDate());
+			if (employee.getUser().getCreatedBy()!= null) {
+				employeeDetails.setEmployeeCreatedBy(employee.getUser().getCreatedBy().toString());
 			}
-			employeeDetails.setPermanentAddress(employee.getUserInfo().getPermanentAddress()); 
-			employeeDetails.setPermanentCity(employee.getUserInfo().getPermanentCity());
-			employeeDetails.setPermanentPinCode(employee.getUserInfo().getPermanentPincode());
-			employeeDetails.setCorrespondenceCity(employee.getUserInfo().getCorrespondenceCity());
-			employeeDetails.setCorrespondencePinCode(employee.getUserInfo().getCorrespondencePincode());
-			employeeDetails.setCorrespondenceAddress(employee.getUserInfo().getCorrespondenceAddress());
-			employeeDetails.setAccountLocked(employee.getUserInfo().getAccountLocked());
-			employeeDetails.setFatherOrHusbandname(employee.getUserInfo().getFatherOrHusbandName());
-			employeeDetails.setBloodGroup(employee.getUserInfo().getBloodGroup());
-			employeeDetails.setIdentificationMark(employee.getUserInfo().getIdentificationMark());
+			employeeDetails.setPermanentAddress(employee.getUser().getPermanentAddress()); 
+			employeeDetails.setPermanentCity(employee.getUser().getPermanentCity());
+			employeeDetails.setPermanentPinCode(employee.getUser().getPermanentPincode());
+			employeeDetails.setCorrespondenceCity(employee.getUser().getCorrespondenceCity());
+			employeeDetails.setCorrespondencePinCode(employee.getUser().getCorrespondencePincode());
+			employeeDetails.setCorrespondenceAddress(employee.getUser().getCorrespondenceAddress());
+			employeeDetails.setAccountLocked(employee.getUser().getAccountLocked());
+			employeeDetails.setFatherOrHusbandname(employee.getUser().getFatherOrHusbandName());
+			employeeDetails.setBloodGroup(employee.getUser().getBloodGroup());
+			employeeDetails.setIdentificationMark(employee.getUser().getIdentificationMark());
 		}
 		// FIXME populate UserInfo details too
 		// ulbName;
@@ -110,37 +120,37 @@ public class EmployeeAdapter {
 			employeeDetails.setEmployeeStatus(employee.getEmployeeStatus().toString()); 
 		}
 		if (employee.getEmployeeType()!= null) {
-			employeeDetails.setEmployeeType(hrMasterService.getEmployeeType(employee.getEmployeeType()).getName());
+			employeeDetails.setEmployeeType(hrMasterService.getEmployeeType(employee.getEmployeeType(), requestInfo).getName());
 		}
 		if (employee.getRecruitmentMode()!= null) {
-			employeeDetails.setRecruitmentMode(hrMasterService.getRecruitmentMode(employee.getRecruitmentMode()).getName());
+			employeeDetails.setRecruitmentMode(hrMasterService.getRecruitmentMode(employee.getRecruitmentMode(), requestInfo).getName());
 		}
 		if (employee.getRecruitmentType()!= null) {
-			employeeDetails.setRecruitmentType(hrMasterService.getRecruitmentType(employee.getEmployeeType()).getName());
+			employeeDetails.setRecruitmentType(hrMasterService.getRecruitmentType(employee.getEmployeeType(), requestInfo).getName());
 		}
 		if (employee.getRecruitmentQuota()!= null) {
-			employeeDetails.setRecruitmentQuota(hrMasterService.getRecruitmentQuota(employee.getEmployeeType()).getName());
+			employeeDetails.setRecruitmentQuota(hrMasterService.getRecruitmentQuota(employee.getEmployeeType(), requestInfo).getName());
 		}
 		employeeDetails.setRetirementAge(employee.getRetirementAge());
 		employeeDetails.setDateOfResignation(employee.getDateOfResignation());
 		employeeDetails.setDateOfTermination(employee.getDateOfTermination());
 		if (employee.getMotherTongue()!= null) {
-			employeeDetails.setMotherTongue(commonMasterService.getLanguage(employee.getMotherTongue()).getName()); //FIXME commonmaster
+			employeeDetails.setMotherTongue(commonMasterService.getLanguage(employee.getMotherTongue(), requestInfo).getName()); //FIXME commonmaster
 		}
 		if (employee.getReligion()!= null) {
-			employeeDetails.setReligion(commonMasterService.getReligion(employee.getReligion()).getName());
+			employeeDetails.setReligion(commonMasterService.getReligion(employee.getReligion(), requestInfo).getName());
 		}
 		if (employee.getCommunity()!= null) {
-			employeeDetails.setCommunity(commonMasterService.getCommunity(employee.getCommunity()).getName());
+			employeeDetails.setCommunity(commonMasterService.getCommunity(employee.getCommunity(), requestInfo).getName());
 		}
 		if (employee.getCategory()!= null) {
-			employeeDetails.setEmployeeCategory(commonMasterService.getCategory(employee.getCategory()).getName());
+			employeeDetails.setEmployeeCategory(commonMasterService.getCategory(employee.getCategory(), requestInfo).getName());
 		}
 		employeeDetails.setPhysicallyDisabled(employee.getPhysicallyDisabled());
 		employeeDetails.setMedicalReportProduced(employee.getMedicalReportProduced());
 		if (employee.getLanguagesKnown()!= null) { // FIXME Makejust one call
 			employeeDetails.setLanguagesKnown(employee.getLanguagesKnown().stream()
-					.map(languageId -> commonMasterService.getLanguage(languageId).getName())
+					.map(languageId -> commonMasterService.getLanguage(languageId, requestInfo).getName())
 					.collect(Collectors.toList()).toString());
 		}
 		if (employee.getMaritalStatus()!= null) {
@@ -238,7 +248,7 @@ public class EmployeeAdapter {
 		}).collect(Collectors.toList());
 	}
 
-	private List<EmployeeProbation> getEmployeeprobation(Employee employee) {
+	private List<EmployeeProbation> getEmployeeProbation(Employee employee) {
 
 		List<Probation> probations = employee.getProbation();
 
@@ -361,6 +371,35 @@ public class EmployeeAdapter {
 	}
 	
 
+	private List<EmployeeJurisdiction> getEmployeeJurisdiction(EmployeeRequest employeeRequest) {
+
+		Employee employee = employeeRequest.getEmployee();
+		RequestInfo requestInfo = employeeRequest.getRequestInfo();
+		
+		String jurisdictionIdsInCsv = String.join(",", employee.getJurisdictions().stream()
+				.map(jurisdictionId -> jurisdictionId.toString()).collect(Collectors.toList()));
+		List<Boundary> boundaries = boundaryService.getBoundary(jurisdictionIdsInCsv, requestInfo);
+
+		return boundaries.stream().map(boundary -> {
+			EmployeeJurisdiction employeeJurisdiction = new EmployeeJurisdiction();
+
+			employeeJurisdiction.setEmployeeId(employee.getId().intValue());
+			employeeJurisdiction.setEmployeeCode(employee.getCode());
+			
+			employeeJurisdiction.setBoundaryName(boundary.getName());
+
+// FIXME : Boundary type is not available now
+/*
+			employeeJurisdiction.setBoundaryType(boundary.getBoundaryType().getName());	
+*/
+			employeeJurisdiction.setJurisdictionCreatedDate(new Date());	
+			if (boundary.getCreatedBy()!= null) {
+				employeeJurisdiction.setJurisdictionCreatedBy("System"); // FIXME
+			}
+
+			return employeeJurisdiction;
+		}).collect(Collectors.toList());
+	}
 
 
 

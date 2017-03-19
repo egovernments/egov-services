@@ -119,8 +119,7 @@ $(document).ready(function()
 				required : 'required'
 			});
 		}else{
-			$('#recenter').addClass('hide');
-			$('#receivingCenter').removeAttr('name required');
+			hideReceivingCenter();
 		}
 	});
 	
@@ -242,11 +241,10 @@ $(document).ready(function()
 		var RequestInfo = new $.RequestInfo(localStorage.getItem("auth"));
 		
 		if($('form').valid()){
-			var obj = $(this);
-			obj.attr("disabled", "disabled");
 			if(captcha.validateCaptcha($('#captcha').val())){
 				//ajax to submit
-
+				var obj = $(this);
+				obj.attr("disabled", "disabled");
 				var $form = $("form");
 				var data = getFormData($form);
 
@@ -361,6 +359,7 @@ $(document).ready(function()
 		$('.acknowledgement, .breadcrumb').addClass('hide');
 		$('.createcrn, .tour-section').removeClass('hide');
 		$( "form" ).trigger('reset');
+		hideReceivingCenter();
 		clearimagepreview();
 		captcha.refreshCaptcha();
 		$(this).parent().nextAll('li').remove();
@@ -373,6 +372,11 @@ $(document).ready(function()
 	});
 
 });
+
+function hideReceivingCenter(){
+	$('#recenter').addClass('hide');
+	$('#receivingCenter').removeAttr('name required');
+}
 
 function doAck(response){
 	$('.breadcrumb').append('<li class="active" data-translate="ack">Acknowledgement</li>');

@@ -75,13 +75,21 @@
 								<div class="row add-border">
 									<div class="col-md-3 col-xs-6 add-margin">Name</div>
 									<div class="col-md-3 col-xs-6 add-margin view-content">
-										{{first_name}}
+										{{#if first_name}}
+											{{first_name}}
+										{{else}}
+											N/A
+										{{/if}}
 									</div>
 									<div class="col-md-3 col-xs-6 add-margin">
 										Phone Number
 									</div>
 									<div class="col-md-3 col-xs-6 add-margin view-content">
-											{{phone}}	
+										{{#if phone}}
+											{{phone}}
+										{{else}}
+											N/A
+										{{/if}}
 									</div>
 								</div>
 				
@@ -133,12 +141,12 @@
 								</div>
 					{{/service_requests}}
 								<div class="row add-border">
-									<div class="col-md-3 col-xs-6 add-margin">
+									<div class="col-md-3 col-sm-3 col-xs-6 add-margin">
 										Photos/Video
 									</div>
-									<div id="links" class="col-md-9 col-xs-12">
+									<div id="links" class="col-md-9 col-sm-9 col-xs-12">
 									{{#files}}
-										<a href="{{url}}" type="{{contentType}}" class="col-md-4 col-xs-12 add-margin down-file view-content" data-gallery> 
+										<a href="{{url}}" type="{{contentType}}" class="col-md-4 col-sm-4 col-xs-12 add-margin down-file view-content" data-gallery> 
 											{{#if (contains contentType "video")}}
 												<img class="img-width add-margin" src="../resources/global/images/video.png" alt="">
 											{{else}}
@@ -293,32 +301,32 @@
 					<div class="panel-body">
 						<form id="complaintUpdate" role="form" class="form-horizontal form-groups-bordered" enctype="multipart/form-data" autocomplete="off">
 							<div class="form-group">
-								<div class="col-md-3 col-xs-6 add-margin">
+								<div class="col-md-3 col-sm-4 col-xs-6 add-margin">
 									Change Status
 								</div>
-								<div class="col-md-3 col-xs-6 add-margin">
+								<div class="col-md-3 col-sm-8 col-xs-6 add-margin">
 									<select id="status" name="status" class="form-control">
 									</select>
 								</div>
-								<div class="col-md-3 col-xs-6 add-margin employee-action">
+								<div class="col-md-3 col-sm-4 col-xs-6 add-margin employee-action">
 									Change Grievance Type
 								</div>
-								<div class="col-md-3 col-xs-6 add-margin employee-action">
+								<div class="col-md-3 col-sm-8 col-xs-6 add-margin employee-action">
 									<select id="complaintType" name="complaintType" class="form-control">
 									</select>
 									
 								</div>
 							</div>
 							<div class="form-group employee-action">
-								<div class="col-md-3 col-xs-12 add-margin">
+								<div class="col-md-3 col-sm-4 col-xs-12 add-margin">
 									Change Jurisdiction
 								</div>
-								<div class="col-md-3 col-xs-12 add-margin">
+								<div class="col-md-3 col-sm-4 col-xs-12 add-margin">
 									<select id="ct-sel-jurisd" name="location" class="form-control" >
 										<option value="">Select</option>
 									</select>
 								</div>
-								<div class="col-md-3 col-xs-12 add-margin">
+								<div class="col-md-3 col-sm-4 col-xs-12 add-margin">
 									<select id="location" name="childLocation" class="form-control">
 										<option value="">Select</option>
 									</select>
@@ -327,18 +335,18 @@
 							</div>
 							<div class="form-group employee-action">
 								<label class="col-md-3 col-xs-12">Forward Grievance To</label>
-								<div class="col-md-3 col-xs-12 add-margin">
+								<div class="col-md-3 col-sm-4 col-xs-12 add-margin">
 									<select id="approvalDepartment" name="approvalDepartment" class="form-control">  
 									</select>
 								</div>
-								<div class="col-md-3 col-xs-12 add-margin">
+								<div class="col-md-3 col-sm-4 col-xs-12 add-margin">
 									<select id="approvalDesignation" name="approvalDesignation" class="form-control">  
 										<option value="">
 											Select Designation
 										</option>
 									</select>
 								</div>
-								<div class="col-md-3 col-xs-12 add-margin">
+								<div class="col-md-3 col-sm-4 col-xs-12 add-margin">
 									<select name="approvalPosition" id="approvalPosition" class="form-control">
 										<option value="">
 											Select Position

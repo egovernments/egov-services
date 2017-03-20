@@ -1,15 +1,24 @@
 package org.egov.egf.persistence.service;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.egov.egf.json.ObjectMapperFactory;
 import org.egov.egf.persistence.entity.Bank;
 import org.egov.egf.persistence.queue.contract.BankContract;
 import org.egov.egf.persistence.queue.contract.BankContractRequest;
-import org.egov.egf.persistence.repository.BankRepository;
+import org.egov.egf.persistence.queue.contract.BankContractResponse;
+import org.egov.egf.persistence.queue.contract.RequestInfo;
+import org.egov.egf.persistence.queue.contract.ResponseInfo;
+import org.egov.egf.persistence.repository.BankJpaRepository;
+import org.egov.egf.persistence.repository.BankQueueRepository;
 import org.egov.egf.persistence.specification.BankSpecification;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,7 +35,8 @@ import org.springframework.validation.SmartValidator;
 @Transactional(readOnly = true)
 public class BankService {
 
-	private final BankRepository bankRepository;
+	private final BankJpaRepository bankJpaRepository;
+	private final BankQueueRepository bankQueueRepository;
 	@PersistenceContext
 	private EntityManager entityManager;
 
@@ -34,41 +44,58 @@ public class BankService {
 	private SmartValidator validator;
 
 	@Autowired
-	public BankService(final BankRepository bankRepository) {
-		this.bankRepository = bankRepository;
+	public BankService(final BankJpaRepository bankJpaRepository, final BankQueueRepository bankQueueRepository) {
+		this.bankJpaRepository = bankJpaRepository;
+		this.bankQueueRepository = bankQueueRepository;
+	}
+
+	public void push(final BankContractRequest bankContractRequest) {
+		bankQueueRepository.push(bankContractRequest);
 	}
 
 	@Transactional
-	public Bank create(final Bank bank) {
-		return bankRepository.save(bank);
+	public BankContractResponse create(HashMap<String, Object> financialContractRequestMap) {
+		final BankContractRequest bankContractRequest = ObjectMapperFactory.create()
+				.convertValue(financialContractRequestMap.get("Bank"), BankContractRequest.class);
+		BankContractResponse bankContractResponse = new BankContractResponse();
+		bankContractResponse.setBanks(new ArrayList<BankContract>());
+		ModelMapper modelMapper = new ModelMapper();
+		for (BankContract bankContract : bankContractRequest.getBanks()) {
+			Bank bankEntity = modelMapper.map(bankContract, Bank.class);
+			bankJpaRepository.save(bankEntity);
+			BankContract resp = modelMapper.map(bankEntity, BankContract.class);
+			bankContractResponse.getBanks().add(resp);
+		}
+		bankContractResponse.setResponseInfo(getResponseInfo(bankContractRequest.getRequestInfo()));
+		return bankContractResponse;
 	}
 
 	@Transactional
 	public Bank update(final Bank bank) {
-		return bankRepository.save(bank);
+		return bankJpaRepository.save(bank);
 	}
 
 	public List<Bank> findAll() {
-		return bankRepository.findAll(new Sort(Sort.Direction.ASC, "name"));
+		return bankJpaRepository.findAll(new Sort(Sort.Direction.ASC, "name"));
 	}
 
 	public Bank findByName(String name) {
-		return bankRepository.findByName(name);
+		return bankJpaRepository.findByName(name);
 	}
 
 	public Bank findByCode(String code) {
-		return bankRepository.findByCode(code);
+		return bankJpaRepository.findByCode(code);
 	}
 
 	public Bank findOne(Long id) {
-		return bankRepository.findOne(id);
+		return bankJpaRepository.findOne(id);
 	}
 
 	public Page<Bank> search(BankContractRequest bankContractRequest) {
 		final BankSpecification specification = new BankSpecification(bankContractRequest.getBank());
 		Pageable page = new PageRequest(bankContractRequest.getPage().getOffSet(),
 				bankContractRequest.getPage().getPageSize());
-		return bankRepository.findAll(specification, page);
+		return bankJpaRepository.findAll(specification, page);
 	}
 
 	public BindingResult validate(BankContractRequest bankContractRequest, String method, BindingResult errors) {
@@ -106,6 +133,12 @@ public class BankService {
 
 	public BankContractRequest fetchRelatedContracts(BankContractRequest bankContractRequest) {
 		return bankContractRequest;
+	}
+
+	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
+		new ResponseInfo();
+		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer()).ts(new Date())
+				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
 	}
 
 }

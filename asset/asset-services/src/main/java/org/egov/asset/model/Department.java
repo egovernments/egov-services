@@ -41,8 +41,6 @@
 
 package org.egov.asset.model;
 
-import javax.validation.constraints.NotNull;
-
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -58,7 +56,6 @@ import lombok.ToString;
 @ToString
 public class Department {
 
-	@NotNull
 	private Long id;
 	private String name;
 	private String code;

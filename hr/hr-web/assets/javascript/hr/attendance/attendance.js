@@ -42,7 +42,7 @@ class Attendance extends React.Component {
                 var yearIn=date.getFullYear();
                 // console.log(date.getDate().length);
                 // console.log(employees[emp].attendance[att].split("-")[1]);
-                attendance.push({attendanceDate:day+"/"+monthIn+"/"+yearIn,employee:employees[emp].id,month:(month+1),year,type:{code:employees[emp].attendance[att]},remarks:"",tenantId});
+                attendance.push({attendanceDate:day+"/"+monthIn+"/"+yearIn,employee:emp,month:(month+1),year,type:{code:employees[emp].attendance[att]},remarks:"",tenantId});
           }
       }
 
@@ -100,8 +100,8 @@ class Attendance extends React.Component {
     var employees={};
     for(var i=0;i<employeesTemp.length;i++)
     {
-        employees[employeesTemp[i].code]={
-          id:employeesTemp[i].id,
+        employees[employeesTemp[i].id]={
+          code:employeesTemp[i].code,
           name:employeesTemp[i].name,
           month:queryParam["month"],
           year:queryParam["year"],
@@ -126,10 +126,12 @@ class Attendance extends React.Component {
         // empTemp.push(emp);
     }
 
+    console.log(employees);
+
     if(currentAttendance.length>0)
     {
         for (var i = 0; i < currentAttendance.length; i++) {
-            employees[currentAttendance[i].code][month+"-"+currentAttendance[i].attendanceDate.split("-")[2]]=currentAttendance[i].type.code;
+            employees[currentAttendance[i].employee]["attendance"][`${parseInt(queryParam["month"])}-${currentAttendance[i].attendanceDate.split("-")[2]}`]=currentAttendance[i].type.code;
         }
     }
 
@@ -169,7 +171,7 @@ class Attendance extends React.Component {
   markBulkAttendance(oDate,type)
   {
     var employees=this.state.employees;
-    var date=`${oDate.getMonth()}-${oDate.getDate()}`;
+    var date=`${oDate.getMonth()}-${oDate.getDate().toString().length===1?"0"+oDate.getDate():oDate.getDate()}`;
     for(var emp in employees)
     {
       var now = new Date();
@@ -270,9 +272,9 @@ class Attendance extends React.Component {
     {
         return Object.keys(employees).map((k, index)=>
         {
-          return (<tr key={employees[k].id}>
+          return (<tr key={employees[k].code}>
                       <td>{index+1}</td>
-                      <td>{employees[k].id+"-"+employees[k].name}</td>
+                      <td>{employees[k].code+"-"+employees[k].name}</td>
                       {createCalender("td",k,employees[k].attendance)}
                   </tr>)
         })

@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.springframework.util.StringUtils.isEmpty;
+
 /**
  * Service request raised by the citizen
  */
@@ -118,7 +120,26 @@ public class ServiceRequest {
         lastName = null;
         phone = complaint.getComplainant().getMobile();
         email = complaint.getComplainant().getEmail();
-        values = complaint.getAdditionalValues();
+        values = getAdditionalValues(complaint);
+    }
+
+    private Map<String, String> getAdditionalValues(Complaint complaint) {
+        final HashMap<String, String> map = new HashMap<>();
+        map.put("ReceivingMode", complaint.getReceivingMode());
+        map.put("ComplaintStatus", complaint.getComplaintStatus());
+        addEntryIfPresent(map, "ReceivingCenter", complaint.getReceivingCenter());
+        addEntryIfPresent(map, "LocationId", complaint.getComplaintLocation().getLocationId());
+        addEntryIfPresent(map, "ChildLocationId", complaint.getChildLocation());
+        addEntryIfPresent(map, "StateId", complaint.getState());
+        addEntryIfPresent(map, "AssigneeId", complaint.getAssignee());
+        addEntryIfPresent(map, "DepartmentId", complaint.getDepartment());
+        return map;
+    }
+
+    private void addEntryIfPresent(Map<String, String> map, String key, String item) {
+        if (!isEmpty(item)) {
+            map.put(key, item);
+        }
     }
 
     public Complaint toDomainForCreateRequest(AuthenticatedUser authenticatedUser) {
@@ -136,7 +157,6 @@ public class ServiceRequest {
                 .authenticatedUser(authenticatedUser)
                 .crn(crn)
                 .complaintType(new ComplaintType(complaintTypeName, complaintTypeCode))
-                .additionalValues(values)
                 .address(address)
                 .mediaUrls(mediaUrls)
                 .complaintLocation(complaintLocation)

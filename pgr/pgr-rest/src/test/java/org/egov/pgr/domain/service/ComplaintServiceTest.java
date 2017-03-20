@@ -1,31 +1,11 @@
 package org.egov.pgr.domain.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-
-import org.egov.pgr.domain.model.AuthenticatedUser;
-import org.egov.pgr.domain.model.Complainant;
-import org.egov.pgr.domain.model.Complaint;
-import org.egov.pgr.domain.model.ComplaintLocation;
-import org.egov.pgr.domain.model.ComplaintSearchCriteria;
-import org.egov.pgr.domain.model.ComplaintType;
-import org.egov.pgr.domain.model.Coordinates;
-import org.egov.pgr.domain.model.UserType;
+import org.egov.pgr.domain.model.*;
 import org.egov.pgr.persistence.queue.contract.RequestInfo;
 import org.egov.pgr.persistence.queue.contract.ServiceRequest;
 import org.egov.pgr.persistence.queue.contract.SevaRequest;
 import org.egov.pgr.persistence.repository.ComplaintJpaRepository;
 import org.egov.pgr.persistence.repository.ComplaintRepository;
-import org.egov.pgr.persistence.repository.DepartmentRepository;
 import org.egov.pgr.persistence.repository.UserRepository;
 import org.egov.pgr.web.contract.Department;
 import org.egov.pgr.web.contract.User;
@@ -35,6 +15,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
+
 @RunWith(MockitoJUnitRunner.class)
 public class ComplaintServiceTest {
 
@@ -42,9 +31,6 @@ public class ComplaintServiceTest {
 	private static final String TENANT_ID = "tenantId";
 	@Mock
 	private ComplaintRepository complaintRepository;
-
-	@Mock
-	private DepartmentRepository departmentRepository;
 
 	@Mock
 	private UserRepository userRepository;
@@ -138,9 +124,7 @@ public class ComplaintServiceTest {
 	public void testShouldFindAllComplaintsBySearchCriteria() {
 		final ComplaintSearchCriteria searchCriteria = ComplaintSearchCriteria.builder().build();
 		final Complaint expectedComplaint = getComplaint();
-		final Department expectedDepartment = getDepartment();
 		when(complaintRepository.findAll(searchCriteria)).thenReturn(Collections.singletonList(expectedComplaint));
-		when(departmentRepository.getAll()).thenReturn(Collections.singletonList(expectedDepartment));
 
 		final List<Complaint> actualComplaints = complaintService.findAll(searchCriteria);
 
@@ -179,14 +163,17 @@ public class ComplaintServiceTest {
 		final Coordinates coordinates = new Coordinates(0d, 0d);
 		final ComplaintLocation complaintLocation = new ComplaintLocation(coordinates, "id", null);
 		final Complainant complainant = Complainant.builder().userId("userId").build();
-		return Complaint.builder().complainant(complainant).authenticatedUser(getCitizen())
-				.complaintLocation(complaintLocation).tenantId(TENANT_ID).description("description").crn("crn")
-				.lastAccessedTime(new Date()).department(2L).complaintType(new ComplaintType(null, "complaintCode"))
+		return Complaint.builder()
+                .complainant(complainant)
+                .authenticatedUser(getCitizen())
+				.complaintLocation(complaintLocation)
+                .tenantId(TENANT_ID)
+                .description("description")
+                .crn("crn")
+				.lastAccessedTime(new Date())
+                .department("2")
+				.complaintType(new ComplaintType(null, "complaintCode"))
 				.build();
-	}
-
-	private Department getDepartment() {
-		return Department.builder().id(2L).name("Accounts").code("A").build();
 	}
 
 	private AuthenticatedUser getCitizen() {

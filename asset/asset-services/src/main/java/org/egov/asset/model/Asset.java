@@ -49,6 +49,9 @@ import javax.validation.constraints.NotNull;
 
 import org.egov.asset.model.enums.ModeOfAcquisition;
 import org.egov.asset.model.enums.Status;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -72,23 +75,29 @@ public class Asset {
 	private String name;
 	private String code;
 	
-	@Valid
+	
 	private Department department;
 	
 	@Valid
 	private AssetCategory assetCategory;
 	private String assetDetails;
 	private ModeOfAcquisition modeOfAcquisition;
+	
+	@NotNull
 	private Status status;
 	private String description;
+	
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date dateOfCreation;
 	
-	@Valid
 	private Location locationDetails;
 	
 	private String remarks;
 	private String length;
 	private String width;
 	private String totalArea;
+	private Double grossValue;
+	private Double accumulatedDepreciation;
+	
 	private Map<String, String> properties;
 }

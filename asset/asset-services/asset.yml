@@ -149,11 +149,42 @@ paths:
           schema:
             $ref: '#/definitions/AssetResponse'
         '400':
-          description: tenant_id was not provided or General service error
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+  
+  /assets/{code}/_update:
+    post:
+      summary: Update existing Asset.
+      description: The asset master is the database of all the assets owned by the ULB. Each asset belongs to a category. The attributes of the asset category are inherited by the assets within that category. This API allow user to update the existing asset property.
+      parameters:
+        
+        - name: code
+          in: path
+          required: true
+          description: The unique code of the asset.
+          type: integer
+          format: int64
+          
+        - name: Asset
+          in: body
+          description: Details for the new Asset.
+          required: true
+          schema:
+            $ref: '#/definitions/AssetRequest'
+      tags:
+        - Asset
+      responses:
+        '201':
+          description: Asset created
+          schema:
+            $ref: '#/definitions/AssetResponse'
+        '400':
+          description: Invalid input.
           schema:
             $ref: '#/definitions/ErrorRes'
             
-  /assetsCategory/_create:
+  /assets/assetsCategory/_create:
     post:
       summary: Create AssetCategory
       description: To create a new Asset.
@@ -178,11 +209,11 @@ paths:
           schema:
             $ref: '#/definitions/AssetCategoryResponse'
         '400':
-          description: tenant_id was not provided or General service error
+          description: Invalid input.
           schema:
             $ref: '#/definitions/ErrorRes'
   
-  /assetsCategory/_search:
+  /assets/assetsCategory/_search:
      post:
       summary: Get Asset Category List.
       description: >
@@ -237,7 +268,7 @@ paths:
           schema:
             $ref: '#/definitions/AssetCategoryResponse'
         '400':
-          description: tenant_id was not provided or General service error
+          description: Invalid input.
           schema:
             $ref: '#/definitions/ErrorRes'
   
@@ -246,6 +277,9 @@ definitions:
     description: Hold the asset specific information.
     type: object
     properties:
+      tenantId:
+        type: string
+        description: Unique id for ulb.
       id:
         description: Unique id for the asset.  This will be auto generated.
         type: integer
@@ -285,6 +319,15 @@ definitions:
           - Retired
           - Revaluated
           - Sold
+      
+      grossValue:
+        type: integer
+        format: double
+        description: gross value of the asset, applicable only if the status is Capitalized 
+      accumulatedDepreciation:
+        type: integer
+        format: double
+        description: gross value of the asset, applicable only if the status is Capitalized 
       description:
         type: string
         description: description of asset
@@ -309,7 +352,6 @@ definitions:
       properties:
         type: string
         description: Additional information of the asset.Hold the data for dynamic custom field in JSON format. There key and value will be LABEL NAME and USER INPUT DATA respactively. 
-# need discuss about department data        
   Department:
     type: object
     description: List of departments in the ULB
@@ -329,6 +371,9 @@ definitions:
     type: object
     description: Categories defined under asset category type are shown in the drop down.
     properties:
+      tenantId:
+        type: string
+        description: Unique id for ulb.
       id:
         type: integer
         format: int64
@@ -360,22 +405,18 @@ definitions:
         type: integer
         format: int64
         description: Options are from the  chart of account master for the configured purpose id.
-  # need clarification about the field data
       accumulatedDepreciationAccount:
         type: integer
         format: int64
         description: Options are from the  chart of account master for the configured purpose id.
- # need clarification about the field data
       revaluationReserveAccount:
         type: integer
         format: int64
         description: Options are from the  chart of account master for the configured purpose id.
- # need clarification about the field data
       depreciationExpenseAccount:
         type: integer
         format: int64
         description: Options are from the  chart of account master for the configured purpose id.
- # need clarification about the field data
       unitOfMeasurement:
         type: integer
         format: int64
@@ -464,31 +505,24 @@ definitions:
       type:
         type: string
         description: type of the custom field.
-  #need some clarity of this field    
       isActive:
         type: boolean
         description: .
       isMandatory:      
         type: boolean
         description: value will be true if field is mandatory otherwise false.
-  #need some clarity of this field         
       values:
         type: string
         description: .
-  #need some clarity of this field   
       localText:
         type: string
         description: .
-  #need some clarity of this field   
       regExFormate:      
         type: string
         description: .
 
   AssetRequest:
     properties:
-      tenantId:
-        description: Unique id for for a tenant.
-        type: string
       ResposneInfo:
         $ref: '#/definitions/RequestInfo'
       Assets:
@@ -508,9 +542,6 @@ definitions:
     
   AssetCategoryRequest:
     properties:
-      tenantId:
-        description: Unique id for for a tenant.
-        type: string
       ResposneInfo:
         $ref: '#/definitions/RequestInfo'
       AssetCategory:
@@ -617,5 +648,4 @@ definitions:
       Error:
         $ref: '#/definitions/Error'
     type: object
-
 

@@ -21,11 +21,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/installment")
+@RequestMapping("installment")
 public class InstallmentController {
 	@Autowired
 	private InstallmentService installmentService;
@@ -37,7 +37,7 @@ public class InstallmentController {
 	private ErrorHandler errHandler;
 
 	@PostMapping("_search")
-	@ResponseStatus(HttpStatus.CREATED)
+	@ResponseBody
 	public ResponseEntity<?> search(@ModelAttribute @Valid InstallmentSearchCriteria installmentSearchCriteria,
 			@RequestBody RequestInfo requestInfo, BindingResult bindingResult) {
 		List<Installment> installments = null;

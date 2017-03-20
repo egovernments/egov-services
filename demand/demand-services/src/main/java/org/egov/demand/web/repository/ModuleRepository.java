@@ -10,18 +10,21 @@ import org.springframework.web.client.RestTemplate;
 @Repository
 public class ModuleRepository {
 	private final String commonServicesHost;
-	
+	private final String moduleByNameUrl;
+
 	@Autowired
 	private RestTemplate restTemplate;
 
 	public ModuleRepository(RestTemplate restTemplate,
-			@Value("${egov.services.common-masters.host}") String commonServicesHost) {
+			@Value("${egov.services.common-masters.host}") String commonServicesHost,
+			@Value("${egov.services.common-masters.module_by_name}") final String moduleByNameUrl) {
 		this.restTemplate = restTemplate;
 		this.commonServicesHost = commonServicesHost;
+		this.moduleByNameUrl = moduleByNameUrl;
 	}
 
 	public Module fetchModuleByName(String name) {
-		String url = this.commonServicesHost + "egov-common-masters/modules/_search?module.name={name}";
+		String url = this.commonServicesHost + moduleByNameUrl;
 		return getModuleServiceResponse(url, name).getModules().get(0);
 	}
 

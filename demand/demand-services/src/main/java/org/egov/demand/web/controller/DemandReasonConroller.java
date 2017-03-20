@@ -61,11 +61,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/demandreason")
+@RequestMapping("demandreason")
 public class DemandReasonConroller {
 
 	@Autowired
@@ -77,8 +77,8 @@ public class DemandReasonConroller {
 	@Autowired
 	private ErrorHandler errHandler;
 
-	@PostMapping("demandreason/_search")
-	@ResponseStatus(HttpStatus.CREATED)
+	@PostMapping("_search")
+	@ResponseBody
 	public ResponseEntity<?> search(@ModelAttribute @Valid DemandReasonCriteria demandReasonCriteria,@RequestBody RequestInfo requestInfo,
 			 BindingResult bindingResult) {
 		List<EgDemandReason> egDemandReasons = null;

@@ -40,13 +40,13 @@ public class EmployeeListener {
 		System.err.println(record.value());
 		ObjectMapper objectMapper=new ObjectMapper();
 		EmployeeRequest employeeRequest = null;
-		
+
 		try {
 			employeeRequest = objectMapper.readValue(record.value(), EmployeeRequest.class);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		//if (employeeRequest.getServiceRequest() != null && !employeeRequest.getServiceRequest().getValues().isEmpty()
 			//	&& employeeRequest.getServiceRequest().getValues().get("complaintStatus").equalsIgnoreCase("REGISTERED"))
 		//{
@@ -57,7 +57,7 @@ public class EmployeeListener {
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
-// FIXME : Uncomment after the date type is decided
-//		elasticSearchRepository.index(INDEX_NAME, INDEX_TYPE, employeeIndex.getEmployeeDetails().getEmployeeId(), employeeIndex);
+
+		elasticSearchRepository.index(INDEX_NAME, INDEX_TYPE, employeeIndex.getEmployeeDetails().getEmployeeId(), employeeIndex);
 	}
 }

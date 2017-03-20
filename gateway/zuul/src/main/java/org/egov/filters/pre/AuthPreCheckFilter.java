@@ -34,7 +34,7 @@ public class AuthPreCheckFilter extends ZuulFilter {
     @Override
     public Object run() {
         RequestContext ctx = RequestContext.getCurrentContext();
-        String authToken = ctx.getRequest().getHeader("auth_token");
+        String authToken = ctx.getRequest().getHeader("auth-token");
 
         HttpServletRequest request = ctx.getRequest();
         if (isRoutingToAnyWhitelistedEndpoints(request, openEndpointsWhitelist)) {

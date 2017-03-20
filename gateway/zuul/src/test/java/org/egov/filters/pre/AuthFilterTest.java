@@ -62,7 +62,7 @@ public class AuthFilterTest {
     @Test
     public void testThatFilterShouldSetUserInfoInHeaderAfterValidatingAuthToken() throws IOException {
         String authToken = "dummy-auth-token";
-        request.addHeader("auth_token", authToken);
+        request.addHeader("auth-token", authToken);
         RequestContext ctx = RequestContext.getCurrentContext();
         ctx.setRequest(request);
 
@@ -98,7 +98,7 @@ public class AuthFilterTest {
     public void testThatFilterShouldAbortIfValidatingAuthTokenFails() throws IOException {
         RequestContext ctx = RequestContext.getCurrentContext();
         String authToken = "dummy-auth-token";
-        request.addHeader("auth_token", authToken);
+        request.addHeader("auth-token", authToken);
         ctx.setRequest(request);
         ctx.setResponse(new MockHttpServletResponse());
         String authUrl = String.format("%s%s%s", authServiceHost, authUri, authToken);
@@ -114,7 +114,7 @@ public class AuthFilterTest {
     public void testThatFilterShouldAbortIfCannotParseAuthResponse() throws IOException {
         RequestContext ctx = RequestContext.getCurrentContext();
         String authToken = "dummy-auth-token";
-        request.addHeader("auth_token", authToken);
+        request.addHeader("auth-token", authToken);
         ctx.setRequest(request);
         ctx.setResponse(new MockHttpServletResponse());
         String authUrl = String.format("%s%s%s", authServiceHost, authUri, authToken);

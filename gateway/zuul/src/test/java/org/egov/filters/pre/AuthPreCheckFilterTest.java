@@ -60,7 +60,7 @@ public class AuthPreCheckFilterTest {
     @Test
     public void testThatAuthShouldHappenForAnonymousEndpointsOnAuthToken() {
         RequestContext ctx = RequestContext.getCurrentContext();
-        request.addHeader("auth_token", "token");
+        request.addHeader("auth-token", "token");
 
         request.setRequestURI("/anonymous-endpoint1");
         ctx.setRequest(request);
@@ -76,7 +76,7 @@ public class AuthPreCheckFilterTest {
     @Test
     public void testThatAuthShouldHappenForOtherEndpointsOnAuthToken() {
         RequestContext ctx = RequestContext.getCurrentContext();
-        request.addHeader("auth_token", "token");
+        request.addHeader("auth-token", "token");
 
         request.setRequestURI("/other-endpoint");
         ctx.setRequest(request);

@@ -45,7 +45,7 @@ public class AuthFilter extends ZuulFilter {
     @Override
     public Object run() {
         RequestContext ctx = RequestContext.getCurrentContext();
-        String authToken = ctx.getRequest().getHeader("auth_token");
+        String authToken = ctx.getRequest().getHeader("auth-token");
         String authURL = String.format("%s%s%s", authServiceHost, authUri, authToken);
         try {
             User user = restTemplate.postForObject(authURL, null, User.class);

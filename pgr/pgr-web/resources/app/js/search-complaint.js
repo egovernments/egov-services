@@ -109,6 +109,7 @@
 	        },
 			destroy:true,
 			autoWidth: false,
+			"aaSorting": [],
 			dom: "<'row'<'col-xs-12 pull-right'f>r>t<'row buttons-margin'<'col-md-3 col-xs-6'i><'col-md-3  col-xs-6'l><'col-md-3 col-xs-6'B><'col-md-3 col-xs-6 text-right'p>>",
 			buttons: [
 			    'excel','print',

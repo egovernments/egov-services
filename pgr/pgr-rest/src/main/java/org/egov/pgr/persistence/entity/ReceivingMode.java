@@ -55,58 +55,58 @@ import org.hibernate.validator.constraints.SafeHtml;
 @SequenceGenerator(name = ReceivingMode.SEQ_RECEIVINGMODE, sequenceName = ReceivingMode.SEQ_RECEIVINGMODE, allocationSize = 1)
 public class ReceivingMode extends AbstractPersistable<Long> {
 
-    protected static final String SEQ_RECEIVINGMODE = "seq_egpgr_receivingmode";
+	protected static final String SEQ_RECEIVINGMODE = "seq_egpgr_receivingmode";
 
-    @Id
-    @GeneratedValue(generator = SEQ_RECEIVINGMODE, strategy = GenerationType.SEQUENCE)
-    private Long id;
+	@Id
+	@GeneratedValue(generator = SEQ_RECEIVINGMODE, strategy = GenerationType.SEQUENCE)
+	private Long id;
 
-    @SafeHtml
-    @Length(min = 1, max = 150)
-    private String name;
+	@SafeHtml
+	@Length(min = 1, max = 150)
+	private String name;
 
-    @SafeHtml
-    @Length(min = 1, max = 50)
-    private String code;
+	@SafeHtml
+	@Length(min = 1, max = 50)
+	private String code;
 
-    private boolean visible;
+	private boolean visible;
 
-    @Override
-    public Long getId() {
-        return this.id;
-    }
+	@Override
+	public Long getId() {
+		return this.id;
+	}
 
-    @Override
-    protected void setId(final Long id) {
-        this.id = id;
-    }
+	@Override
+	protected void setId(final Long id) {
+		this.id = id;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setName(final String name) {
-        this.name = name;
-    }
+	public void setName(final String name) {
+		this.name = name;
+	}
 
-    public String getCode() {
-        return code;
-    }
+	public String getCode() {
+		return code;
+	}
 
-    public void setCode(final String code) {
-        this.code = code;
-    }
+	public void setCode(final String code) {
+		this.code = code;
+	}
 
-    public boolean isVisible() {
-        return visible;
-    }
+	public boolean isVisible() {
+		return visible;
+	}
 
-    public void setVisible(final boolean visible) {
-        this.visible = visible;
-    }
+	public void setVisible(final boolean visible) {
+		this.visible = visible;
+	}
 
-    @Override
-    public String toString() {
-        return StringUtils.capitalize(name);
-    }
+	@Override
+	public String toString() {
+		return StringUtils.capitalize(name);
+	}
 }

@@ -16,8 +16,8 @@ class AssetSearch extends React.Component {
   {
     e.preventDefault();
     //call api call
-     var list=commonApiPost("asset-services","","_search",this.state.searchSet).responseJSON["Assets"];
-      console.log(commonApiPost("asset-services","","_search",this.state.searchSet).responseJSON["Assets"]);
+     var list=commonApiPost("asset-services","assets","_search",this.state.searchSet).responseJSON["Assets"];
+      console.log(commonApiPost("asset-services","assets","_search",this.state.searchSet).responseJSON["Assets"]);
     this.setState({
       isSearchClicked:true,
       list
@@ -212,11 +212,11 @@ class AssetSearch extends React.Component {
                       <div className="col-sm-6">
                           <div className="row">
                               <div className="col-sm-6 label-text">
-                                  <label for="">Asset Code <span> *</span></label>
+                                  <label for="">Asset Code </label>
                               </div>
                               <div className="col-sm-6">
                                       <input type="text" name="code" id="code" value={code}
-                                      onChange={(e)=>{handleChange(e,"code")}} required/>
+                                      onChange={(e)=>{handleChange(e,"code")}} />
                               </div>
                           </div>
                         </div>

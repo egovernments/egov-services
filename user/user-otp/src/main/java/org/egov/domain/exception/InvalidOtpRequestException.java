@@ -13,3 +13,4 @@ public class InvalidOtpRequestException extends RuntimeException {
         this.otpRequest = otpRequest;
     }
 }
+

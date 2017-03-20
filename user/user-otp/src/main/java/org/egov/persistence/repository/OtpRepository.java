@@ -1,5 +1,6 @@
 package org.egov.persistence.repository;
 
+import org.egov.domain.exception.OtpNumberNotPresentException;
 import org.egov.domain.model.OtpRequest;
 import org.egov.persistence.contract.OtpResponse;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,6 +25,15 @@ public class OtpRepository {
                 new org.egov.persistence.contract.OtpRequest(otpRequest);
         final OtpResponse otpResponse =
                 restTemplate.postForObject(otpCreateUrl, request, OtpResponse.class);
-        return otpResponse != null ? otpResponse.getOtpNumber() : null;
+
+        if(isOtpNumberAbsent(otpResponse)) {
+            throw new OtpNumberNotPresentException();
+        }
+
+        return otpResponse.getOtpNumber();
+    }
+
+    private boolean isOtpNumberAbsent(OtpResponse otpResponse) {
+        return otpResponse == null || otpResponse.isOtpNumberAbsent();
     }
 }

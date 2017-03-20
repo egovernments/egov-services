@@ -52,7 +52,7 @@ public class WorkflowServiceTest {
         serviceRequestMap.put("service_code", "serviceCode");
         serviceRequestMap.put("status", "REGISTERED");
         complaintRequestMap.put("ServiceRequest", serviceRequestMap);
-        final RequestInfo requestInfo = RequestInfo.builder().build();
+        final RequestInfo requestInfo = RequestInfo.builder().action("POST").build();
         complaintRequestMap.put("RequestInfo", requestInfo);
         final SevaRequest sevaRequest = new SevaRequest(complaintRequestMap);
         final WorkflowResponse workflowResponse = new WorkflowResponse(ASSIGNEE, getValuesWithStateId());

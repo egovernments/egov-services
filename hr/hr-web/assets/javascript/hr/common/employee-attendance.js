@@ -173,23 +173,7 @@ class EmployeeSearch extends React.Component {
                       </div>
                   </div>
                 </div>
-                <div className="col-sm-6">
-                    <div className="row">
-                        <div className="col-sm-6 label-text">
-                          <label for="">Employee Type  </label>
-                        </div>
-                        <div className="col-sm-6">
-                        <div className="styled-select">
-                            <select id="employeeType" name="employeeType" onChange={(e)=>{
-                                handleChange(e,"employeeType")
-                            }}>
-                                <option>Select Type</option>
-                                {renderOption(this.state.employeeType)}
-                           </select>
-                        </div>
-                        </div>
-                    </div>
-                  </div>
+
             </div>
 
 
@@ -215,3 +199,22 @@ ReactDOM.render(
   <EmployeeSearch />,
   document.getElementById('root')
 );
+
+
+// <div className="col-sm-6">
+//     <div className="row">
+//         <div className="col-sm-6 label-text">
+//           <label for="">Employee Type  </label>
+//         </div>
+//         <div className="col-sm-6">
+//         <div className="styled-select">
+//             <select id="employeeType" name="employeeType" onChange={(e)=>{
+//                 handleChange(e,"employeeType")
+//             }}>
+//                 <option>Select Type</option>
+//                 {renderOption(this.state.employeeType)}
+//            </select>
+//         </div>
+//         </div>
+//     </div>
+//   </div>

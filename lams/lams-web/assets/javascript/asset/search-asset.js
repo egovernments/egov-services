@@ -30,8 +30,8 @@ class SearchAsset extends React.Component {
   {
     e.preventDefault();
     //call api call
-     var list=commonApiPost("asset-services","","_search",this.state.searchSet).responseJSON["Assets"];
-    //  console.log(commonApiPost("asset-services","","_search",this.state.searchSet).responseJSON["Assets"]);
+    var list=commonApiPost("asset-services","assets","_search",this.state.searchSet).responseJSON["Assets"];
+     //console.log(commonApiPost("asset-services","assets","_search",this.state.searchSet).responseJSON["Assets"]);
     this.setState({
       isSearchClicked:true,
       list
@@ -141,12 +141,12 @@ class SearchAsset extends React.Component {
       if (type==="update") {
 
               return (
-                      <a href={`../../../../app/hr/master/position.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-pencil"></span></a>
+                      <a href={`../../../../app/asset/create-asset.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-pencil"></span></a>
               );
 
     }else {
             return (
-                    <a href={`../../../../app/hr/master/position.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-modal-window"></span></a>
+                    <a href={`../../../../app/asset/create-asset.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-modal-window"></span></a>
             );
         }
 }
@@ -161,7 +161,7 @@ class SearchAsset extends React.Component {
                                 <td>{item.code}</td>
                                 <td>{item.name}</td>
                                 <td>{item.assetCategory.name}</td>
-                                <td>{item.department.name}</td>
+                                <td>{item.department.name?item.department.name:"NULL"}</td>
                                 <td>{item.status}</td>
                                 <td>{item.assetDetails}</td>
 
@@ -180,11 +180,11 @@ class SearchAsset extends React.Component {
           <div className="col-sm-6">
             <div className="row">
               <div className="col-sm-6 label-text">
-                <label for="code">  code  <span> * </span></label>
+                <label for="code">  Code </label>
               </div>
               <div className="col-sm-6">
                 <input id="code" name="code" value={code} type="text"
-                  onChange={(e)=>{handleChange(e,"code")}} required/>
+                  onChange={(e)=>{handleChange(e,"code")}}/>
               </div>
             </div>
           </div>

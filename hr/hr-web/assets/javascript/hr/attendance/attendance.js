@@ -34,8 +34,15 @@ class Attendance extends React.Component {
       var attendance=[]
       for (var emp in employees) {
           for (var att in employees[emp].attendance) {
+              //  console.log(att.split('-')[1]);
+                // var month=month+1;
+                var date=new Date(year,(month+1),att.split('-')[1]);
+                var day=date.getDate().toString().length===1?"0"+date.getDate():date.getDate();
+                var monthIn=date.getMonth().toString().length===1?"0"+date.getMonth():date.getMonth();
+                var yearIn=date.getFullYear();
+                // console.log(date.getDate().length);
                 // console.log(employees[emp].attendance[att].split("-")[1]);
-                attendance.push({date:new Date(year,month,1).getDate()+"/"+(new Date(year,month,1).getMonth()+1)+"/"+new Date(year,month,1).getFullYear(),employee:emp,month,year,type:{code:employees[emp].attendance[att]},remarks:"",tenantId});
+                attendance.push({attendanceDate:day+"/"+monthIn+"/"+yearIn,employee:employees[emp].id,month:(month+1),year,type:{code:employees[emp].attendance[att]},remarks:"",tenantId});
           }
       }
 
@@ -56,6 +63,7 @@ class Attendance extends React.Component {
                 contentType: 'application/json'
             });
 
+      // console.log(attendance);
       // console.log(response);
       if(response["statusText"]==="OK")
       {
@@ -87,16 +95,18 @@ class Attendance extends React.Component {
     var now = new Date();
     // var startDate=new Date((typeof(queryParam["year"])==="undefined")?now.getFullYear():parseInt(queryParam["year"]), (typeof(queryParam["month"])==="undefined")?now.getMonth():parseInt(queryParam["month"]), 1);
     // console.log(startDate);
-    var employeesTemp=commonApiPost("hr-employee","employees","_search",{tenantId,department:queryParam["departmentCode"],designation:queryParam["designationCode"],employeeType:queryParam["type"],code:queryParam["code"]}).responseJSON["Employee"] || [];
-    var employees=[];
+    var employeesTemp=commonApiPost("hr-employee","employees","_search",{tenantId,departmentId:queryParam["departmentCode"],designationId:queryParam["designationCode"],employeeType:queryParam["type"],code:queryParam["code"]}).responseJSON["Employee"] || [];
+    var currentAttendance=commonApiPost("hr-attendance","attendances","_search",{tenantId,month:parseInt(queryParam["month"])+1,year:queryParam["year"]}).responseJSON["Attendance"] || [];
+    var employees={};
     for(var i=0;i<employeesTemp.length;i++)
     {
-        employees.push({
+        employees[employeesTemp[i].code]={
+          id:employeesTemp[i].id,
           name:employeesTemp[i].name,
           month:queryParam["month"],
           year:queryParam["year"],
           attendance:{}
-        });
+        };
     }
 
     // console.log(employeesTemp);
@@ -109,11 +119,18 @@ class Attendance extends React.Component {
         var startDate=new Date((typeof(queryParam["year"])==="undefined")?now.getFullYear():parseInt(queryParam["year"]), (typeof(queryParam["month"])==="undefined")?now.getMonth():parseInt(queryParam["month"]), 1);
         for (var d = startDate ; d <= endDate; d.setDate(d.getDate() + 1)) {
         //  daysOfYear.push(new Date(d));
-            employees[emp].attendance[`${d.getMonth()}-${d.getDate()}`]=(d.getDay()===0||d.getDay()===6)?"H":"";
+            employees[emp].attendance[`${d.getMonth()}-${d.getDate().toString().length===1?"0"+d.getDate():d.getDate()}`]=(d.getDay()===0||d.getDay()===6)?"H":"";
             // console.log(employees[emp]);
         }
 
         // empTemp.push(emp);
+    }
+
+    if(currentAttendance.length>0)
+    {
+        for (var i = 0; i < currentAttendance.length; i++) {
+            employees[currentAttendance[i].code][month+"-"+currentAttendance[i].attendanceDate.split("-")[2]]=currentAttendance[i].type.code;
+        }
     }
 
     this.setState({
@@ -253,9 +270,9 @@ class Attendance extends React.Component {
     {
         return Object.keys(employees).map((k, index)=>
         {
-          return (<tr key={employees[k].code}>
+          return (<tr key={employees[k].id}>
                       <td>{index+1}</td>
-                      <td>{k+"-"+employees[k].name}</td>
+                      <td>{employees[k].id+"-"+employees[k].name}</td>
                       {createCalender("td",k,employees[k].attendance)}
                   </tr>)
         })
@@ -331,7 +348,7 @@ class Attendance extends React.Component {
         }
         else if (daysOfYear.length>0) {
           return daysOfYear.map(function(item,index) {
-                var date=`${item.getMonth()}-${item.getDate()}`;
+                var date=`${item.getMonth()}-${item.getDate().toString().length===1?"0"+item.getDate():item.getDate()}`;
                 return (<td key={index} className="text-center">
                             <input type="text" className={`form-control ${getColor(typeof(attendance[date])==="undefined"?"":attendance[date])}`} style={{width: "44px",fontSize: "10px",textAlign: "center"}}  value={typeof(attendance[date])==="undefined"?"":attendance[date]} onChange={(e)=>{
                                 handleChange(e,empCode,date)

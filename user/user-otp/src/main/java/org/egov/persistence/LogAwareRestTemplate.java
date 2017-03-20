@@ -26,16 +26,17 @@ public class LogAwareRestTemplate extends RestTemplate {
     private ClientHttpRequestInterceptor logRequestAndResponse() {
         return (httpRequest, body, clientHttpRequestExecution) -> {
             logRequest(httpRequest, body);
-            final ClientHttpResponse response = clientHttpRequestExecution.execute(httpRequest, body);
+            final ClientHttpResponse rawResponse = clientHttpRequestExecution.execute(httpRequest, body);
+            if(!log.isInfoEnabled()) {
+                return rawResponse;
+            }
+            final CacheableSimpleClientHttpResponse response = new CacheableSimpleClientHttpResponse(rawResponse);
             logResponse(response);
             return response;
         };
     }
 
     private void logResponse(ClientHttpResponse response) {
-        if (!log.isInfoEnabled()) {
-            return;
-        }
         try {
             String body = getBodyString(response);
             log.info(RESPONSE_MESSAGE, response.getStatusCode(), body);
@@ -63,4 +64,6 @@ public class LogAwareRestTemplate extends RestTemplate {
     private String getBody(byte[] body) {
         return body == null ? EMPTY_MESSAGE : new String(body);
     }
+
 }
+

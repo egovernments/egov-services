@@ -34,8 +34,14 @@ class Attendance extends React.Component {
       var attendance=[]
       for (var emp in employees) {
           for (var att in employees[emp].attendance) {
+              //  console.log(att.split('-')[1]);
+                var date=new Date(year,month,att.split('-')[1]);
+                var day=date.getDate().toString().length===1?"0"+date.getDate():date.getDate();
+                var monthIn=date.getMonth().toString().length===1?"0"+date.getMonth():date.getMonth();
+                var yearIn=date.getFullYear();
+                // console.log(date.getDate().length);
                 // console.log(employees[emp].attendance[att].split("-")[1]);
-                attendance.push({date:new Date(year,month,1).getDate()+"/"+(new Date(year,month,1).getMonth()+1)+"/"+new Date(year,month,1).getFullYear(),employee:emp,month,year,type:{code:employees[emp].attendance[att]},remarks:"",tenantId});
+                attendance.push({attendanceDate:day+"/"+monthIn+"/"+yearIn,employee:employees[emp].id,month,year,type:{code:employees[emp].attendance[att]},remarks:"",tenantId});
           }
       }
 
@@ -88,15 +94,16 @@ class Attendance extends React.Component {
     // var startDate=new Date((typeof(queryParam["year"])==="undefined")?now.getFullYear():parseInt(queryParam["year"]), (typeof(queryParam["month"])==="undefined")?now.getMonth():parseInt(queryParam["month"]), 1);
     // console.log(startDate);
     var employeesTemp=commonApiPost("hr-employee","employees","_search",{tenantId,department:queryParam["departmentCode"],designation:queryParam["designationCode"],employeeType:queryParam["type"],code:queryParam["code"]}).responseJSON["Employee"] || [];
-    var employees=[];
+    var employees={};
     for(var i=0;i<employeesTemp.length;i++)
     {
-        employees.push({
+        employees[employeesTemp[i].code]={
+          id:employeesTemp[i].id,
           name:employeesTemp[i].name,
           month:queryParam["month"],
           year:queryParam["year"],
           attendance:{}
-        });
+        };
     }
 
     // console.log(employeesTemp);
@@ -253,9 +260,9 @@ class Attendance extends React.Component {
     {
         return Object.keys(employees).map((k, index)=>
         {
-          return (<tr key={employees[k].code}>
+          return (<tr key={employees[k].id}>
                       <td>{index+1}</td>
-                      <td>{k+"-"+employees[k].name}</td>
+                      <td>{employees[k].id+"-"+employees[k].name}</td>
                       {createCalender("td",k,employees[k].attendance)}
                   </tr>)
         })

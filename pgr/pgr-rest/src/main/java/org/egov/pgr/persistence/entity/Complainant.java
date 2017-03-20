@@ -113,6 +113,6 @@ public class Complainant extends AbstractPersistable<Long> {
     }
     
     public org.egov.pgr.domain.model.Complainant toDomain() {
-        return new org.egov.pgr.domain.model.Complainant(name, mobile, email,address, null);
+        return new org.egov.pgr.domain.model.Complainant(name, mobile, email, address, null);
     }
 }

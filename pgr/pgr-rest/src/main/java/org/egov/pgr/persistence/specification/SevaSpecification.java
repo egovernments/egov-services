@@ -1,19 +1,7 @@
 package org.egov.pgr.persistence.specification;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-
 import org.egov.pgr.domain.model.ComplaintSearchCriteria;
 import org.egov.pgr.persistence.entity.AbstractAuditable_;
-import org.egov.pgr.persistence.entity.Boundary;
-import org.egov.pgr.persistence.entity.Boundary_;
 import org.egov.pgr.persistence.entity.Complainant;
 import org.egov.pgr.persistence.entity.Complainant_;
 import org.egov.pgr.persistence.entity.Complaint;
@@ -26,6 +14,11 @@ import org.egov.pgr.persistence.entity.ReceivingMode;
 import org.egov.pgr.persistence.entity.ReceivingMode_;
 import org.springframework.data.jpa.domain.Specification;
 
+import javax.persistence.criteria.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 public class SevaSpecification implements Specification<Complaint> {
 	private ComplaintSearchCriteria criteria;
 
@@ -35,7 +28,7 @@ public class SevaSpecification implements Specification<Complaint> {
 
 	@Override
 	public Predicate toPredicate(Root<Complaint> root, CriteriaQuery<?> criteriaQuery,
-			CriteriaBuilder criteriaBuilder) {
+                                 CriteriaBuilder criteriaBuilder) {
 		Path<String> crn = root.get(Complaint_.crn);
 		Path<ComplaintType> complaintType = root.get(Complaint_.complaintType);
 		Path<String> code = complaintType.get(ComplaintType_.code);
@@ -45,18 +38,17 @@ public class SevaSpecification implements Specification<Complaint> {
 		Path<Date> lastModifiedDate = root.get(AbstractAuditable_.lastModifiedDate);
 		Path<Long> assignmentId = root.get(Complaint_.assignee);
 		Path<Long> userId = root.get(AbstractAuditable_.createdBy);
-		Path<Complainant> complainant = root.get(Complaint_.complainant);
-		Path<String> name = complainant.get(Complainant_.name);
-		Path<String> emailId = complainant.get(Complainant_.email);
-		Path<String> mobileNumber = complainant.get(Complainant_.mobile);
-		Path<Boundary> location = root.get(Complaint_.location);
-		Path<Long> locationId = location.get(Boundary_.id);
-		Path<Boundary> childLocation = root.get(Complaint_.childLocation);
-		Path<Long> childLocationId = childLocation.get(Boundary_.id);
-		Path<ReceivingMode> receivingMode = root.get(Complaint_.receivingMode);
-		Path<Long> mode = receivingMode.get(ReceivingMode_.id);
-
-		List<Predicate> predicates = new ArrayList<>();
+		Path<Complainant> complainant= root.get(Complaint_.complainant);
+		Path<String> name= complainant.get(Complainant_.name);
+		Path<String> emailId= complainant.get(Complainant_.email);
+		Path<String>  mobileNumber = complainant.get(Complainant_.mobile);
+	    Path<Long> locationId = root.get(Complaint_.location);
+	    Path<Long> childLocationId= root.get(Complaint_.childLocation);
+        Path<ReceivingMode> receivingMode = root.get(Complaint_.receivingMode);
+        Path<Long> mode = receivingMode.get(ReceivingMode_.id);
+	 
+     
+	    List<Predicate> predicates = new ArrayList<>();
 		if (criteria.getServiceRequestId() != null) {
 			predicates.add(criteriaBuilder.equal(crn, criteria.getServiceRequestId()));
 		}

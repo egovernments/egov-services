@@ -30,13 +30,14 @@
          "device_id":null,
          "account_id":null,
          "values":{
+            "ComplaintStatus": "FORWARDED",
             "ReceivingMode": "MANUAL",
             "ReceivingCenter": "Commissioner Office",
-            "LocationId": "Election Ward No 1",
+            "LocationId": "34",
             "ChildLocationId": "Gadu Veedhi",
             "StateId": "1",
             "AssigneeId": "2",
-            "DepartmentName": "Accounts"
+            "DepartmentId": "3"
          }
      }
     ]

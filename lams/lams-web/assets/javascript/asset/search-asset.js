@@ -117,7 +117,6 @@ class SearchAsset extends React.Component {
               <table id="agreementTable" className="table table-bordered">
                   <thead>
                   <tr>
-                  <th>Sl No.</th>
                       <th>Code</th>
                       <th>Name</th>
                       <th>Asset Category Type</th>
@@ -158,7 +157,7 @@ class SearchAsset extends React.Component {
       return list.map((item,index)=>
       {
             return (<tr key={index}>
-              <td>{index+1}</td>
+
                                 <td>{item.code}</td>
                                 <td>{item.name}</td>
                                 <td>{item.assetCategory.name}</td>

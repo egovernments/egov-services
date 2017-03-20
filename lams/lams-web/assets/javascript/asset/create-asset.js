@@ -433,7 +433,7 @@ class CreateAsset extends React.Component {
 
 <div className="text-center">
           <button type="submit" className="btn btn-submit" >Create</button>
-          <button type="button" className="btn btn-submit">close</button>
+          <button type="button" className="btn btn-submit" onClick={(e)=>{this.close()}}>close</button>
       </div>
   </form>
 </div>

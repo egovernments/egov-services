@@ -176,10 +176,6 @@ public class ComplaintServiceTest {
 				.build();
 	}
 
-	private Department getDepartment() {
-		return Department.builder().id(2L).name("Accounts").code("A").build();
-	}
-
 	private AuthenticatedUser getCitizen() {
 		return AuthenticatedUser.builder().id(1).type(UserType.CITIZEN).build();
 	}

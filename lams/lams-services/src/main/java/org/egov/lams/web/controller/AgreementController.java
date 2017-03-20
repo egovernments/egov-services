@@ -82,7 +82,7 @@ public class AgreementController {
 		LOGGER.info("agreementRequest::" + agreementRequest);
 		Agreement agreement = agreementRequest.getAgreement();
 		AgreementValidator.validateAgreement(agreement);
-		agreement = agreementService.createAgreement(agreement);
+		agreement = agreementService.createAgreement(agreementRequest);
 		List<Agreement> agreements = new ArrayList<>();
 		agreements.add(agreement);
 		AgreementResponse agreementResponse = new AgreementResponse();

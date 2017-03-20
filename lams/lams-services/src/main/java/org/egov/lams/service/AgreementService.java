@@ -1,11 +1,14 @@
 package org.egov.lams.service;
 
 import java.util.List;
+
+import org.egov.lams.contract.AgreementRequest;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.AgreementCriteria;
 import org.egov.lams.model.RentIncrementType;
 import org.egov.lams.producers.AgreementProducer;
 import org.egov.lams.repository.AgreementRepository;
+import org.egov.lams.repository.AllotteeRepository;
 import org.egov.lams.repository.builder.AgreementQueryBuilder;
 import org.egov.lams.repository.rowmapper.RentIncrementRowMapper;
 import org.slf4j.Logger;
@@ -29,6 +32,9 @@ public class AgreementService {
 	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
+	
+	@Autowired
+	private AllotteeRepository allotteeRepository;
 
 	public List<Agreement> searchAgreement(AgreementCriteria agreementCriteria) {
 		/*
@@ -93,16 +99,24 @@ public class AgreementService {
 	 * 
 	 * */
 	
-	public Agreement createAgreement(Agreement agreement){
+	public Agreement createAgreement(AgreementRequest agreementRequest){
+		
+		Agreement agreement = agreementRequest.getAgreement();
 		ObjectMapper mapper = new ObjectMapper();
 		String agreementValue=null;
 		String rentIncrementTypeqQuery=AgreementQueryBuilder.findRentIncrementTypeQuery();
 	    Object[] rentObj = new Object[]{ agreement.getRentIncrementMethod().getId() };
 	    Long agreementNumber=null;
 	    RentIncrementType rentIncrementType=null;
+	    
+		// code for allottee gen
+		if (!allotteeRepository.isAllotteeExist(agreementRequest)) {
+			allotteeRepository.createAllottee(agreementRequest);
+		}
 	    try {
 	    	 	rentIncrementType=jdbcTemplate.queryForObject(rentIncrementTypeqQuery,rentObj,new RentIncrementRowMapper());
-				agreementNumber=(Long) jdbcTemplate.queryForList("SELECT NEXTVAL('seq_lams_rentincrement')").get(0).get("nextval");
+			//TODO put ackno gen service here 
+	    	 	agreementNumber=(Long) jdbcTemplate.queryForList("SELECT NEXTVAL('seq_lams_rentincrement')").get(0).get("nextval");
 				agreement.setAgreementNumber(agreementNumber.toString());
 	    }catch(Exception ex){
 	    		ex.printStackTrace();

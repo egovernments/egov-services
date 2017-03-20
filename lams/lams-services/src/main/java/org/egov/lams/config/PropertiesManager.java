@@ -35,6 +35,9 @@ public class PropertiesManager {
 	@Value("${egov.services.allottee_service.searchpath}")
 	private String allotteeServiceSearchPath;
 
+	@Value("${egov.services.allottee_service.createpath}")
+	private String allotteeServiceCreatePAth;
+	
 	@Value("${egov.services.lams.ulb_number}")
 	private String ulbNumber;
 

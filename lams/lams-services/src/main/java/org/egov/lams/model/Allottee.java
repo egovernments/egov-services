@@ -29,4 +29,6 @@ public class Allottee {
 	private String aadhaarNumber;
 	private String pan;
 	private String emailId;
+	private String userName;
+	private String password;
 }

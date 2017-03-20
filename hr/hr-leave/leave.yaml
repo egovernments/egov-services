@@ -467,6 +467,7 @@ paths:
        
 definitions:
   LeaveType:
+    title: Master of all leave types with its properties.
     type: object
     properties:
       id:
@@ -545,6 +546,7 @@ definitions:
           $ref: "#/definitions/LeaveType"  
         
   LeaveAllotment:
+    title: This is a set up master which defined how many leaves are alloted for each leave type.
     type: object
     properties:
       id:
@@ -606,6 +608,7 @@ definitions:
           $ref: '#/definitions/LeaveAllotment'
           
   LeaveOpeningBalance:
+    title: Each employee's leave balance carry forwarded from previous year will be captured here.
     type: object
     properties:
       id:
@@ -615,7 +618,7 @@ definitions:
       employee:
         type: integer
         format: int64
-        description: Unique id of the employee
+        description: Unique id of the employee for whom the leave is applicable.
       calendarYear:
         type: integer
         format: int32
@@ -673,6 +676,7 @@ definitions:
           $ref: '#/definitions/LeaveOpeningBalance'
         
   LeaveApplication:
+    title: All leave applications will be captured here.
     type: object
     properties:
       id:
@@ -681,11 +685,12 @@ definitions:
         description: The unique id an employee leave.
       applicationNumber:
         type: string
-        description: The unique leave application number.
+        description: The unique leave application number. This will be auto-generated mandatorily for each leave application.
+        maxLength: 100
       employee:
         type: integer
         format: int64
-        description: Unique id of the employee
+        description: Unique id of the employee who has applied for leave.
       leaveType:
         type: object
         description: which leave type the leaves are allocated.
@@ -725,7 +730,7 @@ definitions:
         maxLength: 500
       status:
         type: object
-        description: Current status of leave.
+        description: Current status of leave. Possible values are- Applied, Approved, Rejected, Cancelled.
         items:
           $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/HRStatus'
       stateId:
@@ -751,7 +756,6 @@ definitions:
         description: Unique Identifier of which tenant this data is defined. For example, AP, AP-Kurnool etc.
         maxLength: 256
     required:
-      - applicationNumber
       - employee
       - leaveType
       - fromDate

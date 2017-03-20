@@ -9,6 +9,9 @@ import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Arrays;
+import java.util.HashSet;
+
 @EnableZuulProxy
 @SpringBootApplication
 public class ZuulGatewayApplication {
@@ -19,11 +22,11 @@ public class ZuulGatewayApplication {
     @Value("${egov.user-info-header}")
     private String userInfoHeader;
 
-    @Value("${egov.open-endpoints-whitelist}")
-    private String openEndpointsWhitelist;
+    @Value("#{'${egov.open-endpoints-whitelist}'.split(',')}")
+    private String[] openEndpointsWhitelist;
 
-    @Value("${egov.anonymous-endpoints-whitelist}")
-    private String anonymousEndpointsWhitelist;
+    @Value("#{'${egov.anonymous-endpoints-whitelist}'.split(',')}")
+    private String[] anonymousEndpointsWhitelist;
 
     @Value("${egov.auth-service-host}")
     private String authServiceHost;
@@ -33,7 +36,8 @@ public class ZuulGatewayApplication {
 
     @Bean
     public AuthPreCheckFilter authCheckFilter() {
-        return new AuthPreCheckFilter(openEndpointsWhitelist, anonymousEndpointsWhitelist);
+        return new AuthPreCheckFilter(new HashSet<>(Arrays.asList(openEndpointsWhitelist)),
+                new HashSet<>(Arrays.asList(anonymousEndpointsWhitelist)));
     }
 
     @Bean

@@ -1,25 +1,6 @@
 package org.egov.pgr.domain.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-
-import org.egov.pgr.domain.model.AuthenticatedUser;
-import org.egov.pgr.domain.model.Complainant;
-import org.egov.pgr.domain.model.Complaint;
-import org.egov.pgr.domain.model.ComplaintLocation;
-import org.egov.pgr.domain.model.ComplaintSearchCriteria;
-import org.egov.pgr.domain.model.ComplaintType;
-import org.egov.pgr.domain.model.Coordinates;
-import org.egov.pgr.domain.model.UserType;
+import org.egov.pgr.domain.model.*;
 import org.egov.pgr.persistence.queue.contract.RequestInfo;
 import org.egov.pgr.persistence.queue.contract.ServiceRequest;
 import org.egov.pgr.persistence.queue.contract.SevaRequest;
@@ -34,6 +15,15 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ComplaintServiceTest {
@@ -179,9 +169,16 @@ public class ComplaintServiceTest {
 		final Coordinates coordinates = new Coordinates(0d, 0d);
 		final ComplaintLocation complaintLocation = new ComplaintLocation(coordinates, "id", null);
 		final Complainant complainant = Complainant.builder().userId("userId").build();
-		return Complaint.builder().complainant(complainant).authenticatedUser(getCitizen())
-				.complaintLocation(complaintLocation).tenantId(TENANT_ID).description("description").crn("crn")
-				.lastAccessedTime(new Date()).department(2L).complaintType(new ComplaintType(null, "complaintCode"))
+		return Complaint.builder()
+                .complainant(complainant)
+                .authenticatedUser(getCitizen())
+				.complaintLocation(complaintLocation)
+                .tenantId(TENANT_ID)
+                .description("description")
+                .crn("crn")
+				.lastAccessedTime(new Date())
+                .department("2")
+				.complaintType(new ComplaintType(null, "complaintCode"))
 				.build();
 	}
 

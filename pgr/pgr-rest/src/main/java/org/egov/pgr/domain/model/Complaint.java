@@ -1,17 +1,15 @@
 package org.egov.pgr.domain.model;
 
-import static org.springframework.util.StringUtils.isEmpty;
-
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import org.egov.pgr.domain.exception.InvalidComplaintException;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
+import org.egov.pgr.domain.exception.InvalidComplaintException;
+
+import java.util.Date;
+import java.util.List;
+
+import static org.springframework.util.StringUtils.isEmpty;
 
 @AllArgsConstructor
 @Builder
@@ -25,7 +23,6 @@ public class Complaint {
 	@NonNull
 	private Complainant complainant;
 	private String crn;
-	private Map<String, String> additionalValues;
 	@NonNull
 	private ComplaintType complaintType;
 	private String complaintStatus;
@@ -40,8 +37,11 @@ public class Complaint {
 	private boolean modifyComplaint;
 	private String receivingMode;
 	private String receivingCenter;
-	private Long department;
+	private String department;
 	private Date lastAccessedTime;
+	private String childLocation;
+	private String assignee;
+	private String state;
 
 	public boolean isComplainantAbsent() {
 		if (authenticatedUser.isAnonymousUser() || authenticatedUser.isEmployee()) {
@@ -115,10 +115,6 @@ public class Complaint {
 	public boolean isReceivingCenterAbsent() {
 		return authenticatedUser.isEmployee() && MANUAL_RECEIVING_MODE.equalsIgnoreCase(receivingMode)
 				&& isEmpty(receivingCenter);
-	}
-
-	public void setAdditionalValues(Map<String, String> additionalValues) {
-		this.additionalValues = additionalValues;
 	}
 
 }

@@ -1,5 +1,15 @@
 package org.egov.pgr.persistence.specification;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 import org.egov.pgr.domain.model.ComplaintSearchCriteria;
 import org.egov.pgr.persistence.entity.AbstractAuditable_;
 import org.egov.pgr.persistence.entity.Complainant;
@@ -12,12 +22,8 @@ import org.egov.pgr.persistence.entity.ComplaintType_;
 import org.egov.pgr.persistence.entity.Complaint_;
 import org.egov.pgr.persistence.entity.ReceivingMode;
 import org.egov.pgr.persistence.entity.ReceivingMode_;
+import org.joda.time.DateTime;
 import org.springframework.data.jpa.domain.Specification;
-
-import javax.persistence.criteria.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 public class SevaSpecification implements Specification<Complaint> {
 	private ComplaintSearchCriteria criteria;
@@ -66,8 +72,7 @@ public class SevaSpecification implements Specification<Complaint> {
 		}
 
 		if (criteria.getEndDate() != null) {
-			predicates.add(criteriaBuilder.lessThanOrEqualTo(createdDate, criteria.getEndDate()));
-		}
+			predicates.add(criteriaBuilder.lessThan(createdDate, new DateTime(criteria.getEndDate()).plusDays(1).toDate()));		}
 
 		if (criteria.getLastModifiedDatetime() != null) {
 			predicates.add(criteriaBuilder.greaterThan(lastModifiedDate, criteria.getLastModifiedDatetime()));

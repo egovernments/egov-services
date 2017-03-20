@@ -157,6 +157,7 @@ function getNameById(object, id) {
             return commonObject[object][i].name;
         }
     }
+    return "";
 }
 //final post object
 var employee = {
@@ -862,7 +863,7 @@ $("select").on("change", function() {
         }
         if(this.id=="jurisdictions.jurisdictionsType")
         {
-          commonObject["jurisdictions_boundary"]=commonApiPost("v1/location", "boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName",{boundaryTypeName:this.value,hierarchyTypeName:"REVENUE"}).responseJSON["Boundary"] || [];
+          commonObject["jurisdictions_boundary"]=commonApiPost("v1/location", "boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName",{boundaryTypeName:this.value,hierarchyTypeName:"ADMINISTRATION"}).responseJSON["Boundary"] || [];
           $(`#jurisdictions\\.boundary`).html(`<option value=''>Select</option>`)
 
           for (var i = 0; i < commonObject["jurisdictions_boundary"].length; i++) {
@@ -1281,6 +1282,8 @@ $("#createEmployeeForm").validate({
         // form.submit();
 
         // console.log(agreement);
+
+
 
     }
 })

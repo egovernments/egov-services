@@ -5,13 +5,14 @@ import com.netflix.zuul.context.RequestContext;
 import org.springframework.http.HttpStatus;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashSet;
 
 public class AuthPreCheckFilter extends ZuulFilter {
-    private String openEndpointsWhitelist;
-    private String anonymousEndpointsWhitelist;
+    private HashSet<String> openEndpointsWhitelist;
+    private HashSet<String> anonymousEndpointsWhitelist;
 
-    public AuthPreCheckFilter(String openEndpointsWhitelist,
-                              String anonymousEndpointsWhitelist) {
+    public AuthPreCheckFilter(HashSet<String> openEndpointsWhitelist,
+                              HashSet<String> anonymousEndpointsWhitelist) {
         this.openEndpointsWhitelist = openEndpointsWhitelist;
         this.anonymousEndpointsWhitelist = anonymousEndpointsWhitelist;
     }
@@ -37,13 +38,14 @@ public class AuthPreCheckFilter extends ZuulFilter {
         String authToken = ctx.getRequest().getHeader("auth-token");
 
         HttpServletRequest request = ctx.getRequest();
-        if (isRoutingToAnyWhitelistedEndpoints(request, openEndpointsWhitelist)) {
+        if (openEndpointsWhitelist.contains(request.getRequestURI())) {
             setShouldDoAuth(ctx, false);
             return null;
         }
 
+        System.out.println(anonymousEndpointsWhitelist.toString());
         if (authToken == null) {
-            if (isRoutingToAnyWhitelistedEndpoints(request, anonymousEndpointsWhitelist)) {
+            if (anonymousEndpointsWhitelist.contains(request.getRequestURI())) {
                 setShouldDoAuth(ctx, false);
                 return null;
             } else {
@@ -58,15 +60,6 @@ public class AuthPreCheckFilter extends ZuulFilter {
 
     private void setShouldDoAuth(RequestContext ctx, boolean b) {
         ctx.set("shouldDoAuth", b);
-    }
-
-    private boolean isRoutingToAnyWhitelistedEndpoints(HttpServletRequest request, String whitelist) {
-        for (String openEndpoint : whitelist.split(",")) {
-            if (request.getRequestURI().contains(openEndpoint)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     private void abortWithStatus(RequestContext ctx, HttpStatus status, String message) {

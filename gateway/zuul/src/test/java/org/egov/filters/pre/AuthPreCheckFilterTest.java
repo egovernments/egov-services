@@ -5,6 +5,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
+import java.util.HashSet;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
@@ -13,10 +15,16 @@ public class AuthPreCheckFilterTest {
 
     private AuthPreCheckFilter authPreCheckFilter;
 
+    private HashSet<String> openEndpointsWhitelist = new HashSet<>();
+    private HashSet<String> anonymousEndpointsWhitelist = new HashSet<>();
+
     @Before
     public void init() {
-        authPreCheckFilter = new AuthPreCheckFilter("/open-endpoint1,/open-endpoint2",
-                "anonymous-endpoint1,anonymous-endpoint2");
+        openEndpointsWhitelist.add("open-endpoint1");
+        openEndpointsWhitelist.add("open-endpoint2");
+        anonymousEndpointsWhitelist.add("anonymous-endpoint1");
+        anonymousEndpointsWhitelist.add("anonymous-endpoint2");
+        authPreCheckFilter = new AuthPreCheckFilter(openEndpointsWhitelist, anonymousEndpointsWhitelist);
         RequestContext ctx = RequestContext.getCurrentContext();
         ctx.clear();
         ctx.setRequest(request);
@@ -32,12 +40,12 @@ public class AuthPreCheckFilterTest {
     @Test
     public void testThatAuthShouldNotHappenForOpenEndpoints() {
         RequestContext ctx = RequestContext.getCurrentContext();
-        request.setRequestURI("/open-endpoint1");
+        request.setRequestURI("open-endpoint1");
         ctx.setRequest(request);
         authPreCheckFilter.run();
         assertFalse((Boolean) ctx.get("shouldDoAuth"));
 
-        request.setRequestURI("/open-endpoint2");
+        request.setRequestURI("open-endpoint2");
         ctx.setRequest(request);
         authPreCheckFilter.run();
         assertFalse((Boolean) ctx.get("shouldDoAuth"));
@@ -46,12 +54,12 @@ public class AuthPreCheckFilterTest {
     @Test
     public void testThatAuthShouldNotHappenForAnonymousEndpointsOnNoAuthToken() {
         RequestContext ctx = RequestContext.getCurrentContext();
-        request.setRequestURI("/anonymous-endpoint1");
+        request.setRequestURI("anonymous-endpoint1");
         ctx.setRequest(request);
         authPreCheckFilter.run();
         assertFalse((Boolean) ctx.get("shouldDoAuth"));
 
-        request.setRequestURI("/anonymous-endpoint1");
+        request.setRequestURI("anonymous-endpoint1");
         ctx.setRequest(request);
         authPreCheckFilter.run();
         assertFalse((Boolean) ctx.get("shouldDoAuth"));
@@ -78,7 +86,7 @@ public class AuthPreCheckFilterTest {
         RequestContext ctx = RequestContext.getCurrentContext();
         request.addHeader("auth-token", "token");
 
-        request.setRequestURI("/other-endpoint");
+        request.setRequestURI("other-endpoint");
         ctx.setRequest(request);
         authPreCheckFilter.run();
         assertTrue((Boolean) ctx.get("shouldDoAuth"));
@@ -88,7 +96,7 @@ public class AuthPreCheckFilterTest {
     public void testThatFilterShouldAbortForOtherEndpointsOnNoAuthToken() {
         RequestContext ctx = RequestContext.getCurrentContext();
 
-        request.setRequestURI("/other-endpoint");
+        request.setRequestURI("other-endpoint");
         ctx.setRequest(request);
         authPreCheckFilter.run();
         assertFalse(ctx.sendZuulResponse());

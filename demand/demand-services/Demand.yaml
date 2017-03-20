@@ -704,6 +704,10 @@ definitions:
         type: integer
         format: int64
         description: The unique id of Bill
+      demandId:
+        type: integer
+        format: int64
+        description: The unique id of Demand
       citizenName:
         type: string
         minLength: 1
@@ -972,14 +976,10 @@ definitions:
     properties:
       RequestInfo:
         $ref: '#/definitions/RequestInfo'
-      BillAddlInfo:
-        $ref: '#/definitions/BillAddlInfo'
-      DemandId:
-        description: List of Unique Id of Demand
+      BillAddlInfos:
         type: array
         items:
-          type: integer
-          format: int64
+          $ref: '#/definitions/BillAddlInfo'
     type: object
 
   BillResponse:

@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/bill")
+@RequestMapping("bill")
 public class BillController {
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
@@ -35,23 +35,21 @@ public class BillController {
 	@Autowired
 	private BillService billService;
 
-	@PostMapping("/_create")
+	@PostMapping("_create")
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> create(@RequestBody @Valid BillRequest billRequest, BindingResult bindingResult) {
 		BillAddlInfo bill = null;
 		List<BillAddlInfo> bills = new ArrayList<BillAddlInfo>();
-		List<Long> demandIds = null;
 		if (bindingResult.hasErrors()) {
 			return errHandler.getErrorResponseEntityForBindingErrors(bindingResult, billRequest.getRequestInfo());
 		}
-		if ((billRequest.getDemandId() == null || billRequest.getDemandId().size() == 0)
-				&& billRequest.getBillAddlInfo() == null) {
+		if ((billRequest.getBillAddlInfos() == null || billRequest.getBillAddlInfos().size() == 0)
+				&& billRequest.getBillAddlInfos() == null) {
 			return errHandler.getErrorResponseEntityForMissingRequestInfo(billRequest.getRequestInfo());
 		}
 		try {
-			demandIds = billRequest.getDemandId();
-			for (Long demandId : demandIds) {
-				bill = billService.createBill(demandId, billRequest.getBillAddlInfo());
+			for (BillAddlInfo billInfo : billRequest.getBillAddlInfos()) {
+				bill = billService.createBill(billInfo.getDemandId(), billInfo);
 				bills.add(bill);
 			}
 		} catch (Exception e) {

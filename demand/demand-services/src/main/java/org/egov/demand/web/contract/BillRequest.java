@@ -22,9 +22,6 @@ public class BillRequest {
 	RequestInfo requestInfo;
 
 	@JsonProperty("BillAddlInfo")
-	BillAddlInfo billAddlInfo;
-
-	@JsonProperty("DemandId")
-	List<Long> demandId;
+	List<BillAddlInfo> billAddlInfos;
 
 }

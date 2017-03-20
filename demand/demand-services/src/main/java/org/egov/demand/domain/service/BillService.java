@@ -24,8 +24,10 @@ public class BillService {
 	private ModuleRepository moduleRepository;
 	@Autowired
 	private BillTypeRepository billTypeRepository;
+	@Autowired
+	private BillDetailsService billDetailsService;
 
-	public BillAddlInfo createBill(Long demandId, BillAddlInfo billAddlInfo) throws Exception {
+	public BillAddlInfo createBill(Long demandId, BillAddlInfo billAddlInfo) {
 		EgBill egBill = new EgBill(billAddlInfo);
 		EgDemand egDemand = demandRepository.findOne(demandId);
 		egBill.setEgDemand(egDemand);
@@ -33,6 +35,8 @@ public class BillService {
 		egBill.setEgBillType(billTypeRepository.findByName(billAddlInfo.getBillType()));
 		egBill.setCreateDate(new Date());
 		egBill.setModifiedDate(new Date());
+		egBill.setUserId(1l);
+		egBill.setEgBillDetails(billDetailsService.createBillDetails(egDemand, egBill));
 		return billRepository.save(egBill).toDomain(egBill);
 	}
 }

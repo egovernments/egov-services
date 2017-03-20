@@ -16,8 +16,7 @@ public class DemandReasonService {
 	@Autowired
 	private ModuleRepository moduleRepository;
 
-	public EgDemandReason findByCodeInstModule(String demandReasonCode, String instDescription, String moduleName,
-			String tenantId) {
+	public EgDemandReason findByCodeInstModule(String demandReasonCode, String instDescription, String moduleName) {
 		Long moduleId = moduleRepository.fetchModuleByName(moduleName).getId();
 		return demandReasonRepository.findByCodeInstModule(demandReasonCode, instDescription, moduleId);
 	}

@@ -68,6 +68,7 @@ class Attendance extends React.Component {
       if(response["statusText"]==="OK")
       {
         alert("Successfully added");
+        window.location.href="../../../../app/hr/common/employee-attendance.html";
       }
       else {
         alert(response["statusText"]);
@@ -96,7 +97,7 @@ class Attendance extends React.Component {
     // var startDate=new Date((typeof(queryParam["year"])==="undefined")?now.getFullYear():parseInt(queryParam["year"]), (typeof(queryParam["month"])==="undefined")?now.getMonth():parseInt(queryParam["month"]), 1);
     // console.log(startDate);
     var employeesTemp=commonApiPost("hr-employee","employees","_search",{tenantId,departmentId:queryParam["departmentCode"],designationId:queryParam["designationCode"],employeeType:queryParam["type"],code:queryParam["code"]}).responseJSON["Employee"] || [];
-    var currentAttendance=commonApiPost("hr-attendance","attendances","_search",{tenantId,month:parseInt(queryParam["month"])+1,year:queryParam["year"]}).responseJSON["Attendance"] || [];
+    var currentAttendance=commonApiPost("hr-attendance","attendances","_search",{tenantId,month:parseInt(queryParam["month"])+1,year:queryParam["year"],pageSize:500,pageNumber:1}).responseJSON["Attendance"] || [];
     var employees={};
     for(var i=0;i<employeesTemp.length;i++)
     {

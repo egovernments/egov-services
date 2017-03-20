@@ -37,7 +37,7 @@
  *
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.pgr.persistence.entity;
+package org.egov.pgr.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -46,12 +46,22 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.SafeHtml;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 @Entity
 @Table(name = "egpgr_receivingmode")
+@Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @SequenceGenerator(name = ReceivingMode.SEQ_RECEIVINGMODE, sequenceName = ReceivingMode.SEQ_RECEIVINGMODE, allocationSize = 1)
 public class ReceivingMode extends AbstractPersistable<Long> {
 
@@ -79,34 +89,5 @@ public class ReceivingMode extends AbstractPersistable<Long> {
 	@Override
 	protected void setId(final Long id) {
 		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(final String name) {
-		this.name = name;
-	}
-
-	public String getCode() {
-		return code;
-	}
-
-	public void setCode(final String code) {
-		this.code = code;
-	}
-
-	public boolean isVisible() {
-		return visible;
-	}
-
-	public void setVisible(final boolean visible) {
-		this.visible = visible;
-	}
-
-	@Override
-	public String toString() {
-		return StringUtils.capitalize(name);
 	}
 }

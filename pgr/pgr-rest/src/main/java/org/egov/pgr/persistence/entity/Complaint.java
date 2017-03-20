@@ -69,7 +69,6 @@ import org.egov.pgr.domain.model.AuthenticatedUser;
 import org.egov.pgr.domain.model.ComplaintLocation;
 import org.egov.pgr.domain.model.Coordinates;
 import org.egov.pgr.persistence.entity.enums.CitizenFeedback;
-import org.egov.pgr.persistence.entity.enums.ReceivingMode;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.SafeHtml;
 
@@ -136,10 +135,9 @@ public class Complaint extends AbstractAuditable {
 	@SafeHtml
 	private String landmarkDetails;
 
-	@Column(name = "receivingmode")
-	@Enumerated(EnumType.ORDINAL)
-	@NotNull
-	private ReceivingMode receivingMode = ReceivingMode.WEBSITE;
+	@ManyToOne
+	@JoinColumn(name = "receivingmode")
+	private ReceivingMode receivingMode;
 
 	@ManyToOne
 	@JoinColumn(name = "receivingcenter", nullable = true)
@@ -208,12 +206,14 @@ public class Complaint extends AbstractAuditable {
 				.address(landmarkDetails).description(details).crn(crn).createdDate(getCreatedDate())
 				.lastModifiedDate(getLastModifiedDate()).mediaUrls(Collections.emptyList())
 				.escalationDate(getEscalationDate()).closed(isCompleted()).department(department)
-				.lastAccessedTime(lastAccessedTime).build(); 
+				.lastAccessedTime(lastAccessedTime).build();
 	}
 
 	private Map<String, String> getAdditionalValues() {
 		HashMap<String, String> map = new HashMap<>();
-		map.put("ReceivingMode", getReceivingMode().toString());
+		if (getReceivingMode() != null) {
+			map.put("ReceivingMode", getReceivingMode().getCode().toString());
+		}
 		map.put("ComplaintStatus", getStatus().getName());
 		if (getReceivingCenter() != null) {
 			map.put("receivingCenter", getReceivingCenter().getId().toString());

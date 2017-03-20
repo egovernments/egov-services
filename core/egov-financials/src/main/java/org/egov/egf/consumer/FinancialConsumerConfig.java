@@ -5,9 +5,7 @@ import java.util.Map;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
-import org.egov.egf.listner.FinancialListener;
 import org.egov.egf.persistence.queue.FinancialGenericDeserializer;
-import org.egov.egf.persistence.queue.contract.BankContractRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -68,11 +66,6 @@ public class FinancialConsumerConfig {
 		propsMap.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 		propsMap.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, FinancialGenericDeserializer.class);
 		return propsMap;
-	}
-
-	@Bean
-	public FinancialListener listener() {
-		return new FinancialListener();
 	}
 
 }

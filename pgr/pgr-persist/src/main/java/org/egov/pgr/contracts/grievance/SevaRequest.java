@@ -1,9 +1,11 @@
 package org.egov.pgr.contracts.grievance;
 
+import java.util.HashMap;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class SevaRequest {
 
@@ -40,4 +42,7 @@ public class SevaRequest {
         return -1L;
     }
 
+	public RequestInfo getRequestInfo() {
+		return new ObjectMapper().convertValue(sevaRequestMap.get(REQUEST_INFO), RequestInfo.class);
+	}
 }

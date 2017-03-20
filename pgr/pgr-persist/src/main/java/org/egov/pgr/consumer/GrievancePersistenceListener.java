@@ -1,7 +1,10 @@
 package org.egov.pgr.consumer;
 
+import java.util.HashMap;
+
 import org.apache.commons.lang3.StringUtils;
 import org.egov.pgr.config.PersistenceProperties;
+import org.egov.pgr.contracts.grievance.RequestInfo;
 import org.egov.pgr.contracts.grievance.SevaRequest;
 import org.egov.pgr.entity.Complaint;
 import org.egov.pgr.model.ComplaintBuilder;
@@ -10,14 +13,17 @@ import org.egov.pgr.model.SmsComposer;
 import org.egov.pgr.producer.GrievanceProducer;
 import org.egov.pgr.repository.PositionRepository;
 import org.egov.pgr.repository.UserRepository;
-import org.egov.pgr.service.*;
+import org.egov.pgr.service.ComplaintService;
+import org.egov.pgr.service.ComplaintStatusService;
+import org.egov.pgr.service.ComplaintTypeService;
+import org.egov.pgr.service.EscalationService;
+import org.egov.pgr.service.ReceivingCenterService;
+import org.egov.pgr.service.TemplateService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
 
 @Service
 public class GrievancePersistenceListener {
@@ -33,6 +39,7 @@ public class GrievancePersistenceListener {
     private TemplateService templateService;
     private PersistenceProperties persistenceProperties;
     private ReceivingCenterService receivingCenterService;
+    private RequestInfo requestInfo;
 
     @Autowired
     public GrievancePersistenceListener(ComplaintTypeService complaintTypeService, ComplaintStatusService complaintStatusService,
@@ -86,7 +93,7 @@ public class GrievancePersistenceListener {
         logger.debug("Saving record in database for" + sevaRequest.getServiceRequest().getCrn());
         String complaintCrn = sevaRequest.getServiceRequest().getCrn();
         Complaint complaintByCrn = complaintService.findByCrn(complaintCrn);
-        Complaint complaint = new ComplaintBuilder(complaintByCrn, sevaRequest, complaintTypeService, complaintStatusService, escalationService, positionRepository,userRepository,receivingCenterService).build();
+        Complaint complaint = new ComplaintBuilder(complaintByCrn, sevaRequest, complaintTypeService, complaintStatusService, escalationService, positionRepository,userRepository,receivingCenterService,requestInfo).build();
         complaint = complaintService.save(complaint);
         return complaint;
     }

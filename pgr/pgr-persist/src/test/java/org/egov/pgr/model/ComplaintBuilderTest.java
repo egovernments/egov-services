@@ -1,5 +1,19 @@
 package org.egov.pgr.model;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.egov.pgr.contracts.grievance.RequestInfo;
 import org.egov.pgr.contracts.grievance.SevaRequest;
 import org.egov.pgr.entity.Complaint;
 import org.egov.pgr.entity.ComplaintType;
@@ -16,15 +30,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.*;
-
 
 @RunWith(MockitoJUnitRunner.class)
 public class ComplaintBuilderTest {
@@ -39,6 +44,8 @@ public class ComplaintBuilderTest {
     private PositionRepository positionRepository;
     @Mock 
     private ReceivingCenterService receivingCenterService;
+    @Mock
+    private RequestInfo requestInfo;
 
     @Mock
     private UserRepository userRepository;
@@ -169,7 +176,7 @@ public class ComplaintBuilderTest {
 
     private ComplaintBuilder complaintBuilderWithComplaint(Complaint complaint, SevaRequest sevaRequest) {
         return new ComplaintBuilder(complaint, sevaRequest, complaintTypeService, complaintStatusService,
-                escalationService, positionRepository,userRepository,receivingCenterService);
+                escalationService, positionRepository,userRepository,receivingCenterService,requestInfo);
     }
 
     private Date getDateFor(int year, int month, int date) {

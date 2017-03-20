@@ -23,12 +23,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("agreements")
 public class AgreementController {
 	public static final Logger LOGGER = LoggerFactory
 			.getLogger(AgreementController.class);
@@ -87,6 +90,28 @@ public class AgreementController {
 
 		return new ResponseEntity<>(agreementResponse,
 				HttpStatus.CREATED);
+	}
+	
+	@PostMapping("_update/{code}")
+	@ResponseBody
+	public ResponseEntity<?> update(@PathVariable("code") String code, @RequestBody AgreementRequest agreementRequest,
+			BindingResult bindingResult) {
+
+		if (bindingResult.hasErrors()) {
+			ErrorResponse errorResponse = populateErrors(bindingResult);
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+		}
+		LOGGER.info("AgreementController:getAgreements():update agreement:" + agreementRequest);
+
+		Agreement agreement = agreementRequest.getAgreement();
+		AgreementValidator.validateAgreement(agreement);
+		agreement = agreementService.updateAgreement(agreement);
+		List<Agreement> agreements = new ArrayList<>();
+		agreements.add(agreement);
+		AgreementResponse agreementResponse = new AgreementResponse();
+		agreementResponse.setAgreement(agreements);
+
+		return new ResponseEntity<>(agreementResponse, HttpStatus.CREATED);
 	}
 
 	private ErrorResponse populateErrors(BindingResult errors) {

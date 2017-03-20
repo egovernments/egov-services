@@ -1,7 +1,6 @@
 package org.egov.lams.service;
 
 import java.util.List;
-
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.AgreementCriteria;
 import org.egov.lams.model.RentIncrementType;
@@ -117,13 +116,52 @@ public class AgreementService {
 				agreementValue = mapper.writeValueAsString(agreement);
 				logger.info("agreementValue::"+agreementValue);
 		} catch (JsonProcessingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			e.printStackTrace();
+				throw new RuntimeException(e.getMessage());
 		}
 		try {
 				agreementProducer.sendMessage("agreement-save-db", "save-agreement", agreementValue);
 		}catch(Exception ex){
 				ex.printStackTrace();
+				throw new RuntimeException(ex.getMessage());
+		}
+		return agreement;
+	}
+
+	/***
+	 * method to update agreementNumber using acknowledgeNumber
+	 * 
+	 * @param agreement
+	 * @return
+	 */
+	public Agreement updateAgreement(Agreement agreement) {
+		ObjectMapper mapper = new ObjectMapper();
+		String agreementValue = null;
+		Long agreementNumber = null;
+
+		try {
+			// TODO put agreement number generator here and change
+			agreementNumber = (Long) jdbcTemplate.queryForList("SELECT NEXTVAL('seq_lams_rentincrement')").get(0)
+					.get("nextval");
+			agreement.setAgreementNumber(agreementNumber.toString());
+		} catch (Exception exception) {
+			exception.printStackTrace();
+			throw exception;
+		}
+		try {
+			logger.info("createAgreement service::" + agreement);
+			agreementValue = mapper.writeValueAsString(agreement);
+			logger.info("agreementValue::" + agreementValue);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new RuntimeException(e.getMessage());
+		}
+		try {
+			agreementProducer.sendMessage("agreement-update-db", "save-agreement", agreementValue);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			throw ex;
 		}
 		return agreement;
 	}

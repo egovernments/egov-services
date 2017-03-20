@@ -137,7 +137,7 @@ public class AssetRepository {
 				asset.getLength(),asset.getWidth(),asset.getTotalArea(),modeOfAcquisition,
 				status,asset.getTenantId(),location.getZone(),location.getRevenueWard(),location.getStreet(),
 				location.getElectionWard(),location.getDoorNo(),location.getPinCode(),location.getLocality(),location.getBlock(),
-				property,requestInfo.getMsgId(), new Date(), requestInfo.getMsgId(), new Date()};
+				property,requestInfo.getRequesterId(), new Date(), requestInfo.getMsgId(), new Date()};
 		try{
 			 jdbcTemplate.update(query, obj);
 		} catch(Exception ex) {

@@ -75,7 +75,7 @@ public class Asset {
 	@Valid
 	private Department department;
 	
-	@NotNull
+	@Valid
 	private AssetCategory assetCategory;
 	private String assetDetails;
 	private ModeOfAcquisition modeOfAcquisition;

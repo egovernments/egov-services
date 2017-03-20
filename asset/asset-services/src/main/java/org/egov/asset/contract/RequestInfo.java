@@ -40,6 +40,8 @@
 
 package org.egov.asset.contract;
 
+import javax.validation.constraints.NotNull;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -62,6 +64,8 @@ public class RequestInfo {
 	private String did;
 	private String key;
 	private String msgId;
+	
+	@NotNull
 	private String requesterId;
 	private String authToken;
 }

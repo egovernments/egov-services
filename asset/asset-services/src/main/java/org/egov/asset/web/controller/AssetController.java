@@ -42,6 +42,8 @@ package org.egov.asset.web.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.contract.AssetRequest;
 import org.egov.asset.contract.AssetResponse;
@@ -97,7 +99,7 @@ public class AssetController {
 
 	@PostMapping("_create")
 	@ResponseBody
-	public ResponseEntity<?> create(@RequestBody AssetRequest assetRequest,BindingResult bindingResult) {
+	public ResponseEntity<?> create(@RequestBody @Valid AssetRequest assetRequest,BindingResult bindingResult) {
 		
 		logger.info("create asset:"+ assetRequest);
 		if(bindingResult.hasErrors()){

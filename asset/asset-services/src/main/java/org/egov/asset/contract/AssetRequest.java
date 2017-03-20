@@ -61,6 +61,7 @@ import org.egov.asset.model.Asset;
 public class AssetRequest {
 	
 	@JsonProperty("RequestInfo")
+	@Valid
 	private RequestInfo requestInfo;
 
 	@JsonProperty("Asset")

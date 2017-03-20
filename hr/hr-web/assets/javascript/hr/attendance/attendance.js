@@ -93,7 +93,7 @@ class Attendance extends React.Component {
     var now = new Date();
     // var startDate=new Date((typeof(queryParam["year"])==="undefined")?now.getFullYear():parseInt(queryParam["year"]), (typeof(queryParam["month"])==="undefined")?now.getMonth():parseInt(queryParam["month"]), 1);
     // console.log(startDate);
-    var employeesTemp=commonApiPost("hr-employee","employees","_search",{tenantId,department:queryParam["departmentCode"],designation:queryParam["designationCode"],employeeType:queryParam["type"],code:queryParam["code"]}).responseJSON["Employee"] || [];
+    var employeesTemp=commonApiPost("hr-employee","employees","_search",{tenantId,departmentId:queryParam["departmentCode"],designationId:queryParam["designationCode"],employeeType:queryParam["type"],code:queryParam["code"]}).responseJSON["Employee"] || [];
     var employees={};
     for(var i=0;i<employeesTemp.length;i++)
     {

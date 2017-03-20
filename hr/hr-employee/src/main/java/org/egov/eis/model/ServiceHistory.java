@@ -61,11 +61,7 @@ import lombok.ToString;
 @ToString
 public class ServiceHistory {
 
-	@NotNull
 	private Long id;
-
-	@NotNull
-	private Long employeeId;
 
 	@NotNull
 	private String serviceInfo;
@@ -78,10 +74,8 @@ public class ServiceHistory {
 
 	private String orderNo;
 
-	@NotNull
 	private Long createdBy;
 
-	@NotNull
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date createdDate;
 
@@ -90,7 +84,6 @@ public class ServiceHistory {
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date lastModifiedDate;
 
-	@NotNull
 	private String tenantId;
 
 }

@@ -58,7 +58,6 @@ import lombok.ToString;
 @ToString
 public class EmployeeType {
 
-	@NotNull
 	private Long id;
 
 	@NotNull
@@ -68,7 +67,6 @@ public class EmployeeType {
 	@Size(max=10)
 	private String chartOfAccounts;
 
-	@NotNull
 	private String tenantId;
 
 }

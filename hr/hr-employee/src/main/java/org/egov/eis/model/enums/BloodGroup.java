@@ -38,49 +38,36 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.model;
+package org.egov.eis.model.enums;
 
-import java.util.Date;
+import org.apache.commons.lang3.StringUtils;
 
-import javax.validation.constraints.NotNull;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+public enum BloodGroup {
+	A_POSITIVE("A+"), B_POSITIVE("B+"), AB_POSITIVE("AB+"), O_POSITIVE("O+"),
+	A_NEGATIVE("A-"), B_NEGATIVE("B-"), AB_NEGATIVE("AB-"), O_NEGATIVE("O-");
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+	private String value;
 
-@AllArgsConstructor
-@EqualsAndHashCode
-@Getter
-@NoArgsConstructor
-@Setter
-@ToString
-public class DepartmentalTest {
+	BloodGroup(String value) {
+		this.value = value;
+	}
 
-	private Long id;
+	@Override
+	@JsonValue
+    public String toString() {
+        return StringUtils.capitalize(name());
+    }
 
-	@NotNull
-	private String test;
-
-	@NotNull
-	private Integer yearOfPassing;
-
-	private String remarks;
-
-	private Long createdBy;
-
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date createdDate;
-
-	private Long lastModifiedBy;
-
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date lastModifiedDate;
-
-	private String tenantId;
-
+	@JsonCreator
+	public static BloodGroup fromValue(String passedValue) {
+		for (BloodGroup obj : BloodGroup.values()) {
+			if (String.valueOf(obj.value).equals(passedValue.toUpperCase())) {
+				return obj;
+			}
+		}
+		return null;
+	}
 }

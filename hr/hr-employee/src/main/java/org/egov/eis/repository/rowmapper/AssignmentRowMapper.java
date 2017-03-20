@@ -68,7 +68,6 @@ public class AssignmentRowMapper implements ResultSetExtractor<List<Assignment>>
 			if (assignment == null) {
 				assignment = new Assignment();
 				assignment.setId(rs.getLong("a_id"));
-				assignment.setEmployee(rs.getLong("a_employeeId"));
 				assignment.setPosition(rs.getLong("a_positionId"));
 				assignment.setFund(rs.getLong("a_fundId"));
 				assignment.setFunctionary(rs.getLong("a_functionaryId"));

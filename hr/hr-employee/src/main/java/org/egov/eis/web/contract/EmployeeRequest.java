@@ -40,6 +40,9 @@
 
 package org.egov.eis.web.contract;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
 import org.egov.eis.model.Employee;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -59,9 +62,12 @@ import lombok.ToString;
 @ToString
 public class EmployeeRequest {
 
+	@NotNull
 	@JsonProperty("RequestInfo")
 	private RequestInfo requestInfo;
 
+	@Valid
+	@NotNull
 	@JsonProperty("Employee")
 	private Employee employee;
 

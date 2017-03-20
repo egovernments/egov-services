@@ -58,7 +58,6 @@ import lombok.ToString;
 @ToString
 public class Designation {
 
-	@NotNull
 	private Long id;
 
 	@NotNull
@@ -77,7 +76,6 @@ public class Designation {
 	@NotNull
 	private Boolean active;
 
-	@NotNull
 	private String tenantId;
 
 }

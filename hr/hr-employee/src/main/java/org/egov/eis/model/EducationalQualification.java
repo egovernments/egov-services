@@ -61,11 +61,7 @@ import lombok.ToString;
 @ToString
 public class EducationalQualification {
 
-	@NotNull
 	private Long id;
-
-	@NotNull
-	private Long employeeId;
 
 	@NotNull
 	private String qualification;
@@ -77,10 +73,8 @@ public class EducationalQualification {
 
 	private String university;
 
-	@NotNull
 	private Long createdBy;
 
-	@NotNull
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date createdDate;
 
@@ -89,7 +83,6 @@ public class EducationalQualification {
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date lastModifiedDate;
 
-	@NotNull
 	private String tenantId;
 
 }

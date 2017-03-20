@@ -44,10 +44,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.egov.eis.model.enums.EmployeeStatus;
 import org.egov.eis.model.enums.MaritalStatus;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -67,10 +69,8 @@ import lombok.ToString;
 @ToString
 public class Employee {
 
-	@NotNull
 	private Long id;
 
-	@NotNull
 	@Size(min=1, max=256)
 	private String code;
 
@@ -84,7 +84,7 @@ public class Employee {
 	private Date dateOfRetirement;
 
 	@NotNull
-	private String employeeStatus;
+	private EmployeeStatus employeeStatus;
 
 	private Long recruitmentMode;
 
@@ -104,6 +104,7 @@ public class Employee {
 	@NotNull
 	private Long employeeType;
 
+	@Valid
 	private List<Assignment> assignments = new ArrayList<Assignment>();
 
 	private List<Long> jurisdictions = new ArrayList<Long>();
@@ -122,6 +123,7 @@ public class Employee {
 
 	private List<Long> languagesKnown = new ArrayList<Long>();
 
+	@Valid
 	private MaritalStatus maritalStatus;
 
 	private String passportNo;
@@ -140,18 +142,25 @@ public class Employee {
 	@Size(max=200)
 	private String placeOfBirth;
 
+	@Valid
 	private List<ServiceHistory> serviceHistory = new ArrayList<ServiceHistory>();
 
+	@Valid
 	private List<Probation> probation = new ArrayList<Probation>();
 
+	@Valid
 	private List<Regularisation> regularisation = new ArrayList<Regularisation>();
 
+	@Valid
 	private List<TechnicalQualification> technical = new ArrayList<TechnicalQualification>();
 
+	@Valid
 	private List<EducationalQualification> education = new ArrayList<EducationalQualification>();
 
+	@Valid
 	private List<DepartmentalTest> test = new ArrayList<DepartmentalTest>();
 
+	@Valid
 	private User user;
 
 	@NotNull

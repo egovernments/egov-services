@@ -64,7 +64,6 @@ import lombok.ToString;
 @ToString
 public class Role {
 
-	@NotNull
 	private Long id;
 
 	@NotNull
@@ -74,10 +73,8 @@ public class Role {
 	@Size(max=256)
     private String description;
 
-	@NotNull
 	private Long createdBy;
 
-	@NotNull
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date createdDate;
 
@@ -86,7 +83,6 @@ public class Role {
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date lastModifiedDate;
 
-	@NotNull
 	private String tenantId;
 
 }

@@ -43,7 +43,7 @@ package org.egov.eis.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.Valid;
 import javax.validation.constraints.Size;
 
 import org.egov.eis.model.enums.EmployeeStatus;
@@ -67,37 +67,44 @@ import lombok.ToString;
 @ToString
 public class EmployeeInfo {
 
-	@NotNull
 	private Long id;
 
-	@NotNull
 	@Size(min=1, max=256)
 	private String code;
 
+	@Size(max=5)
 	private String salutation;
 
+	@Size(min=3, max=100)
 	private String name;
 
+	@Size(min=1, max=64)
 	private String userName;
 
 	private Gender gender;
 
+	@Size(max=10)
 	private String mobileNumber;
 
+	@Size(min=5, max=128)
 	private String emailId;
 
+	@Size(max=10)
 	private String pan;
 
+	@Size(max=12)
 	private Long aadhaarNumber;
 
 	private Boolean active;
 
+	@Valid
 	private UserType type = UserType.EMPLOYEE;
 
 	private EmployeeStatus employeeStatus;
 
 	private Long employeeType;
 
+	@Valid
 	private List<Assignment> assignments = new ArrayList<Assignment>();
 
 	private List<Long> jurisdictions = new ArrayList<Long>();
@@ -109,7 +116,6 @@ public class EmployeeInfo {
 	@Size(max=20)
 	private String bankAccount;
 
-	@NotNull
 	private String tenantId;
 
 }

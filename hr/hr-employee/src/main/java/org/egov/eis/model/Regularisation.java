@@ -61,11 +61,7 @@ import lombok.ToString;
 @ToString
 public class Regularisation {
 
-	@NotNull
 	private Long id;
-
-	@NotNull
-	private Long employeeId;
 
 	private Long designation;
 
@@ -80,10 +76,8 @@ public class Regularisation {
 
 	private String remarks;
 
-	@NotNull
 	private Long createdBy;
 
-	@NotNull
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date createdDate;
 
@@ -92,7 +86,6 @@ public class Regularisation {
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date lastModifiedDate;
 
-	@NotNull
 	private String tenantId;
 
 }

@@ -57,13 +57,13 @@ import lombok.ToString;
 @ToString
 public class Location {
 	
-	@NotNull
+	
 	private Long locality;
 	private Long zone;
 	private Long revenueWard;
 	private Long block;
 	private Long street;
 	private Long electionWard;
-	private Long doorNo;
+	private String doorNo;
 	private Long pinCode;
 }

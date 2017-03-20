@@ -1,27 +1,35 @@
-CREATE TABLE EGASSET_ASSET (
-	id bigint NOT NULL,
-	assetCategory BIGINT NOT NULL,
-	name CHARACTER VARYING(250) NOT NULL,
-	code CHARACTER VARYING(250) NOT NULL,
-	department BIGINT NOT NULL,
-	location BIGINT,
-	assetDetails CHARACTER VARYING(4000),
-	description CHARACTER VARYING(1024),
-	dateOfCreation TIMESTAMP WITHOUT TIME ZONE NOT NULL,
-	remarks CHARACTER VARYING(250),
-	length CHARACTER VARYING(250),
-	width CHARACTER VARYING(250),
-	totalArea CHARACTER VARYING(250),
-	properties CHARACTER VARYING(250),
-	modeOfAcquisition CHARACTER VARYING(250),
-    status CHARACTER VARYING(250) NOT NULL,
-	tenantId CHARACTER VARYING(250),
-	createdBy CHARACTER VARYING(64) NOT NULL,
-	createdDate TIMESTAMP WITHOUT TIME ZONE NOT NULL,
-    lastModifiedBy CHARACTER VARYING(64),
-    lastModifiedDate TIMESTAMP WITHOUT TIME ZONE,
-
-	CONSTRAINT PK_EGASSET_ASSET PRIMARY KEY (id)
-);
-
+CREATE TABLE public.egasset_asset
+(
+  id bigint NOT NULL,
+  assetcategory bigint NOT NULL,
+  name character varying(250) NOT NULL,
+  code character varying(100) NOT NULL,
+  department bigint ,
+  assetdetails character varying(4000),
+  description character varying(1024),
+  dateofcreation timestamp without time zone,-- capture through the screen
+  remarks character varying(250),
+  length character varying(250),
+  width character varying(250),
+  totalarea character varying(250),
+  modeofacquisition character varying(250),
+  status character varying(250) NOT NULL,--Todo phash-2 
+  tenantid character varying(250) NOT NULL,
+  zone bigint,
+  revenueward bigint,
+  street bigint,
+  electionward bigint,
+  doorno bigint,
+  pincode bigint,
+  locality bigint,
+  block bigint,
+  properties character varying(5000),
+  createdby character varying(64) NOT NULL,
+  createddate timestamp without time zone NOT NULL,
+  lastmodifiedby character varying(64),
+  lastmodifieddate timestamp without time zone,
+  grossvalue numeric,
+  accumulateddepreciation numeric,
+  CONSTRAINT pk_egasset_asset PRIMARY KEY (id)
+)
 CREATE SEQUENCE SEQ_EGASSET_ASSET INCREMENT 1 MINVALUE 1 MAXVALUE 9223372036854775807 START 1 CACHE 1;

@@ -108,7 +108,7 @@ public class AssetRowMapper implements RowMapper<Asset> {
 		Location location=new Location();
 		location.setBlock((Long)rs.getObject("block"));
 		location.setLocality((Long)rs.getObject("locality"));
-		location.setDoorNo((Long)rs.getObject("doorNo"));
+		location.setDoorNo(rs.getString("doorNo"));
 		location.setElectionWard((Long)rs.getObject("electionWard"));
 		location.setRevenueWard((Long)rs.getObject("revenueWard"));
 		location.setPinCode((Long)rs.getObject("pincode"));

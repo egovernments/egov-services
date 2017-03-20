@@ -57,6 +57,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.egov.demand.web.contract.Bill;
+import org.egov.demand.web.contract.BillAddlInfo;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -151,6 +154,51 @@ public class EgBill implements java.io.Serializable {
 	@Column(name = "emailid")
 	private String emailId;
 
+	public EgBill (BillAddlInfo bill) {
+		this.id = bill.getId();
+		//this.egDemand = bill.getEgdemand();
+		//this.egBillType = bill.getBillType();
+		this.citizenName = bill.getCitizenName();
+		this.citizenAddress = bill.getCitizenAddress();
+		this.billNo = bill.getBillNumber();
+		this.issueDate = bill.getIssuedDate();
+		this.lastDate = bill.getLastDate();
+		//this.module = bill.getModuleName();
+		//this.userId = bill.getUserid();
+		//this.createDate = bill.getCreateDate();
+		//this.modifiedDate = bill.getModifiedDate();
+		//this.egBillDetails = bill.getEgbillDetails();
+		this.is_History = bill.getHistory();
+		this.is_Cancelled = bill.getCancelled();
+		this.fundCode = bill.getFundCode();
+		this.functionaryCode = BigDecimal.valueOf(bill.getFunctionaryCode());
+		this.fundSourceCode = bill.getFundSourceCode();
+		this.departmentCode = bill.getDepartmentCode();
+		this.collModesNotAllowed = bill.getCollModesNotAllowed();
+		this.boundaryNum = bill.getBoundaryNumber();
+		this.boundaryType = bill.getBoundaryType();
+		this.totalAmount = BigDecimal.valueOf(bill.getTotalAmount());
+		//this.totalCollectedAmount = bill.getTotalcollectedamount();
+		this.serviceCode = bill.getServiceCode();
+		this.partPaymentAllowed = bill.getPartPaymentAllowed();
+		this.overrideAccountHeadsAllowed = bill.getOverrideAccHeadAllowed();
+		this.description = bill.getDescription();
+		this.minAmtPayable = BigDecimal.valueOf(bill.getMinAmountPayable());
+		this.consumerId = bill.getConsumerCode();
+		this.consumerType = bill.getConsumerType();
+		this.displayMessage = bill.getDisplayMessage();
+		this.callBackForApportion = bill.getCallbackForApportion();
+		//this.transanctionReferenceNumber = bill.getTransanctionreferencenumber();
+		this.emailId = bill.getEmailId();
+
+	}
+	public BillAddlInfo toDomain(EgBill bill){
+		return BillAddlInfo.builder().id(id)
+				.billType(egBillType.getName())
+				.citizenName(citizenName)
+				.citizenAddress(citizenAddress)
+				.billNumber(billNo).build();
+	}
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();

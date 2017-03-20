@@ -21,7 +21,7 @@ public class ModuleRepository {
 	}
 
 	public Module fetchModuleByName(String name) {
-		String url = this.commonServicesHost + "v1/modules/_search?module.name={name}";
+		String url = this.commonServicesHost + "egov-common-masters/modules/_search?module.name={name}";
 		return getModuleServiceResponse(url, name).getModules().get(0);
 	}
 

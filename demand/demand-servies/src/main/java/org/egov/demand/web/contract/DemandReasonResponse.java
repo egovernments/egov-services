@@ -20,7 +20,7 @@ import lombok.ToString;
 @ToString
 public class DemandReasonResponse {
 	@JsonProperty("ResponseInfo")
-	RequestInfo responseInfo;
+	ResponseInfo responseInfo;
 
 	@JsonProperty("DemandReason")
 	private List<DemandReason> demandReasons = new ArrayList<DemandReason>();

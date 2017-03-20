@@ -18,10 +18,10 @@ import lombok.ToString;
 @NoArgsConstructor
 @Setter
 @ToString
-public class DemandDetailsResponse {
-	@JsonProperty("ResponseInfo")
-	ResponseInfo responseInfo;
+public class InstallmentRequest {
+	@JsonProperty("RequestInfo")
+	RequestInfo requestInfo;
 
-	@JsonProperty("DemandDetails")
-	private List<DemandDetails> demandDetails = new ArrayList<DemandDetails>();
+	@JsonProperty("Installment")
+	private List<Installment> installments = new ArrayList<Installment>();
 }

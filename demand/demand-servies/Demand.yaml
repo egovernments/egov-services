@@ -139,6 +139,139 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/ErrorRes'
+
+  /demand/installment/_search:
+    post:
+      description: Returns a installments
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Request header for the service request details.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - name: tenantId
+          in: query
+          description: Unique id for ulb.
+          required: true
+          type: string
+          format: varchar
+        - name: moduleName
+          in: query
+          description: Name of the module for which installments to be returned.
+          required: true
+          type: string
+        - name: fromDate
+          in: query
+          description: Installment start date, here search will happen as Installment start is greater or equal to given fromDate.
+          required: false
+          type: string
+        - name: toDate
+          in: query
+          description: Installment end date, here search will happen as Installment end is greater or equal to given toDate.
+          required: false
+          type: string
+        - name: description
+          in: query
+          description: representation of a tax period.
+          required: false
+          type: string
+        - name: installmentType
+          in: query
+          description: type of installment, its for monthly, querterly, halfyearly or yearly.
+          required: false
+          type: string
+      tags:
+        - Master
+      responses:
+        '200':
+          description: returns a installments.
+          schema:
+            $ref: '#/definitions/InstallmentResponse'
+        '400':
+          description: tenantId was not provided or General service error
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        '404':
+          description: tenantId provided was not found
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/ErrorRes'
+            
+  /demand/installment/_create:
+    post:
+      description: Creates a Installment
+      parameters:
+        - name: installment
+          in: body
+          description: Request header for the demand reason.
+          required: true
+          schema:
+            $ref: '#/definitions/InstallmentRequest'
+        - name: tenantId
+          in: query
+          description: Unique id for ulb.
+          required: true
+          type: string
+          format: varchar
+      tags:
+        - Master
+      responses:
+        '200':
+          description: returns a demand reason id (A primary key of a demand reason object).
+          schema:
+            $ref: '#/definitions/InstallmentResponse'
+        '400':
+          description: tenantId was not provided or General service error
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        '404':
+          description: tenantId provided was not found
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/ErrorRes'
+            
+  /demand/installment/_update:
+    post:
+      description: Updates a Installment.
+      parameters:
+        - name: demand
+          in: body
+          description: Request header for the demand reason.
+          required: true
+          schema:
+            $ref: '#/definitions/InstallmentRequest'
+        - name: tenantId
+          in: query
+          description: Unique id for ulb.
+          required: true
+          type: string
+          format: varchar
+      tags:
+        - Master
+      responses:
+        '200':
+          description: updated a installment
+          schema:
+            $ref: '#/definitions/InstallmentResponse'
+        '400':
+          description: tenantId was not provided or General service error
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        '404':
+          description: tenantId provided was not found
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/ErrorRes'
             
   /demand/_search:
     post:
@@ -497,6 +630,49 @@ definitions:
       - taxPeriod
       - glCode
       
+  Installment:
+    type: object
+    description: A object holds a installment, the tax period info
+    properties:
+      fromDate:
+        type: string
+        format: date
+        description: Start date for tax period
+      toDate:
+        type: string
+        format: date
+        description: End date for tax period
+      installmentYear:
+        type: string
+        format: date
+        description: Installment Year
+      module:
+        type: string
+        description: Name of the module this period belongs to.
+      installmentNumber:
+        type: string
+        description: Tax period number.
+      description:
+        type: string
+        description: representation of a tax period.
+      installmentType:
+        type: string
+        description: type of installment, its for monthly, querterly, halfyearly or yearly.
+        enum:
+          - MONTH
+          - QUARTER
+          - HALFYEAR
+          - ANNUAL
+      financialYear:
+        type: string
+        description: financial year for which this period belongs.
+    required:
+      - fromDate
+      - toDate
+      - installmentNumber
+      - description
+      - installmentType
+      
   CollectedReceipts:
     type: object
     description: A object holds a payment information against a demand.
@@ -814,6 +990,24 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/BillAddlInfo'
+    type: object
+    
+  InstallmentRequest:
+    properties:
+      RequestInfo:
+        $ref: '#/definitions/RequestInfo'
+      Installment:
+        $ref: '#/definitions/Installment'
+    type: object
+
+  InstallmentResponse:
+    properties:
+      ResposneInfo:
+        $ref: '#/definitions/ResponseInfo'
+      Installments:
+        type: array
+        items:
+          $ref: '#/definitions/Installment'
     type: object
       
   RequestInfo:

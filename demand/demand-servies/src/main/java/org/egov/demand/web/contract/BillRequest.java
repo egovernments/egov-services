@@ -1,6 +1,5 @@
 package org.egov.demand.web.contract;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -18,10 +17,14 @@ import lombok.ToString;
 @NoArgsConstructor
 @Setter
 @ToString
-public class DemandDetailsResponse {
-	@JsonProperty("ResponseInfo")
-	ResponseInfo responseInfo;
+public class BillRequest {
+	@JsonProperty("RequestInfo")
+	RequestInfo requestInfo;
 
-	@JsonProperty("DemandDetails")
-	private List<DemandDetails> demandDetails = new ArrayList<DemandDetails>();
+	@JsonProperty("BillAddlInfo")
+	BillAddlInfo billAddlInfo;
+
+	@JsonProperty("DemandId")
+	List<Long> demandId;
+
 }

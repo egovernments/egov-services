@@ -56,7 +56,7 @@ public class ComplaintService {
 			if (ct.getDepartment() != null) {
 				if (ct.getAdditionalValues() == null)
 					ct.setAdditionalValues(new HashMap<String, String>());
-				ct.getAdditionalValues().put("departmentName", deptIdNameMap.get(ct.getDepartment()));
+					ct.getAdditionalValues().put("departmentName", deptIdNameMap.get(ct.getDepartment()));
 			} else {
 				if (ct.getAdditionalValues() == null)
 					ct.setAdditionalValues(new HashMap<String, String>());

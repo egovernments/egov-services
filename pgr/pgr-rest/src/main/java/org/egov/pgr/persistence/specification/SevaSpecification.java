@@ -22,11 +22,9 @@ import org.egov.pgr.persistence.entity.ComplaintStatus_;
 import org.egov.pgr.persistence.entity.ComplaintType;
 import org.egov.pgr.persistence.entity.ComplaintType_;
 import org.egov.pgr.persistence.entity.Complaint_;
-import org.egov.pgr.persistence.entity.enums.ReceivingMode;
+import org.egov.pgr.persistence.entity.ReceivingMode;
+import org.egov.pgr.persistence.entity.ReceivingMode_;
 import org.springframework.data.jpa.domain.Specification;
-
-
-
 
 public class SevaSpecification implements Specification<Complaint> {
 	private ComplaintSearchCriteria criteria;
@@ -47,18 +45,18 @@ public class SevaSpecification implements Specification<Complaint> {
 		Path<Date> lastModifiedDate = root.get(AbstractAuditable_.lastModifiedDate);
 		Path<Long> assignmentId = root.get(Complaint_.assignee);
 		Path<Long> userId = root.get(AbstractAuditable_.createdBy);
-		Path<Complainant> complainant= root.get(Complaint_.complainant);
-		Path<String> name= complainant.get(Complainant_.name);
-		Path<String> emailId= complainant.get(Complainant_.email);
-		Path<String>  mobileNumber = complainant.get(Complainant_.mobile);
-        Path<Boundary>location = root.get(Complaint_.location);
-	    Path<Long> locationId =location.get(Boundary_.id);
-	    Path<Boundary> childLocation=root.get(Complaint_.childLocation);
-	    Path<Long> childLocationId= childLocation.get(Boundary_.id);
-	    Path<ReceivingMode> mode = root.get(Complaint_.receivingMode);
-	 
-     
-	    List<Predicate> predicates = new ArrayList<>();
+		Path<Complainant> complainant = root.get(Complaint_.complainant);
+		Path<String> name = complainant.get(Complainant_.name);
+		Path<String> emailId = complainant.get(Complainant_.email);
+		Path<String> mobileNumber = complainant.get(Complainant_.mobile);
+		Path<Boundary> location = root.get(Complaint_.location);
+		Path<Long> locationId = location.get(Boundary_.id);
+		Path<Boundary> childLocation = root.get(Complaint_.childLocation);
+		Path<Long> childLocationId = childLocation.get(Boundary_.id);
+		Path<ReceivingMode> receivingMode = root.get(Complaint_.receivingMode);
+		Path<Long> mode = receivingMode.get(ReceivingMode_.id);
+
+		List<Predicate> predicates = new ArrayList<>();
 		if (criteria.getServiceRequestId() != null) {
 			predicates.add(criteriaBuilder.equal(crn, criteria.getServiceRequestId()));
 		}
@@ -80,7 +78,7 @@ public class SevaSpecification implements Specification<Complaint> {
 		}
 
 		if (criteria.getLastModifiedDatetime() != null) {
-			predicates.add(criteriaBuilder.greaterThan(lastModifiedDate,criteria.getLastModifiedDatetime()));
+			predicates.add(criteriaBuilder.greaterThan(lastModifiedDate, criteria.getLastModifiedDatetime()));
 		}
 		if (criteria.getUserId() != null) {
 
@@ -91,34 +89,30 @@ public class SevaSpecification implements Specification<Complaint> {
 
 			predicates.add(criteriaBuilder.equal(assignmentId, criteria.getAssignmentId()));
 		}
-		
-		if (criteria.getName()!=null){
-			predicates.add(criteriaBuilder.equal(name,criteria.getName()));
+
+		if (criteria.getName() != null) {
+			predicates.add(criteriaBuilder.equal(name, criteria.getName()));
 		}
-		
-		if (criteria.getEmailId()!=null){
-			predicates.add(criteriaBuilder.equal(emailId,criteria.getEmailId()));
+
+		if (criteria.getEmailId() != null) {
+			predicates.add(criteriaBuilder.equal(emailId, criteria.getEmailId()));
 		}
-		
-		if (criteria.getMobileNumber()!=null){
-			predicates.add(criteriaBuilder.equal(mobileNumber,criteria.getMobileNumber()));
+
+		if (criteria.getMobileNumber() != null) {
+			predicates.add(criteriaBuilder.equal(mobileNumber, criteria.getMobileNumber()));
 		}
-		
-	    if(criteria.getLocationId()!=null){
-			predicates.add(criteriaBuilder.equal(locationId,criteria.getLocationId()));
+
+		if (criteria.getLocationId() != null) {
+			predicates.add(criteriaBuilder.equal(locationId, criteria.getLocationId()));
 
 		}
-		if(criteria.getChildLocationId()!=null)
-		{
-			predicates.add(criteriaBuilder.equal(childLocationId,criteria.getChildLocationId()));
+		if (criteria.getChildLocationId() != null) {
+			predicates.add(criteriaBuilder.equal(childLocationId, criteria.getChildLocationId()));
 		}
-	  if(criteria.getReceivingMode()!=null)
-		{
+		if (criteria.getReceivingMode() != null) {
 			predicates.add(criteriaBuilder.equal(mode, criteria.getReceivingMode()));
 		}
-	  
-	
-		
+
 		return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
 	}
 }

@@ -43,7 +43,6 @@ public class AuthPreCheckFilter extends ZuulFilter {
             return null;
         }
 
-        System.out.println(anonymousEndpointsWhitelist.toString());
         if (authToken == null) {
             if (anonymousEndpointsWhitelist.contains(request.getRequestURI())) {
                 setShouldDoAuth(ctx, false);

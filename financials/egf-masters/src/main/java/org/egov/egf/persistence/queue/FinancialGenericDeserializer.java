@@ -1,11 +1,12 @@
 package org.egov.egf.persistence.queue;
 
-import org.egov.egf.persistence.queue.contract.BankContractRequest;
+import java.util.HashMap;
+
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 
-public class FinancialGenericDeserializer extends JsonDeserializer<BankContractRequest> {
+public class FinancialGenericDeserializer extends JsonDeserializer<HashMap> {
 
 	public FinancialGenericDeserializer() {
-		super(BankContractRequest.class);
+		super(HashMap.class);
 	}
 }

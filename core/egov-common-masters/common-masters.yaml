@@ -923,7 +923,258 @@ paths:
           description: Invalid input.
           schema:
             $ref: '#/definitions/ErrorRes'
+
+  /uomcategories/_search:
+    # This is a HTTP operation
+    post:
+      # Describe this verb here. Note: you can use markdown 
+      summary: Get the list of uom categories defined in the system.
+      description: |
+        Get the unit of measurement categories master data defined in the system.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Commmon request info for getting category.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - $ref: "#/parameters/tenantId"
+        - name: name
+          in: query
+          required: false
+          type: string
+          format: varchar
+          description: Name of the category.
+        - name: active
+          in: query
+          description: True will be set in cases where only active categories are needed and False will be set when inactive categories are needed and no value will be set when all categories are needed.
+          required: false
+          type: boolean
+          format: varchar
+          default: true
+          allowEmptyValue: true
+        - name: id
+          in: query
+          description: List of Unique Ids of category.
+          required: false
+          type: array
+          items: 
+            type: integer
+          format: int64
+          maxItems: 50
+        - name: sort
+          in: query
+          description: Result will be sorted by name ascending by default if this parameter is not provided.
+          type: array
+          uniqueItems: true
+          minItems: 1
+          maxItems: 2
+          collectionFormat: pipes
+          items:
+            type: string
+          pattern: '[-+](name|active)'
+          default:
+           - +name
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Successful response
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "#/definitions/UOMCategoryRes"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+      tags: 
+       - Unit of Measurement (UOM)
+       
+  /uomcategory/_create:      
+    post:
+      summary: Create a new unit of measurement category in the system.
+      description: To create a new UOM category we can use POST and set all the required and non-mandatory parameters.
+      parameters:
+        - name: uomcategory
+          in: body
+          description: Details for the new category .
+          required: true
+          schema:
+            $ref: '#/definitions/UOMCategoryReq'
+
+      tags:
+        - Unit of Measurement (UOM)
+      responses:
+        '201':
+          description: UOM Category created sucessfully.
+          schema:
+            $ref: '#/definitions/UOMCategoryRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
             
+  /uomcategory/{categoryId}/_update:   
+    post:
+      summary: Update existing UOM category data for the name passed.
+      description: To update an existing category master data.
+      parameters:
+        - name: uomCategory
+          in: body
+          description: Request header for the uom category with new of values.
+          required: true
+          schema:
+            $ref: "#/definitions/UOMCategoryReq"
+        - name: categoryId
+          in: path
+          required: true
+          description: The category Id for which data needs to be updated.
+          type: integer
+          format: int64
+      tags:
+        - Unit of Measurement (UOM)
+      responses:
+        '200':
+          description: UOM Category updated.
+          schema:
+            $ref: '#/definitions/UOMCategoryRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+
+  /uoms/_search:
+    # This is a HTTP operation
+    post:
+      # Describe this verb here. Note: you can use markdown 
+      summary: Get the list of unit of measurements defined in the system.
+      description: |
+        Get the unit of measurement master data defined in the system.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Commmon request info for getting UOM.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - $ref: "#/parameters/tenantId"
+        - name: code
+          in: query
+          required: false
+          type: string
+          format: varchar
+          description: code of the unit of measurement.
+        - name: active
+          in: query
+          description: True will be set in cases where only active UOMs are needed and False will be set when inactive UOMs are needed and no value will be set when all UOMs are needed.
+          required: false
+          type: boolean
+          format: varchar
+          default: true
+          allowEmptyValue: true
+        - name: id
+          in: query
+          description: List of Unique Ids of UOMs.
+          required: false
+          type: array
+          items: 
+            type: integer
+          format: int64
+          maxItems: 50
+        - name: categoryId
+          in: query
+          description: List of Unique category Ids of UOMs.
+          required: false
+          type: array
+          items: 
+            type: integer
+          format: int64
+          maxItems: 50
+        - name: sort
+          in: query
+          description: Result will be sorted by code ascending by default if this parameter is not provided.
+          type: array
+          uniqueItems: true
+          minItems: 1
+          maxItems: 3
+          collectionFormat: pipes
+          items:
+            type: string
+          pattern: '[-+](name|active|category)'
+          default:
+           - +code
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Successful response
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "#/definitions/UOMRes"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+      tags: 
+       - Unit of Measurement (UOM)
+       
+  /uom/_create:      
+    post:
+      summary: Create a new unit of measurement in the system.
+      description: To create a new UOM we can use POST and set all the required and non-mandatory parameters.
+      parameters:
+        - name: uom
+          in: body
+          description: Details for the new unit of measurement.
+          required: true
+          schema:
+            $ref: '#/definitions/UOMReq'
+
+      tags:
+        - Unit of Measurement (UOM)
+      responses:
+        '201':
+          description: Unit of Measurement created sucessfully.
+          schema:
+            $ref: '#/definitions/UOMRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+            
+  /uom/{uomid}/_update:   
+    post:
+      summary: Update existing UOM data for the name passed.
+      description: To update an existing unit of measurement master data.
+      parameters:
+        - name: uom
+          in: body
+          description: Request header for the uom category with new of values.
+          required: true
+          schema:
+            $ref: "#/definitions/UOMReq"
+        - name: uomid
+          in: path
+          required: true
+          description: The uom Id for which the data needs to be updated.
+          type: integer
+          format: int64
+      tags:
+        - Unit of Measurement (UOM)
+      responses:
+        '200':
+          description: Unit of Measurement updated.
+          schema:
+            $ref: '#/definitions/UOMRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+                        
 definitions:
   Language:
     title: Language in the system
@@ -955,6 +1206,135 @@ definitions:
       - name
       - active
 
+  UOMCategory:
+    title: List of UOM categories in the system
+    type: object
+    properties:
+      id: 
+       type: integer
+       format: int64
+       description : Unique identifier of the UOM Category.
+      name:
+        type: string
+        description: The Name of the category.
+        minLength: 3
+        maxLength: 50
+      description:
+        type: string
+        description: The description of the category.
+        maxLength: 250
+      active:
+        type: boolean
+        format: varchar
+        description: TRUE for active languages and FALSE for inactive languages.
+        default: true
+      tenantId:
+        description: Unique id for for a tenant.
+        type: string
+    required:
+      - tenantId
+      - name
+      - active      
+  UOM:
+    title: List of UOMs in the system
+    type: object
+    properties:
+      id: 
+       type: integer
+       format: int64
+       description : Unique identifier of the UOM.
+      code:
+        type: string
+        description: The code of the uom.
+        minLength: 1
+        maxLength: 30
+      description:
+        type: string
+        description: The description of the unit of measurement.
+        maxLength: 250
+      category: 
+        type: object
+        description: category to which this unit of measurement belongs.
+        items:
+          $ref: "#/definitions/UOMCategory"
+      active:
+        type: boolean
+        format: varchar
+        description: TRUE for active languages and FALSE for inactive languages.
+        default: true
+      coversionFactor:
+        type: number
+        format: float
+        description: What is the conversion factor of this unit of measurement with the base UOM. For Base UOM the conversion factor will be 1.
+      baseuom:
+        type: boolean
+        format: varchar
+        description: TRUE if this particular UOM is the base UOM and FALSE if it not the base UOM.
+        default: false
+      tenantId:
+        description: Unique Identifier of which tenant this data is defined. For example, AP, AP-Kurnool etc.
+        maxLength: 256
+      createdBy:
+        type: string
+        description: Id of the user who created the record. 
+      createdDate:
+        type: string
+        format: date
+        description: Date on which the uom master data was added into the system.
+      lastModifiedBy:
+        type: string
+        description: Id of the user who last modified the record. 
+      lastModifiedDate:
+        type: string
+        format: date
+        description: Date on which the uom master data was last modified.        
+    required:
+      - tenantId
+      - code
+      - active            
+      - category
+
+  UOMCategoryRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: '#/definitions/ResponseInfo'
+      UOMCategory:
+        type: array
+        items: 
+         $ref: '#/definitions/UOMCategory'  
+         
+  UOMCategoryReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: '#/definitions/RequestInfo'
+      UOMCategory:
+        $ref: '#/definitions/UOMCategory'  
+    required:
+      - RequestInfo
+      - UOMCategory
+  UOMRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: '#/definitions/ResponseInfo'
+      UOM:
+        type: array
+        items: 
+         $ref: '#/definitions/UOM'  
+         
+  UOMReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: '#/definitions/RequestInfo'
+      UOM:
+        $ref: '#/definitions/UOM'  
+    required:
+      - RequestInfo
+      - UOM      
+      
   RequestInfo:
     type: object
     properties:

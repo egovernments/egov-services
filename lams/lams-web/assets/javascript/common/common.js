@@ -57,7 +57,10 @@ function commonApiPost(context,resource="",action="",queryObject={}) {
             dataType: 'json',
             data:JSON.stringify(requestInfo),
             async: false,
-            contentType: 'application/json'
+            contentType: 'application/json',
+            headers:{
+              'auth-token' :'bedb20fb-7d74-445e-94cc-6a64e825d509'
+            }
         });
 }
 
@@ -74,7 +77,10 @@ function commonApiGet(context,resource="",action="",queryObject={}) {
             dataType: 'json',
             // data:JSON.stringify(requestInfo),
             async: false,
-            contentType: 'application/json'
+            contentType: 'application/json',
+            headers:{
+              'auth-token' :'bedb20fb-7d74-445e-94cc-6a64e825d509'
+            }
         });
 }
 

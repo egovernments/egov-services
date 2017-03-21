@@ -4,7 +4,7 @@ import org.slf4j.MDC;
 
 public class RequestContext {
 
-    public static String CORRELATION_ID = "X-CORRELATION-ID";
+    public static String CORRELATION_ID = "x-correlation-id";
 
     private static final ThreadLocal<String> id = new ThreadLocal<>();
 

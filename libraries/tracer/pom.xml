@@ -67,7 +67,7 @@
 
         <snapshotRepository>
             <id>repo.egovernments.org</id>
-            <name>eGov ERP Snapshots Repository</name>
+            <name>eGov snapshots Repository</name>
             <url>http://repo.egovernments.org/nexus/content/repositories/snapshots/</url>
         </snapshotRepository>
     </distributionManagement>

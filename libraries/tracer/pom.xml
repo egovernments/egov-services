@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.egov</groupId>
+    <groupId>org.egov.services</groupId>
     <artifactId>tracer</artifactId>
     <version>0.1.0</version>
     <packaging>jar</packaging>
@@ -64,14 +64,17 @@
     </dependencies>
 
     <distributionManagement>
-
+        <repository>
+            <id>repo.egovernments.org</id>
+            <name>eGov ERP Releases Repository</name>
+            <url>http://repo.egovernments.org/nexus/content/repositories/releases/</url>
+        </repository>
         <snapshotRepository>
             <id>repo.egovernments.org</id>
-            <name>eGov snapshots Repository</name>
+            <name>eGov ERP Snapshots Repository</name>
             <url>http://repo.egovernments.org/nexus/content/repositories/snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
-
 
     <build>
         <plugins>

@@ -11,7 +11,8 @@ class CreateAsset extends React.Component {
        tenantId,
        "id":""
      },
-     "assetDetails": "",
+     "description": "",
+     "assetCategoryType":"",
      "modeOfAcquisition": null,
      "status": null,
      "description": "",
@@ -31,7 +32,7 @@ class CreateAsset extends React.Component {
      "width": "",
      "totalArea": "",
      "properties": {}
-   },assetCategories:[],localityList:[],electionwards:[],departments:[],acquisitionList:[],zoneList:[],streetList:[],WardList:[],blockList:[],customFields:[]}
+   },assetCategories:[],localityList:[],electionwards:[],departments:[],acquisitionList:[],zoneList:[],streetList:[],WardList:[],blockList:[],customFields:[],assetCategoriesType:{}}
     this.handleChange=this.handleChange.bind(this);
     this.handleChangeTwoLevel=this.handleChangeTwoLevel.bind(this);
     this.addOrUpdate=this.addOrUpdate.bind(this);
@@ -101,7 +102,7 @@ class CreateAsset extends React.Component {
       //    "name": "",
       //    "department": "",
       //    "assetCategory": "",
-      //    "assetDetails": "",
+      //    "description": "",
       //    "modeOfAcquisition": "",
       //    "status": "",
       //    "description": "",
@@ -181,7 +182,8 @@ class CreateAsset extends React.Component {
       zoneList:commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"ZONE",hierarchyTypeName:"REVENUE"}).responseJSON["Boundary"] || [],
       streetList:commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"STREET",hierarchyTypeName:"REVENUE"}).responseJSON["Boundary"] || [],
       WardList:commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"WARD",hierarchyTypeName:"REVENUE"}).responseJSON["Boundary"] || [],
-      blockList:commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"BLOCK",hierarchyTypeName:"REVENUE"}).responseJSON["Boundary"] || []
+      blockList:commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"BLOCK",hierarchyTypeName:"REVENUE"}).responseJSON["Boundary"] || [],
+      assetCategoriesType:commonApiGet("asset-services","","GET_ASSET_CATEGORY_TYPE",{}).responseJSON|| {}
     })
   }
 
@@ -189,7 +191,7 @@ class CreateAsset extends React.Component {
     console.log(this.state);
     let {handleChange,addOrUpdate,handleChangeTwoLevel}=this;
     let {isSearchClicked,list,customFields}=this.state;
-    let {assetCategory,locationDetails,locality,doorNo,name,pinCode,street,electionWard,dateOfCreation,assetAddress,block,zone,totalArea,code,department,assetDetails,modeOfAcquisition,length,width,revenueWard}=this.state.assetSet;
+    let {assetCategory,locationDetails,assetCategoryType,locality,doorNo,name,pinCode,street,electionWard,dateOfCreation,assetAddress,block,zone,totalArea,code,department,description,modeOfAcquisition,length,width,revenueWard}=this.state.assetSet;
     let mode=getUrlVars()["type"];
 
 
@@ -274,38 +276,9 @@ class CreateAsset extends React.Component {
       <div>
         <form onSubmit={(e)=>{addOrUpdate(e)}}>
         <div className="form-section">
-            <h3 className="categoryType">Asset Details </h3>
+            <h3 className="categoryType">Header Details </h3>
 
               <div className="form-section-inner">
-                <div className="row">
-                  <div className="col-sm-6">
-                    <div className="row">
-                      <div className="col-sm-6 label-text">
-                        <label for="Name">Name  <span> * </span></label>
-                      </div>
-                      <div className="col-sm-6">
-                        <input id="name" name="name" value={name} type="text"
-                          onChange={(e)=>{handleChange(e,"name")}} required/>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="col-sm-6">
-                    <div className="row">
-                      <div className="col-sm-6 label-text">
-                          <label for="assetCategory">Asset Category <span> *</span> </label>
-                        </div>
-                      <div className="col-sm-6">
-                         <div className="styled-select">
-                         <select id="assetCategory" name="assetCategory" required value={assetCategory.id} onChange={(e)=>{
-                         handleChangeTwoLevel(e,"assetCategory","id")}}>
-                             <option value="">Select Asset Category</option>
-                             {renderOption(this.state.assetCategories)}
-                           </select>
-                      </div>
-                    </div>
-                  </div>
-                </div>
                 <div className="row">
                 <div className="col-sm-6">
                 <div className="row">
@@ -326,92 +299,56 @@ class CreateAsset extends React.Component {
                 </div>
 
                 <div className="col-sm-6">
+                    <div className="row">
+                        <div className="col-sm-6 label-text">
+                            <label for="assetCategoryType">Asset Category Type <span> *</span></label>
+                        </div>
+                        <div className="col-sm-6">
+                            <div className="styled-select">
+                            <select id="assetCategoryType" name="assetCategoryType" value={assetCategoryType} required= "true" onChange={(e)=>{
+                            handleChange(e,"assetCategoryType")}}>
+                                <option value="">Select Asset Category</option>
+                                {renderOption(this.state.assetCategoriesType)}
+                              </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+              <div className="row">
+                <div className="col-sm-6">
+                  <div className="row">
+                    <div className="col-sm-6 label-text">
+                        <label for="assetCategory">Asset Category <span> *</span> </label>
+                      </div>
+                    <div className="col-sm-6">
+                       <div className="styled-select">
+                       <select id="assetCategory" name="assetCategory" required value={assetCategory.id} onChange={(e)=>{
+                       handleChangeTwoLevel(e,"assetCategory","id")}}>
+                           <option value="">Select Asset Category</option>
+                           {renderOption(this.state.assetCategories)}
+                         </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+                <div className="col-sm-6">
                 <div className="row">
                 <div className="col-sm-6 label-text">
-                    <label for="modeOfAcquisition">Mode Of Acquisition <span> * </span>  </label>
+                  <label for="description">Description</label>
                 </div>
                 <div className="col-sm-6">
-                <div className="styled-select">
-                <select id="modeOfAcquisition" name="modeOfAcquisition"  value={modeOfAcquisition} onChange={(e)=>{
-                        handleChange(e,"modeOfAcquisition")
-                    }}>
-                      <option value="">Select Acquisition</option>
-                      {renderOption(this.state.acquisitionList)}
-                   </select>
-                </div>
-                </div>
-                </div>
-                </div>
-                </div>
-                </div>
-                <div className="row">
-                <div className="col-sm-6">
-                <div className="row">
-                <div className="col-sm-6 label-text">
-                  <label for="dateOfCreation"> Date Of Creation </label>
-                </div>
-                <div className="col-sm-6">
-                <div className="text-no-ui">
-                  <span>
-                  <i className="glyphicon glyphicon-calendar"></i>
-                  </span>
-                  <input type="date" name="dateOfCreation" id="dateOfCreation" value= {dateOfCreation}
-                  onChange={(e)=>{handleChange(e,"dateOfCreation")}}/>
-                </div>
-                </div>
-                </div>
-                </div>
-                <div className="col-sm-6">
-                <div className="row">
-                <div className="col-sm-6 label-text">
-                  <label for="assetDetails">Asset Details</label>
-                </div>
-                <div className="col-sm-6">
-                  <textarea id="assetDetails" name="assetDetails" value= {assetDetails}
-                  onChange={(e)=>{handleChange(e,"assetDetails")}} max="1024"></textarea>
+                  <textarea id="description" name="description" value= {description}
+                  onChange={(e)=>{handleChange(e,"description")}} max="1024"></textarea>
                 </div>
                 </div>
                 </div>
                 </div>
 
-                <div className="row">
-                <div className="col-sm-6">
-                <div className="row">
-                <div className="col-sm-6 label-text">
-                  <label for="length">Length  </label>
-                </div>
-                <div className="col-sm-6">
-                  <input id="length" name="length" type="number" value= {length}
-                  onChange={(e)=>{handleChange(e,"length")}}/>
-                </div>
-                </div>
-                </div>
-                <div className="col-sm-6">
-                <div className="row">
-                <div className="col-sm-6 label-text">
-                  <label for="width">Width  </label>
-                </div>
-                <div className="col-sm-6">
-                  <input type="number" id="width" name="width" value= {width}
-                  onChange={(e)=>{handleChange(e,"width")}}/>
-                </div>
-                </div>
-                </div>
-                </div>
 
-                <div className="row">
-                <div className="col-sm-6">
-                <div className="row">
-                <div className="col-sm-6 label-text">
-                <label for="totalArea">Total Area  </label>
-                </div>
-                <div className="col-sm-6">
-                <input type="number" id="totalArea" name="totalArea" value= {totalArea}
-                onChange={(e)=>{handleChange(e,"totalArea")}}/>
-                </div>
-                </div>
-                </div>
-                </div>
                 </div>
               </div>
 

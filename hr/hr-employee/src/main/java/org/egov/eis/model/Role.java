@@ -45,6 +45,8 @@ import java.util.Date;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
@@ -64,7 +66,6 @@ import lombok.ToString;
 @ToString
 public class Role {
 
-	@NotNull
 	private Long id;
 
 	@NotNull
@@ -74,19 +75,18 @@ public class Role {
 	@Size(max=256)
     private String description;
 
-	@NotNull
 	private Long createdBy;
 
-	@NotNull
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date createdDate;
 
 	private Long lastModifiedBy;
 
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date lastModifiedDate;
 
-	@NotNull
 	private String tenantId;
 
 }

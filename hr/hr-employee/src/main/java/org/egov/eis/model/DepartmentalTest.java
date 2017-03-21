@@ -44,6 +44,8 @@ import java.util.Date;
 
 import javax.validation.constraints.NotNull;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
@@ -61,11 +63,7 @@ import lombok.ToString;
 @ToString
 public class DepartmentalTest {
 
-	@NotNull
 	private Long id;
-
-	@NotNull
-	private Long employeeId;
 
 	@NotNull
 	private String test;
@@ -75,19 +73,18 @@ public class DepartmentalTest {
 
 	private String remarks;
 
-	@NotNull
 	private Long createdBy;
 
-	@NotNull
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date createdDate;
 
 	private Long lastModifiedBy;
 
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date lastModifiedDate;
 
-	@NotNull
 	private String tenantId;
 
 }

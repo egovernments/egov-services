@@ -12,6 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,8 +25,6 @@ public class ComplaintRepositoryTest {
     @Autowired
     private ComplaintRepository complaintRepository;
 
-    @Autowired
-    private ComplaintJpaRepository complaintJpaRepository;
 
     @Test
     @Sql(scripts = {"/sql/addLastAccessedTime.sql",
@@ -35,16 +34,15 @@ public class ComplaintRepositoryTest {
             "/sql/InsertComplaintData.sql"})
     public void testShouldFindAllComplaints() {
 
-        DateTime date = new DateTime();
-        date = new DateTime(2016, 12, 19, 0, 0, 0, 0);
 
-        DateTime date2 = new DateTime();
-        date2 = new DateTime(2016, 12, 31, 0, 0, 0, 0);
-        DateTime date3 = new DateTime();
-        date3 = new DateTime(2016, 12, 22, 0, 0, 0, 0);
-        DateTime date4 = new DateTime();
-        date4 = new DateTime(2016, 12, 20, 0, 0, 0, 0);
-
+    	   DateTime date = new DateTime();
+           date = new DateTime(2016, 12, 19, 0, 0, 0, 0);
+           DateTime date2 = new DateTime();
+           date2 = new DateTime(2016, 12, 31, 0, 0, 0, 0);
+           DateTime date3 = new DateTime();
+           date3 = new DateTime(2016, 12, 22, 0, 0, 0, 0);
+           DateTime date4 = new DateTime();
+   date4 = new DateTime(2016, 12, 20, 0, 0, 0, 0);
         ComplaintSearchCriteria complaintSearchCriteria = ComplaintSearchCriteria.builder()
                 .serviceRequestId("0005-2017-AB")
                 .assignmentId(1L)
@@ -69,14 +67,23 @@ public class ComplaintRepositoryTest {
         assertThat(complaints.get(0).getComplainant().getFirstName()).isEqualTo("kumar");
         assertThat(complaints.get(0).getComplainant().getMobile()).isEqualTo("7475844747");
         assertThat(complaints.get(0).getComplainant().getEmail()).isEqualTo("abc@gmail.com");
-        assertThat(complaints.get(0).getComplainant().getAddress()).isEqualTo("Near Temple");
+        assertThat(complaints.get(0).getComplainant().getAddress()).isEqualTo("Near School");
         assertThat(complaints.get(0).getComplaintLocation().getLocationId()).isEqualTo("1");
         assertThat(complaints.get(0).getComplaintLocation().getCoordinates().getLatitude()).isEqualTo(0);
         assertThat(complaints.get(0).getComplaintLocation().getCoordinates().getLongitude()).isEqualTo(0);
         assertThat(complaints.get(0).getComplaintType().getName())
-                .isEqualTo("Absenteesim of door to door garbage collector");
+        .isEqualTo("Absenteesim of door to door garbage collector");
+        assertThat(complaints.get(0).getComplaintType().getCode()).isEqualTo("AODTDGC");
+        assertThat(complaints.get(0).getAddress()).isEqualTo("Near Temple");
+        assertThat(complaints.get(0).getReceivingMode()).isEqualTo("MANUAL");
+        assertThat(complaints.get(0).getReceivingCenter()).isEqualTo("5");
+        assertThat(complaints.get(0).getState()).isEqualTo("5");
+ //       assertThat(complaints.get(0).getEscalationDate()).isEqualTo(date1);
         assertThat(complaints.get(0).getDescription()).isEqualTo("This is a huge problem");
         assertThat(complaints.get(0).getDepartment()).isEqualTo("18");
+        assertThat(complaints.get(0).getAssignee()).isEqualTo("1");
+  
+       
     }
 
 

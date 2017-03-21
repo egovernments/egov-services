@@ -44,6 +44,8 @@ import java.util.Date;
 
 import javax.validation.constraints.NotNull;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
@@ -61,16 +63,13 @@ import lombok.ToString;
 @ToString
 public class ServiceHistory {
 
-	@NotNull
 	private Long id;
-
-	@NotNull
-	private Long employeeId;
 
 	@NotNull
 	private String serviceInfo;
 
 	@NotNull
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date serviceFrom;
 
@@ -78,19 +77,18 @@ public class ServiceHistory {
 
 	private String orderNo;
 
-	@NotNull
 	private Long createdBy;
 
-	@NotNull
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date createdDate;
 
 	private Long lastModifiedBy;
 
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date lastModifiedDate;
 
-	@NotNull
 	private String tenantId;
 
 }

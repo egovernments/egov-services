@@ -55,12 +55,14 @@ import org.egov.eis.web.contract.RequestInfo;
 import org.egov.eis.web.contract.ResponseInfo;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
 import org.egov.eis.web.errorhandler.ErrorHandler;
+import org.egov.eis.web.validator.EmployeeAssignmentValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ValidationUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -82,6 +84,9 @@ public class EmployeeController {
 
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
+
+	@Autowired
+	private EmployeeAssignmentValidator employeeAssignmentValidator;
 
 	@PostMapping("_search")
 	@ResponseBody
@@ -113,16 +118,30 @@ public class EmployeeController {
 	@PostMapping("/_create")
 	@ResponseBody
 	public ResponseEntity<?> create(@RequestBody @Valid EmployeeRequest employeeRequest, BindingResult bindingResult) {
-		// validate input params
+		LOGGER.debug("employeeRequest::" + employeeRequest);
+
+		ResponseEntity<?> errorResponseEntity = validateEmployeeRequest(employeeRequest, bindingResult);
+		if (errorResponseEntity != null)
+			return errorResponseEntity;
+
+		employeeService.createEmployee(employeeRequest);
+		employeeRequest.getEmployee().getUser().setPassword(null);
+		return getSuccessResponse(employeeRequest.getEmployee(), employeeRequest.getRequestInfo());
+	}
+
+	private ResponseEntity<?> validateEmployeeRequest(EmployeeRequest employeeRequest, BindingResult bindingResult) {
+		// validate input params that can be handled by annotations
 		if (bindingResult.hasErrors()) {
 			return errHandler.getErrorResponseEntityForBindingErrors(bindingResult, employeeRequest.getRequestInfo());
 		}
 
-		LOGGER.info("employeeRequest::" + employeeRequest);
-		employeeService.createEmployee(employeeRequest);
-		employeeRequest.getEmployee().getUser().setPassword(null);
+		// validate input params that can't be handled by annotations
+		ValidationUtils.invokeValidator(employeeAssignmentValidator, employeeRequest.getEmployee(), bindingResult);
 
-		return getSuccessResponse(employeeRequest.getEmployee(), employeeRequest.getRequestInfo());
+		if (bindingResult.hasErrors()) {
+			return errHandler.getErrorResponseEntityForBindingErrors(bindingResult, employeeRequest.getRequestInfo());
+		}
+		return null;
 	}
 
 	/**

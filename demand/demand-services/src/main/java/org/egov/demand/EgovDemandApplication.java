@@ -1,6 +1,5 @@
 package org.egov.demand;
 
-import org.egov.demand.web.interceptor.CorrelationIdAwareRestTemplate;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -14,6 +13,6 @@ public class EgovDemandApplication {
 	}
 	@Bean
 	public RestTemplate getRestTemplate() {
-		return new CorrelationIdAwareRestTemplate();
+		return new RestTemplate();
 	}
 }

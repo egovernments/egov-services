@@ -173,8 +173,11 @@ function getComplaint(){
 							var locationId = response.service_requests[0].values.LocationId;
 							var childLocationId = response.service_requests[0].values.ChildLocationId;
 
-							getBoundarybyId(locationId,'LocationName', response);
-							getBoundarybyId(childLocationId, 'ChildLocationName', response);
+							if(locationId)
+								getBoundarybyId(locationId,'LocationName', response);
+
+							if(childLocationId)
+								getBoundarybyId(childLocationId, 'ChildLocationName', response);
 
 							response['files'] = fileresponse.files;
 							var source   = $("#viewcomplaint-script").html();

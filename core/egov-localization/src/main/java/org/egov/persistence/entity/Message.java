@@ -11,10 +11,13 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode
+@SequenceGenerator(name = Message.SEQ_MESSAGE, sequenceName = Message.SEQ_MESSAGE, allocationSize = 1)
 public class Message {
 
+    static final String SEQ_MESSAGE = "SEQ_MESSAGE";
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(generator = SEQ_MESSAGE, strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @Column(name = "locale")

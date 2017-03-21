@@ -1,5 +1,5 @@
 var baseUrl = window.location.origin;
-var authToken='6c3b9391-dbfc-468c-bc29-2592865d07af';
+var authToken='bedb20fb-7d74-445e-94cc-6a64e825d509';
 //request info from cookies
 var requestInfo = {
   "apiId":"org.egov.pgr",

@@ -41,9 +41,11 @@
 package org.egov.eis.service;
 
 import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 
 import org.egov.eis.model.Attendance;
+import org.egov.eis.model.AttendanceType;
 import org.egov.eis.producers.AttendanceProducer;
 import org.egov.eis.repository.AttendanceRepository;
 import org.egov.eis.web.contract.AttendanceGetRequest;
@@ -94,8 +96,19 @@ public class AttendanceService {
         return attendanceRequest.getAttendances();
     }
 
+    public boolean getByEmployeeAndDate(final Long employee, final Date attendanceDate) {
+        return attendanceRepository.checkAttendanceByEmployeeAndDate(employee, attendanceDate);
+    }
+
     public AttendanceRequest create(final AttendanceRequest attendanceRequest) {
         return attendanceRepository.saveAttendance(attendanceRequest);
     }
 
+    public AttendanceType getAttendanceTypeByCode(final String code) {
+        return attendanceRepository.findAttendanceTypeByCode(code);
+    }
+
+    public List<AttendanceType> getAllAttendanceTypes() {
+        return attendanceRepository.findAllAttendanceTypes();
+    }
 }

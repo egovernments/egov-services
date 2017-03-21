@@ -38,25 +38,40 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.repository.rowmapper;
+package org.egov.eis.service;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.List;
 
-import org.egov.eis.model.AttendanceType;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
+import org.egov.eis.model.Holiday;
+import org.egov.eis.service.helper.HolidaySearchURLHelper;
+import org.egov.eis.web.contract.HolidayResponse;
+import org.egov.eis.web.contract.RequestInfo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
-@Component
-public class AttendanceTypeRowMapper implements RowMapper<AttendanceType> {
+@Service
+public class HolidayService {
+    @Autowired
+    private HolidaySearchURLHelper holidaySearchURLHelper;
 
-    @Override
-    public AttendanceType mapRow(final ResultSet rs, final int rowNum) throws SQLException {
-        final AttendanceType type = new AttendanceType();
-        type.setId(rs.getLong("id"));
-        type.setCode(rs.getString("code"));
-        type.setDescription(rs.getString("description"));
+    public List<Holiday> getHolidays(final String tenantId, final RequestInfo requestInfo) {
+        final String url = holidaySearchURLHelper.searchURL(tenantId);
 
-        return type;
+        final MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
+        headers.add("auth-token", requestInfo.getAuthToken());
+
+        final RestTemplate restTemplate = new RestTemplate();
+        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+
+        final HttpEntity<RequestInfo> request = new HttpEntity<RequestInfo>(requestInfo, headers);
+
+        final HolidayResponse holidayResponse = restTemplate.postForObject(url, request, HolidayResponse.class);
+
+        return holidayResponse.getHoliday();
     }
 }

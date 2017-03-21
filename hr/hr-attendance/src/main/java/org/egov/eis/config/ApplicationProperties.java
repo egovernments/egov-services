@@ -51,23 +51,35 @@ import org.springframework.core.env.Environment;
 @Order(0)
 public class ApplicationProperties {
 
-    private static final String COMMONS_SEARCH_PAGESIZE_DEFAULT = "commons.search.pagesize.default";
-    public static final String COMMONS_SEARCH_PAGENO_MAX = "commons.search.pageno.max";
-    public static final String COMMONS_SEARCH_PAGESIZE_MAX = "commons.search.pagesize.max";
+    private static final String ATTENDANCE_SEARCH_PAGESIZE_DEFAULT = "attendance.search.pagesize.default";
+    public static final String ATTENDANCE_SEARCH_PAGENO_MAX = "attendance.search.pageno.max";
+    public static final String ATTENDANCE_SEARCH_PAGESIZE_MAX = "attendance.search.pagesize.max";
+
+    private static final String ATTENDANCE_SERVICES_COMMON_SERVICE_SEARCH_HOLIDAYS_HOST_URL = "attendance.services.common_masters_service.search.holidays.host.url";
+
+    private static final String ATTENDANCE_SERVICES_HR_EMPLOYEE_SERVICE_SEARCH_EMPLOYEE_HOST_URL = "attendance.services.hr_employee_service.search.employee.host.url";
 
     @Autowired
     private Environment environment;
 
-    public String commonsSearchPageSizeDefault() {
-        return environment.getProperty(COMMONS_SEARCH_PAGESIZE_DEFAULT);
+    public String attendanceSearchPageSizeDefault() {
+        return environment.getProperty(ATTENDANCE_SEARCH_PAGESIZE_DEFAULT);
     }
 
-    public String commonsSearchPageNumberMax() {
-        return environment.getProperty(COMMONS_SEARCH_PAGENO_MAX);
+    public String attendanceSearchPageNumberMax() {
+        return environment.getProperty(ATTENDANCE_SEARCH_PAGENO_MAX);
     }
 
-    public String commonsSearchPageSizeMax() {
-        return environment.getProperty(COMMONS_SEARCH_PAGESIZE_MAX);
+    public String attendanceSearchPageSizeMax() {
+        return environment.getProperty(ATTENDANCE_SEARCH_PAGESIZE_MAX);
+    }
+
+    public String attendanceServicesCommonMastersServiceSearchHolidaysHostURL() {
+        return environment.getProperty(ATTENDANCE_SERVICES_COMMON_SERVICE_SEARCH_HOLIDAYS_HOST_URL);
+    }
+
+    public String attendanceServicesHREmployeeServiceSearchEmployeeHostURL() {
+        return environment.getProperty(ATTENDANCE_SERVICES_HR_EMPLOYEE_SERVICE_SEARCH_EMPLOYEE_HOST_URL);
     }
 
 }

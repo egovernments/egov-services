@@ -41,8 +41,20 @@ function returnObject(alies) {
         default:
 
     }
+
 }
+
+
+// localStorage.setItem("employeeType",JSON.stringify(getCommonMaster("hr-masters", "employeetypes", "EmployeeType").responseJSON["EmployeeType"]));
+// employeeType:JSON.parse(localStorage.getItem("employeeType"))==""?(localStorage.setItem("employeeType",JSON.stringify(getCommonMaster("hr-masters", "employeetypes", "EmployeeType").responseJSON["EmployeeType"]))|| []) :JSON.parse(localStorage.getItem("employeeType")),
+
 //common object
+var yearOfPassing=[];
+
+for (var i = 2000; i <= new Date().getFullYear(); i++) {
+    yearOfPassing.push(i);
+}
+console.log(yearOfPassing);
 var commonObject = {
     employeeType: getCommonMaster("hr-masters", "employeetypes", "EmployeeType").responseJSON["EmployeeType"] || [],
     employeeStatus: ["EMPLOYED", "RETIRED", "RESIGNED", "TERMINATED", "DECEASED", "SUSPENDED", "TRANSFERRED"],
@@ -93,7 +105,7 @@ var commonObject = {
     ],
     assignments_grade: getCommonMaster("hr-masters", "grades", "Grade").responseJSON["Grade"] || [],
     assignments_designation: getCommonMaster("hr-masters", "designations", "Designation").responseJSON["Designation"] || [],
-    assignments_position: getCommonMaster("hr-masters", "positions", "Position").responseJSON["Position"] || [],
+    assignments_position: [],
     assignments_department: getCommonMaster("egov-common-masters", "departments", "Department").responseJSON["Department"] || [],
     jurisdictions_jurisdictionsType: [{
             id: "CITY",
@@ -114,10 +126,11 @@ var commonObject = {
             active: true
         }
     ],
-    jurisdictions_boundary:[]
+    jurisdictions_boundary:[],
+    yearOfPassing
 }
 
-
+// getCommonMaster("hr-masters", "positions", "Position").responseJSON["Position"] || [];
 
 //common shared object
 commonObject["assignments_mainDepartments"] = commonObject["assignments_department"];
@@ -125,7 +138,9 @@ commonObject["languagesKnow"] = commonObject["motherTounge"];
 commonObject["user_locale"] = commonObject["motherTounge"];
 commonObject["probation_designation"] = commonObject["assignments_designation"];
 commonObject["regularisation_designation"] = commonObject["assignments_designation"];
-
+commonObject["education_yearOfPassing"]=commonObject["yearOfPassing"];
+commonObject["technical_yearOfPassing"]=commonObject["yearOfPassing"];
+commonObject["test_yearOfPassing"]=commonObject["yearOfPassing"];
 
 for (var key in commonObject) {
     var splitObject = key.split("_");
@@ -212,15 +227,18 @@ var employee = {
         correspondenceCity: "",
         correspondencePincode: "",
         correspondenceAddress: "",
-        active: "",
+        active: "Yes",
         dob: "",
         locale: "",
         signature: "",
         fatherOrHusbandName: "",
         bloodGroup: "",
         identificationMark: "",
-        photo: ""
-    }
+        photo: "",
+        type:"EMPLOYEE",
+        tenantId
+    },
+    tenantId
 }
 
 //temprory object for holding modal value
@@ -235,14 +253,14 @@ var employeeSubObject = {
         position: "",
         functionary: "",
         department: "",
-        hod: "No",
-        mainDepartments: "",
+        hod: [],
+        // mainDepartments: "",
         govtOrderNumber: "",
         isPrimary: "No"
     },
-    jurisdictions: {
-        jurisdictionsType: "",
-        boundary: ""
+    jurisdictions:{
+      jurisdictionsType:"",
+      boundary:""
     },
     serviceHistory: {
         id: 1,
@@ -869,6 +887,7 @@ $("select").on("change", function() {
           for (var i = 0; i < commonObject["jurisdictions_boundary"].length; i++) {
               $(`#jurisdictions\\.boundary`).append(`<option value='${commonObject["jurisdictions_boundary"][i]['id']}'>${commonObject["jurisdictions_boundary"][i]['name']}</option>`)
           }
+          // return;
         }
         fillValueToObject(this);
     // }
@@ -897,13 +916,71 @@ function fillValueToObject(currentState) {
 
         var splitResult = currentState.id.split(".");
         if (splitResult[0] === "user") {
-            employee[splitResult[0]][splitResult[1]] = currentState.value;
-        } else {
-            employeeSubObject[splitResult[0]][splitResult[1]] = currentState.value;
+            // if(currentState.id=="user.dob")
+            // {
+            //   var dateSplit=currentState.value.split("-");
+            //   var date=new Date(dateSplit[0],dateSplit[1],dateSplit[2]);
+            //   var day=date.getDate().toString().length===1?"0"+date.getDate():date.getDate();
+            //   var monthIn=date.getMonth().toString().length===1?"0"+date.getMonth():date.getMonth();
+            //   var yearIn=date.getFullYear();
+            //   employee[splitResult[0]][splitResult[1]] = day+"/"+monthIn+"/"+yearIn;
+            //
+            // }
+            if(currentState.id=="user.active")
+            {
+              employee[splitResult[0]][splitResult[1]] = currentState.value=="No"?false:true;
+
+            }
+            else {
+              employee[splitResult[0]][splitResult[1]] = currentState.value;
+
+            }
+        } else
+        {
+            if( currentState.id=="assignments.fromDate" || currentState.id=="assignments.toDate" ||currentState.id=="serviceHistory.serviceFrom" ||currentState.id=="probation.orderDate" ||currentState.id=="probation.declaredOn" ||currentState.id=="regularisation.declaredOn" ||currentState.id=="regularisation.orderDate" ||currentState.id=="education.yearOfPassing" ||currentState.id=="technical.yearOfPassing" || currentState.id=="test.yearOfPassing")
+            {
+              var dateSplit=currentState.value.split("-");
+              var date=new Date(dateSplit[0],dateSplit[1],dateSplit[2]);
+              var day=date.getDate().toString().length===1?"0"+date.getDate():date.getDate();
+              var monthIn=date.getMonth().toString().length===1?"0"+date.getMonth():date.getMonth();
+              var yearIn=date.getFullYear();
+              employeeSubObject[splitResult[0]][splitResult[1]] = day+"/"+monthIn+"/"+yearIn;
+
+            }
+            else if (currentState.id=="assignments.mainDepartments") {
+                  employeeSubObject[splitResult[0]][splitResult[1]].push({department:currentState.value});
+            }
+            else if(currentState.id=="assignments.isPrimary")
+            {
+              employeeSubObject[splitResult[0]][splitResult[1]]=currentState.value=="No"?false:true;
+            }
+            // if (currentState.id=="jurisdictions.boundary") {
+            //       employeeSubObject[splitResult[0]][splitResult[1]].push(currentState.value);
+            // }
+
+            else {
+              employeeSubObject[splitResult[0]][splitResult[1]] = currentState.value;
+
+            }
         }
 
     } else {
-        employee[currentState.id] = currentState.value;
+        if(currentState.id=="dateOfAppointment" ||currentState.id=="dateOfRetirement" ||currentState.id=="dateOfTermination" ||currentState.id =="retirementAge" ||currentState.id=="dateOfJoining" || currentState.id=="dateOfRetirement" || currentState.id=="dateOfTermination" ||currentState.id=="dateOfResignation")
+        {
+          var dateSplit=currentState.value.split("-");
+          var date=new Date(dateSplit[0],dateSplit[1],dateSplit[2]);
+          var day=date.getDate().toString().length===1?"0"+date.getDate():date.getDate();
+          var monthIn=date.getMonth().toString().length===1?"0"+date.getMonth():date.getMonth();
+          var yearIn=date.getFullYear();
+          employee[currentState.id] = day+"/"+monthIn+"/"+yearIn;
+        }
+        else if(currentState.id=="languagesKnown")
+        {
+            employee[currentState.id].push(currentState.value);
+        }
+        else {
+          employee[currentState.id] = currentState.value;
+        }
     }
 }
 
@@ -928,8 +1005,8 @@ $('#assignmentDetailModal').on('hidden.bs.modal', function(e) {
         position: "No",
         functionary: "",
         department: "",
-        hod: "No",
-        mainDepartments: "",
+        hod: [],
+        // mainDepartments: "",
         govtOrderNumber: "",
         is_primary: ""
     };
@@ -1264,17 +1341,49 @@ $("#createEmployeeForm").validate({
         if (employee.assignments.length > 0 && employee.jurisdictions.length > 0) {
             //call api
             console.log("calling api");
-            $.post(`${baseUrl}hr-employee/employees/_create?tenantId=1`, {
-                RequestInfo: requestInfo,
-                Employee: employee
-            }, function(response) {
-                alert("submit");
-                // window.open("../../../../app/search-assets/create-agreement-ack.html?&agreement_id=aeiou", "", "width=1200,height=800")
-                console.log(response);
-            },function(error){
-              alert("error")
-              console.log(error);
-            })
+
+            var empJuridictiona=employee[jurisdictions];
+            employee[jurisdictions]=[];
+            for (var i = 0; i < empJuridictiona.length; i++) {
+              employee[jurisdictions](empJuridictiona[i].boundary);
+            }
+
+            var response=$.ajax({
+                      url: baseUrl+"/hr-employee/employees/_create?tenantId=1",
+                      type: 'POST',
+                      dataType: 'json',
+                      data:JSON.stringify({
+                          RequestInfo: requestInfo,
+                          Employee: employee
+                      }),
+                      async: false,
+                      headers: {
+                              'auth-token': 'b265b91d-62e1-459e-9859-92f0c19ff522'
+                          },
+                      contentType: 'application/json'
+                  });
+
+                  if(response["statusText"]==="OK")
+                  {
+                    alert("Successfully added");
+                    window.location.href="../../../../app/hr/common/employee-attendance.html";
+                  }
+                  else {
+                    alert(response["statusText"]);
+                  }
+
+
+            // $.post(`${baseUrl}hr-employee/employees/_create?tenantId=1`, {
+            //     RequestInfo: requestInfo,
+            //     Employee: employee
+            // }, function(response) {
+            //     alert("submit");
+            //     // window.open("../../../../app/search-assets/create-agreement-ack.html?&agreement_id=aeiou", "", "width=1200,height=800")
+            //     console.log(response);
+            // },function(error){
+            //   alert("error")
+            //   console.log(error);
+            // })
         } else {
             alert("Please enter atleast assignment and jurisdiction");
         }

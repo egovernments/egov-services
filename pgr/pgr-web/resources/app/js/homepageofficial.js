@@ -614,7 +614,7 @@ function getPosition(){
 			$('.profile-text').text(response.Assignment[0].employee);
 		},
 		error: function(){
-			bootbox.alert('Error gegtting positionId!');
+			bootbox.alert('Error getting positionId!');
 		},
 		complete : function(){
 

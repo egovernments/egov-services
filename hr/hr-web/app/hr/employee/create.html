@@ -382,7 +382,7 @@
                                                                           <label for="user.mobileNumber">Mobile number  </label>
                                                                       </div>
                                                                       <div class="col-sm-6">
-                                                                          <input id="user.mobileNumber" name="user.mobileNumber" type="number" min="0">
+                                                                          <input id="user.mobileNumber" name="user.mobileNumber" type="text">
                                                                       </div>
                                                                   </div>
                                                               </div>
@@ -510,10 +510,10 @@
                                                                 </div>
                                                                 <div class="col-sm-6">
                                                                     <label class="radio-inline radioUi">
-                                                                <input type="radio" name="inlineRadioOptions" id="physicallyDisabled" value="Yes"> Yes
+                                                                <input type="radio" name="inlineRadioOptions" id="physicallyDisabled" value="true"> Yes
                                                                 </label>
                                                                     <label class="radio-inline radioUi">
-                                                              <input type="radio" name="inlineRadioOptions" id="physicallyDisabled" value="No"> No
+                                                              <input type="radio" name="inlineRadioOptions" id="physicallyDisabled" value="false"> No
                                                             </label>
 
                                                                 </div>
@@ -528,10 +528,10 @@
                                                                 </div>
                                                                 <div class="col-sm-6">
                                                                     <label class="radio-inline radioUi">
-                                                                <input type="radio" name="inlineRadioOptions" id="medicalReportProduced" value="Yes"> Yes
+                                                                <input type="radio" name="inlineRadioOptions" id="medicalReportProduced" value="true"> Yes
                                                                 </label>
                                                                     <label class="radio-inline radioUi">
-                                                              <input type="radio" name="inlineRadioOptions" id="medicalReportProduced" value="No"> No
+                                                              <input type="radio" name="inlineRadioOptions" id="medicalReportProduced" value="false"> No
                                                             </label>
 
                                                                 </div>
@@ -589,7 +589,7 @@
                                                                     <label for="user.aadhaarNumber">Aadhaar Number </label>
                                                                 </div>
                                                                 <div class="col-sm-6">
-                                                                    <input id="user.aadhaarNumber" name="user.aadhaarNumber" type="number" min="0">
+                                                                    <input id="user.aadhaarNumber" name="user.aadhaarNumber" type="text" >
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -645,7 +645,7 @@
                                                                     <label for="user.altContactNumber">Phone number (Emergency/Res)  </label>
                                                                 </div>
                                                                 <div class="col-sm-6">
-                                                                    <input id="user.altContactNumber" name="user.altContactNumber" type="number" min="0">
+                                                                    <input id="user.altContactNumber" name="user.altContactNumber" type="text">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -730,7 +730,7 @@
                                                             </div>
                                                         </div>
 
-                                                        <div class="col-sm-6">
+                                                        <!-- <div class="col-sm-6">
                                                             <div class="row">
                                                                 <div class="col-sm-6 label-text">
                                                                     <label for="user.locale">Local Language Qualified</label>
@@ -744,7 +744,7 @@
 
                                                                 </div>
                                                             </div>
-                                                        </div>
+                                                        </div> -->
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-sm-6">
@@ -951,7 +951,7 @@
                                                                 <th>Function</th>
                                                                 <th>Functionality</th>
                                                                 <th>Grade</th>
-                                                                <th>Is HOD</th>
+                                                                <!-- <th>Is HOD</th> -->
                                                                 <th>HOD Department</th>
                                                                 <th>Govt Order No</th>
 
@@ -987,15 +987,38 @@
                                                                             </div>
                                                                             <div class="col-sm-6">
                                                                                 <label class="radio-inline radioUi">
-                                                                        <input type="radio" name="assignments.is_primary" id="assignments.is_primary" value="Yes"> Yes
+                                                                        <input type="radio" name="assignments.isPrimary" id="assignments.isPrimary" value="Yes"> Yes
                                                                           </label>
                                                                                 <label class="radio-inline radioUi">
-                                                                          <input type="radio" name="assignments.is_primary" id="assignments.is_primary" value="No" checked="checked"> No
+                                                                          <input type="radio" name="assignments.isPrimary" id="assignments.isPrimary" value="No" checked="checked"> No
                                                                       </label>
 
                                                                             </div>
                                                                         </div>
                                                                     </div>
+
+                                                                    <div class="col-sm-6">
+                                                                        <div class="row">
+                                                                            <div class="col-sm-6 label-text">
+                                                                                <label for="assignments.fromDate">From Date</label>
+                                                                            </div>
+                                                                            <div class="col-sm-6">
+                                                                                <input id="assignments.fromDate" name="assignments.fromDate" type="date">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="col-sm-6">
+                                                                        <div class="row">
+                                                                            <div class="col-sm-6 label-text">
+                                                                                <label for="assignments.toDate">To Date</label>
+                                                                            </div>
+                                                                            <div class="col-sm-6">
+                                                                                <input id="assignments.toDate" name="assignments.toDate" type="date">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
 
                                                                     <div class="col-sm-6">
                                                                         <div class="row">
@@ -1052,26 +1075,8 @@
                                                                 </div>
 
                                                                 <div class="row">
-                                                                  <div class="col-sm-6">
-                                                                      <div class="row">
-                                                                          <div class="col-sm-6 label-text">
-                                                                              <label for="assignments.fromDate">From Date</label>
-                                                                          </div>
-                                                                          <div class="col-sm-6">
-                                                                              <input id="assignments.fromDate" name="assignments.fromDate" type="date">
-                                                                          </div>
-                                                                      </div>
-                                                                  </div>
-                                                                    <div class="col-sm-6">
-                                                                        <div class="row">
-                                                                            <div class="col-sm-6 label-text">
-                                                                                <label for="assignments.toDate">To Date</label>
-                                                                            </div>
-                                                                            <div class="col-sm-6">
-                                                                                <input id="assignments.toDate" name="assignments.toDate" type="date">
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
+
+
 
 
                                                                 </div>
@@ -1741,7 +1746,9 @@
                                                                                     <label for="education.yearOfPassing">Year of Passing</label>
                                                                                 </div>
                                                                                 <div class="col-sm-6">
-                                                                                    <input id="education.yearOfPassing" name="education.yearOfPassing" type="date">
+                                                                                    <select id="education.yearOfPassing" name="education.yearOfPassing">
+                                                                                        <option value="">Select</option>
+                                                                                    </select>
 
                                                                                 </div>
                                                                             </div>
@@ -1851,8 +1858,9 @@
                                                                                     <label for="technical.yearOfPassing">Year of Completion</label>
                                                                                 </div>
                                                                                 <div class="col-sm-6">
-                                                                                    <input id="technical.yearOfPassing" name="technical.yearOfPassing" type="date">
-
+                                                                                    <select id="technical.yearOfPassing" name="technical.yearOfPassing">
+                                                                                        <option value="">Select</option>
+                                                                                    </select>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -1947,7 +1955,9 @@
                                                                                     <label for="test.yearOfPassing">Year of Completion</label>
                                                                                 </div>
                                                                                 <div class="col-sm-6">
-                                                                                    <input id="test.yearOfPassing" name="test.yearOfPassing" type="date">
+                                                                                    <select id="test.yearOfPassing" name="test.yearOfPassing">
+                                                                                          <option value="">Select</option>
+                                                                                    </select>
 
                                                                                 </div>
                                                                             </div>

@@ -46,6 +46,7 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.egov.eis.model.Attendance;
 import org.egov.eis.model.AttendanceType;
@@ -100,6 +101,18 @@ public class AttendanceRepository {
         return null;
     }
 
+    public boolean checkAttendanceByEmployeeAndDate(final Long employee, final java.util.Date attendanceDate) {
+        final List<Object> preparedStatementValues = new ArrayList<Object>();
+        preparedStatementValues.add(employee);
+        preparedStatementValues.add(attendanceDate);
+        final String query = AttendanceQueryBuilder.selectAttendanceByEmployeeAndDateQuery();
+        final List<Map<String, Object>> attendanceIds = jdbcTemplate.queryForList(query, preparedStatementValues.toArray());
+        if (!attendanceIds.isEmpty())
+            return true;
+
+        return false;
+    }
+
     public AttendanceRequest saveAttendance(final AttendanceRequest attendanceRequest) {
 
         LOGGER.info("AttendanceDao attendanceRequest::" + attendanceRequest);
@@ -123,7 +136,7 @@ public class AttendanceRepository {
                         type = findAttendanceTypeByCode("A");
                     ps.setDate(1, new Date(attendance.getAttendanceDate().getTime()));
                     ps.setLong(2, attendance.getEmployee());
-                    ps.setString(3, attendance.getMonth());
+                    ps.setInt(3, attendance.getMonth());
                     ps.setString(4, attendance.getYear());
                     ps.setLong(5, type.getId());
                     ps.setString(6, attendance.getRemarks());
@@ -158,7 +171,7 @@ public class AttendanceRepository {
                         type = findAttendanceTypeByCode("A");
                     ps.setDate(1, new Date(attendance.getAttendanceDate().getTime()));
                     ps.setLong(2, attendance.getEmployee());
-                    ps.setString(3, attendance.getMonth());
+                    ps.setInt(3, attendance.getMonth());
                     ps.setString(4, attendance.getYear());
                     ps.setLong(5, type.getId());
                     ps.setString(6, attendance.getRemarks());
@@ -177,5 +190,12 @@ public class AttendanceRepository {
             ex.printStackTrace();
             throw new RuntimeException(ex.getMessage());
         }
+    }
+
+    public List<AttendanceType> findAllAttendanceTypes() {
+        final List<Object> preparedStatementValues = new ArrayList<Object>();
+        final String query = AttendanceQueryBuilder.selectAttendanceTypeQuery();
+        return jdbcTemplate.query(query, preparedStatementValues.toArray(),
+                attendanceTypeRowMapper);
     }
 }

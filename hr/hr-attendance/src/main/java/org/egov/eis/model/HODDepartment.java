@@ -38,25 +38,32 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.repository.rowmapper;
+package org.egov.eis.model;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import javax.validation.constraints.NotNull;
 
-import org.egov.eis.model.AttendanceType;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-@Component
-public class AttendanceTypeRowMapper implements RowMapper<AttendanceType> {
+@AllArgsConstructor
+@EqualsAndHashCode
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+public class HODDepartment {
 
-    @Override
-    public AttendanceType mapRow(final ResultSet rs, final int rowNum) throws SQLException {
-        final AttendanceType type = new AttendanceType();
-        type.setId(rs.getLong("id"));
-        type.setCode(rs.getString("code"));
-        type.setDescription(rs.getString("description"));
+    @NotNull
+    private Long id;
 
-        return type;
-    }
+    @NotNull
+    private Long department;
+
+    @NotNull
+    private String tenantId;
+
 }

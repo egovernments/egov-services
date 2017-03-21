@@ -1,5 +1,5 @@
 var baseUrl = window.location.origin;
-
+var authToken='6c3b9391-dbfc-468c-bc29-2592865d07af';
 //request info from cookies
 var requestInfo = {
   "apiId":"org.egov.pgr",
@@ -24,9 +24,9 @@ function getCommonMaster(mainRoute,resource,returnObject) {
               async: false,
               // crossDomain: true, // set this to ensure our $.ajaxPrefilter hook fires
               // processData: false, // We want this to remain an object for  $.ajaxPrefilter
-              // headers: {
-              //     'Content-Type': 'application/json'
-              // },
+              headers: {
+                      'auth-token': authToken
+              },
               contentType: 'application/json'
               // ,
               // success: function (result) {
@@ -67,6 +67,9 @@ function commonApiPost(context,resource="",action="",queryObject={}) {
             dataType: 'json',
             data:JSON.stringify(requestInfo),
             async: false,
+            headers: {
+                    'auth-token': authToken
+                },
             contentType: 'application/json'
         });
 }
@@ -81,9 +84,9 @@ function getCommonMasterById(mainRoute,resource,returnObject,id) {
               async: false,
               // crossDomain: true, // set this to ensure our $.ajaxPrefilter hook fires
               // processData: false, // We want this to remain an object for  $.ajaxPrefilter
-              // headers: {
-              //     'Content-Type': 'application/json'
-              // },
+              headers: {
+                      'auth-token': authToken
+              },
               contentType: 'application/json'
               // ,
               // success: function (result) {

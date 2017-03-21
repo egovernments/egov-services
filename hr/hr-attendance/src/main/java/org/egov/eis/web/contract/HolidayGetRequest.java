@@ -38,25 +38,56 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.repository.rowmapper;
+package org.egov.eis.web.contract;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.Date;
 
-import org.egov.eis.model.AttendanceType;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
-@Component
-public class AttendanceTypeRowMapper implements RowMapper<AttendanceType> {
+import com.fasterxml.jackson.annotation.JsonFormat;
 
-    @Override
-    public AttendanceType mapRow(final ResultSet rs, final int rowNum) throws SQLException {
-        final AttendanceType type = new AttendanceType();
-        type.setId(rs.getLong("id"));
-        type.setCode(rs.getString("code"));
-        type.setDescription(rs.getString("description"));
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-        return type;
-    }
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@EqualsAndHashCode
+public class HolidayGetRequest {
+
+    private Integer year;
+
+    @Size(min = 3, max = 200)
+    private String name;
+
+    private String applicableOn;
+
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date fromDate;
+
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date toDate;
+
+    @NotNull
+    private String tenantId;
+
+    private String sortBy;
+
+    private String sortOrder;
+
+    @Min(1)
+    @Max(500)
+    private Short pageSize;
+
+    private Short pageNumber;
+
 }

@@ -45,6 +45,7 @@ public class AgreementHelper {
 				newAgreements.add(agreement);
 			}
 		}
+		System.err.println("inside filter and enrich agreements"+newAgreements);
 		return newAgreements;
 	}
 

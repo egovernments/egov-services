@@ -38,25 +38,45 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.repository.rowmapper;
+package org.egov.eis.model;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.Date;
 
-import org.egov.eis.model.AttendanceType;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
-@Component
-public class AttendanceTypeRowMapper implements RowMapper<AttendanceType> {
+import com.fasterxml.jackson.annotation.JsonFormat;
 
-    @Override
-    public AttendanceType mapRow(final ResultSet rs, final int rowNum) throws SQLException {
-        final AttendanceType type = new AttendanceType();
-        type.setId(rs.getLong("id"));
-        type.setCode(rs.getString("code"));
-        type.setDescription(rs.getString("description"));
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-        return type;
-    }
+@AllArgsConstructor
+@EqualsAndHashCode
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+public class Holiday {
+
+    @NotNull
+    private Long id;
+
+    @NotNull
+    private CalendarYear calendarYear;
+
+    @NotNull
+    @Size(min = 3, max = 200)
+    private String name;
+
+    @NotNull
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date applicableOn;
+
+    @NotNull
+    private String tenantId;
+
 }

@@ -38,25 +38,34 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.repository.rowmapper;
+package org.egov.eis.web.contract;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.egov.eis.model.AttendanceType;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
+import org.egov.eis.model.Holiday;
 
-@Component
-public class AttendanceTypeRowMapper implements RowMapper<AttendanceType> {
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-    @Override
-    public AttendanceType mapRow(final ResultSet rs, final int rowNum) throws SQLException {
-        final AttendanceType type = new AttendanceType();
-        type.setId(rs.getLong("id"));
-        type.setCode(rs.getString("code"));
-        type.setDescription(rs.getString("description"));
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-        return type;
-    }
+@AllArgsConstructor
+@EqualsAndHashCode
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+public class HolidayResponse {
+
+    @JsonProperty("ResponseInfo")
+    private ResponseInfo responseInfo;
+
+    @JsonProperty("Holiday")
+    private List<Holiday> holiday = new ArrayList<Holiday>();
+
 }

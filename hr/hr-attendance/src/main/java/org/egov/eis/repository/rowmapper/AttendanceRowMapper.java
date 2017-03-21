@@ -57,7 +57,7 @@ public class AttendanceRowMapper implements RowMapper<Attendance> {
         attendance.setId(rs.getLong("a_id"));
         attendance.setAttendanceDate(rs.getDate("a_date"));
         attendance.setEmployee(rs.getLong("a_employee"));
-        attendance.setMonth(rs.getString("a_month"));
+        attendance.setMonth(rs.getInt("a_month"));
         attendance.setYear(rs.getString("a_year"));
 
         final AttendanceType attendanceType = new AttendanceType();

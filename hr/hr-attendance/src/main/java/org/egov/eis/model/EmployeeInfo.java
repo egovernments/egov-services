@@ -38,25 +38,78 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.repository.rowmapper;
+package org.egov.eis.model;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.egov.eis.model.AttendanceType;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
-@Component
-public class AttendanceTypeRowMapper implements RowMapper<AttendanceType> {
+import org.egov.eis.model.enums.EmployeeStatus;
+import org.egov.eis.model.enums.Gender;
+import org.egov.eis.model.enums.UserType;
 
-    @Override
-    public AttendanceType mapRow(final ResultSet rs, final int rowNum) throws SQLException {
-        final AttendanceType type = new AttendanceType();
-        type.setId(rs.getLong("id"));
-        type.setCode(rs.getString("code"));
-        type.setDescription(rs.getString("description"));
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-        return type;
-    }
+@Builder
+@AllArgsConstructor
+@EqualsAndHashCode
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+public class EmployeeInfo {
+
+    @NotNull
+    private Long id;
+
+    @NotNull
+    @Size(min = 1, max = 256)
+    private String code;
+
+    private String salutation;
+
+    private String name;
+
+    private String userName;
+
+    private Gender gender;
+
+    private String mobileNumber;
+
+    private String emailId;
+
+    private String pan;
+
+    private Long aadhaarNumber;
+
+    private Boolean active;
+
+    private UserType type = UserType.EMPLOYEE;
+
+    private EmployeeStatus employeeStatus;
+
+    private Long employeeType;
+
+    private List<Assignment> assignments = new ArrayList<Assignment>();
+
+    private List<Long> jurisdictions = new ArrayList<Long>();
+
+    private Long bank;
+
+    private Long bankBranch;
+
+    @Size(max = 20)
+    private String bankAccount;
+
+    @NotNull
+    private String tenantId;
+
 }

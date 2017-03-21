@@ -38,25 +38,33 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.repository.rowmapper;
+package org.egov.eis.model.enums;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import org.apache.commons.lang3.StringUtils;
 
-import org.egov.eis.model.AttendanceType;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
-@Component
-public class AttendanceTypeRowMapper implements RowMapper<AttendanceType> {
+public enum EmployeeStatus {
+    EMPLOYED("EMPLOYED"), RETIRED("RETIRED"), SUSPENDED("SUSPENDED"), DECEASED("DECEASED");
+
+    private String value;
+
+    EmployeeStatus(final String value) {
+        this.value = value;
+    }
 
     @Override
-    public AttendanceType mapRow(final ResultSet rs, final int rowNum) throws SQLException {
-        final AttendanceType type = new AttendanceType();
-        type.setId(rs.getLong("id"));
-        type.setCode(rs.getString("code"));
-        type.setDescription(rs.getString("description"));
+    @JsonValue
+    public String toString() {
+        return StringUtils.capitalize(name());
+    }
 
-        return type;
+    @JsonCreator
+    public static EmployeeStatus fromValue(final String passedValue) {
+        for (final EmployeeStatus obj : EmployeeStatus.values())
+            if (String.valueOf(obj.value).equals(passedValue.toUpperCase()))
+                return obj;
+        return null;
     }
 }

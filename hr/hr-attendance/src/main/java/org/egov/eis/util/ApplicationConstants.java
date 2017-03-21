@@ -38,25 +38,29 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.repository.rowmapper;
+package org.egov.eis.util;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.annotation.Order;
+import org.springframework.core.env.Environment;
 
-import org.egov.eis.model.AttendanceType;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
+@Configuration
+@PropertySource(value = { "classpath:messages/messages.properties",
+        "classpath:messages/errors.properties" }, ignoreResourceNotFound = true)
+@Order(0)
+public class ApplicationConstants {
 
-@Component
-public class AttendanceTypeRowMapper implements RowMapper<AttendanceType> {
+    public static final String MSG_ATTENDANCE_PRESENT = "attendance.present";
+    public static final String MSG_ATTENDANCE_EMPLOYEE_DATE_MANDATORY = "attendance.employee.date.mandatory";
+    public static final String MSG_ATTENDANCE_INVALID_TYPE = "attendance.invalid.type";
+    public static final String MSG_ATTENDANCE_MARKED_HOLIDAY = "attendance.marked.holiday";
 
-    @Override
-    public AttendanceType mapRow(final ResultSet rs, final int rowNum) throws SQLException {
-        final AttendanceType type = new AttendanceType();
-        type.setId(rs.getLong("id"));
-        type.setCode(rs.getString("code"));
-        type.setDescription(rs.getString("description"));
+    @Autowired
+    private Environment environment;
 
-        return type;
+    public String getErrorMessage(final String property) {
+        return environment.getProperty(property);
     }
 }

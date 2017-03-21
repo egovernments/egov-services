@@ -59,7 +59,7 @@ public class AttendanceQueryBuilder {
     @Autowired
     private ApplicationProperties applicationProperties;
 
-    private static final String BASE_QUERY = "SELECT a.id AS a_id, a.date AS a_date, a.employee AS "
+    private static final String BASE_QUERY = "SELECT a.id AS a_id, a.attendancedate AS a_date, a.employee AS "
             + "a_employee, a.month AS a_month, a.year AS a_year, a.type AS a_type, a.remarks AS "
             + "a_remarks, a.createdby AS a_createdby, a.createddate AS a_createddate, a.lastmodifiedby"
             + " AS a_lastmodifiedby, a.lastmodifieddate AS a_lastmodifieddate, a.tenantId AS a_tenantId, "
@@ -106,7 +106,7 @@ public class AttendanceQueryBuilder {
         if (attendanceGetRequest.getApplicableOn() != null) {
             final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" date = ?");
+            selectQuery.append(" attendancedate = ?");
             preparedStatementValues.add(sdf.parse(attendanceGetRequest.getApplicableOn()));
         }
 
@@ -144,7 +144,7 @@ public class AttendanceQueryBuilder {
 
     private void addOrderByClause(final StringBuilder selectQuery,
             final AttendanceGetRequest attendanceGetRequest) {
-        final String sortBy = attendanceGetRequest.getSortBy() == null ? "date"
+        final String sortBy = attendanceGetRequest.getSortBy() == null ? "attendancedate"
                 : attendanceGetRequest.getSortBy();
         final String sortOrder = attendanceGetRequest.getSortOrder() == null ? "ASC"
                 : attendanceGetRequest.getSortOrder();
@@ -156,7 +156,7 @@ public class AttendanceQueryBuilder {
             final AttendanceGetRequest attendanceGetRequest) {
         // handle limit(also called pageSize) here
         selectQuery.append(" LIMIT ?");
-        long pageSize = Integer.parseInt(applicationProperties.commonsSearchPageSizeDefault());
+        long pageSize = Integer.parseInt(applicationProperties.attendanceSearchPageSizeDefault());
         if (attendanceGetRequest.getPageSize() != null)
             pageSize = attendanceGetRequest.getPageSize();
         preparedStatementValues.add(pageSize); // Set limit to pageSize
@@ -195,19 +195,25 @@ public class AttendanceQueryBuilder {
     }
 
     public static String insertAttendanceQuery() {
-        final String query = "INSERT INTO egeis_attendance values "
+        return "INSERT INTO egeis_attendance values "
                 + "(nextval('seq_egeis_attendance'),?,?,?,?,?,?,?,?,?,?,?)";
-        return query;
     }
 
     public static String updateAttendanceQuery() {
-        final String query = "UPDATE egeis_attendance SET date = ?, employee = ?,"
+        return "UPDATE egeis_attendance SET attendancedate = ?, employee = ?,"
                 + " month = ?, year = ?, type = ?, remarks = ?, lastmodifiedby = ?, lastmodifieddate = ?,"
                 + " tenantid = ? where id = ? ";
-        return query;
     }
 
     public static String selectTypeByCodeQuery() {
         return "select * from egeis_attendance_type where upper(code) = ?";
+    }
+
+    public static String selectAttendanceTypeQuery() {
+        return "select * from egeis_attendance_type";
+    }
+
+    public static String selectAttendanceByEmployeeAndDateQuery() {
+        return "SELECT id FROM egeis_attendance where employee = ? and attendancedate = ?";
     }
 }

@@ -40,12 +40,17 @@
 
 package org.egov.eis.web.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
 
 import org.egov.eis.model.Attendance;
+import org.egov.eis.model.AttendanceType;
+import org.egov.eis.model.Holiday;
 import org.egov.eis.service.AttendanceService;
+import org.egov.eis.service.HolidayService;
+import org.egov.eis.util.ApplicationConstants;
 import org.egov.eis.web.contract.AttendanceGetRequest;
 import org.egov.eis.web.contract.AttendanceRequest;
 import org.egov.eis.web.contract.AttendanceResponse;
@@ -66,6 +71,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -83,6 +89,12 @@ public class AttendanceController {
 
     @Autowired
     private ResponseInfoFactory responseInfoFactory;
+
+    @Autowired
+    private HolidayService holidayService;
+
+    @Autowired
+    private ApplicationConstants applicationConstants;
 
     @PostMapping("_search")
     @ResponseBody
@@ -112,6 +124,7 @@ public class AttendanceController {
     @PostMapping({ "_create", "_update" })
     @ResponseBody
     public ResponseEntity<?> create(@RequestBody @Valid final AttendanceRequest attendanceRequest,
+            @RequestParam("tenantId") final String tenantId,
             final BindingResult errors) {
         // validate header
         if (errors.hasErrors()) {
@@ -120,9 +133,89 @@ public class AttendanceController {
         }
         logger.info("attendanceRequest::" + attendanceRequest);
 
+        final List<ErrorResponse> errorResponses = validateAttendanceRequest(attendanceRequest, tenantId);
+        if (!errorResponses.isEmpty())
+            return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
+
         final List<Attendance> attendances = attendanceService.createAsync(attendanceRequest);
 
         return getSuccessResponse(attendances, attendanceRequest.getRequestInfo());
+    }
+
+    private List<ErrorResponse> validateAttendanceRequest(final AttendanceRequest attendanceRequest, final String tenantId) {
+        final List<ErrorResponse> errorResponses = new ArrayList<>();
+        final List<Holiday> holidays = holidayService.getHolidays(tenantId, attendanceRequest.getRequestInfo());
+        final List<AttendanceType> attendanceTypes = attendanceService.getAllAttendanceTypes();
+        boolean isHoliday = true;
+        boolean isEmployeeDate = true;
+        boolean isTypeExists = false;
+        boolean isAttendanceExists = false;
+        final boolean isEmployeePresent = true;
+        final boolean isEmployeeRetired = false;
+
+        for (final Attendance attendance : attendanceRequest.getAttendances()) {
+            isTypeExists = false;
+            if (attendance.getEmployee() == null || attendance.getAttendanceDate() == null)
+                isEmployeeDate = false;
+            else if (attendance.getId() == null
+                    && attendanceService.getByEmployeeAndDate(attendance.getEmployee(), attendance.getAttendanceDate()))
+                isAttendanceExists = true;
+            // TODO: uncomment once employee authentication is done
+            /*
+             * List<EmployeeInfo> employeeInfos = employeeService.getEmployee(attendance.getEmployee(), tenantId,
+             * attendanceRequest.getRequestInfo()); if (employeeInfos.isEmpty()) { isEmployeePresent = false; } else { if
+             * (EmployeeStatus.RETIRED.toString().equals(employeeInfos.get(0).getEmployeeStatus())) isEmployeeRetired = true; }
+             */
+            if ("".equals(attendance.getType().getCode()))
+                isTypeExists = true;
+            else
+                for (final AttendanceType type : attendanceTypes)
+                    if (type.getCode().equalsIgnoreCase(attendance.getType().getCode())) {
+                        isTypeExists = true;
+                        break;
+                    }
+
+            if (!holidays.isEmpty() && attendance.getType() != null && "H".equals(attendance.getType().getCode()))
+                for (final Holiday holiday : holidays)
+                    if (holiday.getApplicableOn().compareTo(attendance.getAttendanceDate()) == 0) {
+                        isHoliday = true;
+                        break;
+                    } else
+                        isHoliday = false;
+            if (!isTypeExists || !isEmployeeDate || !isHoliday || isAttendanceExists || !isEmployeePresent || isEmployeeRetired)
+                break;
+        }
+        if (isAttendanceExists) {
+            final ErrorResponse errorResponse = new ErrorResponse();
+            final Error error = new Error();
+            error.setDescription(applicationConstants.getErrorMessage(ApplicationConstants.MSG_ATTENDANCE_PRESENT));
+            errorResponse.setError(error);
+            errorResponses.add(errorResponse);
+        }
+        if (!isEmployeeDate) {
+            final ErrorResponse errorResponse = new ErrorResponse();
+            final Error error = new Error();
+            error.setDescription(
+                    applicationConstants.getErrorMessage(ApplicationConstants.MSG_ATTENDANCE_EMPLOYEE_DATE_MANDATORY));
+            errorResponse.setError(error);
+            errorResponses.add(errorResponse);
+        }
+        if (!isTypeExists) {
+            final ErrorResponse errorResponse = new ErrorResponse();
+            final Error error = new Error();
+            error.setDescription(applicationConstants.getErrorMessage(ApplicationConstants.MSG_ATTENDANCE_INVALID_TYPE));
+            errorResponse.setError(error);
+            errorResponses.add(errorResponse);
+        }
+        if (!isHoliday) {
+            final ErrorResponse errorResponse = new ErrorResponse();
+            final Error error = new Error();
+            error.setDescription(applicationConstants.getErrorMessage(ApplicationConstants.MSG_ATTENDANCE_MARKED_HOLIDAY));
+            errorResponse.setError(error);
+            errorResponses.add(errorResponse);
+        }
+
+        return errorResponses;
     }
 
     /**

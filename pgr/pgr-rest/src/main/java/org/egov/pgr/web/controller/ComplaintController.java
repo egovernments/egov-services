@@ -38,7 +38,6 @@ public class ComplaintController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public ServiceResponse createServiceRequest(@RequestBody SevaRequest request) {
-		request.getRequestInfo().setAction("POST");
 		final AuthenticatedUser user = userRepository.getUser(request.getAuthToken());
 		final Complaint complaint = request.toDomainForCreateRequest(user);
 		complaintService.save(complaint, request);
@@ -49,7 +48,6 @@ public class ComplaintController {
 	@PutMapping
 	@ResponseStatus(HttpStatus.OK)
 	public ServiceResponse updateServiceRequest(@RequestBody SevaRequest request) {
-		request.getRequestInfo().setAction("PUT");
 		RequestInfo requestInfo = request.getRequestInfo();
 		final AuthenticatedUser user = userRepository.getUser(requestInfo.getAuthToken());
 		final Complaint complaint = request.toDomainForUpdateRequest(user);

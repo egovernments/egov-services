@@ -69,9 +69,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
-import org.springframework.validation.SmartValidator;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -122,9 +119,6 @@ public class EmployeeService {
 	
 	@Autowired
 	EmployeeProducer employeeProducer;
-	
-	@Autowired
-	SmartValidator validator;
 
 	@Value("${kafka.topics.employee.savedb.name}")
 	String employeeSaveTopic;
@@ -145,11 +139,11 @@ public class EmployeeService {
 
 	public void createEmployee(EmployeeRequest employeeRequest) {
 		UserRequest userRequest = getUserRequest(employeeRequest);
-//		Long id = userService.createUser(userRequest);
-//		String code = getEmployeeCode(id);
+		Long id = userService.createUser(userRequest);
+		String code = getEmployeeCode(id);
 		Employee employee = employeeRequest.getEmployee();
-//		employee.setId(id);
-//		employee.setCode(code);
+		employee.setId(id);
+		employee.setCode(code);
 
 		String employeeRequestJson = null;
 		try {
@@ -200,19 +194,5 @@ public class EmployeeService {
 		technicalQualificationRepository.save(employee);
 		educationalQualificationRepository.save(employee);
 		departmentalTestRepository.save(employee);
-	}
-
-	public void validate(EmployeeRequest employeeRequest, String method, BindingResult bindingResult) {
-		try {
-			switch (method) {
-			case "create":
-				validator.validate(employeeRequest.getEmployee(), bindingResult);
-				break;
-			default:
-				validator.validate(employeeRequest.getRequestInfo(), bindingResult);
-			}
-		} catch (IllegalArgumentException e) {
-			bindingResult.addError(new ObjectError("Missing data", e.getMessage()));
-		}
 	}
 }

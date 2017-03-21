@@ -93,7 +93,7 @@ public class EmployeeInfo {
 	private String pan;
 
 	@Size(max=12)
-	private Long aadhaarNumber;
+	private String aadhaarNumber;
 
 	private Boolean active;
 

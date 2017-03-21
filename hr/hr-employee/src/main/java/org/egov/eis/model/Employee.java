@@ -51,6 +51,7 @@ import javax.validation.constraints.Size;
 
 import org.egov.eis.model.enums.EmployeeStatus;
 import org.egov.eis.model.enums.MaritalStatus;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -74,12 +75,15 @@ public class Employee {
 	@Size(min=1, max=256)
 	private String code;
 
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date dateOfAppointment;
 
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date dateOfJoining;
 
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date dateOfRetirement;
 
@@ -95,9 +99,11 @@ public class Employee {
 	@Max(100)
 	private Short retirementAge;
 
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date dateOfResignation;
 
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date dateOfTermination;
 
@@ -105,8 +111,12 @@ public class Employee {
 	private Long employeeType;
 
 	@Valid
+	@NotNull
+	@Size(min=1)
 	private List<Assignment> assignments = new ArrayList<Assignment>();
 
+	@NotNull
+	@Size(min=1)
 	private List<Long> jurisdictions = new ArrayList<Long>();
 
 	private Long motherTongue;

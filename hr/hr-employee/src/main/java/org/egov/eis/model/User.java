@@ -52,6 +52,7 @@ import javax.validation.constraints.Size;
 import org.egov.eis.model.enums.BloodGroup;
 import org.egov.eis.model.enums.Gender;
 import org.egov.eis.model.enums.UserType;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -100,7 +101,7 @@ public class User {
 	private String pan;
 
 	@Size(max=12)
-	private Long aadhaarNumber;
+	private String aadhaarNumber;
 
 	@Size(max=300)
 	private String permanentAddress;
@@ -123,10 +124,12 @@ public class User {
 	private Boolean active;
 
 	@Past
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	@JsonFormat(pattern = "yyyy-mm-dd")
 	private Date dob;
 
 	@Future
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	@JsonFormat(pattern = "dd-MM-yyyy hh:mm:ss")
 	private Date pwdExpiryDate;
 
@@ -152,11 +155,13 @@ public class User {
 
 	private Long createdBy;
 
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	@JsonFormat(pattern = "dd-MM-yyyy hh:mm:ss")
 	private Date createdDate;
 
 	private Long lastModifiedBy;
 
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	@JsonFormat(pattern = "dd-MM-yyyy hh:mm:ss")
 	private Date lastModifiedDate;
 

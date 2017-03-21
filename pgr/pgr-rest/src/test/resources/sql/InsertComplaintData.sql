@@ -3,7 +3,7 @@ createdby,lastmodifiedby,active,name,gender,pan,aadhaarnumber,type,version,guard
 'anonymous','XYZ','2099-01-01 00:00:00',null,null,null,'2010-01-01 00:00:00','2015-01-01 00:00:00',1,1,'t','Anonymous',null,null,null,'SYSTEM',0,null,null,null,'f');
 
 
-INSERT into egpgr_complainant (id,email,mobile,name,userdetail,address,version)values(1,'abc@gmail.com','7475844747','kumar',2,'Near Temple',0);
+INSERT into egpgr_complainant (id,email,mobile,name,userdetail,address,version)values(1,'abc@gmail.com','7475844747','kumar',2,'Near School',0);
 
 
 
@@ -27,7 +27,7 @@ Insert into egpgr_complainttype_category (id,name,description,version) values(4,
 
 insert into egpgr_complainttype (id,name,department,version,code,isactive,description,createddate,lastmodifieddate,createdby,
 lastmodifiedby,slahours,hasfinancialimpact,attributes,category,metadata,type,keywords)values(6,'Absenteesim of door to door garbage collector'
-,18,0,'AODTDGC','t',null,'2010-01-01 00:00:00','2015-01-01 00:00:00',1,1,24,'f',null,4,'t','realtime',null);
+,18,0,'AODTDGC','t','garbage collector absent','2010-01-01 00:00:00','2015-01-01 00:00:00',1,1,24,'f',null,4,'t','realtime',null);
 
 insert into eg_position (name,id,deptdesig,createddate,lastmodifieddate,createdby,lastmodifiedby,ispostoutsourced,version)
 values('L-JUNIOR ENGINEER-1',1,1,'2015-01-01 00:00:00','2015-01-01 00:00:00',1,1,'f',0);
@@ -36,7 +36,7 @@ values('L-JUNIOR ENGINEER-1',1,1,'2015-01-01 00:00:00','2015-01-01 00:00:00',1,1
 INSERT into egpgr_complaint(id,crn,complaintType,complainant,assignee,location,childlocation,
 status,details,landmarkDetails,receivingMode,receivingCenter,lng,lat,escalation_date,department,
 citizenFeedback,latlngAddress,crossHierarchyId,state_id,createdby,createddate,lastmodifiedby,lastmodifieddate)VALUES(1,'0005-2017-AB',6,1,1,1,null,
-1,'This is a huge problem','Near Temple',5,5,0,0,'2016-12-22 00:00:00',18,5,null,2,5,2,'2016-12-20 00:00:00',2,'2016-12-21 00:00:00');
+1,'This is a huge problem','Near Temple',5,5,0,0,'2016-12-22T00:00:00.000',18,5,null,2,5,2,'2016-12-20 00:00:00',2,'2016-12-21 00:00:00');
 
 
 

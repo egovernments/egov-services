@@ -93,6 +93,9 @@ public class DemandReasonConroller {
 				demandReason = new DemandReason();
 				demandReason.setCategory(demRes.getEgDemandReasonMaster().getEgReasonCategory().getName());
 				demandReason.setName(demRes.getEgDemandReasonMaster().getReasonMaster());
+				demandReason.setTaxPeriod(demRes.getEgInstallmentMaster().getDescription());
+				demandReason.setGlCode(demRes.getGlcodeId());
+				demandReasons.add(demandReason);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

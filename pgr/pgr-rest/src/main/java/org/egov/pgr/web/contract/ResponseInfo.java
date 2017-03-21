@@ -28,5 +28,4 @@ public class ResponseInfo   {
 
     @JsonProperty("status")
     private String status;
-
 }

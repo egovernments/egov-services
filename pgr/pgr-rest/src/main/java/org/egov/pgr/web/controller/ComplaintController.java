@@ -1,14 +1,8 @@
 package org.egov.pgr.web.controller;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.egov.pgr.domain.model.AuthenticatedUser;
 import org.egov.pgr.domain.model.Complaint;
 import org.egov.pgr.domain.model.ComplaintSearchCriteria;
-import org.egov.pgr.domain.model.UserType;
 import org.egov.pgr.domain.service.ComplaintService;
 import org.egov.pgr.persistence.queue.contract.RequestInfo;
 import org.egov.pgr.persistence.queue.contract.ServiceRequest;
@@ -21,16 +15,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = { "/seva" })
@@ -53,9 +43,6 @@ public class ComplaintController {
 		final Complaint complaint = request.toDomainForCreateRequest(user);
 		complaintService.save(complaint, request);
 		ResponseInfo responseInfo = getResponseInfo(request);
-		//This is for UI to display name of ctizen
-		if(user.getType().equals(UserType.CITIZEN))
-			request.getServiceRequest().setFirstName(user.getName());
 		return new ServiceResponse(responseInfo, Collections.singletonList(request.getServiceRequest()));
 	}
 

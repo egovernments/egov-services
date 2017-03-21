@@ -4,7 +4,7 @@ class AgreementSearch extends React.Component {
     this.state={agreements:[],searchSet:{locality:"",
     agreementNumber:"",
     doorNo:"",
-    category:"",
+    assetCategory:"",
     mobileNumber:"",
     name:"",
     revenueWard:"",
@@ -19,7 +19,7 @@ class AgreementSearch extends React.Component {
   {
     e.preventDefault();
     //call api call
-    var agreements=commonApiPost("agreements","","_search",this.state.searchSet).responseJSON["Agreements"];
+    var agreements=commonApiPost("lams-services","agreements","_search",this.state.searchSet).responseJSON["Agreements"] ||[];
     // console.log(agreements);
     this.setState({
       isSearchClicked:true,
@@ -47,131 +47,131 @@ class AgreementSearch extends React.Component {
 
     // console.log(commonApiGet("asset","","GET_MODE_OF_ACQUISITION",{}).responseJSON);
 
-    this.setState({
-      employeeType:[{
-              id: 1,
-              name: "Deputation",
-              chartOfAccounts: ""
-          },
-          {
-              id: 2,
-              name: "Permanent",
-              chartOfAccounts: ""
-          },
-          {
-              id: 3,
-              name: "Daily Wages`",
-              chartOfAccounts: ""
-          },
-          {
-              id: 4,
-              name: "Temporary",
-              chartOfAccounts: ""
-          },
-          {
-              id: 5,
-              name: "Contract",
-              chartOfAccounts: ""
-          }],
-      departments:[{
-              id: 1,
-              name: "Juniour Engineer",
-              description: "",
-              orderno: "1",
-              active: true
-          },
-          {
-              id: 2,
-              name: "Assistance Engineer",
-              description: "",
-              orderno: "1",
-              active: true
-          }],
-      designation:[{
-              id: 1,
-              name: "Juniour Engineer",
-              description: "",
-              orderno: "1",
-              active: true
-          },
-          {
-              id: 2,
-              name: "Assistance Engineer",
-              description: "",
-              orderno: "1",
-              active: true
-          }],
-      active:[{
-              id: 1,
-              name: "Juniour Engineer",
-              description: "",
-              orderno: "1",
-              active: true
-          },
-          {
-              id: 2,
-              name: "Assistance Engineer",
-              description: "",
-              orderno: "1",
-              active: true
-          }],
-      employeeStatus:[{
-              id: 1,
-              name: "Juniour Engineer",
-              description: "",
-              orderno: "1",
-              active: true
-          },
-          {
-              id: 2,
-              name: "Assistance Engineer",
-              description: "",
-              orderno: "1",
-              active: true
-          }],
-      function:[{
-              id: 1,
-              name: "Juniour Engineer",
-              description: "",
-              orderno: "1",
-              active: true
-          },
-          {
-              id: 2,
-              name: "Assistance Engineer",
-              description: "",
-              orderno: "1",
-              active: true
-          }],
-      functionary:[{
-              id: 1,
-              name: "Juniour Engineer",
-              description: "",
-              orderno: "1",
-              active: true
-          },
-          {
-              id: 2,
-              name: "Assistance Engineer",
-              description: "",
-              orderno: "1",
-              active: true
-          }],
-      drawingOfficer:[{
-              id: 1,
-              name: "Juniour Engineer",
-              description: "",
-              orderno: "1",
-              active: true
-          },
-          {
-              id: 2,
-              name: "Assistance Engineer",
-              description: "",
-              orderno: "1",
-              active: true
-          }]
-    })
+    // this.setState({
+    //   employeeType:[{
+    //           id: 1,
+    //           name: "Deputation",
+    //           chartOfAccounts: ""
+    //       },
+    //       {
+    //           id: 2,
+    //           name: "Permanent",
+    //           chartOfAccounts: ""
+    //       },
+    //       {
+    //           id: 3,
+    //           name: "Daily Wages`",
+    //           chartOfAccounts: ""
+    //       },
+    //       {
+    //           id: 4,
+    //           name: "Temporary",
+    //           chartOfAccounts: ""
+    //       },
+    //       {
+    //           id: 5,
+    //           name: "Contract",
+    //           chartOfAccounts: ""
+    //       }],
+    //   departments:[{
+    //           id: 1,
+    //           name: "Juniour Engineer",
+    //           description: "",
+    //           orderno: "1",
+    //           active: true
+    //       },
+    //       {
+    //           id: 2,
+    //           name: "Assistance Engineer",
+    //           description: "",
+    //           orderno: "1",
+    //           active: true
+    //       }],
+    //   designation:[{
+    //           id: 1,
+    //           name: "Juniour Engineer",
+    //           description: "",
+    //           orderno: "1",
+    //           active: true
+    //       },
+    //       {
+    //           id: 2,
+    //           name: "Assistance Engineer",
+    //           description: "",
+    //           orderno: "1",
+    //           active: true
+    //       }],
+    //   active:[{
+    //           id: 1,
+    //           name: "Juniour Engineer",
+    //           description: "",
+    //           orderno: "1",
+    //           active: true
+    //       },
+    //       {
+    //           id: 2,
+    //           name: "Assistance Engineer",
+    //           description: "",
+    //           orderno: "1",
+    //           active: true
+    //       }],
+    //   employeeStatus:[{
+    //           id: 1,
+    //           name: "Juniour Engineer",
+    //           description: "",
+    //           orderno: "1",
+    //           active: true
+    //       },
+    //       {
+    //           id: 2,
+    //           name: "Assistance Engineer",
+    //           description: "",
+    //           orderno: "1",
+    //           active: true
+    //       }],
+    //   function:[{
+    //           id: 1,
+    //           name: "Juniour Engineer",
+    //           description: "",
+    //           orderno: "1",
+    //           active: true
+    //       },
+    //       {
+    //           id: 2,
+    //           name: "Assistance Engineer",
+    //           description: "",
+    //           orderno: "1",
+    //           active: true
+    //       }],
+    //   functionary:[{
+    //           id: 1,
+    //           name: "Juniour Engineer",
+    //           description: "",
+    //           orderno: "1",
+    //           active: true
+    //       },
+    //       {
+    //           id: 2,
+    //           name: "Assistance Engineer",
+    //           description: "",
+    //           orderno: "1",
+    //           active: true
+    //       }],
+    //   drawingOfficer:[{
+    //           id: 1,
+    //           name: "Juniour Engineer",
+    //           description: "",
+    //           orderno: "1",
+    //           active: true
+    //       },
+    //       {
+    //           id: 2,
+    //           name: "Assistance Engineer",
+    //           description: "",
+    //           orderno: "1",
+    //           active: true
+    //       }]
+    // })
   }
 
   componentDidMount()
@@ -182,10 +182,10 @@ class AgreementSearch extends React.Component {
     // console.log(commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"WARD",hierarchyTypeName:"REVENUE"}).responseJSON["Boundary"]);
 
     this.setState({
-      assetCategories:commonApiPost("asset","assetCategories","_search",{}).responseJSON["AssetCategory"],
-      locality:commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"LOCALITY",hierarchyTypeName:"LOCATION"}).responseJSON["Boundary"],
-      electionwards:commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"WARD",hierarchyTypeName:"ADMINISTRATION"}).responseJSON["Boundary"],
-      revenueWards:commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"WARD",hierarchyTypeName:"REVENUE"}).responseJSON["Boundary"]
+      assetCategories:commonApiPost("asset-services","assetCategories","_search",{}).responseJSON["AssetCategory"] || [],
+      locality:commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"LOCALITY",hierarchyTypeName:"LOCATION"}).responseJSON["Boundary"] || [],
+      electionwards:commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"WARD",hierarchyTypeName:"ADMINISTRATION"}).responseJSON["Boundary"] || [],
+      revenueWards:commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"WARD",hierarchyTypeName:"REVENUE"}).responseJSON["Boundary"] || []
     })
   }
 
@@ -218,13 +218,13 @@ class AgreementSearch extends React.Component {
 
   }
 
-  handleSelectChange(type)
+  handleSelectChange(type,id,number,assetCategory)
   {
     console.log(type);
     if (type === "renew") {
-                window.open("../../../../app/search-agreement/renew-agreement.html", "fs", "fullscreen=yes")
+                window.open("../../../../app/search-agreement/view-renew-agreement.html?view=renew&type="+assetCategory+"&agreementNumber="+number+"&assetId="+id, "fs", "fullscreen=yes")
             } else {
-                window.open("../../../../app/search-agreement/view-renew-agreement.html", "fs", "fullscreen=yes")
+                window.open("../../../../app/search-agreement/view-renew-agreement.html?view=new&type="+assetCategory+"&agreementNumber="+number+"&assetId="+id, "fs", "fullscreen=yes")
             }
   }
 
@@ -239,17 +239,26 @@ class AgreementSearch extends React.Component {
   render() {
     console.log(this.state.searchSet);
     let {handleChange,search,updateTable,handleSelectChange}=this;
-    let {isSearchClicked,agreements}=this.state;
+    let {isSearchClicked,agreements,assetCategories}=this.state;
     let {locality,
     agreementNumber,
     doorNo,
-    category,
+    assetCategory,
     mobileNumber,
     name,
     revenueWard,
     electionWard,
     code,
     tenderNumber,createdDate,endDate,shopComplexNumber}=this.state.searchSet;
+
+    const getValueByName=function(name,id)
+    {
+        for (var i = 0; i < assetCategories.length; i++) {
+          if (assetCategories[i].id==id) {
+              return assetCategories[i][name];
+          }
+        }
+    }
 
     const renderOption=function(list)
     {
@@ -300,35 +309,43 @@ class AgreementSearch extends React.Component {
     }
     const renderBody=function()
     {
-      return agreements.map((item,index)=>
-      {
-            return (<tr key={index}>
-              <td>{index+1}</td>
-                                <td>{item.agreementNumber} </td>
-                                <td>{item.allottee.name}</td>
-                                <td>{item.allottee.mobileNumber}</td>
-                                <td>{item.asset.locationDetails.zone}</td>
+      if (agreements.length>0) {
+        return agreements.map((item,index)=>
+        {
+              return (<tr key={index}>
+                <td>{index+1}</td>
+                                  <td>{item.agreementNumber} </td>
+                                  <td>{item.allottee.name}</td>
+                                  <td>{item.allottee.mobileNumber}</td>
+                                  <td>{item.asset.locationDetails.zone}</td>
 
 
-                                <td>{item.asset.assetCategory.id?item.asset.assetCategory.id:"Null"}</td>
-                                <td>{item.asset.code}</td>
-                                <td>{item.tradelicenseNumber}</td>
-                                <td>{item.agreementDate}</td>
-                                <td>
-                                    <div className="styled-select">
-                                        <select id="myOptions" onChange={(e)=>{
-                                          handleSelectChange(e.target.value)
-                                        }}>
-                                            <option value="">Select Action</option>
-                                            <option value="view">View</option>
-                                            <option value="renew">Renew</option>
-                                        </select>
-                                    </div>
-                                </td>
-                </tr>
-            );
+                                  <td>{item.asset.assetCategory.id?getValueByName("name",item.asset.assetCategory.id):"Null"}</td>
+                                  <td>{item.asset.code}</td>
+                                  <td>{item.tradelicenseNumber}</td>
+                                  <td>{item.agreementDate}</td>
+                                  <td>
+                                      <div className="styled-select">
+                                          <select id="myOptions" onChange={(e)=>{
+                                            handleSelectChange(e.target.value,item.asset.id,item.agreementNumber,getValueByName("name",item.asset.assetCategory.id))
+                                          }}>
+                                              <option value="">Select Action</option>
+                                              <option value="view">View</option>
+                                            { /*<option value="renew">Renew</option> */}
+                                          </select>
+                                      </div>
+                                  </td>
+                  </tr>
+              );
 
-      })
+        })
+      }
+      else {
+          return (<tr>
+              <td > </td>
+          </tr>)
+      }
+
     }
     const disbaled=function(type) {
         if (type==="view") {
@@ -351,8 +368,8 @@ class AgreementSearch extends React.Component {
                         <div className="col-sm-3 col-sm-offset-5">
                               <label for="asset_category">Asset category<span> *</span></label>
                               <div className="styled-select">
-                                  <select id="asset_category" name="asset_category" required="true" value={category} onChange={(e)=>{
-                                  handleChange(e,"category")
+                                  <select id="asset_category" name="asset_category" required="true" value={assetCategory} onChange={(e)=>{
+                                  handleChange(e,"assetCategory")
                               }}>
                                       <option value="">Select Asset Category</option>
                                       {renderOption(this.state.assetCategories)}

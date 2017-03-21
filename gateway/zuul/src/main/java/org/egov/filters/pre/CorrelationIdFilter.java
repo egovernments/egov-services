@@ -9,7 +9,7 @@ import java.util.UUID;
 @Component
 public class CorrelationIdFilter extends ZuulFilter {
 
-	public static final String CORRELATION_HEADER_NAME = "X-CORRELATION-ID";
+	public static final String CORRELATION_HEADER_NAME = "x-correlation-id";
 
 	@Override
     public String filterType() {

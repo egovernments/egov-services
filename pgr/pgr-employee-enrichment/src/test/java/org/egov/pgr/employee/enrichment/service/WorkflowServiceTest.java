@@ -151,7 +151,7 @@ public class WorkflowServiceTest {
         final WorkflowResponse workflowResponse = new WorkflowResponse(ASSIGNEE, getValuesWithStateId());
         when(workflowRepository.update(any(WorkflowRequest.class))).thenReturn(workflowResponse);
         Map<String,String> responseValues = new HashMap<String,String>();
-        responseValues.put("LocationId", "1");   
+        responseValues.put("locationId", "1");
         responseValues.put("departmentName", "Electrical");
         responseValues.put("assigneeId", "6");
         when(complaintRestRepository.getComplaintByCrn(1L, serviceRequestMap.get("service_request_id").toString()))
@@ -184,7 +184,7 @@ public class WorkflowServiceTest {
        final WorkflowResponse workflowResponse = new WorkflowResponse(ASSIGNEE, getValuesWithStateId());
        when(workflowRepository.update(any(WorkflowRequest.class))).thenReturn(workflowResponse);
        Map<String,String> responseValues = new HashMap<String,String>();
-       responseValues.put("LocationId", "1");   
+       responseValues.put("locationId", "1");
        responseValues.put("departmentName", "Electrical");
        responseValues.put("assigneeId", "6");
        when(complaintRestRepository.getComplaintByCrn(1L, serviceRequestMap.get("service_request_id").toString()))

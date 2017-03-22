@@ -35,10 +35,10 @@ public class WorkflowService {
 		} else {
 			ServiceRequest responseFromDB = complaintRestRepository.getComplaintByCrn(1L, request.getCrn());
 			Map<String, String> values = responseFromDB.getValues();
-			String locationId = values.get("LocationId");
+			String locationId = values.get("locationId");
 			String department = values.get("departmentName");
 			String assigneeId = values.get("assigneeId");
-			String status = values.get("ComplaintStatus");
+			String status = values.get("complaintStatus");
 			boolean isUpdate = false;
 			if (!responseFromDB.getComplaintTypeCode().equals(request.getValueForKey("complaintTypeCode"))
 					|| !locationId.equals(request.getValueForKey("boundaryId"))

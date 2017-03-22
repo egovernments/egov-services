@@ -1,0 +1,14 @@
+  
+CREATE SEQUENCE public.seq_egasset_assetcode
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 8
+  CACHE 1;
+
+CREATE SEQUENCE public.seq_egasset_categorycode
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 999
+  START 7
+  CACHE 1;

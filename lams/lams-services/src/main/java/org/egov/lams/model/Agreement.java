@@ -1,11 +1,15 @@
 package org.egov.lams.model;
 
 import java.util.Date;
+
 import javax.validation.constraints.NotNull;
+
 import org.egov.lams.model.enums.NatureOfAllotment;
 import org.egov.lams.model.enums.PaymentCycle;
 import org.egov.lams.model.enums.Status;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

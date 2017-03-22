@@ -49,5 +49,14 @@ public class PropertiesManager {
 
 	@Value("${egov.services.lams.acknowledgementnumber_sequence}")
 	private String acknowledgementNumberSequence;
+	
+	@Value("${egov.services.demand_service.hostname}")
+	private String demandServiceHostName;
+	
+	@Value("${egov.services.demand_reason_service.searchpath}")
+	private String demandReasonSearchService;
+	
+	@Value("${egov.services.demand_service.createdemand}")
+	private String createDemandSevice;
 
 }

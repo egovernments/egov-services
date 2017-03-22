@@ -119,7 +119,7 @@ public interface BillInfo {
      *
      * @return Boolean as Part Payment Allowed
      */
-    Character getPartPaymentAllowed();
+    Boolean getPartPaymentAllowed();
 
     /**
      * This method returns True if Account Overriding is allowed else return
@@ -127,7 +127,7 @@ public interface BillInfo {
      *
      * @return Boolean as Override Account Head Allowed
      */
-    Character getOverrideAccountHeadsAllowed();
+    Boolean getOverrideAccountHeadsAllowed();
 
     /**
      * This method returns True if the billing system should do the amount
@@ -135,7 +135,7 @@ public interface BillInfo {
      *
      * @return Boolean as Call Back For Apportioning
      */
-    Character getCallbackForApportioning();
+    Boolean getCallbackForApportioning();
 
     /**
      * This method return list of collection modes not allowed for this bill,

@@ -57,13 +57,13 @@ public class BillInfoImpl implements BillInfo {
 
     private String displayMessage;
     private String paidBy;
-    private Character partPaymentAllowed;
+    private Boolean partPaymentAllowed;
 
     // true => call the new API (of billing system), false => default logic
     // (done by collection system).
-    private Character callbackForApportioning;
+    private Boolean callbackForApportioning;
 
-    private Character overrideAccountHeadsAllowed;
+    private Boolean overrideAccountHeadsAllowed;
 
     private COLLECTIONTYPE collectionType;
 
@@ -87,7 +87,7 @@ public class BillInfoImpl implements BillInfo {
 
     public BillInfoImpl(final String serviceCode, final String fundCode, final BigDecimal functionaryCode,
             final String fundSourceCode, final String departmentCode, final String displayMessage, final String paidBy,
-            final Character partPaymentAllowed, final Character overrideAccountHeadsAllowed,
+            final Boolean partPaymentAllowed, final Boolean overrideAccountHeadsAllowed,
             final List<String> collectionModesNotAllowed, final COLLECTIONTYPE collectionType) {
         this.serviceCode = serviceCode;
         this.fundCode = fundCode;
@@ -128,12 +128,12 @@ public class BillInfoImpl implements BillInfo {
     }
 
     @Override
-    public Character getPartPaymentAllowed() {
+    public Boolean getPartPaymentAllowed() {
         return partPaymentAllowed;
     }
 
     @Override
-    public Character getOverrideAccountHeadsAllowed() {
+    public Boolean getOverrideAccountHeadsAllowed() {
         return overrideAccountHeadsAllowed;
     }
 
@@ -168,11 +168,11 @@ public class BillInfoImpl implements BillInfo {
     }
 
     @Override
-    public Character getCallbackForApportioning() {
+    public Boolean getCallbackForApportioning() {
         return callbackForApportioning;
     }
 
-    public void setCallbackForApportioning(final Character callbackForApportioning) {
+    public void setCallbackForApportioning(final Boolean callbackForApportioning) {
         this.callbackForApportioning = callbackForApportioning;
     }
     

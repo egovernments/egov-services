@@ -1,5 +1,6 @@
 package org.egov.lams.repository;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,9 +47,9 @@ public class DemandRepository {
 		for(DemandReason demandReason: demandReasons){
 			demandDetail = new DemandDetails();
 			//rent has to be not null
-			demandDetail.setTaxAmount(agreementRequest.getAgreement().getRent().toString());
-			demandDetail.setCollectionAmount("0");
-			demandDetail.setRebateAmount("0");
+			demandDetail.setTaxAmount(BigDecimal.valueOf(agreementRequest.getAgreement().getRent()));
+			demandDetail.setCollectionAmount(BigDecimal.ZERO);
+			demandDetail.setRebateAmount(BigDecimal.ZERO);
 			demandDetail.setTaxReason("RENT");
 			demandDetail.setTaxPeriod(demandReason.getTaxPeriod());
 			

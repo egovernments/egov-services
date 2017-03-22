@@ -1,34 +1,41 @@
 package org.egov.lams.model;
 
+import java.math.BigDecimal;
+
+/**
+ * @author ramki
+ *
+ */
 public class DemandDetails {
-	private String taxAmount;
-	private String collectionAmount;
-	private String rebateAmount;
+	private BigDecimal taxAmount;
+	private BigDecimal collectionAmount;
+	private BigDecimal rebateAmount;
 	private String taxReason;
 	private String taxPeriod;
-	private String glCode;
+	private Long glCode;
+	private Integer isActualDemand;
 
-	public String getTaxAmount() {
+	public BigDecimal getTaxAmount() {
 		return taxAmount;
 	}
 
-	public void setTaxAmount(String taxAmount) {
+	public void setTaxAmount(BigDecimal taxAmount) {
 		this.taxAmount = taxAmount;
 	}
 
-	public String getCollectionAmount() {
+	public BigDecimal getCollectionAmount() {
 		return collectionAmount;
 	}
 
-	public void setCollectionAmount(String collectionAmount) {
+	public void setCollectionAmount(BigDecimal collectionAmount) {
 		this.collectionAmount = collectionAmount;
 	}
 
-	public String getRebateAmount() {
+	public BigDecimal getRebateAmount() {
 		return rebateAmount;
 	}
 
-	public void setRebateAmount(String rebateAmount) {
+	public void setRebateAmount(BigDecimal rebateAmount) {
 		this.rebateAmount = rebateAmount;
 	}
 
@@ -48,12 +55,20 @@ public class DemandDetails {
 		this.taxPeriod = taxPeriod;
 	}
 
-	public String getGlCode() {
+	public Long getGlCode() {
 		return glCode;
 	}
 
-	public void setGlCode(String glCode) {
+	public void setGlCode(Long glCode) {
 		this.glCode = glCode;
+	}
+
+	public Integer getIsActualDemand() {
+		return isActualDemand;
+	}
+
+	public void setIsActualDemand(Integer isActualDemand) {
+		this.isActualDemand = isActualDemand;
 	}
 
 }

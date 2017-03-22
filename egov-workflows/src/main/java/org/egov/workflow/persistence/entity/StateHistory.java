@@ -73,223 +73,227 @@ import lombok.Builder;
 @Table(name = "eg_wf_state_history")
 @SequenceGenerator(name = StateHistory.SEQ_STATEHISTORY, sequenceName = StateHistory.SEQ_STATEHISTORY, allocationSize = 1)
 public class StateHistory implements Serializable {
-    private static final long serialVersionUID = -2286621991905578107L;
-    static final String SEQ_STATEHISTORY = "SEQ_EG_WF_STATE_HISTORY";
+	private static final long serialVersionUID = -2286621991905578107L;
+	static final String SEQ_STATEHISTORY = "SEQ_EG_WF_STATE_HISTORY";
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = SEQ_STATEHISTORY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = SEQ_STATEHISTORY)
+	private Long id;
 
-    @Column(name = "createdBy")
-    private Long createdBy;
+	@Column(name = "createdBy")
+	private Long createdBy;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdDate;
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date createdDate;
 
-    @Column(name = "lastModifiedBy")
-    private Long lastModifiedBy;
+	@Column(name = "lastModifiedBy")
+	private Long lastModifiedBy;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date lastModifiedDate;
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date lastModifiedDate;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "state_id")
-    private State state;
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "state_id")
+	private State state;
 
-    @NotNull
-    private String value;
+	@NotNull
+	private String value;
 
-    @Column(name = "OWNER_POS")
-    private Long ownerPosition;
+	@Column(name = "OWNER_POS")
+	private Long ownerPosition;
 
-    @Column(name = "OWNER_USER")
-    private Long ownerUser;
+	@Column(name = "OWNER_USER")
+	private Long ownerUser;
 
-    private String senderName;
-    private String nextAction;
-    private String comments;
-    private String natureOfTask;
-    private String extraInfo;
-    private Date dateInfo;
-    private Date extraDateInfo;
+	private String senderName;
+	private String nextAction;
+	private String comments;
+	private String natureOfTask;
+	private String extraInfo;
+	private Date dateInfo;
+	private Date extraDateInfo;
+	private String tenantId;
+	@Column(name = "INITIATOR_POS")
+	private Long initiatorPosition;
 
-    @Column(name = "INITIATOR_POS")
-    private Long initiatorPosition;
+	StateHistory() {
+	}
 
-    StateHistory() {
-    }
+	public StateHistory(final State state) {
+		this.state = state;
+		createdBy = state.getCreatedBy();
+		createdDate = state.getCreatedDate() != null ? state.getCreatedDate() : null;
+		lastModifiedBy = state.getLastModifiedBy();
+		lastModifiedDate = state.getLastModifiedDate() != null ? state.getLastModifiedDate() : null;
+		value = state.getValue();
+		ownerPosition = state.getOwnerPosition();
+		ownerUser = state.getOwnerUser();
+		senderName = state.getSenderName();
+		nextAction = state.getNextAction();
+		comments = state.getComments();
+		extraInfo = state.getExtraInfo();
+		dateInfo = state.getDateInfo();
+		extraDateInfo = state.getExtraDateInfo();
+		natureOfTask = state.getNatureOfTask();
+		initiatorPosition = state.getInitiatorPosition();
+	}
 
-    public StateHistory(final State state) {
-        this.state = state;
-        createdBy = state.getCreatedBy();
-        createdDate = state.getCreatedDate() != null ? state.getCreatedDate() : null;
-        lastModifiedBy = state.getLastModifiedBy();
-        lastModifiedDate = state.getLastModifiedDate() != null ? state.getLastModifiedDate() : null;
-        value = state.getValue();
-        ownerPosition = state.getOwnerPosition();
-        ownerUser = state.getOwnerUser();
-        senderName = state.getSenderName();
-        nextAction = state.getNextAction();
-        comments = state.getComments();
-        extraInfo = state.getExtraInfo();
-        dateInfo = state.getDateInfo();
-        extraDateInfo = state.getExtraDateInfo();
-        natureOfTask = state.getNatureOfTask();
-        initiatorPosition = state.getInitiatorPosition();
-    }
+	public State getState() {
+		return state;
+	}
 
-    public State getState() {
-        return state;
-    }
+	public void setState(final State state) {
+		this.state = state;
+	}
 
-    public void setState(final State state) {
-        this.state = state;
-    }
+	public String getValue() {
+		return value;
+	}
 
-    public String getValue() {
-        return value;
-    }
+	public void setValue(final String value) {
+		this.value = value;
+	}
 
-    public void setValue(final String value) {
-        this.value = value;
-    }
+	public String getSenderName() {
+		return senderName;
+	}
 
-    public String getSenderName() {
-        return senderName;
-    }
+	public void setSenderName(final String senderName) {
+		this.senderName = senderName;
+	}
 
-    public void setSenderName(final String senderName) {
-        this.senderName = senderName;
-    }
+	public String getNextAction() {
+		return nextAction;
+	}
 
-    public String getNextAction() {
-        return nextAction;
-    }
+	public void setNextAction(final String nextAction) {
+		this.nextAction = nextAction;
+	}
 
-    public void setNextAction(final String nextAction) {
-        this.nextAction = nextAction;
-    }
+	public String getComments() {
+		return comments;
+	}
 
-    public String getComments() {
-        return comments;
-    }
+	public void setComments(final String comments) {
+		this.comments = comments;
+	}
 
-    public void setComments(final String comments) {
-        this.comments = comments;
-    }
+	public String getNatureOfTask() {
+		return natureOfTask;
+	}
 
-    public String getNatureOfTask() {
-        return natureOfTask;
-    }
+	public void setNatureOfTask(final String natureOfTask) {
+		this.natureOfTask = natureOfTask;
+	}
 
-    public void setNatureOfTask(final String natureOfTask) {
-        this.natureOfTask = natureOfTask;
-    }
+	public String getExtraInfo() {
+		return extraInfo;
+	}
 
-    public String getExtraInfo() {
-        return extraInfo;
-    }
+	public void setExtraInfo(final String extraInfo) {
+		this.extraInfo = extraInfo;
+	}
 
-    public void setExtraInfo(final String extraInfo) {
-        this.extraInfo = extraInfo;
-    }
+	public Date getDateInfo() {
+		return dateInfo;
+	}
 
-    public Date getDateInfo() {
-        return dateInfo;
-    }
+	public void setDateInfo(final Date dateInfo) {
+		this.dateInfo = dateInfo;
+	}
 
-    public void setDateInfo(final Date dateInfo) {
-        this.dateInfo = dateInfo;
-    }
+	public Date getExtraDateInfo() {
+		return extraDateInfo;
+	}
 
-    public Date getExtraDateInfo() {
-        return extraDateInfo;
-    }
+	public void setExtraDateInfo(final Date extraDateInfo) {
+		this.extraDateInfo = extraDateInfo;
+	}
 
-    public void setExtraDateInfo(final Date extraDateInfo) {
-        this.extraDateInfo = extraDateInfo;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public Long getId() {
-        return id;
-    }
+	public void setId(final Long id) {
+		this.id = id;
+	}
 
-    public void setId(final Long id) {
-        this.id = id;
-    }
+	public Date getCreatedDate() {
+		return createdDate;
+	}
 
-    public Date getCreatedDate() {
-        return createdDate;
-    }
+	public void setCreatedDate(final Date createdDate) {
+		this.createdDate = createdDate;
+	}
 
-    public void setCreatedDate(final Date createdDate) {
-        this.createdDate = createdDate;
-    }
+	public Date getLastModifiedDate() {
+		return lastModifiedDate;
+	}
 
-    public Date getLastModifiedDate() {
-        return lastModifiedDate;
-    }
+	public void setLastModifiedDate(final Date lastModifiedDate) {
+		this.lastModifiedDate = lastModifiedDate;
+	}
 
-    public void setLastModifiedDate(final Date lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
+	public Long getCreatedBy() {
+		return createdBy;
+	}
 
-    public Long getCreatedBy() {
-        return createdBy;
-    }
+	public void setCreatedBy(Long createdBy) {
+		this.createdBy = createdBy;
+	}
 
-    public void setCreatedBy(Long createdBy) {
-        this.createdBy = createdBy;
-    }
+	public Long getLastModifiedBy() {
+		return lastModifiedBy;
+	}
 
-    public Long getLastModifiedBy() {
-        return lastModifiedBy;
-    }
+	public void setLastModifiedBy(Long lastModifiedBy) {
+		this.lastModifiedBy = lastModifiedBy;
+	}
 
-    public void setLastModifiedBy(Long lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
-    }
+	public Long getOwnerPosition() {
+		return ownerPosition;
+	}
 
-    public Long getOwnerPosition() {
-        return ownerPosition;
-    }
+	public void setOwnerPosition(Long ownerPosition) {
+		this.ownerPosition = ownerPosition;
+	}
 
-    public void setOwnerPosition(Long ownerPosition) {
-        this.ownerPosition = ownerPosition;
-    }
+	public Long getOwnerUser() {
+		return ownerUser;
+	}
 
-    public Long getOwnerUser() {
-        return ownerUser;
-    }
+	public void setOwnerUser(Long ownerUser) {
+		this.ownerUser = ownerUser;
+	}
 
-    public void setOwnerUser(Long ownerUser) {
-        this.ownerUser = ownerUser;
-    }
+	public Long getInitiatorPosition() {
+		return initiatorPosition;
+	}
 
-    public Long getInitiatorPosition() {
-        return initiatorPosition;
-    }
+	public void setInitiatorPosition(Long initiatorPosition) {
+		this.initiatorPosition = initiatorPosition;
+	}
 
-    public void setInitiatorPosition(Long initiatorPosition) {
-        this.initiatorPosition = initiatorPosition;
-    }
+	public Task map() {
+		Position p = new Position();
+		p.setId(this.ownerPosition);
+		Task t = Task.builder().businessKey(this.getState().getType())
+				.comments(this.comments == null ? "" : this.comments).createdDate(this.getCreatedDate())
+				.id(this.getId().toString()).status(this.getValue()).natureOfTask(this.getNatureOfTask()).owner(p)
+				.extraInfo(this.extraInfo == null ? "" : this.extraInfo)
+				.senderName(this.senderName == null ? "" : this.senderName)
+				.action(this.nextAction == null ? "" : this.nextAction).attributes(new HashMap<String, Attribute>())
+				.build();
+		return t;
 
-    public Task map() {
-    	Position p=new Position();
-    	p.setId(this.ownerPosition);
-        Task t = Task.builder().businessKey(this.getState().getType()).
-                comments(this.comments == null ? "" : this.comments)
-                .createdDate(this.getCreatedDate())
-                .id(this.getId().toString())
-                .status(this.getValue())
-                .natureOfTask(this.getNatureOfTask())
-                .owner(p)
-                .extraInfo(this.extraInfo == null ? "" : this.extraInfo)
-                .senderName(this.senderName == null ? "" : this.senderName)
-                .action(this.nextAction == null ? "" : this.nextAction)
-                .attributes(new HashMap<String,Attribute>()).build();
-        return t;
-    
-    }
+	}
+
+	public String getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
+	}
 
 }

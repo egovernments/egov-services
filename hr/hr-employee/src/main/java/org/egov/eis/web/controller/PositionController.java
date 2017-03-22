@@ -70,7 +70,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/employees/{id}/positions")
+@RequestMapping("/employees/{employeeId}/positions")
 public class PositionController {
 
 	private static final Logger logger = LoggerFactory.getLogger(PositionController.class);
@@ -99,9 +99,9 @@ public class PositionController {
 	 */
 	@PostMapping(value = "_search", headers = { "x-user-info" })
 	@ResponseBody
-	public ResponseEntity<?> search(@ModelAttribute @Valid PositionGetRequest positionGetRequest,
-			BindingResult bindingResult, @PathVariable Long id, @RequestBody RequestInfo requestInfo,
-			@RequestHeader HttpHeaders headers) {
+	public ResponseEntity<?> search(@PathVariable Long employeeId, @RequestHeader HttpHeaders headers,
+			@RequestBody RequestInfo requestInfo, @ModelAttribute @Valid PositionGetRequest positionGetRequest,
+			BindingResult bindingResult) {
 
 		ResponseEntity<?> errorResponseEntity = requestValidator.validateSearchRequest(requestInfo, bindingResult);
 		if (errorResponseEntity != null)
@@ -110,7 +110,7 @@ public class PositionController {
 		// Call service
 		List<Position> positionsList = null;
 		try {
-			positionsList = positionService.getPositions(id, positionGetRequest, requestInfo);
+			positionsList = positionService.getPositions(employeeId, positionGetRequest, requestInfo);
 		} catch (Exception exception) {
 			logger.error("Error while processing request " + positionGetRequest, exception);
 			return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);

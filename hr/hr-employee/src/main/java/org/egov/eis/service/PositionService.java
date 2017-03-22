@@ -43,6 +43,7 @@ package org.egov.eis.service;
 import java.util.List;
 
 import org.egov.eis.model.Position;
+import org.egov.eis.repository.PositionAssignmentRepository;
 import org.egov.eis.service.helper.PositionSearchURLHelper;
 import org.egov.eis.web.contract.PositionGetRequest;
 import org.egov.eis.web.contract.PositionResponse;
@@ -59,16 +60,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class PositionService {
-	/*
-	 * @Autowired private RestTemplate restTemplate;
-	 */
+
+	@Autowired
+	private PositionAssignmentRepository positionAssignmentRepository;
+
 	@Autowired
 	private PositionSearchURLHelper positionSearchURLHelper;
 
-	public List<Position> getPositions(Long employeeId, PositionGetRequest positionGetRequest,
-			RequestInfo requestInfo) {
+	public List<Position> getPositions(Long employeeId, PositionGetRequest positionGetRequest, RequestInfo requestInfo) {
+
+		List<Long> actualPositionIds = positionAssignmentRepository.findForCriteria(employeeId, positionGetRequest);
+		positionGetRequest.getId().retainAll(actualPositionIds);
+
 		String url = positionSearchURLHelper.searchURL(positionGetRequest);
 
+		System.err.println("URL: " + url + " id.isEmpty : " + positionGetRequest.getId().isEmpty());
 		String requestInfoJson = null;
 		try {
 			ObjectMapper mapper = new ObjectMapper();
@@ -85,8 +91,7 @@ public class PositionService {
 		HttpEntity<String> httpEntityRequest = new HttpEntity<String>(requestInfoJson, hardCodedAuthTokenHeader);
 
 		// Replace httpEntityRequest with requestInfo if there is no need to send headers
-		PositionResponse positionResponse = new RestTemplate().postForObject(url, httpEntityRequest,
-				PositionResponse.class);
+		PositionResponse positionResponse = new RestTemplate().postForObject(url, httpEntityRequest, PositionResponse.class);
 
 		return positionResponse.getPosition();
 	}

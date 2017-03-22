@@ -57,12 +57,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.egov.pgr.entity.enums.CitizenFeedback;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "egpgr_complaint")
@@ -77,7 +75,6 @@ public class Complaint extends AbstractAuditable {
 
 	@Column(name = "crn", unique = true)
 	@Length(max = 32)
-	@SafeHtml
 	private String crn = "";
 
 	@ManyToOne
@@ -85,7 +82,6 @@ public class Complaint extends AbstractAuditable {
 	private ComplaintType complaintType;
 
 	@ManyToOne(cascade = CascadeType.ALL)
-	@Valid
 	@NotNull
 	@JoinColumn(name = "complainant", nullable = false)
 	private Complainant complainant = new Complainant();
@@ -100,14 +96,12 @@ public class Complaint extends AbstractAuditable {
 	private ComplaintStatus status = new ComplaintStatus();
 
 	@Length(min = 10, max = 500)
-	@SafeHtml
 	private String details;
 
 	@Column(name = "state_id")
 	private Long stateId;
 
 	@Length(max = 200)
-	@SafeHtml
 	// @Column(name = "landmarkdetails")
 	private String landmarkDetails;
 

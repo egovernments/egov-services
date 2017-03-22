@@ -47,7 +47,6 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.SafeHtml;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -71,11 +70,9 @@ public class ReceivingMode extends AbstractPersistable<Long> {
 	@GeneratedValue(generator = SEQ_RECEIVINGMODE, strategy = GenerationType.SEQUENCE)
 	private Long id;
 
-	@SafeHtml
 	@Length(min = 1, max = 150)
 	private String name;
 
-	@SafeHtml
 	@Length(min = 1, max = 50)
 	private String code;
 

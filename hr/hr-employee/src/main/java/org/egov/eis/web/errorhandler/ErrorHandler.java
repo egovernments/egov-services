@@ -100,7 +100,8 @@ public class ErrorHandler {
 			RequestInfo requestInfo) {
 		Error error = new Error();
 		error.setCode(400);
-		error.setDescription("Binding Error");
+		error.setMessage("Binding Error");
+		error.setDescription("Error while binding request object");
 
 		if (bindingResult.hasFieldErrors()) {
 			for (FieldError fieldError : bindingResult.getFieldErrors()) {

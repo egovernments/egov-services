@@ -110,8 +110,7 @@ public class EmployeeController {
 			@ModelAttribute @Valid EmployeeGetRequest employeeGetRequest, BindingResult bindingResult,
 			@RequestBody RequestInfo requestInfo) {
 
-		ResponseEntity<?> errorResponseEntity = requestValidator.validateSearchRequest(requestInfo, headers,
-				bindingResult);
+		ResponseEntity<?> errorResponseEntity = requestValidator.validateSearchRequest(requestInfo, bindingResult);
 		if (errorResponseEntity != null)
 			return errorResponseEntity;
 
@@ -121,10 +120,10 @@ public class EmployeeController {
 			employeesList = employeeService.getEmployees(employeeGetRequest, requestInfo, headers);
 		} catch (Exception exception) {
 			LOGGER.error("Error while processing request " + employeeGetRequest, exception);
-			return errorHandler.getResponseEntityForUnexpectedErrors(requestInfo, headers);
+			return errorHandler.getResponseEntityForUnexpectedErrors(requestInfo);
 		}
 
-		return getSuccessResponseForSearch(employeesList, requestInfo, headers);
+		return getSuccessResponseForSearch(employeesList, requestInfo);
 	}
 
 	/**
@@ -143,16 +142,16 @@ public class EmployeeController {
 			@RequestBody @Valid EmployeeRequest employeeRequest, BindingResult bindingResult) {
 		LOGGER.debug("employeeRequest::" + employeeRequest);
 
-		ResponseEntity<?> errorResponseEntity = validateEmployeeCreateRequest(employeeRequest, headers, bindingResult);
+		ResponseEntity<?> errorResponseEntity = validateEmployeeCreateRequest(employeeRequest, bindingResult);
 		if (errorResponseEntity != null)
 			return errorResponseEntity;
 
 		Employee employee = employeeService.createEmployee(employeeRequest, headers);
 
 		if(employee == null) {
-			return errorHandler.getResponseEntityForExistingUser(employeeRequest, headers);
+			return errorHandler.getResponseEntityForExistingUser(employeeRequest);
 		}
-		return getSuccessResponseForCreate(employee, employeeRequest.getRequestInfo(), headers);
+		return getSuccessResponseForCreate(employee, employeeRequest.getRequestInfo());
 	}
 
 	/**
@@ -164,20 +163,17 @@ public class EmployeeController {
 	 * @param bindingResult
 	 * @return ResponseEntity<?>
 	 */
-	private ResponseEntity<?> validateEmployeeCreateRequest(EmployeeRequest employeeRequest, HttpHeaders headers,
-			BindingResult bindingResult) {
+	private ResponseEntity<?> validateEmployeeCreateRequest(EmployeeRequest employeeRequest, BindingResult bindingResult) {
 		// validate input params that can be handled by annotations
 		if (bindingResult.hasErrors()) {
-			return errorHandler.getErrorResponseEntityForBindingErrors(bindingResult, employeeRequest.getRequestInfo(),
-					headers);
+			return errorHandler.getErrorResponseEntityForBindingErrors(bindingResult, employeeRequest.getRequestInfo());
 		}
 
 		// validate input params that can't be handled by annotations
 		ValidationUtils.invokeValidator(employeeAssignmentValidator, employeeRequest.getEmployee(), bindingResult);
 
 		if (bindingResult.hasErrors()) {
-			return errorHandler.getErrorResponseEntityForBindingErrors(bindingResult, employeeRequest.getRequestInfo(),
-					headers);
+			return errorHandler.getErrorResponseEntityForBindingErrors(bindingResult, employeeRequest.getRequestInfo());
 		}
 		return null;
 	}
@@ -191,8 +187,7 @@ public class EmployeeController {
 	 * @param headers
 	 * @return ResponseEntity<?>
 	 */
-	private ResponseEntity<?> getSuccessResponseForCreate(Employee employee, RequestInfo requestInfo,
-			HttpHeaders headers) {
+	private ResponseEntity<?> getSuccessResponseForCreate(Employee employee, RequestInfo requestInfo) {
 		EmployeeResponse employeeResponse = new EmployeeResponse();
 		employeeResponse.setEmployee(employee);
 
@@ -211,8 +206,7 @@ public class EmployeeController {
 	 * @param headers
 	 * @return ResponseEntity<?>
 	 */
-	private ResponseEntity<?> getSuccessResponseForSearch(List<EmployeeInfo> employeesList, RequestInfo requestInfo,
-			HttpHeaders headers) {
+	private ResponseEntity<?> getSuccessResponseForSearch(List<EmployeeInfo> employeesList, RequestInfo requestInfo) {
 		EmployeeInfoResponse employeeInfoResponse = new EmployeeInfoResponse();
 		employeeInfoResponse.setEmployees(employeesList);
 		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);

@@ -97,13 +97,13 @@ public class AssignmentController {
 	 * @param headers
 	 * @return ResponseEntity<?>
 	 */
-	@PostMapping(value = "_search", headers = { "auth-token", "user-info" })
+	@PostMapping(value = "_search", headers = { "x-user-info" })
 	@ResponseBody
 	public ResponseEntity<?> search(@ModelAttribute @Valid AssignmentGetRequest assignmentGetRequest,
 			BindingResult bindingResult, @PathVariable Long id, @RequestBody RequestInfo requestInfo,
 			@RequestHeader HttpHeaders headers) {
 
-		ResponseEntity<?> errorResponseEntity = requestValidator.validateSearchRequest(requestInfo, headers, bindingResult);
+		ResponseEntity<?> errorResponseEntity = requestValidator.validateSearchRequest(requestInfo, bindingResult);
 		if (errorResponseEntity != null)
 			return errorResponseEntity;
 
@@ -113,10 +113,10 @@ public class AssignmentController {
 			assignmentsList = assignmentService.getAssignments(id, assignmentGetRequest);
 		} catch (Exception exception) {
 			logger.error("Error while processing request " + assignmentGetRequest, exception);
-			return errHandler.getResponseEntityForUnexpectedErrors(requestInfo, headers);
+			return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
 		}
 
-		return getSuccessResponse(assignmentsList, requestInfo, headers);
+		return getSuccessResponse(assignmentsList, requestInfo);
 	}
 
 	/**
@@ -128,14 +128,13 @@ public class AssignmentController {
 	 * @param headers
 	 * @return ResponseEntity<?>
 	 */
-	private ResponseEntity<?> getSuccessResponse(List<Assignment> assignmentsList, RequestInfo requestInfo,
-			HttpHeaders headers) {
+	private ResponseEntity<?> getSuccessResponse(List<Assignment> assignmentsList, RequestInfo requestInfo) {
 		AssignmentResponse assignmentRes = new AssignmentResponse();
 		assignmentRes.setAssignment(assignmentsList);
 		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 		responseInfo.setStatus(HttpStatus.OK.toString());
 		assignmentRes.setResponseInfo(responseInfo);
-		return new ResponseEntity<AssignmentResponse>(assignmentRes, headers, HttpStatus.OK);
+		return new ResponseEntity<AssignmentResponse>(assignmentRes, HttpStatus.OK);
 
 	}
 

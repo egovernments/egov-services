@@ -3,7 +3,6 @@ package org.egov.eis.web.validator;
 import org.egov.eis.web.contract.RequestInfo;
 import org.egov.eis.web.errorhandler.ErrorHandler;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
@@ -23,16 +22,15 @@ public class RequestValidator {
 	 * @param bindingResult
 	 * @return ResponseEntity<?>
 	 */
-	public ResponseEntity<?> validateSearchRequest(RequestInfo requestInfo, HttpHeaders headers,
-			BindingResult bindingResult) {
+	public ResponseEntity<?> validateSearchRequest(RequestInfo requestInfo, BindingResult bindingResult) {
 		// validate header
 		if (requestInfo.getApiId() == null || requestInfo.getVer() == null || requestInfo.getTs() == null) {
-			return errHandler.getErrorResponseEntityForMissingRequestInfo(requestInfo, headers);
+			return errHandler.getErrorResponseEntityForMissingRequestInfo(requestInfo);
 		}
 
 		// validate input params
 		if (bindingResult.hasErrors()) {
-			return errHandler.getErrorResponseEntityForMissingParameters(bindingResult, requestInfo, headers);
+			return errHandler.getErrorResponseEntityForMissingParameters(bindingResult, requestInfo);
 		}
 		return null;
 	}

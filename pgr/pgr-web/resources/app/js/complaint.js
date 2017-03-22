@@ -308,7 +308,7 @@ $(document).ready(function()
 							});
 
 							$.ajax({
-								url: "/filestore/files",
+								url: "/filestore/v1/files",
 								type : 'POST',
 								// THIS MUST BE DONE FOR FILE UPLOADING
 	    						contentType: false,

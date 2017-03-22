@@ -97,13 +97,13 @@ public class PositionController {
 	 * @param headers
 	 * @return ResponseEntity<?>
 	 */
-	@PostMapping(value = "_search", headers = { "auth-token", "user-info" })
+	@PostMapping(value = "_search", headers = { "x-user-info" })
 	@ResponseBody
 	public ResponseEntity<?> search(@ModelAttribute @Valid PositionGetRequest positionGetRequest,
 			BindingResult bindingResult, @PathVariable Long id, @RequestBody RequestInfo requestInfo,
 			@RequestHeader HttpHeaders headers) {
 
-		ResponseEntity<?> errorResponseEntity = requestValidator.validateSearchRequest(requestInfo, headers, bindingResult);
+		ResponseEntity<?> errorResponseEntity = requestValidator.validateSearchRequest(requestInfo, bindingResult);
 		if (errorResponseEntity != null)
 			return errorResponseEntity;
 
@@ -113,10 +113,10 @@ public class PositionController {
 			positionsList = positionService.getPositions(id, positionGetRequest, requestInfo);
 		} catch (Exception exception) {
 			logger.error("Error while processing request " + positionGetRequest, exception);
-			return errHandler.getResponseEntityForUnexpectedErrors(requestInfo, headers);
+			return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
 		}
 
-		return getSuccessResponse(positionsList, requestInfo, headers);
+		return getSuccessResponse(positionsList, requestInfo);
 	}
 
 	/**
@@ -128,14 +128,13 @@ public class PositionController {
 	 * @param headers
 	 * @return ResponseEntity<?>
 	 */
-	private ResponseEntity<?> getSuccessResponse(List<Position> positionsList, RequestInfo requestInfo,
-			HttpHeaders headers) {
+	private ResponseEntity<?> getSuccessResponse(List<Position> positionsList, RequestInfo requestInfo) {
 		PositionResponse positionRes = new PositionResponse();
 		positionRes.setPosition(positionsList);
 		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 		responseInfo.setStatus(HttpStatus.OK.toString());
 		positionRes.setResponseInfo(responseInfo);
-		return new ResponseEntity<PositionResponse>(positionRes, headers, HttpStatus.OK);
+		return new ResponseEntity<PositionResponse>(positionRes, HttpStatus.OK);
 
 	}
 

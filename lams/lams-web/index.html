@@ -544,6 +544,31 @@
     </script>
 
     <script type="text/javascript">
+
+    var response=$.ajax({
+              url: window.location.origin+"/user/_login?tenantId=ap.public&username=ramakrishna&password=demo&grant_type=password&scope=read",
+              type: 'POST',
+              dataType: 'json',
+              // data:JSON.stringify(requestInfo),
+              async: false,
+              contentType: 'application/json',
+              headers:{
+                'Authorization' :'Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0'
+              }
+          });
+
+          if(response["statusText"]==="OK")
+          {
+              localStorage.setItem("auth-token", response.responseJSON["access_token"]);
+            // alert("Successfully added");
+          }
+          else {
+            alert(response["statusText"]);
+          }
+
+          // console.log(localStorage.getItem("auth-token"));
+
+
         $('#ast-srch').DataTable({
             "bFilter": false
             // "bLengthChange": false

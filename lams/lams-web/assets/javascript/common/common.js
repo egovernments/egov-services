@@ -14,8 +14,31 @@ var requestInfo = {
 };
 
 var tenantId=1;
-var authToken='f1a716e6-15ad-428f-8ffa-607cebb3e6e2';
 
+
+var authToken=localStorage.getItem("auth-token");
+
+// var response=$.ajax({
+//           url: window.location.origin+"/user/_login?tenantId=ap.public&username=ramakrishna&password=demo&grant_type=password&scope=read",
+//           type: 'POST',
+//           dataType: 'json',
+//           // data:JSON.stringify(requestInfo),
+//           async: false,
+//           contentType: 'application/json',
+//           headers:{
+//             'Authorization' :'Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0'
+//           }
+//       });
+//
+//       if(response["statusText"]==="OK")
+//       {
+//           localStorage.setItem("auth-token", response.responseJSON["access_token"]);
+//           authToken=response.responseJSON["access_token"];
+//         // alert("Successfully added");
+//       }
+//       else {
+//         alert(response["statusText"]);
+//       }
 
 
 
@@ -61,7 +84,7 @@ function commonApiPost(context,resource="",action="",queryObject={}) {
             async: false,
             contentType: 'application/json',
             headers:{
-              'auth-token' :'bedb20fb-7d74-445e-94cc-6a64e825d509'
+              'auth-token' :authToken
             }
         });
 }
@@ -82,10 +105,7 @@ function commonApiGet(context,resource="",action="",queryObject={}) {
             },
             // data:JSON.stringify(requestInfo),
             async: false,
-            contentType: 'application/json',
-            headers:{
-              'auth-token' :'bedb20fb-7d74-445e-94cc-6a64e825d509'
-            }
+            contentType: 'application/json'
         });
 }
 

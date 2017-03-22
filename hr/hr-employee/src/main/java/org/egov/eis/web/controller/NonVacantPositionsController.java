@@ -95,7 +95,7 @@ public class NonVacantPositionsController {
 	 * @param headers
 	 * @return ResponseEntity<?>
 	 */
-	@PostMapping(value = "_search", headers = { "auth-token", "user-info" })
+	@PostMapping(value = "_search", headers = { "x-user-info" })
 	@ResponseBody
 	public ResponseEntity<?> search(@ModelAttribute @Valid NonVacantPositionsGetRequest nonVacantPositionsGetRequest,
 			BindingResult bindingResult, @RequestBody RequestInfo requestInfo, @RequestHeader HttpHeaders headers) {

@@ -50,7 +50,6 @@ import org.egov.eis.web.contract.UserGetRequest;
 import org.egov.eis.web.contract.UserRequest;
 import org.egov.eis.web.contract.UserResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -84,9 +83,11 @@ public class UserService {
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
-		HttpEntity<String> httpEntityRequest = new HttpEntity<String>(userGetRequestJson, headers);
 
-		UserResponse userResponse = new RestTemplate().postForObject(url, httpEntityRequest, UserResponse.class);
+		// Configure headers & replace userGetRequestJson with httpEntityRequest when user service expects some header
+//		HttpEntity<String> httpEntityRequest = new HttpEntity<String>(userGetRequestJson, headers);
+
+		UserResponse userResponse = new RestTemplate().postForObject(url, userGetRequestJson, UserResponse.class);
 
 		return userResponse.getUser();
 	}

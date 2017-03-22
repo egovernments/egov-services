@@ -97,7 +97,7 @@ public class AssignmentController {
 	 * @param headers
 	 * @return ResponseEntity<?>
 	 */
-	@PostMapping(value = "_search", headers = { "auth-token", "user-info" })
+	@PostMapping(value = "_search", headers = { "x-user-info" })
 	@ResponseBody
 	public ResponseEntity<?> search(@ModelAttribute @Valid AssignmentGetRequest assignmentGetRequest,
 			BindingResult bindingResult, @PathVariable Long id, @RequestBody RequestInfo requestInfo,

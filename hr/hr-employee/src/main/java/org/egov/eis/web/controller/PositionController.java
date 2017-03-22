@@ -97,7 +97,7 @@ public class PositionController {
 	 * @param headers
 	 * @return ResponseEntity<?>
 	 */
-	@PostMapping(value = "_search", headers = { "auth-token", "user-info" })
+	@PostMapping(value = "_search", headers = { "x-user-info" })
 	@ResponseBody
 	public ResponseEntity<?> search(@ModelAttribute @Valid PositionGetRequest positionGetRequest,
 			BindingResult bindingResult, @PathVariable Long id, @RequestBody RequestInfo requestInfo,

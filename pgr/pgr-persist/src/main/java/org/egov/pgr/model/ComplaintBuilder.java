@@ -121,7 +121,7 @@ public class ComplaintBuilder {
 	private void setComplainant() {
 		String userId;
 		if ((userId = this.serviceRequest.getValues().get(USER_ID)) != null
-				&& this.requestInfo.getAction().equals("PUT")) {
+				&& this.requestInfo.getAction().equals("POST")) {
 			GetUserByIdResponse user = userRepository.findUserById(Long.valueOf(userId));
 			this.complaint.getComplainant().setUserDetail(Long.valueOf(userId));
 			this.complaint.getComplainant().setName(user.getUser().get(0).getName());

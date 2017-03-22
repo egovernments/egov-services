@@ -9,6 +9,7 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.egov.egf.persistence.entity.AccountCodePurpose;
 import org.egov.egf.persistence.entity.ChartOfAccount;
 import org.egov.egf.persistence.entity.ChartOfAccount_;
 import org.egov.egf.persistence.queue.contract.ChartOfAccountContract;
@@ -26,7 +27,7 @@ public class ChartOfAccountSpecification implements Specification<ChartOfAccount
         Path<Long> id = root.get(ChartOfAccount_.id);
         Path<String> glcode = root.get(ChartOfAccount_.glcode);
         Path<String> name = root.get(ChartOfAccount_.name);
-        // Path<AccountCodePurpose> accountCodePurpose = root.get(ChartOfAccount_.accountCodePurpose);
+        Path<AccountCodePurpose> accountCodePurpose = root.get(ChartOfAccount_.accountCodePurpose);
         Path<String> desciption = root.get(ChartOfAccount_.description);
         Path<Boolean> isActiveForPosting = root.get(ChartOfAccount_.isActiveForPosting);
         /*
@@ -53,10 +54,11 @@ public class ChartOfAccountSpecification implements Specification<ChartOfAccount
                 predicates.add(criteriaBuilder.equal(name, criteria.getName()));
             }
 
-            /*
-             * if (criteria.getAccountCodePurpose() != null) { predicates.add(criteriaBuilder.equal(accountCodePurpose,
-             * criteria.getAccountCodePurpose())); }
-             */
+            
+            if (criteria.getAccountCodePurpose() != null) {
+                predicates.add(criteriaBuilder.equal(accountCodePurpose,
+                        criteria.getAccountCodePurpose().getId()));
+            }
 
             if (criteria.getDescription() != null) {
                 predicates.add(criteriaBuilder.equal(desciption, criteria.getDescription()));

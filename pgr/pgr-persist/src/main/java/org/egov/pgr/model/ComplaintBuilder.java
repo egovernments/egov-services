@@ -120,19 +120,20 @@ public class ComplaintBuilder {
 
 	private void setComplainant() {
 		String userId;
-		if ((userId = this.serviceRequest.getValues().get(USER_ID)) != null
-				&& this.requestInfo.getAction().equals("POST")) {
-			GetUserByIdResponse user = userRepository.findUserById(Long.valueOf(userId));
-			this.complaint.getComplainant().setUserDetail(Long.valueOf(userId));
-			this.complaint.getComplainant().setName(user.getUser().get(0).getName());
-			this.complaint.getComplainant().setMobile(user.getUser().get(0).getMobileNumber());
-			this.complaint.getComplainant().setEmail(user.getUser().get(0).getEmailId());
-			this.complaint.getComplainant().setAddress(user.getUser().get(0).getPermanentAddress());
-		} else if(!this.requestInfo.getAction().equals("PUT")){
-			this.complaint.getComplainant().setName(this.serviceRequest.getFirstName());
-			this.complaint.getComplainant().setMobile(this.serviceRequest.getPhone());
-			this.complaint.getComplainant().setEmail(this.serviceRequest.getEmail());
-			this.complaint.getComplainant().setAddress(this.serviceRequest.getValues().get(VALUES_COMPLAINANT_ADDRESS));
+		if(this.requestInfo.getAction().equals("POST")) {
+			if ((userId = this.serviceRequest.getValues().get(USER_ID)) != null) {
+				GetUserByIdResponse user = userRepository.findUserById(Long.valueOf(userId));
+				this.complaint.getComplainant().setUserDetail(Long.valueOf(userId));
+				this.complaint.getComplainant().setName(user.getUser().get(0).getName());
+				this.complaint.getComplainant().setMobile(user.getUser().get(0).getMobileNumber());
+				this.complaint.getComplainant().setEmail(user.getUser().get(0).getEmailId());
+				this.complaint.getComplainant().setAddress(user.getUser().get(0).getPermanentAddress());
+			} else {
+				this.complaint.getComplainant().setName(this.serviceRequest.getFirstName());
+				this.complaint.getComplainant().setMobile(this.serviceRequest.getPhone());
+				this.complaint.getComplainant().setEmail(this.serviceRequest.getEmail());
+				this.complaint.getComplainant().setAddress(this.serviceRequest.getValues().get(VALUES_COMPLAINANT_ADDRESS));
+			}
 		}
 	}
 

@@ -57,7 +57,7 @@ public class StorageControllerTest {
         when(storageService.save(Arrays.asList(mockJpegImageFile, mockPdfDocumentFile), JURISDICTION_ID, MODULE, TAG)).thenReturn(Arrays.asList("fileStoreId1", "fileStoreId2"));
 
         mockMvc.perform(
-                fileUpload("/files")
+                fileUpload("/v1/files")
                         .file(mockJpegImageFile)
                         .file(mockPdfDocumentFile)
                         .param("jurisdictionId", JURISDICTION_ID)
@@ -82,7 +82,7 @@ public class StorageControllerTest {
 
         when(storageService.retrieve("FileStoreId")).thenReturn(resource);
 
-        mockMvc.perform(get("/files/FileStoreId"))
+        mockMvc.perform(get("/v1/files/id").param("fileStoreId", "FileStoreId"))
                 .andExpect(content().contentType(resource.getContentType()))
                 .andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"image.png\""))
                 .andExpect(content().bytes(getExpectedBytes(fileSystemResource)));
@@ -90,9 +90,9 @@ public class StorageControllerTest {
 
     @Test
     public void testRetrievingFilesListByTag() throws Exception {
-        FileRecord fileRecord1 = new FileRecord("http://localhost:8080/filestore/files/fileStoreId1",
+        FileRecord fileRecord1 = new FileRecord("/filestore/v1/files/id?fileStoreId=fileStoreId1",
                 "image/png");
-        FileRecord fileRecord2 = new FileRecord("http://localhost:8080/filestore/files/fileStoreId2",
+        FileRecord fileRecord2 = new FileRecord("/filestore/v1/files/id?fileStoreId=fileStoreId2",
                 "application/pdf");
 
         GetFilesByTagResponse getFilesByTagResponse = new GetFilesByTagResponse(asList(fileRecord1, fileRecord2));
@@ -103,7 +103,7 @@ public class StorageControllerTest {
         when(responseFactory.getFilesByTagResponse(fileInfoList)).thenReturn(getFilesByTagResponse);
 
         mockMvc.perform(
-                get("/files?tag=" + TAG)
+                get("/v1/files/tag").param("tag", TAG)
         )
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -113,10 +113,10 @@ public class StorageControllerTest {
     }
 
     @Test
-    public void test400WhenFileIsNotFound() throws Exception {
+    public void test404WhenFileIsNotFound() throws Exception {
         when(storageService.retrieve("fileStoreId")).thenThrow(new ArtifactNotFoundException("fileStoreId"));
 
-        mockMvc.perform(get("/files/fileStoreId")).andExpect(status().isNotFound());
+        mockMvc.perform(get("/v1/files/id").param("fileStoreId", "fileStoreId")).andExpect(status().isNotFound());
     }
 
     private byte[] getExpectedBytes(Resource fileSystemResource) throws IOException {

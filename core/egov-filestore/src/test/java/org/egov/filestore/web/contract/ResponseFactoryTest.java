@@ -39,8 +39,8 @@ public class ResponseFactoryTest {
         GetFilesByTagResponse result = responseFactory.getFilesByTagResponse(listOfFileInfo);
 
         assertThat(result.getFiles().get(0).getContentType()).isEqualTo(CONTENT_TYPE_1);
-        assertThat(result.getFiles().get(0).getUrl()).isEqualTo("/fileStore/files/FileStoreID1");
+        assertThat(result.getFiles().get(0).getUrl()).isEqualTo("/fileStore/v1/files/id?fileStoreId=FileStoreID1");
         assertThat(result.getFiles().get(1).getContentType()).isEqualTo(CONTENT_TYPE_2);
-        assertThat(result.getFiles().get(1).getUrl()).isEqualTo("/fileStore/files/FileStoreID2");
+        assertThat(result.getFiles().get(1).getUrl()).isEqualTo("/fileStore/v1/files/id?fileStoreId=FileStoreID2");
     }
 }

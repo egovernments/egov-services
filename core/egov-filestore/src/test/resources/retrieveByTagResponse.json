@@ -1,11 +1,11 @@
 {
   "files": [
     {
-      "url": "http://localhost:8080/filestore/files/fileStoreId1",
+      "url": "/filestore/v1/files/id?fileStoreId=fileStoreId1",
       "contentType": "image/png"
     },
     {
-      "url": "http://localhost:8080/filestore/files/fileStoreId2",
+      "url": "/filestore/v1/files/id?fileStoreId=fileStoreId2",
       "contentType": "application/pdf"
     }
   ]

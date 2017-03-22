@@ -10,8 +10,8 @@ import java.util.stream.Collectors;
 @Component
 public class ResponseFactory {
 
-    private String contextPath;
-    private final String PATH_SEPERATOR = "/";
+	private static final String FORMAT = "%s/v1/files/id?fileStoreId=%s";
+	private String contextPath;
 
     public ResponseFactory(@Value("${server.contextPath}") String contextPath) {
         this.contextPath = contextPath;
@@ -19,8 +19,7 @@ public class ResponseFactory {
 
     public GetFilesByTagResponse getFilesByTagResponse(List<FileInfo> listOfFileInfo) {
         List<FileRecord> fileRecords = listOfFileInfo.stream().map(fileInfo -> {
-            String url = String.format("%s%s%s%s%s", contextPath, PATH_SEPERATOR, "files",
-                    PATH_SEPERATOR, fileInfo.getFileLocation().getFileStoreId());
+            String url = String.format(FORMAT, contextPath, fileInfo.getFileLocation().getFileStoreId());
             return new FileRecord(url, fileInfo.getContentType());
         }).collect(Collectors.toList());
 

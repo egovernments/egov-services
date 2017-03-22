@@ -183,7 +183,7 @@ function getComplaint(){
 							var source   = $("#viewcomplaint-script").html();
 							var template = Handlebars.compile(source);
 							$('.viewcomplaint').append(template(response));
-							//console.log('response with files',JSON.stringify(response));
+							///console.log('response with files',JSON.stringify(response));
 
 							//Start actions
 							if(localStorage.getItem('type') == 'EMPLOYEE' || localStorage.getItem('type') == 'CITIZEN'){
@@ -231,12 +231,10 @@ function getComplaint(){
 }
 
 function complaintUpdate(obj){
-	//console.log('updateResponse', JSON.stringify(updateResponse));
 	
-	var duplicateResponse = {};
+	var duplicateResponse, req_obj = {};
 	duplicateResponse =  JSON.parse(JSON.stringify(updateResponse));
 
-	var req_obj = {};
 	req_obj['RequestInfo'] = duplicateResponse.response_info;
 	req_obj['ServiceRequest'] = duplicateResponse.service_requests[0];
 	req_obj['RequestInfo']['auth_token'] = localStorage.getItem('auth');
@@ -534,6 +532,6 @@ google.maps.event.addDomListener(window, 'load', initialize);
 google.maps.event.addDomListener(window, "resize", resizingMap());
 
 Handlebars.registerHelper('contains', function(string, checkString) {
-   var n = string.includes(checkString);
-   return n;
+	var n = string.includes(checkString);
+	return n;
 });

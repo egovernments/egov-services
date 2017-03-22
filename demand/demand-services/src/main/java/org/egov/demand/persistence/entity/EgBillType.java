@@ -41,11 +41,11 @@ package org.egov.demand.persistence.entity;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -72,13 +72,13 @@ public class EgBillType implements java.io.Serializable {
 	@Id
 	@GeneratedValue(generator = SEQ_EGBILLTYPE, strategy = GenerationType.SEQUENCE)
 	private Long id;
-	@JoinColumn(name = "name")
+	@Column(name = "name")
 	private String name;
-	@JoinColumn(name = "code")
+	@Column(name = "code")
 	private String code;
-	@JoinColumn(name = "create_date")
+	@Column(name = "create_date")
 	private Date createDate;
-	@JoinColumn(name = "modified_date")
+	@Column(name = "modified_date")
 	private Date modifiedDate;
 
 	public Long getId() {

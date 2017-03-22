@@ -612,6 +612,9 @@ definitions:
       action:
         type: string
         description: chosen action.
+      status:
+        type: string
+        description: current status.
           
   DocumentType:
     type: object

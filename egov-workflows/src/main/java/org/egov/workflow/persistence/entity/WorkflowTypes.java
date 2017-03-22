@@ -40,95 +40,110 @@
 
 package org.egov.workflow.persistence.entity;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "EG_WF_TYPES")
 @SequenceGenerator(name = WorkflowTypes.SEQ_WORKFLOWTYPES, sequenceName = WorkflowTypes.SEQ_WORKFLOWTYPES, allocationSize = 1)
 public class WorkflowTypes extends AbstractAuditable {
 
-    static final String SEQ_WORKFLOWTYPES = "SEQ_EG_WF_TYPES";
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(generator = SEQ_WORKFLOWTYPES, strategy = GenerationType.SEQUENCE)
-    private Long id;
+	static final String SEQ_WORKFLOWTYPES = "SEQ_EG_WF_TYPES";
+	private static final long serialVersionUID = 1L;
+	@Id
+	@GeneratedValue(generator = SEQ_WORKFLOWTYPES, strategy = GenerationType.SEQUENCE)
+	private Long id;
 
-   
-    private Long module;
+	private Long module;
 
-    private String type;
+	private String type;
 
-    private String typeFQN;
+	private String typeFQN;
 
-    private String link;
+	private String link;
 
-    private String displayName;
+	private String displayName;
 
-    private boolean enabled;
+	private boolean enabled;
 
-    private boolean grouped;
+	private boolean enabledInMs;
 
-    public Long getId() {
-        return id;
-    }
+	private boolean grouped;
 
-    public void setId(final Long id) {
-        this.id = id;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public Long getModule() {
-        return module;
-    }
+	public void setId(final Long id) {
+		this.id = id;
+	}
 
-    public void setModule(Long module) {
-        this.module = module;
-    }
+	public Long getModule() {
+		return module;
+	}
 
-    public String getType() {
-        return type;
-    }
+	public void setModule(Long module) {
+		this.module = module;
+	}
 
-    public void setType(final String type) {
-        this.type = type;
-    }
+	public String getType() {
+		return type;
+	}
 
-    public String getDisplayName() {
-        return displayName;
-    }
+	public void setType(final String type) {
+		this.type = type;
+	}
 
-    public void setDisplayName(final String displayName) {
-        this.displayName = displayName;
-    }
+	public String getDisplayName() {
+		return displayName;
+	}
 
-    public String getLink() {
-        return link;
-    }
+	public void setDisplayName(final String displayName) {
+		this.displayName = displayName;
+	}
 
-    public void setLink(final String link) {
-        this.link = link;
-    }
+	public String getLink() {
+		return link;
+	}
 
-    public String getTypeFQN() {
-        return typeFQN;
-    }
+	public void setLink(final String link) {
+		this.link = link;
+	}
 
-    public void setTypeFQN(final String typeFQN) {
-        this.typeFQN = typeFQN;
-    }
+	public String getTypeFQN() {
+		return typeFQN;
+	}
 
-    public boolean isEnabled() {
-        return enabled;
-    }
+	public void setTypeFQN(final String typeFQN) {
+		this.typeFQN = typeFQN;
+	}
 
-    public void setEnabled(final boolean enabled) {
-        this.enabled = enabled;
-    }
+	public boolean isEnabled() {
+		return enabled;
+	}
 
-    public boolean isGrouped() {
-        return grouped;
-    }
+	public void setEnabled(final boolean enabled) {
+		this.enabled = enabled;
+	}
 
-    public void setGrouped(final boolean grouped) {
-        this.grouped = grouped;
-    }
+	public boolean isGrouped() {
+		return grouped;
+	}
+
+	public void setGrouped(final boolean grouped) {
+		this.grouped = grouped;
+	}
+
+	public boolean isEnabledInMs() {
+		return enabledInMs;
+	}
+
+	public void setEnabledInMs(boolean enabledInMs) {
+		this.enabledInMs = enabledInMs;
+	}
+
 }

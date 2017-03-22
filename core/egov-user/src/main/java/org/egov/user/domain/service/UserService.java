@@ -2,6 +2,7 @@ package org.egov.user.domain.service;
 
 import org.egov.user.domain.exception.DuplicateUserNameException;
 import org.egov.user.domain.exception.OtpValidationPendingException;
+import org.egov.user.domain.exception.UserNotFoundException;
 import org.egov.user.domain.model.User;
 import org.egov.user.domain.model.UserSearch;
 import org.egov.user.persistence.repository.OtpRepository;
@@ -33,12 +34,12 @@ public class UserService {
     public User save(User user, boolean ensureOtpValidation) {
         user.validate();
         validateOtp(user, ensureOtpValidation);
-        validateDuplicateUserName(user);
+        validateDuplicateUserName(user.getId(), user);
         return persistNewUser(user);
     }
 
-    private void validateDuplicateUserName(User user) {
-        if( userRepository.isUserPresent(user.getUsername())) {
+    private void validateDuplicateUserName(Long id, User user) {
+        if( userRepository.isUserPresent(user.getUsername(), id)) {
             throw new DuplicateUserNameException(user);
         }
     }
@@ -55,6 +56,20 @@ public class UserService {
         if (ensureOtpValidation && !otpRepository.isOtpValidationComplete(user))
             throw new OtpValidationPendingException(user);
     }
+    
+    public User update(final Long id, final User user, final boolean ensureOtpValidation) {
+        validateUser(id, user);
+        return persistOldUser(id, user);
+    }
+    
+    private void validateUser(final Long id, final User user) {
+        validateDuplicateUserName(id, user);
+        if (userRepository.getUserById(id) == null) {
+            throw new UserNotFoundException(user);
+        }
+    }
 
-
+    private User persistOldUser(final Long id, final User user) {
+        return userRepository.update(id, user);
+    }
 }

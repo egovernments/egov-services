@@ -46,7 +46,6 @@ import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
 
-import org.egov.eis.model.enums.EmployeeStatus;
 import org.egov.eis.model.enums.Gender;
 import org.egov.eis.model.enums.UserType;
 
@@ -100,7 +99,7 @@ public class EmployeeInfo {
 	@Valid
 	private UserType type = UserType.EMPLOYEE;
 
-	private EmployeeStatus employeeStatus;
+	private String employeeStatus;
 
 	private Long employeeType;
 

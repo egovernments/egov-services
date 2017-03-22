@@ -3,6 +3,10 @@ package org.egov.user.persistence.repository;
 import org.egov.user.domain.model.UserSearch;
 import org.egov.user.persistence.entity.Role;
 import org.egov.user.persistence.entity.User;
+import org.egov.user.persistence.enums.BloodGroup;
+import org.egov.user.persistence.enums.Gender;
+import org.egov.user.persistence.enums.GuardianRelation;
+import org.egov.user.persistence.enums.UserType;
 import org.egov.user.persistence.specification.UserSearchSpecificationFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -14,6 +18,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static org.egov.user.persistence.entity.EnumConverter.toEnumType;
+import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Service
 public class UserRepository {
@@ -39,8 +46,8 @@ public class UserRepository {
         return entityUser != null ? entityUser.toDomain() : null;
     }
 
-    public boolean isUserPresent(String userName) {
-        return userJpaRepository.isUserPresent(userName) != null;
+    public boolean isUserPresent(String userName, Long id) {
+        return userJpaRepository.isUserPresent(userName, id) != null;
     }
 
     public org.egov.user.domain.model.User findByEmailId(String emailId) {
@@ -94,5 +101,63 @@ public class UserRepository {
     private void setEnrichedRolesToUser(User user) {
         final Set<Role> roles = fetchRolesByName(user);
         user.setRoles(roles);
+    }
+    
+    public User getUserById(final Long id) {
+        return userJpaRepository.findOne(id);
+    }
+
+    public org.egov.user.domain.model.User update(final Long id, final org.egov.user.domain.model.User user) {
+        User oldUser = userJpaRepository.findOne(id);
+        if (!isEmpty(user.getAadhaarNumber()))
+            oldUser.setAadhaarNumber(user.getAadhaarNumber());
+        if (!isEmpty(user.isAccountLocked()))
+            oldUser.setAccountLocked(user.isAccountLocked());
+        if (!isEmpty(user.isActive()))
+            oldUser.setActive(user.isActive());
+        if (!isEmpty(user.getAltContactNumber()))
+            oldUser.setAltContactNumber(user.getAltContactNumber());
+        if (!isEmpty(user.getBloodGroup()))
+            oldUser.setBloodGroup(toEnumType(BloodGroup.class, user.getBloodGroup()));
+        if (!isEmpty(user.getDob()))
+            oldUser.setDob(user.getDob());
+        if (!isEmpty(user.getEmailId()))
+            oldUser.setEmailId(user.getEmailId());
+        if (!isEmpty(user.getGender()))
+            oldUser.setGender(toEnumType(Gender.class, user.getGender()));
+        if (!isEmpty(user.getGuardian()))
+            oldUser.setGuardian(user.getGuardian());
+        if (!isEmpty(user.getGuardianRelation()))
+            oldUser.setGuardianRelation(toEnumType(GuardianRelation.class, user.getGuardianRelation()));
+        if (!isEmpty(user.getIdentificationMark()))
+            oldUser.setIdentificationMark(user.getIdentificationMark());
+        if (!isEmpty(user.getLocale()))
+            oldUser.setLocale(user.getLocale());
+        if (!isEmpty(user.getMobileNumber()))
+            oldUser.setMobileNumber(user.getMobileNumber());
+        if (!isEmpty(user.getName()))
+            oldUser.setName(user.getName());
+        if (!isEmpty(user.getPan()))
+            oldUser.setPan(user.getPan());
+        if (!isEmpty(user.getPassword()))
+            oldUser.setPassword(user.getPassword());
+        if (!isEmpty(user.getPhoto()))
+            oldUser.setPhoto(user.getPhoto());
+        if (!isEmpty(user.getPwdExpiryDate()))
+            oldUser.setPwdExpiryDate(user.getPwdExpiryDate());
+        if (!isEmpty(user.getRoles()))
+            oldUser.setRoles(user.getRoles().stream().map(Role::new).collect(Collectors.toSet()));
+        if (!isEmpty(user.getSalutation()))
+            oldUser.setSalutation(user.getSalutation());
+        if (!isEmpty(user.getSignature()))
+            oldUser.setSignature(user.getSignature());
+        if (!isEmpty(user.getTitle()))
+            oldUser.setTitle(user.getTitle());
+        if (!isEmpty(user.getType()))
+            oldUser.setType(toEnumType(UserType.class, user.getType()));
+        
+        setEnrichedRolesToUser(oldUser);
+        encryptPassword(oldUser);
+        return userJpaRepository.save(oldUser).toDomain();
     }
 }

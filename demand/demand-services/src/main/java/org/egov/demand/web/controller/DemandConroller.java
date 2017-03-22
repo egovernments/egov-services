@@ -46,9 +46,13 @@ import javax.validation.Valid;
 
 import org.egov.demand.domain.service.DemandService;
 import org.egov.demand.persistence.entity.EgDemand;
+import org.egov.demand.persistence.entity.EgDemandDetails;
+import org.egov.demand.persistence.repository.DemandRepository;
 import org.egov.demand.web.contract.Demand;
+import org.egov.demand.web.contract.DemandDetails;
 import org.egov.demand.web.contract.DemandRequest;
 import org.egov.demand.web.contract.DemandResponse;
+import org.egov.demand.web.contract.DemandSearchCriteria;
 import org.egov.demand.web.contract.RequestInfo;
 import org.egov.demand.web.contract.ResponseInfo;
 import org.egov.demand.web.contract.factory.ResponseInfoFactory;
@@ -57,16 +61,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/demand")
 public class DemandConroller {
-
+	@Autowired
+	private DemandRepository demandRepository;
 	@Autowired
 	private DemandService demandService;
 
@@ -76,6 +83,32 @@ public class DemandConroller {
 	@Autowired
 	private ErrorHandler errHandler;
 
+	@PostMapping("_search")
+	@ResponseBody
+	public ResponseEntity<?> search(@ModelAttribute @Valid DemandSearchCriteria demandSearchCriteria,@RequestBody RequestInfo requestInfo,
+			 BindingResult bindingResult) {
+		List<Demand> demands = new ArrayList<Demand>();
+		List<DemandDetails> demandDetails = new ArrayList<DemandDetails>();
+		EgDemand egDemand = null;
+		DemandDetails demandDetail = null;
+		if (bindingResult.hasErrors() || demandSearchCriteria == null) {
+			return errHandler.getErrorResponseEntityForBindingErrors(bindingResult, requestInfo);
+		}
+		try {
+			egDemand = demandRepository.findOne(demandSearchCriteria.getDemandId());
+			Demand demand = egDemand.toDomain();
+			for(EgDemandDetails egdemandDetails: egDemand.getEgDemandDetails()){
+				demandDetail = egdemandDetails.toDomain();
+				demandDetails.add(demandDetail);
+			}
+			demand.setDemandDetails(demandDetails);
+			demands.add(demand);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return getSuccessResponseForSearch(demands, requestInfo);
+	}
+	
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> create(@RequestBody @Valid DemandRequest demandRequest, BindingResult bindingResult) {
@@ -88,7 +121,7 @@ public class DemandConroller {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		demandRequest.getDemand().get(0).setId(egDemand.getId().toString());
+		demandRequest.getDemand().get(0).setId(egDemand.getId());
 		return getSuccessResponse(demandRequest.getDemand().get(0), demandRequest.getRequestInfo());
 	}
 

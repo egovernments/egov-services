@@ -21,7 +21,7 @@ public class BillRequest {
 	@JsonProperty("RequestInfo")
 	RequestInfo requestInfo;
 
-	@JsonProperty("BillAddlInfo")
-	List<BillAddlInfo> billAddlInfos;
+	@JsonProperty("BillInfos")
+	List<BillInfo> billInfos;
 
 }

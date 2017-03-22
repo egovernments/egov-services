@@ -9,7 +9,6 @@ import java.util.Map;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotBlank;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,7 +26,7 @@ public class ProcessInstance {
 	/**
 	 * Id of the ProcessInstance gets created. This field Maps to Id of the Task
 	 * in case of eGov internal Work flow or the Work flow Matrix based
-	 * Implementation. 
+	 * Implementation.
 	 */
 
 	private String id = null;
@@ -104,6 +103,16 @@ public class ProcessInstance {
 	 */
 	@Length(max = 128, min = 1)
 	private String senderName;
+
+	/**
+	 * details provides more information on the processs/Task instance. Example
+	 * : In voucher work flow it is VoucherNumber, Property it is the propertyId
+	 * ,Grievance it is the complaint or request number This data is set
+	 * internally by the system which is configured in work flow type
+	 */
+
+	@Length(max = 128, min = 1)
+	private String details;
 
 	/**
 	 * tasks gives the list of tasks owned by the process. For eGov internal

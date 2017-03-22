@@ -108,6 +108,7 @@ public class ComplaintBuilderTest {
 		HashMap<String, Object> sevaRequestMap = new HashMap<>();
 		Map<String, Object> serviceRequestMap = new HashMap<>();
 		Map<String, Object> requestInfoMap = new HashMap<>();
+		requestInfoMap.put("action","POST");
 		Map<String, String> valuesMap = new HashMap<>();
 		sevaRequestMap.put("RequestInfo", requestInfoMap);
 		requestInfoMap.put("requester_id", "22");

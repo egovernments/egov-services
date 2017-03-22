@@ -53,6 +53,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.egov.demand.web.contract.BillDetailInfo;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -80,7 +82,7 @@ public class EgBillDetails implements java.io.Serializable, Comparable<EgBillDet
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_bill")
 	private EgBill egBill;
-	@JoinColumn(name = "create_date")
+	@Column(name = "create_date")
 	private Date createDate;
 	@Column(name = "modified_date")
 	private Date modifiedDate;
@@ -108,6 +110,19 @@ public class EgBillDetails implements java.io.Serializable, Comparable<EgBillDet
 	private EgDemandReason egDemandReason;
 	@Column(name = "purpose")
 	private String purpose;
+
+	public EgBillDetails(BillDetailInfo billDetail) {
+		this.createDate = new Date();
+		this.modifiedDate = new Date();
+		this.glcode = billDetail.getGlCode();
+		this.crAmount = billDetail.getCreditAmount();
+		this.drAmount = billDetail.getDebitAmount();
+		this.orderNo = billDetail.getOrderNo();
+		this.description = billDetail.getDescription();
+		this.functionCode = billDetail.getFunctionCode();
+		this.purpose = billDetail.getPurpose();
+		this.additionalFlag = billDetail.getIsActualDemand();
+	}
 
 	@Override
 	public String toString() {

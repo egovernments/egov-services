@@ -50,6 +50,9 @@ import org.egov.eis.web.contract.UserGetRequest;
 import org.egov.eis.web.contract.UserRequest;
 import org.egov.eis.web.contract.UserResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -65,7 +68,7 @@ public class UserService {
 	@Autowired
 	private ApplicationProperties applicationProperties;
 
-	public List<User> getUsers(List<Long> ids, String tenantId, RequestInfo requestInfo) {
+	public List<User> getUsers(List<Long> ids, String tenantId, RequestInfo requestInfo, HttpHeaders headers) {
 		String url = userSearchURLHelper.searchURL(ids, tenantId);
 
 		UserGetRequest userGetRequest = new UserGetRequest();
@@ -73,12 +76,22 @@ public class UserService {
 		userGetRequest.setRequestInfo(requestInfo);
 		userGetRequest.setTenantId(tenantId);
 
- 		UserResponse userResponse = new RestTemplate().postForObject(url, userGetRequest, UserResponse.class);
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		String userGetRequestJson = null;
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			userGetRequestJson = mapper.writeValueAsString(userGetRequest);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		HttpEntity<String> httpEntityRequest = new HttpEntity<String>(userGetRequestJson, headers);
+
+		UserResponse userResponse = new RestTemplate().postForObject(url, httpEntityRequest, UserResponse.class);
 
 		return userResponse.getUser();
 	}
 
-	public Long createUser(UserRequest userRequest) {
+	public User createUser(UserRequest userRequest, HttpHeaders headers) {
 		String url = applicationProperties.empServicesUsersServiceCreateUsersHostURL();
 		String userJson = null;
 		try {
@@ -87,8 +100,14 @@ public class UserService {
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
-		System.err.println("User Is: " + userJson);
-		UserResponse userResponse = new RestTemplate().postForObject(url, userRequest, UserResponse.class);
-		return userResponse.getUser().get(0).getId();
+		HttpEntity<String> httpEntityRequest = new HttpEntity<String>(userJson, headers);
+		UserResponse userResponse = null;
+		try {
+			userResponse = new RestTemplate().postForObject(url, httpEntityRequest, UserResponse.class);
+		} catch (Exception e) {
+			System.err.println("Exception Occurred While Calling User Service : " + e.getMessage());
+			return null;
+		}
+		return userResponse.getUser().get(0);
 	}
 }

@@ -43,14 +43,15 @@ package org.egov.eis.repository;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.eis.model.Assignment;
-import org.egov.eis.model.Employee;
 import org.egov.eis.repository.builder.AssignmentQueryBuilder;
 import org.egov.eis.repository.rowmapper.AssignmentRowMapper;
 import org.egov.eis.web.contract.AssignmentGetRequest;
+import org.egov.eis.web.contract.EmployeeRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,15 +91,15 @@ public class AssignmentRepository {
 		return assignments;
 	}
 
-	public void save(Employee employee) {
-		List<Assignment> assignments = employee.getAssignments();
+	public void save(EmployeeRequest employeeRequest) {
+		List<Assignment> assignments = employeeRequest.getEmployee().getAssignments();
 
 		jdbcTemplate.batchUpdate(INSERT_ASSIGNMENT_QUERY, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
 				Assignment assignment = assignments.get(i);
 				ps.setLong(1, assignment.getId());
-				ps.setLong(2, employee.getId());
+				ps.setLong(2, employeeRequest.getEmployee().getId());
 				ps.setLong(3, assignment.getPosition());
 				ps.setLong(4, assignment.getFund());
 				ps.setLong(5, assignment.getFunctionary());
@@ -110,11 +111,11 @@ public class AssignmentRepository {
 				ps.setDate(11, new Date(assignment.getToDate().getTime()));
 				ps.setLong(12, assignment.getGrade());
 				ps.setString(13, assignment.getGovtOrderNumber());
-				ps.setLong(14, assignment.getCreatedBy());
-				ps.setDate(15, new Date(assignment.getCreatedDate().getTime()));
-				ps.setLong(16, assignment.getLastModifiedBy());
-				ps.setDate(17, new Date(assignment.getLastModifiedDate().getTime()));
-				ps.setString(18, employee.getTenantId());
+				ps.setLong(14, Long.parseLong(employeeRequest.getRequestInfo().getRequesterId()));
+				ps.setTimestamp(15, new Timestamp(new java.util.Date().getTime()));
+				ps.setLong(16, Long.parseLong(employeeRequest.getRequestInfo().getRequesterId()));
+				ps.setTimestamp(17, new Timestamp(new java.util.Date().getTime()));
+				ps.setString(18, employeeRequest.getEmployee().getTenantId());
 			}
 
 			@Override

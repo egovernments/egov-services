@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -86,5 +87,18 @@ public class UserController {
                 .status(String.valueOf(HttpStatus.OK.value()))
                 .build();
         return new UserDetailResponse(responseInfo, Collections.singletonList(userRequest));
+    }
+    
+    @PostMapping("/users/{id}/_update")
+    public UserDetailResponse updateUserWithValidation(@PathVariable final Long id,
+            @RequestBody final CreateUserRequest createUserRequest) {
+        return updateUser(id, createUserRequest, true);
+    }
+    
+    private UserDetailResponse updateUser(final Long id, final CreateUserRequest createUserRequest,
+            final boolean validateUser) {
+        User user = createUserRequest.toUpdateDomain();
+        final User updatedUser = userService.update(id, user, validateUser);
+        return createResponse(updatedUser);
     }
 }

@@ -56,9 +56,11 @@ import org.egov.eis.web.contract.ResponseInfo;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
 import org.egov.eis.web.errorhandler.ErrorHandler;
 import org.egov.eis.web.validator.EmployeeAssignmentValidator;
+import org.egov.eis.web.validator.RequestValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -66,6 +68,7 @@ import org.springframework.validation.ValidationUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -80,7 +83,10 @@ public class EmployeeController {
 	private EmployeeService employeeService;
 
 	@Autowired
-	private ErrorHandler errHandler;
+	private RequestValidator requestValidator;
+
+	@Autowired
+	private ErrorHandler errorHandler;
 
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
@@ -88,85 +94,133 @@ public class EmployeeController {
 	@Autowired
 	private EmployeeAssignmentValidator employeeAssignmentValidator;
 
-	@PostMapping("_search")
+	/**
+	 * Maps Post Requests for _search & returns ResponseEntity of either
+	 * EmployeeResponse type or ErrorResponse type
+	 * 
+	 * @param employeeGetRequest,
+	 * @param bindingResult
+	 * @param requestInfo
+	 * @param headers
+	 * @return ResponseEntity<?>
+	 */
+	@PostMapping(value = "_search", headers = { "auth-token", "user-info" })
 	@ResponseBody
 	public ResponseEntity<?> search(@ModelAttribute @Valid EmployeeGetRequest employeeGetRequest,
-			BindingResult bindingResult, @RequestBody RequestInfo requestInfo) {
+			BindingResult bindingResult, @RequestBody RequestInfo requestInfo, @RequestHeader HttpHeaders headers) {
 
-		// validate header
-		if (requestInfo.getApiId() == null || requestInfo.getVer() == null || requestInfo.getTs() == null) {
-			return errHandler.getErrorResponseEntityForMissingRequestInfo(requestInfo);
-		}
-
-		// validate input params
-		if (bindingResult.hasErrors()) {
-			return errHandler.getErrorResponseEntityForMissingParameters(bindingResult, requestInfo);
-		}
+		ResponseEntity<?> errorResponseEntity = requestValidator.validateSearchRequest(requestInfo, headers,
+				bindingResult);
+		if (errorResponseEntity != null)
+			return errorResponseEntity;
 
 		// Call service
 		List<EmployeeInfo> employeesList = null;
 		try {
-			employeesList = employeeService.getEmployees(employeeGetRequest, requestInfo);
+			employeesList = employeeService.getEmployees(employeeGetRequest, requestInfo, headers);
 		} catch (Exception exception) {
 			LOGGER.error("Error while processing request " + employeeGetRequest, exception);
-			return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
+			return errorHandler.getResponseEntityForUnexpectedErrors(requestInfo, headers);
 		}
 
-		return getSuccessResponseForSearch(employeesList, requestInfo);
+		return getSuccessResponseForSearch(employeesList, requestInfo, headers);
 	}
 
-	@PostMapping("/_create")
+	/**
+	 * Maps Post Requests for _search & returns ResponseEntity of either
+	 * EmployeeResponse type or ErrorResponse type
+	 * 
+	 * @param employeeGetRequest
+	 * @param bindingResult
+	 * @param requestInfo
+	 * @param headers
+	 * @return ResponseEntity<?>
+	 */
+	@PostMapping(value = "/_create", headers = { "auth-token", "user-info" })
 	@ResponseBody
-	public ResponseEntity<?> create(@RequestBody @Valid EmployeeRequest employeeRequest, BindingResult bindingResult) {
+	public ResponseEntity<?> create(@RequestHeader HttpHeaders headers,
+			@RequestBody @Valid EmployeeRequest employeeRequest, BindingResult bindingResult) {
 		LOGGER.debug("employeeRequest::" + employeeRequest);
 
-		ResponseEntity<?> errorResponseEntity = validateEmployeeRequest(employeeRequest, bindingResult);
+		ResponseEntity<?> errorResponseEntity = validateEmployeeCreateRequest(employeeRequest, headers, bindingResult);
 		if (errorResponseEntity != null)
 			return errorResponseEntity;
 
-		employeeService.createEmployee(employeeRequest);
-		employeeRequest.getEmployee().getUser().setPassword(null);
-		return getSuccessResponse(employeeRequest.getEmployee(), employeeRequest.getRequestInfo());
+		Employee employee = employeeService.createEmployee(employeeRequest, headers);
+
+		if(employee == null) {
+			return errorHandler.getResponseEntityForExistingUser(employeeRequest, headers);
+		}
+		employee.getUser().setPassword(null);
+		return getSuccessResponseForCreate(employee, employeeRequest.getRequestInfo(), headers);
 	}
 
-	private ResponseEntity<?> validateEmployeeRequest(EmployeeRequest employeeRequest, BindingResult bindingResult) {
+	/**
+	 * Validate EmployeeRequest object & returns ErrorResponseEntity if there
+	 * are any errors or else returns null
+	 * 
+	 * @param employeeRequest
+	 * @param headers
+	 * @param bindingResult
+	 * @return ResponseEntity<?>
+	 */
+	private ResponseEntity<?> validateEmployeeCreateRequest(EmployeeRequest employeeRequest, HttpHeaders headers,
+			BindingResult bindingResult) {
 		// validate input params that can be handled by annotations
 		if (bindingResult.hasErrors()) {
-			return errHandler.getErrorResponseEntityForBindingErrors(bindingResult, employeeRequest.getRequestInfo());
+			return errorHandler.getErrorResponseEntityForBindingErrors(bindingResult, employeeRequest.getRequestInfo(),
+					headers);
 		}
 
 		// validate input params that can't be handled by annotations
 		ValidationUtils.invokeValidator(employeeAssignmentValidator, employeeRequest.getEmployee(), bindingResult);
 
 		if (bindingResult.hasErrors()) {
-			return errHandler.getErrorResponseEntityForBindingErrors(bindingResult, employeeRequest.getRequestInfo());
+			return errorHandler.getErrorResponseEntityForBindingErrors(bindingResult, employeeRequest.getRequestInfo(),
+					headers);
 		}
 		return null;
 	}
 
 	/**
-	 * Populate Response object and returnEmployeesList
+	 * Populate EmployeeResponse object & returns ResponseEntity of type
+	 * EmployeeResponse containing ResponseInfo & Employee objects
 	 * 
-	 * @param employeesList
-	 * @return
+	 * @param employee
+	 * @param requestInfo
+	 * @param headers
+	 * @return ResponseEntity<?>
 	 */
-	private ResponseEntity<?> getSuccessResponse(Employee employee, RequestInfo requestInfo) {
-		EmployeeResponse employeeRes = new EmployeeResponse();
-		employeeRes.setEmployee(employee);
+	private ResponseEntity<?> getSuccessResponseForCreate(Employee employee, RequestInfo requestInfo,
+			HttpHeaders headers) {
+		EmployeeResponse employeeResponse = new EmployeeResponse();
+		employeeResponse.setEmployee(employee);
 
 		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 		responseInfo.setStatus(HttpStatus.OK.toString());
-		employeeRes.setResponseInfo(responseInfo);
-		return new ResponseEntity<EmployeeResponse>(employeeRes, HttpStatus.OK);
+		employeeResponse.setResponseInfo(responseInfo);
+		return new ResponseEntity<EmployeeResponse>(employeeResponse, headers, HttpStatus.OK);
 	}
 
-	private ResponseEntity<?> getSuccessResponseForSearch(List<EmployeeInfo> employeesList, RequestInfo requestInfo) {
-		EmployeeInfoResponse employeeRes = new EmployeeInfoResponse();
-		employeeRes.setEmployees(employeesList);
+	/**
+	 * Populate EmployeeInfoResponse object & returns ResponseEntity of type
+	 * EmployeeInfoResponse containing ResponseInfo & List of EmployeeInfo
+	 * 
+	 * @param employeeList
+	 * @param requestInfo
+	 * @param headers
+	 * @return ResponseEntity<?>
+	 */
+	private ResponseEntity<?> getSuccessResponseForSearch(List<EmployeeInfo> employeesList, RequestInfo requestInfo,
+			HttpHeaders headers) {
+		EmployeeInfoResponse employeeInfoResponse = new EmployeeInfoResponse();
+		employeeInfoResponse.setEmployees(employeesList);
 		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 		responseInfo.setStatus(HttpStatus.OK.toString());
-		employeeRes.setResponseInfo(responseInfo);
-		return new ResponseEntity<EmployeeInfoResponse>(employeeRes, HttpStatus.OK);
+		employeeInfoResponse.setResponseInfo(responseInfo);
+
+		
+		return new ResponseEntity<EmployeeInfoResponse>(employeeInfoResponse, HttpStatus.OK);
 	}
 
 }

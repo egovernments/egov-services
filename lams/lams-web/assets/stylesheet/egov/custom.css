@@ -1959,3 +1959,11 @@ footer.main a {
 .DTTT_print_info {
   display: none;
 }
+.alert-toast {
+  position: fixed;
+  width: 40%;
+  left: 30%;
+  text-align: center;
+  bottom: 50px;
+  z-index:1000;
+}

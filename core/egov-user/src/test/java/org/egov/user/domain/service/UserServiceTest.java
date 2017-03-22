@@ -87,7 +87,7 @@ public class UserServiceTest {
     public void test_should_raise_exception_when_duplicate_user_name_exists() throws Exception {
         org.egov.user.domain.model.User domainUser = validDomainUser();
         when(otpRepository.isOtpValidationComplete(domainUser)).thenReturn(true);
-        when(userRepository.isUserPresent("supandi_rocks")).thenReturn(true);
+        when(userRepository.isUserPresent("supandi_rocks", 1L)).thenReturn(true);
 
         userService.save(domainUser, true);
     }

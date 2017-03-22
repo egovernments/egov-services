@@ -173,9 +173,15 @@ public class UserRequest {
                 .roles(Collections.singletonList(role))
                 .build();
     }
+    
+    User toUpdateDomain() {
+        return forDomain()
+                .build();
+    }
 
     private User.UserBuilder forDomain() {
         return User.builder()
+                .id(this.id)
                 .name(this.name)
                 .username(this.userName)
                 .salutation(this.salutation)

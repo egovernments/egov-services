@@ -1,209 +1,290 @@
+const titleCase = (field) => {
+	var newField = field[0].toUpperCase();
+	for(let i=1; i<field.length; i++) {
+      if(field[i-1] != " " && field[i] != " ") {
+      	newField += field.charAt(i).toLowerCase();
+      } else {
+        newField += field[i]
+      } 
+    }
+    return newField;
+}
+
+const defaultAssetSetState = {
+    "tenantId": tenantId,
+    "name": "",
+    "department": {
+        "id": ""
+    },
+    "assetCategory": {
+        tenantId,
+        "id": "",
+        "name": ""
+    },
+    "description": "",
+    "assetCategoryType": "",
+    "modeOfAcquisition": "",
+    "status": "",
+    "description": "",
+    "dateOfCreation": "",
+    "locationDetails": {
+        "locality": "",
+        "zone": "",
+        "revenueWard": "",
+        "block": "",
+        "street": "",
+        "electionWard": "",
+        "doorNo": "",
+        "pinCode": ""
+    },
+    "remarks": "",
+    "length": "",
+    "width": "",
+    "totalArea": "",
+    "properties": {},
+    "grossValue": "",
+    "accumulatedDepreciation": ""
+};
+
 class CreateAsset extends React.Component {
   constructor(props) {
     super(props);
-    this.state={list:[],assetSet:{
-     "tenantId": tenantId,
-     "name": "",
-     "department": {
-       "id":""
-     },
-     "assetCategory": {
-       tenantId,
-       "id":""
-     },
-     "description": "",
-     "assetCategoryType":"",
-     "modeOfAcquisition": null,
-     "status": null,
-     "description": "",
-     "dateOfCreation": "",
-     "locationDetails": {
-       "locality": "",
-       "zone": "",
-       "revenueWard": "",
-       "block": "",
-       "street": "",
-       "electionWard": "",
-       "doorNo": "",
-       "pinCode": ""
-     },
-     "remarks": "",
-     "length": "",
-     "width": "",
-     "totalArea": "",
-     "properties": {}
-   },assetCategories:[],localityList:[],electionwards:[],departments:[],acquisitionList:[],zoneList:[],streetList:[],WardList:[],blockList:[],customFields:[],assetCategoriesType:{}}
-    this.handleChange=this.handleChange.bind(this);
-    this.handleChangeTwoLevel=this.handleChangeTwoLevel.bind(this);
-    this.addOrUpdate=this.addOrUpdate.bind(this);
+    this.state = {
+        list: [],
+        assetSet: Object.assign({}, defaultAssetSetState),
+        assetCategories: [],
+        localityList: [],
+        electionwards: [],
+        departments: [],
+        acquisitionList: [],
+        zoneList: [],
+        streetList: [],
+        WardList: [],
+        blockList: [],
+        customFields: [],
+        statusList: {},
+        assetCategoriesType: {},
+        capitalized: false,
+        error: "",
+        success: ""
+    }
+    this.handleChange = this.handleChange.bind(this);
+    this.handleChangeTwoLevel = this.handleChangeTwoLevel.bind(this);
+    this.addOrUpdate = this.addOrUpdate.bind(this);
 
   }
-  close(){
+  close() {
       // widow.close();
       open(location, '_self').close();
   }
 
-  getCategory(id)
-  {
-      console.log(id);
-      console.log(this.state.assetCategories.length);
+  getCategory(id) {
       for (var i = 0; i < this.state.assetCategories.length; i++) {
-          if(this.state.assetCategories[i].id==id)
-          {
-            return this.state.assetCategories[i]["customFields"];
+          if (this.state.assetCategories[i].id == id) {
+              return this.state.assetCategories[i]["customFields"];
           }
       }
   }
 
-  handleChange(e,name)
-  {
-
+  handleChange(e, name) {
+      if(name === "status") {
+        this.state.capitalized = ( e.target.value === "CAPITALIZED");
+      }
 
       this.setState({
-          assetSet:{
+          assetSet: {
               ...this.state.assetSet,
-              [name]:e.target.value
+              [name]: e.target.value
           }
       })
 
   }
 
-  addOrUpdate(e){
-        e.preventDefault();
-        // console.log(zone);
-        // console.log(this.state.assetSet);
-        var tempInfo=this.state.assetSet;
-        // tempInfo["assetSet"]["assetCategory"]["id"]=parseInt(tempInfo["assetSet"]["assetCategory"]["id"])
-        var body={
-            "RequestInfo":requestInfo,
-            "Asset":tempInfo
-          };
+  addOrUpdate(e) {
+      e.preventDefault();
+      this.setState({
+        ...this.state,
+        error: "",
+        success: ""
+      })
+      var tempInfo = this.state.assetSet;
+      var body = {
+          "RequestInfo": requestInfo,
+          "Asset": tempInfo
+      };
 
-        var response=$.ajax({
-              url:baseUrl+"/asset-services/_create?tenantId=1",
-              type: 'POST',
-              dataType: 'json',
-              data:JSON.stringify(body),
-              async: false,
-              contentType: 'application/json'
+      var response = $.ajax({
+          url: baseUrl + "/asset-services/assets/_create?tenantId=1",
+          type: 'POST',
+          dataType: 'json',
+          data: JSON.stringify(body),
+          async: false,
+          contentType: 'application/json',
+          headers:{
+              'auth-token' :'e4eac22c-2a48-4549-81d8-85d1de08746b'
+          }
+      });
+
+     if (response["status"] === 201 || response["status"] == 200) {
+          this.setState({
+            ...this.state,
+            assetSet: Object.assign({}, defaultAssetSetState),
+            success: "Asset successfuly added!",
+            customFields: []
           });
-
-        // console.log(response);
-        if(response["statusText"]==="OK")
-        {
-          alert("Successfully added");
-        }
-        else {
-          alert(response["statusText"]);
-        }
-
-      //   this.setState({assetSet:{
-      //    "tenantId": "",
-      //    "name": "",
-      //    "department": "",
-      //    "assetCategory": "",
-      //    "description": "",
-      //    "modeOfAcquisition": "",
-      //    "status": "",
-      //    "description": "",
-      //    "dateOfCreation": "",
-      //    "locationDetails": {
-      //      "locality": "",
-      //      "zone": "",
-      //      "revenueWard": "",
-      //      "block": "",
-      //      "street": "",
-      //      "electionWard": "",
-      //      "doorNo": "",
-      //      "pinCode": ""
-      //    },
-      //    "remarks": "",
-      //    "length": "",
-      //    "width": "",
-      //    "totalArea": "",
-      //    "properties": {}
-      //  } })
-    }
+      } else {
+           this.setState({
+            ...this.state,
+            error: response["statusText"]
+          })
+      }
+  }
 
 
-  handleChangeTwoLevel(e,pName,name)
-  {
-    // var id=0;
-    if(pName=="assetCategory")
-    {
-      this.setState({
-          customFields:this.getCategory(e.target.value)
-          ,
-          properties:{}
-      })
-      e.target.value=parseInt(e.target.value)
-    }
+  handleChangeTwoLevel(e, pName, name) {
+      let text;
+      if (pName == "assetCategory") {
+          let el = document.getElementById('assetCategory');
+          text = el.options[el.selectedIndex].innerHTML;
+          this.setState({
+              customFields: this.getCategory(e.target.value),
+              properties: {}
+          })
+          e.target.value = parseInt(e.target.value)
+      }
+
+      let innerJSON = {
+            ...this.state.assetSet[pName],
+            [name]: e.target.value
+      };
+      
+      if(text) {
+        innerJSON["name"] = text;
+      }
 
       this.setState({
-          assetSet:{
+          assetSet: {
               ...this.state.assetSet,
-              [pName]:{
-                ...this.state.assetSet[pName],
-                [name]:e.target.value
-              }
+              [pName]: innerJSON
           }
       })
 
   }
 
 
-  componentDidMount()
-  {
-    var type=getUrlVars()["type"];
-    var id=getUrlVars()["id"];
+  componentDidMount() {
+      var type = getUrlVars()["type"];
+      var id = getUrlVars()["id"];
+      $('#dateOfCreation').datetimepicker({
+          format: 'DD/MM/YYYY',
+          maxDate: new Date()
+      });
+      // if(getUrlVars()["type"]==="view")
+      // {
+      //   for (var variable in this.state.assetSet)
+      //     document.getElementById(variable).disabled = true;
+      // }
 
-    // if(getUrlVars()["type"]==="view")
-    // {
-    //   for (var variable in this.state.assetSet)
-    //     document.getElementById(variable).disabled = true;
-    // }
 
-
-      if(type==="view"||type==="update")
-      {
+      if (type === "view" || type === "update") {
           //console.log(getCommonMasterById("asset-services","assets","Assets",id).responseJSON["Assets"][0]);
           this.setState({
-            assetSet:getCommonMasterById("asset-services","assets","Assets",id).responseJSON["Assets"][0]
+              assetSet: getCommonMasterById("asset-services", "assets", "Assets", id).responseJSON["Assets"][0]
           })
       }
 
 
-     this.setState({
-      assetCategories:commonApiPost("asset-services","assetCategories","_search",{}).responseJSON["AssetCategory"] || [],
-      departments:commonApiPost("egov-common-masters","departments","_search",{tenantId}).responseJSON["Department"] || [],
-      acquisitionList:commonApiGet("asset-services","","GET_MODE_OF_ACQUISITION",{}).responseJSON || [],
-      localityList:commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"LOCALITY",hierarchyTypeName:"LOCATION"}).responseJSON["Boundary"] || [],
-      electionwards:commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"WARD",hierarchyTypeName:"ADMINISTRATION"}).responseJSON["Boundary"] || [],
-      zoneList:commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"ZONE",hierarchyTypeName:"REVENUE"}).responseJSON["Boundary"] || [],
-      streetList:commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"STREET",hierarchyTypeName:"REVENUE"}).responseJSON["Boundary"] || [],
-      WardList:commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"WARD",hierarchyTypeName:"REVENUE"}).responseJSON["Boundary"] || [],
-      blockList:commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"BLOCK",hierarchyTypeName:"REVENUE"}).responseJSON["Boundary"] || [],
-      assetCategoriesType:commonApiGet("asset-services","","GET_ASSET_CATEGORY_TYPE",{}).responseJSON|| {}
-    })
+      this.setState({
+          assetCategories: commonApiPost("asset-services", "assetCategories", "_search", {}).responseJSON["AssetCategory"] || [],
+          departments: commonApiPost("egov-common-masters", "departments", "_search", {
+              tenantId
+          }).responseJSON["Department"] || [],
+          acquisitionList: commonApiGet("asset-services", "", "GET_MODE_OF_ACQUISITION", {}).responseJSON || [],
+          localityList: commonApiPost("v1/location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", {
+              boundaryTypeName: "LOCALITY",
+              hierarchyTypeName: "LOCATION"
+          }).responseJSON["Boundary"] || [],
+          electionwards: commonApiPost("v1/location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", {
+              boundaryTypeName: "WARD",
+              hierarchyTypeName: "ADMINISTRATION"
+          }).responseJSON["Boundary"] || [],
+          zoneList: commonApiPost("v1/location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", {
+              boundaryTypeName: "ZONE",
+              hierarchyTypeName: "REVENUE"
+          }).responseJSON["Boundary"] || [],
+          streetList: commonApiPost("v1/location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", {
+              boundaryTypeName: "STREET",
+              hierarchyTypeName: "REVENUE"
+          }).responseJSON["Boundary"] || [],
+          WardList: commonApiPost("v1/location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", {
+              boundaryTypeName: "WARD",
+              hierarchyTypeName: "REVENUE"
+          }).responseJSON["Boundary"] || [],
+          blockList: commonApiPost("v1/location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", {
+              boundaryTypeName: "BLOCK",
+              hierarchyTypeName: "REVENUE"
+          }).responseJSON["Boundary"] || [],
+          statusList: commonApiGet("asset-services", "", "GET_STATUS", {}).responseJSON || {},
+          assetCategoriesType: commonApiGet("asset-services", "", "GET_ASSET_CATEGORY_TYPE", {}).responseJSON || {}
+      })
   }
 
   render() {
-    console.log(this.state);
-    let {handleChange,addOrUpdate,handleChangeTwoLevel}=this;
-    let {isSearchClicked,list,customFields}=this.state;
-    let {assetCategory,locationDetails,assetCategoryType,locality,doorNo,name,pinCode,street,electionWard,dateOfCreation,assetAddress,block,zone,totalArea,code,department,description,modeOfAcquisition,length,width,revenueWard}=this.state.assetSet;
-    let mode=getUrlVars()["type"];
-
-
-      const showActionButton=function() {
-        if((!mode) ||mode==="update")
-        {
+    let {handleChange, addOrUpdate, handleChangeTwoLevel}=this;
+    let {isSearchClicked, list, customFields, error, success, acquisitionList}=this.state;
+    let {
+      assetCategory,
+      locationDetails,
+      assetCategoryType,
+      locality,
+      doorNo,
+      name,
+      pinCode,
+      street,
+      electionWard,
+      dateOfCreation,
+      assetAddress,
+      block,
+      zone,
+      totalArea,
+      code,
+      department,
+      description,
+      modeOfAcquisition,
+      length,
+      width,
+      revenueWard,
+      accumulatedDepreciation,
+      grossValue,
+      status
+  } = this.state.assetSet;
+    let mode = getUrlVars()["type"];
+    
+    const showActionButton = function() {
+        if((!mode) ||mode==="update") {
           return (<button type="submit" className="btn btn-submit">{mode?"Update":"Create"}</button>);
         }
-      };
+    };
 
+    const showAlert = function(error, success) {
+        if(error) {
+          return (
+            <div className="alert alert-danger alert-dismissible alert-toast" role="alert">
+              <button type="button" className="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <strong>Error!</strong> {error}
+            </div>
+          )
+        } else if(success) {
+           return (
+            <div className="alert alert-success alert-dismissible alert-toast" role="alert">
+              <button type="button" className="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <strong>Success!</strong> {success}
+            </div>
+          )
+        }
+    };
 
-    const renderOption=function(list)
+    const renderOption = function(list)
     {
         if(list)
         {
@@ -227,15 +308,41 @@ class CreateAsset extends React.Component {
 
         }
     }
-    const showCategorySection=function()
+
+    const showCategorySection = function()
     {
-        if(customFields.length>0)
+        if(customFields.length > 0)
         {
               return (
                 <div className="form-section" id="allotteeDetailsBlock">
                   <h3 className="categoryType">Category Details </h3>
                   <div className="form-section-inner">
                       <div className="row">
+                          <div className="col-sm-6">
+                            <div className="row">
+                              <div className="col-sm-6 label-text">
+                                <label for="name">Name <span>* </span></label>
+                              </div>
+                              <div className="col-sm-6">
+                                <input id="name" name="name" value={name} type="text"
+                                  onChange={(e)=>{handleChange(e, "name")}} required/>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="col-sm-6">
+                            <div className="row">
+                              <div className="col-sm-6 label-text">
+                                <label for="name">Mode Of Acquisition <span>* </span></label>
+                              </div>
+                              <div className="col-sm-6">
+                                <select id="modeOfAcquisition" name="modeOfAcquisition" required value={modeOfAcquisition} onChange={(e)=>
+                                    {handleChange(e,"modeOfAcquisition") }}>
+                                    <option value="">Select Mode Of Acquisition</option>
+                                    {renderOption(acquisitionList)}
+                                </select>
+                              </div>
+                            </div>
+                          </div>
                           {showFields()}
                       </div>
                   </div>
@@ -244,17 +351,17 @@ class CreateAsset extends React.Component {
         }
     }
 
-    const showFields=function() {
-        return customFields.map((item,index)=>
+    const showFields = function() {
+        return customFields.map((item, index)=>
         {
             return (
               <div className="col-sm-6" key={index}>
                 <div className="row">
                   <div className="col-sm-6 label-text">
-                    <label for={item.name}>{item.name}  {showStart(item.isActive)}</label>
+                    <label for={item.name}>{titleCase(item.name)}  {showStart(item.isActive)}</label>
                   </div>
                   <div className="col-sm-6">
-                    <input id={item.name} name={item.name}  id={item.name} value={item.values} type={item.type==="String"?"text":item.type}
+                    <input id={item.name} name={item.name} value={item.values} type={item.type==="String"?"text":item.type}
                       onChange={(e)=>{handleChangeTwoLevel(e,"properties",item.name)}} required/>
                   </div>
                 </div>
@@ -263,7 +370,7 @@ class CreateAsset extends React.Component {
         })
     }
 
-    const showStart=function(status)
+    const showStart = function(status)
     {
         if (status) {
             return(
@@ -272,246 +379,305 @@ class CreateAsset extends React.Component {
         }
     }
 
+    const getTodaysDate = function() {
+        var now = new Date();
+        var month = (now.getMonth() + 1);               
+        var day = now.getDate();
+        if(month < 10) 
+            month = "0" + month;
+        if(day < 10) 
+            day = "0" + day;
+        return (now.getFullYear() + '-' + month + '-' + day);
+    }
+
+    const renderIfCapitalized = function(capitalized) {
+      if(capitalized) {
+        return (
+          <div className="row">
+              <div className="col-sm-6">
+                  <div className="row">
+                    <div className="col-sm-6 label-text">
+                        <label for="grossValue">Gross Value</label>
+                    </div>
+                    <div className="col-sm-6">
+                        <input type="number" id="grossValue" name="grossValue" value= {grossValue}
+                          onChange={(e)=>{handleChange(e,"grossValue")}} min="1" maxlength="16" step="0.01"/>
+                    </div>
+                  </div>
+              </div>
+              <div className="col-sm-6">
+                  <div className="row">
+                    <div className="col-sm-6 label-text">
+                        <label for="accumulatedDepreciation">Gross Value</label>
+                    </div>
+                    <div className="col-sm-6">
+                        <input type="number" id="accumulatedDepreciation" name="accumulatedDepreciation" value= {accumulatedDepreciation}
+                          onChange={(e)=>{handleChange(e,"accumulatedDepreciation")}} min="1" maxlength="16" step="0.01"/>
+                    </div>
+                  </div>
+              </div>
+          </div>
+        )
+      }
+    }
+
     return (
       <div>
-        <form onSubmit={(e)=>{addOrUpdate(e)}}>
-        <div className="form-section">
-            <h3 className="categoryType">Header Details </h3>
-
+        {showAlert(error, success)}
+        <form onSubmit={(e)=>
+            {addOrUpdate(e)}}>
+            <div className="form-section">
+              <h3 className="categoryType">Header Details </h3>
               <div className="form-section-inner">
-                <div className="row">
-                <div className="col-sm-6">
-                <div className="row">
-                <div className="col-sm-6 label-text">
-                    <label for="department">Department <span> *</span></label>
-                </div>
-                <div className="col-sm-6">
-                <div className="styled-select">
-                <select id="department" name="department" required value={department.id} onChange={(e)=>{
-                        handleChangeTwoLevel(e,"department","id")
-                    }}>
-                      <option value="">Select Department</option>
-                      {renderOption(this.state.departments)}
-                   </select>
-                </div>
-                </div>
-                </div>
-                </div>
-
-                <div className="col-sm-6">
-                    <div className="row">
-                        <div className="col-sm-6 label-text">
-                            <label for="assetCategoryType">Asset Category Type <span> *</span></label>
-                        </div>
-                        <div className="col-sm-6">
-                            <div className="styled-select">
-                            <select id="assetCategoryType" name="assetCategoryType" value={assetCategoryType} required= "true" onChange={(e)=>{
-                            handleChange(e,"assetCategoryType")}}>
-                                <option value="">Select Asset Category</option>
-                                {renderOption(this.state.assetCategoriesType)}
-                              </select>
-                            </div>
+                  <div className="row">
+                    <div className="col-sm-6">
+                        <div className="row">
+                          <div className="col-sm-6 label-text">
+                              <label for="department">Department <span> *</span></label>
+                          </div>
+                          <div className="col-sm-6">
+                              <div className="styled-select">
+                                <select id="department" name="department" required value={department.id} onChange={(e)=>
+                                    {
+                                    handleChangeTwoLevel(e,"department","id")
+                                    }}>
+                                    <option value="">Select Department</option>
+                                    {renderOption(this.state.departments)}
+                                </select>
+                              </div>
+                          </div>
                         </div>
                     </div>
-                </div>
+                    {/*<div className="col-sm-6">
+                        <div className="row">
+                          <div className="col-sm-6 label-text">
+                              <label for="assetCategoryType">Asset Category Type <span> *</span></label>
+                          </div>
+                          <div className="col-sm-6">
+                              <div className="styled-select">
+                                <select id="assetCategoryType" name="assetCategoryType" value={assetCategoryType} required= "true" onChange={(e)=>
+                                    {
+                                    handleChange(e,"assetCategoryType")}}>
+                                    <option value="">Select Asset Category</option>
+                                    {renderOption(this.state.assetCategoriesType)}
+                                </select>
+                              </div>
+                          </div>
+                        </div>
+                    </div>*/}
+                    <div className="col-sm-6">
+                        <div className="row">
+                          <div className="col-sm-6 label-text">
+                              <label for="assetCategory">Asset Category <span> *</span> </label>
+                          </div>
+                          <div className="col-sm-6">
+                              <div className="styled-select">
+                                <select id="assetCategory" name="assetCategory" required value={assetCategory.id} onChange={(e)=>
+                                    {
+                                    handleChangeTwoLevel(e,"assetCategory","id")}}>
+                                    <option value="">Select Asset Category</option>
+                                    {renderOption(this.state.assetCategories)}
+                                </select>
+                              </div>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-sm-6">
+                        <div className="row">
+                          <div className="col-sm-6 label-text">
+                              <label for="description">Date Of Creation</label>
+                          </div>
+                          <div className="col-sm-6">
+                              <input type="text" id="dateOfCreation" name="dateOfCreation" value= {dateOfCreation}
+                                onChange={(e)=>{handleChange(e,"dateOfCreation")}} max={getTodaysDate()}/>
+                          </div>
+                        </div>
+                    </div>
+                    <div className="col-sm-6">
+                        <div className="row">
+                          <div className="col-sm-6 label-text">
+                              <label for="description">Description</label>
+                          </div>
+                          <div className="col-sm-6">
+                              <textarea id="description" name="description" value= {description}
+                                onChange={(e)=>{handleChange(e,"description")}} max="1024"></textarea>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+              </div>
             </div>
-
-              <div className="row">
-                <div className="col-sm-6">
+            <div className="form-section" id="allotteeDetailsBlock">
+              <h3 className="categoryType">Location Details </h3>
+              <div className="form-section-inner">
                   <div className="row">
-                    <div className="col-sm-6 label-text">
-                        <label for="assetCategory">Asset Category <span> *</span> </label>
-                      </div>
                     <div className="col-sm-6">
-                       <div className="styled-select">
-                       <select id="assetCategory" name="assetCategory" required value={assetCategory.id} onChange={(e)=>{
-                       handleChangeTwoLevel(e,"assetCategory","id")}}>
-                           <option value="">Select Asset Category</option>
-                           {renderOption(this.state.assetCategories)}
-                         </select>
+                        <div className="row">
+                          <div className="col-sm-6 label-text">
+                              <label for="locality"> Location <span> * </span> </label>
+                          </div>
+                          <div className="col-sm-6">
+                              <div className="styled-select">
+                                <select id="locality" name="locality" required="true" value={locationDetails.locality}
+                                    onChange={(e)=>
+                                    {handleChangeTwoLevel(e,"locationDetails","locality")}}>
+                                    <option value="">Choose locality</option>
+                                    {renderOption(this.state.localityList)}
+                                </select>
+                              </div>
+                          </div>
+                        </div>
+                    </div>
+                    <div className="col-sm-6">
+                        <div className="row">
+                          <div className="col-sm-6 label-text">
+                              <label for="revenueWard"> Revenue Ward  </label>
+                          </div>
+                          <div className="col-sm-6">
+                              <div className="styled-select">
+                                <select id="revenueWard" name="revenueWard" value={locationDetails.revenueWard}
+                                    onChange={(e)=>
+                                    {  handleChangeTwoLevel(e,"locationDetails","revenueWard")}}>
+                                    <option value="">Choose Revenue Ward</option>
+                                    {renderOption(this.state.WardList)}
+                                </select>
+                              </div>
+                          </div>
+                        </div>
                     </div>
                   </div>
-                </div>
-              </div>
-
-
-                <div className="col-sm-6">
-                <div className="row">
-                <div className="col-sm-6 label-text">
-                  <label for="description">Description</label>
-                </div>
-                <div className="col-sm-6">
-                  <textarea id="description" name="description" value= {description}
-                  onChange={(e)=>{handleChange(e,"description")}} max="1024"></textarea>
-                </div>
-                </div>
-                </div>
-                </div>
-
-
-                </div>
-              </div>
-
-              <div className="form-section" id="allotteeDetailsBlock">
-                <h3 className="categoryType">Location Details </h3>
-                <div className="form-section-inner">
-
                   <div className="row">
-                  <div className="col-sm-6">
-                  <div className="row">
-                  <div className="col-sm-6 label-text">
-                        <label for="locality"> Location <span> * </span> </label>
-                  </div>
-                  <div className="col-sm-6">
-                  <div className="styled-select">
-                  <select id="locality" name="locality" required="true" value={locationDetails.locality}
-                    onChange={(e)=>{  handleChangeTwoLevel(e,"locationDetails","locality")}}>
-                    <option value="">Choose locality</option>
-                    {renderOption(this.state.localityList)}
-
-                  </select>
-                  </div>
-                  </div>
-                  </div>
-                  </div>
-
                     <div className="col-sm-6">
-                    <div className="row">
-                    <div className="col-sm-6 label-text">
-                            <label for="revenueWard"> Revenue Ward  </label>
-                     </div>
-                      <div className="col-sm-6">
-                      <div className="styled-select">
-                      <select id="revenueWard" name="revenueWard" value={locationDetails.revenueWard}
-                        onChange={(e)=>{  handleChangeTwoLevel(e,"locationDetails","revenueWard")}}>
-                        <option value="">Choose RevenueWard</option>
-                        {renderOption(this.state.WardList)}
-
-                      </select>
-                      </div>
-                      </div>
-                      </div>
-                      </div>
-                      </div>
-                      <div className="row">
-                            <div className="col-sm-6">
-                            <div className="row">
-                            <div className="col-sm-6 label-text">
-                                <label for="block"> Block Number  </label>
-                            </div>
-                            <div className="col-sm-6">
-                            <div className="styled-select">
-                            <select id="block" name="block" value={locationDetails.block}
-                              onChange={(e)=>{  handleChangeTwoLevel(e,"locationDetails","block")}}>
-                              <option value="">Choose Block</option>
-                              {renderOption(this.state.blockList)}
-
-                            </select>
-                            </div>
-                            </div>
-                            </div>
-                            </div>
-
-                            <div className="col-sm-6">
-                            <div className="row">
-                            <div className="col-sm-6 label-text">
-                                  <label for="street"> Street  </label>
-                            </div>
-                            <div className="col-sm-6">
-                            <div className="styled-select">
-                            <select id="street" name="street" value={locationDetails.street}
-                              onChange={(e)=>{  handleChangeTwoLevel(e,"locationDetails","street")}}>
-                              <option value="">Choose Street</option>
-                              {renderOption(this.state.streetList)}
-
-                            </select>
-                            </div>
-                            </div>
-                            </div>
-                            </div>
-                            </div>
-
-                            <div className="row">
-                                  <div className="col-sm-6">
-                                  <div className="row">
-                                  <div className="col-sm-6 label-text">
-                                        <label for="electionWard"> Election Ward No  </label>
-                                  </div>
-                                  <div className="col-sm-6">
-                                  <div className="styled-select">
-                                  <select id="electionWard" name="electionWard" value={locationDetails.electionWard}
-                                    onChange={(e)=>{ handleChangeTwoLevel(e,"locationDetails","electionWard")}}>
-                                  <option value="">Choose Election Wards</option>
-                                  {renderOption(this.state.electionwards)}
-                                  </select>
+                        <div className="row">
+                          <div className="col-sm-6 label-text">
+                              <label for="block"> Block Number  </label>
+                          </div>
+                          <div className="col-sm-6">
+                              <div className="styled-select">
+                                <select id="block" name="block" value={locationDetails.block}
+                                    onChange={(e)=>
+                                    {  handleChangeTwoLevel(e,"locationDetails","block")}}>
+                                    <option value="">Choose Block</option>
+                                    {renderOption(this.state.blockList)}
+                                </select>
                               </div>
+                          </div>
+                        </div>
+                    </div>
+                    <div className="col-sm-6">
+                        <div className="row">
+                          <div className="col-sm-6 label-text">
+                              <label for="street"> Street  </label>
+                          </div>
+                          <div className="col-sm-6">
+                              <div className="styled-select">
+                                <select id="street" name="street" value={locationDetails.street}
+                                    onChange={(e)=>
+                                    {  handleChangeTwoLevel(e,"locationDetails","street")}}>
+                                    <option value="">Choose Street</option>
+                                    {renderOption(this.state.streetList)}
+                                </select>
                               </div>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-sm-6">
+                        <div className="row">
+                          <div className="col-sm-6 label-text">
+                              <label for="electionWard"> Election Ward No  </label>
+                          </div>
+                          <div className="col-sm-6">
+                              <div className="styled-select">
+                                <select id="electionWard" name="electionWard" value={locationDetails.electionWard}
+                                    onChange={(e)=>
+                                    { handleChangeTwoLevel(e,"locationDetails","electionWard")}}>
+                                    <option value="">Choose Election Wards</option>
+                                    {renderOption(this.state.electionwards)}
+                                </select>
                               </div>
-                              </div>
-
-                                <div className="col-sm-6">
-                                <div className="row">
-                                <div className="col-sm-6 label-text">
-                                    <label for="doorno"> Door Number  </label>
-                                </div>
-                                <div className="col-sm-6">
-                                <input type="text" name="doorNo" id= "doorNo" value= {locationDetails.doorNo}
+                          </div>
+                        </div>
+                    </div>
+                    <div className="col-sm-6">
+                        <div className="row">
+                          <div className="col-sm-6 label-text">
+                              <label for="doorno"> Door Number  </label>
+                          </div>
+                          <div className="col-sm-6">
+                              <input type="text" name="doorNo" id= "doorNo" value= {locationDetails.doorNo}
                                 onChange={(e)=>{handleChangeTwoLevel(e,"locationDetails","doorNo")}}/>
-                                </div>
-                                </div>
-                                </div>
-                                </div>
-
-                                <div className="row">
-                                    <div className="col-sm-6">
-                                    <div className="row">
-                                    <div className="col-sm-6 label-text">
-                                        <label for="zone"> Zone Number  </label>
-                                  </div>
-                                  <div className="col-sm-6">
-                                  <div className="styled-select">
-                                  <select id="zone" name="zone" value={locationDetails.zone}
-                                    onChange={(e)=>{ handleChangeTwoLevel(e,"locationDetails","zone")}}>
-                                  <option value="">Choose Zone Number</option>
-                                  {renderOption(this.state.zoneList)}
-                                  </select>
-                                  </div>
-                                  </div>
-                                  </div>
-                                  </div>
-
-                                  <div className="col-sm-6">
-                                  <div className="row">
-                                  <div className="col-sm-6 label-text">
-                                        <label for="pin">PIN No.</label>
-                                  </div>
-                                  <div className="col-sm-6">
-                                        <input type="text" name="pinCode" id="pinCode" value={locationDetails.pinCode}
-                                        onChange={(e)=>{handleChangeTwoLevel(e,"locationDetails","pinCode")}} pattern="[0-9]{6}" title="Six number pin code"/>
-
-                                  </div>
-                                  </div>
-                                  </div>
-                                  </div>
-
-
-
-                                  </div>
-
-
-
-</div>
-
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+                  <div className="row">
+                    {/*<div className="col-sm-6">
+                        <div className="row">
+                          <div className="col-sm-6 label-text">
+                              <label for="zone"> Zone Number  </label>
+                          </div>
+                          <div className="col-sm-6">
+                              <div className="styled-select">
+                                <select id="zone" name="zone" value={locationDetails.zone}
+                                    onChange={(e)=>
+                                    { handleChangeTwoLevel(e,"locationDetails","zone")}}>
+                                    <option value="">Choose Zone Number</option>
+                                    {renderOption(this.state.zoneList)}
+                                </select>
+                              </div>
+                          </div>
+                        </div>
+                    </div>*/}
+                    <div className="col-sm-6">
+                        <div className="row">
+                          <div className="col-sm-6 label-text">
+                              <label for="pin">PIN Code</label>
+                          </div>
+                          <div className="col-sm-6">
+                              <input type="text" name="pinCode" id="pinCode" value={locationDetails.pinCode}
+                                onChange={(e)=>{handleChangeTwoLevel(e,"locationDetails","pinCode")}} pattern="[0-9]{6}" title="Six number pin code"/>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+              </div>
+            </div>
             {showCategorySection()}
-
-      <div className="text-center">
-          {showActionButton()}
-          <button type="button" className="btn btn-submit" onClick={(e)=>{this.close()}}>close</button>
+            <div className="form-section" id="allotteeDetailsBlock">
+              <h3 className="categoryType">Value Summary </h3>
+              <div className="form-section-inner">
+                  <div className="row">
+                      <div className="col-sm-6">
+                        <div className="row">
+                          <div className="col-sm-6 label-text">
+                              <label for="status"> Asset Status </label>
+                          </div>
+                          <div className="col-sm-6">
+                              <div className="styled-select">
+                                <select id="status" name="status" value={status}
+                                    onChange={(e)=>
+                                    { handleChange(e,"status")}}>
+                                    <option value="">Choose Status</option>
+                                    {renderOption(this.state.statusList)}
+                                </select>
+                              </div>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+                  {renderIfCapitalized(this.state.capitalized)}
+              </div>
+            </div>
+            <div className="text-center"> 
+              {showActionButton()} &nbsp;&nbsp;
+              <button type="button" className="btn btn-submit" onClick={(e)=>{this.close()}}>Close</button>
+            </div>
+        </form>
       </div>
-  </form>
-</div>
-
-
     );
   }
 }

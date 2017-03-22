@@ -77,224 +77,215 @@ import lombok.Builder;
 
 public class State extends AbstractAuditable {
 
-    public static final String DEFAULT_STATE_VALUE_CREATED = "Created";
-    public static final String DEFAULT_STATE_VALUE_CLOSED = "Closed";
-    public static final String STATE_REOPENED = "Reopened";
-    static final String SEQ_STATE = "SEQ_EG_WF_STATES";
-    private static final long serialVersionUID = -9159043292636575746L;
+	public static final String DEFAULT_STATE_VALUE_CREATED = "Created";
+	public static final String DEFAULT_STATE_VALUE_CLOSED = "Closed";
+	public static final String STATE_REOPENED = "Reopened";
+	static final String SEQ_STATE = "SEQ_EG_WF_STATES";
+	private static final long serialVersionUID = -9159043292636575746L;
 
-    @Id
-    @GeneratedValue(generator = SEQ_STATE, strategy = GenerationType.SEQUENCE)
-    private Long id;
+	@Id
+	@GeneratedValue(generator = SEQ_STATE, strategy = GenerationType.SEQUENCE)
+	private Long id;
 
-    @NotNull
-    @Length(max=128)
-    private String type;
+	@NotNull
+	@Length(max = 128)
+	private String type;
 
-    @NotNull
-    @Length(min = 1,max=256)
-    private String value;
+	@NotNull
+	@Length(min = 1, max = 256)
+	private String value;
 
-    @Column(name = "owner_pos")
-    private Long ownerPosition;
+	@Column(name = "owner_pos")
+	private Long ownerPosition;
 
-    @Column(name = "owner_user")
-    private Long ownerUser;
+	@Column(name = "owner_user")
+	private Long ownerUser;
 
-    @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.LAZY, mappedBy = "state")
-    @OrderBy("id")
-    private Set<StateHistory> history = new HashSet<>();
+	@OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.LAZY, mappedBy = "state")
+	@OrderBy("id")
+	private Set<StateHistory> history = new HashSet<>();
 
-    private String senderName;
-    private String nextAction;
-    private String comments;
-    private String natureOfTask;
-    private String extraInfo;
-    private Date dateInfo;
-    private Date extraDateInfo;
-    @Enumerated(EnumType.ORDINAL)
-    @NotNull
-    private StateStatus status;
-    @Column(name = "initiator_pos")
-    private Long initiatorPosition;
-    
-    private String myLinkId;
-    
-    
+	private String senderName;
+	private String nextAction;
+	private String comments;
+	private String natureOfTask;
+	private String extraInfo;
+	private Date dateInfo;
+	private Date extraDateInfo;
+	@Enumerated(EnumType.ORDINAL)
+	@NotNull
+	private StateStatus status;
+	@Column(name = "initiator_pos")
+	private Long initiatorPosition;
 
-    public State() {
-    }
+	private String myLinkId;
 
-    @Override
-    public Long getId() {
-        return id;
-    }
+	private String tenantId;
 
-    @Override
-    public void setId(final Long id) {
-        this.id = id;
-    }
+	public State() {
+	}
 
-    public String getType() {
-        return type;
-    }
+	@Override
+	public Long getId() {
+		return id;
+	}
 
-    public void setType(final String type) {
-        this.type = type;
-    }
+	@Override
+	public void setId(final Long id) {
+		this.id = id;
+	}
 
-    public String getValue() {
-        return value;
-    }
+	public String getType() {
+		return type;
+	}
 
-    public void setValue(final String value) {
-        this.value = value;
-    }
+	public void setType(final String type) {
+		this.type = type;
+	}
 
-    public Set<StateHistory> getHistory() {
-        return history;
-    }
+	public String getValue() {
+		return value;
+	}
 
-    public void setHistory(final Set<StateHistory> history) {
-        this.history = history;
-    }
+	public void setValue(final String value) {
+		this.value = value;
+	}
 
-    public void addStateHistory(final StateHistory history) {
-        getHistory().add(history);
-    }
+	public Set<StateHistory> getHistory() {
+		return history;
+	}
 
-    public String getSenderName() {
-        return senderName;
-    }
+	public void setHistory(final Set<StateHistory> history) {
+		this.history = history;
+	}
 
-    public void setSenderName(final String senderName) {
-        this.senderName = senderName;
-    }
+	public void addStateHistory(final StateHistory history) {
+		getHistory().add(history);
+	}
 
-    public String getNextAction() {
-        return nextAction;
-    }
+	public String getSenderName() {
+		return senderName;
+	}
 
-    public void setNextAction(final String nextAction) {
-        this.nextAction = nextAction;
-    }
+	public void setSenderName(final String senderName) {
+		this.senderName = senderName;
+	}
 
-    public String getComments() {
-        return comments;
-    }
+	public String getNextAction() {
+		return nextAction;
+	}
 
-    public void setComments(final String comments) {
-        this.comments = comments;
-    }
+	public void setNextAction(final String nextAction) {
+		this.nextAction = nextAction;
+	}
 
-    public String getNatureOfTask() {
-        return natureOfTask;
-    }
+	public String getComments() {
+		return comments;
+	}
 
-    public void setNatureOfTask(final String natureOfTask) {
-        this.natureOfTask = natureOfTask;
-    }
+	public void setComments(final String comments) {
+		this.comments = comments;
+	}
 
-    public String getExtraInfo() {
-        return extraInfo;
-    }
+	public String getNatureOfTask() {
+		return natureOfTask;
+	}
 
-    public void setExtraInfo(final String extraInfo) {
-        this.extraInfo = extraInfo;
-    }
+	public void setNatureOfTask(final String natureOfTask) {
+		this.natureOfTask = natureOfTask;
+	}
 
-    public Date getDateInfo() {
-        return dateInfo;
-    }
+	public String getExtraInfo() {
+		return extraInfo;
+	}
 
-    public void setDateInfo(final Date dateInfo) {
-        this.dateInfo = dateInfo;
-    }
+	public void setExtraInfo(final String extraInfo) {
+		this.extraInfo = extraInfo;
+	}
 
-    public Date getExtraDateInfo() {
-        return extraDateInfo;
-    }
+	public Date getDateInfo() {
+		return dateInfo;
+	}
 
-    public void setExtraDateInfo(final Date extraDateInfo) {
-        this.extraDateInfo = extraDateInfo;
-    }
+	public void setDateInfo(final Date dateInfo) {
+		this.dateInfo = dateInfo;
+	}
 
-    public StateStatus getStatus() {
-        return status;
-    }
+	public Date getExtraDateInfo() {
+		return extraDateInfo;
+	}
 
-    public void setStatus(final StateStatus status) {
-        this.status = status;
-    }
+	public void setExtraDateInfo(final Date extraDateInfo) {
+		this.extraDateInfo = extraDateInfo;
+	}
 
-    @Override
-    public boolean isNew() {
-        return status.equals(StateStatus.STARTED);
-    }
+	public StateStatus getStatus() {
+		return status;
+	}
 
-    public boolean isEnded() {
-        return status.equals(StateStatus.ENDED);
-    }
+	public void setStatus(final StateStatus status) {
+		this.status = status;
+	}
 
-    public Long getOwnerPosition() {
-        return ownerPosition;
-    }
+	@Override
+	public boolean isNew() {
+		return status.equals(StateStatus.STARTED);
+	}
 
-    public void setOwnerPosition(Long ownerPosition) {
-        this.ownerPosition = ownerPosition;
-    }
+	public boolean isEnded() {
+		return status.equals(StateStatus.ENDED);
+	}
 
-    public Long getOwnerUser() {
-        return ownerUser;
-    }
+	public Long getOwnerPosition() {
+		return ownerPosition;
+	}
 
-    public void setOwnerUser(Long ownerUser) {
-        this.ownerUser = ownerUser;
-    }
+	public void setOwnerPosition(Long ownerPosition) {
+		this.ownerPosition = ownerPosition;
+	}
 
-    public Long getInitiatorPosition() {
-        return initiatorPosition;
-    }
+	public Long getOwnerUser() {
+		return ownerUser;
+	}
 
-    public void setInitiatorPosition(Long initiatorPosition) {
-        this.initiatorPosition = initiatorPosition;
-    }
+	public void setOwnerUser(Long ownerUser) {
+		this.ownerUser = ownerUser;
+	}
 
-    public enum StateStatus {
-        STARTED, INPROGRESS, ENDED
-    }
+	public Long getInitiatorPosition() {
+		return initiatorPosition;
+	}
 
-    public Task map() {
-    	Position p=new Position();
-    	p.setId(this.getOwnerPosition());
-        Task t = Task.builder().businessKey(this.type).
-                comments(this.comments == null ? "" : this.comments)
-                .createdDate(this.getCreatedDate())
-                .id(this.getId().toString())
-                .state(this.getStatus().name())
-                .status(this.getValue())
-                .natureOfTask(this.getNatureOfTask())
-                .owner(p)
-                .extraInfo(this.extraInfo == null ? "" : this.extraInfo)
-                .senderName(this.senderName == null ? "" : this.senderName)
-                .action(this.nextAction == null ? "" : this.nextAction)
-                .attributes(new HashMap<String,Attribute>()).build();
-        return t;
-    }
-    
-    public ProcessInstance mapToProcess(ProcessInstance pi) {
-    	Position p=new Position();
-    	p.setId(this.getOwnerPosition());
-    	pi = pi.builder().businessKey(this.type).
-                comments(this.comments == null ? "" : this.comments)
-                .createdDate(this.getCreatedDate())
-                .id(this.getId().toString())
-                .status(this.getValue())
-                .owner(p)
-                .senderName(this.senderName == null ? "" : this.senderName)
-                .attributes(new HashMap<String,Attribute>()).build();
-        return pi;
-    }
+	public void setInitiatorPosition(Long initiatorPosition) {
+		this.initiatorPosition = initiatorPosition;
+	}
+
+	public enum StateStatus {
+		STARTED, INPROGRESS, ENDED
+	}
+
+	public Task map() {
+		Position p = new Position();
+		p.setId(this.getOwnerPosition());
+		Task t = Task.builder().businessKey(this.type).comments(this.comments == null ? "" : this.comments)
+				.createdDate(this.getCreatedDate()).id(this.getId().toString()).state(this.getStatus().name())
+				.status(this.getValue()).natureOfTask(this.getNatureOfTask()).owner(p)
+				.extraInfo(this.extraInfo == null ? "" : this.extraInfo)
+				.senderName(this.senderName == null ? "" : this.senderName)
+				.action(this.nextAction == null ? "" : this.nextAction).attributes(new HashMap<String, Attribute>())
+				.build();
+		return t;
+	}
+
+	public ProcessInstance mapToProcess(ProcessInstance pi) {
+		Position p = new Position();
+		p.setId(this.getOwnerPosition());
+		pi = pi.builder().businessKey(this.type).comments(this.comments == null ? "" : this.comments)
+				.createdDate(this.getCreatedDate()).id(this.getId().toString()).status(this.getValue()).owner(p)
+				.senderName(this.senderName == null ? "" : this.senderName).attributes(new HashMap<String, Attribute>())
+				.build();
+		return pi;
+	}
 
 	public String getMyLinkId() {
 		return myLinkId;
@@ -303,4 +294,13 @@ public class State extends AbstractAuditable {
 	public void setMyLinkId(String myLinkId) {
 		this.myLinkId = myLinkId;
 	}
+
+	public String getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
+	}
+
 }

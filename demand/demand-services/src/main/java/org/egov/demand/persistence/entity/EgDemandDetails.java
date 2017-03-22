@@ -58,6 +58,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.egov.demand.web.contract.Demand;
+import org.egov.demand.web.contract.DemandDetails;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -107,6 +110,13 @@ public class EgDemandDetails implements Serializable, Cloneable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_demand")
 	private EgDemand egDemand;
+
+	public DemandDetails toDomain() {
+		return DemandDetails.builder().taxAmount(amount).collectionAmount(amtCollected).rebateAmount(amtRebate)
+				.taxReason(egDemandReason.getEgDemandReasonMaster().getReasonMaster())
+				.taxPeriod(egDemandReason.getEgInstallmentMaster().getDescription())
+				.glCode(egDemandReason.getGlcodeId()).isActualDemand(1).build();
+	}
 
 	/**
 	 * Factory method for convenient creation.

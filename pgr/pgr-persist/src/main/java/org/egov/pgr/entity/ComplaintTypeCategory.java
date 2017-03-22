@@ -40,15 +40,23 @@
 
 package org.egov.pgr.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.List;
+
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.SafeHtml;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "egpgr_complainttype_category")
@@ -63,11 +71,9 @@ public class ComplaintTypeCategory extends AbstractPersistable<Long> {
     private Long id;
 
     @NotNull
-    @SafeHtml
     @Length(min = 5, max = 100)
     private String name;
 
-    @SafeHtml
     @Length(max = 250)
     private String description;
 

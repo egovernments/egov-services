@@ -22,7 +22,10 @@ public class BillResponse {
 	@JsonProperty("ResponseInfo")
 	ResponseInfo responseInfo;
 
-	@JsonProperty("bills")
-	private List<BillAddlInfo> bills = new ArrayList<BillAddlInfo>();
+	@JsonProperty("BillInfos")
+	private List<BillInfo> billInfos = new ArrayList<BillInfo>();
+
+	@JsonProperty("BillXmls")
+	private List<String> billXmls = new ArrayList<String>();
 
 }

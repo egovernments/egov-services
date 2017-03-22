@@ -44,18 +44,18 @@ public class UserRepositoryTest {
 
     @Test
     public void test_should_return_true_when_user_exists_with_given_user_name() {
-        when(userJpaRepository.isUserPresent("userName")).thenReturn(1L);
+        when(userJpaRepository.isUserPresent("userName", 1L)).thenReturn(1L);
 
-        boolean isPresent = userRepository.isUserPresent("userName");
+        boolean isPresent = userRepository.isUserPresent("userName", 1L);
 
         assertTrue(isPresent);
     }
 
     @Test
     public void test_should_return_false_when_user_does_not_exist_with_given_user_name() {
-        when(userJpaRepository.isUserPresent("userName")).thenReturn(null);
+        when(userJpaRepository.isUserPresent("userName", 1L)).thenReturn(null);
 
-        boolean isPresent = userRepository.isUserPresent("userName");
+        boolean isPresent = userRepository.isUserPresent("userName", 1L);
 
         assertFalse(isPresent);
     }

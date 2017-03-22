@@ -127,14 +127,14 @@ public class Task {
 	private String senderName;
 
 	/**
-	 * extraInfo provides more information on the processs/Task instance.
+	 * details provides more information on the processs/Task instance.
 	 * Example : In voucher work flow it is VoucherNumber, Property it is the
 	 * propertyId ,Grievance it is the complaint or request number This data is
 	 * set internally by the system which is configured in work flow type
 	 */
 
 	@Length(max = 128, min = 1)
-	private String extraInfo;
+	private String details;
 	/**
 	 * natureOfTask Detaild Description of the task or process . For example in
 	 * case of voucher it can be set as "Finaicial Voucher Workflow " . This

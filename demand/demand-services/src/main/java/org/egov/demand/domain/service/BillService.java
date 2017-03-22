@@ -1,14 +1,15 @@
 package org.egov.demand.domain.service;
 
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.egov.demand.persistence.entity.EgBill;
-import org.egov.demand.persistence.entity.EgDemand;
+import org.egov.demand.persistence.entity.EgBillDetails;
 import org.egov.demand.persistence.repository.BillRepository;
 import org.egov.demand.persistence.repository.BillTypeRepository;
-import org.egov.demand.persistence.repository.DemandRepository;
-import org.egov.demand.web.contract.BillAddlInfo;
+import org.egov.demand.web.contract.BillDetailInfo;
+import org.egov.demand.web.contract.BillInfo;
 import org.egov.demand.web.repository.ModuleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,24 +20,23 @@ public class BillService {
 	@Autowired
 	private BillRepository billRepository;
 	@Autowired
-	private DemandRepository demandRepository;
-	@Autowired
 	private ModuleRepository moduleRepository;
 	@Autowired
 	private BillTypeRepository billTypeRepository;
-	@Autowired
-	private BillDetailsService billDetailsService;
 
-	public BillAddlInfo createBill(Long demandId, BillAddlInfo billAddlInfo) {
-		EgBill egBill = new EgBill(billAddlInfo);
-		EgDemand egDemand = demandRepository.findOne(demandId);
-		egBill.setEgDemand(egDemand);
-		egBill.setModule(moduleRepository.fetchModuleByName(billAddlInfo.getModuleName()).getId());
-		egBill.setEgBillType(billTypeRepository.findByName(billAddlInfo.getBillType()));
-		egBill.setCreateDate(new Date());
-		egBill.setModifiedDate(new Date());
+	public EgBill createBill(Long demandId, BillInfo billInfo) {
+		EgBill egBill = new EgBill(billInfo);
+		List<EgBillDetails> billDetails = new ArrayList<EgBillDetails>();
+		egBill.setEgDemand(demandId);
+		egBill.setModule(moduleRepository.fetchModuleByName(billInfo.getModuleName()).getId());
+		egBill.setEgBillType(billTypeRepository.findByName(billInfo.getBillType()));
 		egBill.setUserId(1l);
-		egBill.setEgBillDetails(billDetailsService.createBillDetails(egDemand, egBill));
-		return billRepository.save(egBill).toDomain(egBill);
+		for (BillDetailInfo billDetailInfo : billInfo.getBillDetailInfos()) {
+			EgBillDetails egBillDetail = new EgBillDetails(billDetailInfo);
+			egBillDetail.setEgBill(egBill);
+			billDetails.add(egBillDetail);
+		}
+		egBill.setEgBillDetails(billDetails);
+		return billRepository.save(egBill);
 	}
 }

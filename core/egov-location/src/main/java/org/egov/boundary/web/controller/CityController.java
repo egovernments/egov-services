@@ -47,7 +47,8 @@ public class CityController {
 		objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
 		try {
 
-			districts = (List<District>) objectMapper.readValue(new ClassPathResource("/json/citiesUrl.json").getFile(),
+			districts = (List<District>) objectMapper.readValue(
+					new ClassPathResource("/json/citiesUrl.json").getInputStream(),
 					new TypeReference<List<District>>() {
 					});
 			if (code != null && !code.isEmpty())

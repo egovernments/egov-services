@@ -1,0 +1,1 @@
+drop sequence if exists SEQ_APPLICATION_NUMBER2017;

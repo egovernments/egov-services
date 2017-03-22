@@ -50,6 +50,7 @@ import org.egov.eis.web.contract.UserGetRequest;
 import org.egov.eis.web.contract.UserRequest;
 import org.egov.eis.web.contract.UserResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -84,10 +85,14 @@ public class UserService {
 			e.printStackTrace();
 		}
 
-		// Configure headers & replace userGetRequestJson with httpEntityRequest when user service expects some header
-//		HttpEntity<String> httpEntityRequest = new HttpEntity<String>(userGetRequestJson, headers);
+		// FIXME : hard-coded auth-token
+		HttpHeaders hardCodedAuthTokenHeader = new HttpHeaders();
+		hardCodedAuthTokenHeader.add("auth-token", "13bbcf71-dc23-4424-82a2-685704dacd09");
+		// Replace hardCodedAuthTokenHeader with header object if required
+		HttpEntity<String> httpEntityRequest = new HttpEntity<String>(userGetRequestJson, hardCodedAuthTokenHeader);
 
-		UserResponse userResponse = new RestTemplate().postForObject(url, userGetRequestJson, UserResponse.class);
+		// Replace httpEntityRequest with userGetRequestJson if there is no need to send headers
+		UserResponse userResponse = new RestTemplate().postForObject(url, httpEntityRequest, UserResponse.class);
 
 		return userResponse.getUser();
 	}
@@ -102,11 +107,16 @@ public class UserService {
 			e.printStackTrace();
 		}
 
-		// Configure headers & replace userJson with httpEntityRequest when user service expects some header
-//		HttpEntity<String> httpEntityRequest = new HttpEntity<String>(userJson, headers);
+		// FIXME : hard-coded auth-token
+		HttpHeaders hardCodedAuthTokenHeader = new HttpHeaders();
+		hardCodedAuthTokenHeader.add("auth-token", "13bbcf71-dc23-4424-82a2-685704dacd09");
+		// Replace hardCodedAuthTokenHeader with header object if required
+		HttpEntity<String> httpEntityRequest = new HttpEntity<String>(userJson, hardCodedAuthTokenHeader);
+
 		UserResponse userResponse = null;
 		try {
-			userResponse = new RestTemplate().postForObject(url, userJson, UserResponse.class);
+			// Replace hardCodedAuthTokenHeader with userResponse if there is no need to send headers
+			userResponse = new RestTemplate().postForObject(url, httpEntityRequest, UserResponse.class);
 		} catch (Exception e) {
 			System.err.println("Exception Occurred While Calling User Service : " + e.getMessage());
 			return null;

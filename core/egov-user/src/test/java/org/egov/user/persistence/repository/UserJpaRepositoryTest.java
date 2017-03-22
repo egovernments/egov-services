@@ -38,7 +38,7 @@ public class UserJpaRepositoryTest {
             "/sql/createUser.sql"
     })
     public void test_should_return_id_for_user_with_given_user_name() {
-        Long id = userJpaRepository.isUserPresent("bigcat399");
+        Long id = userJpaRepository.isUserPresent("bigcat399", 1L);
         assertEquals(Long.valueOf(1), id);;
     }
 
@@ -51,7 +51,7 @@ public class UserJpaRepositoryTest {
             "/sql/createUser.sql"
     })
     public void test_should_return_null_when_user_does_not_exist_for_given_user_name() {
-        Long id = userJpaRepository.isUserPresent("unknown");
+        Long id = userJpaRepository.isUserPresent("unknown", 1L);
         assertNull(id);
     }
 

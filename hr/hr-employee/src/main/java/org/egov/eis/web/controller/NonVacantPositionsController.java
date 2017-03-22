@@ -51,15 +51,18 @@ import org.egov.eis.web.contract.RequestInfo;
 import org.egov.eis.web.contract.ResponseInfo;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
 import org.egov.eis.web.errorhandler.ErrorHandler;
+import org.egov.eis.web.validator.RequestValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -77,49 +80,60 @@ public class NonVacantPositionsController {
 	private ErrorHandler errHandler;
 
 	@Autowired
+	private RequestValidator requestValidator;
+
+	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
 
-	@PostMapping("_search")
+	/**
+	 * Maps Post Requests for _search & returns ResponseEntity of either
+	 * NonVacantPositionsResponse type or ErrorResponse type
+	 * 
+	 * @param nonVacantPositionsGetRequest,
+	 * @param bindingResult
+	 * @param requestInfo
+	 * @param headers
+	 * @return ResponseEntity<?>
+	 */
+	@PostMapping(value = "_search", headers = { "auth-token", "user-info" })
 	@ResponseBody
 	public ResponseEntity<?> search(@ModelAttribute @Valid NonVacantPositionsGetRequest nonVacantPositionsGetRequest,
-			BindingResult bindingResult, @RequestBody RequestInfo requestInfo) {
+			BindingResult bindingResult, @RequestBody RequestInfo requestInfo, @RequestHeader HttpHeaders headers) {
 
-		// validate header
-		if(requestInfo.getApiId() == null || requestInfo.getVer() == null || requestInfo.getTs() == null ) {
-			return errHandler.getErrorResponseEntityForMissingRequestInfo(requestInfo);
-		}
-
-		// validate input params
-		if (bindingResult.hasErrors()) {
-			return errHandler.getErrorResponseEntityForMissingParameters(bindingResult, requestInfo);
-		}
+		ResponseEntity<?> errorResponseEntity = requestValidator.validateSearchRequest(requestInfo, headers, bindingResult);
+		if (errorResponseEntity != null)
+			return errorResponseEntity;
 
 		// Call service
 		List<Long> nonVacantPositionsList = null;
 		try {
-			nonVacantPositionsList = nonVacantPositionsService
-					.getNonVacantPositions(nonVacantPositionsGetRequest, requestInfo);
+			nonVacantPositionsList = nonVacantPositionsService.getNonVacantPositions(nonVacantPositionsGetRequest,
+					requestInfo);
 		} catch (Exception exception) {
 			logger.error("Error while processing request " + nonVacantPositionsGetRequest, exception);
-			return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
+			return errHandler.getResponseEntityForUnexpectedErrors(requestInfo, headers);
 		}
 
-		return getSuccessResponse(nonVacantPositionsList, requestInfo);
+		return getSuccessResponse(nonVacantPositionsList, requestInfo, headers);
 	}
 
 	/**
-	 * Populate Response object and returnnonVacantPositionsList
+	 * Populate NonVacantPositionsResponse object & returns ResponseEntity of type
+	 * NonVacantPositionsResponse containing ResponseInfo & List of NonVacantPositionIds
 	 * 
 	 * @param nonVacantPositionsList
-	 * @return
+	 * @param requestInfo
+	 * @param headers
+	 * @return ResponseEntity<?>
 	 */
-	private ResponseEntity<?> getSuccessResponse(List<Long> nonVacantPositionsList, RequestInfo requestInfo) {
+	private ResponseEntity<?> getSuccessResponse(List<Long> nonVacantPositionsList, RequestInfo requestInfo,
+			HttpHeaders headers) {
 		NonVacantPositionsResponse nonVacantPositionsRes = new NonVacantPositionsResponse();
 		nonVacantPositionsRes.setPositions(nonVacantPositionsList);
 		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 		responseInfo.setStatus(HttpStatus.OK.toString());
 		nonVacantPositionsRes.setResponseInfo(responseInfo);
-		return new ResponseEntity<NonVacantPositionsResponse>(nonVacantPositionsRes, HttpStatus.OK);
+		return new ResponseEntity<NonVacantPositionsResponse>(nonVacantPositionsRes, headers, HttpStatus.OK);
 
 	}
 

@@ -51,7 +51,6 @@ import java.util.Map;
 import org.egov.eis.model.Assignment;
 import org.egov.eis.model.EmployeeInfo;
 import org.egov.eis.model.HODDepartment;
-import org.egov.eis.model.enums.EmployeeStatus;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Component;
@@ -91,7 +90,7 @@ public class EmployeeInfoRowMapper implements ResultSetExtractor<List<EmployeeIn
 				empInfo = new EmpInfo();
 				empInfo.setId(rs.getLong("e_id"));
 				empInfo.setCode(rs.getString("e_code"));
-				empInfo.setEmployeeStatus(EmployeeStatus.fromValue(rs.getString("e_employeeStatus")));
+				empInfo.setEmployeeStatus(rs.getString("e_employeeStatus"));
 				empInfo.setEmployeeType(rs.getLong("e_employeeTypeId"));
 				empInfo.setBank(rs.getLong("e_bankId"));
 				empInfo.setBankBranch(rs.getLong("e_bankBranchId"));
@@ -225,7 +224,7 @@ public class EmployeeInfoRowMapper implements ResultSetExtractor<List<EmployeeIn
 	private class EmpInfo {
 		private Long id;
 		private String code;
-		private EmployeeStatus employeeStatus;
+		private String employeeStatus;
 		private Long employeeType;
 		// Key is assignmentId in the assignments map
 		private Map<Long, AssignmentInfo> assignments = new LinkedHashMap<>();

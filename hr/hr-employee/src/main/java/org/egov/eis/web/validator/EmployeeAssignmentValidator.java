@@ -41,8 +41,8 @@ public class EmployeeAssignmentValidator implements Validator {
 			// check if fromDates are less than toDate
 			if (assignments.get(index).getFromDate().compareTo(assignments.get(index).getToDate()) > 0) {
 				// FIXME : the message can be fromDate cannot be greater than toDate
-				errors.rejectValue("assignments[" + index + "].fromDate", "invalid", "Invalid fromDate");
-				errors.rejectValue("assignments[" + index + "].toDate", "invalid", "Invalid toDate");
+				errors.rejectValue("employee.assignments[" + index + "].fromDate", "invalid", "Invalid fromDate");
+				errors.rejectValue("employee.assignments[" + index + "].toDate", "invalid", "Invalid toDate");
 			}
 		};
 
@@ -57,13 +57,13 @@ public class EmployeeAssignmentValidator implements Validator {
 						&& (primaryAssignments.get(j).getFromDate().compareTo(primaryAssignments.get(i).getToDate()) <= 0))
 					|| ((primaryAssignments.get(j).getToDate().compareTo(primaryAssignments.get(i).getFromDate()) >= 0)
 						&& (primaryAssignments.get(j).getToDate().compareTo(primaryAssignments.get(i).getToDate()) <= 0)))) {
-					errors.rejectValue("assignments[" + primaryMarker.get(i) + "].fromDate", "overlapping",
+					errors.rejectValue("employee.assignments[" + primaryMarker.get(i) + "].fromDate", "overlapping",
 						"Assignment Dates Overlapping");
-					errors.rejectValue("assignments[" + primaryMarker.get(i) + "].toDate", "overlapping",
+					errors.rejectValue("employee.assignments[" + primaryMarker.get(i) + "].toDate", "overlapping",
 						"Assignment Dates Overlapping");
-					errors.rejectValue("assignments[" + primaryMarker.get(j) + "].fromDate", "overlapping",
+					errors.rejectValue("employee.assignments[" + primaryMarker.get(j) + "].fromDate", "overlapping",
 						"Assignment Dates Overlapping");
-					errors.rejectValue("assignments[" + primaryMarker.get(j) + "].toDate", "overlapping",
+					errors.rejectValue("employee.assignments[" + primaryMarker.get(j) + "].toDate", "overlapping",
 						"Assignment Dates Overlapping");
 				}
 			}

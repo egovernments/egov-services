@@ -68,6 +68,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -126,24 +127,34 @@ public class EmployeeService {
 	@Value("${kafka.topics.employee.savedb.key}")
 	String employeeSaveKey;
 
-	public List<EmployeeInfo> getEmployees(EmployeeGetRequest employeeGetRequest, RequestInfo requestInfo) {
+	public List<EmployeeInfo> getEmployees(EmployeeGetRequest employeeGetRequest, RequestInfo requestInfo,
+			HttpHeaders headers) {
 		List<EmployeeInfo> employeeInfoList = employeeRepository.findForCriteria(employeeGetRequest);
 
-		List<Long> ids = employeeInfoList.stream().map(employeeInfo -> employeeInfo.getId()).collect(Collectors.toList());
+		List<Long> ids = employeeInfoList.stream().map(employeeInfo -> employeeInfo.getId())
+				.collect(Collectors.toList());
 
-		List<User> usersList = userService.getUsers(ids, employeeGetRequest.getTenantId(), requestInfo);
+		List<User> usersList = userService.getUsers(ids, employeeGetRequest.getTenantId(), requestInfo, headers);
 		employeeUserMapper.mapUsersWithEmployees(employeeInfoList, usersList);
 
 		return employeeInfoList;
 	}
 
-	public void createEmployee(EmployeeRequest employeeRequest) {
+	public Employee createEmployee(EmployeeRequest employeeRequest, HttpHeaders headers) {
 		UserRequest userRequest = getUserRequest(employeeRequest);
-		Long id = userService.createUser(userRequest);
-		String code = getEmployeeCode(id);
+		User user = userService.createUser(userRequest, headers);
+
+		if(user == null) {
+			return null;
+		}
+
+		String code = getEmployeeCode(user.getId());
 		Employee employee = employeeRequest.getEmployee();
-		employee.setId(id);
+		employee.setId(user.getId());
 		employee.setCode(code);
+		employee.setUser(user);
+
+		employeeRepository.populateIds(employeeRequest);
 
 		String employeeRequestJson = null;
 		try {
@@ -159,6 +170,7 @@ public class EmployeeService {
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}
+		return employee;
 	}
 
 	private String getEmployeeCode(Long id) {
@@ -176,23 +188,21 @@ public class EmployeeService {
 	}
 
 	public void saveEmployee(EmployeeRequest employeeRequest) {
-		Employee employee = employeeRequest.getEmployee();
-
-		employeeRepository.save(employee);
-		employeeJurisdictionRepository.save(employee);
-		employeeLanguageRepository.save(employee);
-		for (int i = 0; i < employee.getAssignments().size(); i++) {
-			employee.getAssignments().get(i).setId(new Date().getTime() + i);
+		employeeRepository.save(employeeRequest);
+		employeeJurisdictionRepository.save(employeeRequest.getEmployee());
+		employeeLanguageRepository.save(employeeRequest.getEmployee());
+		for (int i = 0; i < employeeRequest.getEmployee().getAssignments().size(); i++) {
+			employeeRequest.getEmployee().getAssignments().get(i).setId(new Date().getTime() + i);
 		};
-		assignmentRepository.save(employee);
-		employee.getAssignments().forEach((assignment) -> {
-			hodDepartmentRepository.save(assignment);
+		assignmentRepository.save(employeeRequest);
+		employeeRequest.getEmployee().getAssignments().forEach((assignment) -> {
+			hodDepartmentRepository.save(assignment, employeeRequest.getEmployee().getTenantId());
 		});
-		serviceHistoryRepository.save(employee);
-		probationRepository.save(employee);
-		regularisationRepository.save(employee);
-		technicalQualificationRepository.save(employee);
-		educationalQualificationRepository.save(employee);
-		departmentalTestRepository.save(employee);
+		serviceHistoryRepository.save(employeeRequest);
+		probationRepository.save(employeeRequest);
+		regularisationRepository.save(employeeRequest);
+		technicalQualificationRepository.save(employeeRequest);
+		educationalQualificationRepository.save(employeeRequest);
+		departmentalTestRepository.save(employeeRequest);
 	}
 }

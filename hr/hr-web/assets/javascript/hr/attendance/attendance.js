@@ -1,15 +1,15 @@
 //getting current guerry strings
-function getUrlVars() {
-    var vars = [],
-        hash;
-    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-    for (var i = 0; i < hashes.length; i++) {
-        hash = hashes[i].split('=');
-        vars.push(hash[0]);
-        vars[hash[0]] = hash[1];
-    }
-    return vars;
-}
+// function getUrlVars() {
+//     var vars = [],
+//         hash;
+//     var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+//     for (var i = 0; i < hashes.length; i++) {
+//         hash = hashes[i].split('=');
+//         vars.push(hash[0]);
+//         vars[hash[0]] = hash[1];
+//     }
+//     return vars;
+// }
 
 let months=["January", "February", "March", "April", "May",
  "June", "July", "August", "September", "October",
@@ -60,7 +60,10 @@ class Attendance extends React.Component {
                 dataType: 'json',
                 data:JSON.stringify(body),
                 async: false,
-                contentType: 'application/json'
+                contentType: 'application/json',
+                headers: {
+                        'auth-token': authToken
+                }
             });
 
       // console.log(attendance);

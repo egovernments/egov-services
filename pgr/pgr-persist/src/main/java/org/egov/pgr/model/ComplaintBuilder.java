@@ -128,7 +128,7 @@ public class ComplaintBuilder {
 			this.complaint.getComplainant().setMobile(user.getUser().get(0).getMobileNumber());
 			this.complaint.getComplainant().setEmail(user.getUser().get(0).getEmailId());
 			this.complaint.getComplainant().setAddress(user.getUser().get(0).getPermanentAddress());
-		} else {
+		} else if(!this.requestInfo.getAction().equals("PUT")){
 			this.complaint.getComplainant().setName(this.serviceRequest.getFirstName());
 			this.complaint.getComplainant().setMobile(this.serviceRequest.getPhone());
 			this.complaint.getComplainant().setEmail(this.serviceRequest.getEmail());

@@ -13,6 +13,7 @@ const titleCase = (field) => {
 const defaultAssetSetState = {
     "tenantId": tenantId,
     "name": "",
+    "code": "",
     "department": {
         "id": ""
     },
@@ -79,10 +80,14 @@ class CreateAsset extends React.Component {
   }
 
   getCategory(id) {
-      for (var i = 0; i < this.state.assetCategories.length; i++) {
+      if(this.state.assetCategories.length) {
+        for (var i = 0; i < this.state.assetCategories.length; i++) {
           if (this.state.assetCategories[i].id == id) {
               return this.state.assetCategories[i]["customFields"];
           }
+        }
+      } else {
+        return [];
       }
   }
 
@@ -107,30 +112,30 @@ class CreateAsset extends React.Component {
         error: "",
         success: ""
       })
-      var tempInfo = this.state.assetSet;
+      var tempInfo = this.state.assetSet, _this = this, type = getUrlVars()["type"];
       var body = {
           "RequestInfo": requestInfo,
           "Asset": tempInfo
       };
 
       var response = $.ajax({
-          url: baseUrl + "/asset-services/assets/_create?tenantId=1",
+          url: baseUrl + "/asset-services/assets/" + (type == "update" ? ("_update/"+ _this.state.assetSet.code) : "_create") + "?tenantId=1",
           type: 'POST',
           dataType: 'json',
           data: JSON.stringify(body),
           async: false,
           contentType: 'application/json',
           headers:{
-              'auth-token' :'e4eac22c-2a48-4549-81d8-85d1de08746b'
+              'auth-token' :'1767b001-7966-4030-add2-f2008a88488b'
           }
       });
 
-     if (response["status"] === 201 || response["status"] == 200) {
+     if (response["status"] === 201 || response["status"] == 200 || response["status"] == 204) {
           this.setState({
             ...this.state,
-            assetSet: Object.assign({}, defaultAssetSetState),
-            success: "Asset successfuly added!",
-            customFields: []
+            assetSet: Object.assign({}, (type == "update" ? _this.state.assetSet : defaultAssetSetState)),
+            success: type == "update" ? "Asset successfully modified!" : "Asset successfully added!",
+            customFields: type == "update" ? _this.state.customFields : []
           });
       } else {
            this.setState({
@@ -173,26 +178,12 @@ class CreateAsset extends React.Component {
 
 
   componentDidMount() {
-      var type = getUrlVars()["type"];
+      var type = getUrlVars()["type"], _this = this;
       var id = getUrlVars()["id"];
       $('#dateOfCreation').datetimepicker({
           format: 'DD/MM/YYYY',
           maxDate: new Date()
       });
-      // if(getUrlVars()["type"]==="view")
-      // {
-      //   for (var variable in this.state.assetSet)
-      //     document.getElementById(variable).disabled = true;
-      // }
-
-
-      if (type === "view" || type === "update") {
-          //console.log(getCommonMasterById("asset-services","assets","Assets",id).responseJSON["Assets"][0]);
-          this.setState({
-              assetSet: getCommonMasterById("asset-services", "assets", "Assets", id).responseJSON["Assets"][0]
-          })
-      }
-
 
       this.setState({
           assetCategories: commonApiPost("asset-services", "assetCategories", "_search", {}).responseJSON["AssetCategory"] || [],
@@ -226,7 +217,35 @@ class CreateAsset extends React.Component {
           }).responseJSON["Boundary"] || [],
           statusList: commonApiGet("asset-services", "", "GET_STATUS", {}).responseJSON || {},
           assetCategoriesType: commonApiGet("asset-services", "", "GET_ASSET_CATEGORY_TYPE", {}).responseJSON || {}
-      })
+      });
+
+      if (type === "view" || type === "update") {
+          let asset = getCommonMasterById("asset-services", "assets", "Assets", id).responseJSON["Assets"][0];
+          this.setState({
+              assetSet: asset
+          });
+
+          if(asset.status == "CAPITALIZED") {
+              this.setState({
+                  capitalized: true
+              })
+          }
+
+          if(asset.assetCategory && asset.assetCategory.id) {
+              let count = 10;
+              let timer = setInterval(function(){
+                  count--;
+                  if(count == 0) {
+                    clearInterval(timer);
+                  } else if(_this.state.assetCategories.length) {
+                    clearInterval(timer);
+                    _this.setState({
+                        customFields: _this.getCategory(asset.assetCategory.id)
+                    })
+                  }
+              }, 2000);
+          }
+      }
   }
 
   render() {

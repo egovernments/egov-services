@@ -100,10 +100,12 @@ public class UserService {
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
-		HttpEntity<String> httpEntityRequest = new HttpEntity<String>(userJson, headers);
+
+		// Configure headers & replace userJson with httpEntityRequest when user service expects some header
+//		HttpEntity<String> httpEntityRequest = new HttpEntity<String>(userJson, headers);
 		UserResponse userResponse = null;
 		try {
-			userResponse = new RestTemplate().postForObject(url, httpEntityRequest, UserResponse.class);
+			userResponse = new RestTemplate().postForObject(url, userJson, UserResponse.class);
 		} catch (Exception e) {
 			System.err.println("Exception Occurred While Calling User Service : " + e.getMessage());
 			return null;

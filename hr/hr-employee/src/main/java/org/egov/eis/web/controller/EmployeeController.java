@@ -104,10 +104,11 @@ public class EmployeeController {
 	 * @param headers
 	 * @return ResponseEntity<?>
 	 */
-	@PostMapping(value = "_search", headers = { "auth-token", "user-info" })
+	@PostMapping(value = "_search", headers = { "x-user-info" })
 	@ResponseBody
-	public ResponseEntity<?> search(@ModelAttribute @Valid EmployeeGetRequest employeeGetRequest,
-			BindingResult bindingResult, @RequestBody RequestInfo requestInfo, @RequestHeader HttpHeaders headers) {
+	public ResponseEntity<?> search(@RequestHeader HttpHeaders headers,
+			@ModelAttribute @Valid EmployeeGetRequest employeeGetRequest, BindingResult bindingResult,
+			@RequestBody RequestInfo requestInfo) {
 
 		ResponseEntity<?> errorResponseEntity = requestValidator.validateSearchRequest(requestInfo, headers,
 				bindingResult);
@@ -136,7 +137,7 @@ public class EmployeeController {
 	 * @param headers
 	 * @return ResponseEntity<?>
 	 */
-	@PostMapping(value = "/_create", headers = { "auth-token", "user-info" })
+	@PostMapping(value = "/_create", headers = { "x-user-info" })
 	@ResponseBody
 	public ResponseEntity<?> create(@RequestHeader HttpHeaders headers,
 			@RequestBody @Valid EmployeeRequest employeeRequest, BindingResult bindingResult) {

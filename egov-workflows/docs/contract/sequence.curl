@@ -48,7 +48,7 @@ curl -X POST -H "Content-Type: application/json" -H "Cache-Control: no-cache" -H
   	"type":"EgBillregister",
   	"assignee":{"id":1},
   	"id":89,
-  	"status":"Examinor of Accounts Approved",
+  	"status":"Examiner of Accounts Approved",
   	"action":"forward"
   }	
   

@@ -67,7 +67,7 @@ public class DemandRepository {
 		demandRequest.setDemand(demands);
 		
 		String url = propertiesManager.getDemandServiceHostName()
-				+propertiesManager.getDemandReasonSearchService();
+				+propertiesManager.getCreateDemandSevice();
 		
 		return restTemplate.postForObject(url, demandRequest, DemandResponse.class);
 	}

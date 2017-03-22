@@ -144,7 +144,7 @@
 										Photos/Video
 									</div>
 									<div id="links" class="col-md-9 col-sm-6 col-xs-12 view-content">
-									{{#if files}}
+									{{#each files}}
 										<a href="{{url}}" type="{{contentType}}" class="col-md-4 col-sm-4 col-xs-12 add-margin down-file view-content" data-gallery> 
 											{{#if (contains contentType "video")}}
 												<img class="img-width add-margin" src="../resources/global/images/video.png" alt="">
@@ -154,7 +154,7 @@
 										</a>
 									{{else}}
 										N/A
-									{{/if}}
+									{{/each}}
 									</div>
 								</div>
 					{{#service_requests}}

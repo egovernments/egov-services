@@ -231,11 +231,14 @@ function getComplaint(){
 }
 
 function complaintUpdate(obj){
-	var duplicateResponse, req_obj = {};
-	duplicateResponse =  updateResponse;
+	//console.log('updateResponse', JSON.stringify(updateResponse));
+	
+	var duplicateResponse = {};
+	duplicateResponse =  JSON.parse(JSON.stringify(updateResponse));
+
+	var req_obj = {};
 	req_obj['RequestInfo'] = duplicateResponse.response_info;
 	req_obj['ServiceRequest'] = duplicateResponse.service_requests[0];
-
 	req_obj['RequestInfo']['auth_token'] = localStorage.getItem('auth');
 
 	var dat = new Date().toLocaleDateString();
@@ -268,7 +271,7 @@ function complaintUpdate(obj){
 		req_obj.ServiceRequest.values['departmentName'] = $("#approvalDepartment option:selected").text();
 	if($("#approvalPosition").val())
 		req_obj.ServiceRequest.values['assignment_id'] = $("#approvalPosition").val();
-	//console.log(JSON.stringify(req_obj));
+
 	$.ajax({
 		url: "/pgr/seva?jurisdiction_id=ap.public",
 		type : 'PUT',

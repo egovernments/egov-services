@@ -84,8 +84,15 @@ public class UserService {
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
-		HttpEntity<String> httpEntityRequest = new HttpEntity<String>(userGetRequestJson, headers);
 
+		// FIXME : hard-coded auth-token
+		HttpHeaders hardCodedAuthTokenHeader = new HttpHeaders();
+		hardCodedAuthTokenHeader.add("auth-token", "13bbcf71-dc23-4424-82a2-685704dacd09");
+		hardCodedAuthTokenHeader.setContentType(MediaType.APPLICATION_JSON);
+		// Replace hardCodedAuthTokenHeader with header object if required
+		HttpEntity<String> httpEntityRequest = new HttpEntity<String>(userGetRequestJson, hardCodedAuthTokenHeader);
+
+		// Replace httpEntityRequest with userGetRequestJson if there is no need to send headers
 		UserResponse userResponse = new RestTemplate().postForObject(url, httpEntityRequest, UserResponse.class);
 
 		return userResponse.getUser();
@@ -100,9 +107,17 @@ public class UserService {
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
-		HttpEntity<String> httpEntityRequest = new HttpEntity<String>(userJson, headers);
+
+		// FIXME : hard-coded auth-token
+		HttpHeaders hardCodedAuthTokenHeader = new HttpHeaders();
+		hardCodedAuthTokenHeader.add("auth-token", "13bbcf71-dc23-4424-82a2-685704dacd09");
+		hardCodedAuthTokenHeader.setContentType(MediaType.APPLICATION_JSON);
+		// Replace hardCodedAuthTokenHeader with header object if required
+		HttpEntity<String> httpEntityRequest = new HttpEntity<String>(userJson, hardCodedAuthTokenHeader);
+
 		UserResponse userResponse = null;
 		try {
+			// Replace hardCodedAuthTokenHeader with userResponse if there is no need to send headers
 			userResponse = new RestTemplate().postForObject(url, httpEntityRequest, UserResponse.class);
 		} catch (Exception e) {
 			System.err.println("Exception Occurred While Calling User Service : " + e.getMessage());

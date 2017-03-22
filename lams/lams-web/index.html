@@ -563,13 +563,13 @@
               }
           });
 
-          if(response["statusText"]==="OK")
+          if(response["status"]===200)
           {
               localStorage.setItem("auth-token", response.responseJSON["access_token"]);
             // alert("Successfully added");
           }
           else {
-            alert(response["statusText"]);
+            // alert(response["statusText"]);
           }
 
           // console.log(localStorage.getItem("auth-token"));

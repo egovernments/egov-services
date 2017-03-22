@@ -2,11 +2,9 @@ package org.egov.lams.model;
 
 import java.util.Date;
 import java.util.List;
-
+import java.util.Set;
 import org.egov.lams.model.enums.Status;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,7 +19,7 @@ import lombok.ToString;
 public class AgreementCriteria {
 
 	 private String tenantId;
-	 private List<Long> agreementId;
+	 private Set<Long> agreementId;
 	 private String agreementNumber;
 	 private String tenderNumber;
 	 
@@ -47,6 +45,6 @@ public class AgreementCriteria {
 	
 	/* @Setter(onMethod=@__(@JsonIgnore))
 	 @JsonIgnore*/
-	 private List<Long> asset;
-	 private List<Long> allottee;
+	 private Set<Long> asset;
+	 private Set<Long> allottee;
 }

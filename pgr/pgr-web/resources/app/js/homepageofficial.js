@@ -434,7 +434,7 @@ function worklist(){
 		{ "title":"Nature of Work", "width": "20%", "render": function ( data, type, full, meta ) {
 			return 'Grievance';
 	    } },
-		{ "title":"Status", "data": "values.ComplaintStatus","width": "24%"},
+		{ "title":"Status", "data": "values.complaintStatus","width": "24%"},
 		{ "title":"Comments", "width": "20%", "render": function ( data, type, full, meta ) {
 			var text = 'Complaint Number '+(full.service_request_id)+' for '+(full.service_name)+' filed on '+(full.requested_datetime)+'. Date of Resolution is '+(full.expected_datetime);
 			return text;

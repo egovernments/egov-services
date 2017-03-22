@@ -1,6 +1,8 @@
 package org.egov.lams.repository.helper;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.egov.lams.model.Agreement;
@@ -11,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class AssetHelper {
 
-	public String getAssetUrl(AgreementCriteria assetCriteria) {
+	public String getAssetParams(AgreementCriteria assetCriteria) {
 
 		StringBuilder assetParams = new StringBuilder();
 
@@ -71,8 +73,11 @@ public class AssetHelper {
 	 * @param assetList
 	 * @return
 	 */
-	public List<Long> getAssetIdList(List<Asset> assetList) {
-		return assetList.stream().map(asset -> asset.getId()).collect(Collectors.toList());
+	public Set<Long> getAssetIdList(List<Asset> assetList) {
+		
+		Set<Long> assetIdSet = new HashSet<>();
+		assetIdSet.addAll(assetList.stream().map(asset -> asset.getId()).collect(Collectors.toList()));
+		return assetIdSet;
 	}
 
 	/**
@@ -81,8 +86,10 @@ public class AssetHelper {
 	 * @param agreementList
 	 * @return
 	 */
-	public List<Long> getAssetIdListByAgreements(List<Agreement> agreementList) {
-		return agreementList.stream().map(agreement -> agreement.getAsset().getId()).collect(Collectors.toList());
+	public Set<Long> getAssetIdListByAgreements(List<Agreement> agreementList) {
+		Set<Long> assetIdSet = new HashSet<>();
+		assetIdSet.addAll(agreementList.stream().map(agreement -> agreement.getAsset().getId()).collect(Collectors.toList()));
+		return assetIdSet;
 	}
 
 	private boolean addAndClauseIfRequired(boolean appendAndClauseFlag, StringBuilder queryString) {
@@ -99,14 +106,15 @@ public class AssetHelper {
 	 * @param idList
 	 * @return
 	 */
-	private String getIdParams(List<Long> idList) {
+	private String getIdParams(Set<Long> idList) {
 		if (idList.isEmpty())
 			return "";
+		Long[] list = idList.toArray(new Long[idList.size()]);
 		StringBuilder query = new StringBuilder();
 		// might be a need to throw exception
-		query.append(Long.toString(idList.get(0)));
+		query.append(Long.toString(list[0]));
 		for (int i = 1; i < idList.size(); i++) {
-			query.append("," + idList.get(i));
+			query.append("," + list[i]);
 		}
 
 		return query.toString();

@@ -1,31 +1,31 @@
-package org.egov.lams.repository;
+package org.egov.lams.service;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.egov.lams.config.PropertiesManager;
-import org.egov.lams.contract.AgreementRequest;
 import org.egov.lams.contract.AllotteeResponse;
 import org.egov.lams.contract.CreateUserRequest;
 import org.egov.lams.contract.UserResponse;
 import org.egov.lams.contract.UserSearchRequest;
-import org.egov.lams.exception.AgreementException;
 import org.egov.lams.exception.LamsException;
-import org.egov.lams.model.Agreement;
 import org.egov.lams.model.Allottee;
+import org.egov.lams.model.RequestInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 @Repository
-public class AllotteeRepository {
+public class AllotteeService {
+	
+	public static final Logger logger = LoggerFactory.getLogger(Allottee.class);
 
 	@Autowired
 	private PropertiesManager propertiesManager;
 
-	public boolean isAllotteeExist(AgreementRequest agreementRequest) {
+	public AllotteeResponse getAllottees(Allottee allottee,RequestInfo requestInfo) {
 
 		RestTemplate restTemplate = new RestTemplate();
 		String url = propertiesManager.getAllotteeServiceHostName()
@@ -33,27 +33,31 @@ public class AllotteeRepository {
 				+ propertiesManager.getAllotteeServiceSearchPath();
 		
 		UserSearchRequest userSearchRequest = new UserSearchRequest();
-		// TODO just setting id field, change when they user search with
+		// FIXME just setting id field, change when they user search with
 		// modelattribute rather than request body
-		userSearchRequest.setRequestInfo(agreementRequest.getRequestInfo());
+		userSearchRequest.setRequestInfo(requestInfo);
 		List<Long> allotteeId = new ArrayList<>();
-		allotteeId.add(agreementRequest.getAgreement().getAllottee().getId());
+		allotteeId.add(allottee.getId());
 		userSearchRequest.setId(allotteeId);
-		AllotteeResponse allotteeResponse = restTemplate.postForObject(url, userSearchRequest, AllotteeResponse.class);
-		List<Allottee> allottees = allotteeResponse.getAllottee();
-
-		return !allottees.isEmpty();
+		
+		AllotteeResponse allotteeResponse = null;
+		try{
+			allotteeResponse = restTemplate.postForObject(url, userSearchRequest, AllotteeResponse.class);
+		}catch (Exception e) {
+			logger.info(e.getMessage(), e);
+			throw new RuntimeException(e.getMessage()+e.getCause());
+		}
+		return allotteeResponse;
 	}
 	
-	public void createAllottee(AgreementRequest agreementRequest) {
+	public void createAllottee(Allottee allottee,RequestInfo requestInfo) {
 		
 		RestTemplate restTemplate = new RestTemplate();
 		 String url = propertiesManager.getAllotteeServiceHostName()
 			    	+ propertiesManager.getAllotteeServiceBasePAth()
 			    	+ propertiesManager.getAllotteeServiceCreatePAth();
-		 //TODO set user name and password using any gen service
-		 CreateUserRequest userRequest = new CreateUserRequest(agreementRequest.getRequestInfo(),
-				 agreementRequest.getAgreement().getAllottee());
+		 //FIXME set user name and password using any gen service
+		 CreateUserRequest userRequest = new CreateUserRequest(requestInfo,allottee);
 		 try{
 		 restTemplate.postForObject(url, userRequest, UserResponse.class);
 		 }catch (RestClientException restClientException) {
@@ -61,7 +65,5 @@ public class AllotteeRepository {
 			 throw new LamsException(restClientException.getMessage());
 			 // TODO: handle exception
 		}
-		
 	}
-
 }

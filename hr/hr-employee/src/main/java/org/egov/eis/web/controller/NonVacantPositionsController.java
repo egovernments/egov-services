@@ -95,12 +95,12 @@ public class NonVacantPositionsController {
 	 * @param headers
 	 * @return ResponseEntity<?>
 	 */
-	@PostMapping(value = "_search", headers = { "auth-token", "user-info" })
+	@PostMapping(value = "_search", headers = { "x-user-info" })
 	@ResponseBody
 	public ResponseEntity<?> search(@ModelAttribute @Valid NonVacantPositionsGetRequest nonVacantPositionsGetRequest,
 			BindingResult bindingResult, @RequestBody RequestInfo requestInfo, @RequestHeader HttpHeaders headers) {
 
-		ResponseEntity<?> errorResponseEntity = requestValidator.validateSearchRequest(requestInfo, headers, bindingResult);
+		ResponseEntity<?> errorResponseEntity = requestValidator.validateSearchRequest(requestInfo, bindingResult);
 		if (errorResponseEntity != null)
 			return errorResponseEntity;
 
@@ -111,10 +111,10 @@ public class NonVacantPositionsController {
 					requestInfo);
 		} catch (Exception exception) {
 			logger.error("Error while processing request " + nonVacantPositionsGetRequest, exception);
-			return errHandler.getResponseEntityForUnexpectedErrors(requestInfo, headers);
+			return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
 		}
 
-		return getSuccessResponse(nonVacantPositionsList, requestInfo, headers);
+		return getSuccessResponse(nonVacantPositionsList, requestInfo);
 	}
 
 	/**
@@ -126,14 +126,13 @@ public class NonVacantPositionsController {
 	 * @param headers
 	 * @return ResponseEntity<?>
 	 */
-	private ResponseEntity<?> getSuccessResponse(List<Long> nonVacantPositionsList, RequestInfo requestInfo,
-			HttpHeaders headers) {
+	private ResponseEntity<?> getSuccessResponse(List<Long> nonVacantPositionsList, RequestInfo requestInfo) {
 		NonVacantPositionsResponse nonVacantPositionsRes = new NonVacantPositionsResponse();
 		nonVacantPositionsRes.setPositions(nonVacantPositionsList);
 		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 		responseInfo.setStatus(HttpStatus.OK.toString());
 		nonVacantPositionsRes.setResponseInfo(responseInfo);
-		return new ResponseEntity<NonVacantPositionsResponse>(nonVacantPositionsRes, headers, HttpStatus.OK);
+		return new ResponseEntity<NonVacantPositionsResponse>(nonVacantPositionsRes, HttpStatus.OK);
 
 	}
 

@@ -57,6 +57,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.egov.demand.web.contract.Demand;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -105,6 +107,11 @@ public class EgDemand implements java.io.Serializable {
 	@Column(name = "amt_rebate")
 	private BigDecimal amtRebate = BigDecimal.ZERO;
 
+	public Demand toDomain() {
+		return Demand.builder().id(id).installment(egInstallmentMaster.getDescription())
+				.moduleName("Leases And Agreements").build();
+	}
+    
 	@Override
 	public int hashCode() {
 		final int prime = 31;

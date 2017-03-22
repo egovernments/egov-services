@@ -57,7 +57,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import org.egov.demand.web.contract.BillAddlInfo;
+import org.egov.demand.web.contract.BillInfo;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -83,9 +83,10 @@ public class EgBill implements java.io.Serializable {
 	@Id
 	@GeneratedValue(generator = SEQ_EGBILL, strategy = GenerationType.SEQUENCE)
 	private Long id;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_demand")
-	private EgDemand egDemand;
+	// @ManyToOne(fetch = FetchType.LAZY)
+	// @JoinColumn(name = "id_demand")
+	@Column(name = "id_demand")
+	private Long egDemand;
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_bill_type")
 	private EgBillType egBillType;
@@ -129,14 +130,14 @@ public class EgBill implements java.io.Serializable {
 	private String boundaryType;
 	@Column(name = "total_amount")
 	private BigDecimal totalAmount;
-	@Column(name = "id_status")
+	@Column(name = "total_collected_amount")
 	private BigDecimal totalCollectedAmount;
 	@Column(name = "service_code")
 	private String serviceCode;
 	@Column(name = "part_payment_allowed")
-	private Boolean partPaymentAllowed;
-	@Column(name = "total_collected_amount")
-	private Boolean overrideAccountHeadsAllowed;
+	private Character partPaymentAllowed;
+	@Column(name = "override_accountheads_allowed")
+	private Character overrideAccountHeadsAllowed;
 	@Column(name = "description")
 	private String description;
 	@Column(name = "min_amt_payable")
@@ -148,26 +149,25 @@ public class EgBill implements java.io.Serializable {
 	@Column(name = "dspl_message")
 	private String displayMessage;
 	@Column(name = "callback_for_apportion")
-	private Boolean callBackForApportion;
-	private String transanctionReferenceNumber;
+	private Character callBackForApportion;
 	@Column(name = "emailid")
 	private String emailId;
 
-	public EgBill (BillAddlInfo bill) {
-		//this.egDemand = bill.getDemandId();
-		//this.egBillType = bill.getBillType();
+	public EgBill(BillInfo bill) {
+		this.egDemand = bill.getDemandId();
+		// this.egBillType = bill.getBillType();
 		this.citizenName = bill.getCitizenName();
 		this.citizenAddress = bill.getCitizenAddress();
 		this.billNo = bill.getBillNumber();
 		this.issueDate = bill.getIssuedDate();
 		this.lastDate = bill.getLastDate();
-		//this.module = bill.getModuleName();
-		//this.userId = bill.getUserid();
-		//this.createDate = bill.getCreateDate();
-		//this.modifiedDate = bill.getModifiedDate();
-		//this.egBillDetails = bill.getEgbillDetails();
-		this.is_History = bill.getHistory();
-		this.is_Cancelled = bill.getCancelled();
+		// this.module = bill.getModuleName();
+		// this.userId = bill.getUserid();
+		this.createDate = new Date();
+		this.modifiedDate = new Date();
+		// this.egBillDetails = bill.getEgbillDetails();
+		this.is_History = "N";
+		this.is_Cancelled = "N";
 		this.fundCode = bill.getFundCode();
 		this.functionaryCode = BigDecimal.valueOf(bill.getFunctionaryCode());
 		this.fundSourceCode = bill.getFundSourceCode();
@@ -176,7 +176,6 @@ public class EgBill implements java.io.Serializable {
 		this.boundaryNum = bill.getBoundaryNumber();
 		this.boundaryType = bill.getBoundaryType();
 		this.totalAmount = BigDecimal.valueOf(bill.getTotalAmount());
-		//this.totalCollectedAmount = bill.getTotalcollectedamount();
 		this.serviceCode = bill.getServiceCode();
 		this.partPaymentAllowed = bill.getPartPaymentAllowed();
 		this.overrideAccountHeadsAllowed = bill.getOverrideAccHeadAllowed();
@@ -186,20 +185,10 @@ public class EgBill implements java.io.Serializable {
 		this.consumerType = bill.getConsumerType();
 		this.displayMessage = bill.getDisplayMessage();
 		this.callBackForApportion = bill.getCallbackForApportion();
-		//this.transanctionReferenceNumber = bill.getTransanctionreferencenumber();
+		this.billNo = bill.getReferenceNumber();
 		this.emailId = bill.getEmailId();
+	}
 
-	}
-	public BillAddlInfo toDomain(EgBill bill){
-		return BillAddlInfo.builder().id(id)
-				.billType(egBillType.getName())
-				.citizenName(citizenName)
-				.citizenAddress(citizenAddress)
-				.billNumber(billNo)
-				.issuedDate(issueDate)
-				.lastDate(lastDate)
-				.build();
-	}
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();

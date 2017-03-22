@@ -37,88 +37,39 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.demand.persistence.entity;
+package org.egov.demand.utils;
 
-import java.util.Date;
+import org.egov.demand.web.contract.collection.BillDetails;
+import org.egov.demand.web.contract.collection.BillInfoImpl;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.basic.BooleanConverter;
+import com.thoughtworks.xstream.converters.basic.DateConverter;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+public class BillCollectXmlHandler {
+    private static final String DATE_FORMAT_DDMMYYY = "dd/MM/yyyy";
 
-/**
- * EgBillType entity.
- * 
- * @author Ramki
- */
-@Entity
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
-@Table(name = "eg_bill_type")
-@SequenceGenerator(name = EgBillType.SEQ_EGBILLTYPE, sequenceName = EgBillType.SEQ_EGBILLTYPE, allocationSize = 1)
-public class EgBillType implements java.io.Serializable {
-	private static final long serialVersionUID = -2187446482813112908L;
-	public static final String SEQ_EGBILLTYPE = "seq_eg_bill_type";
-	@Id
-	@GeneratedValue(generator = SEQ_EGBILLTYPE, strategy = GenerationType.SEQUENCE)
-	private Long id;
-	@Column(name = "name")
-	private String name;
-	@Column(name = "code")
-	private String code;
-	@Column(name = "create_date")
-	private Date createDate;
-	@Column(name = "modified_date")
-	private Date modifiedDate;
+    public String toXML(final Object obj) {
+        final XStream xStream = createXStream();
+        final String[] array = { DATE_FORMAT_DDMMYYY };
+        xStream.registerConverter(new DateConverter(DATE_FORMAT_DDMMYYY, array));
+        xStream.registerConverter(BooleanConverter.BINARY);
+        xStream.aliasAttribute(BillDetails.class, "billDate", "billDate");
+        return xStream.toXML(obj);
+    }
 
-	public Long getId() {
-		return this.id;
-	}
+    protected XStream createXStream() {
+        final XStream xstream = new XStream();
+        xstream.autodetectAnnotations(true);
+        return xstream;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return this.name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public Date getCreateDate() {
-		return createDate;
-	}
-
-	public void setCreateDate(Date createDate) {
-		this.createDate = createDate;
-	}
-
-	public Date getModifiedDate() {
-		return modifiedDate;
-	}
-
-	public void setModifiedDate(Date modifiedDate) {
-		this.modifiedDate = modifiedDate;
-	}
-
-	public String getCode() {
-		return code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
+    public Object toObject(final String xml) {
+        final XStream xStream = createXStream();
+        xStream.alias("bill-collect", BillInfoImpl.class);
+        final String[] array = { DATE_FORMAT_DDMMYYY };
+        xStream.registerConverter(new DateConverter(DATE_FORMAT_DDMMYYY, array));
+        xStream.registerConverter(BooleanConverter.BINARY);
+        return xStream.fromXML(xml);
+    }
 }

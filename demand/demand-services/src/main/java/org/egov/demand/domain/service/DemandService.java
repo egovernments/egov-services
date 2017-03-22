@@ -44,13 +44,13 @@ public class DemandService {
 		egDemand.setCreateDate(new Date());
 		egDemand.setModifiedDate(new Date());
 		for (DemandDetails demandDetail : demand.getDemandDetails()) {
-			if (!demandDetail.getTaxAmount().isEmpty() && demandDetail.getTaxReason() != null
+			if (demandDetail.getTaxAmount() != null && demandDetail.getTaxReason() != null
 					&& !demandDetail.getTaxPeriod().isEmpty()) {
 				demandReason = demandReasonService.findByCodeInstModule(demandDetail.getTaxReason(),
 						demandDetail.getTaxPeriod(), demand.getModuleName());
 				if (demandReason != null) {
-					egDemandDetails = EgDemandDetails.fromReasonAndAmounts(new BigDecimal(demandDetail.getTaxAmount()),
-							demandReason, BigDecimal.ZERO);
+					egDemandDetails = EgDemandDetails.fromReasonAndAmounts(demandDetail.getTaxAmount(), demandReason,
+							BigDecimal.ZERO);
 					egDemandDetails.setEgDemand(egDemand);
 					demandDetailsList.add(egDemandDetails);
 				} else

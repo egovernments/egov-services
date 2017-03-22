@@ -6,7 +6,9 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.egov.demand.domain.service.BillService;
-import org.egov.demand.web.contract.BillAddlInfo;
+import org.egov.demand.persistence.entity.EgBill;
+import org.egov.demand.utils.CollectionUtils;
+import org.egov.demand.web.contract.BillInfo;
 import org.egov.demand.web.contract.BillRequest;
 import org.egov.demand.web.contract.BillResponse;
 import org.egov.demand.web.contract.RequestInfo;
@@ -38,17 +40,17 @@ public class BillController {
 	@PostMapping("_create")
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> create(@RequestBody @Valid BillRequest billRequest, BindingResult bindingResult) {
-		BillAddlInfo bill = null;
-		List<BillAddlInfo> bills = new ArrayList<BillAddlInfo>();
+		EgBill bill = null;
+		List<EgBill> bills = new ArrayList<EgBill>();
 		if (bindingResult.hasErrors()) {
 			return errHandler.getErrorResponseEntityForBindingErrors(bindingResult, billRequest.getRequestInfo());
 		}
-		if ((billRequest.getBillAddlInfos() == null || billRequest.getBillAddlInfos().size() == 0)
-				&& billRequest.getBillAddlInfos() == null) {
+		if ((billRequest.getBillInfos() == null || billRequest.getBillInfos().size() == 0)
+				&& billRequest.getBillInfos() == null) {
 			return errHandler.getErrorResponseEntityForMissingRequestInfo(billRequest.getRequestInfo());
 		}
 		try {
-			for (BillAddlInfo billInfo : billRequest.getBillAddlInfos()) {
+			for (BillInfo billInfo : billRequest.getBillInfos()) {
 				bill = billService.createBill(billInfo.getDemandId(), billInfo);
 				bills.add(bill);
 			}
@@ -64,9 +66,14 @@ public class BillController {
 	 * @param employeesList
 	 * @return
 	 */
-	private ResponseEntity<?> getSuccessResponse(List<BillAddlInfo> bills, RequestInfo requestInfo) {
+	private ResponseEntity<?> getSuccessResponse(List<EgBill> bills, RequestInfo requestInfo) {
 		BillResponse billResponse = new BillResponse();
-		billResponse.setBills(bills);
+		List<String> billxmls = new ArrayList<String>();
+		CollectionUtils collectionUtils = new CollectionUtils();
+		for (EgBill bill : bills) {
+			billxmls.add(collectionUtils.generateBillXML(bill, bill.getDisplayMessage()));
+		}
+		billResponse.setBillXmls(billxmls);
 
 		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 		responseInfo.setStatus(HttpStatus.OK.toString());
@@ -74,9 +81,9 @@ public class BillController {
 		return new ResponseEntity<BillResponse>(billResponse, HttpStatus.OK);
 	}
 
-	private ResponseEntity<?> getSuccessResponseForSearch(List<BillAddlInfo> bills, RequestInfo requestInfo) {
+	private ResponseEntity<?> getSuccessResponseForSearch(List<BillInfo> bills, RequestInfo requestInfo) {
 		BillResponse billResponse = new BillResponse();
-		billResponse.setBills(bills);
+		billResponse.setBillInfos(bills);
 		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 		responseInfo.setStatus(HttpStatus.OK.toString());
 		billResponse.setResponseInfo(responseInfo);

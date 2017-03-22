@@ -37,88 +37,66 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.demand.persistence.entity;
+package org.egov.demand.web.contract.collection;
 
-import java.util.Date;
+import com.thoughtworks.xstream.annotations.XStreamAlias;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+@XStreamAlias("payee")
+public class BillPayeeDetails {
 
-/**
- * EgBillType entity.
- * 
- * @author Ramki
- */
-@Entity
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
-@Table(name = "eg_bill_type")
-@SequenceGenerator(name = EgBillType.SEQ_EGBILLTYPE, sequenceName = EgBillType.SEQ_EGBILLTYPE, allocationSize = 1)
-public class EgBillType implements java.io.Serializable {
-	private static final long serialVersionUID = -2187446482813112908L;
-	public static final String SEQ_EGBILLTYPE = "seq_eg_bill_type";
-	@Id
-	@GeneratedValue(generator = SEQ_EGBILLTYPE, strategy = GenerationType.SEQUENCE)
-	private Long id;
-	@Column(name = "name")
-	private String name;
-	@Column(name = "code")
-	private String code;
-	@Column(name = "create_date")
-	private Date createDate;
-	@Column(name = "modified_date")
-	private Date modifiedDate;
+    private final String payeeName;
+    private final String payeeAddress;
+    private final String payeeEmail;
 
-	public Long getId() {
-		return this.id;
-	}
+    @XStreamAlias("bills")
+    private final List<BillDetails> billDetails = new ArrayList<BillDetails>(0);
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public BillPayeeDetails(final String payeeName, final String payeeAddress, final String payeeEmail) {
+        super();
+        this.payeeName = payeeName;
+        this.payeeAddress = payeeAddress;
+        this.payeeEmail = payeeEmail;
+    }
 
-	public String getName() {
-		return this.name;
-	}
+    public String getPayeeName() {
+        return payeeName;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public String getPayeeAddress() {
+        return payeeAddress;
+    }
+    
+    public String getPayeeEmail() {
+        return payeeEmail;
+    }
 
-	public Date getCreateDate() {
-		return createDate;
-	}
+    public List<BillDetails> getBillDetails() {
+        return billDetails;
+    }
 
-	public void setCreateDate(Date createDate) {
-		this.createDate = createDate;
-	}
+    public void addBillDetails(final BillDetails billDetail) {
+        billDetails.add(billDetail);
+    }
 
-	public Date getModifiedDate() {
-		return modifiedDate;
-	}
+    @Override
+    public boolean equals(final Object obj) {
+        if (obj instanceof BillPayeeDetails) {
+            final BillPayeeDetails payee = (BillPayeeDetails) obj;
+            if (payeeName.equals(payee.payeeName) && payeeAddress.equals(payee.payeeAddress) && payeeEmail.equals(payee.payeeEmail))
+                return true;
+        }
+        return false;
+    }
 
-	public void setModifiedDate(Date modifiedDate) {
-		this.modifiedDate = modifiedDate;
-	}
-
-	public String getCode() {
-		return code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
+    /*
+     * (non-Javadoc)
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        return payeeName.hashCode() + payeeAddress.hashCode() + payeeEmail.hashCode();
+    }
 }

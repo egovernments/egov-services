@@ -1,16 +1,18 @@
 package org.egov.lams.repository.helper;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
-
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.AgreementCriteria;
 import org.egov.lams.model.Allottee;
 import org.springframework.stereotype.Component;
+
 @Component
 public class AllotteeHelper {
 
-	public String getAllotteeUrl(AgreementCriteria searchAllottee) {
+	public String getAllotteeParams(AgreementCriteria searchAllottee) {
 
 		if (searchAllottee.getAllottee() == null && searchAllottee.getMobilenumber() == null)
 			throw new RuntimeException("all asset search fields are null");
@@ -30,12 +32,18 @@ public class AllotteeHelper {
 		return allotteeParams.toString();
 	}
 
-	public List<Long> getAllotteeIdList(List<Allottee> allotteeList) {
-		return allotteeList.stream().map(allottee -> allottee.getId()).collect(Collectors.toList());
+	public Set<Long> getAllotteeIdList(List<Allottee> allotteeList) {
+		
+		Set<Long> idSet = new HashSet<>();
+		idSet.addAll(allotteeList.stream().map(allottee -> allottee.getId()).collect(Collectors.toList()));
+		return idSet;
 	}
 
-	public List<Long> getAllotteeIdListByAgreements(List<Agreement> agreementList) {
-		return agreementList.stream().map(agreement -> agreement.getAllottee().getId()).collect(Collectors.toList());
+	public Set<Long> getAllotteeIdListByAgreements(List<Agreement> agreementList) {
+		
+		Set<Long> allotteeIdList = new HashSet<>();
+		allotteeIdList.addAll(agreementList.stream().map(agreement -> agreement.getAllottee().getId()).collect(Collectors.toList()));
+		return allotteeIdList;
 	}
 
 	private boolean addAndClauseIfRequired(boolean appendAndClauseFlag, StringBuilder queryString) {
@@ -45,10 +53,11 @@ public class AllotteeHelper {
 		return true;
 	}
 
-	private String getIdParams(List<Long> idList) {
-		StringBuilder query = new StringBuilder(Long.toString(idList.get(0)));
-		for (int i = 1; i < idList.size(); i++) {
-			query.append("," + idList.get(i));
+	private String getIdParams(Set<Long> idList) {
+		Long[] list = idList.toArray(new Long[idList.size()]);
+		StringBuilder query = new StringBuilder(Long.toString(list[0]));
+		for (int i = 1; i < list.length; i++) {
+			query.append("," + list[i]);
 		}
 		return query.toString();
 	}

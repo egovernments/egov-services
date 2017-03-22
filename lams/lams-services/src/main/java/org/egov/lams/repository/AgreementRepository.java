@@ -16,6 +16,7 @@ import org.egov.lams.repository.helper.AgreementHelper;
 import org.egov.lams.repository.helper.AllotteeHelper;
 import org.egov.lams.repository.helper.AssetHelper;
 import org.egov.lams.repository.rowmapper.AgreementRowMapper;
+import org.egov.lams.service.AssetService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,22 +30,25 @@ public class AgreementRepository {
 	public static final Logger logger = LoggerFactory.getLogger(AgreementRepository.class);
 
 	@Autowired
-	PropertiesManager propertiesManager;
+	private PropertiesManager propertiesManager;
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
 	@Autowired
-	RestTemplate restTemplate;
+	private RestTemplate restTemplate;
+	
+	@Autowired
+	private AssetService assetService;
 
 	@Autowired
-	AssetHelper assetHelper;
+	private AssetHelper assetHelper;
 
 	@Autowired
-	AllotteeHelper allotteeHelper;
+	private AllotteeHelper allotteeHelper;
 
 	@Autowired
-	AgreementHelper agreementHelper;
+	private AgreementHelper agreementHelper;
 
 	/**
 	 * Allottee criteria is on name or mobile number which is expected to return
@@ -175,7 +179,7 @@ public class AgreementRepository {
 	 * Allottee API
 	 */
 	public List<Allottee> getAllottees(AgreementCriteria agreementCriteria) {
-		String queryString = allotteeHelper.getAllotteeUrl(agreementCriteria);
+		String queryString = allotteeHelper.getAllotteeParams(agreementCriteria);
 		logger.info("AgreementController SearchAgreementService AgreementRepository : inside Allottee API caller");
 
 		String url = null;
@@ -200,26 +204,16 @@ public class AgreementRepository {
 	}
 
 	/*
-	 * method to return a list of Asset objects by making an API call to Asset
+	 * method to return a list of Asset objects by calling AssetService
 	 * API
 	 */
 	public List<Asset> getAssets(AgreementCriteria agreementCriteria) {
-		String queryString = assetHelper.getAssetUrl(agreementCriteria);
-		String url = null;
-		AssetResponse AssetResponse = null;
-		try {
-			url = propertiesManager.getAssetServiceHostName() + propertiesManager.getAssetServiceBasePAth()
-					+ propertiesManager.getAssetServiceSearchPath() + "?" + queryString;
-			logger.info(url.toString());
-			AssetResponse = restTemplate.postForObject(url, new RequestInfo(), AssetResponse.class);
-		} catch (Exception e) {
-			// FIXME log error to getstacktrace
-			throw new RuntimeException("check if entered asset API url is correct or the asset service is running");
-		}
-		System.err.println(AssetResponse);
-		if (AssetResponse.getAssets() == null || AssetResponse.getAssets().size() <= 0)
+		String queryString = assetHelper.getAssetParams(agreementCriteria);
+		AssetResponse assetResponse = assetService.getAssets(queryString, new RequestInfo());
+		if (assetResponse.getAssets() == null || assetResponse.getAssets().size() <= 0)
 			throw new RuntimeException("No assets found for given criteria");
+		// FIXME empty response exception
 
-		return AssetResponse.getAssets();
+		return assetResponse.getAssets();
 	}
 }

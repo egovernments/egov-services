@@ -1,5 +1,9 @@
 package org.egov.pgr.domain.service;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.egov.pgr.domain.model.Complaint;
 import org.egov.pgr.domain.model.ComplaintSearchCriteria;
@@ -11,10 +15,6 @@ import org.egov.pgr.persistence.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 @Service
 public class ComplaintService {
 
@@ -25,9 +25,8 @@ public class ComplaintService {
 
 	@Autowired
 	public ComplaintService(ComplaintRepository complaintRepository,
-							SevaNumberGeneratorService sevaNumberGeneratorService,
-							UserRepository userRepository,
-							ComplaintJpaRepository complaintJpaRepository) {
+			SevaNumberGeneratorService sevaNumberGeneratorService, UserRepository userRepository,
+			ComplaintJpaRepository complaintJpaRepository) {
 		this.complaintRepository = complaintRepository;
 		this.sevaNumberGeneratorService = sevaNumberGeneratorService;
 		this.userRepository = userRepository;
@@ -70,17 +69,9 @@ public class ComplaintService {
 	public void updateLastAccessedTime(String crn) {
 		complaintJpaRepository.updateLastAccessedTime(new Date(), crn);
 	}
-	
-	public Date getMaxLastAccessTimeForCitizenComplaints(Long userId) {
-		List<Complaint> complaints = complaintRepository.getAllComplaintsForGivenUser(userId);
-		if (!complaints.isEmpty()) { 
-			return complaints.get(0).getLastAccessedTime();
-		} else
-			return null;
-	}
 
 	public List<Complaint> getAllModifiedCitizenComplaints(Long userId) {
-		Date latestLastAccessedTime = getMaxLastAccessTimeForCitizenComplaints(userId);
+		Date latestLastAccessedTime = complaintJpaRepository.getMaxLastAccessedTimeByUserId(userId);
 		if (latestLastAccessedTime != null) {
 			return complaintRepository.getAllModifiedComplaintsForCitizen(latestLastAccessedTime, userId);
 		}

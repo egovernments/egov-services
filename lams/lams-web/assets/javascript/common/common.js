@@ -14,7 +14,7 @@ var requestInfo = {
 };
 
 var tenantId=1;
-var authToken='f1a716e6-15ad-428f-8ffa-607cebb3e6e2';
+var authToken='e4eac22c-2a48-4549-81d8-85d1de08746b';
 
 
 
@@ -61,7 +61,7 @@ function commonApiPost(context,resource="",action="",queryObject={}) {
             async: false,
             contentType: 'application/json',
             headers:{
-              'auth-token' :'c98e8b66-1837-4b86-b8c7-8eab985714ed'
+              'auth-token' :authToken
             }
         });
 }
@@ -82,10 +82,7 @@ function commonApiGet(context,resource="",action="",queryObject={}) {
             },
             // data:JSON.stringify(requestInfo),
             async: false,
-            contentType: 'application/json',
-            headers:{
-              'auth-token' :'c98e8b66-1837-4b86-b8c7-8eab985714ed'
-            }
+            contentType: 'application/json'
         });
 }
 

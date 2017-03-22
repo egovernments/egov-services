@@ -1,3 +1,15 @@
+const titleCase = (field) => {
+	var newField = field[0].toUpperCase();
+	for(let i=1; i<field.length; i++) {
+      if(field[i-1] != " " && field[i] != " ") {
+      	newField += field.charAt(i).toLowerCase();
+      } else {
+        newField += field[i]
+      } 
+    }
+    return newField;
+}
+
 const defaultAssetSetState = {
     "tenantId": tenantId,
     "name": "",
@@ -6,7 +18,8 @@ const defaultAssetSetState = {
     },
     "assetCategory": {
         tenantId,
-        "id": ""
+        "id": "",
+        "name": ""
     },
     "description": "",
     "assetCategoryType": "",
@@ -108,16 +121,17 @@ class CreateAsset extends React.Component {
           async: false,
           contentType: 'application/json',
           headers:{
-              'auth-token' :'c98e8b66-1837-4b86-b8c7-8eab985714ed'
+              'auth-token' :'e4eac22c-2a48-4549-81d8-85d1de08746b'
           }
       });
 
-      if (response["statusText"] === "OK") {
+     if (response["status"] === 201 || response["status"] == 200) {
           this.setState({
             ...this.state,
             assetSet: Object.assign({}, defaultAssetSetState),
-            success: "Asset successfuly added!"
-          })
+            success: "Asset successfuly added!",
+            customFields: []
+          });
       } else {
            this.setState({
             ...this.state,
@@ -128,8 +142,10 @@ class CreateAsset extends React.Component {
 
 
   handleChangeTwoLevel(e, pName, name) {
-      // var id=0;
+      let text;
       if (pName == "assetCategory") {
+          let el = document.getElementById('assetCategory');
+          text = el.options[el.selectedIndex].innerHTML;
           this.setState({
               customFields: this.getCategory(e.target.value),
               properties: {}
@@ -137,13 +153,19 @@ class CreateAsset extends React.Component {
           e.target.value = parseInt(e.target.value)
       }
 
+      let innerJSON = {
+            ...this.state.assetSet[pName],
+            [name]: e.target.value
+      };
+      
+      if(text) {
+        innerJSON["name"] = text;
+      }
+
       this.setState({
           assetSet: {
               ...this.state.assetSet,
-              [pName]: {
-                  ...this.state.assetSet[pName],
-                  [name]: e.target.value
-              }
+              [pName]: innerJSON
           }
       })
 
@@ -153,7 +175,10 @@ class CreateAsset extends React.Component {
   componentDidMount() {
       var type = getUrlVars()["type"];
       var id = getUrlVars()["id"];
-
+      $('#dateOfCreation').datetimepicker({
+          format: 'DD/MM/YYYY',
+          maxDate: new Date()
+      });
       // if(getUrlVars()["type"]==="view")
       // {
       //   for (var variable in this.state.assetSet)
@@ -327,13 +352,13 @@ class CreateAsset extends React.Component {
     }
 
     const showFields = function() {
-        return customFields.map((item,index)=>
+        return customFields.map((item, index)=>
         {
             return (
               <div className="col-sm-6" key={index}>
                 <div className="row">
                   <div className="col-sm-6 label-text">
-                    <label for={item.name}>{item.name}  {showStart(item.isActive)}</label>
+                    <label for={item.name}>{titleCase(item.name)}  {showStart(item.isActive)}</label>
                   </div>
                   <div className="col-sm-6">
                     <input id={item.name} name={item.name} value={item.values} type={item.type==="String"?"text":item.type}
@@ -376,7 +401,7 @@ class CreateAsset extends React.Component {
                     </div>
                     <div className="col-sm-6">
                         <input type="number" id="grossValue" name="grossValue" value= {grossValue}
-                          onChange={(e)=>{handleChange(e,"grossValue")}} maxlength="16" step="0.01"/>
+                          onChange={(e)=>{handleChange(e,"grossValue")}} min="1" maxlength="16" step="0.01"/>
                     </div>
                   </div>
               </div>
@@ -387,7 +412,7 @@ class CreateAsset extends React.Component {
                     </div>
                     <div className="col-sm-6">
                         <input type="number" id="accumulatedDepreciation" name="accumulatedDepreciation" value= {accumulatedDepreciation}
-                          onChange={(e)=>{handleChange(e,"accumulatedDepreciation")}} maxlength="16" step="0.01"/>
+                          onChange={(e)=>{handleChange(e,"accumulatedDepreciation")}} min="1" maxlength="16" step="0.01"/>
                     </div>
                   </div>
               </div>
@@ -465,7 +490,7 @@ class CreateAsset extends React.Component {
                               <label for="description">Date Of Creation</label>
                           </div>
                           <div className="col-sm-6">
-                              <input type="date" id="dateOfCreation" name="dateOfCreation" value= {dateOfCreation}
+                              <input type="text" id="dateOfCreation" name="dateOfCreation" value= {dateOfCreation}
                                 onChange={(e)=>{handleChange(e,"dateOfCreation")}} max={getTodaysDate()}/>
                           </div>
                         </div>

@@ -41,6 +41,16 @@ var openedWindows = [];
 var locale = [];
 $(document).ready(function()
 {
+	$.ajaxSetup({
+	    beforeSend: function(xhr, settings) {
+	    	var patt = new RegExp("maps.googleapis.com");
+			var res = patt.test(settings.url);
+			var authToken = localStorage.getItem("auth");
+	    	if(authToken && !res){
+	        	xhr.setRequestHeader('auth-token', authToken);
+	    	}
+	    }
+	});
 	
 	try { $('.twitter-typeahead').css('display','block'); } catch(e){}
 	

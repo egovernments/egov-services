@@ -61,7 +61,8 @@ public interface ComplaintJpaRepository extends JpaRepository<Complaint, Long>, 
 	@Transactional
     void updateLastAccessedTime(@Param("date") Date date,@Param("crn") String crn);
 
-	List<Complaint> findByCreatedByOrderByLastAccessedTimeDesc(Long userId);
+	@Query("select max(lastAccessedTime) from Complaint where createdBy=:userId")
+	Date getMaxLastAccessedTimeByUserId(@Param("userId") Long userId);
 
 	@Query("from Complaint where lastModifiedDate>=:lastAccessedTime and createdBy=:userId order by lastModifiedDate desc")
 	List<Complaint> getAllModifiedComplaintsForCitizen(@Param("lastAccessedTime") Date lastAccessedTime,

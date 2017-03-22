@@ -332,6 +332,7 @@ $(document).ready(function()
 							//console.log('File is empty');
 							//Ack page shown
 							doAck(response);
+							obj.removeAttr("disabled");
 							hideLoader();
 						}
 					},

@@ -151,7 +151,6 @@ public class EmployeeController {
 		if(employee == null) {
 			return errorHandler.getResponseEntityForExistingUser(employeeRequest, headers);
 		}
-		employee.getUser().setPassword(null);
 		return getSuccessResponseForCreate(employee, employeeRequest.getRequestInfo(), headers);
 	}
 
@@ -199,7 +198,7 @@ public class EmployeeController {
 		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 		responseInfo.setStatus(HttpStatus.OK.toString());
 		employeeResponse.setResponseInfo(responseInfo);
-		return new ResponseEntity<EmployeeResponse>(employeeResponse, headers, HttpStatus.OK);
+		return new ResponseEntity<EmployeeResponse>(employeeResponse, HttpStatus.OK);
 	}
 
 	/**
@@ -218,8 +217,6 @@ public class EmployeeController {
 		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 		responseInfo.setStatus(HttpStatus.OK.toString());
 		employeeInfoResponse.setResponseInfo(responseInfo);
-
-		
 		return new ResponseEntity<EmployeeInfoResponse>(employeeInfoResponse, HttpStatus.OK);
 	}
 

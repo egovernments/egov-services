@@ -1,19 +1,46 @@
 var baseUrl = window.location.origin;
-var authToken='bedb20fb-7d74-445e-94cc-6a64e825d509';
+
 //request info from cookies
 var requestInfo = {
-  "apiId":"org.egov.pgr",
-  "ver":"1.0",
-  "ts": "2017-12-01",
-  "action":"asd",
-  "did":"4354648646",
-  "key":"xyz",
-  "msgId":"654654",
-  "requesterId":"61",
-  "authToken":"sdfsdfsdf"
+    "apiId":"org.egov.pgr",
+    "ver":"1.0",
+    "ts": "2015-04-12",
+    "action":"asd",
+    "did":"4354648646",
+    "key":"xyz",
+    "msgId":"654654",
+    "requesterId":"61",
+    "authToken":"sdfsdfsdf"
 };
 
 var tenantId=1;
+
+
+var authToken=localStorage.getItem("auth-token");
+
+// var response=$.ajax({
+//           url: window.location.origin+"/user/_login?tenantId=ap.public&username=ramakrishna&password=demo&grant_type=password&scope=read",
+//           type: 'POST',
+//           dataType: 'json',
+//           // data:JSON.stringify(requestInfo),
+//           async: false,
+//           contentType: 'application/json',
+//           headers:{
+//             'Authorization' :'Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0'
+//           }
+//       });
+//
+//       if(response["statusText"]==="OK")
+//       {
+//           localStorage.setItem("auth-token", response.responseJSON["access_token"]);
+//           authToken=response.responseJSON["access_token"];
+//         // alert("Successfully added");
+//       }
+//       else {
+//         alert(response["statusText"]);
+//       }
+
+
 
 function getCommonMaster(mainRoute,resource,returnObject) {
     return $.ajax({
@@ -42,18 +69,6 @@ function getCommonMaster(mainRoute,resource,returnObject) {
     // return response.statusText==="Ok"?response.responseJSON[returnObject]:[];
 }
 
-function getUrlVars() {
-    var vars = [],
-        hash;
-    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-    for (var i = 0; i < hashes.length; i++) {
-        hash = hashes[i].split('=');
-        vars.push(hash[0]);
-        vars[hash[0]] = hash[1];
-    }
-    return vars;
-}
-
 function commonApiPost(context,resource="",action="",queryObject={}) {
   var url=baseUrl+"/"+context+(resource?"/"+resource:"")+(action?"/"+action:"")+(queryObject?"?":"");
   for (var variable in queryObject) {
@@ -67,13 +82,44 @@ function commonApiPost(context,resource="",action="",queryObject={}) {
             dataType: 'json',
             data:JSON.stringify(requestInfo),
             async: false,
+            contentType: 'application/json',
+            headers:{
+              'auth-token' :authToken
+            }
+        });
+}
+
+function commonApiGet(context,resource="",action="",queryObject={}) {
+  var url=baseUrl+"/"+context+(resource?"/"+resource:"")+(action?"/"+action:"")+(queryObject?"?":"");
+  for (var variable in queryObject) {
+      if (queryObject[variable]) {
+        url+="&"+variable+"="+queryObject[variable];
+      }
+  }
+  return $.ajax({
+            url: url,
+            type: 'GET',
+            dataType: 'json',
             headers: {
                     'auth-token': authToken
-                },
+            },
+            // data:JSON.stringify(requestInfo),
+            async: false,
             contentType: 'application/json'
         });
 }
 
+function getUrlVars() {
+    var vars = [],
+        hash;
+    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+    for (var i = 0; i < hashes.length; i++) {
+        hash = hashes[i].split('=');
+        vars.push(hash[0]);
+        vars[hash[0]] = hash[1];
+    }
+    return vars;
+}
 
 function getCommonMasterById(mainRoute,resource,returnObject,id) {
     return $.ajax({
@@ -101,3 +147,5 @@ function getCommonMasterById(mainRoute,resource,returnObject,id) {
           });
     // return response.statusText==="Ok"?response.responseJSON[returnObject]:[];
 }
+
+// commonApiPost("asset","assetCategories","",{boundaryTypeName:"LOCALITY",hierarchyTypeName:"LOCATION"})

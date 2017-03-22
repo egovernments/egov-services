@@ -40,7 +40,6 @@
 
 package org.egov.eis.service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -59,6 +58,7 @@ import org.egov.eis.repository.ProbationRepository;
 import org.egov.eis.repository.RegularisationRepository;
 import org.egov.eis.repository.ServiceHistoryRepository;
 import org.egov.eis.repository.TechnicalQualificationRepository;
+import org.egov.eis.service.helper.EmployeeHelper;
 import org.egov.eis.service.helper.EmployeeUserMapper;
 import org.egov.eis.web.contract.EmployeeGetRequest;
 import org.egov.eis.web.contract.EmployeeRequest;
@@ -116,6 +116,9 @@ public class EmployeeService {
 	private UserService userService;
 
 	@Autowired
+	private EmployeeHelper employeeHelper;
+
+	@Autowired
 	private EmployeeUserMapper employeeUserMapper;
 	
 	@Autowired
@@ -141,20 +144,20 @@ public class EmployeeService {
 	}
 
 	public Employee createEmployee(EmployeeRequest employeeRequest, HttpHeaders headers) {
-		UserRequest userRequest = getUserRequest(employeeRequest);
+		UserRequest userRequest = employeeHelper.getUserRequest(employeeRequest);
 		User user = userService.createUser(userRequest, headers);
 
 		if(user == null) {
 			return null;
 		}
 
-		String code = getEmployeeCode(user.getId());
+		String code = employeeHelper.getEmployeeCode(user.getId());
 		Employee employee = employeeRequest.getEmployee();
 		employee.setId(user.getId());
 		employee.setCode(code);
 		employee.setUser(user);
 
-		employeeRepository.populateIds(employeeRequest);
+		employeeHelper.populateIds(employeeRequest);
 
 		String employeeRequestJson = null;
 		try {
@@ -173,27 +176,10 @@ public class EmployeeService {
 		return employee;
 	}
 
-	private String getEmployeeCode(Long id) {
-		return "EMP" + id;
-	}
-
-	private UserRequest getUserRequest(EmployeeRequest employeeRequest) {
-		UserRequest userRequest = new UserRequest();
-		userRequest.setRequestInfo(employeeRequest.getRequestInfo());
-		User user = employeeRequest.getEmployee().getUser();
-		user.setTenantId(employeeRequest.getEmployee().getTenantId());
-		userRequest.setUser(user);
-
-		return userRequest;
-	}
-
 	public void saveEmployee(EmployeeRequest employeeRequest) {
 		employeeRepository.save(employeeRequest);
 		employeeJurisdictionRepository.save(employeeRequest.getEmployee());
 		employeeLanguageRepository.save(employeeRequest.getEmployee());
-		for (int i = 0; i < employeeRequest.getEmployee().getAssignments().size(); i++) {
-			employeeRequest.getEmployee().getAssignments().get(i).setId(new Date().getTime() + i);
-		};
 		assignmentRepository.save(employeeRequest);
 		employeeRequest.getEmployee().getAssignments().forEach((assignment) -> {
 			hodDepartmentRepository.save(assignment, employeeRequest.getEmployee().getTenantId());

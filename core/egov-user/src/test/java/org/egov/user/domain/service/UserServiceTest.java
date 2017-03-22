@@ -14,6 +14,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Arrays;
@@ -87,7 +88,7 @@ public class UserServiceTest {
     public void test_should_raise_exception_when_duplicate_user_name_exists() throws Exception {
         org.egov.user.domain.model.User domainUser = validDomainUser();
         when(otpRepository.isOtpValidationComplete(domainUser)).thenReturn(true);
-        when(userRepository.isUserPresent("supandi_rocks", 1L)).thenReturn(true);
+        when(userRepository.isUserPresent("supandi_rocks", null)).thenReturn(true);
 
         userService.save(domainUser, true);
     }

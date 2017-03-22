@@ -14,8 +14,31 @@ var requestInfo = {
 };
 
 var tenantId=1;
-var authToken='e4eac22c-2a48-4549-81d8-85d1de08746b';
 
+
+var authToken=localStorage.getItem("auth-token");
+
+// var response=$.ajax({
+//           url: window.location.origin+"/user/_login?tenantId=ap.public&username=ramakrishna&password=demo&grant_type=password&scope=read",
+//           type: 'POST',
+//           dataType: 'json',
+//           // data:JSON.stringify(requestInfo),
+//           async: false,
+//           contentType: 'application/json',
+//           headers:{
+//             'Authorization' :'Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0'
+//           }
+//       });
+//
+//       if(response["statusText"]==="OK")
+//       {
+//           localStorage.setItem("auth-token", response.responseJSON["access_token"]);
+//           authToken=response.responseJSON["access_token"];
+//         // alert("Successfully added");
+//       }
+//       else {
+//         alert(response["statusText"]);
+//       }
 
 
 

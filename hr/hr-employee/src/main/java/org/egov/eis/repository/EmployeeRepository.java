@@ -42,7 +42,6 @@ package org.egov.eis.repository;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 import org.egov.eis.model.Employee;
@@ -142,70 +141,7 @@ public class EmployeeRepository {
 		jdbcTemplate.update(INSERT_EMPLOYEE_QUERY, obj);
 	}
 
-	public void populateIds(EmployeeRequest employeeRequest) {
-		Employee employee = employeeRequest.getEmployee();
-
-		employee.getAssignments().forEach((assignment) -> {
-			assignment.setId(jdbcTemplate.queryForObject("SELECT nextval('seq_egeis_assignment')", Long.class));
-			assignment.setTenantId(employee.getTenantId());
-			assignment.setCreatedBy(Long.parseLong((employeeRequest.getRequestInfo().getRequesterId())));
-			assignment.setCreatedDate(new Date());
-			assignment.setLastModifiedBy((Long.parseLong((employeeRequest.getRequestInfo().getRequesterId()))));
-			assignment.setLastModifiedDate((new Date()));
-		});
-		employee.getAssignments().forEach((assignment) -> {
-			assignment.getHod().forEach((hod) -> {
-				hod.setId(jdbcTemplate.queryForObject("SELECT nextval('seq_egeis_hoddepartment')", Long.class));
-				hod.setTenantId(employee.getTenantId());
-			});
-		});
-		employee.getEducation().forEach((eduction) -> {
-			eduction.setId(jdbcTemplate.queryForObject("SELECT nextval('seq_egeis_educationalqualification')", Long.class));
-			eduction.setTenantId(employee.getTenantId());
-			eduction.setCreatedBy(Long.parseLong((employeeRequest.getRequestInfo().getRequesterId())));
-			eduction.setCreatedDate(new Date());
-			eduction.setLastModifiedBy((Long.parseLong((employeeRequest.getRequestInfo().getRequesterId()))));
-			eduction.setLastModifiedDate((new Date()));
-		});
-		employee.getTest().forEach((test) -> {
-			test.setId(jdbcTemplate.queryForObject("SELECT nextval('seq_egeis_departmentaltest')", Long.class));
-			test.setTenantId(employee.getTenantId());
-			test.setCreatedBy(Long.parseLong((employeeRequest.getRequestInfo().getRequesterId())));
-			test.setCreatedDate(new Date());
-			test.setLastModifiedBy((Long.parseLong((employeeRequest.getRequestInfo().getRequesterId()))));
-			test.setLastModifiedDate((new Date()));
-		});
-		employee.getProbation().forEach((probation) -> {
-			probation.setId(jdbcTemplate.queryForObject("SELECT nextval('seq_egeis_probation')", Long.class));
-			probation.setTenantId(employee.getTenantId());
-			probation.setCreatedBy(Long.parseLong((employeeRequest.getRequestInfo().getRequesterId())));
-			probation.setCreatedDate(new Date());
-			probation.setLastModifiedBy((Long.parseLong((employeeRequest.getRequestInfo().getRequesterId()))));
-			probation.setLastModifiedDate((new Date()));
-		});
-		employee.getRegularisation().forEach((regularisation) -> {
-			regularisation.setId(jdbcTemplate.queryForObject("SELECT nextval('seq_egeis_regularisation')", Long.class));
-			regularisation.setTenantId(employee.getTenantId());
-			regularisation.setCreatedBy(Long.parseLong((employeeRequest.getRequestInfo().getRequesterId())));
-			regularisation.setCreatedDate(new Date());
-			regularisation.setLastModifiedBy((Long.parseLong((employeeRequest.getRequestInfo().getRequesterId()))));
-			regularisation.setLastModifiedDate((new Date()));
-		});
-		employee.getServiceHistory().forEach((serviceHistory) -> {
-			serviceHistory.setId(jdbcTemplate.queryForObject("SELECT nextval('seq_egeis_servicehistory')", Long.class));
-			serviceHistory.setTenantId(employee.getTenantId());
-			serviceHistory.setCreatedBy(Long.parseLong((employeeRequest.getRequestInfo().getRequesterId())));
-			serviceHistory.setCreatedDate(new Date());
-			serviceHistory.setLastModifiedBy((Long.parseLong((employeeRequest.getRequestInfo().getRequesterId()))));
-			serviceHistory.setLastModifiedDate((new Date()));
-		});
-		employee.getTechnical().forEach((technical) -> {
-			technical.setId(jdbcTemplate.queryForObject("SELECT nextval('seq_egeis_technicalqualification')", Long.class));
-			technical.setTenantId(employee.getTenantId());
-			technical.setCreatedBy(Long.parseLong((employeeRequest.getRequestInfo().getRequesterId())));
-			technical.setCreatedDate(new Date());
-			technical.setLastModifiedBy((Long.parseLong((employeeRequest.getRequestInfo().getRequesterId()))));
-			technical.setLastModifiedDate((new Date()));
-		});
+	public Long generateSequence(String sequenceName) {
+		return jdbcTemplate.queryForObject("SELECT nextval('" + sequenceName + "')", Long.class);
 	}
 }

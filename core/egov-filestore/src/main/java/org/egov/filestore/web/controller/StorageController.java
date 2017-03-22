@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
 @Controller
-@RequestMapping("/files")
+@RequestMapping("v1/files")
 public class StorageController {
 
     private StorageService storageService;
@@ -30,9 +30,9 @@ public class StorageController {
         this.responseFactory = responseFactory;
     }
 
-    @GetMapping("/{fileStoreId}")
+    @GetMapping("/id")
     @ResponseBody
-    public ResponseEntity<Resource> getFile(@PathVariable("fileStoreId") String fileStoreId) {
+    public ResponseEntity<Resource> getFile(@RequestParam("fileStoreId") String fileStoreId) {
         org.egov.filestore.domain.model.Resource resource = storageService.retrieve(fileStoreId);
         return ResponseEntity
                 .ok()
@@ -41,7 +41,7 @@ public class StorageController {
                 .body(resource.getResource());
     }
 
-    @GetMapping(produces = APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "/tag", produces = APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public GetFilesByTagResponse getUrlListByTag(@RequestParam("tag") String tag) {
         return responseFactory.getFilesByTagResponse(storageService.retrieveByTag(tag));

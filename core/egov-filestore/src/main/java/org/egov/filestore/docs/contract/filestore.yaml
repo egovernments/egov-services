@@ -5,11 +5,11 @@ info:
   description: API's to create and get files by filestor id and tag
   version: "1.0.0"
 # will be prefixed to all paths
-basePath: /files
+basePath: /filestore
 produces:
-  - application/json
+  - FILE
 paths:
-  /v1/_search/{fileStoreId}:
+  /v1/files/id:
     get:
       summary: Get files by filestore id
       description: |
@@ -22,7 +22,7 @@ paths:
           type: string
           format: varchar
         - name: fileStoreId
-          in: path
+          in: query
           description: filestore id for a file.
           required: true
           type: string
@@ -44,22 +44,22 @@ paths:
         '400':
           description: tenantId,filestore or module id is not present
           schema:
-            $ref: '#/definitions/Error'              
+            $ref: '#/definitions/Error'
         '404':
           description: tenantId,filestore or module id provided were not found
           schema:
             $ref: '#/definitions/Error'
-  /v1/_create:
+  /v1/files:
     post:
-      summary: Store files 
+      summary: Store files
       description: |
         Create files for different modules.
-      consumes : 
-            - multipart/form-data 
+      consumes :
+            - multipart/form-data
       parameters:
         - name: file
           in: formData
-          description: File Object to store 
+          description: File Object to store
           required: true
           type : file
         - name: tenantId
@@ -90,14 +90,14 @@ paths:
         '400':
           description: tenantId,module or file data is not present
           schema:
-            $ref: '#/definitions/Error'              
+            $ref: '#/definitions/Error'
         '404':
           description: tenantId,module or file data is not present
           schema:
             $ref: '#/definitions/Error'
-  /v1/_searchfilesbytag:
+  /v1/files/tag:
     post:
-      summary: Retrieve files by unique tag name 
+      summary: Retrieve files by unique tag name
       description: |
         Retrieve files by unique tag name.
       parameters:
@@ -117,7 +117,7 @@ paths:
           description : Name of madule for files
           type : string
           format : varchar
-       
+
       tags:
         - Files
       responses:
@@ -130,7 +130,7 @@ paths:
         '400':
           description: tenantId,module or file data is not present
           schema:
-            $ref: '#/definitions/Error'              
+            $ref: '#/definitions/Error'
         '404':
           description: tenantId,module or file data is not present
           schema:
@@ -146,7 +146,7 @@ definitions:
           $ref: '#/definitions/File'
       responseInfo :
         type: object
-        items : 
+        items :
           $ref: '#/definitions/ResponseInfo'
   Resource :
     type : object
@@ -158,8 +158,8 @@ definitions:
         type : string
         description : Name of the file
       Resource :
-        type : string 
-        description : InputStreamSource from package org.springframework.core.io.Resource 
+        type : string
+        description : InputStreamSource from package org.springframework.core.io.Resource
   GetFilesByTagResponse:
     type : object
     properties :
@@ -182,7 +182,7 @@ definitions:
       fileStoreId:
         type: string
         description: Unique filestore id across modules.
-  
+
   RequestInfo :
     type: object
     properties:
@@ -205,7 +205,7 @@ definitions:
          type : string
          description : API key (dynamic).
       msgId :
-         type : string 
+         type : string
          description : unique request message id, UUID, for handling API idempotency.
       requesterId :
          type : string
@@ -238,12 +238,12 @@ definitions:
       status :
         type : string
         description : status of request e.g. successful, failed etc.
-    required : 
+    required :
         - apiId
         - ver
         - ts
         - status
-         
+
   Error:
     type: object
     properties:

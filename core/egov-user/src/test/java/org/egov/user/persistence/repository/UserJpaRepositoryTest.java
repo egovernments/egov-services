@@ -10,6 +10,7 @@ import org.egov.user.persistence.specification.FuzzyNameMatchingSpecification;
 import org.egov.user.persistence.specification.MultiFieldsMatchingSpecification;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.jdbc.Sql;
@@ -38,7 +39,7 @@ public class UserJpaRepositoryTest {
             "/sql/createUser.sql"
     })
     public void test_should_return_id_for_user_with_given_user_name() {
-        Long id = userJpaRepository.isUserPresent("bigcat399", 1L);
+        Long id = userJpaRepository.isUserPresent("bigcat399", 5L);
         assertEquals(Long.valueOf(1), id);;
     }
 

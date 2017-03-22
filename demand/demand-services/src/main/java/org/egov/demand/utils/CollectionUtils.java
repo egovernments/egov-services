@@ -47,7 +47,7 @@ public class CollectionUtils {
                 }
                 billInfoImpl = new BillInfoImpl(bill.getServiceCode(), bill.getFundCode(), bill.getFunctionaryCode(),
                         bill.getFundSourceCode(), bill.getDepartmentCode(), displayMsg, bill.getCitizenName(),
-                        bill.getPartPaymentAllowed(), bill.getOverrideAccountHeadsAllowed(), collModesList,
+                        (bill.getPartPaymentAllowed() == 'Y' ? true : false), (bill.getOverrideAccountHeadsAllowed() == 'Y' ? true : false), collModesList,
                         COLLECTIONTYPE.F);
                 billPayeeDet = new BillPayeeDetails(bill.getCitizenName(), bill.getCitizenAddress(), bill.getEmailId());
                 billDetails = new BillDetails(bill.getId().toString(), bill.getCreateDate(), bill.getConsumerId(),bill.getConsumerType(),
@@ -55,7 +55,7 @@ public class CollectionUtils {
                         bill.getTotalAmount(), bill.getMinAmtPayable());
                 billPayeeDetList.add(billPayeeDet);
                 billInfoImpl.setPayees(billPayeeDetList);
-                billInfoImpl.setCallbackForApportioning(bill.getCallBackForApportion());
+                billInfoImpl.setCallbackForApportioning(bill.getCallBackForApportion() == 'Y' ? true : false);
                 boolean isActualDemand = false;
 
                 for (EgBillDetails egBillDet : bill.getEgBillDetails()) {

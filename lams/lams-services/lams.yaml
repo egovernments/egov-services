@@ -543,7 +543,8 @@ definitions:
       demands:
         type: array
         items:
-          $ref: '#/definitions/AgreementDemand'
+          type: integer
+          format: int64
       stateId:
         type: string
         description: Work flow ref id.
@@ -662,19 +663,6 @@ definitions:
         type: integer
         format: int64
         description: unique id of the asset category.
-        
-  AgreementDemand:
-    type: object
-    description: This object demand info for a agreement
-    properties:
-      agreementId:
-        type: integer
-        format: int64
-        description: unique id of the demand
-      demandId:
-        type: integer
-        format: int64
-        description: unique id of the demand.
     
   AgreementRequest:
     properties:

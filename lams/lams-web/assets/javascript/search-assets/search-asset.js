@@ -4,7 +4,7 @@ class AssetSearch extends React.Component {
     this.state={list:[],searchSet:{
     locality:"",
     doorNo:"",
-    category:"",
+    assetCategory:"",
     name:"",
     electionWard:"",
     code:""},isSearchClicked:false,assetCategories:[],locality:[],electionwards:[]}
@@ -62,6 +62,15 @@ class AssetSearch extends React.Component {
              ordering: false
           });
       }
+      // else {
+      //   $('#agreementTable').DataTable({
+      //     dom: 'Bfrtip',
+      //     buttons: [
+      //              'copy', 'csv', 'excel', 'pdf', 'print'
+      //      ],
+      //      ordering: false
+      //   });
+      // }
   }
 
   handleChange(e,name)
@@ -76,16 +85,17 @@ class AssetSearch extends React.Component {
 
   }
 
-  handleSelectChange(type)
+  handleSelectChange(type,category)
   {
     console.log(type);
-    if (type === "view") {
-                window.open("../../../../app/search-agreement/view-renew-agreement.html", "fs", "fullscreen=yes")
-             }
-             else {
-
-                window.open("../../../../app/search-agreement/renew-agreement.html", "fs", "fullscreen=yes")
-            }
+    // if (type === "view") {
+    //             window.open("../../../../app/agreements/new.html", "fs", "fullscreen=yes")
+    //          }
+    //          else {
+    //
+    //             window.open("../../../../app/agreements/new.html", "fs", "fullscreen=yes")
+    //         }
+    window.open("../../../../app/agreements/new.html?type="+category, "fs", "fullscreen=yes")
   }
 
 
@@ -102,7 +112,7 @@ class AssetSearch extends React.Component {
     let {
     locality,
     doorNo,
-    category,
+    assetCategory,
     name,
     electionWard,
     code}=this.state.searchSet;
@@ -151,30 +161,42 @@ class AssetSearch extends React.Component {
     }
     const renderBody=function()
     {
-      return list.map((item,index)=>
+      if(list.length>0)
       {
-            return (<tr key={index}>
-              <td>{index+1}</td>
-                                <td>{item.assetCategory.name}</td>
-                                <td>{item.name}</td>
-                                <td>{item.code}</td>
-                                <td>{item.locationDetails.electionWard}</td>
-                                <td>
-                                    <div className="styled-select">
-                                        <select id="myOptions" onChange={(e)=>{
-                                          handleSelectChange(e.target.value)
-                                        }}>
-                                            <option value="">Select Action</option>
-                                            <option value="view">View</option>
+        return list.map((item,index)=>
+        {
+              return (<tr key={index}>
+                <td>{index+1}</td>
+                                  <td>{item.assetCategory.name}</td>
+                                  <td>{item.name}</td>
+                                  <td>{item.code}</td>
+                                  <td>{item.locationDetails.electionWard}</td>
+                                  <td>
+                                      <div className="styled-select">
+                                          <select id="myOptions" onChange={(e)=>{
+                                            handleSelectChange(e.target.value,item.assetCategory.names)
+                                          }}>
+                                              <option value="">Select Action</option>
+                                              <option value="create">Create</option>
 
-                                        </select>
-                                    </div>
-                                </td>
+                                          </select>
+                                      </div>
+                                  </td>
 
-                </tr>
-            );
+                  </tr>
+              );
 
-      })
+        })
+      }
+      else {
+          return (
+              <tr>
+                  <td colSpan="6">No records</td>
+              </tr>
+          )
+      }
+
+
     }
     const disbaled=function(type) {
         if (type==="view") {
@@ -195,8 +217,8 @@ class AssetSearch extends React.Component {
                       <div className="col-sm-3 col-sm-offset-5">
                             <label for="asset_category">Asset category<span> *</span></label>
                             <div className="styled-select">
-                                <select id="asset_category" name="asset_category" required="true" value={category} onChange={(e)=>{
-                                handleChange(e,"category")}}>
+                                <select id="asset_category" name="asset_category" required="true" value={assetCategory} onChange={(e)=>{
+                                handleChange(e,"assetCategory")}}>
 
                                     <option value="">Select Asset Category</option>
                                     {renderOption(this.state.assetCategories)}

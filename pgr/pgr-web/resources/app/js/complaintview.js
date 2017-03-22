@@ -40,10 +40,10 @@
 var srn = getUrlParameter('srn');
 var lat, lng, myCenter,status;
 var updateResponse = {};
-var departmentId, designationId;
 var loadDD = new $.loadDD();
 $(document).ready(function()
 {
+
 	if(localStorage.getItem('type') == 'CITIZEN'){
 		$('.employee-action').remove();
 	}else if(localStorage.getItem('type') == 'EMPLOYEE'){
@@ -51,6 +51,8 @@ $(document).ready(function()
 	}else{
 		$('.action-section').remove();
 	}
+
+	getComplaint();
 	
 	$('.slide-history-menu').click(function(){
 		$('.history-slide').slideToggle();
@@ -83,10 +85,26 @@ $(document).ready(function()
 		getUser($('#approvalDepartment').val(),$(this).val())
 	});
 
+	$('#complaint-locate').on('show.bs.modal', function() {
+		//Must wait until the render of the modal appear, thats why we use the resizeMap and NOT resizingMap!! ;-)
+		//$('#show_address_in_map').html($('#address_locate').html());
+		myCenter=new google.maps.LatLng(lat, lng);
+		initialize();
+		resizeMap();
+	});
+
+	$('#update-complaint').click(function(){
+		if($('form').valid()){
+			var obj = $(this);
+			obj.attr("disabled", "disabled");
+			complaintUpdate(obj);
+		}
+	});
+
+});
+
+function getComplaint(){
 	var headers = new $.headers();
-
-	//console.log(headers.header)
-
 	$.ajax({
 		url: "/pgr/seva?jurisdiction_id=2&service_request_id="+srn,
 		headers : headers.header,
@@ -121,7 +139,7 @@ $(document).ready(function()
 
 					//History
 					$.ajax({
-						url : "/workflow/history?tenantId=ap.public&workflowId="+response.service_requests[0].values.stateId,
+						url : "/workflow/history?tenantId=ap.public&workflowId="+response.service_requests[0].values.StateId,
 						type : 'GET',
 						success : function(work_response){
 
@@ -134,41 +152,36 @@ $(document).ready(function()
 							var wf_template = Handlebars.compile(wf_source);
 							$('.wfcomplaint').append(wf_template(wf_response));
 
-							lat = response.service_requests[0].lat;
-							lng = response.service_requests[0].lng;
-
 							if(localStorage.getItem('type') == 'CITIZEN' && status != 'COMPLETED')
 								$('.feedback').remove();
 
-							if (lat != '0' && lng != '0'){
-								$.ajax({ 
-							        type: "POST",
-							        async : false,
-							        url: 'https://maps.googleapis.com/maps/api/geocode/json?latlng='+response.service_requests[0].lat+','+response.service_requests[0].lng,
-							        dataType: 'json',
-							        success : function(data){
-							        	response.service_requests[0].values['latlngAddress'] = data.results[0].formatted_address;
-							        }
-								});
-							}
+							lat = response.service_requests[0].lat;
+							lng = response.service_requests[0].lng;
 
-							var receivingcenter = response.service_requests[0].values.receivingCenter;
+							if (lat != '0' && lng != '0')
+								getAddressbyLatLng(lat, lng, response);
 
-							if(receivingcenter){
-								$.ajax({
-									url : "/pgr/receivingcenter/_getreceivingcenterbyid?tenantId=1&id="+receivingcenter,
-									type: 'POST',
-									async : false,
-									success : function(centerReponse){
-										response.service_requests[0].values['recCenterText'] = centerReponse.name;
-									}
-								})
-							}
+							var receivingcenter = response.service_requests[0].values.ReceivingCenter;
+
+							if(receivingcenter)
+								getReceivingCenterbyId(receivingcenter, response);
+
+							var departmentId = response.service_requests[0].values.DepartmentId;
+
+							getDepartmentbyId(departmentId, response);
+
+							var locationId = response.service_requests[0].values.LocationId;
+							var childLocationId = response.service_requests[0].values.ChildLocationId;
+
+							if(locationId)
+								getBoundarybyId(locationId,'LocationName', response);
+
+							if(childLocationId)
+								getBoundarybyId(childLocationId, 'ChildLocationName', response);
 
 							response['files'] = fileresponse.files;
 							var source   = $("#viewcomplaint-script").html();
 							var template = Handlebars.compile(source);
-							//response['service_requests'][0]['customLocation'] = response['service_requests'][0]['values'].ChildLocationName+' - '+response['service_requests'][0]['values'].LocationName;
 							$('.viewcomplaint').append(template(response));
 							//console.log('response with files',JSON.stringify(response));
 
@@ -214,29 +227,12 @@ $(document).ready(function()
 		complete : function(){
 			//console.log('Main complete called')
 		}
-	});	
-
-	$('#complaint-locate').on('show.bs.modal', function() {
-		//Must wait until the render of the modal appear, thats why we use the resizeMap and NOT resizingMap!! ;-)
-		//$('#show_address_in_map').html($('#address_locate').html());
-		myCenter=new google.maps.LatLng(lat, lng);
-		initialize();
-		resizeMap();
 	});
-
-	$('#update-complaint').click(function(){
-		if($('form').valid()){
-			var obj = $(this);
-			obj.attr("disabled", "disabled");
-			complaintUpdate(obj);
-		}
-	});
-});
+}
 
 function complaintUpdate(obj){
-	var duplicateResponse = {};
+	var duplicateResponse, req_obj = {};
 	duplicateResponse =  updateResponse;
-	var req_obj = {};
 	req_obj['RequestInfo'] = duplicateResponse.response_info;
 	req_obj['ServiceRequest'] = duplicateResponse.service_requests[0];
 
@@ -261,10 +257,13 @@ function complaintUpdate(obj){
 	delete req_obj.ServiceRequest.values['ChildLocationName'];
 	req_obj.ServiceRequest.values['receivingMode'] = req_obj.ServiceRequest.values['ReceivingMode'];
 	delete req_obj.ServiceRequest.values['ReceivingMode'];
+	req_obj.ServiceRequest.values['receivingCenter'] = req_obj.ServiceRequest.values['ReceivingCenter'];
+	delete req_obj.ServiceRequest.values['ReceivingCenter'];
 	req_obj.ServiceRequest.values['status'] = req_obj.ServiceRequest.values['ComplaintStatus'];
 	delete req_obj.ServiceRequest.values['ComplaintStatus'];
 	req_obj.ServiceRequest.values['locationName'] = req_obj.ServiceRequest.values['LocationName'];
 	delete req_obj.ServiceRequest.values['LocationName'];
+
 	if($("#approvalDepartment").val())
 		req_obj.ServiceRequest.values['departmentName'] = $("#approvalDepartment option:selected").text();
 	if($("#approvalPosition").val())
@@ -444,6 +443,55 @@ function getUser(depId, desId){
 			keyValue:'position',
 			keyDisplayName:'employee'
 		});
+	});
+}
+
+function getDepartmentbyId(departmentId, response){
+	$.ajax({
+		url : '/eis/departments?id='+departmentId,
+		async : false,
+		success : function(depresponse){
+			response.service_requests[0].values['departmentName'] = depresponse.Department[0].name;
+		},
+		error : function(){
+			bootbox.alert('Loading departmentName failed');
+		}
+	});
+}
+
+function getBoundarybyId(id, name, response){
+	$.ajax({
+		url : '/v1/location/boundarys?boundary='+id,
+		async : false,
+		success : function(lresponse){
+			response.service_requests[0].values[''+name+''] = lresponse.Boundary[0].name;
+		},
+		error : function(){
+			bootbox.alert('Loading location failed');
+		}
+	});
+}
+
+function getReceivingCenterbyId(receivingcenter, response){
+	$.ajax({
+		url : "/pgr/receivingcenter/_getreceivingcenterbyid?tenantId=1&id="+receivingcenter,
+		type: 'POST',
+		async : false,
+		success : function(centerReponse){
+			response.service_requests[0].values['recCenterText'] = centerReponse.name;
+		}
+	});
+}
+
+function getAddressbyLatLng(lat, lng, response){
+	$.ajax({ 
+        type: "POST",
+        async : false,
+        url: 'https://maps.googleapis.com/maps/api/geocode/json?latlng='+lat+','+lng,
+        dataType: 'json',
+        success : function(data){
+        	response.service_requests[0].values['latlngAddress'] = data.results[0].formatted_address;
+        }
 	});
 }
 

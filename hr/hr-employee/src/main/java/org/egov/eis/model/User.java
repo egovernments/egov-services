@@ -44,11 +44,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.Valid;
+import javax.validation.constraints.Future;
+import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 
+import org.egov.eis.model.enums.BloodGroup;
 import org.egov.eis.model.enums.Gender;
 import org.egov.eis.model.enums.UserType;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -67,80 +71,101 @@ import lombok.ToString;
 @ToString
 public class User {
 
-	@NotNull
 	private Long id;
 
+	@Size(min=1, max=100)
 	private String userName;
 
-	@NotNull
+	@Size(max=64)
 	private String password;
 
+	@Size(max=5)
 	private String salutation;
 
-	@Size(min=2, max=100)
+	@Size(min=3, max=100)
 	private String name;
 
+	@Valid
 	private Gender gender;
 
+	@Size(max=10)
 	private String mobileNumber;
 
+	@Size(max=128)
 	private String emailId;
 
+	@Size(max=10)
 	private String altContactNumber;
 
+	@Size(max=10)
 	private String pan;
 
-	private Long aadhaarNumber;
+	@Size(max=12)
+	private String aadhaarNumber;
 
+	@Size(max=300)
 	private String permanentAddress;
 
+	@Size(max=50)
 	private String permanentCity;
 
+	@Size(max=6)
 	private String permanentPincode;
 
+	@Size(max=50)
 	private String correspondenceCity;
 
+	@Size(max=6)
 	private String correspondencePincode;
 
+	@Size(max=300)
 	private String correspondenceAddress;
 
 	private Boolean active;
 
+	@Past
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	@JsonFormat(pattern = "yyyy-mm-dd")
 	private Date dob;
 
+	@Future
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	@JsonFormat(pattern = "dd-MM-yyyy hh:mm:ss")
 	private Date pwdExpiryDate;
 
+	@Size(max=5)
 	private String locale;
 
+	@Valid
 	private UserType type = UserType.EMPLOYEE;
-
-	private String signature;
 
 	private Boolean accountLocked;
 
+	@Valid
 	private List<Role> roles = new ArrayList<Role>();
 
+	@Size(max=100)
 	private String fatherOrHusbandName;
 
-	private String bloodGroup;
+	@Valid
+	private BloodGroup bloodGroup;
 
+	@Size(max=300)
 	private String identificationMark;
-
-	private String photo;
 
 	private Long createdBy;
 
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	@JsonFormat(pattern = "dd-MM-yyyy hh:mm:ss")
 	private Date createdDate;
 
 	private Long lastModifiedBy;
 
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	@JsonFormat(pattern = "dd-MM-yyyy hh:mm:ss")
 	private Date lastModifiedDate;
 
-	@NotNull
+	@Size(max=256)
 	private String tenantId;
 
 }

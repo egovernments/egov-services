@@ -57,13 +57,11 @@ import lombok.ToString;
 @ToString
 public class HODDepartment {
 
-	@NotNull
 	private Long id;
 
 	@NotNull
 	private Long department;
 
-	@NotNull
 	private String tenantId;
 
 }

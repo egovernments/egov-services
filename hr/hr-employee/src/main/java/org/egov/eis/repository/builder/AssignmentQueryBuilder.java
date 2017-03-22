@@ -57,12 +57,12 @@ public class AssignmentQueryBuilder {
 	@Autowired
 	private ApplicationProperties applicationProperties;
 
-	private static final String BASE_QUERY = "SELECT a.id as a_id, a.employeeId AS a_employeeId,"
-			+ " a.positionId as a_positionId, a.fundId as a_fundId, a.functionaryId as a_functionaryId,"
-			+ " a.functionId as a_functionId, a.designationId as a_designationId, a.departmentId as a_departmentId,"
-			+ " a.isPrimary as a_isPrimary, a.fromDate as a_fromDate,  a.toDate as a_toDate, a.gradeId as a_gradeId,"
-			+ " a.govtOrderNumber as a_govtOrderNumber, a.createdBy as a_createdBy, a.createdDate as a_createdDate,"
-			+ " a.lastModifiedBy as a_lastModifiedBy, a.lastModifiedDate as a_lastModifiedDate, a.tenantId as a_tenantId,"
+	private static final String BASE_QUERY = "SELECT a.id as a_id, a.positionId as a_positionId, a.fundId as a_fundId,"
+			+ " a.functionaryId as a_functionaryId, a.functionId as a_functionId, a.designationId as a_designationId,"
+			+ " a.departmentId as a_departmentId, a.isPrimary as a_isPrimary, a.fromDate as a_fromDate,"
+			+ " a.toDate as a_toDate, a.gradeId as a_gradeId, a.govtOrderNumber as a_govtOrderNumber,"
+			+ " a.createdBy as a_createdBy, a.createdDate as a_createdDate, a.lastModifiedBy as a_lastModifiedBy,"
+			+ " a.lastModifiedDate as a_lastModifiedDate, a.tenantId as a_tenantId,"
 			+ " hod.id as hod_id, hod.departmentId as hod_departmentId"
 			+ " FROM egeis_employee e"
 			+ " JOIN egeis_assignment a ON a.employeeId = e.id"

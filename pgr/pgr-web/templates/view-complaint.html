@@ -20,7 +20,6 @@
 		<!--[if lt IE 9]>
 		<script src="../resources/global/js/ie8/html5shiv.min.js"></script>
 		<script src="../resources/global/js/ie8/respond.min.js"></script>
-		<script src="../resources/app/js/custom-header-adder.js"></script>
 		<![endif]-->
 	
 	</head>
@@ -141,11 +140,11 @@
 								</div>
 					{{/service_requests}}
 								<div class="row add-border">
-									<div class="col-md-3 col-sm-3 col-xs-6 add-margin">
+									<div class="col-md-3 col-sm-6 col-xs-6 add-margin">
 										Photos/Video
 									</div>
-									<div id="links" class="col-md-9 col-sm-9 col-xs-12">
-									{{#files}}
+									<div id="links" class="col-md-9 col-sm-6 col-xs-12 view-content">
+									{{#if files}}
 										<a href="{{url}}" type="{{contentType}}" class="col-md-4 col-sm-4 col-xs-12 add-margin down-file view-content" data-gallery> 
 											{{#if (contains contentType "video")}}
 												<img class="img-width add-margin" src="../resources/global/images/video.png" alt="">
@@ -153,7 +152,9 @@
 												<img class="img-width add-margin" src="{{url}}" />
 											{{/if}}
 										</a>
-									{{/files}}
+									{{else}}
+										N/A
+									{{/if}}
 									</div>
 								</div>
 					{{#service_requests}}
@@ -167,7 +168,12 @@
 											 	data-placement="top" title="" data-original-title="Locate on map"
 											 	onclick="jQuery('#complaint-locate').modal('show', {backdrop: 'static'});"><i class="fa fa-map-marker"></i></span>&nbsp;<span id="address_locate">{{values.latlngAddress}}</span>
 											{{else}}
-												<span id="address_locate">{{values.ChildLocationName}} - {{values.LocationName}}</span>
+												<span id="address_locate">
+													{{values.ChildLocationName}} 
+													{{#if values.ChildLocationName}}
+													- 
+													{{/if}}
+													{{values.LocationName}}</span>
 											{{/if}}
 										 	
 									</div>
@@ -444,6 +450,7 @@
 		<script src="../resources/global/js/jquery/plugins/jquery.inputmask.bundle.min.js"></script>
 		<script src="../resources/global/js/jquery/plugins/jquery.validate.min.js"></script>
 		<script src="../resources/global/js/egov/patternvalidation.js"></script>
+		<script src="../resources/app/js/custom-header-adder.js"></script>
 		<script src="../resources/global/js/egov/custom.js"></script>
 		<script	src="../resources/global/js/image-gallery/js/jquery.blueimp-gallery.min.js"></script>
 		<script	src="../resources/global/js/image-gallery/js/bootstrap-image-gallery.js"></script>

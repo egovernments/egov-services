@@ -547,6 +547,8 @@ definitions:
       stateId:
         type: string
         description: Work flow ref id.
+      workFlowDetails:
+        $ref: '#/definitions/WorkFlowDetails'   
       tenantId:
         type: string
         description: Unique Identifier of which tenant this data is defined. For example, AP, AP-Kurnool etc.
@@ -592,7 +594,25 @@ definitions:
         type: string
         format: double
         description: fixed amount used for increase in rent
-        
+
+  WorkFlowDetails:
+    type: object
+    description: This object holds info about the assignee and other workflow related info
+    properties:
+      department:
+        type: string
+        description: Selected department.
+      designation:
+        type: string
+        description: Selected designation.
+      assignee:
+        type: integer
+        format: int64
+        description: Selected assignee.
+      action:
+        type: string
+        description: chosen action.
+          
   DocumentType:
     type: object
     description: This object holds type of documents to be uploaded during the transaction for each application type.

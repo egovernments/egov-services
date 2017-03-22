@@ -14,6 +14,8 @@ var requestInfo = {
 };
 
 var tenantId=1;
+var authToken='f1a716e6-15ad-428f-8ffa-607cebb3e6e2';
+
 
 
 
@@ -26,9 +28,9 @@ function getCommonMaster(mainRoute,resource,returnObject) {
               async: false,
               // crossDomain: true, // set this to ensure our $.ajaxPrefilter hook fires
               // processData: false, // We want this to remain an object for  $.ajaxPrefilter
-              // headers: {
-              //     'Content-Type': 'application/json'
-              // },
+              headers: {
+                      'auth-token': authToken
+              },
               contentType: 'application/json'
               // ,
               // success: function (result) {
@@ -75,6 +77,9 @@ function commonApiGet(context,resource="",action="",queryObject={}) {
             url: url,
             type: 'GET',
             dataType: 'json',
+            headers: {
+                    'auth-token': authToken
+            },
             // data:JSON.stringify(requestInfo),
             async: false,
             contentType: 'application/json',
@@ -105,9 +110,9 @@ function getCommonMasterById(mainRoute,resource,returnObject,id) {
               async: false,
               // crossDomain: true, // set this to ensure our $.ajaxPrefilter hook fires
               // processData: false, // We want this to remain an object for  $.ajaxPrefilter
-              // headers: {
-              //     'Content-Type': 'application/json'
-              // },
+              headers: {
+                      'auth-token': authToken
+              },
               contentType: 'application/json'
               // ,
               // success: function (result) {

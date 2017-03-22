@@ -48,6 +48,23 @@ paths:
           description: Tax period
           required: false
           type: string
+        - name: fromDate
+          in: query
+          description: From tax period, format is dd/MM/yyyy
+          required: false
+          type: string
+          format: date
+        - name: toDate
+          in: query
+          description: To tax period, format is dd/MM/yyyy
+          required: false
+          type: string
+          format: date
+        - name: installmentType
+          in: query
+          description: type of a installment period
+          required: false
+          type: string
       tags:
         - Master
       responses:

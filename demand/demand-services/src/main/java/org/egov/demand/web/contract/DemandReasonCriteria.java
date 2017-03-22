@@ -1,9 +1,18 @@
 package org.egov.demand.web.contract;
 
+import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class DemandReasonCriteria {
 	private String moduleName;
 	private String taxCategory;
 	private String taxPeriod;
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date fromDate;
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date toDate;
+	private String installmentType;
 
 	public String getModuleName() {
 		return moduleName;

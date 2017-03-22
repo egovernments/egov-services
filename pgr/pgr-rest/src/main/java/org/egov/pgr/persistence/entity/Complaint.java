@@ -152,6 +152,7 @@ public class Complaint extends AbstractAuditable {
                 .childLocation(getChildLocationId())
                 .assignee(getAssigneeId())
                 .state(getState())
+                .complaintStatus(getComplaintStatus())
                 .build();
     }
 
@@ -181,6 +182,10 @@ public class Complaint extends AbstractAuditable {
 
     private String getChildLocationId() {
         return childLocation != null ? childLocation.toString(): null;
+    }
+    
+    private String getComplaintStatus(){
+    	return  status.getName()!=null ? status.getName():null ;
     }
 
 }

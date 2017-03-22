@@ -1,0 +1,775 @@
+{
+    "mappings": {
+        "employeedetails": {
+            "properties": {
+                "ulbname": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "ulbcode": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "distname": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "regname": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "ulbgrade": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "employeeid": {
+                    "type": "integer"
+                },
+                "employeecode": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "dateofappointment": {
+                    "format": "dateOptionalTime",
+                    "type": "date"
+                },
+                "dateofretirement": {
+                    "format": "dateOptionalTime",
+                    "type": "date"
+                },
+                "employeestatus": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "employeetype": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "username": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "pwdexpirydate": {
+                    "format": "dateOptionalTime",
+                    "type": "date"
+                },
+                "mobilenumber": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "alternatenumber": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "emailid": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "employeeactive": {
+                    "type": "boolean"
+                },
+                "salutation": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "employeename": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "usertype": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "gender": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "pannumber": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "aadharnumber": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "dateofbirth": {
+                    "format": "dateOptionalTime",
+                    "type": "date"
+                },
+                "employeecreateddate": {
+                    "format": "dateOptionalTime",
+                    "type": "date"
+                },
+                "employeecreatedby": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+
+                "recruitmentmode": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "recruitmenttype": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "recruitmentquota": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "retirementage": {
+                    "type": "integer"
+                },
+                "dateofresignation": {
+                    "format": "dateOptionalTime",
+                    "type": "date"
+                },
+                "dateoftermination": {
+                    "format": "dateOptionalTime",
+                    "type": "date"
+                },
+                "mothertongue": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "religion": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "community": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "employeecategory": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "physicallyDisabled": {
+                    "type": "boolean"
+                },
+                "medicalReportProduced": {
+                    "type": "boolean"
+                },
+                "languagesknown": {
+                    "type": "string",
+                    "store": true,
+                    "index": "analyzed"
+                },
+                "maritalstatus": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "passportno": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "gpfno": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "bank": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "bankbranch": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "bankaccount": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "employeegroup": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "placeofbirth": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "permanentaddress": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "permanentcity": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "permanentpincode": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "correspondencecity": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "correspondencepincode": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "correspondenceaddress": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "accountlocked": {
+                    "type": "boolean"
+                },
+                "fatherorhusbandname": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "bloodgroup": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "identificationmark": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                }
+            }
+        },
+
+        "employeeassignment": {
+            "properties": {
+                "ulbname": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "ulbcode": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "distname": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "regname": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "ulbgrade": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "employeeid": {
+                    "type": "integer"
+                },
+                "employeecode": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "assignmentid": {
+                    "type": "integer"
+                },
+                "fund": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "function": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "designation": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "functionary": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "department": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "position": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "grade": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "fromdate": {
+                    "format": "dateOptionalTime",
+                    "type": "date"
+                },
+                "todate": {
+                    "format": "dateOptionalTime",
+                    "type": "date"
+                },
+                "primaryassignment": {
+                    "type": "boolean"
+                },
+                "headofdepartmentcode": {
+                    "type": "string",
+                    "store": true,
+                    "index": "analyzed"
+                },
+                "assignmentcreateddate": {
+                    "format": "dateOptionalTime",
+                    "type": "date"
+                },
+                "assignmentcreatedby": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                }
+
+            }
+        },
+
+        "employeetest": {
+            "properties": {
+                "ulbname": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "ulbcode": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "distname": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "regname": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "ulbgrade": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "employeeid": {
+                    "type": "integer"
+                },
+                "employeecode": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "testname": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "testpassedyear": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "testremarks": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "testcreateddate": {
+                    "format": "dateOptionalTime",
+                    "type": "date"
+                },
+                "testcreatedby": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                }
+
+            }
+        },
+
+        "employeetechnical": {
+            "properties": {
+                "ulbname": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "ulbcode": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "distname": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "regname": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "ulbgrade": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "employeeid": {
+                    "type": "integer"
+                },
+                "employeecode": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "technicalskill": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "technicalyear": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "technicalgrade": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "technicalremarks": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "technicalcreateddate": {
+                    "format": "dateOptionalTime",
+                    "type": "date"
+                },
+                "technicalcreatedby": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                }
+
+            }
+        },
+
+        "employeeservicehistory": {
+            "properties": {
+                "ulbname": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "ulbcode": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "distname": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "regname": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "ulbgrade": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "employeeid": {
+                    "type": "integer"
+                },
+                "employeecode": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "serviceid": {
+                    "type": "integer"
+                },
+                "serviceentry": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "servicefrom": {
+                    "format": "dateOptionalTime",
+                    "type": "date"
+                },
+                "serviceremarks": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "serviceorderno": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "servicecreateddate": {
+                    "format": "dateOptionalTime",
+                    "type": "date"
+                },
+                "servicecreatedby": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                }
+
+            }
+        },
+
+        "employeeeducation": {
+            "properties": {
+                "ulbname": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "ulbcode": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "distname": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "regname": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "ulbgrade": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "employeeid": {
+                    "type": "integer"
+                },
+                "employeecode": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "qualification": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "qualificationyear": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "qualificationuniversity": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "qualificationremarks": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "qualificationcreateddate": {
+                    "format": "dateOptionalTime",
+                    "type": "date"
+                },
+                "qualificationcreatedby": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                }
+
+            }
+        },
+
+        "employeejurisdiction": {
+            "properties": {
+                "ulbname": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "ulbcode": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "distname": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "regname": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "ulbgrade": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "employeeid": {
+                    "type": "integer"
+                },
+                "employeecode": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "boundarytype": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "boundaryname": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "jurisdictioncreateddate": {
+                    "format": "dateOptionalTime",
+                    "type": "date"
+                },
+                "jurisdictioncreatedby": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                }
+
+            }
+        },
+
+        "employeeprobation": {
+            "properties": {
+                "ulbname": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "ulbcode": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "distname": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "regname": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "ulbgrade": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "employeeid": {
+                    "type": "integer"
+                },
+                "employeecode": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "probationdesignation": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "probationdeclareddate": {
+                    "format": "dateOptionalTime",
+                    "type": "date"
+                },
+                "probationordernumber": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "probationremarks": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "probationorderdate": {
+                    "format": "dateOptionalTime",
+                    "type": "date"
+                },
+                "probationcreateddate": {
+                    "format": "dateOptionalTime",
+                    "type": "date"
+                },
+                "probationcreatedby": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                }
+
+            }
+        }
+    }
+}

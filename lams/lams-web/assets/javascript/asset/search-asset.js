@@ -67,8 +67,8 @@ class SearchAsset extends React.Component {
 
 
      this.setState({
-      assetCategories:commonApiPost("asset-services","assetCategories","_search",{}).responseJSON["AssetCategory"],
-      departments:commonApiPost("egov-common-masters","departments","_search",{tenantId}).responseJSON["Department"],
+      assetCategories:commonApiPost("asset-services","assetCategories","_search",{}).responseJSON["AssetCategory"] ||[],
+      departments:commonApiPost("egov-common-masters","departments","_search",{tenantId}).responseJSON["Department"] || [],
       statusList:commonApiGet("asset-services","","GET_STATUS",{}).responseJSON|| {}
     })
   }

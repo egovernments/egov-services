@@ -40,6 +40,9 @@
 
 package org.egov.eis.web.errorhandler;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 import org.egov.eis.web.contract.RequestInfo;
 import org.egov.eis.web.contract.ResponseInfo;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
@@ -91,7 +94,7 @@ public class ErrorHandler {
 
 		return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
 	}
-	
+
 	public ResponseEntity<ErrorResponse> getErrorResponseEntityForBindingErrors(BindingResult bindingResult,
 			RequestInfo requestInfo) {
 		Error error = new Error();
@@ -100,7 +103,16 @@ public class ErrorHandler {
 		
 		if (bindingResult.hasFieldErrors()) {
 			for (FieldError fieldError : bindingResult.getFieldErrors()) {
-				error.getFields().put(fieldError.getField(), fieldError.getRejectedValue());
+				if (fieldError.getField().contains("Date")) {
+					DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+					String errorDate = dateFormat.format(fieldError.getRejectedValue());
+					error.getFields().put("employee." + fieldError.getField(), errorDate);
+				} else if (fieldError.getField().contains("jurisdictions")
+						|| (fieldError.getField().contains("assignments"))) {
+					error.getFields().put("employee." + fieldError.getField(), fieldError.getRejectedValue());
+				} else {
+					error.getFields().put(fieldError.getField(), fieldError.getRejectedValue());
+				}
 			}
 		}
 

@@ -15,8 +15,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ComplaintRepository {
-    private static final String CREATE = "create";
-    private static final String UPDATE = "update";
+    private static final String POST = "POST";
+    private static final String PUT = "PUT";
     private ComplaintJpaRepository complaintJpaRepository;
     private ComplaintMessageQueueRepository complaintMessageQueueRepository;
 
@@ -28,7 +28,7 @@ public class ComplaintRepository {
     }
 
     public void save(SevaRequest sevaRequest) {
-        sevaRequest.getRequestInfo().setAction(CREATE);
+        sevaRequest.getRequestInfo().setAction(POST);
         this.complaintMessageQueueRepository.save(sevaRequest);
     }
 
@@ -41,7 +41,7 @@ public class ComplaintRepository {
     }
 
     public void update(SevaRequest sevaRequest) {
-        sevaRequest.getRequestInfo().setAction(UPDATE);
+        sevaRequest.getRequestInfo().setAction(PUT);
         this.complaintMessageQueueRepository.save(sevaRequest);
     }
 

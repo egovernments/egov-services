@@ -113,7 +113,7 @@ function getComplaint(){
 		},
 		success : function(response){
 			//console.log('Get complaint done!'+JSON.stringify(response));
-			updateResponse = response;
+			updateResponse = JSON.parse(JSON.stringify(response));
 
 			if(response.service_requests.length == 0){
 				bootbox.alert('Not a valid SRN!');
@@ -121,7 +121,7 @@ function getComplaint(){
 				return;
 			}
 
-			status = response.service_requests[0].values.ComplaintStatus;
+			status = response.service_requests[0].values.complaintStatus;
 			
 			if(localStorage.getItem('type') == 'EMPLOYEE'){
 				if(status == 'COMPLETED' || status == 'REJECTED')
@@ -132,14 +132,14 @@ function getComplaint(){
 			}
 
 			$.ajax({
-				url: "/filestore/files?tag="+srn,
+				url: "/filestore/v1/files/tag?tag="+srn,
 				type : 'GET',
 				success : function(fileresponse){
 					//console.log(fileresponse.files)
 
 					//History
 					$.ajax({
-						url : "/workflow/history?tenantId=ap.public&workflowId="+response.service_requests[0].values.StateId,
+						url : "/workflow/history?tenantId=ap.public&workflowId="+response.service_requests[0].values.stateId,
 						type : 'GET',
 						success : function(work_response){
 
@@ -161,17 +161,17 @@ function getComplaint(){
 							if (lat != '0' && lng != '0')
 								getAddressbyLatLng(lat, lng, response);
 
-							var receivingcenter = response.service_requests[0].values.ReceivingCenter;
+							var receivingcenter = response.service_requests[0].values.receivingCenter;
 
 							if(receivingcenter)
 								getReceivingCenterbyId(receivingcenter, response);
 
-							var departmentId = response.service_requests[0].values.DepartmentId;
+							var departmentId = response.service_requests[0].values.departmentId;
 
 							getDepartmentbyId(departmentId, response);
 
-							var locationId = response.service_requests[0].values.LocationId;
-							var childLocationId = response.service_requests[0].values.ChildLocationId;
+							var locationId = response.service_requests[0].values.locationId;
+							var childLocationId = response.service_requests[0].values.childLocationId;
 
 							if(locationId)
 								getBoundarybyId(locationId,'LocationName', response);
@@ -193,8 +193,8 @@ function getComplaint(){
 
 							if(localStorage.getItem('type') == 'EMPLOYEE'){
 								$('#status').attr('required','required');
-								var wardId = response.service_requests[0].values.LocationId;
-								var localityid = response.service_requests[0].values.ChildLocationId;
+								var wardId = response.service_requests[0].values.locationId;
+								var localityid = response.service_requests[0].values.childLocationId;
 								var serviceName = response.service_requests[0].service_name;
 								complaintType(loadDD, serviceName);
 								getWard(loadDD, wardId);
@@ -244,31 +244,19 @@ function complaintUpdate(obj){
 	var date = dat.split("/").join("-");
 	req_obj.ServiceRequest['updated_datetime'] = date+' '+time;
 	req_obj.ServiceRequest['tenantId'] = 'ap.public';
-	req_obj.ServiceRequest.values['ComplaintStatus'] = $('#status').val() ? $('#status').val() : status;
+	req_obj.ServiceRequest.values['complaintStatus'] = $('#status').val() ? $('#status').val() : status;
 	req_obj.ServiceRequest.values['approvalComments'] = $('#approvalComment').val();
 	if(localStorage.getItem('type') == 'CITIZEN')
 		req_obj.ServiceRequest.values['userId'] = localStorage.getItem('id');
 	req_obj.ServiceRequest.values['assignment_id'] = req_obj.ServiceRequest.values['assigneeId'];
 	delete req_obj.ServiceRequest.values['assigneeId'];
-	req_obj.ServiceRequest.values['locationId'] = req_obj.ServiceRequest.values['LocationId'];
-	delete req_obj.ServiceRequest.values['LocationId'];
-	req_obj.ServiceRequest.values['childLocationId'] = req_obj.ServiceRequest.values['ChildLocationId'];
-	delete req_obj.ServiceRequest.values['ChildLocationId'];
-	req_obj.ServiceRequest.values['childLocationName'] = req_obj.ServiceRequest.values['ChildLocationName'];
-	delete req_obj.ServiceRequest.values['ChildLocationName'];
-	req_obj.ServiceRequest.values['receivingMode'] = req_obj.ServiceRequest.values['ReceivingMode'];
-	delete req_obj.ServiceRequest.values['ReceivingMode'];
-	req_obj.ServiceRequest.values['receivingCenter'] = req_obj.ServiceRequest.values['ReceivingCenter'];
-	delete req_obj.ServiceRequest.values['ReceivingCenter'];
-	req_obj.ServiceRequest.values['status'] = req_obj.ServiceRequest.values['ComplaintStatus'];
-	delete req_obj.ServiceRequest.values['ComplaintStatus'];
-	req_obj.ServiceRequest.values['locationName'] = req_obj.ServiceRequest.values['LocationName'];
-	delete req_obj.ServiceRequest.values['LocationName'];
+	req_obj.ServiceRequest.values['status'] = req_obj.ServiceRequest.values['complaintStatus'];
+	delete req_obj.ServiceRequest.values['complaintStatus'];
 
 	if($("#approvalDepartment").val())
 		req_obj.ServiceRequest.values['departmentName'] = $("#approvalDepartment option:selected").text();
 	if($("#approvalPosition").val())
-		req_obj.ServiceRequest.values['assignment_id'] = $("#approvalPosition").val();
+		req_obj.ServiceRequest.values['assigneeId'] = $("#approvalPosition").val();
 
 	$.ajax({
 		url: "/pgr/seva?jurisdiction_id=ap.public",
@@ -298,7 +286,7 @@ function complaintUpdate(obj){
 				});
 
 				$.ajax({
-					url: "/filestore/files",
+					url: "/filestore/v1/files",
 					type : 'POST',
 					async : false,
 					// THIS MUST BE DONE FOR FILE UPLOADING

@@ -53,10 +53,12 @@ public class ServiceRequest {
 
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "IST")
     @JsonProperty("requested_datetime")
+    @Setter
     private Date createdDate;
 
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "IST")
     @JsonProperty("updated_datetime")
+    @Setter
     private Date lastModifiedDate;
 
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "IST")

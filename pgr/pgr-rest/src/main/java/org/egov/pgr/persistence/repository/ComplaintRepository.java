@@ -13,6 +13,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class ComplaintRepository {
 	private static final String POST = "POST";
@@ -27,10 +32,12 @@ public class ComplaintRepository {
 		this.complaintMessageQueueRepository = complaintMessageQueueRepository;
 	}
 
-	public void save(SevaRequest sevaRequest) {
-		sevaRequest.getRequestInfo().setAction(POST);
-		this.complaintMessageQueueRepository.save(sevaRequest);
-	}
+    public void save(SevaRequest sevaRequest) {
+        Date date = Calendar.getInstance().getTime();
+        sevaRequest.getRequestInfo().setAction(POST);
+        sevaRequest.getServiceRequest().setCreatedDate(date);
+        this.complaintMessageQueueRepository.save(sevaRequest);
+    }
 
 	public List<Complaint> findAll(ComplaintSearchCriteria complaintSearchCriteria) {
 		final SevaSpecification specification = new SevaSpecification(complaintSearchCriteria);
@@ -39,10 +46,12 @@ public class ComplaintRepository {
 				.map(org.egov.pgr.persistence.entity.Complaint::toDomain).collect(Collectors.toList());
 	}
 
-	public void update(SevaRequest sevaRequest) {
-		sevaRequest.getRequestInfo().setAction(PUT);
-		this.complaintMessageQueueRepository.save(sevaRequest);
-	}
+    public void update(SevaRequest sevaRequest) {
+        Date date = Calendar.getInstance().getTime();
+        sevaRequest.getRequestInfo().setAction(PUT);
+        sevaRequest.getServiceRequest().setLastModifiedDate(date);
+        this.complaintMessageQueueRepository.save(sevaRequest);
+    }
 
 	public List<Complaint> getAllModifiedComplaintsForCitizen(Date lastAccessedTime, Long userId) {
 		return this.complaintJpaRepository.getAllModifiedComplaintsForCitizen(lastAccessedTime, userId).stream()

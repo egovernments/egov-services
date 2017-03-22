@@ -1,9 +1,5 @@
 package org.egov.pgr.persistence.repository;
 
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.egov.pgr.domain.model.Complaint;
 import org.egov.pgr.domain.model.ComplaintSearchCriteria;
 import org.egov.pgr.persistence.queue.contract.SevaRequest;

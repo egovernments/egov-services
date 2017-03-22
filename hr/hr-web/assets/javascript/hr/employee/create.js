@@ -889,6 +889,14 @@ $("select").on("change", function() {
           }
           // return;
         }
+        if ((employeeSubObject["assignments"]["department"]!="" && employeeSubObject["assignments"]["designation"]!="")&&(this.id=="assignments.department" ||this.id=="assignments.designation")) {
+          commonObject["assignments_position"]=commonApiPost("hr-masters", "positions", "_search",{tenantId,epartmentId:employeeSubObject["assignments"]["department"],designationId:employeeSubObject["assignments"]["designation"]}).responseJSON["Position"] || [];
+          $(`#assignments\\.position`).html(`<option value=''>Select</option>`)
+
+          for (var i = 0; i < commonObject["assignments_position"].length; i++) {
+              $(`#assignments\\.position`).append(`<option value='${commonObject["assignments_position"][i]['id']}'>${commonObject["assignments_position"][i]['name']}</option>`)
+          }
+        }
         fillValueToObject(this);
     // }
 });

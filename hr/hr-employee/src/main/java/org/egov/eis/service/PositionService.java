@@ -59,14 +59,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class PositionService {
-/*
-	@Autowired
-	private RestTemplate restTemplate;
-*/
+	/*
+	 * @Autowired private RestTemplate restTemplate;
+	 */
 	@Autowired
 	private PositionSearchURLHelper positionSearchURLHelper;
 
-	public List<Position> getPositions(Long employeeId, PositionGetRequest positionGetRequest, RequestInfo requestInfo) {
+	public List<Position> getPositions(Long employeeId, PositionGetRequest positionGetRequest,
+			RequestInfo requestInfo) {
 		String url = positionSearchURLHelper.searchURL(positionGetRequest);
 
 		String requestInfoJson = null;
@@ -85,7 +85,8 @@ public class PositionService {
 		HttpEntity<String> httpEntityRequest = new HttpEntity<String>(requestInfoJson, hardCodedAuthTokenHeader);
 
 		// Replace httpEntityRequest with requestInfo if there is no need to send headers
-		PositionResponse positionResponse = new RestTemplate().postForObject(url, httpEntityRequest, PositionResponse.class);
+		PositionResponse positionResponse = new RestTemplate().postForObject(url, httpEntityRequest,
+				PositionResponse.class);
 
 		return positionResponse.getPosition();
 	}

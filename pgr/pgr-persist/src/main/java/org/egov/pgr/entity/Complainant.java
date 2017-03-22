@@ -40,14 +40,18 @@
 
 package org.egov.pgr.entity;
 
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.SafeHtml;
+import static org.egov.pgr.entity.Complainant.SEQ_COMPLAINANT;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import javax.validation.constraints.Pattern;
 
-import static org.egov.pgr.entity.Complainant.SEQ_COMPLAINANT;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.Length;
 
 @Entity
 @Table(name = "egpgr_complainant")
@@ -63,23 +67,19 @@ public class Complainant extends AbstractPersistable<Long> {
     private Long id;
 
     @Length(max = 150)
-    @SafeHtml
     private String name;
 
     @Length(max = 20)
-    @SafeHtml
     @Pattern(regexp = MOBILE_NUM)
     private String mobile;
 
     @Length(max = 100)
-    @SafeHtml
     @Email(regexp = EMAIL)
     private String email;
 
     private Long userDetail;
 
     @Length(max = 256)
-    @SafeHtml
     private String address;
 
     @Override

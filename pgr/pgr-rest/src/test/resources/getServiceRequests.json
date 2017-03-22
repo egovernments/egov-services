@@ -30,14 +30,14 @@
          "device_id":null,
          "account_id":null,
          "values":{
-            "ComplaintStatus": "FORWARDED",
-            "ReceivingMode": "MANUAL",
-            "ReceivingCenter": "Commissioner Office",
-            "LocationId": "34",
-            "ChildLocationId": "Gadu Veedhi",
-            "StateId": "1",
-            "AssigneeId": "2",
-            "DepartmentId": "3"
+            "complaintStatus": "FORWARDED",
+            "receivingMode": "MANUAL",
+            "receivingCenter": "Commissioner Office",
+            "locationId": "34",
+            "childLocationId": "Gadu Veedhi",
+            "stateId": "1",
+            "assigneeId": "2",
+            "departmentId": "3"
          }
      }
     ]

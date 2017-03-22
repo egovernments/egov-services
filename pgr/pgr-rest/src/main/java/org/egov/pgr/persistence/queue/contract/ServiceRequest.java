@@ -125,14 +125,14 @@ public class ServiceRequest {
 
     private Map<String, String> getAdditionalValues(Complaint complaint) {
         final HashMap<String, String> map = new HashMap<>();
-        map.put("ReceivingMode", complaint.getReceivingMode());
-        map.put("ComplaintStatus", complaint.getComplaintStatus());
-        addEntryIfPresent(map, "ReceivingCenter", complaint.getReceivingCenter());
-        addEntryIfPresent(map, "LocationId", complaint.getComplaintLocation().getLocationId());
-        addEntryIfPresent(map, "ChildLocationId", complaint.getChildLocation());
-        addEntryIfPresent(map, "StateId", complaint.getState());
-        addEntryIfPresent(map, "AssigneeId", complaint.getAssignee());
-        addEntryIfPresent(map, "DepartmentId", complaint.getDepartment());
+        map.put("receivingMode", complaint.getReceivingMode());
+        map.put("complaintStatus", complaint.getComplaintStatus());
+        addEntryIfPresent(map, "receivingCenter", complaint.getReceivingCenter());
+        addEntryIfPresent(map, "locationId", complaint.getComplaintLocation().getLocationId());
+        addEntryIfPresent(map, "childLocationId", complaint.getChildLocation());
+        addEntryIfPresent(map, "stateId", complaint.getState());
+        addEntryIfPresent(map, "assigneeId", complaint.getAssignee());
+        addEntryIfPresent(map, "departmentId", complaint.getDepartment());
         return map;
     }
 

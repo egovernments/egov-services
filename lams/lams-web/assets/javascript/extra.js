@@ -7,7 +7,7 @@ $(document).ready(function() {
         //    alert(infoMessage);
         jQuery('<form>.').attr({
             method: 'post',
-            action: 'http://172.16.2.233:9880/collection/receipts/receipt-newform.action',
+            action: '/collection/receipts/receipt-newform.action',
             target: '_self'
         }).append(jQuery('<input>').attr({
             type: 'hidden',

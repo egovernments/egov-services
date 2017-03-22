@@ -27,13 +27,9 @@ public class PositionSearchURLHelper {
 			searchURL.append("tenantId=" + positionGetRequest.getTenantId());
 		}
 
-		// FIXME : hard-coded "id = -1" if no id is satisfying criteria. Else it will return all positions
 		if (positionGetRequest.getId() != null && !positionGetRequest.getId().isEmpty()) {
 			isAppendAndSeperator = addAndIfRequired(isAppendAndSeperator, searchURL);
 			searchURL.append("id=" + getCommaSeperatedIds(positionGetRequest.getId()));
-		} else {
-			isAppendAndSeperator = addAndIfRequired(isAppendAndSeperator, searchURL);
-			searchURL.append("id=" + "-1");
 		}
 
 		searchURL.append("&pageSize=" + applicationProperties.empSearchPageSizeMax());

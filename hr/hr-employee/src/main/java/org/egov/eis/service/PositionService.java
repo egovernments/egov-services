@@ -70,7 +70,10 @@ public class PositionService {
 	public List<Position> getPositions(Long employeeId, PositionGetRequest positionGetRequest, RequestInfo requestInfo) {
 
 		List<Long> actualPositionIds = positionAssignmentRepository.findForCriteria(employeeId, positionGetRequest);
-		positionGetRequest.getId().retainAll(actualPositionIds);
+		if(!positionGetRequest.getId().isEmpty()) {
+			actualPositionIds.retainAll(positionGetRequest.getId());
+		}
+		positionGetRequest.setId(actualPositionIds);
 
 		String url = positionSearchURLHelper.searchURL(positionGetRequest);
 

@@ -280,7 +280,7 @@ public class StateHistory implements Serializable {
 		Task t = Task.builder().businessKey(this.getState().getType())
 				.comments(this.comments == null ? "" : this.comments).createdDate(this.getCreatedDate())
 				.id(this.getId().toString()).status(this.getValue()).natureOfTask(this.getNatureOfTask()).owner(p)
-				.extraInfo(this.extraInfo == null ? "" : this.extraInfo)
+				.details(this.extraInfo == null ? "" : this.extraInfo)
 				.senderName(this.senderName == null ? "" : this.senderName)
 				.action(this.nextAction == null ? "" : this.nextAction).attributes(new HashMap<String, Attribute>())
 				.build();

@@ -570,6 +570,10 @@ definitions:
     type: object
     description: A basic Object which holds the info about the revenue module name and the period the demand belongs to.
     properties:
+      id:
+        type: integer
+        format: int64
+        description: primary key of a demand.
       installment:
         type: string
         description: installment period description.
@@ -617,6 +621,10 @@ definitions:
         minLength: 1
         maxLength: 64
         description: A general ledger code for tax head for financial posting.
+      isActualDemand:
+        type: number
+        format: int32
+        description: Flag to tell actual demand or not, the demand can be tax or penalty or reabate. If the demand is a tax then its a actual demand.
     required:
       - taxAmount
       - collectionAmount
@@ -713,7 +721,7 @@ definitions:
       - receiptAmount
       - receiptDate
       
-  BillAddlInfo:
+  BillInfo:
     type: object
     description: A detailed head wise dues which is payable on a Demand.
     properties:
@@ -857,10 +865,17 @@ definitions:
         minLength: 1
         maxLength: 100
         description: Type of consumer.
-      billDetails:
+      totalAmount:
+        type: string
+        format: double
+        description: Total amount payable.
+      referenceNumber:
+        type: string
+        description: bill ref. no.
+      billDetailInfos:
         type: array
         items:
-          $ref: '#/definitions/BillDetail'
+          $ref: '#/definitions/BillDetailInfo'
     required:
       - citizenName
       - citizenAddress
@@ -888,7 +903,7 @@ definitions:
       - emailId
       - consumerType
       
-  BillDetail:
+  BillDetailInfo:
     type: object
     description: Holds the head wise break up of the dues.
     properties:
@@ -933,6 +948,14 @@ definitions:
         minLength: 1
         maxLength: 16
         description: The period this tax head due belongs to.
+      orderNo:
+        type: integer
+        format: int32
+        description: order of the bill details in which the payment to be accepted.
+      isActualDemand:
+        type: number
+        format: int32
+        description: Flag to tell actual demand or not, the demand can be tax or penalty or reabate. If the demand is a tax then its a actual demand.
     required:
       - billId
       - creditAmount
@@ -942,6 +965,8 @@ definitions:
       - description
       - purpose
       - period
+      - orderNo
+      - isActualDemand
       
   DemandRequest:
     properties:
@@ -993,20 +1018,20 @@ definitions:
     properties:
       RequestInfo:
         $ref: '#/definitions/RequestInfo'
-      BillAddlInfos:
+      BillInfos:
         type: array
         items:
-          $ref: '#/definitions/BillAddlInfo'
+          $ref: '#/definitions/BillInfo'
     type: object
 
   BillResponse:
     properties:
       ResposneInfo:
         $ref: '#/definitions/ResponseInfo'
-      Bills:
+      BillInfos:
         type: array
         items:
-          $ref: '#/definitions/BillAddlInfo'
+          $ref: '#/definitions/BillInfo'
     type: object
     
   InstallmentRequest:

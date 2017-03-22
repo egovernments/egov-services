@@ -40,6 +40,7 @@
 
 package org.egov.eis.web.contract;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -67,7 +68,7 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class PositionGetRequest {
 
-	private List<Long> id;
+	private List<Long> id = new ArrayList<Long>();
 
 	@Size(min = 2, max = 100)
 	private String name;

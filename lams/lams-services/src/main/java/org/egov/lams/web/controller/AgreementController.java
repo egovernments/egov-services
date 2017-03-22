@@ -13,8 +13,8 @@ import org.egov.lams.model.Agreement;
 import org.egov.lams.model.AgreementCriteria;
 import org.egov.lams.model.RequestInfo;
 import org.egov.lams.service.AgreementService;
-import org.egov.lams.validator.AgreementValidator;
 import org.egov.lams.web.contract.factory.ResponseInfoFactory;
+import org.egov.lams.web.validator.AgreementValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +41,10 @@ public class AgreementController {
 
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
-
+	
+	@Autowired
+	private AgreementValidator agreementValidator;
+	
 	@PostMapping("_search")
 	@ResponseBody
 	public ResponseEntity<?> search(
@@ -81,7 +84,7 @@ public class AgreementController {
 		}
 		LOGGER.info("agreementRequest::" + agreementRequest);
 		Agreement agreement = agreementRequest.getAgreement();
-		AgreementValidator.validateAgreement(agreement);
+		agreementValidator.validateAgreement(agreementRequest);
 		agreement = agreementService.createAgreement(agreementRequest);
 		List<Agreement> agreements = new ArrayList<>();
 		agreements.add(agreement);
@@ -104,7 +107,7 @@ public class AgreementController {
 		LOGGER.info("AgreementController:getAgreements():update agreement:" + agreementRequest);
 
 		Agreement agreement = agreementRequest.getAgreement();
-		AgreementValidator.validateAgreement(agreement);
+		agreementValidator.validateAgreement(agreementRequest);
 		agreement = agreementService.updateAgreement(agreement);
 		List<Agreement> agreements = new ArrayList<>();
 		agreements.add(agreement);

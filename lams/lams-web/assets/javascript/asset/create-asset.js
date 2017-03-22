@@ -13,6 +13,7 @@ const titleCase = (field) => {
 const defaultAssetSetState = {
     "tenantId": tenantId,
     "name": "",
+    "code": "",
     "department": {
         "id": ""
     },
@@ -66,7 +67,8 @@ class CreateAsset extends React.Component {
         assetCategoriesType: {},
         capitalized: false,
         error: "",
-        success: ""
+        success: "",
+        readonly: true
     }
     this.handleChange = this.handleChange.bind(this);
     this.handleChangeTwoLevel = this.handleChangeTwoLevel.bind(this);
@@ -79,10 +81,14 @@ class CreateAsset extends React.Component {
   }
 
   getCategory(id) {
-      for (var i = 0; i < this.state.assetCategories.length; i++) {
+      if(this.state.assetCategories.length) {
+        for (var i = 0; i < this.state.assetCategories.length; i++) {
           if (this.state.assetCategories[i].id == id) {
               return this.state.assetCategories[i]["customFields"];
           }
+        }
+      } else {
+        return [];
       }
   }
 
@@ -107,30 +113,30 @@ class CreateAsset extends React.Component {
         error: "",
         success: ""
       })
-      var tempInfo = this.state.assetSet;
+      var tempInfo = this.state.assetSet, _this = this, type = getUrlVars()["type"];
       var body = {
           "RequestInfo": requestInfo,
           "Asset": tempInfo
       };
 
       var response = $.ajax({
-          url: baseUrl + "/asset-services/assets/_create?tenantId=1",
+          url: baseUrl + "/asset-services/assets/" + (type == "update" ? ("_update/"+ _this.state.assetSet.code) : "_create") + "?tenantId=1",
           type: 'POST',
           dataType: 'json',
           data: JSON.stringify(body),
           async: false,
           contentType: 'application/json',
           headers:{
-              'auth-token' :'e4eac22c-2a48-4549-81d8-85d1de08746b'
+              'auth-token' :authToken
           }
       });
 
-     if (response["status"] === 201 || response["status"] == 200) {
+     if (response["status"] === 201 || response["status"] == 200 || response["status"] == 204) {
           this.setState({
             ...this.state,
-            assetSet: Object.assign({}, defaultAssetSetState),
-            success: "Asset successfuly added!",
-            customFields: []
+            assetSet: Object.assign({}, (type == "update" ? _this.state.assetSet : defaultAssetSetState)),
+            success: type == "update" ? "Asset successfully modified!" : "Asset successfully added!",
+            customFields: type == "update" ? _this.state.customFields : []
           });
       } else {
            this.setState({
@@ -173,26 +179,12 @@ class CreateAsset extends React.Component {
 
 
   componentDidMount() {
-      var type = getUrlVars()["type"];
+      var type = getUrlVars()["type"], _this = this;
       var id = getUrlVars()["id"];
       $('#dateOfCreation').datetimepicker({
           format: 'DD/MM/YYYY',
           maxDate: new Date()
       });
-      // if(getUrlVars()["type"]==="view")
-      // {
-      //   for (var variable in this.state.assetSet)
-      //     document.getElementById(variable).disabled = true;
-      // }
-
-
-      if (type === "view" || type === "update") {
-          //console.log(getCommonMasterById("asset-services","assets","Assets",id).responseJSON["Assets"][0]);
-          this.setState({
-              assetSet: getCommonMasterById("asset-services", "assets", "Assets", id).responseJSON["Assets"][0]
-          })
-      }
-
 
       this.setState({
           assetCategories: commonApiPost("asset-services", "assetCategories", "_search", {}).responseJSON["AssetCategory"] || [],
@@ -225,13 +217,42 @@ class CreateAsset extends React.Component {
               hierarchyTypeName: "REVENUE"
           }).responseJSON["Boundary"] || [],
           statusList: commonApiGet("asset-services", "", "GET_STATUS", {}).responseJSON || {},
-          assetCategoriesType: commonApiGet("asset-services", "", "GET_ASSET_CATEGORY_TYPE", {}).responseJSON || {}
-      })
+          assetCategoriesType: commonApiGet("asset-services", "", "GET_ASSET_CATEGORY_TYPE", {}).responseJSON || {},
+          readonly: (type === "view")
+      });
+
+      if (type === "view" || type === "update") {
+          let asset = getCommonMasterById("asset-services", "assets", "Assets", id).responseJSON["Assets"][0];
+          this.setState({
+              assetSet: asset
+          });
+
+          if(asset.status == "CAPITALIZED") {
+              this.setState({
+                  capitalized: true
+              })
+          }
+
+          if(asset.assetCategory && asset.assetCategory.id) {
+              let count = 10;
+              let timer = setInterval(function(){
+                  count--;
+                  if(count == 0) {
+                    clearInterval(timer);
+                  } else if(_this.state.assetCategories.length) {
+                    clearInterval(timer);
+                    _this.setState({
+                        customFields: _this.getCategory(asset.assetCategory.id)
+                    })
+                  }
+              }, 2000);
+          }
+      }
   }
 
   render() {
     let {handleChange, addOrUpdate, handleChangeTwoLevel}=this;
-    let {isSearchClicked, list, customFields, error, success, acquisitionList}=this.state;
+    let {isSearchClicked, list, customFields, error, success, acquisitionList, readonly}=this.state;
     let {
       assetCategory,
       locationDetails,
@@ -260,9 +281,20 @@ class CreateAsset extends React.Component {
   } = this.state.assetSet;
     let mode = getUrlVars()["type"];
     
+    const getType = function() {
+        switch(mode) {
+            case 'update':
+                return "Update";
+            case 'view':
+                return "View";
+            default:
+                return "Create";
+        }
+    }
+
     const showActionButton = function() {
-        if((!mode) ||mode==="update") {
-          return (<button type="submit" className="btn btn-submit">{mode?"Update":"Create"}</button>);
+        if((!mode) || mode === "update") {
+          return (<button type="submit" className="btn btn-submit">{mode? "Update": "Create"}</button>);
         }
     };
 
@@ -325,7 +357,7 @@ class CreateAsset extends React.Component {
                               </div>
                               <div className="col-sm-6">
                                 <input id="name" name="name" value={name} type="text"
-                                  onChange={(e)=>{handleChange(e, "name")}} required/>
+                                  onChange={(e)=>{handleChange(e, "name")}} required disabled={readonly}/>
                               </div>
                             </div>
                           </div>
@@ -336,7 +368,7 @@ class CreateAsset extends React.Component {
                               </div>
                               <div className="col-sm-6">
                                 <select id="modeOfAcquisition" name="modeOfAcquisition" required value={modeOfAcquisition} onChange={(e)=>
-                                    {handleChange(e,"modeOfAcquisition") }}>
+                                    {handleChange(e,"modeOfAcquisition") }} disabled={readonly}>
                                     <option value="">Select Mode Of Acquisition</option>
                                     {renderOption(acquisitionList)}
                                 </select>
@@ -362,7 +394,7 @@ class CreateAsset extends React.Component {
                   </div>
                   <div className="col-sm-6">
                     <input id={item.name} name={item.name} value={item.values} type={item.type==="String"?"text":item.type}
-                      onChange={(e)=>{handleChangeTwoLevel(e,"properties",item.name)}} required/>
+                      onChange={(e)=>{handleChangeTwoLevel(e,"properties",item.name)}} required disabled={readonly}/>
                   </div>
                 </div>
               </div>
@@ -401,7 +433,7 @@ class CreateAsset extends React.Component {
                     </div>
                     <div className="col-sm-6">
                         <input type="number" id="grossValue" name="grossValue" value= {grossValue}
-                          onChange={(e)=>{handleChange(e,"grossValue")}} min="1" maxlength="16" step="0.01"/>
+                          onChange={(e)=>{handleChange(e,"grossValue")}} min="1" maxlength="16" step="0.01" disabled={readonly}/>
                     </div>
                   </div>
               </div>
@@ -412,7 +444,7 @@ class CreateAsset extends React.Component {
                     </div>
                     <div className="col-sm-6">
                         <input type="number" id="accumulatedDepreciation" name="accumulatedDepreciation" value= {accumulatedDepreciation}
-                          onChange={(e)=>{handleChange(e,"accumulatedDepreciation")}} min="1" maxlength="16" step="0.01"/>
+                          onChange={(e)=>{handleChange(e,"accumulatedDepreciation")}} min="1" maxlength="16" step="0.01" disabled={readonly}/>
                     </div>
                   </div>
               </div>
@@ -423,6 +455,7 @@ class CreateAsset extends React.Component {
 
     return (
       <div>
+        <h3 > {getType()} Asset  </h3>
         {showAlert(error, success)}
         <form onSubmit={(e)=>
             {addOrUpdate(e)}}>
@@ -438,9 +471,7 @@ class CreateAsset extends React.Component {
                           <div className="col-sm-6">
                               <div className="styled-select">
                                 <select id="department" name="department" required value={department.id} onChange={(e)=>
-                                    {
-                                    handleChangeTwoLevel(e,"department","id")
-                                    }}>
+                                    {handleChangeTwoLevel(e,"department","id")}} disabled={readonly}>
                                     <option value="">Select Department</option>
                                     {renderOption(this.state.departments)}
                                 </select>
@@ -473,8 +504,7 @@ class CreateAsset extends React.Component {
                           <div className="col-sm-6">
                               <div className="styled-select">
                                 <select id="assetCategory" name="assetCategory" required value={assetCategory.id} onChange={(e)=>
-                                    {
-                                    handleChangeTwoLevel(e,"assetCategory","id")}}>
+                                    {handleChangeTwoLevel(e,"assetCategory","id")}} disabled={readonly}>
                                     <option value="">Select Asset Category</option>
                                     {renderOption(this.state.assetCategories)}
                                 </select>
@@ -491,7 +521,7 @@ class CreateAsset extends React.Component {
                           </div>
                           <div className="col-sm-6">
                               <input type="text" id="dateOfCreation" name="dateOfCreation" value= {dateOfCreation}
-                                onChange={(e)=>{handleChange(e,"dateOfCreation")}} max={getTodaysDate()}/>
+                                onChange={(e)=>{handleChange(e,"dateOfCreation")}} max={getTodaysDate()} disabled={readonly}/>
                           </div>
                         </div>
                     </div>
@@ -502,7 +532,7 @@ class CreateAsset extends React.Component {
                           </div>
                           <div className="col-sm-6">
                               <textarea id="description" name="description" value= {description}
-                                onChange={(e)=>{handleChange(e,"description")}} max="1024"></textarea>
+                                onChange={(e)=>{handleChange(e,"description")}} max="1024" disabled={readonly}></textarea>
                           </div>
                         </div>
                     </div>
@@ -522,7 +552,7 @@ class CreateAsset extends React.Component {
                               <div className="styled-select">
                                 <select id="locality" name="locality" required="true" value={locationDetails.locality}
                                     onChange={(e)=>
-                                    {handleChangeTwoLevel(e,"locationDetails","locality")}}>
+                                    {handleChangeTwoLevel(e,"locationDetails","locality")}} disabled={readonly}>
                                     <option value="">Choose locality</option>
                                     {renderOption(this.state.localityList)}
                                 </select>
@@ -539,7 +569,7 @@ class CreateAsset extends React.Component {
                               <div className="styled-select">
                                 <select id="revenueWard" name="revenueWard" value={locationDetails.revenueWard}
                                     onChange={(e)=>
-                                    {  handleChangeTwoLevel(e,"locationDetails","revenueWard")}}>
+                                    {  handleChangeTwoLevel(e,"locationDetails","revenueWard")}} disabled={readonly}>
                                     <option value="">Choose Revenue Ward</option>
                                     {renderOption(this.state.WardList)}
                                 </select>
@@ -558,7 +588,7 @@ class CreateAsset extends React.Component {
                               <div className="styled-select">
                                 <select id="block" name="block" value={locationDetails.block}
                                     onChange={(e)=>
-                                    {  handleChangeTwoLevel(e,"locationDetails","block")}}>
+                                    {  handleChangeTwoLevel(e,"locationDetails","block")}} disabled={readonly}>
                                     <option value="">Choose Block</option>
                                     {renderOption(this.state.blockList)}
                                 </select>
@@ -575,7 +605,7 @@ class CreateAsset extends React.Component {
                               <div className="styled-select">
                                 <select id="street" name="street" value={locationDetails.street}
                                     onChange={(e)=>
-                                    {  handleChangeTwoLevel(e,"locationDetails","street")}}>
+                                    {  handleChangeTwoLevel(e,"locationDetails","street")}} disabled={readonly}>
                                     <option value="">Choose Street</option>
                                     {renderOption(this.state.streetList)}
                                 </select>
@@ -594,7 +624,7 @@ class CreateAsset extends React.Component {
                               <div className="styled-select">
                                 <select id="electionWard" name="electionWard" value={locationDetails.electionWard}
                                     onChange={(e)=>
-                                    { handleChangeTwoLevel(e,"locationDetails","electionWard")}}>
+                                    { handleChangeTwoLevel(e,"locationDetails","electionWard")}} disabled={readonly}>
                                     <option value="">Choose Election Wards</option>
                                     {renderOption(this.state.electionwards)}
                                 </select>
@@ -609,7 +639,7 @@ class CreateAsset extends React.Component {
                           </div>
                           <div className="col-sm-6">
                               <input type="text" name="doorNo" id= "doorNo" value= {locationDetails.doorNo}
-                                onChange={(e)=>{handleChangeTwoLevel(e,"locationDetails","doorNo")}}/>
+                                onChange={(e)=>{handleChangeTwoLevel(e,"locationDetails","doorNo")}} disabled={readonly}/>
                           </div>
                         </div>
                     </div>
@@ -639,7 +669,7 @@ class CreateAsset extends React.Component {
                           </div>
                           <div className="col-sm-6">
                               <input type="text" name="pinCode" id="pinCode" value={locationDetails.pinCode}
-                                onChange={(e)=>{handleChangeTwoLevel(e,"locationDetails","pinCode")}} pattern="[0-9]{6}" title="Six number pin code"/>
+                                onChange={(e)=>{handleChangeTwoLevel(e,"locationDetails","pinCode")}} pattern="[0-9]{6}" title="Six number pin code" disabled={readonly}/>
                           </div>
                         </div>
                     </div>
@@ -660,7 +690,7 @@ class CreateAsset extends React.Component {
                               <div className="styled-select">
                                 <select id="status" name="status" value={status}
                                     onChange={(e)=>
-                                    { handleChange(e,"status")}}>
+                                    { handleChange(e,"status")}} disabled={readonly}>
                                     <option value="">Choose Status</option>
                                     {renderOption(this.state.statusList)}
                                 </select>

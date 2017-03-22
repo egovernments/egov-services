@@ -1,6 +1,7 @@
 package org.egov.lams.model;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
@@ -10,19 +11,11 @@ import org.egov.lams.model.enums.Status;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
-@Setter
-@Getter
+@Data
 @NoArgsConstructor
-@AllArgsConstructor
-@ToString
-@EqualsAndHashCode
 public class Agreement {
 
 	@NotNull
@@ -92,4 +85,8 @@ public class Agreement {
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date solvencyCertificateDate;
 	private String tinNumber;
+
+	private List<Document> documents;
+	private List<Long> demands;
+	private WorkFlowDetails workFlowDetails;
 }

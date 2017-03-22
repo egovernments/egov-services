@@ -1,6 +1,7 @@
 package org.egov.lams.repository.builder;
 
 import java.util.List;
+import java.util.Set;
 
 import org.egov.lams.model.AgreementCriteria;
 import org.slf4j.Logger;
@@ -133,19 +134,21 @@ public class AgreementQueryBuilder {
 		return true;
 	}
 
-	private static String getIdQuery(List<Long> idList) {
+	private static String getIdQuery(Set<Long> idList) {
+		
 		StringBuilder query = null;
 		if (idList.size() >= 1) {
-			query = new StringBuilder(idList.get(0).toString());
+			
+			Long[] list = idList.toArray(new Long[idList.size()]);
+			query = new StringBuilder(list[0].toString());
 			for (int i = 1; i < idList.size(); i++) {
-				query.append("," + idList.get(i));
+				query.append("," + list[i]);
 			}
 		}
 		return query.append(")").toString();
 	}
 	
 	public static String findRentIncrementTypeQuery() {
-		String query = "SELECT * FROM EGLAMS_RENTINCREMENTTYPE RENT WHERE RENT.ID=?";
-		return query;
+		return "SELECT * FROM eglams_rentincrementtype rent WHERE rent.id=?";
 	}
 }

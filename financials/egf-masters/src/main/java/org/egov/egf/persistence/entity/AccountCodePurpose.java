@@ -39,8 +39,6 @@
  */
 package org.egov.egf.persistence.entity;
 
-import java.util.Set;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -52,10 +50,10 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -65,17 +63,15 @@ import lombok.Setter;
 @SequenceGenerator(name = AccountCodePurpose.SEQ, sequenceName = AccountCodePurpose.SEQ, allocationSize = 1)
 public class AccountCodePurpose extends AbstractAuditable {
 
- 
-	private static final long serialVersionUID = 1L;
-	public static final String SEQ = "seq_egf_accountcodepurpose";
+    private static final long serialVersionUID = 1L;
+    public static final String SEQ = "seq_egf_accountcodepurpose";
 
     @Id
     @GeneratedValue(generator = SEQ, strategy = GenerationType.SEQUENCE)
-	private Long id;
+    private Long id;
 
-	@NotNull
-	@Length(max=256,min=3)
-	private String name;
-	
+    @NotNull
+    @Length(max = 256, min = 3)
+    private String name;
 
 }

@@ -27,7 +27,7 @@ public class PositionSearchURLHelper {
 			searchURL.append("tenantId=" + positionGetRequest.getTenantId());
 		}
 
-		if (positionGetRequest.getId() != null) {
+		if (positionGetRequest.getId() != null && !positionGetRequest.getId().isEmpty()) {
 			isAppendAndSeperator = addAndIfRequired(isAppendAndSeperator, searchURL);
 			searchURL.append("id=" + getCommaSeperatedIds(positionGetRequest.getId()));
 		}

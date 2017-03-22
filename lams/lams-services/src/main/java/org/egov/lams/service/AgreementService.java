@@ -5,12 +5,9 @@ import java.util.List;
 import org.egov.lams.contract.AgreementRequest;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.AgreementCriteria;
-import org.egov.lams.model.RentIncrementType;
 import org.egov.lams.producers.AgreementProducer;
 import org.egov.lams.repository.AgreementRepository;
-import org.egov.lams.repository.AllotteeRepository;
-import org.egov.lams.repository.builder.AgreementQueryBuilder;
-import org.egov.lams.repository.rowmapper.RentIncrementRowMapper;
+import org.egov.lams.service.AllotteeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +31,7 @@ public class AgreementService {
 	private JdbcTemplate jdbcTemplate;
 	
 	@Autowired
-	private AllotteeRepository allotteeRepository;
+	private AllotteeService allotteeService;
 
 	public List<Agreement> searchAgreement(AgreementCriteria agreementCriteria) {
 		/*
@@ -104,26 +101,15 @@ public class AgreementService {
 		Agreement agreement = agreementRequest.getAgreement();
 		ObjectMapper mapper = new ObjectMapper();
 		String agreementValue=null;
-		String rentIncrementTypeqQuery=AgreementQueryBuilder.findRentIncrementTypeQuery();
-	    Object[] rentObj = new Object[]{ agreement.getRentIncrementMethod().getId() };
 	    Long agreementNumber=null;
-	    RentIncrementType rentIncrementType=null;
-	    
-		// code for allottee gen
-		if (!allotteeRepository.isAllotteeExist(agreementRequest)) {
-			allotteeRepository.createAllottee(agreementRequest);
-		}
+		
 	    try {
-	    	 	rentIncrementType=jdbcTemplate.queryForObject(rentIncrementTypeqQuery,rentObj,new RentIncrementRowMapper());
 			//TODO put ackno gen service here 
-	    	 	agreementNumber=(Long) jdbcTemplate.queryForList("SELECT NEXTVAL('seq_lams_rentincrement')").get(0).get("nextval");
+	    	 	agreementNumber=(Long) jdbcTemplate.queryForList("SELECT NEXTVAL('seq_lams_agreement')").get(0).get("nextval");
 				agreement.setAgreementNumber(agreementNumber.toString());
 	    }catch(Exception ex){
 	    		ex.printStackTrace();
-	    		throw new RuntimeException("Invalid rent increment type");
-	    }
-	    if(rentIncrementType==null||rentIncrementType.getId()==null){
-	    		throw new RuntimeException("Invalid rent increment method type");
+	    		throw new RuntimeException(ex.getMessage());
 	    }
 		try {
 				logger.info("createAgreement service::"+agreement);
@@ -155,11 +141,11 @@ public class AgreementService {
 
 		try {
 			// TODO put agreement number generator here and change
-			agreementNumber = (Long) jdbcTemplate.queryForList("SELECT NEXTVAL('seq_lams_rentincrement')").get(0)
+			agreementNumber = (Long) jdbcTemplate.queryForList("SELECT NEXTVAL('seq_lams_agreement')").get(0)
 					.get("nextval");
 			agreement.setAgreementNumber(agreementNumber.toString());
 		} catch (Exception exception) {
-			exception.printStackTrace();
+			logger.info(exception.getMessage(),exception);
 			throw exception;
 		}
 		try {
@@ -172,7 +158,7 @@ public class AgreementService {
 			throw new RuntimeException(e.getMessage());
 		}
 		try {
-			agreementProducer.sendMessage("agreement-update-db", "save-agreement", agreementValue);
+			agreementProducer.sendMessage("workflow-start", "save-agreement", agreementValue);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			throw ex;

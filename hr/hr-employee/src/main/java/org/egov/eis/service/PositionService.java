@@ -43,27 +43,58 @@ package org.egov.eis.service;
 import java.util.List;
 
 import org.egov.eis.model.Position;
+import org.egov.eis.repository.PositionAssignmentRepository;
 import org.egov.eis.service.helper.PositionSearchURLHelper;
 import org.egov.eis.web.contract.PositionGetRequest;
 import org.egov.eis.web.contract.PositionResponse;
 import org.egov.eis.web.contract.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 @Service
 public class PositionService {
-/*
+
 	@Autowired
-	private RestTemplate restTemplate;
-*/
+	private PositionAssignmentRepository positionAssignmentRepository;
+
 	@Autowired
 	private PositionSearchURLHelper positionSearchURLHelper;
 
 	public List<Position> getPositions(Long employeeId, PositionGetRequest positionGetRequest, RequestInfo requestInfo) {
+
+		List<Long> actualPositionIds = positionAssignmentRepository.findForCriteria(employeeId, positionGetRequest);
+		if(!positionGetRequest.getId().isEmpty()) {
+			actualPositionIds.retainAll(positionGetRequest.getId());
+		}
+		positionGetRequest.setId(actualPositionIds);
+
 		String url = positionSearchURLHelper.searchURL(positionGetRequest);
 
-		PositionResponse positionResponse = new RestTemplate().postForObject(url, requestInfo, PositionResponse.class);
+		System.err.println("URL: " + url + " id.isEmpty : " + positionGetRequest.getId().isEmpty());
+		String requestInfoJson = null;
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			requestInfoJson = mapper.writeValueAsString(requestInfo);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+
+		// FIXME : hard-coded auth-token
+		HttpHeaders hardCodedAuthTokenHeader = new HttpHeaders();
+		hardCodedAuthTokenHeader.add("auth-token", "13bbcf71-dc23-4424-82a2-685704dacd09");
+		hardCodedAuthTokenHeader.setContentType(MediaType.APPLICATION_JSON);
+		// Replace hardCodedAuthTokenHeader with header object if required
+		HttpEntity<String> httpEntityRequest = new HttpEntity<String>(requestInfoJson, hardCodedAuthTokenHeader);
+
+		// Replace httpEntityRequest with requestInfo if there is no need to send headers
+		PositionResponse positionResponse = new RestTemplate().postForObject(url, httpEntityRequest, PositionResponse.class);
 
 		return positionResponse.getPosition();
 	}

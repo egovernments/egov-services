@@ -71,9 +71,8 @@ public class ComplaintService {
 	}
 
 	public List<Complaint> getAllModifiedCitizenComplaints(Long userId) {
-		Date latestLastAccessedTime = complaintJpaRepository.getMaxLastAccessedTimeByUserId(userId);
-		if (latestLastAccessedTime != null) {
-			return complaintRepository.getAllModifiedComplaintsForCitizen(latestLastAccessedTime, userId);
+		if (userId != null) {
+			return complaintRepository.getAllModifiedComplaintsForCitizen(userId);
 		}
 		return new ArrayList<>();
 	}

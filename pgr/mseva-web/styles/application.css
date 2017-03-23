@@ -1143,13 +1143,12 @@ ul{padding: 0; margin: 0; list-style-type: none;}
 
 .toast {
     width:40%;
-    height:20px;
-    height:auto;
+    height:40px;
     position:absolute;
     left:35%;
     margin-left:-100px;
     bottom:50px;
-    background-color: #3a7539;
+    background-color: #5cb85c;
     color: #F0F0F0;
     font-family: Calibri;
     font-size: 20px;

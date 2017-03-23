@@ -28,9 +28,19 @@ public class DemandRepository {
 	
 	public List<DemandReason> getDemandReason(AgreementRequest agreementRequest){
 		String url = propertiesManager.getDemandServiceHostName()
-				+propertiesManager.getDemandReasonSearchService();
-		
-		DemandReasonResponse demandReasonResponse = restTemplate.postForObject(url, agreementRequest.getRequestInfo(), DemandReasonResponse.class);
+					+propertiesManager.getDemandReasonSearchService()
+					+"?moduleName="
+					+propertiesManager.getGetDemandModuleName();
+		System.out.println("DemandRepository getDemandReason url:"+url);
+		DemandReasonResponse demandReasonResponse=null;
+		try{
+		 demandReasonResponse = restTemplate.postForObject(url, 
+													agreementRequest.getRequestInfo(), 
+													DemandReasonResponse.class);
+		} catch (Exception exception){
+			exception.printStackTrace();
+		}
+		System.out.println("demandReasonResponse:"+demandReasonResponse);
 		//Todo if api returns exception object
 		return demandReasonResponse.getDemandReasons();
 	}
@@ -50,7 +60,7 @@ public class DemandRepository {
 			demandDetail.setTaxAmount(BigDecimal.valueOf(agreementRequest.getAgreement().getRent()));
 			demandDetail.setCollectionAmount(BigDecimal.ZERO);
 			demandDetail.setRebateAmount(BigDecimal.ZERO);
-			demandDetail.setTaxReason("RENT");
+			demandDetail.setTaxReason(demandReason.getName());
 			demandDetail.setTaxPeriod(demandReason.getTaxPeriod());
 			
 			demandDetails.add(demandDetail);
@@ -62,7 +72,7 @@ public class DemandRepository {
 	}
 	
 	public DemandResponse createDemand(List<Demand> demands, RequestInfo requestInfo){
-		
+		System.out.println("DemandRepository createDemand demands:"+demands.toString());
 		DemandRequest demandRequest = new DemandRequest();
 		demandRequest.setRequestInfo(requestInfo);
 		demandRequest.setDemand(demands);

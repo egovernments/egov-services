@@ -242,12 +242,12 @@ public class WorkflowMatrixImpl implements Workflow {
 			validActions = workflowService.getNextValidActions(workflowBean.getBusinessKey(),
 					workflowBean.getWorkflowDepartment(), workflowBean.getAmountRule(),
 					workflowBean.getAdditionalRule(), "NEW", workflowBean.getPendingActions(),
-					workflowBean.getCreatedDate());
+					workflowBean.getCreatedDate(),workflowBean.getTenantId());
 		else if (null != workflowBean.getWorkflowId())
 			validActions = workflowService.getNextValidActions(workflowBean.getBusinessKey(),
 					workflowBean.getWorkflowDepartment(), workflowBean.getAmountRule(),
 					workflowBean.getAdditionalRule(), workflowBean.getCurrentState(), workflowBean.getPendingActions(),
-					workflowBean.getCreatedDate());
+					workflowBean.getCreatedDate(),workflowBean.getTenantId());
 		Value v = null;
 		for (String s : validActions) {
 			v = new Value(s, s);
@@ -259,7 +259,7 @@ public class WorkflowMatrixImpl implements Workflow {
 	@Override
 	public ProcessInstance getProcess(final String jurisdiction, final ProcessInstance processInstance) {
 		final WorkflowBean wfbean = new WorkflowBean();
-
+		processInstance.setTenantId(jurisdiction);
 		State state = null;
 		if (processInstance.getId() != null && !processInstance.getId().isEmpty())
 			state = stateService.findOne(Long.valueOf(processInstance.getId()));
@@ -370,12 +370,12 @@ public class WorkflowMatrixImpl implements Workflow {
 		if (attribute != null)
 			designation = attribute.getCode();
 
-		String currentState = t.getState();
+		String currentState = t.getStatus();
 		if ("END".equals(currentState))
 			currentState = "";
 
 		return workflowService.getNextDesignations(t.getBusinessKey(), departmentId, amtRule, additionalRule,
-				t.getState(), pendingAction, new Date(), designation);
+				t.getStatus(), pendingAction, new Date(), designation,t.getTenantId());
 	}
 
 	/*

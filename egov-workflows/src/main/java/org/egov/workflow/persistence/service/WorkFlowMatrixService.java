@@ -132,15 +132,17 @@ public class WorkFlowMatrixService {
 
 	public WorkFlowMatrix getWfMatrix(final String type, final String department, final BigDecimal amountRule,
 			final String additionalRule, final String currentState, final String pendingActions, final Date date,
-			final String designation) {
+			final String designation,String tenantId) {
 		final Criteria wfMatrixCriteria = createWfMatrixAdditionalCriteria(type, department, amountRule, additionalRule,
 				currentState, pendingActions, designation);
 		final Criterion crit1 = Restrictions.le("fromDate", date == null ? new Date() : date);
+		final Criterion crit4 = Restrictions.eq("tenantId", tenantId);
 		final Criterion crit2 = Restrictions.ge("toDate", date == null ? new Date() : date);
 		final Criterion crit3 = Restrictions.conjunction().add(crit1).add(crit2);
 		final Criterion criteriaDesignation = Restrictions.ilike("currentDesignation",
 				StringUtils.isNotBlank(designation) ? designation : "");
 		wfMatrixCriteria.add(criteriaDesignation);
+		
 		wfMatrixCriteria.add(Restrictions.or(crit3, crit1));
 
 		return getWorkflowMatrixObj(type, additionalRule, currentState, pendingActions, designation, wfMatrixCriteria);
@@ -307,7 +309,7 @@ public class WorkFlowMatrixService {
 
 	public List<String> getNextValidActions(final String type, final String departmentName,
 			final BigDecimal businessRule, final String additionalRule, final String currentState,
-			final String pendingAction, final Date date) {
+			final String pendingAction, final Date date,String tenantId) {
 
 		final WorkFlowMatrix wfMatrix = getWfMatrix(type, departmentName, businessRule, additionalRule, currentState,
 				pendingAction, date);
@@ -320,16 +322,16 @@ public class WorkFlowMatrixService {
 
 	public List<String> getNextValidActions(final String type, final String departmentName,
 			final BigDecimal businessRule, final String additionalRule, final String currentState,
-			final String pendingAction, final Date date, final String currentDesignation) {
+			final String pendingAction, final Date date, final String currentDesignation,String tenantId) {
 
 		final WorkFlowMatrix wfMatrix = getWfMatrix(type, departmentName, businessRule, additionalRule, currentState,
-				pendingAction, date, currentDesignation);
+				pendingAction, date, currentDesignation,tenantId);
 		List<String> validActions = Collections.EMPTY_LIST;
 
 		if (wfMatrix != null && wfMatrix.getValidActions() != null)
 			validActions = Arrays.asList(wfMatrix.getValidActions().split(","));
 		return validActions;
-	}
+	} 
 
 	/**
 	 * 
@@ -346,10 +348,10 @@ public class WorkFlowMatrixService {
 	 */
 	public List<Designation> getNextDesignations(final String type, final String department,
 			final BigDecimal businessRule, final String additionalRule, final String currentState,
-			final String pendingAction, final Date date, final String designation) {
+			final String pendingAction, final Date date, final String designation,String tenantId) {
 
 		final WorkFlowMatrix wfMatrix = getWfMatrix(type, department, businessRule, additionalRule, currentState,
-				pendingAction, date, designation);
+				pendingAction, date, designation,tenantId);
 		List<Designation> designationList = new ArrayList<Designation>();
 		if (wfMatrix != null && wfMatrix.getNextDesignation() != null) {
 			final List<String> tempDesignationName = Arrays.asList(wfMatrix.getNextDesignation().split(","));
@@ -359,7 +361,7 @@ public class WorkFlowMatrixService {
 						Log.warn("designations not stored properly in matrix. Please check the api documentation");
 						Designation d = new Designation();
 						d.setName(desgName);
-					
+						designationList.add(d);
 					} else {
 						Designation d = new Designation();
 						d.setId(Long.valueOf(desgName.split(":")[0]));

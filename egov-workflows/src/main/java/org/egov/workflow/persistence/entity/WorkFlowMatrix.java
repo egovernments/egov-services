@@ -104,6 +104,8 @@ public class WorkFlowMatrix extends AbstractPersistable<Long> implements Cloneab
 
     @Temporal(TemporalType.DATE)
     private Date toDate;
+    
+    private String  tenantId;
 
     public WorkFlowMatrix() {
 

@@ -74,6 +74,7 @@ public class WorkflowTypes extends AbstractAuditable {
 
 	private boolean grouped;
 
+	private String  tenantId;
 	public Long getId() {
 		return id;
 	}

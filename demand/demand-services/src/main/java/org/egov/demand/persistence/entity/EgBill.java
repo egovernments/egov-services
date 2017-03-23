@@ -185,7 +185,7 @@ public class EgBill implements java.io.Serializable {
 		this.consumerType = bill.getConsumerType();
 		this.displayMessage = bill.getDisplayMessage();
 		this.callBackForApportion = bill.getCallbackForApportion();
-		this.billNo = bill.getReferenceNumber();
+		this.billNo = bill.getBillNumber();
 		this.emailId = bill.getEmailId();
 	}
 

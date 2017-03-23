@@ -1143,7 +1143,7 @@ ul{padding: 0; margin: 0; list-style-type: none;}
 
 .toast {
     width:40%;
-    height:40px;
+    min-height:20px;
     position:absolute;
     left:35%;
     margin-left:-100px;

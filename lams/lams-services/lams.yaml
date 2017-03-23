@@ -494,6 +494,10 @@ definitions:
         type: number
         format: double
         description: rent to be paid per payment cycle.
+      goodWillAmount:
+        type: number
+        format: double
+        description: Corporations charge good will of the asset depends up on asset demand/area.
       tradeLicenseNumber:
         type: string
         description: Trade license number assigned to the shop should be captured.

@@ -148,4 +148,20 @@ function getCommonMasterById(mainRoute,resource,returnObject,id) {
     // return response.statusText==="Ok"?response.responseJSON[returnObject]:[];
 }
 
+function addMandatoryStart(validationObject, prefix = "") {
+    for (var key in validationObject) {
+        if (prefix === "") {
+            if (validationObject[key].required) {
+                $(`label[for=${key}]`).append(`<span> *</span>`);
+            }
+        } else {
+            if (validationObject[key].required) {
+                $(`label[for=${prefix}\\.${key}]`).append(`<span> *</span>`);
+            }
+        }
+
+        // $(`#${key}`).attr("disabled",true);
+    };
+}
+
 // commonApiPost("asset","assetCategories","",{boundaryTypeName:"LOCALITY",hierarchyTypeName:"LOCATION"})

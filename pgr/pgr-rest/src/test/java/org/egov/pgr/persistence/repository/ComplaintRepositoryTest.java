@@ -105,12 +105,12 @@ public class ComplaintRepositoryTest {
         when(complaintEntityMock1.toDomain()).thenReturn(complaintModelMock1);
         when(complaintEntityMock2.toDomain()).thenReturn(complaintModelMock2);
 
-        when(complaintJpaRepository.getAllModifiedComplaintsForCitizen(lastAccessedTime, 1L)).thenReturn(
+        when(complaintJpaRepository.getAllModifiedComplaintsForCitizen(1L)).thenReturn(
                 Arrays.asList(complaintEntityMock1, complaintEntityMock2)
         );
 
         List<org.egov.pgr.domain.model.Complaint> actual =
-                complaintRepository.getAllModifiedComplaintsForCitizen(lastAccessedTime, 1L);
+                complaintRepository.getAllModifiedComplaintsForCitizen(1L);
 
         assertThat(Arrays.asList(complaintModelMock1, complaintModelMock2)).isEqualTo(actual);
     }

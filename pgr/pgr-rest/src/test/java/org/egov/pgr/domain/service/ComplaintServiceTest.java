@@ -150,8 +150,7 @@ public class ComplaintServiceTest {
 
 	public void test_should_fetch_all_modified_citizen_complaints_by_userid() {
 		final Complaint expectedComplaint = getComplaint();
-		when(complaintJpaRepository.getMaxLastAccessedTimeByUserId(any(Long.class))).thenReturn(new Date());
-		when(complaintRepository.getAllModifiedComplaintsForCitizen(any(Date.class), any(Long.class)))
+		when(complaintRepository.getAllModifiedComplaintsForCitizen(any(Long.class)))
 				.thenReturn(Collections.singletonList(expectedComplaint));
 		final List<Complaint> actualComplaints = complaintService.getAllModifiedCitizenComplaints(1L);
 		assertEquals(1, actualComplaints.size());
@@ -160,8 +159,7 @@ public class ComplaintServiceTest {
 
 	@Test
 	public void test_should_fetch_empty_list_for_invalid_userid() {
-		when(complaintJpaRepository.getMaxLastAccessedTimeByUserId(any(Long.class))).thenReturn(new Date());
-		when(complaintRepository.getAllModifiedComplaintsForCitizen(any(Date.class), any(Long.class)))
+		when(complaintRepository.getAllModifiedComplaintsForCitizen(any(Long.class)))
 				.thenReturn(new ArrayList<Complaint>());
 		final List<Complaint> actualComplaints = complaintService.getAllModifiedCitizenComplaints(1L);
 		assertEquals(0, actualComplaints.size());

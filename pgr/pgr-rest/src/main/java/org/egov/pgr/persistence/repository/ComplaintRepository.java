@@ -49,8 +49,8 @@ public class ComplaintRepository {
         this.complaintMessageQueueRepository.save(sevaRequest);
     }
 
-	public List<Complaint> getAllModifiedComplaintsForCitizen(Date lastAccessedTime, Long userId) {
-		return this.complaintJpaRepository.getAllModifiedComplaintsForCitizen(lastAccessedTime, userId).stream()
+	public List<Complaint> getAllModifiedComplaintsForCitizen(Long userId) { 
+		return this.complaintJpaRepository.getAllModifiedComplaintsForCitizen(userId).stream()
 				.map(org.egov.pgr.persistence.entity.Complaint::toDomain).collect(Collectors.toList());
 	}
 }

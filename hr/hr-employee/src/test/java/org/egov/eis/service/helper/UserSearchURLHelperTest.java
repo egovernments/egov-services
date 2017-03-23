@@ -1,6 +1,7 @@
 package org.egov.eis.service.helper;
 
 import org.egov.eis.config.ApplicationProperties;
+import org.egov.eis.config.PropertiesManager;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -16,6 +17,9 @@ public class UserSearchURLHelperTest {
 	@Mock
 	private ApplicationProperties applicationProperties;
 	
+	@Mock
+	private PropertiesManager propertiesManager;
+	
 	@Before
     public void initMocks() {
         MockitoAnnotations.initMocks(this);
@@ -23,7 +27,10 @@ public class UserSearchURLHelperTest {
 
 	@Test
 	public void testGetBlankQuery() {
-		Mockito.when(applicationProperties.empServicesUsersServiceSearchUsersHostURL())
+		String searchUsersBaseURL = propertiesManager.getUsersServiceHostName()
+				+ propertiesManager.getUsersServiceUsersBasePath() + propertiesManager.getUsersServiceUsersSearchPath();
+
+		Mockito.when(searchUsersBaseURL)
 			.thenReturn("http://localhost:8080/v1/users/_search");
 		Mockito.when(applicationProperties.empSearchPageSizeMax()).thenReturn("500");
 /*

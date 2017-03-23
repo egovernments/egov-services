@@ -3,6 +3,7 @@ package org.egov.eis.service.helper;
 import java.util.List;
 
 import org.egov.eis.config.ApplicationProperties;
+import org.egov.eis.config.PropertiesManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,8 +13,13 @@ public class UserSearchURLHelper {
 	@Autowired
 	private ApplicationProperties applicationProperties;
 
+	@Autowired
+	private PropertiesManager propertiesManager;
+
 	public String searchURL(List<Long> ids, String tenantId) {
-		String BASE_URL = applicationProperties.empServicesUsersServiceSearchUsersHostURL();
+		String BASE_URL = propertiesManager.getUsersServiceHostName() + propertiesManager.getUsersServiceUsersBasePath()
+				+ propertiesManager.getUsersServiceUsersSearchPath();
+
 		StringBuilder searchURL = new StringBuilder(BASE_URL + "?");
 
 		if (ids == null && tenantId == null)

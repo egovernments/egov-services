@@ -42,7 +42,7 @@ package org.egov.eis.service;
 
 import java.util.List;
 
-import org.egov.eis.config.ApplicationProperties;
+import org.egov.eis.config.PropertiesManager;
 import org.egov.eis.model.User;
 import org.egov.eis.service.helper.UserSearchURLHelper;
 import org.egov.eis.web.contract.RequestInfo;
@@ -66,7 +66,7 @@ public class UserService {
 	private UserSearchURLHelper userSearchURLHelper;
 	
 	@Autowired
-	private ApplicationProperties applicationProperties;
+	private PropertiesManager propertiesManager;
 
 	public List<User> getUsers(List<Long> ids, String tenantId, RequestInfo requestInfo, HttpHeaders headers) {
 		String url = userSearchURLHelper.searchURL(ids, tenantId);
@@ -76,7 +76,6 @@ public class UserService {
 		userGetRequest.setRequestInfo(requestInfo);
 		userGetRequest.setTenantId(tenantId);
 
-		headers.setContentType(MediaType.APPLICATION_JSON);
 		String userGetRequestJson = null;
 		try {
 			ObjectMapper mapper = new ObjectMapper();
@@ -85,21 +84,20 @@ public class UserService {
 			e.printStackTrace();
 		}
 
-		// FIXME : hard-coded auth-token
-		HttpHeaders hardCodedAuthTokenHeader = new HttpHeaders();
-		hardCodedAuthTokenHeader.add("auth-token", "631ce772-306a-44c7-93ef-ba874d3cfc31");
-		hardCodedAuthTokenHeader.setContentType(MediaType.APPLICATION_JSON);
-		// Replace hardCodedAuthTokenHeader with header object if required
-		HttpEntity<String> httpEntityRequest = new HttpEntity<String>(userGetRequestJson, hardCodedAuthTokenHeader);
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		// FIXME : Passing auth-token for testing locally. Remove before actual deployment.
+		headers.add("auth-token", requestInfo.getAuthToken());
+		HttpEntity<String> httpEntityRequest = new HttpEntity<String>(userGetRequestJson, headers);
 
-		// Replace httpEntityRequest with userGetRequestJson if there is no need to send headers
 		UserResponse userResponse = new RestTemplate().postForObject(url, httpEntityRequest, UserResponse.class);
 
 		return userResponse.getUser();
 	}
 
 	public User createUser(UserRequest userRequest, HttpHeaders headers) {
-		String url = applicationProperties.empServicesUsersServiceCreateUsersHostURL();
+		String url = propertiesManager.getUsersServiceHostName() + propertiesManager.getUsersServiceUsersBasePath()
+				+ propertiesManager.getUsersServiceUsersCreatePath();
+
 		String userJson = null;
 		try {
 			ObjectMapper mapper = new ObjectMapper();
@@ -108,16 +106,13 @@ public class UserService {
 			e.printStackTrace();
 		}
 
-		// FIXME : hard-coded auth-token
-		HttpHeaders hardCodedAuthTokenHeader = new HttpHeaders();
-		hardCodedAuthTokenHeader.add("auth-token", "631ce772-306a-44c7-93ef-ba874d3cfc31");
-		hardCodedAuthTokenHeader.setContentType(MediaType.APPLICATION_JSON);
-		// Replace hardCodedAuthTokenHeader with header object if required
-		HttpEntity<String> httpEntityRequest = new HttpEntity<String>(userJson, hardCodedAuthTokenHeader);
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		// FIXME : Passing auth-token for testing locally. Remove before actual deployment.
+		headers.add("auth-token", userRequest.getRequestInfo().getAuthToken());
+		HttpEntity<String> httpEntityRequest = new HttpEntity<String>(userJson, headers);
 
 		UserResponse userResponse = null;
 		try {
-			// Replace hardCodedAuthTokenHeader with userResponse if there is no need to send headers
 			userResponse = new RestTemplate().postForObject(url, httpEntityRequest, UserResponse.class);
 		} catch (Exception e) {
 			System.err.println("Exception Occurred While Calling User Service : " + e.getMessage());

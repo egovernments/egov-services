@@ -110,7 +110,7 @@ public class PositionController {
 		// Call service
 		List<Position> positionsList = null;
 		try {
-			positionsList = positionService.getPositions(employeeId, positionGetRequest, requestInfo);
+			positionsList = positionService.getPositions(employeeId, positionGetRequest, requestInfo, headers);
 		} catch (Exception exception) {
 			logger.error("Error while processing request " + positionGetRequest, exception);
 			return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);

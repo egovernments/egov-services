@@ -152,7 +152,7 @@ public class ChartOfAccountController {
         if (errors.hasErrors()) {
             throw new CustomBindException(errors);
         }
-        chartOfAccountService.fetchRelatedContracts(chartOfAccountContractRequest);
+//        chartOfAccountService.fetchRelatedContracts(chartOfAccountContractRequest);
         ChartOfAccountContractResponse chartOfAccountContractResponse = new ChartOfAccountContractResponse();
         chartOfAccountContractResponse.setChartOfAccounts(new ArrayList<ChartOfAccountContract>());
         chartOfAccountContractResponse.setPage(new Pagination());

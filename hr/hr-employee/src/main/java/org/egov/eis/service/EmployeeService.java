@@ -64,11 +64,15 @@ import org.egov.eis.web.contract.EmployeeGetRequest;
 import org.egov.eis.web.contract.EmployeeRequest;
 import org.egov.eis.web.contract.RequestInfo;
 import org.egov.eis.web.contract.UserRequest;
+import org.egov.eis.web.contract.UserResponse;
+import org.egov.eis.web.errorhandler.ErrorResponse;
+import org.egov.eis.web.errorhandler.UserErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -143,13 +147,17 @@ public class EmployeeService {
 		return employeeInfoList;
 	}
 
-	public Employee createEmployee(EmployeeRequest employeeRequest, HttpHeaders headers) {
+	public ResponseEntity<?> createEmployee(EmployeeRequest employeeRequest, HttpHeaders headers) {
 		UserRequest userRequest = employeeHelper.getUserRequest(employeeRequest);
-		User user = userService.createUser(userRequest, headers);
+		ResponseEntity<?> responseEntity = userService.createUser(userRequest, headers);
 
-		if(user == null) {
-			return null;
+		if(responseEntity.getBody().getClass().equals(UserErrorResponse.class)
+				|| responseEntity.getBody().getClass().equals(ErrorResponse.class)) {
+			return responseEntity;
 		}
+
+		UserResponse userResponse = (UserResponse) responseEntity.getBody();
+		User user = userResponse.getUser().get(0);
 
 		String code = employeeHelper.getEmployeeCode(user.getId());
 		Employee employee = employeeRequest.getEmployee();
@@ -173,7 +181,8 @@ public class EmployeeService {
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}
-		return employee;
+
+		return employeeHelper.getSuccessResponseForCreate(employee, employeeRequest.getRequestInfo());
 	}
 
 	public void saveEmployee(EmployeeRequest employeeRequest) {

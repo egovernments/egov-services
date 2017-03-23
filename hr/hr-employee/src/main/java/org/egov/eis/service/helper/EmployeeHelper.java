@@ -6,8 +6,14 @@ import org.egov.eis.model.Employee;
 import org.egov.eis.model.User;
 import org.egov.eis.repository.EmployeeRepository;
 import org.egov.eis.web.contract.EmployeeRequest;
+import org.egov.eis.web.contract.EmployeeResponse;
+import org.egov.eis.web.contract.RequestInfo;
+import org.egov.eis.web.contract.ResponseInfo;
 import org.egov.eis.web.contract.UserRequest;
+import org.egov.eis.web.contract.factory.ResponseInfoFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -15,6 +21,9 @@ public class EmployeeHelper {
 
 	@Autowired
 	private EmployeeRepository employeeRepository;
+
+	@Autowired
+	private ResponseInfoFactory responseInfoFactory;
 
 	private enum Sequences {
 		ASSIGNMENT("seq_egeis_assignment"),
@@ -116,5 +125,25 @@ public class EmployeeHelper {
 			technical.setLastModifiedBy((Long.parseLong((employeeRequest.getRequestInfo().getRequesterId()))));
 			technical.setLastModifiedDate((new Date()));
 		});
+	}
+
+
+	/**
+	 * Populate EmployeeResponse object & returns ResponseEntity of type
+	 * EmployeeResponse containing ResponseInfo & Employee objects
+	 * 
+	 * @param employee
+	 * @param requestInfo
+	 * @param headers
+	 * @return ResponseEntity<?>
+	 */
+	public ResponseEntity<?> getSuccessResponseForCreate(Employee employee, RequestInfo requestInfo) {
+		EmployeeResponse employeeResponse = new EmployeeResponse();
+		employeeResponse.setEmployee(employee);
+
+		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+		responseInfo.setStatus(HttpStatus.OK.toString());
+		employeeResponse.setResponseInfo(responseInfo);
+		return new ResponseEntity<EmployeeResponse>(employeeResponse, HttpStatus.OK);
 	}
 }

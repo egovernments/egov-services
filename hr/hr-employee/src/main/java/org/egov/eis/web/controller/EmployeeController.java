@@ -44,13 +44,11 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.egov.eis.model.Employee;
 import org.egov.eis.model.EmployeeInfo;
 import org.egov.eis.service.EmployeeService;
 import org.egov.eis.web.contract.EmployeeGetRequest;
 import org.egov.eis.web.contract.EmployeeInfoResponse;
 import org.egov.eis.web.contract.EmployeeRequest;
-import org.egov.eis.web.contract.EmployeeResponse;
 import org.egov.eis.web.contract.RequestInfo;
 import org.egov.eis.web.contract.ResponseInfo;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
@@ -146,12 +144,7 @@ public class EmployeeController {
 		if (errorResponseEntity != null)
 			return errorResponseEntity;
 
-		Employee employee = employeeService.createEmployee(employeeRequest, headers);
-
-		if(employee == null) {
-			return errorHandler.getResponseEntityForExistingUser(employeeRequest);
-		}
-		return getSuccessResponseForCreate(employee, employeeRequest.getRequestInfo());
+		return employeeService.createEmployee(employeeRequest, headers);
 	}
 
 	/**
@@ -176,25 +169,6 @@ public class EmployeeController {
 			return errorHandler.getErrorResponseEntityForBindingErrors(bindingResult, employeeRequest.getRequestInfo());
 		}
 		return null;
-	}
-
-	/**
-	 * Populate EmployeeResponse object & returns ResponseEntity of type
-	 * EmployeeResponse containing ResponseInfo & Employee objects
-	 * 
-	 * @param employee
-	 * @param requestInfo
-	 * @param headers
-	 * @return ResponseEntity<?>
-	 */
-	private ResponseEntity<?> getSuccessResponseForCreate(Employee employee, RequestInfo requestInfo) {
-		EmployeeResponse employeeResponse = new EmployeeResponse();
-		employeeResponse.setEmployee(employee);
-
-		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
-		responseInfo.setStatus(HttpStatus.OK.toString());
-		employeeResponse.setResponseInfo(responseInfo);
-		return new ResponseEntity<EmployeeResponse>(employeeResponse, HttpStatus.OK);
 	}
 
 	/**

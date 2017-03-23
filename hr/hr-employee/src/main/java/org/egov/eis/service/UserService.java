@@ -40,6 +40,7 @@
 
 package org.egov.eis.service;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.egov.eis.config.PropertiesManager;
@@ -49,11 +50,16 @@ import org.egov.eis.web.contract.RequestInfo;
 import org.egov.eis.web.contract.UserGetRequest;
 import org.egov.eis.web.contract.UserRequest;
 import org.egov.eis.web.contract.UserResponse;
+import org.egov.eis.web.errorhandler.ErrorHandler;
+import org.egov.eis.web.errorhandler.UserErrorResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -68,6 +74,9 @@ public class UserService {
 	@Autowired
 	private PropertiesManager propertiesManager;
 
+	@Autowired
+	private ErrorHandler errorHandler;
+	
 	public List<User> getUsers(List<Long> ids, String tenantId, RequestInfo requestInfo, HttpHeaders headers) {
 		String url = userSearchURLHelper.searchURL(ids, tenantId);
 
@@ -94,7 +103,7 @@ public class UserService {
 		return userResponse.getUser();
 	}
 
-	public User createUser(UserRequest userRequest, HttpHeaders headers) {
+	public ResponseEntity<?> createUser(UserRequest userRequest, HttpHeaders headers) {
 		String url = propertiesManager.getUsersServiceHostName() + propertiesManager.getUsersServiceUsersBasePath()
 				+ propertiesManager.getUsersServiceUsersCreatePath();
 
@@ -114,10 +123,26 @@ public class UserService {
 		UserResponse userResponse = null;
 		try {
 			userResponse = new RestTemplate().postForObject(url, httpEntityRequest, UserResponse.class);
+		} catch (HttpClientErrorException e) {
+			String errorResponseBody = e.getResponseBodyAsString();
+			UserErrorResponse userErrorResponse = null;
+			try {
+				ObjectMapper mapper = new ObjectMapper();
+				userErrorResponse = mapper.readValue(errorResponseBody, UserErrorResponse.class);
+			} catch (JsonProcessingException jpe) {
+				System.err.println("Following Exception Occurred While Processing JSON Response From User Service : "
+						+ jpe.getMessage());
+				jpe.printStackTrace();
+			} catch (IOException ioe) {
+				System.err.println("Following Exception Occurred Calling User Service : " + ioe.getMessage());
+				ioe.printStackTrace();
+			}
+			return new ResponseEntity<UserErrorResponse>(userErrorResponse, HttpStatus.BAD_REQUEST);
 		} catch (Exception e) {
-			System.err.println("Exception Occurred While Calling User Service : " + e.getMessage());
-			return null;
+			System.err.println("Exception Occurred While Calling User Service : " + e);
+			e.printStackTrace();
+			return errorHandler.getResponseEntityForUnexpectedErrors(userRequest.getRequestInfo());
 		}
-		return userResponse.getUser().get(0);
+		return new ResponseEntity<UserResponse>(userResponse, HttpStatus.BAD_REQUEST);
 	}
 }

@@ -2,7 +2,7 @@ class CreateAsset extends React.Component {
   constructor(props) {
     super(props);
     this.state={list:[],assetCategory:{
-       "tenantId": "tenantId",
+       "tenantId": 1,
       "name": "",
       "assetCategoryType": "",
       "parent":"",
@@ -30,10 +30,10 @@ class CreateAsset extends React.Component {
     assetCategories:[],
     parent:{},
     depreciationMethod:{},
-    assetAccount:{},
-    accumulatedDepreciationAccount:{},
-    revaluationReserveAccount:{},
-    depreciationExpenseAccount:{},
+    assetAccount:[],
+    accumulatedDepreciationAccount:[],
+    revaluationReserveAccount:[],
+    depreciationExpenseAccount:[],
     unitOfMeasurement:[],
     dataType:[],isEdit:false,index:-1,typeList:[]
 
@@ -106,7 +106,7 @@ class CreateAsset extends React.Component {
               async: false,
               contentType: 'application/json',
               headers:{
-                'auth-token': '631ce772-306a-44c7-93ef-ba874d3cfc31'
+                'auth-token': '0bb72a4e-df28-4cb1-8abb-ac298c0a7e02'
               }
           });
 
@@ -157,14 +157,32 @@ class CreateAsset extends React.Component {
 
   componentDidMount()
   {
-    //console.log(commonApiGet("asset-services","","GET_MODE_OF_ACQUISITION",{}).responseJSON);
+    var type = getUrlVars()["type"];
+    var id = getUrlVars()["id"];
 
+    if(getUrlVars()["type"]==="view")
+    {
+      // for (var variable in this.state.assetCategory)
+      //   // document.getElementById(variable).disabled = true;
+      //   console.log($('#'+variable).length);
+      $("input,select").prop("disabled", true);
+    }
+
+
+    if (type === "view" || type === "update") {
+        console.log(getCommonMasterById("asset-services", "assetCategories", "AssetCategory", id).responseJSON);
+        this.setState({
+            assetCategory: getCommonMasterById("asset-services", "assetCategories", "AssetCategory", id).responseJSON["AssetCategory"][0]
+        })
+    }
+      console.log(commonApiPost("egf-masters","chartofaccounts","_search",{tenantId}).responseJSON["chartOfAccounts"]);
 
      this.setState({
+
       parent:commonApiPost("asset-services","assetCategories","_search",{}).responseJSON["AssetCategory"],
       assetCategories:commonApiGet("asset-services","","GET_ASSET_CATEGORY_TYPE",{}).responseJSON|| {},
       depreciationMethod:commonApiGet("asset-services","","GET_DEPRECIATION_METHOD",{}).responseJSON|| {},
-       assetAccount:commonApiPost("egf-masters","chartofaccounts","_search",{tenantId}).responseJSON["chartOfAccounts"],
+      assetAccount:commonApiPost("egf-masters","chartofaccounts","_search",{tenantId}).responseJSON["chartOfAccounts"],
       accumulatedDepreciationAccount:commonApiPost("egf-masters","chartofaccounts","_search",{tenantId}).responseJSON["chartOfAccounts"],
       revaluationReserveAccount:commonApiPost("egf-masters","chartofaccounts","_search",{tenantId}).responseJSON["chartOfAccounts"],
       depreciationExpenseAccount:commonApiPost("egf-masters","chartofaccounts","_search",{tenantId}).responseJSON["chartOfAccounts"],
@@ -227,8 +245,14 @@ class CreateAsset extends React.Component {
     let {isSearchClicked,list,customField,isEdit,index,assetCategory}=this.state;
 
     let {assetCategoryType,AssetCategory,parent,name,customFields,isMandatory,depreciationMethod,assetAccount,accumulatedDepreciationAccount,revaluationReserveAccount,depreciationExpenseAccount,unitOfMeasurement}=assetCategory;
+    let mode = getUrlVars()["type"];
 
-    console.log(customField.name);
+    const showActionButton = function() {
+        if((!mode) ||mode==="update") {
+          return (<button type="submit" className="btn btn-submit">{mode?"Update":"Create"}</button>);
+        }
+    };
+
 
 
     const renderOption=function(list)
@@ -275,10 +299,10 @@ class CreateAsset extends React.Component {
                   {item.regExFormate}
                   </td>
                   <td  >
-                {item.isActive}
+                {item.isActive?item.isActive:"true"}
                   </td>
                   <td  >
-                {item.isMandatory}
+                {item.isMandatory?item.isMandatory:"true"}
                   </td>
                   <td  >
                 {item.values}
@@ -411,7 +435,7 @@ class CreateAsset extends React.Component {
                         </div>
                         <div className="col-sm-6">
                         <div className="styled-select">
-                        <select id="revaluationReserveAccount" name="revaluationReserveAccount" required="true" value={revaluationReserveAccount} onChange={(e)=>{
+                        <select id="revaluationReserveAccount" name="revaluationReserveAccount"  value={revaluationReserveAccount} onChange={(e)=>{
                         handleChange(e,"revaluationReserveAccount")}}>
                             <option value="">Select Reserve Account </option>
                             {renderOption(this.state.revaluationReserveAccount)}
@@ -540,7 +564,7 @@ class CreateAsset extends React.Component {
                                                 <label htmlFor="">Active</label>
                                               </div>
                                               <div className="col-sm-6">
-                                              <input type="checkbox" name="isActive" id="isActive" value="true" onChange={(e)=>{
+                                              <input type="checkbox" name="isActive" id="isActive" value={customField.isActive} onChange={(e)=>{
                                           handleChangeTwoLevel(e,"customField","isActive")}} />
                                               </div>
                                           </div>
@@ -554,7 +578,7 @@ class CreateAsset extends React.Component {
                             <label htmlFor="">Mandatory</label>
                           </div>
                           <div className="col-sm-6">
-                          <input type="checkbox" name="isMandatory" id="isMandatory" value="true" onChange={(e)=>{
+                          <input type="checkbox" name="isMandatory" id="isMandatory" value={customField.isMandatory} onChange={(e)=>{
                     handleChangeTwoLevel(e,"customField","isMandatory")}} />
                           </div>
                       </div>
@@ -586,21 +610,7 @@ class CreateAsset extends React.Component {
                             </div>
                           </div>
                         </div>
-
-
-
-
-
-
                   </div>
-
-
-
-
-
-
-
-
                                   <div className="modal-footer">
                                   <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
                                   <button type="button"  data-dismiss="modal"id="" className="btn btn-primary"  onClick={(e)=>{addAsset()}}>Add/Edit</button>
@@ -613,7 +623,7 @@ class CreateAsset extends React.Component {
 
 
                         <div className="text-center">
-              <button type="submit" className="btn btn-submit" >Submit</button>
+              {showActionButton()} &nbsp;&nbsp;
               <button type="button" className="btn btn-submit" onClick={(e)=>{this.close()}}>Close</button>
 
           </div>

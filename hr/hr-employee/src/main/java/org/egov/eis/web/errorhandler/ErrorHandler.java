@@ -109,9 +109,6 @@ public class ErrorHandler {
 					DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 					String errorDate = dateFormat.format(fieldError.getRejectedValue());
 					error.getFields().put(fieldError.getField(), errorDate);
-				} else if (fieldError.getField().contains("jurisdictions")
-						|| (fieldError.getField().contains("assignments"))) {
-					error.getFields().put("employee." + fieldError.getField(), fieldError.getRejectedValue());
 				} else {
 					error.getFields().put(fieldError.getField(), fieldError.getRejectedValue());
 				}

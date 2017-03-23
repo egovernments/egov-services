@@ -108,7 +108,7 @@ class SearchAssetCategory extends React.Component {
                                 <td>{item.code}</td>
                                 <td>{item.name}</td>
                                 <td>{item.assetCategoryType}</td>
-                                <td>{item.Parent?item.Parent:"NULL"}</td>
+                                <td>{item.parent?item.parent:"NULL"}</td>
                                 <td>{item.unitOfMeasurement?item.unitOfMeasurement:"NULL"}</td>
 
                                 <td data-label="action">

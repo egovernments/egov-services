@@ -869,9 +869,6 @@ definitions:
         type: string
         format: double
         description: Total amount payable.
-      referenceNumber:
-        type: string
-        description: bill ref. no.
       billDetailInfos:
         type: array
         items:

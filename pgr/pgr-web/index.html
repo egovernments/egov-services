@@ -47,7 +47,7 @@
 			<div class="main-content">
 				<div class="row">
 					<div class="col-md-offset-8 col-md-2 col-sm-offset-6 col-sm-3 col-xs-8 text-right view-content">
-						<label for="" class="text-right" style="line-height: 2.5;">Select Locale</label>
+						<label for="" class="text-right" data-translate="core.lbl.locale" style="line-height: 2.5;"></label>
 					</div>
 					<div class="col-md-2 col-sm-3 col-xs-4">
 						<select name="" id="lang-dropdown" class="form-control">
@@ -67,68 +67,66 @@
 							<a href="templates/signup.html" target="_blank">
 								<div class="rounded-circle"><i class="fa fa-user a"></i></div>&nbsp;
 								<div class="label-font">
-									Create an account<br>
-									<span class="label-subfont">Create an account to avail our online services</span>
+									<span data-translate="pgr.title.create.account"></span><br>
+									<span class="label-subfont" data-translate="pgr.msg.creategrievance.avail.onlineservices"></span>
 								</div>
 							</a>
 						</div>
 						<div class="col-md-12 community-card">
 							<a href="templates/create-complaint.html" target="_blank">
 								<div class="rounded-circle"><i class="fa fa-pencil b"></i></div>
-								<div class="label-font" data-translate="create.grievance">
-									Create Grievance<br>
-									<span class="label-subfont" data-translate="create.grievance">Create Grievance</span>
+								<div class="label-font">
+									<span data-translate="pgr.title.create.grievence"></span><br>
+									<span class="label-subfont" data-translate="pgr.title.create.grievence"></span>
 								</div>
 							</a>
 						</div>
 						<div class="col-md-12 community-card">
-						  <a href="javascript:void(0)" class="compsearch">
-							<div class="rounded-circle"><i class="fa fa-search b"></i>
-							</div>
-							&nbsp;
-						  </a>
-							<div class="label-font" style="vertical-align: sub">
-								<span data-translate="check.grievance.status">Check your grievance status</span>&nbsp;<br>
-								<input type="text" placeholder="Grievance number" id="compsearchtxt"
-									style="padding: 2px 5px; height: 30px;font-size: 14px;border: 0;padding-left: 0;border-bottom: 1px solid #D0D2D7;outline: none;box-shadow: none;">
-								<button class="btn-custom compsearch" data-translate="search"
-									style="padding: 4px 5px;border-radius: 4px;font-size: 14px;vertical-align: bottom;">Search</button>
-							</div>
-							<div class="error-msg search-error-msg display-hide" style="padding-left: 65px;">Grievance number is mandatory</div>
+							<a href="javascript:void(0)" class="compsearch">
+								<div class="rounded-circle"><i class="fa fa-search b"></i></div>
+								<div class="label-font">
+									<span data-translate="pgr.msg.complaintstatus.anytime"></span><br>
+									<input type="text" data-translate="pgr.lbl.complaintnumber" id="compsearchtxt"
+										style="padding: 2px 5px; height: 30px;font-size: 14px;border: 0;padding-left: 0;border-bottom: 1px solid #D0D2D7;outline: none;box-shadow: none;">
+									<button class="btn-custom compsearch" data-translate="core.lbl.search"
+										style="padding: 4px 5px;border-radius: 4px;font-size: 14px;vertical-align: bottom;"></button>
+								</div>
+							</a>
+							<div class="error-msg search-error-msg display-hide" data-translate="pgr.error.msg.number.required" style="padding-left: 60px;"></div>
 						</div>
 						
 					</div>
 					<div class="col-md-6 side-space">
 						
 						<div class="signin-formcontent signin-section">
-							<form method="post" role="form" id="signform" action="/egi/j_security_check" autocomplete="off">
+							<form method="post" role="form" id="signform" autocomplete="off">
 								<div class="form-group">
 									<div class="signin-title">Sign in</div>
 								</div>
 								<input class="hide" type="text">
 								<input class="hide" type="password" />
-								<div class="form-group">
+								<div class="form-group overflow">
 									<div class="input-group">
 										<div class="input-group-addon style-label">
 											<i class="fa fa-user theme-color style-color"></i>
 										</div>
 										<input type="text" class="form-control style-form" name="username" id="username"
-											placeholder="Mobile Number / Login ID" autocomplete="off" required="required" autofocus="autofocus"/>
-										<label id="j_username-error" class="error pull-right" for="j_username"></label>
+											data-translate="core.lbl.addmobilenumber/login" autocomplete="off" required="required" autofocus="autofocus"/>
+										<label id="username-error" class="error display-hide pull-right" for="username">Required</label>
 									</div>
+									
 								</div>
 								<div class="form-group overflow">
 									<div class="input-group">
 										<div class="input-group-addon style-label">
 											<i class="fa fa-key theme-color style-color"></i>
 										</div>
-										<input type="password" class="form-control style-form" name="password" id="password" placeholder="Password" autocomplete="new-password" required="required" />
+										<input type="password" class="form-control style-form" name="password" id="password" data-translate="core.lbl.password" autocomplete="new-password" required="required" />
 										<div class="input-group-addon font-12" data-toggle="modal"
-											data-target="#fpassword" data-backdrop="static">
-											Forgot?
+											data-target="#fpassword" data-backdrop="static" data-translate="core.lbl.forgot">
 										</div>
 									</div>
-									<label id="j_password-error" class="error align-top pull-right" for="j_password"></label>
+									<label id="password-error" class="error display-hide pull-right" for="password">Required</label>
 								</div>
 								<div class="form-group display-hide" id="counter-section">
 									<div class="input-group">
@@ -144,8 +142,8 @@
 								</div>
 								<div class="form-group signin-leftpadding">
 									<button type="button"
-										class="btn btn-custom btn-block btn-login preventDS" id="signin-action">
-										<i class="fa fa-sign-in"></i> Sign in
+										class="btn btn-custom btn-block btn-login" id="signin-action">
+										<i class="fa fa-sign-in"></i> <span data-translate="core.lbl.signin"></span>
 									</button>
 								</div>
 							</form>
@@ -170,13 +168,13 @@
 					</div>
 					<div class="col-md-4 top-community-space">
 						<a href="javascript:void(0)"><span><i class="fa fa-thumbs-o-up fa-2x"></i></span></a>
-						<p>Follow us on</p>
+						<p data-translate="core.lbl.follow"></p>
 						<a href="https://twitter.com/eGovFoundation" target="_blank"><i class="fa fa-twitter fa-2x"></i></a> <a href="https://www.facebook.com/egfindia" target="_blank"><i class="fa fa-facebook fa-2x"></i></a>
 					</div>
 				</div>
 			</div>
 			<footer class="main">
-				Powered by <a href="http://eGovernments.org" target="_blank">eGovernments Foundation</a>
+				<a href="http://eGovernments.org" target="_blank"><span data-translate="core.lbl.page.footer"></span></a>
 			</footer>
 		</div>
 		<div class="modal fade" id="fpassword" tabindex="-1" role="dialog"
@@ -239,7 +237,6 @@
 		
 		<script src="resources/global/js/bootstrap/bootstrap.js"></script>
 		<script src="resources/global/js/bootstrap/bootbox.min.js"></script>
-		<script src="resources/global/js/egov/setlang.js"></script>
         <script src="resources/global/js/egov/custom.js"></script>
         <script src="resources/app/js/login.js"></script>
 		<script src="resources/global/js/jquery/plugins/jquery.validate.min.js"></script>

@@ -186,5 +186,27 @@ $(document).ready(function()
 	}else{
 		$('#cookieornoscript').modal('show', {backdrop: 'static'});
 	}	
+
+	if(localStorage.getItem('lang')){
+		$('#lang-dropdown').val(localStorage.getItem('lang'));
+	}
+
+	$('#lang-dropdown').change(function(){
+		var sel_value = $(this).val();
+		$.ajax({
+			url : '/localization/messages?tenantId=ap.public&locale='+sel_value,
+			type : 'GET',
+			success : function(response){
+				var locale = response.messages;
+				localStorage.setItem("lang", sel_value);
+				localStorage.setItem("lang_response", JSON.stringify(locale));
+				translate();
+			},error : function(){
+				bootbox.alert('localization failed!')
+			}
+		});
+	});
+
+	$('#lang-dropdown').trigger('change');
 	
 });

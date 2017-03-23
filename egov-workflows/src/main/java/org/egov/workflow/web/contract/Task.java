@@ -10,8 +10,6 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -101,8 +99,8 @@ public class Task {
 	 * url provides the complete url of the work flow item. This link takes you
 	 * to the view of the item along with provision to select the next assignee.
 	 * This data is also configured in work flow type object. This data is also
-	 * read only . UI Can consider this field to redirect to the page or UI can be 
-	 * build without consuming this. 
+	 * read only . UI Can consider this field to redirect to the page or UI can
+	 * be build without consuming this.
 	 */
 	@Length(max = 256, min = 1)
 	private String url = null;
@@ -127,10 +125,10 @@ public class Task {
 	private String senderName;
 
 	/**
-	 * details provides more information on the processs/Task instance.
-	 * Example : In voucher work flow it is VoucherNumber, Property it is the
-	 * propertyId ,Grievance it is the complaint or request number This data is
-	 * set internally by the system which is configured in work flow type
+	 * details provides more information on the processs/Task instance. Example
+	 * : In voucher work flow it is VoucherNumber, Property it is the propertyId
+	 * ,Grievance it is the complaint or request number This data is set
+	 * internally by the system which is configured in work flow type
 	 */
 
 	@Length(max = 128, min = 1)
@@ -145,11 +143,11 @@ public class Task {
 	@Length(max = 128, min = 1)
 	private String natureOfTask;
 	/**
-	 * entity Maps to the json representation of the item under workflow.
-	 * This will be used when work flow considers rule engine.  
-	 * like amount based flow etc
+	 * entity Maps to the json representation of the item under workflow. This
+	 * will be used when work flow considers rule engine. like amount based flow
+	 * etc
 	 */
-	private String  entity;
+	private String entity;
 
 	private Map<String, Attribute> attributes = new HashMap<String, Attribute>();
 

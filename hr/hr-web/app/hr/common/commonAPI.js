@@ -1,5 +1,11 @@
 var baseUrl = window.location.origin;
 
+
+var tenantId=1;
+
+
+var authToken=localStorage.getItem("auth-token");
+
 //request info from cookies
 var requestInfo = {
     "apiId":"org.egov.pgr",
@@ -10,13 +16,9 @@ var requestInfo = {
     "key":"xyz",
     "msgId":"654654",
     "requesterId":"61",
-    "authToken":"sdfsdfsdf"
+    "authToken":authToken
 };
 
-var tenantId=1;
-
-
-var authToken=localStorage.getItem("auth-token");
 
 // var response=$.ajax({
 //           url: window.location.origin+"/user/_login?tenantId=ap.public&username=ramakrishna&password=demo&grant_type=password&scope=read",

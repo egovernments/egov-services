@@ -1,9 +1,10 @@
 package org.egov.lams.service;
 
 import java.util.List;
-
+import java.util.stream.Collectors;
 import org.egov.lams.config.PropertiesManager;
 import org.egov.lams.contract.AgreementRequest;
+import org.egov.lams.contract.DemandResponse;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.AgreementCriteria;
 import org.egov.lams.model.Demand;
@@ -11,11 +12,9 @@ import org.egov.lams.model.DemandReason;
 import org.egov.lams.producers.AgreementProducer;
 import org.egov.lams.repository.AgreementRepository;
 import org.egov.lams.repository.DemandRepository;
-import org.egov.lams.service.AllotteeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -35,10 +34,7 @@ public class AgreementService {
 	private DemandRepository demandRepository;
 	
 	@Autowired
-	private JdbcTemplate jdbcTemplate;
-	
-	@Autowired
-	private AllotteeService allotteeService;
+	private AcknowledgementNumberService acknowledgementNumberService;	
 	
 	@Autowired
 	private PropertiesManager propertiesManager;
@@ -109,36 +105,33 @@ public class AgreementService {
 	public Agreement createAgreement(AgreementRequest agreementRequest){
 		
 		Agreement agreement = agreementRequest.getAgreement();
+		logger.info("createAgreement service::"+agreement);
+		
 		ObjectMapper mapper = new ObjectMapper();
 		String agreementValue = null;
-	    Long agreementNumber = null;
 	    
-	    List<DemandReason> demandReasons = demandRepository.getDemandReason(agreementRequest);
-	    List<Demand> demands= demandRepository.getDemandList(agreementRequest, demandReasons);
-	    demandRepository.createDemand(demands, agreementRequest.getRequestInfo());
-	    
-		
-	    try {
-			//TODO put ackno gen service here 
-	    	 	agreementNumber=(Long) jdbcTemplate.queryForList("SELECT NEXTVAL('seq_lams_agreement')").get(0).get("nextval");
-				agreement.setAgreementNumber(agreementNumber.toString());
-	    }catch(Exception ex){
-	    		ex.printStackTrace();
-	    		throw new RuntimeException(ex.getMessage());
-	    }
+		List<DemandReason> demandReasons = demandRepository.getDemandReason(agreementRequest);
+		List<Demand> demands = demandRepository.getDemandList(agreementRequest, demandReasons);
+		DemandResponse demandResponse = demandRepository.createDemand(demands,agreementRequest.getRequestInfo());
+
+		List<String> demandIdList = demandResponse.getDemands().stream().map(demand -> demand.getId())
+				.collect(Collectors.toList());
+
+		agreement.setDemands(demandIdList);
+		agreement.setAcknowledgementNumber(acknowledgementNumberService.generateAcknowledgeNumber());
+
 		try {
-				logger.info("createAgreement service::"+agreement);
 				agreementValue = mapper.writeValueAsString(agreementRequest);
 				logger.info("agreementValue::"+agreementValue);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-				throw new RuntimeException(e.getMessage());
+		} catch (JsonProcessingException JsonProcessingException) {
+				logger.debug("AgreementService : "+JsonProcessingException.getMessage(),JsonProcessingException);
+				throw new RuntimeException(JsonProcessingException.getMessage());
 		}
 		try {
 				agreementProducer.sendMessage(propertiesManager.getStartWorkflowTopic(), "save-agreement", agreementValue);
-		}catch(Exception ex){
-				ex.printStackTrace();
-				throw new RuntimeException(ex.getMessage());
+		}catch(Exception exception){
+			logger.debug("AgreementService : "+exception.getMessage(),exception);
+				throw exception;
 		}
 		return agreement;
 	}
@@ -150,36 +143,27 @@ public class AgreementService {
 	 * @return
 	 */
 	public Agreement updateAgreement(AgreementRequest agreementRequest) {
+		
 		Agreement agreement = agreementRequest.getAgreement();
+		logger.info("createAgreement service::" + agreement);
 		ObjectMapper mapper = new ObjectMapper();
 		String agreementValue = null;
-		Long agreementNumber = null;
 
+		// TODO  FIXME put agreement number generator here and change
 		try {
-			// TODO put agreement number generator here and change
-		/*	agreementNumber = (Long) jdbcTemplate.queryForList("SELECT NEXTVAL('seq_lams_agreement')").get(0)
-					.get("nextval");
-			agreementRequest.setAgreementNumber(agreementNumber.toString());*/
-		} catch (Exception exception) {
-			logger.info(exception.getMessage(),exception);
-			throw exception;
-		}
-		try {
-			logger.info("createAgreement service::" + agreement);
 			agreementValue = mapper.writeValueAsString(agreementRequest);
 			logger.info("agreementValue::" + agreementValue);
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			throw new RuntimeException(e.getMessage());
+		} catch (JsonProcessingException jsonProcessingException) {
+			logger.debug("AgreementService : " + jsonProcessingException.getMessage(), jsonProcessingException);
+			throw new RuntimeException(jsonProcessingException.getMessage());
 		}
+
 		try {
 			agreementProducer.sendMessage(propertiesManager.getUpdateWorkflowTopic(), "save-agreement", agreementValue);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			throw ex;
+		} catch (Exception exception) {
+			logger.debug("AgreementService : " + exception.getMessage(), exception);
+			throw exception;
 		}
 		return agreement;
 	}
-
 }

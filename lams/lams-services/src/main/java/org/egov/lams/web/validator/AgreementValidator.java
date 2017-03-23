@@ -48,7 +48,8 @@ public class AgreementValidator {
 		if (bankGuaranteeDate.compareTo(new Date()) >= 0)
 			throw new LamsException("bank Guarantee Date date should be lesser than current date");
 
-		// FIXME uncomment this part before pushing validateAllottee(agreementRequest);
+		// FIXME uncomment this part before pushing-->
+		validateAllottee(agreementRequest);
 		validateAsset(agreementRequest);
 		validateRentIncrementType(agreement.getRentIncrementMethod());
 	}
@@ -58,9 +59,12 @@ public class AgreementValidator {
 		Long assetId = agreementRequest.getAgreement().getAsset().getId();
 		String queryString = "id=" + assetId;
 		AssetResponse assetResponse = assetService.getAssets(queryString, agreementRequest.getRequestInfo());
-		if (assetResponse.getAssets() == null || assetResponse.getAssets().size() == 0) {
+		if (assetResponse.getAssets() == null || assetResponse.getAssets().size() == 0) 
 			throw new LamsException("the asset object does not exist");
-		}
+			
+		if(!assetService.isAssetAvailable(assetId))
+				throw new LamsException("Agreement has been already signed for the particular asset");
+		
 		// FIXME use invalidDataException here
 	}
 

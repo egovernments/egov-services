@@ -6,6 +6,7 @@ import org.egov.lams.model.RequestInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -19,6 +20,9 @@ public class AssetService {
 
 	@Autowired
 	private RestTemplate restTemplate;
+	
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
 
 	public AssetResponse getAssets(String queryString, RequestInfo requestInfo) {
 		String url = null;
@@ -35,6 +39,21 @@ public class AssetService {
 		}
 		logger.info(assetResponse.toString());
 		return assetResponse;
+	}
+	
+	public boolean isAssetAvailable(Long assetId) {
+		
+		final String sql = "select id from elams_agreement where asset="+assetId;
+		//FIXME table name from config 
+		Long agreementId = null;
+		try{
+			agreementId = jdbcTemplate.queryForObject(sql,Long.class);
+		}catch (Exception exception) {
+			logger.debug("aseetService isassetAvailable : ",exception);
+			throw exception;
+			// TODO: handle exception
+		}
+		return agreementId == null;
 	}
 
 }

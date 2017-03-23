@@ -3,12 +3,16 @@ package org.egov.lams.service;
 import java.time.LocalDateTime;
 import java.util.Random;
 import org.egov.lams.config.PropertiesManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AcknowledgementNumberService {
+	
+	public static final Logger logger = LoggerFactory.getLogger(AcknowledgementNumberService.class);
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -28,12 +32,17 @@ public class AcknowledgementNumberService {
 		int k=random.nextInt(25)+65;
 		int l = random.nextInt(25)+65;
 		String suffix = new String((char)k+""+(char)l);
-	
-		String resultSet = jdbcTemplate.queryForObject(sql, String.class);
+		String resultSet = null;
+		try{
+			resultSet = jdbcTemplate.queryForObject(sql, String.class);
+		}catch (Exception e) {
+			logger.info("AcknowledgementNumberService : "+ e.getMessage(),e);
+			throw e;
+		}
 		StringBuilder baseValue = new StringBuilder(String.format("%05d", resultSet));
 		baseValue.append("-" + year);
 		baseValue.append(suffix);
-		
+		logger.info("AcknowledgementNumberService : acknoValue"+baseValue);
 		return baseValue.toString();
 	}
 

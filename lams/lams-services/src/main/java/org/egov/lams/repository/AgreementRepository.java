@@ -30,26 +30,26 @@ public class AgreementRepository {
 	public static final Logger logger = LoggerFactory.getLogger(AgreementRepository.class);
 
 	@Autowired
-	private PropertiesManager propertiesManager;
-
+	private AssetHelper assetHelper;
+	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
-
+	
 	@Autowired
 	private RestTemplate restTemplate;
 	
 	@Autowired
 	private AssetService assetService;
-
-	@Autowired
-	private AssetHelper assetHelper;
-
+	
 	@Autowired
 	private AllotteeHelper allotteeHelper;
 
 	@Autowired
 	private AgreementHelper agreementHelper;
 
+	@Autowired
+	private PropertiesManager propertiesManager;
+	
 	/**
 	 * Allottee criteria is on name or mobile number which is expected to return
 	 * 1 or 2 records. With this, we make the agreementQuery. so, the result set

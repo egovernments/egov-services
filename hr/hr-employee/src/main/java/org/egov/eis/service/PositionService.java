@@ -88,7 +88,7 @@ public class PositionService {
 
 		// FIXME : hard-coded auth-token
 		HttpHeaders hardCodedAuthTokenHeader = new HttpHeaders();
-		hardCodedAuthTokenHeader.add("auth-token", "13bbcf71-dc23-4424-82a2-685704dacd09");
+		hardCodedAuthTokenHeader.add("auth-token", "631ce772-306a-44c7-93ef-ba874d3cfc31");
 		hardCodedAuthTokenHeader.setContentType(MediaType.APPLICATION_JSON);
 		// Replace hardCodedAuthTokenHeader with header object if required
 		HttpEntity<String> httpEntityRequest = new HttpEntity<String>(requestInfoJson, hardCodedAuthTokenHeader);

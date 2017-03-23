@@ -112,7 +112,7 @@ public class EgDemandDetails implements Serializable, Cloneable {
 	private EgDemand egDemand;
 
 	public DemandDetails toDomain() {
-		return DemandDetails.builder().taxAmount(amount).collectionAmount(amtCollected).rebateAmount(amtRebate)
+		return DemandDetails.builder().id(id).taxAmount(amount).collectionAmount(amtCollected).rebateAmount(amtRebate)
 				.taxReason(egDemandReason.getEgDemandReasonMaster().getReasonMaster())
 				.taxPeriod(egDemandReason.getEgInstallmentMaster().getDescription())
 				.glCode(egDemandReason.getGlcodeId()).isActualDemand(1).build();

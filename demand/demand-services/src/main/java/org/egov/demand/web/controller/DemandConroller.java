@@ -62,6 +62,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -118,6 +119,22 @@ public class DemandConroller {
 		}
 		try {
 			egDemand = demandService.createDemand(demandRequest.getDemand().get(0));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		demandRequest.getDemand().get(0).setId(egDemand.getId());
+		return getSuccessResponse(demandRequest.getDemand().get(0), demandRequest.getRequestInfo());
+	}
+	
+	@PostMapping("/{id}/_update")
+	@ResponseStatus(HttpStatus.CREATED)
+	public ResponseEntity<?> update(@PathVariable final Long id, @RequestBody @Valid DemandRequest demandRequest, BindingResult bindingResult) {
+		EgDemand egDemand = null;
+		if (bindingResult.hasErrors()) {
+			return errHandler.getErrorResponseEntityForBindingErrors(bindingResult, demandRequest.getRequestInfo());
+		}
+		try {
+			egDemand = demandService.updateDemand(demandRequest.getDemand().get(0));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -65,7 +65,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("demandreason")
+@RequestMapping("demand/demandreason")
 public class DemandReasonConroller {
 
 	@Autowired

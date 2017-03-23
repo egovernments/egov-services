@@ -61,4 +61,16 @@ public class DemandService {
 		demandRepository.save(egDemand);
 		return egDemand;
 	}
+
+	public EgDemand updateDemand(Demand demand) throws Exception {
+		EgDemand egDemand = demandRepository.findOne(demand.getId());
+		for (DemandDetails demandDetails : demand.getDemandDetails()) {
+			for (EgDemandDetails egDemandDetail : egDemand.getEgDemandDetails()) {
+				if (egDemandDetail.getId().equals(demandDetails.getId())) {
+					egDemandDetail.addCollected(demandDetails.getCollectionAmount());
+				}
+			}
+		}
+		return demandRepository.save(egDemand);
+	}
 }

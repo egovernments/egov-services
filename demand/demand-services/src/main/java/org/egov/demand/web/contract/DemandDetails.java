@@ -12,6 +12,7 @@ import lombok.Setter;
 @Setter
 @Builder
 public class DemandDetails {
+	private Long id;
 	private BigDecimal taxAmount;
 	private BigDecimal collectionAmount;
 	private BigDecimal rebateAmount;

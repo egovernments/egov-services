@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class EmployeeSearchURLHelper {
+public class HRConfigurationSearchURLHelper {
 
     @Autowired
     private ApplicationProperties applicationProperties;
@@ -14,10 +14,10 @@ public class EmployeeSearchURLHelper {
     @Autowired
     private PropertiesManager propertiesManager;
 
-    public String searchURL(final Long id, final String tenantId) {
-        final String BASE_URL = propertiesManager.getHrEmployeeServiceHostName()
-                + propertiesManager.getHrEmployeeServiceEmployeesBasePath()
-                + propertiesManager.getHrEmployeeServiceEmployeesSearchPath();
+    public String searchURL(final String tenantId) {
+        final String BASE_URL = propertiesManager.getHrMastersServiceHostName()
+                + propertiesManager.getHrMastersServiceHRConfigurationBasePath()
+                + propertiesManager.getHrMastersServiceConfigurationsSearchPath();
         final StringBuilder searchURL = new StringBuilder(BASE_URL + "?");
 
         if (tenantId == null)
@@ -25,8 +25,7 @@ public class EmployeeSearchURLHelper {
         else
             searchURL.append("tenantId=" + tenantId);
 
-        if (id != null)
-            searchURL.append("&id=" + id);
+        searchURL.append("&name=" + propertiesManager.getHrMastersServiceConfigurationsKey());
 
         searchURL.append("&pageSize=" + applicationProperties.attendanceSearchPageSizeMax());
 

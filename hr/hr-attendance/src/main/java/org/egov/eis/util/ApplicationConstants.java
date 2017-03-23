@@ -56,6 +56,8 @@ public class ApplicationConstants {
     public static final String MSG_ATTENDANCE_EMPLOYEE_DATE_MANDATORY = "attendance.employee.date.mandatory";
     public static final String MSG_ATTENDANCE_INVALID_TYPE = "attendance.invalid.type";
     public static final String MSG_ATTENDANCE_MARKED_HOLIDAY = "attendance.marked.holiday";
+    public static final String MSG_ATTENDANCE_INVALID_EMPLOYEE = "attendance.invalid.employee";
+    public static final String MSG_ATTENDANCE_EMPLOYEE_RETIRED = "attendance.employee.retired";
 
     @Autowired
     private Environment environment;

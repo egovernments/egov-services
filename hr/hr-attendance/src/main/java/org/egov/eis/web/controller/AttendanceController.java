@@ -41,14 +41,22 @@
 package org.egov.eis.web.controller;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
+import org.egov.eis.config.PropertiesManager;
 import org.egov.eis.model.Attendance;
 import org.egov.eis.model.AttendanceType;
+import org.egov.eis.model.EmployeeInfo;
 import org.egov.eis.model.Holiday;
+import org.egov.eis.model.enums.EmployeeStatus;
 import org.egov.eis.service.AttendanceService;
+import org.egov.eis.service.EmployeeService;
+import org.egov.eis.service.HRConfigurationService;
 import org.egov.eis.service.HolidayService;
 import org.egov.eis.util.ApplicationConstants;
 import org.egov.eis.web.contract.AttendanceGetRequest;
@@ -63,6 +71,7 @@ import org.egov.eis.web.errorhandlers.ErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -70,6 +79,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -96,10 +106,20 @@ public class AttendanceController {
     @Autowired
     private ApplicationConstants applicationConstants;
 
-    @PostMapping("_search")
+    @Autowired
+    private HRConfigurationService hrConfigurationService;
+
+    @Autowired
+    private PropertiesManager propertiesManager;
+
+    @Autowired
+    private EmployeeService employeeService;
+
+    @PostMapping(value = "_search", headers = { "x-user-info" })
     @ResponseBody
     public ResponseEntity<?> search(@ModelAttribute @Valid final AttendanceGetRequest attendanceGetRequest,
-            final BindingResult bindingResult, @RequestBody final RequestInfo requestInfo) {
+            final BindingResult bindingResult, @RequestBody final RequestInfo requestInfo,
+            @RequestHeader final HttpHeaders headers) {
 
         // validate header
         if (requestInfo.getApiId() == null || requestInfo.getVer() == null || requestInfo.getTs() == null)
@@ -121,10 +141,10 @@ public class AttendanceController {
         return getSuccessResponse(attendancesList, requestInfo);
     }
 
-    @PostMapping({ "_create", "_update" })
+    @PostMapping(value = { "_create", "_update" }, headers = { "x-user-info" })
     @ResponseBody
     public ResponseEntity<?> create(@RequestBody @Valid final AttendanceRequest attendanceRequest,
-            @RequestParam("tenantId") final String tenantId,
+            @RequestParam("tenantId") final String tenantId, @RequestHeader final HttpHeaders headers,
             final BindingResult errors) {
         // validate header
         if (errors.hasErrors()) {
@@ -133,7 +153,7 @@ public class AttendanceController {
         }
         logger.info("attendanceRequest::" + attendanceRequest);
 
-        final List<ErrorResponse> errorResponses = validateAttendanceRequest(attendanceRequest, tenantId);
+        final List<ErrorResponse> errorResponses = validateAttendanceRequest(attendanceRequest, tenantId, headers);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
 
@@ -142,30 +162,36 @@ public class AttendanceController {
         return getSuccessResponse(attendances, attendanceRequest.getRequestInfo());
     }
 
-    private List<ErrorResponse> validateAttendanceRequest(final AttendanceRequest attendanceRequest, final String tenantId) {
+    @SuppressWarnings("deprecation")
+    private List<ErrorResponse> validateAttendanceRequest(final AttendanceRequest attendanceRequest, final String tenantId,
+            final HttpHeaders headers) {
         final List<ErrorResponse> errorResponses = new ArrayList<>();
-//        final List<Holiday> holidays = holidayService.getHolidays(tenantId, attendanceRequest.getRequestInfo());
+        final List<Holiday> holidays = holidayService.getHolidays(tenantId, attendanceRequest.getRequestInfo(), headers);
+        final Map<String, List<String>> weeklyHolidays = hrConfigurationService.getWeeklyHolidays(tenantId,
+                attendanceRequest.getRequestInfo(), headers);
         final List<AttendanceType> attendanceTypes = attendanceService.getAllAttendanceTypes();
         boolean isHoliday = true;
         boolean isEmployeeDate = true;
         boolean isTypeExists = false;
         boolean isAttendanceExists = false;
-        final boolean isEmployeePresent = true;
-        final boolean isEmployeeRetired = false;
+        boolean isEmployeePresent = true;
+        boolean isEmployeeRetired = false;
 
         for (final Attendance attendance : attendanceRequest.getAttendances()) {
             isTypeExists = false;
             if (attendance.getEmployee() == null || attendance.getAttendanceDate() == null)
                 isEmployeeDate = false;
             else if (attendance.getId() == null
-                    && attendanceService.getByEmployeeAndDate(attendance.getEmployee(), attendance.getAttendanceDate()))
+                    && attendanceService.getByEmployeeAndDate(attendance.getEmployee(), attendance.getAttendanceDate(), tenantId))
                 isAttendanceExists = true;
-            // TODO: uncomment once employee authentication is done
-            /*
-             * List<EmployeeInfo> employeeInfos = employeeService.getEmployee(attendance.getEmployee(), tenantId,
-             * attendanceRequest.getRequestInfo()); if (employeeInfos.isEmpty()) { isEmployeePresent = false; } else { if
-             * (EmployeeStatus.RETIRED.toString().equals(employeeInfos.get(0).getEmployeeStatus())) isEmployeeRetired = true; }
-             */
+
+            final List<EmployeeInfo> employeeInfos = employeeService.getEmployee(attendance.getEmployee(), tenantId,
+                    attendanceRequest.getRequestInfo(), headers);
+            if (employeeInfos.isEmpty())
+                isEmployeePresent = false;
+            else if (EmployeeStatus.RETIRED.toString().equals(employeeInfos.get(0).getEmployeeStatus()))
+                isEmployeeRetired = true;
+
             if ("".equals(attendance.getType().getCode()))
                 isTypeExists = true;
             else
@@ -174,14 +200,31 @@ public class AttendanceController {
                         isTypeExists = true;
                         break;
                     }
-            // TODO: validate holidays once inter service calls issue fixed.
-//            if (!holidays.isEmpty() && attendance.getType() != null && "H".equals(attendance.getType().getCode()))
-//                for (final Holiday holiday : holidays)
-//                    if (holiday.getApplicableOn().compareTo(attendance.getAttendanceDate()) == 0) {
-//                        isHoliday = true;
-//                        break;
-//                    } else
-//                        isHoliday = false;
+            if (!holidays.isEmpty() && attendance.getType() != null && "H".equals(attendance.getType().getCode()))
+                for (final Holiday holiday : holidays)
+                    if (holiday.getApplicableOn().compareTo(attendance.getAttendanceDate()) == 0) {
+                        isHoliday = true;
+                        break;
+                    } else
+                        isHoliday = false;
+            if (!isHoliday && attendance.getAttendanceDate() != null)
+                if (propertiesManager.getHrMastersServiceConfigurationsFiveDayWeek()
+                        .equals(weeklyHolidays.get(propertiesManager.getHrMastersServiceConfigurationsKey()).get(0))) {
+                    if (attendance.getAttendanceDate().getDay() == 0 || attendance.getAttendanceDate().getDay() == 6)
+                        isHoliday = true;
+                } else if (propertiesManager.getHrMastersServiceConfigurationsSixDayWeek()
+                        .equals(weeklyHolidays.get(propertiesManager.getHrMastersServiceConfigurationsKey()).get(0))) {
+                    if (attendance.getAttendanceDate().getDay() == 0)
+                        isHoliday = true;
+                } else if (propertiesManager.getHrMastersServiceConfigurationsFiveDayWithSecondSaturday()
+                        .equals(weeklyHolidays.get(propertiesManager.getHrMastersServiceConfigurationsKey()).get(0))) {
+                    if (attendance.getAttendanceDate().getDay() == 0 || isSecondSaturdayOfMonth(attendance.getAttendanceDate()))
+                        isHoliday = true;
+                } else if (propertiesManager.getHrMastersServiceConfigurationsFiveDayWithSecondAndFourthSaturday()
+                        .equals(weeklyHolidays.get(propertiesManager.getHrMastersServiceConfigurationsKey()).get(0)))
+                    if (attendance.getAttendanceDate().getDay() == 0
+                            || isSecondOrFourthSaturdayOfMonth(attendance.getAttendanceDate()))
+                        isHoliday = true;
             if (!isTypeExists || !isEmployeeDate || !isHoliday || isAttendanceExists || !isEmployeePresent || isEmployeeRetired)
                 break;
         }
@@ -211,6 +254,20 @@ public class AttendanceController {
             final ErrorResponse errorResponse = new ErrorResponse();
             final Error error = new Error();
             error.setDescription(applicationConstants.getErrorMessage(ApplicationConstants.MSG_ATTENDANCE_MARKED_HOLIDAY));
+            errorResponse.setError(error);
+            errorResponses.add(errorResponse);
+        }
+        if (!isEmployeePresent) {
+            final ErrorResponse errorResponse = new ErrorResponse();
+            final Error error = new Error();
+            error.setDescription(applicationConstants.getErrorMessage(ApplicationConstants.MSG_ATTENDANCE_INVALID_EMPLOYEE));
+            errorResponse.setError(error);
+            errorResponses.add(errorResponse);
+        }
+        if (isEmployeeRetired) {
+            final ErrorResponse errorResponse = new ErrorResponse();
+            final Error error = new Error();
+            error.setDescription(applicationConstants.getErrorMessage(ApplicationConstants.MSG_ATTENDANCE_EMPLOYEE_RETIRED));
             errorResponse.setError(error);
             errorResponses.add(errorResponse);
         }
@@ -247,6 +304,34 @@ public class AttendanceController {
             }
         errRes.setError(error);
         return errRes;
+    }
+
+    @SuppressWarnings("deprecation")
+    public boolean isSecondSaturdayOfMonth(final Date date) {
+        final Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.MONTH, date.getMonth());
+        cal.setFirstDayOfWeek(Calendar.SATURDAY);
+        cal.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+        cal.set(Calendar.WEEK_OF_MONTH, 2);
+        return cal.getTime().equals(date.getTime());
+    }
+
+    @SuppressWarnings("deprecation")
+    public boolean isSecondOrFourthSaturdayOfMonth(final Date date) {
+        boolean isSecondOrFourthSaturday = false;
+        final Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.MONTH, date.getMonth());
+        cal.setFirstDayOfWeek(Calendar.SATURDAY);
+        cal.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+        cal.set(Calendar.WEEK_OF_MONTH, 2);
+        isSecondOrFourthSaturday = cal.getTime().equals(date.getTime());
+
+        if (!isSecondOrFourthSaturday) {
+            cal.set(Calendar.WEEK_OF_MONTH, 4);
+            isSecondOrFourthSaturday = cal.getTime().equals(date.getTime());
+        }
+
+        return isSecondOrFourthSaturday;
     }
 
 }

@@ -38,16 +38,15 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.model;
+package org.egov.eis.web.contract;
 
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import javax.validation.constraints.NotNull;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -55,58 +54,17 @@ import lombok.Setter;
 import lombok.ToString;
 
 @AllArgsConstructor
-@Builder
 @EqualsAndHashCode
 @Getter
 @NoArgsConstructor
 @Setter
 @ToString
-public class Assignment {
+public class HRConfigurationResponse {
 
-    @NotNull
-    private Long id;
+    @JsonProperty("ResponseInfo")
+    private ResponseInfo responseInfo;
 
-    private Long employee;
-
-    private Long position;
-
-    private Long fund;
-
-    private Long functionary;
-
-    private Long function;
-
-    @NotNull
-    private Long department;
-
-    private Long designation;
-
-    private List<HODDepartment> hod = new ArrayList<HODDepartment>();
-
-    @NotNull
-    private Boolean isPrimary;
-
-    @NotNull
-    private Date fromDate;
-
-    @NotNull
-    private Date toDate;
-
-    private Long grade;
-
-    private String govtOrderNumber;
-
-    @NotNull
-    private Long createdBy;
-
-    @NotNull
-    private Date createdDate;
-
-    private Long lastModifiedBy;
-
-    private Date lastModifiedDate;
-
-    @NotNull
-    private String tenantId;
+    @JsonProperty("HRConfiguration")
+    private Map<String, List<String>> hrConfiguration = new HashMap<>();
 
 }

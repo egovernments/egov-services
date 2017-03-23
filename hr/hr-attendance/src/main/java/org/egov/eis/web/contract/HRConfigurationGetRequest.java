@@ -38,75 +38,52 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.model;
+package org.egov.eis.web.contract;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@AllArgsConstructor
-@Builder
-@EqualsAndHashCode
 @Getter
-@NoArgsConstructor
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @ToString
-public class Assignment {
+@EqualsAndHashCode
+public class HRConfigurationGetRequest {
 
-    @NotNull
-    private Long id;
+    private List<Long> id;
 
-    private Long employee;
+    @Size(min = 3, max = 50)
+    private String name;
 
-    private Long position;
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    private Date effectiveFrom;
 
-    private Long fund;
+    private String sortBy;
 
-    private Long functionary;
-
-    private Long function;
-
-    @NotNull
-    private Long department;
-
-    private Long designation;
-
-    private List<HODDepartment> hod = new ArrayList<HODDepartment>();
-
-    @NotNull
-    private Boolean isPrimary;
-
-    @NotNull
-    private Date fromDate;
-
-    @NotNull
-    private Date toDate;
-
-    private Long grade;
-
-    private String govtOrderNumber;
-
-    @NotNull
-    private Long createdBy;
-
-    @NotNull
-    private Date createdDate;
-
-    private Long lastModifiedBy;
-
-    private Date lastModifiedDate;
+    private String sortOrder;
 
     @NotNull
     private String tenantId;
+
+    @Min(1)
+    @Max(500)
+    private Short pageSize;
+
+    private Short pageNumber;
 
 }

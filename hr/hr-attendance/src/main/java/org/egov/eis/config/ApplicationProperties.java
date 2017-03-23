@@ -55,10 +55,6 @@ public class ApplicationProperties {
     public static final String ATTENDANCE_SEARCH_PAGENO_MAX = "attendance.search.pageno.max";
     public static final String ATTENDANCE_SEARCH_PAGESIZE_MAX = "attendance.search.pagesize.max";
 
-    private static final String ATTENDANCE_SERVICES_COMMON_SERVICE_SEARCH_HOLIDAYS_HOST_URL = "attendance.services.common_masters_service.search.holidays.host.url";
-
-    private static final String ATTENDANCE_SERVICES_HR_EMPLOYEE_SERVICE_SEARCH_EMPLOYEE_HOST_URL = "attendance.services.hr_employee_service.search.employee.host.url";
-
     @Autowired
     private Environment environment;
 
@@ -72,14 +68,6 @@ public class ApplicationProperties {
 
     public String attendanceSearchPageSizeMax() {
         return environment.getProperty(ATTENDANCE_SEARCH_PAGESIZE_MAX);
-    }
-
-    public String attendanceServicesCommonMastersServiceSearchHolidaysHostURL() {
-        return environment.getProperty(ATTENDANCE_SERVICES_COMMON_SERVICE_SEARCH_HOLIDAYS_HOST_URL);
-    }
-
-    public String attendanceServicesHREmployeeServiceSearchEmployeeHostURL() {
-        return environment.getProperty(ATTENDANCE_SERVICES_HR_EMPLOYEE_SERVICE_SEARCH_EMPLOYEE_HOST_URL);
     }
 
 }

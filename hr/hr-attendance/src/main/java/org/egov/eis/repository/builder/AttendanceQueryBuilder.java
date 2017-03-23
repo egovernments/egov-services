@@ -214,6 +214,6 @@ public class AttendanceQueryBuilder {
     }
 
     public static String selectAttendanceByEmployeeAndDateQuery() {
-        return "SELECT id FROM egeis_attendance where employee = ? and attendancedate = ?";
+        return "SELECT id FROM egeis_attendance where employee = ? and attendancedate = ? and tenantId = ?";
     }
 }

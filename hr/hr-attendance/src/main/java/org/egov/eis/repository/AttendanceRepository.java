@@ -101,10 +101,12 @@ public class AttendanceRepository {
         return null;
     }
 
-    public boolean checkAttendanceByEmployeeAndDate(final Long employee, final java.util.Date attendanceDate) {
+    public boolean checkAttendanceByEmployeeAndDate(final Long employee, final java.util.Date attendanceDate,
+            final String tenantId) {
         final List<Object> preparedStatementValues = new ArrayList<Object>();
         preparedStatementValues.add(employee);
         preparedStatementValues.add(attendanceDate);
+        preparedStatementValues.add(tenantId);
         final String query = AttendanceQueryBuilder.selectAttendanceByEmployeeAndDateQuery();
         final List<Map<String, Object>> attendanceIds = jdbcTemplate.queryForList(query, preparedStatementValues.toArray());
         if (!attendanceIds.isEmpty())

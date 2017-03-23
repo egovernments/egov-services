@@ -96,8 +96,8 @@ public class AttendanceService {
         return attendanceRequest.getAttendances();
     }
 
-    public boolean getByEmployeeAndDate(final Long employee, final Date attendanceDate) {
-        return attendanceRepository.checkAttendanceByEmployeeAndDate(employee, attendanceDate);
+    public boolean getByEmployeeAndDate(final Long employee, final Date attendanceDate, final String tenantId) {
+        return attendanceRepository.checkAttendanceByEmployeeAndDate(employee, attendanceDate, tenantId);
     }
 
     public AttendanceRequest create(final AttendanceRequest attendanceRequest) {

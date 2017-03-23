@@ -38,75 +38,42 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.model;
+package org.egov.eis.service;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
-import javax.validation.constraints.NotNull;
+import org.egov.eis.service.helper.HRConfigurationSearchURLHelper;
+import org.egov.eis.web.contract.HRConfigurationResponse;
+import org.egov.eis.web.contract.RequestInfo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+@Service
+public class HRConfigurationService {
+    @Autowired
+    private HRConfigurationSearchURLHelper hrConfigurationSearchURLHelper;
 
-@AllArgsConstructor
-@Builder
-@EqualsAndHashCode
-@Getter
-@NoArgsConstructor
-@Setter
-@ToString
-public class Assignment {
+    public Map<String, List<String>> getWeeklyHolidays(final String tenantId, final RequestInfo requestInfo,
+            final HttpHeaders headers) {
+        final String url = hrConfigurationSearchURLHelper.searchURL(tenantId);
 
-    @NotNull
-    private Long id;
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("auth-token", requestInfo.getAuthToken());
 
-    private Long employee;
+        final RestTemplate restTemplate = new RestTemplate();
+        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
-    private Long position;
+        final HttpEntity<RequestInfo> request = new HttpEntity<>(requestInfo, headers);
 
-    private Long fund;
+        final HRConfigurationResponse hrConfigurationResponse = restTemplate.postForObject(url, request,
+                HRConfigurationResponse.class);
 
-    private Long functionary;
-
-    private Long function;
-
-    @NotNull
-    private Long department;
-
-    private Long designation;
-
-    private List<HODDepartment> hod = new ArrayList<HODDepartment>();
-
-    @NotNull
-    private Boolean isPrimary;
-
-    @NotNull
-    private Date fromDate;
-
-    @NotNull
-    private Date toDate;
-
-    private Long grade;
-
-    private String govtOrderNumber;
-
-    @NotNull
-    private Long createdBy;
-
-    @NotNull
-    private Date createdDate;
-
-    private Long lastModifiedBy;
-
-    private Date lastModifiedDate;
-
-    @NotNull
-    private String tenantId;
-
+        return hrConfigurationResponse.getHrConfiguration();
+    }
 }

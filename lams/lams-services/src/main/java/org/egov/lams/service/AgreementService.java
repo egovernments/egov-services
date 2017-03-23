@@ -5,8 +5,11 @@ import java.util.List;
 import org.egov.lams.contract.AgreementRequest;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.AgreementCriteria;
+import org.egov.lams.model.Demand;
+import org.egov.lams.model.DemandReason;
 import org.egov.lams.producers.AgreementProducer;
 import org.egov.lams.repository.AgreementRepository;
+import org.egov.lams.repository.DemandRepository;
 import org.egov.lams.service.AllotteeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +29,9 @@ public class AgreementService {
 	
 	@Autowired
 	private AgreementProducer agreementProducer;
+	
+	@Autowired
+	private DemandRepository demandRepository;
 	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -100,8 +106,13 @@ public class AgreementService {
 		
 		Agreement agreement = agreementRequest.getAgreement();
 		ObjectMapper mapper = new ObjectMapper();
-		String agreementValue=null;
-	    Long agreementNumber=null;
+		String agreementValue = null;
+	    Long agreementNumber = null;
+	    
+	    List<DemandReason> demandReasons = demandRepository.getDemandReason(agreementRequest);
+	    List<Demand> demands= demandRepository.getDemandList(agreementRequest, demandReasons);
+	    demandRepository.createDemand(demands, agreementRequest.getRequestInfo());
+	    
 		
 	    try {
 			//TODO put ackno gen service here 
@@ -120,7 +131,7 @@ public class AgreementService {
 				throw new RuntimeException(e.getMessage());
 		}
 		try {
-				agreementProducer.sendMessage("agreement-save-db", "save-agreement", agreementValue);
+				//agreementProducer.sendMessage("agreement-save-db", "save-agreement", agreementValue);
 		}catch(Exception ex){
 				ex.printStackTrace();
 				throw new RuntimeException(ex.getMessage());

@@ -1,6 +1,7 @@
 package org.egov.lams.config;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
@@ -9,11 +10,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Component
+@Configuration
 @Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @ToString
 public class PropertiesManager {
 
@@ -58,5 +56,8 @@ public class PropertiesManager {
 	
 	@Value("${egov.services.demand_service.createdemand}")
 	private String createDemandSevice;
+	
+	@Value("${egov.services.demand_service.moduleName}")
+	private String getDemandModuleName;
 
 }

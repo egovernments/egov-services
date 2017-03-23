@@ -63,7 +63,7 @@ public class AttendanceGetRequest {
 
     private String applicableOn;
 
-    private String month;
+    private Integer month;
 
     private String year;
 

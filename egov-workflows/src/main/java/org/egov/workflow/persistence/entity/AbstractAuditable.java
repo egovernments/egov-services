@@ -75,9 +75,6 @@ public abstract class AbstractAuditable extends AbstractPersistable<Long> {
 	@Temporal(TemporalType.TIMESTAMP)
 	@LastModifiedDate
 	private Date lastModifiedDate;
-	
-	
-	private String tenantId;
 
 	public Long getCreatedBy() {
 		return createdBy;

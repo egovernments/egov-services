@@ -3,6 +3,7 @@ package org.egov.eis.service.helper;
 import java.util.List;
 
 import org.egov.eis.config.ApplicationProperties;
+import org.egov.eis.config.PropertiesManager;
 import org.egov.eis.web.contract.PositionGetRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -11,10 +12,16 @@ import org.springframework.stereotype.Component;
 public class PositionSearchURLHelper {
 	
 	@Autowired
+	private PropertiesManager propertiesManager;
+
+	@Autowired
 	private ApplicationProperties applicationProperties;
 
 	public String searchURL(PositionGetRequest positionGetRequest) {
-		String BASE_URL = applicationProperties.empServicesHrMastersServiceSearchPositionsHostURL();
+		String BASE_URL = propertiesManager.getHrMastersServiceHostName()
+				+ propertiesManager.getHrMastersServicePositionsBasePath()
+				+ propertiesManager.getHrMastersServicePositionsSearchPath();
+
 		StringBuilder searchURL = new StringBuilder(BASE_URL + "?");
 
 		if (positionGetRequest.getId() == null && positionGetRequest.getTenantId() == null)

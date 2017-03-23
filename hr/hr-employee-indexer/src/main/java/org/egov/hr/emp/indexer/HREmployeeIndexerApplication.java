@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootApplication
-public class SearchIndexerApplication {
+public class HREmployeeIndexerApplication {
 
     @Bean
     public ObjectMapper getObjectMapper() {
@@ -34,7 +34,7 @@ public class SearchIndexerApplication {
 
 
     public static void main(String[] args) {
-        SpringApplication.run(SearchIndexerApplication.class, args);
+        SpringApplication.run(HREmployeeIndexerApplication.class, args);
     }
 
 }

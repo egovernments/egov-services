@@ -51,12 +51,18 @@ import org.springframework.core.env.Environment;
 @Order(0)
 public class ApplicationProperties {
 
-	private static final String EMP_SEARCH_PAGESIZE_DEFAULT = "emp.search.pagesize.default";
-	public static final String EMP_SEARCH_PAGENO_MAX = "emp.search.pageno.max";
-	public static final String EMP_SEARCH_PAGESIZE_MAX = "emp.search.pagesize.max";
-	private static final String EMP_SERVICES_HR_MASTERS_SERVICE_SEARCH_POSITIONS_HOST_URL = "emp.services.hr_masters_service.search.positions.host.url";
-	private static final String EMP_SERVICES_USERS_SERVICE_SEARCH_USERS_HOST_URL = "emp.services.users_service.search.users.host.url";
-	private static final String EMP_SERVICES_USERS_SERVICE_CREATE_USERS_HOST_URL = "emp.services.users_service.create.users.host.url";
+	private static final String EMP_SEARCH_PAGESIZE_DEFAULT = "egov.services.emp.search.pagesize.default";
+	private static final String EMP_SEARCH_PAGENO_MAX = "egov.services.emp.search.pageno.max";
+	private static final String EMP_SEARCH_PAGESIZE_MAX = "egov.services.emp.search.pagesize.max";
+
+	private static final String EMP_SEQ_ASSIGNMENT = "egov.services.emp.seq.assignment";
+	private static final String EMP_SEQ_DEPARTMENTALTEST = "egov.services.emp.seq.departmentaltest";
+	private static final String EMP_SEQ_EDUCATIONALQUALIFICATION = "egov.services.emp.seq.educationalqualification";
+	private static final String EMP_SEQ_HODDEPARTMENT = "egov.services.emp.seq.hoddepartment";
+	private static final String EMP_SEQ_PROBATION = "egov.services.emp.seq.probation";
+	private static final String EMP_SEQ_REGULARISATION = "egov.services.emp.seq.regularisation";
+	private static final String EMP_SEQ_SERVICEHISTORY = "egov.services.emp.seq.servicehistory";
+	private static final String EMP_SEQ_TECHNICALQUALIFICATION = "egov.services.emp.seq.technicalqualification";
 
 	@Autowired
 	private Environment environment;
@@ -73,16 +79,36 @@ public class ApplicationProperties {
 		return this.environment.getProperty(EMP_SEARCH_PAGESIZE_MAX);
 	}
 
-	public String empServicesHrMastersServiceSearchPositionsHostURL() {
-		return this.environment.getProperty(EMP_SERVICES_HR_MASTERS_SERVICE_SEARCH_POSITIONS_HOST_URL);
+	public String empSeqAssignment() {
+		return this.environment.getProperty(EMP_SEQ_ASSIGNMENT);
 	}
 
-	public String empServicesUsersServiceSearchUsersHostURL() {
-		return this.environment.getProperty(EMP_SERVICES_USERS_SERVICE_SEARCH_USERS_HOST_URL);
+	public String empSeqDepartmentalTest() {
+		return this.environment.getProperty(EMP_SEQ_DEPARTMENTALTEST);
 	}
 
-	public String empServicesUsersServiceCreateUsersHostURL() {
-		return this.environment.getProperty(EMP_SERVICES_USERS_SERVICE_CREATE_USERS_HOST_URL);
+	public String empSeqEducationalQualification() {
+		return this.environment.getProperty(EMP_SEQ_EDUCATIONALQUALIFICATION);
+	}
+
+	public String empSeqHODDepartment() {
+		return this.environment.getProperty(EMP_SEQ_HODDEPARTMENT);
+	}
+
+	public String empSeqProbation() {
+		return this.environment.getProperty(EMP_SEQ_PROBATION);
+	}
+
+	public String empSeqRegularisation() {
+		return this.environment.getProperty(EMP_SEQ_REGULARISATION);
+	}
+
+	public String empSeqServiceHistory() {
+		return this.environment.getProperty(EMP_SEQ_SERVICEHISTORY);
+	}
+
+	public String empSeqTechnicalQualification() {
+		return this.environment.getProperty(EMP_SEQ_TECHNICALQUALIFICATION);
 	}
 
 }

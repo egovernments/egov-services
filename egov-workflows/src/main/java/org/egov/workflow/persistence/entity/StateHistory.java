@@ -136,6 +136,7 @@ public class StateHistory implements Serializable {
 		extraDateInfo = state.getExtraDateInfo();
 		natureOfTask = state.getNatureOfTask();
 		initiatorPosition = state.getInitiatorPosition();
+		tenantId = state.getTenantId();
 	}
 
 	public State getState() {

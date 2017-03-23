@@ -1,6 +1,7 @@
 package org.egov.eis.service.helper;
 
 import org.egov.eis.config.ApplicationProperties;
+import org.egov.eis.config.PropertiesManager;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -16,6 +17,9 @@ public class PositionSearchURLHelperTest {
 	@Mock
 	private ApplicationProperties applicationProperties;
 	
+	@Mock
+	private PropertiesManager propertiesManager;
+	
 	@Before
     public void initMocks() {
         MockitoAnnotations.initMocks(this);
@@ -23,7 +27,11 @@ public class PositionSearchURLHelperTest {
 
 	@Test
 	public void testGetBlankQuery() {
-		Mockito.when(applicationProperties.empServicesHrMastersServiceSearchPositionsHostURL())
+		String searchPositionsBaseURL = propertiesManager.getHrMastersServiceHostName()
+				+ propertiesManager.getHrMastersServicePositionsBasePath()
+				+ propertiesManager.getHrMastersServicePositionsSearchPath();
+
+		Mockito.when(searchPositionsBaseURL)
 			.thenReturn("http://localhost:7777/hr-masters/positions/_search");
 		Mockito.when(applicationProperties.empSearchPageSizeMax()).thenReturn("500");
 /*

@@ -5,7 +5,7 @@
  *  Copyright (C) 2016  eGovernments Foundation
  *
  *  The updated version of eGov suite of products as by eGovernments Foundation
- *  is available at http://www.egovernments.org
+ *  is available at http://www.empernments.org
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -31,42 +31,51 @@
  *         is required that all modified versions of this material be marked in
  *         reasonable ways as different from the original version.
  *
- *      3) This license does not grant any rights to any Long of the program
+ *      3) This license does not grant any rights to any user of the program
  *         with regards to rights under trademark law for use of the trade names
  *         or trademarks of eGovernments Foundation.
  *
- *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
+ *  In case of any queries, you can reach eGovernments Foundation at contact@empernments.org.
  */
 
-package org.egov.egf.persistence.queue.contract;
+package org.egov.eis.config;
 
-import javax.validation.constraints.NotNull;
-
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;@Builder@Getter@Setter@AllArgsConstructor@NoArgsConstructor
+import lombok.Setter;
+import lombok.ToString;
 
-@JsonPropertyOrder({ "id","chartOfAccount","accountDetailType"})
-public class ChartOfAccountDetailContract extends AuditableContract {
+@Component
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+public class PropertiesManager {
 
-    
-    
-            private Long id;
-   
-    @NotNull
-            private ChartOfAccountContract chartOfAccount;
+	@Value("${egov.services.users_service.hostname}")
+	private String usersServiceHostName;
 
-    @NotNull
-            private AccountDetailTypeContract accountDetailType;
-        public Long getId()
-    {
-    	return this.id;
-    }
-    
+	@Value("${egov.services.users_service.users.basepath}")
+	private String usersServiceUsersBasePath;
 
-    
+	@Value("${egov.services.users_service.users.searchpath}")
+	private String usersServiceUsersSearchPath;
+
+	@Value("${egov.services.users_service.users.createpath}")
+	private String usersServiceUsersCreatePath;
+
+	@Value("${egov.services.hr_masters_service.hostname}")
+	private String hrMastersServiceHostName;
+
+	@Value("${egov.services.hr_masters_service.positions.basepath}")
+	private String hrMastersServicePositionsBasePath;
+
+	@Value("${egov.services.hr_masters_service.positions.searchpath}")
+	private String hrMastersServicePositionsSearchPath;
+
 }

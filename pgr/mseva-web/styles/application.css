@@ -329,6 +329,7 @@ ul{padding: 0; margin: 0; list-style-type: none;}
     border-radius: 5px;
     padding: 36px 21px;
     margin-bottom: 19px;
+    height: 100%;
 }
 .mseva-prof-pic{
     width: 76px;
@@ -420,7 +421,7 @@ ul{padding: 0; margin: 0; list-style-type: none;}
     -webkit-flex: 1;
           flex: 1;
     margin-right: 30px;
-    margin-bottom: 19px;
+    /*margin-bottom: 19px;*/
     width: 50%;
 }
 .link-right{
@@ -429,7 +430,7 @@ ul{padding: 0; margin: 0; list-style-type: none;}
           flex: 1;
     border-radius: 5px;
     padding: 19px;
-    margin-bottom: 19px;
+    /*margin-bottom: 19px;*/
     width: 50%;
 }
 .link-right h3{
@@ -1044,7 +1045,7 @@ ul{padding: 0; margin: 0; list-style-type: none;}
 .rating > input:checked ~ label:hover ~ label { color: #FFED85;  } 
 
 /*-- Media Query --*/
-@media screen and (max-width: 767px) {
+@media screen and (max-width: 768px) {
     .sidenav {
       height: 100%;
       padding: 15px;
@@ -1061,11 +1062,18 @@ ul{padding: 0; margin: 0; list-style-type: none;}
     .header-link-mseva li{margin-left: 29px; font-size: 16px;}
     .header-link-mseva li:nth-child(1){margin-left: 0;}
     .header-link-mseva li a{font-size: 16px;}
+
+    .dash-link-pan{display: block;}
+    .dash-colm{display: block!important; margin-bottom: 0!important;}
+    .dash-colm-inner{width: 100%;}
+    .link-left{margin-right: 0; width: 100%; margin-bottom: 19px;}
+    .link-right{width: 100%; margin-bottom: 19px;}
+}
+@media screen and (max-width: 640px){
+    
 }
 @media screen and (max-width: 480px){
-    .dash-link-pan{display: block;}
-    .link-left{margin-right: 0; width: 100%}
-    .link-right{width: 100%;}
+    
     .header-link-mseva{text-align: center;}
     .header-link-mseva li{margin-left: 19px; font-size: 14px;}
     .header-link-mseva li:nth-child(1){margin-left: 0; }
@@ -1163,3 +1171,5 @@ ul{padding: 0; margin: 0; list-style-type: none;}
 .btn:focus,.btn:active, a:focus, input:focus {
    outline: none !important;
 }
+.dash-colm{display: flex; margin-bottom: 19px;}
+.dash-colm-inner{flex: 1;}

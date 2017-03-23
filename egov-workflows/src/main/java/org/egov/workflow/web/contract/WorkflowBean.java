@@ -70,6 +70,8 @@ public class WorkflowBean implements Serializable {
     protected String approverGroupId;
     protected String nextAction;
     protected String nextState;
+    
+    private String tenantId;
 
     protected List<String> validActions;
     protected List<Department> departmentList;
@@ -315,6 +317,7 @@ public class WorkflowBean implements Serializable {
             this.setAdditionalRule( processInstance.getAttributes().get("additionalRule").getCode() );
         }
         }
+        this.setTenantId(processInstance.getTenantId());
          
          
     }
@@ -323,5 +326,11 @@ public class WorkflowBean implements Serializable {
 	}
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
+	}
+	public String getTenantId() {
+		return tenantId;
+	}
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
 	}
 }

@@ -148,6 +148,8 @@ public class Task {
 	 * etc
 	 */
 	private String entity;
+	
+	private String tenantId;
 
 	private Map<String, Attribute> attributes = new HashMap<String, Attribute>();
 

@@ -5,7 +5,8 @@ curl -X POST -H "Content-Type: application/json" -H "Cache-Control: no-cache" -H
     "ts": null,
     "resMsgId": null,
     "msgId": null,
-    "status": "200"
+    "status": "200",
+    "tenantId":"1"
   },
    
    "processInstance":

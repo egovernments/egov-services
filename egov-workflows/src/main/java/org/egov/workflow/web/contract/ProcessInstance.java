@@ -23,6 +23,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ProcessInstance {
 
+	
 	/**
 	 * Id of the ProcessInstance gets created. This field Maps to Id of the Task
 	 * in case of eGov internal Work flow or the Work flow Matrix based
@@ -121,6 +122,8 @@ public class ProcessInstance {
 	 */
 
 	List<Task> tasks = new ArrayList<Task>();
+	
+	private String tenantId;
 	/**
 	 * attributes used to pass any additional properties which is not defined in
 	 * here .

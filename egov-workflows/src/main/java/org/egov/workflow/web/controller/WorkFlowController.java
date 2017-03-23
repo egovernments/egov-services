@@ -16,8 +16,10 @@ import org.egov.workflow.web.contract.RequestInfo;
 import org.egov.workflow.web.contract.ResponseInfo;
 import org.egov.workflow.web.contract.Task;
 import org.egov.workflow.web.contract.TaskRequest;
+import org.egov.workflow.web.contract.TaskResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,7 +38,7 @@ public class WorkFlowController {
 	private WorkflowMatrixImpl matrixWorkflow;
 
 	@PostMapping(value = "/process/_start")
-	public ProcessInstance startWorkflow(@RequestBody final ProcessInstanceRequest processInstanceRequest) {
+	public ProcessInstanceResponse startWorkflow(@RequestBody final ProcessInstanceRequest processInstanceRequest) {
 
 		processInstanceRequest.getRequestInfo().getAuthToken();
 
@@ -44,15 +46,20 @@ public class WorkFlowController {
 		System.out.println(user);
 
 		ProcessInstance processInstance = processInstanceRequest.getProcessInstance();
+		ProcessInstanceResponse response=new ProcessInstanceResponse();
 
 		if (processInstance.getBusinessKey().equals("Complaint")) {
 
-			return workflow.start(processInstanceRequest.getRequestInfo().getTenantId(), processInstance);
+			 ProcessInstance start = workflow.start(processInstanceRequest.getRequestInfo().getTenantId(), processInstance);
+			 response.setProcessInstance(start);
 		}
 
 		else {
-			return matrixWorkflow.start(processInstanceRequest.getRequestInfo().getTenantId(), processInstance);
+			 ProcessInstance start =  matrixWorkflow.start(processInstanceRequest.getRequestInfo().getTenantId(), processInstance);
+			 response.setProcessInstance(start);
 		}
+		response.setResponseInfo(getResponseInfo(processInstanceRequest.getRequestInfo()));
+		return response;
 	}
 
 	@PostMapping(value = "/process/_end")
@@ -76,16 +83,21 @@ public class WorkFlowController {
 	}
 
 	@PostMapping(value = "/tasks/{id}/_update")
-	public Task updateTask(@RequestBody final TaskRequest taskRequest) {
-
+	public TaskResponse updateTask(@RequestBody final TaskRequest taskRequest,@PathVariable String id) {
+		TaskResponse response=new TaskResponse();
 		Task task = taskRequest.getTask();
+		task.setId(id);
 		if (task.getBusinessKey().equals("Complaint")) {
-			return workflow.update(taskRequest.getRequestInfo().getTenantId(), task);
+			task= workflow.update(taskRequest.getRequestInfo().getTenantId(), task);
 		}
 
 		else {
-			return matrixWorkflow.update(taskRequest.getRequestInfo().getTenantId(), task);
+			task= matrixWorkflow.update(taskRequest.getRequestInfo().getTenantId(), task);
 		}
+		response.setTask(task);
+		response.setResponseInfo(getResponseInfo(taskRequest.getRequestInfo()));
+		
+		return response;
 	}
 
 	@PostMapping(value = "/process/_search")
@@ -99,19 +111,25 @@ public class WorkFlowController {
 
 		p = matrixWorkflow.getProcess(tenantId, p);
 		pres.setProcessInstance(p);
+		pres.setResponseInfo(getResponseInfo(requestInfo));
 		return pres;
 
 	}
 
 	@PostMapping(value = "/designations/_search")
 	public List<Designation> getDesignationsByObjectType(@RequestBody RequestInfo requestInfo,
-			@RequestParam final String departmentRule, @RequestParam final String currentState,
-			@RequestParam final String businessKey, @RequestParam final String amountRule,
-			@RequestParam final String additionalRule, @RequestParam final String pendingAction,
-			@RequestParam final String approvalDepartmentName, @RequestParam String designation) {
+			@RequestParam final String departmentRule,
+			@RequestParam final String currentStatus,
+			@RequestParam final String businessKey,
+			@RequestParam final String amountRule,
+			@RequestParam final String additionalRule,
+			@RequestParam final String pendingAction,
+			@RequestParam final String approvalDepartmentName,
+			@RequestParam String designation
+						) {
 
 		Task t = new Task();
-		t = t.builder().action(pendingAction).businessKey(businessKey).attributes(new HashMap<>()).state(currentState)
+		t = t.builder().action(pendingAction).businessKey(businessKey).attributes(new HashMap<>()).status(currentStatus)
 				.build();
 
 		Attribute amountRuleAtt = new Attribute();
@@ -125,7 +143,9 @@ public class WorkFlowController {
 		Attribute designationAtt = new Attribute();
 		amountRuleAtt.setCode(designation);
 		t.getAttributes().put("designation", designationAtt);
-
+		
+		t.setTenantId(requestInfo.getTenantId());
+        t.setStatus(currentStatus);
 		return matrixWorkflow.getDesignations(t, approvalDepartmentName);
 
 	}

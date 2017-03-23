@@ -48,9 +48,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.validation.constraints.Pattern;
 
-import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 
 @Entity
@@ -58,8 +56,6 @@ import org.hibernate.validator.constraints.Length;
 @SequenceGenerator(name = SEQ_COMPLAINANT, sequenceName = SEQ_COMPLAINANT, allocationSize = 1)
 public class Complainant extends AbstractPersistable<Long> {
 
-    public static final String MOBILE_NUM = "^((\\+)?(\\d{2}[-]))?(\\d{10}){1}?$";
-    public static final String EMAIL = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
     public static final String SEQ_COMPLAINANT = "SEQ_EGPGR_COMPLAINANT";
     private static final long serialVersionUID = 5691022600220045218L;
     @Id
@@ -70,11 +66,9 @@ public class Complainant extends AbstractPersistable<Long> {
     private String name;
 
     @Length(max = 20)
-    @Pattern(regexp = MOBILE_NUM)
     private String mobile;
 
     @Length(max = 100)
-    @Email(regexp = EMAIL)
     private String email;
 
     private Long userDetail;

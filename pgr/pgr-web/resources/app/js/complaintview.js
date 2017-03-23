@@ -256,7 +256,7 @@ function complaintUpdate(obj){
 	if($("#approvalDepartment").val())
 		req_obj.ServiceRequest.values['departmentName'] = $("#approvalDepartment option:selected").text();
 	if($("#approvalPosition").val())
-		req_obj.ServiceRequest.values['assigneeId'] = $("#approvalPosition").val();
+		req_obj.ServiceRequest.values['assignment_id'] = $("#approvalPosition").val();
 
 	$.ajax({
 		url: "/pgr/seva?jurisdiction_id=ap.public",

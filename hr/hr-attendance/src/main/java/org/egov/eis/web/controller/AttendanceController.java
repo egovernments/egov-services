@@ -144,7 +144,7 @@ public class AttendanceController {
 
     private List<ErrorResponse> validateAttendanceRequest(final AttendanceRequest attendanceRequest, final String tenantId) {
         final List<ErrorResponse> errorResponses = new ArrayList<>();
-        final List<Holiday> holidays = holidayService.getHolidays(tenantId, attendanceRequest.getRequestInfo());
+//        final List<Holiday> holidays = holidayService.getHolidays(tenantId, attendanceRequest.getRequestInfo());
         final List<AttendanceType> attendanceTypes = attendanceService.getAllAttendanceTypes();
         boolean isHoliday = true;
         boolean isEmployeeDate = true;
@@ -174,14 +174,14 @@ public class AttendanceController {
                         isTypeExists = true;
                         break;
                     }
-
-            if (!holidays.isEmpty() && attendance.getType() != null && "H".equals(attendance.getType().getCode()))
-                for (final Holiday holiday : holidays)
-                    if (holiday.getApplicableOn().compareTo(attendance.getAttendanceDate()) == 0) {
-                        isHoliday = true;
-                        break;
-                    } else
-                        isHoliday = false;
+            // TODO: validate holidays once inter service calls issue fixed.
+//            if (!holidays.isEmpty() && attendance.getType() != null && "H".equals(attendance.getType().getCode()))
+//                for (final Holiday holiday : holidays)
+//                    if (holiday.getApplicableOn().compareTo(attendance.getAttendanceDate()) == 0) {
+//                        isHoliday = true;
+//                        break;
+//                    } else
+//                        isHoliday = false;
             if (!isTypeExists || !isEmployeeDate || !isHoliday || isAttendanceExists || !isEmployeePresent || isEmployeeRetired)
                 break;
         }

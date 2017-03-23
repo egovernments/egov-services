@@ -57,7 +57,7 @@ for (var i = 2000; i <= new Date().getFullYear(); i++) {
 console.log(yearOfPassing);
 var commonObject = {
     employeeType: getCommonMaster("hr-masters", "employeetypes", "EmployeeType").responseJSON["EmployeeType"] || [],
-    employeeStatus: ["EMPLOYED", "RETIRED", "RESIGNED", "TERMINATED", "DECEASED", "SUSPENDED", "TRANSFERRED"],
+    employeeStatus: getCommonMaster("hr-masters", "hrstatuses", "HRStatus").responseJSON["HRStatus"] || [],
     group: getCommonMaster("hr-masters", "groups", "Group").responseJSON["Group"] || [],
     maritalStatus: ["MARRIED", "UNMARRIED", "DIVORCED", "WIDOWER", "WIDOW"],
     user_bloodGroup: ["O-", "O+", "A-", "A+", "B-", "B+", "AB-", "AB+"],
@@ -147,7 +147,7 @@ for (var key in commonObject) {
     if (splitObject.length < 2) {
         for (var i = 0; i < commonObject[key].length; i++) {
             if (typeof(commonObject[key][i]) === "object")
-                $(`#${key}`).append(`<option value='${commonObject[key][i]['id']}'>${commonObject[key][i]['name']}</option>`)
+                $(`#${key}`).append(`<option value='${commonObject[key][i]['id']}'>${typeof(commonObject[key][i]['name'])=="undefined"?commonObject[key][i]['code']:commonObject[key][i]['name']}</option>`)
             else
                 $(`#${key}`).append(`<option value='${commonObject[key][i]}'>${commonObject[key][i]}</option>`)
         }
@@ -863,7 +863,7 @@ var user = {
 
 
 //Getting data for user input
-$("input").on("keyup change", function() {
+$("input").on("keyup change changeDate", function() {
     fillValueToObject(this);
 });
 
@@ -890,7 +890,7 @@ $("select").on("change", function() {
           // return;
         }
         if ((employeeSubObject["assignments"]["department"]!="" && employeeSubObject["assignments"]["designation"]!="")&&(this.id=="assignments.department" ||this.id=="assignments.designation")) {
-          commonObject["assignments_position"]=commonApiPost("hr-masters", "positions", "_search",{tenantId,epartmentId:employeeSubObject["assignments"]["department"],designationId:employeeSubObject["assignments"]["designation"]}).responseJSON["Position"] || [];
+          commonObject["assignments_position"]=commonApiPost("hr-masters", "positions", "_search",{tenantId,departmentId:employeeSubObject["assignments"]["department"],designationId:employeeSubObject["assignments"]["designation"]}).responseJSON["Position"] || [];
           $(`#assignments\\.position`).html(`<option value=''>Select</option>`)
 
           for (var i = 0; i < commonObject["assignments_position"].length; i++) {
@@ -1350,7 +1350,7 @@ $("#createEmployeeForm").validate({
             //call api
             console.log("calling api");
 
-            var empJuridictiona=employee[jurisdictions];
+            var empJuridictiona=employee["jurisdictions"];
             employee[jurisdictions]=[];
             for (var i = 0; i < empJuridictiona.length; i++) {
               employee[jurisdictions](empJuridictiona[i].boundary);

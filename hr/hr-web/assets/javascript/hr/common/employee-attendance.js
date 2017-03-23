@@ -179,8 +179,9 @@ class EmployeeSearch extends React.Component {
 
 
             <div className="text-center">
-                <button type="button" className="btn btn-submit" onClick={(e)=>{this.close()}}>Close</button>
                 <button type="submit"  className="btn btn-submit">Search</button>
+                <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>
+
             </div>
           </fieldset>
           </form>

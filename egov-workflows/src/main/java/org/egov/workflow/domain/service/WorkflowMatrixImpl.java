@@ -68,6 +68,7 @@ public class WorkflowMatrixImpl implements Workflow {
 			owner = positionRepository.getById(Long.valueOf(processInstance.getAssignee().getId()));
 
 		final State state = new State();
+		state.setTenantId(jurisdiction);
 		state.setType(processInstance.getType());
 		state.setSenderName(getEmp(1l).getName());
 		state.setStatus(StateStatus.INPROGRESS);
@@ -183,7 +184,8 @@ public class WorkflowMatrixImpl implements Workflow {
 		}
 
 		state.addStateHistory(new StateHistory(state));
-
+		
+		state.setTenantId(jurisdiction);
 		state.setValue(nextState);
 		state.setComments(task.getComments());
 		state.setSenderName(getEmp(1l).getName());

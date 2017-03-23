@@ -5,7 +5,7 @@
  *  Copyright (C) 2016  eGovernments Foundation
  *
  *  The updated version of eGov suite of products as by eGovernments Foundation
- *  is available at http://www.egovernments.org
+ *  is available at http://www.empernments.org
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -35,55 +35,47 @@
  *         with regards to rights under trademark law for use of the trade names
  *         or trademarks of eGovernments Foundation.
  *
- *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
+ *  In case of any queries, you can reach eGovernments Foundation at contact@empernments.org.
  */
 
-package org.egov.eis.web.contract;
+package org.egov.eis.config;
 
-import java.util.List;
-
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
-@Data
+@Component
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@EqualsAndHashCode
-public class AttendanceGetRequest {
+public class PropertiesManager {
 
-    private List<Long> id;
+	@Value("${egov.services.users_service.hostname}")
+	private String usersServiceHostName;
 
-    private String applicableOn;
+	@Value("${egov.services.users_service.users.basepath}")
+	private String usersServiceUsersBasePath;
 
-    private Integer month;
+	@Value("${egov.services.users_service.users.searchpath}")
+	private String usersServiceUsersSearchPath;
 
-    private String year;
+	@Value("${egov.services.users_service.users.createpath}")
+	private String usersServiceUsersCreatePath;
 
-    private String code;
+	@Value("${egov.services.hr_masters_service.hostname}")
+	private String hrMastersServiceHostName;
 
-    private Long departmentId;
+	@Value("${egov.services.hr_masters_service.positions.basepath}")
+	private String hrMastersServicePositionsBasePath;
 
-    private Long designationId;
-
-    private String sortBy;
-
-    private String sortOrder;
-
-    @NotNull
-    private String tenantId;
-
-    @Min(1)
-    @Max(500)
-    private Short pageSize;
-
-    private Short pageNumber;
+	@Value("${egov.services.hr_masters_service.positions.searchpath}")
+	private String hrMastersServicePositionsSearchPath;
 
 }

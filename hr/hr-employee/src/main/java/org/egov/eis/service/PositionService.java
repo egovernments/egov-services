@@ -67,8 +67,8 @@ public class PositionService {
 	@Autowired
 	private PositionSearchURLHelper positionSearchURLHelper;
 
-	public List<Position> getPositions(Long employeeId, PositionGetRequest positionGetRequest, RequestInfo requestInfo) {
-
+	public List<Position> getPositions(Long employeeId, PositionGetRequest positionGetRequest, RequestInfo requestInfo,
+			HttpHeaders headers) {
 		List<Long> actualPositionIds = positionAssignmentRepository.findForCriteria(employeeId, positionGetRequest);
 		if(!positionGetRequest.getId().isEmpty()) {
 			actualPositionIds.retainAll(positionGetRequest.getId());
@@ -86,12 +86,10 @@ public class PositionService {
 			e.printStackTrace();
 		}
 
-		// FIXME : hard-coded auth-token
-		HttpHeaders hardCodedAuthTokenHeader = new HttpHeaders();
-		hardCodedAuthTokenHeader.add("auth-token", "631ce772-306a-44c7-93ef-ba874d3cfc31");
-		hardCodedAuthTokenHeader.setContentType(MediaType.APPLICATION_JSON);
-		// Replace hardCodedAuthTokenHeader with header object if required
-		HttpEntity<String> httpEntityRequest = new HttpEntity<String>(requestInfoJson, hardCodedAuthTokenHeader);
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		// FIXME : Passing auth-token for testing locally. Remove before actual deployment.
+		headers.add("auth-token", requestInfo.getAuthToken());
+		HttpEntity<String> httpEntityRequest = new HttpEntity<String>(requestInfoJson, headers);
 
 		// Replace httpEntityRequest with requestInfo if there is no need to send headers
 		PositionResponse positionResponse = new RestTemplate().postForObject(url, httpEntityRequest, PositionResponse.class);

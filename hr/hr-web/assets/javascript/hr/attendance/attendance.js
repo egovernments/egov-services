@@ -68,7 +68,7 @@ class Attendance extends React.Component {
 
       // console.log(attendance);
       // console.log(response);
-      if(response["statusText"]==="OK")
+      if(response["status"]===200)
       {
         alert("Successfully added");
         window.location.href="../../../../app/hr/common/employee-attendance.html";
@@ -99,7 +99,9 @@ class Attendance extends React.Component {
     var now = new Date();
     // var startDate=new Date((typeof(queryParam["year"])==="undefined")?now.getFullYear():parseInt(queryParam["year"]), (typeof(queryParam["month"])==="undefined")?now.getMonth():parseInt(queryParam["month"]), 1);
     // console.log(startDate);
-    var employeesTemp=commonApiPost("hr-employee","employees","_search",{tenantId,departmentId:queryParam["departmentCode"],designationId:queryParam["designationCode"],employeeType:queryParam["type"],code:queryParam["code"]}).responseJSON["Employee"] || [];
+    var currentDate=new Date(queryParam["year"],parseInt(queryParam["month"])+1,1);
+    var hrConfigurations=commonApiPost("hr-masters","hrconfigurations","_search",{tenantId}).responseJSON || [];
+    var employeesTemp=commonApiPost("hr-employee","employees","_search",{tenantId,departmentId:queryParam["departmentCode"],designationId:queryParam["designationCode"],employeeType:queryParam["type"],code:queryParam["code"],"assignment.isPrimary":true,asOnDate:(currentDate.getDate().toString().length==2?currentDate.getDate():"0"+currentDate.getDate())+"/"+(currentDate.getMonth().toString().length==2?currentDate.getMonth():"0"+currentDate.getMonth())+"/"+currentDate.getFullYear()}).responseJSON["Employee"] || [];
     var currentAttendance=commonApiPost("hr-attendance","attendances","_search",{tenantId,month:parseInt(queryParam["month"])+1,year:queryParam["year"],pageSize:500,pageNumber:1}).responseJSON["Attendance"] || [];
     var employees={};
     for(var i=0;i<employeesTemp.length;i++)
@@ -121,16 +123,28 @@ class Attendance extends React.Component {
         // var daysOfYear = [];
         // console.log(Object.assign({}, startDate));
         var startDate=new Date((typeof(queryParam["year"])==="undefined")?now.getFullYear():parseInt(queryParam["year"]), (typeof(queryParam["month"])==="undefined")?now.getMonth():parseInt(queryParam["month"]), 1);
-        for (var d = startDate ; d <= endDate; d.setDate(d.getDate() + 1)) {
-        //  daysOfYear.push(new Date(d));
-            employees[emp].attendance[`${d.getMonth()}-${d.getDate().toString().length===1?"0"+d.getDate():d.getDate()}`]=(d.getDay()===0||d.getDay()===6)?"H":"";
-            // console.log(employees[emp]);
+        if(hrConfigurations["HRConfiguration"]["Weekly_holidays"][0]=="5-day week")
+        {
+          for (var d = startDate ; d <= endDate; d.setDate(d.getDate() + 1)) {
+          //  daysOfYear.push(new Date(d));
+              employees[emp].attendance[`${d.getMonth()}-${d.getDate().toString().length===1?"0"+d.getDate():d.getDate()}`]=(d.getDay()===0||d.getDay()===6)?"H":"";
+              // console.log(employees[emp]);
+          }
         }
+        else {
+          for (var d = startDate ; d <= endDate; d.setDate(d.getDate() + 1)) {
+          //  daysOfYear.push(new Date(d));
+              employees[emp].attendance[`${d.getMonth()}-${d.getDate().toString().length===1?"0"+d.getDate():d.getDate()}`]=(d.getDay()===0)?"H":"";
+              // console.log(employees[emp]);
+          }
+          //w more
+        }
+
 
         // empTemp.push(emp);
     }
 
-    console.log(employees);
+    // console.log(employees);
 
     if(currentAttendance.length>0)
     {

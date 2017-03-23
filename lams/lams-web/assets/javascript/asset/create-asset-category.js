@@ -30,10 +30,10 @@ class CreateAsset extends React.Component {
     assetCategories:[],
     parent:{},
     depreciationMethod:{},
-    assetAccount:[],
-    accumulatedDepreciationAccount:[],
-    revaluationReserveAccount:[],
-    depreciationExpenseAccount:[],
+    assetAccount:{},
+    accumulatedDepreciationAccount:{},
+    revaluationReserveAccount:{},
+    depreciationExpenseAccount:{},
     unitOfMeasurement:[],
     dataType:[],isEdit:false,index:-1,typeList:[]
 
@@ -161,13 +161,13 @@ class CreateAsset extends React.Component {
 
 
      this.setState({
-       parent:commonApiPost("asset-services","assetCategories","_search",{}).responseJSON["AssetCategory"],
+      parent:commonApiPost("asset-services","assetCategories","_search",{}).responseJSON["AssetCategory"],
       assetCategories:commonApiGet("asset-services","","GET_ASSET_CATEGORY_TYPE",{}).responseJSON|| {},
       depreciationMethod:commonApiGet("asset-services","","GET_DEPRECIATION_METHOD",{}).responseJSON|| {},
-      assetAccount:commonApiGet("asset-services","","GET_DEPRECIATION_METHOD",{}).responseJSON|| {},
-      accumulatedDepreciationAccount:commonApiGet("asset-services","","GET_DEPRECIATION_METHOD",{}).responseJSON|| {},
-      revaluationReserveAccount:commonApiGet("asset-services","","GET_DEPRECIATION_METHOD",{}).responseJSON|| {},
-      depreciationExpenseAccount:commonApiGet("asset-services","","GET_DEPRECIATION_METHOD",{}).responseJSON|| {},
+       assetAccount:commonApiPost("egf-masters","chartofaccounts","_search",{tenantId}).responseJSON["chartOfAccounts"],
+      accumulatedDepreciationAccount:commonApiPost("egf-masters","chartofaccounts","_search",{tenantId}).responseJSON["chartOfAccounts"],
+      revaluationReserveAccount:commonApiPost("egf-masters","chartofaccounts","_search",{tenantId}).responseJSON["chartOfAccounts"],
+      depreciationExpenseAccount:commonApiPost("egf-masters","chartofaccounts","_search",{tenantId}).responseJSON["chartOfAccounts"],
       unitOfMeasurement:commonApiPost("egov-common-masters","uom","_search",{}).responseJSON["uoms"]
 
     })
@@ -411,7 +411,7 @@ class CreateAsset extends React.Component {
                         </div>
                         <div className="col-sm-6">
                         <div className="styled-select">
-                        <select id="revaluationReserveAccount" name="revaluationReserveAccount"  value={revaluationReserveAccount} onChange={(e)=>{
+                        <select id="revaluationReserveAccount" name="revaluationReserveAccount" required="true" value={revaluationReserveAccount} onChange={(e)=>{
                         handleChange(e,"revaluationReserveAccount")}}>
                             <option value="">Select Reserve Account </option>
                             {renderOption(this.state.revaluationReserveAccount)}

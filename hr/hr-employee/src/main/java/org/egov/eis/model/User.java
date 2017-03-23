@@ -125,7 +125,7 @@ public class User {
 
 	@Past
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@JsonFormat(pattern = "yyyy-mm-dd")
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date dob;
 
 	@Future

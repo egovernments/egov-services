@@ -2,12 +2,7 @@ package org.egov.lams.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
-
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
 @Configuration
@@ -59,5 +54,11 @@ public class PropertiesManager {
 	
 	@Value("${egov.services.demand_service.moduleName}")
 	private String getDemandModuleName;
+
+	@Value("${kafka.topics.start.workflow}")
+	private String startWorkflowTopic;
+	
+	@Value("${kafka.topics.update.workflow}")
+	private String updateWorkflowTopic;
 
 }

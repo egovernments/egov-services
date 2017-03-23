@@ -88,5 +88,5 @@ public class Agreement {
 
 	private List<Document> documents;
 	private List<Long> demands;
-	private WorkFlowDetails workFlowDetails;
+	private WorkFlowDetails workflowDetails;
 }

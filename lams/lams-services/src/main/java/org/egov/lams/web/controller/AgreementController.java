@@ -108,7 +108,7 @@ public class AgreementController {
 
 		Agreement agreement = agreementRequest.getAgreement();
 		agreementValidator.validateAgreement(agreementRequest);
-		agreement = agreementService.updateAgreement(agreement);
+		agreement = agreementService.updateAgreement(agreementRequest);
 		List<Agreement> agreements = new ArrayList<>();
 		agreements.add(agreement);
 		AgreementResponse agreementResponse = new AgreementResponse();

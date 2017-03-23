@@ -1,7 +1,6 @@
 package org.egov.lams.model;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 import org.egov.lams.model.enums.Status;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -42,6 +41,7 @@ public class AgreementCriteria {
 	 private Long mobilenumber;
 	 private String offSet;
 	 private String size;
+	 private String StateId;
 	
 	/* @Setter(onMethod=@__(@JsonIgnore))
 	 @JsonIgnore*/

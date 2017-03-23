@@ -2,6 +2,7 @@ package org.egov.lams.service;
 
 import java.util.List;
 
+import org.egov.lams.config.PropertiesManager;
 import org.egov.lams.contract.AgreementRequest;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.AgreementCriteria;
@@ -38,6 +39,9 @@ public class AgreementService {
 	
 	@Autowired
 	private AllotteeService allotteeService;
+	
+	@Autowired
+	private PropertiesManager propertiesManager;
 
 	public List<Agreement> searchAgreement(AgreementCriteria agreementCriteria) {
 		/*
@@ -124,14 +128,14 @@ public class AgreementService {
 	    }
 		try {
 				logger.info("createAgreement service::"+agreement);
-				agreementValue = mapper.writeValueAsString(agreement);
+				agreementValue = mapper.writeValueAsString(agreementRequest);
 				logger.info("agreementValue::"+agreementValue);
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 				throw new RuntimeException(e.getMessage());
 		}
 		try {
-				//agreementProducer.sendMessage("agreement-save-db", "save-agreement", agreementValue);
+				agreementProducer.sendMessage(propertiesManager.getStartWorkflowTopic(), "save-agreement", agreementValue);
 		}catch(Exception ex){
 				ex.printStackTrace();
 				throw new RuntimeException(ex.getMessage());
@@ -145,23 +149,24 @@ public class AgreementService {
 	 * @param agreement
 	 * @return
 	 */
-	public Agreement updateAgreement(Agreement agreement) {
+	public Agreement updateAgreement(AgreementRequest agreementRequest) {
+		Agreement agreement = agreementRequest.getAgreement();
 		ObjectMapper mapper = new ObjectMapper();
 		String agreementValue = null;
 		Long agreementNumber = null;
 
 		try {
 			// TODO put agreement number generator here and change
-			agreementNumber = (Long) jdbcTemplate.queryForList("SELECT NEXTVAL('seq_lams_agreement')").get(0)
+		/*	agreementNumber = (Long) jdbcTemplate.queryForList("SELECT NEXTVAL('seq_lams_agreement')").get(0)
 					.get("nextval");
-			agreement.setAgreementNumber(agreementNumber.toString());
+			agreementRequest.setAgreementNumber(agreementNumber.toString());*/
 		} catch (Exception exception) {
 			logger.info(exception.getMessage(),exception);
 			throw exception;
 		}
 		try {
 			logger.info("createAgreement service::" + agreement);
-			agreementValue = mapper.writeValueAsString(agreement);
+			agreementValue = mapper.writeValueAsString(agreementRequest);
 			logger.info("agreementValue::" + agreementValue);
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
@@ -169,7 +174,7 @@ public class AgreementService {
 			throw new RuntimeException(e.getMessage());
 		}
 		try {
-			agreementProducer.sendMessage("workflow-start", "save-agreement", agreementValue);
+			agreementProducer.sendMessage(propertiesManager.getUpdateWorkflowTopic(), "save-agreement", agreementValue);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			throw ex;

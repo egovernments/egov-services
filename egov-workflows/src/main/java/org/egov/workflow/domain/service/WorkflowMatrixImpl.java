@@ -79,7 +79,7 @@ public class WorkflowMatrixImpl implements Workflow {
 		state.setType(processInstance.getBusinessKey());
 		// state.setInitiatorPosition(getInitiator().getId());
 		final WorkflowTypes type = workflowTypeService.getWorkflowTypeByType(state.getType());
-		state.setMyLinkId(type.getLink().replace(":ID", type.getLink()));// think
+		state.setMyLinkId(type.getLink());// think
 		// about
 		// this
 		// for

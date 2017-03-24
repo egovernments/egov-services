@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.TimeZone;
 
 import static org.junit.Assert.*;
 
@@ -89,6 +90,8 @@ public class SevaRequestTest {
         final HashMap<String, Object> sevaRequestMap = new HashMap<>();
         final Date createdDate = Date.from(LocalDateTime.of(2016, 1, 2, 3, 4)
             .atZone(ZoneId.of(IST)).toInstant());
+        TimeZone.setDefault(TimeZone.getTimeZone(IST));
+
         sevaRequestMap.put("requested_datetime", createdDate);
 
         final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);

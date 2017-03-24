@@ -14,7 +14,7 @@
 
 
 class EmployeeReport extends React.Component {
-  
+
   constructor(props) {
     super(props);
     this.state = {
@@ -74,21 +74,22 @@ class EmployeeReport extends React.Component {
       open(location, '_self').close();
   }
 
-  searchEmployee (e) 
+  searchEmployee (e)
   {
+    console.log(commonApiPost("hr-employee", "employees", "_search", {...this.state.searchSet, tenantId}).responseJSON["Employee"]);
     e.preventDefault();
     this.setState({
         ...this.state,
         isSearchClicked: true,
-        result: commonApiPost("hr-employee", "employees", "_search", {...this.state.searchSet, tenantId}).responseJSON["Employee"] || []
+        result: commonApiPost("hr-employee", "employees", "_search", {...this.state.searchSet, tenantId}).responseJSON["Employee"]
     })
-  } 
+  }
 
   render() {
     let {handleChange, searchEmployee, closeWindow} = this;
     let {result, employeeTypes, departments, designations} = this.state;
     let {employeeCode, department, designation, employeeType, employeeStatus} = this.state.searchSet;
-    
+
     const renderOptions = function(list)
     {
         if(list && list.constructor == Array)

@@ -121,11 +121,17 @@ paths:
           schema:
             $ref: '#/definitions/ErrorRes'
             
-  /demand/demandreason/_update:
+  /demand/demandreason/{id}/_update:
     post:
       description: Updates a demand reason.
       parameters:
-        - name: demand
+        - name: id
+          in: path
+          description: Primary key for a Demand Reason to be udpated.
+          required: true
+          type: integer
+          format: int64
+        - name: demandreason
           in: body
           description: Request header for the demand reason.
           required: true
@@ -254,11 +260,17 @@ paths:
           schema:
             $ref: '#/definitions/ErrorRes'
             
-  /demand/installment/_update:
+  /demand/installment/{id}/_update:
     post:
       description: Updates a Installment.
       parameters:
-        - name: demand
+        - name: id
+          in: path
+          description: Primary key for a installment to be udpated.
+          required: true
+          type: integer
+          format: int64
+        - name: installment
           in: body
           description: Request header for the demand reason.
           required: true
@@ -373,10 +385,16 @@ paths:
           schema:
             $ref: '#/definitions/ErrorRes'
             
-  /demand/_update:
+  /demand/{id}/_update:
     post:
       description: Updates a demand. This only for DCB back update.
       parameters:
+        - name: id
+          in: path
+          description: Primary key for a demand to be udpated.
+          required: true
+          type: integer
+          format: int64
         - name: demand
           in: body
           description: Request header for the demand.
@@ -598,6 +616,10 @@ definitions:
     type: object
     description: A object holds a demand and collection values for a head and category or demand and the period.
     properties:
+      id:
+        type: integer
+        format: int64
+        description: primary key of a demand.
       taxAmount:
         type: number
         format: double

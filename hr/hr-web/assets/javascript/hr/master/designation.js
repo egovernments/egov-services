@@ -35,11 +35,10 @@ class Designation extends React.Component{
         var type=getUrlVars()["type"];
         var id=getUrlVars()["id"];
 
-        // if(getUrlVars()["type"]==="view")
-        // {
-        //   for (var variable in this.state.designationSet)
-        //     document.getElementById(variable).disabled = true;
-        //   }
+        if(getUrlVars()["type"]==="view")
+        {
+            $("input,select").prop("disabled", true);
+          }
 
           if(type==="update"||type==="view")
           {

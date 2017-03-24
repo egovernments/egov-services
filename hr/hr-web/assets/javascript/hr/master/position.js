@@ -2,19 +2,33 @@ class PositionMaster extends React.Component{
     constructor(props){
       super(props);
       this.state={list:[],positionSet:{
-        departmentCode:"",
-        designationCode:"",
-      name:"",
-      isPostOutsourced:""},
-      departments:[],designation:[]}
+      "id": "",
+      "name": "",
+      "deptdesig": {
+        "id": "",
+        "department": "",
+        "designation": {
+          "id": "",
+          "name": "",
+          "code": "",
+          "description": "",
+          "chartOfAccounts": null,
+          "active": true,
+          "tenantId": ""
+        }
+      },
+      "isPostOutsourced": "",
+      "active": "",
+    },
+      departmentsList:[],designationList:[]}
       this.handleChange=this.handleChange.bind(this);
       this.addOrUpdate=this.addOrUpdate.bind(this);
 }
     componentWillMount()
     {
       this.setState({
-        departments:getCommonMaster("egov-common-masters","departments","Department").responseJSON["Department"] || [],
-        designation:getCommonMaster("hr-masters","designations","Designation").responseJSON["Designation"] || []
+        departmentsList:getCommonMaster("egov-common-masters","departments","Department").responseJSON["Department"] || [],
+        designationList:getCommonMaster("hr-masters","designations","Designation").responseJSON["Designation"] || []
     })
     }
 
@@ -40,8 +54,7 @@ class PositionMaster extends React.Component{
 
       if(getUrlVars()["type"]==="view")
       {
-        for (var variable in this.state.positionSet)
-          document.getElementById(variable).disabled = true;
+          $("input,select").prop("disabled", true);
         }
 
         if(type==="view"||type==="update")
@@ -57,22 +70,36 @@ class PositionMaster extends React.Component{
 
     addOrUpdate(e,mode){
       e.preventDefault();
-      console.log({name:this.state.positionSet.name,deptdesig:{designation:this.state.positionSet.designationCode,departments:this.state.positionSet.departmentCode},isPostOutsourced:this.state.positionSet.isPostOutsourced});
+      console.log({name:this.state.positionSet.name,deptdesig:{designationList:this.state.positionSet.designation,departmentsList:this.state.positionSet.department},isPostOutsourced:this.state.positionSet.isPostOutsourced});
       if (mode==="update") {
           console.log("update");
       } else {
       this.setState({positionSet:{
-      departmentCode:"",
-      designationCode:"",
-      name:"",
-      isPostOutsourced:""},departments:"",designation:""})
+      "id": "",
+      "name": "",
+      "deptdesig": {
+        "id": "",
+        "department": "",
+        "designation": {
+          "id": "",
+          "name": "",
+          "code": "",
+          "description": "",
+          "chartOfAccounts": null,
+          "active": true,
+          "tenantId": ""
+        }
+      },
+      "isPostOutsourced": "",
+      "active": "",
+    },designationList:[],departmentsList:[]})
     }
   }
 
     render(){
 
       let {handleChange,addOrUpdate}=this;
-      let {departmentCode,designationCode,name,isPostOutsourced}=this.state.positionSet;
+      let {department,designation,name,isPostOutsourced,deptdesig}=this.state.positionSet;
       let mode =getUrlVars()["type"];
 
 
@@ -107,11 +134,11 @@ class PositionMaster extends React.Component{
                   </div>
                   <div className="col-sm-6">
                   <div className="styled-select">
-                      <select id="department" name="department" onChange={(e)=>{
-                          handleChange(e,"departmentCode")
+                      <select id="department" name="department" value={deptdesig.department} onChange={(e)=>{
+                          handleChange(e,"department")
                       }}>
                         <option>Select Department</option>
-                        {renderOption(this.state.departments)}
+                        {renderOption(this.state.departmentsList)}
                      </select>
                   </div>
                   </div>
@@ -124,11 +151,11 @@ class PositionMaster extends React.Component{
                     </div>
                     <div className="col-sm-6">
                     <div className="styled-select">
-                        <select id="designation" name="designation" onChange={(e)=>{
-                            handleChange(e,"designationCode")
+                        <select id="designation" name="designation" value={deptdesig.designation.name} onChange={(e)=>{
+                            handleChange(e,"designation")
                         }}>
                         <option>Select Designation</option>
-                        {renderOption(this.state.designation)}
+                        {renderOption(this.state.designationList)}
                        </select>
                     </div>
                     </div>

@@ -45,8 +45,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Future;
-import javax.validation.constraints.Past;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.egov.eis.model.enums.BloodGroup;
@@ -123,15 +122,12 @@ public class User {
 
 	private Boolean active;
 
-	@Past
-	@DateTimeFormat(pattern = "MM/dd/yyyy")
-	@JsonFormat(pattern = "yyyy-MM-dd")
-	private Date dob;
+	// FIXME : User service is expecting & sending dates in multiple formats. Fix a common standard for date formats.
+	@NotNull
+	private String dob;
 
-	@Future
-	@DateTimeFormat(pattern = "MM/dd/yyyy")
-	@JsonFormat(pattern = "yyyy-MM-dd")
-	private Date pwdExpiryDate;
+	// FIXME : User service is expecting & sending dates in multiple formats. Fix a common standard for date formats.
+	private String pwdExpiryDate;
 
 	@Size(max=5)
 	private String locale;

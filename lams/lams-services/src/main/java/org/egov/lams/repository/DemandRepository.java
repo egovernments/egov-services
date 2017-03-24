@@ -9,6 +9,7 @@ import org.egov.lams.contract.AgreementRequest;
 import org.egov.lams.contract.DemandReasonResponse;
 import org.egov.lams.contract.DemandRequest;
 import org.egov.lams.contract.DemandResponse;
+import org.egov.lams.contract.DemandSearchCriteria;
 import org.egov.lams.model.Demand;
 import org.egov.lams.model.DemandDetails;
 import org.egov.lams.model.DemandReason;
@@ -81,5 +82,15 @@ public class DemandRepository {
 				+propertiesManager.getCreateDemandSevice();
 		
 		return restTemplate.postForObject(url, demandRequest, DemandResponse.class);
+	}
+	
+
+	public DemandResponse getDemandBySearch(
+			DemandSearchCriteria demandSearchCriteria) {
+		String url = propertiesManager.getDemandServiceHostName()
+				+ propertiesManager.getDemandSearchService();
+
+		return restTemplate.postForObject(url, demandSearchCriteria,
+				DemandResponse.class);
 	}
 }

@@ -60,5 +60,16 @@ public class PropertiesManager {
 	
 	@Value("${kafka.topics.update.workflow}")
 	private String updateWorkflowTopic;
+	@Value("${egov.services.demand_service.searchpath}")
+	private String demandSearchService;
+	
+	@Value("${egov.services.demand_service.bill.create}")
+	private String demandBillCreateService;
+	
+	@Value("${egov.services.lams.billnumber_sequence}")
+	private String billNumberSequence;
+	
+	@Value("${egov.services.lams.billnumber_prefix}")
+	private String lamsBillNumberPrefix;
 
 }

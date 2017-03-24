@@ -87,6 +87,7 @@ public class Agreement {
 	private String tinNumber;
 
 	private List<Document> documents;
-	private List<Long> demands;
+	private List<String> demands;
 	private WorkFlowDetails workflowDetails;
+	private String goodWillAmount;
 }

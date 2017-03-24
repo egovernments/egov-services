@@ -58,7 +58,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import org.egov.demand.web.contract.Demand;
 import org.egov.demand.web.contract.DemandDetails;
 
 import lombok.AllArgsConstructor;

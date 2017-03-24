@@ -317,7 +317,7 @@ $(document).ready(function()
 								success: function(fileresponse){
 									//console.log('file upload success');
 									//Ack page shown
-									doAck(response);
+									docheckUser(response);
 								},
 								error: function(){
 									bootbox.alert('Media file not uploaded!');
@@ -331,7 +331,7 @@ $(document).ready(function()
 						}else{
 							//console.log('File is empty');
 							//Ack page shown
-							doAck(response);
+							docheckUser(response);
 							obj.removeAttr("disabled");
 							hideLoader();
 						}
@@ -379,14 +379,37 @@ function hideReceivingCenter(){
 	$('#receivingCenter').removeAttr('name required');
 }
 
-function doAck(response){
+function docheckUser(response){
+	var userId = localStorage.getItem('id');
+	if(userId){
+		var userArray = [];
+		userArray.push(userId);
+		$.ajax({
+			url : '/user/_search',
+			type: 'POST',
+			async : false,
+			contentType: "application/json",
+			data : JSON.stringify({ id : userArray}),
+			success : function(userResponse){
+				var userName = userResponse.user[0].userName;
+				doAck(response, userName);
+			},
+			error: function(){
+				bootbox.alert('userInfo failed!');
+			}
+		});
+	}else{
+		doAck(response, $('#first_name').val());
+	}
+}
+
+function doAck(response, userName){
 	$('.breadcrumb').append('<li class="active" data-translate="ack">Acknowledgement</li>');
-	localization();
+	//localization();
 	$('.acknowledgement, .breadcrumb').removeClass('hide');
-	$('.acknowledgement #firstname').html('Dear '+response.service_requests[0].first_name+',');
+	$('.acknowledgement #firstname').html('Dear '+userName+',');
 	$('.acknowledgement #crn').html(response.service_requests[0].service_request_id);
 	$('.createcrn, .tour-section').addClass('hide');
-	//console.log('Complaint Acknowledgement Done');
 }
 
 function typingfeel(text, input){

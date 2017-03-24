@@ -106,8 +106,7 @@ public class AgreementController {
 		}
 		LOGGER.info("AgreementController:getAgreements():update agreement:" + agreementRequest);
 
-		Agreement agreement = agreementRequest.getAgreement();
-		agreementValidator.validateAgreement(agreementRequest);
+		Agreement agreement = null;
 		agreement = agreementService.updateAgreement(agreementRequest);
 		List<Agreement> agreements = new ArrayList<>();
 		agreements.add(agreement);

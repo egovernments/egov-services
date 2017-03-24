@@ -1,0 +1,29 @@
+package org.egov.lams.web.contract;
+
+import java.math.BigDecimal;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@AllArgsConstructor
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+public class BillDetailInfo {
+	private Long billId = null;
+	private BigDecimal creditAmount = null;
+	private BigDecimal debitAmount = null;
+	private BigDecimal amountCollected = null;
+	private String glCode = null;
+	private String functionCode = null;
+	private String description = null;
+	private String purpose = null;
+	private String period = null;
+	private Integer orderNo = null;
+	private Integer isActualDemand = null;
+
+}

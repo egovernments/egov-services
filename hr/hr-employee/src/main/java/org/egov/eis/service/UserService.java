@@ -50,8 +50,11 @@ import org.egov.eis.web.contract.RequestInfo;
 import org.egov.eis.web.contract.UserGetRequest;
 import org.egov.eis.web.contract.UserRequest;
 import org.egov.eis.web.contract.UserResponse;
+import org.egov.eis.web.controller.EmployeeController;
 import org.egov.eis.web.errorhandler.ErrorHandler;
 import org.egov.eis.web.errorhandler.UserErrorResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -63,14 +66,17 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class UserService {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(EmployeeController.class);
+
 	@Autowired
 	private UserSearchURLHelper userSearchURLHelper;
-	
+
 	@Autowired
 	private PropertiesManager propertiesManager;
 
@@ -98,11 +104,18 @@ public class UserService {
 		headers.add("auth-token", requestInfo.getAuthToken());
 		HttpEntity<String> httpEntityRequest = new HttpEntity<String>(userGetRequestJson, headers);
 
-		UserResponse userResponse = new RestTemplate().postForObject(url, httpEntityRequest, UserResponse.class);
+		UserResponse userResponse = null;
+		try {
+			userResponse = new RestTemplate().postForObject(url, httpEntityRequest, UserResponse.class);
+		} catch (Exception e) {
+			LOGGER.debug("Following Exception Occurred While Calling User Service : " + e.getMessage());
+			e.printStackTrace();
+		}
 
 		return userResponse.getUser();
 	}
 
+	// FIXME : User service is expecting & sending dates in multiple formats. Fix a common standard for date formats.
 	public ResponseEntity<?> createUser(UserRequest userRequest, HttpHeaders headers) {
 		String url = propertiesManager.getUsersServiceHostName() + propertiesManager.getUsersServiceUsersBasePath()
 				+ propertiesManager.getUsersServiceUsersCreatePath();
@@ -115,6 +128,7 @@ public class UserService {
 			e.printStackTrace();
 		}
 
+		LOGGER.debug("userJson : " + userJson);
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		// FIXME : Passing auth-token for testing locally. Remove before actual deployment.
 		headers.add("auth-token", userRequest.getRequestInfo().getAuthToken());
@@ -129,17 +143,21 @@ public class UserService {
 			try {
 				ObjectMapper mapper = new ObjectMapper();
 				userErrorResponse = mapper.readValue(errorResponseBody, UserErrorResponse.class);
+			} catch (JsonMappingException jme) {
+				LOGGER.debug("Following Exception Occurred While Mapping JSON Response From User Service : "
+						+ jme.getMessage());
+				jme.printStackTrace();
 			} catch (JsonProcessingException jpe) {
-				System.err.println("Following Exception Occurred While Processing JSON Response From User Service : "
+				LOGGER.debug("Following Exception Occurred While Processing JSON Response From User Service : "
 						+ jpe.getMessage());
 				jpe.printStackTrace();
 			} catch (IOException ioe) {
-				System.err.println("Following Exception Occurred Calling User Service : " + ioe.getMessage());
+				LOGGER.debug("Following Exception Occurred Calling User Service : " + ioe.getMessage());
 				ioe.printStackTrace();
 			}
 			return new ResponseEntity<UserErrorResponse>(userErrorResponse, HttpStatus.BAD_REQUEST);
 		} catch (Exception e) {
-			System.err.println("Exception Occurred While Calling User Service : " + e);
+			LOGGER.debug("Following Exception Occurred While Calling User Service : " + e.getMessage());
 			e.printStackTrace();
 			return errorHandler.getResponseEntityForUnexpectedErrors(userRequest.getRequestInfo());
 		}

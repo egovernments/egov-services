@@ -56,6 +56,8 @@ public class AllotteeService {
 		 String url = propertiesManager.getAllotteeServiceHostName()
 			    	+ propertiesManager.getAllotteeServiceBasePAth()
 			    	+ propertiesManager.getAllotteeServiceCreatePAth();
+		 allottee.setUserName(allottee.getName()+allottee.getMobileNumber());
+		 allottee.setPassword(allottee.getMobileNumber().toString());
 		 //FIXME set user name and password using any gen service
 		 CreateUserRequest userRequest = new CreateUserRequest(requestInfo,allottee);
 		 try{

@@ -149,6 +149,8 @@ public class EmployeeService {
 
 	public ResponseEntity<?> createEmployee(EmployeeRequest employeeRequest, HttpHeaders headers) {
 		UserRequest userRequest = employeeHelper.getUserRequest(employeeRequest);
+
+		// FIXME : User service is expecting & sending dates in multiple formats. Fix a common standard for date formats.
 		ResponseEntity<?> responseEntity = userService.createUser(userRequest, headers);
 
 		if(responseEntity.getBody().getClass().equals(UserErrorResponse.class)

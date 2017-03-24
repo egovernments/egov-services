@@ -180,7 +180,7 @@ public class EgBill implements java.io.Serializable {
 		this.partPaymentAllowed = bill.getPartPaymentAllowed();
 		this.overrideAccountHeadsAllowed = bill.getOverrideAccHeadAllowed();
 		this.description = bill.getDescription();
-		this.minAmtPayable = BigDecimal.valueOf(bill.getMinAmountPayable());
+		this.minAmtPayable = BigDecimal.valueOf(bill.getMinAmountPayable()==null?0d:bill.getMinAmountPayable());
 		this.consumerId = bill.getConsumerCode();
 		this.consumerType = bill.getConsumerType();
 		this.displayMessage = bill.getDisplayMessage();

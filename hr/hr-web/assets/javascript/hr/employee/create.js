@@ -134,7 +134,7 @@ var commonObject = {
 
 //common shared object
 commonObject["assignments_mainDepartments"] = commonObject["assignments_department"];
-commonObject["languagesKnow"] = commonObject["motherTounge"];
+commonObject["languagesKnown"] = commonObject["motherTounge"];
 commonObject["user_locale"] = commonObject["motherTounge"];
 commonObject["probation_designation"] = commonObject["assignments_designation"];
 commonObject["regularisation_designation"] = commonObject["assignments_designation"];
@@ -174,6 +174,8 @@ function getNameById(object, id) {
     }
     return "";
 }
+
+var tempListBox=[];
 //final post object
 var employee = {
     code: "",
@@ -196,7 +198,7 @@ var employee = {
     category: "",
     physicallyDisabled: false,
     medicalReportProduced: true,
-    languagesKnow: [],
+    languagesKnown: [],
     maritalStatus: "",
     passportNo: "",
     gpfNo: "",
@@ -227,7 +229,7 @@ var employee = {
         correspondenceCity: "",
         correspondencePincode: "",
         correspondenceAddress: "",
-        active: "Yes",
+        active: "true",
         dob: "",
         locale: "",
         signature: "",
@@ -236,6 +238,7 @@ var employee = {
         identificationMark: "",
         photo: "",
         type:"EMPLOYEE",
+        password:"12345678",
         tenantId
     },
     tenantId
@@ -246,17 +249,17 @@ var employeeSubObject = {
     assignments: {
         fromDate: "",
         toDate: "",
-        fund: "",
-        function: "",
-        grade: "",
+        department: "",
         designation: "",
         position: "",
+        isPrimary: "false",
+        fund: "",
+        function: "",
         functionary: "",
-        department: "",
-        hod: [],
+        grade: "",
+        hod: "false",
         // mainDepartments: "",
-        govtOrderNumber: "",
-        isPrimary: "No"
+        govtOrderNumber: ""
     },
     jurisdictions:{
       jurisdictionsType:"",
@@ -372,7 +375,7 @@ var commom_fields_rules = {
     medicalReportProduced: {
         required: false
     },
-    languagesKnow: {
+    languagesKnown: {
         required: false
     },
     maritalStatus: {
@@ -936,7 +939,7 @@ function fillValueToObject(currentState) {
             // }
             if(currentState.id=="user.active")
             {
-              employee[splitResult[0]][splitResult[1]] = currentState.value=="No"?false:true;
+              employee[splitResult[0]][splitResult[1]] = currentState.value;
 
             }
             else {
@@ -956,12 +959,12 @@ function fillValueToObject(currentState) {
 
             }
             else if (currentState.id=="assignments.mainDepartments") {
-                  employeeSubObject[splitResult[0]][splitResult[1]].push({department:currentState.value});
+                  tempListBox.push({department:currentState.value});
             }
-            else if(currentState.id=="assignments.isPrimary")
-            {
-              employeeSubObject[splitResult[0]][splitResult[1]]=currentState.value=="No"?false:true;
-            }
+            // else if(currentState.id=="assignments.isPrimary")
+            // {
+            //   employeeSubObject[splitResult[0]][splitResult[1]]=currentState.value=="No"?false:true;
+            // }
             // if (currentState.id=="jurisdictions.boundary") {
             //       employeeSubObject[splitResult[0]][splitResult[1]].push(currentState.value);
             // }
@@ -1013,7 +1016,7 @@ $('#assignmentDetailModal').on('hidden.bs.modal', function(e) {
         position: "No",
         functionary: "",
         department: "",
-        hod: [],
+        hod: "No",
         // mainDepartments: "",
         govtOrderNumber: "",
         is_primary: ""
@@ -1154,7 +1157,20 @@ function markEditIndex(index = -1, modalName = "", object = "") {
                 // if($(`#${object}\\.${key}`).length == 0) {
                 //       alert("not there");
                 //   }
-                $(`#${object}\\.${key}`).val(employeeSubObject[object][key]);
+                if( object+"."+key=="assignments.fromDate" || object+"."+key=="assignments.toDate" ||object+"."+key=="serviceHistory.serviceFrom" ||object+"."+key=="probation.orderDate" ||object+"."+key=="probation.declaredOn" ||object+"."+key=="regularisation.declaredOn" || object+"."+key=="regularisation.orderDate" || object+"."+key=="education.yearOfPassing" || object+"."+key=="technical.yearOfPassing" || object+"."+key=="test.yearOfPassing")
+                {
+                  var dateSplit=employeeSubObject[object][key].split("/");
+                  var date=new Date(dateSplit[0],dateSplit[1],dateSplit[2]);
+                  // var day=date.getDate().toString().length===1?"0"+date.getDate():date.getDate();
+                  // var monthIn=date.getMonth().toString().length===1?"0"+date.getMonth():date.getMonth();
+                  // var yearIn=date.getFullYear();
+                  // employeeSubObject[splitResult[0]][splitResult[1]] = day+"/"+monthIn+"/"+yearIn;
+                  $(`#${object}\\.${key}`).val(date);
+
+                }
+                else {
+                  $(`#${object}\\.${key}`).val(employeeSubObject[object][key]);
+                }
             }
         }
     })
@@ -1169,8 +1185,21 @@ function commonAddAndUpdate(tableName, modalName, object) {
             employee[object][editIndex] = employeeSubObject[object];
             updateTable("#" + tableName, modalName, object);
         } else {
-            employee[object].push(Object.assign({}, employeeSubObject[object]));
-            updateTable("#" + tableName, modalName, object);
+            if (object=="assignments") {
+              employeeSubObject[object]["hod"]=[];
+              if(tempListBox.length>0)
+              {
+                employeeSubObject[object]["hod"].push(tempListBox);
+
+              }
+              employee[object].push(Object.assign({}, employeeSubObject[object]));
+              updateTable("#" + tableName, modalName, object);
+            }
+            else {
+              employee[object].push(Object.assign({}, employeeSubObject[object]));
+              updateTable("#" + tableName, modalName, object);
+            }
+
         }
         $(`#${modalName}`).modal("hide");
     } else {
@@ -1351,10 +1380,12 @@ $("#createEmployeeForm").validate({
             console.log("calling api");
 
             var empJuridictiona=employee["jurisdictions"];
-            employee[jurisdictions]=[];
+            employee["jurisdictions"]=[];
             for (var i = 0; i < empJuridictiona.length; i++) {
-              employee[jurisdictions](empJuridictiona[i].boundary);
+              employee["jurisdictions"].push(empJuridictiona[i].boundary);
             }
+
+
 
             var response=$.ajax({
                       url: baseUrl+"/hr-employee/employees/_create?tenantId=1",
@@ -1366,12 +1397,12 @@ $("#createEmployeeForm").validate({
                       }),
                       async: false,
                       headers: {
-                              'auth-token': 'b265b91d-62e1-459e-9859-92f0c19ff522'
+                              'auth-token': authToken
                           },
                       contentType: 'application/json'
                   });
 
-                  if(response["statusText"]==="OK")
+                  if(response["status"]===200)
                   {
                     alert("Successfully added");
                     window.location.href="../../../../app/hr/common/employee-attendance.html";

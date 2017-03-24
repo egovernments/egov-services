@@ -26,7 +26,6 @@ public class Asset {
 	
 	@NotNull
 	private String name;
-	private Long doorNo;
 	private String code;
 	private Location locationDetails;
 }

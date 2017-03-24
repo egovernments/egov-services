@@ -31,17 +31,17 @@ public class AcknowledgementNumberService {
 		Random random = new Random();
 		int k=random.nextInt(25)+65;
 		int l = random.nextInt(25)+65;
-		String suffix = new String((char)k+""+(char)l);
-		String resultSet = null;
+		String suffix = Character.toString((char) k)+(char)l;
+		Long resultSet = null;
 		try{
-			resultSet = jdbcTemplate.queryForObject(sql, String.class);
+			resultSet = jdbcTemplate.queryForObject(sql, Long.class);
 		}catch (Exception e) {
 			logger.info("AcknowledgementNumberService : "+ e.getMessage(),e);
 			throw e;
 		}
 		StringBuilder baseValue = new StringBuilder(String.format("%05d", resultSet));
 		baseValue.append("-" + year);
-		baseValue.append(suffix);
+		baseValue.append("-"+suffix);
 		logger.info("AcknowledgementNumberService : acknoValue"+baseValue);
 		return baseValue.toString();
 	}

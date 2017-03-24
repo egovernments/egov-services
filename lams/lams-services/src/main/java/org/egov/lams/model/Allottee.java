@@ -1,9 +1,8 @@
 package org.egov.lams.model;
 
-import javax.validation.constraints.NotNull;
-
+import org.egov.lams.model.enums.Gender;
+import org.egov.lams.model.enums.UserType;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,19 +17,16 @@ import lombok.ToString;
 public class Allottee {
 
 	private Long id;
-	
-	@NotNull
 	private String name;
-	
-	@NotNull
 	@JsonProperty("permanentAddress")
 	private String address;
-	
-	@NotNull
-	private Long mobileNumber;
+	private String mobileNumber;
 	private String aadhaarNumber;
 	private String pan;
 	private String emailId;
 	private String userName;
 	private String password;
+	private boolean active;
+	private UserType type;
+	private Gender gender;
 }

@@ -45,7 +45,8 @@ public class BillInfo {
 	private String fundSourceCode = null;
 	private String departmentCode = null;
 	private String collModesNotAllowed = null;
-	private Integer boundaryNumber = null;
+	//TODO @iffath changed integer to Long 
+	private Long boundaryNumber = null;
 	private String boundaryType = null;
 	private Double billAmount = null;
 	private Double billAmountCollected = null;

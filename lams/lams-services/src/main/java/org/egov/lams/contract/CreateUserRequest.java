@@ -8,14 +8,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.ToString;
 
 @AllArgsConstructor
 @Getter
-@JsonIgnoreProperties(ignoreUnknown = true)
+@ToString
 public class CreateUserRequest {
-    @JsonProperty("RequestInfo")
+	
+	@JsonProperty("RequestInfo")
     private RequestInfo requestInfo;
-
-    @JsonProperty("User")
-    private Allottee allottee;
+	
+	@JsonProperty("User")
+    private Allottee user;
 }

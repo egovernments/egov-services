@@ -68,7 +68,9 @@ public class PaymentService {
 				.getLamsConfigurations(lamsGetRequest).get("DEPARTMENT_CODE").get(0);
         billInfo.setDepartmentCode(departmentCode);
 		billInfo.setCollModesNotAllowed("");
-		billInfo.setBoundaryNumber(Integer.valueOf(agreement.getAsset().getLocationDetails().getElectionWard()));
+		billInfo.setBoundaryNumber(agreement.getAsset().getLocationDetails().getElectionWard());
+		//TODO @iffath electward is of type Long 
+		//billInfo.setBoundaryNumber(Integer.valueOf(agreement.getAsset().getLocationDetails().getElectionWard()));
 		lamsGetRequest.setName("BOUNDARY_TYPE");
 		String boundaryType = lamsConfigurationService
 				.getLamsConfigurations(lamsGetRequest).get("BOUNDARY_TYPE").get(0);

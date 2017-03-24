@@ -35,8 +35,7 @@ public class DemandRepository {
 		System.out.println("DemandRepository getDemandReason url:"+url);
 		DemandReasonResponse demandReasonResponse=null;
 		try{
-		 demandReasonResponse = restTemplate.postForObject(url, 
-													agreementRequest.getRequestInfo(), 
+		 demandReasonResponse = restTemplate.postForObject(url,agreementRequest.getRequestInfo(), 
 													DemandReasonResponse.class);
 		} catch (Exception exception){
 			exception.printStackTrace();

@@ -113,13 +113,11 @@ public class AgreementService {
 		List<DemandReason> demandReasons = demandRepository.getDemandReason(agreementRequest);
 		List<Demand> demands = demandRepository.getDemandList(agreementRequest, demandReasons);
 		DemandResponse demandResponse = demandRepository.createDemand(demands,agreementRequest.getRequestInfo());
-
 		List<String> demandIdList = demandResponse.getDemands().stream().map(demand -> demand.getId())
 				.collect(Collectors.toList());
-
 		agreement.setDemands(demandIdList);
 		agreement.setAcknowledgementNumber(acknowledgementNumberService.generateAcknowledgeNumber());
-
+		logger.info(agreement.getAcknowledgementNumber());
 		try {
 				agreementValue = mapper.writeValueAsString(agreementRequest);
 				logger.info("agreementValue::"+agreementValue);

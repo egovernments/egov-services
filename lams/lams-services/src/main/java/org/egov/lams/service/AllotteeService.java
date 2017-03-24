@@ -10,12 +10,17 @@ import org.egov.lams.contract.UserSearchRequest;
 import org.egov.lams.exception.LamsException;
 import org.egov.lams.model.Allottee;
 import org.egov.lams.model.RequestInfo;
+import org.egov.lams.model.enums.Gender;
+import org.egov.lams.model.enums.UserType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Repository
 public class AllotteeService {
@@ -56,16 +61,31 @@ public class AllotteeService {
 		 String url = propertiesManager.getAllotteeServiceHostName()
 			    	+ propertiesManager.getAllotteeServiceBasePAth()
 			    	+ propertiesManager.getAllotteeServiceCreatePAth();
-		 allottee.setUserName(allottee.getName()+allottee.getMobileNumber());
+		/* allottee.setUserName(allottee.getName()+allottee.getMobileNumber());
 		 allottee.setPassword(allottee.getMobileNumber().toString());
+		 allottee.setGender(Gender.MALE);
+		 allottee.setType(UserType.CITIZEN);
+		 allottee.setActive(true);*/
+		 //TODO will change in future gender will not be mandatory
 		 //FIXME set user name and password using any gen service
 		 CreateUserRequest userRequest = new CreateUserRequest(requestInfo,allottee);
+		 System.err.println("ALLOTTEE INPUT GIVEN : "+userRequest);
+		 ObjectMapper mapper=new ObjectMapper();
+		 try {
+			String s=mapper.writeValueAsString(userRequest);
+			System.out.println("user object:"+s);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		 UserResponse response = null;
 		 try{
-		 restTemplate.postForObject(url, userRequest, UserResponse.class);
+			 response = restTemplate.postForObject(url, userRequest, UserResponse.class);
 		 }catch (RestClientException restClientException) {
 			 restClientException.printStackTrace();
-			 throw new LamsException(restClientException.getMessage());
+			 throw new LamsException(restClientException);
 			 // TODO: handle exception
 		}
+		 allottee.setId(response.getUser().get(0).getId());
 	}
 }

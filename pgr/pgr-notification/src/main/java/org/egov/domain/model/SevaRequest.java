@@ -19,19 +19,20 @@ public class SevaRequest {
     private static final String LOCATION_NAME = "location_name";
     private static final String REQUESTED_DATE = "requested_datetime";
     private static final String DATE_FORMAT = "dd/MM/yyyy HH:mm";
+    private final static String SERVICE_REQUEST = "ServiceRequest";
+    private final HashMap<String, Object> serviceRequest;
 
-    private HashMap<String, Object> sevaRequestMap;
-
+    @SuppressWarnings("unchecked")
 	public SevaRequest(HashMap<String, Object> sevaRequestMap) {
-		this.sevaRequestMap = sevaRequestMap;
+        this.serviceRequest = (HashMap<String, Object>) sevaRequestMap.get(SERVICE_REQUEST);
 	}
 
 	public String getMobileNumber() {
-        return (String) this.sevaRequestMap.get(PHONE);
+        return (String) this.serviceRequest.get(PHONE);
 	}
 
 	public String getComplainantEmail() {
-        return (String) this.sevaRequestMap.get(EMAIL);
+        return (String) this.serviceRequest.get(EMAIL);
 	}
 
 	public boolean isComplainantEmailAbsent() {
@@ -39,11 +40,11 @@ public class SevaRequest {
 	}
 
 	public String getComplaintTypeName() {
-        return (String) this.sevaRequestMap.get(SERVICE_NAME);
+        return (String) this.serviceRequest.get(SERVICE_NAME);
 	}
 
 	public String getCrn() {
-        return (String) this.sevaRequestMap.get(CRN);
+        return (String) this.serviceRequest.get(CRN);
 	}
 
     public String getStatusName() {
@@ -52,7 +53,7 @@ public class SevaRequest {
 
     @SuppressWarnings("unchecked")
     private HashMap<String, String> getValues() {
-        return (HashMap<String, String>) this.sevaRequestMap.get(VALUES);
+        return (HashMap<String, String>) this.serviceRequest.get(VALUES);
     }
 
     public String getFormattedCreatedDate() {
@@ -61,11 +62,11 @@ public class SevaRequest {
     }
 
     private Date getCreatedDate() {
-        return (Date) this.sevaRequestMap.get(REQUESTED_DATE);
+        return (Date) this.serviceRequest.get(REQUESTED_DATE);
     }
 
     public String getDetails() {
-        return (String) this.sevaRequestMap.get(DESCRIPTION);
+        return (String) this.serviceRequest.get(DESCRIPTION);
     }
 
     public String getLocationName() {
@@ -74,6 +75,7 @@ public class SevaRequest {
 
     public String getComplainantName() {
 	    //TODO: Remove default once retrieval of FirstName from userInfo is implemented.
-        return (String) this.sevaRequestMap.getOrDefault(FIRST_NAME, "placeholder");
+        return (String) this.serviceRequest.getOrDefault(FIRST_NAME, "placeholder");
     }
+
 }

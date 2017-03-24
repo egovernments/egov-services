@@ -17,7 +17,9 @@ public class SevaRequestTest {
     @Test
     public void test_should_retrieve_mobile_number_from_request_map() {
         final HashMap<String, Object> sevaRequestMap = new HashMap<>();
-        sevaRequestMap.put("phone", "mobileNumber");
+        final HashMap<String, Object> serviceRequest = new HashMap<>();
+        serviceRequest.put("phone", "mobileNumber");
+        sevaRequestMap.put("ServiceRequest", serviceRequest);
 
         final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
 
@@ -27,7 +29,9 @@ public class SevaRequestTest {
     @Test
     public void test_should_retrieve_email_from_request_map() {
         final HashMap<String, Object> sevaRequestMap = new HashMap<>();
-        sevaRequestMap.put("email", "email@email.com");
+        final HashMap<String, Object> serviceRequest = new HashMap<>();
+        serviceRequest.put("email", "email@email.com");
+        sevaRequestMap.put("ServiceRequest", serviceRequest);
 
         final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
 
@@ -37,7 +41,9 @@ public class SevaRequestTest {
     @Test
     public void test_should_return_false_when_email_is_present_in_request_map() {
         final HashMap<String, Object> sevaRequestMap = new HashMap<>();
-        sevaRequestMap.put("email", "email@email.com");
+        final HashMap<String, Object> serviceRequest = new HashMap<>();
+        serviceRequest.put("email", "email@email.com");
+        sevaRequestMap.put("ServiceRequest", serviceRequest);
 
         final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
 
@@ -47,6 +53,7 @@ public class SevaRequestTest {
     @Test
     public void test_should_return_true_when_email_is_not_present_in_request_map() {
         final HashMap<String, Object> sevaRequestMap = new HashMap<>();
+        sevaRequestMap.put("ServiceRequest", new HashMap<String, Object>());
 
         final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
 
@@ -56,7 +63,9 @@ public class SevaRequestTest {
     @Test
     public void test_should_return_complaint_type_name_from_request_map() {
         final HashMap<String, Object> sevaRequestMap = new HashMap<>();
-        sevaRequestMap.put("service_name", "complaintTypeName");
+        final HashMap<String, Object> serviceRequest = new HashMap<>();
+        serviceRequest.put("service_name", "complaintTypeName");
+        sevaRequestMap.put("ServiceRequest", serviceRequest);
 
         final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
 
@@ -66,7 +75,9 @@ public class SevaRequestTest {
     @Test
     public void test_should_return_complaint_crn_from_request_map() {
         final HashMap<String, Object> sevaRequestMap = new HashMap<>();
-        sevaRequestMap.put("service_request_id", "CRN");
+        final HashMap<String, Object> serviceRequest = new HashMap<>();
+        serviceRequest.put("service_request_id", "CRN");
+        sevaRequestMap.put("ServiceRequest", serviceRequest);
 
         final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
 
@@ -76,9 +87,11 @@ public class SevaRequestTest {
     @Test
     public void test_should_return_complaint_status_name_from_request_map() {
         final HashMap<String, Object> sevaRequestMap = new HashMap<>();
+        final HashMap<String, Object> serviceRequest = new HashMap<>();
         final HashMap<String, String> values = new HashMap<>();
         values.put("status", "statusName");
-        sevaRequestMap.put("values", values);
+        serviceRequest.put("values", values);
+        sevaRequestMap.put("ServiceRequest", serviceRequest);
 
         final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
 
@@ -87,12 +100,13 @@ public class SevaRequestTest {
 
     @Test
     public void test_should_return_created_date_formatted_from_request_map() {
+        final HashMap<String, Object> serviceRequest = new HashMap<>();
         final HashMap<String, Object> sevaRequestMap = new HashMap<>();
         final Date createdDate = Date.from(LocalDateTime.of(2016, 1, 2, 3, 4)
             .atZone(ZoneId.of(IST)).toInstant());
         TimeZone.setDefault(TimeZone.getTimeZone(IST));
-
-        sevaRequestMap.put("requested_datetime", createdDate);
+        serviceRequest.put("requested_datetime", createdDate);
+        sevaRequestMap.put("ServiceRequest", serviceRequest);
 
         final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
 
@@ -102,7 +116,9 @@ public class SevaRequestTest {
     @Test
     public void test_should_return_complaint_description_from_request_map() {
         final HashMap<String, Object> sevaRequestMap = new HashMap<>();
-        sevaRequestMap.put("description", "complaintDescription");
+        final HashMap<String, Object> serviceRequest = new HashMap<>();
+        serviceRequest.put("description", "complaintDescription");
+        sevaRequestMap.put("ServiceRequest", serviceRequest);
 
         final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
 
@@ -112,19 +128,34 @@ public class SevaRequestTest {
     @Test
     public void test_should_return_complainant_name_from_request_map() {
         final HashMap<String, Object> sevaRequestMap = new HashMap<>();
-        sevaRequestMap.put("description", "complaintDescription");
+        final HashMap<String, Object> serviceRequest = new HashMap<>();
+        serviceRequest.put("first_name", "firstName");
+        sevaRequestMap.put("ServiceRequest", serviceRequest);
 
         final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
 
-        assertEquals("complaintDescription", sevaRequest.getDetails());
+        assertEquals("firstName", sevaRequest.getComplainantName());
+    }
+
+    //TODO: Remove once UserInfo is used to set firstName in PGR-REST
+    @Test
+    public void test_should_return_place_holder_value_when_first_name_not_present_in_request_map() {
+        final HashMap<String, Object> sevaRequestMap = new HashMap<>();
+        sevaRequestMap.put("ServiceRequest", new HashMap<String, Object>());
+
+        final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
+
+        assertEquals("placeholder", sevaRequest.getComplainantName());
     }
 
     @Test
     public void test_should_return_location_name_from_request_map() {
         final HashMap<String, Object> sevaRequestMap = new HashMap<>();
+        final HashMap<String, Object> serviceRequest = new HashMap<>();
         final HashMap<String, String> values = new HashMap<>();
         values.put("location_name", "locationName");
-        sevaRequestMap.put("values", values);
+        serviceRequest.put("values", values);
+        sevaRequestMap.put("ServiceRequest", serviceRequest);
 
         final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
 
@@ -134,7 +165,9 @@ public class SevaRequestTest {
     @Test
     public void test_should_return_first_name_from_request_map() {
         final HashMap<String, Object> sevaRequestMap = new HashMap<>();
-        sevaRequestMap.put("first_name", "firstName");
+        final HashMap<String, Object> serviceRequest = new HashMap<>();
+        serviceRequest.put("first_name", "firstName");
+        sevaRequestMap.put("ServiceRequest", serviceRequest);
 
         final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
 

@@ -73,6 +73,7 @@ public class SevaRequest {
     }
 
     public String getComplainantName() {
-        return (String) this.sevaRequestMap.get(FIRST_NAME);
+	    //TODO: Remove default once retrieval of FirstName from userInfo is implemented.
+        return (String) this.sevaRequestMap.getOrDefault(FIRST_NAME, "placeholder");
     }
 }

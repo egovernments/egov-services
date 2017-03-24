@@ -1,12 +1,20 @@
 class Calenderholiday extends React.Component{
 constructor(props){
   super(props);
-  this.state={list:[],holiday:
-      {CalendarYear:"",
-      name:"",
-      applicableOn:"",
-      active:""
+  this.state={list:[],holiday:{
+    "id": "" ,
+    "calendarYear": {
+      "id": "",
+      "name": "",
+      "startDate": "",
+      "endDate": "",
+      "tenantId": ""
     },
+    "name": "",
+    "applicableOn": "",
+    "tenantId": "",
+    "active": true
+  },
         year:[], holidays:[]
       }
 
@@ -38,14 +46,13 @@ componentWillMount(){
 
       if(getUrlVars()["type"]==="view")
       {
-        for (var variable in this.state.holiday)
-          document.getElementById(variable).disabled = true;
+        $("input,select").prop("disabled", true);
       }
 
 
             if(type==="view"||type==="update")
             {
-                console.log("fired");
+
                 console.log(getCommonMasterById("egov-common-masters","holidays","Holiday",id).responseJSON["Holiday"][0]);
                 this.setState({
                   holiday:getCommonMasterById("egov-common-masters","holidays","Holiday",id).responseJSON["Holiday"][0]
@@ -70,16 +77,26 @@ componentWillMount(){
       }
       else{
         this.setState({holiday:{
-          name:"",
-          applicableOn:"",
-          CalendarYear:"",active:""},year:""})
+          "id": "" ,
+          "calendarYear": {
+            "id": "",
+            "name": "",
+            "startDate": "",
+            "endDate": "",
+            "tenantId": ""
+          },
+          "name": "",
+          "applicableOn": "",
+          "tenantId": "",
+          "active": true
+        },year:[]})
       }
 
     }
 
   render(){
     let {handleChange,addOrUpdate}=this;
-    let {name,CalendarYear,applicableOn,active}=this.state.holiday;
+    let {name,calendarYear,applicableOn,active}=this.state.holiday;
     let holidays=this.state.holidays;
     let mode=getUrlVars()["type"];
 
@@ -115,8 +132,8 @@ componentWillMount(){
                   </div>
                   <div className="col-sm-6">
                     <div className="styled-select">
-                    <select id="CalendarYear" name="CalendarYear" value= {CalendarYear} required="true"
-                        onChange={(e)=>{handleChange(e,"CalendarYear")  }}>
+                    <select id="calendarYear" name="calendarYear" value= {calendarYear.name} required="true"
+                        onChange={(e)=>{handleChange(e,"calendarYear")  }}>
                     <option>Select Year</option>
                     {renderOption(this.state.year)}
                    </select>

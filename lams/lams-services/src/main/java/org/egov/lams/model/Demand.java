@@ -14,4 +14,6 @@ public class Demand {
 	private String moduleName;
 	private List<DemandDetails> demandDetails;
 	private List<PaymentInfo> paymentInfo;
+	private Double minAmountPayable=0d;
+
 }

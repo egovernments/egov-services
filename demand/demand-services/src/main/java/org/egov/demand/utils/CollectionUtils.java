@@ -59,7 +59,7 @@ public class CollectionUtils {
                 boolean isActualDemand = false;
 
                 for (EgBillDetails egBillDet : bill.getEgBillDetails()) {
-                    isActualDemand = egBillDet.getAdditionalFlag() == 1 ? true : false;
+                    isActualDemand = egBillDet.getAdditionalFlag()!=null && egBillDet.getAdditionalFlag() == 1 ? true : false;
                     billAccDetails = new BillAccountDetails(egBillDet.getGlcode(), egBillDet.getOrderNo(),
                             egBillDet.getCrAmount(), egBillDet.getDrAmount(), egBillDet.getFunctionCode(),
                             egBillDet.getDescription(), isActualDemand,egBillDet.getPurpose()!=null?PURPOSE.valueOf(egBillDet.getPurpose()):PURPOSE.OTHERS);

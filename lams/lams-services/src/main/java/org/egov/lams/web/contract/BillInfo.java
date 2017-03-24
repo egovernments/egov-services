@@ -10,7 +10,7 @@
  * Do not edit the class manually.
  */
 
-package org.egov.demand.web.contract;
+package org.egov.lams.web.contract;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,12 +19,14 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @AllArgsConstructor
 @Getter
 @Setter
 @Builder
+@NoArgsConstructor
 public class BillInfo {
 	private Long id = null;
 	private Long demandId = null;
@@ -51,12 +53,12 @@ public class BillInfo {
 	private Character partPaymentAllowed = null;
 	private Character overrideAccHeadAllowed = null;
 	private String description = null;
-	private Double minAmountPayable=0d;
+	private Double minAmountPayable = null;
 	private String consumerCode = null;
 	private String displayMessage = null;
 	private Character callbackForApportion = null;
 	private String emailId = null;
 	private String consumerType = null;
 	private Double totalAmount = null;
-	private List<BillDetailInfo> billDetailInfos = new ArrayList<BillDetailInfo>();
+	private List<BillDetailInfo> billDetailInfos = new ArrayList<>();
 }

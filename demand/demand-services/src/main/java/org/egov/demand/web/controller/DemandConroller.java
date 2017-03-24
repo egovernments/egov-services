@@ -96,7 +96,7 @@ public class DemandConroller {
 			return errHandler.getErrorResponseEntityForBindingErrors(bindingResult, requestInfo);
 		}
 		try {
-			egDemand = demandRepository.findOne(demandSearchCriteria.getDemandId());
+			egDemand = demandRepository.findOne(1L);
 			Demand demand = egDemand.toDomain();
 			for(EgDemandDetails egdemandDetails: egDemand.getEgDemandDetails()){
 				demandDetail = egdemandDetails.toDomain();

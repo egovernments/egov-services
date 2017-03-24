@@ -63,6 +63,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
@@ -115,6 +116,7 @@ public class UserService {
 			e.printStackTrace();
 		}
 
+		System.err.println("userJson : " + userJson);
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		// FIXME : Passing auth-token for testing locally. Remove before actual deployment.
 		headers.add("auth-token", userRequest.getRequestInfo().getAuthToken());
@@ -129,6 +131,10 @@ public class UserService {
 			try {
 				ObjectMapper mapper = new ObjectMapper();
 				userErrorResponse = mapper.readValue(errorResponseBody, UserErrorResponse.class);
+			} catch (JsonMappingException jme) {
+				System.err.println("Following Exception Occurred While Mapping JSON Response From User Service : "
+						+ jme.getMessage());
+				jme.printStackTrace();
 			} catch (JsonProcessingException jpe) {
 				System.err.println("Following Exception Occurred While Processing JSON Response From User Service : "
 						+ jpe.getMessage());

@@ -124,13 +124,11 @@ public class User {
 	private Boolean active;
 
 	@Past
-	@DateTimeFormat(pattern = "MM/dd/yyyy")
-	@JsonFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "MM/dd/yyyy")
 	private Date dob;
 
 	@Future
-	@DateTimeFormat(pattern = "MM/dd/yyyy")
-	@JsonFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "MM/dd/yyyy")
 	private Date pwdExpiryDate;
 
 	@Size(max=5)

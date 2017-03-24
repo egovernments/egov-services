@@ -1,0 +1,25 @@
+package org.egov.eis.indexer.model.es;
+
+import java.util.List;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@ToString
+@Getter
+@Setter
+public class EmployeeIndex {
+	
+	EmployeeDetails employeeDetails;
+	List<EmployeeAssignment> employeeAssignment;
+	List<EmployeeRegularisation> employeeRegularisation;
+	List<EmployeeTechnical> employeeTechnical;
+	List<EmployeeServiceHistory> employeeService;
+	List<EmployeeEducation> employeeEducation;
+	List<EmployeeJurisdiction> employeeJurisdiction;
+	List<EmployeeProbation> employeeprobation;
+	List<EmployeeTest> employeeTest;
+	
+}
+	

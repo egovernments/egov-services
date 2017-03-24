@@ -6,12 +6,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class City {
-	private String id;
+    private String id;
     private String name;
-    private String code ;
-    private String districtCode ;
-    private String districtName ;
-    private String grade ;
+    private String code;
+    private String districtCode;
+    private String districtName;
+    private String grade;
     private String domainURL;
-    private String regionName ;
+    private String regionName;
 }

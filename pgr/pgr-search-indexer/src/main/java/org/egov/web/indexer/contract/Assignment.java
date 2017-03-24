@@ -2,7 +2,6 @@ package org.egov.web.indexer.contract;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,13 +10,13 @@ import lombok.Setter;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Assignment {
 
-	@JsonProperty("id")
-	private Long id;
+    @JsonProperty("id")
+    private Long id;
 
-	@JsonProperty("department")
-	private Department department;
+    @JsonProperty("department")
+    private Department department;
 
-	@JsonProperty("designation")
-	private Designation designation;
+    @JsonProperty("designation")
+    private Designation designation;
 
 }

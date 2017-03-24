@@ -7,8 +7,8 @@ import java.util.List;
 
 @Getter
 public class BoundaryResponse {
-	
-	@JsonProperty("Boundary")
-	private List<Boundary> boundaries;
+
+    @JsonProperty("Boundary")
+    private List<Boundary> boundaries;
 
 }

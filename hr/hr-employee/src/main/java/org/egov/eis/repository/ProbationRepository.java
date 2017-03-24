@@ -42,7 +42,8 @@ public class ProbationRepository {
 				ps.setLong(3, probation.getDesignation());
 				ps.setDate(4, new Date(probation.getDeclaredOn().getTime()));
 				ps.setString(5, probation.getOrderNo());
-				ps.setDate(6, new Date(probation.getOrderDate().getTime()));
+				ps.setDate(6, (probation.getOrderDate() == null ? null
+						: new Date(probation.getOrderDate().getTime())));
 				ps.setString(7, probation.getRemarks());
 				ps.setLong(8, Long.parseLong(employeeRequest.getRequestInfo().getRequesterId()));
 				ps.setTimestamp(9, new Timestamp(new java.util.Date().getTime()));

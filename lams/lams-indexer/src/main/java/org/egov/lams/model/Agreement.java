@@ -89,5 +89,5 @@ public class Agreement {
 	private List<Document> documents;
 	private List<String> demands;
 	private WorkFlowDetails workflowDetails;
-	private String goodWillAmount;
+	private Double goodWillAmount;
 }

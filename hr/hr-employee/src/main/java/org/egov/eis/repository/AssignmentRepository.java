@@ -49,6 +49,7 @@ import java.util.List;
 
 import org.egov.eis.model.Assignment;
 import org.egov.eis.repository.builder.AssignmentQueryBuilder;
+import org.egov.eis.repository.helper.PreparedStatementHelper;
 import org.egov.eis.repository.rowmapper.AssignmentRowMapper;
 import org.egov.eis.web.contract.AssignmentGetRequest;
 import org.egov.eis.web.contract.EmployeeRequest;
@@ -82,6 +83,9 @@ public class AssignmentRepository {
 	@Autowired
 	private AssignmentQueryBuilder assignmentQueryBuilder;
 
+	@Autowired
+	private PreparedStatementHelper psHelper;
+
 	@Transactional(readOnly = true)
 	public List<Assignment> findForCriteria(Long employeeId, AssignmentGetRequest assignmentGetRequest) {
 		List<Object> preparedStatementValues = new ArrayList<Object>();
@@ -100,16 +104,16 @@ public class AssignmentRepository {
 				Assignment assignment = assignments.get(i);
 				ps.setLong(1, assignment.getId());
 				ps.setLong(2, employeeRequest.getEmployee().getId());
-				ps.setLong(3, assignment.getPosition());
-				ps.setLong(4, assignment.getFund());
-				ps.setLong(5, assignment.getFunctionary());
-				ps.setLong(6, assignment.getFunction());
+				psHelper.setLongOrNull(ps, 3, assignment.getPosition());
+				psHelper.setLongOrNull(ps, 4, assignment.getFund());
+				psHelper.setLongOrNull(ps, 5, assignment.getFunctionary());
+				psHelper.setLongOrNull(ps, 6, assignment.getFunction());
 				ps.setLong(7, assignment.getDepartment());
 				ps.setLong(8, assignment.getDesignation());
 				ps.setBoolean(9, assignment.getIsPrimary());
 				ps.setDate(10, new Date(assignment.getFromDate().getTime()));
 				ps.setDate(11, new Date(assignment.getToDate().getTime()));
-				ps.setLong(12, assignment.getGrade());
+				psHelper.setLongOrNull(ps, 12, assignment.getGrade());
 				ps.setString(13, assignment.getGovtOrderNumber());
 				ps.setLong(14, Long.parseLong(employeeRequest.getRequestInfo().getRequesterId()));
 				ps.setTimestamp(15, new Timestamp(new java.util.Date().getTime()));

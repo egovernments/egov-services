@@ -71,7 +71,6 @@ public class Employee {
 
 	private Long id;
 
-	@Size(min=1, max=256)
 	private String code;
 
 	@DateTimeFormat(pattern = "dd/MM/yyyy")

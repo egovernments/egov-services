@@ -6,6 +6,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 import org.egov.eis.model.TechnicalQualification;
+import org.egov.eis.repository.helper.PreparedStatementHelper;
 import org.egov.eis.web.contract.EmployeeRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +29,9 @@ public class TechnicalQualificationRepository {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
+	@Autowired
+	private PreparedStatementHelper psHelper;
+
 	// FIXME put tenantId
 	public void save(EmployeeRequest employeeRequest) {
 		List<TechnicalQualification> technicalQualifications = employeeRequest.getEmployee().getTechnical();
@@ -40,7 +44,7 @@ public class TechnicalQualificationRepository {
 				ps.setLong(2, employeeRequest.getEmployee().getId());
 				ps.setString(3, technicalQualification.getSkill());
 				ps.setString(4, technicalQualification.getGrade());
-				ps.setInt(5, technicalQualification.getYearOfPassing());
+				psHelper.setIntegerOrNull(ps, 5, technicalQualification.getYearOfPassing());
 				ps.setString(6, technicalQualification.getRemarks());
 				ps.setLong(7, Long.parseLong(employeeRequest.getRequestInfo().getRequesterId()));
 				ps.setTimestamp(8, new Timestamp(new java.util.Date().getTime()));

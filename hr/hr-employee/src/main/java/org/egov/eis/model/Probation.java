@@ -65,6 +65,7 @@ public class Probation {
 
 	private Long id;
 
+	@NotNull
 	private Long designation;
 
 	@NotNull

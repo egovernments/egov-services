@@ -81,6 +81,7 @@ public class Assignment {
 	@NotNull
 	private Long department;
 
+	@NotNull
 	private Long designation;
 
 	@Valid

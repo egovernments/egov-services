@@ -74,7 +74,8 @@ public class WorkflowTypes extends AbstractAuditable {
 
 	private boolean grouped;
 
-	private String  tenantId;
+	private String tenantId;
+
 	public Long getId() {
 		return id;
 	}
@@ -145,6 +146,14 @@ public class WorkflowTypes extends AbstractAuditable {
 
 	public void setEnabledInMs(boolean enabledInMs) {
 		this.enabledInMs = enabledInMs;
+	}
+
+	public String getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
 	}
 
 }

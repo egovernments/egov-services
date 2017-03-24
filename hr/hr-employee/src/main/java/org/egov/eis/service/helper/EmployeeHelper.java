@@ -71,59 +71,73 @@ public class EmployeeHelper {
 			assignment.setCreatedDate(new Date());
 			assignment.setLastModifiedBy((Long.parseLong((employeeRequest.getRequestInfo().getRequesterId()))));
 			assignment.setLastModifiedDate((new Date()));
-			assignment.getHod().forEach((hod) -> {
-				hod.setId(employeeRepository.generateSequence(Sequences.HODDEPARTMENT.toString()));
-				hod.setTenantId(employee.getTenantId());
+			if (assignment.getHod() != null) {
+				assignment.getHod().forEach((hod) -> {
+					hod.setId(employeeRepository.generateSequence(Sequences.HODDEPARTMENT.toString()));
+					hod.setTenantId(employee.getTenantId());
+				});
+			}
+		});
+		if (employee.getEducation() != null) {
+			employee.getEducation().forEach((eduction) -> {
+				eduction.setId(employeeRepository.generateSequence(Sequences.EDUCATIONALQUALIFICATION.toString()));
+				eduction.setTenantId(employee.getTenantId());
+				eduction.setCreatedBy(Long.parseLong((employeeRequest.getRequestInfo().getRequesterId())));
+				eduction.setCreatedDate(new Date());
+				eduction.setLastModifiedBy((Long.parseLong((employeeRequest.getRequestInfo().getRequesterId()))));
+				eduction.setLastModifiedDate((new Date()));
 			});
-		});
-		employee.getEducation().forEach((eduction) -> {
-			eduction.setId(employeeRepository.generateSequence(Sequences.EDUCATIONALQUALIFICATION.toString()));
-			eduction.setTenantId(employee.getTenantId());
-			eduction.setCreatedBy(Long.parseLong((employeeRequest.getRequestInfo().getRequesterId())));
-			eduction.setCreatedDate(new Date());
-			eduction.setLastModifiedBy((Long.parseLong((employeeRequest.getRequestInfo().getRequesterId()))));
-			eduction.setLastModifiedDate((new Date()));
-		});
-		employee.getTest().forEach((test) -> {
-			test.setId(employeeRepository.generateSequence(Sequences.DEPARTMENTALTEST.toString()));
-			test.setTenantId(employee.getTenantId());
-			test.setCreatedBy(Long.parseLong((employeeRequest.getRequestInfo().getRequesterId())));
-			test.setCreatedDate(new Date());
-			test.setLastModifiedBy((Long.parseLong((employeeRequest.getRequestInfo().getRequesterId()))));
-			test.setLastModifiedDate((new Date()));
-		});
-		employee.getProbation().forEach((probation) -> {
-			probation.setId(employeeRepository.generateSequence(Sequences.PROBATION.toString()));
-			probation.setTenantId(employee.getTenantId());
-			probation.setCreatedBy(Long.parseLong((employeeRequest.getRequestInfo().getRequesterId())));
-			probation.setCreatedDate(new Date());
-			probation.setLastModifiedBy((Long.parseLong((employeeRequest.getRequestInfo().getRequesterId()))));
-			probation.setLastModifiedDate((new Date()));
-		});
-		employee.getRegularisation().forEach((regularisation) -> {
-			regularisation.setId(employeeRepository.generateSequence(Sequences.REGULARISATION.toString()));
-			regularisation.setTenantId(employee.getTenantId());
-			regularisation.setCreatedBy(Long.parseLong((employeeRequest.getRequestInfo().getRequesterId())));
-			regularisation.setCreatedDate(new Date());
-			regularisation.setLastModifiedBy((Long.parseLong((employeeRequest.getRequestInfo().getRequesterId()))));
-			regularisation.setLastModifiedDate((new Date()));
-		});
-		employee.getServiceHistory().forEach((serviceHistory) -> {
-			serviceHistory.setId(employeeRepository.generateSequence(Sequences.SERVICEHISTORY.toString()));
-			serviceHistory.setTenantId(employee.getTenantId());
-			serviceHistory.setCreatedBy(Long.parseLong((employeeRequest.getRequestInfo().getRequesterId())));
-			serviceHistory.setCreatedDate(new Date());
-			serviceHistory.setLastModifiedBy((Long.parseLong((employeeRequest.getRequestInfo().getRequesterId()))));
-			serviceHistory.setLastModifiedDate((new Date()));
-		});
-		employee.getTechnical().forEach((technical) -> {
-			technical.setId(employeeRepository.generateSequence(Sequences.TECHNICALQUALIFICATION.toString()));
-			technical.setTenantId(employee.getTenantId());
-			technical.setCreatedBy(Long.parseLong((employeeRequest.getRequestInfo().getRequesterId())));
-			technical.setCreatedDate(new Date());
-			technical.setLastModifiedBy((Long.parseLong((employeeRequest.getRequestInfo().getRequesterId()))));
-			technical.setLastModifiedDate((new Date()));
-		});
+		}
+		if (employee.getTest() != null) {
+			employee.getTest().forEach((test) -> {
+				test.setId(employeeRepository.generateSequence(Sequences.DEPARTMENTALTEST.toString()));
+				test.setTenantId(employee.getTenantId());
+				test.setCreatedBy(Long.parseLong((employeeRequest.getRequestInfo().getRequesterId())));
+				test.setCreatedDate(new Date());
+				test.setLastModifiedBy((Long.parseLong((employeeRequest.getRequestInfo().getRequesterId()))));
+				test.setLastModifiedDate((new Date()));
+			});
+		}
+		if (employee.getProbation() != null) {
+			employee.getProbation().forEach((probation) -> {
+				probation.setId(employeeRepository.generateSequence(Sequences.PROBATION.toString()));
+				probation.setTenantId(employee.getTenantId());
+				probation.setCreatedBy(Long.parseLong((employeeRequest.getRequestInfo().getRequesterId())));
+				probation.setCreatedDate(new Date());
+				probation.setLastModifiedBy((Long.parseLong((employeeRequest.getRequestInfo().getRequesterId()))));
+				probation.setLastModifiedDate((new Date()));
+			});
+		}
+		if (employee.getRegularisation() != null) {
+			employee.getRegularisation().forEach((regularisation) -> {
+				regularisation.setId(employeeRepository.generateSequence(Sequences.REGULARISATION.toString()));
+				regularisation.setTenantId(employee.getTenantId());
+				regularisation.setCreatedBy(Long.parseLong((employeeRequest.getRequestInfo().getRequesterId())));
+				regularisation.setCreatedDate(new Date());
+				regularisation.setLastModifiedBy((Long.parseLong((employeeRequest.getRequestInfo().getRequesterId()))));
+				regularisation.setLastModifiedDate((new Date()));
+			});
+		}
+		if (employee.getServiceHistory() != null) {
+			employee.getServiceHistory().forEach((serviceHistory) -> {
+				serviceHistory.setId(employeeRepository.generateSequence(Sequences.SERVICEHISTORY.toString()));
+				serviceHistory.setTenantId(employee.getTenantId());
+				serviceHistory.setCreatedBy(Long.parseLong((employeeRequest.getRequestInfo().getRequesterId())));
+				serviceHistory.setCreatedDate(new Date());
+				serviceHistory.setLastModifiedBy((Long.parseLong((employeeRequest.getRequestInfo().getRequesterId()))));
+				serviceHistory.setLastModifiedDate((new Date()));
+			});
+		}
+		if (employee.getTechnical() != null) {
+			employee.getTechnical().forEach((technical) -> {
+				technical.setId(employeeRepository.generateSequence(Sequences.TECHNICALQUALIFICATION.toString()));
+				technical.setTenantId(employee.getTenantId());
+				technical.setCreatedBy(Long.parseLong((employeeRequest.getRequestInfo().getRequesterId())));
+				technical.setCreatedDate(new Date());
+				technical.setLastModifiedBy((Long.parseLong((employeeRequest.getRequestInfo().getRequesterId()))));
+				technical.setLastModifiedDate((new Date()));
+			});
+		}
 	}
 
 	/**

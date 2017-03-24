@@ -188,18 +188,35 @@ public class EmployeeService {
 	}
 
 	public void saveEmployee(EmployeeRequest employeeRequest) {
+		Employee employee = employeeRequest.getEmployee();
 		employeeRepository.save(employeeRequest);
-		employeeJurisdictionRepository.save(employeeRequest.getEmployee());
-		employeeLanguageRepository.save(employeeRequest.getEmployee());
+		employeeJurisdictionRepository.save(employee);
+		if (employee.getLanguagesKnown() != null) {
+			employeeLanguageRepository.save(employee);
+		}
 		assignmentRepository.save(employeeRequest);
-		employeeRequest.getEmployee().getAssignments().forEach((assignment) -> {
-			hodDepartmentRepository.save(assignment, employeeRequest.getEmployee().getTenantId());
+		employee.getAssignments().forEach((assignment) -> {
+			if (assignment.getHod() != null) {
+				hodDepartmentRepository.save(assignment, employee.getTenantId());
+			}
 		});
-		serviceHistoryRepository.save(employeeRequest);
-		probationRepository.save(employeeRequest);
-		regularisationRepository.save(employeeRequest);
-		technicalQualificationRepository.save(employeeRequest);
-		educationalQualificationRepository.save(employeeRequest);
-		departmentalTestRepository.save(employeeRequest);
+		if (employee.getServiceHistory() != null) {
+			serviceHistoryRepository.save(employeeRequest);
+		}
+		if (employee.getProbation() != null) {
+			probationRepository.save(employeeRequest);
+		}
+		if (employee.getRegularisation() != null) {
+			regularisationRepository.save(employeeRequest);
+		}
+		if (employee.getTechnical() != null) {
+			technicalQualificationRepository.save(employeeRequest);
+		}
+		if (employee.getEducation() != null) {
+			educationalQualificationRepository.save(employeeRequest);
+		}
+		if (employee.getTest() != null) {
+			departmentalTestRepository.save(employeeRequest);
+		}
 	}
 }

@@ -129,7 +129,6 @@ public class Employee {
 
 	private Boolean medicalReportProduced;
 
-	@NotNull
 	private List<Long> languagesKnown = new ArrayList<Long>();
 
 	@Valid
@@ -153,27 +152,21 @@ public class Employee {
 	private String placeOfBirth;
 
 	@Valid
-	@NotNull
 	private List<ServiceHistory> serviceHistory = new ArrayList<ServiceHistory>();
 
 	@Valid
-	@NotNull
 	private List<Probation> probation = new ArrayList<Probation>();
 
 	@Valid
-	@NotNull
 	private List<Regularisation> regularisation = new ArrayList<Regularisation>();
 
 	@Valid
-	@NotNull
 	private List<TechnicalQualification> technical = new ArrayList<TechnicalQualification>();
 
 	@Valid
-	@NotNull
 	private List<EducationalQualification> education = new ArrayList<EducationalQualification>();
 
 	@Valid
-	@NotNull
 	private List<DepartmentalTest> test = new ArrayList<DepartmentalTest>();
 
 	@Valid

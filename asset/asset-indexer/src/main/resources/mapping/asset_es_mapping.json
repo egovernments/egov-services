@@ -1,0 +1,49 @@
+curl -XPUT localhost:9200/assets -d 
+
+ '{
+   "mappings":{
+     "asset":{
+	 "properties":{
+		"assetName"	    : {"index":"not_analyzed","type":"string"},
+		"assetCode"  	    : {"index":"not_analyzed","type":"string"},
+		"assetDetails"	    : {"index":"not_analyzed","type":"string"},
+		"modeOfAcquisition" : {"index":"not_analyzed","type":"string"},
+		"status"	    : {"index": "not_analyzed","type":"string"},
+		"description"	    : {"index":"not_analyzed","type":"string"},
+		"dateOfCreation"    : {"index":"not_analyzed","type":"date"},
+		"remarks"           : {"index":"not_analyzed","type":"string"},
+		"length"	    : {"index":"not_analyzed","type":"string"},
+		"width"		    : {"index":"not_analyzed","type":"string"},
+		"totalArea"	    : {"index":"not_analyzed","type":"string"},
+		"properties"	    : {"index":"not_analyzed","type":"string"},
+
+		"departmentName"    : {"index":"not_analyzed","type":"string"},
+		"departmentCode"    : {"index":"not_analyzed","type":"string"},
+
+		
+		"zone"   	    : {"index":"not_analyzed","type":"string"},
+		"revenueWard"       : {"index":"not_analyzed","type":"string"},
+		"locality"  	    : {"index":"not_analyzed","type":"string"},
+		"block"   	    : {"index":"not_analyzed","type":"string"},
+		"street"   	    : {"index":"not_analyzed","type":"string"},
+		"electionWard"      : {"index":"not_analyzed","type":"string"},
+		"doorNo"  	    : {"index":"not_analyzed","type":"string"},
+		"pinCode"  	    : {"index":"not_analyzed","type":"string"},
+
+		"assetCategoryName"       : {"index":"not_analyzed","type":"string"},
+		"assetCategoryCode"       : {"index":"not_analyzed","type":"string"},
+		"assetCategoryType"       : {"index":"not_analyzed","type":"string"},
+		"parent"      	          : {"index":"not_analyzed","type":"string"},
+		"depreciationMethod"      : {"index":"not_analyzed","type":"string"},
+		"assetAccount"            : {"index":"not_analyzed","type":"string"},
+		"accumulatedDepreciationAccount      : {"index":"not_analyzed","type":"string"},
+		"revaluationReserveAccount"          : {"index":"not_analyzed","type":"string"},
+		"depreciationExpenseAccount"         : {"index":"not_analyzed","type":"string"},
+		"unitOfMeasurement"         	     : {"index":"not_analyzed","type":"string"},
+		"depreciationRate"       	     : {"index":"not_analyzed","type":"string"},
+		"customFields"        	   	     : {"index":"not_analyzed","type":"string"},
+
+	}}}}'
+
+
+

@@ -163,7 +163,7 @@ class SearchAsset extends React.Component {
                                 <td>{item.assetCategory.name}</td>
                                 <td>{item.department.name?item.department.name:"NULL"}</td>
                                 <td>{item.status}</td>
-                                <td>{item.assetDetails}</td>
+                                <td>{item.assetDetails?item.assetDetails:"NULL"}</td>
 
                                 <td data-label="action">
                     {renderAction(getUrlVars()["type"],item.id)}
@@ -260,7 +260,7 @@ class SearchAsset extends React.Component {
           <br/>
 
               <div className="text-center">
-                  <button type="submit" className="btn btn-submit">Search</button>
+                  <button type="submit" className="btn btn-submit">Search</button>&nbsp;&nbsp;
                   <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>
               </div>
           </form>
@@ -284,43 +284,3 @@ ReactDOM.render(
   <SearchAsset />,
   document.getElementById('root')
 );
-
-// <div role="tabpanel" className="tab-pane" id="assignmentDetails">
-// <div className="form-section" >
-//         <h3 className="pull-left">Asset Search Result </h3>
-// <div className="clearfix"></div>
-// <div className="land-table">
-//             <table className="table table-bordered">
-//                 <thead>
-//                     <tr>
-//                         <th>Code</th>
-//                         <th>Name</th>
-//                         <th>Asset Category Type</th>
-//                         <th>Department</th>
-//                         <th>Status</th>
-//                         <th>Asset Details</th>
-//                         <th>Action</th>
-//                     </tr>
-//                 </thead>
-//
-//                 <tbody>
-//                   <tr>
-//                     <td> 001 </td>
-//                     <td> Land</td>
-//                   <td> Land </td>
-//                   <td>  Land</td>
-//                   <td> Buying</td>
-//                   <td>400 sq.ft</td>
-//
-//                   <td> <button className="btn btn-default btn-action"><span className="glyphicon glyphicon-trash"></span></button>
-//                     <button className="btn btn-default btn-action"><span className="glyphicon glyphicon-pencil"></span></button>
-//                   </td>
-//                   </tr>
-//
-//                 </tbody>
-//
-//             </table>
-//
-//         </div>
-//         </div>
-//         </div>

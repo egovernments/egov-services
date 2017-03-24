@@ -10,23 +10,23 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class EmployeeRepository {
 
-	private final String employeeServiceHost;
-	private RestTemplate restTemplate;
+    private final String employeeServiceHost;
+    private RestTemplate restTemplate;
 
-	public EmployeeRepository(RestTemplate restTemplate,
-			@Value("${egov.services.eis.host}") String employeeServiceHost) {
-		this.restTemplate = restTemplate;
-		this.employeeServiceHost = employeeServiceHost;
-	}
+    public EmployeeRepository(RestTemplate restTemplate,
+                              @Value("${egov.services.eis.host}") String employeeServiceHost) {
+        this.restTemplate = restTemplate;
+        this.employeeServiceHost = employeeServiceHost;
+    }
 
-	public Employee fetchEmployeeByPositionId(final Long id, final LocalDate asOnDate, final String tenantId) {
-		String url = this.employeeServiceHost + "eis/employee?positionId={id}&asOnDate={asOnDate}&tenantId={tenantId}";
-		return getEmployeeServiceResponse(url, id, asOnDate, tenantId).getEmployees().get(0);
-	}
+    public Employee fetchEmployeeByPositionId(final Long id, final LocalDate asOnDate, final String tenantId) {
+        String url = this.employeeServiceHost + "eis/employee?positionId={id}&asOnDate={asOnDate}&tenantId={tenantId}";
+        return getEmployeeServiceResponse(url, id, asOnDate, tenantId).getEmployees().get(0);
+    }
 
-	private EmployeeResponse getEmployeeServiceResponse(final String url, Long id, LocalDate asOnDate,
-			String tenantId) {
-		return restTemplate.getForObject(url, EmployeeResponse.class, id, asOnDate, tenantId);
-	}
+    private EmployeeResponse getEmployeeServiceResponse(final String url, Long id, LocalDate asOnDate,
+                                                        String tenantId) {
+        return restTemplate.getForObject(url, EmployeeResponse.class, id, asOnDate, tenantId);
+    }
 
 }

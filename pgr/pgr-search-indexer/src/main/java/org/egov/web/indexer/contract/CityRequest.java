@@ -1,7 +1,6 @@
 package org.egov.web.indexer.contract;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,7 +8,7 @@ import lombok.Setter;
 @Setter
 public class CityRequest {
 
-	@JsonProperty("City")
-	private City city = null;
+    @JsonProperty("City")
+    private City city = null;
 
 }

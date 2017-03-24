@@ -5,7 +5,7 @@
 
 	<groupId>org.egov</groupId>
 	<artifactId>hr-employee-indexer</artifactId>
-	<version>0.1</version>
+	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>hr-employee-indexer</name>

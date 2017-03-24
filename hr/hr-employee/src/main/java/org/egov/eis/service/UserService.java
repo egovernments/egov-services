@@ -161,6 +161,6 @@ public class UserService {
 			e.printStackTrace();
 			return errorHandler.getResponseEntityForUnexpectedErrors(userRequest.getRequestInfo());
 		}
-		return new ResponseEntity<UserResponse>(userResponse, HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<UserResponse>(userResponse, HttpStatus.CREATED);
 	}
 }

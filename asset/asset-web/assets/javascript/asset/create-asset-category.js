@@ -68,8 +68,8 @@ class CreateAsset extends React.Component {
   }
   handleChangeTwoLevel(e,pName,name)
   {
-    console.log(pName);
-    console.log(name);
+    // console.log(pName);
+    // console.log(name);
 
 
       this.setState({
@@ -106,7 +106,7 @@ class CreateAsset extends React.Component {
               async: false,
               contentType: 'application/json',
               headers:{
-                'auth-token': '0bb72a4e-df28-4cb1-8abb-ac298c0a7e02'
+                'auth-token': authToken
               }
           });
 
@@ -114,6 +114,8 @@ class CreateAsset extends React.Component {
         if(response["statusText"]==="OK")
         {
           alert("Successfully added");
+
+
         }
         else {
           alert(response["statusText"]);
@@ -170,12 +172,12 @@ class CreateAsset extends React.Component {
 
 
     if (type === "view" || type === "update") {
-        console.log(getCommonMasterById("asset-services", "assetCategories", "AssetCategory", id).responseJSON);
+        // console.log(getCommonMasterById("asset-services", "assetCategories", "AssetCategory", id).responseJSON);
         this.setState({
             assetCategory: getCommonMasterById("asset-services", "assetCategories", "AssetCategory", id).responseJSON["AssetCategory"][0]
         })
     }
-      console.log(commonApiPost("egf-masters","chartofaccounts","_search",{tenantId}).responseJSON["chartOfAccounts"]);
+      // console.log(commonApiPost("egf-masters","chartofaccounts","_search",{tenantId}).responseJSON["chartOfAccounts"]);
 
      this.setState({
 
@@ -435,7 +437,7 @@ class CreateAsset extends React.Component {
                         </div>
                         <div className="col-sm-6">
                         <div className="styled-select">
-                        <select id="revaluationReserveAccount" name="revaluationReserveAccount"  value={revaluationReserveAccount} onChange={(e)=>{
+                        <select id="revaluationReserveAccount" name="revaluationReserveAccount" required="true" value={revaluationReserveAccount} onChange={(e)=>{
                         handleChange(e,"revaluationReserveAccount")}}>
                             <option value="">Select Reserve Account </option>
                             {renderOption(this.state.revaluationReserveAccount)}
@@ -624,7 +626,7 @@ class CreateAsset extends React.Component {
 
                         <div className="text-center">
               {showActionButton()} &nbsp;&nbsp;
-              <button type="button" className="btn btn-submit" onClick={(e)=>{this.close()}}>Close</button>
+              <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>
 
           </div>
 

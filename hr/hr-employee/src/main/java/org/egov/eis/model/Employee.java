@@ -133,6 +133,7 @@ public class Employee {
 	private List<Long> languagesKnown = new ArrayList<Long>();
 
 	@Valid
+	@NotNull
 	private MaritalStatus maritalStatus;
 
 	private String passportNo;

@@ -57,6 +57,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.egov.demand.web.contract.Bill;
 import org.egov.demand.web.contract.BillInfo;
 
 import lombok.AllArgsConstructor;
@@ -189,6 +190,10 @@ public class EgBill implements java.io.Serializable {
 		this.emailId = bill.getEmailId();
 	}
 
+	public BillInfo toDomain() {
+		return BillInfo.builder().id(id).demandId(egDemand).citizenName(citizenName).citizenAddress(citizenAddress).billNumber(billNo).build();
+	}
+	
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();

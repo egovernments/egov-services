@@ -85,6 +85,7 @@ public class Assignment {
 	private Long designation;
 
 	@Valid
+	@NotNull
 	private List<HODDepartment> hod = new ArrayList<HODDepartment>();
 
 	@NotNull

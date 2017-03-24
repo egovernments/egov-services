@@ -36,6 +36,7 @@ public class EmployeeHelper {
 		TECHNICALQUALIFICATION("seq_egeis_technicalqualification");
 
 		String sequenceName;
+
 		private Sequences(String sequenceName) {
 			this.sequenceName = sequenceName;
 		}
@@ -70,8 +71,6 @@ public class EmployeeHelper {
 			assignment.setCreatedDate(new Date());
 			assignment.setLastModifiedBy((Long.parseLong((employeeRequest.getRequestInfo().getRequesterId()))));
 			assignment.setLastModifiedDate((new Date()));
-		});
-		employee.getAssignments().forEach((assignment) -> {
 			assignment.getHod().forEach((hod) -> {
 				hod.setId(employeeRepository.generateSequence(Sequences.HODDEPARTMENT.toString()));
 				hod.setTenantId(employee.getTenantId());
@@ -126,7 +125,6 @@ public class EmployeeHelper {
 			technical.setLastModifiedDate((new Date()));
 		});
 	}
-
 
 	/**
 	 * Populate EmployeeResponse object & returns ResponseEntity of type

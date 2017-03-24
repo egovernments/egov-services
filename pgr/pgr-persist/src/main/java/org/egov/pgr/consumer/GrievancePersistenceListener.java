@@ -70,8 +70,8 @@ public class GrievancePersistenceListener {
 		logger.debug("Received seva request");
 		SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
 		Complaint complaint = persistComplaint(sevaRequest);
-		triggerSms(complaint);
-		triggerEmail(complaint);
+//		triggerSms(complaint);
+//		triggerEmail(complaint);
 		triggerIndexing(sevaRequest);
 	}
 

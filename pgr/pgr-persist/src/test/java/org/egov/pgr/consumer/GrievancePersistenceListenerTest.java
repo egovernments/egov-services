@@ -13,6 +13,7 @@ import org.egov.pgr.repository.PositionRepository;
 import org.egov.pgr.repository.Resources;
 import org.egov.pgr.service.*;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -77,6 +78,7 @@ public class GrievancePersistenceListenerTest {
     }
 
     @Test
+	@Ignore //TODO: Done in PGR-Notification
     public void testSmsMessageIsSentAsNotificationToSmsService() throws Exception {
         String sevaRequestStr = new Resources().getFileContents("sevaRequest.json");
         HashMap<String, Object> sevaRequestMap = new ObjectMapper().readValue(sevaRequestStr, HashMap.class);
@@ -90,7 +92,8 @@ public class GrievancePersistenceListenerTest {
     }
 
     @Test
-    public void testEmailMesageIsSentToEmailService() throws Exception {
+	@Ignore //TODO: Done in PGR-Notification
+	public void testEmailMesageIsSentToEmailService() throws Exception {
         String sevaRequestStr = new Resources().getFileContents("sevaRequest.json");
         HashMap<String, Object> sevaRequestMap = new ObjectMapper().readValue(sevaRequestStr, HashMap.class);
         listener.processMessage(sevaRequestMap);

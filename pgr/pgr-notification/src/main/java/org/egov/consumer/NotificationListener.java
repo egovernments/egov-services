@@ -18,7 +18,7 @@ public class NotificationListener {
         this.emailService = emailService;
     }
 
-    @KafkaListener(topics = "${incoming.topic}", group = "${consumer.id}")
+    @KafkaListener(topics = "${incoming.topic}", group = "${consumer.group.id}")
     public void process(HashMap<String, Object> sevaRequestMap) {
         final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
         smsService.send(sevaRequest);

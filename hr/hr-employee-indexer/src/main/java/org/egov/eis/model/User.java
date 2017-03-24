@@ -106,7 +106,7 @@ public class User {
 
 	private Boolean active;
 
-	@JsonFormat(pattern = "yyyy-mm-dd")
+	@JsonFormat(pattern = "dd/mm/yyyy")
 	private Date dob;
 
 	@JsonFormat(pattern = "dd-MM-yyyy hh:mm:ss")

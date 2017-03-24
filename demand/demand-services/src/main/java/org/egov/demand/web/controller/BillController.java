@@ -7,10 +7,12 @@ import javax.validation.Valid;
 
 import org.egov.demand.domain.service.BillService;
 import org.egov.demand.persistence.entity.EgBill;
+import org.egov.demand.persistence.repository.BillRepository;
 import org.egov.demand.utils.CollectionUtils;
 import org.egov.demand.web.contract.BillInfo;
 import org.egov.demand.web.contract.BillRequest;
 import org.egov.demand.web.contract.BillResponse;
+import org.egov.demand.web.contract.BillSearchCriteria;
 import org.egov.demand.web.contract.RequestInfo;
 import org.egov.demand.web.contract.ResponseInfo;
 import org.egov.demand.web.contract.factory.ResponseInfoFactory;
@@ -19,14 +21,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("bill")
+@RequestMapping("demand/bill")
 public class BillController {
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
@@ -36,7 +40,29 @@ public class BillController {
 
 	@Autowired
 	private BillService billService;
+	
+	@Autowired
+	private BillRepository billRepository;
 
+	@PostMapping("_search")
+	@ResponseBody
+	public ResponseEntity<?> search(@ModelAttribute @Valid BillSearchCriteria billSearchCriteria,
+			@RequestBody RequestInfo requestInfo, BindingResult bindingResult) {
+		org.egov.demand.web.contract.BillInfo billContract = null;
+		List<org.egov.demand.web.contract.BillInfo> billContracts = new ArrayList<org.egov.demand.web.contract.BillInfo>();
+		if (bindingResult.hasErrors()) {
+			return errHandler.getErrorResponseEntityForBindingErrors(bindingResult, requestInfo);
+		}
+		try {
+			EgBill bill = billRepository.findOne(billSearchCriteria.getBillId());
+			billContract = bill.toDomain();
+			billContracts.add(billContract);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return getSuccessResponseForSearch(billContracts, requestInfo);
+	}
+	
 	@PostMapping("_create")
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> create(@RequestBody @Valid BillRequest billRequest, BindingResult bindingResult) {

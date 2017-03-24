@@ -355,7 +355,7 @@ var commom_fields_rules = {
         required: false
     },
     employeeType: {
-        required: false
+        required: true
     },
     motherTounge: {
         required: false
@@ -379,7 +379,7 @@ var commom_fields_rules = {
         required: false
     },
     maritalStatus: {
-        required: false
+        required: true
     },
     passportNo: {
         required: false
@@ -927,17 +927,17 @@ function fillValueToObject(currentState) {
 
         var splitResult = currentState.id.split(".");
         if (splitResult[0] === "user") {
-            // if(currentState.id=="user.dob")
-            // {
-            //   var dateSplit=currentState.value.split("-");
-            //   var date=new Date(dateSplit[0],dateSplit[1],dateSplit[2]);
-            //   var day=date.getDate().toString().length===1?"0"+date.getDate():date.getDate();
-            //   var monthIn=date.getMonth().toString().length===1?"0"+date.getMonth():date.getMonth();
-            //   var yearIn=date.getFullYear();
-            //   employee[splitResult[0]][splitResult[1]] = day+"/"+monthIn+"/"+yearIn;
-            //
-            // }
-            if(currentState.id=="user.active")
+            if(currentState.id=="user.dob")
+            {
+              var dateSplit=currentState.value.split("-");
+              var date=new Date(dateSplit[0],dateSplit[1],dateSplit[2]);
+              var day=date.getDate().toString().length===1?"0"+date.getDate():date.getDate();
+              var monthIn=date.getMonth().toString().length===1?"0"+date.getMonth():date.getMonth();
+              var yearIn=date.getFullYear();
+              employee[splitResult[0]][splitResult[1]] = day+"/"+monthIn+"/"+yearIn;
+
+            }
+            else if(currentState.id=="user.active")
             {
               employee[splitResult[0]][splitResult[1]] = currentState.value;
 
@@ -1405,7 +1405,7 @@ $("#createEmployeeForm").validate({
                   if(response["status"]===200)
                   {
                     alert("Successfully added");
-                    window.location.href="../../../../app/hr/common/employee-attendance.html";
+                    // window.location.href="../../../../app/hr/common/employee-attendance.html";
                   }
                   else {
                     alert(response["statusText"]);

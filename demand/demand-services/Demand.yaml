@@ -598,6 +598,10 @@ definitions:
     type: object
     description: A object holds a demand and collection values for a head and category or demand and the period.
     properties:
+      id:
+        type: integer
+        format: int64
+        description: primary key of a demand.
       taxAmount:
         type: number
         format: double

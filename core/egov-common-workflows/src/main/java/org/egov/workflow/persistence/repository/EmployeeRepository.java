@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.egov.workflow.web.contract.Employee;
 import org.egov.workflow.web.contract.EmployeeRes;
-import org.egov.workflow.web.contract.PositionRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -43,8 +42,6 @@ public class EmployeeRepository {
 	}
 
 	public EmployeeRes getEmployeeForUserId(final Long userId) {
-		return restTemplate.postForObject(employeesByUserIdUrl, null, EmployeeRes.class);
-		// restTemplate.getForObject(employeesByUserIdUrl, EmployeeRes.class,
-		// userId);
+		return restTemplate.getForObject(employeesByUserIdUrl, EmployeeRes.class, userId);
 	}
 }

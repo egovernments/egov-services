@@ -2,7 +2,6 @@ package org.egov.workflow.persistence.repository;
 
 import java.util.List;
 
-import org.egov.workflow.domain.model.AuthenticatedUser;
 import org.egov.workflow.web.contract.Position;
 import org.egov.workflow.web.contract.PositionRequest;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,13 +26,7 @@ public class PositionRepository {
 	}
 
 	public Position getById(final Long id) {
-		/*
-		 * final PositionRequest positionRequest =
-		 * restTemplate.getForObject(positionsByIdUrl, PositionRequest.class,
-		 * id);
-		 */
-		final PositionRequest positionRequest = restTemplate.postForObject(positionsByIdUrl, null,
-				PositionRequest.class);
+		final PositionRequest positionRequest = restTemplate.getForObject(positionsByIdUrl, PositionRequest.class, id);
 		return positionRequest.getPosition().get(0);
 	}
 

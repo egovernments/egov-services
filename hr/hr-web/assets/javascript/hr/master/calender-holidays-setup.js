@@ -5,10 +5,7 @@ constructor(props){
     "id": "" ,
     "calendarYear": {
       "id": "",
-      "name": "",
-      "startDate": "",
-      "endDate": "",
-      "tenantId": ""
+      "name": ""
     },
     "name": "",
     "applicableOn": "",
@@ -77,13 +74,9 @@ componentWillMount(){
       }
       else{
         this.setState({holiday:{
-          "id": "" ,
+          "tenantId": 1 ,
           "calendarYear": {
-            "id": "",
-            "name": "",
-            "startDate": "",
-            "endDate": "",
-            "tenantId": ""
+            "name": ""
           },
           "name": "",
           "applicableOn": "",
@@ -132,7 +125,7 @@ componentWillMount(){
                   </div>
                   <div className="col-sm-6">
                     <div className="styled-select">
-                    <select id="calendarYear" name="calendarYear" value= {calendarYear.name} required="true"
+                    <select id="calendarYear" name="calendarYear" required="true" value= {calendarYear.name}
                         onChange={(e)=>{handleChange(e,"calendarYear")  }}>
                     <option>Select Year</option>
                     {renderOption(this.state.year)}
@@ -191,8 +184,8 @@ componentWillMount(){
 
 
     <div className="text-center">
-        {showActionButton()}
-        <button type="button" className="btn btn-submit" onClick={(e)=>{this.close()}}>Close</button>
+        {showActionButton()} &nbsp;&nbsp;
+        <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>
 
     </div>
     </fieldset>

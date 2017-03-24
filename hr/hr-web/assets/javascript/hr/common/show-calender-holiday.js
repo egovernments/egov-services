@@ -12,7 +12,7 @@ class ShowCalenderHoliday extends React.Component {
 
   }
 
-
+  
   componentWillMount(){
     this.setState({
     year:getCommonMaster("egov-common-masters","calendaryears","CalendarYear").responseJSON["CalendarYear"] || []
@@ -138,7 +138,7 @@ const showTable=function()
                     <td>{index+1}</td>
                     <td data-label="applicableOn">{item.applicableOn}</td>
                     <td data-label="name">{item.name}</td>
-                    <td data-label="active">{item.active?"true":"false"}</td>
+                    <td data-label="active">{item.active?item.active:"true"}</td>
                     <td data-label="action">
                     {renderAction(getUrlVars()["type"],item.id)}
                     </td>

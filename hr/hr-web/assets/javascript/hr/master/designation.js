@@ -157,8 +157,8 @@ class Designation extends React.Component{
           </div>
 
           <div className="text-center">
-                {showActionButton()}
-                <button type="button" className="btn btn-submit" onClick={(e)=>{this.close()}}>Close</button>
+                {showActionButton()} &nbsp;&nbsp;
+                <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>
         </div>
         </fieldset>
         </form>

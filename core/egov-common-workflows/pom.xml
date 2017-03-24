@@ -4,11 +4,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.egov</groupId>
-	<artifactId>egov-workflows</artifactId>
+	<artifactId>egov-common-workflows</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>egov-workflows</name>
+	<name>egov-common-workflows</name>
 	<description>Workflows service for egov applications</description>
 
 	<parent>

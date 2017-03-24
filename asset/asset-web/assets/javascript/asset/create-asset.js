@@ -5,7 +5,7 @@ const titleCase = (field) => {
       	newField += field.charAt(i).toLowerCase();
       } else {
         newField += field[i]
-      } 
+      }
     }
     return newField;
 }
@@ -163,7 +163,7 @@ class CreateAsset extends React.Component {
             ...this.state.assetSet[pName],
             [name]: e.target.value
       };
-      
+
       if(text) {
         innerJSON["name"] = text;
       }
@@ -185,6 +185,14 @@ class CreateAsset extends React.Component {
           format: 'DD/MM/YYYY',
           maxDate: new Date()
       });
+			$('#dateOfCreation').on("dp.change", function(e) {
+						_this.setState({
+				          assetSet: {
+				              ..._this.state.assetSet,
+				              "dateOfCreation":$("#dateOfCreation").val()
+				          }
+			      })
+				});
 
       this.setState({
           assetCategories: commonApiPost("asset-services", "assetCategories", "_search", {}).responseJSON["AssetCategory"] || [],
@@ -280,7 +288,7 @@ class CreateAsset extends React.Component {
       status
   } = this.state.assetSet;
     let mode = getUrlVars()["type"];
-    
+
     const getType = function() {
         switch(mode) {
             case 'update':
@@ -413,11 +421,11 @@ class CreateAsset extends React.Component {
 
     const getTodaysDate = function() {
         var now = new Date();
-        var month = (now.getMonth() + 1);               
+        var month = (now.getMonth() + 1);
         var day = now.getDate();
-        if(month < 10) 
+        if(month < 10)
             month = "0" + month;
-        if(day < 10) 
+        if(day < 10)
             day = "0" + day;
         return (now.getFullYear() + '-' + month + '-' + day);
     }
@@ -702,9 +710,9 @@ class CreateAsset extends React.Component {
                   {renderIfCapitalized(this.state.capitalized)}
               </div>
             </div>
-            <div className="text-center"> 
+            <div className="text-center">
               {showActionButton()} &nbsp;&nbsp;
-              <button type="button" className="btn btn-submit" onClick={(e)=>{this.close()}}>Close</button>
+              <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>
             </div>
         </form>
       </div>

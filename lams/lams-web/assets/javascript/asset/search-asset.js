@@ -163,7 +163,7 @@ class SearchAsset extends React.Component {
                                 <td>{item.assetCategory.name}</td>
                                 <td>{item.department.name?item.department.name:"NULL"}</td>
                                 <td>{item.status}</td>
-                                <td>{item.assetDetails}</td>
+                                <td>{item.assetDetails?item.assetDetails:"NULL"}</td>
 
                                 <td data-label="action">
                     {renderAction(getUrlVars()["type"],item.id)}

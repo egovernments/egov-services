@@ -189,8 +189,93 @@ paths:
           schema:
             $ref: '#/definitions/ErrorRes'
 
+  /user/_details:
+    post:
+      summary: Get user details based on access token auth
+      description:  Get user details based on access token auth
+      parameters:
+        - name: access_token
+          in: query
+          required: true
+          description: The accessToken for that user.
+          type: string
+        - name: userDetailsRequest
+          in: body
+          description: Request for fetching user details using access token
+          required: true
+          schema:
+            $ref: '#/definitions/UserDetailsReq'
+      tags:
+        - UserDetails
+      responses:
+        '200':
+          description: User details returned successfully.
+          schema:
+            $ref: '#/definitions/UserDetailsRes'
+
+        '400':
+          description: Invalid Input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
 
 definitions:
+
+  UserDetail:
+    type: object
+    description: This is the user object used in api gateway for RBAC filter.
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: The unique id an user.
+      userName:
+        type: string
+        description: The unique username used for user login.
+        minLength: 1
+        maxLength: 64
+      name:
+        type: string
+        description: The full name of the user.
+        minLength: 3
+        maxLength: 100
+      mobileNumber:
+        type: string
+        description: Mobile number ofuser the user
+        maxLength: 10
+      emailId:
+        type: string
+        description: Email address of the user
+        maxLength: 128
+      locale:
+        type: string
+        description: Value will be set to "en_IN".
+        maxLength: 10
+      type:
+        type: string
+        maxLength: 20
+        description : System set value internally. For employee value will be always "EMPLOYEE". For citizen value will be "CITIZEN".
+        items:
+          type: string
+          enum:
+           - EMPLOYEE
+           - CITIZEN
+           - SYSTEM
+      roles:
+        type: array
+        items:
+         $ref: "#/definitions/Role"
+        description: List of roles that are attached to the user.
+      actions:
+        type: array
+        items:
+         $ref: "#/definitions/Action"
+        description: List of actions that are mapped to the roles of the user.
+      active:
+        type: boolean
+        description: True if the user is active and False if the user is inactive.
+      tenantId:
+        type: string
+        description: Unique Identifier of the tenant, Like AP, AP.Kurnool etc.
 
   User:
     type: object
@@ -338,7 +423,7 @@ definitions:
       createdBy:
         type: integer
         format: int64
-        description: Id of the user who created the record. 
+        description: Id of the user who created the record.
       createdDate:
         type: string
         format: date
@@ -346,7 +431,7 @@ definitions:
       lastModifiedBy:
         type: integer
         format: int64
-        description: Id of the user who last modified the record. 
+        description: Id of the user who last modified the record.
       lastModifiedDate:
         type: string
         format: date
@@ -369,7 +454,7 @@ definitions:
   Role:
     type: object
     properties:
-      id: 
+      id:
        type: integer
        format: int64
        description : Unique identifier of the role.
@@ -385,7 +470,7 @@ definitions:
       createdBy:
         type: integer
         format: int64
-        description: Id of the user who created the record. 
+        description: Id of the user who created the record.
       createdDate:
         type: string
         format: date
@@ -393,7 +478,7 @@ definitions:
       lastModifiedBy:
         type: integer
         format: int64
-        description: Id of the user who last modified the record. 
+        description: Id of the user who last modified the record.
       lastModifiedDate:
         type: string
         format: date
@@ -404,7 +489,18 @@ definitions:
     required:
       - name
       - tenantId
-      
+
+  Action:
+    type: object
+    properties:
+      url:
+        type: string
+        description: The string url for the action.
+        minLength: 10
+        maxLength: 100
+    required:
+      - url
+
   UserRes:
     type: object
     properties:
@@ -412,8 +508,8 @@ definitions:
         $ref: '#/definitions/ResponseInfo'
       User:
         type: array
-        items: 
-         $ref: '#/definitions/User'  
+        items:
+         $ref: '#/definitions/User'
   UserReq:
     type: object
     properties:
@@ -424,6 +520,31 @@ definitions:
     required:
       - RequestInfo
       - User
+
+  UserDetailsRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: '#/definitions/ResponseInfo'
+      UserDetails:
+        type: array
+        items:
+         $ref: '#/definitions/UserDetail'
+    required:
+      - ResponseInfo
+      - UserDetails
+
+  UserDetailsReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: '#/definitions/RequestInfo'
+      UserDetails:
+        $ref: '#/definitions/UserDetail'
+    required:
+      - RequestInfo
+      - UserDetails
+
   RequestInfo:
     type: object
     properties:

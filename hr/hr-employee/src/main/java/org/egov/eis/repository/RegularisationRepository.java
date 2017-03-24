@@ -42,7 +42,8 @@ public class RegularisationRepository {
 				ps.setLong(3, regularisation.getDesignation());
 				ps.setDate(4, new Date(regularisation.getDeclaredOn().getTime()));
 				ps.setString(5, regularisation.getOrderNo());
-				ps.setDate(6, new Date(regularisation.getOrderDate().getTime()));
+				ps.setDate(6, (regularisation.getOrderDate() == null ? null
+						: new Date(regularisation.getOrderDate().getTime())));
 				ps.setString(7, regularisation.getRemarks());
 				ps.setLong(8, Long.parseLong(employeeRequest.getRequestInfo().getRequesterId()));
 				ps.setTimestamp(9, new Timestamp(new java.util.Date().getTime()));

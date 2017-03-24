@@ -10,7 +10,7 @@ EXPOSE 8080 9990
 # INSTRUCTIONS ON HOW TO BUILD JAR:
 # Move to the location where pom.xml is exist in project and build project using below command
 # "mvn clean package"
-COPY /target/egov-workflows-0.0.1-SNAPSHOT.jar /opt/egov/egov-workflows.jar
+COPY /target/egov-common-workflows-0.0.1-SNAPSHOT.jar /opt/egov/egov-common-workflows.jar
 
 COPY start.sh /usr/bin/start.sh
 

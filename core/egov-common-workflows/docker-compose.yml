@@ -7,7 +7,7 @@ services:
       - POSTGRES_USER=myuser
       - POSTGRES_PASSWORD=mypass
   financials:
-    image: egovio/egov-workflows:latest
+    image: egovio/egov-common-workflows:latest
     ports:
       - "8080:8080"
       - "9990:9990"

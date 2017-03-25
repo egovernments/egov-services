@@ -22,17 +22,17 @@ public class LogAwareProducerListener<K, V> implements ProducerListener<K, V> {
         "Sending of message to topic: %s, partition: %s with key: %s failed.";
     private static final String SEND_FAILURE_MESSAGE_WITH_BODY =
         "Sending of message to topic: %s, partition: %s, body: %s with key: %s failed.";
-    private boolean isCustomTracingEnabled;
+    private TracerProperties tracerProperties;
 
     public LogAwareProducerListener(TracerProperties tracerProperties) {
-        this.isCustomTracingEnabled = tracerProperties.isDetailedTracingEnabled();
+        this.tracerProperties = tracerProperties;
         this.objectMapper = new ObjectMapper();
     }
 
     @Override
     public void onSuccess(String topic, Integer partition, K key, V value, RecordMetadata recordMetadata) {
         final String keyAsString = ObjectUtils.nullSafeToString(key);
-        if (isCustomTracingEnabled) {
+        if (tracerProperties.isDetailedTracingEnabled()) {
             final String bodyAsJsonString = getMessageBodyAsJsonString(value);
             log.info(SEND_SUCCESS_MESSAGE_WITH_BODY, topic, partition, bodyAsJsonString, keyAsString);
         } else {
@@ -43,7 +43,7 @@ public class LogAwareProducerListener<K, V> implements ProducerListener<K, V> {
     @Override
     public void onError(String topic, Integer partition, K key, V value, Exception exception) {
         final String keyAsString = ObjectUtils.nullSafeToString(key);
-        if (isCustomTracingEnabled) {
+        if (tracerProperties.isDetailedTracingEnabled()) {
             final String bodyAsJsonString = getMessageBodyAsJsonString(value);
             final String message =
                 String.format(SEND_FAILURE_MESSAGE_WITH_BODY, topic, partition, bodyAsJsonString, keyAsString);

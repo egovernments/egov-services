@@ -22,7 +22,7 @@ public class LogAwareRestTemplate extends RestTemplate {
     private static final String UTF_8 = "UTF-8";
     private static final String RESPONSE_BODY_ERROR_MESSAGE = "Error reading response body";
     private static final String RESPONSE_CODE_ERROR_MESSAGE = "Error reading response code";
-    public static final String EMPTY_BODY = "<EMPTY BODY>";
+    private static final String EMPTY_BODY = "<EMPTY BODY>";
     private TracerProperties tracerProperties;
 
     public LogAwareRestTemplate(TracerProperties tracerProperties) {
@@ -45,7 +45,6 @@ public class LogAwareRestTemplate extends RestTemplate {
     }
 
     private void logResponse(ClientHttpResponse response, URI uri) {
-
         try {
             String body = getBodyString(response);
             log.info(RESPONSE_MESSAGE_WITH_BODY, uri, response.getStatusCode(), body);
@@ -73,7 +72,6 @@ public class LogAwareRestTemplate extends RestTemplate {
         } else {
             log.info(REQUEST_MESSAGE, httpRequest.getURI(), httpRequest.getMethod().name());
         }
-
     }
 
     private String getBody(byte[] body) {

@@ -1,6 +1,7 @@
 package org.egov.tracer.config;
 
 import org.egov.tracer.http.LogAwareRestTemplate;
+import org.egov.tracer.kafka.KafkaListenerLoggingAspect;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
@@ -13,6 +14,11 @@ public class TracerConfiguration {
     @Bean
     public TracerProperties tracerProperties(Environment environment) {
         return new TracerProperties(environment);
+    }
+
+    @Bean
+    public KafkaListenerLoggingAspect kafkaListenerLoggingAspect(TracerProperties tracerProperties) {
+        return new KafkaListenerLoggingAspect(tracerProperties);
     }
 
     @Bean

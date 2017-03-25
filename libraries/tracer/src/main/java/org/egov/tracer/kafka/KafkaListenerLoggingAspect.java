@@ -8,32 +8,28 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.springframework.core.env.Environment;
+import org.egov.tracer.config.TracerProperties;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.Acknowledgment;
-import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Aspect
-@Component
 @Slf4j
 public class KafkaListenerLoggingAspect {
 
-    private static final String RECEIVED_MESSAGE = "Received message from topics: {} with body {}";
+    private static final String RECEIVED_MESSAGE_WITH_BODY = "Received message from topics: {} with body {}";
+    private static final String RECEIVED_MESSAGE = "Received message from topics: {}";
     private static final String PROCESSED_SUCCESS_MESSAGE = "Processed message successfully";
     private static final String EXCEPTION_MESSAGE = "Exception processing message";
-    private static final String PROPERTY_PLACEHOLDER_PREFIX = "${";
-    private static final String PROPERTY_PLACEHOLDER_SUFFIX = "}";
-    private static final String REPLACEMENT_STRING = "";
     private static final String JOIN_DELIMITER = ", ";
-    private Environment environment;
     private ObjectMapper objectMapper;
+    private TracerProperties tracerProperties;
 
-    public KafkaListenerLoggingAspect(Environment environment) {
-        this.environment = environment;
+    public KafkaListenerLoggingAspect(TracerProperties tracerProperties) {
+        this.tracerProperties = tracerProperties;
         this.objectMapper = new ObjectMapper();
     }
 
@@ -42,19 +38,23 @@ public class KafkaListenerLoggingAspect {
     }
 
     @Around("anyKafkaConsumer() ")
-    public Object logAction(ProceedingJoinPoint pjp) throws Throwable {
+    public Object logAction(ProceedingJoinPoint joinPoint) throws Throwable {
 
-        final Object[] args = pjp.getArgs();
-        MethodSignature signature = (MethodSignature) pjp.getSignature();
+        final Object[] args = joinPoint.getArgs();
+        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
         KafkaListener myAnnotation = method.getAnnotation(KafkaListener.class);
         try {
-            if (log.isInfoEnabled()) {
+            if (tracerProperties.isDetailedTracingEnabled()) {
                 final String topics = getListeningTopics(myAnnotation);
                 final String messageBodyAsString = getMessageBodyAsString(args);
-                log.info(RECEIVED_MESSAGE, topics, messageBodyAsString);
+                log.info(RECEIVED_MESSAGE_WITH_BODY, topics, messageBodyAsString);
+            } else {
+                final String topics = getListeningTopics(myAnnotation);
+                log.info(RECEIVED_MESSAGE, topics);
             }
-            final Object result = pjp.proceed();
+
+            final Object result = joinPoint.proceed();
             log.info(PROCESSED_SUCCESS_MESSAGE);
             return result;
         }
@@ -84,14 +84,9 @@ public class KafkaListenerLoggingAspect {
         return !(o instanceof Acknowledgment);
     }
 
-    private String getPropertyName(String propertyPlaceholder) {
-        final String propertyName = propertyPlaceholder
-                .replace(PROPERTY_PLACEHOLDER_PREFIX, REPLACEMENT_STRING)
-                .replace(PROPERTY_PLACEHOLDER_SUFFIX, REPLACEMENT_STRING);
-        return this.environment.getProperty(propertyName);
-    }
-
     private String getListeningTopics(KafkaListener myAnnotation) {
-        return Stream.of(myAnnotation.topics()).map(this::getPropertyName).collect(Collectors.joining(JOIN_DELIMITER));
+        return Stream.of(myAnnotation.topics())
+            .map(topic -> tracerProperties.getResolvedPropertyValue(topic))
+            .collect(Collectors.joining(JOIN_DELIMITER));
     }
 }

@@ -5,7 +5,7 @@
  *  Copyright (C) 2016  eGovernments Foundation
  *
  *  The updated version of eGov suite of products as by eGovernments Foundation
- *  is available at http://www.egovernments.org
+ *  is available at http://www.empernments.org
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -35,39 +35,35 @@
  *         with regards to rights under trademark law for use of the trade names
  *         or trademarks of eGovernments Foundation.
  *
- *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
+ *  In case of any queries, you can reach eGovernments Foundation at contact@empernments.org.
  */
 
 package org.egov.eis.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.annotation.Order;
-import org.springframework.core.env.Environment;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
-@Configuration
-@PropertySource(value = { "classpath:config/application-config.properties" }, ignoreResourceNotFound = true)
-@Order(0)
-public class ApplicationProperties {
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-	private static final String HR_MASTERS_SEARCH_PAGESIZE_DEFAULT = "egov.services.hr.masters.search.pagesize.default";
-	public static final String HR_MASTERS_SEARCH_PAGENO_MAX = "egov.services.hr.masters.search.pageno.max";
-	public static final String HR_MASTERS_SEARCH_PAGESIZE_MAX = "egov.services.hr.masters.search.pagesize.max";
+@Component
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+public class PropertiesManager {
 
-	@Autowired
-	private Environment environment;
+	@Value("${egov.services.hr_employee_service.hostname}")
+	private String employeeServiceHostName;
 
-	public String hrSearchPageSizeDefault() {
-		return this.environment.getProperty(HR_MASTERS_SEARCH_PAGESIZE_DEFAULT);
-	}
+	@Value("${egov.services.hr_employee_service.non_vacant_positions.basepath}")
+	private String employeeServiceNonVacantPositionsBasePath;
 
-	public String hrSearchPageNumberMax() {
-		return this.environment.getProperty(HR_MASTERS_SEARCH_PAGENO_MAX);
-	}
-
-	public String hrSearchPageSizeMax() {
-		return this.environment.getProperty(HR_MASTERS_SEARCH_PAGESIZE_MAX);
-	}
+	@Value("${egov.services.hr_employee_service.non_vacant_positions.searchpath}")
+	private String employeeServiceNonVacantPositionsSearchPath;
 
 }

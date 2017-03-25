@@ -43,7 +43,7 @@ package org.egov.eis.service;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-import org.egov.eis.config.ApplicationProperties;
+import org.egov.eis.config.PropertiesManager;
 import org.egov.eis.model.Position;
 import org.egov.eis.repository.VacantPositionsRepository;
 import org.egov.eis.web.contract.NonVacantPositionsResponse;
@@ -66,15 +66,17 @@ public class VacantPositionsService {
 	private VacantPositionsRepository vacantPositionsRepository;
 
 	@Autowired
-	private ApplicationProperties applicationProperties;
+	private PropertiesManager propertiesManager;
 
 	public List<Position> getVacantPositions(VacantPositionsGetRequest vacantPositionsGetRequest,
 			RequestInfo requestInfo) {
-		String url = applicationProperties.hrServicesHREmployeeServiceEmployeeHostRequest()
-			+ "?tenantId=" + vacantPositionsGetRequest.getTenantId()
-			+ "&departmentId=" + vacantPositionsGetRequest.getDepartmentId()
-			+ "&designationId=" + vacantPositionsGetRequest.getDesignationId()
-			+ "&asOnDate=" + new SimpleDateFormat("dd/MM/yyyy").format(vacantPositionsGetRequest.getAsOnDate());
+		String url = propertiesManager.getEmployeeServiceHostName()
+				+ propertiesManager.getEmployeeServiceNonVacantPositionsBasePath()
+				+ propertiesManager.getEmployeeServiceNonVacantPositionsSearchPath() + "?tenantId="
+				+ vacantPositionsGetRequest.getTenantId() + "&departmentId="
+				+ vacantPositionsGetRequest.getDepartmentId() + "&designationId="
+				+ vacantPositionsGetRequest.getDesignationId() + "&asOnDate="
+				+ new SimpleDateFormat("dd/MM/yyyy").format(vacantPositionsGetRequest.getAsOnDate());
 
 		System.err.println(url);
 
@@ -97,7 +99,7 @@ public class VacantPositionsService {
 		NonVacantPositionsResponse nonVacantPositionsResponse = new RestTemplate().postForObject(url, httpEntityRequest,
 				NonVacantPositionsResponse.class);
 
-		if(!nonVacantPositionsResponse.getPositionIds().isEmpty())
+		if (!nonVacantPositionsResponse.getPositionIds().isEmpty())
 			vacantPositionsGetRequest.setId(nonVacantPositionsResponse.getPositionIds());
 
 		return vacantPositionsRepository.findForCriteria(vacantPositionsGetRequest);

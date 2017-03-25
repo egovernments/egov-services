@@ -9,10 +9,14 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.egov.tracer.config.TracerProperties;
+import org.egov.tracer.model.RequestContext;
+import org.egov.tracer.model.RequestCorrelationId;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.Acknowledgment;
 
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -45,6 +49,7 @@ public class KafkaListenerLoggingAspect {
         Method method = signature.getMethod();
         KafkaListener myAnnotation = method.getAnnotation(KafkaListener.class);
         try {
+            setCorrelationId(args);
             if (tracerProperties.isDetailedTracingEnabled()) {
                 final String topics = getListeningTopics(myAnnotation);
                 final String messageBodyAsString = getMessageBodyAsString(args);
@@ -62,6 +67,22 @@ public class KafkaListenerLoggingAspect {
             log.error(EXCEPTION_MESSAGE, e);
             throw e;
         }
+    }
+
+    private void setCorrelationId(Object[] args) {
+        final String correlationId = getCorrelationId(args);
+        RequestContext.setId(correlationId);
+    }
+
+    private String getCorrelationId(Object[] args) {
+        @SuppressWarnings("unchecked")
+        final HashMap<String, Object> requestMap = (HashMap<String, Object>) getMessageBody(args);
+        final String correlationIdFromRequest = new RequestCorrelationId(requestMap).get();
+        return  correlationIdFromRequest == null ? getRandomCorrelationId() : correlationIdFromRequest;
+    }
+
+    private String getRandomCorrelationId() {
+        return UUID.randomUUID().toString();
     }
 
     private String getMessageBodyAsString(Object[] args) throws JsonProcessingException {

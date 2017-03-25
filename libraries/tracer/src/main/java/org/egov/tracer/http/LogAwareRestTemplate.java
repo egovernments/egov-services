@@ -19,6 +19,7 @@ public class LogAwareRestTemplate extends RestTemplate {
     private static final String REQUEST_MESSAGE = "Sending request to {} with verb {}";
     private static final String RESPONSE_MESSAGE_WITH_BODY = "Received from {} response code {} and body {}: ";
     private static final String RESPONSE_MESSAGE = "Received response from {}";
+    private static final String FAILED_RESPONSE_MESSAGE = "Received error response from %s";
     private static final String UTF_8 = "UTF-8";
     private static final String RESPONSE_BODY_ERROR_MESSAGE = "Error reading response body";
     private static final String RESPONSE_CODE_ERROR_MESSAGE = "Error reading response code";
@@ -33,14 +34,20 @@ public class LogAwareRestTemplate extends RestTemplate {
     private ClientHttpRequestInterceptor logRequestAndResponse() {
         return (httpRequest, body, clientHttpRequestExecution) -> {
             logRequest(httpRequest, body);
-            final ClientHttpResponse rawResponse = clientHttpRequestExecution.execute(httpRequest, body);
-            if (tracerProperties.isDetailedTracingDisabled()) {
-                log.info(RESPONSE_MESSAGE, httpRequest.getURI());
-                return rawResponse;
+            try {
+                final ClientHttpResponse rawResponse = clientHttpRequestExecution.execute(httpRequest, body);
+                if (tracerProperties.isDetailedTracingDisabled()) {
+                    log.info(RESPONSE_MESSAGE, httpRequest.getURI());
+                    return rawResponse;
+                }
+                final CacheableSimpleClientHttpResponse response = new CacheableSimpleClientHttpResponse(rawResponse);
+                logResponse(response, httpRequest.getURI());
+                return response;
+            } catch (Exception e) {
+                log.error(String.format(FAILED_RESPONSE_MESSAGE, httpRequest.getURI()), e);
+                throw e;
             }
-            final CacheableSimpleClientHttpResponse response = new CacheableSimpleClientHttpResponse(rawResponse);
-            logResponse(response, httpRequest.getURI());
-            return response;
+
         };
     }
 

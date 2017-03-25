@@ -4,6 +4,7 @@ import org.egov.tracer.http.CorrelationIdFilter;
 import org.egov.tracer.http.LogAwareRestTemplate;
 import org.egov.tracer.http.UnhandledExceptionControllerAdvice;
 import org.egov.tracer.kafka.KafkaListenerLoggingAspect;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -42,7 +43,9 @@ public class TracerConfiguration {
     }
 
     @Bean
-    public FilterRegistrationBean someFilterRegistration() {
+    @ConditionalOnProperty(name = "org.egov.correlation.body.filter.disabled",
+        havingValue = "false", matchIfMissing = true)
+    public FilterRegistrationBean correlationIdFilter() {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setFilter(new CorrelationIdFilter());
         registration.addUrlPatterns("/*");

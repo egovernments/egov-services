@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.tracer.model.RequestContext;
+import org.egov.tracer.model.RequestCorrelationId;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -15,6 +16,11 @@ import java.util.UUID;
 @Slf4j
 public class CorrelationIdFilter implements Filter {
 
+    private static final String CORRELATION_ID_HEADER_NAME = "X-CORRELATION-ID";
+    private static final String FAILED_TO_DESERIALIZE_MESSAGE = "Failed to deserialize body";
+    private static final String GET = "GET";
+    private static final String EMPTY_STRING = "";
+    private static final String MULTI_PART = "multipart";
     private final ObjectMapper objectMapper;
 
     public CorrelationIdFilter() {
@@ -37,39 +43,44 @@ public class CorrelationIdFilter implements Filter {
     }
 
     private void setCorrelationId(HttpServletRequest httpRequest) throws IOException {
-        if ("GET".equals(httpRequest.getMethod())) {
-            RequestContext.setId(getRandomCorrelationId());
+        if (GET.equals(httpRequest.getMethod()) || isMultiPartContentType(httpRequest)) {
+            final String correlationIdFromHeader = getCorrelationIdFromHeader(httpRequest);
+            if (correlationIdFromHeader == null) {
+                RequestContext.setId(getRandomCorrelationId());
+            } else {
+                RequestContext.setId(correlationIdFromHeader);
+            }
         }
-        final String correlationIdFromRequest = getCorrelationIdFromRequest(httpRequest);
-        if (correlationIdFromRequest == null) {
+        final String correlationIdFromRequestBody = getCorrelationIdFromRequestBody(httpRequest);
+        if (correlationIdFromRequestBody == null) {
             RequestContext.setId(getRandomCorrelationId());
         } else {
-            RequestContext.setId(correlationIdFromRequest);
+            RequestContext.setId(correlationIdFromRequestBody);
         }
     }
 
-    private String getCorrelationIdFromRequest(HttpServletRequest httpRequest) throws IOException {
+    private boolean isMultiPartContentType(HttpServletRequest httpRequest) {
+        return getContentType(httpRequest).indexOf(MULTI_PART) > 0;
+    }
+
+    private String getContentType(HttpServletRequest httpRequest) {
+        return httpRequest.getContentType() == null ? EMPTY_STRING : httpRequest.getContentType().toLowerCase();
+    }
+
+    private String getCorrelationIdFromHeader(HttpServletRequest httpRequest) {
+        return httpRequest.getHeader(CORRELATION_ID_HEADER_NAME);
+    }
+
+    private String getCorrelationIdFromRequestBody(HttpServletRequest httpRequest) throws IOException {
         try {
-            final HashMap hashMap = objectMapper.readValue(httpRequest.getInputStream(), HashMap.class);
-            final HashMap<String, Object> requestInfo = getRequestInfo(hashMap);
-            if (requestInfo != null) {
-                return (String) requestInfo.get("correlationId");
-            }
+            @SuppressWarnings("unchecked")
+            final HashMap<String, Object> hashMap = (HashMap<String, Object>)
+                objectMapper.readValue(httpRequest.getInputStream(), HashMap.class);
+            return new RequestCorrelationId(hashMap).get();
         } catch (JsonParseException | JsonMappingException e) {
-            log.error("Failed to deserialize body", e);
+            log.error(FAILED_TO_DESERIALIZE_MESSAGE, e);
             return null;
         }
-        return null;
-    }
-
-    @SuppressWarnings("unchecked")
-    private HashMap<String, Object> getRequestInfo(HashMap hashMap) {
-        final Object requestInfo1 = hashMap.get("RequestInfo");
-        if (requestInfo1 == null) {
-            final Object requestInfo2 = hashMap.get("requestInfo");
-            return (HashMap<String, Object> )requestInfo2;
-        }
-        return (HashMap<String, Object>) requestInfo1;
     }
 
     @Override

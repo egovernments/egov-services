@@ -41,60 +41,56 @@ public class MessageControllerTest {
     public void test_should_fetch_messages_for_given_locale() throws Exception {
         final List<Message> entitMessages = getEntityMessages();
         when(messageRepository.findByTenantIdAndLocale(TENANT_ID, LOCALE))
-                .thenReturn(entitMessages);
+            .thenReturn(entitMessages);
 
         mockMvc.perform(get("/messages")
-                .header("X-CORRELATION-ID", "someId")
-                .param("tenantId", TENANT_ID)
-                .param("locale", LOCALE))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(content().json(getFileContents("messagesResponse.json")));
-
-        assertEquals("someId", RequestContext.getId());
+            .param("tenantId", TENANT_ID)
+            .param("locale", LOCALE))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+            .andExpect(content().json(getFileContents("messagesResponse.json")));
     }
 
     @Test
     public void test_should_save_new_messages() throws Exception {
         final Message message1 = Message.builder()
-                .locale(LOCALE)
-                .tenantId(TENANT_ID)
-                .code("code1")
-                .message("message1")
-                .build();
+            .locale(LOCALE)
+            .tenantId(TENANT_ID)
+            .code("code1")
+            .message("message1")
+            .build();
         final Message message2 = Message.builder()
-                .locale(LOCALE)
-                .tenantId(TENANT_ID)
-                .code("code2")
-                .message("message2")
-                .build();
+            .locale(LOCALE)
+            .tenantId(TENANT_ID)
+            .code("code2")
+            .message("message2")
+            .build();
         List<Message> expectedMessages = Arrays.asList(message1, message2);
         when(messageRepository.save(expectedMessages)).thenReturn(getEntityMessages());
 
         mockMvc.perform(post("/messages")
-                .header("X-CORRELATION-ID", "someId")
-                .content(getFileContents("newMessagesRequest.json")).contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(status().isCreated())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(content().json(getFileContents("messagesResponse.json")));
-
-        assertEquals("someId", RequestContext.getId());
+            .content(getFileContents("newMessagesRequest.json")).contentType(MediaType.APPLICATION_JSON_UTF8))
+            .andExpect(status().isCreated())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+            .andExpect(content().json(getFileContents("messagesResponse.json")));
     }
 
     @Test
-    public void test_should_return_bad_request_with_error_response_when_create_message_request_does_not_have_mandatory_parameters() throws Exception {
+    public void
+    test_should_return_bad_request_with_error_response_when_create_message_request_does_not_have_mandatory_parameters
+        () throws Exception {
         mockMvc.perform(post("/messages")
-                .content(getFileContents("newMessagesRequestWithMissingMandatoryParameters.json"))
-                .contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(content().json(getFileContents("mandatoryFieldsMissingErrorResponse.json")));
+            .content(getFileContents("newMessagesRequestWithMissingMandatoryParameters.json"))
+            .contentType(MediaType.APPLICATION_JSON_UTF8))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+            .andExpect(content().json(getFileContents("mandatoryFieldsMissingErrorResponse.json")));
     }
 
     private String getFileContents(String fileName) {
         try {
             return IOUtils.toString(this.getClass().getClassLoader()
-                    .getResourceAsStream(fileName), "UTF-8");
+                .getResourceAsStream(fileName), "UTF-8");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -102,19 +98,19 @@ public class MessageControllerTest {
 
     private List<Message> getEntityMessages() {
         final Message message1 = Message.builder()
-                .id(1L)
-                .locale(LOCALE)
-                .tenantId(TENANT_ID)
-                .code("code1")
-                .message("message1")
-                .build();
+            .id(1L)
+            .locale(LOCALE)
+            .tenantId(TENANT_ID)
+            .code("code1")
+            .message("message1")
+            .build();
         final Message message2 = Message.builder()
-                .id(2L)
-                .locale(LOCALE)
-                .tenantId(TENANT_ID)
-                .code("code2")
-                .message("message2")
-                .build();
+            .id(2L)
+            .locale(LOCALE)
+            .tenantId(TENANT_ID)
+            .code("code2")
+            .message("message2")
+            .build();
         return Arrays.asList(message1, message2);
     }
 }

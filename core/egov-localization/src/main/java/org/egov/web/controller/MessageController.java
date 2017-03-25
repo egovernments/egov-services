@@ -47,8 +47,8 @@ public class MessageController {
 
     private List<Message> mapToContractMessages(List<org.egov.persistence.entity.Message> entityMessages) {
         return entityMessages.stream()
-                .map(Message::new)
-                .collect(Collectors.toList());
+            .map(Message::new)
+            .collect(Collectors.toList());
     }
 
     private List<Message> getMessages(String locale, String tenantId) {

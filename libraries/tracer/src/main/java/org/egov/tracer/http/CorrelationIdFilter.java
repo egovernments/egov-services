@@ -37,26 +37,36 @@ public class CorrelationIdFilter implements Filter {
         throws IOException, ServletException {
         RequestContext.clear();
         HttpServletRequest httpRequest = (HttpServletRequest) servletRequest;
-        final MultiReadableRequestWrapper wrappedRequest = new MultiReadableRequestWrapper(httpRequest);
-        setCorrelationId(wrappedRequest);
-        filterChain.doFilter(wrappedRequest, servletResponse);
+        if (isBodyNotCompatibleForParsing(httpRequest)) {
+            setCorrelationIdFromHeader(httpRequest);
+            filterChain.doFilter(servletRequest, servletResponse);
+        } else {
+            final MultiReadRequestWrapper wrappedRequest = new MultiReadRequestWrapper(httpRequest);
+            setCorrelationIdFromBody(wrappedRequest);
+            filterChain.doFilter(wrappedRequest, servletResponse);
+        }
     }
 
-    private void setCorrelationId(HttpServletRequest httpRequest) throws IOException {
-        if (GET.equals(httpRequest.getMethod()) || isMultiPartContentType(httpRequest)) {
-            final String correlationIdFromHeader = getCorrelationIdFromHeader(httpRequest);
-            if (correlationIdFromHeader == null) {
-                RequestContext.setId(getRandomCorrelationId());
-            } else {
-                RequestContext.setId(correlationIdFromHeader);
-            }
+    private void setCorrelationIdFromHeader(HttpServletRequest httpRequest) {
+        final String correlationIdFromHeader = getCorrelationIdFromHeader(httpRequest);
+        if (correlationIdFromHeader == null) {
+            RequestContext.setId(getRandomCorrelationId());
+        } else {
+            RequestContext.setId(correlationIdFromHeader);
         }
+    }
+
+    private void setCorrelationIdFromBody(HttpServletRequest httpRequest) throws IOException {
         final String correlationIdFromRequestBody = getCorrelationIdFromRequestBody(httpRequest);
         if (correlationIdFromRequestBody == null) {
             RequestContext.setId(getRandomCorrelationId());
         } else {
             RequestContext.setId(correlationIdFromRequestBody);
         }
+    }
+
+    private boolean isBodyNotCompatibleForParsing(HttpServletRequest httpRequest) {
+        return GET.equals(httpRequest.getMethod()) || isMultiPartContentType(httpRequest);
     }
 
     private boolean isMultiPartContentType(HttpServletRequest httpRequest) {

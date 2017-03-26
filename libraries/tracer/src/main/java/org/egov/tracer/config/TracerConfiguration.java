@@ -32,6 +32,11 @@ public class TracerConfiguration {
         return new LoggingListenerFactory(tracerProperties);
     }
 
+    @Bean
+    public LoggingKafkaTemplateFactory loggingKafkaTemplateFactory(TracerProperties tracerProperties) {
+        return new LoggingKafkaTemplateFactory(tracerProperties);
+    }
+
     @Bean(name = "logAwareRestTemplate")
     public LogAwareRestTemplate logAwareRestTemplate(TracerProperties tracerProperties) {
         return new LogAwareRestTemplate(tracerProperties);

@@ -13,7 +13,7 @@ import java.util.concurrent.ExecutionException;
 
 @Slf4j
 @Component
-public class LogAwareKafkaTemplate<T,Q> {
+public class LogAwareKafkaTemplate<K, V> {
 
     private static final String EMPTY_BODY = "<EMPTY BODY>";
     private static final String SEND_SUCCESS_MESSAGE =
@@ -28,19 +28,19 @@ public class LogAwareKafkaTemplate<T,Q> {
     private static final String SEND_FAILURE_MESSAGE_WITH_TOPIC_KEY_PARTITION =
         "Sending of message to topic: %s, partition: %s, key: %s failed.";
     private TracerProperties tracerProperties;
-    private KafkaTemplate<T, Q> kafkaTemplate;
+    private KafkaTemplate<K, V> kafkaTemplate;
     private ObjectMapper objectMapper;
 
     public LogAwareKafkaTemplate(TracerProperties tracerProperties,
-                                 KafkaTemplate<T, Q> kafkaTemplate) {
+                                 KafkaTemplate<K, V> kafkaTemplate) {
         this.tracerProperties = tracerProperties;
         this.kafkaTemplate = kafkaTemplate;
         this.objectMapper = new ObjectMapper();
     }
 
-    public SendResult<T, Q> send(String topic, Q value) {
+    public SendResult<K, V> send(String topic, V value) {
         try {
-            final SendResult<T, Q> result = kafkaTemplate.send(topic, value).get();
+            final SendResult<K, V> result = kafkaTemplate.send(topic, value).get();
             logSuccessMessage(value, result);
             return result;
         } catch (InterruptedException | ExecutionException e) {
@@ -49,9 +49,9 @@ public class LogAwareKafkaTemplate<T,Q> {
         }
     }
 
-    public SendResult<T, Q> send(String topic, T key, Q value) {
+    public SendResult<K, V> send(String topic, K key, V value) {
         try {
-            final SendResult<T, Q> result = kafkaTemplate.send(topic, key, value).get();
+            final SendResult<K, V> result = kafkaTemplate.send(topic, key, value).get();
             logSuccessMessage(value, result);
             return result;
         } catch (InterruptedException | ExecutionException e) {
@@ -60,9 +60,9 @@ public class LogAwareKafkaTemplate<T,Q> {
         }
     }
 
-    public SendResult<T, Q> send(String topic, T key, int partition, Q value) {
+    public SendResult<K, V> send(String topic, K key, int partition, V value) {
         try {
-            final SendResult<T, Q> result = kafkaTemplate.send(topic, partition, key, value).get();
+            final SendResult<K, V> result = kafkaTemplate.send(topic, partition, key, value).get();
             logSuccessMessage(value, result);
             return result;
         } catch (InterruptedException | ExecutionException e) {
@@ -71,7 +71,7 @@ public class LogAwareKafkaTemplate<T,Q> {
         }
     }
 
-    private void logSuccessMessage(Q message, SendResult<T, Q> result) {
+    private void logSuccessMessage(V message, SendResult<K, V> result) {
         final String topic = result.getProducerRecord().topic();
         final Integer partition = result.getProducerRecord().partition();
         final String key = ObjectUtils.nullSafeToString(result.getProducerRecord().key());

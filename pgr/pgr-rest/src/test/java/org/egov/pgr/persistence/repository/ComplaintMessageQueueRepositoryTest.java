@@ -1,41 +1,37 @@
 package org.egov.pgr.persistence.repository;
 
-import org.egov.pgr.domain.model.RequestContext;
 import org.egov.pgr.persistence.queue.contract.RequestInfo;
 import org.egov.pgr.persistence.queue.contract.SevaRequest;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.kafka.core.KafkaTemplate;
 
-import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ComplaintMessageQueueRepositoryTest {
 
-    private static final String TENANT_ID = "tenantId";
-    private static final String correlationId = "correlation-id";
-    private static final String QUEUE_NAME = "suffix";
+    private static final String TOPIC_NAME = "topic";
 
     @Mock
-    private KafkaTemplate<String, Object> kafkaTemplate;
+    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
     private ComplaintMessageQueueRepository complaintMessageQueueRepository;
 
     @Before
     public void before() {
-        complaintMessageQueueRepository = new ComplaintMessageQueueRepository(kafkaTemplate, QUEUE_NAME);
+        complaintMessageQueueRepository = new ComplaintMessageQueueRepository(kafkaTemplate, TOPIC_NAME);
     }
 
     @Test
-    public void test_should_set_correlation_id_on_outgoing_message() {
+    public void test_should_send_message_to_kafka() {
         final SevaRequest sevaRequest = new SevaRequest(new RequestInfo(), null);
-        RequestContext.setId(correlationId);
 
         complaintMessageQueueRepository.save(sevaRequest);
 
-        assertEquals(correlationId, sevaRequest.getRequestInfo().getMsgId());
+        verify(kafkaTemplate).send(TOPIC_NAME, sevaRequest);
     }
 }

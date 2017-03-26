@@ -14,7 +14,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.5.1.RELEASE</version>
+        <version>1.5.2.RELEASE</version>
         <relativePath/> <!-- lookup parent from persistence -->
     </parent>
 
@@ -27,6 +27,12 @@
     </properties>
 
     <dependencies>
+
+        <dependency>
+            <groupId>org.egov.services</groupId>
+            <artifactId>tracer</artifactId>
+            <version>0.10.0</version>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -105,6 +111,14 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <repositories>
+        <repository>
+            <id>repo.egovernments.org</id>
+            <name>eGov ERP Releases Repository</name>
+            <url>http://repo.egovernments.org/nexus/content/repositories/releases/</url>
+        </repository>
+    </repositories>
 
     <build>
         <plugins>

@@ -1,32 +1,26 @@
 package org.egov.pgr;
 
-import java.util.TimeZone;
-
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.egov.pgr.persistence.repository.UserRepository;
-import org.egov.pgr.web.interceptor.CorrelationIdAwareRestTemplate;
-import org.egov.pgr.web.interceptor.CorrelationIdInterceptor;
+import org.egov.tracer.config.TracerConfiguration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
+import java.util.TimeZone;
 
 @SpringBootApplication
+@Import({TracerConfiguration.class})
 public class PgrRestSpringBootApplication {
-
-	@Bean
-	public RestTemplate getRestTemplate() {
-		return new CorrelationIdAwareRestTemplate();
-	}
 
 	@Value("${user.service.url}")
 	private String userServiceHost;
@@ -63,10 +57,6 @@ public class PgrRestSpringBootApplication {
 				configurer.defaultContentType(MediaType.APPLICATION_JSON_UTF8);
 			}
 
-			@Override
-			public void addInterceptors(InterceptorRegistry registry) {
-				registry.addInterceptor(new CorrelationIdInterceptor());
-			}
 		};
 	}
 

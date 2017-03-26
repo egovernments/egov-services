@@ -1,29 +1,26 @@
 package org.egov.pgr.persistence.repository;
 
-import org.egov.pgr.domain.model.RequestContext;
 import org.egov.pgr.persistence.queue.contract.SevaRequest;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ComplaintMessageQueueRepository {
 
-    private KafkaTemplate<String, Object> kafkaTemplate;
+    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
-    private String queueNameSuffix;
+    private String topicName;
 
     @Autowired
-    public ComplaintMessageQueueRepository(KafkaTemplate<String, Object> kafkaTemplate,
-                                           @Value("${outgoing.queue.name.suffix}") String queueNameSuffix) {
+    public ComplaintMessageQueueRepository(LogAwareKafkaTemplate<String, Object> kafkaTemplate,
+                                           @Value("${outgoing.queue.name.suffix}") String topicName) {
         this.kafkaTemplate = kafkaTemplate;
-        this.queueNameSuffix = queueNameSuffix;
+        this.topicName = topicName;
     }
 
     public void save(SevaRequest sevaRequest) {
-        String topicName = queueNameSuffix;
-        sevaRequest.getRequestInfo().setMsgId(RequestContext.getId());
         kafkaTemplate.send(topicName, sevaRequest);
     }
 }

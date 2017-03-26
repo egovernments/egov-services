@@ -3,9 +3,11 @@ package org.egov;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import org.egov.tracer.config.TracerConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.trimou.engine.MustacheEngine;
 import org.trimou.engine.MustacheEngineBuilder;
 import org.trimou.engine.locator.ClassPathTemplateLocator;
@@ -14,6 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 
 @SpringBootApplication
+@Import(TracerConfiguration.class)
 public class PgrNotificationApplication {
 
     private static final String TEMPLATE_TYPE = "txt";

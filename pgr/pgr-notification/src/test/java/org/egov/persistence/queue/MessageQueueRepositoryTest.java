@@ -3,14 +3,13 @@ package org.egov.persistence.queue;
 import org.egov.domain.model.EmailRequest;
 import org.egov.persistence.queue.contract.EmailMessage;
 import org.egov.persistence.queue.contract.SmsMessage;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
-import org.springframework.util.concurrent.SettableListenableFuture;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -21,7 +20,7 @@ public class MessageQueueRepositoryTest {
     private static final String SMS_TOPIC = "smsTopic";
     private static final String EMAIL_TOPIC = "emailTopic";
     @Mock
-    private KafkaTemplate<String, Object> kafkaTemplate;
+    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
     private MessageQueueRepository messageQueueRepository;
 
     @Before
@@ -34,10 +33,8 @@ public class MessageQueueRepositoryTest {
         final String mobileNumber = "mobileNumber";
         final String smsMessage = "smsMessage";
         final SmsMessage expectedSMSMessage = new SmsMessage(mobileNumber, smsMessage);
-        final SettableListenableFuture<SendResult<String, Object>> listenableFuture =
-            new SettableListenableFuture<>();
-        listenableFuture.set(new SendResult<>(null, null));
-        when(kafkaTemplate.send(SMS_TOPIC, expectedSMSMessage)).thenReturn(listenableFuture);
+        final SendResult<String, Object> sendResult = new SendResult<>(null, null);
+        when(kafkaTemplate.send(SMS_TOPIC, expectedSMSMessage)).thenReturn(sendResult);
 
         messageQueueRepository.sendSMS(mobileNumber, smsMessage);
 
@@ -49,10 +46,7 @@ public class MessageQueueRepositoryTest {
         final String mobileNumber = "mobileNumber";
         final String smsMessage = "smsMessage";
         final SmsMessage expectedSMSMessage = new SmsMessage(mobileNumber, smsMessage);
-        final SettableListenableFuture<SendResult<String, Object>> listenableFuture =
-            new SettableListenableFuture<>();
-        listenableFuture.setException(new InterruptedException());
-        when(kafkaTemplate.send(SMS_TOPIC, expectedSMSMessage)).thenReturn(listenableFuture);
+        when(kafkaTemplate.send(SMS_TOPIC, expectedSMSMessage)).thenThrow(new RuntimeException());
 
         messageQueueRepository.sendSMS(mobileNumber, smsMessage);
     }
@@ -60,9 +54,7 @@ public class MessageQueueRepositoryTest {
     @Test
     public void test_should_send_email_to_email_topic() {
         final String emailAddress = "email@email.com";
-        final SettableListenableFuture<SendResult<String, Object>> listenableFuture =
-            new SettableListenableFuture<>();
-        listenableFuture.set(new SendResult<>(null, null));
+        final SendResult<String, Object> sendResult = new SendResult<>(null, null);
         final String body = "body";
         final String subject = "subject";
         final EmailMessage expectedEmailMessage = EmailMessage.builder()
@@ -71,7 +63,7 @@ public class MessageQueueRepositoryTest {
             .body(body)
             .sender("")
             .build();
-        when(kafkaTemplate.send(EMAIL_TOPIC, expectedEmailMessage)).thenReturn(listenableFuture);
+        when(kafkaTemplate.send(EMAIL_TOPIC, expectedEmailMessage)).thenReturn(sendResult);
 
         messageQueueRepository.sendEmail(emailAddress, new EmailRequest(subject, body));
 
@@ -81,9 +73,6 @@ public class MessageQueueRepositoryTest {
     @Test(expected = RuntimeException.class)
     public void test_should_throw_runtime_exception_when_send_email_message_fails() {
         final String emailAddress = "email@email.com";
-        final SettableListenableFuture<SendResult<String, Object>> listenableFuture =
-            new SettableListenableFuture<>();
-        listenableFuture.setException(new InterruptedException());
         final String body = "body";
         final String subject = "subject";
         final EmailMessage expectedEmailMessage = EmailMessage.builder()
@@ -93,7 +82,7 @@ public class MessageQueueRepositoryTest {
             .sender("")
             .build();
 
-        when(kafkaTemplate.send(EMAIL_TOPIC, expectedEmailMessage)).thenReturn(listenableFuture);
+        when(kafkaTemplate.send(EMAIL_TOPIC, expectedEmailMessage)).thenThrow(new RuntimeException());
 
         messageQueueRepository.sendEmail(emailAddress, new EmailRequest(subject, body));
     }

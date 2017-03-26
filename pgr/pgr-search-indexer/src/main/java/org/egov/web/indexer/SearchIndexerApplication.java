@@ -2,14 +2,15 @@ package org.egov.web.indexer;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.egov.web.indexer.http.CorrelationIdAwareRestTemplate;
+import org.egov.tracer.config.TracerConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
+@Import(TracerConfiguration.class)
 public class SearchIndexerApplication {
 
     @Bean
@@ -25,12 +26,6 @@ public class SearchIndexerApplication {
         converter.setObjectMapper(objectMapper);
         return converter;
     }
-
-    @Bean
-    public RestTemplate getRestTemplate() {
-        return new CorrelationIdAwareRestTemplate();
-    }
-
 
     public static void main(String[] args) {
         SpringApplication.run(SearchIndexerApplication.class, args);

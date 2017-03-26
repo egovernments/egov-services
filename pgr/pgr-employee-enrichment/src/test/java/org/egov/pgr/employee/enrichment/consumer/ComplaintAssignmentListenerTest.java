@@ -1,6 +1,5 @@
 package org.egov.pgr.employee.enrichment.consumer;
 
-import org.egov.pgr.employee.enrichment.model.RequestContext;
 import org.egov.pgr.employee.enrichment.model.SevaRequest;
 import org.egov.pgr.employee.enrichment.repository.ComplaintRepository;
 import org.egov.pgr.employee.enrichment.service.WorkflowService;
@@ -39,17 +38,6 @@ public class ComplaintAssignmentListenerTest {
         complaintAssignmentListener.process(sevaRequestMap);
 
         verify(complaintRepository).save(enrichedSevaRequest);
-    }
-
-    @Test
-    public void testShouldSetRequestContextWithCorrelationId() {
-        final HashMap<String, Object> sevaRequestMap = getSevaRequestMap();
-        final SevaRequest enrichedSevaRequest = new SevaRequest(null);
-        when(workflowService.enrichWorkflow(any(SevaRequest.class))).thenReturn(enrichedSevaRequest);
-
-        complaintAssignmentListener.process(sevaRequestMap);
-
-        assertEquals("correlationId", RequestContext.getId());
     }
 
     @Test

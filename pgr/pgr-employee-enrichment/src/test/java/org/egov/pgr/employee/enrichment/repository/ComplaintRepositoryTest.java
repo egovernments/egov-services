@@ -1,12 +1,12 @@
 package org.egov.pgr.employee.enrichment.repository;
 
 import org.egov.pgr.employee.enrichment.model.SevaRequest;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.kafka.core.KafkaTemplate;
 
 import java.util.HashMap;
 
@@ -18,7 +18,7 @@ public class ComplaintRepositoryTest {
     private static final String TOPIC_NAME = "topicName";
 
     @Mock
-    private KafkaTemplate<String, Object> kafkaTemplate;
+    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
     private ComplaintRepository complaintRepository;
 

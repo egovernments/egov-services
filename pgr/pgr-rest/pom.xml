@@ -31,7 +31,7 @@
         <dependency>
             <groupId>org.egov.services</groupId>
             <artifactId>tracer</artifactId>
-            <version>0.10.0</version>
+            <version>0.11.0</version>
         </dependency>
 
         <dependency>

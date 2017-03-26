@@ -45,6 +45,6 @@ public class RequestInfo {
 
     private String userId;
     private String userType;
-    private String tenantId;
+    private String correlationId;
 
 }

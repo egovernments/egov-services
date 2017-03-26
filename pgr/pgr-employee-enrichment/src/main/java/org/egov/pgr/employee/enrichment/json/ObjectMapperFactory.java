@@ -7,7 +7,7 @@ public class ObjectMapperFactory {
 
     public static ObjectMapper create() {
         final ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.disable(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES);
+        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         return objectMapper;
     }
 }

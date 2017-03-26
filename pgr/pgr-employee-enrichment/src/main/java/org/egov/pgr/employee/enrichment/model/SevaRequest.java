@@ -1,8 +1,8 @@
 package org.egov.pgr.employee.enrichment.model;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang.StringUtils;
 import org.egov.pgr.employee.enrichment.consumer.contract.RequestInfo;
+import org.egov.pgr.employee.enrichment.json.ObjectMapperFactory;
 import org.egov.pgr.employee.enrichment.repository.contract.Attribute;
 import org.egov.pgr.employee.enrichment.repository.contract.WorkflowRequest;
 import org.egov.pgr.employee.enrichment.repository.contract.WorkflowResponse;
@@ -55,7 +55,7 @@ public class SevaRequest {
     }
 
     public RequestInfo getRequestInfo() {
-        return new ObjectMapper().convertValue(sevaRequestMap.get(REQUEST_INFO), RequestInfo.class);
+        return ObjectMapperFactory.create().convertValue(sevaRequestMap.get(REQUEST_INFO), RequestInfo.class);
     }
 
     public HashMap<String, Object> getRequestMap() {

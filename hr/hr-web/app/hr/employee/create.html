@@ -93,7 +93,7 @@
     <!-- Jquery form validator -->
     <script type="text/javascript" src="../../../assets/javascript/global/jquery-validation/jquery.validate.min.js"></script>
     <script type="text/javascript" src="../../../assets/javascript/global/jquery-validation/additional-methods.min.js"></script>
-    <script src="../common/commonAPI.js" charset="utf-8"></script>
+    <script src="../../../assets/javascript/hr/common/commonAPI.js" charset="utf-8"></script>
 </head>
 
 <body class="page-body">
@@ -303,10 +303,10 @@
                                                                 <div class="col-sm-6">
                                                                     <div class="text-no-ui">
                                                                         <span><i class="glyphicon glyphicon-calendar"></i></span>
-                                                                        <input id="user.dob" name="user.dob" type="date" >
+                                                                        <input id="user.dob" name="user.dob" type="text" class="datetimepicker" >
 
 
-                                                                        <!-- <input id="user.dob" name="user.dob" type="text" class="datetimepicker" > -->
+                                                                          <!-- <input id="user.dob" name="user.dob" type="text" class="datetimepicker" > -->
                                                                         <!-- <input class="form-control datepicker" data-date-format="mm/dd/yyyy" type="text"> -->
 
                                                                         <!-- <div class="container">
@@ -389,10 +389,10 @@
                                                                     </div>
                                                                     <div class="col-sm-6">
                                                                         <label class="radio-inline radioUi">
-                                                                          <input type="radio" name="inlineRadioOptions" id="user.active" value="true" checked="true"> Yes
+                                                                          <input type="radio" name="user.active" id="user.active" value="true" checked="true"> Yes
                                                                         </label>
                                                                         <label class="radio-inline radioUi">
-                                                                      <input type="radio" name="inlineRadioOptions" id="user.active" value="false"> No
+                                                                      <input type="radio" name="user.active" id="user.active" value="false"> No
                                                                   </label>
 
                                                                     </div>
@@ -535,10 +535,10 @@
                                                                 </div>
                                                                 <div class="col-sm-6">
                                                                     <label class="radio-inline radioUi">
-                                                                <input type="radio" name="inlineRadioOptions" id="physicallyDisabled" value="true"> Yes
+                                                                <input type="radio" name="physicallyDisabled" id="physicallyDisabled" value="true"> Yes
                                                                 </label>
                                                                     <label class="radio-inline radioUi">
-                                                              <input type="radio" name="inlineRadioOptions" id="physicallyDisabled" value="false"> No
+                                                              <input type="radio" name="physicallyDisabled" id="physicallyDisabled" value="false" checked="true"> No
                                                             </label>
 
                                                                 </div>
@@ -553,10 +553,10 @@
                                                                 </div>
                                                                 <div class="col-sm-6">
                                                                     <label class="radio-inline radioUi">
-                                                                <input type="radio" name="inlineRadioOptions" id="medicalReportProduced" value="true"> Yes
+                                                                <input type="radio" name="medicalReportProduced" id="medicalReportProduced" value="true"> Yes
                                                                 </label>
                                                                     <label class="radio-inline radioUi">
-                                                              <input type="radio" name="inlineRadioOptions" id="medicalReportProduced" value="false"> No
+                                                              <input type="radio" name="medicalReportProduced" id="medicalReportProduced" value="false" checked="true"> No
                                                             </label>
 
                                                                 </div>
@@ -829,7 +829,7 @@
                                                                 <div class="col-sm-6">
                                                                     <div class="text-no-ui">
                                                                         <span><i class="glyphicon glyphicon-calendar"></i></span>
-                                                                        <input id="dateOfAppointment" name="dateOfAppointment" type="date">
+                                                                        <input id="dateOfAppointment" name="dateOfAppointment" type="text" class="datetimepicker">
                                                                         <!-- </div> -->
                                                                     </div>
                                                                 </div>
@@ -844,7 +844,7 @@
                                                                     <div class="col-sm-6">
                                                                         <div class="text-no-ui">
                                                                             <span><i class="glyphicon glyphicon-calendar"></i></span>
-                                                                            <input id="dateOfJoining" name="dateOfJoining" type="date">
+                                                                            <input id="dateOfJoining" name="dateOfJoining" type="text" class="datetimepicker">
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -870,7 +870,7 @@
                                                                     <div class="col-sm-6">
                                                                         <div class="text-no-ui">
                                                                             <span><i class="glyphicon glyphicon-calendar"></i></span>
-                                                                            <input id="dateOfRetirement" name="dateOfRetirement" type="date">
+                                                                            <input id="dateOfRetirement" name="dateOfRetirement" type="text" class="datetimepicker">
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -884,7 +884,7 @@
                                                                     <div class="col-sm-6">
                                                                         <div class="text-no-ui">
                                                                             <span><i class="glyphicon glyphicon-calendar"></i></span>
-                                                                            <input id="dateOfTermination" name="dateOfTermination" type="date">
+                                                                            <input id="dateOfTermination" name="dateOfTermination" type="text" class="datetimepicker">
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -899,7 +899,7 @@
                                                                     <div class="col-sm-6">
                                                                         <div class="text-no-ui">
                                                                             <span><i class="glyphicon glyphicon-calendar"></i></span>
-                                                                            <input id="dateOfResignation" name="dateOfResignation" type="date">
+                                                                            <input id="dateOfResignation" name="dateOfResignation" type="text" class="datetimepicker">
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -1028,7 +1028,7 @@
                                                                                 <label for="assignments.fromDate">From Date</label>
                                                                             </div>
                                                                             <div class="col-sm-6">
-                                                                                <input id="assignments.fromDate" name="assignments.fromDate" type="date">
+                                                                                <input id="assignments.fromDate" name="assignments.fromDate" type="text" class="datetimepicker">
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -1039,7 +1039,7 @@
                                                                                 <label for="assignments.toDate">To Date</label>
                                                                             </div>
                                                                             <div class="col-sm-6">
-                                                                                <input id="assignments.toDate" name="assignments.toDate" type="date">
+                                                                                <input id="assignments.toDate" name="assignments.toDate" type="text" class="datetimepicker">
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -1399,7 +1399,7 @@
                                                                                     <label for="serviceHistory.serviceFrom">Date</label>
                                                                                 </div>
                                                                                 <div class="col-sm-6">
-                                                                                    <input id="serviceHistory.serviceFrom" name="serviceHistory.serviceFrom" type="date">
+                                                                                    <input id="serviceHistory.serviceFrom" name="serviceHistory.serviceFrom" type="text" class="datetimepicker">
 
                                                                                 </div>
                                                                             </div>
@@ -1496,7 +1496,7 @@
                                                                                 <div class="col-sm-6">
                                                                                     <!-- <div class="styled-select multiple"> -->
                                                                                         <select  id="probation.designation" name="probation.designation">
-
+                                                                                          <<option value="">Select</option>
                                                                                         </select>
 
                                                                                     <!-- </div> -->
@@ -1509,7 +1509,7 @@
                                                                                     <label for="probation.declaredOn">Probation Declared Date</label>
                                                                                 </div>
                                                                                 <div class="col-sm-6">
-                                                                                    <input id="probation.declaredOn" name="probation.declaredOn" type="date">
+                                                                                    <input id="probation.declaredOn" name="probation.declaredOn" type="text" class="datetimepicker">
 
                                                                                 </div>
                                                                             </div>
@@ -1534,7 +1534,7 @@
                                                                                     <label for="probation.orderDate">Order Date</label>
                                                                                 </div>
                                                                                 <div class="col-sm-6">
-                                                                                    <input id="probation.orderDate" name="probation.orderDate" type="date">
+                                                                                    <input id="probation.orderDate" name="probation.orderDate" type="text" class="datetimepicker">
 
                                                                                 </div>
                                                                             </div>
@@ -1634,7 +1634,7 @@
                                                                                     <label for="regularisation.declaredOn">Regularisation Declared Date</label>
                                                                                 </div>
                                                                                 <div class="col-sm-6">
-                                                                                    <input id="regularisation.declaredOn" name="regularisation.declaredOn" type="date">
+                                                                                    <input id="regularisation.declaredOn" name="regularisation.declaredOn" type="text" class="datetimepicker">
 
                                                                                 </div>
                                                                             </div>
@@ -1659,7 +1659,7 @@
                                                                                     <label for="regularisation.orderDate">Order Date</label>
                                                                                 </div>
                                                                                 <div class="col-sm-6">
-                                                                                    <input id="regularisation.orderDate" name="regularisation.orderDate" type="date">
+                                                                                    <input id="regularisation.orderDate" name="regularisation.orderDate" type="text" class="datetimepicker">
 
                                                                                 </div>
                                                                             </div>
@@ -2084,7 +2084,7 @@
                                                             </td>
 
                                                             <td data-label="Order Date">
-                                                                  <input id="immovableProperty.orderDate" name="immovableProperty.orderDate" type="date">
+                                                                  <input id="immovableProperty.orderDate" name="immovableProperty.orderDate" type="text" class="datetimepicker">
                                                             </td>
                                                             <td data-label="Doc Attachment">
                                                                   <input id="immovableProperty.documents" name="immovableProperty.documents" type="file">
@@ -2151,7 +2151,7 @@
                                                         </td>
 
                                                         <td data-label="Order Date">
-                                                              <input id="movableProperty.orderDate" name="movableProperty.orderDate" type="date">
+                                                              <input id="movableProperty.orderDate" name="movableProperty.orderDate" type="text" class="datetimepicker">
                                                         </td>
                                                         <td data-label="Doc Attachment">
                                                               <input id="movableProperty.documents" name="movableProperty.documents" type="file">
@@ -2235,11 +2235,9 @@
     </script>
 
     <script type="text/javascript">
-        $(function () {
-            $('.datetimepicker').datetimepicker({
-                  format: 'DD/MM/YYYY'
-            });
-        });
+        // $(function () {
+        //
+        // });
 
         $('#ast-srch').DataTable({
             "bFilter": false

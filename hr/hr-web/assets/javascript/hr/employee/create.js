@@ -1,12 +1,9 @@
-//getting current guerry strings
-
-
 //closing current window
 $('#close').on("click", function() {
     window.close();
 })
 
-function returnObject(alies) {
+function returnObject(alies,optional) {
     switch (alies) {
         case "department":
             return "assignments_department";
@@ -36,7 +33,15 @@ function returnObject(alies) {
             return "jurisdictions_jurisdictionsType";
             break;
         case "boundary":
-            return "jurisdictions_boundary";
+            if (optional=="CITY") {
+              return "juridictionTypeForCity";
+            }
+            else if(optional=="WARD"){
+              return "juridictionTypeForWard";
+            }
+            else {
+              return "juridictionTypeForZone";
+            }
             break;
         default:
 
@@ -46,67 +51,116 @@ function returnObject(alies) {
 
 
 // localStorage.setItem("employeeType",JSON.stringify(getCommonMaster("hr-masters", "employeetypes", "EmployeeType").responseJSON["EmployeeType"]));
-// employeeType:JSON.parse(localStorage.getItem("employeeType"))==""?(localStorage.setItem("employeeType",JSON.stringify(getCommonMaster("hr-masters", "employeetypes", "EmployeeType").responseJSON["EmployeeType"]))|| []) :JSON.parse(localStorage.getItem("employeeType")),
-
+// var employeeType=JSON.parse(localStorage.getItem("employeeType"))==""?(localStorage.setItem("employeeType",JSON.stringify(getCommonMaster("hr-masters", "employeetypes", "EmployeeType").responseJSON["EmployeeType"]))|| []) :JSON.parse(localStorage.getItem("employeeType"));
+// console.log(employeeType);
 //common object
-var yearOfPassing=[];
+var yearOfPassing = [];
 
 for (var i = 2000; i <= new Date().getFullYear(); i++) {
     yearOfPassing.push(i);
 }
 console.log(yearOfPassing);
+// var commonObject = {
+//     employeeType: getCommonMaster("hr-masters", "employeetypes", "EmployeeType").responseJSON["EmployeeType"] || [],
+//     employeeStatus: getCommonMaster("hr-masters", "hrstatuses", "HRStatus").responseJSON["HRStatus"] || [],
+//     group: getCommonMaster("hr-masters", "groups", "Group").responseJSON["Group"] || [],
+//     maritalStatus: ["MARRIED", "UNMARRIED", "DIVORCED", "WIDOWER", "WIDOW"],
+//     user_bloodGroup: ["O-", "O+", "A-", "A+", "B-", "B+", "AB-", "AB+"],
+//     motherTounge: getCommonMaster("egov-common-masters", "languages", "Language").responseJSON["Language"] || [],
+//     religion: getCommonMaster("egov-common-masters", "religions", "Religion").responseJSON["Religion"] || [],
+//     community: getCommonMaster("egov-common-masters", "communities", "Community").responseJSON["Community"] || [],
+//     category: getCommonMaster("egov-common-masters", "categories", "Category").responseJSON["Category"] || [],
+//     bank: getCommonMaster("egf-masters", "banks", "banks").responseJSON["banks"] || [],
+//     bankBranch: [],
+//     recruitmentMode: getCommonMaster("hr-masters", "recruitmentmodes", "RecruitmentMode").responseJSON["RecruitmentMode"] || [],
+//     recruitmentType: getCommonMaster("hr-masters", "recruitmenttypes", "RecruitmentType").responseJSON["RecruitmentType"] || [],
+//     recruitmentQuota: getCommonMaster("hr-masters", "recruitmentquotas", "RecruitmentQuota").responseJSON["RecruitmentQuota"] || [],
+//     assignments_fund: [{
+//             id: 1,
+//             name: "Own",
+//             description: ""
+//         },
+//         {
+//             id: 2,
+//             name: "Company",
+//             description: ""
+//         }
+//     ],
+//     assignments_function: [{
+//             id: 1,
+//             name: "IR",
+//             description: ""
+//         },
+//         {
+//             id: 2,
+//             name: "No-IT",
+//             description: ""
+//         }
+//     ],
+//     assignments_functionary: [{
+//             id: 1,
+//             name: "developrment",
+//             description: ""
+//         },
+//         {
+//             id: 2,
+//             name: "no developrment",
+//             description: ""
+//         }
+//     ],
+//     assignments_grade: getCommonMaster("hr-masters", "grades", "Grade").responseJSON["Grade"] || [],
+//     assignments_designation: getCommonMaster("hr-masters", "designations", "Designation").responseJSON["Designation"] || [],
+//     assignments_position: [],
+//     assignments_department: getCommonMaster("egov-common-masters", "departments", "Department").responseJSON["Department"] || [],
+//     jurisdictions_jurisdictionsType: [{
+//             id: "CITY",
+//             name: "City",
+//             description: "",
+//             active: true
+//         },
+//         {
+//             id: "WARD",
+//             name: "Ward",
+//             description: "",
+//             active: true
+//         },
+//         {
+//             id: "ZONE",
+//             name: "Zone",
+//             description: "",
+//             active: true
+//         }
+//     ],
+//     jurisdictions_boundary: [],
+//     yearOfPassing
+// }
+// var juridictionTypeForCity=[];
+// var juridictionTypeForWard=[];
+// var juridictionTypeForZone=[];
+
+
 var commonObject = {
-    employeeType: getCommonMaster("hr-masters", "employeetypes", "EmployeeType").responseJSON["EmployeeType"] || [],
-    employeeStatus: getCommonMaster("hr-masters", "hrstatuses", "HRStatus").responseJSON["HRStatus"] || [],
-    group: getCommonMaster("hr-masters", "groups", "Group").responseJSON["Group"] || [],
-    maritalStatus: ["MARRIED", "UNMARRIED", "DIVORCED", "WIDOWER", "WIDOW"],
-    user_bloodGroup: ["O-", "O+", "A-", "A+", "B-", "B+", "AB-", "AB+"],
-    motherTounge: getCommonMaster("egov-common-masters", "languages", "Language").responseJSON["Language"] || [],
-    religion: getCommonMaster("egov-common-masters", "religions", "Religion").responseJSON["Religion"] || [],
-    community: getCommonMaster("egov-common-masters", "communities", "Community").responseJSON["Community"] || [],
-    category: getCommonMaster("egov-common-masters", "categories", "Category").responseJSON["Category"] || [],
-    bank: getCommonMaster("egf-masters", "banks", "banks").responseJSON["banks"] || [],
-    bankBranch:[],
-    recruitmentMode: getCommonMaster("hr-masters", "recruitmentmodes", "RecruitmentMode").responseJSON["RecruitmentMode"] || [],
-    recruitmentType: getCommonMaster("hr-masters", "recruitmenttypes", "RecruitmentType").responseJSON["RecruitmentType"] || [],
-    recruitmentQuota: getCommonMaster("hr-masters", "recruitmentquotas", "RecruitmentQuota").responseJSON["RecruitmentQuota"] || [],
-    assignments_fund: [{
-            id: 1,
-            name: "Own",
-            description: ""
-        },
-        {
-            id: 2,
-            name: "Company",
-            description: ""
-        }
-    ],
-    assignments_function: [{
-            id: 1,
-            name: "IR",
-            description: ""
-        },
-        {
-            id: 2,
-            name: "No-IT",
-            description: ""
-        }
-    ],
-    assignments_functionary: [{
-            id: 1,
-            name: "developrment",
-            description: ""
-        },
-        {
-            id: 2,
-            name: "no developrment",
-            description: ""
-        }
-    ],
-    assignments_grade: getCommonMaster("hr-masters", "grades", "Grade").responseJSON["Grade"] || [],
-    assignments_designation: getCommonMaster("hr-masters", "designations", "Designation").responseJSON["Designation"] || [],
+    employeeType,
+    employeeStatus,
+    group,
+    maritalStatus,
+    user_bloodGroup,
+    motherTounge,
+    religion,
+    community,
+    category,
+    bank,
+    bankBranch: [],
+    recruitmentMode,
+    recruitmentType,
+    recruitmentQuota,
+    assignments_fund,
+    assignments_function,
+    assignments_functionary,
+    assignments_grade,
+    assignments_designation,
     assignments_position: [],
-    assignments_department: getCommonMaster("egov-common-masters", "departments", "Department").responseJSON["Department"] || [],
+    assignments_department,
     jurisdictions_jurisdictionsType: [{
             id: "CITY",
             name: "City",
@@ -126,8 +180,11 @@ var commonObject = {
             active: true
         }
     ],
-    jurisdictions_boundary:[],
-    yearOfPassing
+    jurisdictions_boundary: [],
+    yearOfPassing,
+    juridictionTypeForCity:[],
+    juridictionTypeForWard:[],
+    juridictionTypeForZone:[]
 }
 
 // getCommonMaster("hr-masters", "positions", "Position").responseJSON["Position"] || [];
@@ -138,9 +195,9 @@ commonObject["languagesKnown"] = commonObject["motherTounge"];
 commonObject["user_locale"] = commonObject["motherTounge"];
 commonObject["probation_designation"] = commonObject["assignments_designation"];
 commonObject["regularisation_designation"] = commonObject["assignments_designation"];
-commonObject["education_yearOfPassing"]=commonObject["yearOfPassing"];
-commonObject["technical_yearOfPassing"]=commonObject["yearOfPassing"];
-commonObject["test_yearOfPassing"]=commonObject["yearOfPassing"];
+commonObject["education_yearOfPassing"] = commonObject["yearOfPassing"];
+commonObject["technical_yearOfPassing"] = commonObject["yearOfPassing"];
+commonObject["test_yearOfPassing"] = commonObject["yearOfPassing"];
 
 for (var key in commonObject) {
     var splitObject = key.split("_");
@@ -159,14 +216,13 @@ for (var key in commonObject) {
                 $(`#${splitObject[0]}\\.${splitObject[1]}`).append(`<option value='${commonObject[key][i]}'>${commonObject[key][i]}</option>`)
         }
     }
-
 }
 
 
-function getNameById(object, id) {
+function getNameById(object, id,optional) {
     // console.log(commonObject[object].length);
     // return commonObject[object].length
-    object = returnObject(object);
+    object = returnObject(object,optional);
     for (var i = 0; i < commonObject[object].length; i++) {
         if (commonObject[object][i].id == id) {
             return commonObject[object][i].name;
@@ -175,7 +231,7 @@ function getNameById(object, id) {
     return "";
 }
 
-var tempListBox=[];
+var tempListBox = [];
 //final post object
 var employee = {
     code: "",
@@ -229,7 +285,7 @@ var employee = {
         correspondenceCity: "",
         correspondencePincode: "",
         correspondenceAddress: "",
-        active: "true",
+        active:true,
         dob: "",
         locale: "",
         signature: "",
@@ -237,8 +293,8 @@ var employee = {
         bloodGroup: "",
         identificationMark: "",
         photo: "",
-        type:"EMPLOYEE",
-        password:"12345678",
+        type: "EMPLOYEE",
+        password: "12345678",
         tenantId
     },
     tenantId
@@ -252,18 +308,18 @@ var employeeSubObject = {
         department: "",
         designation: "",
         position: "",
-        isPrimary: "false",
+        isPrimary: false,
         fund: "",
         function: "",
         functionary: "",
         grade: "",
-        hod: "false",
+        hod: false,
         // mainDepartments: "",
         govtOrderNumber: ""
     },
-    jurisdictions:{
-      jurisdictionsType:"",
-      boundary:""
+    jurisdictions: {
+        jurisdictionsType: "",
+        boundary: ""
     },
     serviceHistory: {
         id: 1,
@@ -416,18 +472,26 @@ var commom_fields_rules = {
     },
     "user.mobileNumber": {
         required: true
+        // ,
+        // phone:true
     },
     "user.emailId": {
         required: false
     },
     "user.altContactNumber": {
         required: false
+        // ,
+        // phone:true
     },
     "user.pan": {
         required: false
+        // ,
+        // panNo:true
     },
     "user.aadhaarNumber": {
         required: false
+        // ,
+        // aadhar:true
     },
     "user.permanentAddress": {
         required: true
@@ -807,9 +871,11 @@ var user = {
     },
     mobileNumber: {
         required: true
+
     },
     emailId: {
-        required: false
+        required: false,
+
     },
     altContactNumber: {
         required: false
@@ -819,6 +885,7 @@ var user = {
     },
     aadhaarNumber: {
         required: false
+
     },
     permanentAddress: {
         required: true
@@ -864,9 +931,29 @@ var user = {
     }
 }
 
+$('.datetimepicker').datetimepicker({
+      format: 'DD/MM/YYYY'
+});
 
+$(".datetimepicker").on("dp.change", function() {
+    // alert('hey');
+    fillValueToObject(this);
+});
+// .on('changeDate', function (ev) {
+//     $('#date-daily').change();
+// });
+//
+// $('#date-daily').val('0000-00-00');
+// $('#date-daily').change(function () {
+//     console.log($('#date-daily').val());
+// });
+
+// $('#user\\.dob').on("change",function()
+// {
+//     fillValueToObject(this);
+// })
 //Getting data for user input
-$("input").on("keyup change changeDate", function() {
+$("input").on("keyup change", function() {
     fillValueToObject(this);
 });
 
@@ -874,33 +961,53 @@ $("input").on("keyup change changeDate", function() {
 $("select").on("change", function() {
     // if (this.id == "jurisdictions.jurisdictionsType") return;
     // else {
-        if(this.id=="bank")
+    if (this.id == "bank") {
+        commonObject["bankbranches"] = commonApiPost("egf-masters", "bankbranches", "_search", {
+            tenantId,
+            "bank.id":this.value
+        }).responseJSON["bankBranches"] || [];
+        $(`#bankBranch`).html(`<option value=''>Select</option>`)
+        for (var i = 0; i < commonObject["bankbranches"].length; i++) {
+            $(`#bankBranch`).append(`<option value='${commonObject["bankbranches"][i]['id']}'>${commonObject["bankbranches"][i]['name']}</option>`)
+        }
+    }
+    if (this.id == "jurisdictions.jurisdictionsType") {
+        commonObject["jurisdictions_boundary"] = commonApiPost("v1/location", "boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", {
+            boundaryTypeName: this.value,
+            hierarchyTypeName: "ADMINISTRATION"
+        }).responseJSON["Boundary"] || [];
+        if(this.value=="CITY")
         {
-          commonObject["bankbranches"]=commonApiPost("egf-masters", "bankbranches", "_search",{tenantId}).responseJSON["bankBranches"] || [];
-          $(`#bankBranch`).html(`<option value=''>Select</option>`)
-          for (var i = 0; i < commonObject["bankbranches"].length; i++) {
-              $(`#bankBranch`).append(`<option value='${commonObject["bankbranches"][i]['id']}'>${commonObject["bankbranches"][i]['name']}</option>`)
-          }
+            commonObject["juridictionTypeForCity"]=commonObject["jurisdictions_boundary"];
         }
-        if(this.id=="jurisdictions.jurisdictionsType")
-        {
-          commonObject["jurisdictions_boundary"]=commonApiPost("v1/location", "boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName",{boundaryTypeName:this.value,hierarchyTypeName:"ADMINISTRATION"}).responseJSON["Boundary"] || [];
-          $(`#jurisdictions\\.boundary`).html(`<option value=''>Select</option>`)
+        else if (this.value=="WARD") {
+          commonObject["juridictionTypeForWard"]=commonObject["jurisdictions_boundary"];
 
-          for (var i = 0; i < commonObject["jurisdictions_boundary"].length; i++) {
-              $(`#jurisdictions\\.boundary`).append(`<option value='${commonObject["jurisdictions_boundary"][i]['id']}'>${commonObject["jurisdictions_boundary"][i]['name']}</option>`)
-          }
-          // return;
         }
-        if ((employeeSubObject["assignments"]["department"]!="" && employeeSubObject["assignments"]["designation"]!="")&&(this.id=="assignments.department" ||this.id=="assignments.designation")) {
-          commonObject["assignments_position"]=commonApiPost("hr-masters", "positions", "_search",{tenantId,departmentId:employeeSubObject["assignments"]["department"],designationId:employeeSubObject["assignments"]["designation"]}).responseJSON["Position"] || [];
-          $(`#assignments\\.position`).html(`<option value=''>Select</option>`)
+        else {
+          commonObject["juridictionTypeForZone"]=commonObject["jurisdictions_boundary"];
 
-          for (var i = 0; i < commonObject["assignments_position"].length; i++) {
-              $(`#assignments\\.position`).append(`<option value='${commonObject["assignments_position"][i]['id']}'>${commonObject["assignments_position"][i]['name']}</option>`)
-          }
         }
-        fillValueToObject(this);
+        $(`#jurisdictions\\.boundary`).html(`<option value=''>Select</option>`)
+
+        for (var i = 0; i < commonObject["jurisdictions_boundary"].length; i++) {
+            $(`#jurisdictions\\.boundary`).append(`<option value='${commonObject["jurisdictions_boundary"][i]['id']}'>${commonObject["jurisdictions_boundary"][i]['name']}</option>`)
+        }
+        // return;
+    }
+    if (($("#assignments\\.department").val() != "" && $("#assignments\\.designation").val() != "") && (this.id == "assignments.department" || this.id == "assignments.designation")) {
+        commonObject["assignments_position"] = commonApiPost("hr-masters", "positions", "_search", {
+            tenantId,
+            departmentId: $("#assignments\\.department").val(),
+            designationId: $("#assignments\\.designation").val()
+        }).responseJSON["Position"] || [];
+        $(`#assignments\\.position`).html(`<option value=''>Select</option>`)
+
+        for (var i = 0; i < commonObject["assignments_position"].length; i++) {
+            $(`#assignments\\.position`).append(`<option value='${commonObject["assignments_position"][i]['id']}'>${commonObject["assignments_position"][i]['name']}</option>`)
+        }
+    }
+    fillValueToObject(this);
     // }
 });
 
@@ -927,39 +1034,39 @@ function fillValueToObject(currentState) {
 
         var splitResult = currentState.id.split(".");
         if (splitResult[0] === "user") {
-            if(currentState.id=="user.dob")
-            {
-              var dateSplit=currentState.value.split("-");
-              var date=new Date(dateSplit[0],dateSplit[1],dateSplit[2]);
-              var day=date.getDate().toString().length===1?"0"+date.getDate():date.getDate();
-              var monthIn=date.getMonth().toString().length===1?"0"+date.getMonth():date.getMonth();
-              var yearIn=date.getFullYear();
-              employee[splitResult[0]][splitResult[1]] = day+"/"+monthIn+"/"+yearIn;
+            // if (currentState.id == "user.dob") {
+            //     var dateSplit = currentState.value.split("-");
+            //     var date = new Date(dateSplit[0], dateSplit[1], dateSplit[2]);
+            //     var day = date.getDate().toString().length === 1 ? "0" + date.getDate() : date.getDate();
+            //     var monthIn = date.getMonth().toString().length === 1 ? "0" + date.getMonth() : date.getMonth();
+            //     var yearIn = date.getFullYear();
+            //     employee[splitResult[0]][splitResult[1]] = day + "/" + monthIn + "/" + yearIn;
+            //
+            // } else
+            if (currentState.id == "user.active") {
+                employee[splitResult[0]][splitResult[1]] = currentState.value;
+
+            } else {
+                employee[splitResult[0]][splitResult[1]] = currentState.value;
 
             }
-            else if(currentState.id=="user.active")
-            {
-              employee[splitResult[0]][splitResult[1]] = currentState.value;
+        } else {
+            // if (currentState.id == "assignments.fromDate" || currentState.id == "assignments.toDate" || currentState.id == "serviceHistory.serviceFrom" || currentState.id == "probation.orderDate" || currentState.id == "probation.declaredOn" || currentState.id == "regularisation.declaredOn" || currentState.id == "regularisation.orderDate" || currentState.id == "education.yearOfPassing" || currentState.id == "technical.yearOfPassing" || currentState.id == "test.yearOfPassing") {
+            //     var dateSplit = currentState.value.split("-");
+            //     var date = new Date(dateSplit[0], dateSplit[1], dateSplit[2]);
+            //     var day = date.getDate().toString().length === 1 ? "0" + date.getDate() : date.getDate();
+            //     var monthIn = date.getMonth().toString().length === 1 ? "0" + date.getMonth() : date.getMonth();
+            //     var yearIn = date.getFullYear();
+            //     employeeSubObject[splitResult[0]][splitResult[1]] = day + "/" + monthIn + "/" + yearIn;
+            //
+            // } else
+            if (currentState.id == "assignments.mainDepartments") {
+                tempListBox =[];
+                for (var i = 0; i < $(currentState).val().length; i++) {
+                    tempListBox.push({department:$(currentState).val()[i]})
+                }
 
-            }
-            else {
-              employee[splitResult[0]][splitResult[1]] = currentState.value;
 
-            }
-        } else
-        {
-            if( currentState.id=="assignments.fromDate" || currentState.id=="assignments.toDate" ||currentState.id=="serviceHistory.serviceFrom" ||currentState.id=="probation.orderDate" ||currentState.id=="probation.declaredOn" ||currentState.id=="regularisation.declaredOn" ||currentState.id=="regularisation.orderDate" ||currentState.id=="education.yearOfPassing" ||currentState.id=="technical.yearOfPassing" || currentState.id=="test.yearOfPassing")
-            {
-              var dateSplit=currentState.value.split("-");
-              var date=new Date(dateSplit[0],dateSplit[1],dateSplit[2]);
-              var day=date.getDate().toString().length===1?"0"+date.getDate():date.getDate();
-              var monthIn=date.getMonth().toString().length===1?"0"+date.getMonth():date.getMonth();
-              var yearIn=date.getFullYear();
-              employeeSubObject[splitResult[0]][splitResult[1]] = day+"/"+monthIn+"/"+yearIn;
-
-            }
-            else if (currentState.id=="assignments.mainDepartments") {
-                  tempListBox.push({department:currentState.value});
             }
             // else if(currentState.id=="assignments.isPrimary")
             // {
@@ -968,29 +1075,24 @@ function fillValueToObject(currentState) {
             // if (currentState.id=="jurisdictions.boundary") {
             //       employeeSubObject[splitResult[0]][splitResult[1]].push(currentState.value);
             // }
-
             else {
-              employeeSubObject[splitResult[0]][splitResult[1]] = currentState.value;
-
+                employeeSubObject[splitResult[0]][splitResult[1]] = currentState.value;
             }
         }
 
     } else {
-        if(currentState.id=="dateOfAppointment" ||currentState.id=="dateOfRetirement" ||currentState.id=="dateOfTermination" ||currentState.id =="retirementAge" ||currentState.id=="dateOfJoining" || currentState.id=="dateOfRetirement" || currentState.id=="dateOfTermination" ||currentState.id=="dateOfResignation")
-        {
-          var dateSplit=currentState.value.split("-");
-          var date=new Date(dateSplit[0],dateSplit[1],dateSplit[2]);
-          var day=date.getDate().toString().length===1?"0"+date.getDate():date.getDate();
-          var monthIn=date.getMonth().toString().length===1?"0"+date.getMonth():date.getMonth();
-          var yearIn=date.getFullYear();
-          employee[currentState.id] = day+"/"+monthIn+"/"+yearIn;
-        }
-        else if(currentState.id=="languagesKnown")
-        {
-            employee[currentState.id].push(currentState.value);
-        }
-        else {
-          employee[currentState.id] = currentState.value;
+        // if (currentState.id == "dateOfAppointment" || currentState.id == "dateOfRetirement" || currentState.id == "dateOfTermination" || currentState.id == "retirementAge" || currentState.id == "dateOfJoining" || currentState.id == "dateOfRetirement" || currentState.id == "dateOfTermination" || currentState.id == "dateOfResignation") {
+        //     var dateSplit = currentState.value.split("-");
+        //     var date = new Date(dateSplit[0], dateSplit[1], dateSplit[2]);
+        //     var day = date.getDate().toString().length === 1 ? "0" + date.getDate() : date.getDate();
+        //     var monthIn = date.getMonth().toString().length === 1 ? "0" + date.getMonth() : date.getMonth();
+        //     var yearIn = date.getFullYear();
+        //     employee[currentState.id] = day + "/" + monthIn + "/" + yearIn;
+        // } else
+        if (currentState.id == "languagesKnown") {
+            employee[currentState.id]=$(currentState).val();
+        } else {
+            employee[currentState.id] = currentState.value;
         }
     }
 }
@@ -1007,19 +1109,19 @@ function clearModalInput(object, properties) {
 $('#assignmentDetailModal').on('hidden.bs.modal', function(e) {
     editIndex = -1;
     employeeSubObject["assignments"] = {
-        fromDate: "",
-        toDate: "",
-        fund: "",
-        function: "",
-        grade: "",
-        designation: "",
-        position: "No",
-        functionary: "",
-        department: "",
-        hod: "No",
-        // mainDepartments: "",
-        govtOrderNumber: "",
-        is_primary: ""
+      fromDate: "",
+      toDate: "",
+      department: "",
+      designation: "",
+      position: "",
+      isPrimary: false,
+      fund: "",
+      function: "",
+      functionary: "",
+      grade: "",
+      hod: false,
+      // mainDepartments: "",
+      govtOrderNumber: ""
     };
     clearModalInput("assignments", employeeSubObject["assignments"]);
 })
@@ -1037,7 +1139,7 @@ $('#jurisdictionDetailModal').on('hidden.bs.modal', function(e) {
 $('#serviceHistoryDetailModal').on('hidden.bs.modal', function(e) {
     editIndex = -1;
     employeeSubObject["serviceHistory"] = {
-        id: employee["serviceHistory"].length+1,
+        id: employee["serviceHistory"].length + 1,
         serviceInfo: "",
         serviceFrom: "",
         remarks: "",
@@ -1125,11 +1227,24 @@ function updateTable(tableName, modalName, object) {
     for (var i = 0; i < employee[object].length; i++) {
         $(tableName).append(`<tr>`);
         for (var key in employee[object][i]) {
-            if (key === "department" || key === "designation" || key === "position" || key === "fund" || key === "function" || key === "functionary" || key === "grade" || key === "mainDepartments" || key === "jurisdictionsType" || key === "boundary") {
+            if (key === "department" || key === "designation" || key === "position" || key === "fund" || key === "function" || key === "functionary" || (object=="assignments" && key === "grade") || key === "mainDepartments" || key === "jurisdictionsType") {
                 $(tableName).append(`<td data-label=${key}>
-                                  ${getNameById(key,employee[object][i][key])}
+                                  ${getNameById(key,employee[object][i][key],"")}
                             </td>`)
-            } else {
+            }
+            else if(key === "boundary")
+            {
+              $(tableName).append(`<td data-label=${key}>
+                                ${getNameById(key,employee[object][i][key],employee[object][i]["jurisdictionsType"])}
+                          </td>`)
+            }
+            else if(key=="hod")
+            {
+              $(tableName).append(`<td data-label=${key}>
+                                ${employee[object][i][key].length>0?"Yes":"No"}
+                          </td>`)
+            }
+            else {
                 $(tableName).append(`<td data-label=${key}>
                                   ${employee[object][i][key]}
                             </td>`)
@@ -1157,20 +1272,21 @@ function markEditIndex(index = -1, modalName = "", object = "") {
                 // if($(`#${object}\\.${key}`).length == 0) {
                 //       alert("not there");
                 //   }
-                if( object+"."+key=="assignments.fromDate" || object+"."+key=="assignments.toDate" ||object+"."+key=="serviceHistory.serviceFrom" ||object+"."+key=="probation.orderDate" ||object+"."+key=="probation.declaredOn" ||object+"."+key=="regularisation.declaredOn" || object+"."+key=="regularisation.orderDate" || object+"."+key=="education.yearOfPassing" || object+"."+key=="technical.yearOfPassing" || object+"."+key=="test.yearOfPassing")
-                {
-                  var dateSplit=employeeSubObject[object][key].split("/");
-                  var date=new Date(dateSplit[0],dateSplit[1],dateSplit[2]);
-                  // var day=date.getDate().toString().length===1?"0"+date.getDate():date.getDate();
-                  // var monthIn=date.getMonth().toString().length===1?"0"+date.getMonth():date.getMonth();
-                  // var yearIn=date.getFullYear();
-                  // employeeSubObject[splitResult[0]][splitResult[1]] = day+"/"+monthIn+"/"+yearIn;
-                  $(`#${object}\\.${key}`).val(date);
+                // if (object + "." + key == "assignments.fromDate" || object + "." + key == "assignments.toDate" || object + "." + key == "serviceHistory.serviceFrom" || object + "." + key == "probation.orderDate" || object + "." + key == "probation.declaredOn" || object + "." + key == "regularisation.declaredOn" || object + "." + key == "regularisation.orderDate" || object + "." + key == "education.yearOfPassing" || object + "." + key == "technical.yearOfPassing" || object + "." + key == "test.yearOfPassing") {
+                //     var dateSplit = employeeSubObject[object][key].split("/");
+                //     var date = new Date(dateSplit[0], dateSplit[1], dateSplit[2]);
+                //     // var day=date.getDate().toString().length===1?"0"+date.getDate():date.getDate();
+                //     // var monthIn=date.getMonth().toString().length===1?"0"+date.getMonth():date.getMonth();
+                //     // var yearIn=date.getFullYear();
+                //     // employeeSubObject[splitResult[0]][splitResult[1]] = day+"/"+monthIn+"/"+yearIn;
+                //     $(`#${object}\\.${key}`).val(date);
+                //
+                // } else {
+                //     $(`#${object}\\.${key}`).val(employeeSubObject[object][key]);
+                // }
 
-                }
-                else {
-                  $(`#${object}\\.${key}`).val(employeeSubObject[object][key]);
-                }
+                $(`#${object}\\.${key}`).val(employeeSubObject[object][key]);
+
             }
         }
     })
@@ -1185,19 +1301,17 @@ function commonAddAndUpdate(tableName, modalName, object) {
             employee[object][editIndex] = employeeSubObject[object];
             updateTable("#" + tableName, modalName, object);
         } else {
-            if (object=="assignments") {
-              employeeSubObject[object]["hod"]=[];
-              if(tempListBox.length>0)
-              {
-                employeeSubObject[object]["hod"].push(tempListBox);
+            if (object == "assignments") {
+                employeeSubObject[object]["hod"] = [];
+                if (tempListBox.length > 0) {
+                    employeeSubObject[object]["hod"].push(tempListBox);
 
-              }
-              employee[object].push(Object.assign({}, employeeSubObject[object]));
-              updateTable("#" + tableName, modalName, object);
-            }
-            else {
-              employee[object].push(Object.assign({}, employeeSubObject[object]));
-              updateTable("#" + tableName, modalName, object);
+                }
+                employee[object].push(Object.assign({}, employeeSubObject[object]));
+                updateTable("#" + tableName, modalName, object);
+            } else {
+                employee[object].push(Object.assign({}, employeeSubObject[object]));
+                updateTable("#" + tableName, modalName, object);
             }
 
         }
@@ -1236,21 +1350,21 @@ for (var key in final_validatin_rules) {
     // $(`#${key}`).attr("disabled",true);
 };
 
-// $.validator.addMethod('phone', function(value) {
-//     return /^[0-9]{10}$/.test(value);
-// }, 'Please enter a valid phone number.');
-//
-// $.validator.addMethod('aadhar', function(value) {
-//     return /^[0-9]{12}$/.test(value);
-// }, 'Please enter a valid aadhar.');
-//
-// $.validator.addMethod('pan_no', function(value) {
-//     return /^[0-9a-zA-Z]{10}$/.test(value);
-// }, 'Please enter a valid pan.');
+$.validator.addMethod('phone', function(value) {
+    return /^[0-9]{10}$/.test(value);
+}, 'Please enter a valid phone number.');
+
+$.validator.addMethod('aadhar', function(value) {
+    return /^[0-9]{12}$/.test(value);
+}, 'Please enter a valid aadhar.');
+
+$.validator.addMethod('panNo', function(value) {
+    return /^[0-9a-zA-Z]{10}$/.test(value);
+}, 'Please enter a valid pan.');
 
 $("#addEmployee").on("click", function(e) {
     e.preventDefault();
-     $("#createEmployeeForm").submit();
+    $("#createEmployeeForm").submit();
     // switchValidation("final_validatin_rules");
 })
 
@@ -1379,37 +1493,35 @@ $("#createEmployeeForm").validate({
             //call api
             console.log("calling api");
 
-            var empJuridictiona=employee["jurisdictions"];
-            employee["jurisdictions"]=[];
+            var empJuridictiona = employee["jurisdictions"];
+            employee["jurisdictions"] = [];
             for (var i = 0; i < empJuridictiona.length; i++) {
-              employee["jurisdictions"].push(empJuridictiona[i].boundary);
+                employee["jurisdictions"].push(empJuridictiona[i].boundary);
             }
 
 
 
-            var response=$.ajax({
-                      url: baseUrl+"/hr-employee/employees/_create?tenantId=1",
-                      type: 'POST',
-                      dataType: 'json',
-                      data:JSON.stringify({
-                          RequestInfo: requestInfo,
-                          Employee: employee
-                      }),
-                      async: false,
-                      headers: {
-                              'auth-token': authToken
-                          },
-                      contentType: 'application/json'
-                  });
+            var response = $.ajax({
+                url: baseUrl + "/hr-employee/employees/_create?tenantId=1",
+                type: 'POST',
+                dataType: 'json',
+                data: JSON.stringify({
+                    RequestInfo: requestInfo,
+                    Employee: employee
+                }),
+                async: false,
+                headers: {
+                    'auth-token': authToken
+                },
+                contentType: 'application/json'
+            });
 
-                  if(response["status"]===200)
-                  {
-                    alert("Successfully added");
-                    // window.location.href="../../../../app/hr/common/employee-attendance.html";
-                  }
-                  else {
-                    alert(response["statusText"]);
-                  }
+            if (response["status"] === 200) {
+                alert("Successfully added");
+                // window.location.href="../../../../app/hr/common/employee-attendance.html";
+            } else {
+                alert(response["statusText"]);
+            }
 
 
             // $.post(`${baseUrl}hr-employee/employees/_create?tenantId=1`, {

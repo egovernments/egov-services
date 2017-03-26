@@ -36,9 +36,9 @@ class Attendance extends React.Component {
           for (var att in employees[emp].attendance) {
               //  console.log(att.split('-')[1]);
                 // var month=month+1;
-                var date=new Date(year,(month+1),att.split('-')[1]);
+                var date=new Date(year,month,att.split('-')[1]);
                 var day=date.getDate().toString().length===1?"0"+date.getDate():date.getDate();
-                var monthIn=date.getMonth().toString().length===1?"0"+date.getMonth():date.getMonth();
+                var monthIn=date.getMonth().toString().length===1?"0"+(date.getMonth()+1):(date.getMonth()+1);
                 var yearIn=date.getFullYear();
                 // console.log(date.getDate().length);
                 // console.log(employees[emp].attendance[att].split("-")[1]);
@@ -99,9 +99,9 @@ class Attendance extends React.Component {
     var now = new Date();
     // var startDate=new Date((typeof(queryParam["year"])==="undefined")?now.getFullYear():parseInt(queryParam["year"]), (typeof(queryParam["month"])==="undefined")?now.getMonth():parseInt(queryParam["month"]), 1);
     // console.log(startDate);
-    var currentDate=new Date(queryParam["year"],parseInt(queryParam["month"])+1,1);
+    var currentDate=new Date(queryParam["year"],queryParam["month"],1);
     var hrConfigurations=commonApiPost("hr-masters","hrconfigurations","_search",{tenantId}).responseJSON || [];
-    var employeesTemp=commonApiPost("hr-employee","employees","_search",{tenantId,departmentId:queryParam["departmentCode"],designationId:queryParam["designationCode"],employeeType:queryParam["type"],code:queryParam["code"],"assignment.isPrimary":true,asOnDate:(currentDate.getDate().toString().length==2?currentDate.getDate():"0"+currentDate.getDate())+"/"+(currentDate.getMonth().toString().length==2?currentDate.getMonth():"0"+currentDate.getMonth())+"/"+currentDate.getFullYear()}).responseJSON["Employee"] || [];
+    var employeesTemp=commonApiPost("hr-employee","employees","_search",{tenantId,departmentId:queryParam["departmentCode"],designationId:queryParam["designationCode"],employeeType:queryParam["type"],code:queryParam["code"],"assignment.isPrimary":true,asOnDate:(currentDate.getDate().toString().length==2?currentDate.getDate():"0"+currentDate.getDate())+"/"+(currentDate.getMonth().toString().length==2?(currentDate.getMonth()+1):"0"+(currentDate.getMonth()+1))+"/"+currentDate.getFullYear()}).responseJSON["Employee"] || [];
     var currentAttendance=commonApiPost("hr-attendance","attendances","_search",{tenantId,month:parseInt(queryParam["month"])+1,year:queryParam["year"],pageSize:500,pageNumber:1}).responseJSON["Attendance"] || [];
     var employees={};
     for(var i=0;i<employeesTemp.length;i++)

@@ -13,30 +13,32 @@ import java.util.Date;
 @AllArgsConstructor
 public class RequestInfo {
     @JsonProperty("api_id")
-    private String apiId = null;
+    private String apiId;
 
     @JsonProperty("ver")
-    private String ver = null;
+    private String ver;
 
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "IST")
     @JsonProperty("ts")
-    private Date ts = null;
+    private Date ts;
 
     @JsonProperty("action")
-    private String action = null;
+    private String action;
 
     @JsonProperty("did")
-    private String did = null;
+    private String did;
 
     @JsonProperty("key")
-    private String key = null;
+    private String key;
 
     @JsonProperty("msg_id")
-    private String msgId = null;
+    private String msgId;
 
     @JsonProperty("requester_id")
-    private String requesterId = null;
+    private String requesterId;
 
     @JsonProperty("auth_token")
-    private String authToken = null;
+    private String authToken;
+
+    private String correlationId;
 }

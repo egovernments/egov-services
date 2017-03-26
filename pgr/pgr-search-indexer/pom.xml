@@ -151,6 +151,7 @@
                                         <exclude>org.egov.web.indexer.config.IndexerProperties</exclude>
                                         <exclude>org.egov.web.indexer.http.CorrelationIdAwareRestTemplate</exclude>
                                         <exclude>org.egov.web.indexer.SearchIndexerApplication</exclude>
+                                        <exclude>org.egov.web.indexer.consumer.HashMapDeserializer</exclude>
                                         <exclude>org.egov.web.indexer.models.RequestContext</exclude>
                                     </excludes>
                                     <limits>

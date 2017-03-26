@@ -12,8 +12,4 @@ public class SevaRequest {
 
     @JsonProperty("ServiceRequest")
     private ServiceRequest serviceRequest;
-
-    public String getCorrelationId() {
-        return requestInfo.getMsgId();
-    }
 }

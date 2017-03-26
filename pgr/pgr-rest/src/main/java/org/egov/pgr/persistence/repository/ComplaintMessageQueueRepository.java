@@ -2,6 +2,7 @@ package org.egov.pgr.persistence.repository;
 
 import org.egov.pgr.persistence.queue.contract.SevaRequest;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
+import org.egov.tracer.model.RequestContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,8 @@ public class ComplaintMessageQueueRepository {
     }
 
     public void save(SevaRequest sevaRequest) {
+        //TODO: Setting of correlationId to be removed once API gateway does this
+        sevaRequest.getRequestInfo().setCorrelationId(RequestContext.getId());
         kafkaTemplate.send(topicName, sevaRequest);
     }
 }

@@ -55,7 +55,7 @@ public class ComplaintService {
 					.setRequesterId(userRepository.getUserByUserName("anonymous").getId().toString());
 		} else {
 			sevaRequest.setRequestInfo(new RequestInfo("", "", new Date(), "", "", "", "",
-					userRepository.getUserByUserName("anonymous").getId().toString(), ""));
+					userRepository.getUserByUserName("anonymous").getId().toString(), "", ""));
 		}
 	}
 

@@ -32,7 +32,6 @@ public class RequestInfo   {
     private String key;
 
     @JsonProperty("msg_id")
-    @Setter
     private String msgId;
 
     @JsonProperty("requester_id")
@@ -41,4 +40,7 @@ public class RequestInfo   {
 
     @JsonProperty("auth_token")
     private String authToken;
+
+    @Setter
+    private String correlationId;
 }

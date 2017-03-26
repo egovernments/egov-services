@@ -1,13 +1,17 @@
 {
-  "requestInfo": {
-    "api_id": null,
-    "ver": null,
-    "ts": null,
-    "action":null,
-    "did":null,
-    "key":null,
-    "msg_id": null,
-    "requester_id":null,
-    "auth_token": null},
-  "id":[67]
+    "requestInfo": {
+        "api_id": null,
+        "ver": null,
+        "ts": null,
+        "action": null,
+        "did": null,
+        "key": null,
+        "msg_id": null,
+        "requester_id": null,
+        "auth_token": null,
+        "correlationId": null
+    },
+    "id": [
+        67
+    ]
 }

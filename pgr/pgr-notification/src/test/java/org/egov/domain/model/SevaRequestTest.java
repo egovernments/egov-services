@@ -2,9 +2,6 @@ package org.egov.domain.model;
 
 import org.junit.Test;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.TimeZone;
 
@@ -110,6 +107,19 @@ public class SevaRequestTest {
 
         assertEquals("26/03/2017 12:58", sevaRequest.getFormattedCreatedDate());
     }
+
+    @Test(expected = RuntimeException.class)
+    public void test_should_throw_run_time_exception_when_date_format_is_not_as_expected() {
+        final HashMap<String, Object> serviceRequest = new HashMap<>();
+        final HashMap<String, Object> sevaRequestMap = new HashMap<>();
+        TimeZone.setDefault(TimeZone.getTimeZone(IST));
+        serviceRequest.put("requested_datetime", "26/03/2017 12:58:40");
+        sevaRequestMap.put("ServiceRequest", serviceRequest);
+        final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
+
+        sevaRequest.getFormattedCreatedDate();
+    }
+
 
     @Test
     public void test_should_return_complaint_description_from_request_map() {

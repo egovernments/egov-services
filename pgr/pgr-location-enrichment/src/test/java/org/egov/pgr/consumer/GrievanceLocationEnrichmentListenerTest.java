@@ -1,6 +1,5 @@
 package org.egov.pgr.consumer;
 
-import org.egov.pgr.model.RequestContext;
 import org.egov.pgr.model.SevaRequest;
 import org.egov.pgr.repository.ComplaintRepository;
 import org.egov.pgr.services.LocationService;
@@ -12,7 +11,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.HashMap;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -28,15 +26,6 @@ public class GrievanceLocationEnrichmentListenerTest {
 
     @InjectMocks
     private GrievanceLocationEnrichmentListener listener;
-
-    @Test
-    public void test_should_set_request_context_with_correlation_id() {
-        final HashMap<String, Object> sevaRequest = getSevaRequestMap();
-
-        listener.process(sevaRequest);
-
-        assertEquals("correlationId", RequestContext.getId());
-    }
 
     @Test
     public void test_should_perist_enriched_seva_request() {

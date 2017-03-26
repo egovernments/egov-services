@@ -102,15 +102,13 @@ public class SevaRequestTest {
     public void test_should_return_created_date_formatted_from_request_map() {
         final HashMap<String, Object> serviceRequest = new HashMap<>();
         final HashMap<String, Object> sevaRequestMap = new HashMap<>();
-        final Date createdDate = Date.from(LocalDateTime.of(2016, 1, 2, 3, 4)
-            .atZone(ZoneId.of(IST)).toInstant());
         TimeZone.setDefault(TimeZone.getTimeZone(IST));
-        serviceRequest.put("requested_datetime", createdDate);
+        serviceRequest.put("requested_datetime", "26-03-2017 12:58:40");
         sevaRequestMap.put("ServiceRequest", serviceRequest);
 
         final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
 
-        assertEquals("02/01/2016 03:04", sevaRequest.getFormattedCreatedDate());
+        assertEquals("26/03/2017 12:58", sevaRequest.getFormattedCreatedDate());
     }
 
     @Test

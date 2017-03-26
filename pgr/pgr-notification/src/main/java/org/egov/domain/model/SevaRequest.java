@@ -1,5 +1,6 @@
 package org.egov.domain.model;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -62,7 +63,12 @@ public class SevaRequest {
     }
 
     private Date getCreatedDate() {
-        return (Date) this.serviceRequest.get(REQUESTED_DATE);
+        final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        try {
+            return dateFormat.parse((String) this.serviceRequest.get(REQUESTED_DATE));
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public String getDetails() {

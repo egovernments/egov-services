@@ -13,7 +13,7 @@ Create table EG_WF_TYPES(
 		lastmodifiedby bigint,
 		lastmodifieddate timestamp without time zone,
 		version bigint,
-		tenantId varchar(128),
+		tenantId varchar(128)
 		
 );
 alter table EG_WF_TYPES add constraint pk_EG_WF_TYPES primary key (id);

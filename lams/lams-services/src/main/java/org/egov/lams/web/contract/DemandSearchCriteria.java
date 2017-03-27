@@ -1,4 +1,4 @@
-package org.egov.lams.contract;
+package org.egov.lams.web.contract;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

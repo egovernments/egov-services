@@ -45,8 +45,8 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
-import org.egov.lams.model.RequestInfo;
-import org.egov.lams.model.ResponseInfo;
+import org.egov.lams.web.contract.RequestInfo;
+import org.egov.lams.web.contract.ResponseInfo;
 import org.egov.lams.service.LamsConfigurationService;
 import org.egov.lams.web.contract.LamsConfigurationGetRequest;
 import org.egov.lams.web.contract.LamsConfigurationResponse;

@@ -1,7 +1,6 @@
 package org.egov.lams.contract;
 
 import org.egov.lams.model.Agreement;
-import org.egov.lams.model.RequestInfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

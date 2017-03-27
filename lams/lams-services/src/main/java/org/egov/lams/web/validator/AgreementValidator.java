@@ -2,14 +2,14 @@ package org.egov.lams.web.validator;
 
 import java.util.Date;
 
-import org.egov.lams.contract.AgreementRequest;
-import org.egov.lams.contract.AllotteeResponse;
-import org.egov.lams.contract.AssetResponse;
+import org.egov.lams.web.contract.AgreementRequest;
+import org.egov.lams.web.contract.AllotteeResponse;
+import org.egov.lams.web.contract.AssetResponse;
+import org.egov.lams.web.contract.RequestInfo;
 import org.egov.lams.exception.LamsException;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.Allottee;
 import org.egov.lams.model.RentIncrementType;
-import org.egov.lams.model.RequestInfo;
 import org.egov.lams.service.AllotteeService;
 import org.egov.lams.service.AssetService;
 import org.egov.lams.service.RentIncrementService;
@@ -39,8 +39,8 @@ public class AgreementValidator {
 		Date bankGuaranteeDate = agreement.getBankGuaranteeDate();
 
 		// TODO remove hard coded value of rent*3
-		if (securityDeposit.equals(rent * 3))
-			throw new LamsException("security deposit value should be thrice rent value");
+		if (securityDeposit<rent * 3)
+			throw new LamsException("security deposit value should be greater than or equal to thrice rent value");
 
 		if (solvencyCertificateDate.compareTo(new Date()) >= 0)
 			throw new LamsException("solvency certificate date should be lesser than current date");

@@ -4,16 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
-
-import org.egov.lams.contract.AgreementRequest;
-import org.egov.lams.contract.AgreementResponse;
-import org.egov.lams.exception.Error;
-import org.egov.lams.exception.ErrorResponse;
+import org.egov.lams.web.errorhandlers.Error;
+import org.egov.lams.web.contract.AgreementRequest;
+import org.egov.lams.web.contract.AgreementResponse;
+import org.egov.lams.web.contract.RequestInfo;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.AgreementCriteria;
-import org.egov.lams.model.RequestInfo;
 import org.egov.lams.service.AgreementService;
 import org.egov.lams.web.contract.factory.ResponseInfoFactory;
+import org.egov.lams.web.errorhandlers.ErrorResponse;
 import org.egov.lams.web.validator.AgreementValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,9 +82,8 @@ public class AgreementController {
 					HttpStatus.BAD_REQUEST);
 		}
 		LOGGER.info("agreementRequest::" + agreementRequest);
-		Agreement agreement = agreementRequest.getAgreement();
 		agreementValidator.validateAgreement(agreementRequest);
-		agreement = agreementService.createAgreement(agreementRequest);
+		Agreement agreement = agreementService.createAgreement(agreementRequest);
 		List<Agreement> agreements = new ArrayList<>();
 		agreements.add(agreement);
 		AgreementResponse agreementResponse = new AgreementResponse();
@@ -129,8 +127,7 @@ public class AgreementController {
 		error.setDescription("Error while binding request");
 		if (errors.hasFieldErrors()) {
 			for (FieldError errs : errors.getFieldErrors()) {
-				error.getFields().add(errs.getField());
-				error.getFields().add(errs.getRejectedValue());
+				error.getFields().put(errs.getField(),errs.getRejectedValue());
 			}
 		}
 		errRes.setError(error);

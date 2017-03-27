@@ -40,22 +40,34 @@
 
 package org.egov.lams.web.errorhandlers;
 
-import org.egov.lams.model.RequestInfo;
-import org.egov.lams.model.ResponseInfo;
+import org.egov.lams.web.contract.RequestInfo;
+import org.egov.lams.web.contract.ResponseInfo;
 import org.egov.lams.web.contract.factory.ResponseInfoFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
-@Component
+@ControllerAdvice
 public class ErrorHandler {
 
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
 
+
+	@ExceptionHandler(value=Exception.class)
+	public ResponseEntity<ErrorResponse> exceptionHandler(Exception e) {
+		ErrorResponse errorResponse = new ErrorResponse();
+		Error error=new Error();
+		error.setCode(400);
+		error.setMessage(e.getMessage());
+		errorResponse.setError(error);
+		return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.OK);
+	}
+	
 	public ResponseEntity<ErrorResponse> getErrorResponseEntityForMissingRequestInfo(RequestInfo requestInfo) {
 		Error error = new Error();
 		error.setCode(400);

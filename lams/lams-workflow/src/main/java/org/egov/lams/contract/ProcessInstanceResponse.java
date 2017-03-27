@@ -1,16 +1,15 @@
 package org.egov.lams.contract;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.egov.lams.model.ProcessInstance;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.egov.lams.model.ProcessInstance;
-import org.egov.lams.model.ResponseInfo;
 
 
 @Getter

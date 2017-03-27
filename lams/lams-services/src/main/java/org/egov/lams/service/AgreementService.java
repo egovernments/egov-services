@@ -2,9 +2,10 @@ package org.egov.lams.service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
 import org.egov.lams.config.PropertiesManager;
-import org.egov.lams.contract.AgreementRequest;
-import org.egov.lams.contract.DemandResponse;
+import org.egov.lams.web.contract.AgreementRequest;
+import org.egov.lams.web.contract.DemandResponse;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.AgreementCriteria;
 import org.egov.lams.model.Demand;

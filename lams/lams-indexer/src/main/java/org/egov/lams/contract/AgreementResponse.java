@@ -3,7 +3,6 @@ package org.egov.lams.contract;
 import java.util.List;
 
 import org.egov.lams.model.Agreement;
-import org.egov.lams.model.ResponseInfo;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

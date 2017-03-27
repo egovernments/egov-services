@@ -2,8 +2,8 @@ package org.egov.lams.service;
 
 import org.egov.lams.config.PropertiesManager;
 import org.egov.lams.contract.AllotteeResponse;
+import org.egov.lams.contract.RequestInfo;
 import org.egov.lams.model.Allottee;
-import org.egov.lams.model.RequestInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package org.egov.lams.model;
+package org.egov.lams.contract;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,4 +22,5 @@ public class RequestInfo {
 	private String msgId;	
 	private String requesterId;	
 	private String authToken;
+	private User userInfo;
 }

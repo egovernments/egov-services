@@ -2,15 +2,16 @@ package org.egov.lams.repository;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.egov.lams.config.PropertiesManager;
-import org.egov.lams.contract.AllotteeResponse;
-import org.egov.lams.contract.AssetResponse;
-import org.egov.lams.contract.UserSearchRequest;
+import org.egov.lams.web.contract.AllotteeResponse;
+import org.egov.lams.web.contract.AssetResponse;
+import org.egov.lams.web.contract.RequestInfo;
+import org.egov.lams.web.contract.UserSearchRequest;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.AgreementCriteria;
 import org.egov.lams.model.Allottee;
 import org.egov.lams.model.Asset;
-import org.egov.lams.model.RequestInfo;
 import org.egov.lams.repository.builder.AgreementQueryBuilder;
 import org.egov.lams.repository.helper.AgreementHelper;
 import org.egov.lams.repository.helper.AllotteeHelper;

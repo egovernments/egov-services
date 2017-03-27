@@ -1,7 +1,6 @@
 package org.egov.lams.contract;
 
 import org.egov.lams.model.City;
-import org.egov.lams.model.ResponseInfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

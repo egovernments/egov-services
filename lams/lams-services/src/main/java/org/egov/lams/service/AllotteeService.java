@@ -2,16 +2,15 @@ package org.egov.lams.service;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.egov.lams.config.PropertiesManager;
-import org.egov.lams.contract.AllotteeResponse;
-import org.egov.lams.contract.CreateUserRequest;
-import org.egov.lams.contract.UserResponse;
-import org.egov.lams.contract.UserSearchRequest;
+import org.egov.lams.web.contract.AllotteeResponse;
+import org.egov.lams.web.contract.CreateUserRequest;
+import org.egov.lams.web.contract.RequestInfo;
+import org.egov.lams.web.contract.UserResponse;
+import org.egov.lams.web.contract.UserSearchRequest;
 import org.egov.lams.exception.LamsException;
 import org.egov.lams.model.Allottee;
-import org.egov.lams.model.RequestInfo;
-import org.egov.lams.model.enums.Gender;
-import org.egov.lams.model.enums.UserType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

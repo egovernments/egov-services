@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.lams.config.PropertiesManager;
-import org.egov.lams.contract.AssetResponse;
-import org.egov.lams.model.RequestInfo;
+import org.egov.lams.web.contract.AssetResponse;
+import org.egov.lams.web.contract.RequestInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

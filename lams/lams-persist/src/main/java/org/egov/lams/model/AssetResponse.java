@@ -2,6 +2,8 @@ package org.egov.lams.model;
 
 import java.util.List;
 
+import org.egov.lams.contract.ResponseInfo;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class AssetResponse {

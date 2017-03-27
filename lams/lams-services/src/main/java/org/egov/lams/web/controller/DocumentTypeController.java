@@ -1,9 +1,10 @@
 package org.egov.lams.web.controller;
 
 import java.util.List;
-import org.egov.lams.contract.DocumentTypeResponse;
+
+import org.egov.lams.web.contract.DocumentTypeResponse;
+import org.egov.lams.web.contract.RequestInfo;
 import org.egov.lams.model.DocumentType;
-import org.egov.lams.model.RequestInfo;
 import org.egov.lams.model.enums.Application;
 import org.egov.lams.service.DocumentTypeService;
 import org.springframework.beans.factory.annotation.Autowired;

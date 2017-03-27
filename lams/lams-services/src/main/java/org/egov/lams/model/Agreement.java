@@ -18,18 +18,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Agreement {
 
-	@NotNull
 	private Long id;
 
 	@NotNull
 	private String tenantId;
-
-	@NotNull
 	private String agreementNumber;
 	private String acknowledgementNumber;
 	private String StateId;
 
-	@NotNull
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date agreementDate;
 	private Allottee allottee;
@@ -46,6 +42,7 @@ public class Agreement {
 
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date bankGuaranteeDate;
+	@NotNull
 	private Double securityDeposit;
 
 	@JsonFormat(pattern = "dd/MM/yyyy")

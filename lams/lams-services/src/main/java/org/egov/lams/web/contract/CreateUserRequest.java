@@ -1,9 +1,7 @@
-package org.egov.lams.contract;
+package org.egov.lams.web.contract;
 
 import org.egov.lams.model.Allottee;
-import org.egov.lams.model.RequestInfo;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;

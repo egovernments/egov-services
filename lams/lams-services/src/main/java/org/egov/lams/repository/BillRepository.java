@@ -3,7 +3,7 @@ package org.egov.lams.repository;
 import java.util.List;
 
 import org.egov.lams.config.PropertiesManager;
-import org.egov.lams.model.RequestInfo;
+import org.egov.lams.web.contract.RequestInfo;
 import org.egov.lams.web.contract.BillInfo;
 import org.egov.lams.web.contract.BillRequest;
 import org.egov.lams.web.contract.BillResponse;

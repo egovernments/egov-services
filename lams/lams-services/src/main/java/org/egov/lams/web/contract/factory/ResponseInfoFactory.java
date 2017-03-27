@@ -40,8 +40,8 @@
 
 package org.egov.lams.web.contract.factory;
 
-import org.egov.lams.model.RequestInfo;
-import org.egov.lams.model.ResponseInfo;
+import org.egov.lams.web.contract.RequestInfo;
+import org.egov.lams.web.contract.ResponseInfo;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
 

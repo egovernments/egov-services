@@ -38,7 +38,7 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.lams.model;
+package org.egov.lams.web.contract;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;

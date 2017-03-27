@@ -3,9 +3,6 @@ package org.egov.lams.contract;
 import java.util.List;
 
 import org.egov.lams.model.Asset;
-import org.egov.lams.model.ResponseInfo;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

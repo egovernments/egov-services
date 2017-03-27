@@ -8,11 +8,11 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.egov.lams.contract.DemandSearchCriteria;
+import org.egov.lams.web.contract.DemandSearchCriteria;
+import org.egov.lams.web.contract.RequestInfo;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.Demand;
 import org.egov.lams.model.DemandDetails;
-import org.egov.lams.model.RequestInfo;
 import org.egov.lams.repository.BillRepository;
 import org.egov.lams.repository.DemandRepository;
 import org.egov.lams.web.contract.BillDetailInfo;

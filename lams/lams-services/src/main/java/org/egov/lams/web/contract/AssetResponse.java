@@ -1,9 +1,8 @@
-package org.egov.lams.contract;
+package org.egov.lams.web.contract;
 
 import java.util.List;
 
 import org.egov.lams.model.Asset;
-import org.egov.lams.model.ResponseInfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

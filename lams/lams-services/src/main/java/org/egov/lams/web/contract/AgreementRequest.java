@@ -1,7 +1,8 @@
-package org.egov.lams.contract;
+package org.egov.lams.web.contract;
+
+import javax.validation.Valid;
 
 import org.egov.lams.model.Agreement;
-import org.egov.lams.model.RequestInfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -22,5 +23,6 @@ public class AgreementRequest {
 	private RequestInfo requestInfo;
 	
 	@JsonProperty("Agreement")
+	@Valid
 	private Agreement agreement;
 }

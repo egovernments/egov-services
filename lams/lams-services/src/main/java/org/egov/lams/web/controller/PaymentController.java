@@ -1,8 +1,8 @@
 package org.egov.lams.web.controller;
 
+import org.egov.lams.web.contract.RequestInfo;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.AgreementCriteria;
-import org.egov.lams.model.RequestInfo;
 import org.egov.lams.service.AgreementService;
 import org.egov.lams.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;

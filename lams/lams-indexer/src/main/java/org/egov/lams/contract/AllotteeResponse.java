@@ -2,7 +2,6 @@ package org.egov.lams.contract;
 import java.util.List;
 
 import org.egov.lams.model.Allottee;
-import org.egov.lams.model.ResponseInfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

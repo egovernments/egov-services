@@ -1,54 +1,31 @@
-function getUrlVars() {
-    var vars = [],
-        hash;
-    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-    for (var i = 0; i < hashes.length; i++) {
-        hash = hashes[i].split('=');
-        vars.push(hash[0]);
-        vars[hash[0]] = hash[1];
-    }
-    return vars;
-}
-
-
 class EmployeeSearch extends React.Component {
   constructor(props) {
     super(props);
-    this.state={employees:[],searchSet:{employeeStatusCode:"",
+    this.state={employees:[],searchSet:{
     name:"",
     code:"",
-    departmentCode:"",
-    designationCode:"",
-    employeeTypeCode:"",
-    activeCode:"",
-    functionaryCode:"",
-    functionCode:"",
-    drawingOfficerCode:"",userName:" "},isSearchClicked:false,mployeeType:[],department:[],designation:[],employeeStatus:[],active:[],function:[],functionary:[],drawingOfficer:[]}
+    department:"",
+    designation:"",
+    employeeType:"",
+    month:"",calendarYear:"",},isSearchClicked:false,employeeTypeList:[],departmentList:[],designationList:[],year:[],monthList:[]}
     this.handleChange=this.handleChange.bind(this);
     this.search=this.search.bind(this);
   }
 
   search(e)
   {
-    let {employeeStatusCode,
+    let {
     name,
     code,
-    departmentCode,
-    designationCode,
-    employeeTypeCode,
-    activeCode,
-    functionaryCode,
-    functionCode,
-    drawingOfficerCode,userName}=this.state.searchSet;
+    department,
+    designation,
+    employeeType,
+    calendarYear,month}=this.state.searchSet;
     e.preventDefault();
     //call api call
     var employees=[];
-    for(var i=1;i<=100;i++)
-    {
-        employees.push({
-            code:i,name:"murali"+1,designation:'xyz',department:"yxs",userName:"avs"
-        })
-    }
+    //console.log(commonApiPost("hr-employee","employees","_search",{tenantId},this.state.searchSet).responseJSON["Employee"]);
+   employees=commonApiPost("hr-employee","employees","_search",{tenantId,code},this.state.searchSet).responseJSON["Employee"];
     this.setState({
       isSearchClicked:true,
       employees
@@ -59,166 +36,20 @@ class EmployeeSearch extends React.Component {
 
   }
 
+
   componentWillMount()
   {
-    // var employees=[];
-    // for(var i=1;i<=100;i++)
-    // {
-    //     employees.push({
-    //         code:i,name:"murali"+i,designation:'xyz',department:"yxs",userName:"avs"
-    //     })
-    // }
-    // this.setState({
-    //   isSearchClicked:true,
-    //   employees
-    // })
-
+    var date=new Date();
+    var monthList=[{id:0,name:"January"},{id:1,name:"February"}, {id:2,name:"March"}, {id:3,name:"April"}, {id:4,name:"May"},
+         {id:5,name:"June"}, {id:6,name:"July"}, {id:7,name:"August"}, {id:8,name:"September"}, {id:9,name:"October"},
+         {id:10,name:"November"}, {id:11,name:"December"}]
     this.setState({
-      employeeType:[{
-              id: 1,
-              name: "Deputation",
-              chartOfAccounts: ""
-          },
-          {
-              id: 2,
-              name: "Permanent",
-              chartOfAccounts: ""
-          },
-          {
-              id: 3,
-              name: "Daily Wages`",
-              chartOfAccounts: ""
-          },
-          {
-              id: 4,
-              name: "Temporary",
-              chartOfAccounts: ""
-          },
-          {
-              id: 5,
-              name: "Contract",
-              chartOfAccounts: ""
-          }],
-      departments:[{
-              id: 1,
-              name: "Juniour Engineer",
-              description: "",
-              orderno: "1",
-              active: true
-          },
-          {
-              id: 2,
-              name: "Assistance Engineer",
-              description: "",
-              orderno: "1",
-              active: true
-          }],
-      designation:[{
-              id: 1,
-              name: "Juniour Engineer",
-              description: "",
-              orderno: "1",
-              active: true
-          },
-          {
-              id: 2,
-              name: "Assistance Engineer",
-              description: "",
-              orderno: "1",
-              active: true
-          }],
-      active:[{
-              id: 1,
-              name: "Juniour Engineer",
-              description: "",
-              orderno: "1",
-              active: true
-          },
-          {
-              id: 2,
-              name: "Assistance Engineer",
-              description: "",
-              orderno: "1",
-              active: true
-          }],
-      employeeStatus:[{
-              id: 1,
-              name: "Juniour Engineer",
-              description: "",
-              orderno: "1",
-              active: true
-          },
-          {
-              id: 2,
-              name: "Assistance Engineer",
-              description: "",
-              orderno: "1",
-              active: true
-          }],
-      function:[{
-              id: 1,
-              name: "Juniour Engineer",
-              description: "",
-              orderno: "1",
-              active: true
-          },
-          {
-              id: 2,
-              name: "Assistance Engineer",
-              description: "",
-              orderno: "1",
-              active: true
-          }],
-      functionary:[{
-              id: 1,
-              name: "Juniour Engineer",
-              description: "",
-              orderno: "1",
-              active: true
-          },
-          {
-              id: 2,
-              name: "Assistance Engineer",
-              description: "",
-              orderno: "1",
-              active: true
-          }],
-      drawingOfficer:[{
-              id: 1,
-              name: "Juniour Engineer",
-              description: "",
-              orderno: "1",
-              active: true
-          },
-          {
-              id: 2,
-              name: "Assistance Engineer",
-              description: "",
-              orderno: "1",
-              active: true
-          }]
-    })
-  }
-
-  componentDidMount()
-  {
-    // if(getUrlVars()["type"]==="view")
-    // {
-    //   for (var obj in this.state.searchSet) {
-    //       document.getElementById(obj).disabled = true;
-    //   }
-    // }
-
-    // $('#employeeTable').DataTable({
-    //   dom: 'Bfrtip',
-    //   buttons: [
-    //            'copy', 'csv', 'excel', 'pdf', 'print'
-    //    ],
-    //    ordering: false
-    // });
-
-    // console.log($('#employeeTable').length);
-
+      departmentList:getCommonMaster("egov-common-masters","departments","Department").responseJSON["Department"] || [],
+      designationList:getCommonMaster("hr-masters","designations","Designation").responseJSON["Designation"] || [],
+      year:getCommonMaster("egov-common-masters","calendaryears","CalendarYear").responseJSON["CalendarYear"] || [],
+      monthList,
+      employeeTypeList:getCommonMaster("hr-masters","employeetypes","EmployeeType").responseJSON["EmployeeType"] || []
+  })
   }
 
   componentDidUpdate(prevProps, prevState)
@@ -272,26 +103,32 @@ class EmployeeSearch extends React.Component {
     console.log(this.state.searchSet);
     let {handleChange,search,updateTable}=this;
     let {isSearchClicked,employees}=this.state;
-    let {employeeStatusCode,
-    name,
+    let {name,
     code,
-    departmentCode,
-    designationCode,
-    employeeTypeCode,
-    activeCode,
-    functionaryCode,
-    functionCode,
-    drawingOfficerCode,userName}=this.state.searchSet;
-    const renderOption=function(list)
+    department,
+    designation,
+    employeeType,
+    calendarYear,month}=this.state.searchSet;
+    const renderOption=function(list,listName="")
     {
         if(list)
         {
-            return list.map((item)=>
-            {
-                return (<option key={item.id} value={item.id}>
-                        {item.name}
-                  </option>)
-            })
+            if (listName==="year") {
+              return list.map((item)=>
+              {
+                  return (<option key={item.id} value={item.name}>
+                          {item.name}
+                    </option>)
+              })
+            }
+            else {
+              return list.map((item)=>
+              {
+                  return (<option key={item.id} value={item.id}>
+                          {item.name}
+                    </option>)
+              })
+            }
         }
     }
     const showTable=function()
@@ -334,6 +171,24 @@ class EmployeeSearch extends React.Component {
       }
 
     }
+
+
+    const renderAction=function(type,id){
+      if (type==="update") {
+
+              return (
+                      <a href={`./../../../app/hr/employee/create.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-pencil"></span></a>
+              );
+
+    }else {
+            return (
+                    <a href={`./../../../app/hr/employee/create.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-modal-window"></span></a>
+            );
+        }
+}
+
+
+
     const renderBody=function()
     {
       return employees.map((item,index)=>
@@ -341,11 +196,11 @@ class EmployeeSearch extends React.Component {
             return (<tr key={index}>
                     <td data-label="code">{item.code}</td>
                     <td data-label="name">{item.name}</td>
-                    <td data-label="designation">{item.designation}</td>
-                    <td data-label="department">{item.department}</td>
+                    <td data-label="designation">{item.assignments[0].designation}</td>
+                    <td data-label="department">{item.assignments[0].department}</td>
                     <td data-label="userName">{item.userName}</td>
                     <td data-label="action">
-                                <a href={`../../../../app/hr/employee/create.html?code=${item.code}`}>view/edit</a>
+                    {renderAction(getUrlVars()["type"],item.id)}
                     </td>
                 </tr>
             );
@@ -363,19 +218,89 @@ class EmployeeSearch extends React.Component {
       <div>
           <form onSubmit={(e)=>{search(e)}}>
           <fieldset>
+      <div className="row">
+          <div className="col-sm-6">
               <div className="row">
-                <div className="col-sm-6">
-                    <div className="row">
-                        <div className="col-sm-6 label-text">
-                          <label for="">Employee Code </label>
-                        </div>
-                        <div className="col-sm-6">
-                            <input type="text" id="code" name="code" value={code} onChange={(e)=>{
-                                handleChange(e,"code")
-                            }}/>
-                        </div>
+                  <div className="col-sm-6 label-text">
+                    <label for=""> Month <span>*</span></label>
+                  </div>
+                  <div className="col-sm-6">
+                    <div className="styled-select">
+                    <select id="month" name="month"  value= {month}
+                        onChange={(e)=>{handleChange(e,"month")  }}required>
+                    <option value="">Select Month</option>
+                    {renderOption(this.state.monthList)}
+                   </select>
                     </div>
                   </div>
+              </div>
+            </div>
+            <div className="col-sm-6">
+                <div className="row">
+                    <div className="col-sm-6 label-text">
+                      <label for=""> Calendar Year <span>*</span></label>
+                    </div>
+                    <div className="col-sm-6">
+                      <div className="styled-select">
+                      <select id="calendarYear" name="calendarYear"  value= {calendarYear}
+                          onChange={(e)=>{handleChange(e,"calendarYear")}}required>
+                      <option value="">Select Year</option>
+                      {renderOption(this.state.year)}
+                     </select>
+                      </div>
+                    </div>
+                </div>
+              </div>
+          </div>
+          <div className="row">
+            <div className="col-sm-6">
+                <div className="row">
+                    <div className="col-sm-6 label-text">
+                      <label for="">Department  </label>
+                    </div>
+                    <div className="col-sm-6">
+                    <div className="styled-select">
+                        <select id="department" name="department" value={department} onChange={(e)=>{
+                            handleChange(e,"department")
+                        }}>
+                          <option>Select Department</option>
+                          {renderOption(this.state.departmentList)}
+                       </select>
+                    </div>
+                    </div>
+                </div>
+              </div>
+              <div className="col-sm-6">
+                  <div className="row">
+                      <div className="col-sm-6 label-text">
+                        <label for="">Designation  </label>
+                      </div>
+                      <div className="col-sm-6">
+                      <div className="styled-select">
+                          <select id="designation" name="designation" value={designation} onChange={(e)=>{
+                              handleChange(e,"designation")
+                          }}>
+                          <option>Select Designation</option>
+                          {renderOption(this.state.designationList)}
+                         </select>
+                      </div>
+                      </div>
+                  </div>
+                </div>
+          </div>
+          <div className="row">
+            <div className="col-sm-6">
+                <div className="row">
+                    <div className="col-sm-6 label-text">
+                      <label for="">Employee Code/Name  </label>
+                    </div>
+                    <div className="col-sm-6">
+                        <input type="text" name="code" id="code" onChange={(e)=>{
+                            handleChange(e,"code")
+                        }} />
+                    </div>
+                </div>
+              </div>
                   <div className="col-sm-6">
                       <div className="row">
                           <div className="col-sm-6 label-text">
@@ -383,11 +308,11 @@ class EmployeeSearch extends React.Component {
                           </div>
                           <div className="col-sm-6">
                           <div className="styled-select">
-                              <select id="employeeTypeCode" name="employeeTypeCode" value={employeeTypeCode} onChange={(e)=>{
-                                  handleChange(e,"employeeTypeCode")
+                              <select id="employeeType" name="employeeType" value={employeeType} onChange={(e)=>{
+                                  handleChange(e,"employeeType")
                               }}>
                                   <option>Select Type</option>
-                                  {renderOption(this.state.employeeType)}
+                                  {renderOption(this.state.employeeTypeList)}
                              </select>
                           </div>
                           </div>
@@ -395,182 +320,16 @@ class EmployeeSearch extends React.Component {
                     </div>
               </div>
 
-                <div className="row">
 
-                    <div className="col-sm-6">
-                        <div className="row">
-                            <div className="col-sm-6 label-text">
-                              <label for="">Employee Name</label>
-                            </div>
-                            <div className="col-sm-6">
-
-                                <input  type="text" id="name" name="name" onChange={(e)=>{
-                                    handleChange(e,"name")
-                                }}  value={name}/>
-
-                            </div>
-                        </div>
-                      </div>
-
-                      <div className="col-sm-6">
-                          <div className="row">
-                              <div className="col-sm-6 label-text">
-                                <label for="">Status</label>
-                              </div>
-                              <div className="col-sm-6">
-                              <div className="styled-select">
-                                  <select  id="employeeStatusCode" name="employeeStatusCode" value={employeeStatusCode} onChange={(e)=>{
-                                      handleChange(e,"employeeStatusCode")
-                                  }}>
-                                      <option value="">Select Status</option>
-                                      {renderOption(this.state.employeeStatus)}
-                                 </select>
-                              </div>
-                              </div>
-                          </div>
-                        </div>
-                </div>
-
-                <div className="row">
-
-                    <div className="col-sm-6">
-                        <div className="row">
-                            <div className="col-sm-6 label-text">
-                              <label for="">User Name</label>
-                            </div>
-                            <div className="col-sm-6">
-
-                                <input type="text" id="userName" name="userName" onChange={(e)=>{
-                                    handleChange(e,"userName")
-                                }} value={userName}/>
-
-                            </div>
-                        </div>
-                      </div>
-
-                      <div className="col-sm-6">
-                          <div className="row">
-                              <div className="col-sm-6 label-text">
-                                <label for="">User Status</label>
-                              </div>
-                              <div className="col-sm-6">
-                              <div className="styled-select">
-                                  <select id="activeCode" name="activeCode" value={activeCode} onChange={(e)=>{
-                                      handleChange(e,"activeCode")
-                                  }} >
-                                      <option value="">Select User Status</option>
-                                      {renderOption(this.state.active)}
-                                 </select>
-                              </div>
-                              </div>
-                          </div>
-                        </div>
-                </div>
-
-
-                <div className="row">
-                  <div className="col-sm-6">
-                      <div className="row">
-                          <div className="col-sm-6 label-text">
-                            <label for="">Department  </label>
-                          </div>
-                          <div className="col-sm-6">
-                          <div className="styled-select">
-                              <select id="department" name="department" value={departmentCode} onChange={(e)=>{
-                                  handleChange(e,"departmentCode")
-                              }}>
-                                <option>Select Department</option>
-                                {renderOption(this.state.departments)}
-                             </select>
-                          </div>
-                          </div>
-                      </div>
-                    </div>
-                    <div className="col-sm-6">
-                        <div className="row">
-                            <div className="col-sm-6 label-text">
-                              <label for="">Designation  </label>
-                            </div>
-                            <div className="col-sm-6">
-                            <div className="styled-select">
-                                <select id="designation" name="designation" value={designationCode} onChange={(e)=>{
-                                    handleChange(e,"designationCode")
-                                }}>
-                                <option>Select Designation</option>
-                                {renderOption(this.state.designation)}
-                               </select>
-                            </div>
-                            </div>
-                        </div>
-                      </div>
-                </div>
-
-                <div className="row">
-                  <div className="col-sm-6">
-                      <div className="row">
-                          <div className="col-sm-6 label-text">
-                            <label for="">Function  </label>
-                          </div>
-                          <div className="col-sm-6">
-                          <div className="styled-select">
-                              <select id="functionCode" name="functionCode" value={functionCode} onChange={(e)=>{
-                                  handleChange(e,"functionCode")
-                              }}>
-                                <option>Select Function</option>
-                                {renderOption(this.state.function)}
-                             </select>
-                          </div>
-                          </div>
-                      </div>
-                    </div>
-                    <div className="col-sm-6">
-                        <div className="row">
-                            <div className="col-sm-6 label-text">
-                              <label for="">Functionary  </label>
-                            </div>
-                            <div className="col-sm-6">
-                            <div className="styled-select">
-                                <select id="functionaryCode" name="functionaryCode" value={functionaryCode} onChange={(e)=>{
-                                    handleChange(e,"functionaryCode")
-                                }}>
-                                <option>Select Functionary</option>
-                                {renderOption(this.state.functionary)}
-                               </select>
-                            </div>
-                            </div>
-                        </div>
-                      </div>
-                </div>
-
-                <div className="row">
-                  <div className="col-sm-6">
-                      <div className="row">
-                          <div className="col-sm-6 label-text">
-                            <label for="">Drawing Officer  </label>
-                          </div>
-                          <div className="col-sm-6">
-                          <div className="styled-select">
-                              <select id="drawingOfficerCode" name="drawingOfficerCode" value={drawingOfficerCode} onChange={(e)=>{
-                                  handleChange(e,"drawingOfficerCode")
-                              }}>
-                                <option>Select Drawing Officer</option>
-                                {renderOption(this.state.drawingOfficer)}
-                             </select>
-                          </div>
-                          </div>
-                      </div>
-                    </div>
-
-
-                </div>
 
 
 
 
 
             <div className="text-center">
-                <button type="button" className="btn btn-submit" onClick={(e)=>{this.close()}}>Close</button>
-                <button type="submit"  className="btn btn-submit">Search</button>
+              <button type="submit"  className="btn btn-submit">Search</button>&nbsp;&nbsp;
+                <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>
+
             </div>
           </fieldset>
           </form>

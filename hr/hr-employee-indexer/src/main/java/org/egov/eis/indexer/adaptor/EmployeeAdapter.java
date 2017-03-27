@@ -126,10 +126,10 @@ public class EmployeeAdapter {
 			employeeDetails.setRecruitmentMode(hrMasterService.getRecruitmentMode(employee.getRecruitmentMode(), employee.getTenantId(), requestInfo).getName());
 		}
 		if (employee.getRecruitmentType()!= null) {
-			employeeDetails.setRecruitmentType(hrMasterService.getRecruitmentType(employee.getEmployeeType(), employee.getTenantId(), requestInfo).getName());
+			employeeDetails.setRecruitmentType(hrMasterService.getRecruitmentType(employee.getRecruitmentType(), employee.getTenantId(), requestInfo).getName());
 		}
 		if (employee.getRecruitmentQuota()!= null) {
-			employeeDetails.setRecruitmentQuota(hrMasterService.getRecruitmentQuota(employee.getEmployeeType(), employee.getTenantId(), requestInfo).getName());
+			employeeDetails.setRecruitmentQuota(hrMasterService.getRecruitmentQuota(employee.getRecruitmentQuota(), employee.getTenantId(), requestInfo).getName());
 		}
 		employeeDetails.setRetirementAge(employee.getRetirementAge());
 		employeeDetails.setDateOfResignation(employee.getDateOfResignation());
@@ -399,6 +399,11 @@ public class EmployeeAdapter {
 
 			return employeeJurisdiction;
 		}).collect(Collectors.toList());
+	}
+
+	public EmployeeIndex indexOnUpdate(EmployeeRequest employeeRequest) {
+		
+		return null;
 	}
 
 

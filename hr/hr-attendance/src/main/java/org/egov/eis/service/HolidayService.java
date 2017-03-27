@@ -48,8 +48,6 @@ import org.egov.eis.web.contract.HolidayResponse;
 import org.egov.eis.web.contract.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -59,16 +57,13 @@ public class HolidayService {
     @Autowired
     private HolidaySearchURLHelper holidaySearchURLHelper;
 
-    public List<Holiday> getHolidays(final String tenantId, final RequestInfo requestInfo, final HttpHeaders headers) {
+    public List<Holiday> getHolidays(final String tenantId, final RequestInfo requestInfo) {
         final String url = holidaySearchURLHelper.searchURL(tenantId);
-
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.add("auth-token", requestInfo.getAuthToken());
 
         final RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
-        final HttpEntity<RequestInfo> request = new HttpEntity<>(requestInfo, headers);
+        final HttpEntity<RequestInfo> request = new HttpEntity<>(requestInfo);
 
         final HolidayResponse holidayResponse = restTemplate.postForObject(url, request, HolidayResponse.class);
 

@@ -71,7 +71,6 @@ import org.egov.eis.web.errorhandlers.ErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -79,7 +78,6 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -115,11 +113,10 @@ public class AttendanceController {
     @Autowired
     private EmployeeService employeeService;
 
-    @PostMapping(value = "_search", headers = { "x-user-info" })
+    @PostMapping(value = "_search")
     @ResponseBody
     public ResponseEntity<?> search(@ModelAttribute @Valid final AttendanceGetRequest attendanceGetRequest,
-            final BindingResult bindingResult, @RequestBody final RequestInfo requestInfo,
-            @RequestHeader final HttpHeaders headers) {
+            final BindingResult bindingResult, @RequestBody final RequestInfo requestInfo) {
 
         // validate header
         if (requestInfo.getApiId() == null || requestInfo.getVer() == null || requestInfo.getTs() == null)
@@ -141,10 +138,10 @@ public class AttendanceController {
         return getSuccessResponse(attendancesList, requestInfo);
     }
 
-    @PostMapping(value = { "_create", "_update" }, headers = { "x-user-info" })
+    @PostMapping(value = { "_create", "_update" })
     @ResponseBody
     public ResponseEntity<?> create(@RequestBody @Valid final AttendanceRequest attendanceRequest,
-            @RequestParam("tenantId") final String tenantId, @RequestHeader final HttpHeaders headers,
+            @RequestParam("tenantId") final String tenantId,
             final BindingResult errors) {
         // validate header
         if (errors.hasErrors()) {
@@ -153,7 +150,7 @@ public class AttendanceController {
         }
         logger.info("attendanceRequest::" + attendanceRequest);
 
-        final List<ErrorResponse> errorResponses = validateAttendanceRequest(attendanceRequest, tenantId, headers);
+        final List<ErrorResponse> errorResponses = validateAttendanceRequest(attendanceRequest, tenantId);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
 
@@ -163,12 +160,11 @@ public class AttendanceController {
     }
 
     @SuppressWarnings("deprecation")
-    private List<ErrorResponse> validateAttendanceRequest(final AttendanceRequest attendanceRequest, final String tenantId,
-            final HttpHeaders headers) {
+    private List<ErrorResponse> validateAttendanceRequest(final AttendanceRequest attendanceRequest, final String tenantId) {
         final List<ErrorResponse> errorResponses = new ArrayList<>();
-        final List<Holiday> holidays = holidayService.getHolidays(tenantId, attendanceRequest.getRequestInfo(), headers);
+        final List<Holiday> holidays = holidayService.getHolidays(tenantId, attendanceRequest.getRequestInfo());
         final Map<String, List<String>> weeklyHolidays = hrConfigurationService.getWeeklyHolidays(tenantId,
-                attendanceRequest.getRequestInfo(), headers);
+                attendanceRequest.getRequestInfo());
         final List<AttendanceType> attendanceTypes = attendanceService.getAllAttendanceTypes();
         boolean isHoliday = true;
         boolean isEmployeeDate = true;
@@ -186,7 +182,7 @@ public class AttendanceController {
                 isAttendanceExists = true;
 
             final List<EmployeeInfo> employeeInfos = employeeService.getEmployee(attendance.getEmployee(), tenantId,
-                    attendanceRequest.getRequestInfo(), headers);
+                    attendanceRequest.getRequestInfo());
             if (employeeInfos.isEmpty())
                 isEmployeePresent = false;
             else if (EmployeeStatus.RETIRED.toString().equals(employeeInfos.get(0).getEmployeeStatus()))

@@ -48,8 +48,6 @@ import org.egov.eis.web.contract.EmployeeInfoResponse;
 import org.egov.eis.web.contract.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -59,19 +57,15 @@ public class EmployeeService {
     @Autowired
     private EmployeeSearchURLHelper employeeSearchURLHelper;
 
-    public List<EmployeeInfo> getEmployee(final Long id, final String tenantId, final RequestInfo requestInfo,
-            final HttpHeaders headers) {
+    public List<EmployeeInfo> getEmployee(final Long id, final String tenantId, final RequestInfo requestInfo) {
         final String url = employeeSearchURLHelper.searchURL(id, tenantId);
-
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.add("auth-token", requestInfo.getAuthToken());
 
         final RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
-        final HttpEntity<RequestInfo> request = new HttpEntity<>(requestInfo, headers);
+        final HttpEntity<RequestInfo> request = new HttpEntity<>(requestInfo);
 
-        final EmployeeInfoResponse employeeInfoResponse = new RestTemplate().postForObject(url, request,
+        final EmployeeInfoResponse employeeInfoResponse = restTemplate.postForObject(url, request,
                 EmployeeInfoResponse.class);
 
         return employeeInfoResponse.getEmployees();

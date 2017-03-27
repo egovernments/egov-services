@@ -38,27 +38,13 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.boundary.persistence.entity;
+package org.egov.boundary.web.contract;
 
 import java.util.Set;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.SafeHtml;
+import org.egov.boundary.persistence.entity.HierarchyType;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -71,78 +57,46 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Entity
-@Table(name = "EG_BOUNDARY_TYPE")
-@SequenceGenerator(name = BoundaryType.SEQ_BOUNDARY_TYPE, sequenceName = BoundaryType.SEQ_BOUNDARY_TYPE, allocationSize = 1)
-public class BoundaryType extends AbstractAuditable {
+public class BoundaryType {
 
-	public static final String SEQ_BOUNDARY_TYPE = "SEQ_EG_BOUNDARY_TYPE";
-	private static final long serialVersionUID = 859229842367886336L;
+	@JsonProperty("id")
+	private String id;
 
-	@Id
-	@GeneratedValue(generator = SEQ_BOUNDARY_TYPE, strategy = GenerationType.SEQUENCE)
-	private Long id;
-
-	@NotBlank
-	@SafeHtml
+	@JsonProperty("name")
 	private String name;
 
-	@NotBlank
-	@SafeHtml
+	@JsonProperty("code")
 	private String code;
-	@ManyToOne
-	@NotNull
-	@JoinColumn(name = "hierarchytype")
-	@JsonProperty(access = Access.WRITE_ONLY)
+
+	@JsonProperty("hierarchyType")
 	private HierarchyType hierarchyType;
-	@JsonProperty(access = Access.WRITE_ONLY)
-	@ManyToOne
-	@JoinColumn(name = "parent")
+
+	@JsonProperty("parent")
 	private BoundaryType parent;
 
+	@JsonProperty("hierarchy")
 	private Long hierarchy;
 
-	@SafeHtml
+	@JsonProperty("localName")
 	private String localName;
 
-	@Transient
+	@JsonProperty("parentName")
 	private String parentName;
 
-	@Transient
+	@JsonProperty("childBoundaryTypes")
 	private Set<BoundaryType> childBoundaryTypes;
 
-	@Length(max = 256)
-	private String tenantId;
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + (id == null ? 0 : id.hashCode());
-		result = prime * result + (name == null ? 0 : name.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		final BoundaryType other = (BoundaryType) obj;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		return true;
+	public BoundaryType(org.egov.boundary.persistence.entity.BoundaryType entityBoundaryType) {
+		this.id = entityBoundaryType.getId().toString();
+		this.name = entityBoundaryType.getName();
+		this.code = entityBoundaryType.getCode();
+		this.hierarchyType = entityBoundaryType.getHierarchyType();
+		if (entityBoundaryType.getParent() != null) {
+			this.setParent(new BoundaryType(entityBoundaryType.getParent()));
+		}
+		this.hierarchy = entityBoundaryType.getHierarchy();
+		this.localName = entityBoundaryType.getLocalName();
+		this.parentName = entityBoundaryType.getParentName();
 	}
 
 }

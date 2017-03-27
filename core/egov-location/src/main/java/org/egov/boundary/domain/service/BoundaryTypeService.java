@@ -44,7 +44,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.egov.boundary.persistence.entity.Boundary;
 import org.egov.boundary.persistence.entity.BoundaryType;
 import org.egov.boundary.persistence.entity.HierarchyType;
 import org.egov.boundary.persistence.repository.BoundaryTypeRepository;
@@ -52,11 +51,11 @@ import org.egov.boundary.web.contract.BoundaryTypeRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 @Service
 @Transactional(readOnly = true)
 public class BoundaryTypeService {
+
 	@Autowired
 	private BoundaryTypeRepository boundaryTypeRepository;
 
@@ -95,8 +94,9 @@ public class BoundaryTypeService {
 		return boundaryTypeRepository.findByHierarchyTypeNameAndLevel(name, hierarchyLevel);
 	}
 
-	public List<BoundaryType> getAllBoundarTypesByHierarchyTypeId(final Long hierarchyTypeId) {
-		return boundaryTypeRepository.findByHierarchyTypeId(hierarchyTypeId);
+	public List<BoundaryType> getAllBoundarTypesByHierarchyTypeIdAndTenantId(final Long hierarchyTypeId,
+			final String tenantId) {
+		return boundaryTypeRepository.findByHierarchyTypeIdAndTenantId(hierarchyTypeId, tenantId);
 	}
 
 	public BoundaryType getBoundaryTypeByParent(final Long parentId) {

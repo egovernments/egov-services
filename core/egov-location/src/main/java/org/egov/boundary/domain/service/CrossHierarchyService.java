@@ -135,7 +135,7 @@ public class CrossHierarchyService {
 
 	public List<Boundary> getBoundaryByBoundaryType() {
 		final BoundaryType boundaryType = boundaryTypeService.getBoundaryTypeByName("Locality");
-		final List<Boundary> boundaryList = boundaryService.getAllBoundariesByBoundaryTypeId(boundaryType.getId());
+		final List<Boundary> boundaryList = boundaryService.getAllBoundariesByBoundaryTypeIdAndTenantId(boundaryType.getId(),"");
 		return boundaryList;
 	}
 

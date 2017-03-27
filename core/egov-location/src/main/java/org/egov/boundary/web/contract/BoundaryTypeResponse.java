@@ -3,9 +3,6 @@ package org.egov.boundary.web.contract;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.egov.boundary.persistence.entity.BoundaryType;
-import org.egov.boundary.persistence.entity.HierarchyType;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class BoundaryTypeResponse {

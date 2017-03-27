@@ -24,12 +24,22 @@ public class BoundaryServiceTest {
 	private BoundaryService boundaryService;
 
 	@Test
-	public void test_should_fetch_boundaries_for_boundarytype_and_hierarchytype_name() {
+	public void TestShouldFetchBoundariesForBoundarytypeAndHierarchytypeName() {
 		when(boundaryRepository.findBoundariesByBndryTypeNameAndHierarchyTypeName("Ward", "ADMINISTRATION"))
 				.thenReturn(getExpectedBoundaryDetails());
 
 		List<Boundary> boundaryList = boundaryService.getBoundariesByBndryTypeNameAndHierarchyTypeName("Ward",
 				"ADMINISTRATION");
+
+		assertEquals("Election Ward No 1", boundaryList.get(0).getName());
+	}
+
+	@Test
+	public void TestShouldFetchBoundariesForBoundarytypeAndTenantId() {
+		when(boundaryRepository.findBoundariesByBoundaryType_IdAndTenantId(7L, "tenantId"))
+				.thenReturn(getExpectedBoundaryDetails());
+
+		List<Boundary> boundaryList = boundaryService.getAllBoundariesByBoundaryTypeIdAndTenantId(7L, "tenantId");
 
 		assertEquals("Election Ward No 1", boundaryList.get(0).getName());
 	}

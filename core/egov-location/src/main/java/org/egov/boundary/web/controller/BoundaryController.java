@@ -128,6 +128,25 @@ public class BoundaryController {
 
 	}
 
+	@PostMapping(value = "/getByBoundaryType")
+	@ResponseBody
+	public ResponseEntity<?> getBoundaryByBoundaryTypeId(
+			@RequestParam(value = "boundaryTypeId", required = true) final String boundaryTypeId,
+			@RequestParam(value = "tenantId", required = true) final String tenantId) {
+		BoundaryResponse boundaryResponse = new BoundaryResponse();
+		if (boundaryTypeId != null && !boundaryTypeId.isEmpty()) {
+			ResponseInfo responseInfo = new ResponseInfo();
+			responseInfo.setStatus(HttpStatus.OK.toString());
+			boundaryResponse.setResponseInfo(responseInfo);
+			List<Boundary> boundaries = mapToContractBoundaryList(
+					boundaryService.getAllBoundariesByBoundaryTypeIdAndTenantId(Long.valueOf(boundaryTypeId), tenantId));
+			boundaryResponse.setBoundarys(boundaries);
+			return new ResponseEntity<BoundaryResponse>(boundaryResponse, HttpStatus.OK);
+		} else
+			return new ResponseEntity<BoundaryResponse>(boundaryResponse, HttpStatus.BAD_REQUEST);
+
+	}
+
 	private List<Boundary> getChildBoundaryByBoundaryId(String boundaryId) {
 		return mapToContractBoundaryList(
 				crossHierarchyService.getActiveChildBoundariesByBoundaryId(Long.valueOf(boundaryId)));
@@ -145,25 +164,26 @@ public class BoundaryController {
 		}
 		return boundary;
 	}
-	
+
 	@PostMapping(value = "/boundariesByBndryTypeNameAndHierarchyTypeName")
 	@ResponseBody
 	public ResponseEntity<?> getBoundariesByBndryTypeNameAndHierarchyTypeName(
 			@RequestParam(value = "boundaryTypeName", required = true) final String boundaryTypeName,
 			@RequestParam(value = "hierarchyTypeName", required = true) final String hierarchyTypeName) {
 		BoundaryResponse boundaryResponse = new BoundaryResponse();
-		if (boundaryTypeName != null && !boundaryTypeName.isEmpty() && hierarchyTypeName != null && !hierarchyTypeName.isEmpty()) {
+		if (boundaryTypeName != null && !boundaryTypeName.isEmpty() && hierarchyTypeName != null
+				&& !hierarchyTypeName.isEmpty()) {
 			ResponseInfo responseInfo = new ResponseInfo();
 			responseInfo.setStatus(HttpStatus.OK.toString());
 			boundaryResponse.setResponseInfo(responseInfo);
-			List<org.egov.boundary.persistence.entity.Boundary> boundaryList = boundaryService.getBoundariesByBndryTypeNameAndHierarchyTypeName(boundaryTypeName, hierarchyTypeName);
+			List<org.egov.boundary.persistence.entity.Boundary> boundaryList = boundaryService
+					.getBoundariesByBndryTypeNameAndHierarchyTypeName(boundaryTypeName, hierarchyTypeName);
 			boundaryResponse.setBoundarys(boundaryList.stream().map(Boundary::new).collect(Collectors.toList()));
 			return new ResponseEntity<BoundaryResponse>(boundaryResponse, HttpStatus.OK);
 		} else
 			return new ResponseEntity<BoundaryResponse>(boundaryResponse, HttpStatus.BAD_REQUEST);
 
 	}
-
 
 	private ErrorResponse populateErrors(BindingResult errors) {
 		ErrorResponse errRes = new ErrorResponse();

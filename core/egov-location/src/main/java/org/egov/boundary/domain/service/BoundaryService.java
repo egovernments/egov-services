@@ -117,13 +117,13 @@ public class BoundaryService {
 		return boundaryRepository.findByBoundaryTypeOrderByBoundaryNumAsc(boundaryType);
 	}
 
-	public List<Boundary> getAllBoundariesByBoundaryTypeId(final Long boundaryTypeId) {
-		return boundaryRepository.findBoundariesByBoundaryType(boundaryTypeId);
+	public List<Boundary> getAllBoundariesByBoundaryTypeIdAndTenantId(final Long boundaryTypeId,final String tenantId) {
+		return boundaryRepository.findBoundariesByBoundaryType_IdAndTenantId(boundaryTypeId,tenantId);
 	}
 
-	public List<Boundary> getPageOfBoundaries(final Long boundaryTypeId) {
+	public List<Boundary> getPageOfBoundaries(final Long boundaryTypeId,final String tenantId) {
 
-		return boundaryRepository.findBoundariesByBoundaryType(boundaryTypeId);
+		return boundaryRepository.findBoundariesByBoundaryType_IdAndTenantId(boundaryTypeId,tenantId);
 	}
 
 	public Boundary getBoundaryByTypeAndNo(final BoundaryType boundaryType, final Long boundaryNum) {
@@ -286,7 +286,7 @@ public class BoundaryService {
 			if (boundary == null) {
 				final BoundaryType cityBoundaryType = boundaryTypeService
 						.getBoundaryTypeByNameAndHierarchyTypeName("City", "ADMINISTRATION");
-				return Optional.ofNullable(this.getAllBoundariesByBoundaryTypeId(cityBoundaryType.getId()).get(0));
+				return Optional.ofNullable(this.getAllBoundariesByBoundaryTypeIdAndTenantId(cityBoundaryType.getId(),"").get(0));
 			}
 			return Optional.of(boundary);
 		}
@@ -308,7 +308,7 @@ public class BoundaryService {
 					&& !StringUtils.isEmpty(boundaryRequest.getBoundary().getLongitude())) {
 				Optional<Boundary> boundary = getBoundary(boundaryRequest.getBoundary().getLatitude().doubleValue(),
 						boundaryRequest.getBoundary().getLongitude().doubleValue(),
-						boundaryRequest.getBoundary().getTenantid());
+						boundaryRequest.getBoundary().getTenantId());
 				if (boundary.isPresent())
 					boundaries.add(boundary.get());
 				else

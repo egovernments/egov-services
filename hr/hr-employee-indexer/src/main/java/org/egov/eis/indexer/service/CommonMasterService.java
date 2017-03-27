@@ -30,7 +30,7 @@ public class CommonMasterService {
 	@Autowired
 	private RestTemplate restTemplate;
 	
-	public static final Logger logger = LoggerFactory.getLogger(BoundaryService.class);
+	public static final Logger logger = LoggerFactory.getLogger(CommonMasterService.class);
 	
 	public Religion getReligion(Long id, String tenantId, RequestInfo requestInfo) {
 		

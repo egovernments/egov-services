@@ -87,9 +87,9 @@ public class EmployeeAdapter {
 				employeeDetails.setGender(employee.getUser().getGender().toString());
 			}
 			employeeDetails.setPanNumber(employee.getUser().getPan());
-			if (employee.getUser().getAadhaarNumber()!= null) {
-				employeeDetails.setAadharNumber(employee.getUser().getAadhaarNumber().toString()); // FIXME Long toString()
-			}
+			
+			employeeDetails.setAadharNumber(employee.getUser().getAadhaarNumber());
+			
 			//employeeDetails.setDateOfBirth(employee.getUserInfo());dateOfBirth; FIXME Date of birth not included
 			employeeDetails.setEmployeeCreatedDate(employee.getUser().getCreatedDate());
 			if (employee.getUser().getCreatedBy()!= null) {

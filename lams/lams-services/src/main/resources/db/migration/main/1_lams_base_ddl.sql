@@ -1,5 +1,7 @@
 Create sequence seq_lams_agreement;
 Create sequence seq_lams_rent_increment;
+Create sequence seq_lams_rent_acknowlegementnumber;
+Create sequence seq_lams_rent_agreementnumber;
 
 CREATE TABLE eglams_rentincrementtype
 (

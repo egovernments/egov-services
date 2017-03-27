@@ -251,11 +251,11 @@ public class Complaint extends AbstractAuditable {
 	}
 
 	public Date getEscalationDate() {
-		return null == this.escalationDate ? null : this.escalationDate;
+		return this.escalationDate;
 	}
 
 	public void setEscalationDate(Date escalationDate) {
-		this.escalationDate = null == escalationDate ? null : escalationDate;
+		this.escalationDate = escalationDate;
 	}
 
 	public Long getDepartment() {

@@ -1,0 +1,15 @@
+{
+  "ResponseInfo": null,
+  "Error": {
+    "code": 400,
+    "message": "User name already exists",
+    "description": null,
+    "fields": [
+      {
+        "code": "USER.USER_NAME_ALREADY_EXISTS",
+        "message": "User name already exists",
+        "field": "User.userName"
+      }
+    ]
+  }
+}

@@ -1,8 +1,10 @@
 package org.egov.user.web.controller;
 
 import org.apache.commons.io.IOUtils;
+import org.egov.user.domain.exception.DuplicateUserNameException;
 import org.egov.user.domain.exception.InvalidUserException;
 import org.egov.user.domain.exception.OtpValidationPendingException;
+import org.egov.user.domain.exception.UserNotFoundException;
 import org.egov.user.domain.model.Role;
 import org.egov.user.domain.model.User;
 import org.egov.user.domain.service.UserService;
@@ -138,5 +140,52 @@ public class UserRequestControllerTest {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+    
+    @Test
+    @WithMockUser
+    public void testShouldUpdateACitizen() throws Exception {
+        when(userService.updateWithoutValidation(any(Long.class), any(org.egov.user.domain.model.User.class))).thenReturn(buildUser());
+
+        String fileContents = getFileContents("updateValidatedCitizenSuccessRequest.json");
+        mockMvc.perform(post("/users/1/_updatenovalidate")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(fileContents)
+        )
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().json(getFileContents("updateValidatedCitizenSuccessResponse.json")));
+    }
+    
+    @Test
+    @WithMockUser
+    public void testShouldThrowErrorWhileUpdatingWithDuplicateCitizen() throws Exception {
+        DuplicateUserNameException exception = new DuplicateUserNameException(org.egov.user.domain.model.User.builder().build());
+        when(userService.updateWithoutValidation(any(Long.class), any(org.egov.user.domain.model.User.class))).thenThrow(exception);
+
+        String fileContents = getFileContents("updateCitizenUnsuccessfulRequest.json");
+        mockMvc.perform(post("/users/1/_updatenovalidate")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(fileContents)
+        )
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().json(getFileContents("updateCitizenUnsuccessfulResponse.json")));
+    }
+    
+    @Test
+    @WithMockUser
+    public void testShouldThrowErrorWhileUpdatingWithInvalidCitizen() throws Exception {
+        UserNotFoundException exception = new UserNotFoundException(org.egov.user.domain.model.User.builder().build());
+        when(userService.updateWithoutValidation(any(Long.class), any(org.egov.user.domain.model.User.class))).thenThrow(exception);
+
+        String fileContents = getFileContents("updateCitizenUnsuccessfulRequest.json");
+        mockMvc.perform(post("/users/1/_updatenovalidate")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(fileContents)
+        )
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().json(getFileContents("updateInvalidCitizenUnsuccessfulResponse.json")));
     }
 }

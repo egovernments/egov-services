@@ -1,8 +1,22 @@
 package org.egov.user.domain.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.egov.user.domain.exception.DuplicateUserNameException;
 import org.egov.user.domain.exception.InvalidUserException;
 import org.egov.user.domain.exception.OtpValidationPendingException;
+import org.egov.user.domain.exception.UserNotFoundException;
 import org.egov.user.domain.model.Role;
 import org.egov.user.domain.model.User;
 import org.egov.user.domain.model.UserSearch;
@@ -14,18 +28,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UserServiceTest {
@@ -159,5 +162,36 @@ public class UserServiceTest {
                 .emailId(EMAIL)
                 .username(USER_NAME)
                 .build();
+    }
+    
+    @Test
+    public void test_should_update_a_valid_user() throws Exception {
+        User domainUser = validDomainUser();
+        org.egov.user.persistence.entity.User user = new org.egov.user.persistence.entity.User();
+        final User expectedEntityUser = User.builder().build();
+        when(userRepository.update(any(Long.class), any(org.egov.user.domain.model.User.class))).thenReturn(expectedEntityUser);
+        when(userRepository.getUserById(any(Long.class))).thenReturn(user);
+        when(userRepository.isUserPresent(any(String.class), any(Long.class))).thenReturn(false);
+
+        User returnedUser = userService.updateWithoutValidation(1L, domainUser);
+
+        assertEquals(expectedEntityUser, returnedUser);
+    }
+    
+    @Test(expected = DuplicateUserNameException.class)
+    public void test_should_throw_error_when_username_exists_while_updating() throws Exception {
+        User domainUser = validDomainUser();
+        when(userRepository.isUserPresent(any(String.class), any(Long.class))).thenReturn(true);
+
+        userService.updateWithoutValidation(1L, domainUser);
+    }
+    
+    @Test(expected = UserNotFoundException.class)
+    public void test_should_throw_error_when_user_not_exists_while_updating() throws Exception {
+        User domainUser = validDomainUser();
+        when(userRepository.isUserPresent(any(String.class), any(Long.class))).thenReturn(false);
+        when(userRepository.getUserById(any(Long.class))).thenReturn(null);
+
+        userService.updateWithoutValidation(1L, domainUser);
     }
 }

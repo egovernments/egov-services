@@ -34,6 +34,7 @@ public class AcknowledgementNumberService {
 		String suffix = Character.toString((char) k)+(char)l;
 		Long resultSet = null;
 		try{
+			//replace it with a generic agreement repository which will take query, input object,response object
 			resultSet = jdbcTemplate.queryForObject(sql, Long.class);
 		}catch (Exception e) {
 			logger.info("AcknowledgementNumberService : "+ e.getMessage(),e);
@@ -43,7 +44,7 @@ public class AcknowledgementNumberService {
 		baseValue.append("-" + year);
 		baseValue.append("-"+suffix);
 		logger.info("AcknowledgementNumberService : acknoValue"+baseValue);
-		return baseValue.toString();
+		return baseValue.toString().toUpperCase();
 	}
 
 }

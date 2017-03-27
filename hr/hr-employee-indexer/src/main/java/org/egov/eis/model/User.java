@@ -90,7 +90,7 @@ public class User {
 
 	private String pan;
 
-	private Long aadhaarNumber;
+	private String aadhaarNumber;
 
 	private String permanentAddress;
 

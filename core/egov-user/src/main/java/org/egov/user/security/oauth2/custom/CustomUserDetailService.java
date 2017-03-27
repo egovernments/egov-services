@@ -39,7 +39,7 @@ public class CustomUserDetailService implements UserDetailsService {
 				.mobileNumber(user.getMobileNumber())
 				.emailId(user.getEmailId())
 				.locale(user.getLocale())
-				.active(user.isActive())
+				.active(user.getActive())
 				.type(getUserType(user))
 				.roles(toAuthRole(user.getRoles()))
 				.build();

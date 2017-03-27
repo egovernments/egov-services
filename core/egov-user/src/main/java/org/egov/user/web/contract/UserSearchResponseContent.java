@@ -76,12 +76,12 @@ public class UserSearchResponseContent {
         this.altContactNumber = user.getAltContactNumber();
         this.pan = user.getPan();
         this.aadhaarNumber = user.getAadhaarNumber();
-        this.active = user.isActive();
+        this.active = user.getActive();
         this.dob = user.getDob();
         this.pwdExpiryDate = user.getPwdExpiryDate() != null ? user.getPwdExpiryDate() : null;
         this.locale = user.getLocale();
         this.type = user.getType();
-        this.accountLocked = user.isAccountLocked();
+        this.accountLocked = user.getAccountLocked();
         this.signature = user.getSignature();
         this.bloodGroup = user.getBloodGroup() != null ? user.getBloodGroup().getValue() : null;
         this.photo = user.getPhoto();

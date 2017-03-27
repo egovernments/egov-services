@@ -34,14 +34,15 @@ public class DemandRepository {
 					+propertiesManager.getGetDemandModuleName();
 		System.out.println("DemandRepository getDemandReason url:"+url);
 		DemandReasonResponse demandReasonResponse=null;
-		try{
-		 demandReasonResponse = restTemplate.postForObject(url,agreementRequest.getRequestInfo(), 
-													DemandReasonResponse.class);
-		} catch (Exception exception){
+		try {
+			demandReasonResponse = restTemplate.postForObject(url, agreementRequest.getRequestInfo(),
+					DemandReasonResponse.class);
+		} catch (Exception exception) {
 			exception.printStackTrace();
+			throw new RuntimeException("DemandRepository : "+exception.getMessage(), exception.getCause());
 		}
-		System.out.println("demandReasonResponse:"+demandReasonResponse);
-		//Todo if api returns exception object
+		System.out.println("demandReasonResponse:" + demandReasonResponse);
+		// Todo if api returns exception object
 		return demandReasonResponse.getDemandReasons();
 	}
 	

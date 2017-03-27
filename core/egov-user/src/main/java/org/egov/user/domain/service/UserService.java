@@ -39,7 +39,7 @@ public class UserService {
     }
 
     private void validateDuplicateUserName(Long id, User user) {
-        if( userRepository.isUserPresent(user.getUsername(), id)) {
+        if(userRepository.isUserPresent(user.getUsername(), id)) {
             throw new DuplicateUserNameException(user);
         }
     }
@@ -57,7 +57,7 @@ public class UserService {
             throw new OtpValidationPendingException(user);
     }
     
-    public User update(final Long id, final User user, final boolean ensureOtpValidation) {
+    public User updateWithoutValidation(final Long id, final User user) {
         validateUser(id, user);
         return persistOldUser(id, user);
     }

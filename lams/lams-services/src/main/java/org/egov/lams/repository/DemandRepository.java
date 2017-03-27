@@ -39,7 +39,7 @@ public class DemandRepository {
 					DemandReasonResponse.class);
 		} catch (Exception exception) {
 			exception.printStackTrace();
-			throw new RuntimeException(exception.getMessage(), exception.getCause());
+			throw new RuntimeException("DemandRepository : "+exception.getMessage(), exception.getCause());
 		}
 		System.out.println("demandReasonResponse:" + demandReasonResponse);
 		// Todo if api returns exception object

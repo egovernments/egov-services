@@ -76,6 +76,7 @@ public class AgreementController {
 			@RequestBody @Valid AgreementRequest agreementRequest,
 			BindingResult errors) {
 
+		System.err.println(agreementRequest);
 		if (errors.hasErrors()) {
 			ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<>(errRes,

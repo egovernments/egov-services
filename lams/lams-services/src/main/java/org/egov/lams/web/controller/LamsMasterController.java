@@ -20,28 +20,28 @@ public class LamsMasterController {
 	RentIncrementService getRentIncrementService;
 
 	@RequestMapping(value = "/getstatus")
-	public Map<Status, Status> getSatusEnum() {
-		Map<Status, Status> status = new HashMap<>();
+	public Map<String, Status> getSatusEnum() {
+		Map<String, Status> status = new HashMap<>();
 		for (Status key : Status.values()) {
-			status.put(key, Status.valueOf(key.toString()));
+			status.put(key.name(),key);
 		}
 		return status;
 	}
 
 	@RequestMapping(value = "/getpaymentcycle")
-	public Map<PaymentCycle, PaymentCycle> getPayementCycleEnum() {
-		Map<PaymentCycle, PaymentCycle> payementCycle = new HashMap<>();
+	public Map<String, PaymentCycle> getPayementCycleEnum() {
+		Map<String, PaymentCycle> payementCycle = new HashMap<>();
 		for (PaymentCycle key : PaymentCycle.values()) {
-			payementCycle.put(key, PaymentCycle.valueOf(key.toString()));
+			payementCycle.put(key.name(),key);
 		}
 		return payementCycle;
 	}
 
 	@RequestMapping(value = "/getnatureofallotment")
-	public Map<NatureOfAllotment, NatureOfAllotment> getNatureOfAllotmentEnum() {
-		Map<NatureOfAllotment, NatureOfAllotment> natureOfAllotment = new HashMap<>();
+	public Map<String, NatureOfAllotment> getNatureOfAllotmentEnum() {
+		Map<String, NatureOfAllotment> natureOfAllotment = new HashMap<>();
 		for (NatureOfAllotment key : NatureOfAllotment.values()) {
-			natureOfAllotment.put(key, NatureOfAllotment.valueOf(key.toString()));
+			natureOfAllotment.put(key.name(),key);
 		}
 		return natureOfAllotment;
 	}

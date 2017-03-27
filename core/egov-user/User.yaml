@@ -104,12 +104,33 @@ paths:
           description: Invalid input.
           schema:
             $ref: '#/definitions/ErrorRes'
-          
-  /user/{userName}/_update:   
-    parameters:
-      - $ref: "#/parameters/userName"
+  /users/_createnovalidate:       
     post:
-      summary: Update existing user master data for the User using the unique user name.
+      summary: Create a new User without OTP validation in password.
+      description: To create a new User in the system without OTP validation.
+      parameters:
+        - name: user
+          in: body
+          description: Details for the new user .
+          required: true
+          schema:
+            $ref: '#/definitions/UserReq'
+      tags:
+        - User
+      responses:
+        '201':
+          description: User created sucessfully.
+          schema:
+            $ref: '#/definitions/UserRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'          
+  /user/{userId}/_update:   
+    parameters:
+      - $ref: "#/parameters/userId"
+    post:
+      summary: Update existing user master data for the User using the unique userId.
       description: To update an existing User master data.
       parameters:
         - name: user
@@ -129,7 +150,30 @@ paths:
           description: Invalid input.
           schema:
             $ref: '#/definitions/ErrorRes'
-
+  /user/{userId}/_updatenovalidate:   
+    parameters:
+      - $ref: "#/parameters/userId"
+    post:
+      summary: Update existing user master data for the User using the unique userId without validating the OTP.
+      description: To update an existing User master data including the password without OTP validation.
+      parameters:
+        - name: user
+          in: body
+          description: Request header for the user with new of values.
+          required: true
+          schema:
+            $ref: '#/definitions/UserReq'
+      tags:
+        - User
+      responses:
+        '200':
+          description: User updated.
+          schema:
+            $ref: '#/definitions/UserRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
   /user/_login:
     post:
       summary: Login a user based on username and password auth and return oAuth tokens.
@@ -660,16 +704,13 @@ definitions:
       - scope
       
 parameters:
-  userName:
-    name: userName
+  userId:
+    name: userId
     in: path
     required: true
-    description: The unique user name with which the user login.
+    description: The unique user Id with which the user login.
     type: string
-    minLength: 0
-    maxLength: 64
-    exclusiveMinimum: true
-    exclusiveMaximum: false
+    format: int64
     
   pageSize:
     name: pageSize

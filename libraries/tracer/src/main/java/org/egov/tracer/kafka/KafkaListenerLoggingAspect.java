@@ -43,7 +43,6 @@ public class KafkaListenerLoggingAspect {
 
     @Around("anyKafkaConsumer() ")
     public Object logAction(ProceedingJoinPoint joinPoint) throws Throwable {
-
         final Object[] args = joinPoint.getArgs();
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
@@ -76,7 +75,7 @@ public class KafkaListenerLoggingAspect {
 
     private String getCorrelationId(Object[] args) {
         @SuppressWarnings("unchecked")
-        final HashMap<String, Object> requestMap = (HashMap<String, Object>) getMessageBody(args);
+        final HashMap<String, Object> requestMap = getMessageBody(args);
         final String correlationIdFromRequest = new RequestCorrelationId(requestMap).get();
         return  correlationIdFromRequest == null ? getRandomCorrelationId() : correlationIdFromRequest;
     }
@@ -89,12 +88,17 @@ public class KafkaListenerLoggingAspect {
         return objectMapper.writeValueAsString(getMessageBody(args));
     }
 
-    private Object getMessageBody(Object[] args) {
+    private HashMap<String, Object> getMessageBody(Object[] args) {
         return Stream.of(args)
                 .filter(parameterObject -> isNotAcknowledgmentParameter(parameterObject) && isNotString(parameterObject))
                 .findFirst()
-                .map(parameterObject -> parameterObject)
+                .map(this::convertToMap)
                 .orElse(null);
+    }
+
+    @SuppressWarnings("unchecked")
+    private HashMap<String, Object> convertToMap(Object parameterObject) {
+        return (HashMap<String, Object>) objectMapper.convertValue(parameterObject, HashMap.class);
     }
 
     private boolean isNotString(Object o) {

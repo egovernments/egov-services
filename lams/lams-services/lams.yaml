@@ -418,6 +418,10 @@ definitions:
         type: string
         format: date
         description: date of agreement.
+      closeDate:
+        type: string
+        format: date
+        description: End date of agreement.
       allottee:
         $ref: '#/definitions/Allottee'                                                             
       asset:
@@ -539,6 +543,10 @@ definitions:
       tinNumber:
         type: string
         description: Tin no.
+        maxLength: 64
+      timePeriod:
+        type: string
+        description: The validity of agreement period,value will be in no.of years. 
         maxLength: 64
       documents:
         type: array

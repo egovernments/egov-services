@@ -88,7 +88,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
 		if (WEB_CHEAT_PASSWORD.equals(password) || bcrypt.matches(password, user.getPassword())) {
 
-			if (!user.isActive()) {
+			if (!user.getActive()) {
 				throw new OAuth2Exception("Please activate your account");
 			}
 			/**
@@ -114,7 +114,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
                 .mobileNumber(user.getMobileNumber())
 				.emailId(user.getEmailId())
 				.locale(user.getLocale())
-                .active(user.isActive())
+                .active(user.getActive())
 				.type(user.getType().name())
 				.roles(toAuthRole(user.getRoles()))
 				.build();

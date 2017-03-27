@@ -1,0 +1,15 @@
+{
+  "ResponseInfo": null,
+  "Error": {
+    "code": 400,
+    "message": "User not found",
+    "description": null,
+    "fields": [
+      {
+        "code": "USER.USER_NOT_FOUND",
+        "message": "User not found",
+        "field": "User.id"
+      }
+    ]
+  }
+}

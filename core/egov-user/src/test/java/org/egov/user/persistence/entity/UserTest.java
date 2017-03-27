@@ -38,12 +38,12 @@ public class UserTest {
         assertThat(userModel.getPan()).isEqualTo(userModel.getPan());
         assertThat(userModel.getAadhaarNumber()).isEqualTo(userModel.getAadhaarNumber());
         assertThat(userModel.getAddress()).isEqualTo(userModel.getAddress());
-        assertThat(userModel.isActive()).isEqualTo(userModel.isActive());
+        assertThat(userModel.getActive()).isEqualTo(userModel.getActive());
         assertThat(userModel.getDob()).isEqualTo(userModel.getDob());
         assertThat(userModel.getPwdExpiryDate()).isEqualTo(userModel.getPwdExpiryDate());
         assertThat(userModel.getLocale()).isEqualTo(userModel.getLocale());
         assertThat(userModel.getType()).isEqualTo(userModel.getType());
-        assertThat(userModel.isAccountLocked()).isEqualTo(userModel.isAccountLocked());
+        assertThat(userModel.getAccountLocked()).isEqualTo(userModel.getAccountLocked());
         assertThat(userModel.getRoles()).isEqualTo(userModel.getRoles());
         assertThat(userModel.getGuardian()).isEqualTo(userModel.getGuardian());
         assertThat(userModel.getGuardianRelation()).isEqualTo(userModel.getGuardianRelation());
@@ -74,7 +74,7 @@ public class UserTest {
         assertThat(entityUser.getAltContactNumber()).isEqualTo(domainUser.getAltContactNumber());
         assertThat(entityUser.getPan()).isEqualTo(domainUser.getPan());
         assertThat(entityUser.getAadhaarNumber()).isEqualTo(domainUser.getAadhaarNumber());
-        assertThat(entityUser.isActive()).isEqualTo(domainUser.isActive());
+        assertThat(entityUser.getActive()).isEqualTo(domainUser.getActive());
         assertThat(entityUser.getDob()).isEqualTo(domainUser.getDob());
         assertThat(entityUser.getPwdExpiryDate()).isEqualTo(domainUser.getPwdExpiryDate());
         assertThat(entityUser.getLocale()).isEqualTo(domainUser.getLocale());
@@ -83,7 +83,7 @@ public class UserTest {
         assertThat(entityUser.getIdentificationMark()).isEqualTo(domainUser.getIdentificationMark());
         assertThat(entityUser.getSignature()).isEqualTo(domainUser.getSignature());
         assertThat(entityUser.getPhoto()).isEqualTo(domainUser.getPhoto());
-        assertThat(entityUser.isAccountLocked()).isEqualTo(domainUser.isAccountLocked());
+        assertThat(entityUser.getAccountLocked()).isEqualTo(domainUser.getAccountLocked());
         assertThat(entityUser.getLastModifiedDate()).isEqualTo(domainUser.getLastModifiedDate());
         assertThat(entityUser.getCreatedDate()).isEqualTo(domainUser.getCreatedDate());
         assertThat(entityUser.getRoles().size()).isEqualTo(2);

@@ -111,10 +111,10 @@ public class UserRepository {
         User oldUser = userJpaRepository.findOne(id);
         if (!isEmpty(user.getAadhaarNumber()))
             oldUser.setAadhaarNumber(user.getAadhaarNumber());
-        if (!isEmpty(user.isAccountLocked()))
-            oldUser.setAccountLocked(user.isAccountLocked());
-        if (!isEmpty(user.isActive()))
-            oldUser.setActive(user.isActive());
+        if (!isEmpty(user.getAccountLocked()))
+            oldUser.setAccountLocked(user.getAccountLocked());
+        if (!isEmpty(user.getActive()))
+            oldUser.setActive(user.getActive());
         if (!isEmpty(user.getAltContactNumber()))
             oldUser.setAltContactNumber(user.getAltContactNumber());
         if (!isEmpty(user.getBloodGroup()))

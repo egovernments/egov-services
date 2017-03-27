@@ -89,16 +89,15 @@ public class UserController {
         return new UserDetailResponse(responseInfo, Collections.singletonList(userRequest));
     }
     
-    @PostMapping("/users/{id}/_update")
-    public UserDetailResponse updateUserWithValidation(@PathVariable final Long id,
+    @PostMapping("/users/{id}/_updatenovalidate")
+    public UserDetailResponse updateUserWithoutValidation(@PathVariable final Long id,
             @RequestBody final CreateUserRequest createUserRequest) {
-        return updateUser(id, createUserRequest, true);
+        return updateUser(id, createUserRequest);
     }
     
-    private UserDetailResponse updateUser(final Long id, final CreateUserRequest createUserRequest,
-            final boolean validateUser) {
+    private UserDetailResponse updateUser(final Long id, final CreateUserRequest createUserRequest) {
         User user = createUserRequest.toUpdateDomain();
-        final User updatedUser = userService.update(id, user, validateUser);
+        final User updatedUser = userService.updateWithoutValidation(id, user);
         return createResponse(updatedUser);
     }
 }

@@ -83,7 +83,7 @@ public class User extends AbstractAuditable {
     private List<Address> address = new ArrayList<>();
 
     @Column(name = "active")
-    private boolean active;
+    private Boolean active;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "eg_userrole", joinColumns = @JoinColumn(name = "userid"),
@@ -117,7 +117,7 @@ public class User extends AbstractAuditable {
     private String photo;
 
     @Column(name = "accountlocked")
-    private boolean accountLocked;
+    private Boolean accountLocked;
 
     public User (org.egov.user.domain.model.User user) {
         this.name = user.getName();
@@ -134,7 +134,7 @@ public class User extends AbstractAuditable {
         this.altContactNumber = user.getAltContactNumber();
         this.pan = user.getPan();
         this.aadhaarNumber = user.getAadhaarNumber();
-        this.active = user.isActive();
+        this.active = user.getActive();
         this.dob = user.getDob();
         this.pwdExpiryDate = user.getPwdExpiryDate();
         this.locale = user.getLocale();
@@ -143,7 +143,7 @@ public class User extends AbstractAuditable {
         this.identificationMark = user.getIdentificationMark();
         this.signature = user.getSignature();
         this.photo = user.getPhoto();
-        this.accountLocked = user.isAccountLocked();
+        this.accountLocked = user.getAccountLocked();
         this.setLastModifiedDate(user.getLastModifiedDate());
         this.setCreatedDate(user.getCreatedDate());
         this.roles = convertDomainRolesToEntity(user.getRoles());

@@ -1746,6 +1746,10 @@ label.error {
 .form-group {
   margin-bottom: 0px;
 }
+.form-group label.required:after {
+  content: ' *';
+  color: red;
+}
 .form-group.overflow {
   overflow: auto;
 }

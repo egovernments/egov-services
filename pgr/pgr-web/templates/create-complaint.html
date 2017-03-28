@@ -32,15 +32,8 @@
 					<div class="container-fluid">
 					<div class="navbar-header col-md-10 col-xs-10">
 						<a class="navbar-brand" href="javascript:void(0);">
-							
 							<img src="../resources/global/images/logo@2x.png" height="60">
-							
-							<div>
-								<span class="title2" data-translate="create.grievance">
-								
-								Create Grievance
-								</span>
-							</div>
+							<div><span class="title2" data-translate="pgr.title.create.grievence"></span></div>
 						</a>
 					</div>
 
@@ -64,7 +57,7 @@
 				<div class="row">
 					<div class="col-md-12" style="position:relative;">
 						<ol class="breadcrumb hide">
-							<li><a href="javascript:void(0)" data-translate="create.grievance">Create Grievance</a></li>
+							<li><a href="javascript:void(0)" data-translate="pgr.title.create.grievence">Create Grievance</a></li>
 						</ol>
 						<div class="tour-section" data-toggle="tooltip" title="Click for demo!"><i class="fa fa-question" aria-hidden="true"></i></div>
 						<form id="complaintform" class="form-horizontal form-groups-bordered" role="form" method="post" enctype="multipart/form-data" autocomplete="off">
@@ -76,10 +69,10 @@
 								<div class="panel-body">
 									<div class="form-group text-center">
 										<div class="col-md-12">
-											<p data-translate="sr.in.process">Service Request is received and is under process.</p>
-											<p data-translate="ur.service.req.no">Your SRN(Service Request No.)
+											<p data-translate="pgr.msg.servicerequest.underprocess"></p>
+											<p data-translate="pgr.lbl.srn"></p>
 											<p class="view-content history-size" id="crn"></p>
-											<p data-translate="future.references">Please use this for all your future references</p></p>
+											<p data-translate="pgr.msg.future.reference"></p>
 										</div>
 									</div>
 								</div>
@@ -87,46 +80,36 @@
 							<div class="createcrn">
 								<div class="panel panel-primary citizenremove" data-collapsed="0">
 									<div class="panel-heading">
-										<div class="panel-title" data-translate="contact.information">
-											Contact Information
-										</div>
+										<div class="panel-title" data-translate="core.lbl.contact.information"></div>
 									</div>
 									<div class="panel-body custom-form">
 
 										<div class="officialremove">
 											<div class="form-group hide receivingModeSection">
-												<label class="col-sm-3 control-label">Receiving Mode<span class="mandatory"></span></label>
+												<label class="col-sm-3 control-label required" data-translate="pgr.lbl.receivingmode">Receiving Mode</label>
 												<div class="col-sm-6 col-xs-12">
 													<select name="receivingMode" data-extra id="receivingMode" class="form-control" required=""></select>
 												</div>
 											</div>
 											
 											<div class="form-group hide" id="recenter">
-												<label class="col-sm-3 control-label">Receiving Center<span class="mandatory"></span></label>
+												<label class="col-sm-3 control-label required"  data-translate="pgr.lbl.receivingcenter"></label>
 												<div class="col-sm-6">
 													<select id="receivingCenter" data-extra class="form-control">
 						                            </select>
 												</div>
 											</div>
-											
-											<!-- <div class="form-group hide" id="regnoblock">
-													<label for="field-1" class="col-sm-3 control-label">CRN<span class="mandatory"></span></label>
-													<div class="col-sm-6">
-														<input id="service_request_id" data-extra class="form-control patternvalidation" data-pattern="alphanumericwithhyphen" type="text" value="" maxlength="32">
-														
-													</div>
-												</div> -->	
 										</div>
 
 										<div class="form-group">
-											<label for="field-1" class="col-sm-3 control-label" data-translate="name">Name<span class="mandatory"></span></label>
+											<label for="field-1" class="col-sm-3 control-label required" data-translate="core.lbl.fullname"></label>
 											<div class="col-sm-6 add-margin">
 												<input id="first_name" name="first_name" data-extra data-pattern="alphabetwithspace" class="form-control patternvalidation" required="required" type="text" value=""/>
 												 
 											</div>
 										</div>
 										<div class="form-group">
-											<label class="col-sm-3 col-md-3 control-label" data-translate="mobile.number">Mobile Number<span class="mandatory"></span></label>
+											<label class="col-sm-3 col-md-3 control-label required" data-translate="core.lbl.mobilenumber"></label>
 											<div class="col-sm-6 col-md-2 add-margin">
 												<div class="input-group">
 													<span class="input-group-addon">+91</span>
@@ -135,14 +118,14 @@
 												<label id="phone-error" class="error display-hide" for="phone">Required</label>
 											</div>
 											<div class="clearfix visible-sm hidden-md" style="margin:0"></div>
-											<label for="field-1" class="control-label col-sm-3 col-md-1" data-translate="email">Email<span class="mandatory"></span></label>
+											<label for="field-1" class="control-label col-sm-3 col-md-1 required" data-translate="core.lbl.email.compulsory"></label>
 											<div class="col-sm-6 col-md-3">
 												<input id="email" name="email" data-extra required="required" type="email" class="form-control emailvalidate" value=""/>
 												
 											</div>
 										</div>
 										<div class="form-group">
-											<label class="col-sm-3 control-label" data-translate="address">Address</label>
+											<label class="col-sm-3 control-label" data-translate="core.lbl.address"></label>
 											<div class="col-sm-6">
 												<textarea class="form-control autogrow" id="complainantAddress" maxlength="256"></textarea>
 											</div>
@@ -151,18 +134,14 @@
 								</div>
 								<div class="panel panel-primary" data-collapsed="0">
 									<div class="panel-heading">
-										<div class="panel-title" data-translate="grievance.information">
-											Grievance Information
-										</div>
+										<div class="panel-title" data-translate="pgr.lbl.grievence.information"></div>
 									</div>
 									<div class="panel-body custom-form ">
 
 										<div id="topcomplaintsection">
 											<div class="form-group">
-												<label class="col-sm-3 control-label" data-translate="top.grievance.types">Select from Top Grievance types</label>
-												<div class="col-sm-6 add-margin" id="topcomplaint">
-													
-												</div>
+												<label class="col-sm-3 control-label" data-translate="pgr.lbl.top.griencetypes"></label>
+												<div class="col-sm-6 add-margin" id="topcomplaint"></div>
 											</div>
 
 											<div class="or-spacer">
@@ -173,50 +152,41 @@
 										
 
 										<div class="form-group">
-											<label class="col-sm-3 control-label" data-translate="grievance.category">
-												Grievance Category<span class="mandatory"></span>
+											<label class="col-sm-3 control-label required" data-translate="pgr.lbl.grievance.category">
 											</label>
 											<div class="col-sm-6 add-margin">
 												<select id="complaintTypeCategory" name="categorytext" data-extra class="form-control" required="required">
 												</select>
-												
 											</div>
 										</div>
 										<br>
 										<div class="form-group">
-											<label class="col-sm-3 control-label" data-translate="grievance.type">
-												Grievance Type<span class="mandatory"></span>
-											</label>
+											<label class="col-sm-3 control-label required" data-translate="pgr.lbl.grievance.type"></label>
 											<div class="col-sm-6">
 												<select id="complaintType" name="service_code" class="form-control" required="required">
 													<option value="">Select</option>
 												</select>
-												
 											</div>
 										</div>
 									</div>
 								</div>
 								<div class="panel panel-primary" data-collapsed="0">
 									<div class="panel-heading">
-										<div class="panel-title" data-translate="more.details">
-											More Details
-										</div>
+										<div class="panel-title" data-translate="core.lbl.moredetails"></div>
 									</div>
 									<div class="panel-body custom-form">
 
 										<div class="form-group">
-											<label class="col-sm-3 control-label" data-translate="grievance.details">
-												Grievance Details <span class="mandatory"></span>
-											</label>
+											<label class="col-sm-3 control-label required" data-translate="pgr.lbl.grievancedetails"></label>
 											<div class="col-sm-6">
-												<textarea id="doc" name="description" data-translate="complaint.more.details" class="form-control" minlength="10" maxlength="500" placeholder="Give more details about the complaint to help us solve your issue" required="required"></textarea>
-												<div class="text-left"><small  data-translate="min.10.max.500">Minimum 10 and maximum 500 characters.</small></div>
+												<textarea id="doc" name="description" class="form-control" minlength="10" maxlength="500" data-translate="pgr.msg.complaint.moredetails" required="required"></textarea>
+												<div class="text-left"><small  data-translate="pgr.lbl.minmax.characters"></small></div>
 											</div>
 										</div>
 										
 										<div class="form-group">
 											<div class="col-sm-3 col-xs-12 text-center" id="upload-section">
-												<button type="button" id="triggerFile" class="btn btn-secondary" data-translate="upload.photograph.video">Upload Photograph/Video</button>
+												<button type="button" id="triggerFile" class="btn btn-secondary" data-translate="core.lbl.upload.photoimage"></button>
 												<input type="file" id="file1" name="file" data-id="1" class="filechange inline btn hide"/>
 												<input type="file" id="file2" name="file" data-id="2" class="filechange inline btn hide"/>
 												<input type="file" id="file3" name="file" data-id="3" class="filechange inline btn hide"/>
@@ -226,10 +196,10 @@
 										</div>
 										
 										<div class="form-group">
-											<label class="col-sm-3 control-label" data-translate="grievance.location">Grievance Location<span class="mandatory"></span></label>
+											<label class="col-sm-3 control-label required" data-translate="pgr.lbl.grievance.location"></label>
 											<div class="col-sm-6" style="margin:0;">
 												<div class="input-group"  id="location-tour">
-													<input id="location" name="locationtext" data-extra="" type="text" class="form-control" data-translate="grievance.location.plh" placeholder="Start typing your Grievance location or select it from location icon" autocomplete="off" required="required"/>
+													<input id="location" name="locationtext" data-extra="" type="text" class="form-control" data-translate="pgr.lbl.grievance.location.icon" autocomplete="off" required="required"/>
 													<span class="input-group-addon map-class btn-secondary" title="See on map" onclick="jQuery('#modal-6').modal('show', {backdrop: 'static'});"><i class="fa fa-map-marker specific"></i></span>
 													<input id="address_id" name="address_id" type="hidden" value=""/>
 									   				<input id="lat" name="lat" type="hidden" value="0.0"/>
@@ -239,7 +209,7 @@
 											</div>
 										</div>
 										<div class="form-group">
-											<label class="col-sm-3 control-label" data-translate="landmark">Landmark</label>
+											<label class="col-sm-3 control-label" data-translate="core.lbl.landmark"></label>
 											<div class="col-sm-6">
 												<textarea id="landmarkDetails" name="address" maxlength="200" class="form-control"></textarea>
 											</div>
@@ -260,8 +230,8 @@
 								</div><br>
 								<div class="row">
 									<div class="text-center">
-										<button type="button" class="btn btn-primary" id="create-griev" data-translate="create.grievance">Create Grievance</button>
-										<a href="javascript:void(0)" class="btn btn-default" onclick="self.close()" data-translate="close">Close</a>
+										<button type="button" class="btn btn-primary" id="create-griev" data-translate="pgr.title.create.grievence"></button>
+										<a href="javascript:void(0)" class="btn btn-default" onclick="self.close()" data-translate="core.lbl.close"></a>
 									</div>
 								</div>
 							</div>
@@ -278,7 +248,7 @@
 										<div class="panel panel-primary" data-collapsed="0"><!-- to apply shadow add class "panel-shadow" -->
 											<!-- panel head -->
 											<div class="panel-heading">
-												<div class="panel-title" data-translate="grievance.location">Grievance Location</div>
+												<div class="panel-title" data-translate="pgr.lbl.grievance.location"></div>
 											</div>
 										
 											<!-- panel body -->
@@ -294,8 +264,8 @@
 							</div>
 							
 							<div class="modal-footer">
-								<button type="button" class="btn btn-info btn-save-location" data-dismiss="modal" data-translate="ok">OK</button>
-								<button type="button" class="btn btn-default" data-dismiss="modal" data-translate="close">Close</button>
+								<button type="button" class="btn btn-info btn-save-location" data-dismiss="modal" data-translate="core.lbl.ok"></button>
+								<button type="button" class="btn btn-default" data-dismiss="modal" data-translate="core.lbl.close"></button>
 							</div>
 						</div>
 					</div>
@@ -303,7 +273,7 @@
 	        </div>
 				
 			<footer class="main">
-			    Powered by <a href="http://egovernments.org/" target="_blank">eGovernments Foundation</a>
+			    <a href="http://egovernments.org/" target="_blank" data-translate="core.lbl.page.footer"></a>
 			</footer>
         </div>
 
@@ -323,10 +293,7 @@
 									<div class="rect5"></div>
 								</div>
 							</div>
-							
-							<div class="col-md-12 spinner-text" data-translate="processing.your.request">
-								Processing your request. Please wait..
-							</div>
+							<div class="col-md-12 spinner-text" data-translate="core.alert.pleasewait"></div>
 						</div>
 					</div>
 			</div>

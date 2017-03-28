@@ -39,26 +39,6 @@
  */
 
 $(document).ready(function(){
-	
-   /*$('#mobileNumber').blur(function(){
-		if($('#mobileNumber').val().length>0 && $('#mobileNumber').val().length<10){
-			$('#mobnumberValid').show();
-			$('#mobileNumber').val("");
-		}else{
-			$('#mobnumberValid').hide();
-		}
-	});
-
-	$('#emailId').blur(function(){
-		var pattern = new RegExp("^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$");
-		var email = $('#emailId').val();
-		if(!pattern.test(email) && $('#emailId').val().length>0){
-			$('#emailValid').show();
-			$('#emailId').val("");
-		}else{
-			$('#emailValid').hide();
-		}
-	});*/
 
 	var password = false;
 	
@@ -79,29 +59,6 @@ $(document).ready(function(){
 			}
 		}
 	});
-
-	/*$('#password').blur(
-		function () {
-            $('.password-invalid').hide();
-			if($(this).val()) {
-				$.ajax({
-					url: "signup/validate-pwd",
-					dataType: "json",
-					data : {"pswd" : $(this).val()},
-					success: function(data) {
-						if(data){
-							$('.password-invalid').hide();
-						} else {
-                            $('.password-invalid').show();
-                        }
-					},
-					error: function() {
-						console.error('Error while validating password');
-					}
-				});
-			}
-		}
-	);*/
 
 	$('#name').keyup(function(){
 		var arr = $(this).val().split(' ');
@@ -140,7 +97,9 @@ $(document).ready(function(){
 					}
 				},
 				error : function(){
-					bootbox.alert('OTP Creation failed!');
+					bootbox.alert('OTP Creation failed!', function(){ 
+						$('#otpbtn-section').show();
+					});
 				}
 			});
 		}
@@ -215,6 +174,9 @@ $(document).ready(function(){
 				error : function(){
 					bootbox.alert('OTP validation failed!', function(){ 
 						currentObj.prop('disabled', false);
+						$('#activationcode').val();
+						$('#otpbtn-section').show();
+						$('#signup-section, #otp-section').hide();
 					});
 				}
 			});

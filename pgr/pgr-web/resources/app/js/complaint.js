@@ -124,73 +124,103 @@ $(document).ready(function()
 	});
 	
 	$('.tour-section').click(function(){
+
 		$('.demo-class').modal('show', {backdrop: 'static'});
+
+		var nameTitle = translate('core.lbl.fullname');
+		var mobTitle = translate('core.lbl.mobilenumber');
+		var emailTitle = translate('core.lbl.email.compulsory');
+		var addressTitle = translate('core.lbl.address');
+		var tCompTitle = translate('pgr.lbl.grievance.types');
+		var categoryTitle = translate('pgr.lbl.grievance.category');
+		var typeTitle = translate('pgr.lbl.grievance.type');
+		var detailsTitle = translate('pgr.lbl.grievancedetails');
+		var uploadTitle = translate('core.lbl.upload.photoimage');
+		var locationTitle = translate('pgr.lbl.grievance.location');
+		var lmTitle = translate('core.lbl.landmark');
+		var captchaTitle = translate('');
+		var cgTitle = translate('pgr.title.create.grievence');
+
+		var nameContent = translate('core.error.fullname.blank');
+		var mobContent = translate('core.lbl.enter.mobilenumber');
+		var emailContent = translate('core.error.valid.email');
+		var addressContent = translate('core.error.residential.address');
+		var tCompContent = translate('pgr.error.select.grievance.categoryandtype');
+		var categoryContent = translate('pgr.error.select.grievance.category');
+		var typeContent = translate('pgr.error.select.grievance.type');
+		var detailsContent = translate('pgr.error.describe.grievance.details');
+		var uploadContent = translate('pgr.error.upload.photovideo');
+		var locationContent = translate('pgr.error.select.grievancelocation');
+		var lmContent = translate('pgr.error.landmark.optional');
+		var captchaContent = translate('');
+		var cgContent = translate('pgr.msg.finalgrievance.submit');
+
 		var tour = new Tour({
 			  steps: [
 	          {
-			    element: "#f-name",
-			    title: "Name",
-			    content: "Enter your full name!"
+			    element: "#first_name",
+			    title: nameTitle,
+			    content: nameContent
 			  },
 			  {
-			    element: "#mob-no",
-			    title: "Mobile Number",
-			    content: "Enter your valid 10 digit mobile number!"
+			    element: "#phone",
+			    title: mobTitle,
+			    content:mobContent
 			  },
 			  {
 			    element: "#email",
 			    title: "Email ID",
-			    content: "Enter your valid email id!"
+			    content: emailContent
 			  },
 			  {
-			    element: "#address",
-			    title: "Address",
-			    content: "Enter your present residential address!"
+			    element: "#complainantAddress",
+			    title: addressTitle,
+			    content: addressContent
 			  },
 			  {
 			    element: "#topcomplaint",
 			    title: "Top Grievance Types",
-			    content: "Select your grievance from here or else choose it from below grievance category and grievance type!"
+			    content: tCompContent
 			  },
 			  {
 			    element: "#complaintTypeCategory",
 			    title: "Grievance Category",
-			    content: "Select your grievance category!"
+			    content: categoryContent
 			  },
 			  {
 			    element: "#complaintType",
 			    title: "Grievance Type",
-			    content: "Select your grievance type!"
+			    content: typeContent
 			  },
 			  {
 			    element: "#doc",
-			    title: "Grievance Details",
-			    content: "Describe your grievance details briefly!"
+			    title: detailsTitle,
+			    content: detailsContent
 			  },
 			  {
 			    element: "#upload-section",
-			    title: "Upload Photograph / Video",
-			    content: "Upload grievance relevated photo / video (Max : 3 files)!"
+			    title: uploadTitle,
+			    content: uploadContent
 			  },
 			  {
 			    element: "#location-tour",
-			    title: "Grievance Location",
-			    content: "Enter your grievance location or click on the location icon to select your desired location from the map!"
+			    title: locationTitle,
+			    content: locationContent
 			  },
 			  {
 			    element: "#landmarkDetails",
-			    title: "Landmark",
-			    content: "Enter your landmark (if any)!"
+			    title: lmTitle,
+			    content: lmContent
 			  },
 			  {
-			    element: "#captcha-section iframe",
+			    element: "#captcha",
 			    title: "Captcha",
 			    content: "Click on the checkbox to validate captcha!"
 			  },
 			  {
 			    element: "#create-griev",
-			    title: "Create Grievance",
-			    content: "Finally, Click here to submit your grievance!"
+			    title: cgTitle,
+			    content: cgContent
 			  }],
 			  storage: false,
 			  duration: 6000,
@@ -198,13 +228,13 @@ $(document).ready(function()
 				  //console.log(tour.getCurrentStep());
 				  var step = tour.getCurrentStep();
 				  if(step == 0){
-					  typingfeel('James Jackson', '#f-name');
+					  typingfeel('James Jackson', '#first_name');
 				  }else if(step == 1){
-					  typingfeel('9988776655', '#mob-no');
+					  typingfeel('9988776655', '#phone');
 				  }else if(step == 2){
 					  typingfeel('james.jackson@gmail.com', '#email');
 				  }else if(step == 3){
-					  typingfeel('Colorado U.S', '#address');
+					  typingfeel('Colorado U.S', '#complainantAddress');
 				  }else if(step == 4){
 					  //typingfeel('Colorado U.S', '#address');
 				  }else if(step == 5){
@@ -404,8 +434,8 @@ function docheckUser(response){
 }
 
 function doAck(response, userName){
-	$('.breadcrumb').append('<li class="active" data-translate="ack">Acknowledgement</li>');
-	//localization();
+	var acklabel = translate('core.msg.acknowledgement');
+	$('.breadcrumb').append('<li class="active">'+acklabel+'</li>');
 	$('.acknowledgement, .breadcrumb').removeClass('hide');
 	$('.acknowledgement #firstname').html('Dear '+userName+',');
 	$('.acknowledgement #crn').html(response.service_requests[0].service_request_id);

@@ -180,12 +180,6 @@ $(document).ready(function()
 	    	j_password: "Please enter your password"
 	    }
 	});
-	
-	if(navigator.cookieEnabled){
-		
-	}else{
-		$('#cookieornoscript').modal('show', {backdrop: 'static'});
-	}	
 
 	if(localStorage.getItem('lang')){
 		$('#lang-dropdown').val(localStorage.getItem('lang'));

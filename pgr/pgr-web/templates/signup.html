@@ -49,7 +49,7 @@
 				</nav>
 			</header>
 			<div class="main-content">
-				<div class="login-content login-content-margin signup-section">
+				<div class="login-content login-content-margin">
                     
 					<div class="login-body">
 						<form id="signupform" role="form" action="/portal/citizen/signup" method="post" autocomplete="off">
@@ -94,9 +94,7 @@
 									<input type="password" class="form-control style-form check-password" id="con-password" data-translate="core.lbl.confirm.password" autocomplete="new-password" maxlength="32">
 									<span class="mandatory set-mandatory"></span>
 									<label id="con-password-error" class="error pull-right display-hide" for="con-password">Required</label>
-									<div class="text-right add-margin error-msg display-hide password-error" style="margin:0;">
-	                                   Password and confirm password are mismatching
-	                                </div>
+									<div class="text-right add-margin error-msg display-hide password-error" data-translate="core.error.password.confirmpassword.same" style="margin:0;"></div>
 								</div>
 							</div>
 							<div class="form-group">
@@ -124,7 +122,7 @@
 									<div class="input-group-addon style-label">
 										<i class="fa fa-key fa-fw theme-color style-color"></i>
 									</div>
-									<input id="activationcode" name="activationCode" data-extra class="form-control style-form" minlength="5" data-translate="core.lbl.otp" type="password" value="" maxlength="5" autocomplete="off">
+									<input id="activationcode" name="activationCode" data-extra class="form-control style-form" minlength="5" data-translate="core.lbl.otp" type="password" maxlength="5" autocomplete="off">
 									<span class="mandatory set-mandatory"></span>
 									<div class="input-group-addon" style="background:#fff;border:none;border-bottom:1px solid #D0D2D7;cursor:default;">
 										<i class="fa fa-eye show otp-view" data-view="show" aria-hidden="true"></i>
@@ -139,22 +137,22 @@
 							</div>
 							<div class="form-group signup-leftpadding display-hide" id="signup-section">
 								<button type="button" class="btn btn-custom btn-block btn-login signup-submit" id="signupbtn">
-									<i class="fa fa-sign-out"></i> Sign up
+									<i class="fa fa-sign-out"></i> <span data-translate="core.lbl.signup"></span>
 								</button>
 							</div>
                              <div class="form-group text-left" style="font-size:12px;color:#777;margin-top:10px;">
-								By doing sign up, you understood and agree to our <span>
-								<a href="javascript:void(0);" data-toggle="modal" data-target="#myModal" data-backdrop="static">
-								Terms of use</a> &amp; 
-								<a href="javascript:void(0);" data-toggle="modal" data-target="#myModal2" data-backdrop="static">
-								Privacy and security policies</a></span>
+								<span data-translate="core.msg.signup.agree"></span>
+								<span>
+									<a href="javascript:void(0);" data-toggle="modal" data-target="#myModal" data-backdrop="static" data-translate="core.msg.terms"></a> &amp; 
+									<a href="javascript:void(0);" data-toggle="modal" data-target="#myModal2" data-backdrop="static" data-translate="core.msg.policies"></a>
+								</span>
 							</div>
 						</form> 
 					</div>
 				</div>
 			</div>
 			<footer class="main">
-				Powered by <a href="http://eGovernments.org" target="_blank">eGovernments Foundation</a>
+				<a href="http://eGovernments.org" target="_blank" data-translate="core.lbl.page.footer"></a>
 			</footer> 
 		</div>
         <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -162,7 +160,7 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-						<h4 class="modal-title" id="myModalLabel">Terms of use</h4>
+						<h4 class="modal-title" id="myModalLabel" data-translate="core.msg.terms"></h4>
 					</div>
 					<div class="modal-body font-12">
 						<p>This website is designed, developed and maintained by
@@ -203,7 +201,7 @@
 							websites comply with Indian Government Web Guidelines.</p>
 					</div>
 					<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal" data-translate="core.lbl.close"></button>
 					</div>
                 </div>
             </div>
@@ -213,10 +211,10 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-						<h4 class="modal-title" id="myModalLabel">Privacy &amp; Security Policies</h4>
+						<h4 class="modal-title" id="myModalLabel" data-translate="core.msg.policies"></h4>
 					</div>
 					<div class="modal-body font-12">
-						<h5>Privacy Policy</h5>
+						<h5 data-translate="core.msg.privacy.policy"></h5>
 						<p>
 						eGov ERP Portal does not automatically capture any specific personal information from you
                         (like name, phone number or e-mail address), that allows us to identify you individually.
@@ -259,7 +257,7 @@
 						possible that some sections of our web site may not function properly.
 						<p></p>
 						<br>
-						<h5>Security Policy</h5>
+						<h5 data-translate="core.msg.security.policy"></h5>
 						<p>
 							</p><ul>
 								<li>eGov ERP Portal, has been placed in protected zones with implementation of firewalls
@@ -328,7 +326,7 @@
 						<p></p>
 					</div>
 					<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal" data-translate="core.lbl.close"></button>
 					</div>
                 </div>
             </div>

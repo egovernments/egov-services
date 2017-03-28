@@ -6,3 +6,4 @@ public class ArtifactNotFoundException extends RuntimeException {
         super(String.format("Artifact with fileStoreId %s is not found", fileStoreId));
     }
 }
+

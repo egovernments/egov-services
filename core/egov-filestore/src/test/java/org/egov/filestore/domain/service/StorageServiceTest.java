@@ -1,6 +1,7 @@
 package org.egov.filestore.domain.service;
 
 
+import org.egov.filestore.domain.exception.EmptyFileUploadRequestException;
 import org.egov.filestore.domain.model.Artifact;
 import org.egov.filestore.domain.model.FileInfo;
 import org.egov.filestore.domain.model.FileLocation;
@@ -16,6 +17,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -78,6 +80,11 @@ public class StorageServiceTest {
 
         assertEquals(listOfFileInfo, actual);
     }
+
+	@Test(expected = EmptyFileUploadRequestException.class)
+	public void test_should_throw_exception_when_list_of_files_to_save_is_empty() {
+    	storageService.save(Collections.emptyList(), JURISDICTION_ID, MODULE, TAG);
+	}
 
     private List<MultipartFile> getMockFileList() {
         MultipartFile multipartFile1 = new MockMultipartFile("file", "filename1.extension",

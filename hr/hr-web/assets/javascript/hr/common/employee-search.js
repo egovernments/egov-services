@@ -2,12 +2,11 @@ class EmployeeSearch extends React.Component {
   constructor(props) {
     super(props);
     this.state={employees:[],searchSet:{
-    name:"",
     code:"",
-    department:"",
-    designation:"",
+    departmentId:"",
+    designationId:"",
     employeeType:"",
-    month:"",calendarYear:"",},isSearchClicked:false,employeeTypeList:[],departmentList:[],designationList:[],year:[],monthList:[]}
+    asOnDate:""},isSearchClicked:false,employeeTypeList:[],departmentList:[],designationList:[]}
     this.handleChange=this.handleChange.bind(this);
     this.search=this.search.bind(this);
   }
@@ -15,18 +14,28 @@ class EmployeeSearch extends React.Component {
   search(e)
   {
     let {
-    name,
     code,
-    department,
-    designation,
+    departmentId,
+    designationId,
     employeeType,
-    calendarYear,month}=this.state.searchSet;
+    asOnDate}=this.state.searchSet;
     e.preventDefault();
     //call api call
     var employees=[];
+    // var queryParam=getUrlVars();
+    // console.log(queryParam["type"]);
+    // var endDate=(parseInt(queryParam["year"])==new Date().getFullYear()&&parseInt(queryParam["month"])==new Date().getMonth())?new Date():new Date(parseInt(queryParam["year"]), parseInt(queryParam["month"])+1, 0);
+    // var now = new Date();
+    // var startDate=new Date(typeof(queryParam["year"])==="undefined"?now.getFullYear():parseInt(queryParam["year"]), typeof(queryParam["month"])==="undefined"?now.getMonth():parseInt(queryParam["month"]), 1);
+    // console.log(typeof(queryParam["month"])==="undefined"?now.getMonth():parseInt(queryParam["month"]));
+    // var now = new Date();
+    // var startDate=new Date((typeof(queryParam["year"])==="undefined")?now.getFullYear():parseInt(queryParam["year"]), (typeof(queryParam["month"])==="undefined")?now.getMonth():parseInt(queryParam["month"]), 1);
+    // console.log(startDate);
+    // var currentDate=new Date(queryParam["year"],queryParam["month"],1);
     //console.log(commonApiPost("hr-employee","employees","_search",{tenantId},this.state.searchSet).responseJSON["Employee"]);
-   employees=commonApiPost("hr-employee","employees","_search",{tenantId,code},this.state.searchSet).responseJSON["Employee"];
-    this.setState({
+   //employees=commonApiPost("hr-employee","employees","_search",{tenantId,code,"assignment.isPrimary":true,asOnDate:(currentDate.getDate().toString().length==2?currentDate.getDate():"0"+currentDate.getDate())+"/"+(currentDate.getMonth().toString().length==2?(currentDate.getMonth()+1):"0"+(currentDate.getMonth()+1))+"/"+currentDate.getFullYear()}this.state.searchSet).responseJSON["Employee"] || [];
+   employees=commonApiPost("hr-employee","employees","_search",{tenantId,code,asOnDate,departmentId,designationId},this.state.searchSet).responseJSON["Employee"] || [];
+   this.setState({
       isSearchClicked:true,
       employees
     })
@@ -39,16 +48,15 @@ class EmployeeSearch extends React.Component {
 
   componentWillMount()
   {
-    var date=new Date();
-    var monthList=[{id:0,name:"January"},{id:1,name:"February"}, {id:2,name:"March"}, {id:3,name:"April"}, {id:4,name:"May"},
-         {id:5,name:"June"}, {id:6,name:"July"}, {id:7,name:"August"}, {id:8,name:"September"}, {id:9,name:"October"},
-         {id:10,name:"November"}, {id:11,name:"December"}]
+
+
     this.setState({
+      // departmentList:assignments_department;
+      // designationList:assignments_designation;
+
       departmentList:getCommonMaster("egov-common-masters","departments","Department").responseJSON["Department"] || [],
-      designationList:getCommonMaster("hr-masters","designations","Designation").responseJSON["Designation"] || [],
-      year:getCommonMaster("egov-common-masters","calendaryears","CalendarYear").responseJSON["CalendarYear"] || [],
-      monthList,
-      employeeTypeList:getCommonMaster("hr-masters","employeetypes","EmployeeType").responseJSON["EmployeeType"] || []
+      designationList:getCommonMaster("hr-masters","designations","Designation").responseJSON["Designation"] || []
+
   })
   }
 
@@ -68,6 +76,25 @@ class EmployeeSearch extends React.Component {
           });
       }
   }
+  componentDidMount() {
+    var type = getUrlVars()["type"], _this = this;
+    var id = getUrlVars()["id"];
+    $('#asOnDate').datetimepicker({
+        format: 'DD/MM/YYYY',
+        maxDate: new Date(),
+        defaultDate: ""
+    });
+    $('#asOnDate').val("");
+    $('#asOnDate').on("dp.change", function(e) {
+      console.log($("#asOnDate").val());
+          _this.setState({
+                searchSet: {
+                    ..._this.state.searchSet,
+                    "asOnDate":$("#asOnDate").val()
+                }
+          })
+      });
+    }
 
   handleChange(e,name)
   {
@@ -103,12 +130,11 @@ class EmployeeSearch extends React.Component {
     console.log(this.state.searchSet);
     let {handleChange,search,updateTable}=this;
     let {isSearchClicked,employees}=this.state;
-    let {name,
+    let {
     code,
-    department,
-    designation,
-    employeeType,
-    calendarYear,month}=this.state.searchSet;
+    departmentId,
+    designationId,
+    asOnDate}=this.state.searchSet;
     const renderOption=function(list,listName="")
     {
         if(list)
@@ -143,7 +169,8 @@ class EmployeeSearch extends React.Component {
                         <th>Employee Name</th>
                         <th>Employee Designation</th>
                         <th>Employee Department</th>
-                        <th>Employee Username</th>
+                        <th>Employee Position</th>
+                        <th>Date-Range</th>
                         <th>Action</th>
 
                     </tr>
@@ -187,18 +214,32 @@ class EmployeeSearch extends React.Component {
         }
 }
 
+const getTodaysDate = function() {
+        var now = new Date();
+        var month = (now.getMonth() + 1);
+        var day = now.getDate();
+        if(month < 10)
+            month = "0" + month;
+        if(day < 10)
+            day = "0" + day;
+        return (now.getFullYear() + '-' + month + '-' + day);
+    }
 
-
+  //  <td data-label="designation">{getNameById(assignments_designation,item.assignments[0].designation)}</td>
     const renderBody=function()
     {
+      if(employees.length>0)
+      {
       return employees.map((item,index)=>
       {
             return (<tr key={index}>
                     <td data-label="code">{item.code}</td>
                     <td data-label="name">{item.name}</td>
+
                     <td data-label="designation">{item.assignments[0].designation}</td>
                     <td data-label="department">{item.assignments[0].department}</td>
-                    <td data-label="userName">{item.userName}</td>
+                    <td data-label="position">{item.assignments[0].position}</td>
+                    <td data-label="range">{item.assignments[0].fromDate}-{item.assignments[0].toDate}</td>
                     <td data-label="action">
                     {renderAction(getUrlVars()["type"],item.id)}
                     </td>
@@ -207,6 +248,17 @@ class EmployeeSearch extends React.Component {
 
       })
     }
+       else {
+          return (
+              <tr>
+                  <td colSpan="6">No records</td>
+              </tr>
+          )
+      }
+
+
+    }
+
     const disbaled=function(type) {
         if (type==="view") {
               return "ture";
@@ -218,40 +270,6 @@ class EmployeeSearch extends React.Component {
       <div>
           <form onSubmit={(e)=>{search(e)}}>
           <fieldset>
-      <div className="row">
-          <div className="col-sm-6">
-              <div className="row">
-                  <div className="col-sm-6 label-text">
-                    <label for=""> Month <span>*</span></label>
-                  </div>
-                  <div className="col-sm-6">
-                    <div className="styled-select">
-                    <select id="month" name="month"  value= {month}
-                        onChange={(e)=>{handleChange(e,"month")  }}required>
-                    <option value="">Select Month</option>
-                    {renderOption(this.state.monthList)}
-                   </select>
-                    </div>
-                  </div>
-              </div>
-            </div>
-            <div className="col-sm-6">
-                <div className="row">
-                    <div className="col-sm-6 label-text">
-                      <label for=""> Calendar Year <span>*</span></label>
-                    </div>
-                    <div className="col-sm-6">
-                      <div className="styled-select">
-                      <select id="calendarYear" name="calendarYear"  value= {calendarYear}
-                          onChange={(e)=>{handleChange(e,"calendarYear")}}required>
-                      <option value="">Select Year</option>
-                      {renderOption(this.state.year)}
-                     </select>
-                      </div>
-                    </div>
-                </div>
-              </div>
-          </div>
           <div className="row">
             <div className="col-sm-6">
                 <div className="row">
@@ -260,10 +278,10 @@ class EmployeeSearch extends React.Component {
                     </div>
                     <div className="col-sm-6">
                     <div className="styled-select">
-                        <select id="department" name="department" value={department} onChange={(e)=>{
-                            handleChange(e,"department")
+                        <select id="department" name="departmentId" value={departmentId} onChange={(e)=>{
+                            handleChange(e,"departmentId")
                         }}>
-                          <option>Select Department</option>
+                          <option>Select department</option>
                           {renderOption(this.state.departmentList)}
                        </select>
                     </div>
@@ -277,8 +295,8 @@ class EmployeeSearch extends React.Component {
                       </div>
                       <div className="col-sm-6">
                       <div className="styled-select">
-                          <select id="designation" name="designation" value={designation} onChange={(e)=>{
-                              handleChange(e,"designation")
+                          <select id="designation" name="designationId" value={designationId} onChange={(e)=>{
+                              handleChange(e,"designationId")
                           }}>
                           <option>Select Designation</option>
                           {renderOption(this.state.designationList)}
@@ -301,31 +319,18 @@ class EmployeeSearch extends React.Component {
                     </div>
                 </div>
               </div>
-                  <div className="col-sm-6">
-                      <div className="row">
+              <div className="col-sm-6">
+                        <div className="row">
                           <div className="col-sm-6 label-text">
-                            <label for="">Employee Type  </label>
+                              <label for="description">As On date</label>
                           </div>
                           <div className="col-sm-6">
-                          <div className="styled-select">
-                              <select id="employeeType" name="employeeType" value={employeeType} onChange={(e)=>{
-                                  handleChange(e,"employeeType")
-                              }}>
-                                  <option>Select Type</option>
-                                  {renderOption(this.state.employeeTypeList)}
-                             </select>
+                              <input type="text" id="asOnDate" name="asOnDate" value= {asOnDate}
+                                onChange={(e)=>{handleChange(e,"asOnDate")}} max={getTodaysDate()}/>
                           </div>
-                          </div>
-                      </div>
+                        </div>
                     </div>
-              </div>
-
-
-
-
-
-
-
+          </div>
             <div className="text-center">
               <button type="submit"  className="btn btn-submit">Search</button>&nbsp;&nbsp;
                 <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>

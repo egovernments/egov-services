@@ -4,7 +4,6 @@ package org.egov.eis.indexer.consumer;
 import java.io.IOException;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-
 import org.egov.eis.indexer.adaptor.EmployeeAdapter;
 import org.egov.eis.indexer.model.es.EmployeeIndex;
 import org.egov.eis.indexer.repository.ElasticSearchRepository;
@@ -13,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.NoArgsConstructor;

@@ -121,7 +121,4 @@ public class CommonMasterService {
 		HttpEntity<RequestInfo> httpEntityRequest = new HttpEntity<RequestInfo>(requestInfo, headers);
 		return httpEntityRequest;
 	}
-
-	
-
 }

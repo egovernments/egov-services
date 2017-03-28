@@ -104,8 +104,7 @@ public class HRMasterService {
 		}
 		return recruitmentQuotaResponse.getRecruitmentQuota().get(0);
 	}
-	
-	
+
 	// getRecruitmentType
 	public RecruitmentType getRecruitmentType(Long id, String tenantId, RequestInfo requestInfo) {
 		URI url = null;

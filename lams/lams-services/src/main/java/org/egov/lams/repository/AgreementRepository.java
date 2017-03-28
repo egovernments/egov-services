@@ -198,7 +198,7 @@ public class AgreementRepository {
 		}
 		System.err.println(allotteeResponse);
 		if (allotteeResponse.getAllottee() == null || allotteeResponse.getAllottee().size() <= 0)
-			throw new RuntimeException("No assets found for given criteria");
+			throw new RuntimeException("No allottee found for given criteria");
 		System.err.println(allotteeResponse.getAllottee().size());
 
 		return allotteeResponse.getAllottee();

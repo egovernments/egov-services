@@ -34,17 +34,21 @@ public class AgreementHelper {
 		for (Asset asset : assets) {
 			assetMap.put(asset.getId(), asset);
 		}
+		int totalMatch=1;
 		for (Agreement agreement : agreements) {
 			Long allotteeId = agreement.getAllottee().getId();
 			Long assetId = agreement.getAsset().getId();
+			System.err.println("the matching key for allotteeId : "+allotteeId+"and assetId");
 			if (allotteeMap.containsKey(allotteeId) && 
 					assetMap.containsKey(assetId)) 
 			{
+				System.err.println(totalMatch++);
 				agreement.setAllottee(allotteeMap.get(allotteeId));
 				agreement.setAsset(assetMap.get(assetId));
 				newAgreements.add(agreement);
 			}
 		}
+		System.err.println("total matches between agreement seet and allottee :"+totalMatch);
 		System.err.println("inside filter and enrich agreements"+newAgreements);
 		return newAgreements;
 	}

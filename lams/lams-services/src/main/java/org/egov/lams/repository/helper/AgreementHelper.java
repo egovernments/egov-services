@@ -49,6 +49,7 @@ public class AgreementHelper {
 			}
 		}
 		System.err.println("total matches between agreement seet and allottee :"+totalMatch);
+		if(newAgreements.isEmpty())
 		System.err.println("inside filter and enrich agreements"+newAgreements);
 		return newAgreements;
 	}

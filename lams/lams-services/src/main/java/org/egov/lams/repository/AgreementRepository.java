@@ -199,8 +199,8 @@ public class AgreementRepository {
 		System.err.println(allotteeResponse);
 		if (allotteeResponse.getAllottee() == null || allotteeResponse.getAllottee().size() <= 0)
 			throw new RuntimeException("No allottee found for given criteria");
-		System.err.println(allotteeResponse.getAllottee().size());
-
+		
+		System.err.println("the result allottee response from allottee api call : "+allotteeResponse.getAllottee());
 		return allotteeResponse.getAllottee();
 	}
 
@@ -214,7 +214,7 @@ public class AgreementRepository {
 		if (assetResponse.getAssets() == null || assetResponse.getAssets().size() <= 0)
 			throw new RuntimeException("No assets found for given criteria");
 		// FIXME empty response exception
-
+		System.err.println("the result allottee response from allottee api call : "+assetResponse.getAssets());
 		return assetResponse.getAssets();
 	}
 }

@@ -195,6 +195,9 @@ function addMandatoryStart(validationObject, prefix = "") {
 
 
 function getNameById(object,id,property="") {
+    if (id==""||id==null) {
+        return "";
+    }
     for (var i = 0; i < object.length; i++) {
         if (property=="") {
             return object[i].name;

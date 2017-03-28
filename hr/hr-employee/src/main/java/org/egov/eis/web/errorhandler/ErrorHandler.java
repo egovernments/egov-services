@@ -109,6 +109,14 @@ public class ErrorHandler {
 					DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 					String errorDate = dateFormat.format(fieldError.getRejectedValue());
 					error.getFields().put(fieldError.getField(), errorDate);
+				} else if (fieldError.getField().contains("retirementAge")
+						|| fieldError.getField().contains("dateOf")) {
+					error.getFields().put(fieldError.getField(),
+							"Invalid " + fieldError.getField() + " - " + fieldError.getRejectedValue());
+				} else if (fieldError.getField().contains("passportNo") || fieldError.getField().contains("gpfNo")
+						|| fieldError.getField().contains("department") || fieldError.getField().contains("documents")) {
+					error.getFields().put(fieldError.getField(), "Concurrent Value - " + fieldError.getField() + " = "
+							+ fieldError.getRejectedValue() + " Already Exists");
 				} else {
 					error.getFields().put(fieldError.getField(), fieldError.getRejectedValue());
 				}

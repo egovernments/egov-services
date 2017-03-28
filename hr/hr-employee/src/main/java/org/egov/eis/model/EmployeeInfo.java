@@ -115,6 +115,8 @@ public class EmployeeInfo {
 	@Size(max=20)
 	private String bankAccount;
 
+	private List<String> documents = new ArrayList<String>();
+
 	private String tenantId;
 
 }

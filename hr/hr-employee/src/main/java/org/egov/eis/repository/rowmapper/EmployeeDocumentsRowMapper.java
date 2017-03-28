@@ -38,47 +38,23 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.repository.helper;
+package org.egov.eis.repository.rowmapper;
 
-import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Types;
 
+import org.egov.eis.model.EmployeeDocument;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PreparedStatementHelper {
+public class EmployeeDocumentsRowMapper implements RowMapper<EmployeeDocument> {
 
-	public void setIntegerOrNull(PreparedStatement ps, int index, Integer value) {
-		if (value == null) {
-			try {
-				ps.setNull(index, Types.INTEGER);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		} else {
-			try {
-				ps.setInt(index, value);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
+	@Override
+	public EmployeeDocument mapRow(ResultSet rs, int rowNum) throws SQLException {
+		EmployeeDocument employeeDocument = new EmployeeDocument();
+		employeeDocument.setEmployeeId(rs.getLong("employeeId"));
+		employeeDocument.setDocument(rs.getString("document"));
+		return employeeDocument;
 	}
-
-	public void setLongOrNull(PreparedStatement ps, int index, Long value) {
-		if (value == null) {
-			try {
-				ps.setNull(index, Types.BIGINT);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		} else {
-			try {
-				ps.setLong(index, value);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
 }

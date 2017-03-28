@@ -38,47 +38,37 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.repository.helper;
+package org.egov.eis.model.enums;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Types;
+import org.apache.commons.lang.StringUtils;
 
-import org.springframework.stereotype.Component;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
-@Component
-public class PreparedStatementHelper {
+public enum DocumentReferenceType {
+	EMPLOYEE_HEADER("EMPLOYEE_HEADER"), ASSIGNMENT("ASSIGNMENT"), JURISDICTION("JURISDICTION"),
+	SERVICE("SERVICE"), TECHNICAL("TECHNICAL"), EDUCATION("EDUCATION"),
+	TEST("TEST"), REGULARISATION("REGULARISATION"), PROBATION("PROBATION");
 
-	public void setIntegerOrNull(PreparedStatement ps, int index, Integer value) {
-		if (value == null) {
-			try {
-				ps.setNull(index, Types.INTEGER);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		} else {
-			try {
-				ps.setInt(index, value);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
+	private String value;
+
+	DocumentReferenceType(String value) {
+		this.value = value;
 	}
 
-	public void setLongOrNull(PreparedStatement ps, int index, Long value) {
-		if (value == null) {
-			try {
-				ps.setNull(index, Types.BIGINT);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		} else {
-			try {
-				ps.setLong(index, value);
-			} catch (SQLException e) {
-				e.printStackTrace();
+	@Override
+	@JsonValue
+    public String toString() {
+        return StringUtils.capitalize(name());
+    }
+
+	@JsonCreator
+	public static DocumentReferenceType fromValue(String passedValue) {
+		for (DocumentReferenceType obj : DocumentReferenceType.values()) {
+			if (String.valueOf(obj.value).equals(passedValue.toUpperCase())) {
+				return obj;
 			}
 		}
+		return null;
 	}
-
 }

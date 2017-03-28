@@ -104,15 +104,16 @@ public class UserService {
 		headers.add("auth-token", requestInfo.getAuthToken());
 		HttpEntity<String> httpEntityRequest = new HttpEntity<String>(userGetRequestJson, headers);
 
-		UserResponse userResponse = null;
+		List<User> users = null;
 		try {
-			userResponse = new RestTemplate().postForObject(url, httpEntityRequest, UserResponse.class);
+			UserResponse userResponse = new RestTemplate().postForObject(url, httpEntityRequest, UserResponse.class);
+			users = userResponse.getUser();
 		} catch (Exception e) {
 			LOGGER.debug("Following Exception Occurred While Calling User Service : " + e.getMessage());
 			e.printStackTrace();
 		}
 
-		return userResponse.getUser();
+		return users;
 	}
 
 	// FIXME : User service is expecting & sending dates in multiple formats. Fix a common standard for date formats.

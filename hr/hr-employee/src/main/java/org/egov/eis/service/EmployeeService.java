@@ -45,6 +45,7 @@ import java.util.stream.Collectors;
 
 import org.egov.eis.broker.EmployeeProducer;
 import org.egov.eis.model.Employee;
+import org.egov.eis.model.EmployeeDocument;
 import org.egov.eis.model.EmployeeInfo;
 import org.egov.eis.model.User;
 import org.egov.eis.repository.AssignmentRepository;
@@ -65,6 +66,7 @@ import org.egov.eis.web.contract.EmployeeRequest;
 import org.egov.eis.web.contract.RequestInfo;
 import org.egov.eis.web.contract.UserRequest;
 import org.egov.eis.web.contract.UserResponse;
+import org.egov.eis.web.errorhandler.ErrorHandler;
 import org.egov.eis.web.errorhandler.ErrorResponse;
 import org.egov.eis.web.errorhandler.UserErrorResponse;
 import org.slf4j.Logger;
@@ -126,7 +128,10 @@ public class EmployeeService {
 	private EmployeeUserMapper employeeUserMapper;
 	
 	@Autowired
-	EmployeeProducer employeeProducer;
+	private EmployeeProducer employeeProducer;
+	
+	@Autowired
+	private ErrorHandler errorHandler;
 
 	@Value("${kafka.topics.employee.savedb.name}")
 	String employeeSaveTopic;
@@ -144,13 +149,18 @@ public class EmployeeService {
 		List<User> usersList = userService.getUsers(ids, employeeGetRequest.getTenantId(), requestInfo, headers);
 		employeeUserMapper.mapUsersWithEmployees(employeeInfoList, usersList);
 
+		if(!ids.isEmpty()) {
+			List<EmployeeDocument> employeeDocuments = employeeRepository.getDocumentsForListOfEmployeeIds(ids);
+			employeeHelper.mapDocumentsWithEmployees(employeeInfoList, employeeDocuments);
+		}
+
 		return employeeInfoList;
 	}
 
 	public ResponseEntity<?> createEmployee(EmployeeRequest employeeRequest, HttpHeaders headers) {
 		UserRequest userRequest = employeeHelper.getUserRequest(employeeRequest);
 
-		// FIXME : User service is expecting & sending dates in multiple formats. Fix a common standard for date formats.
+		// FIXME : User service is expecting & sending dates in multiple formats. Fix a common standard
 		ResponseEntity<?> responseEntity = userService.createUser(userRequest, headers);
 
 		if(responseEntity.getBody().getClass().equals(UserErrorResponse.class)
@@ -167,7 +177,14 @@ public class EmployeeService {
 		employee.setCode(code);
 		employee.setUser(user);
 
-		employeeHelper.populateIds(employeeRequest);
+		try {
+			System.err.println("Before");
+			employeeHelper.populateData(employeeRequest);
+			System.err.println("After");
+		} catch(Exception e) {
+			LOGGER.debug("Error occurred while populating data in objects", e);
+			return errorHandler.getResponseEntityForUnexpectedErrors(employeeRequest.getRequestInfo());
+		}
 
 		String employeeRequestJson = null;
 		try {
@@ -218,5 +235,9 @@ public class EmployeeService {
 		if (employee.getTest() != null) {
 			departmentalTestRepository.save(employeeRequest);
 		}
+	}
+
+	public Boolean getCountForDataIntegrityChecks(String table, String field, Object value) {
+		return employeeRepository.getCountForDataIntegrityChecks(table, field, value);
 	}
 }

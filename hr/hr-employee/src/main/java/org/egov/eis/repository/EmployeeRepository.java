@@ -45,8 +45,11 @@ import java.util.Collections;
 import java.util.List;
 
 import org.egov.eis.model.Employee;
+import org.egov.eis.model.EmployeeDocument;
 import org.egov.eis.model.EmployeeInfo;
+import org.egov.eis.model.enums.DocumentReferenceType;
 import org.egov.eis.repository.builder.EmployeeQueryBuilder;
+import org.egov.eis.repository.rowmapper.EmployeeDocumentsRowMapper;
 import org.egov.eis.repository.rowmapper.EmployeeIdsRowMapper;
 import org.egov.eis.repository.rowmapper.EmployeeInfoRowMapper;
 import org.egov.eis.web.contract.EmployeeGetRequest;
@@ -62,14 +65,15 @@ public class EmployeeRepository {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(EmployeeRepository.class);
 
-	// FIXME Employee sequence
 	public static final String INSERT_EMPLOYEE_QUERY = "INSERT INTO egeis_employee"
 			+ " (id, code, dateOfAppointment, dateofjoining, dateofretirement, employeestatus, recruitmentmodeId,"
 			+ " recruitmenttypeId, recruitmentquotaId, retirementage, dateofresignation, dateoftermination,"
 			+ " employeetypeId, mothertongueId, religionId, communityId, categoryId, physicallydisabled,"
 			+ " medicalreportproduced, maritalstatus, passportno, gpfno, bankId, bankbranchId, bankaccount, groupId,"
-			+ " placeofbirth, tenantId)"
-			+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			+ " placeofbirth, tenantId)" + " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+
+	private static final String SELECT_EMPLOYEE_DOCUMENTS_QUERY = "SELECT employeeId, document"
+			+ " FROM egeis_employeeDocuments where employeeId IN (?)";
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -81,7 +85,13 @@ public class EmployeeRepository {
 	private EmployeeInfoRowMapper employeeInfoRowMapper;
 
 	@Autowired
+	private EmployeeDocumentsRowMapper employeeDocumentsRowMapper;
+
+	@Autowired
 	private EmployeeQueryBuilder employeeQueryBuilder;
+
+	@Autowired
+	private EmployeeDocumentsRepository documentsRepository;
 
 	@SuppressWarnings("unchecked")
 	public List<EmployeeInfo> findForCriteria(EmployeeGetRequest employeeGetRequest) {
@@ -101,10 +111,16 @@ public class EmployeeRepository {
 
 		List<EmployeeInfo> employeesInfo = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
 				employeeInfoRowMapper);
+
 		return employeesInfo;
 	}
 
-	// FIXME put tenantId
+	public List<EmployeeDocument> getDocumentsForListOfEmployeeIds(List<Long> employeeIds) {
+		List<EmployeeDocument> documents = jdbcTemplate.query(SELECT_EMPLOYEE_DOCUMENTS_QUERY, employeeIds.toArray(),
+				employeeDocumentsRowMapper);
+		return documents;
+	}
+
 	public void save(EmployeeRequest employeeRequest) {
 		Employee employee = employeeRequest.getEmployee();
 		Object[] obj = new Object[] {
@@ -138,10 +154,20 @@ public class EmployeeRepository {
 				employee.getTenantId()
 		};
 
+		if (employee.getDocuments() != null && !employee.getDocuments().isEmpty()) {
+			documentsRepository.save(employee.getId(), employee.getDocuments(),
+					DocumentReferenceType.EMPLOYEE_HEADER.toString(), employee.getId(), employee.getTenantId());
+		}
+
 		jdbcTemplate.update(INSERT_EMPLOYEE_QUERY, obj);
 	}
 
 	public Long generateSequence(String sequenceName) {
 		return jdbcTemplate.queryForObject("SELECT nextval('" + sequenceName + "')", Long.class);
+	}
+
+	public Boolean getCountForDataIntegrityChecks(String table, String field, Object value) {
+		String query = "SELECT exists(SELECT 1 FROM " + table + " WHERE " + field + " IN (" + value + "))";
+		return jdbcTemplate.queryForObject(query, Boolean.class);
 	}
 }

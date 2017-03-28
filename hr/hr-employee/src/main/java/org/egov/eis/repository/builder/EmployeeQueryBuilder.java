@@ -4,11 +4,11 @@
  *
  *  Copyright (C) 2016  eGovernments Foundation
  *
- *  The updated version of eGov suite of products as by eGovernments Foundation
+ *  The updated version of eGov suite of products AS by eGovernments Foundation
  *  is available at http://www.egovernments.org
  *
  *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
+ *  it under the terms of the GNU General Public License AS published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  any later version.
  *
@@ -29,7 +29,7 @@
  *
  *      2) Any misrepresentation of the origin of the material is prohibited. It
  *         is required that all modified versions of this material be marked in
- *         reasonable ways as different from the original version.
+ *         reasonable ways AS different from the original version.
  *
  *      3) This license does not grant any rights to any user of the program
  *         with regards to rights under trademark law for use of the trade names
@@ -57,23 +57,23 @@ public class EmployeeQueryBuilder {
 	@Autowired
 	private ApplicationProperties applicationProperties;
 	
-	private static final String EMPLOYEE_IDS_QUERY = "SELECT distinct e.id as e_id "
+	private static final String EMPLOYEE_IDS_QUERY = "SELECT distinct e.id AS e_id "
 			+ " FROM egeis_employee e"
 			+ " JOIN egeis_assignment a ON e.id = a.employeeId"
 			+ " LEFT JOIN egeis_hodDepartment hod ON a.id = hod.assignmentId AND hod.tenantId = ?"
 			+ " LEFT JOIN egeis_employeeJurisdictions ej ON e.id = ej.employeeId AND ej.tenantId = ?";
 
-	private static final String BASE_QUERY = "SELECT e.id as e_id, e.code as e_code, e.employeeStatus as e_employeeStatus,"
-			+ " e.employeeTypeId as e_employeeTypeId, e.bankId as e_bankId, e.bankBranchId as e_bankBranchId,"
-			+ " e.bankAccount as e_bankAccount, e.tenantId as e_tenantId,"
-			+ " a.id as a_id, a.positionId as a_positionId, a.fundId as a_fundId, a.functionaryId as a_functionaryId,"
-			+ " a.functionId as a_functionId, a.designationId as a_designationId, a.departmentId as a_departmentId,"
-			+ " a.isPrimary as a_isPrimary, a.fromDate as a_fromDate, a.toDate as a_toDate, a.gradeId as a_gradeId,"
-			+ " a.govtOrderNumber as a_govtOrderNumber, a.createdBy as a_createdBy, a.createdDate as a_createdDate,"
-			+ " a.lastModifiedBy as a_lastModifiedBy, a.lastModifiedDate as a_lastModifiedDate,"
-			+ " a.employeeId as a_employeeId,"
-			+ " hod.id as hod_id, hod.departmentId as hod_departmentId,"
-			+ " ej.jurisdictionId as ej_jurisdictionId"
+	private static final String BASE_QUERY = "SELECT e.id AS e_id, e.code AS e_code, e.employeeStatus AS e_employeeStatus,"
+			+ " e.employeeTypeId AS e_employeeTypeId, e.bankId AS e_bankId, e.bankBranchId AS e_bankBranchId,"
+			+ " e.bankAccount AS e_bankAccount, e.tenantId AS e_tenantId,"
+			+ " a.id AS a_id, a.positionId AS a_positionId, a.fundId AS a_fundId, a.functionaryId AS a_functionaryId,"
+			+ " a.functionId AS a_functionId, a.designationId AS a_designationId, a.departmentId AS a_departmentId,"
+			+ " a.isPrimary AS a_isPrimary, a.fromDate AS a_fromDate, a.toDate AS a_toDate, a.gradeId AS a_gradeId,"
+			+ " a.govtOrderNumber AS a_govtOrderNumber, a.createdBy AS a_createdBy, a.createdDate AS a_createdDate,"
+			+ " a.lastModifiedBy AS a_lastModifiedBy, a.lastModifiedDate AS a_lastModifiedDate,"
+			+ " a.employeeId AS a_employeeId,"
+			+ " hod.id AS hod_id, hod.departmentId AS hod_departmentId,"
+			+ " ej.jurisdictionId AS ej_jurisdictionId"
 			+ " FROM egeis_employee e"
 			+ " JOIN egeis_assignment a ON e.id = a.employeeId"
 			+ " LEFT JOIN egeis_hodDepartment hod ON a.id = hod.assignmentId AND hod.tenantId = ?"
@@ -206,7 +206,6 @@ public class EmployeeQueryBuilder {
 
 		return true;
 	}
-
 
 	// FIXME : Optimize - Add Question Marks instead of hard-coding the values
 	private static String getIdQuery(List<Long> idList) {

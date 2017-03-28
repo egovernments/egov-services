@@ -48,6 +48,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.eis.model.Assignment;
+import org.egov.eis.model.enums.DocumentReferenceType;
 import org.egov.eis.repository.builder.AssignmentQueryBuilder;
 import org.egov.eis.repository.helper.PreparedStatementHelper;
 import org.egov.eis.repository.rowmapper.AssignmentRowMapper;
@@ -67,12 +68,10 @@ public class AssignmentRepository {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(AssignmentRepository.class);
 
-	// FIXME Assignment Sequence, Employee ID
 	public static final String INSERT_ASSIGNMENT_QUERY = "INSERT INTO egeis_assignment"
 			+ " (id, employeeId, positionId, fundId, functionaryId, functionId, departmentId, designationId,"
 			+ " isPrimary, fromDate, toDate, gradeId, govtOrderNumber, createdBy, createdDate,"
-			+ " lastModifiedBy, lastModifiedDate, tenantId)"
-			+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			+ " lastModifiedBy, lastModifiedDate, tenantId)" + " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -85,6 +84,9 @@ public class AssignmentRepository {
 
 	@Autowired
 	private PreparedStatementHelper psHelper;
+
+	@Autowired
+	private EmployeeDocumentsRepository documentsRepository;
 
 	@Transactional(readOnly = true)
 	public List<Assignment> findForCriteria(Long employeeId, AssignmentGetRequest assignmentGetRequest) {
@@ -119,7 +121,12 @@ public class AssignmentRepository {
 				ps.setTimestamp(15, new Timestamp(new java.util.Date().getTime()));
 				ps.setLong(16, Long.parseLong(employeeRequest.getRequestInfo().getRequesterId()));
 				ps.setTimestamp(17, new Timestamp(new java.util.Date().getTime()));
-				ps.setString(18, employeeRequest.getEmployee().getTenantId());
+				ps.setString(18, assignment.getTenantId());
+
+				if (assignment.getDocuments() != null && !assignment.getDocuments().isEmpty()) {
+					documentsRepository.save(employeeRequest.getEmployee().getId(), assignment.getDocuments(),
+							DocumentReferenceType.ASSIGNMENT.toString(), assignment.getId(), assignment.getTenantId());
+				}
 			}
 
 			@Override

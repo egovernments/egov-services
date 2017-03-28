@@ -38,47 +38,33 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.repository.helper;
+package org.egov.eis.model;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Types;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-import org.springframework.stereotype.Component;
+@AllArgsConstructor
+@EqualsAndHashCode
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+public class EmployeeDocument {
 
-@Component
-public class PreparedStatementHelper {
+	private Long id;
 
-	public void setIntegerOrNull(PreparedStatement ps, int index, Integer value) {
-		if (value == null) {
-			try {
-				ps.setNull(index, Types.INTEGER);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		} else {
-			try {
-				ps.setInt(index, value);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-	}
+	private Long employeeId;
 
-	public void setLongOrNull(PreparedStatement ps, int index, Long value) {
-		if (value == null) {
-			try {
-				ps.setNull(index, Types.BIGINT);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		} else {
-			try {
-				ps.setLong(index, value);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-	}
+	private String document;
+
+	private String referenceType;
+
+	private Long referenceId;
+
+	private String tenantId;
 
 }

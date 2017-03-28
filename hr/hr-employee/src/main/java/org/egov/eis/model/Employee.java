@@ -169,6 +169,8 @@ public class Employee {
 	@Valid
 	private List<DepartmentalTest> test = new ArrayList<DepartmentalTest>();
 
+	private List<String> documents = new ArrayList<String>();
+
 	@Valid
 	@NotNull
 	private User user;

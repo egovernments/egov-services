@@ -42,12 +42,8 @@ package org.egov.eis.repository;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.List;
 
-import org.egov.eis.model.DepartmentalTest;
-import org.egov.eis.model.enums.DocumentReferenceType;
-import org.egov.eis.web.contract.EmployeeRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,48 +52,32 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DepartmentalTestRepository {
+public class EmployeeDocumentsRepository {
 
-	public static final Logger LOGGER = LoggerFactory.getLogger(DepartmentalTestRepository.class);
+	public static final Logger LOGGER = LoggerFactory.getLogger(EmployeeDocumentsRepository.class);
 
-	public static final String INSERT_DEPARTMENTAL_TEST_QUERY = "INSERT INTO egeis_departmentalTest"
-			+ "(id, employeeId, test, yearOfPassing, remarks,"
-			+ " createdBy, createdDate, lastModifiedBy, lastModifiedDate, tenantId)"
-			+ " VALUES (?,?,?,?,?,?,?,?,?,?)";
+	public static final String INSERT_EMPLOYEE_DOCUMENTS_QUERY = "INSERT INTO egeis_employeeDocuments"
+			+ " (id, employeeId, document, referenceType, referenceId, tenantId)"
+			+ " VALUES (nextval('seq_egeis_employeeDocuments'),?,?,?,?,?)";
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
-	@Autowired
-	private EmployeeDocumentsRepository documentsRepository;
-
-	public void save(EmployeeRequest employeeRequest) {
-		List<DepartmentalTest> departmentalTests = employeeRequest.getEmployee().getTest();
-
-		jdbcTemplate.batchUpdate(INSERT_DEPARTMENTAL_TEST_QUERY, new BatchPreparedStatementSetter() {
+	public void save(Long employeeId, List<String> documents, String referenceType, Long referenceId, String tenantId) {
+		System.err.println("documents: " + documents);
+		jdbcTemplate.batchUpdate(INSERT_EMPLOYEE_DOCUMENTS_QUERY, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
-				DepartmentalTest departmentalTest = departmentalTests.get(i);
-				ps.setLong(1, departmentalTest.getId());
-				ps.setLong(2, employeeRequest.getEmployee().getId());
-				ps.setString(3, departmentalTest.getTest());
-				ps.setInt(4, departmentalTest.getYearOfPassing());
-				ps.setString(5, departmentalTest.getRemarks());
-				ps.setLong(6, Long.parseLong(employeeRequest.getRequestInfo().getRequesterId()));
-				ps.setTimestamp(7, new Timestamp(new java.util.Date().getTime()));
-				ps.setLong(8, Long.parseLong(employeeRequest.getRequestInfo().getRequesterId()));
-				ps.setTimestamp(9, new Timestamp(new java.util.Date().getTime()));
-				ps.setString(10, departmentalTest.getTenantId());
-
-				if(departmentalTest.getDocuments() != null && !departmentalTest.getDocuments().isEmpty()) {
-					documentsRepository.save(employeeRequest.getEmployee().getId(), departmentalTest.getDocuments(),
-							DocumentReferenceType.TEST.toString(), departmentalTest.getId(), departmentalTest.getTenantId());
-				}
+				ps.setLong(1, employeeId);
+				ps.setString(2, documents.get(i));
+				ps.setString(3, referenceType);
+				ps.setLong(4, referenceId);
+				ps.setString(5, tenantId);
 			}
 
 			@Override
 			public int getBatchSize() {
-				return departmentalTests.size();
+				return documents.size();
 			}
 		});
 	}

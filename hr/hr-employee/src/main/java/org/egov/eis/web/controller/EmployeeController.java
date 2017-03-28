@@ -53,6 +53,7 @@ import org.egov.eis.web.contract.RequestInfo;
 import org.egov.eis.web.contract.ResponseInfo;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
 import org.egov.eis.web.errorhandler.ErrorHandler;
+import org.egov.eis.web.validator.DataIntegrityValidator;
 import org.egov.eis.web.validator.EmployeeAssignmentValidator;
 import org.egov.eis.web.validator.RequestValidator;
 import org.slf4j.Logger;
@@ -91,6 +92,9 @@ public class EmployeeController {
 
 	@Autowired
 	private EmployeeAssignmentValidator employeeAssignmentValidator;
+
+	@Autowired
+	private DataIntegrityValidator dataIntegrityValidator;
 
 	/**
 	 * Maps Post Requests for _search & returns ResponseEntity of either
@@ -164,6 +168,7 @@ public class EmployeeController {
 
 		// validate input params that can't be handled by annotations
 		ValidationUtils.invokeValidator(employeeAssignmentValidator, employeeRequest.getEmployee(), bindingResult);
+		ValidationUtils.invokeValidator(dataIntegrityValidator, employeeRequest.getEmployee(), bindingResult);
 
 		if (bindingResult.hasErrors()) {
 			return errorHandler.getErrorResponseEntityForBindingErrors(bindingResult, employeeRequest.getRequestInfo());
@@ -188,5 +193,4 @@ public class EmployeeController {
 		employeeInfoResponse.setResponseInfo(responseInfo);
 		return new ResponseEntity<EmployeeInfoResponse>(employeeInfoResponse, HttpStatus.OK);
 	}
-
 }

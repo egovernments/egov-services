@@ -104,6 +104,8 @@ public class Assignment {
 
 	private String govtOrderNumber;
 
+	private List<String> documents = new ArrayList<String>();
+
 	private Long createdBy;
 
 	@DateTimeFormat(pattern = "dd/MM/yyyy")

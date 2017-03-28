@@ -40,7 +40,9 @@
 
 package org.egov.eis.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
@@ -74,6 +76,8 @@ public class EducationalQualification {
 	private Integer yearOfPassing;
 
 	private String university;
+
+	private List<String> documents = new ArrayList<String>();
 
 	private Long createdBy;
 

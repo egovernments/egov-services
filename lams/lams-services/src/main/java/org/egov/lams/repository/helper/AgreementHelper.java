@@ -38,11 +38,11 @@ public class AgreementHelper {
 		for (Agreement agreement : agreements) {
 			Long allotteeId = agreement.getAllottee().getId();
 			Long assetId = agreement.getAsset().getId();
-			System.err.println("the matching key for allotteeId : "+allotteeId+"and assetId");
+			System.err.println("the matching key for allotteeId : "+allotteeId+"and assetId : "+assetId);
 			if (allotteeMap.containsKey(allotteeId) && 
 					assetMap.containsKey(assetId)) 
 			{
-				System.err.println(totalMatch++);
+				System.err.println("inside matching " +totalMatch++);
 				agreement.setAllottee(allotteeMap.get(allotteeId));
 				agreement.setAsset(assetMap.get(assetId));
 				newAgreements.add(agreement);

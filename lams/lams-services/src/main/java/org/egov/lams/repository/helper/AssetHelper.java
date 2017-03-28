@@ -60,15 +60,14 @@ public class AssetHelper {
 
 		if (assetCriteria.getDoorno() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, assetParams);
-			assetParams.append("doorno=?");
-			assetParams.append(assetCriteria.getDoorno());
+			assetParams.append("doorno="+ assetCriteria.getDoorno());
 		}
 		
 		isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, assetParams);
-		assetParams.append("size=?");
-		assetParams.append(500);
+		assetParams.append("size="+500);
 		//FIXME TODO remove hard coded values in asset and allottee helper
 
+		System.err.println(assetParams);
 		return assetParams.toString();
 	}
 

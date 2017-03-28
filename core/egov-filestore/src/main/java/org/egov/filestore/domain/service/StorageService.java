@@ -1,5 +1,6 @@
 package org.egov.filestore.domain.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.egov.filestore.domain.exception.EmptyFileUploadRequestException;
 import org.egov.filestore.domain.model.Artifact;
 import org.egov.filestore.domain.model.FileInfo;
@@ -15,9 +16,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class StorageService {
 
-    private ArtifactRepository artifactRepository;
+	private static final String UPLOAD_MESSAGE = "Received upload request for " +
+			"jurisdiction: %s, module: %s, tag: %s with file count: %s";
+
+	private ArtifactRepository artifactRepository;
     private IdGeneratorService idGeneratorService;
 
     @Autowired
@@ -29,6 +34,7 @@ public class StorageService {
 
     public List<String> save(List<MultipartFile> filesToStore, String jurisdictionId, String module, String tag) {
 		validateFilesToUpload(filesToStore, jurisdictionId, module, tag);
+		log.info(UPLOAD_MESSAGE, jurisdictionId, module, tag, filesToStore.size());
 		List<Artifact> artifacts =
                 mapFilesToArtifacts(filesToStore, jurisdictionId, module, tag);
         return this.artifactRepository.save(artifacts);

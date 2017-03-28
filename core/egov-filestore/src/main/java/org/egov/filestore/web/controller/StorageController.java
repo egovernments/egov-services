@@ -54,7 +54,8 @@ public class StorageController {
                                       @RequestParam("jurisdictionId") String jurisdictionId,
                                       @RequestParam("module") String module,
                                       @RequestParam(value = "tag", required = false) String tag){
-        return getStorageResponse(storageService.save(files, jurisdictionId, module, tag));
+		final List<String> fileStoreIds = storageService.save(files, jurisdictionId, module, tag);
+		return getStorageResponse(fileStoreIds);
     }
 
     private StorageResponse getStorageResponse(List<String> fileStorageIds) {

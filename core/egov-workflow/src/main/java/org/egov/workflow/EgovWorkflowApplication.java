@@ -1,22 +1,17 @@
 package org.egov.workflow;
 
-import java.text.SimpleDateFormat;
-import java.util.TimeZone;
-
-import org.egov.workflow.web.interceptor.CorrelationIdAwareRestTemplate;
-import org.egov.workflow.web.interceptor.CorrelationIdInterceptor;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.text.SimpleDateFormat;
+import java.util.TimeZone;
 
 @SpringBootApplication
 public class EgovWorkflowApplication {
@@ -37,17 +32,7 @@ public class EgovWorkflowApplication {
 				configurer.defaultContentType(MediaType.APPLICATION_JSON_UTF8);
 			}
 
-			@Override
-			public void addInterceptors(InterceptorRegistry registry) {
-				registry.addInterceptor(new CorrelationIdInterceptor());
-			}
-
 		};
-	}
-
-	@Bean
-	public RestTemplate getRestTemplate() {
-		return new CorrelationIdAwareRestTemplate();
 	}
 
 	@Bean

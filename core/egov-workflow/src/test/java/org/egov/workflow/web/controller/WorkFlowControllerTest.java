@@ -1,21 +1,7 @@
 package org.egov.workflow.web.controller;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.argThat;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.commons.io.IOUtils;
-import org.egov.workflow.domain.model.RequestContext;
+import org.egov.workflow.Resources;
 import org.egov.workflow.domain.service.Workflow;
 import org.egov.workflow.persistence.entity.Task;
 import org.egov.workflow.web.contract.Attribute;
@@ -32,15 +18,28 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 @RunWith(SpringRunner.class)
 @WebMvcTest(WorkFlowController.class)
 public class WorkFlowControllerTest {
 
     private static final String TENANT_ID = "tenantId";
-    public static final String STATE_ID = "stateId";
-    public static final String STATE_DETAILS = "stateDetails";
-    public static final String APPROVAL_COMMENTS = "approvalComments";
-    
+    private static final String STATE_ID = "stateId";
+    private static final String APPROVAL_COMMENTS = "approvalComments";
+    private Resources resources = new Resources();
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -50,58 +49,43 @@ public class WorkFlowControllerTest {
     @Test
     public void test_should_create_workflow() throws Exception {
         final ProcessInstance expectedProcessInstance = ProcessInstance.builder()
-                .action("create")
-                .assignee(2L)
-                .businessKey("765")
-                .type("Complaint")
-                .description("Grievance registered successfully")
-                .senderName("harry")
-                .build();
+            .action("create")
+            .assignee(2L)
+            .businessKey("765")
+            .type("Complaint")
+            .description("Grievance registered successfully")
+            .senderName("harry")
+            .build();
 
         when(workflow.start(eq(TENANT_ID), argThat(new ProcessInstanceMatcher(expectedProcessInstance))))
-                .thenReturn(expectedProcessInstance);
+            .thenReturn(expectedProcessInstance);
 
         mockMvc.perform(post("/create")
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(getFileContents("startWorkflowRequest.json"))
-                .header("X-CORRELATION-ID", "someId"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
-
-        assertEquals("someId", RequestContext.getId());
+            .contentType(MediaType.APPLICATION_JSON_UTF8)
+            .content(resources.getFileContents("startWorkflowRequest.json")))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
     }
 
     @Test
     public void test_should_close_workflow() throws Exception {
         final ProcessInstance expectedProcessInstance = ProcessInstance.builder()
-                .action("END")
-                .assignee(2L)
-                .businessKey("765")
-                .type("Complaint")
-                .description("Workflow Terminated")
-                .senderName("garry")
-                .build();
+            .action("END")
+            .assignee(2L)
+            .businessKey("765")
+            .type("Complaint")
+            .description("Workflow Terminated")
+            .senderName("garry")
+            .build();
 
         when(workflow.end(eq(TENANT_ID), argThat(new processInstanceMatcherForCloseWorkflow(expectedProcessInstance))))
-                .thenReturn(expectedProcessInstance);
+            .thenReturn(expectedProcessInstance);
 
         mockMvc.perform(post("/close")
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(getFileContents("closeWorkflowRequest.json"))
-                .header("X-CORRELATION-ID", "someId"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
-
-        assertEquals("someId", RequestContext.getId());
-    }
-
-    private String getFileContents(final String fileName) {
-        try {
-            return IOUtils.toString(this.getClass().getClassLoader()
-                    .getResourceAsStream(fileName), "UTF-8");
-        } catch (final IOException e) {
-            throw new RuntimeException(e);
-        }
+            .contentType(MediaType.APPLICATION_JSON_UTF8)
+            .content(resources.getFileContents("closeWorkflowRequest.json")))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
     }
 
     class ProcessInstanceMatcher extends ArgumentMatcher<ProcessInstance> {
@@ -120,12 +104,12 @@ public class WorkFlowControllerTest {
         public boolean matches(Object o) {
             final ProcessInstance actualProcessInstance = (ProcessInstance) o;
             return expectedProcessInstance.getAction().equals(actualProcessInstance.getAction()) &&
-                    expectedProcessInstance.getAssignee().equals(actualProcessInstance.getAssignee()) &&
-                    expectedProcessInstance.getBusinessKey().equals(actualProcessInstance.getBusinessKey()) &&
-                    expectedProcessInstance.getType().equals(actualProcessInstance.getType()) &&
-                    expectedProcessInstance.getDescription().equals(actualProcessInstance.getDescription()) &&
-                    expectedProcessInstance.getSenderName().equals(actualProcessInstance.getSenderName()) &&
-                    isValuesValid(actualProcessInstance);
+                expectedProcessInstance.getAssignee().equals(actualProcessInstance.getAssignee()) &&
+                expectedProcessInstance.getBusinessKey().equals(actualProcessInstance.getBusinessKey()) &&
+                expectedProcessInstance.getType().equals(actualProcessInstance.getType()) &&
+                expectedProcessInstance.getDescription().equals(actualProcessInstance.getDescription()) &&
+                expectedProcessInstance.getSenderName().equals(actualProcessInstance.getSenderName()) &&
+                isValuesValid(actualProcessInstance);
         }
 
         private boolean isValuesValid(ProcessInstance processInstance) {
@@ -155,12 +139,12 @@ public class WorkFlowControllerTest {
         public boolean matches(Object o) {
             final ProcessInstance actualProcessInstance = (ProcessInstance) o;
             return expectedProcessInstance.getAction().equals(actualProcessInstance.getAction()) &&
-                    expectedProcessInstance.getAssignee().equals(actualProcessInstance.getAssignee()) &&
-                    expectedProcessInstance.getBusinessKey().equals(actualProcessInstance.getBusinessKey()) &&
-                    expectedProcessInstance.getType().equals(actualProcessInstance.getType()) &&
-                    expectedProcessInstance.getDescription().equals(actualProcessInstance.getDescription()) &&
-                    expectedProcessInstance.getSenderName().equals(actualProcessInstance.getSenderName()) &&
-                    isValuesValid(actualProcessInstance);
+                expectedProcessInstance.getAssignee().equals(actualProcessInstance.getAssignee()) &&
+                expectedProcessInstance.getBusinessKey().equals(actualProcessInstance.getBusinessKey()) &&
+                expectedProcessInstance.getType().equals(actualProcessInstance.getType()) &&
+                expectedProcessInstance.getDescription().equals(actualProcessInstance.getDescription()) &&
+                expectedProcessInstance.getSenderName().equals(actualProcessInstance.getSenderName()) &&
+                isValuesValid(actualProcessInstance);
         }
 
         private boolean isValuesValid(ProcessInstance processInstance) {
@@ -184,58 +168,52 @@ public class WorkFlowControllerTest {
     public void testGetWorkFlowHistoryById() throws Exception {
         final List<Task> history = getWorkFlowHistory();
         when(workflow.getHistoryDetail(TENANT_ID, "2"))
-                .thenReturn(history);
+            .thenReturn(history);
 
         mockMvc.perform(get("/history")
-                .header("X-CORRELATION-ID", "someId")
-                .param("tenantId", TENANT_ID)
-                .param("workflowId", "2"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(content().json(getFileContents("historyResponse.json")));
-
-        assertEquals("someId", RequestContext.getId());
+            .param("tenantId", TENANT_ID)
+            .param("workflowId", "2"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().json(resources.getFileContents("historyResponse.json")));
     }
 
     private List<Task> getWorkFlowHistory() {
         final Task history1 = Task.builder()
-                .requestInfo(getRequestInfo())
-                .owner("Owner1")
-                .sender("sender1")
-                .status("Created")
-                .comments("Got workflow history 1")
-                // .createdDate(new Date("2016-08-31T10:46:22.083"))
-                .build();
+            .requestInfo(getRequestInfo())
+            .owner("Owner1")
+            .sender("sender1")
+            .status("Created")
+            .comments("Got workflow history 1")
+            // .createdDate(new Date("2016-08-31T10:46:22.083"))
+            .build();
         final Task history2 = Task.builder()
-                .requestInfo(getRequestInfo())
-                .owner("Owner2")
-                .sender("sender2")
-                .status("Closed")
-                .comments("Got workflow history 2")
-                // .createdDate(new Date("2016-08-31T10:46:22.083"))
-                .build();
+            .requestInfo(getRequestInfo())
+            .owner("Owner2")
+            .sender("sender2")
+            .status("Closed")
+            .comments("Got workflow history 2")
+            // .createdDate(new Date("2016-08-31T10:46:22.083"))
+            .build();
         return Arrays.asList(history1, history2);
     }
-    
+
     private RequestInfo getRequestInfo() {
         return RequestInfo.builder().tenantId("ap.public").ver("1").apiId("").msgId("").build();
     }
-    
+
     @Test
     public void testShouldUpdateWorkflow() throws Exception {
         Task task = getTask();
         when(workflow.update(eq(TENANT_ID), argThat(new TaskMatcherForUpdateWorkflow(task))))
-        .thenReturn(task);
-                mockMvc.perform(post("/task")
-                        .contentType(MediaType.APPLICATION_JSON_UTF8)
-                        .content(getFileContents("updateWorkflowRequest.json"))
-                        .header("X-CORRELATION-ID", "someId"))
-                        .andExpect(status().isOk())
-                        .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
-                assertEquals("someId", RequestContext.getId());
+            .thenReturn(task);
+        mockMvc.perform(post("/task")
+            .contentType(MediaType.APPLICATION_JSON_UTF8)
+            .content(resources.getFileContents("updateWorkflowRequest.json")))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
     }
-    
-    
+
     class TaskMatcherForUpdateWorkflow extends ArgumentMatcher<Task> {
 
         private Task expectedTaskInstance;
@@ -249,11 +227,11 @@ public class WorkFlowControllerTest {
         public boolean matches(Object o) {
             final Task actualTaskInstance = (Task) o;
             return expectedTaskInstance.getStatus().equals(actualTaskInstance.getStatus()) &&
-                    expectedTaskInstance.getAssignee().equals(actualTaskInstance.getAssignee()) &&
-                    expectedTaskInstance.getSender().equals(actualTaskInstance.getSender()) &&
-                     isValuesValid(actualTaskInstance);
+                expectedTaskInstance.getAssignee().equals(actualTaskInstance.getAssignee()) &&
+                expectedTaskInstance.getSender().equals(actualTaskInstance.getSender()) &&
+                isValuesValid(actualTaskInstance);
         }
-        
+
         private boolean isValuesValid(Task task) {
             Map<String, Attribute> attributesMap = task.getAttributes();
             if (attributesMap.get(APPROVAL_COMMENTS).getValues().size() != 1)
@@ -264,14 +242,22 @@ public class WorkFlowControllerTest {
             Value state = attributesMap.get(STATE_ID).getValues().get(0);
             return (comments.getName().equals("complaint is updated") && state.getName().equals("2"));
         }
-    
+
     }
-    
-    
-   private Task getTask() {
-            final RequestInfo requestInfo = RequestInfo.builder().tenantId("tenantId").ver("1").apiId("apiId").msgId("").build();;
-            Task task = Task.builder().assignee("2").sender("narasappa").status("PROCESSING").requestInfo(requestInfo)
-                    .build();
-            return task;
-    }      
+
+    private Task getTask() {
+        final RequestInfo requestInfo = RequestInfo.builder()
+            .tenantId("tenantId")
+            .ver("1")
+            .apiId("apiId")
+            .msgId("")
+            .build();
+
+        return Task.builder()
+            .assignee("2")
+            .sender("narasappa")
+            .status("PROCESSING")
+            .requestInfo(requestInfo)
+            .build();
+    }
 }

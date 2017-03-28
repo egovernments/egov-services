@@ -45,5 +45,4 @@ public class RequestInfo {
 
     @JsonProperty("tenant_id")
     private String tenantId;
-
 }

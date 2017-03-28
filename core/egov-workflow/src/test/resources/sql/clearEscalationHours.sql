@@ -1,0 +1,1 @@
+DELETE FROM egpgr_escalation;

@@ -40,7 +40,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 @RunWith(MockitoJUnitRunner.class)
-public class PgrWorkflowImplTest {
+public class PgrWorkflowTest {
 
 	private static final String TENANT_ID = "tenantId";
 	private static final String COMPLAINT_TYPE_CODE = "complaintTypeCode";
@@ -49,7 +49,7 @@ public class PgrWorkflowImplTest {
 	    public static final String STATE_DETAILS = "stateDetails";
 
 	@MockBean
-	private PgrWorkflowImpl pgrWorkflowImpl;
+	private PgrWorkflow pgrWorkflow;
 
 	@Mock
 	private ComplaintRouterService complaintRouterService;
@@ -64,14 +64,14 @@ public class PgrWorkflowImplTest {
 	private EmployeeRepository employeeRepository;
 
 	@InjectMocks
-	private PgrWorkflowImpl workflow;
+	private PgrWorkflow workflow;
 
 	@Mock
 	private PositionRepository positionRepository;
 
 	@Before
 	public void before() {
-		pgrWorkflowImpl = new PgrWorkflowImpl(complaintRouterService, stateService, employeeRepository, userRepository);
+		pgrWorkflow = new PgrWorkflow(complaintRouterService, stateService, employeeRepository, userRepository);
 	}
 
 	@Test
@@ -82,7 +82,7 @@ public class PgrWorkflowImplTest {
 		when(complaintRouterService.getAssignee(1L, "C001", null)).thenReturn(position);
 		when(positionRepository.getById(2L)).thenReturn(position);
 		when(stateService.create(new State())).thenReturn(stateExpected);
-		final ProcessInstance actualResponse = pgrWorkflowImpl.start("ap.public", processInstance);
+		final ProcessInstance actualResponse = pgrWorkflow.start("ap.public", processInstance);
 		assertEquals(stateExpected.getOwnerPosition(), actualResponse.getAssignee());
 	}
 
@@ -148,7 +148,7 @@ public class PgrWorkflowImplTest {
 		when(employeeRepository.getEmployeeForUserId(1l)).thenReturn(employeeRes);
 		when(userRepository.findUserById(1L)).thenReturn(userResponse);
 		when(employeeRepository.getEmployeeForPosition(3l, new LocalDate())).thenReturn(employeeRes);
-		final List<Task> actualHistory = pgrWorkflowImpl.getHistoryDetail(TENANT_ID, "2");
+		final List<Task> actualHistory = pgrWorkflow.getHistoryDetail(TENANT_ID, "2");
 		assertEquals(3, actualHistory.size());
 	}
 
@@ -209,7 +209,7 @@ public class PgrWorkflowImplTest {
         State state = prepareState();
         when(stateService.update(new State())).thenReturn(state);
         when(stateService.getStateById(2l)).thenReturn(state);
-        Task actualResponse = pgrWorkflowImpl.update("ap.public", task);
+        Task actualResponse = pgrWorkflow.update("ap.public", task);
         assertEquals(actualResponse.getId(), state.getId().toString());
     }
     

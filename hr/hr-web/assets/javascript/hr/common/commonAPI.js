@@ -175,7 +175,7 @@ function getCommonMasterById(mainRoute, resource, returnObject, id) {
 
 function getNameById(object, id, property = "") {
 
-    if (id == "" || id = null) {
+    if (id == "" || id == null) {
         return "";
     }
     for (var i = 0; i < object.length; i++) {

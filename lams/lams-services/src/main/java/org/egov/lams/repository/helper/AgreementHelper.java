@@ -39,6 +39,7 @@ public class AgreementHelper {
 			Long allotteeId = agreement.getAllottee().getId();
 			Long assetId = agreement.getAsset().getId();
 			System.err.println("the matching key for allotteeId : "+allotteeId+"and assetId : "+assetId);
+			System.err.println("allotteeMap.containsKey(allotteeId) : "+allotteeMap.containsKey(allotteeId)+", assetMap.containsKey(assetId) : "+assetMap.containsKey(assetId));
 			if (allotteeMap.containsKey(allotteeId) && 
 					assetMap.containsKey(assetId)) 
 			{

@@ -1,5 +1,7 @@
 var baseUrl = window.location.origin;
 
+var authToken=localStorage.getItem("auth-token");
+
 //request info from cookies
 var requestInfo = {
     "apiId":"org.egov.pgr",
@@ -10,13 +12,12 @@ var requestInfo = {
     "key":"xyz",
     "msgId":"654654",
     "requesterId":"61",
-    "authToken":"sdfsdfsdf"
+    "authToken":authToken
 };
 
 var tenantId=1;
 
 
-var authToken=localStorage.getItem("auth-token");
 
 // var employeeType=JSON.parse(localStorage.getItem("employeeType"))==null?(localStorage.setItem("employeeType",JSON.stringify(getCommonMaster("hr-masters", "employeetypes", "EmployeeType").responseJSON["EmployeeType"]))|| []) :JSON.parse(localStorage.getItem("employeeType"));
 // var employeeStatus=JSON.parse(localStorage.getItem("employeeStatus"))==null?(localStorage.setItem("employeeStatus",JSON.stringify(getCommonMaster("hr-masters", "hrstatuses", "HRStatus").responseJSON["HRStatus"])) || []) :JSON.parse(localStorage.getItem("employeeStatus"));
@@ -42,7 +43,7 @@ var revenueZone=JSON.parse(localStorage.getItem("revenueZone"))==null?(localStor
 var revenueBlock=JSON.parse(localStorage.getItem("revenueBlock"))==null?(localStorage.setItem("revenueBlock",JSON.stringify(commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"BLOCK",hierarchyTypeName:"REVENUE"}).responseJSON["Boundary"])) || []) :JSON.parse(localStorage.getItem("revenueBlock"));
 var assetCategories=JSON.parse(localStorage.getItem("assetCategories"))==null?(localStorage.setItem("assetCategories",JSON.stringify(commonApiPost("asset-services","assetCategories","_search",{}).responseJSON["AssetCategory"])) || []) :JSON.parse(localStorage.getItem("assetCategories"));
 var natureOfAllotments=JSON.parse(localStorage.getItem("natureOfAllotments"))==null?(localStorage.setItem("natureOfAllotments",JSON.stringify(commonApiPost("lams-services","","getnatureofallotment",{}).responseJSON)) || {}) :JSON.parse(localStorage.getItem("natureOfAllotments"));
-
+var employees=[];
 // var assignments_fund=JSON.parse(localStorage.getItem("assignments_fund"))==null?(localStorage.setItem("assignments_fund",JSON.stringify(getCommonMaster("egf-masters", "funds", "funds").responseJSON["funds"])) || []) :JSON.parse(localStorage.getItem("assignments_fund"));
 // var assignments_functionary=JSON.parse(localStorage.getItem("assignments_functionary"))==null?(localStorage.setItem("assignments_functionary",JSON.stringify(getCommonMaster("egf-masters", "functionaries", "funds").responseJSON["functionaries"])) || []) :JSON.parse(localStorage.getItem("assignments_functionary"));
 // var assignments_function=JSON.parse(localStorage.getItem("assignments_function"))==null?(localStorage.setItem("assignments_function",JSON.stringify(getCommonMaster("egf-masters", "functions", "functions").responseJSON["functions"])) || []) :JSON.parse(localStorage.getItem("assignments_function"));
@@ -200,11 +201,15 @@ function getNameById(object,id,property="") {
     }
     for (var i = 0; i < object.length; i++) {
         if (property=="") {
-            return object[i].name;
+            if (object[i].id==id) {
+              return object[i].name;
+            }
         }
         else {
           if (object[i].hasOwnProperty(property)) {
-              return object[i][property];
+                if (object[i].id==id) {
+                    return object[i][property];
+                }
           }
           else {
               return "";

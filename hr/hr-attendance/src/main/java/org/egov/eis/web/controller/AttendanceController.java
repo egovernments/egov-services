@@ -63,6 +63,7 @@ import org.egov.eis.web.contract.AttendanceGetRequest;
 import org.egov.eis.web.contract.AttendanceRequest;
 import org.egov.eis.web.contract.AttendanceResponse;
 import org.egov.eis.web.contract.RequestInfo;
+import org.egov.eis.web.contract.RequestInfoWrapper;
 import org.egov.eis.web.contract.ResponseInfo;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
 import org.egov.eis.web.errorhandlers.Error;
@@ -116,7 +117,8 @@ public class AttendanceController {
     @PostMapping(value = "_search")
     @ResponseBody
     public ResponseEntity<?> search(@ModelAttribute @Valid final AttendanceGetRequest attendanceGetRequest,
-            final BindingResult bindingResult, @RequestBody final RequestInfo requestInfo) {
+            final BindingResult bindingResult, @RequestBody final RequestInfoWrapper requestInfoWrapper) {
+        final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 
         // validate header
         if (requestInfo.getApiId() == null || requestInfo.getVer() == null || requestInfo.getTs() == null)

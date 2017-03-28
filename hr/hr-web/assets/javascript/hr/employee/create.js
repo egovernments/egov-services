@@ -1046,9 +1046,10 @@ function fillValueToObject(currentState) {
             if (currentState.id == "user.active") {
                 employee[splitResult[0]][splitResult[1]] = currentState.value;
 
+            } else if(currentState.type === "file") {
+                employee[splitResult[0]][splitResult[1]] = currentState.files;
             } else {
                 employee[splitResult[0]][splitResult[1]] = currentState.value;
-
             }
         } else {
             // if (currentState.id == "assignments.fromDate" || currentState.id == "assignments.toDate" || currentState.id == "serviceHistory.serviceFrom" || currentState.id == "probation.orderDate" || currentState.id == "probation.declaredOn" || currentState.id == "regularisation.declaredOn" || currentState.id == "regularisation.orderDate" || currentState.id == "education.yearOfPassing" || currentState.id == "technical.yearOfPassing" || currentState.id == "test.yearOfPassing") {
@@ -1075,9 +1076,10 @@ function fillValueToObject(currentState) {
             // if (currentState.id=="jurisdictions.boundary") {
             //       employeeSubObject[splitResult[0]][splitResult[1]].push(currentState.value);
             // }
-            else {
+            else if(currentState.type === "file") {
+                employeeSubObject[splitResult[0]][splitResult[1]] = currentState.files;
+            } else
                 employeeSubObject[splitResult[0]][splitResult[1]] = currentState.value;
-            }
         }
 
     } else {
@@ -1091,6 +1093,8 @@ function fillValueToObject(currentState) {
         // } else
         if (currentState.id == "languagesKnown") {
             employee[currentState.id]=$(currentState).val();
+        } else if(currentState.type === "file") {
+            employee[currentState.id] = currentState.files;
         } else {
             employee[currentState.id] = currentState.value;
         }

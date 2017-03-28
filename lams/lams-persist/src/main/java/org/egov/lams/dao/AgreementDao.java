@@ -31,7 +31,7 @@ public class AgreementDao {
 
 		LOGGER.info("AgreementDao agreement::" + agreement);
 		
-		String agreementIdQuery = "select nextval('seq_lams_agreement')";
+		String agreementIdQuery = "select nextval('seq_eglams_agreement')";
 		try {
 			agreement.setId(jdbcTemplate.queryForObject(agreementIdQuery,Long.class));
 		} catch (DataAccessException ex) {

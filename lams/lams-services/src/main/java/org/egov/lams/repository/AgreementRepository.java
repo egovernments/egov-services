@@ -96,7 +96,7 @@ public class AgreementRepository {
 		try {
 			agreements = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), new AgreementRowMapper());
 		} catch (DataAccessException e) {
-			// FIXME log exception
+			logger.info(e.getMessage(),e.getCause());
 			throw new RuntimeException(e.getMessage());
 		}
 		if (agreements.isEmpty())

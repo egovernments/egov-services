@@ -28,6 +28,8 @@ public class Agreement {
 
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date agreementDate;
+	private Date closeDate;
+	private Long timePeriod;
 	private Allottee allottee;
 	private Asset asset;
 	private String tenderNumber;

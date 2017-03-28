@@ -69,6 +69,7 @@ public class WorkflowRepository {
 			LOGGER.info(e.toString());
 			throw e;
 		}
+		LOGGER.info("string url of the workflow appp : "+url);
 		//FIXME the response should be always processInstanceResponse
 		return processInstanceRes;
 	}

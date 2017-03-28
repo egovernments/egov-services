@@ -8,6 +8,7 @@ import org.egov.lams.web.errorhandlers.Error;
 import org.egov.lams.web.contract.AgreementRequest;
 import org.egov.lams.web.contract.AgreementResponse;
 import org.egov.lams.web.contract.RequestInfo;
+import org.egov.lams.exception.LamsException;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.AgreementCriteria;
 import org.egov.lams.service.AgreementService;
@@ -60,6 +61,8 @@ public class AgreementController {
 
 		List<Agreement> agreements = agreementService
 				.searchAgreement(agreementCriteria);
+		if(agreements.isEmpty())
+			throw new LamsException("No agreements found for the given criteria");
 		return getSuccessResponse(agreements, requestInfo);
 	}
 

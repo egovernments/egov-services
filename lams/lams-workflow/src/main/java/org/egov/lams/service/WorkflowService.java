@@ -1,7 +1,6 @@
 package org.egov.lams.service;
 
 import org.egov.lams.contract.AgreementRequest;
-import org.egov.lams.contract.ProcessInstanceResponse;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.ProcessInstance;
 import org.egov.lams.repository.WorkflowRepository;
@@ -24,6 +23,7 @@ public class WorkflowService {
 		Agreement agreement = agreementRequest.getAgreement();
 		//FIXME ask mani, it should be ProcessInstanceResponse
 		ProcessInstance processInstanceResponse = workflowRepository.startWorkflow(agreementRequest);
+		LOGGER.info("the processInstance object response from workflow statrt repository call",processInstanceResponse);
 		agreement.setStateId(processInstanceResponse.getId());
 		saveAgreement(agreementRequest);
 	}

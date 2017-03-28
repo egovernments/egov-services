@@ -49,6 +49,7 @@ import org.egov.commons.service.LanguageService;
 import org.egov.commons.web.contract.LanguageGetRequest;
 import org.egov.commons.web.contract.LanguageResponse;
 import org.egov.commons.web.contract.RequestInfo;
+import org.egov.commons.web.contract.RequestInfoWrapper;
 import org.egov.commons.web.contract.ResponseInfo;
 import org.egov.commons.web.contract.factory.ResponseInfoFactory;
 import org.egov.commons.web.errorhandlers.ErrorHandler;
@@ -83,16 +84,18 @@ public class LanguageController {
 	@PostMapping("_search")
 	@ResponseBody
 	public ResponseEntity<?> search(@ModelAttribute @Valid LanguageGetRequest languageGetRequest,
-			BindingResult bindingResult, @RequestBody RequestInfo requestInfo) {
+			BindingResult modelAttributeBindingResult, @RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
+			BindingResult requestBodyBindingResult) {
+		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 
-		// validate header
-		if(requestInfo.getApiId() == null || requestInfo.getVer() == null || requestInfo.getTs() == null ) {
-			return errHandler.getErrorResponseEntityForMissingRequestInfo(requestInfo);
+		// validate input params
+		if (modelAttributeBindingResult.hasErrors()) {
+			return errHandler.getErrorResponseEntityForMissingParameters(modelAttributeBindingResult, requestInfo);
 		}
 
 		// validate input params
-		if (bindingResult.hasErrors()) {
-			return errHandler.getErrorResponseEntityForMissingParameters(bindingResult, requestInfo);
+		if (requestBodyBindingResult.hasErrors()) {
+			return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
 		}
 
 		// Call service

@@ -2,9 +2,12 @@ package org.egov.commons.web.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.egov.commons.model.Uom;
 import org.egov.commons.service.UomService;
 import org.egov.commons.web.contract.RequestInfo;
+import org.egov.commons.web.contract.RequestInfoWrapper;
 import org.egov.commons.web.contract.ResponseInfo;
 import org.egov.commons.web.contract.UomResponse;
 import org.egov.commons.web.contract.factory.ResponseInfoFactory;
@@ -22,28 +25,30 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("uom")
 public class UomController {
-	
+
 	@Autowired
 	private UomService uomService;
-	
+
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
-	
+
 	@Autowired
 	private ErrorHandler errHandler;
-	
+
 	@PostMapping("_search")
 	@ResponseBody
-	public ResponseEntity<?> search(@RequestBody RequestInfo requestInfo,BindingResult bindingResult){
-		
-		if (bindingResult.hasErrors()) {
-			return errHandler.getErrorResponseEntityForMissingParameters(bindingResult, requestInfo);
+	public ResponseEntity<?> search(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
+			BindingResult requestBodyBindingResult) {
+		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+
+		if (requestBodyBindingResult.hasErrors()) {
+			return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
 		}
-		
-		List<Uom> uomList=uomService.search();
+
+		List<Uom> uomList = uomService.search();
 		return getSuccessResponse(uomList, requestInfo);
 	}
-	
+
 	/**
 	 * Populate Response object and returnreligionsList
 	 * 

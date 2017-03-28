@@ -40,8 +40,11 @@
 
 package org.egov.commons.web.contract;
 
+import java.util.List;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -56,31 +59,34 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
-public class RequestInfo {
+public class UserInfo {
 
 	@NotNull
-	private String apiId;
+	private Long id;
 
 	@NotNull
-	private String ver;
+	@Size(min=1, max=64)
+	private String userName;
 
 	@NotNull
-	private String ts;
+	@Size(min=3, max=100)
+	private String name;
 
-	private String action;
+	@NotNull
+	@Size(max=20)
+	private String type;
 
-	private String did;
+	@NotNull
+	@Size(max=10)
+	private String mobileNumber;
 
-	private String key;
-
-	private String msgId;
-
-	private String requesterId;
-
-	private String authToken;
+	@NotNull
+	@Size(min=3, max=100)
+	private String emailId;
 
 	@Valid
 	@NotNull
-	private UserInfo userInfo;
+	@Size(min=1)
+	private List<UserInfoRoles> roles;
 
 }

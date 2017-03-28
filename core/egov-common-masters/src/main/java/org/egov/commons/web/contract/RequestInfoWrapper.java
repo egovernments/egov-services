@@ -43,6 +43,8 @@ package org.egov.commons.web.contract;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -56,31 +58,11 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
-public class RequestInfo {
+public class RequestInfoWrapper {
 
 	@NotNull
-	private String apiId;
-
-	@NotNull
-	private String ver;
-
-	@NotNull
-	private String ts;
-
-	private String action;
-
-	private String did;
-
-	private String key;
-
-	private String msgId;
-
-	private String requesterId;
-
-	private String authToken;
-
 	@Valid
-	@NotNull
-	private UserInfo userInfo;
+	@JsonProperty("RequestInfo")
+	private RequestInfo requestInfo;
 
 }

@@ -1017,13 +1017,13 @@ $("textarea").on("keyup change", function() {
 })
 
 //file change handle for file upload
-$("input[type=file]").on("change", function(evt) {
+/*$("input[type=file]").on("change", function(evt) {
     // console.log(this.value);
     // agreement[this.id] = this.value;
     var file = evt.currentTarget.files[0];
 
     //call post api update and update that url in pur agrement object
-});
+});*/
 
 //initial setup
 $("#departments").hide();
@@ -1047,7 +1047,7 @@ function fillValueToObject(currentState) {
                 employee[splitResult[0]][splitResult[1]] = currentState.value;
 
             } else if(currentState.type === "file") {
-                employee[splitResult[0]][splitResult[1]] = currentState.files;
+                employee[splitResult[0]][splitResult[1]] = $.extend(true,[],currentState.files);
             } else {
                 employee[splitResult[0]][splitResult[1]] = currentState.value;
             }
@@ -1077,7 +1077,7 @@ function fillValueToObject(currentState) {
             //       employeeSubObject[splitResult[0]][splitResult[1]].push(currentState.value);
             // }
             else if(currentState.type === "file") {
-                employeeSubObject[splitResult[0]][splitResult[1]] = currentState.files;
+                employeeSubObject[splitResult[0]][splitResult[1]] = $.extend(true,[],currentState.files);
             } else
                 employeeSubObject[splitResult[0]][splitResult[1]] = currentState.value;
         }
@@ -1094,7 +1094,7 @@ function fillValueToObject(currentState) {
         if (currentState.id == "languagesKnown") {
             employee[currentState.id]=$(currentState).val();
         } else if(currentState.type === "file") {
-            employee[currentState.id] = currentState.files;
+            employee[currentState.id] = $.extend(true,[],currentState.files);
         } else {
             employee[currentState.id] = currentState.value;
         }
@@ -1137,11 +1137,10 @@ $('#jurisdictionDetailModal').on('hidden.bs.modal', function(e) {
         boundary: ""
     }
     clearModalInput("jurisdictions", employeeSubObject["jurisdictions"]);
-
 })
 
 $('#serviceHistoryDetailModal').on('hidden.bs.modal', function(e) {
-    editIndex = -1;
+   editIndex = -1;
     employeeSubObject["serviceHistory"] = {
         id: employee["serviceHistory"].length + 1,
         serviceInfo: "",
@@ -1151,7 +1150,6 @@ $('#serviceHistoryDetailModal').on('hidden.bs.modal', function(e) {
         documents: ""
     }
     clearModalInput("serviceHistory", employeeSubObject["serviceHistory"]);
-
 })
 
 $('#probationDetailModal').on('hidden.bs.modal', function(e) {
@@ -1502,43 +1500,47 @@ $("#createEmployeeForm").validate({
             for (var i = 0; i < empJuridictiona.length; i++) {
                 employee["jurisdictions"].push(empJuridictiona[i].boundary);
             }
+            //Upload files if any 
+            uploadFiles(employee, function(err, emp) {
+                if(err) {
+                    //Handle error
+                } else {
+                     var response = $.ajax({
+                        url: baseUrl + "/hr-employee/employees/_create?tenantId=1",
+                        type: 'POST',
+                        dataType: 'json',
+                        data: JSON.stringify({
+                            RequestInfo: requestInfo,
+                            Employee: emp
+                        }),
+                        async: false,
+                        headers: {
+                            'auth-token': authToken
+                        },
+                        contentType: 'application/json'
+                    });
+
+                    if (response["status"] === 200) {
+                        alert("Successfully added");
+                        // window.location.href="../../../../app/hr/common/employee-attendance.html";
+                    } else {
+                        alert(response["statusText"]);
+                    }
 
 
-
-            var response = $.ajax({
-                url: baseUrl + "/hr-employee/employees/_create?tenantId=1",
-                type: 'POST',
-                dataType: 'json',
-                data: JSON.stringify({
-                    RequestInfo: requestInfo,
-                    Employee: employee
-                }),
-                async: false,
-                headers: {
-                    'auth-token': authToken
-                },
-                contentType: 'application/json'
-            });
-
-            if (response["status"] === 200) {
-                alert("Successfully added");
-                // window.location.href="../../../../app/hr/common/employee-attendance.html";
-            } else {
-                alert(response["statusText"]);
-            }
-
-
-            // $.post(`${baseUrl}hr-employee/employees/_create?tenantId=1`, {
-            //     RequestInfo: requestInfo,
-            //     Employee: employee
-            // }, function(response) {
-            //     alert("submit");
-            //     // window.open("../../../../app/search-assets/create-agreement-ack.html?&agreement_id=aeiou", "", "width=1200,height=800")
-            //     console.log(response);
-            // },function(error){
-            //   alert("error")
-            //   console.log(error);
-            // })
+                    // $.post(`${baseUrl}hr-employee/employees/_create?tenantId=1`, {
+                    //     RequestInfo: requestInfo,
+                    //     Employee: employee
+                    // }, function(response) {
+                    //     alert("submit");
+                    //     // window.open("../../../../app/search-assets/create-agreement-ack.html?&agreement_id=aeiou", "", "width=1200,height=800")
+                    //     console.log(response);
+                    // },function(error){
+                    //   alert("error")
+                    //   console.log(error);
+                    // })
+                }
+            })
         } else {
             alert("Please enter atleast assignment and jurisdiction");
         }
@@ -1551,3 +1553,238 @@ $("#createEmployeeForm").validate({
 
     }
 })
+
+function uploadFiles(employee, cb) {
+    if(employee.user.photo && typeof employee.user.photo == "object") {
+        makeAjaxUpload(employee.user.photo[0], function(err, res) {
+            if(err) {
+                cb(err);
+            } else {
+                employee.user.photo = `/filestore/v1/files/id?fileStoreId=${res.files[0].fileStoreId}`;
+                uploadFiles(employee, cb);
+            }
+        })
+    } else if(employee.user.signature && typeof employee.user.signature == "object") {
+         makeAjaxUpload(employee.user.signature[0], function(err, res) {
+            if(err) {
+                cb(err);
+            } else {
+                employee.user.signature = `/filestore/v1/files/id?fileStoreId=${res.files[0].fileStoreId}`;
+                uploadFiles(employee, cb);
+            }
+        })
+    } else if(employee.documents.length && employee.documents[0].constructor == File) {
+        let counter = employee.documents.length, breakout = 0 ;
+        for(let i=0; len = employee.documents.length, i<len; i++) {
+            makeAjaxUpload(employee.documents[i], function(err, res) {
+                if(breakout == 1) 
+                    return;
+                else if(err) {
+                    cb(err);
+                    breakout = 1;
+                } else {
+                    counter--;
+                    employee.documents[i] = `/filestore/v1/files/id?fileStoreId=${res.files[0].fileStoreId}`;
+                    if(counter == 0 && breakout == 0)
+                        uploadFiles(employee, cb);
+                }
+            })
+        }
+    } else if(employee.assignments.length && hasFile(employee.assignments)) {
+        let counter1 = employee.assignments.length, breakout = 0;
+        for(let i=0; len = employee.assignments.length, i<len; i++) {
+            let counter = employee.assignments[i].documents.length;
+            for(let j=0; len1 = employee.assignments[i].documents.length, j<len1; j++) {
+                makeAjaxUpload(employee.assignments[i].documents[j], function(err, res) {
+                    if(breakout == 1) 
+                        return;
+                    else if(err) {
+                        cb(err);
+                        breakout = 1;
+                    } else {
+                        counter--;
+                        employee.assignments[i].documents[j] = `/filestore/v1/files/id?fileStoreId=${res.files[0].fileStoreId}`;
+                        if(counter == 0 && breakout == 0) {
+                            counter1--;
+                            if(counter1 == 0 && breakout == 0)
+                                uploadFiles(employee, cb);
+                        }
+                    }
+                })
+            }
+        }
+    } else if(employee.serviceHistory.length && hasFile(employee.serviceHistory)) {
+        let counter1 = employee.serviceHistory.length, breakout = 0;
+        for(let i=0; len = employee.serviceHistory.length, i<len; i++) {
+            let counter = employee.serviceHistory[i].documents.length;
+            for(let j=0; len1 = employee.serviceHistory[i].documents.length, j<len1; j++) {
+                makeAjaxUpload(employee.serviceHistory[i].documents[j], function(err, res) {
+                    if(breakout == 1) 
+                        return;
+                    else if(err) {
+                        cb(err);
+                        breakout = 1;
+                    } else {
+                        counter--;
+                        employee.serviceHistory[i].documents[j] = `/filestore/v1/files/id?fileStoreId=${res.files[0].fileStoreId}`;
+                        if(counter == 0 && breakout == 0) {
+                            counter1--;
+                            if(counter1 == 0 && breakout == 0)
+                                uploadFiles(employee, cb);
+                        }
+                    }
+                })
+            }
+        }
+    } else if(employee.probation.length && hasFile(employee.probation)) {
+        let counter1 = employee.probation.length, breakout = 0;
+        for(let i=0; len = employee.probation.length, i<len; i++) {
+            let counter = employee.probation[i].documents.length;
+            for(let j=0; len1 = employee.probation[i].documents.length, j<len1; j++) {
+                makeAjaxUpload(employee.probation[i].documents[j], function(err, res) {
+                    if(breakout == 1) 
+                        return;
+                    else if(err) {
+                        cb(err);
+                        breakout = 1;
+                    } else {
+                        counter--;
+                        employee.probation[i].documents[j] = `/filestore/v1/files/id?fileStoreId=${res.files[0].fileStoreId}`;
+                        if(counter == 0 && breakout == 0) {
+                            counter1--;
+                            if(counter1 == 0 && breakout == 0)
+                                uploadFiles(employee, cb);
+                        }
+                    }
+                })
+            }
+        }
+    } else if(employee.regularisation.length && hasFile(employee.regularisation)) {
+        let counter1 = employee.regularisation.length, breakout = 0;
+        for(let i=0; len = employee.regularisation.length, i<len; i++) {
+            let counter = employee.regularisation[i].documents.length;
+            for(let j=0; len1 = employee.regularisation[i].documents.length, j<len1; j++) {
+                makeAjaxUpload(employee.regularisation[i].documents[j], function(err, res) {
+                    if(breakout == 1) 
+                        return;
+                    else if(err) {
+                        cb(err);
+                        breakout = 1;
+                    } else {
+                        counter--;
+                        employee.regularisation[i].documents[j] = `/filestore/v1/files/id?fileStoreId=${res.files[0].fileStoreId}`;
+                        if(counter == 0 && breakout == 0) {
+                            counter1--;
+                            if(counter1 == 0 && breakout == 0)
+                                uploadFiles(employee, cb);
+                        }
+                    }
+                })
+            }
+        }
+    } else if(employee.technical.length && hasFile(employee.technical)) {
+        let counter1 = employee.technical.length, breakout = 0;
+        for(let i=0; len = employee.technical.length, i<len; i++) {
+            let counter = employee.technical[i].documents.length;
+            for(let j=0; len1 = employee.technical[i].documents.length, j<len1; j++) {
+                makeAjaxUpload(employee.technical[i].documents[j], function(err, res) {
+                    if(breakout == 1) 
+                        return;
+                    else if(err) {
+                        cb(err);
+                        breakout = 1;
+                    } else {
+                        counter--;
+                        employee.technical[i].documents[j] = `/filestore/v1/files/id?fileStoreId=${res.files[0].fileStoreId}`;
+                        if(counter == 0 && breakout == 0) {
+                            counter1--;
+                            if(counter1 == 0 && breakout == 0)
+                                uploadFiles(employee, cb);
+                        }
+                    }
+                })
+            }
+        }
+    } else if(employee.education.length && hasFile(employee.education)) {
+        let counter1 = employee.education.length, breakout = 0;
+        for(let i=0; len = employee.education.length, i<len; i++) {
+            let counter = employee.education[i].documents.length;
+            for(let j=0; len1 = employee.education[i].documents.length, j<len1; j++) {
+                makeAjaxUpload(employee.education[i].documents[j], function(err, res) {
+                    if(breakout == 1) 
+                        return;
+                    else if(err) {
+                        cb(err);
+                        breakout = 1;
+                    } else {
+                        counter--;
+                        employee.education[i].documents[j] = `/filestore/v1/files/id?fileStoreId=${res.files[0].fileStoreId}`;
+                        if(counter == 0 && breakout == 0) {
+                            counter1--;
+                            if(counter1 == 0 && breakout == 0)
+                                uploadFiles(employee, cb);
+                        }
+                    }
+                })
+            }
+        }
+    } else if(employee.test.length && hasFile(employee.test)) {
+        let counter1 = employee.test.length, breakout = 0;
+        for(let i=0; len = employee.test.length, i<len; i++) {
+            let counter = employee.test[i].documents.length;
+            for(let j=0; len1 = employee.test[i].documents.length, j<len1; j++) {
+                makeAjaxUpload(employee.test[i].documents[j], function(err, res) {
+                    if(breakout == 1) 
+                        return;
+                    else if(err) {
+                        cb(err);
+                        breakout = 1;
+                    } else {
+                        counter--;
+                        employee.test[i].documents[j] = `/filestore/v1/files/id?fileStoreId=${res.files[0].fileStoreId}`;
+                        if(counter == 0 && breakout == 0) {
+                            counter1--;
+                            if(counter1 == 0 && breakout == 0)
+                                uploadFiles(employee, cb);
+                        }
+                    }
+                })
+            }
+        }
+    } else {
+        cb(null, employee);
+    }
+}
+
+function hasFile(elements) {
+    if(elements && elements.constructor == Array) {
+        for(var i=0; i<elements.length; i++) {
+            if(elements[i].documents && elements[i].documents.constructor == Array)
+                for(var j=0; j<elements[i].documents.length; j++)
+                    if(elements[i].documents[j].constructor == File)
+                        return true;
+        }
+    }
+    return false;
+}
+
+function makeAjaxUpload (file, cb) {
+    let formData = new FormData();
+    formData.append("jurisdictionId", "ap.public");
+    formData.append("module", "PGR");
+    formData.append("file", file);
+    $.ajax({
+        url: baseUrl + "/filestore/v1/files",
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        type: 'POST',
+        success: function(res) {
+            cb(null, res);
+        },
+        error: function(jqXHR, exception) {
+            cb(jqXHR.responseText || jqXHR.statusText);
+        }
+    });   
+}

@@ -44,6 +44,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.egov.eis.web.contract.RequestInfoWrapper;
 import org.egov.eis.model.HRStatus;
 import org.egov.eis.service.HRStatusService;
 import org.egov.eis.web.contract.HRStatusGetRequest;
@@ -83,16 +84,18 @@ public class HRStatusController {
 	@PostMapping("_search")
 	@ResponseBody
 	public ResponseEntity<?> search(@ModelAttribute @Valid HRStatusGetRequest hrStatusGetRequest,
-			BindingResult bindingResult, @RequestBody RequestInfo requestInfo) {
+			BindingResult modelAttributeBindingResult, @RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
+			BindingResult requestBodyBindingResult) {
+		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 
-		// validate header
-		if(requestInfo.getApiId() == null || requestInfo.getVer() == null || requestInfo.getTs() == null ) {
-			return errHandler.getErrorResponseEntityForMissingRequestInfo(requestInfo);
+		// validate input params
+		if (modelAttributeBindingResult.hasErrors()) {
+			return errHandler.getErrorResponseEntityForMissingParameters(modelAttributeBindingResult, requestInfo);
 		}
 
 		// validate input params
-		if (bindingResult.hasErrors()) {
-			return errHandler.getErrorResponseEntityForMissingParameters(bindingResult, requestInfo);
+		if (requestBodyBindingResult.hasErrors()) {
+			return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
 		}
 
 		// Call service

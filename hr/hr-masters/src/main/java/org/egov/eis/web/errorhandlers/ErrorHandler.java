@@ -40,6 +40,8 @@
 
 package org.egov.eis.web.errorhandlers;
 
+import org.egov.eis.web.errorhandlers.Error;
+import org.egov.eis.web.errorhandlers.ErrorResponse;
 import org.egov.eis.web.contract.RequestInfo;
 import org.egov.eis.web.contract.ResponseInfo;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
@@ -56,11 +58,17 @@ public class ErrorHandler {
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
 
-	public ResponseEntity<ErrorResponse> getErrorResponseEntityForMissingRequestInfo(RequestInfo requestInfo) {
+	public ResponseEntity<ErrorResponse> getErrorResponseEntityForMissingRequestInfo(BindingResult bindingResult,
+			RequestInfo requestInfo) {
 		Error error = new Error();
 		error.setCode(400);
-		error.setMessage("Missing RequestInfo Parameters");
-		error.setDescription("Required RequestInfo Parameter(s) Not Found");
+		error.setMessage("Missing RequestBody Fields");
+		error.setDescription("Error While Binding RequestBody");
+		if (bindingResult.hasFieldErrors()) {
+			for (FieldError fieldError : bindingResult.getFieldErrors()) {
+				error.getFields().put(fieldError.getField(), fieldError.getRejectedValue());
+			}
+		}
 
 		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, false);
 
@@ -75,8 +83,8 @@ public class ErrorHandler {
 			RequestInfo requestInfo) {
 		Error error = new Error();
 		error.setCode(400);
-		error.setMessage("Missing Request Parameter");
-		error.setDescription("Error While Binding Request");
+		error.setMessage("Missing Required Query Parameter");
+		error.setDescription("Error While Binding ModelAttribute");
 		if (bindingResult.hasFieldErrors()) {
 			for (FieldError fieldError : bindingResult.getFieldErrors()) {
 				error.getFields().put(fieldError.getField(), fieldError.getRejectedValue());

@@ -1,11 +1,9 @@
 package org.egov.lams.web.validator;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
-import org.egov.lams.web.contract.AgreementRequest;
-import org.egov.lams.web.contract.AllotteeResponse;
-import org.egov.lams.web.contract.AssetResponse;
-import org.egov.lams.web.contract.RequestInfo;
 import org.egov.lams.exception.LamsException;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.Allottee;
@@ -13,6 +11,10 @@ import org.egov.lams.model.RentIncrementType;
 import org.egov.lams.service.AllotteeService;
 import org.egov.lams.service.AssetService;
 import org.egov.lams.service.RentIncrementService;
+import org.egov.lams.web.contract.AgreementRequest;
+import org.egov.lams.web.contract.AllotteeResponse;
+import org.egov.lams.web.contract.AssetResponse;
+import org.egov.lams.web.contract.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -72,8 +74,9 @@ public class AgreementValidator {
 
 		Allottee allottee = agreementRequest.getAgreement().getAllottee();
 		RequestInfo requestInfo = agreementRequest.getRequestInfo();
-
-		AllotteeResponse allotteeResponse = allotteeService.getAllottees(allottee, requestInfo);
+		Set<Long> allotteeId = new HashSet<>();
+		allotteeId.add(allottee.getId());
+		AllotteeResponse allotteeResponse = allotteeService.getAllottees(allotteeId, requestInfo);
 		if (allotteeResponse.getAllottee() == null || allotteeResponse.getAllottee().size() == 0)
 			allotteeService.createAllottee(allottee, requestInfo);
 

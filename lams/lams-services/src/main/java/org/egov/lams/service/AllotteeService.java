@@ -2,6 +2,8 @@ package org.egov.lams.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+
 import org.egov.lams.config.PropertiesManager;
 import org.egov.lams.exception.LamsException;
 import org.egov.lams.model.Allottee;
@@ -26,7 +28,7 @@ public class AllotteeService {
 	@Autowired
 	private PropertiesManager propertiesManager;
 
-	public AllotteeResponse getAllottees(Allottee allottee,RequestInfo requestInfo) {
+	public AllotteeResponse getAllottees(Set<Long> id,RequestInfo requestInfo) {
 
 		RestTemplate restTemplate = new RestTemplate();
 		String url = propertiesManager.getAllotteeServiceHostName()
@@ -38,7 +40,7 @@ public class AllotteeService {
 		// modelattribute rather than request body
 		userSearchRequest.setRequestInfo(requestInfo);
 		List<Long> allotteeId = new ArrayList<>();
-		allotteeId.add(allottee.getId());
+		allotteeId.addAll(id);
 		userSearchRequest.setId(allotteeId);
 		logger.info("url for allottee api post call",url);
 		AllotteeResponse allotteeResponse = null;

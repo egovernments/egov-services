@@ -27,11 +27,11 @@ public class AssetService {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
-	public AssetResponse getAssets(String queryString, RequestInfo requestInfo) {
+	public AssetResponse getAssets(String urlParams, RequestInfo requestInfo) {
 		String url = null;
 		AssetResponse assetResponse = null;
 		url = propertiesManager.getAssetServiceHostName() + propertiesManager.getAssetServiceBasePAth()
-				+ propertiesManager.getAssetServiceSearchPath() + "?" + queryString;
+				+ propertiesManager.getAssetServiceSearchPath() + "?" + urlParams;
 
 		logger.info("the url of asset api call : "+url,url);
 		try {

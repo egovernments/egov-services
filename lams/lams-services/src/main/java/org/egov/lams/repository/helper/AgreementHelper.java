@@ -38,8 +38,6 @@ public class AgreementHelper {
 		for (Agreement agreement : agreements) {
 			Long allotteeId = agreement.getAllottee().getId();
 			Long assetId = agreement.getAsset().getId();
-			System.err.println("the matching key for allotteeId : "+allotteeId+"and assetId : "+assetId);
-			System.err.println("allotteeMap.containsKey(allotteeId) : "+allotteeMap.containsKey(allotteeId)+", assetMap.containsKey(assetId) : "+assetMap.containsKey(assetId));
 			if (allotteeMap.containsKey(allotteeId) && 
 					assetMap.containsKey(assetId)) 
 			{
@@ -50,7 +48,6 @@ public class AgreementHelper {
 			}
 		}
 		System.err.println("total matches between agreement seet and allottee :"+totalMatch);
-		if(newAgreements.isEmpty())
 		System.err.println("inside filter and enrich agreements"+newAgreements);
 		return newAgreements;
 	}

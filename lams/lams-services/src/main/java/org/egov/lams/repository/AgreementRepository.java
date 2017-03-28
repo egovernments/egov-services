@@ -4,10 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.lams.config.PropertiesManager;
-import org.egov.lams.web.contract.AllotteeResponse;
-import org.egov.lams.web.contract.AssetResponse;
-import org.egov.lams.web.contract.RequestInfo;
-import org.egov.lams.web.contract.UserSearchRequest;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.AgreementCriteria;
 import org.egov.lams.model.Allottee;
@@ -17,7 +13,11 @@ import org.egov.lams.repository.helper.AgreementHelper;
 import org.egov.lams.repository.helper.AllotteeHelper;
 import org.egov.lams.repository.helper.AssetHelper;
 import org.egov.lams.repository.rowmapper.AgreementRowMapper;
+import org.egov.lams.service.AllotteeService;
 import org.egov.lams.service.AssetService;
+import org.egov.lams.web.contract.AllotteeResponse;
+import org.egov.lams.web.contract.AssetResponse;
+import org.egov.lams.web.contract.RequestInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,10 +37,10 @@ public class AgreementRepository {
 	private JdbcTemplate jdbcTemplate;
 	
 	@Autowired
-	private RestTemplate restTemplate;
+	private AssetService assetService;
 	
 	@Autowired
-	private AssetService assetService;
+	private AllotteeService allotteeService;
 	
 	@Autowired
 	private AllotteeHelper allotteeHelper;
@@ -180,26 +180,12 @@ public class AgreementRepository {
 	 * Allottee API
 	 */
 	public List<Allottee> getAllottees(AgreementCriteria agreementCriteria) {
+		//FIXME TODO urgent allottee helper has to be changed for post
 		String queryString = allotteeHelper.getAllotteeParams(agreementCriteria);
 		logger.info("AgreementController SearchAgreementService AgreementRepository : inside Allottee API caller");
-
-		String url = null;
-		AllotteeResponse allotteeResponse = null;
-		try {
-			url = propertiesManager.getAllotteeServiceHostName() + propertiesManager.getAllotteeServiceBasePAth()
-			+propertiesManager.getAllotteeServiceSearchPath();
-			UserSearchRequest userSearchRequest = new UserSearchRequest();
-			logger.info(url.toString());
-			allotteeResponse = restTemplate.postForObject(url, userSearchRequest, AllotteeResponse.class);
-		} catch (Exception e) {
-			// FIXME log error to getstacktrace
-			System.err.println(e);
-			throw new RuntimeException(e.getMessage());
-		}
-		System.err.println(allotteeResponse);
+		AllotteeResponse allotteeResponse = allotteeService.getAllottees(agreementCriteria.getAllottee(),new RequestInfo());
 		if (allotteeResponse.getAllottee() == null || allotteeResponse.getAllottee().size() <= 0)
 			throw new RuntimeException("No allottee found for given criteria");
-		
 		System.err.println("the result allottee response from allottee api call : "+allotteeResponse.getAllottee());
 		return allotteeResponse.getAllottee();
 	}

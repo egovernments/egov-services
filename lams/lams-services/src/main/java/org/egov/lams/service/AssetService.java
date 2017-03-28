@@ -33,7 +33,7 @@ public class AssetService {
 		url = propertiesManager.getAssetServiceHostName() + propertiesManager.getAssetServiceBasePAth()
 				+ propertiesManager.getAssetServiceSearchPath() + "?" + urlParams;
 
-		logger.info("the url of asset api call : "+url,url);
+		logger.info("the url of asset api call : "+url);
 		try {
 			assetResponse = restTemplate.postForObject(url, requestInfo, AssetResponse.class);
 		} catch (Exception e) {

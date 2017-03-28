@@ -196,6 +196,7 @@ public class AgreementRepository {
 	 */
 	public List<Asset> getAssets(AgreementCriteria agreementCriteria) {
 		String queryString = assetHelper.getAssetParams(agreementCriteria);
+		System.err.println("the url params for asset api call using rest template"+queryString);
 		AssetResponse assetResponse = assetService.getAssets(queryString, new RequestInfo());
 		if (assetResponse.getAssets() == null || assetResponse.getAssets().size() <= 0)
 			throw new RuntimeException("No assets found for given criteria");

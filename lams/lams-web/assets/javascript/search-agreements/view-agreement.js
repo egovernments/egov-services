@@ -9,8 +9,6 @@
 //     }
 //     return vars;
 // }
-
-
 $(document).ready(function() {
 
     $("#viewDcb").on("click", function() {
@@ -20,32 +18,43 @@ $(document).ready(function() {
         window.location = "./view-dcb.html"
     });
 
-    var assetDetails=commonApiPost("asset-services","assets","_search",{assetCategory:getUrlVars()["assetId"]}).responseJSON["Assets"][0] ||[];
-    var agreementDetail=commonApiPost("lams-services","agreements","_search",{agreementNumber:getUrlVars()["agreementNumber"]}).responseJSON["Agreements"][0] ||[];
-    printValue("",agreementDetail)
+    try {
+        var assetDetails = commonApiPost("asset-services", "assets", "_search", {
+            category: getUrlVars()["assetId"]
+        }).responseJSON["Assets"][0] || [];
+        var agreementDetail = commonApiPost("lams-services", "agreements", "_search", {
+            agreementNumber: getUrlVars()["agreementNumber"]
+        }).responseJSON["Agreements"][0] || [];
+        printValue("", agreementDetail);
+        printValue("", assetDetails);
+    } catch(e) {
+        console.log(e);
+    }
 
-    function printValue(object="",values) {
-      if (object != "") {
+    function printValue(object = "", values) {
+        if (object != "") {
 
-      }
-      else {
-        for (var key in values)
-        {
-                $("[name]="+key).val(values[key]);
-        }
-        for (var key in values) {
-            if (key.search('date')>0) {
-                // console.log(key);
-                    var d=new Date(values[key]);
-                    $(`#${key}`).val(`${d.getDate()}-${d.getMonth()+1}-${d.getFullYear()}`);
+        } else {
+            for (var key in values) {
+                if (typeof values[key] === "object") {
+                    for (ckey in values[key]) {
+                        if(values[key][ckey])
+                            $("[name='" + key + "." + ckey + "']").text(values[key][ckey]);
+                    }
+                } else if(values[key]) {
+                    $("[name=" + key + "]").text(values[key]);
+                }
+
+                if (key.search('date')>0) {
+                        var d = new Date(values[key]);
+                        $(`#${key}`).val(`${d.getDate()}-${d.getMonth()+1}-${d.getFullYear()}`);
+                }
             }
         }
-
-      }
     }
 
 
-    // console.log(assetDetails);
+    console.log(assetDetails);
     //base url for api_id
     // var baseUrl = "https://peaceful-headland-36194.herokuapp.com/v1/mSevaAndLA/";
     // //request info from cookies
@@ -102,8 +111,8 @@ $(document).ready(function() {
         renew_reason: {
             required: true
         },
-        renew_rent_increment_method:{
-            required:true
+        renew_rent_increment_method: {
+            required: true
         }
     };
 
@@ -207,11 +216,4 @@ $(document).ready(function() {
             // })
         }
     })
-
-
-
-
-
-
-
 });

@@ -171,3 +171,21 @@ function getCommonMasterById(mainRoute,resource,returnObject,id) {
 }
 
 // commonApiPost("asset","assetCategories","",{boundaryTypeName:"LOCALITY",hierarchyTypeName:"LOCATION"})
+
+
+function getNameById(object,id,property="") {
+    for (var i = 0; i < object.length; i++) {
+        if (property=="") {
+            return object[i].name;
+        }
+        else {
+          if (object[i].hasOwnProperty(property)) {
+              return object[i][property];
+          }
+          else {
+              return "";
+          }
+        }
+    }
+    return "";
+}

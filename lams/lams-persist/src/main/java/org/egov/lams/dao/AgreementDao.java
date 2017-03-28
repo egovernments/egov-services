@@ -96,7 +96,9 @@ public class AgreementDao {
 				agreement.getTenderNumber(), agreement.getTradelicenseNumber(), 1, null, new Date(), null,
 				agreement.getAllottee().getId(), agreement.getAsset().getId(),
 				agreement.getRentIncrementMethod().getId(), agreement.getAcknowledgementNumber(),
-				agreement.getStateId(), agreement.getTenantId() };
+				agreement.getStateId(), agreement.getTenantId(),
+				
+				agreement.getAcknowledgementNumber(),agreement.getTenantId()};
 
 		try {
 			jdbcTemplate.update(agreementUpdate, obj);

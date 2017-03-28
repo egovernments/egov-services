@@ -75,5 +75,7 @@ public class RequestInfo {
     private String requesterId;
 
     private String authToken;
+    
+    private UserInfo userInfo;
 
 }

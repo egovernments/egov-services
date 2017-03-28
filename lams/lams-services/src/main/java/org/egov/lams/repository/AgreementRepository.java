@@ -87,8 +87,9 @@ public class AgreementRepository {
 		logger.info("AgreementController SearchAgreementService AgreementRepository : inside findByAsset");
 		List<Object> preparedStatementValues = new ArrayList<Object>();
 		List<Agreement> agreements = null;
-
+		System.out.println("before calling get asset method");
 		List<Asset> assets = getAssets(agreementCriteria);
+		System.out.println("after calling get asset method : lengeth of result is"+ assets.size());
 		if (assets.size() > 1000) // FIXME
 			throw new RuntimeException("Asset criteria is too big");
 		agreementCriteria.setAsset(assetHelper.getAssetIdList(assets));
@@ -195,13 +196,15 @@ public class AgreementRepository {
 	 * API
 	 */
 	public List<Asset> getAssets(AgreementCriteria agreementCriteria) {
+		System.out.println("inside get asset method");
 		String queryString = assetHelper.getAssetParams(agreementCriteria);
-		System.err.println("the url params for asset api call using rest template"+queryString);
+		
+		System.out.println("after calling asset params method"+queryString);
 		AssetResponse assetResponse = assetService.getAssets(queryString, new RequestInfo());
 		if (assetResponse.getAssets() == null || assetResponse.getAssets().size() <= 0)
 			throw new RuntimeException("No assets found for given criteria");
 		// FIXME empty response exception
-		System.err.println("the result allottee response from allottee api call : "+assetResponse.getAssets());
+		System.err.println("the result asset response from asset api call : "+assetResponse.getAssets());
 		return assetResponse.getAssets();
 	}
 }

@@ -25,7 +25,7 @@ $(document).ready(function() {
         var agreementDetail = commonApiPost("lams-services", "agreements", "_search", {
             agreementNumber: getUrlVars()["agreementNumber"]
         }).responseJSON["Agreements"][0] || [];
-        //printValue("", agreementDetail);
+        printValue("", agreementDetail);
         printValue("", assetDetails, true);
     } catch(e) {
         console.log(e);
@@ -39,7 +39,33 @@ $(document).ready(function() {
                 if (typeof values[key] === "object") {
                     for (ckey in values[key]) {
                         if(values[key][ckey]) {
-                            $("[name='" + (isAsset ? "asset." : "") + key + "." + ckey + "']").text(values[key][ckey]);
+                            //Get description
+                            if(isAsset && key == "locationDetails" && ["locality", "electionWard", "street", "revenueWard", "revenueZone", "revenueBlock"].indexOf(ckey) > -1) {
+                                var _obj;
+                                switch(ckey) {
+                                    case 'locality': 
+                                        _obj = locality;
+                                        break;
+                                    case 'electionWard':
+                                        _obj = electionwards;
+                                        break; 
+                                    case 'street':
+                                        _obj = street;
+                                        break; 
+                                    case 'revenueWard':
+                                        _obj = revenueWard;
+                                        break; 
+                                    case 'revenueZone':
+                                        _obj = revenueZone;
+                                        break; 
+                                    case 'revenueBlock':
+                                        _obj = revenueZone;
+                                        break; 
+                                }
+                                $("[name='" + (isAsset ? "asset." : "") + key + "." + ckey + "']").text(getNameById(_obj, ckey));
+                            }
+                            else
+                                $("[name='" + (isAsset ? "asset." : "") + key + "." + ckey + "']").text(values[key][ckey]);
                         }
                     }
                 } else if(values[key]) {

@@ -1,34 +1,28 @@
 package org.egov.pgr.model;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.egov.pgr.contracts.grievance.RequestInfo;
+import org.egov.pgr.contracts.grievance.ResponseInfo;
 import org.egov.pgr.contracts.grievance.SevaRequest;
+import org.egov.pgr.contracts.user.GetUserByIdResponse;
+import org.egov.pgr.contracts.user.User;
 import org.egov.pgr.entity.Complaint;
 import org.egov.pgr.entity.ComplaintType;
 import org.egov.pgr.entity.enums.ComplaintStatus;
 import org.egov.pgr.repository.PositionRepository;
 import org.egov.pgr.repository.UserRepository;
-import org.egov.pgr.service.ComplaintStatusService;
-import org.egov.pgr.service.ComplaintTypeService;
-import org.egov.pgr.service.EscalationService;
-import org.egov.pgr.service.ReceivingCenterService;
-import org.egov.pgr.service.ReceivingModeService;
+import org.egov.pgr.service.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import java.util.*;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ComplaintBuilderTest {
@@ -104,6 +98,47 @@ public class ComplaintBuilderTest {
 		assertEquals(originalStatus, builtComplaint.getStatus());
 	}
 
+    @Test
+    public void test_should_set_complainant_details_from_sevarequest_for_complaint_registration_that_has_complainant_details() {
+        SevaRequest sevaRequest = successSevaRequest();
+        Complaint complaint = new Complaint();
+        ComplaintBuilder complaintBuilder = complaintBuilderWithComplaint(complaint, sevaRequest);
+
+        Complaint builtComplaint = complaintBuilder.build();
+
+        assertEquals("raju",builtComplaint.getComplainant().getName());
+        assertEquals("raju@maildrop.cc",builtComplaint.getComplainant().getEmail());
+    }
+
+    @Test
+    public void test_should_set_complainant_details_from_user_response_for_complaint_registration_with_only_complainant_userid() {
+        SevaRequest sevaRequest = citizenSevaRequest();
+        GetUserByIdResponse expectedUser = getUserResponse();
+        when(userRepository.findUserById(1L)).thenReturn(expectedUser);
+        Complaint complaint = new Complaint();
+        ComplaintBuilder complaintBuilder = complaintBuilderWithComplaint(complaint, sevaRequest);
+
+        Complaint builtComplaint = complaintBuilder.build();
+
+        assertEquals("Hulk",builtComplaint.getComplainant().getName());
+        assertEquals("Hulk@avengers.com",builtComplaint.getComplainant().getEmail());
+    }
+
+    private GetUserByIdResponse getUserResponse(){
+        ResponseInfo responseInfo = new ResponseInfo();
+        User user = User.builder()
+            .id(1L)
+            .name("Hulk")
+            .emailId("Hulk@avengers.com")
+            .gender("Male")
+            .build();
+
+        return GetUserByIdResponse.builder()
+            .responseInfo(responseInfo)
+            .user(Collections.singletonList(user))
+            .build();
+    }
+
 	private SevaRequest successSevaRequest() {
 		HashMap<String, Object> sevaRequestMap = new HashMap<>();
 		Map<String, Object> serviceRequestMap = new HashMap<>();
@@ -134,6 +169,39 @@ public class ComplaintBuilderTest {
 		sevaRequestMap.put("ServiceRequest", serviceRequestMap);
 		return new SevaRequest(sevaRequestMap);
 	}
+
+	private SevaRequest citizenSevaRequest() {
+        HashMap<String, Object> sevaRequestMap = new HashMap<>();
+        Map<String, Object> serviceRequestMap = new HashMap<>();
+        Map<String, Object> requestInfoMap = new HashMap<>();
+        requestInfoMap.put("action","POST");
+        Map<String, String> valuesMap = new HashMap<>();
+        sevaRequestMap.put("RequestInfo", requestInfoMap);
+        requestInfoMap.put("requester_id", "22");
+        valuesMap.put("complainantAddress", "complainant address");
+        valuesMap.put("receivingMode", "Website");
+        valuesMap.put("status", "PROCESSING");
+        valuesMap.put("assignment_id", "18");
+        valuesMap.put("locationId", "101");
+        valuesMap.put("child_location_id", "201");
+        valuesMap.put("location_name", "jhumritalaiyya");
+        valuesMap.put("stateId", "88");
+        valuesMap.put("status", "REGISTERED");
+        valuesMap.put("userId", "1");
+        serviceRequestMap.put("values", valuesMap);
+        serviceRequestMap.put("tenantId", tenantId);
+        serviceRequestMap.put("service_request_id", "AA-01892-AP");
+        serviceRequestMap.put("lat", 15.232D);
+        serviceRequestMap.put("lng", 18.232D);
+        serviceRequestMap.put("address", "landmark");
+        serviceRequestMap.put("description", "complaint details");
+        serviceRequestMap.put("first_name", "");
+        serviceRequestMap.put("email", "");
+        serviceRequestMap.put("phone", "");
+        serviceRequestMap.put("service_code", "MAGIC");
+        sevaRequestMap.put("ServiceRequest", serviceRequestMap);
+        return new SevaRequest(sevaRequestMap);
+    }
 
 	private void setupMocks() {
 		long designationId = 12L;

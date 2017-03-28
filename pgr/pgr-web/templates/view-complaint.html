@@ -72,7 +72,7 @@
 							</div>
 							<div class="panel-body">
 								<div class="row add-border">
-									<div class="col-md-3 col-xs-6 add-margin">Name</div>
+									<div class="col-md-3 col-xs-6 add-margin" data-translate="core.lbl.fullname"></div>
 									<div class="col-md-3 col-xs-6 add-margin view-content">
 										{{#if first_name}}
 											{{first_name}}
@@ -80,9 +80,7 @@
 											N/A
 										{{/if}}
 									</div>
-									<div class="col-md-3 col-xs-6 add-margin">
-										Phone Number
-									</div>
+									<div class="col-md-3 col-xs-6 add-margin" data-translate="core.lbl.mobilenumber"></div>
 									<div class="col-md-3 col-xs-6 add-margin view-content">
 										{{#if phone}}
 											{{phone}}
@@ -93,56 +91,50 @@
 								</div>
 				
 								<div class="row add-border">
-									<div class="col-md-3 col-xs-6 add-margin">
-										SRN
-									</div>
+									<div class="col-md-3 col-xs-6 add-margin" data-translate="pgr.lbl.srn"></div>
 									<div class="col-md-3 col-xs-6 add-margin view-content">
 										{{service_request_id}}
 									</div>
-									<div class="col-md-3 col-xs-6 add-margin">
-										Grievance Date
-									</div>
+									<div class="col-md-3 col-xs-6 add-margin" data-translate="pgr.lbl.grievance.date"></div>
 									<div class="col-md-3 col-xs-6 add-margin view-content">
 										{{requested_datetime}}
 									</div>
 								</div>
 								<div class="row add-border">
-									<div class="col-md-3 col-xs-6 add-margin">Grievance Department</div>
+									<div class="col-md-3 col-xs-6 add-margin" data-translate="pgr.lbl.grievance.department"></div>
 									<div class="col-md-3 col-xs-6 add-margin view-content">
 										{{values.departmentName}}
 									</div>
-									<div class="col-md-3 col-xs-6 add-margin">Next Escalation Date</div>
+									<div class="col-md-3 col-xs-6 add-margin" data-translate="pgr.lbl.nextescalation.date"></div>
 									<div class="col-md-3 col-xs-6 add-margin view-content">
 										{{expected_datetime}}
 									</div> 
 								</div>
 								<div class="row add-border">
-									<div class="col-md-3 col-xs-6 add-margin">Grievance Type</div>
+									<div class="col-md-3 col-xs-6 add-margin" data-translate="pgr.lbl.grievance.type"></div>
 									<div class="col-md-3 col-xs-6 add-margin view-content">
 										{{service_name}}
 									</div>
-									<div class="col-md-3 col-xs-6 add-margin">Filed via</div>
+									<div class="col-md-3 col-xs-6 add-margin" data-translate="pgr.lbl.filedvia"></div>
 									<div class="col-md-3 col-xs-6 add-margin view-content">
 										{{values.receivingMode}}
 									</div>
 								</div>
 								<div class="row add-border">
 								{{#if values.recCenterText}}
-									<div class="col-md-3 col-xs-6 add-margin">Receiving Center</div>
+									<div class="col-md-3 col-xs-6 add-margin" data-translate="pgr.lbl.receivingcenter"></div>
 									<div class="col-md-3 col-xs-6 add-margin view-content">
 										{{values.recCenterText}}
 									</div>
 								{{/if}}
-									<div class="col-md-3 col-xs-6 add-margin">Grievance Details</div>
+									<div class="col-md-3 col-xs-6 add-margin" data-translate="pgr.lbl.grievancedetails"></div>
 									<div class="col-md-3 col-xs-6 add-margin view-content">
 										{{description}}
 									</div>
 								</div>
 					{{/service_requests}}
 								<div class="row add-border">
-									<div class="col-md-3 col-sm-6 col-xs-6 add-margin">
-										Photos/Video
-									</div>
+									<div class="col-md-3 col-sm-6 col-xs-6 add-margin" data-translate="core.lbl.photo"></div>
 									<div id="links" class="col-md-9 col-sm-6 col-xs-12 view-content">
 									{{#each files}}
 										<a href="{{url}}" type="{{contentType}}" class="col-md-4 col-sm-4 col-xs-12 add-margin down-file view-content" data-gallery> 
@@ -159,9 +151,7 @@
 								</div>
 					{{#service_requests}}
 								<div class="row add-border">
-									<div class="col-md-3 col-xs-6 add-margin">
-										Location
-									</div>
+									<div class="col-md-3 col-xs-6 add-margin" data-translate="pgr.lbl.grievance.location"></div>
 									<div class="col-md-9 col-xs-6 add-margin view-content">
 										 	{{#if values.latlngAddress}}
 												<span class="map-tool-class btn-secondary" data-toggle="tooltip"
@@ -178,9 +168,7 @@
 									</div>
 								</div>
 								<div class="row">
-									<div class="col-md-3 col-xs-6 add-margin">
-										Landmark
-									</div>
+									<div class="col-md-3 col-xs-6 add-margin" data-translate="core.lbl.landmark"></div>
 									<div class="col-md-9 col-xs-6 add-margin view-content">
 										{{#if address}}
 											{{address}}
@@ -202,21 +190,19 @@
 						<div class="panel-group">
 							<div class="panel panel-primary">
 								<div class="panel-heading slide-history-menu">
-									<div class="panel-title">
-										<strong>Grievance History</strong>
-									</div>
+									<div class="panel-title" data-translate="pgr.lbl.grievance.history"></div>
 									<div class="history-icon">
 										<i class="fa fa-angle-down fa-2x" id="toggle-his-icon"></i>
 									</div>
 								</div>
 								<div class="panel-body history-slide wfcomplaint">
 									<div class="row hidden-xs visible-sm visible-md visible-lg view-content header-color">
-										<div class="col-sm-2 col-xs-6 add-margin">Date</div>
-										<div class="col-sm-2 col-xs-6 add-margin">Updated By</div>
-										<div class="col-sm-2 col-xs-6 add-margin">Status</div>
-										<div class="col-sm-2 col-xs-6 add-margin">Current Owner/Officer Responsible</div>
-										<div class="col-sm-2 col-xs-6 add-margin">Department</div>
-										<div class="col-sm-2 col-xs-6 add-margin">Comments</div>
+										<div class="col-sm-2 col-xs-6 add-margin" data-translate="core.lbl.date"></div>
+										<div class="col-sm-2 col-xs-6 add-margin" data-translate="pgr.lbl.updatedby"></div>
+										<div class="col-sm-2 col-xs-6 add-margin" data-translate="core.lbl.status"></div>
+										<div class="col-sm-2 col-xs-6 add-margin" data-translate="pgr.lbl.currentowner"></div>
+										<div class="col-sm-2 col-xs-6 add-margin" data-translate="core.lbl.department"></div>
+										<div class="col-sm-2 col-xs-6 add-margin" data-translate="core.lbl.comments"></div>
 									</div>
 									<script id="wfcomplaint-script" type="text/x-handlebars-template">
 										{{#workflow}}
@@ -256,14 +242,14 @@
 						<div class="modal-content">
 							<div class="modal-header">
 						        <button type="button" class="close" data-dismiss="modal">&times;</button>
-						        <h4 class="modal-title">Location</h4>
+						        <h4 class="modal-title" data-translate="pgr.lbl.grievance.location"></h4>
 							</div>
 							<div class="modal-body">
 								<script type="text/javascript" src="https://maps.google.com/maps/api/js?key=AIzaSyB4Rn4dQ1hivzYaXNvpxxUB5i3x2j4ytic"></script>
 								<div id="normal" class="img-prop"></div>
 							</div>
 							<div class="modal-footer">
-								<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+								<button type="button" class="btn btn-default" data-dismiss="modal" data-translate="core.lbl.close"></button>
 							</div>
 						</div>
 					</div>
@@ -299,23 +285,18 @@
 				</div>
 				<div class="panel panel-primary action-section" data-collapsed="0">
 					<div class="panel-heading">
-						<div class="panel-title">
-							<strong>Actions</strong>
-						</div>
+						<div class="panel-title" data-translate="pgr.lbl.actions"></div>
 					</div>
 					<div class="panel-body">
 						<form id="complaintUpdate" role="form" class="form-horizontal form-groups-bordered" enctype="multipart/form-data" autocomplete="off">
 							<div class="form-group">
-								<div class="col-md-3 col-sm-4 col-xs-6 add-margin">
-									Change Status
+								<div class="col-md-3 col-sm-4 col-xs-6 add-margin" data-translate="pgr.lbl.change.status">
 								</div>
 								<div class="col-md-3 col-sm-8 col-xs-6 add-margin">
 									<select id="status" name="status" class="form-control">
 									</select>
 								</div>
-								<div class="col-md-3 col-sm-4 col-xs-6 add-margin employee-action">
-									Change Grievance Type
-								</div>
+								<div class="col-md-3 col-sm-4 col-xs-6 add-margin employee-action" data-translate="pgr.lbl.change.grievancetype"></div>
 								<div class="col-md-3 col-sm-8 col-xs-6 add-margin employee-action">
 									<select id="complaintType" name="complaintType" class="form-control">
 									</select>
@@ -323,9 +304,7 @@
 								</div>
 							</div>
 							<div class="form-group employee-action">
-								<div class="col-md-3 col-sm-4 col-xs-12 add-margin">
-									Change Jurisdiction
-								</div>
+								<div class="col-md-3 col-sm-4 col-xs-12 add-margin" data-translate="pgr.lbl.change.jurisdiction"></div>
 								<div class="col-md-3 col-sm-4 col-xs-12 add-margin">
 									<select id="ct-sel-jurisd" name="location" class="form-control" >
 										<option value="">Select</option>
@@ -339,7 +318,7 @@
 								</div>
 							</div>
 							<div class="form-group employee-action">
-								<label class="col-md-3 col-xs-12">Forward Grievance To</label>
+								<label class="col-md-3 col-xs-12" data-translate="pgr.lbl.forwardto"></label>
 								<div class="col-md-3 col-sm-4 col-xs-12 add-margin">
 									<select id="approvalDepartment" name="approvalDepartment" class="form-control">  
 									</select>
@@ -361,9 +340,7 @@
 							</div>
 							
 							<div class="form-group">
-								<div class="col-md-3 add-margin">
-									Include Message<span class="mandatory"></span>
-								</div>
+								<label class="col-md-3 add-margin required" data-translate="core.lbl.include.message"></label>
 								<div class="col-md-9 add-margin">
 									<textarea class="form-control" id="approvalComment" placeholder="" required="required"
 										maxlength="400" name="approvalComent" autocomplete="off"></textarea>
@@ -372,7 +349,7 @@
 							</div>  
 							<div class="form-group employee-action">
 								<div class="col-sm-3 col-xs-12">
-									<button type="button" id="triggerFile" class="btn btn-secondary" data-translate="upload.photograph.video">Upload Photograph/Video</button>
+									<button type="button" id="triggerFile" class="btn btn-secondary" data-translate="core.lbl.upload.photoimage"></button>
 									<input type="file" id="file1" name="file" data-id="1" class="filechange inline btn hide"/>
 									<input type="file" id="file2" name="file" data-id="2" class="filechange inline btn hide"/>
 									<input type="file" id="file3" name="file" data-id="3" class="filechange inline btn hide"/>
@@ -391,14 +368,8 @@
 				
 							<div class="form-group">
 								<div class="text-center">
-						        	<button type="button" id="update-complaint" class="btn btn-primary">
-										Submit
-									</button>
-									<!-- <a href="btn btn-default" >Send Email</a> -->
-									<!-- <button type="reset" class="btn btn-danger">
-										Reset
-									</button> -->
-									<button type="button" class="btn btn-default" onclick="window.close();">Close</button>   
+						        	<button type="button" id="update-complaint" class="btn btn-primary" data-translate="core.lbl.submit"></button>
+									<button type="button" class="btn btn-default" data-translate="core.lbl.close" onclick="window.close();"></button>   
 								</div>
 							</div>
 						</form>
@@ -407,7 +378,7 @@
             </div>
 				
 			<footer class="main">
-			    Powered by <a href="http://egovernments.org/" target="_blank">eGovernments Foundation</a>
+			    <a href="http://egovernments.org/" target="_blank" data-translate="core.lbl.page.footer"></a>
 			</footer>
         </div>
         <input type="hidden" value="15.83" id="getcitylat">
@@ -426,9 +397,7 @@
 								</div>
 							</div>
 							
-							<div class="col-md-12 spinner-text">
-								Processing your request. Please wait..
-							</div>
+							<div class="col-md-12 spinner-text" data-translate="core.alert.pleasewait"></div>
 						</div>
 					</div>
 			</div>

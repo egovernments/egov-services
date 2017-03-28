@@ -99,12 +99,16 @@ public class AgreementController {
 	
 	@PostMapping("_update/{code}")
 	@ResponseBody
-	public ResponseEntity<?> update(@PathVariable("code") String code, @RequestBody AgreementRequest agreementRequest,
+	public ResponseEntity<?> update(@PathVariable("code") String acknowledgementNumber, @RequestBody AgreementRequest agreementRequest,
 			BindingResult bindingResult) {
 
 		if (bindingResult.hasErrors()) {
 			ErrorResponse errorResponse = populateErrors(bindingResult);
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+		}
+		
+		if(!acknowledgementNumber.equals(agreementRequest.getAgreement().getAcknowledgementNumber())){
+			throw new RuntimeException("Invalid acknowledgementnumber, no agreement found for this value");
 		}
 		LOGGER.info("AgreementController:getAgreements():update agreement:" + agreementRequest);
 

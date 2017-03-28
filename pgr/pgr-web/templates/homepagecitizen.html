@@ -43,17 +43,17 @@
 									<img src="../resources/global/images/logo@2x.png" height="60">
 								
 								<div>
-									<span class="title2 hidden-sm hidden-xs citizen-title">Citizen Portal<br>eGov ERP</span>
+									<span class="title2 hidden-sm hidden-xs citizen-title" data-translate="core.title.citizenportal"></span>
 								</div>
 							</a>
 						</div>
 						<div class="nav-menu col-lg-4 col-xs-12">
 							<ul class="hr-menu text-center">
-								<li class="active inboxLoad"><a class="menu-item" href="javascript:void(0)" data-show-screen="#inbox-template"> <span class="title">Inbox</span><!-- <span id="unreadMessageCount" class="badge custom-badge">0</span> --></a></li>
+								<li class="active inboxLoad"><a class="menu-item" href="javascript:void(0)" data-show-screen="#inbox-template"> <span class="title" data-translate="core.lbl.inbox"></span><!-- <span id="unreadMessageCount" class="badge custom-badge">0</span> --></a></li>
 								<span class="separator">|</span>
-								<li><a class="menu-item" href="javascript:void(0);" data-show-screen="#myaccount">My Account</a></li>
+								<li><a class="menu-item" href="javascript:void(0);" data-show-screen="#myaccount" data-translate="core.lbl.myaccount"></a></li>
 								<span class="separator">|</span>
-								<li><a class="menu-item" href="javascript:void(0);" data-show-screen="#newreq">New Request</a></li>
+								<li><a class="menu-item" href="javascript:void(0);" data-show-screen="#newreq" data-translate="core.lbl.newrequest"></a></li>
 							</ul>
 						</div><!--/.nav-collapse -->
 						
@@ -73,12 +73,12 @@
 									<ul class="right-arrow dropdown-menu" role="menu">
 										<!-- <li><a href="../home/profile/edit" data-open-popup=""><i class="fa fa-user"></i>Edit Profile</a></li>
 										<li><a href="javascript:void(0);" onclick="jQuery('.change-password').modal('show', {backdrop: 'static'});"><i class="fa fa-key"></i>Change Password</a></li> -->
-										<li><a href="javascript:void(0)" class="signout"><i class="fa fa-sign-out"></i>Sign out</a></li>
+										<li><a href="javascript:void(0)" class="signout"><i class="fa fa-sign-out"></i><span data-translate="core.lbl.signout"></span></a></li>
 									</ul>
 								</li>
 								
 								<li class="ico-menu">
-									<a href="http://www.egovernments.org" data-strwindname="egovsite" class="open-popup">
+									<a href="http://www.egovernments.org" target="_blank" data-strwindname="egovsite" class="open-popup">
 										<img src="../resources/global/images/logo@2x.png" title="Powered by eGovernments" height="20px">
 									</a>
 								</li>
@@ -123,7 +123,7 @@
 						<div class="row padding-tb"><!-- padding-tb -->
 							<div class="search-box col-md-12 col-sm-12">
 								<i class="fa fa-search"></i>
-								<input type="text" class="form-control searchinbox" placeholder="Search" onkeyup="search(this)">
+								<input type="text" class="form-control searchinbox" data-translate="core.lbl.search"onkeyup="search(this)">
 							</div>
 							<!-- <div class="col-md-3 col-sm-4 text-center xs-margin-top-10">
 								<div class="btn-group btn-input clearfix" id="sortby_drop">
@@ -184,19 +184,17 @@
 					<div class="content-wrap">
 						<section id="section-myaccount-1" class="content-current-myacc">
 							<div class="visible-xs visible-sm add-margin">My Grievance</div>
-							
 						</section>
-						
 					</div>
 				</div>
 				
 				<div class="citizen-screens tabs tabs-style-topline newrequest display-hide" id="newreq">
 					<nav>
 						<ul>
-							<li class="tab-current-newreq features" data-section="newrequest" data-newreq-section="#section-newrequest-1" id="pgr" style="display: block;">
+							<li class="tab-current-newreq features" data-section="newrequest" data-newreq-section="#section-newrequest-1" id="pgr">
 								<a href="javascript:void(0);">
 									<div class="text-center"><i class="fa fa-book"></i></div>
-									<span class="hidden-sm hidden-xs">Grievance Redressal</span>
+									<span class="hidden-sm hidden-xs" data-translate="pgr.lbl.grievance.redressal"></span>
 								</a>
 							</li>
 							<!-- <li data-section="newrequest" data-newreq-section="#section-newrequest-2" id="ptis" class="features" style="display: block;">
@@ -282,18 +280,18 @@
 					</script>
 					<div class="content-wrap">
 						<section id="section-newrequest-1" class="newreq content-current-newreq">
-							<div class="visible-xs visible-sm add-margin">Grievance Redressal</div>
+							<div class="visible-xs visible-sm add-margin" data-translate="pgr.lbl.grievance.redressal"></div>
 							<div class="msg">
 								<header>
 									<div class="row">
-										<i class="fa fa-edit col-sm-1 col-xs-2 unread-msg"></i><a href="create-complaint.html" target="_blank" class="col-sm-11 col-xs-10">Register Grievance</a>
+										<i class="fa fa-edit col-sm-1 col-xs-2 unread-msg"></i><a href="create-complaint.html" target="_blank" class="col-sm-11 col-xs-10" data-translate="pgr.lbl.register.grievance"></a>
 									</div>
 								</header>
 							</div>
 							<div class="msg">
 								<header>
 									<div class="row">
-										<i class="fa fa-desktop col-sm-1 col-xs-2 unread-msg"></i><a href="search-complaint.html" target="_blank" class="col-sm-11 col-xs-10">View Grievance</a>
+										<i class="fa fa-desktop col-sm-1 col-xs-2 unread-msg"></i><a href="search-complaint.html" target="_blank" class="col-sm-11 col-xs-10" data-translate="pgr.lbl.view.grievance"></a>
 									</div>
 								</header>
 							</div>
@@ -544,7 +542,7 @@
              
 
 <footer class="main">
-    Powered by <a href="http://egovernments.org/" target="_blank">eGovernments Foundation</a>
+    <a href="http://egovernments.org/" target="_blank" data-translate="core.lbl.page.footer"></a>
 </footer>
 
         </div>
@@ -610,8 +608,7 @@
 								</div>
 							</div>
 							
-							<div class="col-md-12 spinner-text">
-								Processing your request. Please wait..
+							<div class="col-md-12 spinner-text" data-translate="core.alert.pleasewait">
 							</div>
 						</div>
 					</div>

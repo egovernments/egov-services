@@ -15,6 +15,7 @@ public class AssetHelper {
 
 	public String getAssetParams(AgreementCriteria assetCriteria) {
 
+		System.out.println("inside get assetparams method");
 		StringBuilder assetParams = new StringBuilder();
 
 		if (assetCriteria.getAssetCategory() == null && assetCriteria.getElectionWard() == null
@@ -50,7 +51,7 @@ public class AssetHelper {
 
 		if (assetCriteria.getElectionWard() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, assetParams);
-			assetParams.append("election_Ward=" + assetCriteria.getElectionWard());
+			assetParams.append("electionWard=" + assetCriteria.getElectionWard());
 		}
 
 		if (assetCriteria.getTenantId() != null) {
@@ -67,7 +68,7 @@ public class AssetHelper {
 		assetParams.append("size="+500);
 		//FIXME TODO remove hard coded values in asset and allottee helper
 
-		System.err.println(assetParams);
+		System.out.println("inside get asset method and the string query is"+assetParams);
 		return assetParams.toString();
 	}
 

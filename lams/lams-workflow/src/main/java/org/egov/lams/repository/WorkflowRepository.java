@@ -69,7 +69,6 @@ public class WorkflowRepository {
 			LOGGER.info(e.toString());
 			throw e;
 		}
-		LOGGER.info("string url of the workflow appp : "+url);
 		//FIXME the response should be always processInstanceResponse
 		return processInstanceRes;
 	}
@@ -80,7 +79,9 @@ public class WorkflowRepository {
 		WorkFlowDetails workFlowDetails = agreement.getWorkflowDetails();
 
 		TaskRequest taskRequest = new TaskRequest();
-		taskRequest.setRequestInfo(agreementRequest.getRequestInfo());
+		WorkflowRequestInfo workflowRequestInfo = new WorkflowRequestInfo();
+		workflowRequestInfo.setTenantId(agreement.getTenantId());
+		taskRequest.setRequestInfo(workflowRequestInfo);
 
 		Task task = new Task();
 		task.setAction(workFlowDetails.getAction());

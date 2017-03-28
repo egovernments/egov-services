@@ -20,29 +20,30 @@ $(document).ready(function() {
 
     try {
         var assetDetails = commonApiPost("asset-services", "assets", "_search", {
-            category: getUrlVars()["assetId"]
+            assetCategory: getUrlVars()["assetId"]
         }).responseJSON["Assets"][0] || [];
         var agreementDetail = commonApiPost("lams-services", "agreements", "_search", {
             agreementNumber: getUrlVars()["agreementNumber"]
         }).responseJSON["Agreements"][0] || [];
-        printValue("", agreementDetail);
-        printValue("", assetDetails);
+        //printValue("", agreementDetail);
+        printValue("", assetDetails, true);
     } catch(e) {
         console.log(e);
     }
 
-    function printValue(object = "", values) {
+    function printValue(object = "", values, isAsset) {
         if (object != "") {
 
         } else {
             for (var key in values) {
                 if (typeof values[key] === "object") {
                     for (ckey in values[key]) {
-                        if(values[key][ckey])
-                            $("[name='" + key + "." + ckey + "']").text(values[key][ckey]);
+                        if(values[key][ckey]) {
+                            $("[name='" + (isAsset ? "asset." : "") + key + "." + ckey + "']").text(values[key][ckey]);
+                        }
                     }
                 } else if(values[key]) {
-                    $("[name=" + key + "]").text(values[key]);
+                    $("[name='" + (isAsset ? "asset." : "") + key + "']").text(values[key]);
                 }
 
                 if (key.search('date')>0) {
@@ -53,8 +54,6 @@ $(document).ready(function() {
         }
     }
 
-
-    console.log(assetDetails);
     //base url for api_id
     // var baseUrl = "https://peaceful-headland-36194.herokuapp.com/v1/mSevaAndLA/";
     // //request info from cookies

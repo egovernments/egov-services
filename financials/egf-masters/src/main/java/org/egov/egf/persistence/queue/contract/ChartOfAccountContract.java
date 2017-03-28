@@ -106,4 +106,12 @@ public class ChartOfAccountContract extends AuditableContract {
         super();
         this.id = Long.valueOf(id);
     }
+
+    public Boolean getIsSubledger() {
+        if (!chartOfAccountDetails.isEmpty())
+            return true;
+        else
+            return false;
+
+    }
 }

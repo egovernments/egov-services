@@ -10,6 +10,7 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.egov.egf.persistence.entity.Scheme;
 import org.egov.egf.persistence.entity.SubScheme;
 import org.egov.egf.persistence.entity.SubScheme_;
 import org.egov.egf.persistence.queue.contract.SubSchemeContract;
@@ -25,7 +26,7 @@ public class SubSchemeSpecification implements Specification<SubScheme> {
 	@Override
 	public Predicate toPredicate(Root<SubScheme> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
 		Path<Long> id = root.get(SubScheme_.id);
-		//Path<Scheme> scheme = root.get(SubScheme_.scheme);
+		Path<Scheme> scheme = root.get(SubScheme_.scheme);
 		Path<String> code = root.get(SubScheme_.code);
 		Path<String> name = root.get(SubScheme_.name);
 		Path<Date> validFrom = root.get(SubScheme_.validFrom);
@@ -39,9 +40,9 @@ public class SubSchemeSpecification implements Specification<SubScheme> {
 			predicates.add(criteriaBuilder.equal(id, criteria.getId()));
 		}
 
-		/*if (criteria.getScheme() != null) {
-			predicates.add(criteriaBuilder.equal(scheme, criteria.getScheme()));
-		}*/
+		if (criteria.getScheme() != null) {
+			predicates.add(criteriaBuilder.equal(scheme, criteria.getScheme().getId()));
+		}
 
 		if (criteria.getCode() != null) {
 			predicates.add(criteriaBuilder.equal(code, criteria.getCode()));

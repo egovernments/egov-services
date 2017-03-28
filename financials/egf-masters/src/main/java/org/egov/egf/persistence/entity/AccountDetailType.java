@@ -40,8 +40,6 @@
 
 package org.egov.egf.persistence.entity;
 
-import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -65,8 +63,7 @@ import lombok.Setter;
 @Setter
 @Table(name = "egf_accountdetailtype")
 @SequenceGenerator(name = AccountDetailType.SEQ_ACCOUNTDETAILTYPE, sequenceName = AccountDetailType.SEQ_ACCOUNTDETAILTYPE, allocationSize = 1)
- 
- 
+
 public class AccountDetailType extends AbstractAuditable implements java.io.Serializable {
 
     private static final long serialVersionUID = 3499589983886551123L;
@@ -75,44 +72,30 @@ public class AccountDetailType extends AbstractAuditable implements java.io.Seri
 
     @Id
     @GeneratedValue(generator = SEQ_ACCOUNTDETAILTYPE, strategy = GenerationType.SEQUENCE)
-   
+
     private Long id;
 
-    
     @NotNull
-    @Length(max = 50,min=1)
+    @Length(max = 50, min = 1)
     private String name;
 
     @NotNull
-    @Length(max = 50,min=1)
+    @Length(max = 50, min = 1)
     private String description;
 
     @Length(max = 25)
     private String tableName;
 
-    @Length(max = 25)
-    private String columnName;
-
-   
-    @Length(max = 50)
-    private String attributeName;
-
     @NotNull
     private Boolean active;
 
     @Column(name = "FULLY_QUALIFIED_NAME")
-    @Length(max = 250,min=1)
+    @Length(max = 250, min = 1)
     private String fullyQualifiedName;
 
     @Override
-    public Long getId()
-    {
-    	return this.id;
+    public Long getId() {
+        return this.id;
     }
-     
-
-     
-
-   
 
 }

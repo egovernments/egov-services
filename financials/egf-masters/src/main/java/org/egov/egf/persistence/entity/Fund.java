@@ -51,8 +51,6 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import org.egov.egf.persistence.entity.enums.BudgetAccountType;
-import org.egov.egf.persistence.entity.enums.BudgetingType;
 import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
@@ -66,7 +64,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(exclude={"parentId"},callSuper=false)
+@EqualsAndHashCode(exclude = { "parentId" }, callSuper = false)
 
 @Table(name = "egf_fund")
 @SequenceGenerator(name = Fund.SEQ, sequenceName = Fund.SEQ, allocationSize = 1)
@@ -87,9 +85,9 @@ public class Fund extends AbstractAuditable {
     private String code;
     @NotNull
     private Character identifier;
-    
+
     @NotNull
-    private Long level = Long.valueOf(1l);
+    private Long level;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parentid")
@@ -100,9 +98,8 @@ public class Fund extends AbstractAuditable {
     private Boolean active;
 
     @Override
-    public Long getId()
-    {
-    	return this.id;
+    public Long getId() {
+        return this.id;
     }
 
 }

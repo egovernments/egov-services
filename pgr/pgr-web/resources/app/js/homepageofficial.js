@@ -37,7 +37,7 @@
  *
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-var tableContainer, positionId;
+var tableContainer, positionId, dt_date, dt_sender, dt_now, dt_status, dt_comments;
 $(document).ready(function()
 {	
 	$('#new-pass').popover({ trigger: "focus",placement: "bottom"});
@@ -56,6 +56,12 @@ $(document).ready(function()
 				$(this).children('ul').removeAttr('style');
 				$(this).children('ul').hide();
 	});
+
+	dt_date = translate('core.lbl.date');
+	dt_sender = translate('core.lbl.sender');
+	dt_now = translate('core.lbl.natureofwork');
+	dt_status = translate('core.lbl.status');
+	dt_comments = translate('core.lbl.comments');
 	
 	//TODO not yet implemented at backend
 	/*$('#feedback-form').on('submit', function(e){
@@ -137,11 +143,11 @@ $(document).ready(function()
 				"dataSrc":"",
 			},
 			"columns": [
-						{ "title":"Date", "data": "created_Date","width": "20%" },
-						{ "title":"Sender", "data": "owner","width": "15%" },
-						{ "title":"Nature of Work", "data": "natureOfTask","width": "20%" },
-						{ "title":"Status", "data": "status","width": "20%" },
-						{ "title":"Comments", "data": "comments","width": "20%" }
+						{ "title":dt_date, "data": "created_Date","width": "20%" },
+						{ "title":dt_sender, "data": "owner","width": "15%" },
+						{ "title":dt_now, "data": "natureOfTask","width": "20%" },
+						{ "title":dt_status, "data": "status","width": "20%" },
+						{ "title":dt_comments, "data": "comments","width": "20%" }
 					]
 		});
 		
@@ -429,13 +435,13 @@ function worklist(){
 			dataSrc : "service_requests"
 		},
 		"columns": [
-		{ "title":"Date", "data": "requested_datetime","width": "16%" },
-		{ "title":"Sender", "data": "first_name","width": "15%" },
-		{ "title":"Nature of Work", "width": "20%", "render": function ( data, type, full, meta ) {
+		{ "title": dt_date, "data": "requested_datetime","width": "16%" },
+		{ "title":dt_sender, "data": "first_name","width": "15%" },
+		{ "title":dt_now, "width": "20%", "render": function ( data, type, full, meta ) {
 			return 'Grievance';
 	    } },
-		{ "title":"Status", "data": "values.complaintStatus","width": "24%"},
-		{ "title":"Comments", "width": "20%", "render": function ( data, type, full, meta ) {
+		{ "title":dt_status, "data": "values.complaintStatus","width": "24%"},
+		{ "title":dt_comments, "width": "20%", "render": function ( data, type, full, meta ) {
 			var text = 'Complaint Number '+(full.service_request_id)+' for '+(full.service_name)+' filed on '+(full.requested_datetime)+'. Date of Resolution is '+(full.expected_datetime);
 			return text;
 	    } },

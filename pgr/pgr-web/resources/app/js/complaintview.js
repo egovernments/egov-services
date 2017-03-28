@@ -183,6 +183,7 @@ function getComplaint(){
 							var source   = $("#viewcomplaint-script").html();
 							var template = Handlebars.compile(source);
 							$('.viewcomplaint').append(template(response));
+							translate();
 							///console.log('response with files',JSON.stringify(response));
 
 							//Start actions

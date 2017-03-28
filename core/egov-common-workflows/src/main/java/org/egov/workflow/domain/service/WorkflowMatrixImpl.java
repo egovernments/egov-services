@@ -30,7 +30,12 @@ import org.egov.workflow.web.contract.Designation;
 import org.egov.workflow.web.contract.Employee;
 import org.egov.workflow.web.contract.Position;
 import org.egov.workflow.web.contract.ProcessInstance;
+import org.egov.workflow.web.contract.ProcessInstanceRequest;
+import org.egov.workflow.web.contract.ProcessInstanceResponse;
 import org.egov.workflow.web.contract.Task;
+import org.egov.workflow.web.contract.TaskRequest;
+import org.egov.workflow.web.contract.TaskResponse;
+import org.egov.workflow.web.contract.User;
 import org.egov.workflow.web.contract.Value;
 import org.egov.workflow.web.contract.WorkflowBean;
 import org.slf4j.Logger;
@@ -60,47 +65,42 @@ public class WorkflowMatrixImpl implements Workflow {
 
 	@Transactional
 	@Override
-	public ProcessInstance start(final String jurisdiction, ProcessInstance processInstance) {
+	public ProcessInstanceResponse start(ProcessInstanceRequest processInstanceRequest) {
+		ProcessInstance processInstance = processInstanceRequest.getProcessInstance();
 		final WorkFlowMatrix wfMatrix = workflowService.getWfMatrix(processInstance.getBusinessKey(), null, null, null,
 				null, null);
-		Position owner = null;
+		Position owner = processInstance.getAssignee();
 		if (processInstance.getAssignee() != null)
 			owner = positionRepository.getById(Long.valueOf(processInstance.getAssignee().getId()));
 
 		final State state = new State();
-		state.setTenantId(jurisdiction);
+		state.setTenantId(processInstanceRequest.getRequestInfo().getTenantId());
 		state.setType(processInstance.getType());
-		state.setSenderName(getEmp(1l).getName());
+		state.setSenderName(processInstance.getSenderName());
 		state.setStatus(StateStatus.INPROGRESS);
 		state.setValue(wfMatrix.getNextState());
 		state.setComments(processInstance.getComments());
 		state.setOwnerPosition(owner.getId());
 		state.setNextAction(wfMatrix.getNextAction());
 		state.setType(processInstance.getBusinessKey());
-		// state.setInitiatorPosition(getInitiator().getId());
+		state.setInitiatorPosition(owner.getId());
 		final WorkflowTypes type = workflowTypeService.getWorkflowTypeByType(state.getType());
-		state.setMyLinkId(type.getLink());// think
-		// about
-		// this
-		// for
-		// PGR
-		// and
-		// PTIS
+		state.setMyLinkId(type.getLink()); 
+		
 		state.setNatureOfTask(type.getDisplayName());
 		state.setExtraInfo(processInstance.getDetails());
-		updateAuditDetails(state);
+		updateAuditDetails(state,processInstanceRequest.getRequestInfo().getUserInfo());
 		stateService.create(state);
 		processInstance = state.mapToProcess(processInstance);
-		/*
-		 * if (state.getId() != null)
-		 * processInstance.setId(state.getId().toString());
-		 */
-		return processInstance;
+		
+		ProcessInstanceResponse response=new ProcessInstanceResponse();
+		response.setProcessInstance(processInstance);
+		return response;
 	}
 
-	private void updateAuditDetails(State s) {
-		s.setCreatedBy(1l);
-		s.setLastModifiedBy(1l);
+	private void updateAuditDetails(State s,User u) {
+		s.setCreatedBy(u.getId());
+		s.setLastModifiedBy(u.getId());
 		s.setCreatedDate(new Date());
 		s.setLastModifiedDate(new Date());
 	}
@@ -130,18 +130,16 @@ public class WorkflowMatrixImpl implements Workflow {
 		return emp;
 	}
 
-	@Transactional
-	@Override
-	public ProcessInstance update(final String jurisdiction, final ProcessInstance pi) {
-		return pi;
-
-	}
+	 
+	
+	
 
 	@Transactional
 	@Override
-	public Task update(final String jurisdiction, final Task task) {
-		Position owner = null;
-		Long ownerId = null;
+	public TaskResponse update(final TaskRequest taskRequest) {
+		Task task = taskRequest.getTask();
+		Position owner = task.getAssignee();
+		Long ownerId = task.getAssignee().getId();
 		if (task.getAssignee() != null)
 			owner = positionRepository.getById(Long.valueOf(task.getAssignee().getId()));
 		// final WorkflowEntity entity = task.getEntity();
@@ -185,10 +183,10 @@ public class WorkflowMatrixImpl implements Workflow {
 
 		state.addStateHistory(new StateHistory(state));
 		
-		state.setTenantId(jurisdiction);
+		state.setTenantId(taskRequest.getRequestInfo().getTenantId());
 		state.setValue(nextState);
 		state.setComments(task.getComments());
-		state.setSenderName(getEmp(1l).getName());
+		state.setSenderName(taskRequest.getRequestInfo().getUserInfo().getName());
 		if (owner != null)
 			state.setOwnerPosition(owner.getId());
 		state.setNextAction(wfMatrix.getNextAction());
@@ -197,12 +195,12 @@ public class WorkflowMatrixImpl implements Workflow {
 			state.setExtraInfo(task.getDetails());
 		stateService.create(state);
 		Task t = state.map();
-		/*
-		 * if (state.getId() != null) task.setId(state.getId().toString());
-		 */
+		 
 		stateService.update(state);
-
-		return t;
+		TaskResponse response=new TaskResponse();
+		response.setTask(t);
+		
+		return response;
 	}
 
 	private String getApproverName(final Position owner) {
@@ -376,6 +374,12 @@ public class WorkflowMatrixImpl implements Workflow {
 
 		return workflowService.getNextDesignations(t.getBusinessKey(), departmentId, amtRule, additionalRule,
 				t.getStatus(), pendingAction, new Date(), designation,t.getTenantId());
+	}
+
+	@Override
+	public ProcessInstance update(String jurisdiction, ProcessInstance processInstance) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	/*

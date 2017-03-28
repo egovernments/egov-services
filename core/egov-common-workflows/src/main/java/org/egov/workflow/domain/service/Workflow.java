@@ -4,11 +4,15 @@ import java.util.List;
 
 import org.egov.workflow.web.contract.Designation;
 import org.egov.workflow.web.contract.ProcessInstance;
+import org.egov.workflow.web.contract.ProcessInstanceRequest;
+import org.egov.workflow.web.contract.ProcessInstanceResponse;
 import org.egov.workflow.web.contract.Task;
+import org.egov.workflow.web.contract.TaskRequest;
+import org.egov.workflow.web.contract.TaskResponse;
 
 public interface Workflow {
 
-    ProcessInstance start(String jurisdiction, ProcessInstance processInstance);
+    ProcessInstanceResponse start(ProcessInstanceRequest processInstanceRequest);
 
     ProcessInstance end(String jurisdiction, ProcessInstance processInstance);
 
@@ -18,7 +22,7 @@ public interface Workflow {
 
      ProcessInstance update(String jurisdiction, ProcessInstance processInstance);
 
-    Task update(String jurisdiction, Task task);
+    TaskResponse update(TaskRequest taskRequest);
 
     List<Task> getHistoryDetail(String tenantId,String workflowId);
 

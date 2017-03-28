@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.egov.workflow.domain.model.AuthenticatedUser;
+import org.egov.workflow.domain.service.PgrWorkflowImpl;
 import org.egov.workflow.domain.service.WorkflowMatrixImpl;
 import org.egov.workflow.persistence.repository.UserRepository;
 import org.egov.workflow.web.contract.Attribute;
@@ -17,6 +18,7 @@ import org.egov.workflow.web.contract.ResponseInfo;
 import org.egov.workflow.web.contract.Task;
 import org.egov.workflow.web.contract.TaskRequest;
 import org.egov.workflow.web.contract.TaskResponse;
+import org.egov.workflow.web.contract.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,7 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class WorkFlowController {
 
 	@Autowired
-	private WorkflowMatrixImpl workflow;
+	private PgrWorkflowImpl workflow;
 
 	@Autowired
 	UserRepository userRepository;
@@ -40,23 +42,24 @@ public class WorkFlowController {
 	@PostMapping(value = "/process/_start")
 	public ProcessInstanceResponse startWorkflow(@RequestBody final ProcessInstanceRequest processInstanceRequest) {
 
-		processInstanceRequest.getRequestInfo().getAuthToken();
-
-		final AuthenticatedUser user = userRepository.getUser(processInstanceRequest.getRequestInfo().getAuthToken());
-		System.out.println(user);
+		User user = processInstanceRequest.getRequestInfo().getUserInfo();
+        
+		 
 
 		ProcessInstance processInstance = processInstanceRequest.getProcessInstance();
+		processInstance.setSenderName(user.getName());
+		
 		ProcessInstanceResponse response=new ProcessInstanceResponse();
 
 		if (processInstance.getBusinessKey().equals("Complaint")) {
 
-			 ProcessInstance start = workflow.start(processInstanceRequest.getRequestInfo().getTenantId(), processInstance);
-			 response.setProcessInstance(start);
+			response = workflow.start(processInstanceRequest);
+			
 		}
 
 		else {
-			 ProcessInstance start =  matrixWorkflow.start(processInstanceRequest.getRequestInfo().getTenantId(), processInstance);
-			 response.setProcessInstance(start);
+			response= matrixWorkflow.start(processInstanceRequest);
+			 
 		}
 		response.setResponseInfo(getResponseInfo(processInstanceRequest.getRequestInfo()));
 		return response;
@@ -88,13 +91,13 @@ public class WorkFlowController {
 		Task task = taskRequest.getTask();
 		task.setId(id);
 		if (task.getBusinessKey().equals("Complaint")) {
-			task= workflow.update(taskRequest.getRequestInfo().getTenantId(), task);
+			response= workflow.update(taskRequest);
 		}
 
 		else {
-			task= matrixWorkflow.update(taskRequest.getRequestInfo().getTenantId(), task);
+			response= matrixWorkflow.update(taskRequest);
 		}
-		response.setTask(task);
+		 
 		response.setResponseInfo(getResponseInfo(taskRequest.getRequestInfo()));
 		
 		return response;

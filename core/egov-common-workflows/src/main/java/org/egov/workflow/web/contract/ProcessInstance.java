@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.validation.constraints.NotNull;
 
@@ -143,11 +144,11 @@ public class ProcessInstance {
 	 * Collections.singletonList(value); Attribute attribute = new
 	 * Attribute(true, "stateId", "String", true, "This is the id of state",
 	 * attributeValues,null); attributeValues.put("stateId", attribute); }
-	 * 
-	 * // To be used to fetch single value attributes public String
-	 * getValueForKey(String key) { if (Objects.nonNull(values.get(key))) return
-	 * values.get(key).getValues().get(0).getName();
-	 * 
-	 * return ""; }
-	 */
+	 *  */
+	  // To be used to fetch single value attributes 
+	  public String  getValueForKey(String key) { if (Objects.nonNull(attributes.get(key))) return
+			  attributes.get(key).getValues().get(0).getName();
+	   
+	  return ""; }
+	
 }

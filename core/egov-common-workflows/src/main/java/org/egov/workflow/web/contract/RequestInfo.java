@@ -35,5 +35,7 @@ public class RequestInfo {
 	private String authToken;
 
 	private String tenantId;
+	
+	private User userInfo;
 
 }

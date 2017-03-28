@@ -26,6 +26,5 @@ public class Attribute {
 	private String datatypeDescription;
 
 	private List<Value> values;
-	
-	private List<Object> vals;
+	 
 }

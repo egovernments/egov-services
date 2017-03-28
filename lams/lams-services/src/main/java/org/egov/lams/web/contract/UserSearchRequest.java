@@ -38,7 +38,7 @@ public class UserSearchRequest {
     private String tenantId;
 
     @JsonProperty("pageSize")
-    private int pageSize = 20;
+    private int pageSize = 500;
 
     @JsonProperty("pageNumber")
     private int pageNumber = 0;

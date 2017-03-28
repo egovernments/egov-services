@@ -2,6 +2,7 @@ package org.egov.lams.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+
 import lombok.Getter;
 import lombok.ToString;
 
@@ -71,5 +72,17 @@ public class PropertiesManager {
 	
 	@Value("${egov.services.lams.billnumber_prefix}")
 	private String lamsBillNumberPrefix;
+
+	@Value("${egov.services.demand_service.updatedemand}")
+	private String updateDemandSevice;
+	
+	@Value("${egov.services.demand_service.bill.search}")
+	private String demandBillSearchService;
+
+	@Value("${egov.services.collection_service.hostname}")
+	public String purposeHostName;
+
+	@Value("${egov.services.collection_service.purpose}")
+	public String purposeService;
 
 }

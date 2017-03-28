@@ -1,10 +1,11 @@
 package org.egov.lams.web.controller;
 
-import org.egov.lams.web.contract.RequestInfo;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.AgreementCriteria;
 import org.egov.lams.service.AgreementService;
 import org.egov.lams.service.PaymentService;
+import org.egov.lams.web.contract.BillReceiptInfoReq;
+import org.egov.lams.web.contract.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,4 +35,12 @@ public class PaymentController {
 		return new ResponseEntity<>(paymentService.generateBillXml(agreement,requestInfo),
 				HttpStatus.OK);
 	}
+	
+	
+	@PostMapping("/_update")
+	@ResponseBody
+	public ResponseEntity<?> update(BillReceiptInfoReq billReceiptInfoReq) {
+		return new ResponseEntity<>(paymentService.updateDemand(billReceiptInfoReq),HttpStatus.OK);
+	}
+	
 }

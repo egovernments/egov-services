@@ -86,11 +86,21 @@ public class DemandRepository {
 	
 
 	public DemandResponse getDemandBySearch(
-			DemandSearchCriteria demandSearchCriteria) {
+			DemandSearchCriteria demandSearchCriteria, RequestInfo requestInfo) {
 		String url = propertiesManager.getDemandServiceHostName()
 				+ propertiesManager.getDemandSearchService();
-
-		return restTemplate.postForObject(url, demandSearchCriteria,
-				DemandResponse.class);
+		return restTemplate.postForObject(url, requestInfo, DemandResponse.class, demandSearchCriteria);
+	}
+	
+	public DemandResponse updateDemand(List<Demand> demands, RequestInfo requestInfo){
+		System.out.println("DemandRepository createDemand demands:"+demands.toString());
+		DemandRequest demandRequest = new DemandRequest();
+		demandRequest.setRequestInfo(requestInfo);
+		demandRequest.setDemand(demands);
+		
+		String url = propertiesManager.getDemandServiceHostName()
+				+propertiesManager.getUpdateDemandSevice();
+		
+		return restTemplate.postForObject(url, demandRequest, DemandResponse.class);
 	}
 }

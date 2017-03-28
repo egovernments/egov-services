@@ -486,10 +486,6 @@ definitions:
         type: string
         format: date
         description: Date of Commencement of Agreement.
-      expiryDate:
-        type: string
-        format: date
-        description: Date of expiry.
       orderDetails:
         type: string
         description: order details.

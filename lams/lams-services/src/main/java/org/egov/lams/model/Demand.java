@@ -15,7 +15,7 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 public class Demand {
-	private Long id;
+	private String id;
 	private BigDecimal taxAmount;
 	private BigDecimal collectionAmount;
 	private String installment;

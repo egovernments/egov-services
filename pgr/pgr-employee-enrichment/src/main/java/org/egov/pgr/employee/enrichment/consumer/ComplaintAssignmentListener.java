@@ -1,7 +1,8 @@
 package org.egov.pgr.employee.enrichment.consumer;
 
 import org.egov.pgr.employee.enrichment.model.SevaRequest;
-import org.egov.pgr.employee.enrichment.repository.ComplaintRepository;
+import org.egov.pgr.employee.enrichment.repository.ComplaintMessageQueueRepository;
+import org.egov.pgr.employee.enrichment.service.EscalationDateService;
 import org.egov.pgr.employee.enrichment.service.WorkflowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -12,22 +13,25 @@ import java.util.HashMap;
 @Service
 public class ComplaintAssignmentListener {
 
-    private ComplaintRepository complaintRepository;
+    private ComplaintMessageQueueRepository complaintMessageQueueRepository;
     private WorkflowService workflowService;
+    private EscalationDateService escalationDateService;
 
     @Autowired
-    public ComplaintAssignmentListener(ComplaintRepository complaintRepository, WorkflowService workflowService) {
+    public ComplaintAssignmentListener(ComplaintMessageQueueRepository complaintMessageQueueRepository,
+                                       WorkflowService workflowService,
+                                       EscalationDateService escalationDateService) {
         this.workflowService = workflowService;
-        this.complaintRepository = complaintRepository;
+        this.complaintMessageQueueRepository = complaintMessageQueueRepository;
+        this.escalationDateService = escalationDateService;
     }
 
-    @KafkaListener(id = "${kafka.topics.pgr.locationpopulated.id}",
-        topics = "${kafka.topics.pgr.locationpopulated.name}",
-        group = "${kafka.topics.pgr.locationpopulated.group}")
+    @KafkaListener(topics = "${kafka.topics.pgr.locationpopulated.name}")
     public void process(HashMap<String, Object> sevaRequestMap) {
         final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
         final SevaRequest enrichedSevaRequest = workflowService.enrichWorkflow(sevaRequest);
-        complaintRepository.save(enrichedSevaRequest);
+        escalationDateService.enrichRequest(enrichedSevaRequest);
+        complaintMessageQueueRepository.save(enrichedSevaRequest);
     }
 
 }

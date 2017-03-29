@@ -9,9 +9,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 
+import java.util.TimeZone;
+
 @SpringBootApplication
 @Import(TracerConfiguration.class)
 public class PgrEmployeeEnrichmentApplication {
+    private static final String IST = "Asia/Calcutta";
 
     @Bean
     public ObjectMapper getObjectMapper() {
@@ -26,6 +29,7 @@ public class PgrEmployeeEnrichmentApplication {
     }
 
     public static void main(String[] args) {
+        TimeZone.setDefault(TimeZone.getTimeZone(IST));
         SpringApplication.run(PgrEmployeeEnrichmentApplication.class, args);
     }
 }

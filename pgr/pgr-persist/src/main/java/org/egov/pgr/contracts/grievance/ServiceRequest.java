@@ -1,5 +1,6 @@
 package org.egov.pgr.contracts.grievance;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,19 +16,20 @@ public class ServiceRequest {
 	public static final String VALUES_RECIEVING_MODE = "receivingMode";
 	public static final String VALUES_RECEIVING_CENTER = "receivingCenter";
 	public static final String VALUES_COMPLAINANT_ADDRESS = "complainantAddress";
-	public static final String CRN = "service_request_id";
-	public static final String TENANT_ID = "tenantId";
-	public static final String DESCRIPTION = "description";
-	public static final String ADDRESS = "address";
-	public static final String LAT = "lat";
-	public static final String LNG = "lng";
-	public static final String FIRST_NAME = "first_name";
-	public static final String PHONE = "phone";
-	public static final String EMAIL = "email";
-	public static final String SERVICE_CODE = "service_code";
-	public final static String REQUEST_INFO = "RequestInfo";
+	private static final String CRN = "service_request_id";
+	private static final String TENANT_ID = "tenantId";
+	private static final String DESCRIPTION = "description";
+	private static final String ADDRESS = "address";
+	private static final String LAT = "lat";
+	private static final String LNG = "lng";
+	private static final String FIRST_NAME = "first_name";
+	private static final String PHONE = "phone";
+	private static final String EMAIL = "email";
+	private static final String SERVICE_CODE = "service_code";
+	private final static String REQUEST_INFO = "RequestInfo";
+    private static final String EXPECTED_DATETIME = "expected_datetime";
 
-	private Map<String, Object> serviceRequestMap;
+    private Map<String, Object> serviceRequestMap;
 
 	public ServiceRequest(Map<String, Object> serviceRequestMap) {
 		this.serviceRequestMap = serviceRequestMap;
@@ -73,11 +75,11 @@ public class ServiceRequest {
 		return (String) this.serviceRequestMap.get(EMAIL);
 	}
 
-	public RequestInfo getRequestInfo() {
-		return (RequestInfo) this.serviceRequestMap.get(REQUEST_INFO);
-	}
+	public Date getEscalationDate() {
+	    return (Date) this.serviceRequestMap.get(EXPECTED_DATETIME);
+    }
 
-	@SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
 	public HashMap<String, String> getValues() {
 		return (HashMap<String, String>) this.serviceRequestMap.get("values");
 	}

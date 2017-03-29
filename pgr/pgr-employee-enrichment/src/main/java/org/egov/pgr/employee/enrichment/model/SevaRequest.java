@@ -7,6 +7,7 @@ import org.egov.pgr.employee.enrichment.repository.contract.Attribute;
 import org.egov.pgr.employee.enrichment.repository.contract.WorkflowRequest;
 import org.egov.pgr.employee.enrichment.repository.contract.WorkflowResponse;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -23,16 +24,17 @@ public class SevaRequest {
     public static final String VALUES_COMLAINT_TYPE_CODE = "complaintTypeCode";
     public static final String BOUNDARY_ID = "boundaryId";
     public static final String STATE_DETAILS = "stateDetails";
-    public static final String WORKFLOW_TYPE = "Complaint";
+    private static final String WORKFLOW_TYPE = "Complaint";
     public static final String STATUS = "status";
     public static final String SERVICE_CODE = "service_code";
     public static final String VALUES_LOCATION_ID = "locationId";
-    public static final String MSG_ID = "msg_id";
     public static final String VALUES_APPROVAL_COMMENT = "approvalComments";
     public static final String USER_ROLE = "userRole";
-    public static final String SERVICE_REQUEST_ID = "service_request_id";
-    public static final String DEPARTMENT_NAME = "departmentName";
-    public static final String COMPLAINT_CRN = "crn";
+    private static final String SERVICE_REQUEST_ID = "service_request_id";
+    private static final String DEPARTMENT_NAME = "departmentName";
+    private static final String COMPLAINT_CRN = "crn";
+    private static final String EXPECTED_DATETIME = "expected_datetime";
+    private static final String TENANT_ID = "tenantId";
 
     private HashMap<String, Object> sevaRequestMap;
 
@@ -42,8 +44,12 @@ public class SevaRequest {
 
     @SuppressWarnings("unchecked")
     public HashMap<String, String> getValues() {
-        HashMap<String, Object> serviceRequest = (HashMap<String, Object>) sevaRequestMap.get(SERVICE_REQUEST);
+        HashMap<String, Object> serviceRequest = getServiceRequest();
         return (HashMap<String, String>) serviceRequest.get(VALUES);
+    }
+
+    public Long getAssignee() {
+        return Long.valueOf(getValues().get(VALUES_ASSIGNEE_ID));
     }
 
     private void setAssignee(String assignee) {
@@ -62,17 +68,14 @@ public class SevaRequest {
         return sevaRequestMap;
     }
 
-    @SuppressWarnings("unchecked")
-    public String getCorrelationId() {
-        final HashMap<String, Object> requestInfo = (HashMap<String, Object>) sevaRequestMap.get(REQUEST_INFO);
-        return String.valueOf(requestInfo.get(MSG_ID));
+    public String getComplaintTypeCode() {
+        return (String) this.getServiceRequest().get(SERVICE_CODE);
     }
 
-    @SuppressWarnings("unchecked")
     public WorkflowRequest getWorkFlowRequest() {
-        HashMap<String, Object> serviceRequest = (HashMap<String, Object>) sevaRequestMap.get(SERVICE_REQUEST);
+        HashMap<String, Object> serviceRequest = getServiceRequest();
         RequestInfo requestInfo = getRequestInfo();
-        HashMap<String, String> values = (HashMap<String, String>) serviceRequest.get(VALUES);
+        HashMap<String, String> values = getValues();
         String complaintType = (String) serviceRequest.get(SERVICE_CODE);
 		String crn = (String) serviceRequest.get(SERVICE_REQUEST_ID);
         Map<String, Attribute> valuesToSet = getWorkFlowRequestValues(values, complaintType);
@@ -88,6 +91,24 @@ public class SevaRequest {
                 .crn(crn);
 
         return workflowRequestBuilder.build();
+    }
+
+    @SuppressWarnings("unchecked")
+    private HashMap<String, Object> getServiceRequest() {
+        return (HashMap<String, Object>) sevaRequestMap.get(SERVICE_REQUEST);
+    }
+
+    public void update(WorkflowResponse workflowResponse) {
+        setAssignee(workflowResponse.getAssignee());
+        setStateId(workflowResponse.getValueForKey(STATE_ID));
+    }
+
+    public void setEscalationDate(Date date) {
+        getServiceRequest().put(EXPECTED_DATETIME, date);
+    }
+
+    public String getTenantId() {
+        return (String) getServiceRequest().get(TENANT_ID);
     }
 
     private Map<String, Attribute> getWorkFlowRequestValues(HashMap<String, String> values, String complaintType) {
@@ -111,8 +132,5 @@ public class SevaRequest {
         return assignee != null ? Long.valueOf(String.valueOf(assignee)) : null;
     }
 
-    public void update(WorkflowResponse workflowResponse) {
-        setAssignee(workflowResponse.getAssignee());
-        setStateId(workflowResponse.getValueForKey(STATE_ID));
-    }
+
 }

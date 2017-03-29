@@ -1,48 +1,48 @@
-{  
-   "response_info":{  
-      "api_id":"org.egov.pgr",
-      "ver":"1.0",
-      "ts":"28-03-2016 10:22:33",
-      "res_msg_id":"uief87324",
-      "msg_id":"654654",
-      "status":"successful"
-   },
-   "service_requests":[  
-      {  
-         "tenantId":null,
-         "service_request_id":"00015-2016-AP",
-         "status":false,
-         "service_name":"Broken Bin",
-         "service_code":"6",
-         "description":"Complaints regarding broken bin",
-         "agency_responsible":null,
-         "service_notice":null,
-         "requested_datetime":"20-12-2016 16:03:03",
-         "updated_datetime":"09-03-2017 17:32:47",
-         "expected_datetime":"11-03-2017 17:32:47",
-         "address":"Near central building area",
-         "address_id":null,
-         "zipcode":null,
-         "lat":0.0,
-         "lng":0.0,
-         "media_urls":null,
-         "first_name":"Ravi",
-         "last_name":null,
-         "phone":"5822252525",
-         "email":"raman@ddd.com",
-         "device_id":null,
-         "account_id":null,
-         "values":{  
-            "departmentName":"Health",
-            "stateId":"6",
-            "LocationId":"178",
-            "ChildLocationId":"161",
-            "ChildLocationName":"Bheemili Road",
-            "ReceivingMode":"WEBSITE",
-            "ComplaintStatus":"PROCESSING",
-            "assigneeId":"4",
-            "LocationName":"Election Ward No 6"
-         }
-      }
-   ]
+{
+    "response_info": {
+        "api_id": "org.egov.pgr",
+        "ver": "1.0",
+        "ts": "28-03-2016 10:22:33",
+        "res_msg_id": "uief87324",
+        "msg_id": "654654",
+        "status": "successful"
+    },
+    "service_requests": [
+        {
+            "tenantId": null,
+            "service_request_id": "00015-2016-AP",
+            "status": false,
+            "service_name": "Broken Bin",
+            "service_code": "6",
+            "description": "Complaints regarding broken bin",
+            "agency_responsible": null,
+            "service_notice": null,
+            "requested_datetime": "20-12-2016 16:03:03",
+            "updated_datetime": "09-03-2017 17:32:47",
+            "expected_datetime": "11-03-2017 17:32:47",
+            "address": "Near central building area",
+            "address_id": null,
+            "zipcode": null,
+            "lat": 0.0,
+            "lng": 0.0,
+            "media_urls": null,
+            "first_name": "Ravi",
+            "last_name": null,
+            "phone": "5822252525",
+            "email": "raman@ddd.com",
+            "device_id": null,
+            "account_id": null,
+            "values": {
+                "departmentName": "Health",
+                "stateId": "6",
+                "LocationId": "178",
+                "ChildLocationId": "161",
+                "ChildLocationName": "Bheemili Road",
+                "ReceivingMode": "WEBSITE",
+                "ComplaintStatus": "PROCESSING",
+                "assigneeId": "4",
+                "LocationName": "Election Ward No 6"
+            }
+        }
+    ]
 }

@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class SevaRequest {
 
-    public static final String REQUESTER_ID = "requester_id";
+    private static final String REQUESTER_ID = "requester_id";
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private static final String SERVICE_REQUEST = "ServiceRequest";
     private static final String REQUEST_INFO = "RequestInfo";

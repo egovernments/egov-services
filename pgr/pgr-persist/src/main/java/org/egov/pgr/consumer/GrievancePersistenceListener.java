@@ -16,7 +16,6 @@ import org.egov.pgr.repository.UserRepository;
 import org.egov.pgr.service.ComplaintService;
 import org.egov.pgr.service.ComplaintStatusService;
 import org.egov.pgr.service.ComplaintTypeService;
-import org.egov.pgr.service.EscalationService;
 import org.egov.pgr.service.ReceivingCenterService;
 import org.egov.pgr.service.ReceivingModeService;
 import org.egov.pgr.service.TemplateService;
@@ -33,7 +32,6 @@ public class GrievancePersistenceListener {
     private ComplaintTypeService complaintTypeService;
     private ComplaintStatusService complaintStatusService;
     private ComplaintService complaintService;
-    private EscalationService escalationService;
     private GrievanceProducer kafkaProducer;
     private PositionRepository positionRepository;
     private UserRepository userRepository;
@@ -45,19 +43,19 @@ public class GrievancePersistenceListener {
 
     @Autowired
     public GrievancePersistenceListener(ComplaintTypeService complaintTypeService,
-                                        ComplaintStatusService complaintStatusService, ComplaintService
-                                                complaintService,
-                                        EscalationService escalationService, GrievanceProducer grievanceProducer,
-                                        PositionRepository positionRepository, UserRepository userRepository,
+                                        ComplaintStatusService complaintStatusService,
+                                        ComplaintService complaintService,
+                                        GrievanceProducer grievanceProducer,
+                                        PositionRepository positionRepository,
+                                        UserRepository userRepository,
                                         TemplateService templateService,
-                                        PersistenceProperties persistenceProperties, ReceivingCenterService
-                                                receivingCenterService,
+                                        PersistenceProperties persistenceProperties,
+                                        ReceivingCenterService receivingCenterService,
                                         ReceivingModeService receivingModeService) {
         this.complaintService = complaintService;
         this.complaintTypeService = complaintTypeService;
         this.complaintStatusService = complaintStatusService;
         this.complaintService = complaintService;
-        this.escalationService = escalationService;
         this.kafkaProducer = grievanceProducer;
         this.positionRepository = positionRepository;
         this.templateService = templateService;
@@ -104,8 +102,8 @@ public class GrievancePersistenceListener {
         String complaintCrn = sevaRequest.getServiceRequest().getCrn();
         Complaint complaintByCrn = complaintService.findByCrn(complaintCrn);
         Complaint complaint = new ComplaintBuilder(complaintByCrn, sevaRequest, complaintTypeService,
-            complaintStatusService, escalationService, positionRepository, userRepository, receivingCenterService,
-            requestInfo, receivingModeService).build();
+            complaintStatusService, positionRepository, userRepository, receivingCenterService,
+            receivingModeService).build();
         complaint = complaintService.save(complaint);
         return complaint;
     }

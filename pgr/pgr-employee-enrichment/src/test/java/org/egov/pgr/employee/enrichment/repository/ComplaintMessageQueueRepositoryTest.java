@@ -13,18 +13,18 @@ import java.util.HashMap;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ComplaintRepositoryTest {
+public class ComplaintMessageQueueRepositoryTest {
 
     private static final String TOPIC_NAME = "topicName";
 
     @Mock
     private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
-    private ComplaintRepository complaintRepository;
+    private ComplaintMessageQueueRepository complaintMessageQueueRepository;
 
     @Before
     public void before() {
-        complaintRepository = new ComplaintRepository(TOPIC_NAME, kafkaTemplate);
+        complaintMessageQueueRepository = new ComplaintMessageQueueRepository(TOPIC_NAME, kafkaTemplate);
     }
 
     @Test
@@ -32,7 +32,7 @@ public class ComplaintRepositoryTest {
         final HashMap<String, Object> expectedMap = new HashMap<>();
         final SevaRequest sevaRequest = new SevaRequest(expectedMap);
 
-        complaintRepository.save(sevaRequest);
+        complaintMessageQueueRepository.save(sevaRequest);
 
         verify(kafkaTemplate).send(TOPIC_NAME, expectedMap);
     }

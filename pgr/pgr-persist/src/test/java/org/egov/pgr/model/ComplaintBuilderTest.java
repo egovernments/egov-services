@@ -1,6 +1,6 @@
 package org.egov.pgr.model;
 
-import org.egov.pgr.contracts.grievance.RequestInfo;
+import org.egov.pgr.DateConverter;
 import org.egov.pgr.contracts.grievance.ResponseInfo;
 import org.egov.pgr.contracts.grievance.SevaRequest;
 import org.egov.pgr.contracts.user.GetUserByIdResponse;
@@ -10,18 +10,23 @@ import org.egov.pgr.entity.ComplaintType;
 import org.egov.pgr.entity.enums.ComplaintStatus;
 import org.egov.pgr.repository.PositionRepository;
 import org.egov.pgr.repository.UserRepository;
-import org.egov.pgr.service.*;
+import org.egov.pgr.service.ComplaintStatusService;
+import org.egov.pgr.service.ComplaintTypeService;
+import org.egov.pgr.service.ReceivingCenterService;
+import org.egov.pgr.service.ReceivingModeService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.*;
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -32,13 +37,9 @@ public class ComplaintBuilderTest {
 	@Mock
 	private ComplaintStatusService complaintStatusService;
 	@Mock
-	private EscalationService escalationService;
-	@Mock
 	private PositionRepository positionRepository;
 	@Mock
 	private ReceivingCenterService receivingCenterService;
-	@Mock
-	private RequestInfo requestInfo;
 	@Mock
 	private ReceivingModeService receivingModeService;
 
@@ -53,8 +54,10 @@ public class ComplaintBuilderTest {
 		ComplaintBuilder complaintBuilder = complaintBuilderWithComplaint(new Complaint(), sevaRequest);
 		Complaint builtComplaint = complaintBuilder.build();
 
-		Calendar c = Calendar.getInstance();
-		c.setTime(builtComplaint.getEscalationDate());
+        final LocalDateTime expectedEscalationDateTime =
+            LocalDateTime.of(2016, 1, 2, 3, 4, 5);
+        final Date expectedEscalationDate = new DateConverter(expectedEscalationDateTime).toDate();
+        assertEquals(expectedEscalationDate, builtComplaint.getEscalationDate());
 		assertEquals("AA-01892-AP", builtComplaint.getCrn());
 		assertEquals(15.232, builtComplaint.getLat(), 0.0);
 		assertEquals(18.232, builtComplaint.getLng(), 0.0);
@@ -77,9 +80,6 @@ public class ComplaintBuilderTest {
 		assertEquals(Long.valueOf(22), builtComplaint.getLastModifiedBy());
 		assertNotNull(builtComplaint.getCreatedDate());
 		assertNotNull(builtComplaint.getLastModifiedDate());
-		assertEquals(28, c.get(Calendar.DAY_OF_MONTH));
-		assertEquals(2, c.get(Calendar.MONTH));
-		assertEquals(2017, c.get(Calendar.YEAR));
 	}
 
 	@Test
@@ -157,6 +157,8 @@ public class ComplaintBuilderTest {
 		valuesMap.put("stateId", "88");
 		serviceRequestMap.put("values", valuesMap);
 		serviceRequestMap.put("tenantId", tenantId);
+        final LocalDateTime escalationDateTime = LocalDateTime.of(2016, 1, 2, 3, 4, 5);
+        serviceRequestMap.put("expected_datetime", new DateConverter(escalationDateTime).toDate());
 		serviceRequestMap.put("service_request_id", "AA-01892-AP");
 		serviceRequestMap.put("lat", 15.232D);
 		serviceRequestMap.put("lng", 18.232D);
@@ -207,13 +209,11 @@ public class ComplaintBuilderTest {
 		long designationId = 12L;
 		long assigneeId = 18L;
 		Long departmentId = 11L;
-		Date escalationDate = getDateFor(2017, 2, 28);
 		String complaintStatus = "PROCESSING";
 		String mode = "Website";
 		setupStatusMock();
 		setupComplaintTypeMock();
 		setupPositionMock(assigneeId, designationId, departmentId);
-		setupEscalationDateMock(escalationDate, designationId);
 		setupComplaintStatusMock(complaintStatus);
 		setupReceivingModeMock(mode);
 	}
@@ -222,10 +222,6 @@ public class ComplaintBuilderTest {
 		org.egov.pgr.entity.ComplaintStatus complaintStatus = new org.egov.pgr.entity.ComplaintStatus();
 		complaintStatus.setName(statusName);
 		when(complaintStatusService.getByName(statusName)).thenReturn(complaintStatus);
-	}
-
-	private void setupEscalationDateMock(Date expectedDate, long designationId) {
-		when(escalationService.getExpiryDate(any(Complaint.class), eq(designationId))).thenReturn(expectedDate);
 	}
 
 	private void setupPositionMock(Long assigneeId, Long designationId, Long departmentId) {
@@ -255,13 +251,7 @@ public class ComplaintBuilderTest {
 
 	private ComplaintBuilder complaintBuilderWithComplaint(Complaint complaint, SevaRequest sevaRequest) {
 		return new ComplaintBuilder(complaint, sevaRequest, complaintTypeService, complaintStatusService,
-				escalationService, positionRepository, userRepository, receivingCenterService, requestInfo,
-				receivingModeService);
+            positionRepository, userRepository, receivingCenterService, receivingModeService);
 	}
 
-	private Date getDateFor(int year, int month, int date) {
-		Calendar c = Calendar.getInstance();
-		c.set(year, month, date, 0, 0);
-		return c.getTime();
-	}
 }

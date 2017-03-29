@@ -39,8 +39,6 @@ public class GrievancePersistenceListenerTest {
     @Mock
     private ComplaintService complaintService;
     @Mock
-    private EscalationService escalationService;
-    @Mock
     private GrievanceProducer producer;
     @Mock
     private PositionRepository positionRepository;

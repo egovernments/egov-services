@@ -6,14 +6,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ComplaintRepository {
+public class ComplaintMessageQueueRepository {
 
     private String topicName;
     private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
-    public ComplaintRepository(@Value("${kafka.topics.pgr.employee_enriched.name}")
-                                   String topicName,
-                               LogAwareKafkaTemplate<String, Object> kafkaTemplate) {
+    public ComplaintMessageQueueRepository(@Value("${kafka.topics.pgr.employee_enriched.name}")
+                                               String topicName,
+                                           LogAwareKafkaTemplate<String, Object> kafkaTemplate) {
         this.topicName = topicName;
         this.kafkaTemplate = kafkaTemplate;
     }

@@ -51,9 +51,9 @@ import org.springframework.core.env.Environment;
 @Order(0)
 public class ApplicationProperties {
 
-	private static final String HR_LEAVE_SEARCH_PAGESIZE_DEFAULT = "hr.leave.search.pagesize.default";
-	public static final String HR_LEAVE_SEARCH_PAGENO_MAX = "hr.leave.search.pageno.max";
-	public static final String HR_LEAVE_SEARCH_PAGESIZE_MAX = "hr.leave.search.pagesize.max";
+	private static final String HR_LEAVE_SEARCH_PAGESIZE_DEFAULT = "egov.services.hr.leave.search.pagesize.default";
+	public static final String HR_LEAVE_SEARCH_PAGENO_MAX = "egov.services.hr.leave.search.pageno.max";
+	public static final String HR_LEAVE_SEARCH_PAGESIZE_MAX = "egov.services.hr.leave.search.pagesize.max";
 
 	@Autowired
 	private Environment environment;

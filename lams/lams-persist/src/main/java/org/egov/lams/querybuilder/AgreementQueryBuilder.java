@@ -12,8 +12,8 @@ public class AgreementQueryBuilder {
 
 	public static String updateAgreementQuery() {
 		  
-		return "UPDATE eglams_agreement values "
-				+ "(Id=?,Agreement_Date=?,Agreement_Number=?,"
+		return "UPDATE eglams_agreement SET "
+				+ "Id=?,Agreement_Date=?,Agreement_Number=?,"
 				+ "Bank_Guarantee_Amount=?,Bank_Guarantee_Date=?,Case_No=?,Commencement_Date=?,"
 				+ "Council_Date=?,Council_Number=?,Expiry_Date=?,Nature_Of_Allotment=?,"
 				+ "Order_Date=?,Order_Details=?,Order_No=?,Payment_Cycle=?,Registration_Fee=?,"

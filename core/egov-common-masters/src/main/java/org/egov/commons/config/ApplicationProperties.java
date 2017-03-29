@@ -51,9 +51,9 @@ import org.springframework.core.env.Environment;
 @Order(0)
 public class ApplicationProperties {
 
-	private static final String COMMONS_SEARCH_PAGESIZE_DEFAULT = "commons.search.pagesize.default";
-	public static final String COMMONS_SEARCH_PAGENO_MAX = "commons.search.pageno.max";
-	public static final String COMMONS_SEARCH_PAGESIZE_MAX = "commons.search.pagesize.max";
+	private static final String COMMONS_SEARCH_PAGESIZE_DEFAULT = "egov.services.egov.commons.search.pagesize.default";
+	public static final String COMMONS_SEARCH_PAGENO_MAX = "egov.services.egov.commons.search.pageno.max";
+	public static final String COMMONS_SEARCH_PAGESIZE_MAX = "egov.services.egov.commons.search.pagesize.max";
 
 	@Autowired
 	private Environment environment;

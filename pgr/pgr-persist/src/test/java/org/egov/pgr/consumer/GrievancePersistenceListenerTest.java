@@ -49,10 +49,6 @@ public class GrievancePersistenceListenerTest {
     private Complaint complaint;
     @InjectMocks
     private GrievancePersistenceListener listener;
-    private String key = "sevaReq";
-    private long offset = 1L;
-    private String topic = "temp";
-    private int partition = 1;
     private String complaintCrn = "12-1532-AA";
     private ComplaintType complaintType;
 

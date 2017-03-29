@@ -1,5 +1,6 @@
 package org.egov.pgr.model;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.egov.pgr.DateConverter;
 import org.egov.pgr.contracts.grievance.ResponseInfo;
 import org.egov.pgr.contracts.grievance.SevaRequest;
@@ -20,13 +21,11 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -55,9 +54,11 @@ public class ComplaintBuilderTest {
 		Complaint builtComplaint = complaintBuilder.build();
 
         final LocalDateTime expectedEscalationDateTime =
-            LocalDateTime.of(2016, 1, 2, 3, 4, 5);
+            LocalDateTime.of(2017, 3, 31, 14, 5, 23);
         final Date expectedEscalationDate = new DateConverter(expectedEscalationDateTime).toDate();
-        assertEquals(expectedEscalationDate, builtComplaint.getEscalationDate());
+        final Date actualEscalationDate = builtComplaint.getEscalationDate();
+        String message = String.format("Expected: %s, Actual: %s", expectedEscalationDate, actualEscalationDate);
+        assertTrue(message, DateUtils.truncatedEquals(expectedEscalationDate, actualEscalationDate, Calendar.SECOND));
 		assertEquals("AA-01892-AP", builtComplaint.getCrn());
 		assertEquals(15.232, builtComplaint.getLat(), 0.0);
 		assertEquals(18.232, builtComplaint.getLng(), 0.0);
@@ -168,7 +169,8 @@ public class ComplaintBuilderTest {
 		serviceRequestMap.put("email", "raju@maildrop.cc");
 		serviceRequestMap.put("phone", "9988776655");
 		serviceRequestMap.put("service_code", "MAGIC");
-		sevaRequestMap.put("ServiceRequest", serviceRequestMap);
+        serviceRequestMap.put("expected_datetime", 1490949323177L);
+        sevaRequestMap.put("ServiceRequest", serviceRequestMap);
 		return new SevaRequest(sevaRequestMap);
 	}
 
@@ -201,6 +203,7 @@ public class ComplaintBuilderTest {
         serviceRequestMap.put("email", "");
         serviceRequestMap.put("phone", "");
         serviceRequestMap.put("service_code", "MAGIC");
+        serviceRequestMap.put("expected_datetime", 1490949323177L);
         sevaRequestMap.put("ServiceRequest", serviceRequestMap);
         return new SevaRequest(sevaRequestMap);
     }

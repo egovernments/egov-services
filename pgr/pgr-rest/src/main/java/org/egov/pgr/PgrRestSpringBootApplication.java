@@ -16,13 +16,18 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 import java.util.TimeZone;
 
 @SpringBootApplication
 @Import({TracerConfiguration.class})
 public class PgrRestSpringBootApplication {
 
-	@Value("${user.service.url}")
+    private static final String DATE_FORMAT = "dd-MM-yyyy HH:mm:ss";
+    private static final String IST = "Asia/Calcutta";
+
+    @Value("${user.service.url}")
 	private String userServiceHost;
 
 	@Value("${egov.services.user.get_user_details}")
@@ -31,7 +36,6 @@ public class PgrRestSpringBootApplication {
 	@Value("${egov.services.user.get_user_by_username}")
 	private String getUserByUserNameUrl;
 
-	private static final String IST = "Asia/Calcutta";
 
 	@Bean
 	public UserRepository userRepository(RestTemplate restTemplate) {
@@ -43,7 +47,7 @@ public class PgrRestSpringBootApplication {
 		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-		mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+		mapper.setDateFormat(new SimpleDateFormat(DATE_FORMAT, Locale.ENGLISH));
 		converter.setObjectMapper(mapper);
 		return converter;
 	}

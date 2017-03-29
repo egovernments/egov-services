@@ -1,5 +1,6 @@
 package org.egov.pgr.contracts.grievance;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -76,7 +77,7 @@ public class ServiceRequest {
 	}
 
 	public Date getEscalationDate() {
-	    return (Date) this.serviceRequestMap.get(EXPECTED_DATETIME);
+        return new Date((Long) this.serviceRequestMap.get(EXPECTED_DATETIME));
     }
 
     @SuppressWarnings("unchecked")

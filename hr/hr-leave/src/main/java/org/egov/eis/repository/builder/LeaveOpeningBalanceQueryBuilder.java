@@ -60,14 +60,14 @@ public class LeaveOpeningBalanceQueryBuilder {
 	private static final String BASE_QUERY = "SELECT lob.id AS lob_id, lob.employeeId AS lob_employeeId,"
 			+ " lob.calendarYear AS lob_calendarYear, lob.noOfDays AS lob_noOfDays, lob.createdBy AS lob_createdBy,"
 			+ " lob.createdDate AS lob_createdDate, lob.lastModifiedBy AS lob_lastModifiedBy,"
-			+ " lob.lastModifiedDate AS lob_lastModifiedDate, lob.tenantId AS lob_tenantId"
+			+ " lob.lastModifiedDate AS lob_lastModifiedDate, lob.tenantId AS lob_tenantId,"
 			+ " lt.id AS lt_id, lt.name AS lt_name, lt.description AS lt_description,"
 			+ " lt.halfdayAllowed AS lt_halfdayAllowed, lt.payEligible AS lt_payEligible,"
 			+ " lt.accumulative AS lt_accumulative, lt.encashable AS lt_encashable,"
 			+ " lt.active AS lt_active, lt.createdBy AS lt_createdBy, lt.createdDate AS lt_createdDate,"
 			+ " lt.lastModifiedBy AS lt_lastModifiedBy, lt.lastModifiedDate AS lt_lastModifiedDate"
 			+ " FROM egeis_leaveOpeningBalance lob"
-			+ " JOIN egeis_leaveType lt ON la.leaveTypeId = lt.id";
+			+ " JOIN egeis_leaveType lt ON lob.leaveTypeId = lt.id";
 
 	@SuppressWarnings("rawtypes")
 	public String getQuery(LeaveOpeningBalanceGetRequest leaveOpeningBalanceGetRequest, List preparedStatementValues) {

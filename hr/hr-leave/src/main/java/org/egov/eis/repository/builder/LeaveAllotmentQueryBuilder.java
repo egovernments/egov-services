@@ -57,10 +57,15 @@ public class LeaveAllotmentQueryBuilder {
 	@Autowired
 	private ApplicationProperties applicationProperties;
 
-	private static final String BASE_QUERY = "SELECT la_id, la_designation, la_noOfDays, la_createdBy,"
-			+ " la_createdDate, la_lastModifiedBy, la_lastModifiedDate, la_tenantId"
-			+ " lt_id, lt_name, lt_description, lt_halfdayAllowed, lt_payEligible, lt_accumulative, lt_encashable,"
-			+ " lt_active, lt_createdBy, lt_createdDate, lt_lastModifiedBy, lt_lastModifiedDate"
+	private static final String BASE_QUERY = "SELECT la.id AS la_id, la.designationId AS la_designationId,"
+			+ " la.noOfDays AS la_noOfDays, la.createdBy AS la_createdBy, la.createdDate AS la_createdDate,"
+			+ " la.lastModifiedBy AS la_lastModifiedBy, la.lastModifiedDate AS la_lastModifiedDate,"
+			+ " la.tenantId AS la_tenantId,"
+			+ " lt.id AS lt_id, lt.name AS lt_name, lt.description AS lt_description,"
+			+ " lt.halfdayAllowed AS lt_halfdayAllowed, lt.payEligible AS lt_payEligible,"
+			+ " lt.accumulative AS lt_accumulative, lt.encashable AS lt_encashable,"
+			+ " lt.active AS lt_active, lt.createdBy AS lt_createdBy, lt.createdDate AS lt_createdDate,"
+			+ " lt.lastModifiedBy AS lt_lastModifiedBy, lt.lastModifiedDate AS lt_lastModifiedDate"
 			+ " FROM egeis_leaveAllotment la"
 			+ " JOIN egeis_leaveType lt ON la.leaveTypeId = lt.id";
 
@@ -89,32 +94,35 @@ public class LeaveAllotmentQueryBuilder {
 
 		if (leaveAllotmentGetRequest.getTenantId() != null) {
 			isAppendAndClause = true;
-			selectQuery.append(" tenantId = ?");
+			selectQuery.append(" la.tenantId = ?");
+			preparedStatementValues.add(leaveAllotmentGetRequest.getTenantId());
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" lt.tenantId = ?");
 			preparedStatementValues.add(leaveAllotmentGetRequest.getTenantId());
 		}
 
 		if (leaveAllotmentGetRequest.getId() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" la_id IN " + getIdQuery(leaveAllotmentGetRequest.getId()));
+			selectQuery.append(" la.id IN " + getIdQuery(leaveAllotmentGetRequest.getId()));
 		}
 
 		if (leaveAllotmentGetRequest.getDesignationId() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" la_designation = ?");
-			preparedStatementValues.add(leaveAllotmentGetRequest.getDesignationId());
+			selectQuery.append(" la.designationId IN " + getIdQuery(leaveAllotmentGetRequest.getDesignationId()));
 		}
 
 		if (leaveAllotmentGetRequest.getLeaveType() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" la_leaveTypeId IN " + getIdQuery(leaveAllotmentGetRequest.getLeaveType()));
+			selectQuery.append(" la.leaveTypeId IN " + getIdQuery(leaveAllotmentGetRequest.getLeaveType()));
 		}
 	}
 
 	private void addOrderByClause(StringBuilder selectQuery, LeaveAllotmentGetRequest leaveAllotmentGetRequest) {
-		String sortBy = (leaveAllotmentGetRequest.getSortBy() == null ? "name" : leaveAllotmentGetRequest.getSortBy());
+		String sortBy = (leaveAllotmentGetRequest.getSortBy() == null ? "lt.name"
+				: leaveAllotmentGetRequest.getSortBy());
 		String sortOrder = (leaveAllotmentGetRequest.getSortOrder() == null ? "ASC"
 				: leaveAllotmentGetRequest.getSortOrder());
-		selectQuery.append(" ORDER BY lt_" + sortBy + " " + sortOrder);
+		selectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })

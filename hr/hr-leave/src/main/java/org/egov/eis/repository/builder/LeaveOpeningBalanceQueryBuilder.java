@@ -57,7 +57,17 @@ public class LeaveOpeningBalanceQueryBuilder {
 	@Autowired
 	private ApplicationProperties applicationProperties;
 
-	private static final String BASE_QUERY = "SELECT id, employee, calendarYear, leaveType, noOfDays, createdBy, createdDate, lastModifiedBy, lastModifiedDate, tenantId FROM egeis_leaveOpeningBalance";
+	private static final String BASE_QUERY = "SELECT lob.id AS lob_id, lob.employeeId AS lob_employeeId,"
+			+ " lob.calendarYear AS lob_calendarYear, lob.noOfDays AS lob_noOfDays, lob.createdBy AS lob_createdBy,"
+			+ " lob.createdDate AS lob_createdDate, lob.lastModifiedBy AS lob_lastModifiedBy,"
+			+ " lob.lastModifiedDate AS lob_lastModifiedDate, lob.tenantId AS lob_tenantId"
+			+ " lt.id AS lt_id, lt.name AS lt_name, lt.description AS lt_description,"
+			+ " lt.halfdayAllowed AS lt_halfdayAllowed, lt.payEligible AS lt_payEligible,"
+			+ " lt.accumulative AS lt_accumulative, lt.encashable AS lt_encashable,"
+			+ " lt.active AS lt_active, lt.createdBy AS lt_createdBy, lt.createdDate AS lt_createdDate,"
+			+ " lt.lastModifiedBy AS lt_lastModifiedBy, lt.lastModifiedDate AS lt_lastModifiedDate"
+			+ " FROM egeis_leaveOpeningBalance lob"
+			+ " JOIN egeis_leaveType lt ON la.leaveTypeId = lt.id";
 
 	@SuppressWarnings("rawtypes")
 	public String getQuery(LeaveOpeningBalanceGetRequest leaveOpeningBalanceGetRequest, List preparedStatementValues) {
@@ -86,37 +96,38 @@ public class LeaveOpeningBalanceQueryBuilder {
 
 		if (leaveOpeningBalanceGetRequest.getTenantId() != null) {
 			isAppendAndClause = true;
-			selectQuery.append(" tenantId = ?");
+			selectQuery.append(" lob.tenantId = ?");
+			preparedStatementValues.add(leaveOpeningBalanceGetRequest.getTenantId());
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" lt.tenantId = ?");
 			preparedStatementValues.add(leaveOpeningBalanceGetRequest.getTenantId());
 		}
 
 		if (leaveOpeningBalanceGetRequest.getId() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" id IN " + getIdQuery(leaveOpeningBalanceGetRequest.getId()));
+			selectQuery.append(" lob.id IN " + getIdQuery(leaveOpeningBalanceGetRequest.getId()));
 		}
 
 		if (leaveOpeningBalanceGetRequest.getEmployee() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" employee = ?");
-			preparedStatementValues.add(leaveOpeningBalanceGetRequest.getEmployee());
+			selectQuery.append(" lob.employeeId IN " + getIdQuery(leaveOpeningBalanceGetRequest.getEmployee()));
 		}
 
 		if (leaveOpeningBalanceGetRequest.getYear() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" calendarYear = ?");
+			selectQuery.append(" lob.calendarYear = ?");
 			preparedStatementValues.add(leaveOpeningBalanceGetRequest.getYear());
 		}
 
 		if (leaveOpeningBalanceGetRequest.getLeaveType() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" leaveType = ?");
-			preparedStatementValues.add(leaveOpeningBalanceGetRequest.getLeaveType());
+			selectQuery.append(" lob.leaveTypeId IN " + getIdQuery(leaveOpeningBalanceGetRequest.getLeaveType()));
 		}
 	}
 
 	private void addOrderByClause(StringBuilder selectQuery,
 			LeaveOpeningBalanceGetRequest leaveOpeningBalanceGetRequest) {
-		String sortBy = (leaveOpeningBalanceGetRequest.getSortBy() == null ? "id"
+		String sortBy = (leaveOpeningBalanceGetRequest.getSortBy() == null ? "lob.calendarYear"
 				: leaveOpeningBalanceGetRequest.getSortBy());
 		String sortOrder = (leaveOpeningBalanceGetRequest.getSortOrder() == null ? "ASC"
 				: leaveOpeningBalanceGetRequest.getSortOrder());

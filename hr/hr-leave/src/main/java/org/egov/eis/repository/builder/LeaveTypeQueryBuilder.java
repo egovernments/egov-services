@@ -103,7 +103,7 @@ public class LeaveTypeQueryBuilder {
 	}
 
 	private void addOrderByClause(StringBuilder selectQuery, LeaveTypeGetRequest leaveTypeGetRequest) {
-		String sortBy = (leaveTypeGetRequest.getSortBy() == null ? "id" : leaveTypeGetRequest.getSortBy());
+		String sortBy = (leaveTypeGetRequest.getSortBy() == null ? "name" : leaveTypeGetRequest.getSortBy());
 		String sortOrder = (leaveTypeGetRequest.getSortOrder() == null ? "ASC" : leaveTypeGetRequest.getSortOrder());
 		selectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);
 	}

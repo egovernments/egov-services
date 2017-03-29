@@ -7,9 +7,9 @@ CREATE TABLE egeis_leaveType (
 	accumulative BOOLEAN NOT NULL,
 	encashable BOOLEAN NOT NULL,
 	active BOOLEAN DEFAULT true,
-	createdBy CHARACTER VARYING(250) NOT NULL,
+	createdBy BIGINT NOT NULL,
 	createdDate DATE NOT NULL,
-	lastModifiedBy CHARACTER VARYING(250),
+	lastModifiedBy BIGINT,
 	lastModifiedDate DATE,
 	tenantId CHARACTER VARYING(250) NOT NULL,
 

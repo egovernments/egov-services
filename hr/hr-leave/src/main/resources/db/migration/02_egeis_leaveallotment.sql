@@ -3,14 +3,13 @@ CREATE TABLE egeis_leaveAllotment (
 	designationId BIGINT,
 	leaveTypeId BIGINT NOT NULL,
 	noOfDays FLOAT NOT NULL,
-	createdBy CHARACTER VARYING(250) NOT NULL,
+	createdBy BIGINT NOT NULL,
 	createdDate DATE NOT NULL,
-	lastModifiedBy CHARACTER VARYING(250),
+	lastModifiedBy BIGINT,
 	lastModifiedDate DATE,
 	tenantId CHARACTER VARYING(250) NOT NULL,
 
 	CONSTRAINT pk_egeis_leaveAllotment PRIMARY KEY (Id),
-	CONSTRAINT uk_egeis_leaveAllotment_designationId UNIQUE (designationId),
 	CONSTRAINT fk_egeis_leaveAllotment_leaveTypeId FOREIGN KEY (leaveTypeId)
 		REFERENCES egeis_leaveType(id)
 );

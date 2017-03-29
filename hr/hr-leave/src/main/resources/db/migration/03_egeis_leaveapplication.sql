@@ -13,15 +13,14 @@ CREATE TABLE egeis_leaveApplication (
 	reason CHARACTER VARYING(500),
 	status CHARACTER VARYING(10) NOT NULL,
 	stateId BIGINT,
-	createdBy CHARACTER VARYING(250) NOT NULL,
+	createdBy BIGINT NOT NULL,
 	createdDate DATE NOT NULL,
-	lastModifiedBy CHARACTER VARYING(250),
+	lastModifiedBy BIGINT,
 	lastModifiedDate DATE,
 	tenantId CHARACTER VARYING(250) NOT NULL,
 
 	CONSTRAINT pk_egeis_leaveApplication PRIMARY KEY (Id),
 	CONSTRAINT uk_egeis_leaveApplication_applicationNumber UNIQUE (applicationNumber),
-	CONSTRAINT uk_egeis_leaveApplication_employeeId UNIQUE (employeeId),
 	CONSTRAINT fk_egeis_leaveApplication_leaveTypeId FOREIGN KEY (leaveTypeId)
 		REFERENCES egeis_leaveType(id)
 );

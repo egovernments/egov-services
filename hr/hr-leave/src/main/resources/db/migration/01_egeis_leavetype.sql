@@ -6,7 +6,7 @@ CREATE TABLE egeis_leaveType (
 	payEligible BOOLEAN NOT NULL,
 	accumulative BOOLEAN NOT NULL,
 	encashable BOOLEAN NOT NULL,
-	active BOOLEAN DEFAULT true,
+	active BOOLEAN DEFAULT TRUE,
 	createdBy BIGINT NOT NULL,
 	createdDate DATE NOT NULL,
 	lastModifiedBy BIGINT,

@@ -9,7 +9,7 @@ CREATE TABLE egeis_leaveApplication (
 	leaveDays FLOAT,
 	availableDays FLOAT,
 	halfdays INTEGER,
-	firstHalfleave BOOLEAN NOT NULL,
+	firstHalfleave BOOLEAN,
 	reason CHARACTER VARYING(500),
 	status CHARACTER VARYING(10) NOT NULL,
 	stateId BIGINT,

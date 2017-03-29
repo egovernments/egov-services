@@ -29,9 +29,7 @@ public class IndexerListener {
         this.objectMapper = objectMapper;
     }
 
-    @KafkaListener(id = "${kafka.topics.egov.index.id}",
-        topics = "${kafka.topics.egov.index.name}",
-        group = "${kafka.topics.egov.index.group}")
+    @KafkaListener(topics = "${kafka.topics.egov.index.name}")
     public void listen(HashMap<String, Object> sevaRequestMap) {
         SevaRequest sevaRequest = objectMapper.convertValue(sevaRequestMap, SevaRequest.class);
         if (sevaRequest.getServiceRequest() != null && !sevaRequest.getServiceRequest().getValues().isEmpty()

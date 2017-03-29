@@ -30,10 +30,14 @@ public class WorkflowService {
 	
 	public void updateWorkflow(AgreementRequest agreementRequest){
 		workflowRepository.updateWorkflow(agreementRequest);
+		updateAgreement(agreementRequest);
 	}
 
 	private void saveAgreement(AgreementRequest agreementRequest) {
 		workflowRepository.saveAgreement(agreementRequest);
 	}
 	
+	private void updateAgreement(AgreementRequest agreementRequest) {
+		workflowRepository.updateAgreement(agreementRequest);
+	}
 }

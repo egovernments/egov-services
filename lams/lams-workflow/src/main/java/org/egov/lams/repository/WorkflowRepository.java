@@ -3,6 +3,7 @@ package org.egov.lams.repository;
 import org.egov.lams.config.PropertiesManager;
 import org.egov.lams.contract.AgreementRequest;
 import org.egov.lams.contract.ProcessInstanceRequest;
+import org.egov.lams.contract.ProcessInstanceResponse;
 import org.egov.lams.contract.TaskRequest;
 import org.egov.lams.contract.TaskResponse;
 import org.egov.lams.contract.WorkflowRequestInfo;
@@ -62,15 +63,16 @@ public class WorkflowRepository {
 					+ propertiesManager.getWorkflowServiceStartPath();
 		LOGGER.info("string url of the workflow appp : "+url);
 
-		ProcessInstance  processInstanceRes = null;
+		ProcessInstanceResponse  processInstanceRes = null;
 		try {
-			processInstanceRes = restTemplate.postForObject(url, processInstanceRequest,ProcessInstance.class);
+			processInstanceRes = restTemplate.postForObject(url, processInstanceRequest,ProcessInstanceResponse.class);
 		} catch (Exception e) {
 			LOGGER.info(e.toString());
 			throw e;
 		}
 		//FIXME the response should be always processInstanceResponse
-		return processInstanceRes;
+		LOGGER.error("the response object from workflow : " +processInstanceRes.getProcessInstance().getId());
+		return processInstanceRes.getProcessInstance();
 	}
 
 	public TaskResponse updateWorkflow(AgreementRequest agreementRequest) {
@@ -86,7 +88,7 @@ public class WorkflowRepository {
 		Task task = new Task();
 		task.setAction(workFlowDetails.getAction());
 		// FIXME business key get confirmed form workflow module
-		task.setBusinessKey("agreement");
+		task.setBusinessKey(propertiesManager.getWorkflowServiceBusinessKey());
 		task.setType("agreement");
 		task.setId(agreement.getStateId());
 		task.setStatus(workFlowDetails.getStatus());
@@ -101,6 +103,8 @@ public class WorkflowRepository {
 					+ propertiesManager.getWorkflowServiceTaskPAth() 
 					+ "/"+agreement.getStateId()
 					+ propertiesManager.getWorkflowServiceUpdatePath();
+		
+		LOGGER.error("the task object : "+ task.toString()+ " : "+ url);
 
 		TaskResponse taskResponse = null;
 		try {
@@ -109,7 +113,7 @@ public class WorkflowRepository {
 			LOGGER.info(e.toString());
 			e.printStackTrace();
 		}
-			
+			LOGGER.info("the response from task update : "+taskResponse.getTask());
 		return taskResponse;
 	}
 
@@ -123,6 +127,19 @@ public class WorkflowRepository {
 			throw new RuntimeException(e);
 		}
 		agreementProducer.sendMessage(propertiesManager.getKafkaSaveAgreementTopic(), "key", agreementRequestMessage);
+	}
+	
+	public void updateAgreement(AgreementRequest agreementRequest) {
+		String agreementRequestMessage = null;
+		ObjectMapper objectMapper = new ObjectMapper();
+		try{
+			agreementRequestMessage	= objectMapper.writeValueAsString(agreementRequest);
+		}catch (Exception e) {
+			LOGGER.debug("WorkflowRepositorysaveAgreement : " +e);
+			throw new RuntimeException(e);
+		}
+		//FIXME TODO remove the hard coding and place the property manager string
+		agreementProducer.sendMessage("agreement-update-db", "key", agreementRequestMessage);
 	}
 
 }

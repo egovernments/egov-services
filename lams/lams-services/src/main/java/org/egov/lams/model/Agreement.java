@@ -49,8 +49,6 @@ public class Agreement {
 
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date securityDepositDate;
-
-	@NotNull
 	private Status status;
 
 	@NotNull

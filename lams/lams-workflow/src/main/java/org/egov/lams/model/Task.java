@@ -2,6 +2,8 @@ package org.egov.lams.model;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -16,7 +18,9 @@ public class Task   {
 	private String type;
 	private Position assignee;
 	private String comments;
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date createdDate;
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date lastupdatedSince;
 	private Position owner;
 	private String state;

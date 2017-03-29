@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -18,6 +20,7 @@ public class ProcessInstance   {
 	private String type = null;
 	private Position assignee = null;
 	private String comments = null;
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date createdDate = null;
 	private Date lastupdatedSince = null;
 	private Position owner = null;

@@ -7,6 +7,8 @@ import java.util.Set;
 import org.egov.lams.config.PropertiesManager;
 import org.egov.lams.exception.LamsException;
 import org.egov.lams.model.Allottee;
+import org.egov.lams.model.enums.Gender;
+import org.egov.lams.model.enums.UserType;
 import org.egov.lams.web.contract.AllotteeResponse;
 import org.egov.lams.web.contract.CreateUserRequest;
 import org.egov.lams.web.contract.RequestInfo;
@@ -17,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -60,11 +63,12 @@ public class AllotteeService {
 		 String url = propertiesManager.getAllotteeServiceHostName()
 			    	+ propertiesManager.getAllotteeServiceBasePAth()
 			    	+ propertiesManager.getAllotteeServiceCreatePAth();
-		/* allottee.setUserName(allottee.getName()+allottee.getMobileNumber());
+		 
+		allottee.setUserName(allottee.getName()+allottee.getMobileNumber());
 		 allottee.setPassword(allottee.getMobileNumber().toString());
-		 allottee.setGender(Gender.MALE);
+		 allottee.setGender(Gender.FEMALE);
 		 allottee.setType(UserType.CITIZEN);
-		 allottee.setActive(true);*/
+		 allottee.setActive(true);
 		 //TODO will change in future gender will not be mandatory
 		 //FIXME set user name and password using any gen service
 		 CreateUserRequest userRequest = new CreateUserRequest(requestInfo,allottee);

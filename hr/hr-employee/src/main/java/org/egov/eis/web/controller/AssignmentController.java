@@ -49,6 +49,7 @@ import org.egov.eis.service.AssignmentService;
 import org.egov.eis.web.contract.AssignmentGetRequest;
 import org.egov.eis.web.contract.AssignmentResponse;
 import org.egov.eis.web.contract.RequestInfo;
+import org.egov.eis.web.contract.RequestInfoWrapper;
 import org.egov.eis.web.contract.ResponseInfo;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
 import org.egov.eis.web.errorhandler.ErrorHandler;
@@ -56,7 +57,6 @@ import org.egov.eis.web.validator.RequestValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -64,7 +64,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -91,19 +90,23 @@ public class AssignmentController {
 	 * Maps Post Requests for _search & returns ResponseEntity of either
 	 * AssignmentResponse type or ErrorResponse type
 	 * 
-	 * @param assignmentGetRequest,
-	 * @param bindingResult
-	 * @param requestInfo
-	 * @param headers
+	 * @param AssignmentGetRequest,
+	 * @param BindingResult
+	 * @param RequestInfoWrapper
+	 * @param BindingResult
+	 * @param Long
 	 * @return ResponseEntity<?>
 	 */
-	@PostMapping(value = "_search", headers = { "x-user-info" })
+	@PostMapping("_search")
 	@ResponseBody
 	public ResponseEntity<?> search(@ModelAttribute @Valid AssignmentGetRequest assignmentGetRequest,
-			BindingResult bindingResult, @PathVariable Long id, @RequestBody RequestInfo requestInfo,
-			@RequestHeader HttpHeaders headers) {
+			BindingResult modelAttributeBindingResult, @RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
+			BindingResult requestBodyBindingResult, @PathVariable Long id) {
+		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 
-		ResponseEntity<?> errorResponseEntity = requestValidator.validateSearchRequest(requestInfo, bindingResult);
+		ResponseEntity<?> errorResponseEntity = requestValidator.validateSearchRequest(requestInfo,
+				modelAttributeBindingResult, requestBodyBindingResult);
+
 		if (errorResponseEntity != null)
 			return errorResponseEntity;
 
@@ -123,9 +126,8 @@ public class AssignmentController {
 	 * Populate AssignmentResponse object & returns ResponseEntity of type
 	 * AssignmentResponse containing ResponseInfo & List of Assignments
 	 * 
-	 * @param employee
-	 * @param requestInfo
-	 * @param headers
+	 * @param List<Assignment>
+	 * @param RequestInfo
 	 * @return ResponseEntity<?>
 	 */
 	private ResponseEntity<?> getSuccessResponse(List<Assignment> assignmentsList, RequestInfo requestInfo) {

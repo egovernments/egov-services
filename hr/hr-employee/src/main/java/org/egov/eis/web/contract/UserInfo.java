@@ -38,39 +38,55 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.web.validator;
+package org.egov.eis.web.contract;
 
-import org.egov.eis.web.contract.RequestInfo;
-import org.egov.eis.web.errorhandler.ErrorHandler;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
-import org.springframework.validation.BindingResult;
+import java.util.List;
 
-@Component
-public class RequestValidator {
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
-	@Autowired
-	private ErrorHandler errHandler;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-	/**
-	 * Validate RequestInfo object & returns ErrorResponseEntity if there are
-	 * any errors or else returns null
-	 * 
-	 * @param requestInfo
-	 * @param headers
-	 * @param bindingResult
-	 * @return ResponseEntity<?>
-	 */
-	public ResponseEntity<?> validateSearchRequest(RequestInfo requestInfo, BindingResult modelAttributeBindingResult,
-			BindingResult requestBodyBindingResult) {
-		// validate input params
-		if (modelAttributeBindingResult.hasErrors()) {
-			return errHandler.getErrorResponseEntityForMissingParameters(modelAttributeBindingResult, requestInfo);
-		}
-		if (requestBodyBindingResult.hasErrors()) {
-			return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
-		}
-		return null;
-	}
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@EqualsAndHashCode
+public class UserInfo {
+
+	@NotNull
+	private Long id;
+
+	@NotNull
+	@Size(min=1, max=64)
+	private String userName;
+
+	@NotNull
+	@Size(min=3, max=100)
+	private String name;
+
+	@NotNull
+	@Size(max=20)
+	private String type;
+
+	@NotNull
+	@Size(max=10)
+	private String mobileNumber;
+
+	@NotNull
+	@Size(min=3, max=100)
+	private String emailId;
+
+	@Valid
+	@NotNull
+	@Size(min=1)
+	private List<UserInfoRoles> roles;
+
 }

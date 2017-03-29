@@ -83,7 +83,7 @@ public class UserService {
 	@Autowired
 	private ErrorHandler errorHandler;
 	
-	public List<User> getUsers(List<Long> ids, String tenantId, RequestInfo requestInfo, HttpHeaders headers) {
+	public List<User> getUsers(List<Long> ids, String tenantId, RequestInfo requestInfo) {
 		String url = userSearchURLHelper.searchURL(ids, tenantId);
 
 		UserGetRequest userGetRequest = new UserGetRequest();
@@ -99,8 +99,9 @@ public class UserService {
 			e.printStackTrace();
 		}
 
-		headers.setContentType(MediaType.APPLICATION_JSON);
 		// FIXME : Passing auth-token for testing locally. Remove before actual deployment.
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.add("auth-token", requestInfo.getAuthToken());
 		HttpEntity<String> httpEntityRequest = new HttpEntity<String>(userGetRequestJson, headers);
 
@@ -117,7 +118,7 @@ public class UserService {
 	}
 
 	// FIXME : User service is expecting & sending dates in multiple formats. Fix a common standard for date formats.
-	public ResponseEntity<?> createUser(UserRequest userRequest, HttpHeaders headers) {
+	public ResponseEntity<?> createUser(UserRequest userRequest) {
 		String url = propertiesManager.getUsersServiceHostName() + propertiesManager.getUsersServiceUsersBasePath()
 				+ propertiesManager.getUsersServiceUsersCreatePath();
 
@@ -130,6 +131,7 @@ public class UserService {
 		}
 
 		LOGGER.debug("userJson : " + userJson);
+		HttpHeaders headers =  new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		// FIXME : Passing auth-token for testing locally. Remove before actual deployment.
 		headers.add("auth-token", userRequest.getRequestInfo().getAuthToken());

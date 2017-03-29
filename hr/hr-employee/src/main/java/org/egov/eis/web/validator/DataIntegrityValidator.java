@@ -102,21 +102,18 @@ public class DataIntegrityValidator implements Validator {
 			errors.rejectValue("employee.dateOfRetirement", "invalid", "Invalid dateOfRetirement");
 		}
 
-		if ((employee.getPassportNo() != null) && employeeService.getCountForDataIntegrityChecks("egeis_employee",
+		if ((employee.getPassportNo() != null) && employeeService.getBooleanForDataIntegrityChecks("egeis_employee",
 				"passportNo", employee.getPassportNo())) {
 			errors.rejectValue("employee.passportNo", "concurrent", "passportNo already exists");
 		}
 
 		if ((employee.getGpfNo() != null)
-				&& employeeService.getCountForDataIntegrityChecks("egeis_employee", "gpfNo", employee.getGpfNo())) {
+				&& employeeService.getBooleanForDataIntegrityChecks("egeis_employee", "gpfNo", employee.getGpfNo())) {
 			errors.rejectValue("employee.gpfNo", "concurrent", "gpfNo already exists");
 		}
 
-		System.err.println(String.join(",", employee.getDocuments()));
-		System.err.println(employeeService.getCountForDataIntegrityChecks("egeis_employeeDocuments", "document",
-				getProcessedDocumentsString(employee.getDocuments())));
-
-		if ((employee.getDocuments() != null) && employeeService.getCountForDataIntegrityChecks(
+		if ((employee.getDocuments() != null) && !employee.getDocuments().isEmpty()
+				&& employeeService.getBooleanForDataIntegrityChecks(
 				"egeis_employeeDocuments", "document", getProcessedDocumentsString(employee.getDocuments()))) {
 			errors.rejectValue("employee.documents", "concurrent", "document(s) already exists");
 		}
@@ -124,7 +121,7 @@ public class DataIntegrityValidator implements Validator {
 		List<Assignment> assignments = employee.getAssignments();
 		for (int index = 0; index < assignments.size(); index++) {
 			if (assignments.get(index).getDocuments() != null && !assignments.get(index).getDocuments().isEmpty()
-					&& employeeService.getCountForDataIntegrityChecks("egeis_employeeDocuments", "document",
+					&& employeeService.getBooleanForDataIntegrityChecks("egeis_employeeDocuments", "document",
 							getProcessedDocumentsString(assignments.get(index).getDocuments()))) {
 				errors.rejectValue("employee.assignments[" + index + "].documents", "concurrent",
 						"document(s) already exists");
@@ -135,7 +132,7 @@ public class DataIntegrityValidator implements Validator {
 		if (tests != null && !tests.isEmpty()) {
 			for (int index = 0; index < tests.size(); index++) {
 				if (tests.get(index).getDocuments() != null && !tests.get(index).getDocuments().isEmpty()
-						&& employeeService.getCountForDataIntegrityChecks("egeis_employeeDocuments", "document",
+						&& employeeService.getBooleanForDataIntegrityChecks("egeis_employeeDocuments", "document",
 								getProcessedDocumentsString(tests.get(index).getDocuments()))) {
 					errors.rejectValue("employee.test[" + index + "].documents", "concurrent",
 							"document(s) already exists");
@@ -147,7 +144,7 @@ public class DataIntegrityValidator implements Validator {
 		if (educations != null && !educations.isEmpty()) {
 			for (int index = 0; index < educations.size(); index++) {
 				if (educations.get(index).getDocuments() != null && !educations.get(index).getDocuments().isEmpty()
-						&& employeeService.getCountForDataIntegrityChecks("egeis_employeeDocuments", "document",
+						&& employeeService.getBooleanForDataIntegrityChecks("egeis_employeeDocuments", "document",
 								getProcessedDocumentsString(educations.get(index).getDocuments()))) {
 					System.err.println("Checking");
 					errors.rejectValue("employee.education[" + index + "].documents", "concurrent",
@@ -160,7 +157,7 @@ public class DataIntegrityValidator implements Validator {
 		if (probations != null && !probations.isEmpty()) {
 			for (int index = 0; index < probations.size(); index++) {
 				if (probations.get(index).getDocuments() != null && !probations.get(index).getDocuments().isEmpty()
-						&& employeeService.getCountForDataIntegrityChecks("egeis_employeeDocuments", "document",
+						&& employeeService.getBooleanForDataIntegrityChecks("egeis_employeeDocuments", "document",
 								getProcessedDocumentsString(probations.get(index).getDocuments()))) {
 					errors.rejectValue("employee.probation[" + index + "].documents", "concurrent",
 							"document(s) already exists");
@@ -173,7 +170,7 @@ public class DataIntegrityValidator implements Validator {
 			for (int index = 0; index < regularisations.size(); index++) {
 				if (regularisations.get(index).getDocuments() != null
 						&& !regularisations.get(index).getDocuments().isEmpty()
-						&& employeeService.getCountForDataIntegrityChecks("egeis_employeeDocuments", "document",
+						&& employeeService.getBooleanForDataIntegrityChecks("egeis_employeeDocuments", "document",
 								getProcessedDocumentsString(regularisations.get(index).getDocuments()))) {
 					errors.rejectValue("employee.regularisation[" + index + "].documents", "concurrent",
 							"document(s) already exists");
@@ -185,7 +182,7 @@ public class DataIntegrityValidator implements Validator {
 		if (histories != null && !histories.isEmpty()) {
 			for (int index = 0; index < histories.size(); index++) {
 				if (histories.get(index).getDocuments() != null && !histories.get(index).getDocuments().isEmpty()
-						&& employeeService.getCountForDataIntegrityChecks("egeis_employeeDocuments", "document",
+						&& employeeService.getBooleanForDataIntegrityChecks("egeis_employeeDocuments", "document",
 								getProcessedDocumentsString(histories.get(index).getDocuments()))) {
 					errors.rejectValue("employee.history[" + index + "].documents", "concurrent",
 							"document(s) already exists");
@@ -197,7 +194,7 @@ public class DataIntegrityValidator implements Validator {
 		if (technicals != null && !technicals.isEmpty()) {
 			for (int index = 0; index < technicals.size(); index++) {
 				if (technicals.get(index).getDocuments() != null && !technicals.get(index).getDocuments().isEmpty()
-						&& employeeService.getCountForDataIntegrityChecks("egeis_employeeDocuments", "document",
+						&& employeeService.getBooleanForDataIntegrityChecks("egeis_employeeDocuments", "document",
 								getProcessedDocumentsString(technicals.get(index).getDocuments()))) {
 					errors.rejectValue("employee.technical[" + index + "].documents", "concurrent",
 							"document(s) already exists");

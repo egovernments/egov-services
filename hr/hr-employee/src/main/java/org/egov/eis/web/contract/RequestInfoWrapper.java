@@ -38,39 +38,31 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.web.validator;
+package org.egov.eis.web.contract;
 
-import org.egov.eis.web.contract.RequestInfo;
-import org.egov.eis.web.errorhandler.ErrorHandler;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
-import org.springframework.validation.BindingResult;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
-@Component
-public class RequestValidator {
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-	@Autowired
-	private ErrorHandler errHandler;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-	/**
-	 * Validate RequestInfo object & returns ErrorResponseEntity if there are
-	 * any errors or else returns null
-	 * 
-	 * @param requestInfo
-	 * @param headers
-	 * @param bindingResult
-	 * @return ResponseEntity<?>
-	 */
-	public ResponseEntity<?> validateSearchRequest(RequestInfo requestInfo, BindingResult modelAttributeBindingResult,
-			BindingResult requestBodyBindingResult) {
-		// validate input params
-		if (modelAttributeBindingResult.hasErrors()) {
-			return errHandler.getErrorResponseEntityForMissingParameters(modelAttributeBindingResult, requestInfo);
-		}
-		if (requestBodyBindingResult.hasErrors()) {
-			return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
-		}
-		return null;
-	}
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@EqualsAndHashCode
+public class RequestInfoWrapper {
+
+	@NotNull
+	@Valid
+	@JsonProperty("RequestInfo")
+	private RequestInfo requestInfo;
+
 }

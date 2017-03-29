@@ -73,7 +73,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -139,14 +138,13 @@ public class EmployeeService {
 	@Value("${kafka.topics.employee.savedb.key}")
 	String employeeSaveKey;
 
-	public List<EmployeeInfo> getEmployees(EmployeeGetRequest employeeGetRequest, RequestInfo requestInfo,
-			HttpHeaders headers) {
+	public List<EmployeeInfo> getEmployees(EmployeeGetRequest employeeGetRequest, RequestInfo requestInfo) {
 		List<EmployeeInfo> employeeInfoList = employeeRepository.findForCriteria(employeeGetRequest);
 
 		List<Long> ids = employeeInfoList.stream().map(employeeInfo -> employeeInfo.getId())
 				.collect(Collectors.toList());
 
-		List<User> usersList = userService.getUsers(ids, employeeGetRequest.getTenantId(), requestInfo, headers);
+		List<User> usersList = userService.getUsers(ids, employeeGetRequest.getTenantId(), requestInfo);
 		employeeUserMapper.mapUsersWithEmployees(employeeInfoList, usersList);
 
 		if(!ids.isEmpty()) {
@@ -157,11 +155,11 @@ public class EmployeeService {
 		return employeeInfoList;
 	}
 
-	public ResponseEntity<?> createEmployee(EmployeeRequest employeeRequest, HttpHeaders headers) {
+	public ResponseEntity<?> createEmployee(EmployeeRequest employeeRequest) {
 		UserRequest userRequest = employeeHelper.getUserRequest(employeeRequest);
 
 		// FIXME : User service is expecting & sending dates in multiple formats. Fix a common standard
-		ResponseEntity<?> responseEntity = userService.createUser(userRequest, headers);
+		ResponseEntity<?> responseEntity = userService.createUser(userRequest);
 
 		if(responseEntity.getBody().getClass().equals(UserErrorResponse.class)
 				|| responseEntity.getBody().getClass().equals(ErrorResponse.class)) {
@@ -178,9 +176,7 @@ public class EmployeeService {
 		employee.setUser(user);
 
 		try {
-			System.err.println("Before");
 			employeeHelper.populateData(employeeRequest);
-			System.err.println("After");
 		} catch(Exception e) {
 			LOGGER.debug("Error occurred while populating data in objects", e);
 			return errorHandler.getResponseEntityForUnexpectedErrors(employeeRequest.getRequestInfo());
@@ -237,7 +233,7 @@ public class EmployeeService {
 		}
 	}
 
-	public Boolean getCountForDataIntegrityChecks(String table, String field, Object value) {
-		return employeeRepository.getCountForDataIntegrityChecks(table, field, value);
+	public Boolean getBooleanForDataIntegrityChecks(String table, String field, Object value) {
+		return employeeRepository.getBooleanForDataIntegrityChecks(table, field, value);
 	}
 }

@@ -72,9 +72,6 @@ public class EmployeeRepository {
 			+ " medicalreportproduced, maritalstatus, passportno, gpfno, bankId, bankbranchId, bankaccount, groupId,"
 			+ " placeofbirth, tenantId)" + " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
-	private static final String SELECT_EMPLOYEE_DOCUMENTS_QUERY = "SELECT employeeId, document"
-			+ " FROM egeis_employeeDocuments where employeeId IN (?)";
-
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
@@ -115,44 +112,27 @@ public class EmployeeRepository {
 		return employeesInfo;
 	}
 
+	// FIXME : Figure out a better way to do this
 	public List<EmployeeDocument> getDocumentsForListOfEmployeeIds(List<Long> employeeIds) {
-		List<EmployeeDocument> documents = jdbcTemplate.query(SELECT_EMPLOYEE_DOCUMENTS_QUERY, employeeIds.toArray(),
+		String SELECT_EMPLOYEE_DOCUMENTS_QUERY = "SELECT employeeId, document"
+				+ " FROM egeis_employeeDocuments where employeeId IN (" + getProcessedIdsString(employeeIds) + ")";
+
+		List<EmployeeDocument> documents = jdbcTemplate.query(SELECT_EMPLOYEE_DOCUMENTS_QUERY,
 				employeeDocumentsRowMapper);
 		return documents;
 	}
 
 	public void save(EmployeeRequest employeeRequest) {
 		Employee employee = employeeRequest.getEmployee();
-		Object[] obj = new Object[] {
-				employee.getId(),
-				employee.getCode(),
-				employee.getDateOfAppointment(),
-				employee.getDateOfJoining(),
-				employee.getDateOfRetirement(),
-				employee.getEmployeeStatus(),
-				employee.getRecruitmentMode(),
-				employee.getRecruitmentType(),
-				employee.getRecruitmentQuota(),
-				employee.getRetirementAge(),
-				employee.getDateOfResignation(),
-				employee.getDateOfTermination(),
-				employee.getEmployeeType(),
-				employee.getMotherTongue(),
-				employee.getReligion(),
-				employee.getCommunity(),
-				employee.getCategory(),
-				employee.getPhysicallyDisabled(),
-				employee.getMedicalReportProduced(),
-				employee.getMaritalStatus().toString(),
-				employee.getPassportNo(),
-				employee.getGpfNo(),
-				employee.getBank(),
-				employee.getBankBranch(),
-				employee.getBankAccount(),
-				employee.getGroup(),
-				employee.getPlaceOfBirth(),
-				employee.getTenantId()
-		};
+		Object[] obj = new Object[] { employee.getId(), employee.getCode(), employee.getDateOfAppointment(),
+				employee.getDateOfJoining(), employee.getDateOfRetirement(), employee.getEmployeeStatus(),
+				employee.getRecruitmentMode(), employee.getRecruitmentType(), employee.getRecruitmentQuota(),
+				employee.getRetirementAge(), employee.getDateOfResignation(), employee.getDateOfTermination(),
+				employee.getEmployeeType(), employee.getMotherTongue(), employee.getReligion(), employee.getCommunity(),
+				employee.getCategory(), employee.getPhysicallyDisabled(), employee.getMedicalReportProduced(),
+				employee.getMaritalStatus().toString(), employee.getPassportNo(), employee.getGpfNo(),
+				employee.getBank(), employee.getBankBranch(), employee.getBankAccount(), employee.getGroup(),
+				employee.getPlaceOfBirth(), employee.getTenantId() };
 
 		if (employee.getDocuments() != null && !employee.getDocuments().isEmpty()) {
 			documentsRepository.save(employee.getId(), employee.getDocuments(),
@@ -166,8 +146,12 @@ public class EmployeeRepository {
 		return jdbcTemplate.queryForObject("SELECT nextval('" + sequenceName + "')", Long.class);
 	}
 
-	public Boolean getCountForDataIntegrityChecks(String table, String field, Object value) {
+	public Boolean getBooleanForDataIntegrityChecks(String table, String field, Object value) {
 		String query = "SELECT exists(SELECT 1 FROM " + table + " WHERE " + field + " IN (" + value + "))";
 		return jdbcTemplate.queryForObject(query, Boolean.class);
+	}
+
+	private String getProcessedIdsString(List<Long> ids) {
+		return ids.toString().replace("[", "").replace("]", "");
 	}
 }

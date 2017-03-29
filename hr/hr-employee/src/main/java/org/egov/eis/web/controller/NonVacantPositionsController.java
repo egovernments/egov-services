@@ -48,6 +48,7 @@ import org.egov.eis.service.NonVacantPositionsService;
 import org.egov.eis.web.contract.NonVacantPositionsGetRequest;
 import org.egov.eis.web.contract.NonVacantPositionsResponse;
 import org.egov.eis.web.contract.RequestInfo;
+import org.egov.eis.web.contract.RequestInfoWrapper;
 import org.egov.eis.web.contract.ResponseInfo;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
 import org.egov.eis.web.errorhandler.ErrorHandler;
@@ -55,14 +56,12 @@ import org.egov.eis.web.validator.RequestValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -89,18 +88,22 @@ public class NonVacantPositionsController {
 	 * Maps Post Requests for _search & returns ResponseEntity of either
 	 * NonVacantPositionsResponse type or ErrorResponse type
 	 * 
-	 * @param nonVacantPositionsGetRequest,
-	 * @param bindingResult
-	 * @param requestInfo
-	 * @param headers
+	 * @param NonVacantPositionsGetRequest,
+	 * @param BindingResult
+	 * @param RequestInfoWrapper
+	 * @param BindingResult
 	 * @return ResponseEntity<?>
 	 */
-	@PostMapping(value = "_search", headers = { "x-user-info" })
+	@PostMapping("_search")
 	@ResponseBody
 	public ResponseEntity<?> search(@ModelAttribute @Valid NonVacantPositionsGetRequest nonVacantPositionsGetRequest,
-			BindingResult bindingResult, @RequestBody RequestInfo requestInfo, @RequestHeader HttpHeaders headers) {
+			BindingResult modelAttributeBindingResult, @RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
+			BindingResult requestBodyBindingResult) {
+		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 
-		ResponseEntity<?> errorResponseEntity = requestValidator.validateSearchRequest(requestInfo, bindingResult);
+		ResponseEntity<?> errorResponseEntity = requestValidator.validateSearchRequest(requestInfo,
+				modelAttributeBindingResult, requestBodyBindingResult);
+
 		if (errorResponseEntity != null)
 			return errorResponseEntity;
 
@@ -118,12 +121,12 @@ public class NonVacantPositionsController {
 	}
 
 	/**
-	 * Populate NonVacantPositionsResponse object & returns ResponseEntity of type
-	 * NonVacantPositionsResponse containing ResponseInfo & List of NonVacantPositionIds
+	 * Populate NonVacantPositionsResponse object & returns ResponseEntity of
+	 * type NonVacantPositionsResponse containing ResponseInfo & List of
+	 * NonVacantPositionIds
 	 * 
-	 * @param nonVacantPositionsList
-	 * @param requestInfo
-	 * @param headers
+	 * @param List<Long>
+	 * @param RequestInfo
 	 * @return ResponseEntity<?>
 	 */
 	private ResponseEntity<?> getSuccessResponse(List<Long> nonVacantPositionsList, RequestInfo requestInfo) {

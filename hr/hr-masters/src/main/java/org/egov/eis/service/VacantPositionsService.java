@@ -50,6 +50,9 @@ import org.egov.eis.web.contract.NonVacantPositionsResponse;
 import org.egov.eis.web.contract.RequestInfoWrapper;
 import org.egov.eis.web.contract.VacantPositionsGetRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -85,7 +88,12 @@ public class VacantPositionsService {
 			e.printStackTrace();
 		}
 
-		NonVacantPositionsResponse nonVacantPositionsResponse = new RestTemplate().postForObject(url, requestInfoJson,
+		// FIXME : Passing auth-token for testing locally. Remove before actual deployment.
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		HttpEntity<String> httpEntityRequest = new HttpEntity<String>(requestInfoJson, headers);
+
+		NonVacantPositionsResponse nonVacantPositionsResponse = new RestTemplate().postForObject(url, httpEntityRequest,
 				NonVacantPositionsResponse.class);
 
 		if (!nonVacantPositionsResponse.getPositionIds().isEmpty())

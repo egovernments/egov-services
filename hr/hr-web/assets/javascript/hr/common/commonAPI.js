@@ -44,7 +44,7 @@ var assignments_function = JSON.parse(localStorage.getItem("assignments_function
 //           url: window.location.origin+"/user/_login?tenantId=ap.public&username=ramakrishna&password=demo&grant_type=password&scope=read",
 //           type: 'POST',
 //           dataType: 'json',
-//           // data:JSON.stringify(requestInfo),
+//           // data:JSON.stringify({RequestInfo: requestInfo}),
 //           async: false,
 //           contentType: 'application/json',
 //           headers:{
@@ -69,7 +69,7 @@ function getCommonMaster(mainRoute, resource, returnObject) {
         url: baseUrl + "/" + mainRoute + "/" + resource + "/_search?tenantId=" + tenantId,
         type: 'POST',
         dataType: 'json',
-        data: JSON.stringify(requestInfo),
+        data: JSON.stringify({RequestInfo: requestInfo}),
         async: false,
         // crossDomain: true, // set this to ensure our $.ajaxPrefilter hook fires
         // processData: false, // We want this to remain an object for  $.ajaxPrefilter
@@ -102,7 +102,7 @@ function commonApiPost(context, resource = "", action = "", queryObject = {}) {
         url: url,
         type: 'POST',
         dataType: 'json',
-        data: JSON.stringify(requestInfo),
+        data: JSON.stringify({RequestInfo: requestInfo}),
         async: false,
         contentType: 'application/json',
         headers: {
@@ -125,7 +125,7 @@ function commonApiGet(context, resource = "", action = "", queryObject = {}) {
         headers: {
             'auth-token': authToken
         },
-        // data:JSON.stringify(requestInfo),
+        // data:JSON.stringify({RequestInfo: requestInfo}),
         async: false,
         contentType: 'application/json'
     });
@@ -148,7 +148,7 @@ function getCommonMasterById(mainRoute, resource, returnObject, id) {
         url: baseUrl + "/" + mainRoute + "/" + resource + "/_search?tenantId=" + tenantId + "&" + "id=" + id,
         type: 'POST',
         dataType: 'json',
-        data: JSON.stringify(requestInfo),
+        data: JSON.stringify({RequestInfo: requestInfo}),
         async: false,
         // crossDomain: true, // set this to ensure our $.ajaxPrefilter hook fires
         // processData: false, // We want this to remain an object for  $.ajaxPrefilter

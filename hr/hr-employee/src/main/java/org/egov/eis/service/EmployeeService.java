@@ -145,6 +145,7 @@ public class EmployeeService {
 				.collect(Collectors.toList());
 
 		List<User> usersList = userService.getUsers(ids, employeeGetRequest.getTenantId(), requestInfo);
+		System.err.println("userService: " + usersList);
 		employeeUserMapper.mapUsersWithEmployees(employeeInfoList, usersList);
 
 		if(!ids.isEmpty()) {

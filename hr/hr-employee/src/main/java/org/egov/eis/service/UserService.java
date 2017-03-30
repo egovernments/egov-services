@@ -88,6 +88,8 @@ public class UserService {
 		userGetRequest.setRequestInfo(requestInfo);
 		userGetRequest.setTenantId(tenantId);
 
+		System.err.println("user url: " + url);
+		System.err.println("userGetRequest: " + userGetRequest);
 		List<User> users = null;
 		try {
 			UserResponse userResponse = new RestTemplate().postForObject(url, userGetRequest, UserResponse.class);

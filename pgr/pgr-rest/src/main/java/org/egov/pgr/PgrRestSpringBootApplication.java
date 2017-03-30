@@ -2,7 +2,7 @@ package org.egov.pgr;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.egov.pgr.persistence.repository.UserRepository;
+import org.egov.pgr.read.persistence.repository.UserRepository;
 import org.egov.tracer.config.TracerConfiguration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;

@@ -173,18 +173,21 @@
                                 <rule>
                                     <element>CLASS</element>
                                     <excludes>
-                                        <exclude>org.egov.pgr.web.contract.*</exclude>
+                                        <exclude>org.egov.pgr.read.web.contract.*</exclude>
                                         <exclude>org.egov.pgr.PgrRestSpringBootApplication</exclude>
-                                        <exclude>org.egov.pgr.persistence.entity.*</exclude>
-                                        <exclude>org.egov.pgr.persistence.queue.contract.*</exclude>
-                                        <exclude>org.egov.pgr.web.controller.*</exclude>
-                                        <exclude>org.egov.pgr.domain.service.*</exclude>
-                                        <exclude>org.egov.pgr.domain.model.*</exclude>
-                                        <exclude>org.egov.pgr.web.resolver.AuthenticatedUserResolver</exclude>
-                                        <exclude>org.egov.pgr.domain.exception.UnauthorizedAccessException</exclude>
-                                        <exclude>org.egov.pgr.web.interceptor.CorrelationIdAwareRestTemplate</exclude>
-                                        <exclude>org.egov.pgr.persistence.repository.ComplaintTypeRepository</exclude>
-                                        <exclude>org.egov.pgr.persistence.repository.UserRepository</exclude>
+                                        <exclude>org.egov.pgr.read.persistence.entity.*</exclude>
+                                        <exclude>org.egov.pgr.common.contract.*</exclude>
+                                        <exclude>org.egov.pgr.read.web.controller.*</exclude>
+                                        <exclude>org.egov.pgr.read.domain.service.*</exclude>
+                                        <exclude>org.egov.pgr.read.domain.model.*</exclude>
+                                        <exclude>org.egov.pgr.read.web.resolver.AuthenticatedUserResolver</exclude>
+                                        <exclude>org.egov.pgr.read.domain.exception.UnauthorizedAccessException
+                                        </exclude>
+                                        <exclude>org.egov.pgr.read.web.interceptor.CorrelationIdAwareRestTemplate
+                                        </exclude>
+                                        <exclude>org.egov.pgr.read.persistence.repository.ComplaintTypeRepository
+                                        </exclude>
+                                        <exclude>org.egov.pgr.read.persistence.repository.UserRepository</exclude>
                                     </excludes>
                                     <limits>
                                         <limit>

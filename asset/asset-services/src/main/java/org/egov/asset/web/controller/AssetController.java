@@ -83,7 +83,7 @@ public class AssetController {
 
 	@PostMapping("_search")
 	@ResponseBody
-	public ResponseEntity<?> search(@RequestBody RequestInfo requestInfo, @ModelAttribute AssetCriteria assetCriteria,BindingResult bindingResult) {
+	public ResponseEntity<?> search(@RequestBody @Valid RequestInfo requestInfo, @ModelAttribute AssetCriteria assetCriteria,BindingResult bindingResult) {
 		logger.info("assetCriteria::"+assetCriteria);
 		
 		if(bindingResult.hasErrors()){

@@ -2,9 +2,6 @@ package org.egov.lams.repository.rowmapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.Allottee;
@@ -29,6 +26,8 @@ public class AgreementRowMapper implements RowMapper<Agreement> {
 		agreement.setAcknowledgementNumber(rs.getString("acknowledgementnumber"));
 		agreement.setStateId(rs.getString("stateid"));
 		agreement.setGoodWillAmount(rs.getDouble("goodwillamount"));
+		agreement.setCloseDate(rs.getDate("closedate"));
+		agreement.setTimePeriod(rs.getLong("timePeriod"));
 		//rs.getArray("demands").getArray();
 		//agreement.setDemands(); FIXME
 		agreement.setAgreementDate(rs.getTimestamp("agreement_date"));

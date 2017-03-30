@@ -74,7 +74,6 @@ public class AgreementController {
 	private ResponseEntity<?> getSuccessResponse(List<Agreement> agreements, RequestInfo requestInfo) {
 		AgreementResponse agreementResponse = new AgreementResponse();
 		agreementResponse.setAgreement(agreements);
-		System.err.println("before sending for response factory");
 		agreementResponse.setResposneInfo(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true));
 		return new ResponseEntity<>(agreementResponse, HttpStatus.OK);
 	}

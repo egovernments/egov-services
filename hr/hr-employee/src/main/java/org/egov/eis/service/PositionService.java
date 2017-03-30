@@ -81,19 +81,15 @@ public class PositionService {
 		String requestInfoJson = null;
 		try {
 			ObjectMapper mapper = new ObjectMapper();
-			// FIXME : Remove getRequestInfo() from below, when new APIs are deployed
-			requestInfoJson = mapper.writeValueAsString(requestInfoWrapper.getRequestInfo());
+			requestInfoJson = mapper.writeValueAsString(requestInfoWrapper);
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
 
-		// FIXME : Passing auth-token for testing locally. Remove before actual deployment.
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
-		headers.add("auth-token", requestInfoWrapper.getRequestInfo().getAuthToken());
 		HttpEntity<String> httpEntityRequest = new HttpEntity<String>(requestInfoJson, headers);
 
-		// Replace httpEntityRequest with requestInfo if there is no need to send headers
 		PositionResponse positionResponse = new RestTemplate().postForObject(url, httpEntityRequest, PositionResponse.class);
 
 		return positionResponse.getPosition();

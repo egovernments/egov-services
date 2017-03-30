@@ -99,10 +99,8 @@ public class UserService {
 			e.printStackTrace();
 		}
 
-		// FIXME : Passing auth-token for testing locally. Remove before actual deployment.
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
-		headers.add("auth-token", requestInfo.getAuthToken());
 		HttpEntity<String> httpEntityRequest = new HttpEntity<String>(userGetRequestJson, headers);
 
 		List<User> users = null;

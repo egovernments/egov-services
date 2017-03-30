@@ -1,4 +1,4 @@
-CREATE TABLE public.egasset_assetcategory
+CREATE TABLE egasset_assetcategory
 (
   id bigint NOT NULL,
   name character varying(250) NOT NULL,
@@ -22,4 +22,4 @@ CREATE TABLE public.egasset_assetcategory
   CONSTRAINT uk_egasset_assetcategory_code UNIQUE (code)
 )
 
-CREATE SEQUENCE SEQ_EGASSET_ASSETCATEGORY INCREMENT 1 MINVALUE 1 MAXVALUE 9223372036854775807 START 1 CACHE 1;
+CREATE SEQUENCE SEQ_EGASSET_ASSETCATEGORY;

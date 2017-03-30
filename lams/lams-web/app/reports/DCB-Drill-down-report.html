@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -7,19 +6,21 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Lease & Agreement</title>
+    <title>EIS</title>
 
     <!-- Bootstrap -->
-    <link rel="stylesheet" type="text/css" href="../../../assets/stylesheet/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="../../../assets/stylesheet/global/multi-level-menu/jquery.multilevelpushmenu.min.css">
-    <link rel="stylesheet" type="text/css" href="../../../assets/stylesheet/application.css">
-    <link rel="stylesheet" type="text/css" href="../../../assets/stylesheet/egov/custom.css">
-    <link rel="stylesheet" type="text/css" href="../../../assets/stylesheet/vistyle.css">
-    <link rel="stylesheet" type="text/css" href="../../../assets/stylesheet/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/stylesheet/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/stylesheet/global/multi-level-menu/jquery.multilevelpushmenu.min.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/stylesheet/application.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/stylesheet/egov/custom.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/stylesheet/vistyle.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/stylesheet/font-awesome.min.css">
 
-    <link rel="stylesheet" type="text/css" href="../../../assets/stylesheet/jquery.dataTables.min.css">
-    <link rel="stylesheet" type="text/css" href="../../../assets/stylesheet/responsive.bootstrap.css">
-    <link rel="stylesheet" type="text/css" href="../../../assets/stylesheet/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/stylesheet/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/stylesheet/responsive.bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/stylesheet/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/stylesheet/buttons.dataTables.min.css">
+    <!-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.13/css/dataTables.bootstrap.min.css"> -->
 
     <style>
         body {
@@ -77,17 +78,41 @@
     <![endif]-->
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script type="text/javascript" src="../../../assets/javascript/jquery.min.js"></script>
-    <script type="text/javascript" src="../../../assets/javascript/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../assets/javascript/jquery.min.js"></script>
+    <script type="text/javascript" src="../../assets/javascript/bootstrap.min.js"></script>
 
-    <script type="text/javascript" src="../../../assets/javascript/global/multi-level-menu/jquery.multilevelpushmenu.min.js"></script>
+    <script type="text/javascript" src="../../assets/javascript/global/multi-level-menu/jquery.multilevelpushmenu.min.js"></script>
 
-    <script type="text/javascript" src="../../../assets/javascript/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="../../assets/javascript/jquery.dataTables.min.js"></script>
 
-    <script type="text/javascript" src="../../../assets/javascript/dataTables.responsive.min.js"></script>
-    <script src="../../../assets/javascript/moment.js"></script>
-    <script src="../../../assets/javascript/bootstrap-datetimepicker.js"></script>
+    <script type="text/javascript" src="../../assets/javascript/dataTables.responsive.min.js"></script>
+    <script type="text/javascript" src="../../assets/javascript/moment.js"></script>
+    <script type="text/javascript" src="../../assets/javascript/bootstrap-datetimepicker.js"></script>
+    <script type="text/javascript" src="../../assets/javascript/data-table/dataTables.buttons.min.js">
+
+    </script>
+    <script type="text/javascript" src="../../assets/javascript/data-table/buttons.flash.min.js">
+
+    </script>
+    <script type="text/javascript" src="../../assets/javascript/data-table/jszip.min.js">
+
+    </script>
+    <script src="../../assets/javascript/data-table/pdfmake.min.js" charset="utf-8"></script>
+    <script src="../../assets/javascript/data-table/vfs_fonts.js" charset="utf-8"></script>
+    <script src="../../assets/javascript/data-table/buttons.html5.min.js" charset="utf-8"></script>
+    <script src="../../assets/javascript/data-table/buttons.print.min.js" charset="utf-8"></script>
+    <!-- <script src="https://cdn.datatables.net/1.10.13/js/dataTables.bootstrap.min.js" charset="utf-8"></script> -->
+    <script type="text/javascript" src="../../assets/javascript/dataTables.responsive.min.js"></script>
+
+    <!-- Jquery form validator -->
+    <script type="text/javascript" src="../../assets/javascript/global/jquery-validation/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="../../assets/javascript/global/jquery-validation/additional-methods.min.js"></script>
+    <script src="../../assets/javascript/reactjs/react.min.js"></script>
+    <script src="../../assets/javascript/reactjs/react-dom.min.js"></script>
+    <script src="../../assets/javascript/reactjs/browser.js"></script>
+    <script src="../../assets/javascript/common/common.js" charset="utf-8"></script>
 </head>
+
 
 <body class="page-body">
     <!-- for showing loading spinner -->
@@ -97,27 +122,18 @@
     </div>
 
     <div class="page-container horizontal-menu" id="dashboard">
-        <!-- Menu search box -->
-        <!-- <div class="search" style="display: block;">
-        <input type="text" id="searchtree" placeholder="Quick Find"><span class="fa fa-search searchicon tooltip-secondary" data-toggle="tooltip" data-original-title="Search menu item" style="display: block;"></span>
-        <span class="applyanimation"></span>
-      </div>
-      <div class="search_list" style="display: none;">
-        <div class="list" style="top: 0px;"><ul class="ullist"></ul></div>
-      </div> -->
-
         <header class="navbar navbar-fixed-top border-header">
             <!-- set fixed position by adding class "navbar-fixed-top" -->
             <div class="navbar-inner">
                 <!-- logo -->
                 <div class="navbar-brand">
                     <a href="javascript:void(0);">
-                        <img src="../../../assets/images/logo.jpg" height="60" class="homepage_logo">
+                        <img src="../../assets/images/logo.jpg" height="60" class="homepage_logo">
                     </a>
                 </div>
 
                 <div class="navbar-brand">
-                    <h3 class="horizontal-page-title homepage hidden-xs hidden-sm" id="hp-citizen-title">Lease & Agreement</h3>
+                    <h3 class="horizontal-page-title homepage hidden-xs hidden-sm" id="hpCitizenTitle">Lease & Agreement</h3>
                 </div>
 
                 <!-- notifications and other links -->
@@ -192,7 +208,7 @@
 
                     <li class="dropdown">
                         <a href="http://www.egovernments.org" target="_blank">
-                            <img src="../../../assets/images/logo@2x.png" title="Powered by eGovernments" height="25px" style="padding-top:5px">
+                            <img src="../../assets/images/logo@2x.png" title="Powered by eGovernments" height="25px" style="padding-top:5px">
                         </a>
                     </li>
                 </ul>
@@ -207,192 +223,31 @@
                     <div class="col-xs-12">
                         <!-- Middle Section -->
                         <div class="body-cont">
-                          <div class="body-cont-inner">
-                            <!-- <h2>Land DCB Report </h2> -->
-                            <div class="form-section">
-                              <h3>Land DCB Report </h3>
-                              <div class="form-section-inner">
-                                <!-- View-chart -->
-                                <!-- Row 1 -->
-                                <div class="row">
-                                  <div class="col-sm-6">
-                                    <div class="row">
-                                      <div class="col-sm-6 label-text">
-                                        <label>Asset Category <strong class="text-red">*</strong></label>
-                                      </div>
-                                      <div class="col-sm-6">
-                                        <div class="styled-select">
-                                          <select>
-                                            <option>asfasf</option>
-                                          </select>
-                                        </div>
-                                      </div>
+                            <form  id="createAgreementForm" name="createAgreementForm" >
+                                <div class="body-cont-inner">
+                                   <div class="" id="shopAssetDetailsBlock">
+                                        <div id="root"></div>
+                                        <script type="text/babel"  src="../../assets/javascript/reports/DCB-Drill-Down-Report.js"></script>
                                     </div>
                                   </div>
-                                  <div class="col-sm-6">
-                                    <div class="row">
-                                      <div class="col-sm-6 label-text">
-                                        <label>Election ward </label>
-                                      </div>
-                                      <div class="col-sm-6">
-                                        <div class="styled-select">
-                                          <select>
-                                            <option>sadas</option>
-                                              <option>sasdasfdas</option>
-                                          </select>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <!-- /Row 1 -->
-                                <!-- Row 2 -->
-                                <div class="row">
-                                  <div class="col-sm-6">
-                                    <div class="row">
-                                      <div class="col-sm-6 label-text">
-                                        <label>Locality  </label>
-                                      </div>
-                                      <div class="col-sm-6">
-                                        <input type="text" id="sdate" name="">
-                                      </div>
-                                    </div>
-                                  </div>
-
-                                </div>
-
-
-                                <!-- /View-chart -->
+                                </form>
                               </div>
                             </div>
-
-                            <div class="text-center">
-                              <button type="button" class="btn btn-submit">Search</button>
-                              <button type="button" class="btn btn-submit">Reset</button>
-                              <button type="button" class="btn btn-close" id="close">Close</button>
-                            </div>
-
-                            <!-- Table -->
-                            <div class="land-table" id="dcb-report-table">
-                              <table id="dcb-rpt-table" cellspacing="0" width="100%">
-                                <thead>
-                                  <tr>
-                                    <th id="boundery">Boundary </th>
-                                    <th id="agreementNo">No. of agreements</th>
-                                    <th>Asset type </th>
-                                    <th colspan="3">Demand </th>
-                                    <th>Collection</th>
-                                    <th>Balance </th>
-                                  </tr>
-                                  <tr>
-                                      <th ></th>
-                                      <th></th>
-                                      <th></th>
-                                      <!-- <th><tr> -->
-                                          <th>Arrears</th>
-                                          <th>Current</th>
-                                          <th>Total</th>
-                                      <!-- </tr></th> -->
-                                      <th ></th>
-                                      <th></th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  <tr>
-
-                                      <td data-label="Boundary">N01 </td>
-                                      <td data-label="No. of agreements">6414</td>
-                                      <td data-label="Asset type">land</td>
-                                      <td data-label="Arrears">6000</td>
-                                      <td data-label="Current">2000</td>
-                                      <td data-label="Total">3000</td>
-                                      <td data-label="Collection">2000</td>
-                                      <td data-label="Balance">3000</td>
-
-                                  </tr>
-                                  <tr>
-
-                                      <td data-label="Boundary">N01 </td>
-                                      <td data-label="No. of agreements">6414</td>
-                                      <td data-label="Asset type">land</td>
-                                      <td data-label="Arrears">6000</td>
-                                      <td data-label="Current">2000</td>
-                                      <td data-label="Total">3000</td>
-                                      <td data-label="Collection">2000</td>
-                                      <td data-label="Balance">3000</td>
-
-                                  </tr>
-                                </tbody>
-                              </table>
-                              <br>
-                              <br>
-                                <button type="button" class="btn btn-default" name="button" id="reset">Reset</button>
-
-                            </div>
-                            <!-- Table -->
-
-
                           </div>
                         </div>
-                        <!-- /Middle Section -->
-                    </div>
-                </div>
-            </div>
-        </div>
+                      </div>
 
-    </div>
-
-    <footer class="clearfix simple">
+        <footer class="clearfix simple">
         <div class="constrain">
             <div id="legal">
-                <span class="copyright">Copyright <span><i class="fa fa-copyright"></i></span> 2017 <a href="http://www.egovernments.org" target="_blank"> eGovernments Foundation.<sup>®</sup></a></span>
+                <span class="copyright">Copyright <span><i class="fa fa-copyright"></i></span> 2017 <a href="http://www.egovernments.org" target="_blank"> eGovernments Foundation.<sup>Â®</sup></a></span>
                 <span class="version">eGov ERP - 2.1.0-SNAPSHOT_2486 @ Core - 2.1.0-SNAPSHOT_2486</span>
             </div>
         </div>
     </footer>
 
-    <script src="../../../assets/javascript/egov/custom.js"></script>
-    <script src="../../../assets/javascript/egov/custom-menu.js"></script>
-    <script src="../../../assets/javascript/js.cookies.js"></script>
-    <script src="../../../assets/javascript/reports/DCB-Drill-Down-Report.js"></script>
-    <script>
-        var menuItems = [{
-            title: 'All Categories',
-            id: 'menuID',
-            // icon: 'fa fa-reorder',
-            items: [{
-                name: 'Land And Lease',
-                id: 'itemID',
-                icon: 'fa fa-laptop',
-                link: '#',
-                items: [{
-                    title: 'Land And Lease',
-                    icon: 'fa fa-laptop',
-                    items: [{
-                            name: 'Search Assets',
-                            icon: 'fa fa-phone',
-                            link: './app/search-assets/'
-                        },
-                        {
-                            name: 'Transactions',
-                            icon: 'fa fa-desktop',
-                            link: '#',
-                            items: [{
-                                title: 'Transactions',
-                                icon: 'fa fa-desktop',
-                                link: '#',
-                                items: [{
-                                    name: 'Search Agreements',
-                                    icon: 'fa fa-phone',
-                                    link: './app/transactions/search-agreement/search-agreement.html'
-                                }]
-                            }]
-                        }
-                    ]
-                }]
-            }]
-        }];
-    </script>
+    <script src="../../assets/javascript/egov/custom.js"></script>
+    <script src="../../assets/javascript/js.cookies.js"></script>
 
     <script type="text/javascript">
         $(window).load(function() {

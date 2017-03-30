@@ -58,7 +58,8 @@ public class AgreementController {
 		}
 		LOGGER.info("AgreementController:getAgreements():searchAgreementsModel:"
 				+ agreementCriteria);
-
+		LOGGER.info("AgreementController:getAgreements():searchAgreementsModel:"
+				+ requestInfo);
 		List<Agreement> agreements = agreementService
 				.searchAgreement(agreementCriteria);
 		if(agreements.isEmpty())

@@ -887,7 +887,7 @@ paths:
             $ref: '#/definitions/ErrorRes'
        
           
-  /recruitmentType/_search:
+  /recruitmenttypes/_search:
     # This is a HTTP operation
     post:
       # Describe this verb here. Note: you can use markdown 
@@ -945,7 +945,7 @@ paths:
             $ref: '#/definitions/ErrorRes'
       tags: 
        - Recruitment Type
-  /recruitmentType/_create:
+  /recruitmenttypes/_create:
     post:
       summary: Create a new recruitment type to the master list.
       description: To create a new recruitment type we can use POST and set all the required and non-mandatory parameters.

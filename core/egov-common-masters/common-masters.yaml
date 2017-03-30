@@ -483,7 +483,7 @@ paths:
           schema:
             $ref: '#/definitions/ErrorRes'
 
-  /calendarYears/_search:
+  /calendaryears/_search:
     # This is a HTTP operation
     post:
       # Describe this verb here. Note: you can use markdown 
@@ -541,7 +541,7 @@ paths:
       tags: 
        - Calendar Year
 
-  /calendarYears/_create:      
+  /calendaryears/_create:      
     post:
       summary: Create a new calendar year data in the system.
       description: To create a new calendar year we can use POST and set all the required and non-mandatory parameters.
@@ -564,7 +564,7 @@ paths:
           schema:
             $ref: '#/definitions/ErrorRes'
             
-  /calendarYear/{name}/_update:   
+  /calendaryear/{name}/_update:   
     parameters:
       - $ref: "#/parameters/calendarYearName"
     post:
@@ -828,7 +828,7 @@ paths:
           schema:
             $ref: '#/definitions/ErrorRes'
 
-  /module/_search:
+  /modules/_search:
     post:
       summary: Get the list of module defined in the system.
       description: |
@@ -878,7 +878,7 @@ paths:
       tags: 
        - Module
 
-  /module/_create:      
+  /modules/_create:      
     post:
       summary: Create a new module in the system.
       description: To create a module we can use POST and set all the required and non-mandatory parameters.
@@ -901,7 +901,7 @@ paths:
           schema:
             $ref: '#/definitions/ErrorRes'
             
-  /module/_update:
+  /modules/_update:
     post:
       summary: Update existing module for the name
       description: To update an existing module master data.
@@ -1045,7 +1045,7 @@ paths:
           schema:
             $ref: '#/definitions/ErrorRes'
 
-  /uoms/_search:
+  /uom/_search:
     # This is a HTTP operation
     post:
       # Describe this verb here. Note: you can use markdown 

@@ -17,7 +17,7 @@ import org.egov.lams.repository.BillRepository;
 import org.egov.lams.repository.DemandRepository;
 import org.egov.lams.web.contract.BillDetailInfo;
 import org.egov.lams.web.contract.BillInfo;
-import org.egov.lams.web.contract.BillReceiptInfo;
+import org.egov.lams.web.contract.BillReceiptReq;
 import org.egov.lams.web.contract.BillReceiptInfoReq;
 import org.egov.lams.web.contract.BillSearchCriteria;
 import org.egov.lams.web.contract.DemandSearchCriteria;
@@ -26,6 +26,8 @@ import org.egov.lams.web.contract.ReceiptAccountInfo;
 import org.egov.lams.web.contract.ReceiptAmountInfo;
 import org.egov.lams.web.contract.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -161,13 +163,12 @@ public class PaymentService {
 		return billDetails;
 	}
 
-	public ReceiptAmountInfo updateDemand(BillReceiptInfoReq billReceiptInfoReq) {
+	public ResponseEntity<ReceiptAmountInfo> updateDemand(BillReceiptInfoReq billReceiptInfoReq) {
 
 		BillSearchCriteria billSearchCriteria = new BillSearchCriteria();
-		BillReceiptInfo billReceiptInfo = billReceiptInfoReq
-				.getBillReceiptInfo().get(0);
-		billSearchCriteria.setBillId(Long.valueOf(billReceiptInfo
-				.getBillReferenceNum()));
+		BillReceiptReq billReceiptInfo = billReceiptInfoReq
+				.getBillReceiptInfo();
+		billSearchCriteria.setBillId(Long.valueOf(1));
 		BillInfo billInfo = billRepository.searchBill(billSearchCriteria,
 				billReceiptInfoReq.getRequestInfo());
 		DemandSearchCriteria demandSearchCriteria = new DemandSearchCriteria();
@@ -181,7 +182,7 @@ public class PaymentService {
 			currentDemand.setMinAmountPayable(0d);
 		
 		updateDemandDetailForReceiptCreate(currentDemand, billReceiptInfoReq
-				.getBillReceiptInfo().get(0));
+				.getBillReceiptInfo());
 		
 		currentDemand.setPaymentInfos(setPaymentInfos(billReceiptInfo));
 		demandRepository
@@ -192,7 +193,7 @@ public class PaymentService {
 	}
 	
 	
-	private List<PaymentInfo> setPaymentInfos(BillReceiptInfo billReceiptInfo)
+	private List<PaymentInfo> setPaymentInfos(BillReceiptReq billReceiptInfo)
 	{
 		
 		List<PaymentInfo> paymentInfos = new ArrayList<>();
@@ -200,13 +201,13 @@ public class PaymentService {
 		paymentInfo.setReceiptAmount(billReceiptInfo.getTotalAmount().toString());
 		paymentInfo.setReceiptDate(billReceiptInfo.getReceiptDate().toString());
 		paymentInfo.setReceiptNumber(billReceiptInfo.getReceiptNum());
-		paymentInfo.setStatus(billReceiptInfo.getReceiptStatus().getCode());
+		paymentInfo.setStatus(billReceiptInfo.getReceiptStatus());
 		return paymentInfos;
 		
 	}
 
 	private void updateDemandDetailForReceiptCreate(Demand demand,
-			BillReceiptInfo billReceiptInfo) {
+			BillReceiptReq billReceiptInfo) {
 		BigDecimal totalAmountCollected = BigDecimal.ZERO;
 		for (final ReceiptAccountInfo rcptAccInfo : billReceiptInfo
 				.getAccountDetails())
@@ -232,8 +233,10 @@ public class PaymentService {
 		demand.setCollectionAmount(totalAmountCollected);
 	}
 
-	public ReceiptAmountInfo receiptAmountBifurcation(
-			final BillReceiptInfo billReceiptInfo, BillInfo billInfo) {
+	public ResponseEntity<ReceiptAmountInfo> receiptAmountBifurcation(
+			final BillReceiptReq billReceiptInfo, BillInfo billInfo) {
+        ResponseEntity<ReceiptAmountInfo> receiptAmountInfoResponse = null;
+
 		final ReceiptAmountInfo receiptAmountInfo = new ReceiptAmountInfo();
 		BigDecimal currentInstallmentAmount = BigDecimal.ZERO;
 		BigDecimal arrearAmount = BigDecimal.ZERO;
@@ -264,11 +267,11 @@ public class PaymentService {
 									.doubleValue());
 					receiptAmountInfo.setArrearsAmount(arrearAmount
 							.doubleValue());
-					return receiptAmountInfo;
+					receiptAmountInfoResponse =  new ResponseEntity<>(receiptAmountInfo,  HttpStatus.OK);
 				}
 			}
 		}
-		return receiptAmountInfo;
+		return receiptAmountInfoResponse;
 	}
 
 }

@@ -44,6 +44,7 @@ public class AllotteeService {
 		allotteeId.addAll(agreementCriteria.getAllottee());
 		userSearchRequest.setId(allotteeId);
 		userSearchRequest.setName(agreementCriteria.getAllotteeName());
+		if(agreementCriteria.getMobilenumber()!= null)
 		userSearchRequest.setMobileNumber(agreementCriteria.getMobilenumber().toString());
 		logger.info("url for allottee api post call",url);
 		return callAllotteSearch(url,userSearchRequest);

@@ -1111,6 +1111,7 @@ function clearModalInput(object, properties) {
 
 //need to cleat editIndex and temprory pbject
 $('#assignmentDetailModal').on('hidden.bs.modal', function(e) {
+    $('.error-p').hide();
     editIndex = -1;
     employeeSubObject["assignments"] = {
       fromDate: "",
@@ -1131,6 +1132,7 @@ $('#assignmentDetailModal').on('hidden.bs.modal', function(e) {
 })
 
 $('#jurisdictionDetailModal').on('hidden.bs.modal', function(e) {
+    $('.error-p').hide();
     editIndex = -1;
     employeeSubObject["jurisdictions"] = {
         jurisdictionsType: "",
@@ -1140,7 +1142,8 @@ $('#jurisdictionDetailModal').on('hidden.bs.modal', function(e) {
 })
 
 $('#serviceHistoryDetailModal').on('hidden.bs.modal', function(e) {
-   editIndex = -1;
+    $('.error-p').hide();
+    editIndex = -1;
     employeeSubObject["serviceHistory"] = {
         id: employee["serviceHistory"].length + 1,
         serviceInfo: "",
@@ -1153,6 +1156,7 @@ $('#serviceHistoryDetailModal').on('hidden.bs.modal', function(e) {
 })
 
 $('#probationDetailModal').on('hidden.bs.modal', function(e) {
+    $('.error-p').hide();
     editIndex = -1;
     employeeSubObject["probation"] = {
         designation: "",
@@ -1167,6 +1171,7 @@ $('#probationDetailModal').on('hidden.bs.modal', function(e) {
 })
 
 $('#regularisationDetailModal').on('hidden.bs.modal', function(e) {
+    $('.error-p').hide();
     editIndex = -1;
     employeeSubObject["regularisation"] = {
         designation: "",
@@ -1181,6 +1186,7 @@ $('#regularisationDetailModal').on('hidden.bs.modal', function(e) {
 })
 
 $('#technicalDetailModal').on('hidden.bs.modal', function(e) {
+    $('.error-p').hide();
     editIndex = -1;
     employeeSubObject["technical"] = {
         skill: "",
@@ -1194,6 +1200,7 @@ $('#technicalDetailModal').on('hidden.bs.modal', function(e) {
 })
 
 $('#educationDetailModal').on('hidden.bs.modal', function(e) {
+    $('.error-p').hide();
     editIndex = -1;
     employeeSubObject["education"] = {
         qualification: "",
@@ -1207,6 +1214,7 @@ $('#educationDetailModal').on('hidden.bs.modal', function(e) {
 })
 
 $('#testDetailModal').on('hidden.bs.modal', function(e) {
+    $('.error-p').hide();
     editIndex = -1;
     employeeSubObject["test"] = {
         test: "",
@@ -1299,25 +1307,28 @@ function markEditIndex(index = -1, modalName = "", object = "") {
 function commonAddAndUpdate(tableName, modalName, object) {
     // if(switchValidation(object))
     if ($("#createEmployeeForm").valid()) {
-        if (editIndex != -1) {
-            employee[object][editIndex] = employeeSubObject[object];
-            updateTable("#" + tableName, modalName, object);
-        } else {
-            if (object == "assignments") {
-                employeeSubObject[object]["hod"] = [];
-                if (tempListBox.length > 0) {
-                    employeeSubObject[object]["hod"].push(tempListBox);
-
-                }
-                employee[object].push(Object.assign({}, employeeSubObject[object]));
+        if(checkIfNoDup(employee, object, employeeSubObject[object])) {
+            if (editIndex != -1) {
+                employee[object][editIndex] = employeeSubObject[object];
                 updateTable("#" + tableName, modalName, object);
             } else {
-                employee[object].push(Object.assign({}, employeeSubObject[object]));
-                updateTable("#" + tableName, modalName, object);
-            }
+                if (object == "assignments") {
+                    employeeSubObject[object]["hod"] = [];
+                    if (tempListBox.length > 0) {
+                        employeeSubObject[object]["hod"].push(tempListBox);
+                    }
+                    employee[object].push(Object.assign({}, employeeSubObject[object]));
+                    updateTable("#" + tableName, modalName, object);
+                } else {
+                    employee[object].push(Object.assign({}, employeeSubObject[object]));
+                    updateTable("#" + tableName, modalName, object);
+                }
 
+            }
+            $(`#${modalName}`).modal("hide");
+        } else {
+            $(".error-p").show();
         }
-        $(`#${modalName}`).modal("hide");
     } else {
         return;
     }
@@ -1490,10 +1501,10 @@ $("#createEmployeeForm").validate({
     rules: final_validatin_rules,
     submitHandler: function(form) {
         // console.log(form);
-
-        if (employee.assignments.length > 0 && employee.jurisdictions.length > 0) {
-            //call api
-            console.log("calling api");
+        if(!hasAllRequiredFields(employee)) {
+            showError("Please enter all mandatory fields.");
+        } else if (employee.assignments.length > 0 && employee.jurisdictions.length > 0) {
+            //Call api
 
             var empJuridictiona = employee["jurisdictions"];
             employee["jurisdictions"] = [];
@@ -1542,7 +1553,7 @@ $("#createEmployeeForm").validate({
                 }
             })
         } else {
-            alert("Please enter atleast assignment and jurisdiction");
+            showError("Please enter atleast one assignment and jurisdiction.");
         }
         //alert("submitterd");
         // form.submit();
@@ -1787,4 +1798,34 @@ function makeAjaxUpload (file, cb) {
             cb(jqXHR.responseText || jqXHR.statusText);
         }
     });   
+}
+
+function hasAllRequiredFields(emp) {
+    return (emp.user.name && emp.code && emp.employeeType && emp.employeeStatus && emp.user.dob && emp.user.gender && emp.maritalStatus && emp.user.userName && emp.user.mobileNumber && emp.user.permanentAddress && emp.user.permanentCity && emp.user.permanentPincode && emp.dateOfAppointment);
+}
+
+function showError(msg) {
+    $('#error-alert-span').text(msg);
+    $('#error-alert-div').show();
+    setTimeout(function(){
+        $('#error-alert-div').hide();
+    }, 3000);
+}
+
+function checkIfNoDup(employee, objectType, subObject) {
+    if(employee[objectType].length === 0) 
+        return true;
+    else if(objectType === "assignments") {
+        for(let i=0; i<employee[objectType].length; i++) {
+            if(employee[objectType][i].fromDate == subObject.fromDate || employee[objectType][i].toDate == subObject.toDate)
+                return false;
+        }
+    } else if(objectType == "jurisdictions") {
+        for(let i=0; i<employee[objectType].length; i++) {
+            if(employee[objectType][i].jurisdictionsType == subObject.jurisdictionsType || employee[objectType][i].boundary == subObject.boundary)
+                return false;
+        }
+    }
+    
+    return true;
 }

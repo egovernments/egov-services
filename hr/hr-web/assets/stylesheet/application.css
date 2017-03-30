@@ -677,3 +677,12 @@ ul{list-style-type: none; padding: 0; margin: 0;}
 	.head-top h1{font-size: 12px;}
 	.left-side-menu{width: 80%;}
 }
+
+.alert-toast {
+  position: fixed;
+  width: 40%;
+  left: 30%;
+  text-align: center;
+  bottom: 50px;
+  z-index:1000;
+}

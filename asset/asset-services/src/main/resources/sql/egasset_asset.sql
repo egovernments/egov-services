@@ -4,22 +4,22 @@ CREATE TABLE public.egasset_asset
   assetcategory bigint NOT NULL,
   name character varying(250) NOT NULL,
   code character varying(100) NOT NULL,
-  department bigint ,
+  department bigint,
   assetdetails character varying(4000),
   description character varying(1024),
-  dateofcreation timestamp without time zone,-- capture through the screen
+  dateofcreation timestamp without time zone,
   remarks character varying(250),
   length character varying(250),
   width character varying(250),
   totalarea character varying(250),
   modeofacquisition character varying(250),
-  status character varying(250) NOT NULL,--Todo phash-2 
+  status character varying(250) NOT NULL,
   tenantid character varying(250) NOT NULL,
   zone bigint,
   revenueward bigint,
   street bigint,
   electionward bigint,
-  doorno bigint,
+  doorno character varying(250),
   pincode bigint,
   locality bigint,
   block bigint,
@@ -32,4 +32,5 @@ CREATE TABLE public.egasset_asset
   accumulateddepreciation numeric,
   CONSTRAINT pk_egasset_asset PRIMARY KEY (id)
 )
+
 CREATE SEQUENCE SEQ_EGASSET_ASSET INCREMENT 1 MINVALUE 1 MAXVALUE 9223372036854775807 START 1 CACHE 1;

@@ -80,7 +80,6 @@ public class RequestInfo {
 	private String authToken;
 
 	@Valid
-	@NotNull
 	private UserInfo userInfo;
 
 }

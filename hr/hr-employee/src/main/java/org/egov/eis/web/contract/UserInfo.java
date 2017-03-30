@@ -64,29 +64,22 @@ public class UserInfo {
 	@NotNull
 	private Long id;
 
-	@NotNull
 	@Size(min=1, max=64)
 	private String userName;
 
-	@NotNull
 	@Size(min=3, max=100)
 	private String name;
 
-	@NotNull
 	@Size(max=20)
 	private String type;
 
-	@NotNull
 	@Size(max=10)
 	private String mobileNumber;
 
-	@NotNull
 	@Size(min=3, max=100)
 	private String emailId;
 
 	@Valid
-	@NotNull
-	@Size(min=1)
 	private List<UserInfoRoles> roles;
 
 }

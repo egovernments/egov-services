@@ -40,7 +40,6 @@
 
 package org.egov.commons.web.contract;
 
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
@@ -58,7 +57,6 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class UserInfoRoles {
 
-	@NotNull
 	@Size(min=2, max=100)
 	private String name;
 

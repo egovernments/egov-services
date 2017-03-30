@@ -8,9 +8,9 @@ CREATE TABLE egeis_leaveType (
 	encashable BOOLEAN NOT NULL,
 	active BOOLEAN DEFAULT TRUE,
 	createdBy BIGINT NOT NULL,
-	createdDate DATE NOT NULL,
+	createdDate TIMESTAMP WITHOUT TIME ZONE NOT NULL,
 	lastModifiedBy BIGINT,
-	lastModifiedDate DATE,
+	lastModifiedDate TIMESTAMP WITHOUT TIME ZONE,
 	tenantId CHARACTER VARYING(250) NOT NULL,
 
 	CONSTRAINT pk_egeis_leaveType PRIMARY KEY (Id),

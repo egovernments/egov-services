@@ -14,9 +14,9 @@ CREATE TABLE egeis_leaveApplication (
 	status CHARACTER VARYING(10) NOT NULL,
 	stateId BIGINT,
 	createdBy BIGINT NOT NULL,
-	createdDate DATE NOT NULL,
+	createdDate TIMESTAMP WITHOUT TIME ZONE NOT NULL,
 	lastModifiedBy BIGINT,
-	lastModifiedDate DATE,
+	lastModifiedDate TIMESTAMP WITHOUT TIME ZONE,
 	tenantId CHARACTER VARYING(250) NOT NULL,
 
 	CONSTRAINT pk_egeis_leaveApplication PRIMARY KEY (Id),

@@ -4,9 +4,9 @@ CREATE TABLE egeis_leaveAllotment (
 	leaveTypeId BIGINT NOT NULL,
 	noOfDays FLOAT NOT NULL,
 	createdBy BIGINT NOT NULL,
-	createdDate DATE NOT NULL,
+	createdDate TIMESTAMP WITHOUT TIME ZONE NOT NULL,
 	lastModifiedBy BIGINT,
-	lastModifiedDate DATE,
+	lastModifiedDate TIMESTAMP WITHOUT TIME ZONE,
 	tenantId CHARACTER VARYING(250) NOT NULL,
 
 	CONSTRAINT pk_egeis_leaveAllotment PRIMARY KEY (Id),

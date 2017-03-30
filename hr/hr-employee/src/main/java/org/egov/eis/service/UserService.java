@@ -131,8 +131,6 @@ public class UserService {
 		LOGGER.debug("userJson : " + userJson);
 		HttpHeaders headers =  new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
-		// FIXME : Passing auth-token for testing locally. Remove before actual deployment.
-		headers.add("auth-token", userRequest.getRequestInfo().getAuthToken());
 		HttpEntity<String> httpEntityRequest = new HttpEntity<String>(userJson, headers);
 
 		UserResponse userResponse = null;

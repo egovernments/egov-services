@@ -46,6 +46,7 @@ import java.util.Map;
 import javax.validation.Valid;
 
 import org.egov.lams.web.contract.RequestInfo;
+import org.egov.lams.web.contract.RequestInfoWrapper;
 import org.egov.lams.web.contract.ResponseInfo;
 import org.egov.lams.service.LamsConfigurationService;
 import org.egov.lams.web.contract.LamsConfigurationGetRequest;
@@ -83,7 +84,9 @@ public class LamsConfigurationController {
 	@PostMapping("_search")
 	@ResponseBody
 	public ResponseEntity<?> search(@ModelAttribute @Valid LamsConfigurationGetRequest lamsConfigurationGetRequest,
-			BindingResult bindingResult, @RequestBody RequestInfo requestInfo) {
+			BindingResult bindingResult, @RequestBody RequestInfoWrapper requestInfoWrapper) {
+		
+		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 
 		// validate header
 		if(requestInfo.getApiId() == null || requestInfo.getVer() == null || requestInfo.getTs() == null ) {

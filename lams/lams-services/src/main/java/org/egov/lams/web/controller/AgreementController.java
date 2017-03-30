@@ -8,6 +8,7 @@ import org.egov.lams.web.errorhandlers.Error;
 import org.egov.lams.web.contract.AgreementRequest;
 import org.egov.lams.web.contract.AgreementResponse;
 import org.egov.lams.web.contract.RequestInfo;
+import org.egov.lams.web.contract.RequestInfoWrapper;
 import org.egov.lams.exception.LamsException;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.AgreementCriteria;
@@ -49,13 +50,15 @@ public class AgreementController {
 	@ResponseBody
 	public ResponseEntity<?> search(
 			@ModelAttribute @Valid AgreementCriteria agreementCriteria,
-			@RequestBody RequestInfo requestInfo, BindingResult bindingResult) {
+			@RequestBody RequestInfoWrapper requestInfoWrapper, BindingResult bindingResult) {
 
 		if (bindingResult.hasErrors()) {
 			ErrorResponse errorResponse = populateErrors(bindingResult);
 			return new ResponseEntity<>(errorResponse,
 					HttpStatus.BAD_REQUEST);
 		}
+		
+		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 		LOGGER.info("AgreementController:getAgreements():searchAgreementsModel:"
 				+ agreementCriteria);
 		LOGGER.info("AgreementController:getAgreements():searchAgreementsModel:"

@@ -1,21 +1,15 @@
 package org.egov.lams.web.controller;
 
-import java.util.Arrays;
-import java.util.List;
-
-import javax.validation.Valid;
-
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.AgreementCriteria;
 import org.egov.lams.service.AgreementService;
 import org.egov.lams.service.PaymentService;
-import org.egov.lams.web.contract.BillReceiptReq;
 import org.egov.lams.web.contract.BillReceiptInfoReq;
+import org.egov.lams.web.contract.BillReceiptReq;
 import org.egov.lams.web.contract.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

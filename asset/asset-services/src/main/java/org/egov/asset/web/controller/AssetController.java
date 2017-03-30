@@ -47,7 +47,6 @@ import javax.validation.Valid;
 import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.contract.AssetRequest;
 import org.egov.asset.contract.AssetResponse;
-import org.egov.asset.contract.RequestInfo;
 import org.egov.asset.contract.RequestInfoWrapper;
 import org.egov.asset.contract.ResponseInfo;
 import org.egov.asset.exception.Error;

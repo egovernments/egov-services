@@ -88,7 +88,6 @@ public class VacantPositionsService {
 			e.printStackTrace();
 		}
 
-		// FIXME : Passing auth-token for testing locally. Remove before actual deployment.
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<String> httpEntityRequest = new HttpEntity<String>(requestInfoJson, headers);

@@ -46,6 +46,7 @@ import org.egov.eis.model.EmployeeInfo;
 import org.egov.eis.service.helper.EmployeeSearchURLHelper;
 import org.egov.eis.web.contract.EmployeeInfoResponse;
 import org.egov.eis.web.contract.RequestInfo;
+import org.egov.eis.web.contract.RequestInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -59,11 +60,13 @@ public class EmployeeService {
 
     public List<EmployeeInfo> getEmployee(final Long id, final String tenantId, final RequestInfo requestInfo) {
         final String url = employeeSearchURLHelper.searchURL(id, tenantId);
+        final RequestInfoWrapper wrapper = new RequestInfoWrapper();
+        wrapper.setRequestInfo(requestInfo);
 
         final RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
-        final HttpEntity<RequestInfo> request = new HttpEntity<>(requestInfo);
+        final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
 
         final EmployeeInfoResponse employeeInfoResponse = restTemplate.postForObject(url, request,
                 EmployeeInfoResponse.class);

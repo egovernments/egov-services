@@ -46,6 +46,7 @@ import java.util.Map;
 import org.egov.eis.service.helper.HRConfigurationSearchURLHelper;
 import org.egov.eis.web.contract.HRConfigurationResponse;
 import org.egov.eis.web.contract.RequestInfo;
+import org.egov.eis.web.contract.RequestInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -59,11 +60,13 @@ public class HRConfigurationService {
 
     public Map<String, List<String>> getWeeklyHolidays(final String tenantId, final RequestInfo requestInfo) {
         final String url = hrConfigurationSearchURLHelper.searchURL(tenantId);
-
+        final RequestInfoWrapper wrapper = new RequestInfoWrapper();
+        wrapper.setRequestInfo(requestInfo);
+        
         final RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
-        final HttpEntity<RequestInfo> request = new HttpEntity<>(requestInfo);
+        final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
 
         final HRConfigurationResponse hrConfigurationResponse = restTemplate.postForObject(url, request,
                 HRConfigurationResponse.class);

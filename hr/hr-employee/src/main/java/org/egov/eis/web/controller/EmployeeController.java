@@ -147,7 +147,19 @@ public class EmployeeController {
 		if (errorResponseEntity != null)
 			return errorResponseEntity;
 
-		return employeeService.createEmployee(employeeRequest);
+		return employeeService.createAsync(employeeRequest);
+	}
+	
+	@PostMapping(value = "/_update", headers = { "x-user-info" })
+	@ResponseBody
+	public ResponseEntity<?> update(@RequestBody @Valid EmployeeRequest employeeRequest, BindingResult bindingResult) {
+		LOGGER.debug("employeeRequest::" + employeeRequest);
+
+		ResponseEntity<?> errorResponseEntity = validateEmployeeCreateRequest(employeeRequest, bindingResult);
+		if (errorResponseEntity != null)
+			return errorResponseEntity;
+
+		return employeeService.updateAsync(employeeRequest);
 	}
 
 	/**

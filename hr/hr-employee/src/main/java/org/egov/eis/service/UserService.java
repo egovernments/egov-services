@@ -133,7 +133,7 @@ public class UserService {
 		} catch (Exception e) {
 			LOGGER.debug("Following Exception Occurred While Calling User Service : " + e.getMessage());
 			e.printStackTrace();
-			return errorHandler.getResponseEntityForUnexpectedErrors(userRequest.getRequestInfo());
+			return errorHandler.getResponseEntityForUnknownUserCreationError(userRequest.getRequestInfo());
 		}
 		return new ResponseEntity<UserResponse>(userResponse, HttpStatus.CREATED);
 	}

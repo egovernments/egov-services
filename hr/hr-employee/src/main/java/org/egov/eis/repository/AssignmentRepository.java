@@ -135,4 +135,14 @@ public class AssignmentRepository {
 			}
 		});
 	}
+
+	public void update(Assignment assignment) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void insert(Assignment assignment) {
+		// TODO Auto-generated method stub
+		
+	}
 }

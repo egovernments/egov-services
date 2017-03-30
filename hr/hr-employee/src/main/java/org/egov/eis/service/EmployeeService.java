@@ -44,6 +44,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.egov.eis.broker.EmployeeProducer;
+import org.egov.eis.config.PropertiesManager;
+import org.egov.eis.model.Assignment;
 import org.egov.eis.model.Employee;
 import org.egov.eis.model.EmployeeDocument;
 import org.egov.eis.model.EmployeeInfo;
@@ -132,8 +134,8 @@ public class EmployeeService {
 	@Autowired
 	private ErrorHandler errorHandler;
 
-	@Value("${kafka.topics.employee.savedb.name}")
-	String employeeSaveTopic;
+	@Autowired
+	PropertiesManager propertiesManager;
 	
 	@Value("${kafka.topics.employee.savedb.key}")
 	String employeeSaveKey;
@@ -156,11 +158,19 @@ public class EmployeeService {
 		return employeeInfoList;
 	}
 
-	public ResponseEntity<?> createEmployee(EmployeeRequest employeeRequest) {
+	public ResponseEntity<?> createAsync(EmployeeRequest employeeRequest) {
 		UserRequest userRequest = employeeHelper.getUserRequest(employeeRequest);
 
+		ResponseEntity<?> responseEntity = null;
+		
 		// FIXME : User service is expecting & sending dates in multiple formats. Fix a common standard
-		ResponseEntity<?> responseEntity = userService.createUser(userRequest);
+		try {
+			responseEntity = userService.createUser(userRequest);
+		} catch(Exception e) {
+			LOGGER.debug("Error occurred while creating user", e);
+			return errorHandler.getResponseEntityForUnknownUserCreationError(employeeRequest.getRequestInfo());
+		}
+
 
 		if(responseEntity.getBody().getClass().equals(UserErrorResponse.class)
 				|| responseEntity.getBody().getClass().equals(ErrorResponse.class)) {
@@ -177,7 +187,7 @@ public class EmployeeService {
 		employee.setUser(user);
 
 		try {
-			employeeHelper.populateData(employeeRequest);
+			employeeHelper.populateDefaultDataForCreate(employeeRequest);
 		} catch(Exception e) {
 			LOGGER.debug("Error occurred while populating data in objects", e);
 			return errorHandler.getResponseEntityForUnexpectedErrors(employeeRequest.getRequestInfo());
@@ -193,7 +203,7 @@ public class EmployeeService {
 			e.printStackTrace();
 		}
 		try {
-			employeeProducer.sendMessage(employeeSaveTopic, employeeSaveKey, employeeRequestJson);
+			employeeProducer.sendMessage(propertiesManager.getSaveEmployeeTopic(), employeeSaveKey, employeeRequestJson);
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}
@@ -201,7 +211,7 @@ public class EmployeeService {
 		return employeeHelper.getSuccessResponseForCreate(employee, employeeRequest.getRequestInfo());
 	}
 
-	public void saveEmployee(EmployeeRequest employeeRequest) {
+	public void create(EmployeeRequest employeeRequest) {
 		Employee employee = employeeRequest.getEmployee();
 		employeeRepository.save(employeeRequest);
 		employeeJurisdictionRepository.save(employee);
@@ -233,8 +243,62 @@ public class EmployeeService {
 			departmentalTestRepository.save(employeeRequest);
 		}
 	}
+	
+	public ResponseEntity<?> updateAsync(EmployeeRequest employeeRequest) {
+		Employee employee = employeeRequest.getEmployee();
+		
+		try {
+			employeeHelper.populateDefaultDataForUpdate(employeeRequest);
+		} catch(Exception e) {
+			LOGGER.debug("Error occurred while populating data in objects", e);
+			return errorHandler.getResponseEntityForUnexpectedErrors(employeeRequest.getRequestInfo());
+		}
+		
+		String employeeUpdateRequestJson = null;
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			employeeUpdateRequestJson = mapper.writeValueAsString(employeeRequest);
+			LOGGER.info("employeeJson update::" + employeeUpdateRequestJson);
+		} catch (JsonProcessingException e) {
+			LOGGER.error("Error while converting Employee to JSON during update", e);
+			e.printStackTrace();
+		}
+		try {
+			employeeProducer.sendMessage(propertiesManager.getUpdateEmployeeTopic(), employeeSaveKey, employeeUpdateRequestJson);
+		} catch(Exception ex) {
+			ex.printStackTrace();
+		}
 
-	public Boolean getBooleanForDataIntegrityChecks(String table, String field, Object value) {
+		return employeeHelper.getSuccessResponseForCreate(employee, employeeRequest.getRequestInfo());
+	}
+	
+	public void update(EmployeeRequest employeeRequest) {
+		Employee employee = employeeRequest.getEmployee();
+		employeeRepository.update(employeeRequest);
+		employeeJurisdictionRepository.update(employee);
+		employee.getAssignments().forEach((assignment) -> {
+			if (assignmentAlreadyExists(assignment.getId())) { // FIXME can be optimized with single query
+				assignmentRepository.update(assignment); // FIXME method to be written
+			} else {
+				assignmentRepository.insert(assignment);
+			}
+			findAndDeleteAssignmentsInDBThatAreNotInList(employee.getAssignments());
+			if (assignment.getHod() != null) {
+				hodDepartmentRepository.save(assignment, employee.getTenantId());
+			}
+		});
+	}
+
+	private void findAndDeleteAssignmentsInDBThatAreNotInList(List<Assignment> assignments) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private boolean assignmentAlreadyExists(Long id) {
+	// TODO Auto-generated method stub
+	return false;
+}
+public Boolean getBooleanForDataIntegrityChecks(String table, String field, Object value) {
 		return employeeRepository.getBooleanForDataIntegrityChecks(table, field, value);
 	}
 }

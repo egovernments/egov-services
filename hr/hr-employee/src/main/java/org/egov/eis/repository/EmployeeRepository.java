@@ -72,6 +72,15 @@ public class EmployeeRepository {
 			+ " medicalreportproduced, maritalstatus, passportno, gpfno, bankId, bankbranchId, bankaccount, groupId,"
 			+ " placeofbirth, tenantId)" + " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
+	public static final String UPDATE_EMPLOYEE_QUERY = "UPDATE egeis_employee "
+			+ "SET (dateOfAppointment, dateofjoining, dateofretirement, employeestatus, recruitmentmodeId,"
+			+ " recruitmenttypeId, recruitmentquotaId, retirementage, dateofresignation, dateoftermination,"
+			+ " employeetypeId, mothertongueId, religionId, communityId, categoryId, physicallydisabled,"
+			+ " medicalreportproduced, maritalstatus, passportno, gpfno, bankId, bankbranchId, bankaccount, groupId,"
+			+ " placeofbirth, tenantId)"
+			+ "= (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+			+"WHERE id = ?";
+	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
@@ -141,6 +150,43 @@ public class EmployeeRepository {
 
 		jdbcTemplate.update(INSERT_EMPLOYEE_QUERY, obj);
 	}
+	
+public void update(EmployeeRequest employeeRequest) {
+		
+		Employee employee = employeeRequest.getEmployee();
+		Object[] obj = new Object[] {
+				
+				employee.getDateOfAppointment(),
+				employee.getDateOfJoining(),
+				employee.getDateOfRetirement(),
+				employee.getEmployeeStatus(),
+				employee.getRecruitmentMode(),
+				employee.getRecruitmentType(),
+				employee.getRecruitmentQuota(),
+				employee.getRetirementAge(),
+				employee.getDateOfResignation(),
+				employee.getDateOfTermination(),
+				employee.getEmployeeType(),
+				employee.getMotherTongue(),
+				employee.getReligion(),
+				employee.getCommunity(),
+				employee.getCategory(),
+				employee.getPhysicallyDisabled(),
+				employee.getMedicalReportProduced(),
+				employee.getMaritalStatus().toString(),
+				employee.getPassportNo(),
+				employee.getGpfNo(),
+				employee.getBank(),
+				employee.getBankBranch(),
+				employee.getBankAccount(),
+				employee.getGroup(),
+				employee.getPlaceOfBirth(),
+				employee.getTenantId(),
+				employee.getId()
+		};
+
+		jdbcTemplate.update(UPDATE_EMPLOYEE_QUERY, obj);
+}
 
 	public Long generateSequence(String sequenceName) {
 		return jdbcTemplate.queryForObject("SELECT nextval('" + sequenceName + "')", Long.class);

@@ -7,7 +7,7 @@ import javax.validation.Valid;
 import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.contract.AssetCategoryRequest;
 import org.egov.asset.contract.AssetCategoryResponse;
-import org.egov.asset.contract.RequestInfo;
+import org.egov.asset.contract.RequestInfoWrapper;
 import org.egov.asset.exception.Error;
 import org.egov.asset.exception.ErrorResponse;
 import org.egov.asset.model.AssetCategory;
@@ -41,7 +41,7 @@ public class AssetCategoryController {
 	
 	@PostMapping("/_search")
 	@ResponseBody
-	public ResponseEntity<?> search(@RequestBody RequestInfo requestInfo ,@ModelAttribute AssetCategoryCriteria assetCategoryCriteria,BindingResult bindingResult){
+	public ResponseEntity<?> search(@RequestBody RequestInfoWrapper requestInfoWrapper ,@ModelAttribute AssetCategoryCriteria assetCategoryCriteria,BindingResult bindingResult){
 		
 		if(bindingResult.hasErrors()){
 			ErrorResponse errorResponse=populateErrors(bindingResult);

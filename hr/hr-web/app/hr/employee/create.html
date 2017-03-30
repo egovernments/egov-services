@@ -1231,8 +1231,7 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
-
-
+                                                                <p class="text-danger error-p" style="display:none">Duplicate entry not allowed.</p>
                                                             </div>
                                                             <div class="modal-footer">
                                                                 <button type="button" class="btn btn-primary" onclick="commonAddAndUpdate('agreementTableBody','assignmentDetailModal','assignments')">Add/Edit</button>
@@ -1320,12 +1319,11 @@
                                                                     </div>
 
                                                                 </div>
-
+                                                                <p class="text-danger error-p" style="display:none">Duplicate entry not allowed.</p>
                                                             </div>
                                                             <div class="modal-footer">
                                                                 <button type="button" id="jurisdictionAddOrUpdate" class="btn btn-primary" onclick="commonAddAndUpdate('jurisdictionTableBody','jurisdictionDetailModal','jurisdictions')">Add/Edit</button>
                                                                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-
                                                             </div>
 
                                                         </div>
@@ -1443,7 +1441,7 @@
                                                                             </div>
                                                                         </div>
                                                                     </div>
-
+                                                                    <p class="text-danger error-p" style="display:none">Duplicate entry not allowed.</p>
                                                                 </div>
                                                                 <div class="modal-footer">
                                                                     <button type="button" id="serviceHistoryAddOrUpdate" class="btn btn-primary" onclick="commonAddAndUpdate('serviceHistoryTableBody','serviceHistoryDetailModal','serviceHistory')">Add/Edit</button>
@@ -1568,7 +1566,7 @@
                                                                     </div>
 
                                                                 </div>
-
+                                                                <p class="text-danger error-p" style="display:none">Duplicate entry not allowed.</p>
                                                                 <div class="modal-footer">
                                                                     <button type="button" id="probationAddOrUpdate" class="btn btn-primary" onclick="commonAddAndUpdate('probationTableBody','probationDetailModal','probation')">Add/Edit</button>
                                                                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -1693,7 +1691,7 @@
                                                                     </div>
 
                                                                 </div>
-
+                                                                <p class="text-danger error-p" style="display:none">Duplicate entry not allowed.</p>
                                                                 <div class="modal-footer">
                                                                     <button type="button" id="regularisationAddOrUpdate" class="btn btn-primary" onclick="commonAddAndUpdate('regularisationTableBody','regularisationDetailModal','regularisation')">Add/Edit</button>
                                                                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -1808,7 +1806,7 @@
 
 
                                                                     </div>
-
+                                                                    <p class="text-danger error-p" style="display:none">Duplicate entry not allowed.</p>
                                                                 </div>
                                                                 <div class="modal-footer">
                                                                     <button type="button" id="educationAddOrUpdate" class="btn btn-primary" onclick="commonAddAndUpdate('educationTableBody','educationDetailModal','education')">Add/Edit</button>
@@ -1920,7 +1918,7 @@
 
 
                                                                     </div>
-
+                                                                    <p class="text-danger error-p" style="display:none">Duplicate entry not allowed.</p>
                                                                 </div>
                                                                 <div class="modal-footer">
                                                                     <button type="button" id="technicalAddOrUpdate" class="btn btn-primary" onclick="commonAddAndUpdate('technicalTableBody','technicalDetailModal','technical')">Add/Edit</button>
@@ -2018,7 +2016,7 @@
 
 
                                                                     </div>
-
+                                                                    <p class="text-danger error-p" style="display:none">Duplicate entry not allowed.</p>
                                                                 </div>
                                                                 <div class="modal-footer">
                                                                     <button type="button" id="testAddOrUpdate" class="btn btn-primary" onclick="commonAddAndUpdate('testTableBody','testDetailModal','test')">Add/Edit</button>
@@ -2208,6 +2206,11 @@
             </div>
         </div>
 
+    </div>
+
+     <div id="error-alert-div" class="alert alert-danger alert-dismissible alert-toast" role="alert" style="display:none">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <span id="error-alert-span"></span>
     </div>
 
     <footer class="clearfix simple">

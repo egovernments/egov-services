@@ -62,15 +62,14 @@ public class RequestValidator {
 	 * @param bindingResult
 	 * @return ResponseEntity<?>
 	 */
-	public ResponseEntity<?> validateSearchRequest(RequestInfo requestInfo, BindingResult bindingResult) {
-		// validate header
-		if (requestInfo.getApiId() == null || requestInfo.getVer() == null || requestInfo.getTs() == null) {
-			return errHandler.getErrorResponseEntityForMissingRequestInfo(requestInfo);
-		}
-
+	public ResponseEntity<?> validateSearchRequest(RequestInfo requestInfo, BindingResult modelAttributeBindingResult,
+			BindingResult requestBodyBindingResult) {
 		// validate input params
-		if (bindingResult.hasErrors()) {
-			return errHandler.getErrorResponseEntityForMissingParameters(bindingResult, requestInfo);
+		if (modelAttributeBindingResult.hasErrors()) {
+			return errHandler.getErrorResponseEntityForMissingParameters(modelAttributeBindingResult, requestInfo);
+		}
+		if (requestBodyBindingResult.hasErrors()) {
+			return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
 		}
 		return null;
 	}

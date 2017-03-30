@@ -55,7 +55,7 @@ public class LeaveAllotmentRowMapper implements RowMapper<LeaveAllotment> {
 	public LeaveAllotment mapRow(ResultSet rs, int rowNum) throws SQLException {
 		LeaveAllotment leaveAllotment = new LeaveAllotment();
 		leaveAllotment.setId(rs.getString("la_id"));
-		leaveAllotment.setDesignation(rs.getLong("la_designation"));
+		leaveAllotment.setDesignation(rs.getLong("la_designationId"));
 
 		LeaveType leaveType = new LeaveType();
 		leaveType.setId(rs.getLong("lt_id"));

@@ -89,7 +89,7 @@ public class WorkflowRepository {
 		task.setAction(workFlowDetails.getAction());
 		// FIXME business key get confirmed form workflow module
 		task.setBusinessKey(propertiesManager.getWorkflowServiceBusinessKey());
-		task.setType("agreement");
+		task.setType(propertiesManager.getWorkflowServiceBusinessKey());
 		task.setId(agreement.getStateId());
 		task.setStatus(workFlowDetails.getStatus());
 		// task.setStatus(workFlowDetails.get); FIXME ask mani about status	// issue not updating
@@ -135,7 +135,7 @@ public class WorkflowRepository {
 		try{
 			agreementRequestMessage	= objectMapper.writeValueAsString(agreementRequest);
 		}catch (Exception e) {
-			LOGGER.debug("WorkflowRepositorysaveAgreement : " +e);
+			LOGGER.debug("WorkflowRepositoryupdateAgreement : " +e);
 			throw new RuntimeException(e);
 		}
 		//FIXME TODO remove the hard coding and place the property manager string

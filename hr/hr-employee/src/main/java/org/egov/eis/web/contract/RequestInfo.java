@@ -40,6 +40,7 @@
 
 package org.egov.eis.web.contract;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
@@ -77,5 +78,8 @@ public class RequestInfo {
 	private String requesterId;
 
 	private String authToken;
+
+	@Valid
+	private UserInfo userInfo;
 
 }

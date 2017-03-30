@@ -57,12 +57,17 @@ public class LeaveApplicationQueryBuilder {
 	@Autowired
 	private ApplicationProperties applicationProperties;
 
-	private static final String BASE_QUERY = "SELECT la_id, la_applicationNumber, la_employee, la_leaveType, la_fromDate,"
-			+ " la_toDate, la_compensatoryForDate, la_leaveDays, la_availableDays, la_halfdays, la_firstHalfleave,"
-			+ " la_reason, la_status, la_stateId, la_createdBy, la_createdDate, la_lastModifiedBy, la_lastModifiedDate,"
-			+ " la_tenantId"
-			+ " lt_id, lt_name, lt_description, lt_halfdayAllowed, lt_payEligible, lt_accumulative, lt_encashable,"
-			+ " lt_active, lt_createdBy, lt_createdDate, lt_lastModifiedBy, lt_lastModifiedDate"
+	private static final String BASE_QUERY = "SELECT la.id AS la_id, la.applicationNumber AS la_applicationNumber,"
+			+ " la.employeeId AS la_employeeId, la.fromDate AS la_fromDate, la.toDate AS la_toDate,"
+			+ " la.compensatoryForDate AS la_compensatoryForDate, la.leaveDays AS la_leaveDays,"
+			+ " la.availableDays AS la_availableDays, la.halfdays AS la_halfdays, la.firstHalfleave AS la_firstHalfleave,"
+			+ " la.reason AS la_reason, la.status AS la_status, la.stateId AS la_stateId, la.createdBy AS la_createdBy,"
+			+ " la.createdDate AS la_createdDate, la.lastModifiedBy AS la_lastModifiedBy,"
+			+ " la.lastModifiedDate AS la_lastModifiedDate, la.tenantId AS la_tenantId,"
+			+ " lt.id AS lt_id, lt.name AS lt_name, lt.description AS lt_description, lt.halfdayAllowed AS lt_halfdayAllowed,"
+			+ " lt.payEligible AS lt_payEligible, lt.accumulative AS lt_accumulative, lt.encashable AS lt_encashable,"
+			+ " lt.active AS lt_active, lt.createdBy AS lt_createdBy, lt.createdDate AS lt_createdDate,"
+			+ " lt.lastModifiedBy AS lt_lastModifiedBy, lt.lastModifiedDate AS lt_lastModifiedDate"
 			+ " FROM egeis_leaveApplication la"
 			+ " JOIN egeis_leaveType lt ON la.leaveTypeId = lt.id";
 
@@ -93,48 +98,50 @@ public class LeaveApplicationQueryBuilder {
 
 		if (leaveApplicationGetRequest.getTenantId() != null) {
 			isAppendAndClause = true;
-			selectQuery.append(" tenantId = ?");
+			selectQuery.append(" la.tenantId = ?");
+			preparedStatementValues.add(leaveApplicationGetRequest.getTenantId());
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" lt.tenantId = ?");
 			preparedStatementValues.add(leaveApplicationGetRequest.getTenantId());
 		}
 
 		if (leaveApplicationGetRequest.getId() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" id IN " + getIdQuery(leaveApplicationGetRequest.getId()));
+			selectQuery.append(" la.id IN " + getIdQuery(leaveApplicationGetRequest.getId()));
 		}
 
 		if (leaveApplicationGetRequest.getApplicationNumber() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" applicationNumber = ?");
+			selectQuery.append(" la.applicationNumber = ?");
 			preparedStatementValues.add(leaveApplicationGetRequest.getApplicationNumber());
 		}
 
 		if (leaveApplicationGetRequest.getEmployee() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" employee = ?");
-			preparedStatementValues.add(leaveApplicationGetRequest.getEmployee());
+			selectQuery.append(" la.employeeId IN " + getIdQuery(leaveApplicationGetRequest.getEmployee()));
 		}
 
 		if (leaveApplicationGetRequest.getLeaveType() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" leaveType = ?");
+			selectQuery.append(" la.leaveTypeId = ?");
 			preparedStatementValues.add(leaveApplicationGetRequest.getLeaveType());
 		}
 
 		if (leaveApplicationGetRequest.getFromDate() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" fromDate = ?");
+			selectQuery.append(" la.fromDate = ?");
 			preparedStatementValues.add(leaveApplicationGetRequest.getFromDate());
 		}
 
 		if (leaveApplicationGetRequest.getToDate() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" toDate = ?");
+			selectQuery.append(" la.toDate = ?");
 			preparedStatementValues.add(leaveApplicationGetRequest.getToDate());
 		}
 	}
 
 	private void addOrderByClause(StringBuilder selectQuery, LeaveApplicationGetRequest leaveApplicationGetRequest) {
-		String sortBy = (leaveApplicationGetRequest.getSortBy() == null ? "id"
+		String sortBy = (leaveApplicationGetRequest.getSortBy() == null ? "lt.name"
 				: leaveApplicationGetRequest.getSortBy());
 		String sortOrder = (leaveApplicationGetRequest.getSortOrder() == null ? "ASC"
 				: leaveApplicationGetRequest.getSortOrder());

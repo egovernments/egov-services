@@ -8,6 +8,7 @@ import org.egov.lams.web.errorhandlers.Error;
 import org.egov.lams.web.contract.AgreementRequest;
 import org.egov.lams.web.contract.AgreementResponse;
 import org.egov.lams.web.contract.RequestInfo;
+import org.egov.lams.web.contract.RequestInfoWrapper;
 import org.egov.lams.exception.LamsException;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.AgreementCriteria;
@@ -49,26 +50,31 @@ public class AgreementController {
 	@ResponseBody
 	public ResponseEntity<?> search(
 			@ModelAttribute @Valid AgreementCriteria agreementCriteria,
-			@RequestBody RequestInfo requestInfo, BindingResult bindingResult) {
+			@RequestBody RequestInfoWrapper requestInfoWrapper, BindingResult bindingResult) {
 
 		if (bindingResult.hasErrors()) {
 			ErrorResponse errorResponse = populateErrors(bindingResult);
 			return new ResponseEntity<>(errorResponse,
 					HttpStatus.BAD_REQUEST);
 		}
+		
+		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 		LOGGER.info("AgreementController:getAgreements():searchAgreementsModel:"
 				+ agreementCriteria);
-
+		LOGGER.info("AgreementController:getAgreements():searchAgreementsModel:"
+				+ requestInfo);
 		List<Agreement> agreements = agreementService
 				.searchAgreement(agreementCriteria);
 		if(agreements.isEmpty())
 			throw new LamsException("No agreements found for the given criteria");
+		System.err.println("before sending for response su7ccess");
 		return getSuccessResponse(agreements, requestInfo);
 	}
 
 	private ResponseEntity<?> getSuccessResponse(List<Agreement> agreements, RequestInfo requestInfo) {
 		AgreementResponse agreementResponse = new AgreementResponse();
 		agreementResponse.setAgreement(agreements);
+		System.err.println("before sending for response factory");
 		agreementResponse.setResposneInfo(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true));
 		return new ResponseEntity<>(agreementResponse, HttpStatus.OK);
 	}

@@ -31,7 +31,7 @@ public class SevaRequest {
     public static final String VALUES_APPROVAL_COMMENT = "approvalComments";
     public static final String USER_ROLE = "userRole";
     private static final String SERVICE_REQUEST_ID = "service_request_id";
-    private static final String DEPARTMENT_NAME = "departmentName";
+    public static final String DEPARTMENT_ID = "departmentId";
     private static final String COMPLAINT_CRN = "crn";
     private static final String EXPECTED_DATETIME = "expected_datetime";
     private static final String TENANT_ID = "tenantId";
@@ -119,7 +119,7 @@ public class SevaRequest {
         valuesToSet.put(USER_ROLE, Attribute.asStringAttr(USER_ROLE, getRequestInfo().getUserType()));
         valuesToSet.put(VALUES_STATE_ID, Attribute.asStringAttr(VALUES_STATE_ID, getCurrentStateId(values)));
         valuesToSet.put(VALUES_APPROVAL_COMMENT, Attribute.asStringAttr(VALUES_APPROVAL_COMMENT, values.get(VALUES_APPROVAL_COMMENT)));
-        valuesToSet.put(DEPARTMENT_NAME, Attribute.asStringAttr(DEPARTMENT_NAME, values.get(DEPARTMENT_NAME)));
+        valuesToSet.put(DEPARTMENT_ID, Attribute.asStringAttr(DEPARTMENT_ID, values.get(DEPARTMENT_ID)));
         return valuesToSet;
     }
 
@@ -132,5 +132,6 @@ public class SevaRequest {
         return assignee != null ? Long.valueOf(String.valueOf(assignee)) : null;
     }
 
+    public boolean isCreate(){ return this.getRequestInfo().getAction().equals("POST");}
 
 }

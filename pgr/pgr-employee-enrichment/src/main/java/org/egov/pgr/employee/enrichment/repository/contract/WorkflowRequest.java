@@ -1,14 +1,17 @@
 package org.egov.pgr.employee.enrichment.repository.contract;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
-import lombok.Getter;
-import org.egov.pgr.employee.enrichment.consumer.contract.RequestInfo;
-
 import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
+
+import org.egov.pgr.employee.enrichment.consumer.contract.RequestInfo;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.Builder;
+import lombok.Getter;
 
 @Getter
 @Builder
@@ -86,5 +89,14 @@ public class WorkflowRequest {
             return values.get(key).getValues().get(0).getName();
         return "";
     }
-
+    
+    @JsonIgnore
+	public boolean isCreate() {
+		return Action.isCreate(this.getAction());
+	}
+    
+    @JsonIgnore
+	public boolean isClosed() {
+		return Action.isEnd(this.getAction());
+	}
 }

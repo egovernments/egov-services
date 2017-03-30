@@ -49,13 +49,24 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class ResponseInfoFactory {
 
 	public ResponseInfo createResponseInfoFromRequestInfo(@RequestBody RequestInfo requestInfo, Boolean success) {
-        String apiId = requestInfo.getApiId();
-        String ver = requestInfo.getVer();
-        String ts = requestInfo.getTs().toString();
-        String resMsgId = "uief87324"; // FIXME : Hard-coded
-        String msgId = requestInfo.getMsgId();
+		
+		System.err.println("before null from factory");
+		String apiId = null;
+		String ver = null;
+		String ts = null;
+		String resMsgId = null;
+		String msgId = null;
+		
+		/*if(requestInfo!= null){
+			 apiId = requestInfo.getApiId();
+			 ver = requestInfo.getVer();
+			 ts = requestInfo.getTs().toString();
+			 resMsgId = "uief87324"; // FIXME : Hard-coded
+			 msgId = requestInfo.getMsgId();
+		}*/
         String responseStatus = success ? "successful" : "failed";
-
+		System.err.println("before return from factory");
+	
         return new ResponseInfo(apiId, ver, ts, resMsgId, msgId, responseStatus);
     }
 

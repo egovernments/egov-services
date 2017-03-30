@@ -57,7 +57,7 @@ public class LeaveApplicationRowMapper implements RowMapper<LeaveApplication> {
 		LeaveApplication leaveApplication = new LeaveApplication();
 		leaveApplication.setId(rs.getString("la_id"));
 		leaveApplication.setApplicationNumber(rs.getString("la_applicationNumber"));
-		leaveApplication.setEmployee(rs.getLong("la_employee"));
+		leaveApplication.setEmployee(rs.getLong("la_employeeId"));
 
 		LeaveType leaveType = new LeaveType();
 		leaveType.setId(rs.getLong("lt_id"));

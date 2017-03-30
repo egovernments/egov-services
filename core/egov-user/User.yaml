@@ -23,7 +23,7 @@ paths:
         Get the user list based on the input parameters.
       # This is array of GET operation parameters:
       parameters:
-        - name: requestInfo
+        - name: RequestInfo
           in: body
           description: Commmon request info for getting user.
           required: true

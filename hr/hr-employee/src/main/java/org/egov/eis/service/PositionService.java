@@ -47,16 +47,10 @@ import org.egov.eis.repository.PositionAssignmentRepository;
 import org.egov.eis.service.helper.PositionSearchURLHelper;
 import org.egov.eis.web.contract.PositionGetRequest;
 import org.egov.eis.web.contract.PositionResponse;
-import org.egov.eis.web.contract.RequestInfo;
+import org.egov.eis.web.contract.RequestInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class PositionService {
@@ -67,32 +61,21 @@ public class PositionService {
 	@Autowired
 	private PositionSearchURLHelper positionSearchURLHelper;
 
-	public List<Position> getPositions(Long employeeId, PositionGetRequest positionGetRequest, RequestInfo requestInfo,
-			HttpHeaders headers) {
+	public List<Position> getPositions(Long employeeId, PositionGetRequest positionGetRequest,
+			RequestInfoWrapper requestInfoWrapper) {
 		List<Long> actualPositionIds = positionAssignmentRepository.findForCriteria(employeeId, positionGetRequest);
-		if(!positionGetRequest.getId().isEmpty()) {
+		if (!positionGetRequest.getId().isEmpty()) {
 			actualPositionIds.retainAll(positionGetRequest.getId());
+			// FIXME : For not getting any positions, setting actualPositionIds
+			// with value [0]
+			actualPositionIds.add(0L);
 		}
 		positionGetRequest.setId(actualPositionIds);
 
 		String url = positionSearchURLHelper.searchURL(positionGetRequest);
 
-		System.err.println("URL: " + url + " id.isEmpty : " + positionGetRequest.getId().isEmpty());
-		String requestInfoJson = null;
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			requestInfoJson = mapper.writeValueAsString(requestInfo);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
-
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		// FIXME : Passing auth-token for testing locally. Remove before actual deployment.
-		headers.add("auth-token", requestInfo.getAuthToken());
-		HttpEntity<String> httpEntityRequest = new HttpEntity<String>(requestInfoJson, headers);
-
-		// Replace httpEntityRequest with requestInfo if there is no need to send headers
-		PositionResponse positionResponse = new RestTemplate().postForObject(url, httpEntityRequest, PositionResponse.class);
+		PositionResponse positionResponse = new RestTemplate().postForObject(url, requestInfoWrapper,
+				PositionResponse.class);
 
 		return positionResponse.getPosition();
 	}

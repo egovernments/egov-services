@@ -48,8 +48,8 @@ public class DemandRepository {
 	
 	public List<Demand> getDemandList(AgreementRequest agreementRequest, List<DemandReason> demandReasons) {
 		
-		List<Demand> demands = new ArrayList<Demand>();
-		List<DemandDetails> demandDetails = new ArrayList<DemandDetails>();
+		List<Demand> demands = new ArrayList<>();
+		List<DemandDetails> demandDetails = new ArrayList<>();
 		Demand demand=new Demand();
 		demand.setInstallment(demandReasons.get(0).getTaxPeriod());
 		demand.setModuleName("Leases And Agreements");

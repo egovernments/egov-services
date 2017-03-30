@@ -2,11 +2,11 @@ package org.egov.lams.web.controller;
 
 import java.util.List;
 
-import org.egov.lams.web.contract.DocumentTypeResponse;
-import org.egov.lams.web.contract.RequestInfo;
 import org.egov.lams.model.DocumentType;
 import org.egov.lams.model.enums.Application;
 import org.egov.lams.service.DocumentTypeService;
+import org.egov.lams.web.contract.DocumentTypeResponse;
+import org.egov.lams.web.contract.RequestInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +24,7 @@ public class DocumentTypeController {
 	private DocumentTypeService documentTypeService;
 
 	@PostMapping("_search")
-	public ResponseEntity<?> getDocumentType(@RequestBody RequestInfo requestInfo,
+	public ResponseEntity<?> getDocumentType(@RequestBody RequestInfoWrapper requestInfoWrapper,
 			@RequestParam(name = "tenantId", required = false) String tenantId,
 			@RequestParam(name = "appilcationtype", required = false) Application application) {
 

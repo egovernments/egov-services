@@ -56,10 +56,7 @@ import org.egov.eis.web.errorhandler.UserErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -83,7 +80,7 @@ public class UserService {
 	@Autowired
 	private ErrorHandler errorHandler;
 	
-	public List<User> getUsers(List<Long> ids, String tenantId, RequestInfo requestInfo, HttpHeaders headers) {
+	public List<User> getUsers(List<Long> ids, String tenantId, RequestInfo requestInfo) {
 		String url = userSearchURLHelper.searchURL(ids, tenantId);
 
 		UserGetRequest userGetRequest = new UserGetRequest();
@@ -91,22 +88,9 @@ public class UserService {
 		userGetRequest.setRequestInfo(requestInfo);
 		userGetRequest.setTenantId(tenantId);
 
-		String userGetRequestJson = null;
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			userGetRequestJson = mapper.writeValueAsString(userGetRequest);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
-
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		// FIXME : Passing auth-token for testing locally. Remove before actual deployment.
-		headers.add("auth-token", requestInfo.getAuthToken());
-		HttpEntity<String> httpEntityRequest = new HttpEntity<String>(userGetRequestJson, headers);
-
 		List<User> users = null;
 		try {
-			UserResponse userResponse = new RestTemplate().postForObject(url, httpEntityRequest, UserResponse.class);
+			UserResponse userResponse = new RestTemplate().postForObject(url, userGetRequest, UserResponse.class);
 			users = userResponse.getUser();
 		} catch (Exception e) {
 			LOGGER.debug("Following Exception Occurred While Calling User Service : " + e.getMessage());
@@ -117,27 +101,13 @@ public class UserService {
 	}
 
 	// FIXME : User service is expecting & sending dates in multiple formats. Fix a common standard for date formats.
-	public ResponseEntity<?> createUser(UserRequest userRequest, HttpHeaders headers) {
+	public ResponseEntity<?> createUser(UserRequest userRequest) {
 		String url = propertiesManager.getUsersServiceHostName() + propertiesManager.getUsersServiceUsersBasePath()
 				+ propertiesManager.getUsersServiceUsersCreatePath();
 
-		String userJson = null;
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			userJson = mapper.writeValueAsString(userRequest);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
-
-		LOGGER.debug("userJson : " + userJson);
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		// FIXME : Passing auth-token for testing locally. Remove before actual deployment.
-		headers.add("auth-token", userRequest.getRequestInfo().getAuthToken());
-		HttpEntity<String> httpEntityRequest = new HttpEntity<String>(userJson, headers);
-
 		UserResponse userResponse = null;
 		try {
-			userResponse = new RestTemplate().postForObject(url, httpEntityRequest, UserResponse.class);
+			userResponse = new RestTemplate().postForObject(url, userRequest, UserResponse.class);
 		} catch (HttpClientErrorException e) {
 			String errorResponseBody = e.getResponseBodyAsString();
 			UserErrorResponse userErrorResponse = null;

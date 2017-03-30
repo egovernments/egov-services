@@ -12,7 +12,7 @@ public class PropertiesManager {
 	 @Value("${kafka.topics.save.agreement}")
 	 private String kafkaSaveAgreementTopic;
 	
-	 @Value("${kafka.topics.save.agreement}")
+	 @Value("${kafka.topics.update.agreement}")
 	 private String kafkaUpdateAgreementTopic; 
 
 }

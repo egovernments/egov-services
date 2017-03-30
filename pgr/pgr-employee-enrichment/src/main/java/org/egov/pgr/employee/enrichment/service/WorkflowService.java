@@ -27,16 +27,15 @@ public class WorkflowService {
 	public SevaRequest enrichWorkflow(SevaRequest sevaRequest) {
 		WorkflowRequest request = sevaRequest.getWorkFlowRequest();
 		WorkflowResponse workflowResponse = null;
-		if (WorkflowRequest.Action.isCreate(request.getAction())
-				&& sevaRequest.getRequestInfo().getAction().equals("POST")) {
+		if (request.isCreate() && sevaRequest.isCreate()) {
 			workflowResponse = workflowRepository.create(request);
-		} else if (WorkflowRequest.Action.isEnd(request.getAction())) {
+		} else if (request.isClosed()) {
 			workflowResponse = workflowRepository.close(request);
 		} else {
 			ServiceRequest responseFromDB = complaintRestRepository.getComplaintByCrn(1L, request.getCrn());
 			Map<String, String> values = responseFromDB.getValues();
 			String locationId = values.get("locationId");
-//			String department = values.get("departmentName");
+			String departmentId = values.get("departmentId");
 			String assigneeId = values.get("assigneeId");
 			String status = values.get("complaintStatus");
 			boolean isUpdate = false;
@@ -44,10 +43,10 @@ public class WorkflowService {
 					|| !locationId.equals(request.getValueForKey("boundaryId"))
 					|| !assigneeId.equals(request.getAssignee().toString())) {
 				isUpdate = true;
-//			} else if ((!department.equals(request.getValueForKey("departmentName"))
-			} else if((!status.equals(request.getStatus())
-					|| !responseFromDB.getDescription().equals(request.getValueForKey("approvalComments")))
-					&& !isUpdate) {
+			} else if (!departmentId.equals(request.getValueForKey("departmentId"))
+					|| (!status.equals(request.getStatus())
+							|| !responseFromDB.getDescription().equals(request.getValueForKey("approvalComments")))
+							&& !isUpdate) {
 				isUpdate = true;
 			}
 			if (isUpdate) {

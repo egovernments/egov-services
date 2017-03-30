@@ -43,12 +43,11 @@ package org.egov.commons.web.contract.factory;
 import org.egov.commons.web.contract.RequestInfo;
 import org.egov.commons.web.contract.ResponseInfo;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @Component
 public class ResponseInfoFactory {
 
-	public ResponseInfo createResponseInfoFromRequestInfo(@RequestBody RequestInfo requestInfo, Boolean success) {
+	public ResponseInfo createResponseInfoFromRequestInfo(RequestInfo requestInfo, Boolean success) {
         String apiId = requestInfo.getApiId();
         String ver = requestInfo.getVer();
         String ts = requestInfo.getTs();

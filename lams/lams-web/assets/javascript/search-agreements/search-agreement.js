@@ -176,17 +176,48 @@ class AgreementSearch extends React.Component {
 
   componentDidMount()
   {
-    // console.log(commonApiPost("asset","assetCategories","_search",{}).responseJSON["AssetCategory"]);
-    // console.log(commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"LOCALITY",hierarchyTypeName:"LOCATION"}).responseJSON["Boundary"]);
-    // console.log(commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"WARD",hierarchyTypeName:"ADMINISTRATION"}).responseJSON["Boundary"]);
-    // console.log(commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"WARD",hierarchyTypeName:"REVENUE"}).responseJSON["Boundary"]);
-
+    let _this = this; 
     this.setState({
       assetCategories:commonApiPost("asset-services","assetCategories","_search",{}).responseJSON["AssetCategory"] || [],
       locality:commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"LOCALITY",hierarchyTypeName:"LOCATION"}).responseJSON["Boundary"] || [],
       electionwards:commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"WARD",hierarchyTypeName:"ADMINISTRATION"}).responseJSON["Boundary"] || [],
       revenueWards:commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"WARD",hierarchyTypeName:"REVENUE"}).responseJSON["Boundary"] || []
     })
+
+    //Fetch allottee name suggestions
+    $( "#name" ).autocomplete({
+      source: function( request, response ) {
+        $.ajax({
+          url: baseUrl + "/user/_search?tenantId=" + tenantId,
+          type: 'POST',
+          dataType: "json",
+          data: JSON.stringify({
+              ...requestInfo,
+              name: request.term,
+              fuzzyLogic: true
+          }),
+          contentType: 'application/json',
+          success: function( data ) {
+            if(data && data.user && data.user.length) {
+                let users = [];
+                for(let i=0;i<data.user.length;i++)
+                    users.push(data.user[i].name);
+                response(users);
+            }
+          }
+        });
+      },
+      minLength: 3,
+      change: function( event, ui ) {
+        if(ui.item && ui.item.value)
+            _this.setState({
+                searchSet:{
+                    ..._this.state.searchSet,
+                    name: ui.item.value
+                }
+            })
+      }
+    });
   }
 
   componentDidUpdate(prevProps, prevState)
@@ -201,21 +232,20 @@ class AgreementSearch extends React.Component {
             buttons: [
                      'copy', 'csv', 'excel', 'pdf', 'print'
              ],
-             ordering: false
+             ordering: false,
+             bDestroy: true
           });
       }
   }
 
   handleChange(e,name)
   {
-
       this.setState({
           searchSet:{
               ...this.state.searchSet,
               [name]:e.target.value
           }
       })
-
   }
 
   handleSelectChange(type,id,number,assetCategory)
@@ -438,7 +468,7 @@ class AgreementSearch extends React.Component {
                               <div className="col-sm-6">
                                   <div className="row">
                                       <div className="col-sm-6 label-text">
-                                          <label id="name">Allottee Name </label>
+                                          <label for="name">Allottee Name </label>
                                       </div>
                                       <div className="col-sm-6">
                                           <input  type="text" id="name" name="name" value={name} onChange={(e)=>{
@@ -589,7 +619,7 @@ class AgreementSearch extends React.Component {
 
 
                   <div className="text-center">
-                      <button type="submit" className="btn btn-submit">Search</button>
+                      <button type="submit" className="btn btn-submit">Search</button>&nbsp;&nbsp;
                       <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>
                   </div>
               </form>

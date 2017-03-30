@@ -18,13 +18,13 @@ import org.egov.lams.service.AssetService;
 import org.egov.lams.web.contract.AllotteeResponse;
 import org.egov.lams.web.contract.AssetResponse;
 import org.egov.lams.web.contract.RequestInfo;
+import org.egov.lams.web.contract.RequestInfoWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.client.RestTemplate;
 
 @Repository
 public class AgreementRepository {
@@ -182,9 +182,9 @@ public class AgreementRepository {
 	 */
 	public List<Allottee> getAllottees(AgreementCriteria agreementCriteria) {
 		//FIXME TODO urgent allottee helper has to be changed for post
-		String queryString = allotteeHelper.getAllotteeParams(agreementCriteria);
+		//String queryString = allotteeHelper.getAllotteeParams(agreementCriteria);
 		logger.info("AgreementController SearchAgreementService AgreementRepository : inside Allottee API caller");
-		AllotteeResponse allotteeResponse = allotteeService.getAllottees(agreementCriteria.getAllottee(),new RequestInfo());
+		AllotteeResponse allotteeResponse = allotteeService.getAllottees(agreementCriteria,new RequestInfo());
 		if (allotteeResponse.getAllottee() == null || allotteeResponse.getAllottee().size() <= 0)
 			throw new RuntimeException("No allottee found for given criteria");
 		System.err.println("the result allottee response from allottee api call : "+allotteeResponse.getAllottee());
@@ -198,9 +198,7 @@ public class AgreementRepository {
 	public List<Asset> getAssets(AgreementCriteria agreementCriteria) {
 		System.out.println("inside get asset method");
 		String queryString = assetHelper.getAssetParams(agreementCriteria);
-		
-		System.out.println("after calling asset params method"+queryString);
-		AssetResponse assetResponse = assetService.getAssets(queryString, new RequestInfo());
+		AssetResponse assetResponse = assetService.getAssets(queryString, new RequestInfoWrapper());
 		if (assetResponse.getAssets() == null || assetResponse.getAssets().size() <= 0)
 			throw new RuntimeException("No assets found for given criteria");
 		// FIXME empty response exception

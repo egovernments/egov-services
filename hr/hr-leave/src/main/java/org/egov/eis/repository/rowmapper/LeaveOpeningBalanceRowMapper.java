@@ -54,9 +54,9 @@ public class LeaveOpeningBalanceRowMapper implements RowMapper<LeaveOpeningBalan
 	@Override
 	public LeaveOpeningBalance mapRow(ResultSet rs, int rowNum) throws SQLException {
 		LeaveOpeningBalance leaveOpeningBalance = new LeaveOpeningBalance();
-		leaveOpeningBalance.setId(rs.getString("lo_id"));
-		leaveOpeningBalance.setEmployee(rs.getLong("lo_employee"));
-		leaveOpeningBalance.setCalendarYear(rs.getInt("lo_calendarYear"));
+		leaveOpeningBalance.setId(rs.getString("lob_id"));
+		leaveOpeningBalance.setEmployee(rs.getLong("lob_employeeId"));
+		leaveOpeningBalance.setCalendarYear(rs.getInt("lob_calendarYear"));
 
 		LeaveType leaveType = new LeaveType();
 		leaveType.setId(rs.getLong("lt_id"));
@@ -71,16 +71,16 @@ public class LeaveOpeningBalanceRowMapper implements RowMapper<LeaveOpeningBalan
 		leaveType.setCreatedDate(rs.getDate("lt_createdDate"));
 		leaveType.setLastModifiedBy(rs.getLong("lt_lastModifiedBy"));
 		leaveType.setLastModifiedDate(rs.getDate("lt_lastModifiedDate"));
-		leaveType.setTenantId(rs.getString("lo_tenantId"));
+		leaveType.setTenantId(rs.getString("lob_tenantId"));
 
 		leaveOpeningBalance.setLeaveType(leaveType);
 
-		leaveOpeningBalance.setNoOfDays(rs.getFloat("lo_noOfDays"));
-		leaveOpeningBalance.setCreatedBy(rs.getLong("lo_createdBy"));
-		leaveOpeningBalance.setCreatedDate(rs.getDate("lo_createdDate"));
-		leaveOpeningBalance.setLastModifiedBy(rs.getLong("lo_lastModifiedBy"));
-		leaveOpeningBalance.setLastModifiedDate(rs.getDate("lo_lastModifiedDate"));
-		leaveOpeningBalance.setTenantId(rs.getString("lo_tenantId"));
+		leaveOpeningBalance.setNoOfDays(rs.getFloat("lob_noOfDays"));
+		leaveOpeningBalance.setCreatedBy(rs.getLong("lob_createdBy"));
+		leaveOpeningBalance.setCreatedDate(rs.getDate("lob_createdDate"));
+		leaveOpeningBalance.setLastModifiedBy(rs.getLong("lob_lastModifiedBy"));
+		leaveOpeningBalance.setLastModifiedDate(rs.getDate("lob_lastModifiedDate"));
+		leaveOpeningBalance.setTenantId(rs.getString("lob_tenantId"));
 		return leaveOpeningBalance;
 	}
 }

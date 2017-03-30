@@ -74,16 +74,32 @@ public class AllotteeService {
 		 return callAllotteSearch(url,createUserRequest);
 	}
 	
-	public AllotteeResponse callAllotteSearch(String url,Object userRequest){
-		
-	AllotteeResponse allotteeResponse = null;
-	try{
-		allotteeResponse = restTemplate.postForObject(url, userRequest, AllotteeResponse.class);
-	}catch (Exception e) {
-		logger.info(e.getMessage(), e);
-		throw new RuntimeException(e.getMessage()+e);
+	public AllotteeResponse callAllotteSearch(String url, Object userRequest) {
+
+		UserSearchRequest userSearchRequest;
+		CreateUserRequest createUserRequest;
+		AllotteeResponse allotteeResponse;
+
+		if (userRequest instanceof UserSearchRequest) {
+
+			userSearchRequest = (UserSearchRequest) userRequest;
+			try {
+				allotteeResponse = restTemplate.postForObject(url, userSearchRequest, AllotteeResponse.class);
+			} catch (Exception e) {
+				logger.info(e.getMessage(), e);
+				throw new RuntimeException(e.getMessage() + e);
+			}
+		} else {
+			createUserRequest = (CreateUserRequest) userRequest;
+			try {
+				allotteeResponse = restTemplate.postForObject(url, createUserRequest, AllotteeResponse.class);
+			} catch (Exception e) {
+				logger.info(e.getMessage(), e);
+				throw new RuntimeException(e.getMessage() + e);
+			}
+		}
+		logger.info("list of allottes from allotteresponse from allotte api call for get allottees",
+				allotteeResponse.getAllottee());
+		return allotteeResponse;
 	}
-	logger.info("list of allottes from allotteresponse from allotte api call for get allottees",allotteeResponse.getAllottee());
-	return allotteeResponse;
-}
 }

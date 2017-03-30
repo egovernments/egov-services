@@ -53,7 +53,8 @@ class SearchAsset extends React.Component {
             buttons: [
                      'copy', 'csv', 'excel', 'pdf', 'print'
              ],
-             ordering: false
+             ordering: false,
+             bDestroy: true
           });
       }
   }

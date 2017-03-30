@@ -7,6 +7,8 @@ import com.netflix.zuul.context.RequestContext;
 import org.apache.commons.io.IOUtils;
 import org.egov.contract.User;
 import org.egov.wrapper.CustomRequestWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.cloud.netflix.zuul.filters.ProxyRequestHelper;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -22,6 +24,7 @@ public class AuthFilter extends ZuulFilter {
     private String authServiceHost;
     private String authUri;
     private RestTemplate restTemplate;
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public AuthFilter(RestTemplate restTemplate, String authServiceHost, String authUri, String userInfoHeader) {
         this.restTemplate = restTemplate;
@@ -54,8 +57,10 @@ public class AuthFilter extends ZuulFilter {
             User user = restTemplate.postForObject(authURL, null, User.class);
             ObjectMapper mapper = new ObjectMapper();
             if (shouldPutUserInfoOnHeaders(ctx)) {
+                logger.info("auth-filter: adding user-info header");
                 ctx.addZuulRequestHeader(userInfoHeader, mapper.writeValueAsString(user));
             } else {
+                logger.info("auth-filter: adding userInfo in request body");
                 appendUserInfoToRequestBody(ctx, user);
             }
         } catch (HttpClientErrorException ex) {
@@ -85,6 +90,7 @@ public class AuthFilter extends ZuulFilter {
         CustomRequestWrapper requestWrapper = new CustomRequestWrapper(ctx.getRequest());
         requestWrapper.setPayload(mapper.writeValueAsString(requestBody));
         ctx.setRequest(requestWrapper);
+        logger.info(String.format("auth-filter: final payload after adding user info - %s", requestWrapper.getPayload()));
     }
 
     private void abortWithException(RequestContext ctx, HttpClientErrorException ex) {

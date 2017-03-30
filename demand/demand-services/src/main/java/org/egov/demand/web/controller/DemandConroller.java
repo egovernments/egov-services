@@ -88,6 +88,8 @@ public class DemandConroller {
 	@ResponseBody
 	public ResponseEntity<?> search(@ModelAttribute @Valid DemandSearchCriteria demandSearchCriteria,@RequestBody RequestInfo requestInfo,
 			 BindingResult bindingResult) {
+
+		System.out.println("the request info object : "+requestInfo);
 		List<Demand> demands = new ArrayList<Demand>();
 		List<DemandDetails> demandDetails = new ArrayList<DemandDetails>();
 		EgDemand egDemand = null;

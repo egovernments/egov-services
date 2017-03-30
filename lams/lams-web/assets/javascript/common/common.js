@@ -1,21 +1,21 @@
 var baseUrl = window.location.origin;
 
-var authToken=localStorage.getItem("auth-token");
+var authToken = localStorage.getItem("auth-token");
 
 //request info from cookies
 var requestInfo = {
-    "apiId":"org.egov.pgr",
-    "ver":"1.0",
-    "ts": "2015-04-12",
-    "action":"asd",
-    "did":"4354648646",
-    "key":"xyz",
-    "msgId":"654654",
-    "requesterId":"61",
-    "authToken":authToken
+    "apiId": "emp",
+    "ver": "1.0",
+    "ts": "2017-04-12",
+    "action": "create",
+    "did": "1",
+    "key": "abcdkey",
+    "msgId": "20170310130900",
+    "requesterId": "rajesh",
+    "authToken": authToken
 };
 
-var tenantId=1;
+var tenantId = 1;
 
 
 
@@ -33,17 +33,36 @@ var tenantId=1;
 // var recruitmentType=JSON.parse(localStorage.getItem("recruitmentType"))==null?(localStorage.setItem("recruitmentType",JSON.stringify(getCommonMaster("hr-masters", "recruitmenttypes", "RecruitmentType").responseJSON["RecruitmentType"])) || []) :JSON.parse(localStorage.getItem("recruitmentType"));
 // var recruitmentQuota=JSON.parse(localStorage.getItem("recruitmentQuota"))==null?(localStorage.setItem("recruitmentQuota",JSON.stringify(getCommonMaster("hr-masters", "recruitmentquotas", "RecruitmentQuota").responseJSON["RecruitmentQuota"])) || []) :JSON.parse(localStorage.getItem("recruitmentQuota"));
 // var assignments_grade=JSON.parse(localStorage.getItem("assignments_grade"))==null?(localStorage.setItem("assignments_grade",JSON.stringify(getCommonMaster("hr-masters", "grades", "Grade").responseJSON["Grade"])) || []) :JSON.parse(localStorage.getItem("assignments_grade"));
-var designation=JSON.parse(localStorage.getItem("assignments_designation"))==null?(localStorage.setItem("assignments_designation",JSON.stringify(getCommonMaster("hr-masters", "designations", "Designation").responseJSON["Designation"])) || []) :JSON.parse(localStorage.getItem("assignments_designation"));
-var department=JSON.parse(localStorage.getItem("assignments_department"))==null?(localStorage.setItem("assignments_department",JSON.stringify(getCommonMaster("egov-common-masters", "departments", "Department").responseJSON["Department"])) || []) :JSON.parse(localStorage.getItem("assignments_department"));
-var locality=JSON.parse(localStorage.getItem("locality"))==null?(localStorage.setItem("locality",JSON.stringify(commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"LOCALITY",hierarchyTypeName:"LOCATION"}).responseJSON["Boundary"])) || []) :JSON.parse(localStorage.getItem("locality"));
-var electionwards=JSON.parse(localStorage.getItem("ward"))==null?(localStorage.setItem("ward",JSON.stringify(commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"WARD",hierarchyTypeName:"ADMINISTRATION"}).responseJSON["Boundary"])) || []) :JSON.parse(localStorage.getItem("ward"));
-var street=JSON.parse(localStorage.getItem("street"))==null?(localStorage.setItem("street",JSON.stringify(commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"STREET",hierarchyTypeName:"LOCATION"}).responseJSON["Boundary"])) || []) :JSON.parse(localStorage.getItem("street"));
-var revenueWard=JSON.parse(localStorage.getItem("revenueWard"))==null?(localStorage.setItem("revenueWard",JSON.stringify(commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"WARD",hierarchyTypeName:"REVENUE"}).responseJSON["Boundary"])) || []) :JSON.parse(localStorage.getItem("revenueWard"));
-var revenueZone=JSON.parse(localStorage.getItem("revenueZone"))==null?(localStorage.setItem("revenueZone",JSON.stringify(commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"ZONE",hierarchyTypeName:"REVENUE"}).responseJSON["Boundary"])) || []) :JSON.parse(localStorage.getItem("revenueZone"));
-var revenueBlock=JSON.parse(localStorage.getItem("revenueBlock"))==null?(localStorage.setItem("revenueBlock",JSON.stringify(commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"BLOCK",hierarchyTypeName:"REVENUE"}).responseJSON["Boundary"])) || []) :JSON.parse(localStorage.getItem("revenueBlock"));
-var assetCategories=JSON.parse(localStorage.getItem("assetCategories"))==null?(localStorage.setItem("assetCategories",JSON.stringify(commonApiPost("asset-services","assetCategories","_search",{}).responseJSON["AssetCategory"])) || []) :JSON.parse(localStorage.getItem("assetCategories"));
-var natureOfAllotments=JSON.parse(localStorage.getItem("natureOfAllotments"))==null?(localStorage.setItem("natureOfAllotments",JSON.stringify(commonApiPost("lams-services","","getnatureofallotment",{}).responseJSON)) || {}) :JSON.parse(localStorage.getItem("natureOfAllotments"));
-var employees=[];
+var designation = JSON.parse(localStorage.getItem("assignments_designation")) == null ? (localStorage.setItem("assignments_designation", JSON.stringify(getCommonMaster("hr-masters", "designations", "Designation").responseJSON["Designation"])) || []) : JSON.parse(localStorage.getItem("assignments_designation"));
+var department = JSON.parse(localStorage.getItem("assignments_department")) == null ? (localStorage.setItem("assignments_department", JSON.stringify(getCommonMaster("egov-common-masters", "departments", "Department").responseJSON["Department"])) || []) : JSON.parse(localStorage.getItem("assignments_department"));
+var locality = JSON.parse(localStorage.getItem("locality")) == null ? (localStorage.setItem("locality", JSON.stringify(commonApiPost("v1/location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", {
+    boundaryTypeName: "LOCALITY",
+    hierarchyTypeName: "LOCATION"
+}).responseJSON["Boundary"])) || []) : JSON.parse(localStorage.getItem("locality"));
+var electionwards = JSON.parse(localStorage.getItem("ward")) == null ? (localStorage.setItem("ward", JSON.stringify(commonApiPost("v1/location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", {
+    boundaryTypeName: "WARD",
+    hierarchyTypeName: "ADMINISTRATION"
+}).responseJSON["Boundary"])) || []) : JSON.parse(localStorage.getItem("ward"));
+var street = JSON.parse(localStorage.getItem("street")) == null ? (localStorage.setItem("street", JSON.stringify(commonApiPost("v1/location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", {
+    boundaryTypeName: "STREET",
+    hierarchyTypeName: "LOCATION"
+}).responseJSON["Boundary"])) || []) : JSON.parse(localStorage.getItem("street"));
+var revenueWard = JSON.parse(localStorage.getItem("revenueWard")) == null ? (localStorage.setItem("revenueWard", JSON.stringify(commonApiPost("v1/location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", {
+    boundaryTypeName: "WARD",
+    hierarchyTypeName: "REVENUE"
+}).responseJSON["Boundary"])) || []) : JSON.parse(localStorage.getItem("revenueWard"));
+var revenueZone = JSON.parse(localStorage.getItem("revenueZone")) == null ? (localStorage.setItem("revenueZone", JSON.stringify(commonApiPost("v1/location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", {
+    boundaryTypeName: "ZONE",
+    hierarchyTypeName: "REVENUE"
+}).responseJSON["Boundary"])) || []) : JSON.parse(localStorage.getItem("revenueZone"));
+var revenueBlock = JSON.parse(localStorage.getItem("revenueBlock")) == null ? (localStorage.setItem("revenueBlock", JSON.stringify(commonApiPost("v1/location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", {
+    boundaryTypeName: "BLOCK",
+    hierarchyTypeName: "REVENUE"
+}).responseJSON["Boundary"])) || []) : JSON.parse(localStorage.getItem("revenueBlock"));
+var assetCategories = JSON.parse(localStorage.getItem("assetCategories")) == null ? (localStorage.setItem("assetCategories", JSON.stringify(commonApiPost("asset-services", "assetCategories", "_search", {}).responseJSON["AssetCategory"])) || []) : JSON.parse(localStorage.getItem("assetCategories"));
+var natureOfAllotments = JSON.parse(localStorage.getItem("natureOfAllotments")) == null ? (localStorage.setItem("natureOfAllotments", JSON.stringify(commonApiPost("lams-services", "", "getnatureofallotment", {}).responseJSON)) || {}) : JSON.parse(localStorage.getItem("natureOfAllotments"));
+var paymentCycle = JSON.parse(localStorage.getItem("paymentCycle")) == null ? (localStorage.setItem("paymentCycle", JSON.stringify(commonApiPost("lams-services", "", "getpaymentcycle", {}).responseJSON)) || {}) : JSON.parse(localStorage.getItem("paymentCycle"));
+var employees = [];
 // var assignments_fund=JSON.parse(localStorage.getItem("assignments_fund"))==null?(localStorage.setItem("assignments_fund",JSON.stringify(getCommonMaster("egf-masters", "funds", "funds").responseJSON["funds"])) || []) :JSON.parse(localStorage.getItem("assignments_fund"));
 // var assignments_functionary=JSON.parse(localStorage.getItem("assignments_functionary"))==null?(localStorage.setItem("assignments_functionary",JSON.stringify(getCommonMaster("egf-masters", "functionaries", "funds").responseJSON["functionaries"])) || []) :JSON.parse(localStorage.getItem("assignments_functionary"));
 // var assignments_function=JSON.parse(localStorage.getItem("assignments_function"))==null?(localStorage.setItem("assignments_function",JSON.stringify(getCommonMaster("egf-masters", "functions", "functions").responseJSON["functions"])) || []) :JSON.parse(localStorage.getItem("assignments_function"));
@@ -52,7 +71,7 @@ var employees=[];
 //           url: window.location.origin+"/user/_login?tenantId=ap.public&username=ramakrishna&password=demo&grant_type=password&scope=read",
 //           type: 'POST',
 //           dataType: 'json',
-//           // data:JSON.stringify(requestInfo),
+//           // data:JSON.stringify({RequestInfo:requestInfo}),
 //           async: false,
 //           contentType: 'application/json',
 //           headers:{
@@ -72,71 +91,75 @@ var employees=[];
 
 
 
-function getCommonMaster(mainRoute,resource,returnObject) {
+function getCommonMaster(mainRoute, resource, returnObject) {
     return $.ajax({
-              url: baseUrl+"/"+mainRoute+"/"+resource+"/_search?tenantId="+tenantId,
-              type: 'POST',
-              dataType: 'json',
-              data:JSON.stringify(requestInfo),
-              async: false,
-              // crossDomain: true, // set this to ensure our $.ajaxPrefilter hook fires
-              // processData: false, // We want this to remain an object for  $.ajaxPrefilter
-              headers: {
-                      'auth-token': authToken
-              },
-              contentType: 'application/json'
-              // ,
-              // success: function (result) {
-              //     return result[returnObject];
-              //     // console.log(result);
-              //    // CallBack(result);
-              // },
-              // error: function (error) {
-              //     return [];
-              //     // console.log(error);
-              // }
-          });
+        url: baseUrl + "/" + mainRoute + "/" + resource + "/_search?tenantId=" + tenantId,
+        type: 'POST',
+        dataType: 'json',
+        data: JSON.stringify({
+            RequestInfo: requestInfo
+        }),
+        async: false,
+        // crossDomain: true, // set this to ensure our $.ajaxPrefilter hook fires
+        // processData: false, // We want this to remain an object for  $.ajaxPrefilter
+        headers: {
+            'auth-token': authToken
+        },
+        contentType: 'application/json'
+        // ,
+        // success: function (result) {
+        //     return result[returnObject];
+        //     // console.log(result);
+        //    // CallBack(result);
+        // },
+        // error: function (error) {
+        //     return [];
+        //     // console.log(error);
+        // }
+    });
     // return response.statusText==="Ok"?response.responseJSON[returnObject]:[];
 }
 
-function commonApiPost(context,resource="",action="",queryObject={}) {
-  var url=baseUrl+"/"+context+(resource?"/"+resource:"")+(action?"/"+action:"")+(queryObject?"?":"");
-  for (var variable in queryObject) {
-      if (queryObject[variable]) {
-        url+="&"+variable+"="+queryObject[variable];
-      }
-  }
-  return $.ajax({
-            url: url,
-            type: 'POST',
-            dataType: 'json',
-            data:JSON.stringify(requestInfo),
-            async: false,
-            contentType: 'application/json',
-            headers:{
-              'auth-token' :authToken
-            }
-        });
+function commonApiPost(context, resource = "", action = "", queryObject = {}) {
+    var url = baseUrl + "/" + context + (resource ? "/" + resource : "") + (action ? "/" + action : "") + (queryObject ? "?" : "");
+    for (var variable in queryObject) {
+        if (queryObject[variable]) {
+            url += "&" + variable + "=" + queryObject[variable];
+        }
+    }
+    return $.ajax({
+        url: url,
+        type: 'POST',
+        dataType: 'json',
+        data: JSON.stringify({
+            RequestInfo: requestInfo
+        }),
+        async: false,
+        contentType: 'application/json',
+        headers: {
+            'auth-token': authToken
+        }
+    });
 }
 
-function commonApiGet(context,resource="",action="",queryObject={}) {
-  var url=baseUrl+"/"+context+(resource?"/"+resource:"")+(action?"/"+action:"")+(queryObject?"?":"");
-  for (var variable in queryObject) {
-      if (queryObject[variable]) {
-        url+="&"+variable+"="+queryObject[variable];
-      }
-  }
-  return $.ajax({
-            url: url,
-            type: 'GET',
-            dataType: 'json',
-            headers: {
-                    'auth-token': authToken
-            },
-            // data:JSON.stringify(requestInfo),
-            async: false,
-            contentType: 'application/json'
-        });
+function commonApiGet(context, resource = "", action = "", queryObject = {}) {
+    var url = baseUrl + "/" + context + (resource ? "/" + resource : "") + (action ? "/" + action : "") + (queryObject ? "?" : "");
+    for (var variable in queryObject) {
+        if (queryObject[variable]) {
+            url += "&" + variable + "=" + queryObject[variable];
+        }
+    }
+    return $.ajax({
+        url: url,
+        type: 'GET',
+        dataType: 'json',
+        headers: {
+            'auth-token': authToken
+        },
+        // data:JSON.stringify({RequestInfo:requestInfo}),
+        async: false,
+        contentType: 'application/json'
+    });
 }
 
 function getUrlVars() {
@@ -151,30 +174,32 @@ function getUrlVars() {
     return vars;
 }
 
-function getCommonMasterById(mainRoute,resource,returnObject,id) {
+function getCommonMasterById(mainRoute, resource, returnObject, id) {
     return $.ajax({
-              url: baseUrl+"/"+mainRoute+"/"+resource+"/_search?tenantId="+tenantId+"&"+"id="+id,
-              type: 'POST',
-              dataType: 'json',
-              data:JSON.stringify(requestInfo),
-              async: false,
-              // crossDomain: true, // set this to ensure our $.ajaxPrefilter hook fires
-              // processData: false, // We want this to remain an object for  $.ajaxPrefilter
-              headers: {
-                      'auth-token': authToken
-              },
-              contentType: 'application/json'
-              // ,
-              // success: function (result) {
-              //     return result[returnObject];
-              //     // console.log(result);
-              //    // CallBack(result);
-              // },
-              // error: function (error) {
-              //     return [];
-              //     // console.log(error);
-              // }
-          });
+        url: baseUrl + "/" + mainRoute + "/" + resource + "/_search?tenantId=" + tenantId + "&" + "id=" + id,
+        type: 'POST',
+        dataType: 'json',
+        data: JSON.stringify({
+            RequestInfo: requestInfo
+        }),
+        async: false,
+        // crossDomain: true, // set this to ensure our $.ajaxPrefilter hook fires
+        // processData: false, // We want this to remain an object for  $.ajaxPrefilter
+        headers: {
+            'auth-token': authToken
+        },
+        contentType: 'application/json'
+        // ,
+        // success: function (result) {
+        //     return result[returnObject];
+        //     // console.log(result);
+        //    // CallBack(result);
+        // },
+        // error: function (error) {
+        //     return [];
+        //     // console.log(error);
+        // }
+    });
     // return response.statusText==="Ok"?response.responseJSON[returnObject]:[];
 }
 
@@ -195,25 +220,23 @@ function addMandatoryStart(validationObject, prefix = "") {
 }
 
 
-function getNameById(object,id,property="") {
-    if (id==""||id==null) {
+function getNameById(object, id, property = "") {
+    if (id == "" || id == null) {
         return "";
     }
     for (var i = 0; i < object.length; i++) {
-        if (property=="") {
-            if (object[i].id==id) {
-              return object[i].name;
+        if (property == "") {
+            if (object[i].id == id) {
+                return object[i].name;
             }
-        }
-        else {
-          if (object[i].hasOwnProperty(property)) {
-                if (object[i].id==id) {
+        } else {
+            if (object[i].hasOwnProperty(property)) {
+                if (object[i].id == id) {
                     return object[i][property];
                 }
-          }
-          else {
-              return "";
-          }
+            } else {
+                return "";
+            }
         }
     }
     return "";

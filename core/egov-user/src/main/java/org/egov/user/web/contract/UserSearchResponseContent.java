@@ -44,7 +44,7 @@ public class UserSearchResponseContent {
     private Boolean active;
     private String locale;
     private UserType type;
-    private boolean accountLocked;
+    private Boolean accountLocked;
     private String fatherOrHusbandName;
     private String signature;
     private String bloodGroup;

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.lams.config.PropertiesManager;
-import org.egov.lams.exception.LamsException;
 import org.egov.lams.model.AgreementCriteria;
 import org.egov.lams.model.Allottee;
 import org.egov.lams.model.enums.Gender;
@@ -17,11 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Repository
 public class AllotteeService {

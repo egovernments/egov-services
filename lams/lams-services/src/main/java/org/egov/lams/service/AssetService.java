@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.egov.lams.config.PropertiesManager;
 import org.egov.lams.web.contract.AssetResponse;
-import org.egov.lams.web.contract.RequestInfo;
+import org.egov.lams.web.contract.RequestInfoWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class AssetService {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
-	public AssetResponse getAssets(String urlParams, RequestInfo requestInfo) {
+	public AssetResponse getAssets(String urlParams, RequestInfoWrapper requestInfoWrapper) {
 		String url = null;
 		AssetResponse assetResponse = null;
 		url = propertiesManager.getAssetServiceHostName() + propertiesManager.getAssetServiceBasePAth()
@@ -35,7 +35,7 @@ public class AssetService {
 
 		logger.info("the url of asset api call : "+url);
 		try {
-			assetResponse = restTemplate.postForObject(url, requestInfo, AssetResponse.class);
+			assetResponse = restTemplate.postForObject(url, requestInfoWrapper, AssetResponse.class);
 		} catch (Exception e) {
 			logger.debug("exception in AssetService restTemplate", assetResponse);
 			throw new RuntimeException("check if entered asset API url is correct or the asset service is running");

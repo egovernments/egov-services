@@ -112,6 +112,9 @@ public class AgreementService {
 		String agreementValue = null;
 	    
 		List<DemandReason> demandReasons = demandRepository.getDemandReason(agreementRequest);
+		if(demandReasons.isEmpty())
+			throw new RuntimeException("No demand reason found for given criteria");
+		
 		List<Demand> demands = demandRepository.getDemandList(agreementRequest, demandReasons);
 		DemandResponse demandResponse = demandRepository.createDemand(demands,agreementRequest.getRequestInfo());
 		List<String> demandIdList = demandResponse.getDemands().stream().map(demand -> demand.getId())

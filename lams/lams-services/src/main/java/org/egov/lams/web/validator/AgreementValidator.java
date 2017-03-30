@@ -13,6 +13,7 @@ import org.egov.lams.web.contract.AgreementRequest;
 import org.egov.lams.web.contract.AllotteeResponse;
 import org.egov.lams.web.contract.AssetResponse;
 import org.egov.lams.web.contract.RequestInfo;
+import org.egov.lams.web.contract.RequestInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -58,13 +59,14 @@ public class AgreementValidator {
 
 		Long assetId = agreementRequest.getAgreement().getAsset().getId();
 		String queryString = "id=" + assetId;
-		AssetResponse assetResponse = assetService.getAssets(queryString, agreementRequest.getRequestInfo());
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(agreementRequest.getRequestInfo());
+		AssetResponse assetResponse = assetService.getAssets(queryString,requestInfoWrapper);
 		if (assetResponse.getAssets() == null || assetResponse.getAssets().size() == 0) 
 			throw new LamsException("the asset object does not exist");
 			
 		if(!assetService.isAssetAvailable(assetId))
 				throw new LamsException("Agreement has been already signed for the particular asset");
-		
 		// FIXME use invalidDataException here
 	}
 
@@ -75,9 +77,8 @@ public class AgreementValidator {
 		AllotteeResponse allotteeResponse = allotteeService.isAllotteeExist(allottee, requestInfo);
 		if (allotteeResponse.getAllottee() == null || allotteeResponse.getAllottee().size() == 0)
 			allotteeService.createAllottee(allottee, requestInfo);
-
 	}
-	
+
 	public void validateRentIncrementType(RentIncrementType rentIncrement) {
 		Long rentIncrementId = rentIncrement.getId();
 		RentIncrementType responseRentIncrement = rentIncrementService.getRentIncrementById(rentIncrementId);

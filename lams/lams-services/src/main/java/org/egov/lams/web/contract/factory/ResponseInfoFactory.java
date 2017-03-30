@@ -50,6 +50,7 @@ public class ResponseInfoFactory {
 
 	public ResponseInfo createResponseInfoFromRequestInfo(@RequestBody RequestInfo requestInfo, Boolean success) {
 		
+		System.err.println("before null from factory");
 		String apiId = null;
 		String ver = null;
 		String ts = null;
@@ -64,7 +65,8 @@ public class ResponseInfoFactory {
 			 msgId = requestInfo.getMsgId();
 		}
         String responseStatus = success ? "successful" : "failed";
-
+		System.err.println("before return from factory");
+	
         return new ResponseInfo(apiId, ver, ts, resMsgId, msgId, responseStatus);
     }
 

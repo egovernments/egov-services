@@ -1,6 +1,7 @@
 package org.egov.lams.web.contract;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonRootName;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,7 +14,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@JsonIgnoreProperties(ignoreUnknown=true)
+@JsonRootName("RequestInfo")
 public class RequestInfo {
 
 	private String apiId;	

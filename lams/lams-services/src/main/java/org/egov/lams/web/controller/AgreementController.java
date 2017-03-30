@@ -64,12 +64,14 @@ public class AgreementController {
 				.searchAgreement(agreementCriteria);
 		if(agreements.isEmpty())
 			throw new LamsException("No agreements found for the given criteria");
+		System.err.println("before sending for response su7ccess");
 		return getSuccessResponse(agreements, requestInfo);
 	}
 
 	private ResponseEntity<?> getSuccessResponse(List<Agreement> agreements, RequestInfo requestInfo) {
 		AgreementResponse agreementResponse = new AgreementResponse();
 		agreementResponse.setAgreement(agreements);
+		System.err.println("before sending for response factory");
 		agreementResponse.setResposneInfo(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true));
 		return new ResponseEntity<>(agreementResponse, HttpStatus.OK);
 	}

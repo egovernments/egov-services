@@ -41,7 +41,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": " {\n    \"requestInfo\": {\n    \"api_id\": \"org.egov.pgr\",\n    \"ver\": \"1.0\",\n    \"ts\": \"28-03-2016 10:22:33\",\n    \"res_msg_id\": \"uief87324\",\n    \"msg_id\": \"654654\",\n    \"status\": \"successful\",\n    \"auth_token\": \"cdaaa28a-f88a-429e-a710-b401097a165c\"\n     },\n     \"id\":[67]\n}"
+					"raw": " {\n    \"RequestInfo\": {\n    \"api_id\": \"org.egov.pgr\",\n    \"ver\": \"1.0\",\n    \"ts\": \"28-03-2016 10:22:33\",\n    \"res_msg_id\": \"uief87324\",\n    \"msg_id\": \"654654\",\n    \"status\": \"successful\",\n    \"auth_token\": \"cdaaa28a-f88a-429e-a710-b401097a165c\"\n     },\n     \"id\":[67]\n}"
 				},
 				"description": ""
 			},

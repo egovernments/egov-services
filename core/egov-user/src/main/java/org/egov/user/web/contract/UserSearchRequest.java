@@ -12,7 +12,7 @@ import java.util.List;
 @Setter
 public class UserSearchRequest {
 
-    @JsonProperty("requestInfo")
+    @JsonProperty("RequestInfo")
     private RequestInfo requestInfo;
 
     @JsonProperty("id")

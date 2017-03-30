@@ -1,5 +1,5 @@
 {
-  "requestInfo": {
+  "RequestInfo": {
     "apiId": "apiId",
     "ver": "version",
     "ts": "timeStamp",

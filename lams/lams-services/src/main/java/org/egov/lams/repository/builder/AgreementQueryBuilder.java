@@ -22,7 +22,7 @@ public class AgreementQueryBuilder {
 				&& agreementsModel.getStatus() == null && agreementsModel.getTenderNumber() == null
 				&& agreementsModel.getTinNumber() == null && agreementsModel.getTradelicenseNumber() == null
 				&& agreementsModel.getAllottee() == null && agreementsModel.getAsset() == null
-				&& agreementsModel.getTenantId() == null))
+				&& agreementsModel.getTenantId() == null && agreementsModel.getStateId() == null))
 		{
 			selectQuery.append(" WHERE");
 			boolean isAppendAndClause = false;
@@ -67,12 +67,18 @@ public class AgreementQueryBuilder {
 				selectQuery.append(" AGREEMENT.TRADE_LICENSE_NUMBER=?");
 				preparedStatementValues.add(agreementsModel.getTradelicenseNumber());
 			}
+			
+			if (agreementsModel.getStateId() != null) {
+				isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+				selectQuery.append(" AGREEMENT.STATEID=?");
+				preparedStatementValues.add(agreementsModel.getStateId());
+			}
 
 			if (agreementsModel.getAsset() != null) {
 				isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 				selectQuery.append(" AGREEMENT.ASSET IN (" + getIdQuery(agreementsModel.getAsset()));
 			}
-
+			
 			if (agreementsModel.getAllottee() != null) {
 				isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 				selectQuery.append(" AGREEMENT.ALLOTTEE IN (" + getIdQuery(agreementsModel.getAllottee()));

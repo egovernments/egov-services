@@ -13,5 +13,4 @@ public class RequestInfoWrapper {
 	
 	@JsonProperty(value="RequestInfo")
 	private RequestInfo requestInfo;
-	
 }

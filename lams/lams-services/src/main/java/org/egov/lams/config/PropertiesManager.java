@@ -55,6 +55,9 @@ public class PropertiesManager {
 	
 	@Value("${egov.services.demand_service.moduleName}")
 	private String getDemandModuleName;
+	
+	@Value("${egov.services.demand_service.TaxName}")
+	private String getDemandModuleTax;
 
 	@Value("${kafka.topics.start.workflow}")
 	private String startWorkflowTopic;

@@ -56,10 +56,7 @@ import org.egov.eis.web.errorhandler.UserErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -91,21 +88,9 @@ public class UserService {
 		userGetRequest.setRequestInfo(requestInfo);
 		userGetRequest.setTenantId(tenantId);
 
-		String userGetRequestJson = null;
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			userGetRequestJson = mapper.writeValueAsString(userGetRequest);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
-
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		HttpEntity<String> httpEntityRequest = new HttpEntity<String>(userGetRequestJson, headers);
-
 		List<User> users = null;
 		try {
-			UserResponse userResponse = new RestTemplate().postForObject(url, httpEntityRequest, UserResponse.class);
+			UserResponse userResponse = new RestTemplate().postForObject(url, userGetRequest, UserResponse.class);
 			users = userResponse.getUser();
 		} catch (Exception e) {
 			LOGGER.debug("Following Exception Occurred While Calling User Service : " + e.getMessage());
@@ -120,22 +105,9 @@ public class UserService {
 		String url = propertiesManager.getUsersServiceHostName() + propertiesManager.getUsersServiceUsersBasePath()
 				+ propertiesManager.getUsersServiceUsersCreatePath();
 
-		String userJson = null;
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			userJson = mapper.writeValueAsString(userRequest);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
-
-		LOGGER.debug("userJson : " + userJson);
-		HttpHeaders headers =  new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		HttpEntity<String> httpEntityRequest = new HttpEntity<String>(userJson, headers);
-
 		UserResponse userResponse = null;
 		try {
-			userResponse = new RestTemplate().postForObject(url, httpEntityRequest, UserResponse.class);
+			userResponse = new RestTemplate().postForObject(url, userRequest, UserResponse.class);
 		} catch (HttpClientErrorException e) {
 			String errorResponseBody = e.getResponseBodyAsString();
 			UserErrorResponse userErrorResponse = null;

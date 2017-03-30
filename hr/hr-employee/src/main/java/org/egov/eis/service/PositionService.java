@@ -49,14 +49,8 @@ import org.egov.eis.web.contract.PositionGetRequest;
 import org.egov.eis.web.contract.PositionResponse;
 import org.egov.eis.web.contract.RequestInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class PositionService {
@@ -67,30 +61,21 @@ public class PositionService {
 	@Autowired
 	private PositionSearchURLHelper positionSearchURLHelper;
 
-	public List<Position> getPositions(Long employeeId, PositionGetRequest positionGetRequest, RequestInfoWrapper requestInfoWrapper) {
+	public List<Position> getPositions(Long employeeId, PositionGetRequest positionGetRequest,
+			RequestInfoWrapper requestInfoWrapper) {
 		List<Long> actualPositionIds = positionAssignmentRepository.findForCriteria(employeeId, positionGetRequest);
-		if(!positionGetRequest.getId().isEmpty()) {
+		if (!positionGetRequest.getId().isEmpty()) {
 			actualPositionIds.retainAll(positionGetRequest.getId());
-			// FIXME : For not getting any positions, setting actualPositionIds with value [0]
+			// FIXME : For not getting any positions, setting actualPositionIds
+			// with value [0]
 			actualPositionIds.add(0L);
 		}
 		positionGetRequest.setId(actualPositionIds);
 
 		String url = positionSearchURLHelper.searchURL(positionGetRequest);
 
-		String requestInfoJson = null;
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			requestInfoJson = mapper.writeValueAsString(requestInfoWrapper);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
-
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		HttpEntity<String> httpEntityRequest = new HttpEntity<String>(requestInfoJson, headers);
-
-		PositionResponse positionResponse = new RestTemplate().postForObject(url, httpEntityRequest, PositionResponse.class);
+		PositionResponse positionResponse = new RestTemplate().postForObject(url, requestInfoWrapper,
+				PositionResponse.class);
 
 		return positionResponse.getPosition();
 	}

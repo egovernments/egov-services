@@ -2,10 +2,10 @@ package org.egov.lams.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.egov.lams.config.PropertiesManager;
 import org.egov.lams.exception.LamsException;
+import org.egov.lams.model.AgreementCriteria;
 import org.egov.lams.model.Allottee;
 import org.egov.lams.model.enums.Gender;
 import org.egov.lams.model.enums.UserType;
@@ -31,7 +31,35 @@ public class AllotteeService {
 	@Autowired
 	private PropertiesManager propertiesManager;
 
-	public AllotteeResponse getAllottees(Allottee allottee,RequestInfo requestInfo) {
+	public AllotteeResponse getAllottees(AgreementCriteria agreementCriteria,RequestInfo requestInfo) {
+
+		RestTemplate restTemplate = new RestTemplate();
+		String url = propertiesManager.getAllotteeServiceHostName()
+				+ propertiesManager.getAllotteeServiceBasePAth()
+				+ propertiesManager.getAllotteeServiceSearchPath();
+		
+		UserSearchRequest userSearchRequest = new UserSearchRequest();
+		// FIXME 
+		userSearchRequest.setRequestInfo(requestInfo);
+		List<Long> allotteeId = new ArrayList<>();
+		allotteeId.addAll(agreementCriteria.getAllottee());
+		userSearchRequest.setId(allotteeId);
+		userSearchRequest.setName(agreementCriteria.getAllotteeName());
+		userSearchRequest.setMobileNumber(agreementCriteria.getMobilenumber().toString());
+		
+		logger.info("url for allottee api post call",url);
+		AllotteeResponse allotteeResponse = null;
+		try{
+			allotteeResponse = restTemplate.postForObject(url, userSearchRequest, AllotteeResponse.class);
+		}catch (Exception e) {
+			logger.info(e.getMessage(), e);
+			throw new RuntimeException(e.getMessage()+e);
+		}
+		logger.info("list of allottes from allotteresponse from allotte api call for get allottees",allotteeResponse.getAllottee());
+		return allotteeResponse;
+	}
+	
+	public AllotteeResponse isAllotteeExist(Allottee allottee,RequestInfo requestInfo) {
 
 		RestTemplate restTemplate = new RestTemplate();
 		String url = propertiesManager.getAllotteeServiceHostName()

@@ -1,8 +1,6 @@
 package org.egov.lams.web.validator;
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.egov.lams.exception.LamsException;
 import org.egov.lams.model.Agreement;
@@ -74,9 +72,7 @@ public class AgreementValidator {
 
 		Allottee allottee = agreementRequest.getAgreement().getAllottee();
 		RequestInfo requestInfo = agreementRequest.getRequestInfo();
-		Set<Long> allotteeId = new HashSet<>();
-		allotteeId.add(allottee.getId());
-		AllotteeResponse allotteeResponse = allotteeService.getAllottees(allotteeId, requestInfo);
+		AllotteeResponse allotteeResponse = allotteeService.isAllotteeExist(allottee, requestInfo);
 		if (allotteeResponse.getAllottee() == null || allotteeResponse.getAllottee().size() == 0)
 			allotteeService.createAllottee(allottee, requestInfo);
 

@@ -184,7 +184,7 @@ public class AgreementRepository {
 		//FIXME TODO urgent allottee helper has to be changed for post
 		String queryString = allotteeHelper.getAllotteeParams(agreementCriteria);
 		logger.info("AgreementController SearchAgreementService AgreementRepository : inside Allottee API caller");
-		AllotteeResponse allotteeResponse = allotteeService.getAllottees(agreementCriteria.getAllottee(),new RequestInfo());
+		AllotteeResponse allotteeResponse = allotteeService.getAllottees(agreementCriteria,new RequestInfo());
 		if (allotteeResponse.getAllottee() == null || allotteeResponse.getAllottee().size() <= 0)
 			throw new RuntimeException("No allottee found for given criteria");
 		System.err.println("the result allottee response from allottee api call : "+allotteeResponse.getAllottee());

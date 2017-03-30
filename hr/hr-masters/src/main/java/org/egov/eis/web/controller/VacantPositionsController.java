@@ -101,7 +101,8 @@ public class VacantPositionsController {
 		// Call service
 		List<Position> vacantPositionsList = null;
 		try {
-			vacantPositionsList = vacantPositionsService.getVacantPositions(vacantPositionsGetRequest, requestInfo);
+			vacantPositionsList = vacantPositionsService.getVacantPositions(vacantPositionsGetRequest,
+					requestInfoWrapper);
 		} catch (Exception exception) {
 			logger.error("Error while processing request " + vacantPositionsGetRequest, exception);
 			return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);

@@ -1,3 +1,5 @@
+create sequence SEQ_EG_MODULE;
+
 CREATE TABLE if not exists eg_module
 (
   id bigint NOT NULL,

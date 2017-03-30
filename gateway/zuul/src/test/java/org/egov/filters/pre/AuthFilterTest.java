@@ -186,6 +186,9 @@ public class AuthFilterTest {
                                     "}" +
                                 "}";
         assertEquals(expectedBody, IOUtils.toString(ctx.getRequest().getInputStream()));
+        int expectedContentLength = 239;
+        assertEquals(expectedContentLength, ctx.getRequest().getContentLength());
+        assertEquals(expectedContentLength, ctx.getRequest().getContentLengthLong());
         assertEquals(null, ctx.getZuulRequestHeaders().get(userInfoHeader));
         assertTrue(ctx.sendZuulResponse());
     }

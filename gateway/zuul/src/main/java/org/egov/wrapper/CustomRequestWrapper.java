@@ -27,6 +27,16 @@ public class CustomRequestWrapper
     }
 
     @Override
+    public int getContentLength() {
+        return payload.length();
+    }
+
+    @Override
+    public long getContentLengthLong() {
+        return payload.length();
+    }
+
+    @Override
     public ServletInputStream getInputStream() {
         return new ServletInputStreamWrapper(payload.getBytes());
     }

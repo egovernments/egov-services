@@ -57,13 +57,13 @@ public class ResponseInfoFactory {
 		String resMsgId = null;
 		String msgId = null;
 		
-		if(requestInfo!= null){
+		/*if(requestInfo!= null){
 			 apiId = requestInfo.getApiId();
 			 ver = requestInfo.getVer();
 			 ts = requestInfo.getTs().toString();
 			 resMsgId = "uief87324"; // FIXME : Hard-coded
 			 msgId = requestInfo.getMsgId();
-		}
+		}*/
         String responseStatus = success ? "successful" : "failed";
 		System.err.println("before return from factory");
 	

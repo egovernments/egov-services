@@ -103,18 +103,18 @@ public class DataIntegrityValidator implements Validator {
 		}
 
 		if ((employee.getPassportNo() != null) && employeeService.getBooleanForDataIntegrityChecks("egeis_employee",
-				"passportNo", employee.getPassportNo())) {
+				"passportNo", "'" + employee.getPassportNo() + "'")) {
 			errors.rejectValue("employee.passportNo", "concurrent", "passportNo already exists");
 		}
 
-		if ((employee.getGpfNo() != null)
-				&& employeeService.getBooleanForDataIntegrityChecks("egeis_employee", "gpfNo", employee.getGpfNo())) {
+		if ((employee.getGpfNo() != null) && employeeService.getBooleanForDataIntegrityChecks("egeis_employee", "gpfNo",
+				"'" + employee.getGpfNo() + "'")) {
 			errors.rejectValue("employee.gpfNo", "concurrent", "gpfNo already exists");
 		}
 
 		if ((employee.getDocuments() != null) && !employee.getDocuments().isEmpty()
-				&& employeeService.getBooleanForDataIntegrityChecks(
-				"egeis_employeeDocuments", "document", getProcessedDocumentsString(employee.getDocuments()))) {
+				&& employeeService.getBooleanForDataIntegrityChecks("egeis_employeeDocuments", "document",
+						getProcessedDocumentsString(employee.getDocuments()))) {
 			errors.rejectValue("employee.documents", "concurrent", "document(s) already exists");
 		}
 

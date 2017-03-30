@@ -31,7 +31,7 @@ public class AllotteeService {
 	@Autowired
 	private PropertiesManager propertiesManager;
 
-	public AllotteeResponse getAllottees(Set<Long> id,RequestInfo requestInfo) {
+	public AllotteeResponse getAllottees(Allottee allottee,RequestInfo requestInfo) {
 
 		RestTemplate restTemplate = new RestTemplate();
 		String url = propertiesManager.getAllotteeServiceHostName()
@@ -42,9 +42,12 @@ public class AllotteeService {
 		// FIXME just setting id field, change when they user search with
 		// modelattribute rather than request body
 		userSearchRequest.setRequestInfo(requestInfo);
-		List<Long> allotteeId = new ArrayList<>();
-		allotteeId.addAll(id);
-		userSearchRequest.setId(allotteeId);
+		userSearchRequest.setAadhaarNumber(allottee.getAadhaarNumber());
+		userSearchRequest.setPan(allottee.getPan());
+		userSearchRequest.setName(allottee.getName());
+		userSearchRequest.setEmailId(allottee.getEmailId());
+		userSearchRequest.setMobileNumber(allottee.getMobileNumber());
+		
 		logger.info("url for allottee api post call",url);
 		AllotteeResponse allotteeResponse = null;
 		try{

@@ -76,7 +76,9 @@ public class AgreementValidator {
 		RequestInfo requestInfo = agreementRequest.getRequestInfo();
 		AllotteeResponse allotteeResponse = allotteeService.isAllotteeExist(allottee, requestInfo);
 		if (allotteeResponse.getAllottee() == null || allotteeResponse.getAllottee().size() == 0)
-			allotteeService.createAllottee(allottee, requestInfo);
+			 allotteeResponse = allotteeService.createAllottee(allottee, requestInfo);
+		if(!allotteeResponse.getAllottee().isEmpty())
+			allottee.setId(allotteeResponse.getAllottee().get(0).getId());
 	}
 
 	public void validateRentIncrementType(RentIncrementType rentIncrement) {

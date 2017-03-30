@@ -85,9 +85,10 @@ class AssetSearch extends React.Component {
 
   }
 
-  handleSelectChange(type,category)
+  handleSelectChange(type,assetId)
   {
-    console.log(type);
+    // console.log(type);
+    // console.log(category);
     // if (type === "view") {
     //             window.open("../../../../app/agreements/new.html", "fs", "fullscreen=yes")
     //          }
@@ -95,7 +96,7 @@ class AssetSearch extends React.Component {
     //
     //             window.open("../../../../app/agreements/new.html", "fs", "fullscreen=yes")
     //         }
-    window.open("../../../../app/agreements/new.html?type="+category, "fs", "fullscreen=yes")
+    window.open("../../../../app/agreements/new.html?type="+type+"&assetId="+assetId, "fs", "fullscreen=yes")
   }
 
 
@@ -174,7 +175,7 @@ class AssetSearch extends React.Component {
                                   <td>
                                       <div className="styled-select">
                                           <select id="myOptions" onChange={(e)=>{
-                                            handleSelectChange(e.target.value,item.assetCategory.names)
+                                            handleSelectChange(item.assetCategory.name,item.id)
                                           }}>
                                               <option value="">Select Action</option>
                                               <option value="create">Create</option>

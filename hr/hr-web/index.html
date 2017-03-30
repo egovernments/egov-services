@@ -239,6 +239,7 @@
     <script src="assets/javascript/egov/custom.js"></script>
     <script src="assets/javascript/egov/custom-menu.js"></script>
     <script src="assets/javascript/js.cookies.js"></script>
+
     <script>
         var menuItems = [{
             title: 'All Categories',
@@ -830,7 +831,7 @@
 
     <script type="text/javascript">
     var response=$.ajax({
-          url: window.location.origin+"/user/_login?tenantId=ap.public&username=manju&password=demo&grant_type=password&scope=read",
+          url: window.location.origin+"/user/_login?tenantId=ap.public&username=Rajesh&password=demo&grant_type=password&scope=read",
           type: 'POST',
           dataType: 'json',
           // data:JSON.stringify(requestInfo),
@@ -850,6 +851,8 @@
         // alert(response["statusText"]);
       }
 
+      // JSON.parse(localStorage.getItem("employeeType"))==null?(localStorage.setItem("employeeType",JSON.stringify(getCommonMaster("hr-masters", "employeetypes", "EmployeeType").responseJSON["EmployeeType"]))|| []);
+      // console.log(localStorage.getItem("employeeType"));
         $('#ast-srch').DataTable({
             "bFilter": false
             // "bLengthChange": false
@@ -861,6 +864,9 @@
             $('.menu-responsive > ul').css('display', 'none')
         });
     </script>
+
+    <script src="assets/javascript/hr/common/commonAPI.js"></script>
+    
 </body>
 
 </html>

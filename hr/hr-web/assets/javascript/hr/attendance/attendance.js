@@ -106,7 +106,7 @@ class Attendance extends React.Component {
     var employees={};
     for(var i=0;i<employeesTemp.length;i++)
     {
-        employees[employeesTemp[i].id]={
+          employees[employeesTemp[i].id]={
           code:employeesTemp[i].code,
           name:employeesTemp[i].name,
           month:queryParam["month"],

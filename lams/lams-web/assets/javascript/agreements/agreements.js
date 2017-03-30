@@ -1,54 +1,18 @@
-function getUrlVars() {
-    var vars = [],
-        hash;
-    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-    for (var i = 0; i < hashes.length; i++) {
-        hash = hashes[i].split('=');
-        vars.push(hash[0]);
-        vars[hash[0]] = hash[1];
-    }
-    return vars;
-}
+
 
 $('#close').on("click", function() {
     window.close();
 })
 
-$().ready(function() {
-
-    //base url for api_id
-    var baseUrl = "https://peaceful-headland-36194.herokuapp.com/v1/mSevaAndLA/";
-    //request info from cookies
-    var requestInfo = {
-        "apiId": "string",
-        "ver": "string",
-        "ts": "2017-01-18T07:18:23.130Z",
-        "action": "string",
-        "did": "string",
-        "key": "string",
-        "msgId": "string",
-        "requesterId": "string",
-        "authToken": "aeiou"
-    };
-
-    // $.validator.addMethod(
-    //     "regex",
-    //     function(value, element, regexp) {
-    //         var re = new RegExp(regexp);
-    //         return this.optional(element) || re.test(value);
-    //     },
-    //     "Please check your input."
-    // );
-
-
-    // $("#contactNumber").rules("add", { regex: "^[0-9]{5,10}$" })
 
     var agreement = {};
     $(".disabled").attr("disabled", true);
     //Getting data for user input
     $("input").on("keyup", function() {
         // console.log(this.value);
-        agreement[this.id] = this.value;
+        // agreement[this.id] = this.value;
+        fillValueToObject(this);
+
     });
 
     //Getting data for user input
@@ -65,7 +29,23 @@ $().ready(function() {
 
             }
         }
-        agreement[this.id] = this.value;
+
+        if (($("#approverDepartment").val() != "" && $("#approverDesignation").val() != "") && (this.id == "approverDepartment" || this.id == "approverDesignation")) {
+          employees = commonApiPost("hr-employee", "employees", "_search", {
+          tenantId,
+          departmentId: $("#approverDepartment").val(),
+          designationId: $("#approverDesignation").val()
+      }).responseJSON["Employee"] || [];
+      $(`#approverName`).html(`<option value=''>Select</option>`)
+
+      for (var i = 0; i < employees.length; i++) {
+          $(`#approverName`).append(`<option value='${employees[i]['id']}'>${employees[i]['name']}</option>`)
+      }
+  }
+
+        // agreement[this.id] = this.value;
+        fillValueToObject(this);
+
     });
 
     //file change handle for file upload
@@ -95,6 +75,28 @@ $().ready(function() {
         }
     });
 
+    //it will split object string where it has .
+function fillValueToObject(currentState) {
+    if (currentState.id.includes(".")) {
+        var splitResult = currentState.id.split(".");
+        if (agreement.hasOwnProperty(splitResult[0])) {
+          agreement[splitResult[0]][splitResult[1]] = currentState.value;
+        }
+        else {
+          agreement[splitResult[0]]={};
+          agreement[splitResult[0]][splitResult[1]] = currentState.value;
+        }
+
+
+
+    } else {
+
+          agreement[currentState.id] = currentState.value;
+
+    }
+}
+
+
     var validationRules = {};
     var finalValidatinRules = {};
     var commomFieldsRules = {
@@ -111,15 +113,15 @@ $().ready(function() {
             required: false,
             aadhar: true
         },
-      panNumber: {
+      "allottee.pan": {
             required: false,
-          panNumber: true
+          panNo: true
         },
-        emailid: {
+        "allottee.emailId": {
             required: true,
             email: true
         },
-        contactNumber: {
+        "allottee.mobileNumber": {
             required: true,
             phone: true
         },
@@ -142,7 +144,7 @@ $().ready(function() {
             required: true
         },
         rrReadingNumber: {
-            required: getUrlVars()["type"] != "land" ? true : false
+            required: decodeURIComponent(getUrlVars()["type"]) != "land" ? true : false
         },
         registrationFee: {
             required: true
@@ -184,7 +186,7 @@ $().ready(function() {
             required: true
         },
         rentIncrementMethod: {
-            required: (getUrlVars()["type"] == "land" || getUrlVars()["type"] == "shop") ? true : false
+            required: (decodeURIComponent(getUrlVars()["type"]) == "land" || decodeURIComponent(getUrlVars()["type"]) == "shop") ? true : false
         },
         remarks: {
             required: false
@@ -196,57 +198,58 @@ $().ready(function() {
             required: true
         }
     };
-    if (getUrlVars()["type"] == "land") {
+    if (decodeURIComponent(getUrlVars()["type"]) == "land") {
         // validation rules for land agreement
         validationRules = {
-            landRegisterNumber: {
-                required: true
-            },
-            particularsOfLand: {
-                required: true
-            },
-            resurveyNumber: {
-                required: true
-            },
-            landAddress: {
-                required: true
-            },
-            townSurveyNumber: {
-                required: true
-            },
-            assetCategory: {
-                required: true
-            },
-            assetName: {
-                required: true
-            },
-            assetCode: {
-                required: true
-            },
-            assetArea: {
-                required: true
-            },
-            assetLocality: {
-                required: true
-            },
-            assetStreet: {
-                required: true
-            },
-            assetRevenueZone: {
-                required: true
-            },
-            assetRevenueWard: {
-                required: true
-            },
-            assetRevenueBlock: {
-                required: true
-            },
-            assetElectionWard: {
-                required: true
-            },
-            assetAssetAddress: {
-                required: true
-            }
+            // landRegisterNumber: {
+            //     required: true
+            // },
+            // particularsOfLand: {
+            //     required: true
+            // },
+            // resurveyNumber: {
+            //     required: true
+            // },
+            // landAddress: {
+            //     required: true
+            // },
+            // townSurveyNumber: {
+            //     required: true
+            // }
+            // ,
+            // assetCategory: {
+            //     required: true
+            // },
+            // assetName: {
+            //     required: true
+            // },
+            // assetCode: {
+            //     required: true
+            // },
+            // assetArea: {
+            //     required: true
+            // },
+            // assetLocality: {
+            //     required: true
+            // },
+            // assetStreet: {
+            //     required: true
+            // },
+            // assetRevenueZone: {
+            //     required: true
+            // },
+            // assetRevenueWard: {
+            //     required: true
+            // },
+            // assetRevenueBlock: {
+            //     required: true
+            // },
+            // assetElectionWard: {
+            //     required: true
+            // },
+            // assetAssetAddress: {
+            //     required: true
+            // }
         }
         // remove all other Asset Details block from DOM except land asset related fields
         $("#shopAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
@@ -259,57 +262,58 @@ $().ready(function() {
 
         //append category text
         $(".categoryType").prepend("Land ");
-    } else if (getUrlVars()["type"] == "shop") {
+    } else if (decodeURIComponent(getUrlVars()["type"]) == "shop") {
         // validation rules for shop agreement
         validationRules = {
-            shoppingComplexName: {
-                required: true
-            },
-            shoppingComplexNo: {
-                required: true
-            },
-            shoppingComplexShopNo: {
-                required: true
-            },
-            shoppingComplexFloorNo: {
-                required: true
-            },
-            shopArea: {
-                required: true
-            },
-            shoppingComplexAddress: {
-                required: true
-            },
-            assetCategory: {
-                required: true
-            },
-            assetName: {
-                required: true
-            },
-            assetCode: {
-                required: true
-            },
-            assetLocality: {
-                required: true
-            },
-            assetStreet: {
-                required: true
-            },
-            assetRevenueZone: {
-                required: true
-            },
-            assetRevenueWard: {
-                required: true
-            },
-            assetRevenueBlock: {
-                required: true
-            },
-            assetElectionWard: {
-                required: true
-            },
-            assetAssetAddress: {
-                required: true
-            }
+            // shoppingComplexName: {
+            //     required: true
+            // },
+            // shoppingComplexNo: {
+            //     required: true
+            // },
+            // shoppingComplexShopNo: {
+            //     required: true
+            // },
+            // shoppingComplexFloorNo: {
+            //     required: true
+            // },
+            // shopArea: {
+            //     required: true
+            // },
+            // shoppingComplexAddress: {
+            //     required: true
+            // }
+            // ,
+            // assetCategory: {
+            //     required: true
+            // },
+            // assetName: {
+            //     required: true
+            // },
+            // assetCode: {
+            //     required: true
+            // },
+            // assetLocality: {
+            //     required: true
+            // },
+            // assetStreet: {
+            //     required: true
+            // },
+            // assetRevenueZone: {
+            //     required: true
+            // },
+            // assetRevenueWard: {
+            //     required: true
+            // },
+            // assetRevenueBlock: {
+            //     required: true
+            // },
+            // assetElectionWard: {
+            //     required: true
+            // },
+            // assetAssetAddress: {
+            //     required: true
+            // }
         }
 
         // remove all other Asset Details block from DOM except shop asset related fields
@@ -324,42 +328,42 @@ $().ready(function() {
         $("#shopAssetDetailsBlock select").attr("disabled", true);
         //append category text
         $(".categoryType").prepend("Shop ");
-    } else if (getUrlVars()["type"] == "market") {
+    } else if (decodeURIComponent(getUrlVars()["type"]) == "market") {
         // validation rules for shop agreement
         validationRules = {
-            assetCategory: {
-                required: true
-            },
-            assetName: {
-                required: true
-            },
-            assetCode: {
-                required: true
-            },
-            assetArea: {
-                required: true
-            },
-            assetLocality: {
-                required: true
-            },
-            assetStreet: {
-                required: true
-            },
-            assetRevenueZone: {
-                required: true
-            },
-            assetRevenueWard: {
-                required: true
-            },
-            assetRevenueBlock: {
-                required: true
-            },
-            assetElectionWard: {
-                required: true
-            },
-            assetAssetAddress: {
-                required: true
-            }
+            // assetCategory: {
+            //     required: true
+            // },
+            // assetName: {
+            //     required: true
+            // },
+            // assetCode: {
+            //     required: true
+            // },
+            // assetArea: {
+            //     required: true
+            // },
+            // assetLocality: {
+            //     required: true
+            // },
+            // assetStreet: {
+            //     required: true
+            // },
+            // assetRevenueZone: {
+            //     required: true
+            // },
+            // assetRevenueWard: {
+            //     required: true
+            // },
+            // assetRevenueBlock: {
+            //     required: true
+            // },
+            // assetElectionWard: {
+            //     required: true
+            // },
+            // assetAssetAddress: {
+            //     required: true
+            // }
         }
 
         // remove all other Asset Details block from DOM except shop asset related fields
@@ -371,42 +375,42 @@ $().ready(function() {
         $("#marketAssetDetailsBlock textarea").attr("disabled", true);
         //append category text
         $(".categoryType").prepend("Market ");
-    } else if (getUrlVars()["type"] == "kalyanamandapam") {
+    } else if (decodeURIComponent(getUrlVars()["type"]) == "kalyanamandapam") {
         // validation rules for shop agreement
         validationRules = {
-            kalyanamandapamName: {
-                required: true
-            },
-            assetCategory: {
-                required: true
-            },
-            assetName: {
-                required: true
-            },
-            assetCode: {
-                required: true
-            },
-            assetLocality: {
-                required: true
-            },
-            assetStreet: {
-                required: true
-            },
-            assetRevenueZone: {
-                required: true
-            },
-            assetRevenueWard: {
-                required: true
-            },
-            assetRevenueBlock: {
-                required: true
-            },
-            assetElectionWard: {
-                required: true
-            },
-            assetAssetAddress: {
-                required: true
-            }
+            // kalyanamandapamName: {
+            //     required: true
+            // },
+            // assetCategory: {
+            //     required: true
+            // },
+            // assetName: {
+            //     required: true
+            // },
+            // assetCode: {
+            //     required: true
+            // },
+            // assetLocality: {
+            //     required: true
+            // },
+            // assetStreet: {
+            //     required: true
+            // },
+            // assetRevenueZone: {
+            //     required: true
+            // },
+            // assetRevenueWard: {
+            //     required: true
+            // },
+            // assetRevenueBlock: {
+            //     required: true
+            // },
+            // assetElectionWard: {
+            //     required: true
+            // },
+            // assetAssetAddress: {
+            //     required: true
+            // }
         }
 
         // remove all other Asset Details block from DOM except shop asset related fields
@@ -418,45 +422,45 @@ $().ready(function() {
         $("#kalyanamandapamAssetDetailsBlock textarea").attr("disabled", true);
         //append category text
         $(".categoryType").prepend("Kalyanamandapam ");
-    } else if (getUrlVars()["type"] == "parking_space") {
+    } else if (decodeURIComponent(getUrlVars()["type"]) == "parking_space") {
         // validation rules for shop agreement
         validationRules = {
-            parkingSpaceName: {
-                required: true
-            },
-            assetCategory: {
-                required: true
-            },
-            assetName: {
-                required: true
-            },
-            assetCode: {
-                required: true
-            },
-            assetArea: {
-                required: true
-            },
-            assetLocality: {
-                required: true
-            },
-            assetStreet: {
-                required: true
-            },
-            assetRevenueZone: {
-                required: true
-            },
-            assetRevenueWard: {
-                required: true
-            },
-            assetRevenueBlock: {
-                required: true
-            },
-            assetElectionWard: {
-                required: true
-            },
-            assetAssetAddress: {
-                required: true
-            }
+            // parkingSpaceName: {
+            //     required: true
+            // },
+            // assetCategory: {
+            //     required: true
+            // },
+            // assetName: {
+            //     required: true
+            // },
+            // assetCode: {
+            //     required: true
+            // },
+            // assetArea: {
+            //     required: true
+            // },
+            // assetLocality: {
+            //     required: true
+            // },
+            // assetStreet: {
+            //     required: true
+            // },
+            // assetRevenueZone: {
+            //     required: true
+            // },
+            // assetRevenueWard: {
+            //     required: true
+            // },
+            // assetRevenueBlock: {
+            //     required: true
+            // },
+            // assetElectionWard: {
+            //     required: true
+            // },
+            // assetAssetAddress: {
+            //     required: true
+            // }
         }
 
         // remove all other Asset Details block from DOM except shop asset related fields
@@ -470,42 +474,42 @@ $().ready(function() {
         //append category text
         $(".categoryType").prepend("Parking Space ");
 
-    } else if (getUrlVars()["type"] == "slaughter_house") {
+    } else if (decodeURIComponent(getUrlVars()["type"]) == "slaughter_house") {
         // validation rules for shop agreement
         validationRules = {
-            slaughterHouseName: {
-                required: true
-            },
-            assetCategory: {
-                required: true
-            },
-            assetName: {
-                required: true
-            },
-            assetCode: {
-                required: true
-            },
-            assetLocality: {
-                required: true
-            },
-            assetStreet: {
-                required: true
-            },
-            assetRevenueZone: {
-                required: true
-            },
-            assetRevenueWard: {
-                required: true
-            },
-            assetRevenueBlock: {
-                required: true
-            },
-            assetElectionWard: {
-                required: true
-            },
-            assetAssetAddress: {
-                required: true
-            }
+            // slaughterHouseName: {
+            //     required: true
+            // },
+            // assetCategory: {
+            //     required: true
+            // },
+            // assetName: {
+            //     required: true
+            // },
+            // assetCode: {
+            //     required: true
+            // },
+            // assetLocality: {
+            //     required: true
+            // },
+            // assetStreet: {
+            //     required: true
+            // },
+            // assetRevenueZone: {
+            //     required: true
+            // },
+            // assetRevenueWard: {
+            //     required: true
+            // },
+            // assetRevenueBlock: {
+            //     required: true
+            // },
+            // assetElectionWard: {
+            //     required: true
+            // },
+            // assetAssetAddress: {
+            //     required: true
+            // }
         }
 
         // remove all other Asset Details block from DOM except shop asset related fields
@@ -517,42 +521,42 @@ $().ready(function() {
         $("#slaughterHousesAssetDetailsBlock textarea").attr("disabled", true);
         //append category text
         $(".categoryType").prepend("Slaughter House ");
-    } else if (getUrlVars()["type"] == "usfructs") {
+    } else if (decodeURIComponent(getUrlVars()["type"]) == "usfructs") {
         // validation rules for shop agreement
         validationRules = {
-            usfructName: {
-                required: true
-            },
-            assetCategory: {
-                required: true
-            },
-            assetName: {
-                required: true
-            },
-            assetCode: {
-                required: true
-            },
-            assetLocality: {
-                required: true
-            },
-            assetStreet: {
-                required: true
-            },
-            assetRevenueZone: {
-                required: true
-            },
-            assetRevenueWard: {
-                required: true
-            },
-            assetRevenueBlock: {
-                required: true
-            },
-            assetElectionWard: {
-                required: true
-            },
-            assetAssetAddress: {
-                required: true
-            }
+            // usfructName: {
+            //     required: true
+            // },
+            // assetCategory: {
+            //     required: true
+            // },
+            // assetName: {
+            //     required: true
+            // },
+            // assetCode: {
+            //     required: true
+            // },
+            // assetLocality: {
+            //     required: true
+            // },
+            // assetStreet: {
+            //     required: true
+            // },
+            // assetRevenueZone: {
+            //     required: true
+            // },
+            // assetRevenueWard: {
+            //     required: true
+            // },
+            // assetRevenueBlock: {
+            //     required: true
+            // },
+            // assetElectionWard: {
+            //     required: true
+            // },
+            // assetAssetAddress: {
+            //     required: true
+            // }
         }
 
         // remove all other Asset Details block from DOM except shop asset related fields
@@ -565,42 +569,42 @@ $().ready(function() {
 
         //append category text
         $(".categoryType").prepend("Usfructs ");
-    } else if (getUrlVars()["type"] == "community") {
+    } else if (decodeURIComponent(getUrlVars()["type"]) == "community") {
         // validation rules for shop agreement
         validationRules = {
-            toiletComplexName: {
-                required: true
-            },
-            assetCategory: {
-                required: true
-            },
-            assetName: {
-                required: true
-            },
-            assetCode: {
-                required: true
-            },
-            assetLocality: {
-                required: true
-            },
-            assetStreet: {
-                required: true
-            },
-            assetRevenueZone: {
-                required: true
-            },
-            assetRevenueWard: {
-                required: true
-            },
-            assetRevenueBlock: {
-                required: true
-            },
-            assetElectionWard: {
-                required: true
-            },
-            assetAssetAddress: {
-                required: true
-            }
+            // toiletComplexName: {
+            //     required: true
+            // },
+            // assetCategory: {
+            //     required: true
+            // },
+            // assetName: {
+            //     required: true
+            // },
+            // assetCode: {
+            //     required: true
+            // },
+            // assetLocality: {
+            //     required: true
+            // },
+            // assetStreet: {
+            //     required: true
+            // },
+            // assetRevenueZone: {
+            //     required: true
+            // },
+            // assetRevenueWard: {
+            //     required: true
+            // },
+            // assetRevenueBlock: {
+            //     required: true
+            // },
+            // assetElectionWard: {
+            //     required: true
+            // },
+            // assetAssetAddress: {
+            //     required: true
+            // }
         }
 
         // remove all other Asset Details block from DOM except shop asset related fields
@@ -612,42 +616,42 @@ $().ready(function() {
         $("#communityAssetDetailsBlock textarea").attr("disabled", true);
         //append category text
         $(".categoryType").prepend("Community ");
-    } else if (getUrlVars()["type"] == "fish_tank") {
+    } else if (decodeURIComponent(getUrlVars()["type"]) == "Fish Tank") {
         // validation rules for shop agreement
         validationRules = {
-            fishTankName: {
-                required: true
-            },
-            assetCategory: {
-                required: true
-            },
-            assetName: {
-                required: true
-            },
-            assetCode: {
-                required: true
-            },
-            assetLocality: {
-                required: true
-            },
-            assetStreet: {
-                required: true
-            },
-            assetRevenueZone: {
-                required: true
-            },
-            assetRevenueWard: {
-                required: true
-            },
-            assetRevenueBlock: {
-                required: true
-            },
-            assetElectionWard: {
-                required: true
-            },
-            assetAssetAddress: {
-                required: true
-            }
+            // fishTankName: {
+            //     required: true
+            // },
+            // assetCategory: {
+            //     required: true
+            // },
+            // assetName: {
+            //     required: true
+            // },
+            // assetCode: {
+            //     required: true
+            // },
+            // assetLocality: {
+            //     required: true
+            // },
+            // assetStreet: {
+            //     required: true
+            // },
+            // assetRevenueZone: {
+            //     required: true
+            // },
+            // assetRevenueWard: {
+            //     required: true
+            // },
+            // assetRevenueBlock: {
+            //     required: true
+            // },
+            // assetElectionWard: {
+            //     required: true
+            // },
+            // assetAssetAddress: {
+            //     required: true
+            // }
         }
 
         // remove all other Asset Details block from DOM except shop asset related fields
@@ -659,42 +663,42 @@ $().ready(function() {
         $("#fishTankAssetDetailsBlock textarea").attr("disabled", true);
         //append category text
         $(".categoryType").prepend("Fish Tank ");
-    } else if (getUrlVars()["type"] == "park") {
+    } else if (decodeURIComponent(getUrlVars()["type"]) == "park") {
         // validation rules for shop agreement
         validationRules = {
-            park_name: {
-                required: true
-            },
-            assetCategory: {
-                required: true
-            },
-            assetName: {
-                required: true
-            },
-            assetCode: {
-                required: true
-            },
-            assetLocality: {
-                required: true
-            },
-            assetStreet: {
-                required: true
-            },
-            assetRevenueZone: {
-                required: true
-            },
-            assetRevenueWard: {
-                required: true
-            },
-            assetRevenueBlock: {
-                required: true
-            },
-            assetElectionWard: {
-                required: true
-            },
-            assetAssetAddress: {
-                required: true
-            }
+            // park_name: {
+            //     required: true
+            // },
+            // assetCategory: {
+            //     required: true
+            // },
+            // assetName: {
+            //     required: true
+            // },
+            // assetCode: {
+            //     required: true
+            // },
+            // assetLocality: {
+            //     required: true
+            // },
+            // assetStreet: {
+            //     required: true
+            // },
+            // assetRevenueZone: {
+            //     required: true
+            // },
+            // assetRevenueWard: {
+            //     required: true
+            // },
+            // assetRevenueBlock: {
+            //     required: true
+            // },
+            // assetElectionWard: {
+            //     required: true
+            // },
+            // assetAssetAddress: {
+            //     required: true
+            // }
         }
 
         // remove all other Asset Details block from DOM except shop asset related fields
@@ -712,7 +716,13 @@ $().ready(function() {
 
     for (var key in finalValidatinRules) {
         if (finalValidatinRules[key].required) {
-            $(`label[for=${key}]`).append(`<span> *</span>`);
+            if(key.split(".").length=="2")
+            {
+              $(`label[for=${key.split(".")[0]}\\.${key.split(".")[1]}]`).append(`<span> *</span>`);
+            }
+            else {
+              $(`label[for=${key}]`).append(`<span> *</span>`);
+            }
         }
         // $(`#${key}`).attr("disabled",true);
     };
@@ -727,30 +737,30 @@ $().ready(function() {
         return /^[0-9]{12}$/.test(value);
     }, 'Please enter a valid aadhar.');
 
-    $.validator.addMethod('pan_no', function(value) {
+    $.validator.addMethod('panNo', function(value) {
         return /^[0-9a-zA-Z]{10}$/.test(value);
     }, 'Please enter a valid pan.');
 
     finalValidatinRules["messages"] = {
-        name: {
+        "allottee.name": {
             required: "Enter Name of the Allottee/Lessee"
         },
-        address: {
+        "allottee.permanentAddress": {
             required: "Enter Address of the Allottee/Lessee"
         },
         natureOfAllotment: {
             required: "Enter Nature of allotment of the agreement"
         },
-        aadhaarNumber: {
+        "allottee.aadhaarNumber": {
             required: "Enter Aadhar no. of Allottee"
         },
-      panNumber: {
+      "allottee.pan": {
             required: "Enter PAN no. of Allottee"
         },
-        emailid: {
+        "allottee.emailId": {
             required: "Enter Email ID of Allottee to get Notifications"
         },
-        contactNumber: {
+        "allottee.mobileNumber": {
             required: "Enter Mobile number of the Allottee to get Notifications"
         },
         tenderNumber: {
@@ -772,7 +782,7 @@ $().ready(function() {
         //     required: true
         // },
         rrReadingNumber: {
-            required: getUrlVars()["type"] != "land" ? "Enter Electricity reading number" : ""
+            required: decodeURIComponent(getUrlVars()["type"]) != "land" ? "Enter Electricity reading number" : ""
         },
         registrationFee: {
             required: "Enter Registration fee paid"
@@ -814,7 +824,7 @@ $().ready(function() {
         //     required: true
         // },
         rentIncrementMethod: {
-            required: getUrlVars()["type"] == "land" || getUrlVars()["type"] == "shop" ? "Select increase in monthly rent at the time of renewal" : ""
+            required: decodeURIComponent(getUrlVars()["type"]) == "land" || decodeURIComponent(getUrlVars()["type"]) == "shop" ? "Select increase in monthly rent at the time of renewal" : ""
         },
         // remarks: {
         //     required: "Enter Remarks if any"
@@ -829,6 +839,123 @@ $().ready(function() {
 
     }
 
+    // $("#"+name).val("murali");
+
+  var assetDetails=commonApiPost("asset-services","assets","_search",{id:getUrlVars()["assetId"]}).responseJSON["Assets"][0] ||[];
+  // var natureOfAllotments=commonApiPost("lams-services","","getnatureofallotment",{}).responseJSON ||{};
+  // var designation= getCommonMaster("hr-masters", "designations", "Designation").responseJSON["Designation"] || [];
+  // var department= getCommonMaster("egov-common-masters", "departments", "Department").responseJSON["Department"] || [];
+
+  for (var variable in natureOfAllotments) {
+    if (natureOfAllotments.hasOwnProperty(variable)) {
+      $(`#natureOfAllotment`).append(`<option value='${variable}'>${natureOfAllotments[variable]}</option>`)
+
+    }
+  }
+
+  for (var variable in paymentCycle) {
+    if (paymentCycle.hasOwnProperty(variable)) {
+      $(`#paymentCycle`).append(`<option value='${variable}'>${paymentCycle[variable]}</option>`)
+
+    }
+  }
+
+  $(`#approverDepartment`).html(`<option value=''>Select</option>`)
+
+  for (var variable in department) {
+      $(`#approverDepartment`).append(`<option value='${department[variable]["id"]}'>${department[variable]["name"]}</option>`)
+
+  }
+  $(`#approverDesignation`).html(`<option value=''>Select</option>`)
+
+  for (var variable in designation) {
+
+
+      $(`#approverDesignation`).append(`<option value='${designation[variable]["id"]}'>${designation[variable]["name"]}</option>`)
+
+
+  }
+
+  // var locality=commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"LOCALITY",hierarchyTypeName:"LOCATION"}).responseJSON["Boundary"] || [],
+  // var electionwards=commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"WARD",hierarchyTypeName:"ADMINISTRATION"}).responseJSON["Boundary"] || [],
+  // var revenueWards=commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"WARD",hierarchyTypeName:"REVENUE"}).responseJSON["Boundary"] || []
+  $("#assetCategory\\.name").val(assetDetails["assetCategory"]["name"]);
+
+  $("#aName").val(assetDetails["name"]);
+
+  $("#totalArea").val(assetDetails["totalArea"]);
+
+  $("#code").val(assetDetails["code"]);
+
+  $("#locationDetails\\.locality").val(getNameById(locality,assetDetails["locationDetails"]["locality"]));
+
+  $("#locationDetails\\.street").val(getNameById(street,assetDetails["locationDetails"]["street"]));
+
+  $("#locationDetails\\.zone").val(getNameById(revenueZone,assetDetails["locationDetails"]["zone"]));
+
+  $("#locationDetails\\.revenueWard").val(getNameById(revenueWard,assetDetails["locationDetails"]["revenueWard"]));
+
+  $("#locationDetails\\.block").val(getNameById(revenueBlock,assetDetails["locationDetails"]["block"]));
+
+  $("#locationDetails\\.electionWard").val(getNameById(electionwards,assetDetails["locationDetails"]["electionWard"]));
+
+
+  $('.datetimepicker').datetimepicker({
+      format: 'DD/MM/YYYY'
+});
+
+$(".datetimepicker").on("dp.change", function() {
+    // alert('hey');
+    fillValueToObject(this);
+});
+
+  // printValue("",assetDetails)
+  //
+  //
+  // function printValue(object="",values) {
+  //   if (object != "") {
+  //
+  //   }
+  //   else {
+  //     for (var key in values)
+  //     {
+  //             if (typeof(values[key])=="object") {
+  //                 for (var variable in values[key]) {
+  //                     $("#"+key+"\\."+variable).val(values[key][variable]);
+  //                 }
+  //             }
+  //             else {
+  //                   if(key=="name")
+  //                   {
+  //                     $("#aName").val(values[key]);
+  //
+  //                   }
+  //                   else {
+  //                     $("#"+key).val(values[key]);
+  //
+  //                   }
+  //             }
+  //
+  //     }
+  //     // for (var key in values) {
+  //     //     if (key.search('date')>0) {
+  //     //         // console.log(key);
+  //     //             var d=new Date(values[key]);
+  //     //             $(`#${key}`).val(`${d.getDate()}-${d.getMonth()+1}-${d.getFullYear()}`);
+  //     //     }
+  //     // }
+  //
+  //   }
+  // }
+
+  $("#createAgreement").on("click", function(e) {
+      e.preventDefault();
+      $("#createAgreementForm").submit();
+  // switchValidation("final_validatin_rules");
+})
+
+
+
 
     // Adding Jquery validation dynamically
     $("#createAgreementForm").validate({
@@ -836,16 +963,46 @@ $().ready(function() {
         messages: finalValidatinRules["messages"],
         submitHandler: function(form) {
             // form.submit();
+            // form.preventDefault();
+              agreement["workflowDetails"]={};
+              agreement["workflowDetails"]["assignee"]=agreement["approverName"];
+              agreement["asset"]={};
+              agreement["asset"]["id"]=getUrlVars()["assetId"];
+                agreement["tenantId"]=tenantId;
+              console.log(agreement);
+            // $.post(`${baseUrl}agreements?tenant_id=kul.am`, {
+            //     RequestInfo: requestInfo,
+            //     Agreement: agreement
+            // }, function(response) {
+            //     // alert("submit");
+            //     // window.open("../../../../app/search-assets/create-agreement-ack.html?&agreement_id=aeiou", "", "width=1200,height=800")
+            //     // console.log(response);
+            // })
 
-            // console.log(agreement);
-            $.post(`${baseUrl}agreements?tenant_id=kul.am`, {
-                RequestInfo: requestInfo,
-                Agreement: agreement
-            }, function(response) {
-                // alert("submit");
-                window.open("../../../../app/search-assets/create-agreement-ack.html?&agreement_id=aeiou", "", "width=1200,height=800")
-                console.log(response);
-            })
+            var response=$.ajax({
+                    url: baseUrl+"/lams-services/agreements/_create?tenantId="+tenantId,
+                    type: 'POST',
+                    dataType: 'json',
+                    data:JSON.stringify({
+                        RequestInfo: requestInfo,
+                        Agreement: agreement
+                    }),
+                    async: false,
+                    headers: {
+                            'auth-token': authToken
+                        },
+                    contentType: 'application/json'
+                });
+
+                if(response["status"]===200)
+                {
+                  alert("Successfully added");
+                  // window.location.href="../../../../app/hr/common/employee-attendance.html";
+                }
+                else {
+                  alert(response["statusText"]);
+                }
+
+
         }
     })
-})

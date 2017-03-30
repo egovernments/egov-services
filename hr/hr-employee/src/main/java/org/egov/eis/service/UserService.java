@@ -112,6 +112,7 @@ public class UserService {
 			userResponse = new RestTemplate().postForObject(url, userRequest, UserResponse.class);
 		} catch (HttpClientErrorException e) {
 			String errorResponseBody = e.getResponseBodyAsString();
+			System.err.println("Following exception occurred: " + e.getResponseBodyAsString());
 			UserErrorResponse userErrorResponse = null;
 			try {
 				ObjectMapper mapper = new ObjectMapper();

@@ -45,101 +45,106 @@ public class PaymentService {
 	BillNumberService billNumberService;
 
 	public String generateBillXml(Agreement agreement, RequestInfo requestInfo) {
-		LamsConfigurationGetRequest lamsGetRequest = new LamsConfigurationGetRequest();
-		List<BillInfo> billInfos = new ArrayList<>();
-		BillInfo billInfo = new BillInfo();
-		billInfo.setId(null);
-		billInfo.setDemandId(1L);
-		billInfo.setCitizenName(agreement.getAllottee().getName());
-		billInfo.setCitizenAddress(agreement.getAllottee().getAddress());
-		billInfo.setBillType("AUTO");
-		billInfo.setIssuedDate(new Date());
-		billInfo.setLastDate(new Date());
-		lamsGetRequest.setName("MODULE_NAME");
-		String moduleName = lamsConfigurationService
-				.getLamsConfigurations(lamsGetRequest).get("MODULE_NAME")
-				.get(0);
-		billInfo.setModuleName(moduleName);
-		lamsGetRequest.setTenantId(agreement.getTenantId());
-		lamsGetRequest.setName("FUND_CODE");
-		String fundCode = lamsConfigurationService
-				.getLamsConfigurations(lamsGetRequest).get("FUND_CODE").get(0);
-		billInfo.setFundCode(fundCode);
-		lamsGetRequest.setName("FUNCTIONARY_CODE");
-		String functionaryCode = lamsConfigurationService
-				.getLamsConfigurations(lamsGetRequest).get("FUNCTIONARY_CODE")
-				.get(0);
-		billInfo.setFunctionaryCode(Long.valueOf(functionaryCode));
-		lamsGetRequest.setName("FUNDSOURCE_CODE");
-		String fundSourceCode = lamsConfigurationService
-				.getLamsConfigurations(lamsGetRequest).get("FUNDSOURCE_CODE")
-				.get(0);
-		billInfo.setFundSourceCode(fundSourceCode);
-		lamsGetRequest.setName("DEPARTMENT_CODE");
-		String departmentCode = lamsConfigurationService
-				.getLamsConfigurations(lamsGetRequest).get("DEPARTMENT_CODE")
-				.get(0);
-		billInfo.setDepartmentCode(departmentCode);
-		billInfo.setCollModesNotAllowed("");
-		billInfo.setBoundaryNumber(agreement.getAsset().getLocationDetails()
-				.getElectionWard());
-		lamsGetRequest.setName("BOUNDARY_TYPE");
-		String boundaryType = lamsConfigurationService
-				.getLamsConfigurations(lamsGetRequest).get("BOUNDARY_TYPE")
-				.get(0);
-		billInfo.setBoundaryType(boundaryType);
-		lamsGetRequest.setName("SERVICE_CODE");
-		String serviceCode = lamsConfigurationService
-				.getLamsConfigurations(lamsGetRequest).get("SERVICE_CODE")
-				.get(0);
-		billInfo.setServiceCode(serviceCode);
-		billInfo.setPartPaymentAllowed('N');
-		billInfo.setOverrideAccHeadAllowed('N');
-		billInfo.setDescription("Leases And Agreements : "
-				+ (StringUtils.isBlank(agreement.getAgreementNumber()) ? agreement
-						.getAcknowledgementNumber() : agreement
-						.getAgreementNumber()));
-		billInfo.setConsumerCode(StringUtils.isBlank(agreement
-				.getAgreementNumber()) ? agreement.getAcknowledgementNumber()
-				: agreement.getAgreementNumber());
-		billInfo.setCallbackForApportion('N');
-		billInfo.setEmailId(agreement.getAllottee().getEmailId());
-		billInfo.setConsumerType("Agreement");
-		billInfo.setBillNumber(billNumberService.generateBillNumber());
-
-		DemandSearchCriteria demandSearchCriteria = new DemandSearchCriteria();
-		demandSearchCriteria.setDemandId(1L);
-
-		Demand demand = demandRepository
-				.getDemandBySearch(demandSearchCriteria, requestInfo)
-				.getDemands().get(0);
-		billInfo.setDisplayMessage(demand.getModuleName());
-		billInfo.setMinAmountPayable(demand.getMinAmountPayable());
-
-		lamsGetRequest.setName("FUNCTION_CODE");
-		String functionCode = lamsConfigurationService
-				.getLamsConfigurations(lamsGetRequest).get("FUNCTION_CODE")
-				.get(0);
-		BigDecimal totalAmount = BigDecimal.ZERO;
-		List<BillDetailInfo> billDetailInfos = new ArrayList<>();
-		int orderNo = 0;
-		for (DemandDetails demandDetail : demand.getDemandDetails()) {
-			orderNo++;
-			totalAmount = totalAmount.add(demandDetail.getTaxAmount());
-			billDetailInfos.addAll(getBilldetails(demandDetail, functionCode,
-					orderNo));
-		}
-		billInfo.setTotalAmount(totalAmount.doubleValue());
-		billInfo.setBillAmount(totalAmount.doubleValue());
-		billInfo.setBillDetailInfos(billDetailInfos);
-		billInfos.add(billInfo);
-		final String billXml = billRepository.createBillAndGetXml(billInfos,
-				requestInfo);
 		String collectXML = "";
 		try {
-			collectXML = URLEncoder.encode(billXml, "UTF-8");
-		} catch (final UnsupportedEncodingException e) {
-			throw new RuntimeException(e.getMessage());
+			LamsConfigurationGetRequest lamsGetRequest = new LamsConfigurationGetRequest();
+			List<BillInfo> billInfos = new ArrayList<>();
+			BillInfo billInfo = new BillInfo();
+			billInfo.setId(null);
+			billInfo.setDemandId(1L);
+			billInfo.setCitizenName(agreement.getAllottee().getName());
+			billInfo.setCitizenAddress(agreement.getAllottee().getAddress());
+			billInfo.setBillType("AUTO");
+			billInfo.setIssuedDate(new Date());
+			billInfo.setLastDate(new Date());
+			lamsGetRequest.setName("MODULE_NAME");
+			String moduleName = lamsConfigurationService
+					.getLamsConfigurations(lamsGetRequest).get("MODULE_NAME")
+					.get(0);
+			billInfo.setModuleName(moduleName);
+			lamsGetRequest.setTenantId(agreement.getTenantId());
+			lamsGetRequest.setName("FUND_CODE");
+			String fundCode = lamsConfigurationService
+					.getLamsConfigurations(lamsGetRequest).get("FUND_CODE").get(0);
+			billInfo.setFundCode(fundCode);
+			lamsGetRequest.setName("FUNCTIONARY_CODE");
+			String functionaryCode = lamsConfigurationService
+					.getLamsConfigurations(lamsGetRequest).get("FUNCTIONARY_CODE")
+					.get(0);
+			billInfo.setFunctionaryCode(Long.valueOf(functionaryCode));
+			lamsGetRequest.setName("FUNDSOURCE_CODE");
+			String fundSourceCode = lamsConfigurationService
+					.getLamsConfigurations(lamsGetRequest).get("FUNDSOURCE_CODE")
+					.get(0);
+			billInfo.setFundSourceCode(fundSourceCode);
+			lamsGetRequest.setName("DEPARTMENT_CODE");
+			String departmentCode = lamsConfigurationService
+					.getLamsConfigurations(lamsGetRequest).get("DEPARTMENT_CODE")
+					.get(0);
+			billInfo.setDepartmentCode(departmentCode);
+			billInfo.setCollModesNotAllowed("");
+			billInfo.setBoundaryNumber(agreement.getAsset().getLocationDetails()
+					.getElectionWard());
+			lamsGetRequest.setName("BOUNDARY_TYPE");
+			String boundaryType = lamsConfigurationService
+					.getLamsConfigurations(lamsGetRequest).get("BOUNDARY_TYPE")
+					.get(0);
+			billInfo.setBoundaryType(boundaryType);
+			lamsGetRequest.setName("SERVICE_CODE");
+			String serviceCode = lamsConfigurationService
+					.getLamsConfigurations(lamsGetRequest).get("SERVICE_CODE")
+					.get(0);
+			billInfo.setServiceCode(serviceCode);
+			billInfo.setPartPaymentAllowed('N');
+			billInfo.setOverrideAccHeadAllowed('N');
+			billInfo.setDescription("Leases And Agreements : "
+					+ (StringUtils.isBlank(agreement.getAgreementNumber()) ? agreement
+							.getAcknowledgementNumber() : agreement
+							.getAgreementNumber()));
+			billInfo.setConsumerCode(StringUtils.isBlank(agreement
+					.getAgreementNumber()) ? agreement.getAcknowledgementNumber()
+					: agreement.getAgreementNumber());
+			billInfo.setCallbackForApportion('N');
+			billInfo.setEmailId(agreement.getAllottee().getEmailId());
+			billInfo.setConsumerType("Agreement");
+			billInfo.setBillNumber(billNumberService.generateBillNumber());
+
+			DemandSearchCriteria demandSearchCriteria = new DemandSearchCriteria();
+			demandSearchCriteria.setDemandId(1L);
+
+			Demand demand = demandRepository
+					.getDemandBySearch(demandSearchCriteria, requestInfo)
+					.getDemands().get(0);
+			billInfo.setDisplayMessage(demand.getModuleName());
+			billInfo.setMinAmountPayable(demand.getMinAmountPayable());
+
+			lamsGetRequest.setName("FUNCTION_CODE");
+			String functionCode = lamsConfigurationService
+					.getLamsConfigurations(lamsGetRequest).get("FUNCTION_CODE")
+					.get(0);
+			BigDecimal totalAmount = BigDecimal.ZERO;
+			List<BillDetailInfo> billDetailInfos = new ArrayList<>();
+			int orderNo = 0;
+			for (DemandDetails demandDetail : demand.getDemandDetails()) {
+				orderNo++;
+				totalAmount = totalAmount.add(demandDetail.getTaxAmount());
+				billDetailInfos.addAll(getBilldetails(demandDetail, functionCode,
+						orderNo));
+			}
+			billInfo.setTotalAmount(totalAmount.doubleValue());
+			billInfo.setBillAmount(totalAmount.doubleValue());
+			billInfo.setBillDetailInfos(billDetailInfos);
+			billInfos.add(billInfo);
+			final String billXml = billRepository.createBillAndGetXml(billInfos,
+					requestInfo);
+			
+			try {
+				collectXML = URLEncoder.encode(billXml, "UTF-8");
+			} catch (final UnsupportedEncodingException e) {
+				throw new RuntimeException(e.getMessage());
+			}
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
 		}
 		return collectXML;
 	}

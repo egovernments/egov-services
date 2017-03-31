@@ -194,7 +194,7 @@ public class DataIntegrityValidator implements Validator {
 		if (histories != null && !histories.isEmpty()) {
 			for (int index = 0; index < histories.size(); index++) {
 				if (histories.get(index).getId() != null)
-					validateInvalidIdforTechnical(histories.get(index).getId(), errors);
+					validateInvalidIdForServiceHistory(histories.get(index).getId(), errors);
 				if (histories.get(index).getDocuments() != null && !histories.get(index).getDocuments().isEmpty()
 						&& employeeService.checkForDuplicatesForAnyOneOfGivenCSV("egeis_employeeDocuments", "document",
 								getProcessedDocumentsString(histories.get(index).getDocuments()))) {
@@ -210,7 +210,7 @@ public class DataIntegrityValidator implements Validator {
 		if (regularisations != null && !regularisations.isEmpty()) {
 			for (int index = 0; index < regularisations.size(); index++) {
 				if (regularisations.get(index).getId() != null)
-					validateInvalidIdforTechnical(regularisations.get(index).getId(), errors);
+					validateInvalidIdForRegularisation(regularisations.get(index).getId(), errors);
 				if (regularisations.get(index).getDocuments() != null
 						&& !regularisations.get(index).getDocuments().isEmpty()
 						&& employeeService.checkForDuplicatesForAnyOneOfGivenCSV("egeis_employeeDocuments", "document",
@@ -227,7 +227,7 @@ public class DataIntegrityValidator implements Validator {
 		if (probations != null && !probations.isEmpty()) {
 			for (int index = 0; index < probations.size(); index++) {
 				if (probations.get(index).getId() != null)
-					validateInvalidIdforTechnical(probations.get(index).getId(), errors);
+					validateInvalidIdForProbation(probations.get(index).getId(), errors);
 				if (probations.get(index).getDocuments() != null && !probations.get(index).getDocuments().isEmpty()
 						&& employeeService.checkForDuplicatesForAnyOneOfGivenCSV("egeis_employeeDocuments", "document",
 								getProcessedDocumentsString(probations.get(index).getDocuments()))) {
@@ -243,7 +243,7 @@ public class DataIntegrityValidator implements Validator {
 		if (educations != null && !educations.isEmpty()) {
 			for (int index = 0; index < educations.size(); index++) {
 				if (educations.get(index).getId() != null)
-					validateInvalidIdforTechnical(educations.get(index).getId(), errors);
+					validateInvalidIdForEducationalQualification(educations.get(index).getId(), errors);
 				if (educations.get(index).getDocuments() != null && !educations.get(index).getDocuments().isEmpty()
 						&& employeeService.checkForDuplicatesForAnyOneOfGivenCSV("egeis_employeeDocuments", "document",
 								getProcessedDocumentsString(educations.get(index).getDocuments()))) {
@@ -259,7 +259,7 @@ public class DataIntegrityValidator implements Validator {
 		if (tests != null && !tests.isEmpty()) {
 			for (int index = 0; index < tests.size(); index++) {
 				if (tests.get(index).getId() != null)
-					validateInvalidIdforTechnical(tests.get(index).getId(), errors);
+					validateInvalidIdForDepartmentalTest(tests.get(index).getId(), errors);
 				if (tests.get(index).getDocuments() != null && !tests.get(index).getDocuments().isEmpty()
 						&& employeeService.checkForDuplicatesForAnyOneOfGivenCSV("egeis_employeeDocuments", "document",
 								getProcessedDocumentsString(tests.get(index).getDocuments()))) {
@@ -274,7 +274,7 @@ public class DataIntegrityValidator implements Validator {
 	private void validateAssignments(List<Assignment> assignments, Errors errors) {
 		for (int index = 0; index < assignments.size(); index++) {
 			if (assignments.get(index).getId() != null)
-				validateInvalidIdforTechnical(assignments.get(index).getId(), errors);
+				validateInvalidIdForAssignment(assignments.get(index).getId(), errors);
 			if (assignments.get(index).getDocuments() != null && !assignments.get(index).getDocuments().isEmpty()
 					&& employeeService.checkForDuplicatesForAnyOneOfGivenCSV("egeis_employeeDocuments", "document",
 							getProcessedDocumentsString(assignments.get(index).getDocuments()))) {

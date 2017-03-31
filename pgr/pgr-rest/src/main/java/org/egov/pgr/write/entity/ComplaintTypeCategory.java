@@ -1,6 +1,9 @@
 package org.egov.pgr.write.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.Setter;
+import org.egov.pgr.common.entity.AbstractPersistable;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.validator.constraints.Length;
@@ -9,6 +12,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
+@Getter
+@Setter
 @Entity(name = "complainttypecategory_write")
 @Table(name = "egpgr_complainttype_category")
 @SequenceGenerator(name = ComplaintTypeCategory.SEQ_COMP_TYPE_CATEGORY, sequenceName = ComplaintTypeCategory.SEQ_COMP_TYPE_CATEGORY, allocationSize = 1)
@@ -41,29 +46,5 @@ public class ComplaintTypeCategory extends AbstractPersistable<Long> {
     @Override
     public Long getId() {
         return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(final String description) {
-        this.description = description;
-    }
-
-    public List<ComplaintType> getComplaintTypes() {
-        return complaintTypes;
-    }
-
-    public void setComplaintTypes(final List<ComplaintType> complaintTypes) {
-        this.complaintTypes = complaintTypes;
     }
 }

@@ -1,7 +1,10 @@
 package org.egov.pgr.read.persistence.entity;
 
 import lombok.*;
-import org.egov.pgr.read.domain.model.AuthenticatedUser;
+import org.egov.pgr.common.entity.AbstractAuditable;
+import org.egov.pgr.common.entity.ReceivingCenter;
+import org.egov.pgr.common.entity.ReceivingMode;
+import org.egov.pgr.common.model.AuthenticatedUser;
 import org.egov.pgr.read.domain.model.ComplaintLocation;
 import org.egov.pgr.read.domain.model.Coordinates;
 import org.egov.pgr.read.persistence.entity.enums.CitizenFeedback;

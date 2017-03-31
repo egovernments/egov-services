@@ -8,7 +8,7 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 
 import java.util.Set;
 
-import org.egov.pgr.read.domain.model.Role;
+import org.egov.pgr.common.model.Role;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.HttpMethod;

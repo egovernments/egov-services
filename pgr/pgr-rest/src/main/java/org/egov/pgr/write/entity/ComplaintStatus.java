@@ -1,10 +1,16 @@
 package org.egov.pgr.write.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+import org.egov.pgr.common.entity.AbstractPersistable;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 import static org.egov.pgr.write.entity.ComplaintStatus.SEQ_COMPLAINTSTATUS;
 
+@Getter
+@Setter
 @Entity(name = "complaintstatus_write")
 @Table(name = "egpgr_complaintstatus")
 @SequenceGenerator(name = SEQ_COMPLAINTSTATUS, sequenceName = SEQ_COMPLAINTSTATUS, allocationSize = 1)
@@ -18,20 +24,13 @@ public class ComplaintStatus extends AbstractPersistable<Long> {
     @NotNull
     private String name;
 
+    @Override
     public Long getId() {
         return id;
     }
 
+    @Override
     protected void setId(final Long id) {
         this.id = id;
     }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
-
 }

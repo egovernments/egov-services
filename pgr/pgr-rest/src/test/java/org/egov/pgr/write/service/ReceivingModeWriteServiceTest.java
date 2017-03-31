@@ -1,7 +1,7 @@
 package org.egov.pgr.write.service;
 
-import org.egov.pgr.write.entity.ReceivingMode;
-import org.egov.pgr.write.repository.ReceivingModeWriteRepository;
+import org.egov.pgr.common.entity.ReceivingMode;
+import org.egov.pgr.common.repository.ReceivingModeRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -14,7 +14,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class ReceivingModeWriteServiceTest {
     @Mock
-    private ReceivingModeWriteRepository receivingModeRepository;
+    private ReceivingModeRepository receivingModeRepository;
 
     @InjectMocks
     private ReceivingModeWriteService receivingModeService;

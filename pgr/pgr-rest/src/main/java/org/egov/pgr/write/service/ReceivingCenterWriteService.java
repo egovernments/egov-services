@@ -1,17 +1,17 @@
 package org.egov.pgr.write.service;
 
-import org.egov.pgr.write.entity.ReceivingCenter;
-import org.egov.pgr.write.repository.ReceivingCenterWriteRepository;
+import org.egov.pgr.common.entity.ReceivingCenter;
+import org.egov.pgr.common.repository.ReceivingCenterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ReceivingCenterWriteService {
 
-	private final ReceivingCenterWriteRepository receivingCenterWriteRepository;
+	private final ReceivingCenterRepository receivingCenterWriteRepository;
 
 	@Autowired
-	public ReceivingCenterWriteService(final ReceivingCenterWriteRepository receivingCenterWriteRepository) {
+	public ReceivingCenterWriteService(final ReceivingCenterRepository receivingCenterWriteRepository) {
 		this.receivingCenterWriteRepository = receivingCenterWriteRepository;
 	}
 

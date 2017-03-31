@@ -11,7 +11,7 @@ import org.egov.pgr.common.contract.RequestInfo;
 import org.egov.pgr.common.contract.SevaRequest;
 import org.egov.pgr.read.persistence.repository.ComplaintJpaRepository;
 import org.egov.pgr.read.persistence.repository.ComplaintRepository;
-import org.egov.pgr.read.persistence.repository.UserRepository;
+import org.egov.pgr.common.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

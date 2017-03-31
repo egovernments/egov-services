@@ -1,7 +1,7 @@
 package org.egov.pgr.read.web.resolver;
 
-import org.egov.pgr.read.domain.model.AuthenticatedUser;
-import org.egov.pgr.read.persistence.repository.UserRepository;
+import org.egov.pgr.common.model.AuthenticatedUser;
+import org.egov.pgr.common.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Service;

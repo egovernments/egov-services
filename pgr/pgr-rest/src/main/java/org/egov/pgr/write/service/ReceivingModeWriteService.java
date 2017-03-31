@@ -1,17 +1,17 @@
 package org.egov.pgr.write.service;
 
-import org.egov.pgr.write.entity.ReceivingMode;
-import org.egov.pgr.write.repository.ReceivingModeWriteRepository;
+import org.egov.pgr.common.entity.ReceivingMode;
+import org.egov.pgr.common.repository.ReceivingModeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ReceivingModeWriteService {
 
-	private final ReceivingModeWriteRepository receivingModeWriteRepository;
+	private final ReceivingModeRepository receivingModeWriteRepository;
 
 	@Autowired
-	public ReceivingModeWriteService(final ReceivingModeWriteRepository receivingModeWriteRepository) {
+	public ReceivingModeWriteService(final ReceivingModeRepository receivingModeWriteRepository) {
 		this.receivingModeWriteRepository = receivingModeWriteRepository;
 	}
 

@@ -1,21 +1,21 @@
 package org.egov.pgr.write.service;
 
-import org.egov.pgr.write.entity.ReceivingCenter;
-import org.egov.pgr.write.repository.ReceivingCenterWriteRepository;
+import org.egov.pgr.common.entity.ReceivingCenter;
+import org.egov.pgr.common.repository.ReceivingCenterRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ReceivingCenterWriteServiceTest {
 
     @Mock
-    private ReceivingCenterWriteRepository receivingCenterRepository;
+    private ReceivingCenterRepository receivingCenterRepository;
 
     @InjectMocks
     private ReceivingCenterWriteService receivingCenterService;

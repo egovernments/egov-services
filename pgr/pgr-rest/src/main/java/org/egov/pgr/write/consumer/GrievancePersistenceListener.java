@@ -1,10 +1,10 @@
 package org.egov.pgr.write.consumer;
 
+import org.egov.pgr.common.repository.UserRepository;
 import org.egov.pgr.write.contracts.grievance.SevaRequest;
 import org.egov.pgr.write.entity.Complaint;
 import org.egov.pgr.write.model.ComplaintBuilder;
 import org.egov.pgr.write.repository.PositionRepository;
-import org.egov.pgr.write.repository.UserWriteRepository;
 import org.egov.pgr.write.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -19,7 +19,7 @@ public class GrievancePersistenceListener {
     private ComplaintStatusWriteService complaintStatusWriteService;
     private ComplaintWriteService complaintWriteService;
     private PositionRepository positionRepository;
-    private UserWriteRepository userWriteRepository;
+    private UserRepository userWriteRepository;
     private ReceivingCenterWriteService receivingCenterWriteService;
     private ReceivingModeWriteService receivingModeWriteService;
 
@@ -28,7 +28,7 @@ public class GrievancePersistenceListener {
                                         ComplaintStatusWriteService complaintStatusWriteService,
                                         ComplaintWriteService complaintWriteService,
                                         PositionRepository positionRepository,
-                                        UserWriteRepository userWriteRepository,
+                                        UserRepository userRepository,
                                         ReceivingCenterWriteService receivingCenterWriteService,
                                         ReceivingModeWriteService receivingModeWriteService) {
         this.complaintWriteService = complaintWriteService;
@@ -36,7 +36,7 @@ public class GrievancePersistenceListener {
         this.complaintStatusWriteService = complaintStatusWriteService;
         this.complaintWriteService = complaintWriteService;
         this.positionRepository = positionRepository;
-        this.userWriteRepository = userWriteRepository;
+        this.userWriteRepository = userRepository;
         this.receivingCenterWriteService = receivingCenterWriteService;
         this.receivingModeWriteService = receivingModeWriteService;
 

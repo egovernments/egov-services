@@ -2,7 +2,7 @@ package org.egov.pgr.read.web.controller;
 
 import org.egov.pgr.TestConfiguration;
 import org.egov.pgr.read.domain.service.ReceivingModeService;
-import org.egov.pgr.read.persistence.entity.ReceivingMode;
+import org.egov.pgr.common.entity.ReceivingMode;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -8,10 +8,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.egov.pgr.read.domain.model.Role;
+import org.egov.pgr.common.model.Role;
 import org.egov.pgr.read.persistence.entity.ComplaintStatus;
-import org.egov.pgr.read.persistence.repository.UserRepository;
-import org.egov.pgr.read.web.contract.GetUserByIdResponse;
+import org.egov.pgr.common.repository.UserRepository;
+import org.egov.pgr.common.contract.GetUserByIdResponse;
 import org.egov.pgr.read.web.contract.ResponseInfo;
 import org.egov.pgr.read.web.contract.User;
 import org.junit.Test;

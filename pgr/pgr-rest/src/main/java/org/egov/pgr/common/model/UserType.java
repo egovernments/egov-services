@@ -1,4 +1,4 @@
-package org.egov.pgr.read.domain.model;
+package org.egov.pgr.common.model;
 
 public enum UserType {
     EMPLOYEE("EMPLOYEE"),

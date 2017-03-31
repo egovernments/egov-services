@@ -1,5 +1,7 @@
 package org.egov.pgr.read.domain.model;
 
+import org.egov.pgr.common.model.AuthenticatedUser;
+import org.egov.pgr.common.model.UserType;
 import org.egov.pgr.read.domain.exception.InvalidComplaintException;
 import org.junit.Test;
 

@@ -2,6 +2,9 @@ package org.egov.pgr.write.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.egov.pgr.common.entity.AbstractAuditable;
+import org.egov.pgr.common.entity.ReceivingCenter;
+import org.egov.pgr.common.entity.ReceivingMode;
 import org.egov.pgr.write.entity.enums.CitizenFeedback;
 import org.hibernate.validator.constraints.Length;
 

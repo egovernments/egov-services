@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import org.egov.pgr.common.entity.AbstractPersistable;
 
 import static org.egov.pgr.read.persistence.entity.ComplaintStatus.SEQ_COMPLAINTSTATUS;
 

@@ -6,8 +6,8 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.egov.pgr.read.persistence.entity.ReceivingCenter;
-import org.egov.pgr.read.persistence.repository.ReceivingCenterRepository;
+import org.egov.pgr.common.entity.ReceivingCenter;
+import org.egov.pgr.common.repository.ReceivingCenterRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -38,7 +38,7 @@ public class ReceivingCenterServiceTest {
 
 	@Test
 	public void testShouldFindReceivingCenterById() {
-		ReceivingCenter expectedResult = ReceivingCenter.builder().id(1L).name("Complaint Cell").isCrnRequired(true)
+		ReceivingCenter expectedResult = ReceivingCenter.builder().id(1L).name("Complaint Cell").crnRequired(true)
 				.orderNo(8L).build();
 		when(receivingCenterRepository.findById(1L)).thenReturn(expectedResult);
 		final ReceivingCenter receivingCenter = receivingCenterService.getReceivingCenterById("ap.public", 1L);

@@ -6,7 +6,8 @@ import static org.junit.Assert.assertFalse;
 import java.util.List;
 
 import org.egov.pgr.TestConfiguration;
-import org.egov.pgr.read.persistence.entity.ReceivingCenter;
+import org.egov.pgr.common.entity.ReceivingCenter;
+import org.egov.pgr.common.repository.ReceivingCenterRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

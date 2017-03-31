@@ -1,5 +1,6 @@
 package org.egov.pgr.read.persistence.entity;
 
+import org.egov.pgr.common.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.SafeHtml;

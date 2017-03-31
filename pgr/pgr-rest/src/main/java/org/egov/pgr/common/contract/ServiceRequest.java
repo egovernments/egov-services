@@ -3,6 +3,7 @@ package org.egov.pgr.common.contract;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+import org.egov.pgr.common.model.AuthenticatedUser;
 import org.egov.pgr.read.domain.model.*;
 
 import java.util.Date;

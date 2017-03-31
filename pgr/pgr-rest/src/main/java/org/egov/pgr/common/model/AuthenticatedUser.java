@@ -1,4 +1,4 @@
-package org.egov.pgr.read.domain.model;
+package org.egov.pgr.common.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,8 +35,5 @@ public class AuthenticatedUser {
         return getType() == UserType.EMPLOYEE;
     }
 
-    public Complainant toComplainant() {
-        return new Complainant(name, mobileNumber, emailId, null, null);
-    }
 }
 

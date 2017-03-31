@@ -2,7 +2,7 @@ package org.egov.pgr.read.persistence.repository;
 
 import java.util.Set;
 
-import org.egov.pgr.read.domain.model.Role;
+import org.egov.pgr.common.model.Role;
 import org.egov.pgr.read.web.contract.EmployeeResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

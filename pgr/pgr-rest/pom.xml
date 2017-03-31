@@ -173,6 +173,8 @@
                                 <rule>
                                     <element>CLASS</element>
                                     <excludes>
+                                        <exclude>org.egov.pgr.common.entity.*</exclude>
+                                        <exclude>org.egov.pgr.common.model.AuthenticatedUser</exclude>
                                         <exclude>org.egov.pgr.read.web.contract.*</exclude>
                                         <exclude>org.egov.pgr.PgrRestSpringBootApplication</exclude>
                                         <exclude>org.egov.pgr.read.persistence.entity.*</exclude>
@@ -190,7 +192,7 @@
                                         </exclude>
                                         <exclude>org.egov.pgr.read.persistence.repository.ComplaintTypeRepository
                                         </exclude>
-                                        <exclude>org.egov.pgr.read.persistence.repository.UserRepository</exclude>
+                                        <exclude>org.egov.pgr.common.repository.UserRepository</exclude>
                                     </excludes>
                                     <limits>
                                         <limit>

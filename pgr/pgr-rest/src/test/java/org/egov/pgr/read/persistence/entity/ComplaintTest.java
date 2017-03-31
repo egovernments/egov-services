@@ -1,7 +1,9 @@
 package org.egov.pgr.read.persistence.entity;
 
 
-import org.egov.pgr.read.domain.model.AuthenticatedUser;
+import org.egov.pgr.common.entity.ReceivingCenter;
+import org.egov.pgr.common.entity.ReceivingMode;
+import org.egov.pgr.common.model.AuthenticatedUser;
 import org.egov.pgr.read.domain.model.ComplaintLocation;
 import org.egov.pgr.read.domain.model.Coordinates;
 import org.junit.Test;
@@ -36,8 +38,7 @@ public class ComplaintTest {
                 .build();
         final LocalDateTime lastAccessedDateTime = LocalDateTime.of(2016, 1, 2, 3, 4, 5);
         final ReceivingCenter receivingCenter = ReceivingCenter.builder().id(4L).build();
-        final org.egov.pgr.read.persistence.entity.ReceivingMode receivingMode = new org.egov.pgr.read.persistence.entity
-                .ReceivingMode();
+        final ReceivingMode receivingMode = new ReceivingMode();
         receivingMode.setCode("EMAIL");
         final Complaint entityComplaint = Complaint.builder()
                 .crn("crn")

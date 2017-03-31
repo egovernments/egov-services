@@ -1,15 +1,15 @@
 package org.egov.pgr.write.model;
 
+import org.egov.pgr.common.contract.GetUserByIdResponse;
+import org.egov.pgr.common.entity.ReceivingCenter;
+import org.egov.pgr.common.repository.UserRepository;
 import org.egov.pgr.write.contracts.grievance.RequestInfo;
 import org.egov.pgr.write.contracts.grievance.ServiceRequest;
 import org.egov.pgr.write.contracts.grievance.SevaRequest;
-import org.egov.pgr.write.contracts.user.GetUserByIdResponse;
 import org.egov.pgr.write.entity.Complaint;
 import org.egov.pgr.write.entity.ComplaintType;
-import org.egov.pgr.write.entity.ReceivingCenter;
 import org.egov.pgr.write.entity.enums.ComplaintStatus;
 import org.egov.pgr.write.repository.PositionRepository;
-import org.egov.pgr.write.repository.UserWriteRepository;
 import org.egov.pgr.write.service.ComplaintStatusWriteService;
 import org.egov.pgr.write.service.ComplaintTypeWriteService;
 import org.egov.pgr.write.service.ReceivingCenterWriteService;
@@ -24,7 +24,7 @@ public class ComplaintBuilder {
     private final ComplaintTypeWriteService complaintTypeWriteService;
     private final ComplaintStatusWriteService complaintStatusWriteService;
     private final PositionRepository positionRepository;
-    private final UserWriteRepository userWriteRepository;
+    private final UserRepository userWriteRepository;
     private final Complaint complaint;
     private final ServiceRequest serviceRequest;
     private final ReceivingCenterWriteService receivingCenterWriteService;
@@ -35,7 +35,7 @@ public class ComplaintBuilder {
                             ComplaintTypeWriteService complaintTypeWriteService,
                             ComplaintStatusWriteService complaintStatusWriteService,
                             PositionRepository positionRepository,
-                            UserWriteRepository userWriteRepository,
+                            UserRepository userRepository,
                             ReceivingCenterWriteService receivingCenterWriteService,
                             ReceivingModeWriteService receivingModeWriteService) {
         this.requesterId = sevaRequest.getRequesterId();
@@ -44,7 +44,7 @@ public class ComplaintBuilder {
         this.positionRepository = positionRepository;
         this.complaint = complaint == null ? new Complaint() : complaint;
         this.complaintTypeWriteService = complaintTypeWriteService;
-        this.userWriteRepository = userWriteRepository;
+        this.userWriteRepository = userRepository;
         this.receivingCenterWriteService = receivingCenterWriteService;
         this.requestInfo = sevaRequest.getRequestInfo();
         this.receivingModeWriteService = receivingModeWriteService;

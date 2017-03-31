@@ -1,5 +1,7 @@
 package org.egov.pgr.read.domain.model;
 
+import org.egov.pgr.common.model.AuthenticatedUser;
+import org.egov.pgr.common.model.UserType;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;

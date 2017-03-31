@@ -1,6 +1,7 @@
 package org.egov.pgr.read.persistence.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.egov.pgr.common.entity.AbstractPersistable;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.validator.constraints.Length;

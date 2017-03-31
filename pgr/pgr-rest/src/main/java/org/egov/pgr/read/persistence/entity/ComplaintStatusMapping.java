@@ -1,5 +1,7 @@
 package org.egov.pgr.read.persistence.entity;
 
+import org.egov.pgr.common.entity.AbstractPersistable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;

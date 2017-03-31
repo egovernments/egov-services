@@ -41,6 +41,7 @@
 package org.egov.pgr.read.persistence.entity;
 
 import lombok.*;
+import org.egov.pgr.common.entity.AbstractPersistable;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.SafeHtml;

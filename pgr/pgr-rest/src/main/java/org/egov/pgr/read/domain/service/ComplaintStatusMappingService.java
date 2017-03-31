@@ -48,11 +48,11 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import org.egov.pgr.read.domain.model.Role;
+import org.egov.pgr.common.model.Role;
 import org.egov.pgr.read.persistence.entity.ComplaintStatus;
 import org.egov.pgr.read.persistence.entity.ComplaintStatusMapping;
-import org.egov.pgr.read.persistence.repository.UserRepository;
-import org.egov.pgr.read.web.contract.GetUserByIdResponse;
+import org.egov.pgr.common.repository.UserRepository;
+import org.egov.pgr.common.contract.GetUserByIdResponse;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.CriteriaSpecification;

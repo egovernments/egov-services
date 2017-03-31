@@ -42,8 +42,8 @@ package org.egov.pgr.read.domain.service;
 
 import java.util.List;
 
-import org.egov.pgr.read.persistence.entity.ReceivingMode;
-import org.egov.pgr.read.persistence.repository.ReceivingModeRepository;
+import org.egov.pgr.common.entity.ReceivingMode;
+import org.egov.pgr.common.repository.ReceivingModeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

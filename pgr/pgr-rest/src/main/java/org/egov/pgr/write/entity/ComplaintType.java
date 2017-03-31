@@ -1,5 +1,8 @@
 package org.egov.pgr.write.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+import org.egov.pgr.common.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -8,6 +11,8 @@ import javax.validation.constraints.NotNull;
 
 import static org.egov.pgr.write.entity.ComplaintType.SEQ_COMPLAINTTYPE;
 
+@Getter
+@Setter
 @Entity(name = "complainttype_write")
 @Table(name = "egpgr_complainttype")
 @SequenceGenerator(name = SEQ_COMPLAINTTYPE, sequenceName = SEQ_COMPLAINTTYPE, allocationSize = 1)
@@ -38,7 +43,7 @@ public class ComplaintType extends AbstractAuditable {
 	private Integer slaHours;
 
 	@Column(name = "isactive")
-	private boolean isActive;
+	private boolean active;
 
 	@Column(name = "hasfinancialimpact")
 	private boolean hasFinancialImpact;
@@ -68,99 +73,4 @@ public class ComplaintType extends AbstractAuditable {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(final String name) {
-		this.name = name;
-	}
-
-	public Long getDepartment() {
-		return department;
-	}
-
-	public void setDepartment(final Long department) {
-		this.department = department;
-	}
-
-	public String getCode() {
-		return code;
-	}
-
-	public void setCode(final String code) {
-		this.code = code;
-	}
-
-	public boolean getIsActive() {
-		return isActive;
-	}
-
-	public void setIsActive(final boolean isActive) {
-		this.isActive = isActive;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(final String description) {
-		this.description = description;
-	}
-
-	public Integer getSlaHours() {
-		return slaHours;
-	}
-
-	public void setSlaHours(final Integer slaHours) {
-		this.slaHours = slaHours;
-	}
-
-	public boolean isHasFinancialImpact() {
-		return hasFinancialImpact;
-	}
-
-	public void setHasFinancialImpact(final boolean hasFinancialImpact) {
-		this.hasFinancialImpact = hasFinancialImpact;
-	}
-
-	public ComplaintTypeCategory getCategory() {
-		return category;
-	}
-
-	public void setCategory(final ComplaintTypeCategory category) {
-		this.category = category;
-	}
-
-	public boolean isMetadata() {
-		return metadata;
-	}
-
-	public void setMetadata(boolean metadata) {
-		this.metadata = metadata;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
-	public String getKeywords() {
-		return keywords;
-	}
-
-	public void setKeywords(String keywords) {
-		this.keywords = keywords;
-	}
-
-	public String getAttributes() {
-		return attributes;
-	}
-
-	public void setAttributes(String attributes) {
-		this.attributes = attributes;
-	}
 }

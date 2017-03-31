@@ -1,7 +1,7 @@
 
-package org.egov.pgr.read.persistence.repository;
+package org.egov.pgr.common.repository;
 
-import org.egov.pgr.read.persistence.entity.ReceivingCenter;
+import org.egov.pgr.common.entity.ReceivingCenter;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

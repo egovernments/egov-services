@@ -1,8 +1,8 @@
 package org.egov.pgr.common.contract;
 
-import org.egov.pgr.read.domain.model.AuthenticatedUser;
+import org.egov.pgr.common.model.AuthenticatedUser;
 import org.egov.pgr.read.domain.model.Complaint;
-import org.egov.pgr.read.domain.model.UserType;
+import org.egov.pgr.common.model.UserType;
 import org.junit.Test;
 
 import java.util.*;

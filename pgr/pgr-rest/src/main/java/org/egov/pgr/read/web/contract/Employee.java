@@ -3,7 +3,7 @@ package org.egov.pgr.read.web.contract;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.egov.pgr.read.domain.model.Role;
+import org.egov.pgr.common.model.Role;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

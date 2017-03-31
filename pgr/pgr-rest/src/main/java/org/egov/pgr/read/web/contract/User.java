@@ -2,7 +2,7 @@ package org.egov.pgr.read.web.contract;
 
 import java.util.Set;
 
-import org.egov.pgr.read.domain.model.Role;
+import org.egov.pgr.common.model.Role;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -37,6 +37,9 @@ public class User {
 	@JsonProperty("type")
 	private String type;
 
-	@JsonProperty("roles")
+    @JsonProperty("permanentAddress")
+    private String permanentAddress;
+
+    @JsonProperty("roles")
 	private Set<Role> roles = null;
 }

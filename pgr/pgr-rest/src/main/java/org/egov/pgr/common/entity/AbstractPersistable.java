@@ -38,7 +38,7 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.pgr.read.persistence.entity;
+package org.egov.pgr.common.entity;
 
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Version;

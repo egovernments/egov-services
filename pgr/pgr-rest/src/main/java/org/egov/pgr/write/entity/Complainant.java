@@ -3,6 +3,7 @@ package org.egov.pgr.write.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.egov.pgr.common.entity.AbstractPersistable;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;

@@ -44,14 +44,17 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.eis.model.Regularisation;
+import org.egov.eis.model.ServiceHistory;
 import org.egov.eis.model.enums.DocumentReferenceType;
 import org.egov.eis.web.contract.EmployeeRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -65,6 +68,15 @@ public class RegularisationRepository {
 			+ " (id, employeeId, designationId, declaredOn, orderNo, orderDate, remarks,"
 			+ " createdBy, createdDate, lastModifiedBy, lastModifiedDate, tenantId)"
 			+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+	
+	public static final String UPDATE_REGULARISATION_QUERY = "UPDATE egeis_regularisation"
+			+ " SET (designationId, declaredOn, orderNo, orderDate, remarks,"
+			+ " lastModifiedBy, lastModifiedDate)"
+			+ "= (?,?,?,?,?,?,?)"
+			+"where id = ?";
+
+	public static final String CHECK_IF_ID_EXISTS_QUERY = "SELECT id FROM egeis_regularisation where "
+			+ "id=? and employeeId=? and tenantId=?";
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -104,5 +116,44 @@ public class RegularisationRepository {
 				return regularisations.size();
 			}
 		});
+	}
+
+	public void update(Regularisation regularisation) {
+
+		Object[] obj = new Object[] { regularisation.getDesignation(), regularisation.getDeclaredOn(),
+				regularisation.getOrderNo(), regularisation.getOrderDate(), regularisation.getRemarks(),
+				regularisation.getLastModifiedBy(), regularisation.getLastModifiedDate(),
+				regularisation.getId() };
+
+		jdbcTemplate.update(UPDATE_REGULARISATION_QUERY, obj);
+
+	}
+
+	public void insert(Regularisation regularisation, Long empId) {
+		Object[] obj = new Object[] { regularisation.getId(), empId, regularisation.getDesignation(),
+				regularisation.getDeclaredOn(), regularisation.getOrderNo(), regularisation.getOrderDate(),
+				regularisation.getRemarks(), regularisation.getCreatedBy(), regularisation.getCreatedDate(),
+				regularisation.getLastModifiedBy(), regularisation.getLastModifiedDate(), regularisation.getTenantId(),
+				 };
+
+		jdbcTemplate.update(INSERT_REGULARISATION_QUERY, obj);
+	}
+
+	public boolean regularisationAlreadyExists(Long id, Long empId, String tenantId) {
+		List<Object> values = new ArrayList<Object>();
+		values.add(id);
+		values.add(empId);
+		values.add(tenantId);
+		try {
+			jdbcTemplate.queryForObject(CHECK_IF_ID_EXISTS_QUERY, values.toArray(), Long.class);
+			return true;
+		} catch (EmptyResultDataAccessException e) {
+			return false;
+		}
+	}
+
+	public void findAndDeleteRegularisationInDBThatAreNotInList(List<Regularisation> regularisation) {
+		// TODO Auto-generated method stub
+		
 	}
 }

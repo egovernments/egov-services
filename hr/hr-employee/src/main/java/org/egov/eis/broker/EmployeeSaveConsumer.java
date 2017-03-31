@@ -44,6 +44,7 @@ package org.egov.eis.broker;
 import java.io.IOException;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.egov.eis.config.PropertiesManager;
 import org.egov.eis.service.EmployeeService;
 import org.egov.eis.web.contract.EmployeeRequest;
 import org.slf4j.Logger;
@@ -58,18 +59,32 @@ public class EmployeeSaveConsumer {
 	public static final Logger LOGGER = LoggerFactory.getLogger(EmployeeSaveConsumer.class);
 
 	@Autowired
+	PropertiesManager propertiesManager;
+	
+	@Autowired
 	private EmployeeService employeeService;
 	
-	@KafkaListener(containerFactory = "kafkaListenerContainerFactory", topics = "${kafka.topics.employee.savedb.name}")
+	@KafkaListener(containerFactory = "kafkaListenerContainerFactory", topics = {"${kafka.topics.employee.savedb.name}", "${kafka.topics.employee.updatedb.name}" })
 	public void listen(ConsumerRecord<String, String> record) {
-		LOGGER.info("key : "+ record.key() + "\t\t" + "value : " +record.value());
+		LOGGER.info("key:"+ record.key() +":"+ "value:" +record.value());
+		
+		if (record.topic().equals(propertiesManager.getSaveEmployeeTopic())){
 		ObjectMapper objectMapper = new ObjectMapper();
 		try {
-			System.err.println("objectMapper Mapped request object to : "
-					+ objectMapper.readValue(record.value(), EmployeeRequest.class));
-			employeeService.saveEmployee(objectMapper.readValue(record.value(), EmployeeRequest.class));
+			employeeService.create(objectMapper.readValue(record.value(), EmployeeRequest.class));
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+		else if (record.topic().equals(propertiesManager.getUpdateEmployeeTopic())){
+			ObjectMapper objectMapper = new ObjectMapper();
+			try {
+				LOGGER.info("entering updateemp consumer");
+				employeeService.update(objectMapper.readValue(record.value(), EmployeeRequest.class));
+				
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }

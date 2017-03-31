@@ -88,6 +88,8 @@ public class UserService {
 		userGetRequest.setRequestInfo(requestInfo);
 		userGetRequest.setTenantId(tenantId);
 
+		System.err.println("user url: " + url);
+		System.err.println("userGetRequest: " + userGetRequest);
 		List<User> users = null;
 		try {
 			UserResponse userResponse = new RestTemplate().postForObject(url, userGetRequest, UserResponse.class);
@@ -110,6 +112,7 @@ public class UserService {
 			userResponse = new RestTemplate().postForObject(url, userRequest, UserResponse.class);
 		} catch (HttpClientErrorException e) {
 			String errorResponseBody = e.getResponseBodyAsString();
+			System.err.println("Following exception occurred: " + e.getResponseBodyAsString());
 			UserErrorResponse userErrorResponse = null;
 			try {
 				ObjectMapper mapper = new ObjectMapper();
@@ -130,7 +133,7 @@ public class UserService {
 		} catch (Exception e) {
 			LOGGER.debug("Following Exception Occurred While Calling User Service : " + e.getMessage());
 			e.printStackTrace();
-			return errorHandler.getResponseEntityForUnexpectedErrors(userRequest.getRequestInfo());
+			return errorHandler.getResponseEntityForUnknownUserCreationError(userRequest.getRequestInfo());
 		}
 		return new ResponseEntity<UserResponse>(userResponse, HttpStatus.CREATED);
 	}

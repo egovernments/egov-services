@@ -66,7 +66,8 @@ public class PositionService {
 		List<Long> actualPositionIds = positionAssignmentRepository.findForCriteria(employeeId, positionGetRequest);
 		if (!positionGetRequest.getId().isEmpty()) {
 			actualPositionIds.retainAll(positionGetRequest.getId());
-			// FIXME : For not getting any positions, setting actualPositionIds with value [0]
+			// FIXME : For not getting any positions, setting actualPositionIds
+			// with value [0]
 			actualPositionIds.add(0L);
 		}
 		positionGetRequest.setId(actualPositionIds);

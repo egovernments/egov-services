@@ -43,6 +43,7 @@ package org.egov.eis.repository;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.eis.model.EducationalQualification;
@@ -51,6 +52,7 @@ import org.egov.eis.web.contract.EmployeeRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -64,7 +66,16 @@ public class EducationalQualificationRepository {
 			+ " (id, employeeId, qualification, majorSubject, yearOfPassing, university,"
 			+ " createdBy, createdDate, lastModifiedBy, lastModifiedDate, tenantId)"
 			+ " VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+	
+	public static final String UPDATE_EDUCATIONAL_QUALIFICATION_QUERY = "UPDATE egeis_educationalQualification"
+			+ " SET (qualification, majorSubject, yearOfPassing, university,"
+			+ " lastModifiedBy, lastModifiedDate)"
+			+ " = (?,?,?,?,?,?)"
+			+"WHERE id = ?";
 
+	public static final String CHECK_IF_ID_EXISTS_QUERY = "SELECT id FROM egeis_educationalqualification where "
+			+ "id=? and employeeId=? and tenantId=?";
+	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
@@ -103,5 +114,42 @@ public class EducationalQualificationRepository {
 				return educationalQualifications.size();
 			}
 		});
+	}
+
+	public void update(EducationalQualification education) {
+
+		Object[] obj = new Object[] { education.getQualification(), education.getMajorSubject(),
+				education.getYearOfPassing(), education.getUniversity(), education.getLastModifiedBy(),
+				education.getLastModifiedDate(), education.getId() };
+
+		jdbcTemplate.update(UPDATE_EDUCATIONAL_QUALIFICATION_QUERY, obj);
+
+	}
+
+	public void insert(EducationalQualification education, Long empId) {
+		Object[] obj = new Object[] { education.getId(), empId, education.getQualification(),
+				education.getMajorSubject(), education.getYearOfPassing(), education.getUniversity(),
+				education.getCreatedBy(), education.getCreatedDate(), education.getLastModifiedBy(),
+				education.getLastModifiedDate(), education.getTenantId() };
+
+		jdbcTemplate.update(INSERT_EDUCATIONAL_QUALIFICATION_QUERY, obj);
+	}
+
+	public void findAndDeleteThatAreNotInList(List<EducationalQualification> education) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public boolean educationAlreadyExists(Long id, Long empId, String tenantId) {
+		List<Object> values = new ArrayList<Object>();
+		values.add(id);
+		values.add(empId);
+		values.add(tenantId);
+		try {
+			jdbcTemplate.queryForObject(CHECK_IF_ID_EXISTS_QUERY, values.toArray(), Long.class);
+			return true;
+		} catch (EmptyResultDataAccessException e) {
+			return false;
+		}
 	}
 }

@@ -40,13 +40,22 @@
 
 package org.egov.eis.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.egov.eis.broker.EmployeeProducer;
+import org.egov.eis.config.PropertiesManager;
+import org.egov.eis.model.Assignment;
+import org.egov.eis.model.DepartmentalTest;
+import org.egov.eis.model.EducationalQualification;
 import org.egov.eis.model.Employee;
 import org.egov.eis.model.EmployeeDocument;
 import org.egov.eis.model.EmployeeInfo;
+import org.egov.eis.model.Probation;
+import org.egov.eis.model.Regularisation;
+import org.egov.eis.model.ServiceHistory;
+import org.egov.eis.model.TechnicalQualification;
 import org.egov.eis.model.User;
 import org.egov.eis.repository.AssignmentRepository;
 import org.egov.eis.repository.DepartmentalTestRepository;
@@ -74,6 +83,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -132,11 +142,10 @@ public class EmployeeService {
 	@Autowired
 	private ErrorHandler errorHandler;
 
-	@Value("${kafka.topics.employee.savedb.name}")
-	String employeeSaveTopic;
+	@Autowired
+	PropertiesManager propertiesManager;
 	
-	@Value("${kafka.topics.employee.savedb.key}")
-	String employeeSaveKey;
+	public static final String INSERT_PROBATION_QUERY = "SELECT id FROM egeis_departmentaltest WHERE employeeid = ?";
 
 	public List<EmployeeInfo> getEmployees(EmployeeGetRequest employeeGetRequest, RequestInfo requestInfo) {
 		List<EmployeeInfo> employeeInfoList = employeeRepository.findForCriteria(employeeGetRequest);
@@ -145,6 +154,7 @@ public class EmployeeService {
 				.collect(Collectors.toList());
 
 		List<User> usersList = userService.getUsers(ids, employeeGetRequest.getTenantId(), requestInfo);
+		LOGGER.debug("userService: " + usersList);
 		employeeUserMapper.mapUsersWithEmployees(employeeInfoList, usersList);
 
 		if(!ids.isEmpty()) {
@@ -155,11 +165,19 @@ public class EmployeeService {
 		return employeeInfoList;
 	}
 
-	public ResponseEntity<?> createEmployee(EmployeeRequest employeeRequest) {
+	public ResponseEntity<?> createAsync(EmployeeRequest employeeRequest) {
 		UserRequest userRequest = employeeHelper.getUserRequest(employeeRequest);
 
+		ResponseEntity<?> responseEntity = null;
+		
 		// FIXME : User service is expecting & sending dates in multiple formats. Fix a common standard
-		ResponseEntity<?> responseEntity = userService.createUser(userRequest);
+		try {
+			responseEntity = userService.createUser(userRequest);
+		} catch(Exception e) {
+			LOGGER.debug("Error occurred while creating user", e);
+			return errorHandler.getResponseEntityForUnknownUserCreationError(employeeRequest.getRequestInfo());
+		}
+
 
 		if(responseEntity.getBody().getClass().equals(UserErrorResponse.class)
 				|| responseEntity.getBody().getClass().equals(ErrorResponse.class)) {
@@ -176,7 +194,7 @@ public class EmployeeService {
 		employee.setUser(user);
 
 		try {
-			employeeHelper.populateData(employeeRequest);
+			employeeHelper.populateDefaultDataForCreate(employeeRequest);
 		} catch(Exception e) {
 			LOGGER.debug("Error occurred while populating data in objects", e);
 			return errorHandler.getResponseEntityForUnexpectedErrors(employeeRequest.getRequestInfo());
@@ -192,7 +210,7 @@ public class EmployeeService {
 			e.printStackTrace();
 		}
 		try {
-			employeeProducer.sendMessage(employeeSaveTopic, employeeSaveKey, employeeRequestJson);
+			employeeProducer.sendMessage(propertiesManager.getSaveEmployeeTopic(), propertiesManager.getEmployeeSaveKey(), employeeRequestJson);
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}
@@ -200,8 +218,7 @@ public class EmployeeService {
 		return employeeHelper.getSuccessResponseForCreate(employee, employeeRequest.getRequestInfo());
 	}
 
-	public void saveEmployee(EmployeeRequest employeeRequest) {
-		System.err.println("\n\n\t\tObject Received in Service : " + employeeRequest);
+	public void create(EmployeeRequest employeeRequest) {
 		Employee employee = employeeRequest.getEmployee();
 		employeeRepository.save(employeeRequest);
 		employeeJurisdictionRepository.save(employee);
@@ -233,8 +250,140 @@ public class EmployeeService {
 			departmentalTestRepository.save(employeeRequest);
 		}
 	}
+	
+	public ResponseEntity<?> updateAsync(EmployeeRequest employeeRequest) {
+		Employee employee = employeeRequest.getEmployee();
+		
+		try {
+			employeeHelper.populateDefaultDataForUpdate(employeeRequest);
+		} catch(Exception e) {
+			LOGGER.debug("Error occurred while populating data in objects", e);
+			return errorHandler.getResponseEntityForUnexpectedErrors(employeeRequest.getRequestInfo());
+		}
+		
+		String employeeUpdateRequestJson = null;
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			employeeUpdateRequestJson = mapper.writeValueAsString(employeeRequest);
+			LOGGER.info("employeeJson update::" + employeeUpdateRequestJson);
+		} catch (JsonProcessingException e) {
+			LOGGER.error("Error while converting Employee to JSON during update", e);
+			e.printStackTrace();
+		}
+		try {
+			employeeProducer.sendMessage(propertiesManager.getUpdateEmployeeTopic(), propertiesManager.getEmployeeSaveKey(), employeeUpdateRequestJson);
+		} catch(Exception ex) {
+			ex.printStackTrace();
+		}
 
-	public Boolean getBooleanForDataIntegrityChecks(String table, String field, Object value) {
-		return employeeRepository.getBooleanForDataIntegrityChecks(table, field, value);
+		return employeeHelper.getSuccessResponseForCreate(employee, employeeRequest.getRequestInfo());
+	}
+	
+	
+	public void update(EmployeeRequest employeeRequest) {
+		Employee employee = employeeRequest.getEmployee();
+		employeeRepository.update(employeeRequest);
+	//	employeeJurisdictionRepository.update(employee);//FIXME
+		employee.getAssignments().forEach((assignment) -> {
+			if (assignmentRepository.assignmentAlreadyExists(assignment.getId(), employee.getId(), employee.getTenantId())) { // FIXME can be optimized with single query
+				assignmentRepository.update(assignment); 
+			} else {
+				assignmentRepository.insert(assignment, employee.getId());
+			}
+		//	assignmentRepository.findAndDeleteAssignmentsInDBThatAreNotInList(employee.getAssignments());
+			if (assignment.getHod() != null) {
+				hodDepartmentRepository.save(assignment, employee.getTenantId());
+			}
+		});
+		
+	employee.getServiceHistory().forEach((service) -> {
+		if (serviceHistoryRepository.serviceHistoryAlreadyExists(service.getId(), employee.getId(), employee.getTenantId())) { // FIXME can be optimized with single query
+			serviceHistoryRepository.update(service); 
+		} else {
+			serviceHistoryRepository.insert(service, employee.getId());
+		}
+		//serviceHistoryRepository.findAndDeleteServiceHistoryInDBThatAreNotInList(employee.getServiceHistory());
+	});
+
+	
+	
+	employee.getProbation().forEach((probation) -> {
+		if (probationRepository.probationAlreadyExists(probation.getId(), employee.getId(), employee.getTenantId())) { // FIXME can be optimized with single query
+			probationRepository.update(probation); 
+		} else {
+			probationRepository.insert(probation, employee.getId());
+		}
+		//probationRepository.findAndDeleteProbationInDBThatAreNotInList(employee.getProbation());
+	});
+	
+	employee.getRegularisation().forEach((regularisation) -> {
+		if (regularisationRepository.regularisationAlreadyExists(regularisation.getId(), employee.getId(), employee.getTenantId())) { // FIXME can be optimized with single query
+			regularisationRepository.update(regularisation);
+		} else {
+			regularisationRepository.insert(regularisation, employee.getId());
+		}
+		//regularisationRepository.findAndDeleteRegularisationInDBThatAreNotInList(employee.getRegularisation());
+	});
+	
+	
+	employee.getTechnical().forEach((technical) -> {
+		if (technicalQualificationRepository.technicalAlreadyExists(technical.getId(), employee.getId(), employee.getTenantId())) { // FIXME can be optimized with single query
+			technicalQualificationRepository.update(technical); 
+		} else {
+			technicalQualificationRepository.insert(technical, employee.getId());
+		}
+		//technicalQualificationRepository.findAndDeleteThatAreNotInList(employee.getTechnical());
+	});
+	
+	employee.getEducation().forEach((education) -> {
+		if (educationalQualificationRepository.educationAlreadyExists(education.getId(), employee.getId(), employee.getTenantId())) { // FIXME can be optimized with single query
+			educationalQualificationRepository.update(education); 
+		} else {
+			educationalQualificationRepository.insert(education, employee.getId());
+		}
+		//educationalQualificationRepository.findAndDeleteThatAreNotInList(employee.getEducation());
+	});
+	
+	employee.getTest().forEach((test) -> {
+		if (departmentalTestRepository.testAlreadyExists(test.getId(), employee.getId(), employee.getTenantId())) { // FIXME can be optimized with single query
+			departmentalTestRepository.update(test); 
+		} else {
+			departmentalTestRepository.insert(test, employee.getId());
+		}
+		//departmentalTestRepository.findAndDeleteThatAreNotInList(employee.getTest());
+	});
+}
+	
+	
+	
+	
+
+
+
+
+	/**
+	 * Checks if any one of the string in given comma separated values is present in db for the given column and given table.
+	 * @param table
+	 * @param field
+	 * @param value is a comma separated value string 
+	 * @return
+	 */
+	public Boolean checkForDuplicatesForAnyOneOfGivenCSV(String table, String field, Object value) {
+		return employeeRepository.checkForDuplicates(table, field, value);
+	}
+	
+	/**
+	 * Checks if the given string is present in db for the given column and given table.
+	 * @param table
+	 * @param column
+	 * @param value
+	 * @param id
+	 * @return
+	 */
+	public Boolean duplicateExists(String table, String column, String value, Long id) {
+		Long idFromDb = employeeRepository.getId(table, column, value);
+		if (idFromDb == 0 || id.equals(idFromDb))
+			return false;
+		return true;
 	}
 }

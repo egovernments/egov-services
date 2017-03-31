@@ -56,7 +56,17 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class PropertiesManager {
+	
 
+	@Value("${kafka.topics.employee.savedb.name}")
+	private String saveEmployeeTopic;
+	
+	@Value("${kafka.topics.employee.updatedb.name}")
+	private String updateEmployeeTopic;
+	
+	@Value("${kafka.topics.employee.savedb.key}")
+	String employeeSaveKey;
+	
 	@Value("${egov.services.users_service.hostname}")
 	private String usersServiceHostName;
 

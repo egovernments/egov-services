@@ -48,6 +48,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.eis.model.Assignment;
+import org.egov.eis.model.Employee;
 import org.egov.eis.model.enums.DocumentReferenceType;
 import org.egov.eis.repository.builder.AssignmentQueryBuilder;
 import org.egov.eis.repository.helper.PreparedStatementHelper;
@@ -57,6 +58,7 @@ import org.egov.eis.web.contract.EmployeeRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -72,6 +74,16 @@ public class AssignmentRepository {
 			+ " (id, employeeId, positionId, fundId, functionaryId, functionId, departmentId, designationId,"
 			+ " isPrimary, fromDate, toDate, gradeId, govtOrderNumber, createdBy, createdDate,"
 			+ " lastModifiedBy, lastModifiedDate, tenantId)" + " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+	
+	public static final String UPDATE_ASSIGNMENT_QUERY = "UPDATE egeis_assignment"
+			+ " SET (positionId, fundId, functionaryId, functionId, departmentId, designationId,"
+			+ " isPrimary, fromDate, toDate, gradeId, govtOrderNumber,"
+			+ " lastModifiedBy, lastModifiedDate)"
+			+ " = (?,?,?,?,?,?,?,?,?,?,?,?,?)"
+			+ " where id = ?";
+	
+	public static final String CHECK_IF_ID_EXISTS_QUERY = "SELECT id FROM egeis_assignment where "
+			+ "id=? and employeeId=? and tenantId=?";
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -134,5 +146,43 @@ public class AssignmentRepository {
 				return assignments.size();
 			}
 		});
+	}
+
+	public void update(Assignment assignment) {
+
+		Object[] obj = new Object[] {
+
+				assignment.getPosition(), assignment.getFund(), assignment.getFunctionary(), assignment.getFunction(),
+				assignment.getDepartment(), assignment.getDesignation(), assignment.getIsPrimary(),
+				assignment.getFromDate(), assignment.getToDate(), assignment.getGrade(),
+				assignment.getGovtOrderNumber(), assignment.getLastModifiedBy(), assignment.getLastModifiedDate(),
+				 assignment.getId()};
+
+		jdbcTemplate.update(UPDATE_ASSIGNMENT_QUERY, obj);
+}
+
+	public void insert(Assignment assignment, Long empId) {
+
+		Object[] obj = new Object[] {
+				assignment.getId(), empId, assignment.getPosition(), assignment.getFund(), assignment.getFunctionary(),
+				assignment.getFunction(), assignment.getDepartment(), assignment.getDesignation(),
+				assignment.getIsPrimary(), assignment.getFromDate(), assignment.getToDate(), assignment.getGrade(),
+				assignment.getGovtOrderNumber(), assignment.getCreatedBy(), assignment.getCreatedDate(),
+				assignment.getLastModifiedBy(), assignment.getLastModifiedDate(), assignment.getTenantId() };
+		
+		jdbcTemplate.update(INSERT_ASSIGNMENT_QUERY, obj);
+	}
+
+	public boolean assignmentAlreadyExists(Long id, Long empId, String tenantId) {
+		List<Object> values = new ArrayList<Object>();
+		values.add(id);
+		values.add(empId);
+		values.add(tenantId);
+		try {
+			jdbcTemplate.queryForObject(CHECK_IF_ID_EXISTS_QUERY, values.toArray(), Long.class);
+			return true;
+		} catch (EmptyResultDataAccessException e) {
+			return false;
+		}
 	}
 }

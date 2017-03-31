@@ -74,7 +74,27 @@ public class EmployeeJurisdictionRepository {
 				ps.setLong(2, jurisdictionId);
 				ps.setString(3, employee.getTenantId());
 			}
-
+	
+			@Override
+			public int getBatchSize() {
+				return employeeJurisdictions.size();
+			}
+		});
+	}
+	
+	// FIXME
+	public void update(Employee employee) {
+		List<Long> employeeJurisdictions = employee.getJurisdictions();
+		
+		jdbcTemplate.batchUpdate(INSERT_EMPLOYEE_JURISDICTION_QUERY, new BatchPreparedStatementSetter() {
+			@Override
+			public void setValues(PreparedStatement ps, int i) throws SQLException {
+				Long jurisdictionId = employeeJurisdictions.get(i);
+				ps.setLong(1, employee.getId());
+				ps.setLong(2, jurisdictionId);
+				ps.setString(3, employee.getTenantId());
+			}
+	
 			@Override
 			public int getBatchSize() {
 				return employeeJurisdictions.size();

@@ -57,6 +57,7 @@ import org.egov.eis.web.contract.EmployeeRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -71,6 +72,13 @@ public class EmployeeRepository {
 			+ " employeetypeId, mothertongueId, religionId, communityId, categoryId, physicallydisabled,"
 			+ " medicalreportproduced, maritalstatus, passportno, gpfno, bankId, bankbranchId, bankaccount, groupId,"
 			+ " placeofbirth, tenantId)" + " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+
+	public static final String UPDATE_EMPLOYEE_QUERY = "UPDATE egeis_employee "
+			+ "SET (dateOfAppointment, dateofjoining, dateofretirement, employeestatus, recruitmentmodeId,"
+			+ " recruitmenttypeId, recruitmentquotaId, retirementage, dateofresignation, dateoftermination,"
+			+ " employeetypeId, mothertongueId, religionId, communityId, categoryId, physicallydisabled,"
+			+ " medicalreportproduced, maritalstatus, passportno, gpfno, bankId, bankbranchId, bankaccount, groupId,"
+			+ " placeofbirth, tenantId)" + "= (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" + "WHERE id = ?";
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -142,13 +150,47 @@ public class EmployeeRepository {
 		jdbcTemplate.update(INSERT_EMPLOYEE_QUERY, obj);
 	}
 
+	public void update(EmployeeRequest employeeRequest) {
+
+		Employee employee = employeeRequest.getEmployee();
+		Object[] obj = new Object[] { employee.getDateOfAppointment(), employee.getDateOfJoining(),
+				employee.getDateOfRetirement(), employee.getEmployeeStatus(), employee.getRecruitmentMode(),
+				employee.getRecruitmentType(), employee.getRecruitmentQuota(), employee.getRetirementAge(),
+				employee.getDateOfResignation(), employee.getDateOfTermination(), employee.getEmployeeType(),
+				employee.getMotherTongue(), employee.getReligion(), employee.getCommunity(), employee.getCategory(),
+				employee.getPhysicallyDisabled(), employee.getMedicalReportProduced(),
+				employee.getMaritalStatus().toString(), employee.getPassportNo(), employee.getGpfNo(),
+				employee.getBank(), employee.getBankBranch(), employee.getBankAccount(), employee.getGroup(),
+				employee.getPlaceOfBirth(), employee.getTenantId(), employee.getId() };
+
+		jdbcTemplate.update(UPDATE_EMPLOYEE_QUERY, obj);
+	}
+
 	public Long generateSequence(String sequenceName) {
 		return jdbcTemplate.queryForObject("SELECT nextval('" + sequenceName + "')", Long.class);
 	}
 
-	public Boolean getBooleanForDataIntegrityChecks(String table, String field, Object value) {
-		String query = "SELECT exists(SELECT 1 FROM " + table + " WHERE " + field + " IN (" + value + "))";
+	public Boolean checkForDuplicates(String table, String column, Object value) {
+		String query = "SELECT exists(SELECT 1 FROM " + table + " WHERE " + column + " IN (" + value + "))";
 		return jdbcTemplate.queryForObject(query, Boolean.class);
+	}
+	
+	/**
+	 * Checks in given table, field if the given value already exists and returns the id of the row
+	 * @param table
+	 * @param column
+	 * @param value
+	 * @return id of the row if exists; 0 otherwise
+	 */
+	public Long getId(String table, String column, String value) {
+		String query = "SELECT id FROM " + table + " WHERE " + column + " = ?";
+		List<Object> preparedStatementValues = new ArrayList<Object>();
+		preparedStatementValues.add(value);
+		try {
+			return jdbcTemplate.queryForObject(query, preparedStatementValues.toArray(), Long.class);
+		} catch (EmptyResultDataAccessException e) {
+			return 0L;
+		}
 	}
 
 	private String getProcessedIdsString(List<Long> ids) {

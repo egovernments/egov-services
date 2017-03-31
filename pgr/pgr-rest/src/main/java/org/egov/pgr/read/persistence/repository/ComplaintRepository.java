@@ -39,7 +39,7 @@ public class ComplaintRepository {
 		final SevaSpecification specification = new SevaSpecification(complaintSearchCriteria);
 		final Sort sort = new Sort(Direction.DESC, "lastModifiedDate");
 		return this.complaintJpaRepository.findAll(specification, sort).stream()
-				.map(org.egov.pgr.read.persistence.entity.Complaint::toDomain).collect(Collectors.toList());
+				.map(org.egov.pgr.common.entity.Complaint::toDomain).collect(Collectors.toList());
 	}
 
     public void update(SevaRequest sevaRequest) {
@@ -51,6 +51,6 @@ public class ComplaintRepository {
 
 	public List<Complaint> getAllModifiedComplaintsForCitizen(Long userId) { 
 		return this.complaintJpaRepository.getAllModifiedComplaintsForCitizen(userId).stream()
-				.map(org.egov.pgr.read.persistence.entity.Complaint::toDomain).collect(Collectors.toList());
+				.map(org.egov.pgr.common.entity.Complaint::toDomain).collect(Collectors.toList());
 	}
 }

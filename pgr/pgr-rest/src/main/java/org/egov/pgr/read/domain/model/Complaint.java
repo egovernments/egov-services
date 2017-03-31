@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 import org.egov.pgr.common.model.AuthenticatedUser;
+import org.egov.pgr.common.model.Complainant;
 import org.egov.pgr.read.domain.exception.InvalidComplaintException;
 
 import java.util.Date;

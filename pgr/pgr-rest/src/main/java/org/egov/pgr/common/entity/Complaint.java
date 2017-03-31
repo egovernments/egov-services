@@ -1,23 +1,15 @@
-package org.egov.pgr.read.persistence.entity;
+package org.egov.pgr.common.entity;
 
 import lombok.*;
-import org.egov.pgr.common.entity.AbstractAuditable;
-import org.egov.pgr.common.entity.ReceivingCenter;
-import org.egov.pgr.common.entity.ReceivingMode;
 import org.egov.pgr.common.model.AuthenticatedUser;
 import org.egov.pgr.read.domain.model.ComplaintLocation;
 import org.egov.pgr.read.domain.model.Coordinates;
-import org.egov.pgr.read.persistence.entity.enums.CitizenFeedback;
-import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.SafeHtml;
 
 import javax.persistence.*;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.util.Collections;
 import java.util.Date;
 
-import static org.egov.pgr.read.persistence.entity.Complaint.SEQ_COMPLAINT;
+import static org.egov.pgr.common.entity.Complaint.SEQ_COMPLAINT;
 
 @Getter
 @Setter
@@ -36,17 +28,13 @@ public class Complaint extends AbstractAuditable {
     private Long id;
 
     @Column(name = "crn", unique = true)
-    @Length(max = 32)
-    @SafeHtml
     private String crn = "";
 
     @ManyToOne
-    @JoinColumn(name = "complainttype", nullable = true)
+    @JoinColumn(name = "complainttype")
     private ComplaintType complaintType;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @Valid
-    @NotNull
     @JoinColumn(name = "complainant", nullable = false)
     private Complainant complainant = new Complainant();
 
@@ -59,17 +47,12 @@ public class Complaint extends AbstractAuditable {
     private Long childLocation;
 
     @ManyToOne
-    @NotNull
     @JoinColumn(name = "status")
-    private ComplaintStatus status = new ComplaintStatus();
+    private ComplaintStatus status;
 
-    @Length(min = 10, max = 500)
-    @SafeHtml
     private String details;
 
     @Column(name = "landmarkdetails")
-    @Length(max = 200)
-    @SafeHtml
     private String landmarkDetails;
 
 	@ManyToOne
@@ -77,7 +60,7 @@ public class Complaint extends AbstractAuditable {
 	private ReceivingMode receivingMode;
 
     @ManyToOne
-    @JoinColumn(name = "receivingcenter", nullable = true)
+    @JoinColumn(name = "receivingcenter")
     private ReceivingCenter receivingCenter;
 
     @Column(name = "lng")
@@ -93,7 +76,7 @@ public class Complaint extends AbstractAuditable {
 
     @Column(name = "citizenfeedback")
     @Enumerated(EnumType.ORDINAL)
-    private CitizenFeedback citizenFeedback;
+    private org.egov.pgr.common.entity.enums.CitizenFeedback citizenFeedback;
 
     @Transient
     private String latlngAddress;
@@ -122,8 +105,8 @@ public class Complaint extends AbstractAuditable {
     }
 
     public boolean isCompleted() {
-        return org.egov.pgr.read.persistence.entity.enums.ComplaintStatus
-                .valueOf(getStatus().getName()) == org.egov.pgr.read.persistence.entity.enums.ComplaintStatus.COMPLETED;
+        return org.egov.pgr.common.entity.enums.ComplaintStatus
+                .valueOf(getStatus().getName()) == org.egov.pgr.common.entity.enums.ComplaintStatus.COMPLETED;
     }
 
     public String getCrossHierarchyId() {

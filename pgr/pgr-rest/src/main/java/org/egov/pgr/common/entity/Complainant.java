@@ -1,18 +1,18 @@
 
-package org.egov.pgr.write.entity;
+package org.egov.pgr.common.entity;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.egov.pgr.common.entity.AbstractPersistable;
-import org.hibernate.validator.constraints.Length;
+import lombok.*;
 
 import javax.persistence.*;
 
-import static org.egov.pgr.write.entity.Complainant.SEQ_COMPLAINANT;
+import static org.egov.pgr.common.entity.Complainant.SEQ_COMPLAINANT;
 
-@Entity(name = "complainant_write")
+@Entity
 @Setter
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Table(name = "egpgr_complainant")
 @SequenceGenerator(name = SEQ_COMPLAINANT, sequenceName = SEQ_COMPLAINANT, allocationSize = 1)
 public class Complainant extends AbstractPersistable<Long> {
@@ -23,19 +23,15 @@ public class Complainant extends AbstractPersistable<Long> {
     @GeneratedValue(generator = SEQ_COMPLAINANT, strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @Length(max = 150)
     private String name;
 
-    @Length(max = 20)
     private String mobile;
 
-    @Length(max = 100)
     private String email;
 
     @Column(name = "userdetail")
     private Long userDetail;
 
-    @Length(max = 256)
     private String address;
 
     @Override
@@ -46,6 +42,15 @@ public class Complainant extends AbstractPersistable<Long> {
     @Override
     protected void setId(final Long id) {
         this.id = id;
+    }
+
+    public org.egov.pgr.common.model.Complainant toDomain() {
+        return org.egov.pgr.common.model.Complainant.builder()
+            .firstName(name)
+            .mobile(mobile)
+            .email(email)
+            .address(address)
+            .build();
     }
 
 }

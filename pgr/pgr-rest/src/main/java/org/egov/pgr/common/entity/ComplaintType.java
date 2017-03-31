@@ -1,19 +1,19 @@
-package org.egov.pgr.write.entity;
+package org.egov.pgr.common.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.egov.pgr.common.entity.AbstractAuditable;
-import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
-import static org.egov.pgr.write.entity.ComplaintType.SEQ_COMPLAINTTYPE;
+import static org.egov.pgr.common.entity.ComplaintType.SEQ_COMPLAINTTYPE;
 
 @Getter
 @Setter
-@Entity(name = "complainttype_write")
+@Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "egpgr_complainttype")
 @SequenceGenerator(name = SEQ_COMPLAINTTYPE, sequenceName = SEQ_COMPLAINTTYPE, allocationSize = 1)
 public class ComplaintType extends AbstractAuditable {
@@ -23,22 +23,16 @@ public class ComplaintType extends AbstractAuditable {
 	@GeneratedValue(generator = SEQ_COMPLAINTTYPE, strategy = GenerationType.SEQUENCE)
 	private Long id;
 
-	@NotBlank
-	@Length(max = 150)
 	@Column(name = "name")
 	private String name;
 
-	@NotBlank
-	@Length(max = 20)
 	@Column(name = "code", updatable = false)
 	private String code;
 
 	private Long department;
 
-	@Length(max = 100)
 	private String description;
 
-	@NotNull
 	@Column(name = "slahours")
 	private Integer slaHours;
 
@@ -55,10 +49,8 @@ public class ComplaintType extends AbstractAuditable {
 	@Column(name = "metadata")
 	private boolean metadata;
 
-	@Length(max = 50)
 	private String type;
 
-	@Length(max = 100)
 	private String keywords;
 
 	private String attributes;

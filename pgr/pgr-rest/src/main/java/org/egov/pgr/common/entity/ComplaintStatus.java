@@ -1,24 +1,20 @@
-package org.egov.pgr.read.persistence.entity;
+package org.egov.pgr.common.entity;
+
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import static org.egov.pgr.common.entity.ComplaintStatus.SEQ_COMPLAINTSTATUS;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import org.egov.pgr.common.entity.AbstractPersistable;
-
-import static org.egov.pgr.read.persistence.entity.ComplaintStatus.SEQ_COMPLAINTSTATUS;
-
-@Entity
-@Builder
-@AllArgsConstructor
+@Getter
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Entity(name = "complaintstatus_write")
 @Table(name = "egpgr_complaintstatus")
 @SequenceGenerator(name = SEQ_COMPLAINTSTATUS, sequenceName = SEQ_COMPLAINTSTATUS, allocationSize = 1)
-@JsonIgnoreProperties(value = { "handler", "hibernateLazyInitializer" })
 public class ComplaintStatus extends AbstractPersistable<Long> {
     public static final String SEQ_COMPLAINTSTATUS = "SEQ_EGPGR_COMPLAINTSTATUS";
     private static final long serialVersionUID = -9009821412847211632L;
@@ -29,20 +25,13 @@ public class ComplaintStatus extends AbstractPersistable<Long> {
     @NotNull
     private String name;
 
+    @Override
     public Long getId() {
         return id;
     }
 
+    @Override
     protected void setId(final Long id) {
         this.id = id;
     }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
-
 }

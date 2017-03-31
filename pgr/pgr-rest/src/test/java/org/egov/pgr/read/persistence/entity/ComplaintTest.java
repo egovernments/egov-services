@@ -1,8 +1,7 @@
 package org.egov.pgr.read.persistence.entity;
 
 
-import org.egov.pgr.common.entity.ReceivingCenter;
-import org.egov.pgr.common.entity.ReceivingMode;
+import org.egov.pgr.common.entity.*;
 import org.egov.pgr.common.model.AuthenticatedUser;
 import org.egov.pgr.read.domain.model.ComplaintLocation;
 import org.egov.pgr.read.domain.model.Coordinates;
@@ -81,7 +80,7 @@ public class ComplaintTest {
         assertEquals(Collections.emptyList(), domainComplaint.getMediaUrls());
         assertEquals("crn", domainComplaint.getCrn());
         assertEquals("complaint description", domainComplaint.getDescription());
-        final org.egov.pgr.read.domain.model.Complainant domainComplainant = domainComplaint.getComplainant();
+        final org.egov.pgr.common.model.Complainant domainComplainant = domainComplaint.getComplainant();
         assertNotNull(domainComplainant);
         assertEquals("firstName", domainComplainant.getFirstName());
         assertEquals("mobileNumber", domainComplainant.getMobile());

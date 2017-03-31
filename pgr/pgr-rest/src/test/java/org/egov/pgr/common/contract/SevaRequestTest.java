@@ -1,6 +1,7 @@
 package org.egov.pgr.common.contract;
 
 import org.egov.pgr.common.model.AuthenticatedUser;
+import org.egov.pgr.common.model.Complainant;
 import org.egov.pgr.common.model.UserType;
 import org.egov.pgr.read.domain.model.*;
 import org.junit.Test;

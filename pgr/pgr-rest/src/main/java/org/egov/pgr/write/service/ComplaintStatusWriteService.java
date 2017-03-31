@@ -1,7 +1,7 @@
 package org.egov.pgr.write.service;
 
-import org.egov.pgr.write.entity.ComplaintStatus;
-import org.egov.pgr.write.repository.ComplaintStatusWriteRepository;
+import org.egov.pgr.common.entity.ComplaintStatus;
+import org.egov.pgr.common.repository.ComplaintStatusJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,15 +10,15 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class ComplaintStatusWriteService {
 
-    private final ComplaintStatusWriteRepository complaintStatusWriteRepository;
+    private final ComplaintStatusJpaRepository complaintStatusRepository;
 
     @Autowired
-    public ComplaintStatusWriteService(final ComplaintStatusWriteRepository complaintStatusWriteRepository) {
-        this.complaintStatusWriteRepository = complaintStatusWriteRepository;
+    public ComplaintStatusWriteService(final ComplaintStatusJpaRepository complaintStatusRepository) {
+        this.complaintStatusRepository = complaintStatusRepository;
     }
 
     public ComplaintStatus getByName(final String name) {
-        return complaintStatusWriteRepository.findByName(name);
+        return complaintStatusRepository.findByName(name);
     }
 
 }

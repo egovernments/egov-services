@@ -1,7 +1,7 @@
 package org.egov.pgr.write.service;
 
-import org.egov.pgr.write.entity.ComplaintType;
-import org.egov.pgr.write.repository.ComplaintTypeWriteRepository;
+import org.egov.pgr.common.entity.ComplaintType;
+import org.egov.pgr.common.repository.ComplaintTypeJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,10 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class ComplaintTypeWriteService {
 
-    private final ComplaintTypeWriteRepository complaintTypeWriteRepository;
+    private final ComplaintTypeJpaRepository complaintTypeWriteRepository;
 
     @Autowired
-    public ComplaintTypeWriteService(final ComplaintTypeWriteRepository complaintTypeWriteRepository) {
+    public ComplaintTypeWriteService(final ComplaintTypeJpaRepository complaintTypeWriteRepository) {
         this.complaintTypeWriteRepository = complaintTypeWriteRepository;
     }
 

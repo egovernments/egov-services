@@ -14,7 +14,7 @@ import java.util.List;
 import org.apache.commons.io.IOUtils;
 import org.egov.pgr.TestConfiguration;
 import org.egov.pgr.common.model.AuthenticatedUser;
-import org.egov.pgr.read.domain.model.Complainant;
+import org.egov.pgr.common.model.Complainant;
 import org.egov.pgr.read.domain.model.Complaint;
 import org.egov.pgr.read.domain.model.ComplaintLocation;
 import org.egov.pgr.read.domain.model.ComplaintType;

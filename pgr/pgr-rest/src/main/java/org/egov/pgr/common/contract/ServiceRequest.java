@@ -4,7 +4,11 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.egov.pgr.common.model.AuthenticatedUser;
-import org.egov.pgr.read.domain.model.*;
+import org.egov.pgr.common.model.Complainant;
+import org.egov.pgr.read.domain.model.Complaint;
+import org.egov.pgr.read.domain.model.ComplaintLocation;
+import org.egov.pgr.read.domain.model.ComplaintType;
+import org.egov.pgr.read.domain.model.Coordinates;
 
 import java.util.Date;
 import java.util.HashMap;

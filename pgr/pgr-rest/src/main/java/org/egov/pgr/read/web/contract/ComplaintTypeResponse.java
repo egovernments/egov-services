@@ -10,7 +10,7 @@ public class ComplaintTypeResponse {
     @JsonProperty("ComplaintType")
     private ComplaintType complaintType;
 
-    public ComplaintTypeResponse(org.egov.pgr.read.persistence.entity.ComplaintType complaintType) {
+    public ComplaintTypeResponse(org.egov.pgr.common.entity.ComplaintType complaintType) {
         this.complaintType = new ComplaintType(complaintType);
 
     }

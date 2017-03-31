@@ -1,6 +1,7 @@
 package org.egov.pgr.read.persistence.repository;
 
 import org.egov.pgr.TestConfiguration;
+import org.egov.pgr.common.entity.Complaint;
 import org.egov.pgr.read.domain.model.ComplaintSearchCriteria;
 import org.egov.pgr.read.persistence.specification.SevaSpecification;
 import org.joda.time.DateTime;
@@ -54,7 +55,7 @@ public class ComplaintJpaRepositoryTest {
                 .build();
 
         SevaSpecification specification = new SevaSpecification(complaintSearchCriteria);
-        List<org.egov.pgr.read.persistence.entity.Complaint> complaints = complaintJpaRepository.findAll(specification);
+        List<Complaint> complaints = complaintJpaRepository.findAll(specification);
 
         assertThat(complaints.get(0).getCrn()).isEqualTo("0005-2017-AB");
         assertThat(complaints.get(0).getComplainant()).isNotNull();

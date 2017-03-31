@@ -1,7 +1,7 @@
 package org.egov.pgr.read.domain.service;
 
+import org.egov.pgr.common.entity.ComplaintType;
 import org.egov.pgr.read.domain.model.ComplaintTypeSearchCriteria;
-import org.egov.pgr.read.persistence.entity.ComplaintType;
 import org.egov.pgr.read.persistence.repository.ComplaintTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

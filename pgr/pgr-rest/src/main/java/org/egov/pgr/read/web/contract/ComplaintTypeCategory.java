@@ -8,7 +8,7 @@ public class ComplaintTypeCategory {
     private String name;
     private String description;
 
-    public ComplaintTypeCategory(org.egov.pgr.read.persistence.entity.ComplaintTypeCategory entityComplaintTypeCategory) {
+    public ComplaintTypeCategory(org.egov.pgr.common.entity.ComplaintTypeCategory entityComplaintTypeCategory) {
         this.id = entityComplaintTypeCategory.getId();
         this.name = entityComplaintTypeCategory.getName();
         this.description = entityComplaintTypeCategory.getDescription();

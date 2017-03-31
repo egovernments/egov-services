@@ -12,9 +12,9 @@ import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.egov.pgr.TestConfiguration;
+import org.egov.pgr.common.entity.ComplaintStatus;
+import org.egov.pgr.common.repository.ComplaintStatusJpaRepository;
 import org.egov.pgr.read.domain.service.ComplaintStatusService;
-import org.egov.pgr.read.persistence.entity.ComplaintStatus;
-import org.egov.pgr.read.persistence.repository.ComplaintStatusRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ public class ComplaintStatusControllerTest {
 	@Autowired
 	private MockMvc mockMvc;
 	@MockBean
-	private ComplaintStatusRepository complaintStatusRepository;
+	private ComplaintStatusJpaRepository complaintStatusRepository;
 	@MockBean
 	private ComplaintStatusService complaintStatusService;
 

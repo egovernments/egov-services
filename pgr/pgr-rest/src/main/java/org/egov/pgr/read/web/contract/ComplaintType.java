@@ -15,7 +15,7 @@ public class ComplaintType {
 	private String groups;
 	private Integer slaHours;
 
-	public ComplaintType(org.egov.pgr.read.persistence.entity.ComplaintType domainComplaintType) {
+	public ComplaintType(org.egov.pgr.common.entity.ComplaintType domainComplaintType) {
 		this.id = domainComplaintType.getId();
 		this.serviceName = domainComplaintType.getName();
 		this.serviceCode = domainComplaintType.getCode();

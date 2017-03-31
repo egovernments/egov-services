@@ -20,6 +20,7 @@ public class SevaRequest {
     public final static String REQUEST_INFO = "RequestInfo";
     public static final String VALUES_ASSIGNEE_ID = "assignment_id";
     public static final String VALUES_STATE_ID = "stateId";
+    public static final String VALUES_DESIGNATION_ID = "designationId";
     public static final String VALUES = "values";
     public static final String VALUES_COMLAINT_TYPE_CODE = "complaintTypeCode";
     public static final String BOUNDARY_ID = "boundaryId";
@@ -134,4 +135,11 @@ public class SevaRequest {
 
     public boolean isCreate(){ return this.getRequestInfo().getAction().equals("POST");}
 
+    public void setDesignation(String designationId) {
+        getValues().put(VALUES_DESIGNATION_ID, designationId);
+    }
+
+    public String getDesignation() {
+        return getValues().get(VALUES_DESIGNATION_ID);
+    }
 }

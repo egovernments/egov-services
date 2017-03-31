@@ -1,7 +1,7 @@
 package org.egov.pgr.read.persistence.repository;
 
 import org.egov.pgr.read.domain.model.ComplaintSearchCriteria;
-import org.egov.pgr.read.persistence.entity.Complaint;
+import org.egov.pgr.common.entity.Complaint;
 import org.egov.pgr.common.contract.RequestInfo;
 import org.egov.pgr.common.contract.ServiceRequest;
 import org.egov.pgr.common.contract.SevaRequest;

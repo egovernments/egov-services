@@ -13,7 +13,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.egov.pgr.common.model.AuthenticatedUser;
-import org.egov.pgr.read.domain.model.Complainant;
+import org.egov.pgr.common.model.Complainant;
 import org.egov.pgr.read.domain.model.Complaint;
 import org.egov.pgr.read.domain.model.ComplaintLocation;
 import org.egov.pgr.read.domain.model.ComplaintSearchCriteria;

@@ -54,6 +54,17 @@ public class SevaRequestTest {
     }
 
     @Test
+    public void test_should_set_designation_id_to_seva_request_map() {
+        final SevaRequest sevaRequest = createSevaRequest();
+        final String designationId = "2";
+        final String designationIdKey = "designationId";
+
+        sevaRequest.setDesignation(designationId);
+
+        assertEquals(designationId, sevaRequest.getValues().get(designationIdKey));
+    }
+
+    @Test
     public void test_should_set_escalation_date() {
         final SevaRequest sevaRequest = createSevaRequest();
         final LocalDateTime dateTime = LocalDateTime.of(2017, 1, 2, 3, 4);

@@ -1,13 +1,13 @@
 package org.egov.pgr.read.web.controller;
 
-import java.util.List;
-
+import org.egov.pgr.common.entity.ComplaintStatus;
 import org.egov.pgr.read.domain.service.ComplaintStatusService;
-import org.egov.pgr.read.persistence.entity.ComplaintStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 public class ComplaintStatusController {

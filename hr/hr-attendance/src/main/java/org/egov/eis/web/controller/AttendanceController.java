@@ -174,11 +174,14 @@ public class AttendanceController {
         boolean isAttendanceExists = false;
         boolean isEmployeePresent = true;
         boolean isEmployeeRetired = false;
+        boolean isFutureDate = false;
 
         for (final Attendance attendance : attendanceRequest.getAttendances()) {
             isTypeExists = false;
             if (attendance.getEmployee() == null || attendance.getAttendanceDate() == null)
                 isEmployeeDate = false;
+            if (attendance.getAttendanceDate() != null && attendance.getAttendanceDate().after(new Date()))
+                isFutureDate = true;
             else if (attendance.getId() == null
                     && attendanceService.getByEmployeeAndDate(attendance.getEmployee(), attendance.getAttendanceDate(), tenantId))
                 isAttendanceExists = true;
@@ -225,6 +228,13 @@ public class AttendanceController {
                         isHoliday = true;
             if (!isTypeExists || !isEmployeeDate || !isHoliday || isAttendanceExists || !isEmployeePresent || isEmployeeRetired)
                 break;
+        }
+        if (isFutureDate) {
+            final ErrorResponse errorResponse = new ErrorResponse();
+            final Error error = new Error();
+            error.setDescription(applicationConstants.getErrorMessage(ApplicationConstants.MSG_ATTENDANCE_FUTURE_DATE));
+            errorResponse.setError(error);
+            errorResponses.add(errorResponse);
         }
         if (isAttendanceExists) {
             final ErrorResponse errorResponse = new ErrorResponse();

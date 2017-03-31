@@ -6,16 +6,16 @@ import java.util.Map;
 
 public class ServiceRequest {
 
-	public static final String USER_ID = "userId";
-	public static final String LOCATION_ID = "locationId";
-	public static final String CHILD_LOCATION_ID = "child_location_id";
-	public static final String VALUES_ASSIGNEE_ID = "assignment_id";
-	public static final String VALUES_STATE_ID = "stateId";
-	public static final String VALUES_STATUS = "status";
-	public static final String VALUES_DESIGNATION = "designationId";
-	public static final String VALUES_RECEIVING_MODE = "receivingMode";
-	public static final String VALUES_RECEIVING_CENTER = "receivingCenter";
-	public static final String VALUES_COMPLAINANT_ADDRESS = "complainantAddress";
+	static final String USER_ID = "userId";
+	static final String LOCATION_ID = "locationId";
+	static final String CHILD_LOCATION_ID = "child_location_id";
+	static final String VALUES_ASSIGNEE_ID = "assignment_id";
+	static final String VALUES_STATE_ID = "stateId";
+	static final String VALUES_STATUS = "status";
+	static final String VALUES_DESIGNATION = "designationId";
+	static final String VALUES_RECEIVING_MODE = "receivingMode";
+	static final String VALUES_RECEIVING_CENTER = "receivingCenter";
+	static final String VALUES_COMPLAINANT_ADDRESS = "complainantAddress";
 	private static final String CRN = "service_request_id";
 	private static final String TENANT_ID = "tenantId";
 	private static final String DESCRIPTION = "description";

@@ -11,6 +11,7 @@ import org.egov.lams.web.contract.BillResponse;
 import org.egov.lams.web.contract.BillSearchCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 @Repository
@@ -51,7 +52,14 @@ public class BillRepository {
 	{
 		String url = propertiesManager.getPurposeHostName()
 				+ propertiesManager.getPurposeService();
-		Map purpose = restTemplate.getForObject(url, Map.class);
+		Map purpose = null;
+		try {
+			purpose = restTemplate.getForObject(url, Map.class);
+		} catch (RestClientException e) {
+			e.printStackTrace();
+		}
+		System.out.println("Purpose>>>>>>>>>>"+purpose);
+
 		return purpose;
 	}
 }

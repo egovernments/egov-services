@@ -1,4 +1,5 @@
 var baseUrl = window.location.origin;
+//Reading token
 var authToken=localStorage.getItem("auth-token");
 //request info from cookies
 var requestInfo = {

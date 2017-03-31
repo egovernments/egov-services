@@ -201,6 +201,7 @@ public class EmployeeService {
 	}
 
 	public void saveEmployee(EmployeeRequest employeeRequest) {
+		System.err.println("\n\n\t\tObject Received in Service : " + employeeRequest);
 		Employee employee = employeeRequest.getEmployee();
 		employeeRepository.save(employeeRequest);
 		employeeJurisdictionRepository.save(employee);

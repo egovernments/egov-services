@@ -62,9 +62,11 @@ public class EmployeeSaveConsumer {
 	
 	@KafkaListener(containerFactory = "kafkaListenerContainerFactory", topics = "${kafka.topics.employee.savedb.name}")
 	public void listen(ConsumerRecord<String, String> record) {
-		LOGGER.info("key:"+ record.key() +":"+ "value:" +record.value());
+		LOGGER.info("key : "+ record.key() + "\t\t" + "value : " +record.value());
 		ObjectMapper objectMapper = new ObjectMapper();
 		try {
+			System.err.println("objectMapper Mapped request object to : "
+					+ objectMapper.readValue(record.value(), EmployeeRequest.class));
 			employeeService.saveEmployee(objectMapper.readValue(record.value(), EmployeeRequest.class));
 		} catch (IOException e) {
 			e.printStackTrace();

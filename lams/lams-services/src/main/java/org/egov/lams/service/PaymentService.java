@@ -75,21 +75,29 @@ public class PaymentService {
 					.getLamsConfigurations(lamsGetRequest).get("FUND_CODE")
 					.get(0);
 			billInfo.setFundCode(fundCode);
+			LOGGER.info("after fundCode>>>>>>>" + fundCode);
+
 			lamsGetRequest.setName("FUNCTIONARY_CODE");
 			String functionaryCode = lamsConfigurationService
 					.getLamsConfigurations(lamsGetRequest)
 					.get("FUNCTIONARY_CODE").get(0);
+			LOGGER.info("after functionaryCode>>>>>>>" + functionaryCode);
+
 			billInfo.setFunctionaryCode(Long.valueOf(functionaryCode));
 			lamsGetRequest.setName("FUNDSOURCE_CODE");
 			String fundSourceCode = lamsConfigurationService
 					.getLamsConfigurations(lamsGetRequest)
 					.get("FUNDSOURCE_CODE").get(0);
+			LOGGER.info("after fundSourceCode>>>>>>>" + fundSourceCode);
+
 			billInfo.setFundSourceCode(fundSourceCode);
 			lamsGetRequest.setName("DEPARTMENT_CODE");
 			String departmentCode = lamsConfigurationService
 					.getLamsConfigurations(lamsGetRequest)
 					.get("DEPARTMENT_CODE").get(0);
 			billInfo.setDepartmentCode(departmentCode);
+			LOGGER.info("after departmentCode>>>>>>>" + departmentCode);
+
 			billInfo.setCollModesNotAllowed("");
 			billInfo.setBoundaryNumber(agreement.getAsset()
 					.getLocationDetails().getElectionWard());
@@ -97,11 +105,15 @@ public class PaymentService {
 			String boundaryType = lamsConfigurationService
 					.getLamsConfigurations(lamsGetRequest).get("BOUNDARY_TYPE")
 					.get(0);
+			LOGGER.info("after boundaryType>>>>>>>" + boundaryType);
+
 			billInfo.setBoundaryType(boundaryType);
 			lamsGetRequest.setName("SERVICE_CODE");
 			String serviceCode = lamsConfigurationService
 					.getLamsConfigurations(lamsGetRequest).get("SERVICE_CODE")
 					.get(0);
+			LOGGER.info("after serviceCode>>>>>>>" + serviceCode);
+
 			billInfo.setServiceCode(serviceCode);
 			billInfo.setPartPaymentAllowed('N');
 			billInfo.setOverrideAccHeadAllowed('N');
@@ -109,15 +121,20 @@ public class PaymentService {
 					+ (StringUtils.isBlank(agreement.getAgreementNumber()) ? agreement
 							.getAcknowledgementNumber() : agreement
 							.getAgreementNumber()));
+			LOGGER.info("after billInfo.setDescription>>>>>>>" + billInfo.getDescription());
+
 			billInfo.setConsumerCode(StringUtils.isBlank(agreement
 					.getAgreementNumber()) ? agreement
 					.getAcknowledgementNumber() : agreement
 					.getAgreementNumber());
 			billInfo.setCallbackForApportion('N');
+			LOGGER.info("after billInfo.setConsumerCode>>>>>>>" + billInfo.getConsumerCode());
+
 			billInfo.setEmailId(agreement.getAllottee().getEmailId());
 			billInfo.setConsumerType("Agreement");
+			LOGGER.info("before Bill Number"+billNumberService.generateBillNumber());
 			billInfo.setBillNumber(billNumberService.generateBillNumber());
-
+			LOGGER.info("after Bill Number"+billNumberService.generateBillNumber());
 			DemandSearchCriteria demandSearchCriteria = new DemandSearchCriteria();
 			demandSearchCriteria.setDemandId(1L);
 

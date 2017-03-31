@@ -256,14 +256,14 @@ var employee = {
     medicalReportProduced: true,
     languagesKnown: [],
     maritalStatus: "",
-    passportNo: "",
-    gpfNo: "",
+    passportNo: null,
+    gpfNo: null,
     bank: "",
     bankBranch: "",
     bankAccount: "",
     group: "",
     placeOfBirth: "",
-    documents: "",
+    documents: null,
     serviceHistory: [],
     probation: [],
     regularisation: [],
@@ -327,7 +327,7 @@ var employeeSubObject = {
         serviceFrom: "",
         remarks: "",
         orderNo: "",
-        documents: ""
+        documents: null
     },
     probation: {
         designation: "",
@@ -335,7 +335,7 @@ var employeeSubObject = {
         orderNo: "",
         orderDate: "",
         remarks: "",
-        documents: ""
+        documents: null
     },
     regularisation: {
         designation: "",
@@ -343,27 +343,27 @@ var employeeSubObject = {
         orderNo: "",
         orderDate: "",
         remarks: "",
-        documents: ""
+        documents: null
     },
     education: {
         qualification: "",
         majorSubject: "",
         yearOfPassing: "",
         university: "",
-        documents: ""
+        documents: null
     },
     technical: {
         skill: "",
         grade: "",
         yearOfPassing: "",
         remarks: "",
-        documents: ""
+        documents: null
     },
     test: {
         test: "",
         yearOfPassing: "",
         remarks: "",
-        documents: ""
+        documents: null
     }
 }
 
@@ -1150,7 +1150,7 @@ $('#serviceHistoryDetailModal').on('hidden.bs.modal', function(e) {
         serviceFrom: "",
         remarks: "",
         orderNo: "",
-        documents: ""
+        documents: null
     }
     clearModalInput("serviceHistory", employeeSubObject["serviceHistory"]);
 })
@@ -1164,7 +1164,7 @@ $('#probationDetailModal').on('hidden.bs.modal', function(e) {
         orderNo: "",
         orderDate: "",
         remarks: "",
-        documents: ""
+        documents: null
     }
     clearModalInput("probation", employeeSubObject["probation"]);
 
@@ -1179,7 +1179,7 @@ $('#regularisationDetailModal').on('hidden.bs.modal', function(e) {
         orderNo: "",
         orderDate: "",
         remarks: "",
-        documents: ""
+        documents: null
     }
     clearModalInput("regularisation", employeeSubObject["regularisation"]);
 
@@ -1193,7 +1193,7 @@ $('#technicalDetailModal').on('hidden.bs.modal', function(e) {
         grade: "",
         yearOfPassing: "",
         remarks: "",
-        documents: ""
+        documents: null
     }
     clearModalInput("technical", employeeSubObject["technical"]);
 
@@ -1207,7 +1207,7 @@ $('#educationDetailModal').on('hidden.bs.modal', function(e) {
         majorSubject: "",
         yearOfPassing: "",
         university: "",
-        documents: ""
+        documents: null
     }
     clearModalInput("education", employeeSubObject["education"]);
 
@@ -1220,7 +1220,7 @@ $('#testDetailModal').on('hidden.bs.modal', function(e) {
         test: "",
         yearOfPassing: "",
         remarks: "",
-        documents: ""
+        documents: null
     }
     clearModalInput("test", employeeSubObject["test"]);
 
@@ -1532,7 +1532,7 @@ $("#createEmployeeForm").validate({
                     });
 
                     if (response["status"] === 200) {
-                        alert("Successfully added");
+                        showSuccess("Employee added successfully.");
                         // window.location.href="../../../../app/hr/common/employee-attendance.html";
                     } else {
                         alert(response["statusText"]);
@@ -1584,7 +1584,7 @@ function uploadFiles(employee, cb) {
                 uploadFiles(employee, cb);
             }
         })
-    } else if(employee.documents.length && employee.documents[0].constructor == File) {
+    } else if(employee.documents && employee.documents.length && employee.documents[0].constructor == File) {
         let counter = employee.documents.length, breakout = 0 ;
         for(let i=0; len = employee.documents.length, i<len; i++) {
             makeAjaxUpload(employee.documents[i], function(err, res) {
@@ -1809,6 +1809,14 @@ function showError(msg) {
     $('#error-alert-div').show();
     setTimeout(function(){
         $('#error-alert-div').hide();
+    }, 3000);
+}
+
+function showSuccess(msg) {
+    $('#success-alert-span').text(msg);
+    $('#success-alert-div').show();
+    setTimeout(function(){
+        $('#success-alert-div').hide();
     }, 3000);
 }
 

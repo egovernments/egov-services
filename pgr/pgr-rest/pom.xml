@@ -183,7 +183,6 @@
                                         <exclude>org.egov.pgr.write.contracts.*</exclude>
                                         <exclude>org.egov.pgr.write.entity.*</exclude>
                                         <exclude>org.egov.pgr.write.*</exclude>
-                                        <exclude>org.egov.pgr.write.transform.SevaRequestDeserializer</exclude>
                                         <exclude>org.egov.pgr.read.web.resolver.AuthenticatedUserResolver</exclude>
                                         <exclude>org.egov.pgr.read.domain.exception.UnauthorizedAccessException
                                         </exclude>

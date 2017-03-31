@@ -1,7 +1,6 @@
 package org.egov.pgr.write.repository;
 
 import org.egov.pgr.Resources;
-import org.egov.pgr.write.config.PersistenceProperties;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,7 +12,6 @@ import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.client.ExpectedCount.once;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
@@ -22,16 +20,15 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 @RunWith(MockitoJUnitRunner.class)
 public class PositionRepositoryTest {
     @Mock
-    private PersistenceProperties persistenceProperties;
     private MockRestServiceServer server;
     private PositionRepository positionRepository;
 
     @Before
     public void setUp() throws Exception {
-        String url = "http://position/assignee/{tenantId}/{assigneeId}";
-        when(persistenceProperties.getPositionServiceEndpoint()).thenReturn(url);
+        String host = "http://position/";
+        String urlSuffix = "assignee/{tenantId}/{assigneeId}";
         final RestTemplate restTemplate = new RestTemplate();
-        positionRepository = new PositionRepository(restTemplate, persistenceProperties);
+        positionRepository = new PositionRepository(restTemplate, host, urlSuffix);
         server = MockRestServiceServer.bindTo(restTemplate).build();
     }
 

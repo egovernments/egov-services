@@ -47,8 +47,11 @@ $().ready(function() {
     $(".disabled").attr("disabled", true);
     //Getting data for user input
     $("input").on("keyup", function() {
-        // console.log(this.value);
         agreement[this.id] = this.value;
+        if(this.id == "rent") {
+            $('#securityDeposit').val(this.value*3);
+            agreement["securityDeposit"] = this.value*3;
+        }
     });
 
     //Getting data for user input
@@ -70,11 +73,8 @@ $().ready(function() {
 
     //file change handle for file upload
     $("input[type=file]").on("change", function(evt) {
-        // console.log(this.value);
-        // agreement[this.id] = this.value;
-        var file = evt.currentTarget.files[0];
-
-        //call post api update and update that url in pur agrement object
+        //evt.currentTarget.files[0];
+        agreement["documents"] = evt.currentTarget.files;
     });
 
 
@@ -836,16 +836,62 @@ $().ready(function() {
         messages: finalValidatinRules["messages"],
         submitHandler: function(form) {
             // form.submit();
-
-            // console.log(agreement);
-            $.post(`${baseUrl}agreements?tenant_id=kul.am`, {
-                RequestInfo: requestInfo,
-                Agreement: agreement
-            }, function(response) {
-                // alert("submit");
-                window.open("../../../../app/search-assets/create-agreement-ack.html?&agreement_id=aeiou", "", "width=1200,height=800")
-                console.log(response);
+            uploadFiles(agreement, function(err, agreement) {
+                if(err) {
+                    //Handle error
+                } else {
+                    $.post(`${baseUrl}agreements?tenant_id=kul.am`, {
+                        RequestInfo: requestInfo,
+                        Agreement: agreement
+                    }, function(response) {
+                        window.open("../../../../app/search-assets/create-agreement-ack.html?&agreement_id=aeiou", "", "width=1200,height=800")
+                    })
+                }
             })
         }
     })
+
+    function uploadFiles(agreement, cb) {
+        if(agreement.documents.constructor == FileList) {
+            let counter = agreement.documents.length, breakout = 0;
+            for(let i=0; len = agreement.documents.length, i<len; i++) {
+                makeAjaxUpload(agreement.documents[i], function(err, res) {
+                    if(breakout == 1) 
+                        return;
+                    else if(err) {
+                        cb(err);
+                        breakout = 1;
+                    } else {
+                        counter--;
+                        agreement.documents[i] = `/filestore/v1/files/id?fileStoreId=${res.files[0].fileStoreId}`;
+                        if(counter == 0 && breakout == 0)
+                            uploadFiles(agreement, cb);
+                    }
+                })
+            }
+        } else {
+            cb(agreement);
+        }
+    }
+
+    function makeAjaxUpload (file, cb) {
+        let formData = new FormData();
+        formData.append("jurisdictionId", "ap.public");
+        formData.append("module", "PGR");
+        formData.append("file", file);
+        $.ajax({
+            url: baseUrl + "/filestore/v1/files",
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            type: 'POST',
+            success: function(res) {
+                cb(null, res);
+            },
+            error: function(jqXHR, exception) {
+                cb(jqXHR.responseText || jqXHR.statusText);
+            }
+        });   
+    }
 })

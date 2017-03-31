@@ -176,7 +176,7 @@ class AgreementSearch extends React.Component {
 
   componentDidMount()
   {
-    let _this = this; 
+    let _this = this;
     this.setState({
       assetCategories:commonApiPost("asset-services","assetCategories","_search",{}).responseJSON["AssetCategory"] || [],
       locality:commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"LOCALITY",hierarchyTypeName:"LOCATION"}).responseJSON["Boundary"] || [],
@@ -444,7 +444,7 @@ class AgreementSearch extends React.Component {
                                     </div>
                                 </div>
                             </div>
-                        <a href="#" className="btn btn-default btn-action pull-right" style={{marginRight:"2%"}} data-toggle="collapse" data-target="#demo"><span className="glyphicon glyphicon-plus"></span></a>
+                        <button type="button" className="btn btn-default btn-action pull-right" style={{marginRight:"2%"}} data-toggle="collapse" data-target="#demo"><span className="glyphicon glyphicon-plus"></span></button>
                       </div>
                         <div id="demo" className="collapse">
                           <div className="row">

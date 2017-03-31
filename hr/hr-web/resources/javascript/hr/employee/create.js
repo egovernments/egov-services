@@ -931,14 +931,321 @@ var user = {
     }
 }
 
-$('.datetimepicker').datetimepicker({
+$("input[name='user.dob']").datetimepicker({
+  format: 'DD/MM/YYYY',
+  maxDate: new Date(),
+  defaultDate: ""
+});
+$("input[name='user.dob']").val("");
+$("input[name='user.dob']").on("dp.change", function(e) {
+fillValueToObject(this);
+  });
+
+
+  $('#dateOfAppointment').datetimepicker({
+    format: 'DD/MM/YYYY'
+  });
+
+  $('#dateOfAppointment').on("dp.change", function(e) {
+        fillValueToObject(this);
+        var date_received = $("#dateOfJoining").val();
+        var date_completed = $("#dateOfAppointment").val();
+        var dateParts = date_received.split("/");
+        var newDateStr = dateParts[1] + "/" + dateParts[0] + "/ "  + dateParts[2];
+          var date1 = new Date( newDateStr );
+
+          var dateParts = date_completed.split("/");
+          var newDateStr = dateParts[1] + "/" + dateParts[0] + "/"  + dateParts[2];
+          var date2 = new Date( newDateStr );
+       if ( date1 >= date2 ){
+          showError("Appointment date must be after Joining date");
+          $("#dateOfAppointment").val("");
+        }
+
+    });
+
+
+
+
+    $('#dateOfJoining').datetimepicker({
       format: 'DD/MM/YYYY'
+    });
+
+    $('#dateOfJoining').on("dp.change", function(e) {
+      fillValueToObject(this);
+      var date_received = $("#dateOfJoining").val();
+      var date_completed = $("#dateOfAppointment").val();
+      var dateParts = date_received.split("/");
+      var newDateStr = dateParts[1] + "/" + dateParts[0] + "/ "  + dateParts[2];
+        var date1 = new Date( newDateStr );
+
+        var dateParts = date_completed.split("/");
+        var newDateStr = dateParts[1] + "/" + dateParts[0] + "/"  + dateParts[2];
+        var date2 = new Date( newDateStr );
+     if ( date1 >= date2 ){
+        showError("Appointment date must be after Joining date");
+        $("#dateOfAppointment").val("");
+      }
+
+  });
+
+  $('#dateOfJoining').datetimepicker({
+    format: 'DD/MM/YYYY'
+  });
+
+  $('#dateOfJoining').on("dp.change", function(e) {
+    fillValueToObject(this);
+    var date_received = $("#dateOfJoining").val();
+    var date_completed = $("#dateOfRetirement").val();
+    var dateParts = date_received.split("/");
+    var newDateStr = dateParts[1] + "/" + dateParts[0] + "/ "  + dateParts[2];
+      var date1 = new Date( newDateStr );
+
+      var dateParts = date_completed.split("/");
+      var newDateStr = dateParts[1] + "/" + dateParts[0] + "/"  + dateParts[2];
+      var date2 = new Date( newDateStr );
+   if ( date1 >= date2 ){
+      showError("Appointment date must be after Joining date");
+      $("#dateOfRetirement").val("");
+    }
+
 });
 
-$(".datetimepicker").on("dp.change", function() {
-    // alert('hey');
-    fillValueToObject(this);
-});
+
+
+      $('#dateOfRetirement').datetimepicker({
+        format: 'DD/MM/YYYY'
+      });
+
+      $('#dateOfRetirement').on("dp.change", function(e) {
+              fillValueToObject(this);
+             var date_received = $("#dateOfJoining").val();
+             var date_completed = $("#dateOfRetirement").val();
+             var dateParts = date_received.split("/");
+             var newDateStr = dateParts[1] + "/" + dateParts[0] + "/ "  + dateParts[2];
+               var date1 = new Date( newDateStr );
+
+               var dateParts = date_completed.split("/");
+               var newDateStr = dateParts[1] + "/" + dateParts[0] + "/"  + dateParts[2];
+               var date2 = new Date( newDateStr );
+            if ( date1 > date2 ){
+              showError("Retirement date must be after Joining date");
+              $("#dateOfRetirement").val("");
+            }
+            else {}
+        });
+
+
+
+        $('#dateOfJoining').datetimepicker({
+          format: 'DD/MM/YYYY'
+        });
+
+        $('#dateOfJoining').on("dp.change", function(e) {
+          fillValueToObject(this);
+          var date_received = $("#dateOfJoining").val();
+          var date_completed = $("#dateOfTermination").val();
+          var dateParts = date_received.split("/");
+          var newDateStr = dateParts[1] + "/" + dateParts[0] + "/ "  + dateParts[2];
+            var date1 = new Date( newDateStr );
+
+            var dateParts = date_completed.split("/");
+            var newDateStr = dateParts[1] + "/" + dateParts[0] + "/"  + dateParts[2];
+            var date2 = new Date( newDateStr );
+         if ( date1 >= date2 ){
+            showError("Appointment date must be after Joining date");
+            $("#dateOfTermination").val("");
+          }
+
+        });
+
+
+        $('#dateOfTermination').datetimepicker({
+          format: 'DD/MM/YYYY'
+        });
+
+        $('#dateOfTermination').on("dp.change", function(e) {
+              fillValueToObject(this);
+              var date_received = $("#dateOfJoining").val();
+              var date_completed = $("#dateOfTermination").val();
+              var dateParts = date_received.split("/");
+              var newDateStr = dateParts[1] + "/" + dateParts[0] + "/ "  + dateParts[2];
+                var date1 = new Date( newDateStr );
+
+                var dateParts = date_completed.split("/");
+                var newDateStr = dateParts[1] + "/" + dateParts[0] + "/"  + dateParts[2];
+                var date2 = new Date( newDateStr );
+             if ( date1 > date2 ){
+               showError("Termination date must be after Joining date");
+               $("#dateOfTermination").val("");
+             }
+             else {}
+
+          });
+
+          $('#dateOfJoining').datetimepicker({
+            format: 'DD/MM/YYYY'
+          });
+
+          $('#dateOfJoining').on("dp.change", function(e) {
+            fillValueToObject(this);
+            var date_received = $("#dateOfJoining").val();
+            var date_completed = $("#dateOfResignation").val();
+            var dateParts = date_received.split("/");
+            var newDateStr = dateParts[1] + "/" + dateParts[0] + "/ "  + dateParts[2];
+              var date1 = new Date( newDateStr );
+
+              var dateParts = date_completed.split("/");
+              var newDateStr = dateParts[1] + "/" + dateParts[0] + "/"  + dateParts[2];
+              var date2 = new Date( newDateStr );
+           if ( date1 >= date2 ){
+              showError("Appointment date must be after Joining date");
+              $("#dateOfResignation").val("");
+            }
+
+          });
+
+          $('#dateOfResignation').datetimepicker({
+            format: 'DD/MM/YYYY'
+          });
+
+          $('#dateOfResignation').on("dp.change", function(e) {
+                fillValueToObject(this);
+                var date_received = $("#dateOfJoining").val();
+                var date_completed = $("#dateOfResignation").val();
+                var dateParts = date_received.split("/");
+                var newDateStr = dateParts[1] + "/" + dateParts[0] + "/ "  + dateParts[2];
+                var date1 = new Date( newDateStr );
+
+                var dateParts = date_completed.split("/");
+                var newDateStr = dateParts[1] + "/" + dateParts[0] + "/"  + dateParts[2];
+                var date2 = new Date( newDateStr );
+                if ( date1 > date2 ){
+                 showError("Resignation date must be after Joining date");
+                 $("#dateOfResignation").val("");
+               }
+               else {}
+            });
+
+
+
+            $("input[name='assignments.fromDate']").datetimepicker({
+              format: 'DD/MM/YYYY'
+            });
+
+            $("input[name='assignments.fromDate']").on("dp.change", function(e) {
+                fillValueToObject(this);
+              var from = $("input[name='assignments.fromDate']").val();
+              var to = $("input[name='assignments.toDate']").val();
+                  var dateParts = from.split("/");
+                  var newDateStr = dateParts[1] + "/" + dateParts[0] + "/ "  + dateParts[2];
+                    var date1 = new Date( newDateStr );
+
+                    var dateParts = to.split("/");
+                    var newDateStr = dateParts[1] + "/" + dateParts[0] + "/"  + dateParts[2];
+                    var date2 = new Date( newDateStr );
+                 if ( date1 > date2 ){
+                   howError("End date must be after From date");
+                   $("input[name='assignments.toDate']").val("");
+                 }else {}
+              });
+
+
+
+              $("input[name='assignments.toDate']").datetimepicker({
+                format: 'DD/MM/YYYY'
+              });
+
+              $("input[name='assignments.toDate']").on("dp.change", function(e) {
+                    fillValueToObject(this);
+                    var from = $("input[name='assignments.fromDate']").val();
+                    var to = $("input[name='assignments.toDate']").val();
+                    var dateParts = from.split("/");
+                    var newDateStr = dateParts[1] + "/" + dateParts[0] + "/ "  + dateParts[2];
+                      var date1 = new Date( newDateStr );
+
+                      var dateParts = to.split("/");
+                      var newDateStr = dateParts[1] + "/" + dateParts[0] + "/"  + dateParts[2];
+                      var date2 = new Date( newDateStr );
+                   if ( date1 > date2 ){
+                     showError("End date must be after From date");
+                     $("input[name='assignments.toDate']").val("");
+                   }else {}
+                });
+
+
+
+
+                $("input[name='serviceHistory.serviceFrom']").datetimepicker({
+                  format: 'DD/MM/YYYY'
+                });
+
+                $("input[name='serviceHistory.serviceFrom']").on("dp.change", function(e) {
+
+                      fillValueToObject(this);
+                  });
+
+
+                  $("input[name='probation.orderDate']").datetimepicker({
+                    format: 'DD/MM/YYYY'
+                  });
+
+                  $("input[name='probation.orderDate']").on("dp.change", function(e) {
+
+                        fillValueToObject(this);
+                    });
+
+
+                    $("input[name='regularisation.orderDate']").datetimepicker({
+                      format: 'DD/MM/YYYY'
+                    });
+
+                    $("input[name='regularisation.orderDate']").on("dp.change", function(e) {
+
+                          fillValueToObject(this);
+                      });
+
+
+
+
+
+        var startDate;
+         $("#dateOfJoining").datetimepicker({
+                     timepicker:true,
+                     closeOnDateSelect:false,
+                     closeOnTimeSelect: true,
+                     initTime: true,
+                     format: 'DD/MM/YYYY',
+                     minDate: 0,
+                     onChangeDateTime: function(dp,$input){
+                               startDate = $("#startdate").val();
+                                                           }
+                                                           });
+        $("#dateOfRetirement").datetimepicker({
+                     timepicker:true,
+                     closeOnDateSelect:false,
+                     closeOnTimeSelect: true,
+                     initTime: true,
+                     format: 'DD/MM/YYYY',
+                     onClose: function(current_time, $input){
+                            var endDate = $("#enddate").val();
+                            if(startDate>endDate){
+                                   alert('Please select correct date');
+                             }
+             }
+              });
+
+
+
+// $('.datetimepicker').datetimepicker({
+//       format: 'DD/MM/YYYY'
+//
+// });
+//
+// $(".datetimepicker").on("dp.change", function() {
+//     // alert('hey');
+//     fillValueToObject(this);
+// });
 // .on('changeDate', function (ev) {
 //     $('#date-daily').change();
 // });
@@ -1511,7 +1818,7 @@ $("#createEmployeeForm").validate({
             for (var i = 0; i < empJuridictiona.length; i++) {
                 employee["jurisdictions"].push(empJuridictiona[i].boundary);
             }
-            //Upload files if any 
+            //Upload files if any
             uploadFiles(employee, function(err, emp) {
                 if(err) {
                     //Handle error
@@ -1588,7 +1895,7 @@ function uploadFiles(employee, cb) {
         let counter = employee.documents.length, breakout = 0 ;
         for(let i=0; len = employee.documents.length, i<len; i++) {
             makeAjaxUpload(employee.documents[i], function(err, res) {
-                if(breakout == 1) 
+                if(breakout == 1)
                     return;
                 else if(err) {
                     cb(err);
@@ -1607,7 +1914,7 @@ function uploadFiles(employee, cb) {
             let counter = employee.assignments[i].documents.length;
             for(let j=0; len1 = employee.assignments[i].documents.length, j<len1; j++) {
                 makeAjaxUpload(employee.assignments[i].documents[j], function(err, res) {
-                    if(breakout == 1) 
+                    if(breakout == 1)
                         return;
                     else if(err) {
                         cb(err);
@@ -1630,7 +1937,7 @@ function uploadFiles(employee, cb) {
             let counter = employee.serviceHistory[i].documents.length;
             for(let j=0; len1 = employee.serviceHistory[i].documents.length, j<len1; j++) {
                 makeAjaxUpload(employee.serviceHistory[i].documents[j], function(err, res) {
-                    if(breakout == 1) 
+                    if(breakout == 1)
                         return;
                     else if(err) {
                         cb(err);
@@ -1653,7 +1960,7 @@ function uploadFiles(employee, cb) {
             let counter = employee.probation[i].documents.length;
             for(let j=0; len1 = employee.probation[i].documents.length, j<len1; j++) {
                 makeAjaxUpload(employee.probation[i].documents[j], function(err, res) {
-                    if(breakout == 1) 
+                    if(breakout == 1)
                         return;
                     else if(err) {
                         cb(err);
@@ -1676,7 +1983,7 @@ function uploadFiles(employee, cb) {
             let counter = employee.regularisation[i].documents.length;
             for(let j=0; len1 = employee.regularisation[i].documents.length, j<len1; j++) {
                 makeAjaxUpload(employee.regularisation[i].documents[j], function(err, res) {
-                    if(breakout == 1) 
+                    if(breakout == 1)
                         return;
                     else if(err) {
                         cb(err);
@@ -1699,7 +2006,7 @@ function uploadFiles(employee, cb) {
             let counter = employee.technical[i].documents.length;
             for(let j=0; len1 = employee.technical[i].documents.length, j<len1; j++) {
                 makeAjaxUpload(employee.technical[i].documents[j], function(err, res) {
-                    if(breakout == 1) 
+                    if(breakout == 1)
                         return;
                     else if(err) {
                         cb(err);
@@ -1722,7 +2029,7 @@ function uploadFiles(employee, cb) {
             let counter = employee.education[i].documents.length;
             for(let j=0; len1 = employee.education[i].documents.length, j<len1; j++) {
                 makeAjaxUpload(employee.education[i].documents[j], function(err, res) {
-                    if(breakout == 1) 
+                    if(breakout == 1)
                         return;
                     else if(err) {
                         cb(err);
@@ -1745,7 +2052,7 @@ function uploadFiles(employee, cb) {
             let counter = employee.test[i].documents.length;
             for(let j=0; len1 = employee.test[i].documents.length, j<len1; j++) {
                 makeAjaxUpload(employee.test[i].documents[j], function(err, res) {
-                    if(breakout == 1) 
+                    if(breakout == 1)
                         return;
                     else if(err) {
                         cb(err);
@@ -1797,7 +2104,7 @@ function makeAjaxUpload (file, cb) {
         error: function(jqXHR, exception) {
             cb(jqXHR.responseText || jqXHR.statusText);
         }
-    });   
+    });
 }
 
 function hasAllRequiredFields(emp) {
@@ -1821,7 +2128,7 @@ function showSuccess(msg) {
 }
 
 function checkIfNoDup(employee, objectType, subObject) {
-    if(employee[objectType].length === 0) 
+    if(employee[objectType].length === 0)
         return true;
     else if(objectType === "assignments") {
         for(let i=0; i<employee[objectType].length; i++) {
@@ -1834,6 +2141,6 @@ function checkIfNoDup(employee, objectType, subObject) {
                 return false;
         }
     }
-    
+
     return true;
 }

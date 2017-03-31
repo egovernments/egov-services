@@ -6,7 +6,8 @@ class EmployeeSearch extends React.Component {
     departmentId:"",
     designationId:"",
     employeeType:"",
-    asOnDate:""},isSearchClicked:false,employeeTypeList:[],departmentList:[],designationList:[]}
+    asOnDate:"",
+  name:"",mobileNumber:"",pan:"",aadhaarNumber:""},isSearchClicked:false,employeeTypeList:[],departmentList:[],designationList:[]}
     this.handleChange=this.handleChange.bind(this);
     this.search=this.search.bind(this);
   }
@@ -81,7 +82,7 @@ class EmployeeSearch extends React.Component {
     var id = getUrlVars()["id"];
     $('#asOnDate').datetimepicker({
         format: 'DD/MM/YYYY',
-        maxDate: new Date(),
+        // maxDate: new Date(),
         defaultDate: ""
     });
     $('#asOnDate').val("");
@@ -134,7 +135,7 @@ class EmployeeSearch extends React.Component {
     code,
     departmentId,
     designationId,
-    asOnDate}=this.state.searchSet;
+    asOnDate,name,mobileNumber,pan,aadhaarNumber}=this.state.searchSet;
     const renderOption=function(list,listName="")
     {
         if(list)
@@ -326,10 +327,61 @@ const getTodaysDate = function() {
                           </div>
                           <div className="col-sm-6">
                               <input type="text" id="asOnDate" name="asOnDate" value= {asOnDate}
-                                onChange={(e)=>{handleChange(e,"asOnDate")}} max={getTodaysDate()}/>
+                                onChange={(e)=>{handleChange(e,"asOnDate")}} />
                           </div>
                         </div>
                     </div>
+          </div>
+          <div className="row">
+            <div className="col-sm-6">
+                <div className="row">
+                    <div className="col-sm-6 label-text">
+                      <label for="">Name  </label>
+                    </div>
+                    <div className="col-sm-6">
+                        <input type="text" name="name" id="name" onChange={(e)=>{
+                            handleChange(e,"name")
+                        }} />
+                    </div>
+                </div>
+              </div>
+              <div className="col-sm-6">
+                        <div className="row">
+                          <div className="col-sm-6 label-text">
+                              <label for="description">Mobile Number</label>
+                          </div>
+                          <div className="col-sm-6">
+                              <input type="number" id="mobileNumber" name="mobileNumber" value= {mobileNumber}
+                                onChange={(e)=>{handleChange(e,"mobileNumber")}}/>
+                          </div>
+                        </div>
+                    </div>
+          </div>
+      <div>
+          <div className="col-sm-6">
+              <div className="row">
+                  <div className="col-sm-6 label-text">
+                    <label for="">Pan  </label>
+                  </div>
+                  <div className="col-sm-6">
+                      <input type="text" name="pan" id="pan" onChange={(e)=>{
+                          handleChange(e,"pan")
+                      }} />
+                  </div>
+              </div>
+            </div>
+            <div className="col-sm-6">
+                <div className="row">
+                    <div className="col-sm-6 label-text">
+                      <label for="">Aadhar Code  </label>
+                    </div>
+                    <div className="col-sm-6">
+                        <input type="text" name="aadhaarNumber" id="aadhaarNumber" onChange={(e)=>{
+                            handleChange(e,"aadhaarNumber")
+                        }} />
+                    </div>
+                </div>
+              </div>
           </div>
             <div className="text-center">
               <button type="submit"  className="btn btn-submit">Search</button>&nbsp;&nbsp;

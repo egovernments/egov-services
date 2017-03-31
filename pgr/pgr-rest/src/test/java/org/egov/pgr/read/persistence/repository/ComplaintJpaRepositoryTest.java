@@ -32,8 +32,6 @@ public class ComplaintJpaRepositoryTest {
             "/sql/clearComplaint.sql",
             "/sql/InsertComplaintData.sql"})
     public void testShouldFindAllComplaints() {
-
-
         DateTime startDate = new DateTime(2016, 12, 19, 0, 0, 0, 0);
         DateTime endDate = new DateTime(2016, 12, 31, 0, 0, 0, 0);
         DateTime lastModifiedDate = new DateTime(2016, 12, 20, 0, 0, 0, 0);

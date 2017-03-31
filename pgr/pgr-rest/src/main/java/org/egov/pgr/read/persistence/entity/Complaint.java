@@ -22,7 +22,6 @@ import static org.egov.pgr.read.persistence.entity.Complaint.SEQ_COMPLAINT;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
 @Table(name = "egpgr_complaint")
 @SequenceGenerator(name = SEQ_COMPLAINT, sequenceName = SEQ_COMPLAINT, allocationSize = 1)
 public class Complaint extends AbstractAuditable {
@@ -88,6 +87,7 @@ public class Complaint extends AbstractAuditable {
     private Date escalationDate;
 
     private Long department;
+
     @Column(name = "citizenfeedback")
     @Enumerated(EnumType.ORDINAL)
     private CitizenFeedback citizenFeedback;

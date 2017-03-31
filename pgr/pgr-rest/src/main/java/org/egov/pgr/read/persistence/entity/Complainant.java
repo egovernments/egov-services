@@ -40,27 +40,15 @@
 
 package org.egov.pgr.read.persistence.entity;
 
-import static org.egov.pgr.read.persistence.entity.Complainant.SEQ_COMPLAINANT;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.validation.constraints.Pattern;
-
+import lombok.*;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.SafeHtml;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import javax.persistence.*;
+import javax.validation.constraints.Pattern;
+
+import static org.egov.pgr.read.persistence.entity.Complainant.SEQ_COMPLAINANT;
 
 @Entity
 @Builder
@@ -68,7 +56,6 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
 @Table(name = "egpgr_complainant")
 @SequenceGenerator(name = SEQ_COMPLAINANT, sequenceName = SEQ_COMPLAINANT, allocationSize = 1)
 public class Complainant extends AbstractPersistable<Long> {

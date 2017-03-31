@@ -17,7 +17,6 @@ class AssetSearch extends React.Component {
     e.preventDefault();
     //call api call
      var list=commonApiPost("asset-services","assets","_search",this.state.searchSet).responseJSON["Assets"];
-      console.log(commonApiPost("asset-services","assets","_search",this.state.searchSet).responseJSON["Assets"]);
     this.setState({
       isSearchClicked:true,
       list
@@ -38,12 +37,11 @@ class AssetSearch extends React.Component {
 
   componentDidMount()
   {
-   console.log(commonApiPost("asset-services","assetCategories","_search",{}).responseJSON["AssetCategory"]);
 
      this.setState({
-      assetCategories:commonApiPost("asset-services","assetCategories","_search",{}).responseJSON["AssetCategory"],
-      locality:commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"LOCALITY",hierarchyTypeName:"LOCATION"}).responseJSON["Boundary"],
-      electionwards:commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"WARD",hierarchyTypeName:"ADMINISTRATION"}).responseJSON["Boundary"]
+      assetCategories,
+      locality,
+      electionwards
     })
   }
 
@@ -89,6 +87,7 @@ class AssetSearch extends React.Component {
   handleSelectChange(type,category)
   {
     console.log(type);
+    console.log(category);
     // if (type === "view") {
     //             window.open("../../../../app/agreements/new.html", "fs", "fullscreen=yes")
     //          }
@@ -96,7 +95,7 @@ class AssetSearch extends React.Component {
     //
     //             window.open("../../../../app/agreements/new.html", "fs", "fullscreen=yes")
     //         }
-    window.open("../../../../app/agreements/new.html?type="+category, "fs", "fullscreen=yes")
+    window.open("app/agreements/new.html?type="+category, "fs", "fullscreen=yes")
   }
 
 
@@ -175,7 +174,7 @@ class AssetSearch extends React.Component {
                                   <td>
                                       <div className="styled-select">
                                           <select id="myOptions" onChange={(e)=>{
-                                            handleSelectChange(e.target.value,item.assetCategory.names)
+                                            handleSelectChange(e.target.value,item.assetCategory.name)
                                           }}>
                                               <option value="">Select Action</option>
                                               <option value="create">Create</option>

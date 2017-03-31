@@ -33,155 +33,17 @@ class AgreementSearch extends React.Component {
 
   componentWillMount()
   {
-    // var agreements=[];
-    // for(var i=1;i<=100;i++)
-    // {
-    //     agreements.push({
-    //         code:i,name:"murali"+i,designation:'xyz',department:"yxs",userName:"avs"
-    //     })
-    // }
-    // this.setState({
-    //   isSearchClicked:true,
-    //   agreements
-    // })
 
-    // console.log(commonApiGet("asset","","GET_MODE_OF_ACQUISITION",{}).responseJSON);
-
-    // this.setState({
-    //   employeeType:[{
-    //           id: 1,
-    //           name: "Deputation",
-    //           chartOfAccounts: ""
-    //       },
-    //       {
-    //           id: 2,
-    //           name: "Permanent",
-    //           chartOfAccounts: ""
-    //       },
-    //       {
-    //           id: 3,
-    //           name: "Daily Wages`",
-    //           chartOfAccounts: ""
-    //       },
-    //       {
-    //           id: 4,
-    //           name: "Temporary",
-    //           chartOfAccounts: ""
-    //       },
-    //       {
-    //           id: 5,
-    //           name: "Contract",
-    //           chartOfAccounts: ""
-    //       }],
-    //   departments:[{
-    //           id: 1,
-    //           name: "Juniour Engineer",
-    //           description: "",
-    //           orderno: "1",
-    //           active: true
-    //       },
-    //       {
-    //           id: 2,
-    //           name: "Assistance Engineer",
-    //           description: "",
-    //           orderno: "1",
-    //           active: true
-    //       }],
-    //   designation:[{
-    //           id: 1,
-    //           name: "Juniour Engineer",
-    //           description: "",
-    //           orderno: "1",
-    //           active: true
-    //       },
-    //       {
-    //           id: 2,
-    //           name: "Assistance Engineer",
-    //           description: "",
-    //           orderno: "1",
-    //           active: true
-    //       }],
-    //   active:[{
-    //           id: 1,
-    //           name: "Juniour Engineer",
-    //           description: "",
-    //           orderno: "1",
-    //           active: true
-    //       },
-    //       {
-    //           id: 2,
-    //           name: "Assistance Engineer",
-    //           description: "",
-    //           orderno: "1",
-    //           active: true
-    //       }],
-    //   employeeStatus:[{
-    //           id: 1,
-    //           name: "Juniour Engineer",
-    //           description: "",
-    //           orderno: "1",
-    //           active: true
-    //       },
-    //       {
-    //           id: 2,
-    //           name: "Assistance Engineer",
-    //           description: "",
-    //           orderno: "1",
-    //           active: true
-    //       }],
-    //   function:[{
-    //           id: 1,
-    //           name: "Juniour Engineer",
-    //           description: "",
-    //           orderno: "1",
-    //           active: true
-    //       },
-    //       {
-    //           id: 2,
-    //           name: "Assistance Engineer",
-    //           description: "",
-    //           orderno: "1",
-    //           active: true
-    //       }],
-    //   functionary:[{
-    //           id: 1,
-    //           name: "Juniour Engineer",
-    //           description: "",
-    //           orderno: "1",
-    //           active: true
-    //       },
-    //       {
-    //           id: 2,
-    //           name: "Assistance Engineer",
-    //           description: "",
-    //           orderno: "1",
-    //           active: true
-    //       }],
-    //   drawingOfficer:[{
-    //           id: 1,
-    //           name: "Juniour Engineer",
-    //           description: "",
-    //           orderno: "1",
-    //           active: true
-    //       },
-    //       {
-    //           id: 2,
-    //           name: "Assistance Engineer",
-    //           description: "",
-    //           orderno: "1",
-    //           active: true
-    //       }]
-    // })
   }
 
   componentDidMount()
   {
     let _this = this;
     this.setState({
-      assetCategories:commonApiPost("asset-services","assetCategories","_search",{}).responseJSON["AssetCategory"] || [],
-      locality:commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"LOCALITY",hierarchyTypeName:"LOCATION"}).responseJSON["Boundary"] || [],
-      electionwards:commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"WARD",hierarchyTypeName:"ADMINISTRATION"}).responseJSON["Boundary"] || [],
-      revenueWards:commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"WARD",hierarchyTypeName:"REVENUE"}).responseJSON["Boundary"] || []
+      assetCategories,
+      locality,
+      electionwards,
+      revenueWards
     })
 
     //Fetch allottee name suggestions

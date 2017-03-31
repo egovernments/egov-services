@@ -14,7 +14,7 @@ var requestInfo = {
     "authToken":authToken
 };
 
-var tenantId=1;
+var tenantId="ap.kurnool";
 
 // var response=$.ajax({
 //           url: window.location.origin+"/user/_login?tenantId=ap.public&username=ramakrishna&password=demo&grant_type=password&scope=read",

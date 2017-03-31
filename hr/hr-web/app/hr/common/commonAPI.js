@@ -1,7 +1,7 @@
 var baseUrl = window.location.origin;
 
 
-var tenantId=1;
+var tenantId="ap.kurnool";
 
 
 var authToken=localStorage.getItem("auth-token");

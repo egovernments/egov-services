@@ -54,6 +54,7 @@ public class BillRepository {
 				+ propertiesManager.getPurposeService();
 		Map purpose = null;
 		try {
+		System.out.println("url>>>>>>>>>>"+url);
 			purpose = restTemplate.getForObject(url, Map.class);
 		} catch (RestClientException e) {
 			e.printStackTrace();

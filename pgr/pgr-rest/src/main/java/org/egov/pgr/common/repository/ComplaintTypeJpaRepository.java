@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 public interface ComplaintTypeJpaRepository extends JpaRepository<ComplaintType, Long> {
-    @Query("select c from ComplaintType c where c.category = :categoryId and c.active = 't' order by c.name")
+    @Query("select c from ComplaintType c where c.category.id = :categoryId and c.active = 't' order by c.name")
     List<ComplaintType> findActiveComplaintTypes(@Param("categoryId") Long categoryId);
     ComplaintType findByCode(String code);
 }

@@ -8,6 +8,7 @@ import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 public class SevaRequestTest {
 
@@ -97,8 +98,23 @@ public class SevaRequestTest {
         assertEquals(Long.valueOf(7), complaintRecord.getLocation());
         assertEquals(Long.valueOf(8), complaintRecord.getChildLocation());
         assertEquals(Long.valueOf(9), complaintRecord.getWorkflowStateId());
-
     }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void test_should_return_receiving_center_as_null_when_not_present_in_request_map() {
+        final HashMap<String, Object> sevaRequestMap = SevaRequestMapFactory.create();
+        final HashMap<String, Object> serviceRequest = (HashMap<String, Object>) sevaRequestMap.get("ServiceRequest");
+        final HashMap<String, String> values = (HashMap<String, String>) serviceRequest.get("values");
+        values.put("receivingCenter", "");
+
+        final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
+
+        final ComplaintRecord complaintRecord = sevaRequest.toDomain();
+
+        assertNull(complaintRecord.getReceivingCenter());
+    }
+
 
 
 

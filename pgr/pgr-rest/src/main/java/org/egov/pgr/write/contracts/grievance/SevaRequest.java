@@ -5,6 +5,7 @@ import org.egov.pgr.write.model.ComplaintRecord;
 import java.util.HashMap;
 
 import static org.egov.pgr.write.contracts.grievance.ServiceRequest.*;
+import static org.hibernate.internal.util.StringHelper.isEmpty;
 
 public class SevaRequest {
 
@@ -71,7 +72,7 @@ public class SevaRequest {
 
     public Long getReceivingCenter() {
         final String receivingCenter = this.getServiceRequest().getValues().get(VALUES_RECEIVING_CENTER);
-        return receivingCenter == null ? null : Long.valueOf(receivingCenter);
+        return isEmpty(receivingCenter) ? null : Long.valueOf(receivingCenter);
     }
 
     private Long getDesignation() {
@@ -80,26 +81,26 @@ public class SevaRequest {
 
     private Long getStateId() {
         final String stateId = this.getServiceRequest().getValues().get(VALUES_STATE_ID);
-        return stateId == null ? null : Long.valueOf(stateId);
+        return isEmpty(stateId) ? null : Long.valueOf(stateId);
     }
 
     public Long getLocation() {
         final String locationId = this.getServiceRequest().getValues().get(LOCATION_ID);
-        return locationId != null ? Long.valueOf(locationId) : null;
+        return isEmpty(locationId) ? null : Long.valueOf(locationId);
     }
 
     private Long getChildLocation() {
         final String childLocationId = this.getServiceRequest().getValues().get(CHILD_LOCATION_ID);
-        return childLocationId != null ? Long.valueOf(childLocationId) : null;
+        return isEmpty(childLocationId) ?  null : Long.valueOf(childLocationId);
     }
 
     private Long getAssigneeId() {
         final String assigneeId = this.getServiceRequest().getValues().get(VALUES_ASSIGNEE_ID);
-        return assigneeId == null ? null : Long.valueOf(assigneeId);
+        return isEmpty(assigneeId) ? null : Long.valueOf(assigneeId);
     }
 
     private Long getUserId() {
         final String userId = this.getServiceRequest().getValues().get(USER_ID);
-        return userId != null ? Long.valueOf(userId) : null;
+        return isEmpty(userId) ? null : Long.valueOf(userId);
     }
 }

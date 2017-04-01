@@ -18,29 +18,11 @@ public class SevaRequest {
         this.sevaRequestMap = sevaRequestMap;
     }
 
-    @SuppressWarnings("unchecked")
-    private ServiceRequest getServiceRequest() {
-        return new ServiceRequest((HashMap<String, Object>) sevaRequestMap.get(SERVICE_REQUEST));
-    }
-
-    private String getCRN() {
-        return getServiceRequest().getCrn();
-    }
-
-    @SuppressWarnings("unchecked")
-    private Long getRequesterId() {
-        HashMap<String, Object> requestInfoMap = (HashMap<String, Object>) sevaRequestMap.get(REQUEST_INFO);
-        if (requestInfoMap != null) {
-            return Long.parseLong(String.valueOf(requestInfoMap.get(REQUESTER_ID)));
-        }
-        return -1L;
-    }
-
     public ComplaintRecord toDomain() {
         return ComplaintRecord.builder()
             .CRN(getCRN())
-            .latitude(this.getServiceRequest().getLat() == null ? 0.0 : this.getServiceRequest().getLat())
-            .latitude(this.getServiceRequest().getLng() == null ? 0.0 : this.getServiceRequest().getLng())
+            .latitude(getLatitude())
+            .latitude(getLongitude())
             .description(this.getServiceRequest().getDetails())
             .landmarkDetails(this.getServiceRequest().getLandmarkDetails())
             .createdBy(this.getRequesterId())
@@ -61,6 +43,30 @@ public class SevaRequest {
             .workflowStateId(getStateId())
             .department(getDesignation())
             .build();
+    }
+
+    @SuppressWarnings("unchecked")
+    private ServiceRequest getServiceRequest() {
+        return new ServiceRequest((HashMap<String, Object>) sevaRequestMap.get(SERVICE_REQUEST));
+    }
+
+    private String getCRN() {
+        return getServiceRequest().getCrn();
+    }
+
+    @SuppressWarnings("unchecked")
+    private Long getRequesterId() {
+        HashMap<String, Object> requestInfoMap = (HashMap<String, Object>) sevaRequestMap.get(REQUEST_INFO);
+        return Long.parseLong(String.valueOf(requestInfoMap.get(REQUESTER_ID)));
+    }
+
+
+    private double getLongitude() {
+        return this.getServiceRequest().getLng() == null ? 0.0 : this.getServiceRequest().getLng();
+    }
+
+    private double getLatitude() {
+        return this.getServiceRequest().getLat() == null ? 0.0 : this.getServiceRequest().getLat();
     }
 
     public Long getReceivingCenter() {

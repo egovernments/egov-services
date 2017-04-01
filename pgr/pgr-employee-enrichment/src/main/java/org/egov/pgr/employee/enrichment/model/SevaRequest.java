@@ -20,7 +20,8 @@ public class SevaRequest {
     public final static String REQUEST_INFO = "RequestInfo";
     public static final String VALUES_ASSIGNEE_ID = "assignment_id";
     public static final String VALUES_STATE_ID = "stateId";
-    public static final String VALUES_DESIGNATION_ID = "designationId";
+    private static final String VALUES_DESIGNATION_ID = "designationId";
+    private static final String VALUES_DEPARTMENT_ID = "departmentId";
     public static final String VALUES = "values";
     public static final String VALUES_COMLAINT_TYPE_CODE = "complaintTypeCode";
     public static final String BOUNDARY_ID = "boundaryId";
@@ -104,6 +105,11 @@ public class SevaRequest {
         setStateId(workflowResponse.getValueForKey(STATE_ID));
     }
 
+    public void update(Position position) {
+        setDesignation(position.getDesignationId());
+        setDepartment(position.getDepartmentId());
+    }
+
     public void setEscalationDate(Date date) {
         getServiceRequest().put(EXPECTED_DATETIME, date);
     }
@@ -142,4 +148,9 @@ public class SevaRequest {
     public String getDesignation() {
         return getValues().get(VALUES_DESIGNATION_ID);
     }
+
+    public void setDepartment(String departmentId) {
+        getValues().put(VALUES_DEPARTMENT_ID, departmentId);
+    }
+
 }

@@ -10,4 +10,7 @@ public class DepartmentDesignationResponse {
 
     @JsonProperty("designation")
     private DesignationResponse designation;
+
+    @JsonProperty("department")
+    private DepartmentResponse department;
 }

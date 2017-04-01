@@ -2,7 +2,7 @@ package org.egov.pgr.employee.enrichment.consumer;
 
 import org.egov.pgr.employee.enrichment.model.SevaRequest;
 import org.egov.pgr.employee.enrichment.repository.ComplaintMessageQueueRepository;
-import org.egov.pgr.employee.enrichment.service.DepartmentService;
+import org.egov.pgr.employee.enrichment.service.PositionService;
 import org.egov.pgr.employee.enrichment.service.EscalationDateService;
 import org.egov.pgr.employee.enrichment.service.WorkflowService;
 import org.junit.Test;
@@ -32,7 +32,7 @@ public class ComplaintAssignmentListenerTest {
     private EscalationDateService escalationDateService;
 
     @Mock
-    private DepartmentService departmentService;
+    private PositionService positionService;
 
     @InjectMocks
     private ComplaintAssignmentListener complaintAssignmentListener;
@@ -79,7 +79,7 @@ public class ComplaintAssignmentListenerTest {
 
         complaintAssignmentListener.process(sevaRequestMap);
 
-        verify(departmentService).enrichRequestWithDesignation(sevaRequest);
+        verify(positionService).enrichRequestWithPosition(sevaRequest);
     }
 
     @Test
@@ -90,10 +90,10 @@ public class ComplaintAssignmentListenerTest {
 
         complaintAssignmentListener.process(sevaRequestMap);
 
-        final InOrder inOrder = inOrder(workflowService, departmentService, escalationDateService);
+        final InOrder inOrder = inOrder(workflowService, positionService, escalationDateService);
 
         inOrder.verify(workflowService).enrichWorkflow(any(SevaRequest.class));
-        inOrder.verify(departmentService).enrichRequestWithDesignation(sevaRequest);
+        inOrder.verify(positionService).enrichRequestWithPosition(sevaRequest);
         inOrder.verify(escalationDateService).enrichRequestWithEscalationDate(sevaRequest);
         inOrder.verifyNoMoreInteractions();
     }

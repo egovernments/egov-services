@@ -17,7 +17,7 @@ public class SevaRequestMapFactory {
         serviceRequestMap.put("requested_datetime", "01-04-2017 13:20:47");
         serviceRequestMap.put("updated_datetime", "02-04-2017 13:20:47");
         final HashMap<String, String> valuesMap = new HashMap<>();
-        valuesMap.put("designationId", "29");
+        valuesMap.put("departmentId", "29");
         valuesMap.put("complainantAddress", "complainant address");
         valuesMap.put("userId", "3");
         valuesMap.put("receivingMode", "receiving mode");

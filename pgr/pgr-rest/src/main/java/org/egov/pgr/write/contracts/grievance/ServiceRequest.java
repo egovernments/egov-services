@@ -12,7 +12,7 @@ public class ServiceRequest {
 	static final String VALUES_ASSIGNEE_ID = "assignment_id";
 	static final String VALUES_STATE_ID = "stateId";
 	static final String VALUES_STATUS = "status";
-	static final String VALUES_DESIGNATION = "designationId";
+	static final String VALUES_DEPARTMENT = "departmentId";
 	static final String VALUES_RECEIVING_MODE = "receivingMode";
 	static final String VALUES_RECEIVING_CENTER = "receivingCenter";
 	static final String VALUES_COMPLAINANT_ADDRESS = "complainantAddress";

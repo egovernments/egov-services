@@ -1,6 +1,7 @@
 package org.egov.pgr.employee.enrichment.repository;
 
 import org.egov.pgr.employee.enrichment.Resources;
+import org.egov.pgr.employee.enrichment.model.Position;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.HttpMethod;
@@ -30,7 +31,7 @@ public class PositionRepositoryTest {
     }
 
     @Test
-    public void testShouldGetDesignationByAssignee() throws Exception {
+    public void test_should_get_position_for_given_assignee() throws Exception {
         String tenantId = "ap.hyd";
         Long assigneeId = 1L;
         String expectedUrl = "http://position/eis/position?tenantId=ap.hyd&id=1";
@@ -38,9 +39,9 @@ public class PositionRepositoryTest {
             .andRespond(withSuccess(resources.getFileContents("positionResponse.json"),
                 MediaType.APPLICATION_JSON_UTF8));
 
-        String designationId = positionRepository.getDesignationIdForAssignee(tenantId, assigneeId);
+        Position position = positionRepository.getDesignationIdForAssignee(tenantId, assigneeId);
         server.verify();
-        assertEquals("12", designationId);
+        assertEquals(new Position("12", "18"), position);
     }
 
 }

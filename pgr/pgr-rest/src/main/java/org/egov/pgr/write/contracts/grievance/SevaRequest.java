@@ -42,7 +42,7 @@ public class SevaRequest {
             .childLocation(getChildLocation())
             .escalationDate(this.getServiceRequest().getEscalationDate())
             .workflowStateId(getStateId())
-            .department(getDesignation())
+            .department(getDepartment())
             .build();
     }
 
@@ -75,8 +75,8 @@ public class SevaRequest {
         return isEmpty(receivingCenter) ? null : Long.valueOf(receivingCenter);
     }
 
-    private Long getDesignation() {
-        return Long.valueOf(this.getServiceRequest().getValues().get(VALUES_DESIGNATION));
+    private Long getDepartment() {
+        return Long.valueOf(this.getServiceRequest().getValues().get(VALUES_DEPARTMENT));
     }
 
     private Long getStateId() {

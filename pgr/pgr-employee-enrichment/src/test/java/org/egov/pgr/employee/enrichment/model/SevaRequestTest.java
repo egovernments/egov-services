@@ -54,14 +54,17 @@ public class SevaRequestTest {
     }
 
     @Test
-    public void test_should_set_designation_id_to_seva_request_map() {
+    public void test_should_update_seva_request_map_with_positions() {
         final SevaRequest sevaRequest = createSevaRequest();
         final String designationId = "2";
+        final String departmentId = "3";
         final String designationIdKey = "designationId";
+        final String departmentIdKey = "departmentId";
 
-        sevaRequest.setDesignation(designationId);
+        sevaRequest.update(new Position(designationId, departmentId));
 
         assertEquals(designationId, sevaRequest.getValues().get(designationIdKey));
+        assertEquals(departmentId, sevaRequest.getValues().get(departmentIdKey));
     }
 
     @Test

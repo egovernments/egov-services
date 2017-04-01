@@ -1,5 +1,6 @@
 package org.egov.pgr.employee.enrichment.service;
 
+import org.egov.pgr.employee.enrichment.model.Position;
 import org.egov.pgr.employee.enrichment.model.SevaRequest;
 import org.egov.pgr.employee.enrichment.repository.PositionRepository;
 import org.junit.Test;
@@ -12,10 +13,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class DepartmentServiceTest {
+public class PositionServiceTest {
 
     @InjectMocks
-    private DepartmentService departmentService;
+    private PositionService positionService;
 
     @Mock
     private PositionRepository positionRepository;
@@ -26,15 +27,17 @@ public class DepartmentServiceTest {
     @Test
     public void test_should_set_department_id_to_seva_request() {
         final String designationId = "designationId";
+        final String departmentId = "departmentId";
         final String tenantId = "tenantId";
         when(sevaRequest.getTenantId()).thenReturn(tenantId);
         final long assigneeId = 2L;
         when(sevaRequest.getAssignee()).thenReturn(assigneeId);
-        when(positionRepository.getDesignationIdForAssignee(tenantId, assigneeId)).thenReturn(designationId);
+        final Position position = new Position(designationId, departmentId);
+        when(positionRepository.getDesignationIdForAssignee(tenantId, assigneeId)).thenReturn(position);
 
-        departmentService.enrichRequestWithDesignation(sevaRequest);
+        positionService.enrichRequestWithPosition(sevaRequest);
 
-        verify(sevaRequest).setDesignation(designationId);
+        verify(sevaRequest).update(position);
     }
 
 }

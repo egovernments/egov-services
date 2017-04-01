@@ -45,7 +45,7 @@ public class ComplaintTypeRepository {
                 .add(Projections.count("complaint.complaintType").as("count"))
                 .add(Projections.groupProperty("complaint.complaintType")));
         criteria.add(Restrictions.between("complaint.createdDate", previousDate.toDate(), currentDate.toDate()));
-        criteria.add(Restrictions.eq("compType.isActive", Boolean.TRUE));
+        criteria.add(Restrictions.eq("compType.active", Boolean.TRUE));
         criteria.setMaxResults(count).addOrder(Order.desc("count"));
         final List<Object> resultList = criteria.list();
         final List<ComplaintType> complaintTypeList = new ArrayList<ComplaintType>();

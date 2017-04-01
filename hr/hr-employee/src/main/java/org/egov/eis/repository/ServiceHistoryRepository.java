@@ -72,7 +72,7 @@ public class ServiceHistoryRepository {
 			+ " SET (serviceInfo, serviceFrom, remarks, orderNo,"
 			+ " lastModifiedBy, lastModifiedDate)"
 			+ " = (?,?,?,?,?,?)"
-	        + "where id = ?";
+	        + "where id = ? and tenantId=?";
 
 	public static final String CHECK_IF_ID_EXISTS_QUERY = "SELECT id FROM egeis_serviceHistory where "
 			+ "id=? and employeeId=? and tenantId=?";
@@ -118,7 +118,7 @@ public class ServiceHistoryRepository {
 	public void update(ServiceHistory service) {
 		Object[] obj = new Object[] { service.getServiceInfo(), service.getServiceFrom(), service.getRemarks(),
 				service.getOrderNo(), service.getLastModifiedBy(), service.getLastModifiedDate(),
-				service.getId() };
+				service.getId(), service.getTenantId() };
 
 		jdbcTemplate.update(UPDATE_SERVICE_HISTORY_QUERY, obj);
 
@@ -147,12 +147,13 @@ public class ServiceHistoryRepository {
 		values.add(id);
 		values.add(empId);
 		values.add(tenantId);
+		System.out.println("id" + id + " empId " +empId + " tenantId " +tenantId);
 		LOGGER.info("id" + id + " empId " +empId + " tenantId " +tenantId);
 		try {
 			jdbcTemplate.queryForObject(CHECK_IF_ID_EXISTS_QUERY, values.toArray(), Long.class);
 			return true;
 		} catch (EmptyResultDataAccessException e) {
-			e.printStackTrace();
+		//	e.printStackTrace();
 			return false;
 		}
 	}

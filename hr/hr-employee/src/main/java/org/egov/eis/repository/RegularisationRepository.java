@@ -73,7 +73,7 @@ public class RegularisationRepository {
 			+ " SET (designationId, declaredOn, orderNo, orderDate, remarks,"
 			+ " lastModifiedBy, lastModifiedDate)"
 			+ "= (?,?,?,?,?,?,?)"
-			+"where id = ?";
+			+"where id = ? and tenantId=?";
 
 	public static final String CHECK_IF_ID_EXISTS_QUERY = "SELECT id FROM egeis_regularisation where "
 			+ "id=? and employeeId=? and tenantId=?";
@@ -123,7 +123,7 @@ public class RegularisationRepository {
 		Object[] obj = new Object[] { regularisation.getDesignation(), regularisation.getDeclaredOn(),
 				regularisation.getOrderNo(), regularisation.getOrderDate(), regularisation.getRemarks(),
 				regularisation.getLastModifiedBy(), regularisation.getLastModifiedDate(),
-				regularisation.getId() };
+				regularisation.getId(), regularisation.getTenantId() };
 
 		jdbcTemplate.update(UPDATE_REGULARISATION_QUERY, obj);
 

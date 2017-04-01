@@ -78,6 +78,9 @@ public class PropertiesManager {
 
 	@Value("${egov.services.users_service.users.createpath}")
 	private String usersServiceUsersCreatePath;
+	
+	@Value("${egov.services.users_service.users.updatepath}")
+	private String usersServiceUsersUpdatePath;
 
 	@Value("${egov.services.hr_masters_service.hostname}")
 	private String hrMastersServiceHostName;

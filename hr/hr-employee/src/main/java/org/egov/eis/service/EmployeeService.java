@@ -40,22 +40,13 @@
 
 package org.egov.eis.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.egov.eis.broker.EmployeeProducer;
 import org.egov.eis.config.PropertiesManager;
-import org.egov.eis.model.Assignment;
-import org.egov.eis.model.DepartmentalTest;
-import org.egov.eis.model.EducationalQualification;
 import org.egov.eis.model.Employee;
 import org.egov.eis.model.EmployeeDocument;
 import org.egov.eis.model.EmployeeInfo;
-import org.egov.eis.model.Probation;
-import org.egov.eis.model.Regularisation;
-import org.egov.eis.model.ServiceHistory;
-import org.egov.eis.model.TechnicalQualification;
 import org.egov.eis.model.User;
 import org.egov.eis.repository.AssignmentRepository;
 import org.egov.eis.repository.DepartmentalTestRepository;
@@ -81,17 +72,14 @@ import org.egov.eis.web.errorhandler.UserErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class EmployeeService {
-	
+
 	public static final Logger LOGGER = LoggerFactory.getLogger(EmployeeService.class);
 
 	@Autowired
@@ -135,16 +123,16 @@ public class EmployeeService {
 
 	@Autowired
 	private EmployeeUserMapper employeeUserMapper;
-	
+
 	@Autowired
 	private EmployeeProducer employeeProducer;
-	
+
 	@Autowired
 	private ErrorHandler errorHandler;
 
 	@Autowired
 	PropertiesManager propertiesManager;
-	
+
 	public static final String INSERT_PROBATION_QUERY = "SELECT id FROM egeis_departmentaltest WHERE employeeid = ?";
 
 	public List<EmployeeInfo> getEmployees(EmployeeGetRequest employeeGetRequest, RequestInfo requestInfo) {
@@ -157,7 +145,7 @@ public class EmployeeService {
 		LOGGER.debug("userService: " + usersList);
 		employeeUserMapper.mapUsersWithEmployees(employeeInfoList, usersList);
 
-		if(!ids.isEmpty()) {
+		if (!ids.isEmpty()) {
 			List<EmployeeDocument> employeeDocuments = employeeRepository.getDocumentsForListOfEmployeeIds(ids);
 			employeeHelper.mapDocumentsWithEmployees(employeeInfoList, employeeDocuments);
 		}
@@ -169,17 +157,17 @@ public class EmployeeService {
 		UserRequest userRequest = employeeHelper.getUserRequest(employeeRequest);
 
 		ResponseEntity<?> responseEntity = null;
-		
-		// FIXME : User service is expecting & sending dates in multiple formats. Fix a common standard
+
+		// FIXME : User service is expecting & sending dates in multiple
+		// formats. Fix a common standard
 		try {
 			responseEntity = userService.createUser(userRequest);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			LOGGER.debug("Error occurred while creating user", e);
 			return errorHandler.getResponseEntityForUnknownUserCreationError(employeeRequest.getRequestInfo());
 		}
 
-
-		if(responseEntity.getBody().getClass().equals(UserErrorResponse.class)
+		if (responseEntity.getBody().getClass().equals(UserErrorResponse.class)
 				|| responseEntity.getBody().getClass().equals(ErrorResponse.class)) {
 			return responseEntity;
 		}
@@ -195,7 +183,7 @@ public class EmployeeService {
 
 		try {
 			employeeHelper.populateDefaultDataForCreate(employeeRequest);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			LOGGER.debug("Error occurred while populating data in objects", e);
 			return errorHandler.getResponseEntityForUnexpectedErrors(employeeRequest.getRequestInfo());
 		}
@@ -210,8 +198,9 @@ public class EmployeeService {
 			e.printStackTrace();
 		}
 		try {
-			employeeProducer.sendMessage(propertiesManager.getSaveEmployeeTopic(), propertiesManager.getEmployeeSaveKey(), employeeRequestJson);
-		} catch(Exception ex) {
+			employeeProducer.sendMessage(propertiesManager.getSaveEmployeeTopic(),
+					propertiesManager.getEmployeeSaveKey(), employeeRequestJson);
+		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 
@@ -250,17 +239,36 @@ public class EmployeeService {
 			departmentalTestRepository.save(employeeRequest);
 		}
 	}
-	
+
 	public ResponseEntity<?> updateAsync(EmployeeRequest employeeRequest) {
+
+		UserRequest userRequest = employeeHelper.getUserRequest(employeeRequest);
 		Employee employee = employeeRequest.getEmployee();
-		
+		ResponseEntity<?> responseEntity = null;
+
+		try {
+			responseEntity = userService.updateUser(userRequest.getUser().getId(), userRequest);
+		} catch (Exception e) {
+			LOGGER.debug("Error occurred while updating user", e);
+			return errorHandler.getResponseEntityForUnknownUserCreationError(employeeRequest.getRequestInfo());
+		}
+
+		if (responseEntity.getBody().getClass().equals(UserErrorResponse.class)
+				|| responseEntity.getBody().getClass().equals(ErrorResponse.class)) {
+			return responseEntity;
+		}
+
+		UserResponse userResponse = (UserResponse) responseEntity.getBody();
+		User user = userResponse.getUser().get(0);
+		employee.setUser(user);
+
 		try {
 			employeeHelper.populateDefaultDataForUpdate(employeeRequest);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			LOGGER.debug("Error occurred while populating data in objects", e);
 			return errorHandler.getResponseEntityForUnexpectedErrors(employeeRequest.getRequestInfo());
 		}
-		
+
 		String employeeUpdateRequestJson = null;
 		try {
 			ObjectMapper mapper = new ObjectMapper();
@@ -271,109 +279,122 @@ public class EmployeeService {
 			e.printStackTrace();
 		}
 		try {
-			employeeProducer.sendMessage(propertiesManager.getUpdateEmployeeTopic(), propertiesManager.getEmployeeSaveKey(), employeeUpdateRequestJson);
-		} catch(Exception ex) {
+			employeeProducer.sendMessage(propertiesManager.getUpdateEmployeeTopic(),
+					propertiesManager.getEmployeeSaveKey(), employeeUpdateRequestJson);
+		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-
 		return employeeHelper.getSuccessResponseForCreate(employee, employeeRequest.getRequestInfo());
 	}
-	
-	
+
 	public void update(EmployeeRequest employeeRequest) {
 		Employee employee = employeeRequest.getEmployee();
 		employeeRepository.update(employeeRequest);
-	//	employeeJurisdictionRepository.update(employee);//FIXME
+
+		employee.getJurisdictions().forEach((jurisdiction) -> {
+			// if jurisdiction id already exists in table, we dont do anything. When absent, we insert the record.
+			if (!employeeJurisdictionRepository.jurisdictionAlreadyExists(jurisdiction, employee.getId(),employee.getTenantId()))
+				employeeJurisdictionRepository.insert(jurisdiction, employee.getId(), employee.getTenantId());
+			
+			// serviceHistoryRepository.findAndDeleteServiceHistoryInDBThatAreNotInList(employee.getServiceHistory());
+		});
 		employee.getAssignments().forEach((assignment) -> {
-			if (assignmentRepository.assignmentAlreadyExists(assignment.getId(), employee.getId(), employee.getTenantId())) { // FIXME can be optimized with single query
-				assignmentRepository.update(assignment); 
+			if (assignmentRepository.assignmentAlreadyExists(assignment.getId(), employee.getId(),
+					employee.getTenantId())) { // FIXME can be optimized with
+												// single query
+				assignmentRepository.update(assignment);
 			} else {
 				assignmentRepository.insert(assignment, employee.getId());
 			}
-		//	assignmentRepository.findAndDeleteAssignmentsInDBThatAreNotInList(employee.getAssignments());
+			// assignmentRepository.findAndDeleteAssignmentsInDBThatAreNotInList(employee.getAssignments());
 			if (assignment.getHod() != null) {
 				hodDepartmentRepository.save(assignment, employee.getTenantId());
 			}
 		});
-		
-	employee.getServiceHistory().forEach((service) -> {
-		if (serviceHistoryRepository.serviceHistoryAlreadyExists(service.getId(), employee.getId(), employee.getTenantId())) { // FIXME can be optimized with single query
-			serviceHistoryRepository.update(service); 
-		} else {
-			serviceHistoryRepository.insert(service, employee.getId());
-		}
-		//serviceHistoryRepository.findAndDeleteServiceHistoryInDBThatAreNotInList(employee.getServiceHistory());
-	});
 
-	
-	
-	employee.getProbation().forEach((probation) -> {
-		if (probationRepository.probationAlreadyExists(probation.getId(), employee.getId(), employee.getTenantId())) { // FIXME can be optimized with single query
-			probationRepository.update(probation); 
-		} else {
-			probationRepository.insert(probation, employee.getId());
-		}
-		//probationRepository.findAndDeleteProbationInDBThatAreNotInList(employee.getProbation());
-	});
-	
-	employee.getRegularisation().forEach((regularisation) -> {
-		if (regularisationRepository.regularisationAlreadyExists(regularisation.getId(), employee.getId(), employee.getTenantId())) { // FIXME can be optimized with single query
-			regularisationRepository.update(regularisation);
-		} else {
-			regularisationRepository.insert(regularisation, employee.getId());
-		}
-		//regularisationRepository.findAndDeleteRegularisationInDBThatAreNotInList(employee.getRegularisation());
-	});
-	
-	
-	employee.getTechnical().forEach((technical) -> {
-		if (technicalQualificationRepository.technicalAlreadyExists(technical.getId(), employee.getId(), employee.getTenantId())) { // FIXME can be optimized with single query
-			technicalQualificationRepository.update(technical); 
-		} else {
-			technicalQualificationRepository.insert(technical, employee.getId());
-		}
-		//technicalQualificationRepository.findAndDeleteThatAreNotInList(employee.getTechnical());
-	});
-	
-	employee.getEducation().forEach((education) -> {
-		if (educationalQualificationRepository.educationAlreadyExists(education.getId(), employee.getId(), employee.getTenantId())) { // FIXME can be optimized with single query
-			educationalQualificationRepository.update(education); 
-		} else {
-			educationalQualificationRepository.insert(education, employee.getId());
-		}
-		//educationalQualificationRepository.findAndDeleteThatAreNotInList(employee.getEducation());
-	});
-	
-	employee.getTest().forEach((test) -> {
-		if (departmentalTestRepository.testAlreadyExists(test.getId(), employee.getId(), employee.getTenantId())) { // FIXME can be optimized with single query
-			departmentalTestRepository.update(test); 
-		} else {
-			departmentalTestRepository.insert(test, employee.getId());
-		}
-		//departmentalTestRepository.findAndDeleteThatAreNotInList(employee.getTest());
-	});
-}
-	
-	
-	
-	
+		employee.getServiceHistory().forEach((service) -> {
+			if (serviceHistoryRepository.serviceHistoryAlreadyExists(service.getId(), employee.getId(),
+					employee.getTenantId())) { // FIXME can be optimized with
+												// single query
+				serviceHistoryRepository.update(service);
+			} else {
+				serviceHistoryRepository.insert(service, employee.getId());
+			}
+			// serviceHistoryRepository.findAndDeleteServiceHistoryInDBThatAreNotInList(employee.getServiceHistory());
+		});
 
+		employee.getProbation().forEach((probation) -> {
+			if (probationRepository.probationAlreadyExists(probation.getId(), employee.getId(),
+					employee.getTenantId())) { // FIXME can be optimized with
+												// single query
+				probationRepository.update(probation);
+			} else {
+				probationRepository.insert(probation, employee.getId());
+			}
+			// probationRepository.findAndDeleteProbationInDBThatAreNotInList(employee.getProbation());
+		});
 
+		employee.getRegularisation().forEach((regularisation) -> {
+			if (regularisationRepository.regularisationAlreadyExists(regularisation.getId(), employee.getId(),
+					employee.getTenantId())) { // FIXME can be optimized with
+												// single query
+				regularisationRepository.update(regularisation);
+			} else {
+				regularisationRepository.insert(regularisation, employee.getId());
+			}
+			// regularisationRepository.findAndDeleteRegularisationInDBThatAreNotInList(employee.getRegularisation());
+		});
 
+		employee.getTechnical().forEach((technical) -> {
+			if (technicalQualificationRepository.technicalAlreadyExists(technical.getId(), employee.getId(),
+					employee.getTenantId())) { // FIXME can be optimized with
+												// single query
+				technicalQualificationRepository.update(technical);
+			} else {
+				technicalQualificationRepository.insert(technical, employee.getId());
+			}
+			// technicalQualificationRepository.findAndDeleteThatAreNotInList(employee.getTechnical());
+		});
+
+		employee.getEducation().forEach((education) -> {
+			if (educationalQualificationRepository.educationAlreadyExists(education.getId(), employee.getId(),
+					employee.getTenantId())) { // FIXME can be optimized with
+												// single query
+				educationalQualificationRepository.update(education);
+			} else {
+				educationalQualificationRepository.insert(education, employee.getId());
+			}
+			// educationalQualificationRepository.findAndDeleteThatAreNotInList(employee.getEducation());
+		});
+
+		employee.getTest().forEach((test) -> {
+			if (departmentalTestRepository.testAlreadyExists(test.getId(), employee.getId(), employee.getTenantId())) { 
+				departmentalTestRepository.update(test);
+			} else {
+				departmentalTestRepository.insert(test, employee.getId());
+			}
+			// departmentalTestRepository.findAndDeleteThatAreNotInList(employee.getTest());
+		});
+	}
 
 	/**
-	 * Checks if any one of the string in given comma separated values is present in db for the given column and given table.
+	 * Checks if any one of the string in given comma separated values is
+	 * present in db for the given column and given table.
+	 * 
 	 * @param table
 	 * @param field
-	 * @param value is a comma separated value string 
+	 * @param value
+	 *            is a comma separated value string
 	 * @return
 	 */
 	public Boolean checkForDuplicatesForAnyOneOfGivenCSV(String table, String field, Object value) {
 		return employeeRepository.checkForDuplicates(table, field, value);
 	}
-	
+
 	/**
-	 * Checks if the given string is present in db for the given column and given table.
+	 * Checks if the given string is present in db for the given column and
+	 * given table.
+	 * 
 	 * @param table
 	 * @param column
 	 * @param value

@@ -71,7 +71,7 @@ public class EducationalQualificationRepository {
 			+ " SET (qualification, majorSubject, yearOfPassing, university,"
 			+ " lastModifiedBy, lastModifiedDate)"
 			+ " = (?,?,?,?,?,?)"
-			+"WHERE id = ?";
+			+"WHERE id = ? and tenantId=?";
 
 	public static final String CHECK_IF_ID_EXISTS_QUERY = "SELECT id FROM egeis_educationalqualification where "
 			+ "id=? and employeeId=? and tenantId=?";
@@ -120,7 +120,7 @@ public class EducationalQualificationRepository {
 
 		Object[] obj = new Object[] { education.getQualification(), education.getMajorSubject(),
 				education.getYearOfPassing(), education.getUniversity(), education.getLastModifiedBy(),
-				education.getLastModifiedDate(), education.getId() };
+				education.getLastModifiedDate(), education.getId(), education.getTenantId() };
 
 		jdbcTemplate.update(UPDATE_EDUCATIONAL_QUALIFICATION_QUERY, obj);
 

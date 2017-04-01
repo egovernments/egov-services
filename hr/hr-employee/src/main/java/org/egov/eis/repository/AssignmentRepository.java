@@ -80,7 +80,7 @@ public class AssignmentRepository {
 			+ " isPrimary, fromDate, toDate, gradeId, govtOrderNumber,"
 			+ " lastModifiedBy, lastModifiedDate)"
 			+ " = (?,?,?,?,?,?,?,?,?,?,?,?,?)"
-			+ " where id = ?";
+			+ " where id = ? and tenantId=?";
 	
 	public static final String CHECK_IF_ID_EXISTS_QUERY = "SELECT id FROM egeis_assignment where "
 			+ "id=? and employeeId=? and tenantId=?";
@@ -156,7 +156,7 @@ public class AssignmentRepository {
 				assignment.getDepartment(), assignment.getDesignation(), assignment.getIsPrimary(),
 				assignment.getFromDate(), assignment.getToDate(), assignment.getGrade(),
 				assignment.getGovtOrderNumber(), assignment.getLastModifiedBy(), assignment.getLastModifiedDate(),
-				 assignment.getId()};
+				 assignment.getId(), assignment.getTenantId() };
 
 		jdbcTemplate.update(UPDATE_ASSIGNMENT_QUERY, obj);
 }

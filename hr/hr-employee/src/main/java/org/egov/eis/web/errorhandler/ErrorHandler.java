@@ -185,4 +185,20 @@ public class ErrorHandler {
 
 		return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
 	}
+
+	public ResponseEntity<?> getResponseEntityForUnknownUserUpdationError(RequestInfo requestInfo) {
+		Error error = new Error();
+		error.setCode(500);
+		error.setMessage("User Updation Failed");
+		error.setDescription("Unknown error");
+		
+		ResponseInfo responseInfo = responseInfoFactory
+				.createResponseInfoFromRequestInfo(requestInfo, false);
+
+		ErrorResponse errorResponse = new ErrorResponse();
+		errorResponse.setResponseInfo(responseInfo);
+		errorResponse.setError(error);
+
+		return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
+	}
 }

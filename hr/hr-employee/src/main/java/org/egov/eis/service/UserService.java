@@ -41,6 +41,7 @@
 package org.egov.eis.service;
 
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.List;
 
 import org.egov.eis.config.PropertiesManager;
@@ -136,5 +137,49 @@ public class UserService {
 			return errorHandler.getResponseEntityForUnknownUserCreationError(userRequest.getRequestInfo());
 		}
 		return new ResponseEntity<UserResponse>(userResponse, HttpStatus.CREATED);
+	}
+
+	public ResponseEntity<?> updateUser(Long userId, UserRequest userRequest) {
+
+		String url = propertiesManager.getUsersServiceHostName() + propertiesManager.getUsersServiceUsersBasePath()
+		+  getUserUpdatePath(userId);
+		
+		LOGGER.info("update url" + url);
+		
+		UserResponse userResponse = null;
+		try {
+			userResponse = new RestTemplate().postForObject(url, userRequest, UserResponse.class);
+		} catch (HttpClientErrorException e) {
+			String errorResponseBody = e.getResponseBodyAsString();
+			System.err.println("Following exception occurred: " + e.getResponseBodyAsString());
+			UserErrorResponse userErrorResponse = null;
+			try {
+				ObjectMapper mapper = new ObjectMapper();
+				userErrorResponse = mapper.readValue(errorResponseBody, UserErrorResponse.class);
+			} catch (JsonMappingException jme) {
+				LOGGER.debug("Following Exception Occurred While Mapping JSON Response From User Service : "
+						+ jme.getMessage());
+				jme.printStackTrace();
+			} catch (JsonProcessingException jpe) {
+				LOGGER.debug("Following Exception Occurred While Processing JSON Response From User Service : "
+						+ jpe.getMessage());
+				jpe.printStackTrace();
+			} catch (IOException ioe) {
+				LOGGER.debug("Following Exception Occurred Calling User Service : " + ioe.getMessage());
+				ioe.printStackTrace();
+			}
+			return new ResponseEntity<UserErrorResponse>(userErrorResponse, HttpStatus.BAD_REQUEST);
+		} catch (Exception e) {
+			LOGGER.debug("Following Exception Occurred While Calling User Service : " + e.getMessage());
+			e.printStackTrace();
+			return errorHandler.getResponseEntityForUnknownUserUpdationError(userRequest.getRequestInfo());
+		}
+		return new ResponseEntity<UserResponse>(userResponse, HttpStatus.OK);
+		
+	}
+	
+	private String getUserUpdatePath(long id){
+		String path = MessageFormat.format(propertiesManager.getUsersServiceUsersUpdatePath(),id);
+		return path;
 	}
 }

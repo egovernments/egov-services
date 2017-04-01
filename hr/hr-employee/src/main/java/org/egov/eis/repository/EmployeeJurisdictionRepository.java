@@ -42,12 +42,14 @@ package org.egov.eis.repository;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.eis.model.Employee;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -60,7 +62,13 @@ public class EmployeeJurisdictionRepository {
 	public static final String INSERT_EMPLOYEE_JURISDICTION_QUERY = "INSERT INTO egeis_employeeJurisdictions"
 			+ " (id, employeeId, jurisdictionId, tenantId)"
 			+ " VALUES (NEXTVAL('seq_egeis_employeeJurisdictions'),?,?,?)";
+	
+	public static final String DELETE_EMPLOYEE_JURISDICTION_QUERY = "DELETE FROM egeis_employeeJurisdictions"
+			+ " WHERE jurisdictionId = ? and employeeId=? and tenantId=?)";
 
+	public static final String CHECK_IF_ID_EXISTS_QUERY = "SELECT id FROM egeis_employeeJurisdictions where "
+			+ "jurisdictionId=? and employeeId=? and tenantId=?";
+	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
@@ -82,23 +90,21 @@ public class EmployeeJurisdictionRepository {
 		});
 	}
 	
-	// FIXME
-	public void update(Employee employee) {
-		List<Long> employeeJurisdictions = employee.getJurisdictions();
+	public boolean jurisdictionAlreadyExists(Long jurisdictionId, Long empId, String tenantId) {
+		List<Object> values = new ArrayList<Object>();
+		values.add(jurisdictionId);
+		values.add(empId); 
+		values.add(tenantId);
+		try {
+			jdbcTemplate.queryForObject(CHECK_IF_ID_EXISTS_QUERY, values.toArray(), Long.class);
+			return true;
+		} catch (EmptyResultDataAccessException e) {
+			return false;
+		}
+	}
+
+	public void insert(Long jurisdictionId, Long empId, String tenantId) {
 		
-		jdbcTemplate.batchUpdate(INSERT_EMPLOYEE_JURISDICTION_QUERY, new BatchPreparedStatementSetter() {
-			@Override
-			public void setValues(PreparedStatement ps, int i) throws SQLException {
-				Long jurisdictionId = employeeJurisdictions.get(i);
-				ps.setLong(1, employee.getId());
-				ps.setLong(2, jurisdictionId);
-				ps.setString(3, employee.getTenantId());
-			}
-	
-			@Override
-			public int getBatchSize() {
-				return employeeJurisdictions.size();
-			}
-		});
+		jdbcTemplate.update(INSERT_EMPLOYEE_JURISDICTION_QUERY, empId, jurisdictionId, tenantId);
 	}
 }

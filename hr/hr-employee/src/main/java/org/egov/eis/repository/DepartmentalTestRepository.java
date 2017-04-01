@@ -69,7 +69,7 @@ public class DepartmentalTestRepository {
 
 	public static final String UPDATE_DEPARTMENTAL_TEST_QUERY = "UPDATE egeis_departmentalTest"
 			+ " SET (test, yearOfPassing, remarks," + " lastModifiedBy, lastModifiedDate)"
-			+ " = (?,?,?,?,?)" + " WHERE id = ?";
+			+ " = (?,?,?,?,?)" + " WHERE id = ? and tenantId=?";
 
 	public static final String CHECK_IF_ID_EXISTS_QUERY = "SELECT id FROM egeis_departmentaltest where "
 			+ "id=? and employeeId=? and tenantId=?";
@@ -117,7 +117,7 @@ public class DepartmentalTestRepository {
 
 	public void update(DepartmentalTest test) {
 		Object[] obj = new Object[] { test.getTest(), test.getYearOfPassing(), test.getRemarks(),
-				test.getLastModifiedBy(), test.getLastModifiedDate(),test.getId() };
+				test.getLastModifiedBy(), test.getLastModifiedDate(),test.getId(), test.getTenantId() };
 
 		jdbcTemplate.update(UPDATE_DEPARTMENTAL_TEST_QUERY, obj);
 	}

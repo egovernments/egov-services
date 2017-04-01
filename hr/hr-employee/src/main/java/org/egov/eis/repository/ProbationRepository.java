@@ -72,7 +72,7 @@ public class ProbationRepository {
 			+ " SET (designationId, declaredOn, orderNo, orderDate, remarks,"
 			+ "lastModifiedBy, lastModifiedDate)"
 			+ " = (?,?,?,?,?,?,?)"
-			+"WHERE id = ?";
+			+"WHERE id = ? and tenantId=?";
 
     public static final String CHECK_IF_ID_EXISTS_QUERY = "SELECT id FROM egeis_probation where "
 			+ "id=? and employeeId=? and tenantId=?";
@@ -121,7 +121,7 @@ public class ProbationRepository {
 
 		Object[] obj = new Object[] { probation.getDesignation(), probation.getDeclaredOn(), probation.getOrderNo(),
 				probation.getOrderDate(), probation.getRemarks(), probation.getLastModifiedBy(),
-				probation.getLastModifiedDate(), probation.getId() };
+				probation.getLastModifiedDate(), probation.getId(), probation.getTenantId()};
 
 		jdbcTemplate.update(UPDATE_PROBATION_QUERY, obj);
 	}

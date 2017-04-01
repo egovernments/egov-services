@@ -198,7 +198,7 @@ public class DataIntegrityValidator implements Validator {
 				if (histories.get(index).getDocuments() != null && !histories.get(index).getDocuments().isEmpty()
 						&& employeeService.checkForDuplicatesForAnyOneOfGivenCSV("egeis_employeeDocuments", "document",
 								getProcessedDocumentsString(histories.get(index).getDocuments()))) {
-					errors.rejectValue("employee.history[" + index + "].documents", "concurrent",
+					errors.rejectValue("employee.serviceHistory[" + index + "].documents", "concurrent",
 							"document(s) already exists");
 				}
 			}

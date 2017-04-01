@@ -16,7 +16,7 @@ public class ComplaintMessageQueueRepository {
 
     @Autowired
     public ComplaintMessageQueueRepository(LogAwareKafkaTemplate<String, Object> kafkaTemplate,
-                                           @Value("${outgoing.queue.name.suffix}") String topicName) {
+                                           @Value("${outgoing.queue.name}") String topicName) {
         this.kafkaTemplate = kafkaTemplate;
         this.topicName = topicName;
     }

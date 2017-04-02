@@ -86,6 +86,7 @@
                                     <element>CLASS</element>
                                     <excludes>
                                         <exclude>org.egov.ZuulGatewayApplication</exclude>
+                                        <exclude>org.egov.constants.RequestContextConstants</exclude>
                                         <exclude>org.egov.contract.*</exclude>
                                     </excludes>
                                     <limits>

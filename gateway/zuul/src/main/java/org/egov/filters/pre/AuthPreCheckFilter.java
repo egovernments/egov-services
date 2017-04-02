@@ -10,18 +10,42 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+
+import static org.egov.constants.RequestContextConstants.*;
 
 public class AuthPreCheckFilter extends ZuulFilter {
+    private static final String AUTH_TOKEN_RETRIEVE_FAILURE_MESSAGE = "Retrieving of auth token failed";
+    private static final String REQUEST_INFO_FIELD_NAME = "RequestInfo";
+    private static final String OPEN_ENDPOINT_MESSAGE = "Routing to an open endpoint: {}";
+    private static final String GET = "GET";
+    private static final String AUTH_TOKEN_HEADER_MESSAGE = "Fetching auth-token from header for URI: {}";
+    private static final String FILESTORE_REGEX = "^/filestore/.*";
+    private static final String AUTH_TOKEN_BODY_MESSAGE = "Fetching auth-token from request body for URI: {}";
+    private static final String AUTH_TOKEN_HEADER_NAME = "auth-token";
+    private static final String RETRIEVED_AUTH_TOKEN_MESSAGE = "Auth-token: {}";
+    private static final String ROUTING_TO_ANONYMOUS_ENDPOINT_MESSAGE = "Routing to anonymous endpoint: {}";
+    private static final String ROUTING_TO_PROTECTED_ENDPOINT_RESTRICTED_MESSAGE =
+        "Routing to protected endpoint {} restricted - No auth token";
+    private static final String UNAUTHORIZED_USER_MESSAGE = "You are not authorized to access this resource";
+    private static final String PROCEED_ROUTING_MESSAGE = "Routing to an endpoint: {} - auth provided";
+    private static final String NO_REQUEST_INFO_FIELD_MESSAGE = "No request-info field in request body for: {}";
+    private static final String AUTH_TOKEN_REQUEST_BODY_FIELD_NAME = "authToken";
+    private static final String USER_INFO_FIELD_NAME = "userInfo";
     private HashSet<String> openEndpointsWhitelist;
     private HashSet<String> anonymousEndpointsWhitelist;
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final ObjectMapper objectMapper;
+
 
     public AuthPreCheckFilter(HashSet<String> openEndpointsWhitelist,
                               HashSet<String> anonymousEndpointsWhitelist) {
         this.openEndpointsWhitelist = openEndpointsWhitelist;
         this.anonymousEndpointsWhitelist = anonymousEndpointsWhitelist;
+        objectMapper = new ObjectMapper();
     }
 
     @Override
@@ -42,89 +66,105 @@ public class AuthPreCheckFilter extends ZuulFilter {
     @Override
     public Object run() {
         String authToken;
-        RequestContext ctx = RequestContext.getCurrentContext();
-
-        if (openEndpointsWhitelist.contains(ctx.getRequest().getRequestURI())) {
-            setShouldDoAuth(ctx, false);
-            logger.info(String.format("pre-auth-filter: Routing to an open endpoint: %s", ctx.getRequest().getRequestURI()));
+        if (openEndpointsWhitelist.contains(getRequestURI())) {
+            setShouldDoAuth(false);
+            logger.info(OPEN_ENDPOINT_MESSAGE, getRequestURI());
             return null;
         }
-
         try {
-            authToken = getAuthTokenFromRequest(ctx);
-            ctx.set("authToken", authToken);
-            logger.info(String.format("pre-auth-filter: Auth-token: %s", authToken));
-            if (authToken == null) {
-                if (anonymousEndpointsWhitelist.contains(ctx.getRequest().getRequestURI())) {
-                    logger.info(String.format("pre-auth-filter: Routing to an anonymous endpoint: %s, No auth provided", ctx.getRequest().getRequestURI()));
-                    setShouldDoAuth(ctx, false);
-                } else {
-                    logger.info(String.format("pre-auth-filter: Routing to an non-anonymous endpoint: %s, No auth provided", ctx.getRequest().getRequestURI()));
-                    abortWithStatus(ctx, HttpStatus.UNAUTHORIZED, "You are not authorized to access this resource");
-                    return null;
-                }
-            } else {
-                logger.info(String.format("pre-auth-filter: Routing to an endpoint: %s, Auth provided", ctx.getRequest().getRequestURI()));
-                setShouldDoAuth(ctx, true);
-            }
-            return null;
+            authToken = getAuthTokenFromRequest();
         } catch (IOException e) {
-            logger.info(String.format("pre-auth-filter: Error while routing to an endpoint: %s", ctx.getRequest().getRequestURI()));
-            e.printStackTrace();
-            abortWithStatus(ctx, HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong");
+            logger.error(AUTH_TOKEN_RETRIEVE_FAILURE_MESSAGE, e);
+            abortWithStatus(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
             return null;
         }
-    }
-
-    private String getAuthTokenFromRequest(RequestContext ctx) throws IOException {
-        if (Objects.equals(ctx.getRequest().getMethod().toUpperCase(), "GET") ||
-                ctx.getRequest().getRequestURI().matches("^/filestore/.*")) {
-            logger.info("pre-auth-filter: Getting auth-token from header");
-            return getAuthTokenFromRequestHeader(ctx);
+        RequestContext.getCurrentContext().set(AUTH_TOKEN_KEY, authToken);
+        logger.info(RETRIEVED_AUTH_TOKEN_MESSAGE, authToken);
+        if (authToken == null) {
+            if (anonymousEndpointsWhitelist.contains(getRequestURI())) {
+                logger.info(ROUTING_TO_ANONYMOUS_ENDPOINT_MESSAGE, getRequestURI());
+                setShouldDoAuth(false);
+            } else {
+                logger.info(ROUTING_TO_PROTECTED_ENDPOINT_RESTRICTED_MESSAGE, getRequestURI());
+                abortWithStatus(HttpStatus.UNAUTHORIZED, UNAUTHORIZED_USER_MESSAGE);
+                return null;
+            }
         } else {
-            logger.info("pre-auth-filter: Getting auth-token from request body");
-            return getAuthTokenFromRequestBody(ctx);
+            logger.info(PROCEED_ROUTING_MESSAGE, getRequestURI());
+            setShouldDoAuth(true);
+        }
+        return null;
+    }
+
+    private String getAuthTokenFromRequest() throws IOException {
+        if (GET.equalsIgnoreCase(getRequestMethod()) || getRequestURI().matches(FILESTORE_REGEX)) {
+            logger.info(AUTH_TOKEN_HEADER_MESSAGE, getRequestURI());
+            return getAuthTokenFromRequestHeader();
+        } else {
+            logger.info(AUTH_TOKEN_BODY_MESSAGE, getRequestURI());
+            return getAuthTokenFromRequestBody();
         }
     }
 
-    private String getAuthTokenFromRequestBody(RequestContext ctx) throws IOException {
-        CustomRequestWrapper requestWrapper = new CustomRequestWrapper(ctx.getRequest());
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        TypeReference<HashMap<String, Object>> typeRef = new TypeReference<HashMap<String, Object>>() {
-        };
-        HashMap<String, Object> requestBody = objectMapper.readValue(requestWrapper.getPayload(), typeRef);
-        HashMap<String, String> requestInfo = (HashMap<String, String>) requestBody.get("RequestInfo");
+    private String getAuthTokenFromRequestBody() throws IOException {
+        CustomRequestWrapper requestWrapper = new CustomRequestWrapper(getRequest());
+        HashMap<String, Object> requestBody = getRequestBody(requestWrapper);
+        @SuppressWarnings("unchecked")
+        HashMap<String, String> requestInfo = (HashMap<String, String>) requestBody.get(REQUEST_INFO_FIELD_NAME);
         if (requestInfo == null) {
-            logger.info("pre-auth-filter: no request-info, so no authToken");
+            logger.info(NO_REQUEST_INFO_FIELD_MESSAGE, getRequestURI());
             return null;
         }
-        sanitizeAndSetRequest(ctx, requestBody, objectMapper, requestWrapper);
-        return requestInfo.get("authToken");
+        sanitizeAndSetRequest(requestBody, requestWrapper);
+        return requestInfo.get(AUTH_TOKEN_REQUEST_BODY_FIELD_NAME);
     }
 
-    private void sanitizeAndSetRequest(RequestContext ctx, HashMap<String, Object> requestBody, ObjectMapper objectMapper,
-                                       CustomRequestWrapper requestWrapper) throws JsonProcessingException {
-        HashMap<String, Object> requestInfo = (HashMap<String, Object>) requestBody.get("RequestInfo");
-
-        requestInfo.remove("userInfo");
-        requestBody.put("RequestInfo", requestInfo);
-        requestWrapper.setPayload(objectMapper.writeValueAsString(requestBody));
-        ctx.setRequest(requestWrapper);
-        logger.info(String.format("pre-auth-filter: Updated request payload - %s", requestWrapper.getPayload()));
+    private HashMap<String, Object> getRequestBody(CustomRequestWrapper requestWrapper) throws IOException {
+        return objectMapper.readValue(requestWrapper.getPayload(),
+            new TypeReference<HashMap<String, Object>>() { });
     }
 
-    private String getAuthTokenFromRequestHeader(RequestContext ctx) {
-        return ctx.getRequest().getHeader("auth-token");
+    private void sanitizeAndSetRequest(HashMap<String, Object> requestBody, CustomRequestWrapper requestWrapper) {
+        @SuppressWarnings("unchecked")
+        HashMap<String, Object> requestInfo = (HashMap<String, Object>) requestBody.get(REQUEST_INFO_FIELD_NAME);
+
+        requestInfo.remove(USER_INFO_FIELD_NAME);
+        requestBody.put(REQUEST_INFO_FIELD_NAME, requestInfo);
+        try {
+            requestWrapper.setPayload(objectMapper.writeValueAsString(requestBody));
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+        RequestContext.getCurrentContext().setRequest(requestWrapper);
     }
 
-    private void setShouldDoAuth(RequestContext ctx, boolean b) {
-        ctx.set("shouldDoAuth", b);
+    private String getAuthTokenFromRequestHeader() {
+        RequestContext ctx = RequestContext.getCurrentContext();
+        return ctx.getRequest().getHeader(AUTH_TOKEN_HEADER_NAME);
     }
 
-    private void abortWithStatus(RequestContext ctx, HttpStatus status, String message) {
-        ctx.set("error.status_code", status.value());
-        ctx.set("error.message", message);
+    private void setShouldDoAuth(boolean enableAuth) {
+        RequestContext ctx = RequestContext.getCurrentContext();
+        ctx.set(AUTH_BOOLEAN_FLAG_NAME, enableAuth);
+    }
+
+    private String getRequestURI() {
+        return getRequest().getRequestURI();
+    }
+
+    private HttpServletRequest getRequest() {
+        RequestContext ctx = RequestContext.getCurrentContext();
+        return ctx.getRequest();
+    }
+
+    private String getRequestMethod() {
+        return getRequest().getMethod();
+    }
+
+    private void abortWithStatus(HttpStatus status, String message) {
+        RequestContext ctx = RequestContext.getCurrentContext();
+        ctx.set(ERROR_CODE_KEY, status.value());
+        ctx.set(ERROR_MESSAGE_KEY, message);
         ctx.setSendZuulResponse(false);
     }
 }

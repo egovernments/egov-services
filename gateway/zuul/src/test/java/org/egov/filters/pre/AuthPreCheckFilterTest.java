@@ -237,6 +237,7 @@ public class AuthPreCheckFilterTest {
         ctx.setRequest(request);
 
         authPreCheckFilter.run();
+
         assertFalse(ctx.sendZuulResponse());
         assertThat(ctx.get("error.status_code"), is(500));
     }

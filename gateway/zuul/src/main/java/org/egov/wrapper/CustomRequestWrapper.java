@@ -8,14 +8,21 @@ import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
-public class CustomRequestWrapper
-        extends HttpServletRequestWrapper {
+public class CustomRequestWrapper extends HttpServletRequestWrapper {
 
     private String payload;
 
-    public CustomRequestWrapper(HttpServletRequest request) throws IOException {
+    public CustomRequestWrapper(HttpServletRequest request) {
         super(request);
-        payload = IOUtils.toString(request.getInputStream());
+        convertInputStreamToString(request);
+    }
+
+    private void convertInputStreamToString(HttpServletRequest request) {
+        try {
+            payload = IOUtils.toString(request.getInputStream());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public String getPayload() {

@@ -1,7 +1,6 @@
 package org.egov.filters.pre;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netflix.zuul.context.RequestContext;
 import org.apache.commons.io.IOUtils;
 import org.egov.contract.Role;
@@ -10,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.cloud.netflix.zuul.filters.ProxyRequestHelper;
 import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -22,6 +22,9 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class AuthFilterTest {
@@ -29,6 +32,9 @@ public class AuthFilterTest {
 
     @Mock
     private RestTemplate restTemplate;
+
+    @Mock
+    private ProxyRequestHelper proxyRequestHelper;
 
     private AuthFilter authFilter;
 
@@ -39,7 +45,7 @@ public class AuthFilterTest {
     @Before
     public void init() {
         MockitoAnnotations.initMocks(this);
-        authFilter = new AuthFilter(restTemplate, authServiceHost, authUri, userInfoHeader);
+        authFilter = new AuthFilter(proxyRequestHelper, restTemplate, authServiceHost, authUri, userInfoHeader);
         RequestContext ctx = RequestContext.getCurrentContext();
         ctx.clear();
         ctx.setRequest(request);
@@ -93,7 +99,8 @@ public class AuthFilterTest {
         when(restTemplate.postForObject(authUrl, null, User.class)).thenReturn(mockUser);
 
         authFilter.run();
-        assertThat(ctx.getZuulRequestHeaders().get(userInfoHeader), is("{\"id\":30,\"userName\":\"userName\",\"name\":\"name\",\"type\":\"EMPLOYEE\",\"mobileNumber\":\"1234567890\",\"emailId\":\"fu@bar.com\",\"roles\":[{\"name\":\"Employee\"},{\"name\":\"ULB Operator\"}]}"));
+        assertThat(ctx.getZuulRequestHeaders().get(userInfoHeader),
+            is("{\"id\":30,\"userName\":\"userName\",\"name\":\"name\",\"type\":\"EMPLOYEE\",\"mobileNumber\":\"1234567890\",\"emailId\":\"fu@bar.com\",\"roles\":[{\"name\":\"Employee\"},{\"name\":\"ULB Operator\"}]}"));
         assertTrue(ctx.sendZuulResponse());
     }
 
@@ -130,7 +137,8 @@ public class AuthFilterTest {
         when(restTemplate.postForObject(authUrl, null, User.class)).thenReturn(mockUser);
 
         authFilter.run();
-        assertThat(ctx.getZuulRequestHeaders().get(userInfoHeader), is("{\"id\":30,\"userName\":\"userName\",\"name\":\"name\",\"type\":\"EMPLOYEE\",\"mobileNumber\":\"1234567890\",\"emailId\":\"fu@bar.com\",\"roles\":[{\"name\":\"Employee\"},{\"name\":\"ULB Operator\"}]}"));
+        assertThat(ctx.getZuulRequestHeaders().get(userInfoHeader),
+            is("{\"id\":30,\"userName\":\"userName\",\"name\":\"name\",\"type\":\"EMPLOYEE\",\"mobileNumber\":\"1234567890\",\"emailId\":\"fu@bar.com\",\"roles\":[{\"name\":\"Employee\"},{\"name\":\"ULB Operator\"}]}"));
         assertTrue(ctx.sendZuulResponse());
     }
 
@@ -202,12 +210,12 @@ public class AuthFilterTest {
         ctx.setRequest(request);
         ctx.setResponse(new MockHttpServletResponse());
         String authUrl = String.format("%s%s%s", authServiceHost, authUri, authToken);
-
-        when(restTemplate.postForObject(authUrl, null, User.class)).thenThrow(new HttpClientErrorException(HttpStatus.UNAUTHORIZED));
+        when(restTemplate.postForObject(authUrl, null, User.class))
+            .thenThrow(new HttpClientErrorException(HttpStatus.UNAUTHORIZED));
 
         authFilter.run();
         assertFalse(ctx.sendZuulResponse());
-        assertThat(ctx.getResponseStatusCode(), is(401));
+        verify(proxyRequestHelper).setResponse(eq(401), any(), any());
     }
 
     @Test
@@ -219,10 +227,10 @@ public class AuthFilterTest {
         ctx.setRequest(request);
         ctx.setResponse(new MockHttpServletResponse());
         String authUrl = String.format("%s%s%s", authServiceHost, authUri, authToken);
-
         when(restTemplate.postForObject(authUrl, null, User.class)).thenThrow(JsonProcessingException.class);
 
         authFilter.run();
+
         assertFalse(ctx.sendZuulResponse());
     }
 }

@@ -17,16 +17,20 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Objects;
 
+import static org.egov.constants.RequestContextConstants.AUTH_BOOLEAN_FLAG_NAME;
+
 public class AuthFilter extends ZuulFilter {
 
-    private ProxyRequestHelper helper = new ProxyRequestHelper();
-    private String userInfoHeader;
-    private String authServiceHost;
-    private String authUri;
-    private RestTemplate restTemplate;
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final ProxyRequestHelper helper;
+    private final String userInfoHeader;
+    private final String authServiceHost;
+    private final String authUri;
+    private final RestTemplate restTemplate;
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    public AuthFilter(RestTemplate restTemplate, String authServiceHost, String authUri, String userInfoHeader) {
+    public AuthFilter(ProxyRequestHelper helper, RestTemplate restTemplate, String authServiceHost,
+                      String authUri, String userInfoHeader) {
+        this.helper = helper;
         this.restTemplate = restTemplate;
         this.authServiceHost = authServiceHost;
         this.authUri = authUri;
@@ -45,7 +49,7 @@ public class AuthFilter extends ZuulFilter {
 
     @Override
     public boolean shouldFilter() {
-        return (boolean) RequestContext.getCurrentContext().get("shouldDoAuth");
+        return (boolean) RequestContext.getCurrentContext().get(AUTH_BOOLEAN_FLAG_NAME);
     }
 
     @Override
@@ -64,10 +68,8 @@ public class AuthFilter extends ZuulFilter {
                 appendUserInfoToRequestBody(ctx, user);
             }
         } catch (HttpClientErrorException ex) {
-            ex.printStackTrace();
             abortWithException(ctx, ex);
         } catch (IOException ex) {
-            ex.printStackTrace();
             ctx.setSendZuulResponse(false);
         }
         return null;
@@ -90,16 +92,16 @@ public class AuthFilter extends ZuulFilter {
         CustomRequestWrapper requestWrapper = new CustomRequestWrapper(ctx.getRequest());
         requestWrapper.setPayload(mapper.writeValueAsString(requestBody));
         ctx.setRequest(requestWrapper);
-        logger.info(String.format("auth-filter: final payload after adding user info - %s", requestWrapper.getPayload()));
     }
 
     private void abortWithException(RequestContext ctx, HttpClientErrorException ex) {
         ctx.setSendZuulResponse(false);
         try {
-            helper.setResponse(ex.getStatusCode().value(), IOUtils.toInputStream(ex.getResponseBodyAsString()),
+            helper.setResponse(ex.getStatusCode().value(),
+					IOUtils.toInputStream(ex.getResponseBodyAsString()),
                     ex.getResponseHeaders());
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

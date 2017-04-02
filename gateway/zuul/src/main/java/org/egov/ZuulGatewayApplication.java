@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
+import org.springframework.cloud.netflix.zuul.filters.ProxyRequestHelper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
@@ -43,6 +44,7 @@ public class ZuulGatewayApplication {
     @Bean
     public AuthFilter authFilter() {
         RestTemplate restTemplate = new RestTemplate();
-        return new AuthFilter(restTemplate, authServiceHost, authServiceUri, userInfoHeader);
+        final ProxyRequestHelper proxyRequestHelper = new ProxyRequestHelper();
+        return new AuthFilter(proxyRequestHelper, restTemplate, authServiceHost, authServiceUri, userInfoHeader);
     }
 }

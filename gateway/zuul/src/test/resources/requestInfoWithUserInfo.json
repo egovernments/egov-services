@@ -1,0 +1,23 @@
+{
+    "RequestInfo": {
+        "fu": "bar",
+        "authToken": "dummy-auth-token",
+        "userInfo": {
+            "id": 30,
+            "userName": "userName",
+            "name": "name",
+            "type": "EMPLOYEE",
+            "mobileNumber": "1234567890",
+            "emailId": "fu@bar.com",
+            "roles": [
+                {
+                    "name": "Employee"
+                },
+                {
+                    "name": "ULB Operator"
+                }
+            ]
+        },
+        "correlationId": "123-123-123-123"
+    }
+}

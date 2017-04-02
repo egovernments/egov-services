@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Objects;
 
-import static org.egov.constants.RequestContextConstants.AUTH_BOOLEAN_FLAG_NAME;
+import static org.egov.constants.RequestContextConstants.*;
 
 public class AuthFilter extends ZuulFilter {
 
@@ -27,6 +27,8 @@ public class AuthFilter extends ZuulFilter {
     private final String authUri;
     private final RestTemplate restTemplate;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final ObjectMapper mapper;
+
 
     public AuthFilter(ProxyRequestHelper helper, RestTemplate restTemplate, String authServiceHost,
                       String authUri, String userInfoHeader) {
@@ -35,6 +37,7 @@ public class AuthFilter extends ZuulFilter {
         this.authServiceHost = authServiceHost;
         this.authUri = authUri;
         this.userInfoHeader = userInfoHeader;
+        mapper = new ObjectMapper();
     }
 
     @Override
@@ -55,16 +58,12 @@ public class AuthFilter extends ZuulFilter {
     @Override
     public Object run() {
         RequestContext ctx = RequestContext.getCurrentContext();
-        String authToken = (String) ctx.get("authToken");
-        String authURL = String.format("%s%s%s", authServiceHost, authUri, authToken);
+        String authToken = (String) ctx.get(AUTH_TOKEN_KEY);
         try {
-            User user = restTemplate.postForObject(authURL, null, User.class);
-            ObjectMapper mapper = new ObjectMapper();
+            User user = getUser(authToken);
             if (shouldPutUserInfoOnHeaders(ctx)) {
-                logger.info("auth-filter: adding user-info header");
                 ctx.addZuulRequestHeader(userInfoHeader, mapper.writeValueAsString(user));
             } else {
-                logger.info("auth-filter: adding userInfo in request body");
                 appendUserInfoToRequestBody(ctx, user);
             }
         } catch (HttpClientErrorException ex) {
@@ -75,23 +74,31 @@ public class AuthFilter extends ZuulFilter {
         return null;
     }
 
-    private boolean shouldPutUserInfoOnHeaders(RequestContext ctx) {
-        return Objects.equals(ctx.getRequest().getMethod().toUpperCase(), "GET") ||
-                ctx.getRequest().getRequestURI().matches("^/filestore/.*");
+    private User getUser(String authToken) {
+        String authURL = String.format("%s%s%s", authServiceHost, authUri, authToken);
+        return restTemplate.postForObject(authURL, null, User.class);
     }
 
+    private boolean shouldPutUserInfoOnHeaders(RequestContext ctx) {
+        return Objects.equals(ctx.getRequest().getMethod().toUpperCase(), GET) ||
+                ctx.getRequest().getRequestURI().matches(FILESTORE_REGEX);
+    }
+
+    @SuppressWarnings("unchecked")
     private void appendUserInfoToRequestBody(RequestContext ctx, User user) throws IOException {
-        String payload = IOUtils.toString(ctx.getRequest().getInputStream());
-        ObjectMapper mapper = new ObjectMapper();
-        TypeReference<HashMap<String, Object>> typeRef = new TypeReference<HashMap<String, Object>>() {
-        };
-        HashMap<String, Object> requestBody = mapper.readValue(payload, typeRef);
-        HashMap<String, Object> requestInfo = (HashMap<String, Object>) requestBody.get("RequestInfo");
-        requestInfo.put("userInfo", user);
-        requestBody.put("RequestInfo", requestInfo);
+        HashMap<String, Object> requestBody = getRequestBody(ctx);
+        HashMap<String, Object> requestInfo = (HashMap<String, Object>) requestBody.get(REQUEST_INFO_FIELD_NAME);
+        requestInfo.put(USER_INFO_FIELD_NAME, user);
+        requestInfo.put(CORRELATION_ID_FIELD_NAME, ctx.get(CORRELATION_ID_KEY));
+        requestBody.put(REQUEST_INFO_FIELD_NAME, requestInfo);
         CustomRequestWrapper requestWrapper = new CustomRequestWrapper(ctx.getRequest());
         requestWrapper.setPayload(mapper.writeValueAsString(requestBody));
         ctx.setRequest(requestWrapper);
+    }
+
+    private HashMap<String, Object> getRequestBody(RequestContext ctx) throws IOException {
+        String payload = IOUtils.toString(ctx.getRequest().getInputStream());
+        return mapper.readValue(payload, new TypeReference<HashMap<String, Object>>() { });
     }
 
     private void abortWithException(RequestContext ctx, HttpClientErrorException ex) {

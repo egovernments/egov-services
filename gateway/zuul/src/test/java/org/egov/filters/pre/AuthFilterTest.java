@@ -3,6 +3,7 @@ package org.egov.filters.pre;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.netflix.zuul.context.RequestContext;
 import org.apache.commons.io.IOUtils;
+import org.egov.Resources;
 import org.egov.contract.Role;
 import org.egov.contract.User;
 import org.junit.Before;
@@ -29,6 +30,7 @@ import static org.mockito.Mockito.when;
 
 public class AuthFilterTest {
     private MockHttpServletRequest request = new MockHttpServletRequest();
+    private Resources resources = new Resources();
 
     @Mock
     private RestTemplate restTemplate;
@@ -72,6 +74,7 @@ public class AuthFilterTest {
         String authToken = "dummy-auth-token";
         RequestContext ctx = RequestContext.getCurrentContext();
         ctx.set("authToken", authToken);
+        ctx.set("CORRELATION_ID", "123-123-123-123");
         request.setMethod("GET");
         ctx.setRequest(request);
 
@@ -147,10 +150,10 @@ public class AuthFilterTest {
         String authToken = "dummy-auth-token";
         RequestContext ctx = RequestContext.getCurrentContext();
         ctx.set("authToken", authToken);
+        ctx.set("CORRELATION_ID", "123-123-123-123");
         request.setMethod("POST");
         request.setContent(IOUtils.toByteArray(IOUtils.toInputStream("{\"RequestInfo\": {\"fu\": \"bar\", \"authToken\": \"dummy-auth-token\"}}")));
         ctx.setRequest(request);
-
         String authUrl = String.format("%s%s%s", authServiceHost, authUri, authToken);
         User mockUser = new User();
         mockUser.setId(30);
@@ -159,42 +162,21 @@ public class AuthFilterTest {
         mockUser.setMobileNumber("1234567890");
         mockUser.setEmailId("fu@bar.com");
         mockUser.setType("EMPLOYEE");
-
         Role mockRole1 = new Role();
         mockRole1.setName("Employee");
-
         Role mockRole2 = new Role();
         mockRole2.setName("ULB Operator");
-
         List<Role> roles = new ArrayList<>();
         roles.add(mockRole1);
         roles.add(mockRole2);
-
         mockUser.setRoles(roles);
-
         when(restTemplate.postForObject(authUrl, null, User.class)).thenReturn(mockUser);
 
         authFilter.run();
 
-        String expectedBody = "{\"RequestInfo\":" +
-                                    "{\"fu\":\"bar\"," +
-                                    "\"authToken\":\"dummy-auth-token\"," +
-                                    "\"userInfo\":" +
-                                        "{\"id\":30," +
-                                        "\"userName\":\"userName\"," +
-                                        "\"name\":\"name\"," +
-                                        "\"type\":\"EMPLOYEE\"," +
-                                        "\"mobileNumber\":\"1234567890\"," +
-                                        "\"emailId\":\"fu@bar.com\"," +
-                                        "\"roles\":[" +
-                                            "{\"name\":\"Employee\"}," +
-                                            "{\"name\":\"ULB Operator\"}" +
-                                           "]" +
-                                        "}" +
-                                    "}" +
-                                "}";
+        String expectedBody = resources.getFileContents("requestInfoWithUserInfo.json");
         assertEquals(expectedBody, IOUtils.toString(ctx.getRequest().getInputStream()));
-        int expectedContentLength = 239;
+        int expectedContentLength = 273;
         assertEquals(expectedContentLength, ctx.getRequest().getContentLength());
         assertEquals(expectedContentLength, ctx.getRequest().getContentLengthLong());
         assertEquals(null, ctx.getZuulRequestHeaders().get(userInfoHeader));

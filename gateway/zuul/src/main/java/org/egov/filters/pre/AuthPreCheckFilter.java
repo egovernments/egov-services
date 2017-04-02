@@ -19,11 +19,8 @@ import static org.egov.constants.RequestContextConstants.*;
 
 public class AuthPreCheckFilter extends ZuulFilter {
     private static final String AUTH_TOKEN_RETRIEVE_FAILURE_MESSAGE = "Retrieving of auth token failed";
-    private static final String REQUEST_INFO_FIELD_NAME = "RequestInfo";
     private static final String OPEN_ENDPOINT_MESSAGE = "Routing to an open endpoint: {}";
-    private static final String GET = "GET";
     private static final String AUTH_TOKEN_HEADER_MESSAGE = "Fetching auth-token from header for URI: {}";
-    private static final String FILESTORE_REGEX = "^/filestore/.*";
     private static final String AUTH_TOKEN_BODY_MESSAGE = "Fetching auth-token from request body for URI: {}";
     private static final String AUTH_TOKEN_HEADER_NAME = "auth-token";
     private static final String RETRIEVED_AUTH_TOKEN_MESSAGE = "Auth-token: {}";
@@ -34,7 +31,6 @@ public class AuthPreCheckFilter extends ZuulFilter {
     private static final String PROCEED_ROUTING_MESSAGE = "Routing to an endpoint: {} - auth provided";
     private static final String NO_REQUEST_INFO_FIELD_MESSAGE = "No request-info field in request body for: {}";
     private static final String AUTH_TOKEN_REQUEST_BODY_FIELD_NAME = "authToken";
-    private static final String USER_INFO_FIELD_NAME = "userInfo";
     private HashSet<String> openEndpointsWhitelist;
     private HashSet<String> anonymousEndpointsWhitelist;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());

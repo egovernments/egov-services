@@ -9,12 +9,13 @@ import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
+import static org.egov.constants.RequestContextConstants.CORRELATION_ID_KEY;
+
 @Component
 public class CorrelationIdFilter extends ZuulFilter {
 
     private static final String CORRELATION_HEADER_NAME = "x-correlation-id";
-    private static final String RECEIVED_REQUEST_MESSAGE = "Received request for: ";
-    private static final String CORRELATION_ID = "CORRELATION_ID";
+    private static final String RECEIVED_REQUEST_MESSAGE = "Received request for: {}";
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -37,10 +38,10 @@ public class CorrelationIdFilter extends ZuulFilter {
     public Object run() {
         RequestContext ctx = RequestContext.getCurrentContext();
         final String correlationId = UUID.randomUUID().toString();
-        ctx.set(CORRELATION_ID, correlationId);
+        MDC.put(CORRELATION_ID_KEY, correlationId);
+        ctx.set(CORRELATION_ID_KEY, correlationId);
         ctx.addZuulRequestHeader(CORRELATION_HEADER_NAME, correlationId);
-        MDC.put(CORRELATION_ID, correlationId);
-        logger.info(RECEIVED_REQUEST_MESSAGE + ctx.getRequest().getRequestURI());
+        logger.info(RECEIVED_REQUEST_MESSAGE, ctx.getRequest().getRequestURI());
         return null;
     }
 

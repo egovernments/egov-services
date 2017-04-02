@@ -1,4 +1,4 @@
-CREATE TABLE public.egasset_asset
+CREATE TABLE egasset_asset
 (
   id bigint NOT NULL,
   assetcategory bigint NOT NULL,
@@ -31,5 +31,5 @@ CREATE TABLE public.egasset_asset
   grossvalue numeric,
   accumulateddepreciation numeric,
   CONSTRAINT pk_egasset_asset PRIMARY KEY (id)
-)
-CREATE SEQUENCE SEQ_EGASSET_ASSET INCREMENT 1 MINVALUE 1 MAXVALUE 9223372036854775807 START 1 CACHE 1;
+);
+CREATE SEQUENCE SEQ_EGASSET_ASSET;

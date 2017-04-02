@@ -38,54 +38,48 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.model;
+package org.egov.eis.broker;
 
-import java.util.Date;
+import java.io.IOException;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.egov.eis.service.LeaveOpeningBalanceService;
+import org.egov.eis.web.contract.LeaveOpeningBalanceRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.annotation.KafkaListener;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+public class LeaveOpeningBalanceSaveConsumer {
 
-@AllArgsConstructor
-@EqualsAndHashCode
-@Getter
-@NoArgsConstructor
-@Setter
-@ToString
-public class LeaveOpeningBalance {
+	public static final Logger LOGGER = LoggerFactory.getLogger(LeaveOpeningBalanceSaveConsumer.class);
 
-	private Long id;
+	@Autowired
+	private LeaveOpeningBalanceService leaveOpeningBalanceService;
 
-	@NotNull
-	private Long employee;
+	@Value("${kafka.topics.leaveopeningbalance.create.name}")
+	private String leaveOpeningBalanceCreateTopic;
 
-	@NotNull
-	private Integer calendarYear;
+	@Value("${kafka.topics.leaveopeningbalance.update.name}")
+	private String leaveOpeningBalanceUpdateTopic;
 
-	private LeaveType leaveType;
-
-	@NotNull
-	private Float noOfDays;
-
-	private Long createdBy;
-
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date createdDate;
-
-	private Long lastModifiedBy;
-
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date lastModifiedDate;
-
-	@Size(max=256)
-	private String tenantId;
-
+	@KafkaListener(containerFactory = "kafkaListenerContainerFactory", topics = {
+			"${kafka.topics.leaveopeningbalance.create.name}", "${kafka.topics.leaveopeningbalance.update.name}" })
+	public void listen(ConsumerRecord<String, String> record) {
+		LOGGER.info("key:" + record.key() + ":" + "value:" + record.value());
+		ObjectMapper objectMapper = new ObjectMapper();
+		try {
+			if (record.topic().equalsIgnoreCase(leaveOpeningBalanceCreateTopic))
+				leaveOpeningBalanceService
+						.create(objectMapper.readValue(record.value(), LeaveOpeningBalanceRequest.class));
+			else
+				leaveOpeningBalanceService
+						.update(objectMapper.readValue(record.value(), LeaveOpeningBalanceRequest.class));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

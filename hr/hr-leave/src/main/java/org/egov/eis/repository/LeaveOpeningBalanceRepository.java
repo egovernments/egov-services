@@ -40,6 +40,9 @@
 
 package org.egov.eis.repository;
 
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,12 +50,24 @@ import org.egov.eis.model.LeaveOpeningBalance;
 import org.egov.eis.repository.builder.LeaveOpeningBalanceQueryBuilder;
 import org.egov.eis.repository.rowmapper.LeaveOpeningBalanceRowMapper;
 import org.egov.eis.web.contract.LeaveOpeningBalanceGetRequest;
+import org.egov.eis.web.contract.LeaveOpeningBalanceRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class LeaveOpeningBalanceRepository {
+
+	public static final String INSERT_LEAVEOPENINGBALANCE_QUERY = "INSERT INTO egeis_leaveOpeningBalance"
+			+ " (id, employeeId, calendarYear, leaveTypeId, noOfDays, createdBy, createdDate,"
+			+ " lastModifiedBy, lastModifiedDate, tenantId)"
+			+ " VALUES (nextval('seq_egeis_leaveOpeningBalance'),?,?,?,?,?,?,?,?,?)";
+
+	public static final String UPDATE_LEAVEOPENINGBALANCE_QUERY = "UPDATE egeis_leaveOpeningBalance"
+			+ " SET employeeId=?, calendarYear=?, leaveTypeId=?, noOfDays=?, createdBy=?, createdDate=?,"
+			+ " lastModifiedBy=?, lastModifiedDate=?, tenantId=? where id=? and tenantid=? ";
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -65,8 +80,110 @@ public class LeaveOpeningBalanceRepository {
 
 	public List<LeaveOpeningBalance> findForCriteria(LeaveOpeningBalanceGetRequest leaveOpeningBalanceGetRequest) {
 		List<Object> preparedStatementValues = new ArrayList<Object>();
-		String queryStr = leaveOpeningBalanceQueryBuilder.getQuery(leaveOpeningBalanceGetRequest, preparedStatementValues);
-		List<LeaveOpeningBalance> leaveOpeningBalances = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), leaveOpeningBalanceRowMapper);
+		String queryStr = leaveOpeningBalanceQueryBuilder.getQuery(leaveOpeningBalanceGetRequest,
+				preparedStatementValues);
+		List<LeaveOpeningBalance> leaveOpeningBalances = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
+				leaveOpeningBalanceRowMapper);
 		return leaveOpeningBalances;
 	}
+
+	public void create(LeaveOpeningBalanceRequest leaveOpeningBalanceRequest) {
+		/*
+		 * LeaveOpeningBalance leaveOpeningBalance =
+		 * leaveOpeningBalanceRequest.getLeaveOpeningBalance(); Object[] obj =
+		 * new Object[] { leaveOpeningBalance.getEmployee(),
+		 * leaveOpeningBalance.getCalendarYear(),
+		 * leaveOpeningBalance.getLeaveType().getId(),
+		 * leaveOpeningBalance.getNoOfDays(),
+		 * leaveOpeningBalance.getCreatedBy(),
+		 * leaveOpeningBalance.getCreatedDate(),
+		 * leaveOpeningBalance.getLastModifiedBy(),
+		 * leaveOpeningBalance.getLastModifiedDate(),
+		 * leaveOpeningBalance.getTenantId() };
+		 * 
+		 * try { jdbcTemplate.update(INSERT_LEAVEOPENINGBALANCE_QUERY, obj); }
+		 * catch (Exception ex) { ex.printStackTrace(); }
+		 */
+
+		try {
+			jdbcTemplate.batchUpdate(INSERT_LEAVEOPENINGBALANCE_QUERY, new BatchPreparedStatementSetter() {
+
+				@Override
+				public void setValues(final PreparedStatement ps, final int i) throws SQLException {
+					final LeaveOpeningBalance leaveOpeningBalance = ((List<LeaveOpeningBalance>) leaveOpeningBalanceRequest
+							.getLeaveOpeningBalance()).get(i);
+					ps.setLong(1, leaveOpeningBalance.getEmployee());
+					ps.setInt(2, leaveOpeningBalance.getCalendarYear());
+					ps.setLong(3, leaveOpeningBalance.getLeaveType().getId());
+					ps.setFloat(4, leaveOpeningBalance.getNoOfDays());
+					ps.setLong(5, leaveOpeningBalance.getCreatedBy());
+					ps.setDate(6, (Date) leaveOpeningBalance.getCreatedDate());
+					ps.setLong(7, leaveOpeningBalance.getLastModifiedBy());
+					ps.setDate(8, (Date) leaveOpeningBalance.getLastModifiedDate());
+					ps.setString(9, leaveOpeningBalance.getTenantId());
+				}
+
+				@Override
+				public int getBatchSize() {
+					return leaveOpeningBalanceRequest.getLeaveOpeningBalance().size();
+				}
+			});
+		} catch (final DataAccessException ex) {
+			ex.printStackTrace();
+			throw new RuntimeException(ex.getMessage());
+		}
+
+	}
+
+	public void update(LeaveOpeningBalanceRequest leaveOpeningBalanceRequest) {
+		/*
+		 * LeaveOpeningBalance leaveOpeningBalance =
+		 * leaveOpeningBalanceRequest.getLeaveOpeningBalance(); Object[] obj =
+		 * new Object[] { leaveOpeningBalance.getEmployee(),
+		 * leaveOpeningBalance.getCalendarYear(),
+		 * leaveOpeningBalance.getLeaveType().getId(),
+		 * leaveOpeningBalance.getNoOfDays(),
+		 * leaveOpeningBalance.getCreatedBy(),
+		 * leaveOpeningBalance.getCreatedDate(),
+		 * leaveOpeningBalance.getLastModifiedBy(),
+		 * leaveOpeningBalance.getLastModifiedDate(),
+		 * leaveOpeningBalance.getTenantId(), leaveOpeningBalance.getId(),
+		 * leaveOpeningBalance.getTenantId() };
+		 * 
+		 * try { jdbcTemplate.update(UPDATE_LEAVEOPENINGBALANCE_QUERY, obj); }
+		 * catch (Exception ex) { ex.printStackTrace(); }
+		 */
+
+		try {
+			jdbcTemplate.batchUpdate(UPDATE_LEAVEOPENINGBALANCE_QUERY, new BatchPreparedStatementSetter() {
+
+				@Override
+				public void setValues(final PreparedStatement ps, final int i) throws SQLException {
+					final LeaveOpeningBalance leaveOpeningBalance = ((List<LeaveOpeningBalance>) leaveOpeningBalanceRequest
+							.getLeaveOpeningBalance()).get(i);
+					ps.setLong(1, leaveOpeningBalance.getEmployee());
+					ps.setInt(2, leaveOpeningBalance.getCalendarYear());
+					ps.setLong(3, leaveOpeningBalance.getLeaveType().getId());
+					ps.setFloat(4, leaveOpeningBalance.getNoOfDays());
+					ps.setLong(5, leaveOpeningBalance.getCreatedBy());
+					ps.setDate(6, (Date) leaveOpeningBalance.getCreatedDate());
+					ps.setLong(7, leaveOpeningBalance.getLastModifiedBy());
+					ps.setDate(8, (Date) leaveOpeningBalance.getLastModifiedDate());
+					ps.setString(9, leaveOpeningBalance.getTenantId());
+					ps.setLong(10, leaveOpeningBalance.getId());
+					ps.setString(11, leaveOpeningBalance.getTenantId());
+				}
+
+				@Override
+				public int getBatchSize() {
+					return leaveOpeningBalanceRequest.getLeaveOpeningBalance().size();
+				}
+			});
+		} catch (final DataAccessException ex) {
+			ex.printStackTrace();
+			throw new RuntimeException(ex.getMessage());
+		}
+
+	}
+
 }

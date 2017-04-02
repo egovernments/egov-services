@@ -40,6 +40,9 @@
 
 package org.egov.eis.web.errorhandlers;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 import org.egov.eis.web.contract.RequestInfo;
 import org.egov.eis.web.contract.ResponseInfo;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
@@ -111,5 +114,33 @@ public class ErrorHandler {
 		errorResponse.setError(error);
 
 		return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+	public ResponseEntity<ErrorResponse> getErrorResponseEntityForBindingErrors(BindingResult bindingResult,
+			RequestInfo requestInfo) {
+		Error error = new Error();
+		error.setCode(400);
+		error.setMessage("Binding Error");
+		error.setDescription("Error while binding request object");
+
+		if (bindingResult.hasFieldErrors()) {
+			for (FieldError fieldError : bindingResult.getFieldErrors()) {
+				if (fieldError.getField().contains("Date")) {
+					DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+					String errorDate = dateFormat.format(fieldError.getRejectedValue());
+					error.getFields().put(fieldError.getField(), errorDate);
+				} else {
+					error.getFields().put(fieldError.getField(), fieldError.getRejectedValue());
+				}
+			}
+		}
+
+		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, false);
+
+		ErrorResponse errorResponse = new ErrorResponse();
+		errorResponse.setResponseInfo(responseInfo);
+		errorResponse.setError(error);
+
+		return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
 	}
 }

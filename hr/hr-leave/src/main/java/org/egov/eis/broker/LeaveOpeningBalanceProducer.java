@@ -38,54 +38,34 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.model;
+package org.egov.eis.broker;
 
-import java.util.Date;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.SendResult;
+import org.springframework.stereotype.Service;
+import org.springframework.util.concurrent.ListenableFuture;
+import org.springframework.util.concurrent.ListenableFutureCallback;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+@Service
+public class LeaveOpeningBalanceProducer {
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+	@Autowired
+	private KafkaTemplate<String, Object> kafkaTemplate;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+	public void sendMessage(String topic, String key, Object message) {
 
-@AllArgsConstructor
-@EqualsAndHashCode
-@Getter
-@NoArgsConstructor
-@Setter
-@ToString
-public class LeaveOpeningBalance {
+		ListenableFuture<SendResult<String, Object>> future = kafkaTemplate.send(topic, key, message);
 
-	private Long id;
+		// Handle success or failure of sending
+		future.addCallback(new ListenableFutureCallback<SendResult<String, Object>>() {
+			@Override
+			public void onSuccess(SendResult<String, Object> stringTSendResult) {
+			}
 
-	@NotNull
-	private Long employee;
-
-	@NotNull
-	private Integer calendarYear;
-
-	private LeaveType leaveType;
-
-	@NotNull
-	private Float noOfDays;
-
-	private Long createdBy;
-
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date createdDate;
-
-	private Long lastModifiedBy;
-
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date lastModifiedDate;
-
-	@Size(max=256)
-	private String tenantId;
-
+			@Override
+			public void onFailure(Throwable throwable) {
+			}
+		});
+	}
 }

@@ -80,9 +80,14 @@ public class WorkFlowController {
 		}
 	}
 
-	@GetMapping(value = "/history")
-	public List<Task> getHistory(@RequestParam final String tenantId, @RequestParam final String workflowId) {
-		return workflow.getHistoryDetail(tenantId, workflowId);
+	@PostMapping(value = "/history")
+	public TaskResponse getHistory(@RequestBody  RequestInfo requestInfo ,@RequestParam final String tenantId, @RequestParam final String workflowId) {
+		
+		List<Task> historyDetail = workflow.getHistoryDetail(tenantId, workflowId);
+		TaskResponse response=new TaskResponse();
+		response.setResponseInfo(getResponseInfo(requestInfo));
+		response.setTasks(historyDetail);
+		return response;
 	}
 
 	@PostMapping(value = "/tasks/{id}/_update")

@@ -57,7 +57,10 @@ public class AllotteeService {
 		userSearchRequest.setEmailId(allottee.getEmailId());
 		userSearchRequest.setMobileNumber(allottee.getMobileNumber());
 		logger.info("url for allottee api post call",url);
-		return callAllotteSearch(url,userSearchRequest);
+		AllotteeResponse allotteeResponse = callAllotteSearch(url, userSearchRequest);
+		allottee.setId(allotteeResponse.getAllottee().get(0).getId());
+		System.err.println("the id from alottee ::: " + allotteeResponse.getAllottee().get(0).getId());
+		return allotteeResponse;
 	}
 	
 	public AllotteeResponse createAllottee(Allottee allottee,RequestInfo requestInfo) {

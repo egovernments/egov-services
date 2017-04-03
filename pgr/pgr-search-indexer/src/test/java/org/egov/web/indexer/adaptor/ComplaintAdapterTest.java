@@ -70,7 +70,7 @@ public class ComplaintAdapterTest {
 		values.put("citizenFeedback", "0");
 		values.put("escalationHours", "0");
 		values.put("locationId", "1");
-		values.put("childLocationId", "2");
+		values.put("child_location_id", "2");
 		values.put("tenantId", "1");
 		values.put("assignmentId", "1");
 		final ComplaintType expectedComplaintType = getComplaintType();

@@ -71,7 +71,7 @@ public class ComplaintAdapter {
 //        complaintIndex.setSource(propertiesManager.getProperty(String.format("complaint.source.%s.%s",
 //            values.get("userType").toLowerCase(), values.get("receivingMode").toLowerCase())));
         complaintIndex.setSource(propertiesManager.getProperty("complaint.source.citizen.website"));
-        InitializeBoundaryDetails(complaintIndex, values.get("locationId"), values.get("childLocationId"));
+        InitializeBoundaryDetails(complaintIndex, values.get("locationId"), values.get("child_location_id"));
 //        InitializeCityDetails(complaintIndex, values.get("tenantId"));
         InitializeEmployeeDetails(complaintIndex, values.get("assignmentId"), values.get("tenantId"));
 

@@ -15,7 +15,7 @@ var requestInfo = {
     "authToken":authToken
 };
 
-var tenantId="ap.kurnool";
+var tenantId="1";
 
 
 
@@ -43,6 +43,7 @@ var revenueZone = !localStorage.getItem("revenueZone") || localStorage.getItem("
 var revenueBlock = !localStorage.getItem("revenueBlock") || localStorage.getItem("revenueBlock") == "undefined" ? (localStorage.setItem("revenueBlock", JSON.stringify(commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"BLOCK",hierarchyTypeName:"REVENUE"}).responseJSON["Boundary"])) || []) : JSON.parse(localStorage.getItem("revenueBlock"));
 var assetCategories = !localStorage.getItem("assetCategories") || localStorage.getItem("assetCategories") == "undefined" ? (localStorage.setItem("assetCategories", JSON.stringify(commonApiPost("asset-services","assetCategories","_search",{}).responseJSON["AssetCategory"])) || []) : JSON.parse(localStorage.getItem("assetCategories"));
 var natureOfAllotments = !localStorage.getItem("natureOfAllotments") || localStorage.getItem("natureOfAllotments") == "undefined" ? (localStorage.setItem("natureOfAllotments", JSON.stringify(commonApiPost("lams-services","","getnatureofallotment",{}).responseJSON)) || {}) : JSON.parse(localStorage.getItem("natureOfAllotments"));
+var paymentCycle= !localStorage.getItem("paymentCycle") || localStorage.getItem("paymentCycle") == "undefined" ? (localStorage.setItem("paymentCycle", JSON.stringify(commonApiPost("lams-services","","getpaymentcycle",{}).responseJSON)) || {}) : JSON.parse(localStorage.getItem("paymentCycle"));
 var employees=[];
 // var assignments_fund=JSON.parse(localStorage.getItem("assignments_fund"))==null?(localStorage.setItem("assignments_fund",JSON.stringify(getCommonMaster("egf-masters", "funds", "funds").responseJSON["funds"])) || []) :JSON.parse(localStorage.getItem("assignments_fund"));
 // var assignments_functionary=JSON.parse(localStorage.getItem("assignments_functionary"))==null?(localStorage.setItem("assignments_functionary",JSON.stringify(getCommonMaster("egf-masters", "functionaries", "funds").responseJSON["functionaries"])) || []) :JSON.parse(localStorage.getItem("assignments_functionary"));

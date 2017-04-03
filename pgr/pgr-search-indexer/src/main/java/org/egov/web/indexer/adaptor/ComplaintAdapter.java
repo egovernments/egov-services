@@ -73,7 +73,7 @@ public class ComplaintAdapter {
         complaintIndex.setSource(propertiesManager.getProperty("complaint.source.citizen.website"));
         InitializeBoundaryDetails(complaintIndex, values.get("locationId"), values.get("child_location_id"));
 //        InitializeCityDetails(complaintIndex, values.get("tenantId"));
-        InitializeEmployeeDetails(complaintIndex, values.get("assignmentId"), values.get("tenantId"));
+        InitializeEmployeeDetails(complaintIndex, values.get("assignment_id"), values.get("tenantId"));
 
         // Default values set
         complaintIndex.setClosed(false);

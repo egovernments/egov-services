@@ -72,7 +72,7 @@ public class ComplaintAdapterTest {
 		values.put("locationId", "1");
 		values.put("child_location_id", "2");
 		values.put("tenantId", "1");
-		values.put("assignmentId", "1");
+		values.put("assignment_id", "1");
 		final ComplaintType expectedComplaintType = getComplaintType();
 		final Boundary expectedBoundary = getExpectedBoundary();
 		final City expectedCityContent = getExpectedCityContent();
@@ -80,7 +80,7 @@ public class ComplaintAdapterTest {
 		when(complaintTypeRepository.fetchComplaintTypeByCode("AOS")).thenReturn(expectedComplaintType);
 		when(boundaryRepository.fetchBoundaryById(Long.valueOf(values.get("locationId")))).thenReturn(expectedBoundary);
 		when(cityRepository.fetchCityById(Long.valueOf(values.get("tenantId")))).thenReturn(expectedCityContent);
-		when(employeeRepository.fetchEmployeeByPositionId(Long.valueOf(values.get("assignmentId")), new LocalDate(),
+		when(employeeRepository.fetchEmployeeByPositionId(Long.valueOf(values.get("assignment_id")), new LocalDate(),
 				values.get("tenantId"))).thenReturn(expectedAssignment);
 		return serviceRequest;
 	}

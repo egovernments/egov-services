@@ -141,12 +141,12 @@ class SearchAsset extends React.Component {
       if (type==="update") {
 
               return (
-                      <a href={`../../../../app/asset/create-asset.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-pencil"></span></a>
+                      <a href={`app/asset/create-asset.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-pencil"></span></a>
               );
 
     }else {
             return (
-                    <a href={`../../../../app/asset/create-asset.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-modal-window"></span></a>
+                    <a href={`app/asset/create-asset.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-modal-window"></span></a>
             );
         }
 }
@@ -161,7 +161,7 @@ class SearchAsset extends React.Component {
                                 <td>{item.code}</td>
                                 <td>{item.name}</td>
                                 <td>{item.assetCategory.name}</td>
-                                <td>{item.department.name?item.department.name:"NULL"}</td>
+                                <td>{getNameById(assignments_department,item.department.id)}</td>
                                 <td>{item.status}</td>
                                 <td>{item.assetDetails?item.assetDetails:"NULL"}</td>
 

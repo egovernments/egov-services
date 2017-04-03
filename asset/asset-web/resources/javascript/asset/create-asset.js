@@ -68,7 +68,7 @@ class CreateAsset extends React.Component {
         capitalized: false,
         error: "",
         success: "",
-        readonly: true
+        readonly: false
     }
     this.handleChange = this.handleChange.bind(this);
     this.handleChangeTwoLevel = this.handleChangeTwoLevel.bind(this);

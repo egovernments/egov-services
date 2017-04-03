@@ -90,7 +90,7 @@ class CreateAsset extends React.Component {
         // }
         e.preventDefault();
         // console.log(zone);
-        console.log(this.state.assetCategory);
+        // console.log(this.state.assetCategory);
         var tempInfo=this.state.assetCategory;
         // tempInfo["assetSet"]["assetCategory"]["id"]=parseInt(tempInfo["assetSet"]["assetCategory"]["id"])
         var body={
@@ -114,12 +114,48 @@ class CreateAsset extends React.Component {
         if(response["statusText"]==="OK")
         {
           alert("Successfully added");
-
-
         }
         else {
           alert(response["statusText"]);
-        }
+          this.setState({
+            assetCategory:{
+               "tenantId": 1,
+              "name": "",
+              "assetCategoryType": "",
+              "parent":"",
+              "depreciationMethod": "",
+              "assetAccount": "",
+              "accumulatedDepreciationAccount": "",
+              "revaluationReserveAccount": "",
+              "depreciationExpenseAccount": "",
+              "unitOfMeasurement": "",
+              "depreciationRate": null,
+              "customFields":[]
+
+
+            },
+            customField:
+             {
+                      "name": "",
+                      "type": "",
+                      "isActive": "",
+                      "isMandatory": "",
+                      "values": "",
+                      "localText": "",
+                      "regExFormate": ""
+                    },
+            assetCategories:[],
+            parent:{},
+            depreciationMethod:{},
+            assetAccount:[],
+            accumulatedDepreciationAccount:[],
+            revaluationReserveAccount:[],
+            depreciationExpenseAccount:[],
+            unitOfMeasurement:[],
+            typeList:[]
+
+          })
+}
 }
   componentWillMount(){
       this.setState({
@@ -242,7 +278,7 @@ class CreateAsset extends React.Component {
 
 
   render() {
-    console.log(this.state);
+    // console.log(this.state);
     let {handleChange,addOrUpdate,renderDelEvent,addAsset,handleChangeTwoLevel}=this;
     let {isSearchClicked,list,customField,isEdit,index,assetCategory}=this.state;
 
@@ -314,7 +350,7 @@ class CreateAsset extends React.Component {
                   </td>
 
                   <td data-label="Action">
-                    <a href="#" className="btn btn-default btn-action"><span className="glyphicon glyphicon-trash"onClick={(e)=>{renderDelEvent(index)}}></span></a>
+                  <button type="button" className="btn btn-default btn-action"><span className="glyphicon glyphicon-trash"onClick={(e)=>{renderDelEvent(index)}}></span></button>
                 </td></tr>)
             })
         }

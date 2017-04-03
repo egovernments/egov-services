@@ -37,6 +37,7 @@ public class SevaRequest {
     private static final String COMPLAINT_CRN = "crn";
     private static final String EXPECTED_DATETIME = "expected_datetime";
     private static final String TENANT_ID = "tenantId";
+    private static final String ESCALATION_HOURS = "escalationHours";
 
     private HashMap<String, Object> sevaRequestMap;
 
@@ -60,6 +61,10 @@ public class SevaRequest {
 
     private void setStateId(String stateId) {
         getValues().put(VALUES_STATE_ID, stateId);
+    }
+
+    public void setEscalationHours(String escalationHours) {
+        getValues().put(ESCALATION_HOURS, escalationHours);
     }
 
     public RequestInfo getRequestInfo() {

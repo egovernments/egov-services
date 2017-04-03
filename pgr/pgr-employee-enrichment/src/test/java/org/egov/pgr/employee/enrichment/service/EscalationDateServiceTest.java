@@ -59,6 +59,7 @@ public class EscalationDateServiceTest {
         escalationDateService.enrichRequestWithEscalationDate(sevaRequest);
 
         verify(sevaRequest).setEscalationDate(expectedDate);
+        verify(sevaRequest).setEscalationHours(String.valueOf(escalationHours));
     }
 
 }

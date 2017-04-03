@@ -44,10 +44,10 @@ $(document).ready(function()
 	preventBack();
 
 	var obj = {};
-	var RI = new $.RequestInfo(localStorage.getItem('auth'));
+	var RI = new $.newRequestInfo(localStorage.getItem('auth'));
 	var userArray = [localStorage.getItem('id')]
 
-	obj['requestInfo'] = RI.requestInfo;
+	obj['RequestInfo'] = RI.requestInfo;
 	obj['id'] = userArray;
 
 	$.ajax({

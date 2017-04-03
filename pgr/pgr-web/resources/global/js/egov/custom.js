@@ -136,9 +136,15 @@ $(document).ready(function()
 	}
 	
 	$('.signout').click(function(){
+		var RI = new $.newRequestInfo(localStorage.getItem('auth'));
+		var obj = {};
+		obj['RequestInfo'] = RI.requestInfo;
 		$.ajax({
 			url : '/user/_logout?access_token='+localStorage.getItem('auth'),
 			type: 'POST',
+			processData : false,
+			contentType: "application/json",
+			data : JSON.stringify(obj),
 			success : function(response){
 				if(response.status == 'Logout successfully'){
 					clearLocalStorage();
@@ -174,19 +180,34 @@ function translate(keyname){
 			});
 			return Object.values(langresult[0])[1];
 		}else{
-			$('[data-translate]').each(function(i,v){
+			$('[data-translate], [data-content], [data-original-title]').each(function(i,v){
 				var translate = $(this).data('translate');
-				var langresult = JSON.parse(localStorage.getItem("lang_response")).filter(function( obj ) {
-				  return obj.code == translate;
-				});
-				//console.log(translate+'<--->'+JSON.stringify(langresult));
-				var type = this.tagName.toLowerCase();
-				if(type == 'input' || type == 'textarea'){
-					if(langresult[0]) $(this).attr('placeholder', Object.values(langresult[0])[1]);
+				var content = $(this).data('content');
+				var title = $(this).data('original-title');
+				//console.log(translate, content , title)
+				if(translate){
+					var langresult = JSON.parse(localStorage.getItem("lang_response")).filter(function( obj ) {
+					  return obj.code == translate;
+					});
+					var type = this.tagName.toLowerCase();
+					if(type == 'input' || type == 'textarea'){
+						if(langresult[0]) $(this).attr('placeholder', Object.values(langresult[0])[1]);
+					}
+					else{
+						if(langresult[0]) $(this).html(Object.values(langresult[0])[1]);
+					}
 				}
-				else{
-					//if(langresult[0]) $(this).contents().first().replaceWith(Object.values(langresult[0])[1]);
-					if(langresult[0]) $(this).html(Object.values(langresult[0])[1]);
+				if(content){
+					var langresult = JSON.parse(localStorage.getItem("lang_response")).filter(function( obj ) {
+					  return obj.code == content;
+					});
+					if(langresult[0]) $(this).attr('data-content',Object.values(langresult[0])[1]);
+				}
+				if(title){
+					var langresult = JSON.parse(localStorage.getItem("lang_response")).filter(function( obj ) {
+					  return obj.code == title;
+					});
+					if(langresult[0]) $(this).attr('data-original-title',Object.values(langresult[0])[1]);
 				}
 			});
 		}

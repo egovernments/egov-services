@@ -611,9 +611,15 @@ function inboxloadmethod(){
 }
 
 function getPosition(){
+	var RI = new $.newRequestInfo(localStorage.getItem('auth'));
+	var obj = {};
+	obj['RequestInfo'] = RI.requestInfo;
 	$.ajax({
 		url : '/eis/_assignmentByEmployeeId?employeeId='+localStorage.getItem('id'),
 		type : 'POST',
+		processData : false,
+		contentType: "application/json",
+		data : JSON.stringify(obj),
 		async : false,
 		success : function(response){
 			positionId = response.Assignment[0].position;

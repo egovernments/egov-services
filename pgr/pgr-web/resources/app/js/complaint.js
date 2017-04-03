@@ -39,6 +39,7 @@
  */
 var type = localStorage.getItem("type");
 var loadDD = new $.loadDD();
+var RequestInfo = new $.newRequestInfo(localStorage.getItem("auth"));
 $(document).ready(function()
 {
 	/*Productization - Aslam*/
@@ -414,12 +415,15 @@ function docheckUser(response){
 	if(userId){
 		var userArray = [];
 		userArray.push(userId);
+		var requestInfo = {};
+		requestInfo['RequestInfo'] = RequestInfo.requestInfo;
+		requestInfo['id'] = userArray
 		$.ajax({
 			url : '/user/_search',
 			type: 'POST',
 			async : false,
 			contentType: "application/json",
-			data : JSON.stringify({ id : userArray}),
+			data : JSON.stringify(requestInfo),
 			success : function(userResponse){
 				var userName = userResponse.user[0].userName;
 				doAck(response, userName);

@@ -37,8 +37,12 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
- var loadDD = new $.loadDD();
- var tableContainer = $("#complaintSearchResults");
+var loadDD = new $.loadDD();
+var tableContainer = $("#complaintSearchResults");
+var complaintList, department, ward = [];
+var RequestInfo = new $.newRequestInfo(localStorage.getItem("auth"));
+var requestInfo = {};
+requestInfo['RequestInfo'] = RequestInfo.requestInfo;
  $(document).ready(function() {
 
 	$.when(
@@ -54,6 +58,10 @@
 
 		/*load complaint types*/
 		complaintType(),
+
+		loadDeparment(),
+
+		loadBoundarys(),
 
 		loadStatus()
 
@@ -108,6 +116,7 @@
 				}
 	        },
 			destroy:true,
+			"deferRender": true,
 			autoWidth: false,
 			"aaSorting": [],
 			dom: "<'row'<'col-xs-12 pull-right'f>r>t<'row buttons-margin'<'col-md-3 col-xs-6'i><'col-md-3  col-xs-6'l><'col-md-3 col-xs-6'B><'col-md-3 col-xs-6 text-right'p>>",
@@ -127,9 +136,16 @@
 				{title: 'Complaint Number', data: 'service_request_id'},
 				{title: 'Grievance Type', data: 'service_name'},
 				{title: 'Name', data: 'first_name'},
-				{title: 'Location', data: 'values.LocationName'},
-				{title: 'Status', data: 'values.ComplaintStatus'},
-				{title: 'Department', data: 'values.departmentName'},
+				{title: 'Location', "render": function ( data, type, full, meta ) {
+					var wardname = getBoundariesbyId(full.values.locationId);
+					var localityname = getBoundariesbyId(full.values.childLocationId);
+					return (wardname+' - '+localityname);
+			    } },
+				{title: 'Status', data: 'values.complaintStatus'},
+				{title: 'Department', data: 'values.departmentId', "render": function ( data, type, full, meta ) {
+					var depart = getDepartmentbyId(full.values.departmentId);
+					return depart;
+			    } },
 				{title: 'Registration Date', data : 'requested_datetime'}
 			]
 	    });
@@ -142,6 +158,38 @@ $("#complaintSearchResults").on('click','tbody tr',function(event) {
 	var srn = tableContainer.row( this ).data().service_request_id;
 	openPopUp('view-complaint.html?srn='+srn, srn);
 });
+
+function loadDeparment(){
+	$.ajax({
+		url: "/eis/departments",
+		type : 'GET'
+	}).done(function(data) {
+		department = data.Department;
+	});
+}
+
+function getDepartmentbyId(departmentId){
+	var depObj = department.filter(function( obj ) {
+	  return obj.id == departmentId;
+	});
+	return Object.values(depObj[0])[1];
+}
+
+function loadBoundarys(){
+	$.ajax({
+		url : '/v1/location/boundarys?boundary.tenantId=ap.kurnool',
+		success : function(data){
+			ward = data.Boundary;
+		}
+	})
+}
+
+function getBoundariesbyId(wardId){
+	var wardObj = ward.filter(function( obj ) {
+	  return obj.id == wardId;
+	});
+	return Object.values(wardObj[0])[1];
+}
  
 function populatedate(id) {
     var d = new Date();
@@ -230,7 +278,11 @@ function complaintType(){
 function loadStatus(){
 	$.ajax({
 		url: "/pgr/_statuses?tenantId=ap-public",
-		type : 'POST'
+		type : 'POST',
+		dataType: 'json',
+		processData : false,
+		contentType: "application/json",
+		data : JSON.stringify(requestInfo)
 	}).done(function(data) {
 		loadDD.load({
 			element:$('#status'),
@@ -244,7 +296,11 @@ function loadStatus(){
 function loadWard(){
 	$.ajax({
 		url: "/v1/location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?boundaryTypeName=Ward&hierarchyTypeName=Administration",
-		type : 'POST'
+		type : 'POST',
+		dataType: 'json',
+		processData : false,
+		contentType: "application/json",
+		data : JSON.stringify(requestInfo),
 	}).done(function(data) {
 		loadDD.load({
 			element:$('#ct-location'),

@@ -41,6 +41,9 @@ var srn = getUrlParameter('srn');
 var lat, lng, myCenter,status;
 var updateResponse = {};
 var loadDD = new $.loadDD();
+var RequestInfo = new $.newRequestInfo(localStorage.getItem("auth"));
+var requestInfo = {};
+requestInfo['RequestInfo'] = RequestInfo.requestInfo;
 $(document).ready(function()
 {
 
@@ -343,7 +346,11 @@ function complaintType(loadDD, serviceName){
 function nextStatus(loadDD){
 	$.ajax({
 		url: "/pgr/_getnextstatuses?userId="+localStorage.getItem("id")+"&currentStatus="+status+"&tenantId=ap.public",
-		type : 'POST'
+		type : 'POST',
+		dataType: 'json',
+		processData : false,
+		contentType: "application/json",
+		data : JSON.stringify(requestInfo)
 	}).done(function(data) {
 		loadDD.load({
 			element:$('#status'),
@@ -359,7 +366,11 @@ function nextStatus(loadDD){
 function getWard(loadDD, wardId){
 	$.ajax({
 		url: "/v1/location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?boundaryTypeName=Ward&hierarchyTypeName=Administration",
-		type : 'POST'
+		type : 'POST',
+		dataType: 'json',
+		processData : false,
+		contentType: "application/json",
+		data : JSON.stringify(requestInfo)
 	}).done(function(data) {
 		loadDD.load({
 			element:$('#ct-sel-jurisd'),
@@ -375,7 +386,11 @@ function getWard(loadDD, wardId){
 function getLocality(boundaryId, localityid){
 	$.ajax({
 		url: "/v1/location/boundarys/childLocationsByBoundaryId?boundaryId="+boundaryId,
-		type : 'POST'
+		type : 'POST',
+		dataType: 'json',
+		processData : false,
+		contentType: "application/json",
+		data : JSON.stringify(requestInfo)
 	}).done(function(data) {
 		loadDD.load({
 			element:$('#location'),
@@ -408,7 +423,11 @@ function getDepartment(loadDD){
 function getDesignation(depId){
 	$.ajax({
 		url: "/eis/designationByDepartmentId?id="+depId,
-		type : 'POST'
+		type : 'POST',
+		dataType: 'json',
+		processData : false,
+		contentType: "application/json",
+		data : JSON.stringify(requestInfo)
 	}).done(function(data) {
 		loadDD.load({
 			element:$('#approvalDesignation'),
@@ -424,7 +443,11 @@ function getUser(depId, desId){
 	//console.log(depId, desId);
 	$.ajax({
 		url: "/eis/assignmentsByDeptOrDesignId?deptId="+depId+"&desgnId="+desId,
-		type : 'POST'
+		type : 'POST',
+		dataType: 'json',
+		processData : false,
+		contentType: "application/json",
+		data : JSON.stringify(requestInfo),
 	}).done(function(data) {
 		loadDD.load({
 			element:$('#approvalPosition'),
@@ -466,7 +489,11 @@ function getReceivingCenterbyId(receivingcenter, response){
 	$.ajax({
 		url : "/pgr/receivingcenter/_getreceivingcenterbyid?tenantId=1&id="+receivingcenter,
 		type: 'POST',
-		async : false,
+		dataType: 'json',
+		processData : false,
+		contentType: "application/json",
+		data : JSON.stringify(requestInfo)
+,		async : false,
 		success : function(centerReponse){
 			response.service_requests[0].values['recCenterText'] = centerReponse.name;
 		}

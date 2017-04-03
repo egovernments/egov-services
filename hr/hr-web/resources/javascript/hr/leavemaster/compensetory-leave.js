@@ -1,16 +1,3 @@
-function getUrlVars() {
-    var vars = [],
-        hash;
-    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-    for (var i = 0; i < hashes.length; i++) {
-        hash = hashes[i].split('=');
-        vars.push(hash[0]);
-        vars[hash[0]] = hash[1];
-    }
-    return vars;
-}
-
-
 class CompensetoryLeave extends React.Component {
   constructor(props) {
     super(props);
@@ -54,6 +41,14 @@ class CompensetoryLeave extends React.Component {
   render() {
       let {handleChange}=this;
       let {code,name,workedOn,compensatoryForDate}=this.state.compensetorySet;
+      let mode=getUrlVars()["type"];
+
+      const showActionButton=function() {
+        if((!mode) ||mode==="update")
+        {
+          return (<button type="submit" className="btn btn-submit">{mode?"Update":"Add"}</button>);
+        }
+      };
     return (
       <div>
             <form onSubmit={(e)=>{this.Add(e)}}>
@@ -120,7 +115,7 @@ class CompensetoryLeave extends React.Component {
 
 
             <div className="text-center">
-                <button type="submit"  className="btn btn-submit">Forward</button>
+                 <button type="submit"  className="btn btn-submit">Forward</button> &nbsp;&nbsp;
                 <button type="button" className="btn btn-submit" onClick={(e)=>{this.close()}}>Close</button>
 
             </div>

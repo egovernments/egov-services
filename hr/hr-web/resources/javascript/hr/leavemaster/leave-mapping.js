@@ -1,17 +1,3 @@
-function getUrlVars() {
-    var vars = [],
-        hash;
-    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-    for (var i = 0; i < hashes.length; i++) {
-        hash = hashes[i].split('=');
-        vars.push(hash[0]);
-        vars[hash[0]] = hash[1];
-    }
-    return vars;
-}
-
-
-
 class LeaveMaster extends React.Component{
 constructor(props){
   super(props);
@@ -19,16 +5,17 @@ constructor(props){
       {designation:"",
       leaveType:"",
       noOfDay:""},
-        designation:[]}
+        designationList:[]}
 
   this.addOrUpdate=this.addOrUpdate.bind(this);
   this.handleChange=this.handleChange.bind(this);
 
 }
-componentWillMount(){
-
-  var designation=[{id:"1",name:"ASSISTANT ENGINEER"},{id:"2",name:"ASSISTANT OFFICER"},{id:"3",name:"JUNIOR ENGINEER"},{id:"4",name:"SENIOR MANAGER"}];
-  this.setState({designation})
+componentWillMount()
+{
+  this.setState({
+    designationList:getCommonMaster("hr-masters","designations","Designation").responseJSON["Designation"] || []
+})
 }
     handleChange(e,name)
     {
@@ -54,7 +41,7 @@ componentWillMount(){
         this.setState({leave:
             {designation:"",
             leaveType:"",
-            noOfDay:""},designation:""  })
+            noOfDay:""},designationList:[]})
       }
     }
 
@@ -108,7 +95,7 @@ componentWillMount(){
                         handleChange(e,"designation")
                     }}required>
                     <option>Select Designation</option>
-                    {renderOption(this.state.designation)}
+                    {renderOption(this.state.designationList)}
                    </select>
                     </div>
                   </div>
@@ -147,8 +134,8 @@ componentWillMount(){
 
 
     <div className="text-center">
-        {showActionButton()}
-        <button type="button" className="btn btn-submit" onClick={(e)=>{this.close()}}>Close</button>
+        {showActionButton()} &nbsp;&nbsp;
+        <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>
 
     </div>
     </fieldset>

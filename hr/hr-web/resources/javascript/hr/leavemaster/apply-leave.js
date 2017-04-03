@@ -1,16 +1,3 @@
-function getUrlVars() {
-    var vars = [],
-        hash;
-    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-    for (var i = 0; i < hashes.length; i++) {
-        hash = hashes[i].split('=');
-        vars.push(hash[0]);
-        vars[hash[0]] = hash[1];
-    }
-    return vars;
-}
-
-
 class ApplyLeave extends React.Component {
   constructor(props) {
     super(props);
@@ -100,12 +87,14 @@ class ApplyLeave extends React.Component {
       fromDate:"",
       toDate:"",
       reason:"",
-      leaveType:""},leave:"" })
+      leaveType:""},leave:[] })
   }
 
   render() {
     let {handleChange}=this;
     let {name,employee,workingDay,availableDays,fromDate,toDate,reason,leaveType}=this.state.leaveSet;
+
+
     const renderOption=function(list)
     {
       if(list)
@@ -119,6 +108,7 @@ class ApplyLeave extends React.Component {
       }
 
     }
+
 
     return (
       <div>
@@ -195,7 +185,7 @@ class ApplyLeave extends React.Component {
                             <select id="leaveType" name="leaveType" value={leaveType}
                               onChange={(e)=>{ handleChange(e,"leaveType")
                             }}>
-                            <option>Select Designation</option>
+                            <option>Select Leave Type</option>
                             {renderOption(this.state.leave)}
                            </select>
                             </div>
@@ -246,8 +236,8 @@ class ApplyLeave extends React.Component {
 
 
             <div className="text-center">
-                <button type="submit"  className="btn btn-submit">Approve</button>
-                <button type="button" className="btn btn-submit" onClick={(e)=>{this.close()}}>Close</button>
+               <button type="submit"  className="btn btn-submit">Approve</button> &nbsp;&nbsp;
+                <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>
 
             </div>
           </fieldset>

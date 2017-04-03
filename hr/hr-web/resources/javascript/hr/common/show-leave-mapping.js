@@ -1,16 +1,3 @@
-function getUrlVars() {
-    var vars = [],
-        hash;
-    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-    for (var i = 0; i < hashes.length; i++) {
-        hash = hashes[i].split('=');
-        vars.push(hash[0]);
-        vars[hash[0]] = hash[1];
-    }
-    return vars;
-}
-
-
 class ShowLeaveMapping extends React.Component {
   constructor(props) {
     super(props);
@@ -121,12 +108,12 @@ class ShowLeaveMapping extends React.Component {
       if (type==="update") {
 
               return (
-                      <a href={`../../../../app/hr/leavemaster/leave-mapping.html?leaveType=${leaveType}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-pencil"></span></a>
+                      <a href={`app/hr/leavemaster/leave-mapping.html?leaveType=${leaveType}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-pencil"></span></a>
               );
 
     }else {
             return (
-                    <a href={`../../../../app/hr/leavemaster/leave-mapping.html?leaveType=${leaveType}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-modal-window"></span></a>
+                    <a href={`app/hr/leavemaster/leave-mapping.html?leaveType=${leaveType}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-modal-window"></span></a>
             );
         }
 }

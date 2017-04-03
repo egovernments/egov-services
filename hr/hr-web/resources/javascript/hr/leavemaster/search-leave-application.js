@@ -1,15 +1,3 @@
-function getUrlVars() {
-    var vars = [],
-        hash;
-    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-    for (var i = 0; i < hashes.length; i++) {
-        hash = hashes[i].split('=');
-        vars.push(hash[0]);
-        vars[hash[0]] = hash[1];
-    }
-    return vars;
-}
-
 class PersonalInform extends React.Component {
   constructor(props) {
     super(props);
@@ -17,11 +5,11 @@ class PersonalInform extends React.Component {
 
     name:"",
     employee:"",
-    departmentCode:"",
-    designationCode:"",
+    department:"",
+    designation:"",
     employeeTypeCode:"",
     functionaryCode:"",
-    employeeStatusCode:""},isSearchClicked:false,employeeType:[],department:[],designation:[],employeeStatus:[],functionary:[]}
+    employeeStatusCode:""},isSearchClicked:false,employeeType:[],departmentList:[],designationList:[],employeeStatus:[],functionary:[]}
     this.handleChange=this.handleChange.bind(this);
     this.search=this.search.bind(this);
 
@@ -36,8 +24,8 @@ class PersonalInform extends React.Component {
     let {
     name,
     employee,
-    departmentCode,
-    designationCode,
+    department,
+    designation,
     employeeTypeCode,
     functionaryCode,
     employeeStatusCode}=this.state.searchSet;
@@ -56,8 +44,8 @@ class PersonalInform extends React.Component {
 
       name:"",
       employee:"",
-      departmentCode:"",
-      designationCode:"",
+      department:"",
+      designation:"",
       employeeTypeCode:"",
       functionaryCode:"",
       employeeStatusCode:""}
@@ -69,6 +57,8 @@ class PersonalInform extends React.Component {
   {
 
     this.setState({
+      departmentList:getCommonMaster("egov-common-masters","departments","Department").responseJSON["Department"] || [],
+      designationList:getCommonMaster("hr-masters","designations","Designation").responseJSON["Designation"] || [],
       employeeType:[{
               id: 1,
               name: "Deputation",
@@ -93,34 +83,6 @@ class PersonalInform extends React.Component {
               id: 5,
               name: "Contract",
               chartOfAccounts: ""
-          }],
-      department:[{
-              id: 1,
-              name: "Juniour Engineer",
-              description: "",
-              orderno: "1",
-              active: true
-          },
-          {
-              id: 2,
-              name: "Assistance Engineer",
-              description: "",
-              orderno: "1",
-              active: true
-          }],
-      designation:[{
-              id: 1,
-              name: "Juniour Engineer",
-              description: "",
-              orderno: "1",
-              active: true
-          },
-          {
-              id: 2,
-              name: "Assistance Engineer",
-              description: "",
-              orderno: "1",
-              active: true
           }],
       employeeStatus:[{
               id: 1,
@@ -196,8 +158,8 @@ class PersonalInform extends React.Component {
     let {isSearchClicked,employees}=this.state;
     let {name,
     employee,
-    departmentCode,
-    designationCode,
+    department,
+    designation,
     employeeTypeCode,
     functionaryCode,
     employeeStatusCode}=this.state.searchSet;
@@ -275,10 +237,10 @@ class PersonalInform extends React.Component {
                         </div>
                         <div className="col-sm-6">
                           <div className="styled-select">
-                            <select id="designationCode" name="designationCode" value={designationCode} onChange={(e)=>{
-                                handleChange(e,"designationCode")}}>
+                            <select id="designation" name="designation" value={designation} onChange={(e)=>{
+                                handleChange(e,"designation")}}>
                             <option>Select Designation</option>
-                            {renderOption(this.state.designation)}
+                            {renderOption(this.state.designationList)}
                            </select>
                         </div>
                         </div>
@@ -291,10 +253,10 @@ class PersonalInform extends React.Component {
                           </div>
                           <div className="col-sm-6">
                           <div className="styled-select">
-                              <select id="departmentCode" name="departmentCode" value={departmentCode}
-                              onChange={(e)=>{ handleChange(e,"departmentCode")}}>
+                              <select id="department" name="department" value={department}
+                              onChange={(e)=>{ handleChange(e,"department")}}>
                                 <option>Select Department</option>
-                                {renderOption(this.state.departments)}
+                                {renderOption(this.state.departmentList)}
                              </select>
                           </div>
                           </div>
@@ -386,8 +348,8 @@ class PersonalInform extends React.Component {
 
 
             <div className="text-center">
-                <button type="submit"  className="btn btn-submit">Search</button>
-                <button type="button" className="btn btn-submit" onClick={(e)=>{this.close()}}>Close</button>
+                <button type="submit"  className="btn btn-submit">Search</button> &nbsp;&nbsp;
+                <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>
             </div>
           </fieldset>
           </form>

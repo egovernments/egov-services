@@ -1,15 +1,3 @@
-function getUrlVars() {
-    var vars = [],
-        hash;
-    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-    for (var i = 0; i < hashes.length; i++) {
-        hash = hashes[i].split('=');
-        vars.push(hash[0]);
-        vars[hash[0]] = hash[1];
-    }
-    return vars;
-}
-
 class Leavetype extends React.Component{
 
   constructor(props) {
@@ -184,8 +172,8 @@ componentDidMount()
                 </div>
 
                 <div className="text-center">
-                    {showActionButton()}
-                    <button type="button" className="btn btn-submit"onClick={(e)=>{this.close()}}>Close</button>
+                    {showActionButton()}  &nbsp;&nbsp;
+                    <button type="button" className="btn btn-close"onClick={(e)=>{this.close()}}>Close</button>
                 </div>
                 </fieldset>
                 </form>

@@ -35,6 +35,8 @@ public class BillRepository {
 
 		BillResponse billResponse = restTemplate.postForObject(url,
 				billRequest, BillResponse.class);
+		System.out.println("billRequest url ++++++++++++ "+url+"billResponse>>>>>>>>>>"+billResponse.getBillXmls());
+
 		return billResponse.getBillXmls().get(0);
 	}
 

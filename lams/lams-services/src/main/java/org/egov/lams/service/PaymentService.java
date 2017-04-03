@@ -196,6 +196,9 @@ public class PaymentService {
 			billdetail.setPeriod(demandDetail.getTaxPeriod());
 			billdetail.setPurpose(billRepository.getPurpose()
 					.get("CURRENT_AMOUNT").toString());
+			LOGGER.info("getPurpose after >>>>>>>" +billRepository.getPurpose()
+					.get("CURRENT_AMOUNT"));
+
 			billdetail.setIsActualDemand(demandDetail.getIsActualDemand());
 			billdetail.setFunctionCode(functionCode);
 			billDetails.add(billdetail);

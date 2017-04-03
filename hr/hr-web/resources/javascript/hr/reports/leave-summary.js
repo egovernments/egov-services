@@ -65,23 +65,16 @@ class LeaveSummary extends React.Component {
       open(location, '_self').close();
   }
 
-  searchEmployee (e) 
+  searchEmployee (e)
   {
+     //console.log(commonApiPost("hr-employee", "employees", "_search", {...this.state.searchSet, tenantId}).responseJSON["Employee"]);
     e.preventDefault();
-    let searchSet = this.state.searchSet;
-    console.log(searchSet);
-    if(!searchSet.department && !searchSet.designation && !searchSet.employeeCode && !searchSet.employeeType && !searchSet.employeeStatus && !searchSet.leaveType) {
-        this.setState({
-            ...this.state,
-            error: "One of the above is mandatory"
-        })
-    } else {
-        this.setState({
-            ...this.state,
-            error: ""
-        })
-    }
-  } 
+    this.setState({
+        ...this.state,
+        isSearchClicked: true,
+        result: commonApiPost("hr-employee", "employees", "_search", {...this.state.searchSet, tenantId}).responseJSON["Employee"]
+    })
+  }
 
   render() {
     let {handleChange, searchEmployee, closeWindow} = this;
@@ -105,13 +98,13 @@ class LeaveSummary extends React.Component {
         return result.map((item, ind) => {
             return (
                 <tr key={ind}>
-                    <td>89-Kumaresh </td>
-                    <td>casual</td>
-                    <td>1</td>
-                    <td>3</td>
-                    <td>10</td>
-                    <td>5</td>
-                    <td>5</td>
+                <td>{item.code}</td>
+                <td>{item.name}</td>
+                <td>{item.employeeStatus}</td>
+                <td>{item.employeeType}</td>
+                <td>{item.fromdate}</td>
+                <td>{item.enddate}</td>
+
                 </tr>
             )
         })

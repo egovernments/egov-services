@@ -57,9 +57,15 @@ class LeaveReport extends React.Component {
       open(location, '_self').close();
   }
 
-  searchEmployee(e) {
+  searchEmployee (e)
+  {
+     console.log(commonApiPost("hr-employee", "employees", "_search", {...this.state.searchSet, tenantId}).responseJSON["Employee"]);
     e.preventDefault();
-    console.log(this.state.searchSet);
+    this.setState({
+        ...this.state,
+        isSearchClicked: true,
+        result: commonApiPost("hr-employee", "employees", "_search", {...this.state.searchSet, tenantId}).responseJSON["Employee"]
+    })
   }
 
   handleChange(e, name)
@@ -95,12 +101,13 @@ class LeaveReport extends React.Component {
         return result.map((item, ind) => {
             return (
                 <tr key={ind}>
-                    <td>89-Kumaresh </td>
-                    <td>123</td>
-                    <td>casual</td>
-                    <td>2</td>
-                    <td>ok</td>
-                    <td>fine</td>
+                <td>{item.code}</td>
+                <td>{item.name}</td>
+                <td>{item.employeeStatus}</td>
+                <td>{item.employeeType}</td>
+                <td>{item.fromdate}</td>
+                <td>{item.enddate}</td>
+                
                 </tr>
             )
         })
@@ -262,9 +269,10 @@ class LeaveReport extends React.Component {
                                 </div>
                             </div>
                             <div className="text-center">
-                                <button type="button" className="btn btn-submit" onClick={(e)=>{this.closeWindow()}}>Close</button>
-                                &nbsp;&nbsp;
-                                <button type="submit" className="btn btn-submit">Search</button>
+                            <button type="submit" className="btn btn-submit">Search</button>
+                            &nbsp;&nbsp;
+
+                                <button type="button" className="btn btn-close" onClick={(e)=>{this.closeWindow()}}>Close</button>
                             </div>
                         </fieldset>
                     </form>

@@ -76,12 +76,11 @@ class EmployeeReport extends React.Component {
 
   searchEmployee (e)
   {
-    console.log(commonApiPost("hr-employee", "employees", "_search", {...this.state.searchSet, tenantId}).responseJSON["Employee"]);
     e.preventDefault();
     this.setState({
         ...this.state,
         isSearchClicked: true,
-        result: commonApiPost("hr-employee", "employees", "_search", {...this.state.searchSet, tenantId}).responseJSON["Employee"]
+        result: commonApiPost("hr-employee", "employees", "_search", {...this.state.searchSet, tenantId}).responseJSON["Employee"] || []
     })
   }
 

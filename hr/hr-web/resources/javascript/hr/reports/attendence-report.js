@@ -1,6 +1,6 @@
 
 class EmployeeAttendence extends React.Component {
- 
+
  constructor (props) {
     super(props);
     this.state = {
@@ -74,27 +74,16 @@ class EmployeeAttendence extends React.Component {
 
  closeWindow () {
       open(location, '_self').close();
- } 
+ }
 
- searchEmployee (e) {
-    e.preventDefault();
-
-    if(!this.state.searchSet.department && !this.state.searchSet.designation && !this.state.searchSet.employeeCode && !this.state.searchSet.employeeType) {
-        this.setState({
-            ...this.state,
-            error: "One of the above is mandatory"
-        })
-    } else {
-        this.setState({
-            ...this.state,
-            error: ""
-        });
-        /*this.setState({
-            ...this.state,
-            isSearchClicked: true,
-            result: commonApiPost("hr-employee", "employees", "_search", {...this.state.searchSet, tenantId}).responseJSON["Employee"] || []
-        })*/
-    }
+ searchEmployee (e)
+ {
+   e.preventDefault();
+   this.setState({
+       ...this.state,
+       isSearchClicked: true,
+       result: commonApiPost("hr-employee", "employees", "_search", {...this.state.searchSet, tenantId}).responseJSON["Employee"]
+   })
  }
 
  render () {
@@ -105,44 +94,48 @@ class EmployeeAttendence extends React.Component {
         return result.map((item, ind) => {
             return (
                 <tr key={ind}>
-                    <td>89-Kumaresh </td>
-                    <td>20</td>
-                    <td>3</td>
-                    <td>1</td>
-                    <td>2</td>
+                <td>{item.code}</td>
+                <td>{item.name}</td>
+                <td>{item.employeeStatus}</td>
+                <td>{item.employeeType}</td>
+                <td><a href="#" Employee>Employee </a></td>
                 </tr>
             )
         })
     }
 
     const showTable = () => {
-        if(this.props.isSearchClicked) {
+        if(this.state.isSearchClicked) {
             return (
-                <div>
-                    <br/>
-                    <br/>
-                    <div className="row">
-                        <div className="col-sm-6">
-                            <div className="row">
-                                <div className="col-sm-6 label-text">
-                                <label for="">Number Of Days In Month </label>
-                                </div>
-                                <div className="col-sm-6">
-                                <input type="text" id="days" name="days" />
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-sm-6">
-                            <div className="row">
-                                <div className="col-sm-6 label-text">
-                                <label for="">Number Of Working Days</label>
-                                </div>
-                                <div className="col-sm-6">
-                                <input  type="text" id="Workingday" name="Workingday"/>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                // <div>
+                //     <br/>
+                //     <br/>
+                //     <div className="row">
+                //         <div className="col-sm-6">
+                //             <div className="row">
+                //                 <div className="col-sm-6 label-text">
+                //                 <label for="">Number Of Days In Month </label>
+                //                 </div>
+                //                 <div className="col-sm-6">
+                //                 <input type="text" id="days" name="days" />
+                //                 </div>
+                //             </div>
+                //         </div>
+                //         <div className="col-sm-6">
+                //             <div className="row">
+                //                 <div className="col-sm-6 label-text">
+                //                 <label for="">Number Of Working Days</label>
+                //                 </div>
+                //                 <div className="col-sm-6">
+                //                 <input  type="text" id="Workingday" name="Workingday"/>
+                //                 </div>
+                //             </div>
+                //         </div>
+                //     </div>
+                <div className="form-section" >
+                    <h3 className="pull-left">Employee Details </h3>
+                    <div className="clearfix"></div>
+
                     <div className="land-table">
                         <table id="employeeTable" className="table table-bordered">
                             <thead>
@@ -160,6 +153,7 @@ class EmployeeAttendence extends React.Component {
                         </table>
                     </div>
                 </div>
+
             )
         }
     }
@@ -186,7 +180,7 @@ class EmployeeAttendence extends React.Component {
                         <div className="col-sm-6">
                             <div className="row">
                                 <div className="col-sm-6 label-text">
-                                    <label for="">Month* </label>
+                                    <label for="">Month <span> * </span> </label>
                                 </div>
                                 <div className="col-sm-6">
                                     <select id="month" value={month} onChange={(e) => {handleChange(e, "month")}} required>
@@ -199,7 +193,7 @@ class EmployeeAttendence extends React.Component {
                         <div className="col-sm-6">
                             <div className="row">
                                 <div className="col-sm-6 label-text">
-                                    <label for="">Calender Year* </label>
+                                    <label for="">Calender Year <span> *</span> </label>
                                 </div>
                                 <div className="col-sm-6">
                                     <select id="calenderYear" value={calenderYear} onChange={(e) => {handleChange(e, "calenderYear")}} required>
@@ -265,13 +259,15 @@ class EmployeeAttendence extends React.Component {
                     </div>
                     <p className="text-danger">{error}</p>
                     <div className="text-center">
-                        <button type="button" className="btn btn-submit" onClick={(e)=>{this.closeWindow()}}>Close</button>
-                        &nbsp;&nbsp;
-                        <button type="submit" className="btn btn-submit">Search</button>
+
+                    <button type="submit" className="btn btn-submit">Search</button>
+                    &nbsp; &nbsp;
+                        <button type="button" className="btn btn-close" onClick={(e)=>{this.closeWindow()}}>Close</button>
+
                     </div>
                 </fieldset>
             </form>
-            
+            {showTable()}
         </div>
     );
   }

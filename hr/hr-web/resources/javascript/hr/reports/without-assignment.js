@@ -27,11 +27,15 @@ class WithoutAssignment extends React.Component {
       })
   }
 
-  searchEmployee (e) 
+  searchEmployee (e)
   {
     e.preventDefault();
-    console.log(this.state);
-  } 
+    this.setState({
+        ...this.state,
+        isSearchClicked: true,
+        result: commonApiPost("hr-employee", "employees", "_search", {...this.state.searchSet, tenantId}).responseJSON["Employee"]
+    })
+  }
 
   closeWindow(){
       open(location, '_self').close();
@@ -41,7 +45,7 @@ class WithoutAssignment extends React.Component {
     let {handleChange, searchEmployee, closeWindow} = this;
     let {result} = this.state;
     let {date} = this.state.searchSet;
-    
+
     const renderTr = () => {
         return result.map((item, ind) => {
             return (
@@ -52,7 +56,7 @@ class WithoutAssignment extends React.Component {
                 </tr>
             )
         })
-    }  
+    }
 
     const showTable = () => {
         if(this.state.isSearchClicked) {

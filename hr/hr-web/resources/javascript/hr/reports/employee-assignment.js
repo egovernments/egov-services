@@ -25,7 +25,8 @@ class EmployeeReport extends React.Component {
             "designation": "",
             "employeeType": "",
             "employeeStatus": "",
-            "date":"",
+            "fromdate":"",
+            "enddate":"",
         },
         "employeeTypes": [],
         "departments": [],
@@ -77,7 +78,6 @@ class EmployeeReport extends React.Component {
 
   searchEmployee (e)
   {
-     console.log(commonApiPost("hr-employee", "employees", "_search", {...this.state.searchSet, tenantId}).responseJSON["Employee"]);
     e.preventDefault();
     this.setState({
         ...this.state,
@@ -89,7 +89,7 @@ class EmployeeReport extends React.Component {
   render() {
     let {handleChange, searchEmployee, closeWindow} = this;
     let {result, employeeTypes, departments, designations} = this.state;
-    let {employeeCode, department, designation, employeeType, employeeStatus,date} = this.state.searchSet;
+    let {employeeCode, department, designation, employeeType, employeeStatus,fromdate,enddate} = this.state.searchSet;
 
     const renderOptions = function(list)
     {
@@ -112,6 +112,8 @@ class EmployeeReport extends React.Component {
                     <td>{item.name}</td>
                     <td>{item.employeeStatus}</td>
                     <td>{item.employeeType}</td>
+                    <td>{item.fromdate}</td>
+                    <td>{item.enddate}</td>
                     <td><a href="#" Employee>Employee </a></td>
                 </tr>
             )
@@ -227,7 +229,7 @@ class EmployeeReport extends React.Component {
                                     <div className="col-sm-6">
                                         <div className="text-no-ui">
                                             <span><i className="glyphicon glyphicon-calendar"></i></span>
-                                            <input type="date" id="date" value={date} onChange={(e) => {handleChange(e, "date")}} required/>
+                                            <input type="date" id="fromdate" value={fromdate} onChange={(e) => {handleChange(e, "fromdate")}} required/>
                                         </div>
                                     </div>
                                 </div>
@@ -244,7 +246,7 @@ class EmployeeReport extends React.Component {
                                     <div className="col-sm-6">
                                         <div className="text-no-ui">
                                             <span><i className="glyphicon glyphicon-calendar"></i></span>
-                                            <input type="date" id="date" value={date} onChange={(e) => {handleChange(e, "date")}} required/>
+                                            <input type="date" id="enddate" value={enddate} onChange={(e) => {handleChange(e, "enddate")}} required/>
                                         </div>
                                     </div>
                                 </div>
@@ -252,9 +254,10 @@ class EmployeeReport extends React.Component {
                         </div>
 
                         <div className="text-center">
-                            <button type="button" className="btn btn-submit" onClick={(e)=>{this.closeWindow()}}>Close</button>
-                            &nbsp;&nbsp;
-                            <button type="submit" className="btn btn-submit">Search</button>
+                        <button type="submit" className="btn btn-submit">Search</button>
+                        &nbsp;&nbsp;
+
+                            <button type="button" className="btn btn-close" onClick={(e)=>{this.closeWindow()}}>Close</button>
                         </div>
                     </fieldset>
                 </form>

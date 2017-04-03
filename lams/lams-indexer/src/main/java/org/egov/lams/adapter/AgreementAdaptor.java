@@ -1,8 +1,5 @@
 package org.egov.lams.adapter;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.egov.lams.contract.AgreementDetails;
 import org.egov.lams.contract.AgreementRequest;
 import org.egov.lams.model.Agreement;

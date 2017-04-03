@@ -71,7 +71,9 @@ public class AllotteeService {
 		 allottee.setActive(true); //FIXME set user name and password using any gen service
 		 CreateUserRequest createUserRequest = new CreateUserRequest(requestInfo,allottee);
 		 logger.info("url for allottee api post call : "+url+"  the user request obj is : "+ createUserRequest);
-		 return callAllotteSearch(url,createUserRequest);
+		 AllotteeResponse allotteeResponse = callAllotteSearch(url,createUserRequest);
+		 allottee.setId(allotteeResponse.getAllottee().get(0).getId());
+		 return allotteeResponse;
 	}
 	
 	public AllotteeResponse callAllotteSearch(String url, Object userRequest) {

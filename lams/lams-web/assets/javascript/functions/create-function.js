@@ -119,7 +119,7 @@ render() {
                   <label for="name">Name <span> * </span></label>
           </div>
           <div className="col-sm-6">
-                  <input type="text" id="name" name="name" value={name}
+                  <input type="text" id="name" name="name" required="true" value={name}
                   onChange={(e)=>{handleChange(e,"name")}}/>
           </div>
           </div>
@@ -130,7 +130,7 @@ render() {
                   <label for="code">Code <span> * </span></label>
           </div>
           <div className="col-sm-6">
-                  <input type="text" id="code" name="code" value={code}
+                  <input type="text" id="code" name="code" required="true" value={code}
                   onChange={(e)=>{handleChange(e,"code")}}/>
           </div>
           </div>

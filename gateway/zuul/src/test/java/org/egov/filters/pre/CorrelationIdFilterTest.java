@@ -3,6 +3,7 @@ package org.egov.filters.pre;
 import com.netflix.zuul.context.RequestContext;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.MDC;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.util.Map;
@@ -20,14 +21,24 @@ public class CorrelationIdFilterTest {
 	}
 
 	@Test
-	public void test_should_set_custom_correlation_id_header() {
+	public void test_should_set_context_with_correlation_id() {
 		MockHttpServletRequest request = new MockHttpServletRequest();
 		RequestContext.getCurrentContext().setRequest(request);
+
 		correlationIdFilter.run();
 
-		final Map<String, String> zuulRequestHeaders = RequestContext.getCurrentContext().getZuulRequestHeaders();
-		assertNotNull(zuulRequestHeaders.get("x-correlation-id"));
+		assertNotNull(RequestContext.getCurrentContext().get("CORRELATION_ID"));
 	}
+
+    @Test
+    public void test_should_set_mdc_with_correlation_id() {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        RequestContext.getCurrentContext().setRequest(request);
+
+        correlationIdFilter.run();
+
+        assertNotNull(MDC.get("CORRELATION_ID"));
+    }
 
 	@Test
 	public void test_should_set_filter_order_to_beginning() {

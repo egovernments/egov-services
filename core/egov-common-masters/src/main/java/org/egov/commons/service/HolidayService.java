@@ -40,22 +40,64 @@
 
 package org.egov.commons.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.egov.commons.model.Holiday;
+import org.egov.commons.producers.HolidayProducer;
 import org.egov.commons.repository.HolidayRepository;
 import org.egov.commons.web.contract.HolidayGetRequest;
+import org.egov.commons.web.contract.HolidayRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 @Service
 public class HolidayService {
+	public static final Logger logger = LoggerFactory.getLogger(HolidayService.class);
 
 	@Autowired
 	private HolidayRepository holidayRepository;
 
+	@Autowired
+	private HolidayProducer holidayProducer;
+
 	public List<Holiday> getHolidays(HolidayGetRequest holidayGetRequest) {
 		return holidayRepository.findForCriteria(holidayGetRequest);
+	}
+
+	public Holiday createHoliday(final HolidayRequest holidayRequest) {
+		final ObjectMapper mapper = new ObjectMapper();
+		String holidayValue = null;
+		try {
+			logger.info("createHoliday service::" + holidayRequest);
+			holidayValue = mapper.writeValueAsString(holidayRequest);
+			logger.info("holidayValue::" + holidayValue);
+		} catch (final JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		try {
+			holidayProducer.sendMessage("egov-common-holiday", "save-holiday", holidayValue);
+		} catch (final Exception ex) {
+			ex.printStackTrace();
+		}
+		return holidayRequest.getHoliday();
+	}
+
+	public HolidayRequest create(final HolidayRequest holidayRequest) {
+		if (holidayRequest.getHoliday().getId() == null)
+			return holidayRepository.saveHoliday(holidayRequest);
+		else
+			return holidayRepository.modifyHoliday(holidayRequest);
+
+	}
+
+	public boolean getHolidayByApplicableOn(final Long id, final Date applicableOn, final String tenantId) {
+		return holidayRepository.checkHolidayByApplicableOn(id, applicableOn, tenantId);
 	}
 
 }

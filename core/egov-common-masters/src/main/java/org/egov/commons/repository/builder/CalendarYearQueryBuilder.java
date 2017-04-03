@@ -57,12 +57,11 @@ public class CalendarYearQueryBuilder {
 	@Autowired
 	private ApplicationProperties applicationProperties;
 
-	private static final String BASE_QUERY = "SELECT id, name, startDate, endDate, active, tenantId " +
-		"FROM eg_calendarYear";
+	private static final String BASE_QUERY = "SELECT id, name, startDate, endDate, active, tenantId "
+			+ "FROM eg_calendarYear";
 
 	@SuppressWarnings("rawtypes")
-	public String getQuery(CalendarYearGetRequest calendarYearGetRequest,
-			List preparedStatementValues) {
+	public String getQuery(CalendarYearGetRequest calendarYearGetRequest, List preparedStatementValues) {
 		StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
 
 		addWhereClause(selectQuery, preparedStatementValues, calendarYearGetRequest);
@@ -108,10 +107,8 @@ public class CalendarYearQueryBuilder {
 		}
 	}
 
-	private void addOrderByClause(StringBuilder selectQuery,
-			CalendarYearGetRequest calendarYearGetRequest) {
-		String sortBy = (calendarYearGetRequest.getSortBy() == null ? "name"
-				: calendarYearGetRequest.getSortBy());
+	private void addOrderByClause(StringBuilder selectQuery, CalendarYearGetRequest calendarYearGetRequest) {
+		String sortBy = (calendarYearGetRequest.getSortBy() == null ? "name" : calendarYearGetRequest.getSortBy());
 		String sortOrder = (calendarYearGetRequest.getSortOrder() == null ? "DESC"
 				: calendarYearGetRequest.getSortOrder());
 		selectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);
@@ -132,7 +129,8 @@ public class CalendarYearQueryBuilder {
 		int pageNumber = 0; // Default pageNo is zero meaning first page
 		if (calendarYearGetRequest.getPageNumber() != null)
 			pageNumber = calendarYearGetRequest.getPageNumber() - 1;
-		preparedStatementValues.add(pageNumber * pageSize); // Set offset to pageNo * pageSize
+		preparedStatementValues.add(pageNumber * pageSize); // Set offset to
+															// pageNo * pageSize
 	}
 
 	/**
@@ -159,5 +157,13 @@ public class CalendarYearQueryBuilder {
 			}
 		}
 		return query.append(")").toString();
+	}
+
+	public static String selectYearByNameQuery() {
+		return "select * from eg_calendaryear where name = ? and tenantId = ?";
+	}
+
+	public static String selectYearByByNameAndDateQuery() {
+		return "select * from eg_calendaryear where name = ? and startdate<= ? and enddate >= ? and tenantId = ?";
 	}
 }

@@ -40,29 +40,38 @@
 
 package org.egov.commons.web.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
 
 import org.egov.commons.model.Holiday;
+import org.egov.commons.service.CalendarYearService;
 import org.egov.commons.service.HolidayService;
+import org.egov.commons.util.ApplicationConstants;
 import org.egov.commons.web.contract.HolidayGetRequest;
+import org.egov.commons.web.contract.HolidayRequest;
 import org.egov.commons.web.contract.HolidayResponse;
 import org.egov.commons.web.contract.RequestInfo;
 import org.egov.commons.web.contract.RequestInfoWrapper;
 import org.egov.commons.web.contract.ResponseInfo;
 import org.egov.commons.web.contract.factory.ResponseInfoFactory;
+import org.egov.commons.web.errorhandlers.Error;
 import org.egov.commons.web.errorhandlers.ErrorHandler;
+import org.egov.commons.web.errorhandlers.ErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -80,6 +89,112 @@ public class HolidayController {
 
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
+
+	@Autowired
+	private ApplicationConstants applicationConstants;
+
+	@Autowired
+	private CalendarYearService calendarYearService;
+
+	@PostMapping(value = "_create")
+	@ResponseBody
+	public ResponseEntity<?> create(@RequestBody @Valid final HolidayRequest holidayRequest, final BindingResult errors) {
+		// validate header
+		if (errors.hasErrors()) {
+			final ErrorResponse errRes = populateErrors(errors);
+			return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
+		}
+		logger.info("holidayRequest::" + holidayRequest);
+
+		final List<ErrorResponse> errorResponses = validateHolidayRequest(holidayRequest);
+		if (!errorResponses.isEmpty())
+			return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
+
+		final Holiday holiday = holidayService.createHoliday(holidayRequest);
+
+		List<Holiday> holidays = new ArrayList<>();
+		holidays.add(holiday);
+		return getSuccessResponse(holidays, holidayRequest.getRequestInfo());
+	}
+
+	@PostMapping(value = "/{holidayId}/_update")
+	@ResponseBody
+	public ResponseEntity<?> update(@RequestBody @Valid final HolidayRequest holidayRequest, final BindingResult errors, @PathVariable Long holidayId) {
+		// validate header
+		if (errors.hasErrors()) {
+			final ErrorResponse errRes = populateErrors(errors);
+			return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
+		}
+		logger.info("holidayRequest::" + holidayRequest);
+		holidayRequest.getHoliday().setId(holidayId);
+
+		final List<ErrorResponse> errorResponses = validateHolidayRequest(holidayRequest);
+		if (!errorResponses.isEmpty())
+			return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
+
+		final Holiday holiday = holidayService.createHoliday(holidayRequest);
+
+		List<Holiday> holidays = new ArrayList<>();
+		holidays.add(holiday);
+
+		return getSuccessResponse(holidays, holidayRequest.getRequestInfo());
+	}
+
+	@SuppressWarnings("deprecation")
+	private List<ErrorResponse> validateHolidayRequest(final HolidayRequest holidayRequest) {
+		final List<ErrorResponse> errorResponses = new ArrayList<>();
+		boolean isNameYearApplicableOn = true;
+		boolean isCalendarYearExists = true;
+		boolean isHolidayExists = false;
+		boolean isDateOutOfRange = false;
+
+		Holiday holiday = holidayRequest.getHoliday();
+		if (holiday.getName() == null || holiday.getCalendarYear() == null || holiday.getApplicableOn() == null)
+			isNameYearApplicableOn = false;
+		else if (!calendarYearService.getYearByName(holiday.getCalendarYear().getName(), holidayRequest.getHoliday().getTenantId()))
+			isCalendarYearExists = false;
+		else if (!calendarYearService.getYearByNameAndDate(holiday.getCalendarYear().getName(),
+				holiday.getApplicableOn(), holidayRequest.getHoliday().getTenantId()))
+			isDateOutOfRange = true;
+		else if (holidayService.getHolidayByApplicableOn(holiday.getId(), holiday.getApplicableOn(), holidayRequest.getHoliday().getTenantId()))
+			isHolidayExists = true;
+
+		if (!isCalendarYearExists) {
+			final ErrorResponse errorResponse = new ErrorResponse();
+			final Error error = new Error();
+			error.setDescription(
+					applicationConstants.getErrorMessage(ApplicationConstants.MSG_HOLIDAY_CALENDARYEAR_EXISTS));
+			errorResponse.setError(error);
+			errorResponses.add(errorResponse);
+		}
+
+		if (isHolidayExists) {
+			final ErrorResponse errorResponse = new ErrorResponse();
+			final Error error = new Error();
+			error.setDescription(applicationConstants.getErrorMessage(ApplicationConstants.MSG_HOLIDAY_PRESENT));
+			errorResponse.setError(error);
+			errorResponses.add(errorResponse);
+		}
+
+		if (isDateOutOfRange) {
+			final ErrorResponse errorResponse = new ErrorResponse();
+			final Error error = new Error();
+			error.setDescription(applicationConstants.getErrorMessage(ApplicationConstants.MSG_HOLIDAY_DATERANGE));
+			errorResponse.setError(error);
+			errorResponses.add(errorResponse);
+		}
+
+		if (!isNameYearApplicableOn) {
+			final ErrorResponse errorResponse = new ErrorResponse();
+			final Error error = new Error();
+			error.setDescription(applicationConstants
+					.getErrorMessage(ApplicationConstants.MSG_HOLIDAY_NAME_YEAR_APPLICABLE_MANDATORY));
+			errorResponse.setError(error);
+			errorResponses.add(errorResponse);
+		}
+
+		return errorResponses;
+	}
 
 	@PostMapping("_search")
 	@ResponseBody
@@ -124,6 +239,20 @@ public class HolidayController {
 		holidayRes.setResponseInfo(responseInfo);
 		return new ResponseEntity<HolidayResponse>(holidayRes, HttpStatus.OK);
 
+	}
+
+	private ErrorResponse populateErrors(final BindingResult errors) {
+		final ErrorResponse errRes = new ErrorResponse();
+
+		final Error error = new Error();
+		error.setCode(1);
+		error.setDescription("Error while binding request");
+		if (errors.hasFieldErrors())
+			for (final FieldError fieldError : errors.getFieldErrors()) {
+				error.getFields().put(fieldError.getField(), fieldError.getRejectedValue());
+			}
+		errRes.setError(error);
+		return errRes;
 	}
 
 }

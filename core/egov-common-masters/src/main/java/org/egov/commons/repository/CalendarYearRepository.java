@@ -42,6 +42,7 @@ package org.egov.commons.repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.egov.commons.model.CalendarYear;
 import org.egov.commons.repository.builder.CalendarYearQueryBuilder;
@@ -69,5 +70,45 @@ public class CalendarYearRepository {
 		List<CalendarYear> calendarYears = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
 				calendarYearRowMapper);
 		return calendarYears;
+	}
+
+	@SuppressWarnings("static-access")
+	public CalendarYear findCalendarYearByName(final int name, final String tenantId) {
+		final List<Object> preparedStatementValues = new ArrayList<Object>();
+		preparedStatementValues.add(name);
+		preparedStatementValues.add(tenantId);
+		final String query = calendarYearQueryBuilder.selectYearByNameQuery();
+		final List<CalendarYear> calendarYears = jdbcTemplate.query(query, preparedStatementValues.toArray(),
+				calendarYearRowMapper);
+		if (!calendarYears.isEmpty())
+			return calendarYears.get(0);
+
+		return null;
+	}
+
+	public boolean checkYearByNameAndDate(final int name, final java.util.Date givenDate, final String tenantId) {
+		final List<Object> preparedStatementValues = new ArrayList<Object>();
+		preparedStatementValues.add(name);
+		preparedStatementValues.add(givenDate);
+		preparedStatementValues.add(givenDate);
+		preparedStatementValues.add(tenantId);
+		final String query = CalendarYearQueryBuilder.selectYearByByNameAndDateQuery();
+		final List<Map<String, Object>> year = jdbcTemplate.queryForList(query, preparedStatementValues.toArray());
+		if (!year.isEmpty())
+			return true;
+
+		return false;
+	}
+
+	public boolean checkYearByName(final int name, final String tenantId) {
+		final List<Object> preparedStatementValues = new ArrayList<Object>();
+		preparedStatementValues.add(name);
+		preparedStatementValues.add(tenantId);
+		final String query = CalendarYearQueryBuilder.selectYearByNameQuery();
+		final List<Map<String, Object>> year = jdbcTemplate.queryForList(query, preparedStatementValues.toArray());
+		if (!year.isEmpty())
+			return true;
+
+		return false;
 	}
 }

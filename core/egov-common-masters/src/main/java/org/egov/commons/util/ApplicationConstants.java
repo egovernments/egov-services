@@ -38,45 +38,29 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.commons.model;
+package org.egov.commons.util;
 
-import java.util.Date;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.annotation.Order;
+import org.springframework.core.env.Environment;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+@Configuration
+@PropertySource(value = { "classpath:messages/messages.properties",
+		"classpath:messages/errors.properties" }, ignoreResourceNotFound = true)
+@Order(0)
+public class ApplicationConstants {
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+	public static final String MSG_HOLIDAY_PRESENT = "holiday.present";
+	public static final String MSG_HOLIDAY_CALENDARYEAR_EXISTS = "holiday.invalid.calendaryear";
+	public static final String MSG_HOLIDAY_NAME_YEAR_APPLICABLE_MANDATORY = "holiday.name.year.applicableon.mandatory";
+	public static final String MSG_HOLIDAY_DATERANGE = "holiday.daterange";
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+	@Autowired
+	private Environment environment;
 
-@AllArgsConstructor
-@EqualsAndHashCode
-@Getter
-@NoArgsConstructor
-@Setter
-@ToString
-public class Holiday {
-
-	@NotNull
-	private Long id;
-
-	@NotNull
-	private CalendarYear calendarYear;
-
-	@NotNull
-	@Size(min = 3, max = 200)
-	private String name;
-
-	@NotNull
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date applicableOn;
-
-	@NotNull
-	private String tenantId;
-
+	public String getErrorMessage(final String property) {
+		return environment.getProperty(property);
+	}
 }

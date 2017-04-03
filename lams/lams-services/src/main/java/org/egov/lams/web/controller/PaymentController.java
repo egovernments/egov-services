@@ -7,6 +7,7 @@ import org.egov.lams.service.PaymentService;
 import org.egov.lams.web.contract.BillReceiptInfoReq;
 import org.egov.lams.web.contract.BillReceiptReq;
 import org.egov.lams.web.contract.RequestInfo;
+import org.egov.lams.web.contract.RequestInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,12 +29,12 @@ public class PaymentController {
 
 	@PostMapping("/_create")
 	@ResponseBody
-	public ResponseEntity<?> create(@RequestBody RequestInfo requestInfo) {
+	public ResponseEntity<?> create(@RequestBody RequestInfoWrapper requestInfoWrapper) {
 		AgreementCriteria agreementCriteria = new AgreementCriteria();
 		agreementCriteria.setAgreementNumber("LA-17-0001");
 		Agreement agreement = agreementService.searchAgreement(
 				agreementCriteria).get(0);
-		return new ResponseEntity<>(paymentService.generateBillXml(agreement,requestInfo),
+		return new ResponseEntity<>(paymentService.generateBillXml(agreement,requestInfoWrapper.getRequestInfo()),
 				HttpStatus.OK);
 	}
 	

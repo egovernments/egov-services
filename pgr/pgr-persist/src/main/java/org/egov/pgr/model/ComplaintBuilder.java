@@ -82,7 +82,7 @@ public class ComplaintBuilder {
 
     private void setDepartmentId() {
         if (null != this.complaint.getComplaintType() && null != this.complaint.getComplaintType().getDepartment())
-            this.complaint.setDepartment(this.complaint.getComplaintType().getDepartment());
+            this.complaint.setDepartment(this.complaint.getComplaintType().getDepartment()); //what?
         else if (null != this.complaint.getAssignee()) {
             Long departmentId = positionRepository.departmentIdForAssignee(serviceRequest.getTenantId(),
                 this.complaint.getAssignee());
@@ -112,7 +112,7 @@ public class ComplaintBuilder {
         if (this.requestInfo.getAction().equals("POST")) {
             if ((userId = this.serviceRequest.getValues().get(USER_ID)) != null) {
                 GetUserByIdResponse user = userRepository.findUserById(Long.valueOf(userId));
-                this.complaint.getComplainant().setUserDetail(Long.valueOf(userId));
+                this.complaint.getComplainant().setUserDetail(Long.valueOf(userId)); //what?
                 this.complaint.getComplainant().setName(user.getUser().get(0).getName());
                 this.complaint.getComplainant().setMobile(user.getUser().get(0).getMobileNumber());
                 this.complaint.getComplainant().setEmail(user.getUser().get(0).getEmailId());

@@ -1,5 +1,6 @@
 package org.egov.pgr.employee.enrichment.repository;
 
+import org.egov.pgr.employee.enrichment.model.Position;
 import org.egov.pgr.employee.enrichment.repository.contract.PositionsResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -18,10 +19,10 @@ public class PositionRepository {
         this.restTemplate = restTemplate;
     }
 
-    public String getDesignationIdForAssignee(String tenantId, long assigneeId) {
+    public Position getDesignationIdForAssignee(String tenantId, long assigneeId) {
         PositionsResponse response = restTemplate
             .getForObject(this.url, PositionsResponse.class, tenantId, assigneeId);
-        return response.getDesignationId();
+        return response.toDomain();
     }
 
 }

@@ -54,6 +54,7 @@ public class EmployeeUserMapper {
 	public List<EmployeeInfo> mapUsersWithEmployees(List<EmployeeInfo> employeeInfoList, List<User> userInfoList) {
 		Map<Long, User> userInfoMap = new HashMap<Long, User>();
 
+		System.err.println("userInfoList inside EmployeeUserMapper: " + userInfoList);
 		for (User userInfo : userInfoList) {
 			userInfoMap.put(userInfo.getId(), userInfo);
 		}

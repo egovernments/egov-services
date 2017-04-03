@@ -62,7 +62,7 @@ import lombok.ToString;
 @ToString
 public class LeaveOpeningBalance {
 
-	private String id;
+	private Long id;
 
 	@NotNull
 	private Long employee;

@@ -54,7 +54,7 @@ public class LeaveOpeningBalanceRowMapper implements RowMapper<LeaveOpeningBalan
 	@Override
 	public LeaveOpeningBalance mapRow(ResultSet rs, int rowNum) throws SQLException {
 		LeaveOpeningBalance leaveOpeningBalance = new LeaveOpeningBalance();
-		leaveOpeningBalance.setId(rs.getString("lob_id"));
+		leaveOpeningBalance.setId(rs.getLong("lob_id"));
 		leaveOpeningBalance.setEmployee(rs.getLong("lob_employeeId"));
 		leaveOpeningBalance.setCalendarYear(rs.getInt("lob_calendarYear"));
 

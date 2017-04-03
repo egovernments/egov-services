@@ -7,18 +7,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>Lease & Agreement</title>
-
+    <base href="/lams-web/">
     <!-- Bootstrap -->
-    <link rel="stylesheet" type="text/css" href="../../../assets/stylesheet/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="../../../assets/stylesheet/global/multi-level-menu/jquery.multilevelpushmenu.min.css">
-    <link rel="stylesheet" type="text/css" href="../../../assets/stylesheet/application.css">
-    <link rel="stylesheet" type="text/css" href="../../../assets/stylesheet/egov/custom.css">
-    <link rel="stylesheet" type="text/css" href="../../../assets/stylesheet/vistyle.css">
-    <link rel="stylesheet" type="text/css" href="../../../assets/stylesheet/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="resources/stylesheet/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="resources/stylesheet/global/multi-level-menu/jquery.multilevelpushmenu.min.css">
+    <link rel="stylesheet" type="text/css" href="resources/stylesheet/application.css">
+    <link rel="stylesheet" type="text/css" href="resources/stylesheet/egov/custom.css">
+    <link rel="stylesheet" type="text/css" href="resources/stylesheet/vistyle.css">
+    <link rel="stylesheet" type="text/css" href="resources/stylesheet/font-awesome.min.css">
 
-    <link rel="stylesheet" type="text/css" href="../../../assets/stylesheet/jquery.dataTables.min.css">
-    <link rel="stylesheet" type="text/css" href="../../../assets/stylesheet/responsive.bootstrap.css">
-    <link rel="stylesheet" type="text/css" href="../../../assets/stylesheet/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" type="text/css" href="resources/stylesheet/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="resources/stylesheet/responsive.bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="resources/stylesheet/bootstrap-datetimepicker.min.css">
 
     <style>
         body {
@@ -76,19 +76,21 @@
     <![endif]-->
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script type="text/javascript" src="../../../assets/javascript/jquery.min.js"></script>
-    <script type="text/javascript" src="../../../assets/javascript/bootstrap.min.js"></script>
+    <script type="text/javascript" src="resources/javascript/jquery.min.js"></script>
+    <script type="text/javascript" src="resources/javascript/bootstrap.min.js"></script>
 
-    <script type="text/javascript" src="../../../assets/javascript/global/multi-level-menu/jquery.multilevelpushmenu.min.js"></script>
+    <script type="text/javascript" src="resources/javascript/global/multi-level-menu/jquery.multilevelpushmenu.min.js"></script>
 
-    <script type="text/javascript" src="../../../assets/javascript/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="resources/javascript/jquery.dataTables.min.js"></script>
 
-    <script type="text/javascript" src="../../../assets/javascript/dataTables.responsive.min.js"></script>
-    <script type="text/javascript" src="../../../assets/javascript/moment.js"></script>
-    <script type="text/javascript" src="../../../assets/javascript/bootstrap-datetimepicker.js"></script>
+    <script type="text/javascript" src="resources/javascript/dataTables.responsive.min.js"></script>
+    <script type="text/javascript" src="resources/javascript/moment.js"></script>
+    <script type="text/javascript" src="resources/javascript/bootstrap-datetimepicker.js"></script>
     <!-- Jquery form validator -->
-    <script type="text/javascript" src="../../../assets/javascript/global/jquery-validation/jquery.validate.min.js"></script>
-    <script type="text/javascript" src="../../../assets/javascript/global/jquery-validation/additional-methods.min.js"></script>
+    <script type="text/javascript" src="resources/javascript/global/jquery-validation/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="resources/javascript/global/jquery-validation/additional-methods.min.js"></script>
+      <script type="text/javascript" src="resources/javascript/common/common.js">
+      </script>
 </head>
 
 <body class="page-body">
@@ -105,7 +107,7 @@
                 <!-- logo -->
                 <div class="navbar-brand">
                     <a href="javascript:void(0);">
-                        <img src="../../../assets/images/logo.jpg" height="60" class="homepage_logo">
+                        <img src="resources/images/logo.jpg" height="60" class="homepage_logo">
                     </a>
                 </div>
 
@@ -185,7 +187,7 @@
 
                     <li class="dropdown">
                         <a href="http://www.egovernments.org" target="_blank">
-                            <img src="../../../assets/images/logo@2x.png" title="Powered by eGovernments" height="25px" style="padding-top:5px">
+                            <img src="resources/images/logo@2x.png" title="Powered by eGovernments" height="25px" style="padding-top:5px">
                         </a>
                     </li>
                 </ul>
@@ -278,42 +280,20 @@
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetCategory">Asset Category</label>
+                                                            <label for="assetCategory.name">Asset Category</label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetCategory" name="assetCategory" type="text">
+                                                            <input id="assetCategory.name" name="assetCategory.name" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetName">Asset Name</label>
+                                                            <label for="aName">Asset Name</label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetName" name="assetName" type="text">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-sm-6">
-                                                    <div class="row">
-                                                        <div class="col-sm-6 label-text">
-                                                            <label for="assetCode">Asset Code</label>
-                                                        </div>
-                                                        <div class="col-sm-6">
-                                                            <input id="assetCode" name="assetCode" type="text">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-6">
-                                                    <div class="row">
-                                                        <div class="col-sm-6 label-text">
-                                                            <label for="assetArea">Asset Area</label>
-                                                        </div>
-                                                        <div class="col-sm-6">
-                                                            <input id="assetArea" name="assetArea" type="text">
+                                                            <input id="aName" name="aName" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -322,42 +302,20 @@
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetLocality">Locality </label>
+                                                            <label for="code">Asset Code</label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetLocality" name="assetLocality" type="text">
+                                                            <input id="code" name="code" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetStreet">Street </label>
+                                                            <label for="totalArea">Asset Area</label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetStreet" name="assetStreet" type="text">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-sm-6">
-                                                    <div class="row">
-                                                        <div class="col-sm-6 label-text">
-                                                            <label for="assetRevenueZone">Revenue Zone </label>
-                                                        </div>
-                                                        <div class="col-sm-6">
-                                                            <input id="assetRevenueZone" name="assetRevenueZone" type="text">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-6">
-                                                    <div class="row">
-                                                        <div class="col-sm-6 label-text">
-                                                            <label for="assetRevenueWard">Revenue Ward </label>
-                                                        </div>
-                                                        <div class="col-sm-6">
-                                                            <input id="assetRevenueWard" name="assetRevenueWard" type="text">
+                                                            <input id="totalArea" name="totalArea" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -366,20 +324,64 @@
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetRevenueBlock">Revenue Block </label>
+                                                            <label for="locationDetails.locality">Locality </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetRevenueBlock" name="assetRevenueBlock" type="text">
+                                                            <input id="locationDetails.locality" name="locationDetails.locality" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetElectionWard">Election Ward </label>
+                                                            <label for="locationDetails.street">Street </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetElectionWard" name="assetElectionWard" type="text">
+                                                            <input id="locationDetails.street" name="locationDetails.street" type="text">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="locationDetails.zone">Revenue Zone </label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <input id="locationDetails.zone" name="locationDetails.zone" type="text">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="locationDetails.revenueWard">Revenue Ward </label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <input id="locationDetails.revenueWard" name="locationDetails.revenueWard" type="text">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="locationDetails.block">Revenue Block </label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <input id="locationDetails.block" name="locationDetails.block" type="text">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="locationDetails.electionWard">Election Ward </label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <input id="locationDetails.electionWard" name="locationDetails.electionWard" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -485,90 +487,90 @@
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetCategory">Asset Category</label>
+                                                            <label for="assetCategory.name">Asset Category</label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetCategory" name="assetCategory" type="text">
+                                                            <input id="assetCategory.name" name="assetCategory.name" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetName">Asset Name</label>
+                                                            <label for="aName">Asset Name</label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetName" name="assetName" type="text">
+                                                            <input id="aName" name="aName" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetCode">Asset Code</label>
+                                                            <label for="code">Asset Code</label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetCode" name="assetCode" type="text">
+                                                            <input id="code" name="code" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetLocality">Locality </label>
+                                                            <label for="locationDetails.locality">Locality </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetLocality" name="assetLocality" type="text">
+                                                            <input id="locationDetails.locality" name="locationDetails.locality" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetStreet">Street </label>
+                                                            <label for="locationDetails.street">Street </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetStreet" name="assetStreet" type="text">
+                                                            <input id="locationDetails.street" name="locationDetails.street" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetRevenueZone">Revenue Zone </label>
+                                                            <label for="locationDetails.zone">Revenue Zone </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetRevenueZone" name="assetRevenueZone" type="text">
+                                                            <input id="locationDetails.zone" name="locationDetails.zone" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetRevenueWard">Revenue Ward </label>
+                                                            <label for="locationDetails.revenueWard">Revenue Ward </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetRevenueWard" name="assetRevenueWard" type="text">
+                                                            <input id="locationDetails.revenueWard" name="locationDetails.revenueWard" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetRevenueBlock">Revenue Block </label>
+                                                            <label for="locationDetails.block">Revenue Block </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetRevenueBlock" name="assetRevenueBlock" type="text">
+                                                            <input id="locationDetails.block" name="locationDetails.block" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetElectionWard">Election Ward </label>
+                                                            <label for="locationDetails.electionWard">Election Ward </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetElectionWard" name="assetElectionWard" type="text">
+                                                            <input id="locationDetails.electionWard" name="locationDetails.electionWard" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -596,100 +598,100 @@
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetCategory">Asset Category</label>
+                                                            <label for="assetCategory.name">Asset Category</label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetCategory" name="assetCategory" type="text">
+                                                            <input id="assetCategory.name" name="assetCategory.name" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetName">Asset Name</label>
+                                                            <label for="aName">Asset Name</label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetName" name="assetName" type="text">
+                                                            <input id="aName" name="aName" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetCode">Asset Code</label>
+                                                            <label for="code">Asset Code</label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetCode" name="assetCode" type="text">
+                                                            <input id="code" name="code" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetArea">Asset Area</label>
+                                                            <label for="totalArea">Asset Area</label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetArea" name="assetArea" type="text">
+                                                            <input id="totalArea" name="totalArea" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetLocality">Locality </label>
+                                                            <label for="locationDetails.locality">Locality </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetLocality" name="assetLocality" type="text">
+                                                            <input id="locationDetails.locality" name="locationDetails.locality" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetStreet">Street </label>
+                                                            <label for="locationDetails.street">Street </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetStreet" name="assetStreet" type="text">
+                                                            <input id="locationDetails.street" name="locationDetails.street" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetRevenueZone">Revenue Zone </label>
+                                                            <label for="locationDetails.zone">Revenue Zone </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetRevenueZone" name="assetRevenueZone" type="text">
+                                                            <input id="locationDetails.zone" name="locationDetails.zone" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetRevenueWard">Revenue Ward </label>
+                                                            <label for="locationDetails.revenueWard">Revenue Ward </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetRevenueWard" name="assetRevenueWard" type="text">
+                                                            <input id="locationDetails.revenueWard" name="locationDetails.revenueWard" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetRevenueBlock">Revenue Block </label>
+                                                            <label for="locationDetails.block">Revenue Block </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetRevenueBlock" name="assetRevenueBlock" type="text">
+                                                            <input id="locationDetails.block" name="locationDetails.block" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetElectionWard">Election Ward </label>
+                                                            <label for="locationDetails.electionWard">Election Ward </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetElectionWard" name="assetElectionWard" type="text">
+                                                            <input id="locationDetails.electionWard" name="locationDetails.electionWard" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -727,100 +729,100 @@
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetCategory">Asset Category</label>
+                                                            <label for="assetCategory.name">Asset Category</label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetCategory" name="assetCategory" type="text">
+                                                            <input id="assetCategory.name" name="assetCategory.name" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetName">Asset Name</label>
+                                                            <label for="aName">Asset Name</label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetName" name="assetName" type="text">
+                                                            <input id="aName" name="aName" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetCode">Asset Code</label>
+                                                            <label for="code">Asset Code</label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetCode" name="assetCode" type="text">
+                                                            <input id="code" name="code" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetArea">Asset Area</label>
+                                                            <label for="totalArea">Asset Area</label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetArea" name="assetArea" type="text">
+                                                            <input id="totalArea" name="totalArea" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetLocality">Locality </label>
+                                                            <label for="locationDetails.locality">Locality </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetLocality" name="assetLocality" type="text">
+                                                            <input id="locationDetails.locality" name="locationDetails.locality" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetStreet">Street </label>
+                                                            <label for="locationDetails.street">Street </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetStreet" name="assetStreet" type="text">
+                                                            <input id="locationDetails.street" name="locationDetails.street" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetRevenueZone">Revenue Zone </label>
+                                                            <label for="locationDetails.zone">Revenue Zone </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetRevenueZone" name="assetRevenueZone" type="text">
+                                                            <input id="locationDetails.zone" name="locationDetails.zone" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetRevenueWard">Revenue Ward </label>
+                                                            <label for="locationDetails.revenueWard">Revenue Ward </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetRevenueWard" name="assetRevenueWard" type="text">
+                                                            <input id="locationDetails.revenueWard" name="locationDetails.revenueWard" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetRevenueBlock">Revenue Block </label>
+                                                            <label for="locationDetails.block">Revenue Block </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetRevenueBlock" name="assetRevenueBlock" type="text">
+                                                            <input id="locationDetails.block" name="locationDetails.block" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetElectionWard">Election Ward </label>
+                                                            <label for="locationDetails.electionWard">Election Ward </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetElectionWard" name="assetElectionWard" type="text">
+                                                            <input id="locationDetails.electionWard" name="locationDetails.electionWard" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -858,100 +860,100 @@
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetCategory">Asset Category</label>
+                                                            <label for="assetCategory.name">Asset Category</label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetCategory" name="AssetCategory" type="text">
+                                                            <input id="assetCategory.name" name="AssetCategory" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetName">Asset Name</label>
+                                                            <label for="aName">Asset Name</label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetName" name="assetName" type="text">
+                                                            <input id="aName" name="aName" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetCode">Asset Code</label>
+                                                            <label for="code">Asset Code</label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetCode" name="assetCode" type="text">
+                                                            <input id="code" name="code" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetArea">Asset Area</label>
+                                                            <label for="totalArea">Asset Area</label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetArea" name="assetArea" type="text">
+                                                            <input id="totalArea" name="totalArea" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetLocality">Locality </label>
+                                                            <label for="locationDetails.locality">Locality </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetLocality" name="assetLocality" type="text">
+                                                            <input id="locationDetails.locality" name="locationDetails.locality" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetStreet">Street </label>
+                                                            <label for="locationDetails.street">Street </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetStreet" name="assetStreet" type="text">
+                                                            <input id="locationDetails.street" name="locationDetails.street" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetRevenueZone">Revenue Zone </label>
+                                                            <label for="locationDetails.zone">Revenue Zone </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetRevenueZone" name="assetRevenueZone" type="text">
+                                                            <input id="locationDetails.zone" name="locationDetails.zone" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetRevenueWard">Revenue Ward </label>
+                                                            <label for="locationDetails.revenueWard">Revenue Ward </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetRevenueWard" name="assetRevenueWard" type="text">
+                                                            <input id="locationDetails.revenueWard" name="locationDetails.revenueWard" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetRevenueBlock">Revenue Block </label>
+                                                            <label for="locationDetails.block">Revenue Block </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetRevenueBlock" name="assetRevenueBlock" type="text">
+                                                            <input id="locationDetails.block" name="locationDetails.block" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetElectionWard">Election Ward </label>
+                                                            <label for="locationDetails.electionWard">Election Ward </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetElectionWard" name="assetElectionWard" type="text">
+                                                            <input id="locationDetails.electionWard" name="locationDetails.electionWard" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -989,100 +991,100 @@
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetCategory">Asset Category</label>
+                                                            <label for="assetCategory.name">Asset Category</label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetCategory" name="assetCategory" type="text">
+                                                            <input id="assetCategory.name" name="assetCategory.name" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetName">Asset Name</label>
+                                                            <label for="aName">Asset Name</label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetName" name="assetName" type="text">
+                                                            <input id="aName" name="aName" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetCode">Asset Code</label>
+                                                            <label for="code">Asset Code</label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetCode" name="assetCode" type="text">
+                                                            <input id="code" name="code" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetArea">Asset Area</label>
+                                                            <label for="totalArea">Asset Area</label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetArea" name="assetArea" type="text">
+                                                            <input id="totalArea" name="totalArea" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetLocality">Locality </label>
+                                                            <label for="locationDetails.locality">Locality </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetLocality" name="assetLocality" type="text">
+                                                            <input id="locationDetails.locality" name="locationDetails.locality" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetStreet">Street </label>
+                                                            <label for="locationDetails.street">Street </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetStreet" name="assetStreet" type="text">
+                                                            <input id="locationDetails.street" name="locationDetails.street" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetRevenueZone">Revenue Zone </label>
+                                                            <label for="locationDetails.zone">Revenue Zone </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetRevenueZone" name="assetRevenueZone" type="text">
+                                                            <input id="locationDetails.zone" name="locationDetails.zone" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetRevenueWard">Revenue Ward </label>
+                                                            <label for="locationDetails.revenueWard">Revenue Ward </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetRevenueWard" name="assetRevenueWard" type="text">
+                                                            <input id="locationDetails.revenueWard" name="locationDetails.revenueWard" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetRevenueBlock">Revenue Block </label>
+                                                            <label for="locationDetails.block">Revenue Block </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetRevenueBlock" name="assetRevenueBlock" type="text">
+                                                            <input id="locationDetails.block" name="locationDetails.block" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetElectionWard">Election Ward </label>
+                                                            <label for="locationDetails.electionWard">Election Ward </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetElectionWard" name="assetElectionWard" type="text">
+                                                            <input id="locationDetails.electionWard" name="locationDetails.electionWard" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1120,100 +1122,100 @@
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetCategory">Asset Category</label>
+                                                            <label for="assetCategory.name">Asset Category</label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetCategory" name="assetCategory" type="text">
+                                                            <input id="assetCategory.name" name="assetCategory.name" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetName">Asset Name</label>
+                                                            <label for="aName">Asset Name</label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetName" name="assetName" type="text">
+                                                            <input id="aName" name="aName" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetCode">Asset Code</label>
+                                                            <label for="code">Asset Code</label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetCode" name="assetCode" type="text">
+                                                            <input id="code" name="code" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetArea">Asset Area</label>
+                                                            <label for="totalArea">Asset Area</label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetArea" name="assetArea" type="text">
+                                                            <input id="totalArea" name="totalArea" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetLocality">Locality </label>
+                                                            <label for="locationDetails.locality">Locality </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetLocality" name="assetLocality" type="text">
+                                                            <input id="locationDetails.locality" name="locationDetails.locality" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetStreet">Street </label>
+                                                            <label for="locationDetails.street">Street </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetStreet" name="assetStreet" type="text">
+                                                            <input id="locationDetails.street" name="locationDetails.street" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetRevenueZone">Revenue Zone </label>
+                                                            <label for="locationDetails.zone">Revenue Zone </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetRevenueZone" name="assetRevenueZone" type="text">
+                                                            <input id="locationDetails.zone" name="locationDetails.zone" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetRevenueWard">Revenue Ward </label>
+                                                            <label for="locationDetails.revenueWard">Revenue Ward </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetRevenueWard" name="assetRevenueWard" type="text">
+                                                            <input id="locationDetails.revenueWard" name="locationDetails.revenueWard" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetRevenueBlock">Revenue Block </label>
+                                                            <label for="locationDetails.block">Revenue Block </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetRevenueBlock" name="assetRevenueBlock" type="text">
+                                                            <input id="locationDetails.block" name="locationDetails.block" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetElectionWard">Election Ward </label>
+                                                            <label for="locationDetails.electionWard">Election Ward </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetElectionWard" name="assetElectionWard" type="text">
+                                                            <input id="locationDetails.electionWard" name="locationDetails.electionWard" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1251,100 +1253,100 @@
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetCategory">Asset Category</label>
+                                                            <label for="assetCategory.name">Asset Category</label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetCategory" name="assetCategory" type="text">
+                                                            <input id="assetCategory.name" name="assetCategory.name" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetName">Asset Name</label>
+                                                            <label for="aName">Asset Name</label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetName" name="assetName" type="text">
+                                                            <input id="aName" name="aName" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetCode">Asset Code</label>
+                                                            <label for="code">Asset Code</label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetCode" name="assetCode" type="text">
+                                                            <input id="code" name="code" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetArea">Asset Area</label>
+                                                            <label for="totalArea">Asset Area</label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetArea" name="assetArea" type="text">
+                                                            <input id="totalArea" name="totalArea" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetLocality">Locality </label>
+                                                            <label for="locationDetails.locality">Locality </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetLocality" name="assetLocality" type="text">
+                                                            <input id="locationDetails.locality" name="locationDetails.locality" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetStreet">Street </label>
+                                                            <label for="locationDetails.street">Street </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetStreet" name="assetStreet" type="text">
+                                                            <input id="locationDetails.street" name="locationDetails.street" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetRevenueZone">Revenue Zone </label>
+                                                            <label for="locationDetails.zone">Revenue Zone </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetRevenueZone" name="assetRevenueZone" type="text">
+                                                            <input id="locationDetails.zone" name="locationDetails.zone" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetRevenueWard">Revenue Ward </label>
+                                                            <label for="locationDetails.revenueWard">Revenue Ward </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetRevenueWard" name="assetRevenueWard" type="text">
+                                                            <input id="locationDetails.revenueWard" name="locationDetails.revenueWard" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetRevenueBlock">Revenue Block </label>
+                                                            <label for="locationDetails.block">Revenue Block </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetRevenueBlock" name="assetRevenueBlock" type="text">
+                                                            <input id="locationDetails.block" name="locationDetails.block" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetElectionWard">Election Ward </label>
+                                                            <label for="locationDetails.electionWard">Election Ward </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetElectionWard" name="assetElectionWard" type="text">
+                                                            <input id="locationDetails.electionWard" name="locationDetails.electionWard" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1369,117 +1371,117 @@
                                         <h3>Fish Tank Asset Details </h3>
                                         <div class="form-section-inner">
                                             <div class="row">
+                                                <!-- <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="aName">Fish Tank Name</label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <input id="aName" name="aName" type="text">
+                                                        </div>
+                                                    </div>
+                                                </div> -->
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="fishTankName">Fish Tank Name</label>
+                                                            <label for="assetCategory.name">Asset Category</label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="fishTankName" name="fishTankName" type="text">
+                                                            <input id="assetCategory.name" name="assetCategory.name" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetCategory">Asset Category</label>
+                                                            <label for="aName">Asset Name</label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetCategory" name="assetCategory" type="text">
+                                                            <input id="aName" name="aName" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetName">Asset Name</label>
+                                                            <label for="code">Asset Code</label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetName" name="assetName" type="text">
+                                                            <input id="code" name="code" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetCode">Asset Code</label>
+                                                            <label for="totalArea">Asset Area</label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetCode" name="assetCode" type="text">
+                                                            <input id="totalArea" name="totalArea" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetArea">Asset Area</label>
+                                                            <label for="locationDetails.locality">Locality </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetArea" name="assetArea" type="text">
+                                                            <input id="locationDetails.locality" name="locationDetails.locality" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetLocality">Locality </label>
+                                                            <label for="locationDetails.street">Street </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetLocality" name="assetLocality" type="text">
+                                                            <input id="locationDetails.street" name="locationDetails.street" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetStreet">Street </label>
+                                                            <label for="locationDetails.zone">Revenue Zone </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetStreet" name="assetStreet" type="text">
+                                                            <input id="locationDetails.zone" name="locationDetails.zone" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetRevenueZone">Revenue Zone </label>
+                                                            <label for="locationDetails.revenueWard">Revenue Ward </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetRevenueZone" name="assetRevenueZone" type="text">
+                                                            <input id="locationDetails.revenueWard" name="locationDetails.revenueWard" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetRevenueWard">Revenue Ward </label>
+                                                            <label for="locationDetails.block">Revenue Block </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetRevenueWard" name="assetRevenueWard" type="text">
+                                                            <input id="locationDetails.block" name="locationDetails.block" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetRevenueBlock">Revenue Block </label>
+                                                            <label for="locationDetails.electionWard">Election Ward </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetRevenueBlock" name="assetRevenueBlock" type="text">
+                                                            <input id="locationDetails.electionWard" name="locationDetails.electionWard" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-6">
-                                                    <div class="row">
-                                                        <div class="col-sm-6 label-text">
-                                                            <label for="assetElectionWard">Election Ward </label>
-                                                        </div>
-                                                        <div class="col-sm-6">
-                                                            <input id="assetElectionWard" name="assetElectionWard" type="text">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-6">
+                                                <!-- <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
                                                             <label for="assetAssetAddress">Asset Address</label>
@@ -1488,7 +1490,7 @@
                                                             <textarea id="assetAssetAddress" name="assetAssetAddress" type="text"></textarea>
                                                         </div>
                                                     </div>
-                                                </div>
+                                                </div> -->
 
                                             </div>
                                         </div>
@@ -1513,100 +1515,100 @@
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetCategory">Asset Category</label>
+                                                            <label for="assetCategory.name">Asset Category</label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetCategory" name="assetCategory" type="text">
+                                                            <input id="assetCategory.name" name="assetCategory.name" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetName">Asset Name</label>
+                                                            <label for="aName">Asset Name</label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetName" name="assetName" type="text">
+                                                            <input id="aName" name="aName" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetCode">Asset Code</label>
+                                                            <label for="code">Asset Code</label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetCode" name="assetCode" type="text">
+                                                            <input id="code" name="code" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetArea">Asset Area</label>
+                                                            <label for="totalArea">Asset Area</label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetArea" name="assetArea" type="text">
+                                                            <input id="totalArea" name="totalArea" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetLocality">Locality </label>
+                                                            <label for="locationDetails.locality">Locality </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetLocality" name="assetLocality" type="text">
+                                                            <input id="locationDetails.locality" name="locationDetails.locality" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetStreet">Street </label>
+                                                            <label for="locationDetails.street">Street </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetStreet" name="assetStreet" type="text">
+                                                            <input id="locationDetails.street" name="locationDetails.street" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetRevenueZone">Revenue Zone </label>
+                                                            <label for="locationDetails.zone">Revenue Zone </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetRevenueZone" name="assetRevenueZone" type="text">
+                                                            <input id="locationDetails.zone" name="locationDetails.zone" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetRevenueWard">Revenue Ward </label>
+                                                            <label for="locationDetails.revenueWard">Revenue Ward </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetRevenueWard" name="assetRevenueWard" type="text">
+                                                            <input id="locationDetails.revenueWard" name="locationDetails.revenueWard" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetRevenueBlock">Revenue Block </label>
+                                                            <label for="locationDetails.block">Revenue Block </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetRevenueBlock" name="assetRevenueBlock" type="text">
+                                                            <input id="locationDetails.block" name="locationDetails.block" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="assetElectionWard">Election Ward </label>
+                                                            <label for="locationDetails.electionWard">Election Ward </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input id="assetElectionWard" name="assetElectionWard" type="text">
+                                                            <input id="locationDetails.electionWard" name="locationDetails.electionWard" type="text">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1637,10 +1639,10 @@
                                               <div class="col-sm-6">
                                                   <div class="row">
                                                       <div class="col-sm-6 label-text">
-                                                            <label for="aadhaar_no">Aadhar No </label>
+                                                            <label for="allottee.aadhaarNumber">Aadhar No </label>
                                                       </div>
                                                       <div class="col-sm-6">
-                                                          <input type="text" class="onlyNumber"   name="aadhaarNo" id="aadhaar_no">
+                                                          <input type="text" class="onlyNumber"   name="allottee.aadhaarNumber" id="allottee.aadhaarNumber">
                                                       </div>
                                                   </div>
                                               </div>
@@ -1648,12 +1650,12 @@
                                               <div class="col-sm-6">
                                                   <div class="row">
                                                       <div class="col-sm-6 label-text">
-                                                          <label for="contact_no">Contact No </label>
+                                                          <label for="allottee.mobileNumber">Contact No </label>
                                                       </div>
                                                       <div class="col-sm-6">
                                                           <div class="text-no-ui">
                                                               <span>+91</span>
-                                                              <input type="text"  name="contactNo" id="contact_no">
+                                                              <input type="text"  name="allottee.mobileNumber" id="allottee.mobileNumber">
                                                           </div>
                                                       </div>
                                                   </div>
@@ -1666,10 +1668,10 @@
                                               <div class="col-sm-6">
                                                   <div class="row">
                                                       <div class="col-sm-6 label-text">
-                                                          <label for="name">Name of the Allottee </label>
+                                                          <label for="allottee.name">Name of the Allottee </label>
                                                       </div>
                                                       <div class="col-sm-6">
-                                                          <input type="text" name="name" id="name">
+                                                          <input type="text" name="allottee.name" id="allottee.name">
                                                       </div>
                                                   </div>
                                               </div>
@@ -1677,10 +1679,10 @@
                                               <div class="col-sm-6">
                                                   <div class="row">
                                                       <div class="col-sm-6 label-text">
-                                                          <label for="emailid">Email Id  </label>
+                                                          <label for="allottee.emailId">Email Id  </label>
                                                       </div>
                                                       <div class="col-sm-6">
-                                                          <input class="form-control" name="emailid" id="emailid" type="email" ></input>
+                                                          <input class="form-control" name="allottee.emailId" id="allottee.emailId" type="email" ></input>
                                                       </div>
                                                   </div>
                                               </div>
@@ -1690,10 +1692,10 @@
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="pan_no">PAN  </label>
+                                                            <label for="allottee.pan">PAN  </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input type="text"  name="panNo" id="pan_no">
+                                                            <input type="text"  name="allottee.pan" id="allottee.pan">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1701,10 +1703,10 @@
                                             <div class="col-sm-6">
                                                 <div class="row">
                                                     <div class="col-sm-6 label-text">
-                                                        <label for="tradelicense_number">Trade license number  </label>
+                                                        <label for="tradelicenseNumber">Trade license number  </label>
                                                     </div>
                                                     <div class="col-sm-6">
-                                                        <input type="text" name="tradelicenseNumber" id="tradelicense_number">
+                                                        <input type="text" name="tradelicenseNumber" id="tradelicenseNumber">
                                                     </div>
                                                 </div>
                                             </div>
@@ -1713,20 +1715,20 @@
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="tin">TIN  </label>
+                                                            <label for="tinNumber">TIN  </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input type="text" name="tin" id="tin">
+                                                            <input type="text" name="tinNumber" id="tinNumber">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="address">Address of the Allottee</label>
+                                                            <label for="allottee.permanentAddress">Address of the Allottee</label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <textarea name="address" ></textarea>
+                                                            <textarea name="allottee.permanentAddress" id="allottee.permanentAddress" ></textarea>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1759,7 +1761,7 @@
                                                         <div class="col-sm-6">
                                                           <div class="text-no-ui">
                                                               <span class="glyphicon glyphicon-calendar"></span>
-                                                            <input type="number" name="tenderDate" id="tenderDate">
+                                                            <input type="text" class="datetimepicker" name="tenderDate" id="tenderDate">
                                                           </div>
                                                         </div>
                                                     </div>
@@ -1774,10 +1776,8 @@
                                                         <div class="col-sm-6">
                                                             <div class="styled-select">
                                                                 <select name="natureOfAllotment" id="natureOfAllotment">
-                                                              <option>Choose</option>
-                                                              <option>asfdas</option>
-                                                              <option>dfsda</option>
-                                                              <option value="Direct">Direct</option>
+                                                              <option>Select</option>
+
 
                                                             </select>
                                                             </div>
@@ -1802,7 +1802,7 @@
                                                             <label for="orderDetails">Order details  </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input type="number" name="orderDetails" id="orderDetails" class="disabled" >
+                                                            <input type="text" name="orderDetails" id="orderDetails" class="disabled" >
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1814,7 +1814,7 @@
                                                         <div class="col-sm-6">
                                                             <div class="text-no-ui">
                                                                 <span>₹</span>
-                                                                <input type="number" name="registrationFree" id="registration_free">
+                                                                <input type="number" min="0" name="registrationFree" id="registration_free">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1839,7 +1839,7 @@
                                                         <div class="col-sm-6">
                                                           <div class="text-no-ui">
                                                               <span class="glyphicon glyphicon-calendar"></span>
-                                                            <input type="date" id="councilDate" name="councilDate">
+                                                            <input type="text" class="datetimepicker" id="councilDate" name="councilDate">
                                                           </div>
                                                         </div>
                                                     </div>
@@ -1855,12 +1855,24 @@
                                                         <div class="col-sm-6">
                                                           <div class="text-no-ui">
                                                               <span>₹</span>
-                                                            <input type="number" name="rent" id="rent">
+                                                            <input type="number" min="0" name="rent" id="rent">
                                                           </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="paymentCycle">Payment Cycle  </label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <select name="paymentCycle" id="paymentCycle">
+                                                              <option value="">Select</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
 
@@ -1870,11 +1882,11 @@
                                                         <div class="col-sm-6">
                                                           <div class="text-no-ui">
                                                               <span>₹</span>
-                                                            <input type="number" name="advance" id="advance" readonly="true">
+                                                            <input type="number" min="0" name="advance" id="advance" readonly="true">
                                                         </div>
                                                       </div>
                                                     </div>
-                                                </div>
+                                                </div> -->
 
                                             </div>
                                             <div class="row">
@@ -1899,7 +1911,7 @@
                                                         <div class="col-sm-6">
                                                           <div class="text-no-ui">
                                                               <span class="glyphicon glyphicon-calendar"></span>
-                                                            <input type="date" id="bankGuaranteeDate" name="bankGuaranteeDate">
+                                                            <input type="text" class="datetimepicker" id="bankGuaranteeDate" name="bankGuaranteeDate">
                                                           </div>
                                                         </div>
                                                     </div>
@@ -1925,7 +1937,7 @@
                                                         <div class="col-sm-6">
                                                           <div class="text-no-ui">
                                                               <span class="glyphicon glyphicon-calendar"></span>
-                                                            <input type="date" id="solvencyCertificateDate" name="solvencyCertificateDate">
+                                                            <input type="text" class="datetimepicker" id="solvencyCertificateDate" name="solvencyCertificateDate">
                                                         </div>
                                                       </div>
                                                     </div>
@@ -1939,7 +1951,7 @@
                                                           <label for="securityDeposit">Security Deposit  </label>
                                                       </div>
                                                       <div class="col-sm-6">
-                                                          <input type="number" id="securityDeposit" name="securityDeposit" >
+                                                          <input type="number" min="0" id="securityDeposit" name="securityDeposit" class="disabled">
                                                       </div>
                                                   </div>
                                               </div>
@@ -1951,18 +1963,20 @@
                                                         <div class="col-sm-6">
                                                           <div class="text-no-ui">
                                                               <span class="glyphicon glyphicon-calendar"></span>
-                                                            <input type="date" id="securityDepositDate" name="securityDepositDate" >
+                                                            <input type="text" class="datetimepicker" id="securityDepositDate" name="securityDepositDate" >
                                                         </div>
                                                       </div>
                                                     </div>
                                                 </div>
+
+
                                                 <!-- <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
                                                             <label for="advance_payment">Advance Payment  </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input type="number" name="advance_payment" id="advance_payment">
+                                                            <input type="number" min="0" name="advance_payment" id="advance_payment">
                                                         </div>
                                                     </div>
                                                 </div> -->
@@ -1978,7 +1992,7 @@
                                                       <div class="col-sm-6">
                                                         <div class="text-no-ui">
                                                             <span class="glyphicon glyphicon-calendar"></span>
-                                                          <input type="date" name="commencementDate" id="commencementDate">
+                                                          <input type="text" class="datetimepicker" name="commencementDate" id="commencementDate">
                                                       </div>
                                                     </div>
                                                   </div>
@@ -2012,7 +2026,7 @@
                                                       <div class="col-sm-6">
                                                         <div class="text-no-ui">
                                                             <span>₹</span>
-                                                          <input type="number" name="goodWill" id="goodWill">
+                                                          <input type="number" min="0" name="goodWill" id="goodWill">
                                                       </div>
                                                     </div>
                                                   </div>
@@ -2027,7 +2041,7 @@
                                                       </div>
                                                       <div class="col-sm-6">
                                                           <div class="styled-file">
-                                                              <input type="file" >
+                                                              <input type="file" multiple id="documents">
                                                           </div>
                                                       </div>
                                                   </div>
@@ -2070,7 +2084,7 @@
                                                       <div class="col-sm-6">
                                                         <div class="text-no-ui">
                                                             <span class="glyphicon glyphicon-calendar"></span>
-                                                          <input type="number" name="tenderDate" id="tenderDate">
+                                                          <input type="text" class="datetimepicker" name="tenderDate" id="tenderDate">
                                                         </div>
                                                       </div>
                                                   </div>
@@ -2085,10 +2099,8 @@
                                                       <div class="col-sm-6">
                                                           <div class="styled-select">
                                                               <select name="natureOfAllotment" id="natureOfAllotment">
-                                                            <option>Choose</option>
-                                                            <option>asfdas</option>
-                                                            <option>dfsda</option>
-                                                            <option value="Direct">Direct</option>
+                                                            <option>Seect</option>
+
 
                                                           </select>
                                                           </div>
@@ -2113,7 +2125,7 @@
                                                           <label for="orderDetails">Order details  </label>
                                                       </div>
                                                       <div class="col-sm-6">
-                                                          <input type="number" name="orderDetails" id="orderDetails" class="disabled" >
+                                                          <input type="text" name="orderDetails" id="orderDetails" class="disabled" >
                                                       </div>
                                                   </div>
                                               </div>
@@ -2125,7 +2137,7 @@
                                                       <div class="col-sm-6">
                                                           <div class="text-no-ui">
                                                               <span>₹</span>
-                                                              <input type="number" name="registrationFree" id="registration_free">
+                                                              <input type="number" min="0" name="registrationFree" id="registration_free">
                                                           </div>
                                                       </div>
                                                   </div>
@@ -2150,7 +2162,7 @@
                                                       <div class="col-sm-6">
                                                         <div class="text-no-ui">
                                                             <span class="glyphicon glyphicon-calendar"></span>
-                                                          <input type="date" id="councilDate" name="councilDate">
+                                                          <input type="text" class="datetimepicker" id="councilDate" name="councilDate">
                                                         </div>
                                                       </div>
                                                   </div>
@@ -2166,12 +2178,25 @@
                                                       <div class="col-sm-6">
                                                         <div class="text-no-ui">
                                                             <span>₹</span>
-                                                          <input type="number" name="rent" id="rent">
+                                                          <input type="number" min="0" name="rent" id="rent">
                                                         </div>
                                                       </div>
                                                   </div>
                                               </div>
+
                                               <div class="col-sm-6">
+                                                  <div class="row">
+                                                      <div class="col-sm-6 label-text">
+                                                          <label for="paymentCycle">Payment Cycle  </label>
+                                                      </div>
+                                                      <div class="col-sm-6">
+                                                          <select name="paymentCycle" id="paymentCycle">
+                                                            <option value="">Select</option>
+                                                          </select>
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                              <!-- <div class="col-sm-6">
                                                   <div class="row">
                                                       <div class="col-sm-6 label-text">
 
@@ -2181,11 +2206,11 @@
                                                       <div class="col-sm-6">
                                                         <div class="text-no-ui">
                                                             <span>₹</span>
-                                                          <input type="number" name="advance" id="advance" readonly="true">
+                                                          <input type="number" min="0" name="advance" id="advance" readonly="true">
                                                       </div>
                                                     </div>
                                                   </div>
-                                              </div>
+                                              </div> -->
 
                                           </div>
                                           <div class="row">
@@ -2210,7 +2235,7 @@
                                                       <div class="col-sm-6">
                                                         <div class="text-no-ui">
                                                             <span class="glyphicon glyphicon-calendar"></span>
-                                                          <input type="date" id="bankGuaranteeDate" name="bankGuaranteeDate">
+                                                          <input type="text" class="datetimepicker" id="bankGuaranteeDate" name="bankGuaranteeDate">
                                                         </div>
                                                       </div>
                                                   </div>
@@ -2236,7 +2261,7 @@
                                                       <div class="col-sm-6">
                                                         <div class="text-no-ui">
                                                             <span class="glyphicon glyphicon-calendar"></span>
-                                                          <input type="date" id="solvencyCertificateDate" name="solvencyCertificateDate">
+                                                          <input type="text" class="datetimepicker" id="solvencyCertificateDate" name="solvencyCertificateDate">
                                                       </div>
                                                     </div>
                                                   </div>
@@ -2250,7 +2275,7 @@
                                                         <label for="securityDeposit">Security Deposit  </label>
                                                     </div>
                                                     <div class="col-sm-6">
-                                                        <input type="number" id="securityDeposit" name="securityDeposit" >
+                                                        <input type="number" min="0" id="securityDeposit" name="securityDeposit" class="disabled">
                                                     </div>
                                                 </div>
                                             </div>
@@ -2262,18 +2287,19 @@
                                                       <div class="col-sm-6">
                                                         <div class="text-no-ui">
                                                             <span class="glyphicon glyphicon-calendar"></span>
-                                                          <input type="date" id="securityDepositDate" name="securityDepositDate" >
+                                                          <input type="text" class="datetimepicker" id="securityDepositDate" name="securityDepositDate" >
                                                       </div>
                                                     </div>
                                                   </div>
                                               </div>
+
                                               <!-- <div class="col-sm-6">
                                                   <div class="row">
                                                       <div class="col-sm-6 label-text">
                                                           <label for="advance_payment">Advance Payment  </label>
                                                       </div>
                                                       <div class="col-sm-6">
-                                                          <input type="number" name="advance_payment" id="advance_payment">
+                                                          <input type="number" min="0" name="advance_payment" id="advance_payment">
                                                       </div>
                                                   </div>
                                               </div> -->
@@ -2289,7 +2315,7 @@
                                                     <div class="col-sm-6">
                                                       <div class="text-no-ui">
                                                           <span class="glyphicon glyphicon-calendar"></span>
-                                                        <input type="date" name="commencementDate" id="commencementDate">
+                                                        <input type="text" class="datetimepicker" name="commencementDate" id="commencementDate">
                                                     </div>
                                                   </div>
                                                 </div>
@@ -2323,7 +2349,7 @@
                                                     <div class="col-sm-6">
                                                       <div class="text-no-ui">
                                                           <span>₹</span>
-                                                        <input type="number" name="goodWill" id="goodWill">
+                                                        <input type="number" min="0" name="goodWill" id="goodWill">
                                                     </div>
                                                   </div>
                                                 </div>
@@ -2338,7 +2364,7 @@
                                                     </div>
                                                     <div class="col-sm-6">
                                                         <div class="styled-file">
-                                                            <input type="file" >
+                                                            <input type="file" multiple id="documents">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -2382,7 +2408,7 @@
                                                       <div class="col-sm-6">
                                                         <div class="text-no-ui">
                                                             <span class="glyphicon glyphicon-calendar"></span>
-                                                          <input type="number" name="tenderDate" id="tenderDate">
+                                                          <input type="text" class="datetimepicker" name="tenderDate" id="tenderDate">
                                                         </div>
                                                       </div>
                                                   </div>
@@ -2397,10 +2423,8 @@
                                                       <div class="col-sm-6">
                                                           <div class="styled-select">
                                                               <select name="natureOfAllotment" id="natureOfAllotment">
-                                                            <option>Choose</option>
-                                                            <option>asfdas</option>
-                                                            <option>dfsda</option>
-                                                            <option value="Direct">Direct</option>
+                                                            <option>Select</option>
+
 
                                                           </select>
                                                           </div>
@@ -2425,7 +2449,7 @@
                                                           <label for="orderDetails">Order details  </label>
                                                       </div>
                                                       <div class="col-sm-6">
-                                                          <input type="number" name="orderDetails" id="orderDetails" class="disabled" >
+                                                          <input type="text" name="orderDetails" id="orderDetails" class="disabled" >
                                                       </div>
                                                   </div>
                                               </div>
@@ -2437,7 +2461,7 @@
                                                       <div class="col-sm-6">
                                                           <div class="text-no-ui">
                                                               <span>₹</span>
-                                                              <input type="number" name="registrationFree" id="registration_free">
+                                                              <input type="number" min="0" name="registrationFree" id="registration_free">
                                                           </div>
                                                       </div>
                                                   </div>
@@ -2462,7 +2486,7 @@
                                                       <div class="col-sm-6">
                                                         <div class="text-no-ui">
                                                             <span class="glyphicon glyphicon-calendar"></span>
-                                                          <input type="date" id="councilDate" name="councilDate">
+                                                          <input type="text" class="datetimepicker" id="councilDate" name="councilDate">
                                                         </div>
                                                       </div>
                                                   </div>
@@ -2478,12 +2502,24 @@
                                                       <div class="col-sm-6">
                                                         <div class="text-no-ui">
                                                             <span>₹</span>
-                                                          <input type="number" name="rent" id="rent">
+                                                          <input type="number" min="0" name="rent" id="rent">
                                                         </div>
                                                       </div>
                                                   </div>
                                               </div>
                                               <div class="col-sm-6">
+                                                  <div class="row">
+                                                      <div class="col-sm-6 label-text">
+                                                          <label for="paymentCycle">Payment Cycle  </label>
+                                                      </div>
+                                                      <div class="col-sm-6">
+                                                          <select name="paymentCycle" id="paymentCycle">
+                                                            <option value="">Select</option>
+                                                          </select>
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                              <!-- <div class="col-sm-6">
                                                   <div class="row">
                                                       <div class="col-sm-6 label-text">
 
@@ -2493,11 +2529,11 @@
                                                       <div class="col-sm-6">
                                                         <div class="text-no-ui">
                                                             <span>₹</span>
-                                                          <input type="number" name="advance" id="advance" readonly="true">
+                                                          <input type="number" min="0" name="advance" id="advance" readonly="true">
                                                       </div>
                                                     </div>
                                                   </div>
-                                              </div>
+                                              </div> -->
 
                                           </div>
                                           <div class="row">
@@ -2522,7 +2558,7 @@
                                                       <div class="col-sm-6">
                                                         <div class="text-no-ui">
                                                             <span class="glyphicon glyphicon-calendar"></span>
-                                                          <input type="date" id="bankGuaranteeDate" name="bankGuaranteeDate">
+                                                          <input type="text" class="datetimepicker" id="bankGuaranteeDate" name="bankGuaranteeDate">
                                                         </div>
                                                       </div>
                                                   </div>
@@ -2548,7 +2584,7 @@
                                                       <div class="col-sm-6">
                                                         <div class="text-no-ui">
                                                             <span class="glyphicon glyphicon-calendar"></span>
-                                                          <input type="date" id="solvencyCertificateDate" name="solvencyCertificateDate">
+                                                          <input type="text" class="datetimepicker" id="solvencyCertificateDate" name="solvencyCertificateDate">
                                                       </div>
                                                     </div>
                                                   </div>
@@ -2562,7 +2598,7 @@
                                                         <label for="securityDeposit">Security Deposit  </label>
                                                     </div>
                                                     <div class="col-sm-6">
-                                                        <input type="number" id="securityDeposit" name="securityDeposit" >
+                                                        <input type="number" min="0" id="securityDeposit" name="securityDeposit" class="disabled">
                                                     </div>
                                                 </div>
                                             </div>
@@ -2574,18 +2610,20 @@
                                                       <div class="col-sm-6">
                                                         <div class="text-no-ui">
                                                             <span class="glyphicon glyphicon-calendar"></span>
-                                                          <input type="date" id="securityDepositDate" name="securityDepositDate" >
+                                                          <input type="text" class="datetimepicker" id="securityDepositDate" name="securityDepositDate" >
                                                       </div>
                                                     </div>
                                                   </div>
                                               </div>
+
+
                                               <!-- <div class="col-sm-6">
                                                   <div class="row">
                                                       <div class="col-sm-6 label-text">
                                                           <label for="advance_payment">Advance Payment  </label>
                                                       </div>
                                                       <div class="col-sm-6">
-                                                          <input type="number" name="advance_payment" id="advance_payment">
+                                                          <input type="number" min="0" name="advance_payment" id="advance_payment">
                                                       </div>
                                                   </div>
                                               </div> -->
@@ -2601,7 +2639,7 @@
                                                     <div class="col-sm-6">
                                                       <div class="text-no-ui">
                                                           <span class="glyphicon glyphicon-calendar"></span>
-                                                        <input type="date" name="commencementDate" id="commencementDate">
+                                                        <input type="text" class="datetimepicker" name="commencementDate" id="commencementDate">
                                                     </div>
                                                   </div>
                                                 </div>
@@ -2635,7 +2673,7 @@
                                                     <div class="col-sm-6">
                                                       <div class="text-no-ui">
                                                           <span>₹</span>
-                                                        <input type="number" name="goodWill" id="goodWill">
+                                                        <input type="number" min="0" name="goodWill" id="goodWill">
                                                     </div>
                                                   </div>
                                                 </div>
@@ -2650,7 +2688,7 @@
                                                     </div>
                                                     <div class="col-sm-6">
                                                         <div class="styled-file">
-                                                            <input type="file" >
+                                                            <input type="file" multiple id="documents">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -2685,9 +2723,7 @@
                                                         <div class="col-sm-6">
                                                             <div class="styled-select">
                                                                 <select id="approverDepartment">
-                                                              <option>Select from bellow</option>
-                                                              <option value="asdas">sadas</option>
-                                                              <option value="asdas">sffds</option>
+
                                                             </select>
                                                             </div>
                                                         </div>
@@ -2701,9 +2737,7 @@
                                                         <div class="col-sm-6">
                                                             <div class="styled-select">
                                                                 <select id="approverDesignation">
-                                                              <option>Select from bellow</option>
-                                                              <option value="asdas">sadas</option>
-                                                              <option value="asdas">sffds</option>
+
                                                             </select>
                                                             </div>
                                                         </div>
@@ -2720,9 +2754,7 @@
                                                         <div class="col-sm-6">
                                                             <div class="styled-select">
                                                                 <select id="approverName">
-                                                              <option>Select from bellow</option>
-                                                              <option value="asdas">sadas</option>
-                                                              <option value="asdas">sffds</option>
+
                                                             </select>
                                                             </div>
                                                         </div>
@@ -2733,7 +2765,7 @@
                                     </div>
                                     <div class="text-center">
                                       <button type="button" class="btn btn-submit" id="close">Close</button>
-                                        <button type="submit" class="btn btn-submit">Submit</button>
+                                        <button type="button" id="createAgreement" class="btn btn-submit">Submit</button>
                                     </div>
                                 </div>
                             </form>
@@ -2755,9 +2787,9 @@
         </div>
     </footer>
 
-    <script src="../../../assets/javascript/egov/custom.js"></script>
-    <script src="../../../assets/javascript/js.cookies.js"></script>
-    <script src="../../../assets/javascript/agreements/agreements.js"></script>
+    <script src="resources/javascript/egov/custom.js"></script>
+    <script src="resources/javascript/js.cookies.js"></script>
+    <script src="resources/javascript/agreements/agreements.js"></script>
 
     <script type="text/javascript">
         $(window).load(function() {
@@ -2768,6 +2800,8 @@
     </script>
 
     <script type="text/javascript">
+
+
         $('#ast-srch').DataTable({
             "bFilter": false
             // "bLengthChange": false

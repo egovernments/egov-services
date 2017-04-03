@@ -150,7 +150,7 @@ public class ErrorHandler {
 		errorResponse.setResponseInfo(responseInfo);
 		errorResponse.setError(error);
 
-		return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
 	}
 
 	public ResponseEntity<ErrorResponse> getResponseEntityForExistingUser(EmployeeRequest employeeRequest) {
@@ -167,6 +167,38 @@ public class ErrorHandler {
 		errorResponse.setResponseInfo(responseInfo);
 		errorResponse.setError(error);
 
-		return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.CONFLICT);
+		return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
+	}
+	
+	public ResponseEntity<ErrorResponse> getResponseEntityForUnknownUserCreationError(RequestInfo requestInfo) {
+		Error error = new Error();
+		error.setCode(500);
+		error.setMessage("User Creation Failed");
+		error.setDescription("Unknown error");
+		
+		ResponseInfo responseInfo = responseInfoFactory
+				.createResponseInfoFromRequestInfo(requestInfo, false);
+
+		ErrorResponse errorResponse = new ErrorResponse();
+		errorResponse.setResponseInfo(responseInfo);
+		errorResponse.setError(error);
+
+		return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
+	}
+
+	public ResponseEntity<?> getResponseEntityForUnknownUserUpdationError(RequestInfo requestInfo) {
+		Error error = new Error();
+		error.setCode(500);
+		error.setMessage("User Updation Failed");
+		error.setDescription("Unknown error");
+		
+		ResponseInfo responseInfo = responseInfoFactory
+				.createResponseInfoFromRequestInfo(requestInfo, false);
+
+		ErrorResponse errorResponse = new ErrorResponse();
+		errorResponse.setResponseInfo(responseInfo);
+		errorResponse.setError(error);
+
+		return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
 	}
 }

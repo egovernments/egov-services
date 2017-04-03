@@ -5,7 +5,6 @@ import org.egov.pgr.employee.enrichment.factory.DateFactory;
 import org.egov.pgr.employee.enrichment.model.SevaRequest;
 import org.egov.pgr.employee.enrichment.repository.ComplaintTypeRepository;
 import org.egov.pgr.employee.enrichment.repository.EscalationHoursRepository;
-import org.egov.pgr.employee.enrichment.repository.PositionRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -21,7 +20,6 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class EscalationDateServiceTest {
 
-    private static final String IST = "Asia/Calcutta";
     @InjectMocks
     private EscalationDateService escalationDateService;
 
@@ -30,9 +28,6 @@ public class EscalationDateServiceTest {
 
     @Mock
     private ComplaintTypeRepository complaintTypeRepository;
-
-    @Mock
-    private PositionRepository positionRepository;
 
     @Mock
     private DateFactory dateFactory;
@@ -52,7 +47,7 @@ public class EscalationDateServiceTest {
         when(sevaRequest.getTenantId()).thenReturn(tenantId);
         final long assigneeId = 2L;
         when(sevaRequest.getAssignee()).thenReturn(assigneeId);
-        when(positionRepository.getDesignationIdForAssignee(tenantId, assigneeId)).thenReturn(designationId);
+        when(sevaRequest.getDesignation()).thenReturn(designationId);
         final String complaintTypeId = "complaintTypeId";
         final String complaintTypeCode = "complaintTypeCode";
         when(sevaRequest.getComplaintTypeCode()).thenReturn(complaintTypeCode);
@@ -61,7 +56,7 @@ public class EscalationDateServiceTest {
             .thenReturn(escalationHours);
         when(dateFactory.now()).thenReturn(now);
 
-        escalationDateService.enrichRequest(sevaRequest);
+        escalationDateService.enrichRequestWithEscalationDate(sevaRequest);
 
         verify(sevaRequest).setEscalationDate(expectedDate);
     }

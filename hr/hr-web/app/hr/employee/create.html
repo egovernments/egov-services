@@ -7,18 +7,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>EIS</title>
+    <base href="/hr-web/"/>
 
     <!-- Bootstrap -->
-    <link rel="stylesheet" type="text/css" href="../../../assets/stylesheet/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="../../../assets/stylesheet/global/multi-level-menu/jquery.multilevelpushmenu.min.css">
-    <link rel="stylesheet" type="text/css" href="../../../assets/stylesheet/application.css">
-    <link rel="stylesheet" type="text/css" href="../../../assets/stylesheet/egov/custom.css">
-    <link rel="stylesheet" type="text/css" href="../../../assets/stylesheet/vistyle.css">
-    <link rel="stylesheet" type="text/css" href="../../../assets/stylesheet/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="resources/stylesheet/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="resources/stylesheet/global/multi-level-menu/jquery.multilevelpushmenu.min.css">
+    <link rel="stylesheet" type="text/css" href="resources/stylesheet/application.css">
+    <link rel="stylesheet" type="text/css" href="resources/stylesheet/egov/custom.css">
+    <link rel="stylesheet" type="text/css" href="resources/stylesheet/vistyle.css">
+    <link rel="stylesheet" type="text/css" href="resources/stylesheet/font-awesome.min.css">
 
-    <link rel="stylesheet" type="text/css" href="../../../assets/stylesheet/jquery.dataTables.min.css">
-    <link rel="stylesheet" type="text/css" href="../../../assets/stylesheet/responsive.bootstrap.css">
-    <link rel="stylesheet" type="text/css" href="../../../assets/stylesheet/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" type="text/css" href="resources/stylesheet/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="resources/stylesheet/responsive.bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="resources/stylesheet/bootstrap-datetimepicker.min.css">
 
 
     <style>
@@ -80,20 +81,20 @@
     <![endif]-->
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script type="text/javascript" src="../../../assets/javascript/jquery.min.js"></script>
-    <script type="text/javascript" src="../../../assets/javascript/bootstrap.min.js"></script>
+    <script type="text/javascript" src="resources/javascript/jquery.min.js"></script>
+    <script type="text/javascript" src="resources/javascript/bootstrap.min.js"></script>
 
-    <script type="text/javascript" src="../../../assets/javascript/global/multi-level-menu/jquery.multilevelpushmenu.min.js"></script>
+    <script type="text/javascript" src="resources/javascript/global/multi-level-menu/jquery.multilevelpushmenu.min.js"></script>
 
-    <script type="text/javascript" src="../../../assets/javascript/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="resources/javascript/jquery.dataTables.min.js"></script>
 
-    <script type="text/javascript" src="../../../assets/javascript/dataTables.responsive.min.js"></script>
-    <script type="text/javascript" src="../../../assets/javascript/moment.js"></script>
-    <script type="text/javascript" src="../../../assets/javascript/bootstrap-datetimepicker.js"></script>
+    <script type="text/javascript" src="resources/javascript/dataTables.responsive.min.js"></script>
+    <script type="text/javascript" src="resources/javascript/moment.js"></script>
+    <script type="text/javascript" src="resources/javascript/bootstrap-datetimepicker.js"></script>
     <!-- Jquery form validator -->
-    <script type="text/javascript" src="../../../assets/javascript/global/jquery-validation/jquery.validate.min.js"></script>
-    <script type="text/javascript" src="../../../assets/javascript/global/jquery-validation/additional-methods.min.js"></script>
-    <script src="../../../assets/javascript/hr/common/commonAPI.js" charset="utf-8"></script>
+    <script type="text/javascript" src="resources/javascript/global/jquery-validation/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="resources/javascript/global/jquery-validation/additional-methods.min.js"></script>
+    <script src="resources/javascript/hr/common/commonAPI.js" charset="utf-8"></script>
 </head>
 
 <body class="page-body">
@@ -110,7 +111,7 @@
                 <!-- logo -->
                 <div class="navbar-brand">
                     <a href="javascript:void(0);">
-                        <img src="../../../assets/images/logo.jpg" height="60" class="homepage_logo">
+                        <img src="resources/images/logo.jpg" height="60" class="homepage_logo">
                     </a>
                 </div>
 
@@ -190,7 +191,7 @@
 
                     <li class="dropdown">
                         <a href="http://www.egovernments.org" target="_blank">
-                            <img src="../../../assets/images/logo@2x.png" title="Powered by eGovernments" height="25px" style="padding-top:5px">
+                            <img src="resources/images/logo@2x.png" title="Powered by eGovernments" height="25px" style="padding-top:5px">
                         </a>
                     </li>
                 </ul>
@@ -442,7 +443,7 @@
                                                                     <label for="placeOfBirth">Native/Birth Place</label>
                                                                 </div>
                                                                 <div class="col-sm-6">
-                                                                    <input id="placeOfBirth" name="placeOfBirth" type="text">
+                                                                    <input id="placeOfBirth" name="placeOfBirth" type="text" maxlength="200">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -659,7 +660,7 @@
                                                                     <label for="bankAccount">Account number  </label>
                                                                 </div>
                                                                 <div class="col-sm-6">
-                                                                    <input id="bankAccount" name="bankAccount" type="number" min="0">
+                                                                    <input id="bankAccount" name="bankAccount" type="number" min="0" maxlength="20">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1231,8 +1232,7 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
-
-
+                                                                <p class="text-danger error-p" style="display:none">Duplicate entry not allowed.</p>
                                                             </div>
                                                             <div class="modal-footer">
                                                                 <button type="button" class="btn btn-primary" onclick="commonAddAndUpdate('agreementTableBody','assignmentDetailModal','assignments')">Add/Edit</button>
@@ -1320,12 +1320,11 @@
                                                                     </div>
 
                                                                 </div>
-
+                                                                <p class="text-danger error-p" style="display:none">Duplicate entry not allowed.</p>
                                                             </div>
                                                             <div class="modal-footer">
                                                                 <button type="button" id="jurisdictionAddOrUpdate" class="btn btn-primary" onclick="commonAddAndUpdate('jurisdictionTableBody','jurisdictionDetailModal','jurisdictions')">Add/Edit</button>
                                                                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-
                                                             </div>
 
                                                         </div>
@@ -1443,7 +1442,7 @@
                                                                             </div>
                                                                         </div>
                                                                     </div>
-
+                                                                    <p class="text-danger error-p" style="display:none">Duplicate entry not allowed.</p>
                                                                 </div>
                                                                 <div class="modal-footer">
                                                                     <button type="button" id="serviceHistoryAddOrUpdate" class="btn btn-primary" onclick="commonAddAndUpdate('serviceHistoryTableBody','serviceHistoryDetailModal','serviceHistory')">Add/Edit</button>
@@ -1568,7 +1567,7 @@
                                                                     </div>
 
                                                                 </div>
-
+                                                                <p class="text-danger error-p" style="display:none">Duplicate entry not allowed.</p>
                                                                 <div class="modal-footer">
                                                                     <button type="button" id="probationAddOrUpdate" class="btn btn-primary" onclick="commonAddAndUpdate('probationTableBody','probationDetailModal','probation')">Add/Edit</button>
                                                                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -1693,7 +1692,7 @@
                                                                     </div>
 
                                                                 </div>
-
+                                                                <p class="text-danger error-p" style="display:none">Duplicate entry not allowed.</p>
                                                                 <div class="modal-footer">
                                                                     <button type="button" id="regularisationAddOrUpdate" class="btn btn-primary" onclick="commonAddAndUpdate('regularisationTableBody','regularisationDetailModal','regularisation')">Add/Edit</button>
                                                                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -1808,7 +1807,7 @@
 
 
                                                                     </div>
-
+                                                                    <p class="text-danger error-p" style="display:none">Duplicate entry not allowed.</p>
                                                                 </div>
                                                                 <div class="modal-footer">
                                                                     <button type="button" id="educationAddOrUpdate" class="btn btn-primary" onclick="commonAddAndUpdate('educationTableBody','educationDetailModal','education')">Add/Edit</button>
@@ -1920,7 +1919,7 @@
 
 
                                                                     </div>
-
+                                                                    <p class="text-danger error-p" style="display:none">Duplicate entry not allowed.</p>
                                                                 </div>
                                                                 <div class="modal-footer">
                                                                     <button type="button" id="technicalAddOrUpdate" class="btn btn-primary" onclick="commonAddAndUpdate('technicalTableBody','technicalDetailModal','technical')">Add/Edit</button>
@@ -2018,7 +2017,7 @@
 
 
                                                                     </div>
-
+                                                                    <p class="text-danger error-p" style="display:none">Duplicate entry not allowed.</p>
                                                                 </div>
                                                                 <div class="modal-footer">
                                                                     <button type="button" id="testAddOrUpdate" class="btn btn-primary" onclick="commonAddAndUpdate('testTableBody','testDetailModal','test')">Add/Edit</button>
@@ -2210,6 +2209,16 @@
 
     </div>
 
+     <div id="error-alert-div" class="alert alert-danger alert-dismissible alert-toast" role="alert" style="display:none">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <span id="error-alert-span"></span>
+    </div>
+
+    <div id="success-alert-div" class="alert alert-success alert-dismissible alert-toast" role="alert" style="display:none">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <span id="success-alert-span"></span>
+    </div>
+
     <footer class="clearfix simple">
         <div class="constrain">
             <div id="legal">
@@ -2219,11 +2228,11 @@
         </div>
     </footer>
 
-    <script src="../../../assets/javascript/egov/custom.js"></script>
-    <script src="../../../assets/javascript/js.cookies.js"></script>
-    <script src="../../../assets/javascript/hr/employee/create.js"></script>
-    <script type="text/javascript" src="../../../assets/javascript/global/jquery-validation/jquery.validate.min.js"></script>
-    <script type="text/javascript" src="../../../assets/javascript/global/jquery-validation/additional-methods.min.js"></script>
+    <script src="resources/javascript/egov/custom.js"></script>
+    <script src="resources/javascript/js.cookies.js"></script>
+    <script src="resources/javascript/hr/employee/create.js"></script>
+    <script type="text/javascript" src="resources/javascript/global/jquery-validation/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="resources/javascript/global/jquery-validation/additional-methods.min.js"></script>
 
 
     <script type="text/javascript">

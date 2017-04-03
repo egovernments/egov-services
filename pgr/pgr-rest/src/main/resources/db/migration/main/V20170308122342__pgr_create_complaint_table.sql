@@ -183,8 +183,8 @@ CREATE TABLE egpgr_complainttype
   type character varying(50) DEFAULT 'realtime',
   keywords character varying(100) DEFAULT '',
   CONSTRAINT pk_pgr_complainttype_id PRIMARY KEY (id),
-  CONSTRAINT fk_pgr_complainttype_deptid FOREIGN KEY (department)
-  REFERENCES eg_department (id) ,CONSTRAINT uk_complainttype_code UNIQUE (code),
+  CONSTRAINT fk_pgr_complainttype_deptid FOREIGN KEY (department) REFERENCES eg_department (id),
+  CONSTRAINT uk_complainttype_code UNIQUE (code),
   CONSTRAINT uk_pgr_complainttype_name UNIQUE (name)
 );
 

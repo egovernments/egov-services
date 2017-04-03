@@ -47,6 +47,7 @@ import javax.validation.Valid;
 import org.egov.eis.model.LeaveOpeningBalance;
 import org.egov.eis.service.LeaveOpeningBalanceService;
 import org.egov.eis.web.contract.LeaveOpeningBalanceGetRequest;
+import org.egov.eis.web.contract.LeaveOpeningBalanceRequest;
 import org.egov.eis.web.contract.LeaveOpeningBalanceResponse;
 import org.egov.eis.web.contract.RequestInfo;
 import org.egov.eis.web.contract.RequestInfoWrapper;
@@ -60,6 +61,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -76,7 +78,7 @@ public class LeaveOpeningBalanceController {
 	private LeaveOpeningBalanceService leaveOpeningBalanceService;
 
 	@Autowired
-	private ErrorHandler errHandler;
+	private ErrorHandler errorHandler;
 
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
@@ -90,24 +92,69 @@ public class LeaveOpeningBalanceController {
 
 		// validate input params
 		if (modelAttributeBindingResult.hasErrors()) {
-			return errHandler.getErrorResponseEntityForMissingParameters(modelAttributeBindingResult, requestInfo);
+			return errorHandler.getErrorResponseEntityForMissingParameters(modelAttributeBindingResult, requestInfo);
 		}
 
 		// validate input params
 		if (requestBodyBindingResult.hasErrors()) {
-			return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
+			return errorHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
 		}
 
 		// Call service
 		List<LeaveOpeningBalance> leaveOpeningBalancesList = null;
 		try {
-			leaveOpeningBalancesList = leaveOpeningBalanceService.getLeaveOpeningBalances(leaveOpeningBalanceGetRequest);
+			leaveOpeningBalancesList = leaveOpeningBalanceService
+					.getLeaveOpeningBalances(leaveOpeningBalanceGetRequest);
 		} catch (Exception exception) {
 			logger.error("Error while processing request " + leaveOpeningBalanceGetRequest, exception);
-			return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
+			return errorHandler.getResponseEntityForUnexpectedErrors(requestInfo);
 		}
 
 		return getSuccessResponse(leaveOpeningBalancesList, requestInfo);
+	}
+
+	/**
+	 * Maps Post Requests for _create & returns ResponseEntity of either
+	 * LeaveOpeningBalanceResponse type or ErrorResponse type
+	 * 
+	 * @param LeaveOpeningBalanceRequest
+	 * @param BindingResult
+	 * @return ResponseEntity<?>
+	 */
+
+	@PostMapping("_create")
+	@ResponseBody
+	public ResponseEntity<?> create(@RequestBody LeaveOpeningBalanceRequest leaveOpeningBalanceRequest,
+			BindingResult bindingResult) {
+
+		ResponseEntity<?> errorResponseEntity = validateLeaveOpeningBalanceRequest(leaveOpeningBalanceRequest,
+				bindingResult);
+		if (errorResponseEntity != null)
+			return errorResponseEntity;
+
+		return leaveOpeningBalanceService.createLeaveOpeningBalance(leaveOpeningBalanceRequest);
+	}
+
+	/**
+	 * Maps Post Requests for _create & returns ResponseEntity of either
+	 * LeaveOpeningBalanceResponse type or ErrorResponse type
+	 * 
+	 * @param LeaveOpeningBalanceRequest
+	 * @param BindingResult
+	 * @return ResponseEntity<?>
+	 */
+
+	@PostMapping("/{employeeId}/_update")
+	@ResponseBody
+	public ResponseEntity<?> update(@RequestBody LeaveOpeningBalanceRequest leaveOpeningBalanceRequest,
+			@PathVariable(required = true, name = "employeeId") Long employeeId, BindingResult bindingResult) {
+
+		ResponseEntity<?> errorResponseEntity = validateLeaveOpeningBalanceRequest(leaveOpeningBalanceRequest,
+				bindingResult);
+		if (errorResponseEntity != null)
+			return errorResponseEntity;
+
+		return leaveOpeningBalanceService.updateLeaveOpeningBalance(leaveOpeningBalanceRequest);
 	}
 
 	/**
@@ -116,7 +163,8 @@ public class LeaveOpeningBalanceController {
 	 * @param leaveOpeningBalancesList
 	 * @return
 	 */
-	private ResponseEntity<?> getSuccessResponse(List<LeaveOpeningBalance> leaveOpeningBalancesList, RequestInfo requestInfo) {
+	private ResponseEntity<?> getSuccessResponse(List<LeaveOpeningBalance> leaveOpeningBalancesList,
+			RequestInfo requestInfo) {
 		LeaveOpeningBalanceResponse leaveOpeningBalanceRes = new LeaveOpeningBalanceResponse();
 		leaveOpeningBalanceRes.setLeaveOpeningBalance(leaveOpeningBalancesList);
 		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
@@ -124,6 +172,24 @@ public class LeaveOpeningBalanceController {
 		leaveOpeningBalanceRes.setResponseInfo(responseInfo);
 		return new ResponseEntity<LeaveOpeningBalanceResponse>(leaveOpeningBalanceRes, HttpStatus.OK);
 
+	}
+
+	/**
+	 * Validate EmployeeRequest object & returns ErrorResponseEntity if there
+	 * are any errors or else returns null
+	 * 
+	 * @param EmployeeRequest
+	 * @param bindingResult
+	 * @return ResponseEntity<?>
+	 */
+	private ResponseEntity<?> validateLeaveOpeningBalanceRequest(LeaveOpeningBalanceRequest leaveOpeningBalanceRequest,
+			BindingResult bindingResult) {
+		// validate input params that can be handled by annotations
+		if (bindingResult.hasErrors()) {
+			return errorHandler.getErrorResponseEntityForBindingErrors(bindingResult,
+					leaveOpeningBalanceRequest.getRequestInfo());
+		}
+		return null;
 	}
 
 }

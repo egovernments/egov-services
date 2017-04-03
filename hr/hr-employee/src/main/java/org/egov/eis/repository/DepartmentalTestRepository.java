@@ -40,9 +40,11 @@
 
 package org.egov.eis.repository;
 
+import java.io.StringWriter;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.eis.model.DepartmentalTest;
@@ -51,6 +53,7 @@ import org.egov.eis.web.contract.EmployeeRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -62,9 +65,18 @@ public class DepartmentalTestRepository {
 
 	public static final String INSERT_DEPARTMENTAL_TEST_QUERY = "INSERT INTO egeis_departmentalTest"
 			+ "(id, employeeId, test, yearOfPassing, remarks,"
-			+ " createdBy, createdDate, lastModifiedBy, lastModifiedDate, tenantId)"
-			+ " VALUES (?,?,?,?,?,?,?,?,?,?)";
+			+ " createdBy, createdDate, lastModifiedBy, lastModifiedDate, tenantId)" + " VALUES (?,?,?,?,?,?,?,?,?,?)";
 
+	public static final String UPDATE_DEPARTMENTAL_TEST_QUERY = "UPDATE egeis_departmentalTest"
+			+ " SET (test, yearOfPassing, remarks," + " lastModifiedBy, lastModifiedDate)"
+			+ " = (?,?,?,?,?)" + " WHERE id = ? and tenantId=?";
+
+	public static final String CHECK_IF_ID_EXISTS_QUERY = "SELECT id FROM egeis_departmentaltest where "
+			+ "id=? and employeeId=? and tenantId=?";
+	
+	public static final String DELETE_QUERY = "DELETE FROM egeis_departmentaltest where "
+			+ "id=? and employeeId=? and tenantId=?";
+	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
@@ -89,9 +101,10 @@ public class DepartmentalTestRepository {
 				ps.setTimestamp(9, new Timestamp(new java.util.Date().getTime()));
 				ps.setString(10, departmentalTest.getTenantId());
 
-				if(departmentalTest.getDocuments() != null && !departmentalTest.getDocuments().isEmpty()) {
+				if (departmentalTest.getDocuments() != null && !departmentalTest.getDocuments().isEmpty()) {
 					documentsRepository.save(employeeRequest.getEmployee().getId(), departmentalTest.getDocuments(),
-							DocumentReferenceType.TEST.toString(), departmentalTest.getId(), departmentalTest.getTenantId());
+							DocumentReferenceType.TEST.toString(), departmentalTest.getId(),
+							departmentalTest.getTenantId());
 				}
 			}
 
@@ -100,5 +113,50 @@ public class DepartmentalTestRepository {
 				return departmentalTests.size();
 			}
 		});
+	}
+
+	public void update(DepartmentalTest test) {
+		Object[] obj = new Object[] { test.getTest(), test.getYearOfPassing(), test.getRemarks(),
+				test.getLastModifiedBy(), test.getLastModifiedDate(),test.getId(), test.getTenantId() };
+
+		jdbcTemplate.update(UPDATE_DEPARTMENTAL_TEST_QUERY, obj);
+	}
+
+	public void insert(DepartmentalTest test, Long empId) {
+		Object[] obj = new Object[] { test.getId(), empId, test.getTest(), test.getYearOfPassing(), test.getRemarks(),
+				test.getCreatedBy(), test.getCreatedDate(), test.getLastModifiedBy(), test.getLastModifiedDate(),
+				test.getTenantId() };
+
+		jdbcTemplate.update(INSERT_DEPARTMENTAL_TEST_QUERY, obj);
+	}
+	
+	public void findAndDeleteThatAreNotInList(List<DepartmentalTest> test) {
+/*		for(test) -> {
+		});
+		
+		StringWriter stringWriter = new StringWriter();
+		Long id[] = 
+		String[] b = new String[a.length];
+		for ( int i = 0; i < a.length; i++) {
+		    b[i] = a[i];
+		}
+		CSVWriter csvWriter = new CSVWriter(stringWriter, ",");
+		csvWriter.writeNext(b);*/
+		// TODO Auto-generated method stub
+		
+		// DELETE FROM egeis_departmentaltest where empid=? and id NOT IN <<loop probation and get all ids in csv>>)
+	}
+
+	public boolean testAlreadyExists(Long id, Long empId, String tenantId) {
+		List<Object> values = new ArrayList<Object>();
+		values.add(id);
+		values.add(empId);
+		values.add(tenantId);
+		try {
+			jdbcTemplate.queryForObject(CHECK_IF_ID_EXISTS_QUERY, values.toArray(), Long.class);
+			return true;
+		} catch (EmptyResultDataAccessException e) {
+			return false;
+		}
 	}
 }

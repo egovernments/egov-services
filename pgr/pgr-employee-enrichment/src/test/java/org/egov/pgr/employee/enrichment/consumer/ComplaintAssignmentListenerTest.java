@@ -2,11 +2,13 @@ package org.egov.pgr.employee.enrichment.consumer;
 
 import org.egov.pgr.employee.enrichment.model.SevaRequest;
 import org.egov.pgr.employee.enrichment.repository.ComplaintMessageQueueRepository;
+import org.egov.pgr.employee.enrichment.service.PositionService;
 import org.egov.pgr.employee.enrichment.service.EscalationDateService;
 import org.egov.pgr.employee.enrichment.service.WorkflowService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -15,8 +17,7 @@ import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ComplaintAssignmentListenerTest {
@@ -29,6 +30,9 @@ public class ComplaintAssignmentListenerTest {
 
     @Mock
     private EscalationDateService escalationDateService;
+
+    @Mock
+    private PositionService positionService;
 
     @InjectMocks
     private ComplaintAssignmentListener complaintAssignmentListener;
@@ -64,7 +68,34 @@ public class ComplaintAssignmentListenerTest {
 
         complaintAssignmentListener.process(sevaRequestMap);
 
-        verify(escalationDateService).enrichRequest(sevaRequest);
+        verify(escalationDateService).enrichRequestWithEscalationDate(sevaRequest);
+    }
+
+    @Test
+    public void test_should_enrich_seva_request_with_designation() {
+        HashMap<String, Object> sevaRequestMap = getSevaRequestMap();
+        final SevaRequest sevaRequest = new SevaRequest(new HashMap<>());
+        when(workflowService.enrichWorkflow(any(SevaRequest.class))).thenReturn(sevaRequest);
+
+        complaintAssignmentListener.process(sevaRequestMap);
+
+        verify(positionService).enrichRequestWithPosition(sevaRequest);
+    }
+
+    @Test
+    public void test_should_invoke_enrichers_in_order() {
+        HashMap<String, Object> sevaRequestMap = getSevaRequestMap();
+        final SevaRequest sevaRequest = new SevaRequest(new HashMap<>());
+        when(workflowService.enrichWorkflow(any(SevaRequest.class))).thenReturn(sevaRequest);
+
+        complaintAssignmentListener.process(sevaRequestMap);
+
+        final InOrder inOrder = inOrder(workflowService, positionService, escalationDateService);
+
+        inOrder.verify(workflowService).enrichWorkflow(any(SevaRequest.class));
+        inOrder.verify(positionService).enrichRequestWithPosition(sevaRequest);
+        inOrder.verify(escalationDateService).enrichRequestWithEscalationDate(sevaRequest);
+        inOrder.verifyNoMoreInteractions();
     }
 
     private HashMap<String, Object> getSevaRequestMap() {

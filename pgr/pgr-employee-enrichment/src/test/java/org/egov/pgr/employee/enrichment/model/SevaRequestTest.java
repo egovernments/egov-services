@@ -54,6 +54,20 @@ public class SevaRequestTest {
     }
 
     @Test
+    public void test_should_update_seva_request_map_with_positions() {
+        final SevaRequest sevaRequest = createSevaRequest();
+        final String designationId = "2";
+        final String departmentId = "3";
+        final String designationIdKey = "designationId";
+        final String departmentIdKey = "departmentId";
+
+        sevaRequest.update(new Position(designationId, departmentId));
+
+        assertEquals(designationId, sevaRequest.getValues().get(designationIdKey));
+        assertEquals(departmentId, sevaRequest.getValues().get(departmentIdKey));
+    }
+
+    @Test
     public void test_should_set_escalation_date() {
         final SevaRequest sevaRequest = createSevaRequest();
         final LocalDateTime dateTime = LocalDateTime.of(2017, 1, 2, 3, 4);

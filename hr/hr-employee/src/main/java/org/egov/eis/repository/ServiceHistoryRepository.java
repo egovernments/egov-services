@@ -44,6 +44,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.eis.model.ServiceHistory;
@@ -52,6 +53,7 @@ import org.egov.eis.web.contract.EmployeeRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -65,7 +67,16 @@ public class ServiceHistoryRepository {
 			+ " (id, employeeId, serviceInfo, serviceFrom, remarks, orderNo,"
 			+ " createdBy, createdDate, lastModifiedBy, lastModifiedDate, tenantId)"
 			+ " VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+	
+	public static final String UPDATE_SERVICE_HISTORY_QUERY = "UPDATE egeis_serviceHistory"
+			+ " SET (serviceInfo, serviceFrom, remarks, orderNo,"
+			+ " lastModifiedBy, lastModifiedDate)"
+			+ " = (?,?,?,?,?,?)"
+	        + "where id = ? and tenantId=?";
 
+	public static final String CHECK_IF_ID_EXISTS_QUERY = "SELECT id FROM egeis_serviceHistory where "
+			+ "id=? and employeeId=? and tenantId=?";
+	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
@@ -102,5 +113,48 @@ public class ServiceHistoryRepository {
 				return serviceHistories.size();
 			}
 		});
+	}
+
+	public void update(ServiceHistory service) {
+		Object[] obj = new Object[] { service.getServiceInfo(), service.getServiceFrom(), service.getRemarks(),
+				service.getOrderNo(), service.getLastModifiedBy(), service.getLastModifiedDate(),
+				service.getId(), service.getTenantId() };
+
+		jdbcTemplate.update(UPDATE_SERVICE_HISTORY_QUERY, obj);
+
+	}
+
+	public void insert(ServiceHistory service, Long empId) {
+		/*
+		 * + " (id, employeeId, serviceInfo, serviceFrom, remarks, orderNo,"
+			+ " createdBy, createdDate, lastModifiedBy, lastModifiedDate, tenantId)"
+			+ " VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+	
+		 */
+		Object[] obj = new Object[] {
+
+				service.getId(), empId, service.getServiceInfo(), service.getServiceFrom(), service.getRemarks(),
+				service.getOrderNo(), service.getCreatedBy(), service.getCreatedDate(), service.getLastModifiedBy(),
+				service.getLastModifiedDate(), service.getTenantId()
+				};
+
+		jdbcTemplate.update(INSERT_SERVICE_HISTORY_QUERY, obj);
+	}
+
+	public boolean serviceHistoryAlreadyExists(Long id, Long empId, String tenantId) {
+		
+		List<Object> values = new ArrayList<Object>();
+		values.add(id);
+		values.add(empId);
+		values.add(tenantId);
+		System.out.println("id" + id + " empId " +empId + " tenantId " +tenantId);
+		LOGGER.info("id" + id + " empId " +empId + " tenantId " +tenantId);
+		try {
+			jdbcTemplate.queryForObject(CHECK_IF_ID_EXISTS_QUERY, values.toArray(), Long.class);
+			return true;
+		} catch (EmptyResultDataAccessException e) {
+		//	e.printStackTrace();
+			return false;
+		}
 	}
 }

@@ -45,7 +45,7 @@ public class ServiceRequest {
     private String lastModifiedDate = null;
 
     @JsonProperty("expected_datetime")
-    private String escalationDate = null;
+    private Long escalationDate = null;
 
     @JsonProperty("address")
     private String landmarkDetails = null;

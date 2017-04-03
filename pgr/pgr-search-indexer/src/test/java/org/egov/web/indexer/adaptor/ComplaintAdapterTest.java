@@ -60,7 +60,7 @@ public class ComplaintAdapterTest {
 	private ServiceRequest setUpServiceRequest() {
 		ServiceRequest serviceRequest = ServiceRequest.builder().values(new HashMap<>()).build();
 		serviceRequest.setCreatedDate("2016-10-20");
-		serviceRequest.setEscalationDate("2016-10-21");
+		serviceRequest.setEscalationDate(1491374461909L);
 		serviceRequest.setFirstName("abc");
 		serviceRequest.setLastName("xyz");
 		serviceRequest.setComplaintTypeCode("AOS");

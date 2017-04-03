@@ -40,26 +40,33 @@
 
 package org.egov.eis.web.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
 
 import org.egov.eis.model.LeaveType;
 import org.egov.eis.service.LeaveTypeService;
+import org.egov.eis.util.ApplicationConstants;
 import org.egov.eis.web.contract.LeaveTypeGetRequest;
+import org.egov.eis.web.contract.LeaveTypeRequest;
 import org.egov.eis.web.contract.LeaveTypeResponse;
 import org.egov.eis.web.contract.RequestInfo;
 import org.egov.eis.web.contract.RequestInfoWrapper;
 import org.egov.eis.web.contract.ResponseInfo;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
+import org.egov.eis.web.errorhandlers.Error;
 import org.egov.eis.web.errorhandlers.ErrorHandler;
+import org.egov.eis.web.errorhandlers.ErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -80,6 +87,72 @@ public class LeaveTypeController {
 
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
+
+	@Autowired
+	private ApplicationConstants applicationConstants;
+
+	@PostMapping(value = "_create")
+	@ResponseBody
+	public ResponseEntity<?> create(@RequestBody @Valid final LeaveTypeRequest leaveTypeRequest,
+			final BindingResult errors) {
+		if (errors.hasErrors()) {
+			final ErrorResponse errRes = populateErrors(errors);
+			return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
+		}
+		logger.info("leaveTypeRequest::" + leaveTypeRequest);
+
+		final List<ErrorResponse> errorResponses = validateLeaveTypeRequest(leaveTypeRequest);
+		if (!errorResponses.isEmpty())
+			return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
+
+		final List<LeaveType> leaveTypes = leaveTypeService.createLeaveType(leaveTypeRequest);
+
+		return getSuccessResponse(leaveTypes, leaveTypeRequest.getRequestInfo());
+	}
+
+	@PostMapping(value = "/{leaveTypeId}/_update")
+	@ResponseBody
+	public ResponseEntity<?> update(@RequestBody @Valid final LeaveTypeRequest leaveTypeRequest,
+			final BindingResult errors, @PathVariable Long leaveTypeId) {
+		// validate header
+		if (errors.hasErrors()) {
+			final ErrorResponse errRes = populateErrors(errors);
+			return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
+		}
+		leaveTypeRequest.getLeaveType().get(0).setId(leaveTypeId);
+		logger.info("leaveTypeRequest::" + leaveTypeRequest);
+
+		final List<ErrorResponse> errorResponses = validateLeaveTypeRequest(leaveTypeRequest);
+		if (!errorResponses.isEmpty())
+			return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
+
+		final List<LeaveType> leaveTypes = leaveTypeService.createLeaveType(leaveTypeRequest);
+
+		return getSuccessResponse(leaveTypes, leaveTypeRequest.getRequestInfo());
+	}
+
+	@SuppressWarnings("deprecation")
+	private List<ErrorResponse> validateLeaveTypeRequest(final LeaveTypeRequest leaveTypeRequest) {
+		boolean isLeaveTypeExists = false;
+		final List<ErrorResponse> errorResponses = new ArrayList<>();
+
+		for (LeaveType leaveType : leaveTypeRequest.getLeaveType()) {
+			if (leaveTypeService.getLeaveTypeByName(leaveType.getId(), leaveType.getName(), leaveType.getTenantId())) {
+				isLeaveTypeExists = true;
+				break;
+			}
+		}
+
+		if (isLeaveTypeExists) {
+			final ErrorResponse errorResponse = new ErrorResponse();
+			final Error error = new Error();
+			error.setDescription(applicationConstants.getErrorMessage(ApplicationConstants.MSG_LEAVETYPE_PRESENT));
+			errorResponse.setError(error);
+			errorResponses.add(errorResponse);
+		}
+		return errorResponses;
+
+	}
 
 	@PostMapping("_search")
 	@ResponseBody
@@ -124,6 +197,20 @@ public class LeaveTypeController {
 		leaveTypeRes.setResponseInfo(responseInfo);
 		return new ResponseEntity<LeaveTypeResponse>(leaveTypeRes, HttpStatus.OK);
 
+	}
+
+	private ErrorResponse populateErrors(final BindingResult errors) {
+		final ErrorResponse errRes = new ErrorResponse();
+
+		final Error error = new Error();
+		error.setCode(1);
+		error.setDescription("Error while binding request");
+		if (errors.hasFieldErrors())
+			for (final FieldError fieldError : errors.getFieldErrors()) {
+				error.getFields().put(fieldError.getField(), fieldError.getRejectedValue());
+			}
+		errRes.setError(error);
+		return errRes;
 	}
 
 }

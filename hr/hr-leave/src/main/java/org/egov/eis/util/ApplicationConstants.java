@@ -38,65 +38,26 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.model;
+package org.egov.eis.util;
 
-import java.util.Date;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.annotation.Order;
+import org.springframework.core.env.Environment;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+@Configuration
+@PropertySource(value = { "classpath:messages/messages.properties",
+		"classpath:messages/errors.properties" }, ignoreResourceNotFound = true)
+@Order(0)
+public class ApplicationConstants {
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+	public static final String MSG_LEAVETYPE_PRESENT = "leavetype.present";
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+	@Autowired
+	private Environment environment;
 
-@AllArgsConstructor
-@EqualsAndHashCode
-@Getter
-@NoArgsConstructor
-@Setter
-@ToString
-public class LeaveType {
-
-	private Long id;
-
-	@Size(min = 1, max = 50)
-	@NotNull
-	private String name;
-
-	@Size(max = 250)
-	private String description;
-
-	@NotNull
-	private Boolean halfdayAllowed;
-
-	@NotNull
-	private Boolean payEligible;
-
-	@NotNull
-	private Boolean accumulative;
-
-	@NotNull
-	private Boolean encashable;
-
-	private Boolean active;
-
-	private Long createdBy;
-
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date createdDate;
-
-	private Long lastModifiedBy;
-
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date lastModifiedDate;
-
-	@Size(max = 256)
-	@NotNull
-	private String tenantId;
-
+	public String getErrorMessage(final String property) {
+		return environment.getProperty(property);
+	}
 }

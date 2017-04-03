@@ -123,7 +123,8 @@ public class LeaveTypeQueryBuilder {
 		int pageNumber = 0; // Default pageNo is zero meaning first page
 		if (leaveTypeGetRequest.getPageNumber() != null)
 			pageNumber = leaveTypeGetRequest.getPageNumber() - 1;
-		preparedStatementValues.add(pageNumber * pageSize); // Set offset to pageNo * pageSize
+		preparedStatementValues.add(pageNumber * pageSize); // Set offset to
+															// pageNo * pageSize
 	}
 
 	/**
@@ -151,4 +152,23 @@ public class LeaveTypeQueryBuilder {
 		}
 		return query.append(")").toString();
 	}
+
+	public static String insertLeaveTypeQuery() {
+		return "INSERT INTO egeis_leavetype values " + "(nextval('seq_egeis_leaveType'),?,?,?,?,?,?,?,?,?,?,?,?)";
+	}
+
+	public static String updateLeaveTypeQuery() {
+		return "UPDATE egeis_leavetype SET name = ?, description = ?,"
+				+ " halfdayAllowed = ?, payEligible = ?, accumulative = ?, encashable = ?,"
+				+ "active = ? , createdBy = ?, createdDate=? , lastModifiedBy=?, lastModifiedDate=?, tenantId=? where id = ? ";
+	}
+
+	public static String selectLeaveTypeByNameQuery() {
+		return " select * from egeis_leavetype where upper(name) = ? and tenantId = ? ";
+	}
+
+	public static String selectLeaveTypeByNameAndIdNotInQuery() {
+		return " select * from egeis_leavetype where upper(name) = ? and tenantId = ? and id != ? ";
+	}
+
 }

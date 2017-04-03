@@ -42,20 +42,60 @@ package org.egov.eis.service;
 
 import java.util.List;
 
+import org.egov.eis.broker.LeaveTypeProducer;
 import org.egov.eis.model.LeaveType;
 import org.egov.eis.repository.LeaveTypeRepository;
 import org.egov.eis.web.contract.LeaveTypeGetRequest;
+import org.egov.eis.web.contract.LeaveTypeRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 @Service
 public class LeaveTypeService {
+	public static final Logger logger = LoggerFactory.getLogger(LeaveTypeService.class);
 
 	@Autowired
 	private LeaveTypeRepository leaveTypeRepository;
+
+	@Autowired
+	private LeaveTypeProducer leaveTypeProducer;
 
 	public List<LeaveType> getLeaveTypes(LeaveTypeGetRequest leaveTypeGetRequest) {
 		return leaveTypeRepository.findForCriteria(leaveTypeGetRequest);
 	}
 
+	public LeaveTypeRequest create(final LeaveTypeRequest leaveTypeRequest) {
+		if (leaveTypeRequest.getLeaveType().get(0).getId() == null)
+			return leaveTypeRepository.createLeaveType(leaveTypeRequest);
+		else
+			return leaveTypeRepository.updateLeaveType(leaveTypeRequest);
+
+	}
+
+	public List<LeaveType> createLeaveType(final LeaveTypeRequest leaveTypeRequest) {
+		final ObjectMapper mapper = new ObjectMapper();
+		String leaveTypeValue = null;
+		try {
+			logger.info("createLeaveType service::" + leaveTypeRequest);
+			leaveTypeValue = mapper.writeValueAsString(leaveTypeRequest);
+			logger.info("leaveTypeValue::" + leaveTypeValue);
+		} catch (final JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		try {
+			leaveTypeProducer.sendMessage("egov-hr-leavetype", "save-leavetype", leaveTypeValue);
+		} catch (final Exception ex) {
+			ex.printStackTrace();
+		}
+		return leaveTypeRequest.getLeaveType();
+	}
+
+	public boolean getLeaveTypeByName(final Long id, final String name, final String tenantId) {
+		return leaveTypeRepository.checkLeaveTypeByName(id, name, tenantId);
+	}
 }

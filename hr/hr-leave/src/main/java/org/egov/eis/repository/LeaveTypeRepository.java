@@ -40,19 +40,30 @@
 
 package org.egov.eis.repository;
 
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.egov.eis.model.LeaveType;
 import org.egov.eis.repository.builder.LeaveTypeQueryBuilder;
 import org.egov.eis.repository.rowmapper.LeaveTypeRowMapper;
 import org.egov.eis.web.contract.LeaveTypeGetRequest;
+import org.egov.eis.web.contract.LeaveTypeRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class LeaveTypeRepository {
+
+	public static final Logger LOGGER = LoggerFactory.getLogger(LeaveTypeRepository.class);
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -66,7 +77,84 @@ public class LeaveTypeRepository {
 	public List<LeaveType> findForCriteria(LeaveTypeGetRequest leaveTypeGetRequest) {
 		List<Object> preparedStatementValues = new ArrayList<Object>();
 		String queryStr = leaveTypeQueryBuilder.getQuery(leaveTypeGetRequest, preparedStatementValues);
-		List<LeaveType> leaveTypes = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), leaveTypeRowMapper);
+		List<LeaveType> leaveTypes = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
+				leaveTypeRowMapper);
 		return leaveTypes;
+	}
+
+	@SuppressWarnings("static-access")
+	public LeaveTypeRequest createLeaveType(final LeaveTypeRequest leaveTypeRequest) {
+
+		LOGGER.info("LeaveTypeRequest::" + leaveTypeRequest);
+		final String leaveTypeInsert = leaveTypeQueryBuilder.insertLeaveTypeQuery();
+		saveLeaveType(leaveTypeRequest, leaveTypeInsert);
+		return leaveTypeRequest;
+	}
+
+	@SuppressWarnings("static-access")
+	public LeaveTypeRequest updateLeaveType(final LeaveTypeRequest leaveTypeRequest) {
+
+		LOGGER.info("LeaveTypeRequest::" + leaveTypeRequest);
+		final String leaveTypeUpdate = leaveTypeQueryBuilder.updateLeaveTypeQuery();
+		saveLeaveType(leaveTypeRequest, leaveTypeUpdate);
+		return leaveTypeRequest;
+
+	}
+
+	public LeaveTypeRequest saveLeaveType(final LeaveTypeRequest leaveTypeRequest, final String leaveTypeQuery) {
+		try {
+			jdbcTemplate.batchUpdate(leaveTypeQuery, new BatchPreparedStatementSetter() {
+
+				@Override
+				public void setValues(final PreparedStatement ps, final int i) throws SQLException {
+					final LeaveType leaveType = ((List<LeaveType>) leaveTypeRequest.getLeaveType()).get(i);
+					ps.setString(1, leaveType.getName());
+					ps.setString(2, leaveType.getDescription());
+					ps.setBoolean(3, leaveType.getHalfdayAllowed());
+					ps.setBoolean(4, leaveType.getPayEligible());
+					ps.setBoolean(5, leaveType.getAccumulative());
+					ps.setBoolean(6, leaveType.getEncashable());
+					ps.setBoolean(7, leaveType.getActive() == null ? false : true);
+					ps.setLong(8, Long.valueOf(leaveTypeRequest.getRequestInfo().getMsgId()));
+					ps.setDate(9, new Date(new java.util.Date().getTime()));
+					ps.setLong(10, Long.valueOf(leaveTypeRequest.getRequestInfo().getMsgId()));
+					ps.setDate(11, new Date(new java.util.Date().getTime()));
+					ps.setString(12, leaveType.getTenantId());
+					if (leaveType.getId() != null)
+						ps.setLong(13, leaveType.getId());
+				}
+
+				@Override
+				public int getBatchSize() {
+					return leaveTypeRequest.getLeaveType().size();
+				}
+			});
+		} catch (final DataAccessException ex) {
+			ex.printStackTrace();
+			throw new RuntimeException(ex.getMessage());
+		}
+
+		return leaveTypeRequest;
+
+	}
+
+	@SuppressWarnings("static-access")
+	public boolean checkLeaveTypeByName(final Long id, final String name, final String tenantId) {
+		final List<Object> preparedStatementValues = new ArrayList<Object>();
+		preparedStatementValues.add(name);
+		preparedStatementValues.add(tenantId);
+		final String query;
+		if (id == null)
+			query = leaveTypeQueryBuilder.selectLeaveTypeByNameQuery();
+		else {
+			preparedStatementValues.add(id);
+			query = leaveTypeQueryBuilder.selectLeaveTypeByNameAndIdNotInQuery();
+		}
+		final List<Map<String, Object>> leaveTypes = jdbcTemplate.queryForList(query,
+				preparedStatementValues.toArray());
+		if (leaveTypes.isEmpty())
+			return false;
+
+		return true;
 	}
 }

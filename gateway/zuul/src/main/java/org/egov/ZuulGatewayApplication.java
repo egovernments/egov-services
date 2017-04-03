@@ -45,6 +45,6 @@ public class ZuulGatewayApplication {
     public AuthFilter authFilter() {
         RestTemplate restTemplate = new RestTemplate();
         final ProxyRequestHelper proxyRequestHelper = new ProxyRequestHelper();
-        return new AuthFilter(proxyRequestHelper, restTemplate, authServiceHost, authServiceUri, userInfoHeader);
+        return new AuthFilter(proxyRequestHelper, restTemplate, authServiceHost, authServiceUri);
     }
 }

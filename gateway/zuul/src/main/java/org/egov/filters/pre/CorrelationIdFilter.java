@@ -14,7 +14,6 @@ import static org.egov.constants.RequestContextConstants.CORRELATION_ID_KEY;
 @Component
 public class CorrelationIdFilter extends ZuulFilter {
 
-    private static final String CORRELATION_HEADER_NAME = "x-correlation-id";
     private static final String RECEIVED_REQUEST_MESSAGE = "Received request for: {}";
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -40,7 +39,6 @@ public class CorrelationIdFilter extends ZuulFilter {
         final String correlationId = UUID.randomUUID().toString();
         MDC.put(CORRELATION_ID_KEY, correlationId);
         ctx.set(CORRELATION_ID_KEY, correlationId);
-        ctx.addZuulRequestHeader(CORRELATION_HEADER_NAME, correlationId);
         logger.info(RECEIVED_REQUEST_MESSAGE, ctx.getRequest().getRequestURI());
         return null;
     }

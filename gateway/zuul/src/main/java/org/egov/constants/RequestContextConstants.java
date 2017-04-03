@@ -6,9 +6,11 @@ public class RequestContextConstants {
 	public static final String ERROR_MESSAGE_KEY = "error.message";
 	public static final String ERROR_CODE_KEY = "error.status_code";
     public static final String GET = "GET";
+    public static final String POST = "POST";
     public static final String FILESTORE_REGEX = "^/filestore/.*";
     public static final String REQUEST_INFO_FIELD_NAME = "RequestInfo";
     public static final String USER_INFO_FIELD_NAME = "userInfo";
+    public static final String USER_INFO_KEY = "USER_INFO";
     public static final String CORRELATION_ID_FIELD_NAME = "correlationId";
     public static final String CORRELATION_ID_KEY = "CORRELATION_ID";
 }

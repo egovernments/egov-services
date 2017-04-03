@@ -18,6 +18,6 @@
                 }
             ]
         },
-        "correlationId": "123-123-123-123"
+        "correlationId": "someCorrelationId"
     }
 }

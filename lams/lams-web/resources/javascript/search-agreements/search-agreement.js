@@ -114,9 +114,9 @@ class AgreementSearch extends React.Component {
   {
     console.log(type);
     if (type === "renew") {
-                window.open("../../../../app/search-agreement/view-renew-agreement.html?view=renew&type="+assetCategory+"&agreementNumber="+number+"&assetId="+id, "fs", "fullscreen=yes")
+                window.open("app/search-agreement/view-renew-agreement.html?view=renew&type="+assetCategory+"&agreementNumber="+number+"&assetId="+id, "fs", "fullscreen=yes")
             } else {
-                window.open("../../../../app/search-agreement/view-renew-agreement.html?view=new&type="+assetCategory+"&agreementNumber="+number+"&assetId="+id, "fs", "fullscreen=yes")
+                window.open("app/search-agreement/view-renew-agreement.html?view=new&type="+assetCategory+"&agreementNumber="+number+"&assetId="+id, "fs", "fullscreen=yes")
             }
   }
 

@@ -17,7 +17,7 @@ class AssetSearch extends React.Component {
     e.preventDefault();
     //call api call
      var list=commonApiPost("asset-services","assets","_search",this.state.searchSet).responseJSON["Assets"];
-    this.setState({
+      this.setState({
       isSearchClicked:true,
       list
     })

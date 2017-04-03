@@ -13,7 +13,7 @@ $('#close').on("click", function() {
         if(this.id == "rent") {
             $('#securityDeposit').val(this.value*3);
             agreement["securityDeposit"] = this.value*3;
-        } 
+        }
     });
 
     //Getting data for user input
@@ -235,7 +235,7 @@ function fillValueToObject(currentState) {
             // assetRevenueZone: {
             //     required: true
             // },
-            // assetRevenueWard: {
+            // assetrevenueWards: {
             //     required: true
             // },
             // assetRevenueBlock: {
@@ -299,7 +299,7 @@ function fillValueToObject(currentState) {
             // assetRevenueZone: {
             //     required: true
             // },
-            // assetRevenueWard: {
+            // assetrevenueWards: {
             //     required: true
             // },
             // assetRevenueBlock: {
@@ -349,7 +349,7 @@ function fillValueToObject(currentState) {
             // assetRevenueZone: {
             //     required: true
             // },
-            // assetRevenueWard: {
+            // assetrevenueWards: {
             //     required: true
             // },
             // assetRevenueBlock: {
@@ -396,7 +396,7 @@ function fillValueToObject(currentState) {
             // assetRevenueZone: {
             //     required: true
             // },
-            // assetRevenueWard: {
+            // assetrevenueWards: {
             //     required: true
             // },
             // assetRevenueBlock: {
@@ -446,7 +446,7 @@ function fillValueToObject(currentState) {
             // assetRevenueZone: {
             //     required: true
             // },
-            // assetRevenueWard: {
+            // assetrevenueWards: {
             //     required: true
             // },
             // assetRevenueBlock: {
@@ -495,7 +495,7 @@ function fillValueToObject(currentState) {
             // assetRevenueZone: {
             //     required: true
             // },
-            // assetRevenueWard: {
+            // assetrevenueWards: {
             //     required: true
             // },
             // assetRevenueBlock: {
@@ -542,7 +542,7 @@ function fillValueToObject(currentState) {
             // assetRevenueZone: {
             //     required: true
             // },
-            // assetRevenueWard: {
+            // assetrevenueWards: {
             //     required: true
             // },
             // assetRevenueBlock: {
@@ -590,7 +590,7 @@ function fillValueToObject(currentState) {
             // assetRevenueZone: {
             //     required: true
             // },
-            // assetRevenueWard: {
+            // assetrevenueWards: {
             //     required: true
             // },
             // assetRevenueBlock: {
@@ -637,7 +637,7 @@ function fillValueToObject(currentState) {
             // assetRevenueZone: {
             //     required: true
             // },
-            // assetRevenueWard: {
+            // assetrevenueWards: {
             //     required: true
             // },
             // assetRevenueBlock: {
@@ -684,7 +684,7 @@ function fillValueToObject(currentState) {
             // assetRevenueZone: {
             //     required: true
             // },
-            // assetRevenueWard: {
+            // assetrevenueWards: {
             //     required: true
             // },
             // assetRevenueBlock: {
@@ -875,7 +875,7 @@ function fillValueToObject(currentState) {
 
   // var locality=commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"LOCALITY",hierarchyTypeName:"LOCATION"}).responseJSON["Boundary"] || [],
   // var electionwards=commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"WARD",hierarchyTypeName:"ADMINISTRATION"}).responseJSON["Boundary"] || [],
-  // var revenueWards=commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"WARD",hierarchyTypeName:"REVENUE"}).responseJSON["Boundary"] || []
+  // var revenueWardss=commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"WARD",hierarchyTypeName:"REVENUE"}).responseJSON["Boundary"] || []
   $("#assetCategory\\.name").val(assetDetails["assetCategory"]["name"]);
 
   $("#aName").val(assetDetails["name"]);
@@ -890,7 +890,7 @@ function fillValueToObject(currentState) {
 
   $("#locationDetails\\.zone").val(getNameById(revenueZone,assetDetails["locationDetails"]["zone"]));
 
-  $("#locationDetails\\.revenueWard").val(getNameById(revenueWard,assetDetails["locationDetails"]["revenueWard"]));
+  $("#locationDetails\\.revenueWards").val(getNameById(revenueWards,assetDetails["locationDetails"]["revenueWards"]));
 
   $("#locationDetails\\.block").val(getNameById(revenueBlock,assetDetails["locationDetails"]["block"]));
 
@@ -985,7 +985,7 @@ $(".datetimepicker").on("dp.change", function() {
                             dataType: 'json',
                             data:JSON.stringify({
                                 RequestInfo: requestInfo,
-                                Agreement: agreement
+                                Agreement: _agreement
                             }),
                             async: false,
                             headers: {
@@ -1008,11 +1008,11 @@ $(".datetimepicker").on("dp.change", function() {
     })
 
     function uploadFiles(agreement, cb) {
-        if(agreement.documents.constructor == FileList) {
+        if(agreement.documents && agreement.documents.constructor == FileList) {
             let counter = agreement.documents.length, breakout = 0;
             for(let i=0; len = agreement.documents.length, i<len; i++) {
                 makeAjaxUpload(agreement.documents[i], function(err, res) {
-                    if(breakout == 1) 
+                    if(breakout == 1)
                         return;
                     else if(err) {
                         cb(err);
@@ -1026,7 +1026,7 @@ $(".datetimepicker").on("dp.change", function() {
                 })
             }
         } else {
-            cb(agreement);
+            cb(null, agreement);
         }
     }
 
@@ -1048,5 +1048,5 @@ $(".datetimepicker").on("dp.change", function() {
             error: function(jqXHR, exception) {
                 cb(jqXHR.responseText || jqXHR.statusText);
             }
-        });   
+        });
     }

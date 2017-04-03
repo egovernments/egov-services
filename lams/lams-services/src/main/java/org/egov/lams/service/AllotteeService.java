@@ -101,8 +101,7 @@ public class AllotteeService {
 				throw new RuntimeException(e.getMessage() + e);
 			}
 		}
-		logger.info("list of allottes from allotteresponse from allotte api call for get allottees",
-				allotteeResponse.getAllottee());
+		logger.info("list of allottes from allotteresponse from allotte api call for get allottees ::: "+allotteeResponse.getAllottee());
 		return allotteeResponse;
 	}
 }

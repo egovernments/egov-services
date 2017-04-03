@@ -164,6 +164,7 @@ public class PaymentService {
 			billInfo.setTotalAmount(totalAmount.doubleValue());
 			billInfo.setBillAmount(totalAmount.doubleValue());
 			billInfo.setBillDetailInfos(billDetailInfos);
+			LOGGER.info("billInfo before>>>>>>>" +billInfo);
 			billInfos.add(billInfo);
 			final String billXml = billRepository.createBillAndGetXml(
 					billInfos, requestInfo);

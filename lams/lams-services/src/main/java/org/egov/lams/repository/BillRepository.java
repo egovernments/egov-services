@@ -32,10 +32,10 @@ public class BillRepository {
 
 		String url = propertiesManager.getDemandServiceHostName()
 				+ propertiesManager.getDemandBillCreateService();
-
+		System.out.println("billRequest url ++++++++++++ "+url);
 		BillResponse billResponse = restTemplate.postForObject(url,
 				billRequest, BillResponse.class);
-		System.out.println("billRequest url ++++++++++++ "+url+"billResponse>>>>>>>>>>"+billResponse.getBillXmls());
+		System.out.println("billResponse>>>>>>>>>>"+billResponse.getBillXmls());
 
 		return billResponse.getBillXmls().get(0);
 	}

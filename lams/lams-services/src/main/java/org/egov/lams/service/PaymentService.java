@@ -57,7 +57,9 @@ public class PaymentService {
 			billInfo.setId(null);
 			billInfo.setDemandId(1L);
 			billInfo.setCitizenName(agreement.getAllottee().getName());
-			billInfo.setCitizenAddress(agreement.getAllottee().getAddress());
+			// billInfo.setCitizenAddress(agreement.getAllottee().getAddress());
+			// TODO: Fix me after the issue is fixed by user service
+			billInfo.setCitizenAddress("Test");
 			billInfo.setBillType("AUTO");
 			billInfo.setIssuedDate(new Date());
 			billInfo.setLastDate(new Date());
@@ -121,20 +123,24 @@ public class PaymentService {
 					+ (StringUtils.isBlank(agreement.getAgreementNumber()) ? agreement
 							.getAcknowledgementNumber() : agreement
 							.getAgreementNumber()));
-			LOGGER.info("after billInfo.setDescription>>>>>>>" + billInfo.getDescription());
+			LOGGER.info("after billInfo.setDescription>>>>>>>"
+					+ billInfo.getDescription());
 
 			billInfo.setConsumerCode(StringUtils.isBlank(agreement
 					.getAgreementNumber()) ? agreement
 					.getAcknowledgementNumber() : agreement
 					.getAgreementNumber());
 			billInfo.setCallbackForApportion('N');
-			LOGGER.info("after billInfo.setConsumerCode>>>>>>>" + billInfo.getConsumerCode());
+			LOGGER.info("after billInfo.setConsumerCode>>>>>>>"
+					+ billInfo.getConsumerCode());
 
 			billInfo.setEmailId(agreement.getAllottee().getEmailId());
 			billInfo.setConsumerType("Agreement");
-			LOGGER.info("before Bill Number"+billNumberService.generateBillNumber());
+			LOGGER.info("before Bill Number"
+					+ billNumberService.generateBillNumber());
 			billInfo.setBillNumber(billNumberService.generateBillNumber());
-			LOGGER.info("after Bill Number"+billNumberService.generateBillNumber());
+			LOGGER.info("after Bill Number"
+					+ billNumberService.generateBillNumber());
 			DemandSearchCriteria demandSearchCriteria = new DemandSearchCriteria();
 			demandSearchCriteria.setDemandId(1L);
 
@@ -164,7 +170,7 @@ public class PaymentService {
 			billInfo.setTotalAmount(totalAmount.doubleValue());
 			billInfo.setBillAmount(totalAmount.doubleValue());
 			billInfo.setBillDetailInfos(billDetailInfos);
-			LOGGER.info("billInfo before>>>>>>>" +billInfo);
+			LOGGER.info("billInfo before>>>>>>>" + billInfo);
 			billInfos.add(billInfo);
 			final String billXml = billRepository.createBillAndGetXml(
 					billInfos, requestInfo);
@@ -197,8 +203,8 @@ public class PaymentService {
 			billdetail.setPeriod(demandDetail.getTaxPeriod());
 			billdetail.setPurpose(billRepository.getPurpose()
 					.get("CURRENT_AMOUNT").toString());
-			LOGGER.info("getPurpose after >>>>>>>" +billRepository.getPurpose()
-					.get("CURRENT_AMOUNT"));
+			LOGGER.info("getPurpose after >>>>>>>"
+					+ billRepository.getPurpose().get("CURRENT_AMOUNT"));
 
 			billdetail.setIsActualDemand(demandDetail.getIsActualDemand());
 			billdetail.setFunctionCode(functionCode);

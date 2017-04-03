@@ -1,13 +1,13 @@
 package org.egov.pgr.read.web.controller;
 
-import org.egov.pgr.common.model.AuthenticatedUser;
-import org.egov.pgr.read.domain.model.Complaint;
-import org.egov.pgr.read.domain.model.ComplaintSearchCriteria;
-import org.egov.pgr.read.domain.service.ComplaintService;
 import org.egov.pgr.common.contract.RequestInfo;
 import org.egov.pgr.common.contract.ServiceRequest;
 import org.egov.pgr.common.contract.SevaRequest;
+import org.egov.pgr.common.model.AuthenticatedUser;
 import org.egov.pgr.common.repository.UserRepository;
+import org.egov.pgr.read.domain.model.Complaint;
+import org.egov.pgr.read.domain.model.ComplaintSearchCriteria;
+import org.egov.pgr.read.domain.service.ComplaintService;
 import org.egov.pgr.read.web.contract.ResponseInfo;
 import org.egov.pgr.read.web.contract.ServiceResponse;
 import org.egov.pgr.read.web.contract.factory.ResponseInfoFactory;
@@ -85,7 +85,7 @@ public class ComplaintController {
 
 	@PostMapping(value = "/updateLastAccessedTime")
 	@ResponseBody
-	public void updateLastAccessedTime(@RequestParam final String serviceRequestId) {
+	public void updateLastAccessedTime(@RequestParam final String serviceRequestId, @RequestBody RequestInfo requestInfo) {
 		complaintService.updateLastAccessedTime(serviceRequestId);
 	}
 

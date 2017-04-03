@@ -1,22 +1,19 @@
 package org.egov.pgr.read.web.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.egov.pgr.read.domain.model.Complaint;
-import org.egov.pgr.read.domain.service.ComplaintService;
+import org.egov.pgr.common.contract.GetUserByIdResponse;
 import org.egov.pgr.common.contract.ServiceRequest;
 import org.egov.pgr.common.repository.UserRepository;
-import org.egov.pgr.common.contract.GetUserByIdResponse;
+import org.egov.pgr.read.domain.model.Complaint;
+import org.egov.pgr.read.domain.service.ComplaintService;
+import org.egov.pgr.read.web.contract.RequestInfo;
 import org.egov.pgr.read.web.contract.ResponseInfo;
 import org.egov.pgr.read.web.contract.ServiceResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = { "/searchcitizencomplaints" })
@@ -33,7 +30,7 @@ public class SearchCitizenComplaintsController {
 
 	@PostMapping
 	@ResponseBody
-	public ServiceResponse getComplaints(@RequestParam(value = "userId", required = true) Long userId) {
+	public ServiceResponse getComplaints(@RequestParam(value = "userId", required = true) Long userId, @RequestBody RequestInfo requestInfo) {
 		List<Complaint> complaints = new ArrayList<>();
 		GetUserByIdResponse user = userRepository.findUserById(userId);
 		if (!user.getUser().isEmpty() && user.getUser().get(0).getType().equalsIgnoreCase("CITIZEN")) {

@@ -21,8 +21,7 @@ $(document).ready(function() {
               }
           }),
           success: function( data ) {
-            console.log(data);
-            /*jQuery('<form>.').attr({
+            jQuery('<form>.').attr({
                 method: 'post',
                 action: '/collection/receipts/receipt-newform.action',
                 target: '_self'
@@ -30,8 +29,8 @@ $(document).ready(function() {
                 type: 'hidden',
                 id: 'collectXML',
                 name: 'collectXML',
-                value: collectXML
-            })).appendTo( document.body ).submit();*/
+                value: data
+            })).appendTo( document.body ).submit();
           },
           error: function(data) {
               console.log(data);

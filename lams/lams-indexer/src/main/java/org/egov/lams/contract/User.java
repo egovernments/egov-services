@@ -31,4 +31,7 @@ public class User {
 
     @JsonProperty("roles")
     private List<Role> roles;
+    
+    @JsonProperty("tenantId")
+    private String tenantId;
 }

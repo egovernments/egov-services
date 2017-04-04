@@ -43,6 +43,8 @@ package org.egov.commons.web.contract;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -56,6 +58,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class RequestInfo {
 
 	@NotNull

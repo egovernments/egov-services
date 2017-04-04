@@ -37,4 +37,7 @@ public class UserInfo {
 
     @NotNull
     private List<Role> roles;
+    
+    @NotNull
+    private String tenantId;
 }

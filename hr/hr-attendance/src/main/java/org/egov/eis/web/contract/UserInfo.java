@@ -2,7 +2,7 @@ package org.egov.eis.web.contract;
 
 import java.util.List;
 
-import javax.validation.constraints.NotNull;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,29 +15,23 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UserInfo {
 
-    @NotNull
     private Long id;
 
-    @NotNull
     private String userName;
 
-    @NotNull
     private String name;
 
-    @NotNull
     private String type;
 
-    @NotNull
     private String mobileNumber;
 
-    @NotNull
     private String emailId;
 
-    @NotNull
     private List<Role> roles;
     
-    @NotNull
     private String tenantId;
+
 }

@@ -1,7 +1,6 @@
 package org.egov.eis.web.contract;
 
-import javax.validation.constraints.NotNull;
-
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -15,8 +14,10 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class RequestInfoWrapper {
-    @NotNull
+
     @JsonProperty("RequestInfo")
     private RequestInfo requestInfo;
+
 }

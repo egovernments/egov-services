@@ -10,5 +10,5 @@ Dear {{complainantName}},
     Location details - {{locationName}}
     {{/locationName}}
     Grievance description - {{complaintDetails}}
-    Grievance status - {{statusName}}
+    Grievance status - {{statusLowerCase}}
     Grievance Registration Date - {{registeredDate}}

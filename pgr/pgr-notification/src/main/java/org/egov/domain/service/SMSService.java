@@ -12,6 +12,7 @@ public class SMSService {
 	private static final String SMS_ENGLISH = "sms_en";
 	private static final String NAME = "name";
 	private static final String NUMBER = "number";
+	private static final String STATUSLOWERCASE = "statusLowerCase";
 	private TemplateService templateService;
 	private MessageQueueRepository messageQueueRepository;
 
@@ -30,7 +31,8 @@ public class SMSService {
     private String getSMSMessage(SevaRequest sevaRequest) {
         final Map<Object, Object> map = ImmutableMap.of(
 			NAME, sevaRequest.getComplaintTypeName(),
-			NUMBER, sevaRequest.getCrn()
+			NUMBER, sevaRequest.getCrn(),
+            STATUSLOWERCASE, sevaRequest.getStatusName().toLowerCase()
 		);
         return templateService.loadByName(SMS_ENGLISH, map);
     }

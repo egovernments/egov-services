@@ -1,1 +1,1 @@
-Registered Grievance - {{crn}} successfully
+{{statusLowerCase}} Grievance - {{crn}} successfully

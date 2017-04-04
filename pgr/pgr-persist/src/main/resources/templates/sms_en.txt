@@ -1,1 +1,1 @@
-Your grievance for {{name}} has been registered successfully with tracking number ({{number}}). Please use this number for all future references.
+Your grievance for {{name}} has been {{statusLowerCase}}  with tracking number ({{number}}). Please use this number for all future references.

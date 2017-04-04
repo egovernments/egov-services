@@ -33,10 +33,12 @@ public class SMSServiceTest {
     public void test_should_send_sms_with_generated_message_from_template() {
         when(sevaRequest.getComplaintTypeName()).thenReturn("name");
         when(sevaRequest.getCrn()).thenReturn("crn");
+        when(sevaRequest.getStatusName()).thenReturn("Registerd");
         when(sevaRequest.getMobileNumber()).thenReturn("mobileNumber");
         final Map<Object, Object> requestMap = ImmutableMap.of(
             "name", "name",
-            "number", "crn"
+            "number", "crn",
+            "statusLowerCase","registerd"
         );
         when(templateService.loadByName("sms_en", requestMap)).thenReturn("smsMessage");
 

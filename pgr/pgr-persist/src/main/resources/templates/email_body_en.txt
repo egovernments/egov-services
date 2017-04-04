@@ -1,6 +1,6 @@
 Dear {{complainantName}},
 
-    Thank you for registering a grievance ({{crn}}). Your grievance is registered successfully.
+    Thank you for registering a grievance ({{crn}}). Your grievance is {{statusLowerCase}}.
     Please use this number for all future references.
 
     Grievance Details

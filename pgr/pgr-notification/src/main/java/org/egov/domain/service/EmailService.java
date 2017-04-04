@@ -48,7 +48,8 @@ public class EmailService {
         builder.put("locationName", sevaRequest.getLocationName());
         builder.put("complaintDetails", sevaRequest.getDetails());
         builder.put("registeredDate", sevaRequest.getFormattedCreatedDate());
-        builder.put("statusName", sevaRequest.getStatusName());
+        builder.put("statusUpperCase", sevaRequest.getStatusName());
+        builder.put("statusLowerCase",sevaRequest.getStatusName().toLowerCase());
         return templateService.loadByName(EMAIL_BODY_EN_TEMPLATE, builder.build());
     }
 

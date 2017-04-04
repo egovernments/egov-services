@@ -63,15 +63,16 @@ public class EmailServiceTest {
         when(sevaRequest.getDetails()).thenReturn(details);
         final String formattedDate = "formattedDate";
         when(sevaRequest.getFormattedCreatedDate()).thenReturn(formattedDate);
-        final String statusName = "statusName";
-        when(sevaRequest.getStatusName()).thenReturn(statusName);
+        final String statusUpperCase = "statusUpperCase";
+        when(sevaRequest.getStatusName()).thenReturn(statusUpperCase);
         builder.put("complainantName", complainantName);
         builder.put("crn", crn);
         builder.put("complaintType", complaintTypeName);
         builder.put("locationName", locationName);
         builder.put("complaintDetails", details);
         builder.put("registeredDate", formattedDate);
-        builder.put("statusName", statusName);
+        builder.put("statusUpperCase", statusUpperCase);
+        builder.put("statusLowerCase",statusUpperCase.toLowerCase());
         final Map<Object, Object> bodyRequestMap = builder.build();
         when(templateService.loadByName("email_body_en", bodyRequestMap)).thenReturn(body);
 

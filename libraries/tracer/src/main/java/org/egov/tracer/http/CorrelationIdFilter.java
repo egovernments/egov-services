@@ -10,7 +10,6 @@ import org.springframework.http.MediaType;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -52,17 +51,11 @@ public class CorrelationIdFilter implements Filter {
         if (isBodyCompatibleForParsing(httpRequest)) {
             final MultiReadRequestWrapper wrappedRequest = new MultiReadRequestWrapper(httpRequest);
             setCorrelationIdFromBody(wrappedRequest);
-            addCorrelationIdToResponseHeader(servletResponse);
             filterChain.doFilter(wrappedRequest, servletResponse);
         } else {
             setCorrelationIdFromHeader(httpRequest);
-            addCorrelationIdToResponseHeader(servletResponse);
             filterChain.doFilter(servletRequest, servletResponse);
         }
-    }
-
-    private void addCorrelationIdToResponseHeader(ServletResponse servletResponse) {
-        ((HttpServletResponse) servletResponse).addHeader(CORRELATION_ID_HEADER_NAME, RequestContext.getId());
     }
 
     private void setCorrelationIdFromHeader(HttpServletRequest httpRequest) {

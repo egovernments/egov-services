@@ -38,61 +38,30 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.web.notification.mail.services.email;
+package org.egov.web.notification.mail.service;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-import javax.mail.util.ByteArrayDataSource;
-
-import org.egov.web.notification.mail.config.properties.ApplicationProperties;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.MailParseException;
+import org.egov.web.notification.mail.model.Email;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 @Service
-public class EmailService {
-	@Autowired
-	public JavaMailSenderImpl mailSender;
+@ConditionalOnProperty(value = "mail.enabled", havingValue = "true")
+public class ExternalEmailService implements EmailService {
 
-	@Autowired
-	private ApplicationProperties applicationProperties;
+    private JavaMailSenderImpl mailSender;
 
-	public boolean sendMail(final String toEmail, final String subject, final String mailBody) {
-		boolean isSent = false;
-		if (applicationProperties.emailEnabled()) {
-			final SimpleMailMessage mailMessage = new SimpleMailMessage();
-			mailMessage.setTo(toEmail);
-			mailMessage.setSubject(subject);
-			mailMessage.setText(mailBody);
-			mailSender.send(mailMessage);
-			isSent = true;
-		}
-		return isSent;
-	}
+    public ExternalEmailService(JavaMailSenderImpl mailSender) {
+        this.mailSender = mailSender;
+    }
 
-	public boolean sendMailWithAttachment(final String toEmail, final String subject, final String mailBody,
-			final String fileType, final String fileName, final Object attachment) {
-		boolean isSent = false;
-		if (applicationProperties.emailEnabled()) {
-			MimeMessage message = mailSender.createMimeMessage();
-			try {
-				MimeMessageHelper mimeMessageHelper;
-				mimeMessageHelper = new MimeMessageHelper(message, true);
-				mimeMessageHelper.setTo(toEmail);
-				mimeMessageHelper.setSubject(subject);
-				mimeMessageHelper.setText(mailBody);
-				ByteArrayDataSource source = new ByteArrayDataSource((byte[]) attachment, fileType);
-				mimeMessageHelper.addAttachment(fileName, source);
-			} catch (MessagingException e) {
-				throw new MailParseException(e);
-			} catch (IllegalArgumentException e) {
-				throw new MailParseException(e);
-			}
-			mailSender.send(message);
-		}
-		return isSent;
-	}
+    @Override
+    public void sendEmail(Email email) {
+        final SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(email.getToAddress());
+        mailMessage.setSubject(email.getSubject());
+        mailMessage.setText(email.getBody());
+        mailSender.send(mailMessage);
+    }
 }

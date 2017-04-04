@@ -154,22 +154,31 @@ class SearchAsset extends React.Component {
 
     const renderBody=function()
     {
-      return list.map((item,index)=>
-      {
-            return (<tr key={index}>
+      if (list.length>0) {
+        return list.map((item,index)=>
+        {
+              return (<tr key={index}>
 
-                                <td>{item.code}</td>
-                                <td>{item.name}</td>
-                                <td>{item.assetCategory.name}</td>
-                                <td>{getNameById(departments,item.department.id)}</td>
-                                <td>{item.status}</td>
-                                <td>{item.assetDetails?item.assetDetails:"NULL"}</td>
+                                  <td>{item.code}</td>
+                                  <td>{item.name}</td>
+                                  <td>{item.assetCategory.name}</td>
+                                  <td>{getNameById(departments,item.department.id)}</td>
+                                  <td>{item.status}</td>
+                                  <td>{item.assetDetails?item.assetDetails:"NULL"}</td>
 
-                                <td data-label="action">
-                    {renderAction(getUrlVars()["type"],item.id)}
-                    </td>
-                            </tr>  );
-      })
+                                  <td data-label="action">
+                      {renderAction(getUrlVars()["type"],item.id)}
+                      </td>
+                  </tr>  );
+        })
+
+      } else {
+        return (
+            <tr>
+                <td colSpan="6">No records</td>
+            </tr>
+        )
+      }
     }
 
     return (

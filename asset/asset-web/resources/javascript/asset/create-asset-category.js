@@ -2,7 +2,7 @@ class CreateAsset extends React.Component {
   constructor(props) {
     super(props);
     this.state={list:[],assetCategory:{
-       "tenantId": 1,
+      "tenantId": "ap.kurnool",
       "name": "",
       "assetCategoryType": "",
       "parent":"",
@@ -99,7 +99,7 @@ class CreateAsset extends React.Component {
           };
 
         var response=$.ajax({
-              url:baseUrl+"/asset-services/assetCategories/_create?tenantId=1",
+              url:baseUrl+"/asset-services/assetCategories/_create?tenantId=ap.kurnool",
               type: 'POST',
               dataType: 'json',
               data:JSON.stringify(body),
@@ -119,7 +119,7 @@ class CreateAsset extends React.Component {
           alert(response["statusText"]);
           this.setState({
             assetCategory:{
-               "tenantId": 1,
+              "tenantId": "ap.kurnool",
               "name": "",
               "assetCategoryType": "",
               "parent":"",
@@ -232,7 +232,7 @@ class CreateAsset extends React.Component {
   addAsset(){
     var {isEdit,index,list,customField,assetCategory}= this.state;
       if (isEdit) {
-        console.log(isEdit,index);
+        // console.log(isEdit,index);
         //update holidays with current holiday
         assetCategory["customFields"][index]=customField
         this.setState({

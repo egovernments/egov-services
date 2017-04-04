@@ -23,7 +23,7 @@ CREATE TABLE eg_action
   url character varying(100),
   servicecode character varying(50),
   queryparams character varying(100),
-  parentmodule bigint,
+  parentmodule character varying(50),
   ordernumber bigint,
   displayname character varying(100),
   enabled boolean,

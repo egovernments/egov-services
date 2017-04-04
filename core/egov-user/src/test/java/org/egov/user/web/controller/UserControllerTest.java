@@ -4,8 +4,9 @@ import org.apache.commons.io.IOUtils;
 import org.egov.user.TestConfiguration;
 import org.egov.user.domain.model.UserSearch;
 import org.egov.user.domain.model.enums.*;
+import org.egov.user.domain.service.TokenService;
 import org.egov.user.domain.service.UserService;
-import org.egov.user.persistence.entity.User;
+import org.egov.user.web.contract.auth.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatcher;
@@ -14,6 +15,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -24,6 +27,7 @@ import java.util.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.mockito.Matchers.argThat;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -40,6 +44,9 @@ public class UserControllerTest {
     @MockBean
     private UserService userService;
 
+    @MockBean
+    private TokenService tokenService;
+
     @Test
     @WithMockUser
     public void testUserSearch() throws Exception {
@@ -49,6 +56,19 @@ public class UserControllerTest {
                 .content(getFileContents("getUserByIdRequest.json"))).andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(content().json(getFileContents("userSearchResponse.json")));
+    }
+
+
+    @Test
+    @WithMockUser
+    public void testUserDetails() throws Exception {
+        OAuth2Authentication oAuth2Authentication = mock(OAuth2Authentication.class);
+        SecureUser secureUser = new SecureUser(getUser());
+        when(oAuth2Authentication.getPrincipal()).thenReturn(secureUser);
+        when(tokenService.getUser("c80e0ade-f48d-4077-b0d2-4e58526a6bfd")).thenReturn(getCustomUserDetails());
+        mockMvc.perform(post("/_details?access_token=c80e0ade-f48d-4077-b0d2-4e58526a6bfd")
+        ).andExpect(status().isOk())
+                .andExpect(content().json(getFileContents("userDetailsResponse.json")));
     }
 
     private UserSearch getUserSearch() {
@@ -175,4 +195,37 @@ public class UserControllerTest {
                     userSearch.getType().equals(expectedUserSearch.getType());
         }
     }
+
+    public User getUser(){
+        User user=User.builder().id(18L).userName("narasappa").name("narasappa")
+                .mobileNumber("123456789").emailId("abc@gmail.com").locale("en_IN").type("EMPLOYEE").active(Boolean.TRUE)
+                .roles(getRoles()).build();
+        return user;
+    }
+
+    public List<Role>  getRoles(){
+        List<Role> roles=new ArrayList<Role>();
+        org.egov.user.domain.model.Role roleModel=new org.egov.user.domain.model.Role();
+        roleModel.setId(15L);
+        roleModel.setName("Employee");
+
+        Role role=new Role(roleModel);
+
+        roles.add(role);
+
+        return roles;
+    }
+
+    public CustomUserDetails getCustomUserDetails(){
+
+        SecureUser secureUser=new SecureUser(getUser());
+        List<Action> actions = new ArrayList<Action>();
+        Action action =Action.builder().url("/pgr/receivingmode").name("ReceivingMode").displayName("ReceivingMode").orderNumber(0).queryParams("tenantId=").parentModule("1").serviceCode("PGR").build();
+        actions.add(action);
+
+        return new CustomUserDetails(secureUser,actions);
+
+    }
+
+
 }

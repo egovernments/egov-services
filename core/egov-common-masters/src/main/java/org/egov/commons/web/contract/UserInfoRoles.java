@@ -40,8 +40,6 @@
 
 package org.egov.commons.web.contract;
 
-import javax.validation.constraints.Size;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.AllArgsConstructor;
@@ -60,7 +58,6 @@ import lombok.ToString;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserInfoRoles {
 
-	@Size(min=2, max=100)
 	private String name;
 
 }

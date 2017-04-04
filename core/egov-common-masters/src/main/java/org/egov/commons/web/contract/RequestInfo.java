@@ -40,7 +40,6 @@
 
 package org.egov.commons.web.contract;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -82,7 +81,6 @@ public class RequestInfo {
 
 	private String authToken;
 
-	@Valid
 	private UserInfo userInfo;
 
 }

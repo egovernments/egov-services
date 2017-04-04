@@ -42,10 +42,6 @@ package org.egov.commons.web.contract;
 
 import java.util.List;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.AllArgsConstructor;
@@ -64,25 +60,20 @@ import lombok.ToString;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserInfo {
 
-	@NotNull
 	private Long id;
 
-	@Size(min=1, max=64)
 	private String userName;
 
-	@Size(min=3, max=100)
 	private String name;
 
-	@Size(max=20)
 	private String type;
 
-	@Size(max=10)
 	private String mobileNumber;
 
-	@Size(min=3, max=100)
 	private String emailId;
 
-	@Valid
 	private List<UserInfoRoles> roles;
+
+	private String tenantId;
 
 }

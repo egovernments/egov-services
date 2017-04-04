@@ -38,44 +38,13 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.web.notification.mail.config;
+package org.egov.web.notification.mail.services;
 
-import lombok.Getter;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
+public enum MessagePriority {
+    HIGH, MEDIUM, LOW;
 
-@Configuration
-public class EmailProperties {
-
-    @Value("${mail.port}")
-    @Getter
-    private Integer mailPort;
-
-    @Value("${mail.host}")
-    @Getter
-    private String mailHost;
-
-    @Value("${mail.protocol}")
-    @Getter
-    private String mailProtocol;
-
-    @Value("${mail.sender.username}")
-    @Getter
-    private String mailSenderUsername;
-
-    @Value("${mail.sender.password}")
-    @Getter
-    private String mailSenderPassword;
-
-    @Value("${mail.smtps.auth}")
-    @Getter
-    private String mailSmtpsAuth;
-
-    @Value("${mail.smtps.starttls.enable}")
-    @Getter
-    private String mailStartTlsEnabled;
-
-    @Value("${mail.smtps.debug}")
-    @Getter
-    private String mailSmtpsDebug;
+    @Override
+    public String toString() {
+        return this.name().toLowerCase();
+    }
 }

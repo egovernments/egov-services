@@ -40,32 +40,34 @@
 
 package org.egov.web.notification.mail.config;
 
+import java.util.Properties;
+
+import org.egov.web.notification.mail.config.properties.ApplicationProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
-import java.util.Properties;
-
 @Configuration
 public class ApplicationConfiguration {
 
-    @Autowired
-    EmailProperties emailProperties;
+	@Autowired
+	private ApplicationProperties applicationProperties;
 
-    @Bean
-    public JavaMailSenderImpl mailSender() {
-        final JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-        mailSender.setPort(emailProperties.getMailPort());
-        mailSender.setHost(emailProperties.getMailHost());
-        mailSender.setProtocol(emailProperties.getMailProtocol());
-        mailSender.setUsername(emailProperties.getMailSenderUsername());
-        mailSender.setPassword(emailProperties.getMailSenderPassword());
-        final Properties mailProperties = new Properties();
-        mailProperties.setProperty("mail.smtps.auth", emailProperties.getMailSmtpsAuth());
-        mailProperties.setProperty("mail.smtps.starttls.enable", emailProperties.getMailStartTlsEnabled());
-        mailProperties.setProperty("mail.smtps.debug", emailProperties.getMailSmtpsDebug());
-        mailSender.setJavaMailProperties(mailProperties);
-        return mailSender;
-    }
+	@Bean
+	public JavaMailSenderImpl mailSender() {
+		final JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+		mailSender.setPort(applicationProperties.mailPort());
+		mailSender.setHost(applicationProperties.mailHost());
+		mailSender.setProtocol(applicationProperties.mailProtocol());
+		mailSender.setUsername(applicationProperties.mailSenderUsername());
+		mailSender.setPassword(applicationProperties.mailSenderPassword());
+		final Properties mailProperties = new Properties();
+		mailProperties.setProperty("mail.smtps.auth", applicationProperties.mailSMTPSAuth());
+		mailProperties.setProperty("mail.smtps.starttls.enable", applicationProperties.mailStartTLSEnabled());
+		mailProperties.setProperty("mail.smtps.debug", applicationProperties.mailSMTPSDebug());
+		mailSender.setJavaMailProperties(mailProperties);
+		return mailSender;
+	}
+
 }

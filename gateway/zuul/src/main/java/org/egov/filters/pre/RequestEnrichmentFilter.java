@@ -10,17 +10,23 @@ import org.egov.contract.User;
 import org.egov.wrapper.CustomRequestWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 import static org.egov.constants.RequestContextConstants.*;
 
 @Component
 public class RequestEnrichmentFilter extends ZuulFilter {
 
+    private static final String FAILED_TO_ENRICH_REQUEST_BODY_MESSAGE = "Failed to enrich request body";
+    private static final List<String> JSON_MEDIA_TYPES =
+        Arrays.asList(MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE);
     private final ObjectMapper objectMapper;
     private static final String CORRELATION_HEADER_NAME = "x-correlation-id";
     private static final String USER_INFO_HEADER_NAME = "x-user-info";
@@ -81,12 +87,15 @@ public class RequestEnrichmentFilter extends ZuulFilter {
         try {
             enrichRequestBody();
         } catch (IOException e) {
+            logger.error(FAILED_TO_ENRICH_REQUEST_BODY_MESSAGE, e);
             throw new RuntimeException(e);
         }
     }
 
     private boolean isRequestBodyCompatible() {
-        return POST.equalsIgnoreCase(getRequestMethod()) && !getRequestURI().matches(FILESTORE_REGEX);
+        return POST.equalsIgnoreCase(getRequestMethod())
+            && !getRequestURI().matches(FILESTORE_REGEX)
+            && JSON_MEDIA_TYPES.contains(getRequestContentType());
     }
 
     private HttpServletRequest getRequest() {
@@ -96,6 +105,10 @@ public class RequestEnrichmentFilter extends ZuulFilter {
 
     private String getRequestMethod() {
         return getRequest().getMethod();
+    }
+
+    private String getRequestContentType() {
+        return getRequest().getContentType();
     }
 
     private String getRequestURI() {
@@ -145,8 +158,7 @@ public class RequestEnrichmentFilter extends ZuulFilter {
 
     private HashMap<String, Object> getRequestBody(RequestContext ctx) throws IOException {
         String payload = IOUtils.toString(ctx.getRequest().getInputStream());
-        return objectMapper.readValue(payload, new TypeReference<HashMap<String, Object>>() {
-        });
+        return objectMapper.readValue(payload, new TypeReference<HashMap<String, Object>>() { });
     }
 
 }

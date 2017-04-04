@@ -15,16 +15,23 @@ $(document).ready(function() {
         //clear cookies and logout
         // $("#login").hide();
         // $("#dashboard").show();
-        window.location = "./view-dcb.html"
+        window.location = "app/search-agreement/view-dcb.html"
     });
 
     try {
         var assetDetails = commonApiPost("asset-services", "assets", "_search", {
             assetCategory: getUrlVars()["assetId"]
         }).responseJSON["Assets"][0] || [];
-        var agreementDetail = commonApiPost("lams-services", "agreements", "_search", {
-            agreementNumber: getUrlVars()["agreementNumber"]
-        }).responseJSON["Agreements"][0] || [];
+        if(getUrlVars()["agreementNumber"]) {
+            var agreementDetail = commonApiPost("lams-services", "agreements", "_search", {
+                agreementNumber: getUrlVars()["agreementNumber"]
+            }).responseJSON["Agreements"][0] || [];
+        } else {
+             var agreementDetail = commonApiPost("lams-services", "agreements", "_search", {
+                stateId: getUrlVars()["stateId"]
+            }).responseJSON["Agreements"][0] || [];
+        }
+        
         printValue("", agreementDetail);
         printValue("", assetDetails, true);
     } catch(e) {
@@ -95,7 +102,7 @@ $(document).ready(function() {
     //     "auth_token": "aeiou"
     // };
 
-    agreementDetail = {};
+    //agreementDetail = {};
 
 
     var renewAgreement = {};
@@ -109,6 +116,18 @@ $(document).ready(function() {
     $("select").on("change", function() {
         // console.log(this.value);
         renewAgreement[this.id] = this.value;
+
+        if (($("#approver_department").val() != "" && $("#approver_designation").val() != "") && (this.id == "approver_department" || this.id == "approver_designation")) {
+                employees = commonApiPost("hr-employee", "employees", "_search", {
+                tenantId,
+                departmentId: $("#approver_department").val(),
+                designationId: $("#approver_designation").val()
+            }).responseJSON["Employee"] || [];
+
+            for (var i = 0; i < employees.length; i++) {
+                $(`#approver_name`).append(`<option value='${employees[i]['id']}'>${employees[i]['name']}</option>`)
+            }
+        }
     });
 
     //file change handle for file upload
@@ -142,11 +161,51 @@ $(document).ready(function() {
     };
 
     //remove renew part and related buttons from dom
-    if (getUrlVars()["view"] == "new") {
+     if (getUrlVars()["view"] == "new") {
         //removing renew section and renew button
         $("#renew,#workFlowDetails").remove();
+    } else if(getUrlVars()["view"] == "inbox") {
+        $("#historyTable").show();
+        $("#renew").remove();
+        $("#renewBtn").remove();
+        //Fetch workFlow
+        var workflow = commonApiGet("egov-common-workflows", "history", "", {
+            tenantId: tenantId,
+            workflowId: agreementDetail.stateId
+        }).responseJSON;
+
+        var process = commonApiPost("egov-common-workflows", "process", "_search", {
+            tenantId: tenantId,
+            id: agreementDetail.stateId
+        }).responseJSON["processInstance"];
+
+        if(workflow && workflow.length) {
+            workflow = workflow.sort();
+            for(var i=0; i < workflow.length; i++) {
+                $("#historyTable tbody").append(`<tr>
+                    <td data-label="createdDate">${workflow[i].createdDate}</td>
+                    <td data-label="updatedBy">${workflow[i].senderName}</td>
+                    <td data-label="status">${workflow[i].status}</td>
+                    <td data-label="comments">${workflow[i].comments}</td>
+                    </tr>
+                `);
+            }
+
+            if(process && process.attributes && process.attributes.validActions && process.attributes.validActions.values && process.attributes.validActions.values.length) {
+                for(var i=0;i<process.attributes.validActions.values.length;i++) {
+                    $("#footer-btn-grp").append($(`<button data-action=${process.attributes.validActions.values[i].key} id=${process.attributes.validActions.values[i].key} type="button" class="btn btn-submit">${process.attributes.validActions.values[i].name}<button/>`));
+                }
+            }
+        }
     } else {
         $("#viewDcb").remove();
+    }
+
+    for (var variable in department) {
+      $(`#approver_department`).append(`<option value='${department[variable]["id"]}'>${department[variable]["name"]}</option>`)
+    }
+    for (var variable in designation) {
+      $(`#approver_designation`).append(`<option value='${designation[variable]["id"]}'>${designation[variable]["name"]}</option>`)
     }
 
     if (decodeURIComponent(getUrlVars()["type"]) == "land") {
@@ -225,20 +284,47 @@ $(document).ready(function() {
 
 
 
+    $('body').on('click', 'button', function(e) {
+        e.preventDefault();
+        if(!e.target.id) return;
+        var data = $("#" + e.target.id).data();
+        if(data.action) {
+            var _agrmntDet = Object.assign({}, agreementDetail);
+            _agrmntDet.workflowDetails = {
+                    "businessKey": process.businessKey,
+                    "type":"Agreement",
+                    "assignee": $("#approver_name").val(),
+                    "status": process.status,
+                    "action": data.action
+            };
+
+            var response = $.ajax({
+                    url: baseUrl + `/lams-services/agreements/_update/${agreementDetail.acknowledgementNumber}?tenantId=`+tenantId,
+                    type: 'POST',
+                    dataType: 'json',
+                    data:JSON.stringify({
+                        RequestInfo: requestInfo,
+                        Agreement: _agrmntDet
+                    }),
+                    async: false,
+                    headers: {
+                            'auth-token': authToken
+                        },
+                    contentType: 'application/json'
+                });
+            if(response["status"] === 201) {
+                open(location, '_self').close();
+            } else {
+                console.log("Handle error.");
+            }
+        }
+    });
+
     // Adding Jquery validation dynamically
     $("#renewAgreementForm").validate({
         rules: final_validatin_rules,
         submitHandler: function(form) {
-            // form.submit();
-            alert("submitted")
-            // console.log(agreement);
-            // $.post(`${baseUrl}agreements?tenant_id=kul.am`, {
-            //     RequestInfo: requestInfo,
-            //     Agreement: agreement
-            // }, function(response) {
-            //     alert("submit");
-            //     console.log(response);
-            // })
+            
         }
     })
 });

@@ -23,7 +23,7 @@ $(document).ready(function() {
           success: function( data ) {
             jQuery('<form>.').attr({
                 method: 'post',
-                action: '/collection/receipts/receipt-newform.action',
+                action: 'http://kurnool-qa-services.egovernments.org/collection/receipts/receipt-newform.action',
                 target: '_self'
             }).append(jQuery('<input>').attr({
                 type: 'hidden',

@@ -2392,7 +2392,7 @@
                                     <form class="" id="renewAgreementForm">
                                         <h3>Renewal Details </h3>
                                         <div class="form-section-inner">
-
+                                            
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="row">
@@ -2498,6 +2498,21 @@
                                         </div>
                                 </div>
 
+                                <div id="historyTable" class="land-table" style="display:none">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Updated By</th>
+                                                <th>Status</th>
+                                                <th>Comments </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+
                                 <div class="form-section" id="workFlowDetails">
                                     <h3>Workflow Details </h3>
                                     <div class="form-section-inner">
@@ -2510,10 +2525,8 @@
                                                     <div class="col-sm-6">
                                                         <div class="styled-select">
                                                             <select id="approver_department">
-                                                          <option>Select from below</option>
-                                                          <option value="asdas">sadas</option>
-                                                          <option value="asdas">sffds</option>
-                                                        </select>
+                                                                <option value="">Select from below</option>
+                                                            </select>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -2526,10 +2539,8 @@
                                                     <div class="col-sm-6">
                                                         <div class="styled-select">
                                                             <select id="approver_designation">
-                                                          <option>Select from below</option>
-                                                          <option value="asdas">sadas</option>
-                                                          <option value="asdas">sffds</option>
-                                                        </select>
+                                                                <option value="">Select from below</option>
+                                                            </select>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -2545,9 +2556,7 @@
                                                     <div class="col-sm-6">
                                                         <div class="styled-select">
                                                             <select id="approver_name">
-                                                          <option>Select from bellow</option>
-                                                          <option value="asdas">sadas</option>
-                                                          <option value="asdas">sffds</option>
+                                                          <option value="">Select from below</option>
                                                         </select>
                                                         </div>
                                                     </div>
@@ -2557,10 +2566,12 @@
                                     </div>
                                 </div>
 
-                                <div class="text-center">
+                                <div class="text-center" id="footer-btn-grp">
                                     <button type="button" class="btn btn-submit" id="close">Close</button>
                                     <button type="button" class="btn btn-submit" id="viewDcb">View DCB</button>
-                                    <button type="submit" class="btn btn-submit" id="renew">Renew</button>
+                                    <button type="submit" class="btn btn-submit" id="renewBtn">
+                                        Renew
+                                    </button>
                                 </div>
 
                                 </form>

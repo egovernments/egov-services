@@ -68,11 +68,11 @@ public class AssetCategoryController {
 		Boolean isAsync=applicationProperties.getAssetCategoryAsync();
 		AssetCategoryResponse response=null;
 		
-		if(isAsync) {
+		//if(isAsync) {
 			response=assetCategoryService.createAsync(applicationProperties.getCreateAssetCategoryTopicName(),"save-aasetcategory",assetCategoryRequest);
-		} else {
+		/*} else {
 			response=assetCategoryService.create(assetCategoryRequest);
-		}
+		}*/
 		
 		return new ResponseEntity<AssetCategoryResponse>(response, HttpStatus.CREATED);
 	}

@@ -43,6 +43,7 @@ public class AssetCategoryService {
 	public AssetCategoryResponse createAsync(String topic,String key,AssetCategoryRequest assetCategoryRequest){
 		
 		assetCategoryRequest.getAssetCategory().setCode(assetCategoryRepository.getAssetCategoryCode());
+		System.out.println("AssetCategoryService createAsync"+assetCategoryRequest);
 		ObjectMapper objectMapper=new ObjectMapper();
 		String value=null;
 		try {

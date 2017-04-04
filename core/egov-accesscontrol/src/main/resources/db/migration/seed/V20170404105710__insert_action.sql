@@ -31,7 +31,7 @@ values(nextval('SEQ_EG_ACTION'),'Get Department by DepartmentId','/eis/designati
 insert into eg_action(id, name,url,servicecode,queryparams,parentmodule,ordernumber,displayname,enabled,createdby,createddate,lastmodifiedby,lastmodifieddate,tenantId)
 values(nextval('SEQ_EG_ACTION'),'Get Assignments by DepartmentId Or DesignationId','/eis/assignmentsByDeptOrDesignId','PGR','deptId=&desgnId=',(select code from service where name='PGR'and contextroot='pgr'),null,'Get Assignments by DepartmentId Or DesignationId',false,1,now(),1,now(),'ap.kurnool');
 insert into eg_action(id, name,url,servicecode,queryparams,parentmodule,ordernumber,displayname,enabled,createdby,createddate,lastmodifiedby,lastmodifieddate,tenantId)
-values(nextval('SEQ_EG_ACTION'),'Seva','/pgr/seva','PGR','',(select id from service where name='PGR'and contextroot='pgr'),null,'Seva',false,1,now(),1,now(),'ap.kurnool');
+values(nextval('SEQ_EG_ACTION'),'Seva','/pgr/seva','PGR','',(select code from service where name='PGR'and contextroot='pgr'),null,'Seva',false,1,now(),1,now(),'ap.kurnool');
 insert into eg_action(id, name,url,servicecode,queryparams,parentmodule,ordernumber,displayname,enabled,createdby,createddate,lastmodifiedby,lastmodifieddate,tenantId)
 values(nextval('SEQ_EG_ACTION'),'Search Boundary by boundaryId','/v1/location/boundarys','PGR','boundary=',(select code from service where name='PGR'and contextroot='pgr'),null,'Search Boundary by boundaryId',false,1,now(),1,now(),'ap.kurnool');
 insert into eg_action(id, name,url,servicecode,queryparams,parentmodule,ordernumber,displayname,enabled,createdby,createddate,lastmodifiedby,lastmodifieddate,tenantId)

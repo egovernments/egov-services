@@ -2,9 +2,11 @@ package org.egov.filters.post;
 
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
+import org.springframework.stereotype.Component;
 
 import static org.egov.constants.RequestContextConstants.CORRELATION_ID_KEY;
 
+@Component
 public class ResponseEnhancementFilter extends ZuulFilter {
 
     private static final String CORRELATION_HEADER_NAME = "x-correlation-id";

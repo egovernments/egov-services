@@ -69,7 +69,7 @@ class SearchAsset extends React.Component {
      this.setState({
       assetCategories,
       departments,
-      statusList:commonApiGet("asset-services","","GET_STATUS",{}).responseJSON|| {}
+      statusList
     })
   }
 

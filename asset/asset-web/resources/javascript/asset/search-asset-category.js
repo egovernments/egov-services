@@ -108,7 +108,7 @@ class SearchAssetCategory extends React.Component {
                                 <td>{item.code}</td>
                                 <td>{item.name}</td>
                                 <td>{item.assetCategoryType}</td>
-                                <td>{getNameById(assignments_parent,item.parent)}</td>
+                                <td>{getNameById(assetCategories,item.parent)}</td>
                                 <td>{getNameById(assignments_unitOfMeasurement,item.unitOfMeasurement,"narration")}</td>
 
                                 <td data-label="action">

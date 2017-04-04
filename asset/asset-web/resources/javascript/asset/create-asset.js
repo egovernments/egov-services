@@ -58,10 +58,10 @@ class CreateAsset extends React.Component {
         electionwards: [],
         departments: [],
         acquisitionList: [],
-        zoneList: [],
-        streetList: [],
-        WardList: [],
-        blockList: [],
+        revenueZone: [],
+        street: [],
+        revenueWards: [],
+        revenueBlock: [],
         customFields: [],
         statusList: {},
         asset_category_type: {},
@@ -120,7 +120,7 @@ class CreateAsset extends React.Component {
       };
 
       var response = $.ajax({
-          url: baseUrl + "/asset-services/assets/" + (type == "update" ? ("_update/"+ _this.state.assetSet.code) : "_create") + "?tenantId=1",
+          url: baseUrl + "/asset-services/assets/" + (type == "update" ? ("_update/"+ _this.state.assetSet.code) : "_create") + "?tenantId=ap.kurnool",
           type: 'POST',
           dataType: 'json',
           data: JSON.stringify(body),
@@ -199,27 +199,13 @@ class CreateAsset extends React.Component {
 					locality,
 					electionwards,
 					asset_category_type,
-					acquisitionList: commonApiGet("asset-services", "", "GET_MODE_OF_ACQUISITION", {}).responseJSON || [],
-					departments: commonApiPost("egov-common-masters", "departments", "_search", {
-	              tenantId
-	          }).responseJSON["Department"] || [],
-          zoneList: commonApiPost("v1/location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", {
-              boundaryTypeName: "ZONE",
-              hierarchyTypeName: "REVENUE"
-          }).responseJSON["Boundary"] || [],
-          streetList: commonApiPost("v1/location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", {
-              boundaryTypeName: "STREET",
-              hierarchyTypeName: "REVENUE"
-          }).responseJSON["Boundary"] || [],
-          WardList: commonApiPost("v1/location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", {
-              boundaryTypeName: "WARD",
-              hierarchyTypeName: "REVENUE"
-          }).responseJSON["Boundary"] || [],
-          blockList: commonApiPost("v1/location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", {
-              boundaryTypeName: "BLOCK",
-              hierarchyTypeName: "REVENUE"
-          }).responseJSON["Boundary"] || [],
-          statusList: commonApiGet("asset-services", "", "GET_STATUS", {}).responseJSON || {},
+					acquisitionList,
+					departments,
+          revenueZone,
+          street,
+          revenueWards,
+          revenueBlock,
+          statusList,
           readonly: (type === "view")
       });
 
@@ -573,7 +559,7 @@ class CreateAsset extends React.Component {
                                     onChange={(e)=>
                                     {  handleChangeTwoLevel(e,"locationDetails","revenueWard")}} disabled={readonly}>
                                     <option value="">Choose Revenue Ward</option>
-                                    {renderOption(this.state.WardList)}
+                                    {renderOption(this.state.revenueWards)}
                                 </select>
                               </div>
                           </div>
@@ -592,7 +578,7 @@ class CreateAsset extends React.Component {
                                     onChange={(e)=>
                                     {  handleChangeTwoLevel(e,"locationDetails","block")}} disabled={readonly}>
                                     <option value="">Choose Block</option>
-                                    {renderOption(this.state.blockList)}
+                                    {renderOption(this.state.revenueBlock)}
                                 </select>
                               </div>
                           </div>
@@ -609,7 +595,7 @@ class CreateAsset extends React.Component {
                                     onChange={(e)=>
                                     {  handleChangeTwoLevel(e,"locationDetails","street")}} disabled={readonly}>
                                     <option value="">Choose Street</option>
-                                    {renderOption(this.state.streetList)}
+                                    {renderOption(this.state.street)}
                                 </select>
                               </div>
                           </div>
@@ -658,7 +644,7 @@ class CreateAsset extends React.Component {
                                     onChange={(e)=>
                                     { handleChangeTwoLevel(e,"locationDetails","zone")}}>
                                     <option value="">Choose Zone Number</option>
-                                    {renderOption(this.state.zoneList)}
+                                    {renderOption(this.state.revenueZone)}
                                 </select>
                               </div>
                           </div>

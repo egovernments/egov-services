@@ -28,7 +28,7 @@ class CreateAsset extends React.Component {
               "regExFormate": ""
             },
     asset_category_type:[],
-    assignments_parent:[],
+    assetCategories:[],
     depreciationMethod:{},
     assetAccount:[],
     accumulatedDepreciationAccount:[],
@@ -145,7 +145,7 @@ class CreateAsset extends React.Component {
                       "regExFormate": ""
                     },
             asset_category_type:[],
-            assignments_parent:[],
+            assetCategories:[],
             depreciationMethod:{},
             assetAccount:[],
             accumulatedDepreciationAccount:[],
@@ -217,13 +217,13 @@ class CreateAsset extends React.Component {
 
      this.setState({
 
-      assignments_parent,
+      assetCategories,
       asset_category_type,
-      depreciationMethod:commonApiGet("asset-services","","GET_DEPRECIATION_METHOD",{}).responseJSON|| {},
-      assetAccount:commonApiPost("egf-masters","chartofaccounts","_search",{tenantId}).responseJSON["chartOfAccounts"],
-      accumulatedDepreciationAccount:commonApiPost("egf-masters","chartofaccounts","_search",{tenantId}).responseJSON["chartOfAccounts"],
-      revaluationReserveAccount:commonApiPost("egf-masters","chartofaccounts","_search",{tenantId}).responseJSON["chartOfAccounts"],
-      depreciationExpenseAccount:commonApiPost("egf-masters","chartofaccounts","_search",{tenantId}).responseJSON["chartOfAccounts"],
+      depreciationMethod,
+      assetAccount,
+      accumulatedDepreciationAccount,
+      revaluationReserveAccount,
+      depreciationExpenseAccount,
       assignments_unitOfMeasurement
     })
   }
@@ -404,7 +404,7 @@ class CreateAsset extends React.Component {
                         <select id="parent" name="parent"  value={parent} onChange={(e)=>{
                         handleChange(e,"parent")}}>
                             <option value="">Select Parent Category</option>
-                            {renderOption(this.state.assignments_parent)}
+                            {renderOption(this.state.assetCategories)}
                           </select>
                         </div>
                         </div>

@@ -27,14 +27,14 @@ class CreateAsset extends React.Component {
               "localText": "",
               "regExFormate": ""
             },
-    assetCategories:[],
-    parent:{},
+    asset_category_type:[],
+    assignments_parent:[],
     depreciationMethod:{},
     assetAccount:[],
     accumulatedDepreciationAccount:[],
     revaluationReserveAccount:[],
     depreciationExpenseAccount:[],
-    unitOfMeasurement:[],
+    assignments_unitOfMeasurement:[],
     dataType:[],isEdit:false,index:-1,typeList:[]
 
   }
@@ -144,14 +144,14 @@ class CreateAsset extends React.Component {
                       "localText": "",
                       "regExFormate": ""
                     },
-            assetCategories:[],
-            parent:{},
+            asset_category_type:[],
+            assignments_parent:[],
             depreciationMethod:{},
             assetAccount:[],
             accumulatedDepreciationAccount:[],
             revaluationReserveAccount:[],
             depreciationExpenseAccount:[],
-            unitOfMeasurement:[],
+            assignments_unitOfMeasurement:[],
             typeList:[]
 
           })
@@ -217,15 +217,14 @@ class CreateAsset extends React.Component {
 
      this.setState({
 
-      parent:commonApiPost("asset-services","assetCategories","_search",{}).responseJSON["AssetCategory"],
-      assetCategories:commonApiGet("asset-services","","GET_ASSET_CATEGORY_TYPE",{}).responseJSON|| {},
+      assignments_parent,
+      asset_category_type,
       depreciationMethod:commonApiGet("asset-services","","GET_DEPRECIATION_METHOD",{}).responseJSON|| {},
       assetAccount:commonApiPost("egf-masters","chartofaccounts","_search",{tenantId}).responseJSON["chartOfAccounts"],
       accumulatedDepreciationAccount:commonApiPost("egf-masters","chartofaccounts","_search",{tenantId}).responseJSON["chartOfAccounts"],
       revaluationReserveAccount:commonApiPost("egf-masters","chartofaccounts","_search",{tenantId}).responseJSON["chartOfAccounts"],
       depreciationExpenseAccount:commonApiPost("egf-masters","chartofaccounts","_search",{tenantId}).responseJSON["chartOfAccounts"],
-      unitOfMeasurement:commonApiPost("egov-common-masters","uom","_search",{}).responseJSON["uoms"]
-
+      assignments_unitOfMeasurement
     })
   }
 
@@ -386,8 +385,8 @@ class CreateAsset extends React.Component {
                         <div className="styled-select">
                         <select id="assetCategoryType" name="assetCategoryType" required="true" value={assetCategoryType} onChange={(e)=>{
                         handleChange(e,"assetCategoryType")}}>
-                            <option value="">Select Asset Category</option>
-                            {renderOption(this.state.assetCategories)}
+                            <option value="">Select Asset Category Type</option>
+                            {renderOption(this.state.asset_category_type)}
                           </select>
                         </div>
                         </div>
@@ -405,7 +404,7 @@ class CreateAsset extends React.Component {
                         <select id="parent" name="parent"  value={parent} onChange={(e)=>{
                         handleChange(e,"parent")}}>
                             <option value="">Select Parent Category</option>
-                            {renderOption(this.state.parent)}
+                            {renderOption(this.state.assignments_parent)}
                           </select>
                         </div>
                         </div>
@@ -511,7 +510,7 @@ class CreateAsset extends React.Component {
                         <select id="unitOfMeasurement" name="unitOfMeasurement"  value={unitOfMeasurement} onChange={(e)=>{
                         handleChange(e,"unitOfMeasurement")}}>
                           <option value="">Select Unit Of Measurment </option>
-                          {renderOption(this.state.unitOfMeasurement)}
+                          {renderOption(this.state.assignments_unitOfMeasurement)}
                         </select>
                         </div>
                         </div>

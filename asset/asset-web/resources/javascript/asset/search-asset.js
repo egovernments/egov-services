@@ -67,8 +67,8 @@ class SearchAsset extends React.Component {
 
 
      this.setState({
-      assetCategories:commonApiPost("asset-services","assetCategories","_search",{}).responseJSON["AssetCategory"] ||[],
-      departments:commonApiPost("egov-common-masters","departments","_search",{tenantId}).responseJSON["Department"] || [],
+      assetCategories,
+      departments,
       statusList:commonApiGet("asset-services","","GET_STATUS",{}).responseJSON|| {}
     })
   }
@@ -161,7 +161,7 @@ class SearchAsset extends React.Component {
                                 <td>{item.code}</td>
                                 <td>{item.name}</td>
                                 <td>{item.assetCategory.name}</td>
-                                <td>{getNameById(assignments_department,item.department.id)}</td>
+                                <td>{getNameById(departments,item.department.id)}</td>
                                 <td>{item.status}</td>
                                 <td>{item.assetDetails?item.assetDetails:"NULL"}</td>
 

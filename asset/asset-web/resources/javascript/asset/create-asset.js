@@ -54,7 +54,7 @@ class CreateAsset extends React.Component {
         list: [],
         assetSet: Object.assign({}, defaultAssetSetState),
         assetCategories: [],
-        localityList: [],
+        locality: [],
         electionwards: [],
         departments: [],
         acquisitionList: [],
@@ -64,7 +64,7 @@ class CreateAsset extends React.Component {
         blockList: [],
         customFields: [],
         statusList: {},
-        assetCategoriesType: {},
+        asset_category_type: {},
         capitalized: false,
         error: "",
         success: "",
@@ -195,19 +195,14 @@ class CreateAsset extends React.Component {
 				});
 
       this.setState({
-          assetCategories: commonApiPost("asset-services", "assetCategories", "_search", {}).responseJSON["AssetCategory"] || [],
-          departments: commonApiPost("egov-common-masters", "departments", "_search", {
-              tenantId
-          }).responseJSON["Department"] || [],
-          acquisitionList: commonApiGet("asset-services", "", "GET_MODE_OF_ACQUISITION", {}).responseJSON || [],
-          localityList: commonApiPost("v1/location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", {
-              boundaryTypeName: "LOCALITY",
-              hierarchyTypeName: "LOCATION"
-          }).responseJSON["Boundary"] || [],
-          electionwards: commonApiPost("v1/location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", {
-              boundaryTypeName: "WARD",
-              hierarchyTypeName: "ADMINISTRATION"
-          }).responseJSON["Boundary"] || [],
+          assetCategories,
+					locality,
+					electionwards,
+					asset_category_type,
+					acquisitionList: commonApiGet("asset-services", "", "GET_MODE_OF_ACQUISITION", {}).responseJSON || [],
+					departments: commonApiPost("egov-common-masters", "departments", "_search", {
+	              tenantId
+	          }).responseJSON["Department"] || [],
           zoneList: commonApiPost("v1/location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", {
               boundaryTypeName: "ZONE",
               hierarchyTypeName: "REVENUE"
@@ -225,7 +220,6 @@ class CreateAsset extends React.Component {
               hierarchyTypeName: "REVENUE"
           }).responseJSON["Boundary"] || [],
           statusList: commonApiGet("asset-services", "", "GET_STATUS", {}).responseJSON || {},
-          assetCategoriesType: commonApiGet("asset-services", "", "GET_ASSET_CATEGORY_TYPE", {}).responseJSON || {},
           readonly: (type === "view")
       });
 
@@ -498,7 +492,7 @@ class CreateAsset extends React.Component {
                                     {
                                     handleChange(e,"assetCategoryType")}}>
                                     <option value="">Select Asset Category</option>
-                                    {renderOption(this.state.assetCategoriesType)}
+                                    {renderOption(this.state.asset_category_type)}
                                 </select>
                               </div>
                           </div>
@@ -562,7 +556,7 @@ class CreateAsset extends React.Component {
                                     onChange={(e)=>
                                     {handleChangeTwoLevel(e,"locationDetails","locality")}} disabled={readonly}>
                                     <option value="">Choose locality</option>
-                                    {renderOption(this.state.localityList)}
+                                    {renderOption(this.state.locality)}
                                 </select>
                               </div>
                           </div>

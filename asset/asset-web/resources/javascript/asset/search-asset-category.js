@@ -4,7 +4,7 @@ class SearchAssetCategory extends React.Component {
     this.state={list:[],searchSet:{
       "name": "",
       "assetCategoryType": "",
-   },isSearchClicked:false,assetCategories:[]}
+   },isSearchClicked:false,asset_category_type:[]}
     this.handleChange=this.handleChange.bind(this);
     this.search=this.search.bind(this);
 
@@ -34,7 +34,7 @@ class SearchAssetCategory extends React.Component {
   {
     //console.log(commonApiGet("asset-services","","GET_STATUS",{}).responseJSON);
      this.setState({
-      assetCategories:commonApiGet("asset-services","","GET_ASSET_CATEGORY_TYPE",{}).responseJSON|| {}
+      asset_category_type
     })
   }
 
@@ -186,7 +186,7 @@ class SearchAssetCategory extends React.Component {
                           <select id="assetCategoryType" name="assetCategoryType" value={assetCategoryType} required= "true" onChange={(e)=>{
                           handleChange(e,"assetCategoryType")}}>
                               <option value="">Select Asset Category</option>
-                              {renderOption(this.state.assetCategories)}
+                              {renderOption(this.state.asset_category_type)}
                             </select>
                           </div>
                       </div>

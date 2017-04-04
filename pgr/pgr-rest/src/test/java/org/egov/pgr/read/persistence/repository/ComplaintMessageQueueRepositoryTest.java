@@ -3,14 +3,12 @@ package org.egov.pgr.read.persistence.repository;
 import org.egov.pgr.common.contract.RequestInfo;
 import org.egov.pgr.common.contract.SevaRequest;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
-import org.egov.tracer.model.RequestContext;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -35,15 +33,5 @@ public class ComplaintMessageQueueRepositoryTest {
         complaintMessageQueueRepository.save(sevaRequest);
 
         verify(kafkaTemplate).send(TOPIC_NAME, sevaRequest);
-    }
-
-    @Test
-    public void test_should_set_correlation_id_to_seva_request() {
-        RequestContext.setId("correlationId");
-        final SevaRequest sevaRequest = new SevaRequest(new RequestInfo(), null);
-
-        complaintMessageQueueRepository.save(sevaRequest);
-
-        assertEquals("correlationId", sevaRequest.getRequestInfo().getCorrelationId());
     }
 }

@@ -6,12 +6,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.tracer.model.RequestContext;
 import org.egov.tracer.model.RequestCorrelationId;
+import org.springframework.http.MediaType;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -19,9 +22,17 @@ public class CorrelationIdFilter implements Filter {
 
     private static final String CORRELATION_ID_HEADER_NAME = "X-CORRELATION-ID";
     private static final String FAILED_TO_DESERIALIZE_MESSAGE = "Failed to deserialize body";
-    private static final String GET = "GET";
-    private static final String EMPTY_STRING = "";
-    private static final String MULTI_PART = "multipart";
+    private static final List<String> JSON_MEDIA_TYPES =
+        Arrays.asList(MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE);
+    private static final String POST = "POST";
+    private static final String NO_CORRELATION_ID_IN_BODY_MESSAGE =
+        "No correlation id present in the body for URI {}";
+    private static final String FOUND_CORRELATION_ID_IN_BODY_MESSAGE =
+        "Found correlation id {} in body for URI {}";
+    private static final String NO_CORRELATION_ID_IN_HEADER_MESSAGE =
+        "No correlation id found in header for URI {}";
+    private static final String FOUND_CORRELATION_ID_IN_HEADER_MESSAGE =
+        "Found correlation id {} in header for URI {}";
     private final ObjectMapper objectMapper;
 
     public CorrelationIdFilter() {
@@ -38,15 +49,15 @@ public class CorrelationIdFilter implements Filter {
         throws IOException, ServletException {
         RequestContext.clear();
         HttpServletRequest httpRequest = (HttpServletRequest) servletRequest;
-        if (isBodyNotCompatibleForParsing(httpRequest)) {
-            setCorrelationIdFromHeader(httpRequest);
-            addCorrelationIdToResponseHeader(servletResponse);
-            filterChain.doFilter(servletRequest, servletResponse);
-        } else {
+        if (isBodyCompatibleForParsing(httpRequest)) {
             final MultiReadRequestWrapper wrappedRequest = new MultiReadRequestWrapper(httpRequest);
             setCorrelationIdFromBody(wrappedRequest);
             addCorrelationIdToResponseHeader(servletResponse);
             filterChain.doFilter(wrappedRequest, servletResponse);
+        } else {
+            setCorrelationIdFromHeader(httpRequest);
+            addCorrelationIdToResponseHeader(servletResponse);
+            filterChain.doFilter(servletRequest, servletResponse);
         }
     }
 
@@ -57,8 +68,10 @@ public class CorrelationIdFilter implements Filter {
     private void setCorrelationIdFromHeader(HttpServletRequest httpRequest) {
         final String correlationIdFromHeader = getCorrelationIdFromHeader(httpRequest);
         if (correlationIdFromHeader == null) {
+            log.warn(NO_CORRELATION_ID_IN_HEADER_MESSAGE, httpRequest.getRequestURI());
             RequestContext.setId(getRandomCorrelationId());
         } else {
+            log.info(FOUND_CORRELATION_ID_IN_HEADER_MESSAGE, correlationIdFromHeader, httpRequest.getRequestURI());
             RequestContext.setId(correlationIdFromHeader);
         }
     }
@@ -66,22 +79,17 @@ public class CorrelationIdFilter implements Filter {
     private void setCorrelationIdFromBody(HttpServletRequest httpRequest) throws IOException {
         final String correlationIdFromRequestBody = getCorrelationIdFromRequestBody(httpRequest);
         if (correlationIdFromRequestBody == null) {
+            log.warn(NO_CORRELATION_ID_IN_BODY_MESSAGE, httpRequest.getRequestURI());
             RequestContext.setId(getRandomCorrelationId());
         } else {
+            log.info(FOUND_CORRELATION_ID_IN_BODY_MESSAGE, correlationIdFromRequestBody, httpRequest.getRequestURI());
             RequestContext.setId(correlationIdFromRequestBody);
         }
     }
 
-    private boolean isBodyNotCompatibleForParsing(HttpServletRequest httpRequest) {
-        return GET.equals(httpRequest.getMethod()) || isMultiPartContentType(httpRequest);
-    }
-
-    private boolean isMultiPartContentType(HttpServletRequest httpRequest) {
-        return getContentType(httpRequest).indexOf(MULTI_PART) > 0;
-    }
-
-    private String getContentType(HttpServletRequest httpRequest) {
-        return httpRequest.getContentType() == null ? EMPTY_STRING : httpRequest.getContentType().toLowerCase();
+    private boolean isBodyCompatibleForParsing(HttpServletRequest httpRequest) {
+        return POST.equals(httpRequest.getMethod())
+        && JSON_MEDIA_TYPES.contains(httpRequest.getContentType());
     }
 
     private String getCorrelationIdFromHeader(HttpServletRequest httpRequest) {

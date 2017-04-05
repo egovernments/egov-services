@@ -37,7 +37,7 @@ $('#close').on("click", function() {
           departmentId: $("#approverDepartment").val(),
           designationId: $("#approverDesignation").val()
       }).responseJSON["Employee"] || [];
-      $(`#approverName`).html(`<option value=''>Select</option>`)
+      //$(`#approverName`).html(`<option value=''>Select</option>`)
 
       for (var i = 0; i < employees.length; i++) {
           $(`#approverName`).append(`<option value='${employees[i]['id']}'>${employees[i]['name']}</option>`)
@@ -106,7 +106,7 @@ function fillValueToObject(currentState) {
         natureOfAllotment: {
             required: true
         },
-        aadhaarNumber: {
+        "allottee.aadhaarNumber": {
             required: false,
             aadhar: true
         },
@@ -180,6 +180,9 @@ function fillValueToObject(currentState) {
             required: true
         },
         paymentCycle: {
+            required: true
+        },
+        approverName: {
             required: true
         },
         rentIncrementMethod: {
@@ -735,7 +738,7 @@ function fillValueToObject(currentState) {
     }, 'Please enter a valid aadhar.');
 
     $.validator.addMethod('panNo', function(value) {
-        return /^[0-9a-zA-Z]{10}$/.test(value);
+        return /^(?:[0-9]+[a-z]|[a-z]+[0-9])[a-z0-9]*$/i.test(value) && value.length === 10;
     }, 'Please enter a valid pan.');
 
     finalValidatinRules["messages"] = {
@@ -827,7 +830,7 @@ function fillValueToObject(currentState) {
         //     required: "Enter Remarks if any"
         // },
         solvencyCertificateNo: {
-            required: "Enter Solvency certificate date"
+            required: "Enter Solvency certificate number"
         },
         solvencyCertificateDate: {
             required: "Enter Solvency certificate date"

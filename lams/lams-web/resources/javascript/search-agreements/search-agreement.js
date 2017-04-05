@@ -110,14 +110,36 @@ class AgreementSearch extends React.Component {
       })
   }
 
-  handleSelectChange(type,id,number,assetCategory)
-  {
-    console.log(type);
+  handleSelectChange(type, id, number, assetCategory, acknowledgementNumber) {
     if (type === "renew") {
-                window.open("app/search-agreement/view-renew-agreement.html?view=renew&type="+assetCategory+"&agreementNumber="+number+"&assetId="+id, "fs", "fullscreen=yes")
-            } else {
-                window.open("app/search-agreement/view-renew-agreement.html?view=new&type="+assetCategory+"&agreementNumber="+number+"&assetId="+id, "fs", "fullscreen=yes")
-            }
+        window.open("app/search-agreement/view-renew-agreement.html?view=renew&type="+assetCategory+"&agreementNumber="+number+"&assetId="+id, "fs", "fullscreen=yes")
+    } else if(type == "collTax") {
+        $.ajax({
+          url: "/lams-services/payment/_create?" + (number ? "agreementNumber=" + number : "acknowledgementNumber=" + acknowledgementNumber),
+          type: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify({
+              RequestInfo: requestInfo
+          }),
+          success: function( data ) {
+            jQuery('<form>.').attr({
+                method: 'post',
+                action: '/collection/receipts/receipt-newform.action',
+                target: '_self'
+            }).append(jQuery('<input>').attr({
+                type: 'hidden',
+                id: 'collectXML',
+                name: 'collectXML',
+                value: data
+            })).appendTo( document.body ).submit();
+          },
+          error: function(data) {
+              console.log(data);
+          }
+        });
+    } else {
+        window.open("app/search-agreement/view-renew-agreement.html?view=new&type="+assetCategory+"&agreementNumber="+number+"&assetId="+id, "fs", "fullscreen=yes")
+    }
   }
 
 
@@ -219,10 +241,11 @@ class AgreementSearch extends React.Component {
                                   <td>
                                       <div className="styled-select">
                                           <select id="myOptions" onChange={(e)=>{
-                                            handleSelectChange(e.target.value,item.asset.id,item.agreementNumber,getValueByName("name",item.asset.assetCategory.id))
+                                            handleSelectChange(e.target.value, item.asset.id, item.agreementNumber, getValueByName("name",item.asset.assetCategory.id), item.acknowledgementNumber)
                                           }}>
                                               <option value="">Select Action</option>
                                               <option value="view">View</option>
+                                              <option value="collTax">Collect Tax</option>
                                             { /*<option value="renew">Renew</option> */}
                                           </select>
                                       </div>

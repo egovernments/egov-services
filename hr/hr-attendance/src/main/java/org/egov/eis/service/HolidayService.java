@@ -46,6 +46,7 @@ import org.egov.eis.model.Holiday;
 import org.egov.eis.service.helper.HolidaySearchURLHelper;
 import org.egov.eis.web.contract.HolidayResponse;
 import org.egov.eis.web.contract.RequestInfo;
+import org.egov.eis.web.contract.RequestInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -61,9 +62,11 @@ public class HolidayService {
         final String url = holidaySearchURLHelper.searchURL(tenantId);
 
         final RestTemplate restTemplate = new RestTemplate();
+        final RequestInfoWrapper wrapper = new RequestInfoWrapper();
+        wrapper.setRequestInfo(requestInfo);
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
-        final HttpEntity<RequestInfo> request = new HttpEntity<>(requestInfo);
+        final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
 
         final HolidayResponse holidayResponse = restTemplate.postForObject(url, request, HolidayResponse.class);
 

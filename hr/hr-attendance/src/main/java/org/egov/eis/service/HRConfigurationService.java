@@ -46,6 +46,7 @@ import java.util.Map;
 import org.egov.eis.service.helper.HRConfigurationSearchURLHelper;
 import org.egov.eis.web.contract.HRConfigurationResponse;
 import org.egov.eis.web.contract.RequestInfo;
+import org.egov.eis.web.contract.RequestInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -61,9 +62,11 @@ public class HRConfigurationService {
         final String url = hrConfigurationSearchURLHelper.searchURL(tenantId);
 
         final RestTemplate restTemplate = new RestTemplate();
+        final RequestInfoWrapper wrapper = new RequestInfoWrapper();
+        wrapper.setRequestInfo(requestInfo);
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
-        final HttpEntity<RequestInfo> request = new HttpEntity<>(requestInfo);
+        final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
 
         final HRConfigurationResponse hrConfigurationResponse = restTemplate.postForObject(url, request,
                 HRConfigurationResponse.class);

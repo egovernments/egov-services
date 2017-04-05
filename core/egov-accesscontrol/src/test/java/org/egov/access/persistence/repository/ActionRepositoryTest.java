@@ -25,10 +25,10 @@ public class ActionRepositoryTest {
     @Test
     @Sql(scripts = {"/sql/clearAction.sql", "/sql/insertActionData.sql" })
     public void testShouldReturnActionForUserRole() throws Exception {
-        List<Long> roleIdsList = new ArrayList<Long>();
-        roleIdsList.add(4L);
-        roleIdsList.add(50L);
-        ActionSearchCriteria actionSearchCriteria = ActionSearchCriteria.builder().roleIds(roleIdsList).build();
+        List<String> roleCodesList = new ArrayList<String>();
+        roleCodesList.add("CITIZEN");
+        roleCodesList.add("SUPERUSER");
+        ActionSearchCriteria actionSearchCriteria = ActionSearchCriteria.builder().roleCodes(roleCodesList).build();
         List<Action> actions = actionRepository.findForCriteria(actionSearchCriteria);
         assertFalse(actions.isEmpty());
 

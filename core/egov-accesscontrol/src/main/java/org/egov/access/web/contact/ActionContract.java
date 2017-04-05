@@ -23,7 +23,6 @@ public class ActionContract {
     private String queryParams;
     private String parentModule;
     private String displayName;
-    private String contextRoot;
     private boolean enabled;
     private Integer orderNumber;
     private String serviceCode;

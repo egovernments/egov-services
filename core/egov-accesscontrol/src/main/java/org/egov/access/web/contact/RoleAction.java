@@ -9,5 +9,5 @@ public class RoleAction {
 
     private Long action;
 
-    private Long role;
+    private String roleCode;
 }

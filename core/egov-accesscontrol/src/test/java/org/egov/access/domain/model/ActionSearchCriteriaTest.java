@@ -15,11 +15,11 @@ public class ActionSearchCriteriaTest {
 
     @Test
     public void testForEqualsAndHashCode() throws  Exception {
-        List<Long> roleIdsList1 = new ArrayList<Long>();
-        roleIdsList1.add(4L);
-        roleIdsList1.add(5L);
-        ActionSearchCriteria searchCriteria1 = ActionSearchCriteria.builder().roleIds(roleIdsList1).build();
-        ActionSearchCriteria searchCriteria2 = ActionSearchCriteria.builder().roleIds(roleIdsList1).build();
+        List<String> roleCodesList = new ArrayList<String>();
+        roleCodesList.add("CITIZEN");
+        roleCodesList.add("SUPERUSER");
+        ActionSearchCriteria searchCriteria1 = ActionSearchCriteria.builder().roleCodes(roleCodesList).build();
+        ActionSearchCriteria searchCriteria2 = ActionSearchCriteria.builder().roleCodes(roleCodesList).build();
 
         assertEquals(searchCriteria1,searchCriteria2);
         assertEquals(searchCriteria1.hashCode(),searchCriteria2.hashCode());
@@ -27,14 +27,14 @@ public class ActionSearchCriteriaTest {
 
     @Test
     public void testForNotEqualObjects() throws Exception {
-        List<Long> roleIdsList1 = new ArrayList<Long>();
-        roleIdsList1.add(4L);
-        roleIdsList1.add(5L);
-        ActionSearchCriteria searchCriteria1 = ActionSearchCriteria.builder().roleIds(roleIdsList1).build();
-        List<Long> roleIdsList2 = new ArrayList<Long>();
-        roleIdsList2.add(3L);
-        roleIdsList2.add(2L);
-        ActionSearchCriteria searchCriteria2 = ActionSearchCriteria.builder().roleIds(roleIdsList2).build();
+        List<String> roleCodesList1 = new ArrayList<String>();
+        roleCodesList1.add("CITIZEN");
+        roleCodesList1.add("SUPERUSER");
+        ActionSearchCriteria searchCriteria1 = ActionSearchCriteria.builder().roleCodes(roleCodesList1).build();
+        List<String> roleCodesList2 = new ArrayList<String>();
+        roleCodesList2.add("CITIZEN");
+        roleCodesList2.add("TEST");
+        ActionSearchCriteria searchCriteria2 = ActionSearchCriteria.builder().roleCodes(roleCodesList2).build();
 
         assertNotEquals(searchCriteria1,searchCriteria2);
         assertNotEquals(searchCriteria1.hashCode(),searchCriteria2.hashCode());

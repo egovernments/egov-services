@@ -37,25 +37,11 @@ CREATE TABLE eg_action
   CONSTRAINT eg_action_url_queryparams_context_root_key UNIQUE (url, queryparams)
 );
 
-CREATE SEQUENCE seq_eg_role;
-CREATE TABLE eg_role (
-    id serial NOT NULL primary key,
-    name character varying(32) NOT NULL,
-    description character varying(128),
-    createddate timestamp DEFAULT CURRENT_TIMESTAMP,
-    createdby bigint,
-    lastmodifiedby bigint,
-    lastmodifieddate timestamp,
-    version bigint,
-    CONSTRAINT eg_roles_role_name_key UNIQUE (name)
-);
-
-    
 CREATE TABLE eg_roleaction
 (
-  roleid bigint NOT NULL,
+  rolecode character varying(32) NOT NULL,
   actionid bigint NOT NULL,
   tenantid character varying(50) NOT NULL,
-  CONSTRAINT eg_roleaction_ukey UNIQUE (roleid, actionid)
+  CONSTRAINT eg_roleaction_ukey UNIQUE (rolecode, actionid)
 );
 

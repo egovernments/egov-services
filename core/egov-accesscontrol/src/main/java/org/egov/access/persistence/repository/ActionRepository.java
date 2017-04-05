@@ -27,7 +27,7 @@ public class ActionRepository {
             + "a_url, a.servicecode AS a_servicecode, a.queryparams AS a_queryparams, a.parentmodule AS a_parentmodule, a.displayname AS a_displayname, a.enabled AS a_enabled, " +
             " a.createdby AS a_createdby, a.createddate AS a_createddate, a.lastmodifiedby"
             + " AS a_lastmodifiedby, a.lastmodifieddate AS a_lastmodifieddate,a.ordernumber AS a_ordernumber, a.tenantId AS a_tenantId, "
-            + "ra.actionid AS ra_action, ra.roleid AS ra_role FROM eg_action AS a JOIN eg_roleaction AS ra ON a.id = ra.actionid";
+            + "ra.actionid AS ra_action, ra.rolecode AS ra_rolecode FROM eg_action AS a JOIN eg_roleaction AS ra ON a.id = ra.actionid";
 
     public List<Action> findForCriteria(final ActionSearchCriteria actionSearchCriteria) throws ParseException {
         final String queryStr = getQuery(actionSearchCriteria);
@@ -48,22 +48,22 @@ public class ActionRepository {
     private void addWhereClause(final StringBuilder selectQuery,
                                   final ActionSearchCriteria actionSearchCriteria) {
 
-        if (actionSearchCriteria != null && actionSearchCriteria.getRoleIds() == null && actionSearchCriteria.getRoleIds().isEmpty())
+        if (actionSearchCriteria != null && actionSearchCriteria.getRoleCodes() == null && actionSearchCriteria.getRoleCodes().isEmpty())
             return;
 
         selectQuery.append(" WHERE");
 
-        if (actionSearchCriteria.getRoleIds() != null) {
-            selectQuery.append(" ra.roleid in "+getIdQuery(actionSearchCriteria.getRoleIds()));
+        if (actionSearchCriteria.getRoleCodes() != null) {
+            selectQuery.append(" ra.rolecode in "+getIdQuery(actionSearchCriteria.getRoleCodes()));
         }
     }
 
-    private static String getIdQuery(List<Long> idList) {
+    private static String getIdQuery(List<String> idList) {
         StringBuilder query = new StringBuilder("(");
         if (idList.size() >= 1) {
-            query.append(idList.get(0).toString());
+            query.append("'").append(idList.get(0).toString()).append("'");
             for (int i = 1; i < idList.size(); i++) {
-                query.append(", " + idList.get(i));
+                query.append(", ").append("'").append(idList.get(i)).append("'");
             }
         }
         return query.append(")").toString();

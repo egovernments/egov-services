@@ -12,6 +12,6 @@ import java.util.List;
 @Getter
 @EqualsAndHashCode
 public class ActionSearchCriteria {
-    private List<Long> roleIds;
+    private List<String> roleCodes;
     private List<Long> featureIds;
 }

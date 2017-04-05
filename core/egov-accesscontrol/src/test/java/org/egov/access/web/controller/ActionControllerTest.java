@@ -34,10 +34,10 @@ public class ActionControllerTest {
 
     @Test
     public void testShouldGetActionsForUserRoles() throws Exception {
-        List<Long> roleIdsList = new ArrayList<Long>();
-        roleIdsList.add(4L);
-        roleIdsList.add(50L);
-        ActionSearchCriteria actionSearchCriteria = ActionSearchCriteria.builder().roleIds(roleIdsList).build();
+        List<String> roleCodesList = new ArrayList<String>();
+        roleCodesList.add("CITIZEN");
+        roleCodesList.add("SUPERUSER");
+        ActionSearchCriteria actionSearchCriteria = ActionSearchCriteria.builder().roleCodes(roleCodesList).build();
 
         final List<Action> actions = getActions();
         when(actionService.getActions(actionSearchCriteria)).thenReturn(actions);

@@ -3,6 +3,7 @@ package org.egov.access.web.controller;
 import org.egov.access.domain.model.Action;
 import org.egov.access.domain.service.ActionService;
 import org.egov.access.web.contact.*;
+import org.egov.common.contract.request.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

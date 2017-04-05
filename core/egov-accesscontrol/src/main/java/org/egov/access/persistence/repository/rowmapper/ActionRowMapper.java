@@ -31,7 +31,7 @@ public class ActionRowMapper implements RowMapper<Action> {
 
         final RoleAction roleAction = new RoleAction();
         roleAction.setAction(rs.getLong("ra_action"));
-        roleAction.setRole(rs.getLong("ra_role"));
+        roleAction.setRoleCode(rs.getString("ra_rolecode"));
         return action;
 
     }

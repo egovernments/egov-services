@@ -1,37 +1,30 @@
 package org.egov.pgr.read.domain.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-
-import org.egov.pgr.common.model.AuthenticatedUser;
-import org.egov.pgr.common.model.Complainant;
-import org.egov.pgr.read.domain.model.Complaint;
-import org.egov.pgr.read.domain.model.ComplaintLocation;
-import org.egov.pgr.read.domain.model.ComplaintSearchCriteria;
-import org.egov.pgr.read.domain.model.ComplaintType;
-import org.egov.pgr.read.domain.model.Coordinates;
-import org.egov.pgr.common.model.UserType;
-import org.egov.pgr.common.contract.RequestInfo;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.pgr.common.contract.ServiceRequest;
 import org.egov.pgr.common.contract.SevaRequest;
+import org.egov.pgr.common.model.AuthenticatedUser;
+import org.egov.pgr.common.model.Complainant;
+import org.egov.pgr.common.model.UserType;
+import org.egov.pgr.common.repository.UserRepository;
+import org.egov.pgr.read.domain.model.*;
 import org.egov.pgr.read.persistence.repository.ComplaintJpaRepository;
 import org.egov.pgr.read.persistence.repository.ComplaintRepository;
-import org.egov.pgr.common.repository.UserRepository;
 import org.egov.pgr.read.web.contract.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ComplaintServiceTest {

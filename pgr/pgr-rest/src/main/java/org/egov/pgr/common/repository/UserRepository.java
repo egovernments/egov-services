@@ -1,7 +1,7 @@
 package org.egov.pgr.common.repository;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.pgr.common.contract.GetUserByIdResponse;
-import org.egov.pgr.common.contract.RequestInfo;
 import org.egov.pgr.common.model.AuthenticatedUser;
 import org.egov.pgr.read.web.contract.*;
 import org.springframework.web.client.RestTemplate;

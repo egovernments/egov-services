@@ -5,7 +5,7 @@ import org.egov.pgr.common.contract.ServiceRequest;
 import org.egov.pgr.common.repository.UserRepository;
 import org.egov.pgr.read.domain.model.Complaint;
 import org.egov.pgr.read.domain.service.ComplaintService;
-import org.egov.pgr.read.web.contract.RequestInfo;
+import org.egov.pgr.read.web.contract.RequestInfoBody;
 import org.egov.pgr.read.web.contract.ResponseInfo;
 import org.egov.pgr.read.web.contract.ServiceResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,8 @@ public class SearchCitizenComplaintsController {
 
 	@PostMapping
 	@ResponseBody
-	public ServiceResponse getComplaints(@RequestParam(value = "userId", required = true) Long userId, @RequestBody RequestInfo requestInfo) {
+	public ServiceResponse getComplaints(@RequestParam(value = "userId") Long userId,
+                                         @RequestBody RequestInfoBody requestInfo) {
 		List<Complaint> complaints = new ArrayList<>();
 		GetUserByIdResponse user = userRepository.findUserById(userId);
 		if (!user.getUser().isEmpty() && user.getUser().get(0).getType().equalsIgnoreCase("CITIZEN")) {

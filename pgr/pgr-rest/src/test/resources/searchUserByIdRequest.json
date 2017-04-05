@@ -1,15 +1,16 @@
 {
     "requestInfo": {
-        "api_id": null,
+        "apiId": null,
         "ver": null,
         "ts": null,
         "action": null,
         "did": null,
         "key": null,
-        "msg_id": null,
-        "requester_id": null,
-        "auth_token": null,
-        "correlationId": null
+        "msgId": null,
+        "requesterId": null,
+        "authToken": null,
+        "correlationId": null,
+        "userInfo": null
     },
     "id": [
         67

@@ -16,9 +16,7 @@ public class SevaRequest {
     private static final String LOCATION_NAME = "location_name";
     private static final String CHILD_LOCATION_ID = "child_location_id";
     private final static String SERVICE_REQUEST = "ServiceRequest";
-    private final static String REQUEST_INFO = "RequestInfo";
     private static final String VALUES = "values";
-    private static final String MSG_ID = "msg_id";
     private final ServiceRequest serviceRequestObject;
 
     private HashMap<String, Object> sevaRequestMap;
@@ -89,12 +87,6 @@ public class SevaRequest {
 
     public boolean isLocationPresent() {
         return getValues() != null && isNotEmpty(getValues().get(LOCATION_ID));
-    }
-
-    @SuppressWarnings("unchecked")
-    public String getCorrelationId() {
-        final HashMap<String, Object> requestInfo = (HashMap<String, Object>) sevaRequestMap.get(REQUEST_INFO);
-        return String.valueOf(requestInfo.get(MSG_ID));
     }
 
     public HashMap<String, Object> getRequestMap() {

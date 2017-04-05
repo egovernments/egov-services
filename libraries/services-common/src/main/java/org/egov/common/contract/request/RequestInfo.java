@@ -33,5 +33,5 @@ public class RequestInfo {
 
     private String correlationId;
 
-    private UserInfo userInfo;
+    private User user;
 }

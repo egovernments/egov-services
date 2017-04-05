@@ -222,3 +222,22 @@ function getNameById(object,id,property="") {
 }
 
 // commonApiPost("asset","assetCategories","",{boundaryTypeName:"LOCALITY",hierarchyTypeName:"LOCATION"})
+
+function getDesignations(status, cb) {
+    $.ajax({
+            url: baseUrl + "/egov-common-workflows/designations/_search?businessKey=Agreement&approvalDepartmentName=&departmentRule=&currentStatus=" + (status || "") + "&additionalRule=&pendingAction=&designation=&amountRule=",
+            type: 'POST',
+            dataType: 'json',
+            data:JSON.stringify({RequestInfo: requestInfo}),
+            headers: {
+                    'auth-token': authToken
+            },
+            contentType: 'application/json',
+            success: function (result) {
+                cb(result);
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+}

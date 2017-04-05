@@ -868,13 +868,19 @@ function fillValueToObject(currentState) {
   }
   $(`#approverDesignation`).html(`<option value=''>Select</option>`)
 
-  for (var variable in designation) {
+  /*for (var variable in designation) {
 
 
       $(`#approverDesignation`).append(`<option value='${designation[variable]["id"]}'>${designation[variable]["name"]}</option>`)
 
 
-  }
+  }*/
+
+  getDesignations(null, function(designations) {
+      for (var variable in designations) {
+        $(`#approverDesignation`).append(`<option value='${designations[variable]["id"]}'>${designations[variable]["name"]}</option>`);
+      }
+  });
 
   // var locality=commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"LOCALITY",hierarchyTypeName:"LOCATION"}).responseJSON["Boundary"] || [],
   // var electionwards=commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"WARD",hierarchyTypeName:"ADMINISTRATION"}).responseJSON["Boundary"] || [],

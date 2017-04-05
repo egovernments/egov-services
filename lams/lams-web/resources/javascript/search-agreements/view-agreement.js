@@ -204,9 +204,15 @@ $(document).ready(function() {
     for (var variable in department) {
       $(`#approver_department`).append(`<option value='${department[variable]["id"]}'>${department[variable]["name"]}</option>`)
     }
-    for (var variable in designation) {
+   /* for (var variable in designation) {
       $(`#approver_designation`).append(`<option value='${designation[variable]["id"]}'>${designation[variable]["name"]}</option>`)
-    }
+    }*/
+
+    getDesignations(null, function(designations) {
+      for (var variable in designations) {
+        $(`#approver_designation`).append(`<option value='${designations[variable]["id"]}'>${designations[variable]["name"]}</option>`)
+      }
+    });
 
     if (decodeURIComponent(getUrlVars()["type"]) == "land") {
 

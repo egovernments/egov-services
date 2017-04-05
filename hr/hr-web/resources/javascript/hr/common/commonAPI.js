@@ -6,10 +6,15 @@ var tenantId = "ap.kurnool";
 
 
 var authToken = localStorage.getItem("auth-token");
+var now=new Date();
+var year=now.getFullYear();
+var month=now.getMonth();
+var date=now.getDate();
 
+console.log(year+"-"+month+"-"+date);
 //request info from cookies
 var requestInfo = {
-    "apiId": "org.egov.pgr",
+    "apiId": "eis",
     "ver": "1.0",
     "ts": "2015-04-12",
     "action": "asd",

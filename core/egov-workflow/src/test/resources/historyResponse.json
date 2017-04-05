@@ -1,44 +1,41 @@
 [
-  {
-   "RequestInfo":{
-    "tenant_id":"ap.public",
-    "api_id":"",
-    "ver":"1",
-    "msg_id" : ""
-  },
-  "type":null,
-  "last_updated":null,
-  "owner":"Owner1",
-  "assignee":null,
-  "module":null,
-  "state":null,
-  "status":"Created",
-  "url":null,
-  "sender_name":"sender1",
-  "comments":"Got workflow history 1",
-  "extraInfo":null,
-  "natureOfTask":null,
-  "values":null
-  },
-
-  {
-   "RequestInfo":{
-    "tenant_id":"ap.public",
-    "api_id":"",
-    "ver":"1",
-     "msg_id" : ""
-  },
-  "type":null,
-  "last_updated":null,
-  "owner":"Owner2",
-  "assignee":null,
-  "module":null,
-  "state":null,
-  "status":"Closed",
-  "url":null,
-  "sender_name":"sender2",
-  "comments":"Got workflow history 2",
-  "natureOfTask":null,
-  "values":null
-  }
- ]
+    {
+        "RequestInfo": {
+            "apiId": "",
+            "ver": "1",
+            "msgId": ""
+        },
+        "type": null,
+        "last_updated": null,
+        "owner": "Owner1",
+        "assignee": null,
+        "module": null,
+        "state": null,
+        "status": "Created",
+        "url": null,
+        "sender_name": "sender1",
+        "comments": "Got workflow history 1",
+        "extraInfo": null,
+        "natureOfTask": null,
+        "values": null
+    },
+    {
+        "RequestInfo": {
+            "apiId": "",
+            "ver": "1",
+            "msgId": ""
+        },
+        "type": null,
+        "last_updated": null,
+        "owner": "Owner2",
+        "assignee": null,
+        "module": null,
+        "state": null,
+        "status": "Closed",
+        "url": null,
+        "sender_name": "sender2",
+        "comments": "Got workflow history 2",
+        "natureOfTask": null,
+        "values": null
+    }
+]

@@ -7,7 +7,7 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
-import org.egov.workflow.web.contract.RequestInfo;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.workflow.web.contract.User;
 import org.egov.workflow.web.contract.UserResponse;
 import org.junit.Before;

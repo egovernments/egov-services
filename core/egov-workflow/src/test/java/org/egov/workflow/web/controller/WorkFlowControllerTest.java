@@ -1,12 +1,11 @@
 package org.egov.workflow.web.controller;
 
-import org.apache.commons.io.IOUtils;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.workflow.Resources;
 import org.egov.workflow.domain.service.Workflow;
 import org.egov.workflow.persistence.entity.Task;
 import org.egov.workflow.web.contract.Attribute;
 import org.egov.workflow.web.contract.ProcessInstance;
-import org.egov.workflow.web.contract.RequestInfo;
 import org.egov.workflow.web.contract.Value;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,7 +17,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -184,6 +182,7 @@ public class WorkFlowControllerTest {
             .owner("Owner1")
             .sender("sender1")
             .status("Created")
+            .tenantId("ap.public")
             .comments("Got workflow history 1")
             // .createdDate(new Date("2016-08-31T10:46:22.083"))
             .build();
@@ -192,6 +191,7 @@ public class WorkFlowControllerTest {
             .owner("Owner2")
             .sender("sender2")
             .status("Closed")
+            .tenantId("ap.public")
             .comments("Got workflow history 2")
             // .createdDate(new Date("2016-08-31T10:46:22.083"))
             .build();
@@ -199,7 +199,7 @@ public class WorkFlowControllerTest {
     }
 
     private RequestInfo getRequestInfo() {
-        return RequestInfo.builder().tenantId("ap.public").ver("1").apiId("").msgId("").build();
+        return RequestInfo.builder().ver("1").apiId("").msgId("").build();
     }
 
     @Test
@@ -247,7 +247,6 @@ public class WorkFlowControllerTest {
 
     private Task getTask() {
         final RequestInfo requestInfo = RequestInfo.builder()
-            .tenantId("tenantId")
             .ver("1")
             .apiId("apiId")
             .msgId("")
@@ -257,6 +256,7 @@ public class WorkFlowControllerTest {
             .assignee("2")
             .sender("narasappa")
             .status("PROCESSING")
+            .tenantId("tenantId")
             .requestInfo(requestInfo)
             .build();
     }

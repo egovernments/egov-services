@@ -85,18 +85,19 @@ public class SevaRequest {
         RequestInfo requestInfo = getRequestInfo();
         HashMap<String, String> values = getValues();
         String complaintType = (String) serviceRequest.get(SERVICE_CODE);
-		String crn = (String) serviceRequest.get(SERVICE_REQUEST_ID);
+        String crn = (String) serviceRequest.get(SERVICE_REQUEST_ID);
         Map<String, Attribute> valuesToSet = getWorkFlowRequestValues(values, complaintType);
         valuesToSet.put(COMPLAINT_CRN, Attribute.asStringAttr(COMPLAINT_CRN, crn));
         WorkflowRequest.WorkflowRequestBuilder workflowRequestBuilder = WorkflowRequest.builder()
-                .assignee(getCurrentAssignee(values))
-                .action(WorkflowRequest.Action.forComplaintStatus(values.get(STATUS)))
-                .requestInfo(requestInfo)
-                .values(valuesToSet)
-                .status(values.get(STATUS))
-                .type(WORKFLOW_TYPE)
-                .businessKey(WORKFLOW_TYPE)
-                .crn(crn);
+            .assignee(getCurrentAssignee(values))
+            .action(WorkflowRequest.Action.forComplaintStatus(values.get(STATUS)))
+            .requestInfo(requestInfo)
+            .values(valuesToSet)
+            .status(values.get(STATUS))
+            .type(WORKFLOW_TYPE)
+            .businessKey(WORKFLOW_TYPE)
+            .tenantId(getTenantId())
+            .crn(crn);
 
         return workflowRequestBuilder.build();
     }
@@ -131,7 +132,8 @@ public class SevaRequest {
         valuesToSet.put(STATE_DETAILS, Attribute.asStringAttr(STATE_DETAILS, StringUtils.EMPTY));
         valuesToSet.put(USER_ROLE, Attribute.asStringAttr(USER_ROLE, getUserType()));
         valuesToSet.put(VALUES_STATE_ID, Attribute.asStringAttr(VALUES_STATE_ID, getCurrentStateId(values)));
-        valuesToSet.put(VALUES_APPROVAL_COMMENT, Attribute.asStringAttr(VALUES_APPROVAL_COMMENT, values.get(VALUES_APPROVAL_COMMENT)));
+        valuesToSet.put(VALUES_APPROVAL_COMMENT, Attribute.asStringAttr(VALUES_APPROVAL_COMMENT, values.get
+            (VALUES_APPROVAL_COMMENT)));
         valuesToSet.put(DEPARTMENT_ID, Attribute.asStringAttr(DEPARTMENT_ID, values.get(DEPARTMENT_ID)));
         return valuesToSet;
     }
@@ -150,7 +152,9 @@ public class SevaRequest {
         return assignee != null ? Long.valueOf(String.valueOf(assignee)) : null;
     }
 
-    public boolean isCreate(){ return this.getRequestInfo().getAction().equals("POST");}
+    public boolean isCreate() {
+        return this.getRequestInfo().getAction().equals("POST");
+    }
 
     public void setDesignation(String designationId) {
         getValues().put(VALUES_DESIGNATION_ID, designationId);

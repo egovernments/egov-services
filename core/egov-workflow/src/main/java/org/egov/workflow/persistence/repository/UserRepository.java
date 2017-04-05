@@ -2,7 +2,7 @@ package org.egov.workflow.persistence.repository;
 
 import java.util.Collections;
 
-import org.egov.workflow.web.contract.RequestInfo;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.workflow.web.contract.UserRequest;
 import org.egov.workflow.web.contract.UserResponse;
 import org.springframework.beans.factory.annotation.Value;

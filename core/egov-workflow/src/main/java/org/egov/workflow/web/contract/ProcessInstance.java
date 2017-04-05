@@ -1,15 +1,15 @@
 package org.egov.workflow.web.contract;
 
-import java.util.*;
-
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.egov.common.contract.request.RequestInfo;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.*;
 
 @Getter
 @AllArgsConstructor
@@ -57,6 +57,8 @@ public class ProcessInstance {
 
     @JsonProperty("values")
     private Map<String, Attribute> values;
+
+    private String tenantId;
 
     @JsonIgnore
     public String getComments(){

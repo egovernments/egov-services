@@ -9,8 +9,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.workflow.web.contract.Attribute;
-import org.egov.workflow.web.contract.RequestInfo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -76,7 +76,8 @@ public class Task {
 
     @JsonProperty("values")
     private Map<String, Attribute> attributes = new HashMap<String, Attribute>();
-    
+
+    private String tenantId;
 
     //To be used to fetch single value attributes
     public String getValueForKey(String key){

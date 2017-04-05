@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.workflow.persistence.entity.State;
 import org.egov.workflow.persistence.entity.StateHistory;
 import org.egov.workflow.persistence.entity.Task;
@@ -24,8 +26,6 @@ import org.egov.workflow.web.contract.Employee;
 import org.egov.workflow.web.contract.EmployeeRes;
 import org.egov.workflow.web.contract.PositionResponse;
 import org.egov.workflow.web.contract.ProcessInstance;
-import org.egov.workflow.web.contract.RequestInfo;
-import org.egov.workflow.web.contract.ResponseInfo;
 import org.egov.workflow.web.contract.Role;
 import org.egov.workflow.web.contract.User;
 import org.egov.workflow.web.contract.UserResponse;
@@ -96,7 +96,7 @@ public class PgrWorkflowTest {
 	private ProcessInstance getProcessInstance() {
 		final Map<String, Attribute> valuesMap = new HashMap<String, Attribute>();
 		final RequestInfo requestInfo = new RequestInfo("apiId", "ver", new Date(), "start", "did", "key", "msgId", "1",
-				null, "tenantId");
+				null, null, null);
 		final Value complaintType = new Value(COMPLAINT_TYPE_CODE, "C001");
 		final Value boundary = new Value(BOUNDARY_ID, "1");
 		final List<Value> value1 = Collections.singletonList(complaintType);
@@ -215,7 +215,8 @@ public class PgrWorkflowTest {
     
     private Task getTask() {
         final Map<String, Attribute> valuesMap = new HashMap<String, Attribute>();
-        final RequestInfo requestInfo = new RequestInfo("apiId", "ver", new Date(), "start", "did", "key", "msgId", "1", null, "tenantId");
+        final RequestInfo requestInfo =
+            new RequestInfo("apiId", "ver", new Date(), "start", "did", "key", "msgId", "1", null, null, null);
         final Value stateId = new Value(STATE_ID, "2");
         final Value stateDetails = new Value(STATE_DETAILS, "1");
         final Value comments = new Value("approvalComments", "1");

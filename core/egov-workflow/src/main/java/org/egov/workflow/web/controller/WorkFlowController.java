@@ -24,13 +24,13 @@ public class WorkFlowController {
 
     @PostMapping(value = "/create")
     public ProcessInstance startWorkflow(@RequestBody final ProcessInstance processInstance) {
-        String tenantId = processInstance.getRequestInfo().getTenantId();
+        String tenantId = processInstance.getTenantId();
         return workflow.start(tenantId, processInstance);
     }
 
     @PostMapping(value = "/close")
     public ProcessInstance endWorkflow(@RequestBody final ProcessInstance processInstance) {
-        String tenantId = processInstance.getRequestInfo().getTenantId();
+        String tenantId = processInstance.getTenantId();
         return workflow.end(tenantId, processInstance);
     }
 
@@ -41,7 +41,7 @@ public class WorkFlowController {
     
     @PostMapping(value = "/task")
     public Task createTask(@RequestBody final Task task) {
-        String tenantId = task.getRequestInfo().getTenantId();
+        String tenantId = task.getTenantId();
         return workflow.update(tenantId, task);
     }
 

@@ -1,56 +1,56 @@
 {
-  "RequestInfo":{
-    "tenant_id":"tenantId",
-    "api_id":"",
-    "ver":"1"
-  },
-  "type":"Complaint",
-  "description":"Workflow Terminated",
-  "status":"COMPLETED",
-  "action":"END",
-  "businessKey":"765",
-  "assignee":"2",
-  "group":"",
-  "senderName":"garry",
-  "values":{
-    "approvalComments":{
-      "varible":true,
-      "code":"",
-      "datatype":"String",
-      "required":true,
-      "datatypeDescription": "",
-      "values":[
-        {
-          "key":"approvalComments",
-          "name":"complaint closed"
-        }
-      ]
+    "RequestInfo": {
+        "api_id": "",
+        "ver": "1"
     },
-    "stateId": {
-      "variable": true,
-      "code": "stateId",
-      "datatype": "String",
-      "required": true,
-      "datatypeDescription": "This is the id of state",
-      "values": [
-        {
-          "key": "stateId",
-          "name": "119"
+    "type": "Complaint",
+    "description": "Workflow Terminated",
+    "status": "COMPLETED",
+    "action": "END",
+    "businessKey": "765",
+    "assignee": "2",
+    "tenantId": "tenantId",
+    "group": "",
+    "senderName": "garry",
+    "values": {
+        "approvalComments": {
+            "varible": true,
+            "code": "",
+            "datatype": "String",
+            "required": true,
+            "datatypeDescription": "",
+            "values": [
+                {
+                    "key": "approvalComments",
+                    "name": "complaint closed"
+                }
+            ]
+        },
+        "stateId": {
+            "variable": true,
+            "code": "stateId",
+            "datatype": "String",
+            "required": true,
+            "datatypeDescription": "This is the id of state",
+            "values": [
+                {
+                    "key": "stateId",
+                    "name": "119"
+                }
+            ]
+        },
+        "userRole": {
+            "variable": true,
+            "code": "",
+            "datatype": "String",
+            "required": true,
+            "datatypeDescription": "",
+            "values": [
+                {
+                    "key": "userRole",
+                    "name": "EMPLOYEE"
+                }
+            ]
         }
-      ]
-    },
-    "userRole": {
-      "variable": true,
-      "code": "",
-      "datatype": "String",
-      "required": true,
-      "datatypeDescription": "",
-      "values": [
-        {
-          "key": "userRole",
-          "name": "EMPLOYEE"
-        }
-      ]
     }
-  }
 }

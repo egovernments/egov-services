@@ -82,6 +82,8 @@ public class WorkflowRequest {
     @JsonProperty("service_request_id")
     private String crn;
 
+    private String tenantId;
+
     public String getValueForKey(String key) {
         if (Objects.nonNull(values.get(key)))
             return values.get(key).getValues().get(0).getName();

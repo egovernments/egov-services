@@ -148,21 +148,39 @@ class CreateAsset extends React.Component {
 
 
   handleChangeTwoLevel(e, pName, name) {
-      let text;
+      let text, type, codeNo;
+
       if (pName == "assetCategory") {
+
           let el = document.getElementById('assetCategory');
           text = el.options[el.selectedIndex].innerHTML;
           this.setState({
               customFields: this.getCategory(e.target.value),
               properties: {}
           })
-          e.target.value = parseInt(e.target.value)
+          e.target.value = parseInt(e.target.value);
+					for(var i=0;i< this.state.assetCategories.length; i++){
+
+						if (e.target.value==this.state.assetCategories[i].id) {
+								type = this.state.assetCategories[i].assetCategoryType;
+								codeNo = this.state.assetCategories[i].code;
+								break;
+						}
+					}
+
       }
 
       let innerJSON = {
             ...this.state.assetSet[pName],
             [name]: e.target.value
       };
+
+			if(type) {
+				innerJSON["assetCategoryType"] = type;
+			}
+			if(codeNo) {
+				innerJSON["code"] = codeNo;
+			}
 
       if(text) {
         innerJSON["name"] = text;
@@ -338,7 +356,7 @@ class CreateAsset extends React.Component {
                   <h3 className="categoryType">Category Details </h3>
                   <div className="form-section-inner">
                       <div className="row">
-                          <div className="col-sm-6">
+                          {/*<div className="col-sm-6">
                             <div className="row">
                               <div className="col-sm-6 label-text">
                                 <label for="name">Name <span>* </span></label>
@@ -362,7 +380,7 @@ class CreateAsset extends React.Component {
                                 </select>
                               </div>
                             </div>
-                          </div>
+                          </div>*/}
                           {showFields()}
                       </div>
                   </div>
@@ -525,8 +543,38 @@ class CreateAsset extends React.Component {
                         </div>
                     </div>
                   </div>
-              </div>
+
+							<div className="row">
+								<div className="col-sm-6">
+									<div className="row">
+										<div className="col-sm-6 label-text">
+												<label for="name">Asset Name <span>* </span></label>
+											</div>
+											<div className="col-sm-6">
+												<input id="name" name="name" value={name} type="text"
+													onChange={(e)=>{handleChange(e, "name")}} required disabled={readonly}/>
+											</div>
+										</div>
+									</div>
+									<div className="col-sm-6">
+										<div className="row">
+											<div className="col-sm-6 label-text">
+												<label for="modeOfAcquisition">Mode Of Acquisition <span>* </span></label>
+											</div>
+											<div className="col-sm-6">
+											<div className="styled-select">
+												<select id="modeOfAcquisition" name="modeOfAcquisition" required value={modeOfAcquisition} onChange={(e)=>
+														{handleChange(e,"modeOfAcquisition") }} disabled={readonly}>
+														<option value="">Select Mode Of Acquisition</option>
+														{renderOption(acquisitionList)}
+												</select>
+											</div>
+										</div>
+										</div>
+									</div>
+								</div>
             </div>
+						  </div>
             <div className="form-section" id="allotteeDetailsBlock">
               <h3 className="categoryType">Location Details </h3>
               <div className="form-section-inner">
@@ -633,7 +681,7 @@ class CreateAsset extends React.Component {
                     </div>
                   </div>
                   <div className="row">
-                    {/*<div className="col-sm-6">
+                    <div className="col-sm-6">
                         <div className="row">
                           <div className="col-sm-6 label-text">
                               <label for="zone"> Zone Number  </label>
@@ -649,7 +697,7 @@ class CreateAsset extends React.Component {
                               </div>
                           </div>
                         </div>
-                    </div>*/}
+                    </div>
                     <div className="col-sm-6">
                         <div className="row">
                           <div className="col-sm-6 label-text">

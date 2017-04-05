@@ -1,11 +1,10 @@
 {
   "ResponseInfo": {
-    "api_id": null,
+    "apiId": null,
     "ver": null,
     "ts": null,
-    "key": null,
-    "tenantId": null,
     "resMsgId": null,
+    "msgId": null,
     "status": "200"
   },
   "BoundaryType": [

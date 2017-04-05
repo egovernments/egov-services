@@ -1,16 +1,6 @@
 package org.egov.boundary.web.controller;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.io.IOException;
-
 import org.apache.commons.io.IOUtils;
-import org.egov.boundary.domain.model.RequestContext;
 import org.egov.boundary.domain.service.CityService;
 import org.egov.boundary.web.contract.CityRequest;
 import org.junit.Test;
@@ -21,6 +11,14 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.io.IOException;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(CityController.class)
@@ -44,7 +42,6 @@ public class CityControllerTest {
 				.content(getFileContents("cityRequest.json")).contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(getFileContents("cityResponse.json")));
-		assertEquals("someId", RequestContext.getId());
 	}
 
 	@Test

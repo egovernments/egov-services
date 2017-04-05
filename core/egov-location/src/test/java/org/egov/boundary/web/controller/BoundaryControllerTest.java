@@ -1,17 +1,6 @@
 package org.egov.boundary.web.controller;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.io.IOException;
-import java.util.Collections;
-
 import org.apache.commons.io.IOUtils;
-import org.egov.boundary.domain.model.RequestContext;
 import org.egov.boundary.domain.service.BoundaryService;
 import org.egov.boundary.domain.service.CrossHierarchyService;
 import org.egov.boundary.persistence.entity.Boundary;
@@ -23,6 +12,15 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.io.IOException;
+import java.util.Collections;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(BoundaryController.class)
@@ -42,12 +40,11 @@ public class BoundaryControllerTest {
 		final Boundary expectedBoundary = Boundary.builder().id(1L).name("Bank Road").build();
 		when(crossHierarchyService.getActiveChildBoundariesByBoundaryId(any(Long.class)))
 				.thenReturn(Collections.singletonList(expectedBoundary));
-		mockMvc.perform(post("/boundarys/childLocationsByBoundaryId").param("boundaryId", "1")
-				.header("X-CORRELATION-ID", "someId")).andExpect(status().isOk())
+		mockMvc.perform(post("/boundarys/childLocationsByBoundaryId")
+				.param("boundaryId", "1"))
+				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(getFileContents("boundaryResponse.json")));
-
-		assertEquals("someId", RequestContext.getId());
 	}
 
 	@Test
@@ -68,8 +65,6 @@ public class BoundaryControllerTest {
 						.param("hierarchyTypeName", "Admin").header("X-CORRELATION-ID", "someId"))
 				.andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(getFileContents("boundaryResponse.json")));
-
-		assertEquals("someId", RequestContext.getId());
 	}
 
 	@Test
@@ -86,12 +81,12 @@ public class BoundaryControllerTest {
 		final Boundary expectedBoundary = Boundary.builder().id(1L).name("Bank Road").build();
 		when(boundaryService.getAllBoundariesByBoundaryTypeIdAndTenantId(any(Long.class), any(String.class)))
 				.thenReturn(Collections.singletonList(expectedBoundary));
-		mockMvc.perform(post("/boundarys/getByBoundaryType").param("boundaryTypeId", "7").param("tenantId", "tenantId")
-				.header("X-CORRELATION-ID", "someId")).andExpect(status().isOk())
+		mockMvc.perform(post("/boundarys/getByBoundaryType")
+				.param("boundaryTypeId", "7")
+				.param("tenantId", "tenantId"))
+				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(getFileContents("boundaryResponse.json")));
-
-		assertEquals("someId", RequestContext.getId());
 	}
 
 	@Test

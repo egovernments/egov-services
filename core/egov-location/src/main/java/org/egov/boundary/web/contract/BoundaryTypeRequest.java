@@ -6,6 +6,7 @@ import org.egov.boundary.persistence.entity.BoundaryType;
 import org.egov.boundary.persistence.entity.HierarchyType;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.egov.common.contract.request.RequestInfo;
 
 
 public class BoundaryTypeRequest {

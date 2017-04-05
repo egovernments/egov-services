@@ -1,34 +1,23 @@
 package org.egov.boundary.web.controller;
 
-import java.net.URI;
-import java.util.List;
-
-import javax.validation.Valid;
-
 import org.egov.boundary.domain.service.HierarchyTypeService;
 import org.egov.boundary.persistence.entity.HierarchyType;
-import org.egov.boundary.web.contract.Error;
-import org.egov.boundary.web.contract.ErrorResponse;
 import org.egov.boundary.web.contract.HierarchyTypeRequest;
 import org.egov.boundary.web.contract.HierarchyTypeResponse;
-import org.egov.boundary.web.contract.RequestInfo;
-import org.egov.boundary.web.contract.ResponseInfo;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.Error;
+import org.egov.common.contract.response.ErrorField;
+import org.egov.common.contract.response.ErrorResponse;
+import org.egov.common.contract.response.ResponseInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/hierarchytypes")
@@ -53,7 +42,7 @@ public class HierarchyTypeController {
 
 		ResponseInfo responseInfo = new ResponseInfo();
 		responseInfo.setStatus(HttpStatus.CREATED.toString());
-		responseInfo.setApi_id(requestInfo.getApi_id());
+		responseInfo.setApiId(requestInfo.getApiId());
 		hierarchyTypeResponse.setResponseInfo(responseInfo);
 		return new ResponseEntity<HierarchyTypeResponse>(hierarchyTypeResponse, HttpStatus.CREATED);
 	}
@@ -79,9 +68,9 @@ public class HierarchyTypeController {
 
 		ResponseInfo responseInfo = new ResponseInfo();
 		responseInfo.setStatus(HttpStatus.CREATED.toString());
-		responseInfo.setApi_id(requestInfo.getApi_id());
+		responseInfo.setApiId(requestInfo.getApiId());
 		hierarchyTypeResponse.setResponseInfo(responseInfo);
-		return new ResponseEntity<HierarchyTypeResponse>(hierarchyTypeResponse, HttpStatus.CREATED);
+		return new ResponseEntity<>(hierarchyTypeResponse, HttpStatus.CREATED);
 	}
 
 	@GetMapping
@@ -93,9 +82,8 @@ public class HierarchyTypeController {
 		hierarchyTypeResponse.getHierarchyTypes().addAll(allHierarchyTypes);
 		ResponseInfo responseInfo = new ResponseInfo();
 		responseInfo.setStatus(HttpStatus.CREATED.toString());
-		// responseInfo.setApi_id(body.getRequestInfo().getApi_id());
 		hierarchyTypeResponse.setResponseInfo(responseInfo);
-		return new ResponseEntity<HierarchyTypeResponse>(hierarchyTypeResponse, HttpStatus.OK);
+		return new ResponseEntity<>(hierarchyTypeResponse, HttpStatus.OK);
 	}
 
 	private ErrorResponse populateErrors(BindingResult errors) {
@@ -103,15 +91,14 @@ public class HierarchyTypeController {
 
 		ResponseInfo responseInfo = new ResponseInfo();
 		responseInfo.setStatus(HttpStatus.BAD_REQUEST.toString());
-		responseInfo.setApi_id("");
+		responseInfo.setApiId("");
 		errRes.setResponseInfo(responseInfo);
 		Error error = new Error();
 		error.setCode(1);
 		error.setDescription("Error while binding request");
 		if (errors.hasFieldErrors()) {
 			for (FieldError errs : errors.getFieldErrors()) {
-				error.getFilelds().add(errs.getField());
-				error.getFilelds().add(errs.getRejectedValue());
+				error.getFields().add(new ErrorField(errs.getCode(), errs.getDefaultMessage(), errs.getObjectName()));
 			}
 		}
 		errRes.setError(error);

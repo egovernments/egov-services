@@ -6,6 +6,7 @@ import java.util.List;
 import org.egov.boundary.persistence.entity.CrossHierarchy;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.egov.common.contract.response.ResponseInfo;
 
 public class CrossHierarchyResponse {
 	

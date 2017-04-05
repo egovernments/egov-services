@@ -11,7 +11,7 @@ import org.egov.boundary.domain.service.CityService;
 import org.egov.boundary.web.contract.City;
 import org.egov.boundary.web.contract.CityRequest;
 import org.egov.boundary.web.contract.CityResponse;
-import org.egov.boundary.web.contract.ResponseInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
@@ -77,9 +77,9 @@ public class CityController {
 			responseInfo.setStatus(HttpStatus.CREATED.toString());
 			cityResponse.setCity(getCity(cityRequest));
 			cityResponse.setResponseInfo(responseInfo);
-			return new ResponseEntity<CityResponse>(cityResponse, HttpStatus.OK);
+			return new ResponseEntity<>(cityResponse, HttpStatus.OK);
 		} else
-			return new ResponseEntity<CityResponse>(cityResponse, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(cityResponse, HttpStatus.BAD_REQUEST);
 	}
 
 	private City getCity(CityRequest cityRequest) {

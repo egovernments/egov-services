@@ -5,6 +5,7 @@ import javax.validation.Valid;
 import org.egov.boundary.persistence.entity.Boundary;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.egov.common.contract.request.RequestInfo;
 
 
 public class BoundaryRequest {

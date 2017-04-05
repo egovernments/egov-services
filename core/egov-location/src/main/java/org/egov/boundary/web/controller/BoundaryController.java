@@ -1,35 +1,26 @@
 package org.egov.boundary.web.controller;
 
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import javax.validation.Valid;
-
 import org.egov.boundary.domain.service.BoundaryService;
 import org.egov.boundary.domain.service.CrossHierarchyService;
 import org.egov.boundary.web.contract.Boundary;
 import org.egov.boundary.web.contract.BoundaryRequest;
 import org.egov.boundary.web.contract.BoundaryResponse;
-import org.egov.boundary.web.contract.Error;
-import org.egov.boundary.web.contract.ErrorResponse;
-import org.egov.boundary.web.contract.RequestInfo;
-import org.egov.boundary.web.contract.ResponseInfo;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.Error;
+import org.egov.common.contract.response.ErrorField;
+import org.egov.common.contract.response.ErrorResponse;
+import org.egov.common.contract.response.ResponseInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/boundarys")
@@ -56,7 +47,7 @@ public class BoundaryController {
 
 		ResponseInfo responseInfo = new ResponseInfo();
 		responseInfo.setStatus(HttpStatus.CREATED.toString());
-		responseInfo.setApi_id(requestInfo.getApi_id());
+		responseInfo.setApiId(requestInfo.getApiId());
 		boundaryResponse.setResponseInfo(responseInfo);
 		return new ResponseEntity<BoundaryResponse>(boundaryResponse, HttpStatus.CREATED);
 	}
@@ -64,7 +55,7 @@ public class BoundaryController {
 	@PutMapping(value = "/{code}")
 	@ResponseBody
 	public ResponseEntity<?> update(@RequestBody @Valid BoundaryRequest boundaryRequest, BindingResult errors,
-			@PathVariable String code) {
+									@PathVariable String code) {
 
 		if (errors.hasErrors()) {
 			ErrorResponse errRes = populateErrors(errors);
@@ -82,7 +73,7 @@ public class BoundaryController {
 
 		ResponseInfo responseInfo = new ResponseInfo();
 		responseInfo.setStatus(HttpStatus.CREATED.toString());
-		responseInfo.setApi_id(requestInfo.getApi_id());
+		responseInfo.setApiId(requestInfo.getApiId());
 		boundaryResponse.setResponseInfo(responseInfo);
 		return new ResponseEntity<BoundaryResponse>(boundaryResponse, HttpStatus.CREATED);
 	}
@@ -139,11 +130,12 @@ public class BoundaryController {
 			responseInfo.setStatus(HttpStatus.OK.toString());
 			boundaryResponse.setResponseInfo(responseInfo);
 			List<Boundary> boundaries = mapToContractBoundaryList(
-					boundaryService.getAllBoundariesByBoundaryTypeIdAndTenantId(Long.valueOf(boundaryTypeId), tenantId));
+					boundaryService.getAllBoundariesByBoundaryTypeIdAndTenantId(Long.valueOf(boundaryTypeId),
+							tenantId));
 			boundaryResponse.setBoundarys(boundaries);
 			return new ResponseEntity<BoundaryResponse>(boundaryResponse, HttpStatus.OK);
 		} else
-			return new ResponseEntity<BoundaryResponse>(boundaryResponse, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(boundaryResponse, HttpStatus.BAD_REQUEST);
 
 	}
 
@@ -190,15 +182,14 @@ public class BoundaryController {
 
 		ResponseInfo responseInfo = new ResponseInfo();
 		responseInfo.setStatus(HttpStatus.BAD_REQUEST.toString());
-		responseInfo.setApi_id("");
+		responseInfo.setApiId("");
 		errRes.setResponseInfo(responseInfo);
 		Error error = new Error();
 		error.setCode(1);
 		error.setDescription("Error while binding request");
 		if (errors.hasFieldErrors()) {
 			for (FieldError errs : errors.getFieldErrors()) {
-				error.getFilelds().add(errs.getField());
-				error.getFilelds().add(errs.getRejectedValue());
+				error.getFields().add(new ErrorField(errs.getCode(), errs.getDefaultMessage(), errs.getObjectName()));
 			}
 		}
 		errRes.setError(error);

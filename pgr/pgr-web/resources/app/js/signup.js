@@ -134,7 +134,7 @@ $(document).ready(function(){
 				success : function(response){
 					//console.log('OTP validated:', JSON.stringify(response));
 					//create user
-					var RI = new $.newRequestInfo(localStorage.getItem("auth"));
+					var RI = new $.RequestInfo(localStorage.getItem("auth"));
 					var reqObj = {};
 					reqObj['RequestInfo'] = RI.requestInfo;
 					//form serialize

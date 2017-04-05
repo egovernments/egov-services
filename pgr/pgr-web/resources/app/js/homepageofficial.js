@@ -611,7 +611,7 @@ function inboxloadmethod(){
 }
 
 function getPosition(){
-	var RI = new $.newRequestInfo(localStorage.getItem('auth'));
+	var RI = new $.RequestInfo(localStorage.getItem('auth'));
 	var obj = {};
 	obj['RequestInfo'] = RI.requestInfo;
 	$.ajax({

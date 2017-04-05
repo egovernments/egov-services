@@ -136,7 +136,7 @@ $(document).ready(function()
 	}
 	
 	$('.signout').click(function(){
-		var RI = new $.newRequestInfo(localStorage.getItem('auth'));
+		var RI = new $.RequestInfo(localStorage.getItem('auth'));
 		var obj = {};
 		obj['RequestInfo'] = RI.requestInfo;
 		$.ajax({
@@ -399,37 +399,6 @@ function clearLocalStorage(){
 }
 
 var RI = function(auth){
-	this.api_id = 'org.egov.pgr';
-    this.ver = '1.0';
-    var dat = new Date().toLocaleDateString();
-	var time = new Date().toLocaleTimeString();
-	var date = dat.split("/").join("-");
-    this.ts = date+' '+time;
-    this.action = 'POST';
-    this.did = '4354648646';
-    this.key = 'xyz';
-    this.msg_id = '654654';
-    this.requester_id = '61';
-    this.auth_token = auth;
-
-    var requestInfo={};
-
-    requestInfo['api_id']=this.api_id;
-    requestInfo['ver']=this.ver;
-    requestInfo['ts']=this.ts;
-    requestInfo['action']=this.action;
-    requestInfo['did']=this.did;
-    requestInfo['key']=this.key;
-    requestInfo['msg_id']=this.msg_id;
-    requestInfo['requester_id']=this.requester_id;
-    requestInfo['auth_token']=this.auth_token;
-
-    this.requestInfo = requestInfo;
-}
-
-$.RequestInfo = RI;
-
-var newRI = function(auth){
 	this.apiId = 'org.egov.pgr';
     this.ver = '1.0';
     var dat = new Date().toLocaleDateString();
@@ -458,7 +427,7 @@ var newRI = function(auth){
     this.requestInfo = requestInfo;
 }
 
-$.newRequestInfo = newRI;
+$.RequestInfo = RI;
 
 var headers = function(){
 	this.api_id = 'org.egov.pgr';

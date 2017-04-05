@@ -48,10 +48,7 @@
 								<img src="../resources/global/images/logo@2x.png" height="60">
 								
 								<div>
-									<span class="title2">
-									
-									Search Grievance
-									</span>
+									<span class="title2" data-translate="pgr.lbl.search.grievance"></span>
 								</div>
 							</a>
 						</div>
@@ -77,17 +74,13 @@
 					<div class="col-md-12">
 						<div class="panel panel-primary" data-collapsed="0">
 							<div class="panel-heading">
-								<div class="panel-title">
-									Search Grievance
-								</div>
+								<div class="panel-title" data-translate="pgr.lbl.search.grievance"></div>
 							</div>
 							<div class="panel-body">
 								<form id="searchComplaintForm" class="form-horizontal form-groups-bordered">
 									<div class="form-group">
 										<div class="col-md-3 col-sm-4 add-margin">
-											<input type="text" name="service_request_id" class="form-control patternvalidation " data-pattern="alphanumericwithhyphen"
-												id="ct-ctno"
-												placeholder="SRN" />
+											<input type="text" name="service_request_id" class="form-control patternvalidation" data-pattern="alphanumericwithhyphen" data-translate="pgr.lbl.srn" id="ct-ctno"/>
 										</div>
 										<div class="col-md-3 col-sm-4 add-margin">
 											<select name="location_id" id="ct-location" class="form-control"></select>
@@ -126,30 +119,23 @@
 									</div>
 									<div class="form-group show-searchcomp-more display-hide">
 										<div class="col-md-3 col-sm-4 add-margin">
-											<label for="">Name</label>	
-											<input type="text" name="name" class="form-control patternvalidation" data-pattern="alphabetwithspace" id="ct-name" />
+											<input type="text" name="name" class="form-control patternvalidation" data-pattern="alphabetwithspace" data-translate="core.lbl.fullname" id="ct-name" />
 										</div>
 										<div class="col-md-3 col-sm-4 add-margin">
-											<label for="">Mobile Number</label>	
-											<input type="text" name="mobile_number" class="form-control patternvalidation" data-pattern="number" id="ct-mobno"
-												maxlength="10"/>
+											<input type="text" name="mobile_number" class="form-control patternvalidation" data-pattern="number" id="ct-mobno" data-translate="core.lbl.mobilenumber" maxlength="10"/>
 										</div>
 										<div class="col-md-3 col-sm-4 add-margin">
-											<label for="">Email</label>	
-											<input type="text" name="email_id" class="form-control" id="ct-email"/>
+											<input type="text" name="email_id" class="form-control" data-translate="core.lbl.email.compulsory" id="ct-email"/>
 										</div>
 										<div class="col-md-3 col-sm-4 add-margin">
-											<label for="">Complaint Type</label>					
 											<select class="form-control" id="complaintType" name="service_code">
 											</select>
 										</div>
 										<div class="col-md-3 col-sm-4 add-margin">
-											<label for="">Status</label>
 											<select class="form-control" name="status" id="status">
 											</select>
 										</div>
 										<div class="col-md-3 col-sm-4 add-margin">
-											<label for="">Receiving Mode</label>
 											<select class="form-control" id="receivingMode" name="receiving_mode">
 											</select>
 										</div>
@@ -158,11 +144,9 @@
 						</div>
 						<div class="form-group">
 							<div class="text-center">
-								<button type="button" id="searchComplaints" class="btn btn-primary">
-								Search</button>
+								<button type="button" id="searchComplaints" class="btn btn-primary" data-translate="core.lbl.search"></button>
 								<button type="reset" class="btn btn-default">Reset</button>
-								<a href="javascript:void(0);" id="closeComplaints" class="btn btn-default" onclick="self.close()">
-								Close</a>
+								<a href="javascript:void(0);" id="closeComplaints" class="btn btn-default" onclick="self.close()" data-translate="core.lbl.close"></a>
 							</div>
 						</div>
 						</form>
@@ -171,13 +155,13 @@
 				<div class="head-font table-header">The search result is</div>
 				<table class="table table-bordered no-wrap" id="complaintSearchResults">
 					<thead>
-						<th>Complaint Number</th>
-						<th>Grievance Type</th>
+						<th data-translate="pgr.lbl.complaintnumber"></th>
+						<th data-translate="pgr.lbl.grievance.type"></th>
 						<th>Name</th>
-						<th>Location</th>
-						<th>Status</th>
-						<th>Department</th>
-						<th>Registration Date</th>
+						<th data-translate="pgr.lbl.grievance.location"></th>
+						<th data-translate="core.lbl.status"></th>
+						<th data-translate="core.lbl.department"></th>
+						<th data-translate="pgr.lbl.registered.date"></th>
 					</thead>	
 					<tbody>
 						
@@ -186,7 +170,7 @@
         	</div>
 				
 			<footer class="main">
-			    Powered by <a href="http://egovernments.org/" target="_blank">eGovernments Foundation</a>
+			    <a href="http://egovernments.org/" target="_blank" data-translate="core.lbl.page.footer"></a>
 			</footer>
         </div>
         <div class="modal fade loader-class" data-backdrop="static">
@@ -203,9 +187,7 @@
 								</div>
 							</div>
 							
-							<div class="col-md-12 spinner-text">
-								Processing your request. Please wait..
-							</div>
+							<div class="col-md-12 spinner-text" data-translate="core.alert.pleasewait"></div>
 						</div>
 					</div>
 			</div>

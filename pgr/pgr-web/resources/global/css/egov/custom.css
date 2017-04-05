@@ -831,7 +831,7 @@ label.error {
   text-overflow: ellipsis;
 }
 .page-container .main-content .top-space {
-  padding: 50px 20px;
+  padding: 50px 0px;
 }
 .page-container .main-content .side-space {
   padding: 0 40px;

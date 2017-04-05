@@ -40,7 +40,7 @@
 var loadDD = new $.loadDD();
 var tableContainer = $("#complaintSearchResults");
 var complaintList, department, ward = [];
-var RequestInfo = new $.newRequestInfo(localStorage.getItem("auth"));
+var RequestInfo = new $.RequestInfo(localStorage.getItem("auth"));
 var requestInfo = {};
 requestInfo['RequestInfo'] = RequestInfo.requestInfo;
  $(document).ready(function() {
@@ -133,20 +133,20 @@ requestInfo['RequestInfo'] = RequestInfo.requestInfo;
 				}
 			],
 			columns: [
-				{title: 'Complaint Number', data: 'service_request_id'},
-				{title: 'Grievance Type', data: 'service_name'},
-				{title: 'Name', data: 'first_name'},
-				{title: 'Location', "render": function ( data, type, full, meta ) {
+				{data: 'service_request_id'},
+				{data: 'service_name'},
+				{data: 'first_name'},
+				{"render": function ( data, type, full, meta ) {
 					var wardname = getBoundariesbyId(full.values.locationId);
 					var localityname = getBoundariesbyId(full.values.childLocationId);
 					return (wardname+' - '+localityname);
 			    } },
-				{title: 'Status', data: 'values.complaintStatus'},
-				{title: 'Department', data: 'values.departmentId', "render": function ( data, type, full, meta ) {
+				{data: 'values.complaintStatus'},
+				{data: 'values.departmentId', "render": function ( data, type, full, meta ) {
 					var depart = getDepartmentbyId(full.values.departmentId);
 					return depart;
 			    } },
-				{title: 'Registration Date', data : 'requested_datetime'}
+				{data : 'requested_datetime'}
 			]
 	    });
 
@@ -172,7 +172,8 @@ function getDepartmentbyId(departmentId){
 	var depObj = department.filter(function( obj ) {
 	  return obj.id == departmentId;
 	});
-	return Object.values(depObj[0])[1];
+	var value = (depObj[0]) ? (Object.values(depObj[0])[1]) : '-';
+	return value;
 }
 
 function loadBoundarys(){
@@ -251,6 +252,7 @@ function loadReceivingMode(){
 		success : function(response){
 			loadDD.load({
 				element:$('#receivingMode'),
+				placeholder : 'Select Receiving Mode',
 				data:response,
 				keyValue:'id',
 				keyDisplayName:'name'
@@ -269,6 +271,7 @@ function complaintType(){
 		loadDD.load({
 			element:$('#complaintType'),
 			data:data,
+			placeholder : 'Select Complaint Type',
 			keyValue:'serviceCode',
 			keyDisplayName:'serviceName'
 		});
@@ -286,6 +289,7 @@ function loadStatus(){
 	}).done(function(data) {
 		loadDD.load({
 			element:$('#status'),
+			placeholder : 'Select Status',
 			data:data,
 			keyValue:'name',
 			keyDisplayName:'name'

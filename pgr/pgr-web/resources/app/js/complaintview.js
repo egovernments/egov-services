@@ -41,7 +41,7 @@ var srn = getUrlParameter('srn');
 var lat, lng, myCenter,status;
 var updateResponse = {};
 var loadDD = new $.loadDD();
-var RequestInfo = new $.newRequestInfo(localStorage.getItem("auth"));
+var RequestInfo = new $.RequestInfo(localStorage.getItem("auth"));
 var requestInfo = {};
 requestInfo['RequestInfo'] = RequestInfo.requestInfo;
 $(document).ready(function()

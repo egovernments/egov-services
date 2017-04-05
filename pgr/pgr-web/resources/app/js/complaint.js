@@ -39,7 +39,7 @@
  */
 var type = localStorage.getItem("type");
 var loadDD = new $.loadDD();
-var RequestInfo = new $.newRequestInfo(localStorage.getItem("auth"));
+var RequestInfo = new $.RequestInfo(localStorage.getItem("auth"));
 $(document).ready(function()
 {
 	/*Productization - Aslam*/
@@ -268,8 +268,6 @@ $(document).ready(function()
 	});
 
 	$('#create-griev').click(function(){
-
-		var RequestInfo = new $.RequestInfo(localStorage.getItem("auth"));
 		
 		if($('form').valid()){
 			if(captcha.validateCaptcha($('#captcha').val())){
@@ -411,13 +409,14 @@ function hideReceivingCenter(){
 }
 
 function docheckUser(response){
-	var userId = localStorage.getItem('id');
-	if(userId){
+	var userType = localStorage.getItem('type');
+	if(userType && userType == 'CITIZEN'){
+		var userId = localStorage.getItem('id');
 		var userArray = [];
 		userArray.push(userId);
 		var requestInfo = {};
 		requestInfo['RequestInfo'] = RequestInfo.requestInfo;
-		requestInfo['id'] = userArray
+		requestInfo['id'] = userArray;
 		$.ajax({
 			url : '/user/_search',
 			type: 'POST',

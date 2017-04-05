@@ -12,7 +12,7 @@ class ShowCalenderHoliday extends React.Component {
 
   }
 
-  
+
   componentWillMount(){
     this.setState({
     year:getCommonMaster("egov-common-masters","calendaryears","CalendarYear").responseJSON["CalendarYear"] || []
@@ -93,12 +93,12 @@ search(e)
       if (type==="update") {
 
               return (
-                      <a href={`../../../../app/hr/master/calendar-holidays-setup.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-pencil"></span></a>
+                      <a href={`app/hr/master/calendar-holidays-setup.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-pencil"></span></a>
               );
 
     }else {
             return (
-                    <a href={`../../../../app/hr/master/calendar-holidays-setup.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-modal-window"></span></a>
+                    <a href={`app/hr/master/calendar-holidays-setup.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-modal-window"></span></a>
             );
         }
 }

@@ -3,10 +3,12 @@ class ShowLeaveType extends React.Component {
     super(props);
     this.state={employees:[],leaveType:{
     name:"",
-    pay_eligible:"",
+    payEligible:"",
     encashable:"",
-    halfday_allowed:"",
-    accumulative:""
+    halfdayAllowed:"",
+    accumulative:"",
+    description:"",
+    active:""
   }}
   this.handleChange=this.handleChange.bind(this);
 }
@@ -72,6 +74,7 @@ handleChange(e,name)
             return (<tr key={index}>
                     <td>{index+1}</td>
                     <td data-label="name">{item.name}</td>
+                    <td data-label="description">{item.description}</td>
                     <td data-label="action">
                               {renderAction(getUrlVars()["type"])}
                     </td>
@@ -108,7 +111,8 @@ handleChange(e,name)
                   <thead>
                       <tr>
                           <th>SL No. </th>
-                          <th>Leave Type </th>
+                          <th>Leave Name </th>
+                          <th>Description</th>
                           <th>Action</th>
                       </tr>
                   </thead>

@@ -8,6 +8,7 @@ class PersonalInform extends React.Component {
     designation:"",
     leaveType:"",
     noOfDay:"",
+    noOfLeave:"",
     calendarYear:""},isSearchClicked:false,departmentsList:[],designationList:[],leave:[]}
     this.handleChange=this.handleChange.bind(this);
     this.search=this.search.bind(this);
@@ -35,10 +36,11 @@ class PersonalInform extends React.Component {
     e.preventDefault();
     //call api call
     var employees=[];
+    //  employees=commonApiPost("hr-employee","employees","_search",{tenantId}).responseJSON || [];
     for(var i=1;i<=10;i++)
     {
         employees.push({
-            name:"murali",employee:'xyz'
+            name:"murali",employee:'xyz',noOfLeave:""
         })
     }
     this.setState({
@@ -62,7 +64,8 @@ class PersonalInform extends React.Component {
         designation:"",
         leaveType:"",
         noOfDay:"",
-        calendarYear:""} })
+        calendarYear:"",
+        noOfLeave:""} })
       }
 
   }
@@ -72,8 +75,8 @@ class PersonalInform extends React.Component {
   {
 
     this.setState({
-      departmentsList:getCommonMaster("egov-common-masters","departments","Department").responseJSON["Department"] || [],
-      designationList:getCommonMaster("hr-masters","designations","Designation").responseJSON["Designation"] || [],
+      departmentsList:assignments_department,
+      designationList:assignments_designation,
       leave:[{
               id: 1,
               name: "Casual",
@@ -91,13 +94,15 @@ class PersonalInform extends React.Component {
   })
   }
 
-  handleChange(e,name)
+  handleChange(e,noOfLeave,name)
   {
 
       this.setState({
           searchSet:{
               ...this.state.searchSet,
-              [name]:e.target.value
+              [name]:e.target.value,
+              [noOfLeave]:e.target.value
+
           }
       })
   }
@@ -189,8 +194,8 @@ class PersonalInform extends React.Component {
                     <td data-label="name">{item.name}</td>
                     <td data-label="employee">{item.employee}</td>
                     <td data-label="noOfDay">
-                    <input type="number" id="noOfDay" name="noOfDay"value={noOfDay}
-                      onChange={(e)=>{handleChange(e,"noOfDay")}}/>
+                    <input type="number" id="noOfDay" name="noOfDay"  value={noOfDay}
+                      onChange={(e)=>{handleChange(e,noOfLeave,"noOfDay")}}/>
                     </td>
                 </tr>
             );

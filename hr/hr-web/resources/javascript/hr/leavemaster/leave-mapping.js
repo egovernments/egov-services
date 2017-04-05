@@ -5,7 +5,7 @@ constructor(props){
       {designation:"",
       leaveType:"",
       noOfDay:""},
-        designationList:[]}
+        designationList:[],leaveTypeList:[]}
 
   this.addOrUpdate=this.addOrUpdate.bind(this);
   this.handleChange=this.handleChange.bind(this);
@@ -14,7 +14,9 @@ constructor(props){
 componentWillMount()
 {
   this.setState({
-    designationList:getCommonMaster("hr-masters","designations","Designation").responseJSON["Designation"] || []
+    designationList:assignments_designation,
+    leaveTypeList:getCommonMaster("hr-leave","leavetypes","LeaveType").responseJSON["LeaveType"],
+
 })
 }
     handleChange(e,name)
@@ -34,9 +36,9 @@ componentWillMount()
 
     addOrUpdate(e,mode){
       e.preventDefault();
-      console.log(this.state.leave);
+      // console.log(this.state.leave);
       if (mode==="update") {
-        console.log("update");
+        // console.log("update");
       } else {
         this.setState({leave:
             {designation:"",
@@ -112,8 +114,14 @@ componentWillMount()
                         <label for=""> Leave Type<span>*</span></label>
                     </div>
                     <div className="col-sm-6">
-                          <input type="text" name="leaveType" value={leaveType} id="leaveType" onChange={(e)=>{
-                            handleChange(e,"leaveType")}}required/>
+                    <div className="styled-select">
+                    <select id="leaveType"  value={leaveType} required="true" onChange={(e)=>{
+                        handleChange(e,"leaveType")
+                    }}>
+                    <option value="" selected></option>
+                    {renderOption(this.state.leaveTypeList)}
+                   </select>
+                    </div>
 
                     </div>
                 </div>

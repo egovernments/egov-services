@@ -165,7 +165,7 @@ class EmployeeReport extends React.Component {
                                     </div>
                                     <div className="col-sm-6">
                                         <select id="department" value={department} required="true"onChange={(e) => {handleChange(e, "department")}}>
-                                            <option value="" selected></option>
+                                            <option value="" selected> </option>
                                             {renderOptions(departments)}
                                         </select>
                                     </div>

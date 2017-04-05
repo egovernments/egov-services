@@ -141,7 +141,7 @@ public class LeaveTypeRepository {
 	@SuppressWarnings("static-access")
 	public boolean checkLeaveTypeByName(final Long id, final String name, final String tenantId) {
 		final List<Object> preparedStatementValues = new ArrayList<Object>();
-		preparedStatementValues.add(name);
+		preparedStatementValues.add(name.toUpperCase());
 		preparedStatementValues.add(tenantId);
 		final String query;
 		if (id == null)

@@ -17,7 +17,7 @@ class EmployeeSearch extends React.Component {
     let {month,year,designationCode,departmentCode,code,employeeType}=this.state.searchSet;
     e.preventDefault();
     // console.log(e.target.value);
-    window.location=`../../../app/hr/attendance/attendance.html?month=${month}&year=${year}&designationCode=${designationCode}&departmentCode=${departmentCode}&code=${code}&type=${employeeType}`;
+    window.location=`app/hr/attendance/attendance.html?month=${month}&year=${year}&designationCode=${designationCode}&departmentCode=${departmentCode}&code=${code}&type=${employeeType}`;
 
     // console.log("fired");
   }

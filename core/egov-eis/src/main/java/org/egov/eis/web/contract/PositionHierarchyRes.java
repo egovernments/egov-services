@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.eis.persistence.entity.PositionHierarchy;
 
 import com.fasterxml.jackson.annotation.JsonProperty;

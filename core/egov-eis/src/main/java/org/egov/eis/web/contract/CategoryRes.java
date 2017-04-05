@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.egov.common.contract.response.ResponseInfo;
 
 public class CategoryRes {
 	@JsonProperty("ResponseInfo")

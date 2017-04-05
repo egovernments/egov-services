@@ -3,6 +3,7 @@ package org.egov.eis.web.contract;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.egov.common.contract.request.RequestInfo;
 
 public class GradeReq {
 	@JsonProperty("RequestInfo")

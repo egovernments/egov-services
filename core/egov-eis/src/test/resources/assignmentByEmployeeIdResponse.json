@@ -1,10 +1,10 @@
 {
   "ResponseInfo":{
-    "api_id":null,
+    "apiId":null,
     "ver":null,
     "ts":null,
-    "res_msg_id":null,
-    "msg_id":null,
+    "resMsgId":null,
+    "msgId":null,
     "status":null
   },
   "Assignment":[

@@ -6,13 +6,13 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.egov.common.contract.response.Error;
+import org.egov.common.contract.response.ErrorResponse;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.eis.domain.service.AssignmentService;
 import org.egov.eis.web.contract.Assignment;
 import org.egov.eis.web.contract.AssignmentRes;
 import org.egov.eis.web.contract.EmployeeRes;
-import org.egov.eis.web.contract.Error;
-import org.egov.eis.web.contract.ErrorRes;
-import org.egov.eis.web.contract.ResponseInfo;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -111,22 +111,6 @@ public class AssignmentRestController {
 			    return new ResponseEntity<AssignmentRes>(response,HttpStatus.OK);
 		}
 		return new ResponseEntity<AssignmentRes>(response,HttpStatus.BAD_REQUEST);
-	}
-
-	@ExceptionHandler(Exception.class)
-	public ResponseEntity<ErrorRes> handleError(Exception ex) {
-		ex.printStackTrace();
-		ErrorRes response = new ErrorRes();
-		ResponseInfo responseInfo = new ResponseInfo("", "", new Date().toString(), "", "",
-				"Failed to get assignments");
-		response.setResponseInfo(responseInfo);
-		// TODO: Fill right values
-		Error error = new Error(null, null, null);
-		// error.setCode(400);
-		// error.setDescription("Failed to get positions");
-		response.setError(error);
-		response.setError(error);
-		return new ResponseEntity<ErrorRes>(response, HttpStatus.BAD_REQUEST);
 	}
 
 }

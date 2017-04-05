@@ -5,10 +5,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.eis.domain.service.DesignationService;
 import org.egov.eis.web.contract.Designation;
 import org.egov.eis.web.contract.DesignationRes;
-import org.egov.eis.web.contract.ResponseInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +34,7 @@ public class DesignationRestController {
 			throws Exception {
 
 		DesignationRes response = new DesignationRes();
-		response.setResponseInfo(new ResponseInfo("", "", new Date().toString(), "", "", "Successful response"));
+		response.setResponseInfo(new ResponseInfo());
 		if (name != null && !name.isEmpty()) {
 			response.getDesignation()
 					.addAll(mapToContractDesignationList(designationService.getDesignationsByName(name)));

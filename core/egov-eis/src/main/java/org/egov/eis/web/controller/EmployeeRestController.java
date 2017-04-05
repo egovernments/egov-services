@@ -3,9 +3,9 @@ package org.egov.eis.web.controller;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.eis.domain.service.EmployeeService;
 import org.egov.eis.web.contract.EmployeeRes;
-import org.egov.eis.web.contract.ResponseInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,7 +34,7 @@ public class EmployeeRestController {
 			throws Exception {
 
 		EmployeeRes response = new EmployeeRes();
-		response.setResponseInfo(new ResponseInfo("", "", new Date().toString(), "", "", "Successful response"));
+		response.setResponseInfo(new ResponseInfo());
 		if (code != null && !code.isEmpty()) {
 			response.getEmployees().add(employeeService.getByCode(code));
 		} else if (positionId != null && !positionId.isEmpty() && asOnDate != null) {
@@ -56,19 +56,5 @@ public class EmployeeRestController {
 
 		return response;
 	}
-
-	// @ExceptionHandler(Exception.class)
-	// public ResponseEntity<ErrorRes> handleError(Exception ex) {
-	// ex.printStackTrace();
-	// ErrorRes response = new ErrorRes();
-	// ResponseInfo responseInfo = new ResponseInfo("", "", new
-	// Date().toString(), "", "", "Failed to get employee");
-	// response.setResponseInfo(responseInfo);
-	// Error error = new Error();
-	// error.setCode(400);
-	// error.setDescription("Failed to get employee");
-	// response.setError(error);
-	// return new ResponseEntity<ErrorRes>(response, HttpStatus.BAD_REQUEST);
-	// }
 
 }

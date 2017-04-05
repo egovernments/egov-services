@@ -1,16 +1,6 @@
 package org.egov.eis.web.controller;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.io.IOException;
-import java.util.Collections;
-
 import org.apache.commons.io.IOUtils;
-import org.egov.eis.domain.model.RequestContext;
 import org.egov.eis.domain.service.DepartmentService;
 import org.egov.eis.persistence.entity.Department;
 import org.junit.Test;
@@ -21,6 +11,14 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.io.IOException;
+import java.util.Collections;
+
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(DepartmentController.class)
@@ -44,8 +42,6 @@ public class DepartmentControllerTest {
 		mockMvc.perform(get("/departments").header("X-CORRELATION-ID", "someId").param("code", departmentCode))
 				.andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(getFileContents("departmentsResponse.json")));
-
-		assertEquals("someId", RequestContext.getId());
 	}
 
 	@Test
@@ -59,8 +55,6 @@ public class DepartmentControllerTest {
 		mockMvc.perform(get("/departments").header("X-CORRELATION-ID", "someId").param("id", "1"))
 				.andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(getFileContents("departmentsResponse.json")));
-
-		assertEquals("someId", RequestContext.getId());
 	}
 
 	@Test
@@ -74,8 +68,6 @@ public class DepartmentControllerTest {
 		mockMvc.perform(get("/departments").header("X-CORRELATION-ID", "someId")).andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(getFileContents("departmentsResponse.json")));
-
-		assertEquals("someId", RequestContext.getId());
 	}
 
 	private String getFileContents(String fileName) {

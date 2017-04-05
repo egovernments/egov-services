@@ -26,11 +26,17 @@
 	</properties>
 
 	<dependencies>
+
+        <dependency>
+            <groupId>org.egov.services</groupId>
+            <artifactId>services-common</artifactId>
+            <version>0.4.0</version>
+        </dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -94,6 +100,14 @@
         </dependency>
        
     </dependencies>
+
+    <repositories>
+        <repository>
+            <id>repo.egovernments.org</id>
+            <name>eGov ERP Releases Repository</name>
+            <url>http://repo.egovernments.org/nexus/content/repositories/releases/</url>
+        </repository>
+    </repositories>
 
     <reporting>
         <plugins>

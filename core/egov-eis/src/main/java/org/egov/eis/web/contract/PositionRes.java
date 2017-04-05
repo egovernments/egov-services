@@ -3,6 +3,8 @@ package org.egov.eis.web.contract;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.eis.persistence.entity.Position;
 
 import com.fasterxml.jackson.annotation.JsonProperty;

@@ -55,7 +55,7 @@ class Attendance extends React.Component {
         "Attendance":attendance
       };
       var response=$.ajax({
-                url:baseUrl+"/hr-attendance/attendances/_create?tenantId=1",
+                url:baseUrl+"/hr-attendance/attendances/_create?tenantId="+tenantId,
                 type: 'POST',
                 dataType: 'json',
                 data:JSON.stringify(body),
@@ -71,7 +71,7 @@ class Attendance extends React.Component {
       if(response["status"]===200)
       {
         alert("Successfully added");
-        window.location.href="../../../../app/hr/common/employee-attendance.html";
+        window.location.href="app/hr/common/employee-attendance.html";
       }
       else {
         alert(response["statusText"]);

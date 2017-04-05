@@ -1,17 +1,15 @@
 package org.egov.pgr.employee.enrichment.repository.contract;
 
-import java.util.Date;
-import java.util.Map;
-import java.util.Objects;
-
-import org.egov.pgr.employee.enrichment.consumer.contract.RequestInfo;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Builder;
 import lombok.Getter;
+import org.egov.common.contract.request.RequestInfo;
+
+import java.util.Date;
+import java.util.Map;
+import java.util.Objects;
 
 @Getter
 @Builder

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import org.egov.pgr.employee.enrichment.consumer.contract.RequestInfo;
+import org.egov.common.contract.request.RequestInfo;
 
 @Builder
 @Getter

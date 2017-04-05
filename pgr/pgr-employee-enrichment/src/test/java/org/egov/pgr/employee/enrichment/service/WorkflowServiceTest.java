@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.egov.pgr.employee.enrichment.consumer.contract.RequestInfo;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.pgr.employee.enrichment.model.SevaRequest;
 import org.egov.pgr.employee.enrichment.repository.ComplaintRestRepository;
 import org.egov.pgr.employee.enrichment.repository.WorkflowRepository;

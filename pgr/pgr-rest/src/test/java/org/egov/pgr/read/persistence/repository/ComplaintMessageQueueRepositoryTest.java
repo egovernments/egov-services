@@ -1,6 +1,6 @@
 package org.egov.pgr.read.persistence.repository;
 
-import org.egov.pgr.common.contract.RequestInfo;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.pgr.common.contract.SevaRequest;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.junit.Before;

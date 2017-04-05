@@ -1,9 +1,10 @@
 package org.egov.pgr.read.web.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-import org.egov.pgr.common.entity.ComplaintStatus;
 import org.egov.pgr.read.domain.service.ComplaintStatusMappingService;
+import org.egov.pgr.read.web.contract.ComplaintStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,7 +22,10 @@ public class ComplaintStatusMappingController {
     public List<ComplaintStatus> getNextStatusesByCurrentStatusAndRole(@RequestParam final Long userId,
                                                                        @RequestParam final String currentStatus,
                                                                        @RequestParam final String tenantId) {
-        return complaintStatusMappingService.getStatusByRoleAndCurrentStatus(userId, currentStatus, tenantId);
+        return complaintStatusMappingService
+                .getStatusByRoleAndCurrentStatus(userId, currentStatus, tenantId).stream()
+                .map(ComplaintStatus::new)
+                .collect(Collectors.toList());
     }
 
 }

@@ -30,7 +30,7 @@ public class SevaRequestMapFactory {
         serviceRequestMap.put("values", valuesMap);
         sevaRequestMap.put("ServiceRequest", serviceRequestMap);
         final HashMap<String, Object> requestInfoMap = new HashMap<>();
-        requestInfoMap.put("requester_id", "2");
+        requestInfoMap.put("requesterId", "2");
         sevaRequestMap.put("RequestInfo", requestInfoMap);
         return sevaRequestMap;
     }

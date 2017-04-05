@@ -48,8 +48,9 @@ public class EmailServiceTest {
         when(sevaRequest.getCrn()).thenReturn(crn);
         final String body = "body";
         final String subject = "subject";
+        final String status ="Status";
 
-        final Map<Object, Object> subjectRequestMap = ImmutableMap.of("crn", crn);
+        final Map<Object, Object> subjectRequestMap = ImmutableMap.of("crn", crn,"statusLowerCase", "status");
         when(templateService.loadByName("email_subject_en", subjectRequestMap)).thenReturn(subject);
 
         ImmutableMap.ImmutableMapBuilder<Object, Object> builder = ImmutableMap.builder();
@@ -63,16 +64,15 @@ public class EmailServiceTest {
         when(sevaRequest.getDetails()).thenReturn(details);
         final String formattedDate = "formattedDate";
         when(sevaRequest.getFormattedCreatedDate()).thenReturn(formattedDate);
-        final String statusUpperCase = "statusUpperCase";
-        when(sevaRequest.getStatusName()).thenReturn(statusUpperCase);
+        when(sevaRequest.getStatusName()).thenReturn(status);
         builder.put("complainantName", complainantName);
         builder.put("crn", crn);
         builder.put("complaintType", complaintTypeName);
         builder.put("locationName", locationName);
         builder.put("complaintDetails", details);
         builder.put("registeredDate", formattedDate);
-        builder.put("statusUpperCase", statusUpperCase);
-        builder.put("statusLowerCase",statusUpperCase.toLowerCase());
+        builder.put("statusUpperCase", "Status");
+        builder.put("statusLowerCase", "status");
         final Map<Object, Object> bodyRequestMap = builder.build();
         when(templateService.loadByName("email_body_en", bodyRequestMap)).thenReturn(body);
 

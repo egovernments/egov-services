@@ -33,8 +33,8 @@ public class ComplaintStatusMappingService {
 	private EntityManager entityManager;
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW, noRollbackFor = SQLGrammarException.class)
-	public List<ComplaintStatus> getStatusByRoleAndCurrentStatus(final Long userId, final String status,
-                                                                 final String tenantId) {
+	public List<org.egov.pgr.read.domain.model.ComplaintStatus> getStatusByRoleAndCurrentStatus(final Long userId, final String status,
+																								final String tenantId) {
 		Set<Role> roles;
 		GetUserByIdResponse userRoles = userRepository.findUserById(userId);
 		if (!userRoles.getUser().isEmpty()) {
@@ -48,7 +48,15 @@ public class ComplaintStatusMappingService {
 					.addOrder(Order.asc("complaintMapping.orderNo"));
 			criteria.setProjection(Projections.property("complaintMapping.showStatus"));
 			criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
-			return criteria.list();
+			List<ComplaintStatus> complaintStatusEntities = (List<ComplaintStatus>) criteria.list();
+			return complaintStatusEntities.stream()
+					.map(complaintStatusEntity ->
+							new org.egov.pgr.read.domain.model.ComplaintStatus (
+									complaintStatusEntity.getId(),
+									complaintStatusEntity.getName()
+							)
+					)
+					.collect(Collectors.toList());
 		} else
 			return null;
 	}

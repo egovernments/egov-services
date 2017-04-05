@@ -5,9 +5,9 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.pgr.read.domain.model.Complaint;
 import org.egov.pgr.read.domain.model.ComplaintSearchCriteria;
-import org.egov.pgr.common.contract.RequestInfo;
 import org.egov.pgr.common.contract.SevaRequest;
 import org.egov.pgr.read.persistence.repository.ComplaintJpaRepository;
 import org.egov.pgr.read.persistence.repository.ComplaintRepository;
@@ -55,7 +55,7 @@ public class ComplaintService {
 					.setRequesterId(userRepository.getUserByUserName("anonymous").getId().toString());
 		} else {
 			sevaRequest.setRequestInfo(new RequestInfo("", "", new Date(), "", "", "", "",
-					userRepository.getUserByUserName("anonymous").getId().toString(), "", ""));
+					userRepository.getUserByUserName("anonymous").getId().toString(), "", "", null));
 		}
 	}
 

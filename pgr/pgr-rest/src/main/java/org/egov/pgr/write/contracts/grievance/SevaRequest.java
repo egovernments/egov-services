@@ -9,7 +9,7 @@ import static org.hibernate.internal.util.StringHelper.isEmpty;
 
 public class SevaRequest {
 
-    private static final String REQUESTER_ID = "requester_id";
+    private static final String REQUESTER_ID = "requesterId";
     private static final String SERVICE_REQUEST = "ServiceRequest";
     private static final String REQUEST_INFO = "RequestInfo";
 

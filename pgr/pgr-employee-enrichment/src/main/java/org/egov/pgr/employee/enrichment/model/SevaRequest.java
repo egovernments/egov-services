@@ -1,7 +1,8 @@
 package org.egov.pgr.employee.enrichment.model;
 
 import org.apache.commons.lang.StringUtils;
-import org.egov.pgr.employee.enrichment.consumer.contract.RequestInfo;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.request.User;
 import org.egov.pgr.employee.enrichment.json.ObjectMapperFactory;
 import org.egov.pgr.employee.enrichment.repository.contract.Attribute;
 import org.egov.pgr.employee.enrichment.repository.contract.WorkflowRequest;
@@ -128,11 +129,16 @@ public class SevaRequest {
         valuesToSet.put(VALUES_COMLAINT_TYPE_CODE, Attribute.asStringAttr(VALUES_COMLAINT_TYPE_CODE, complaintType));
         valuesToSet.put(BOUNDARY_ID, Attribute.asStringAttr(BOUNDARY_ID, values.get(VALUES_LOCATION_ID)));
         valuesToSet.put(STATE_DETAILS, Attribute.asStringAttr(STATE_DETAILS, StringUtils.EMPTY));
-        valuesToSet.put(USER_ROLE, Attribute.asStringAttr(USER_ROLE, getRequestInfo().getUserType()));
+        valuesToSet.put(USER_ROLE, Attribute.asStringAttr(USER_ROLE, getUserType()));
         valuesToSet.put(VALUES_STATE_ID, Attribute.asStringAttr(VALUES_STATE_ID, getCurrentStateId(values)));
         valuesToSet.put(VALUES_APPROVAL_COMMENT, Attribute.asStringAttr(VALUES_APPROVAL_COMMENT, values.get(VALUES_APPROVAL_COMMENT)));
         valuesToSet.put(DEPARTMENT_ID, Attribute.asStringAttr(DEPARTMENT_ID, values.get(DEPARTMENT_ID)));
         return valuesToSet;
+    }
+
+    private String getUserType() {
+        final User userInfo = getRequestInfo().getUserInfo();
+        return userInfo != null ? userInfo.getType() : null;
     }
 
     private String getCurrentStateId(HashMap<String, String> values) {

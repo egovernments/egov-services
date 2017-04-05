@@ -25,8 +25,8 @@ public class FinancialsRepository {
 		System.out.println("chartOfAccountContract url ++++++++++++ "+url);
 		ChartOfAccountContractResponse chartOfAccountContractResponse =  restTemplate.postForObject(url, requestInfo,
 				ChartOfAccountContractResponse.class,chartOfAccountContract);
-		System.out.println("chartOfAccountContract>>>>>>>>>>"+chartOfAccountContractResponse.getChartOfAccount().getGlcode());
+		System.out.println("chartOfAccountContract>>>>>>>>>>"+chartOfAccountContractResponse.getChartOfAccounts().get(0).getGlcode());
 
-		return chartOfAccountContractResponse.getChartOfAccount().getGlcode();
+		return chartOfAccountContractResponse.getChartOfAccounts().get(0).getGlcode();
 	}
 }

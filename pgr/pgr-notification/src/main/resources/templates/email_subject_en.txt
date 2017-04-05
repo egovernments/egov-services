@@ -1,1 +1,1 @@
-{{statusLowerCase}} Grievance - {{crn}} successfully
+Your Grievance {{crn}} {{statusLowerCase}}

@@ -12,7 +12,6 @@ import org.egov.pgr.common.repository.UserRepository;
 import org.egov.pgr.read.domain.exception.InvalidComplaintException;
 import org.egov.pgr.read.domain.model.*;
 import org.egov.pgr.read.domain.service.ComplaintService;
-import org.egov.pgr.read.web.contract.RequestInfo;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -192,7 +191,6 @@ public class ComplaintControllerTest {
     @Test
     @Ignore
     public void testShouldUpdateLastAccessedTime() throws Exception {
-        RequestInfo requestInfoWrapper=new RequestInfo();
         mockMvc.perform(
             post("/seva/updateLastAccessedTime").param("serviceRequestId", "crn")
         ).andExpect(status().isOk());

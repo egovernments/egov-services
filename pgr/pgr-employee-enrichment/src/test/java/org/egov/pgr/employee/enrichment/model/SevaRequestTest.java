@@ -86,13 +86,15 @@ public class SevaRequestTest {
         final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
         final HashMap<String, Object> serviceRequestMap = new HashMap<>();
         final Map<String, String> valueMap = new HashMap<>();
-        final Map<String, Object> requestInfoMap = new HashMap<>();
+        final Map<String, Object> userInfoMap = new HashMap<>();
         valueMap.put(VALUES_STATE_ID, "233");
         valueMap.put(VALUES_LOCATION_ID, "18");
         valueMap.put(VALUES_APPROVAL_COMMENT, "this is approved");
         valueMap.put(VALUES_ASSIGNEE_ID, "23");
         valueMap.put(STATUS, "REGISTERED");
-        requestInfoMap.put("userType", "EMPLOYEE");
+        userInfoMap.put("type", "EMPLOYEE");
+        final Map<String, Object> requestInfoMap = new HashMap<>();
+        requestInfoMap.put("userInfo", userInfoMap);
         serviceRequestMap.put(SERVICE_CODE, "PKJB");
         serviceRequestMap.put(STATUS, "REGISTERED");
         serviceRequestMap.put(VALUES, valueMap);

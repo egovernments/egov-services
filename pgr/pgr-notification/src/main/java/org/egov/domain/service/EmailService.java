@@ -54,7 +54,7 @@ public class EmailService {
     }
 
     private String getEmailSubject(SevaRequest sevaRequest) {
-        Map<Object, Object> map = ImmutableMap.of("crn", sevaRequest.getCrn());
+        Map<Object, Object> map = ImmutableMap.of("crn", sevaRequest.getCrn(),"statusLowerCase",sevaRequest.getStatusName().toLowerCase());
         return templateService.loadByName(EMAIL_SUBJECT_EN_TEMPLATE, map);
     }
 }

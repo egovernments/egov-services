@@ -2,7 +2,7 @@ package org.egov.pgr.read.web.controller;
 
 import org.apache.commons.io.IOUtils;
 import org.egov.pgr.TestConfiguration;
-import org.egov.pgr.common.entity.ComplaintStatus;
+import org.egov.pgr.read.domain.model.ComplaintStatus;
 import org.egov.pgr.read.domain.service.ComplaintStatusMappingService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,7 +41,7 @@ public class ComplaintStatusMappingControllerTest {
 		Long userId = 18L;
 		String status = "REGISTERED";
 		List<ComplaintStatus> complaintStatuses = new ArrayList<>(
-				Collections.singletonList(ComplaintStatus.builder().id(1L).name("REGISTERED").build()));
+				Collections.singletonList(new ComplaintStatus(1L, "REGISTERED")));
 		when(mockComplaintStatusMappingService.getStatusByRoleAndCurrentStatus(userId, status, tenantId))
 				.thenReturn(complaintStatuses);
 

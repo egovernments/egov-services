@@ -43,7 +43,7 @@ public class RentIncrementService {
 			rentIncrementType = jdbcTemplate.queryForObject(rentIncrementTypeqQuery, rentObj,
 					new RentIncrementRowMapper());
 		} catch (Exception e) {
-			logger.debug(e.getMessage(), e);
+			logger.info(e.getMessage(), e);
 			throw new RuntimeException(e.getMessage());
 			// FIXME put apt exception
 		}

@@ -37,7 +37,7 @@ public class AssetService {
 		try {
 			assetResponse = restTemplate.postForObject(url, requestInfoWrapper, AssetResponse.class);
 		} catch (Exception e) {
-			logger.debug("exception in AssetService restTemplate", assetResponse);
+			logger.info("exception in AssetService restTemplate", assetResponse);
 			throw new RuntimeException("check if entered asset API url is correct or the asset service is running");
 		}
 		logger.info("the list of assets from assetresponse obtained by asset api call : "+assetResponse.getAssets(),assetResponse.getAssets());
@@ -53,7 +53,7 @@ public class AssetService {
 		try{
 			resultSet = jdbcTemplate.queryForList(sql);
 		}catch (Exception exception) {
-			logger.debug("aseetService isassetAvailable : " + exception,exception);
+			logger.info("aseetService isassetAvailable : " + exception,exception);
 			throw exception;
 			// TODO: handle exception
 		}

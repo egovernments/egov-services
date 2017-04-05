@@ -124,7 +124,7 @@ public class WorkflowRepository {
 		try{
 			agreementRequestMessage	= objectMapper.writeValueAsString(agreementRequest);
 		}catch (Exception e) {
-			LOGGER.debug("WorkflowRepositorysaveAgreement : " +e);
+			LOGGER.info("WorkflowRepositorysaveAgreement : " +e);
 			throw new RuntimeException(e);
 		}
 		agreementProducer.sendMessage(propertiesManager.getKafkaSaveAgreementTopic(), "key", agreementRequestMessage);
@@ -136,7 +136,7 @@ public class WorkflowRepository {
 		try{
 			agreementRequestMessage	= objectMapper.writeValueAsString(agreementRequest);
 		}catch (Exception e) {
-			LOGGER.debug("WorkflowRepositoryupdateAgreement : " +e);
+			LOGGER.info("WorkflowRepositoryupdateAgreement : " +e);
 			throw new RuntimeException(e);
 		}
 		//FIXME TODO remove the hard coding and place the property manager string

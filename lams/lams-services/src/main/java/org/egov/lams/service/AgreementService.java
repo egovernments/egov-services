@@ -126,13 +126,13 @@ public class AgreementService {
 				agreementValue = mapper.writeValueAsString(agreementRequest);
 				logger.info("agreementValue::"+agreementValue);
 		} catch (JsonProcessingException JsonProcessingException) {
-				logger.debug("AgreementService : "+JsonProcessingException.getMessage(),JsonProcessingException);
+				logger.info("AgreementService : "+JsonProcessingException.getMessage(),JsonProcessingException);
 				throw new RuntimeException(JsonProcessingException.getMessage());
 		}
 		try {
 				agreementProducer.sendMessage(propertiesManager.getStartWorkflowTopic(), "save-agreement", agreementValue);
 		}catch(Exception exception){
-			logger.debug("AgreementService : "+exception.getMessage(),exception);
+			logger.info("AgreementService : "+exception.getMessage(),exception);
 				throw exception;
 		}
 		return agreement;
@@ -156,14 +156,14 @@ public class AgreementService {
 			agreementValue = mapper.writeValueAsString(agreementRequest);
 			logger.info("agreementValue::" + agreementValue);
 		} catch (JsonProcessingException jsonProcessingException) {
-			logger.debug("AgreementService : " + jsonProcessingException.getMessage(), jsonProcessingException);
+			logger.info("AgreementService : " + jsonProcessingException.getMessage(), jsonProcessingException);
 			throw new RuntimeException(jsonProcessingException.getMessage());
 		}
 
 		try {
 			agreementProducer.sendMessage(propertiesManager.getUpdateWorkflowTopic(), "save-agreement", agreementValue);
 		} catch (Exception exception) {
-			logger.debug("AgreementService : " + exception.getMessage(), exception);
+			logger.info("AgreementService : " + exception.getMessage(), exception);
 			throw exception;
 		}
 		return agreement;

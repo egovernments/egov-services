@@ -68,7 +68,7 @@ public class LamsConfigurationQueryBuilder {
 		addOrderByClause(selectQuery, lamsConfigurationGetRequest);
 		addPagingClause(selectQuery, preparedStatementValues, lamsConfigurationGetRequest);
 
-		logger.debug("Query : " + selectQuery);
+		logger.info("Query : " + selectQuery);
 		return selectQuery.toString();
 	}
 

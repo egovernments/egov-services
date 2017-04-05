@@ -974,8 +974,11 @@ $(".datetimepicker").on("dp.change", function() {
             agreement["workflowDetails"]["assignee"]=agreement["approverName"];
             agreement["asset"]={};
             agreement["asset"]["id"]=getUrlVars()["assetId"];
+            agreement["rentIncrementMethod"]={};
+            agreement["rentIncrementMethod"]["id"]=1;
             agreement["tenantId"]=tenantId;
-            uploadFiles(agreement, function(err, _agreement){
+            uploadFiles(agreement, function(err, _agreement)
+            {
                 if(err) {
                     //Handle error
                 } else {

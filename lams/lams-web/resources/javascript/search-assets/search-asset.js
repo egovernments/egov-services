@@ -84,7 +84,7 @@ class AssetSearch extends React.Component {
 
   }
 
-  handleSelectChange(type,category)
+  handleSelectChange(type,id,category)
   {
     console.log(type);
     console.log(category);
@@ -95,7 +95,7 @@ class AssetSearch extends React.Component {
     //
     //             window.open("../../../../app/agreements/new.html", "fs", "fullscreen=yes")
     //         }
-    window.open("app/agreements/new.html?type="+category, "fs", "fullscreen=yes")
+    window.open("app/agreements/new.html?type="+category+"&assetId="+id, "fs", "fullscreen=yes")
   }
 
 
@@ -174,7 +174,7 @@ class AssetSearch extends React.Component {
                                   <td>
                                       <div className="styled-select">
                                           <select id="myOptions" onChange={(e)=>{
-                                            handleSelectChange(e.target.value,item.assetCategory.name)
+                                            handleSelectChange(e.target.value,item.id,item.assetCategory.name)
                                           }}>
                                               <option value="">Select Action</option>
                                               <option value="create">Create</option>

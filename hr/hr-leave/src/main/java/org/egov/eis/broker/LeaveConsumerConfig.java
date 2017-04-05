@@ -1,3 +1,43 @@
+/*
+ * eGov suite of products aim to improve the internal efficiency,transparency,
+ * accountability and the service delivery of the government  organizations.
+ *
+ *  Copyright (C) 2016  eGovernments Foundation
+ *
+ *  The updated version of eGov suite of products as by eGovernments Foundation
+ *  is available at http://www.egovernments.org
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program. If not, see http://www.gnu.org/licenses/ or
+ *  http://www.gnu.org/licenses/gpl.html .
+ *
+ *  In addition to the terms of the GPL license to be adhered to in using this
+ *  program, the following additional terms are to be complied with:
+ *
+ *      1) All versions of this program, verbatim or modified must carry this
+ *         Legal Notice.
+ *
+ *      2) Any misrepresentation of the origin of the material is prohibited. It
+ *         is required that all modified versions of this material be marked in
+ *         reasonable ways as different from the original version.
+ *
+ *      3) This license does not grant any rights to any user of the program
+ *         with regards to rights under trademark law for use of the trade names
+ *         or trademarks of eGovernments Foundation.
+ *
+ *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
+ */
+
 package org.egov.eis.broker;
 
 import java.util.HashMap;
@@ -17,7 +57,7 @@ import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
 
 @Configuration
 @EnableKafka
-public class LeaveTypeConsumerConfig {
+public class LeaveConsumerConfig {
 
 	@Value("${kafka.config.bootstrap_server_config}")
 	private String serverConfig;
@@ -40,7 +80,7 @@ public class LeaveTypeConsumerConfig {
 	@Bean
 	KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>> kafkaListenerContainerFactory() {
 		System.out.println("kafkaListenerContainerFactory");
-		final ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
+		ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
 		factory.setConsumerFactory(consumerFactory());
 		factory.setConcurrency(3);
 		factory.getContainerProperties().setPollTimeout(3000);
@@ -56,7 +96,7 @@ public class LeaveTypeConsumerConfig {
 	@Bean
 	public Map<String, Object> consumerConfigs() {
 		// TODO - Load configs from env vars
-		final Map<String, Object> propsMap = new HashMap<>();
+		Map<String, Object> propsMap = new HashMap<>();
 		propsMap.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, serverConfig);
 		propsMap.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, enableAutoCommit);
 		propsMap.put(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, autoCommitInterval);
@@ -69,8 +109,8 @@ public class LeaveTypeConsumerConfig {
 	}
 
 	@Bean
-	public LeaveTypeConsumers listener() {
-		return new LeaveTypeConsumers();
+	public LeaveConsumer listener() {
+		return new LeaveConsumer();
 	}
 
 }

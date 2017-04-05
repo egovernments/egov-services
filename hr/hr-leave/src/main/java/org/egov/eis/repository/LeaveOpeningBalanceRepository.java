@@ -88,22 +88,6 @@ public class LeaveOpeningBalanceRepository {
 	}
 
 	public void create(LeaveOpeningBalanceRequest leaveOpeningBalanceRequest) {
-		/*
-		 * LeaveOpeningBalance leaveOpeningBalance =
-		 * leaveOpeningBalanceRequest.getLeaveOpeningBalance(); Object[] obj =
-		 * new Object[] { leaveOpeningBalance.getEmployee(),
-		 * leaveOpeningBalance.getCalendarYear(),
-		 * leaveOpeningBalance.getLeaveType().getId(),
-		 * leaveOpeningBalance.getNoOfDays(),
-		 * leaveOpeningBalance.getCreatedBy(),
-		 * leaveOpeningBalance.getCreatedDate(),
-		 * leaveOpeningBalance.getLastModifiedBy(),
-		 * leaveOpeningBalance.getLastModifiedDate(),
-		 * leaveOpeningBalance.getTenantId() };
-		 * 
-		 * try { jdbcTemplate.update(INSERT_LEAVEOPENINGBALANCE_QUERY, obj); }
-		 * catch (Exception ex) { ex.printStackTrace(); }
-		 */
 
 		try {
 			jdbcTemplate.batchUpdate(INSERT_LEAVEOPENINGBALANCE_QUERY, new BatchPreparedStatementSetter() {
@@ -136,23 +120,6 @@ public class LeaveOpeningBalanceRepository {
 	}
 
 	public void update(LeaveOpeningBalanceRequest leaveOpeningBalanceRequest) {
-		/*
-		 * LeaveOpeningBalance leaveOpeningBalance =
-		 * leaveOpeningBalanceRequest.getLeaveOpeningBalance(); Object[] obj =
-		 * new Object[] { leaveOpeningBalance.getEmployee(),
-		 * leaveOpeningBalance.getCalendarYear(),
-		 * leaveOpeningBalance.getLeaveType().getId(),
-		 * leaveOpeningBalance.getNoOfDays(),
-		 * leaveOpeningBalance.getCreatedBy(),
-		 * leaveOpeningBalance.getCreatedDate(),
-		 * leaveOpeningBalance.getLastModifiedBy(),
-		 * leaveOpeningBalance.getLastModifiedDate(),
-		 * leaveOpeningBalance.getTenantId(), leaveOpeningBalance.getId(),
-		 * leaveOpeningBalance.getTenantId() };
-		 * 
-		 * try { jdbcTemplate.update(UPDATE_LEAVEOPENINGBALANCE_QUERY, obj); }
-		 * catch (Exception ex) { ex.printStackTrace(); }
-		 */
 
 		try {
 			jdbcTemplate.batchUpdate(UPDATE_LEAVEOPENINGBALANCE_QUERY, new BatchPreparedStatementSetter() {

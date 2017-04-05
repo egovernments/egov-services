@@ -47,6 +47,7 @@ import javax.validation.Valid;
 import org.egov.eis.model.LeaveAllotment;
 import org.egov.eis.service.LeaveAllotmentService;
 import org.egov.eis.web.contract.LeaveAllotmentGetRequest;
+import org.egov.eis.web.contract.LeaveAllotmentRequest;
 import org.egov.eis.web.contract.LeaveAllotmentResponse;
 import org.egov.eis.web.contract.RequestInfo;
 import org.egov.eis.web.contract.RequestInfoWrapper;
@@ -60,6 +61,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -111,6 +113,55 @@ public class LeaveAllotmentController {
 	}
 
 	/**
+	 * Maps Post Requests for _create & returns ResponseEntity of either
+	 * LeaveOpeningBalanceResponse type or ErrorResponse type
+	 * 
+	 * @param LeaveOpeningBalanceRequest
+	 * @param BindingResult
+	 * @return ResponseEntity<?>
+	 */
+
+	@PostMapping("_create")
+	@ResponseBody
+	public ResponseEntity<?> create(@RequestBody LeaveAllotmentRequest leaveAllotmentRequest,
+			BindingResult bindingResult) {
+
+		ResponseEntity<?> errorResponseEntity = validateLeaveAllotmentRequest(leaveAllotmentRequest, bindingResult);
+		if (errorResponseEntity != null)
+			return errorResponseEntity;
+
+		return leaveAllotmentService.createLeaveAllotment(leaveAllotmentRequest);
+	}
+
+	/**
+	 * Maps Post Requests for _create & returns ResponseEntity of either
+	 * LeaveAllotmentResponse type or ErrorResponse type
+	 * 
+	 * @param LeaveAllotmentRequest
+	 * @param BindingResult
+	 * @return ResponseEntity<?>
+	 */
+
+	@PostMapping("/{leavetypeId}/_update")
+	@ResponseBody
+	public ResponseEntity<?> update(@RequestBody LeaveAllotmentRequest leaveAllotmentRequest,
+			@PathVariable(required = true, name = "leavetypeId") Long leavetypeId, BindingResult bindingResult) {
+
+		ResponseEntity<?> errorResponseEntity = validateLeaveAllotmentRequest(leaveAllotmentRequest, bindingResult);
+		if (errorResponseEntity != null)
+			return errorResponseEntity;
+
+		return leaveAllotmentService.updateLeaveAllotment(leaveAllotmentRequest);
+	}
+
+	/**
+	 * Populate Response object and returnleaveAllotmentsList
+	 * 
+	 * @param leaveAllotmentsList
+	 * @return
+	 */
+
+	/**
 	 * Populate Response object and returnleaveAllotmentsList
 	 * 
 	 * @param leaveAllotmentsList
@@ -124,6 +175,24 @@ public class LeaveAllotmentController {
 		leaveAllotmentRes.setResponseInfo(responseInfo);
 		return new ResponseEntity<LeaveAllotmentResponse>(leaveAllotmentRes, HttpStatus.OK);
 
+	}
+
+	/**
+	 * Validate EmployeeRequest object & returns ErrorResponseEntity if there
+	 * are any errors or else returns null
+	 * 
+	 * @param EmployeeRequest
+	 * @param bindingResult
+	 * @return ResponseEntity<?>
+	 */
+	private ResponseEntity<?> validateLeaveAllotmentRequest(LeaveAllotmentRequest leaveAllotmentRequest,
+			BindingResult bindingResult) {
+		// validate input params that can be handled by annotations
+		if (bindingResult.hasErrors()) {
+			return errHandler.getErrorResponseEntityForBindingErrors(bindingResult,
+					leaveAllotmentRequest.getRequestInfo());
+		}
+		return null;
 	}
 
 }

@@ -40,7 +40,7 @@
 
 package org.egov.eis.model;
 
-import java.util.Date;
+import java.sql.Date;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -62,10 +62,11 @@ import lombok.ToString;
 @ToString
 public class LeaveAllotment {
 
-	private String id;
+	private Long id;
 
 	private Long designation;
 
+	@NotNull
 	private LeaveType leaveType;
 
 	@NotNull
@@ -73,15 +74,15 @@ public class LeaveAllotment {
 
 	private Long createdBy;
 
-	@JsonFormat(pattern = "dd/MM/yyyy")
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date createdDate;
 
 	private Long lastModifiedBy;
 
-	@JsonFormat(pattern = "dd/MM/yyyy")
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date lastModifiedDate;
 
-	@Size(max=256)
+	@Size(max = 256)
 	private String tenantId;
 
 }

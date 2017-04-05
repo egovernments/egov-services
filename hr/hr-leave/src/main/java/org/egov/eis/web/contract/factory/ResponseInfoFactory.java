@@ -48,14 +48,14 @@ import org.springframework.stereotype.Component;
 public class ResponseInfoFactory {
 
 	public ResponseInfo createResponseInfoFromRequestInfo(RequestInfo requestInfo, Boolean success) {
-        String apiId = requestInfo.getApiId();
-        String ver = requestInfo.getVer();
-        String ts = requestInfo.getTs();
-        String resMsgId = "uief87324"; // FIXME : Hard-coded
-        String msgId = requestInfo.getMsgId();
-        String responseStatus = success ? "successful" : "failed";
+		String apiId = requestInfo != null ? requestInfo.getApiId() : "";
+		String ver = requestInfo != null ? requestInfo.getVer() : "";
+		String ts = requestInfo != null ? requestInfo.getTs() : "";
+		String resMsgId = "uief87324"; // FIXME : Hard-coded
+		String msgId = requestInfo != null ? requestInfo.getMsgId() : "";
+		String responseStatus = success ? "successful" : "failed";
 
-        return new ResponseInfo(apiId, ver, ts, resMsgId, msgId, responseStatus);
-    }
+		return new ResponseInfo(apiId, ver, ts, resMsgId, msgId, responseStatus);
+	}
 
 }

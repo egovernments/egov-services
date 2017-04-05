@@ -40,46 +40,32 @@
 
 package org.egov.eis.broker;
 
-import java.io.IOException;
-
-import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.egov.eis.service.LeaveOpeningBalanceService;
-import org.egov.eis.web.contract.LeaveOpeningBalanceRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.SendResult;
+import org.springframework.stereotype.Service;
+import org.springframework.util.concurrent.ListenableFuture;
+import org.springframework.util.concurrent.ListenableFutureCallback;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-public class LeaveOpeningBalanceSaveConsumer {
-
-	public static final Logger LOGGER = LoggerFactory.getLogger(LeaveOpeningBalanceSaveConsumer.class);
+@Service
+public class LeaveAllotmentProducer {
 
 	@Autowired
-	private LeaveOpeningBalanceService leaveOpeningBalanceService;
+	private KafkaTemplate<String, Object> kafkaTemplate;
 
-	@Value("${kafka.topics.leaveopeningbalance.create.name}")
-	private String leaveOpeningBalanceCreateTopic;
+	public void sendMessage(String topic, String key, Object message) {
 
-	@Value("${kafka.topics.leaveopeningbalance.update.name}")
-	private String leaveOpeningBalanceUpdateTopic;
+		ListenableFuture<SendResult<String, Object>> future = kafkaTemplate.send(topic, key, message);
 
-	@KafkaListener(containerFactory = "kafkaListenerContainerFactory", topics = {
-			"${kafka.topics.leaveopeningbalance.create.name}", "${kafka.topics.leaveopeningbalance.update.name}" })
-	public void listen(ConsumerRecord<String, String> record) {
-		LOGGER.info("key:" + record.key() + ":" + "value:" + record.value());
-		ObjectMapper objectMapper = new ObjectMapper();
-		try {
-			if (record.topic().equalsIgnoreCase(leaveOpeningBalanceCreateTopic))
-				leaveOpeningBalanceService
-						.create(objectMapper.readValue(record.value(), LeaveOpeningBalanceRequest.class));
-			else
-				leaveOpeningBalanceService
-						.update(objectMapper.readValue(record.value(), LeaveOpeningBalanceRequest.class));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		// Handle success or failure of sending
+		future.addCallback(new ListenableFutureCallback<SendResult<String, Object>>() {
+			@Override
+			public void onSuccess(SendResult<String, Object> stringTSendResult) {
+			}
+
+			@Override
+			public void onFailure(Throwable throwable) {
+			}
+		});
 	}
 }

@@ -42,6 +42,7 @@ try { assignments_functionary = !localStorage.getItem("assignments_functionary")
 try { assignments_function = !localStorage.getItem("assignments_function") || localStorage.getItem("assignments_function") == "undefined" ? (localStorage.setItem("assignments_function", JSON.stringify(getCommonMaster("egf-masters", "functions", "functions").responseJSON["functions"])) || []) : JSON.parse(localStorage.getItem("assignments_function")); } catch(e) { console.log(e); assignments_function = []; }
 
 
+
 // var response=$.ajax({
 //           url: window.location.origin+"/user/_login?tenantId=ap.public&username=ramakrishna&password=demo&grant_type=password&scope=read",
 //           type: 'POST',

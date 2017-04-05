@@ -1,7 +1,8 @@
 class ShowLeaveType extends React.Component {
   constructor(props) {
     super(props);
-    this.state={employees:[],leaveType:{leaveName:"",
+    this.state={employees:[],leaveType:{
+    name:"",
     pay_eligible:"",
     encashable:"",
     halfday_allowed:"",
@@ -19,16 +20,10 @@ componentWillMount()
 
 componentDidMount()
 {
-    var employees=[];
-  for(var i=1;i<=5;i++)
-  {
-      employees.push({
-          slnumber:i,leaveName:"casual"
-      })
-
-  }
-  // console.log(leavetypes);
-  this.setState({employees});
+  console.log(getCommonMaster("hr-leave","leavetypes","LeaveType").responseJSON["LeaveType"]);
+  this.setState({
+  employees:getCommonMaster("hr-leave","leavetypes","LeaveType").responseJSON["LeaveType"]
+    });
 }
 
 
@@ -66,7 +61,7 @@ handleChange(e,name)
 
   render() {
     console.log(this.state.leaveType);
-    let  {leaveName}=this.state.leaveType;
+    let  {name}=this.state.leaveType;
     let {isSearchClicked,employees}=this.state;
 
     const renderBody=function()
@@ -75,8 +70,8 @@ handleChange(e,name)
       return employees.map((item,index)=>
       {
             return (<tr key={index}>
-                    <td data-label="slnumber">{item.slnumber}</td>
-                    <td data-label="leaveName">{item.leaveName}</td>
+                    <td>{index+1}</td>
+                    <td data-label="name">{item.name}</td>
                     <td data-label="action">
                               {renderAction(getUrlVars()["type"])}
                     </td>
@@ -85,19 +80,18 @@ handleChange(e,name)
 
       })
     }
-  const  renderAction=function(type,leaveName)
+  const  renderAction=function(type,id)
     {
-      console.log(type);
       if(type==="update")
       {
 
         return(
-          <a href={`app/hr/leavemaster/leave-type.html?leaveName=${leaveName}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-pencil"></span></a>)
+          <a href={`app/hr/leavemaster/leave-type.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-pencil"></span></a>)
       }
 
       else {
             return(
-                    <a href={`app/hr/leavemaster/leave-type.html?leaveName=${leaveName}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-modal-window"></span></a>
+                    <a href={`app/hr/leavemaster/leave-type.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-modal-window"></span></a>
                   )
                 }
          }

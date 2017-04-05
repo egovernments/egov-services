@@ -34,4 +34,8 @@ public class ComplaintStatus extends AbstractPersistable<Long> {
     protected void setId(final Long id) {
         this.id = id;
     }
+
+    public org.egov.pgr.read.domain.model.ComplaintStatus toDomain() {
+        return new org.egov.pgr.read.domain.model.ComplaintStatus(id, name);
+    }
 }

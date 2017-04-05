@@ -84,5 +84,10 @@ public class PropertiesManager {
 
 	@Value("${egov.services.collection_service.purpose}")
 	public String purposeService;
+	
+	@Value("${egov.services.financial.hostname}")
+	public String financialServiceHostName;
 
+	@Value("${egov.services.financial.chartofaccounts}")
+	public String financialGetChartOfAccountsService;
 }

@@ -16,11 +16,13 @@ import org.egov.lams.model.DemandDetails;
 import org.egov.lams.model.PaymentInfo;
 import org.egov.lams.repository.BillRepository;
 import org.egov.lams.repository.DemandRepository;
+import org.egov.lams.repository.FinancialsRepository;
 import org.egov.lams.web.contract.BillDetailInfo;
 import org.egov.lams.web.contract.BillInfo;
 import org.egov.lams.web.contract.BillReceiptInfoReq;
 import org.egov.lams.web.contract.BillReceiptReq;
 import org.egov.lams.web.contract.BillSearchCriteria;
+import org.egov.lams.web.contract.ChartOfAccountContract;
 import org.egov.lams.web.contract.DemandSearchCriteria;
 import org.egov.lams.web.contract.LamsConfigurationGetRequest;
 import org.egov.lams.web.contract.ReceiptAccountInfo;
@@ -47,6 +49,9 @@ public class PaymentService {
 
 	@Autowired
 	BillNumberService billNumberService;
+	
+	@Autowired
+	FinancialsRepository financialsRepository;
 
 	public String generateBillXml(Agreement agreement, RequestInfo requestInfo) {
 		String collectXML = "";
@@ -165,7 +170,7 @@ public class PaymentService {
 				orderNo++;
 				totalAmount = totalAmount.add(demandDetail.getTaxAmount());
 				billDetailInfos.addAll(getBilldetails(demandDetail,
-						functionCode, orderNo));
+						functionCode, orderNo, requestInfo));
 			}
 			billInfo.setTotalAmount(totalAmount.doubleValue());
 			billInfo.setBillAmount(totalAmount.doubleValue());
@@ -187,7 +192,7 @@ public class PaymentService {
 	}
 
 	public List<BillDetailInfo> getBilldetails(
-			final DemandDetails demandDetail, String functionCode, int orderNo) {
+			final DemandDetails demandDetail, String functionCode, int orderNo, RequestInfo requestInfo) {
 		final List<BillDetailInfo> billDetails = new ArrayList<>();
 
 		try {
@@ -197,7 +202,7 @@ public class PaymentService {
 			billdetail.setCreditAmount(demandDetail.getTaxAmount());
 			billdetail.setDebitAmount(BigDecimal.ZERO);
 			LOGGER.info("getGlCode before>>>>>>>" + demandDetail.getGlCode());
-			billdetail.setGlCode(demandDetail.getGlCode().toString());
+			billdetail.setGlCode(getGlcodeById(demandDetail.getGlCode(), requestInfo));
 			LOGGER.info("getGlCode after >>>>>>>" + demandDetail.getGlCode());
 			billdetail.setDescription(demandDetail.getTaxPeriod());
 			billdetail.setPeriod(demandDetail.getTaxPeriod());
@@ -325,6 +330,12 @@ public class PaymentService {
 			}
 		}
 		return receiptAmountInfoResponse;
+	}
+	
+	private String getGlcodeById(Long id, RequestInfo requestInfo){
+		ChartOfAccountContract chartOfAccountContract= new ChartOfAccountContract();
+		chartOfAccountContract.setId(id);
+		return financialsRepository.getChartOfAccountGlcodeById(chartOfAccountContract, requestInfo);
 	}
 
 }

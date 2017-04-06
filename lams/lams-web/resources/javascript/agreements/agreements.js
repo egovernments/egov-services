@@ -6,6 +6,8 @@ $('#close').on("click", function() {
 
 
     var agreement = {};
+    var employees=[];
+
     $(".disabled").attr("disabled", true);
     //Getting data for user input
     $("input").on("keyup", function() {
@@ -42,6 +44,7 @@ $('#close').on("click", function() {
       for (var i = 0; i < employees.length; i++) {
           $(`#approverName`).append(`<option value='${employees[i]['id']}'>${employees[i]['name']}</option>`)
       }
+      console.log(employees);
   }
 
         // agreement[this.id] = this.value;
@@ -710,7 +713,14 @@ function fillValueToObject(currentState) {
         $("#parkingSpaceAssetDetailsBlock textarea").attr("disabled", true);
         //append category text
         $(".categoryType").prepend("Park ");
+    } else {
+      // remove all other Asset Details block from DOM except land asset related fields
+      $("#landAssetDetailsBlock,#shopAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
+      //remove agreement template two and three from screen
+      $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo,#agreementDetailsBlockTemplateThree").remove();
+      alert("Agreement is not applicable for selected category");
     }
+
     // finalValidatinRules = Object.assign(validationRules, commomFieldsRules);
     finalValidatinRules = Object.assign({}, commomFieldsRules);
 
@@ -961,7 +971,20 @@ $(".datetimepicker").on("dp.change", function() {
 })
 
 
+    function getPositionId(id) {
+        var tempEmploye={};
+        for (var i = 0; i < employees.length; i++) {
+          if (employees[i].id==id) {
+              tempEmploye=employees[i];
+          }
+        }
 
+        for (var i = 0; i < tempEmploye.assignments.length; i++) {
+          if (tempEmploye.assignments[i].isPrimary) {
+              return tempEmploye.assignments[i].position;
+          }
+        }
+    }
 
     // Adding Jquery validation dynamically
     $("#createAgreementForm").validate({
@@ -971,7 +994,7 @@ $(".datetimepicker").on("dp.change", function() {
             // form.submit();
             // form.preventDefault();
             agreement["workflowDetails"]={};
-            agreement["workflowDetails"]["assignee"]=agreement["approverName"];
+            agreement["workflowDetails"]["assignee"]=getPositionId(agreement["approverName"]);
             agreement["asset"]={};
             agreement["asset"]["id"]=getUrlVars()["assetId"];
             agreement["rentIncrementMethod"]={};

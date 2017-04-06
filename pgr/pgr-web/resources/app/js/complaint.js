@@ -55,6 +55,8 @@ $(document).ready(function()
 		/*load grievance  category*/
 		complaintCategory(),
 
+		doCheckUser(),
+
 		/*load top 5 complaint types*/
 		topComplaintTypes()
 
@@ -278,9 +280,9 @@ $(document).ready(function()
 				var data = getFormData($form);
 
 				data['service_request_id'] = '';
-				data['first_name'] = $('#first_name').val() ? $('#first_name').val() : '';
-				data['phone'] = $('#phone').val() ? $('#phone').val() : '';
-				data['email'] = $('#email').val() ? $('#email').val() : '';
+				data['first_name'] = $('#first_name').val() ? $('#first_name').val() : userName;
+				data['phone'] = $('#phone').val() ? $('#phone').val() : userMobile;
+				data['email'] = $('#email').val() ? $('#email').val() : userEmail;
 				data['status'] = true;
 				data['service_name'] = $('#complaintType option:selected').text();
 				data['requested_datetime'] = "";
@@ -291,8 +293,6 @@ $(document).ready(function()
 				finobj['receivingMode'] = $('#receivingMode').val() ? $('#receivingMode').val() : 'Website';
 				finobj['receivingCenter'] = $('#receivingCenter').val() ? $('#receivingCenter').val() : '';
 				finobj['status'] = 'REGISTERED';
-				if(localStorage.getItem("type") == 'CITIZEN')
-					finobj['userId'] = localStorage.getItem('id');
 				finobj['complainantAddress'] = $('#complainantAddress').val() ? $('#complainantAddress').val() : '';
 
 				data['values'] = finobj;
@@ -346,7 +346,7 @@ $(document).ready(function()
 								success: function(fileresponse){
 									//console.log('file upload success');
 									//Ack page shown
-									docheckUser(response);
+									doAck(response);
 								},
 								error: function(){
 									bootbox.alert('Media file not uploaded!');
@@ -360,7 +360,7 @@ $(document).ready(function()
 						}else{
 							//console.log('File is empty');
 							//Ack page shown
-							docheckUser(response);
+							doAck(response);
 							obj.removeAttr("disabled");
 							hideLoader();
 						}
@@ -408,10 +408,11 @@ function hideReceivingCenter(){
 	$('#receivingCenter').removeAttr('name required');
 }
 
-function docheckUser(response){
-	var userType = localStorage.getItem('type');
-	if(userType && userType == 'CITIZEN'){
-		var userId = localStorage.getItem('id');
+var userName, userMobile, userEmail;
+
+function doCheckUser(){
+	var userId = localStorage.getItem('id');
+	if(userId){
 		var userArray = [];
 		userArray.push(userId);
 		var requestInfo = {};
@@ -420,27 +421,25 @@ function docheckUser(response){
 		$.ajax({
 			url : '/user/_search',
 			type: 'POST',
-			async : false,
 			contentType: "application/json",
 			data : JSON.stringify(requestInfo),
 			success : function(userResponse){
-				var userName = userResponse.user[0].userName;
-				doAck(response, userName);
+				userName = userResponse.user[0].userName;
+				userMobile = userResponse.user[0].mobileNumber;
+				userEmail = userResponse.user[0].emailId;
 			},
 			error: function(){
 				bootbox.alert('userInfo failed!');
 			}
-		});
-	}else{
-		doAck(response, $('#first_name').val());
+		});	
 	}
 }
 
-function doAck(response, userName){
+function doAck(response){
 	var acklabel = translate('core.msg.acknowledgement');
 	$('.breadcrumb').append('<li class="active">'+acklabel+'</li>');
 	$('.acknowledgement, .breadcrumb').removeClass('hide');
-	$('.acknowledgement #firstname').html('Dear '+userName+',');
+	$('.acknowledgement #firstname').html('Dear '+response.service_requests[0].first_name+',');
 	$('.acknowledgement #crn').html(response.service_requests[0].service_request_id);
 	$('.createcrn, .tour-section').addClass('hide');
 }
@@ -502,7 +501,7 @@ function loadReceivingCenter(){
 			$('#recenter').removeClass('hide');
 		},
 		error: function(){
-			bootbox.alert('Receiving mode failed!')
+			bootbox.alert('Receiving center failed!')
 		}
 	})
 }

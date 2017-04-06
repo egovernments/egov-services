@@ -26,5 +26,8 @@ public class User {
 
     @JsonProperty("roles")
     private Set<Role> roles = null;
+    
+    @JsonProperty("tenantId")
+    private String tenantId;
 
 }

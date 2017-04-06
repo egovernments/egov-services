@@ -45,9 +45,9 @@ import java.util.List;
 
 import org.egov.eis.model.Assignment;
 import org.egov.eis.model.Employee;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
-import org.springframework.stereotype.Component;
 
 @Component
 public class EmployeeAssignmentValidator implements Validator {

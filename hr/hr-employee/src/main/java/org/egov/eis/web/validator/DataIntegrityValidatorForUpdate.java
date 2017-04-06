@@ -53,7 +53,6 @@ import org.egov.eis.model.Regularisation;
 import org.egov.eis.model.ServiceHistory;
 import org.egov.eis.model.TechnicalQualification;
 import org.egov.eis.repository.EmployeeRepository;
-import org.egov.eis.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;

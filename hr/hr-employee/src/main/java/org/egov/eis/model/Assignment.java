@@ -40,6 +40,8 @@
 
 package org.egov.eis.model;
 
+import static org.gov.eis.utils.DateUtils.areDatesEqualWithoutTimePart;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -57,7 +59,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import static org.gov.eis.utils.DateUtils.areDatesEqualWithoutTimePart;
 
 @AllArgsConstructor
 @Builder

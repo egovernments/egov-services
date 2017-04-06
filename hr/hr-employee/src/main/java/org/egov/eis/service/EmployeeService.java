@@ -40,10 +40,9 @@
 
 package org.egov.eis.service;
 
-import static org.gov.eis.utils.DateUtils.areDatesEqualWithoutTimePart;
-
 import java.util.List;
 import java.util.stream.Collectors;
+
 import org.egov.eis.broker.EmployeeProducer;
 import org.egov.eis.config.PropertiesManager;
 import org.egov.eis.model.Assignment;
@@ -77,6 +76,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

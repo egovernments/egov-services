@@ -48,7 +48,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.eis.model.Regularisation;
-import org.egov.eis.model.ServiceHistory;
 import org.egov.eis.model.enums.DocumentReferenceType;
 import org.egov.eis.web.contract.EmployeeRequest;
 import org.slf4j.Logger;

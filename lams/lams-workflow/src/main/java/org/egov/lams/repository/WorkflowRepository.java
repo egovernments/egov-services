@@ -6,7 +6,6 @@ import org.egov.lams.contract.ProcessInstanceRequest;
 import org.egov.lams.contract.ProcessInstanceResponse;
 import org.egov.lams.contract.TaskRequest;
 import org.egov.lams.contract.TaskResponse;
-import org.egov.lams.contract.WorkflowRequestInfo;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.Position;
 import org.egov.lams.model.ProcessInstance;
@@ -52,13 +51,10 @@ public class WorkflowRepository {
 		processInstance.setAssignee(assignee);
 		processInstance.setComments("statrting workflow from lams consumer app");
 		processInstanceRequest.setProcessInstance(processInstance);
-		
-		WorkflowRequestInfo workflowRequestInfo = new WorkflowRequestInfo();
-		workflowRequestInfo.setTenantId(agreement.getTenantId());
-		processInstanceRequest.setRequestInfo(new WorkflowRequestInfo());
+		processInstanceRequest.setRequestInfo(agreementRequest.getRequestInfo());
 		
 		processInstance.setTenantId(agreement.getTenantId());
-		// TODO put business key ina pp.propscomments
+		// TODO put business  key ina pp.propscomments
 
 		String url = propertiesManager.getWorkflowServiceHostName()
 					+ propertiesManager.getWorkflowServiceStartPath();
@@ -82,9 +78,7 @@ public class WorkflowRepository {
 		WorkFlowDetails workFlowDetails = agreement.getWorkflowDetails();
 
 		TaskRequest taskRequest = new TaskRequest();
-		WorkflowRequestInfo workflowRequestInfo = new WorkflowRequestInfo();
-		workflowRequestInfo.setTenantId(agreement.getTenantId());
-		taskRequest.setRequestInfo(workflowRequestInfo);
+		taskRequest.setRequestInfo(agreementRequest.getRequestInfo());
 
 		Task task = new Task();
 		task.setAction(workFlowDetails.getAction());

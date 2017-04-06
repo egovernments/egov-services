@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import org.egov.workflow.domain.model.AuthenticatedUser;
 import org.egov.workflow.domain.service.PgrWorkflowImpl;
 import org.egov.workflow.domain.service.WorkflowMatrixImpl;
 import org.egov.workflow.persistence.repository.UserRepository;
@@ -20,7 +19,6 @@ import org.egov.workflow.web.contract.TaskRequest;
 import org.egov.workflow.web.contract.TaskResponse;
 import org.egov.workflow.web.contract.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

@@ -17,7 +17,7 @@ import lombok.ToString;
 public class ProcessInstanceRequest {
 	
 	@JsonProperty("requestInfo")
-	private WorkflowRequestInfo requestInfo = null;
+	private RequestInfo requestInfo = null;
 
 	@JsonProperty("processInstances")
 	private List<ProcessInstance> processInstances = new ArrayList<ProcessInstance>();

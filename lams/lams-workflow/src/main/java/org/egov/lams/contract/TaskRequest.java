@@ -17,7 +17,7 @@ import lombok.ToString;
 public class TaskRequest   {
 	
   @JsonProperty("requestInfo")
-  private WorkflowRequestInfo requestInfo = null;
+  private RequestInfo requestInfo = null;
 
   @JsonProperty("tasks")
   private List<Task> tasks = new ArrayList<Task>();

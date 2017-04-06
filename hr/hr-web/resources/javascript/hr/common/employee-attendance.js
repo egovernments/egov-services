@@ -24,16 +24,59 @@ class EmployeeSearch extends React.Component {
 
   componentWillMount()
   {
-    var date=new Date();
-    var month=[{id:0,name:"January"},{id:1,name:"February"}, {id:2,name:"March"}, {id:3,name:"April"}, {id:4,name:"May"},
-         {id:5,name:"June"}, {id:6,name:"July"}, {id:7,name:"August"}, {id:8,name:"September"}, {id:9,name:"October"},
-         {id:10,name:"November"}, {id:11,name:"December"}]
+    var date = new Date();
+    var _year, month = [{
+            id: 0,
+            name: "January"
+        }, {
+            id: 1,
+            name: "February"
+        }, {
+            id: 2,
+            name: "March"
+        }, {
+            id: 3,
+            name: "April"
+        }, {
+            id: 4,
+            name: "May"
+        }, {
+            id: 5,
+            name: "June"
+        }, {
+            id: 6,
+            name: "July"
+        }, {
+            id: 7,
+            name: "August"
+        }, {
+            id: 8,
+            name: "September"
+        }, {
+            id: 9,
+            name: "October"
+        }, {
+            id: 10,
+            name: "November"
+        }, {
+            id: 11,
+            name: "December"
+        }
+    ];
+
+    try {
+        _year = getCommonMaster("egov-common-masters", "calendaryears", "CalendarYear").responseJSON["CalendarYear"] || [];
+    } catch(e) {
+        console.log(e);
+        _year = [];
+    }
+
     this.setState({
-      employeeType:getCommonMaster("hr-masters","employeetypes","EmployeeType").responseJSON["EmployeeType"] || [],
-      departments:getCommonMaster("egov-common-masters","departments","Department").responseJSON["Department"] || [],
-      designation:getCommonMaster("hr-masters","designations","Designation").responseJSON["Designation"] || [] ,
-      month,
-      year:getCommonMaster("egov-common-masters","calendaryears","CalendarYear").responseJSON["CalendarYear"] || []
+        employeeType,
+        department: Object.assign([], assignments_department),
+        designation: Object.assign([], assignments_designation),
+        month,
+        year: _year
     })
   }
 
@@ -56,12 +99,11 @@ class EmployeeSearch extends React.Component {
   }
 
   render() {
-    console.log(this.state.searchSet);
     let {handleChange,search}=this;
     let {month,year,designationCode,departmentCode,code,employeeType}=this.state.searchSet;
     const renderOption=function(list,listName="")
     {
-        if(list)
+        if(list && list.constructor == Array)
         {
             if (listName==="year") {
               return list.map((item)=>
@@ -135,7 +177,7 @@ class EmployeeSearch extends React.Component {
                               handleChange(e,"departmentCode")
                           }}>
                             <option>Select Department</option>
-                            {renderOption(this.state.departments)}
+                            {renderOption(this.state.department)}
                          </select>
                       </div>
                       </div>
@@ -179,7 +221,7 @@ class EmployeeSearch extends React.Component {
 
 
             <div className="text-center">
-                <button type="submit"  className="btn btn-submit">Search</button>
+                <button type="submit"  className="btn btn-submit">Search</button> &nbsp;&nbsp;
                 <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>
 
             </div>

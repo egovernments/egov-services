@@ -19,6 +19,7 @@ import org.egov.workflow.web.contract.Position;
 import org.egov.workflow.web.contract.ProcessInstance;
 import org.egov.workflow.web.contract.ProcessInstanceRequest;
 import org.egov.workflow.web.contract.ProcessInstanceResponse;
+import org.egov.workflow.web.contract.RequestInfo;
 import org.egov.workflow.web.contract.Task;
 import org.egov.workflow.web.contract.TaskRequest;
 import org.egov.workflow.web.contract.TaskResponse;
@@ -55,7 +56,7 @@ public class PgrWorkflowImpl implements Workflow {
 		state.setStatus(State.StateStatus.INPROGRESS);
 		state.setValue(processInstance.getStatus());
 		state.setComments(processInstance.getComments());
-		state.setOwnerPosition(resolveAssignee(processInstance));
+		state.setOwnerPosition(resolveAssignee(processInstance, processInstanceRequest.getRequestInfo()));
 		state.setExtraInfo(processInstance.getValueForKey("statusDetails"));
 		state.setDateInfo(processInstance.getCreatedDate());
 		// setAuditableFields(state,
@@ -114,17 +115,19 @@ public class PgrWorkflowImpl implements Workflow {
 		return processInstance;
 	}
 
-	private Long resolveAssignee(final ProcessInstance processInstance) {
+	private Long resolveAssignee(final ProcessInstance processInstance, RequestInfo requestInfo) {
 		final String complaintTypeCode = processInstance.getValueForKey("complaintTypeCode");
 		final Long boundaryId = Long.valueOf(processInstance.getValueForKey("boundaryId"));
 		final Long firstTimeAssignee = null;
-		final Position response = complaintRouterService.getAssignee(boundaryId, complaintTypeCode, firstTimeAssignee);
+		final Position response = complaintRouterService.getAssignee(boundaryId, complaintTypeCode, firstTimeAssignee,
+				requestInfo);
 		return response.getId();
 	}
 
 	@Override
-	public Position getAssignee(final Long boundaryId, final String complaintTypeCode, final Long assigneeId) {
-		return complaintRouterService.getAssignee(boundaryId, complaintTypeCode, assigneeId);
+	public Position getAssignee(final Long boundaryId, final String complaintTypeCode, final Long assigneeId,
+			RequestInfo requestInfo) {
+		return complaintRouterService.getAssignee(boundaryId, complaintTypeCode, assigneeId, requestInfo);
 	}
 
 	/*

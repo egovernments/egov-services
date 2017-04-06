@@ -48,6 +48,7 @@ import org.egov.eis.model.Employee;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -80,5 +81,23 @@ public class EmployeeLanguageRepository {
 				return employeeLanguages.size();
 			}
 		});
+	}
+
+	public List<Long> findByEmployeeId(Long Id, String tenantId) {
+		
+		List<Long> employeeLanguage = null;
+		
+/*		try{
+			employeeLanguage = (List<Long>) jdbcTemplate.query(SELECT_ASSIGNMENT_QUERY, new Object[] {Id, tenantId}, assignmentTableRowMapper);
+			System.out.println("list of assignments" +employeeLanguage);
+			return employeeLanguage;
+		}catch (EmptyResultDataAccessException e) {
+			return null;
+		}*/
+		
+		
+		
+		
+		return null;
 	}
 }

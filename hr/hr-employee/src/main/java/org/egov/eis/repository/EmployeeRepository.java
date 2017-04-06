@@ -1,5 +1,5 @@
 /*
- * eGov suite of products aim to improve the internal efficiency,transparency,
+ * eGov suite of products aim to improve the internal efficiency,transparency,	
  * accountability and the service delivery of the government  organizations.
  *
  *  Copyright (C) 2016  eGovernments Foundation
@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.egov.eis.model.Assignment;
 import org.egov.eis.model.Employee;
 import org.egov.eis.model.EmployeeDocument;
 import org.egov.eis.model.EmployeeInfo;
@@ -52,7 +53,8 @@ import org.egov.eis.repository.builder.EmployeeQueryBuilder;
 import org.egov.eis.repository.rowmapper.EmployeeDocumentsRowMapper;
 import org.egov.eis.repository.rowmapper.EmployeeIdsRowMapper;
 import org.egov.eis.repository.rowmapper.EmployeeInfoRowMapper;
-import org.egov.eis.web.contract.EmployeeGetRequest;
+import org.egov.eis.repository.rowmapper.EmployeeTableRowMapper;
+import org.egov.eis.web.contract.EmployeeCriteria;
 import org.egov.eis.web.contract.EmployeeRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,7 +84,14 @@ public class EmployeeRepository {
 
 	public static final String EMPLOYEE_EXISTANCE_CHECK_QUERY = "SELECT exists(SELECT id FROM egeis_employee"
 			+ " WHERE id = ? AND tenantId = ?)";
-
+	
+	public static final String SELECT_BY_EMPLOYEEID_QUERY = "SELECT"
+			+ " id, code, dateofappointment, dateofjoining, dateofretirement, employeestatus, recruitmentmodeid,"
+			+ " recruitmenttypeid, recruitmentquotaid, retirementage, dateofresignation, dateoftermination, employeetypeid, mothertongueid, religionid,"
+			+ " communityid, categoryid, physicallydisabled, medicalReportproduced, passportno, gpfno, bankid, bankbranchid, bankaccount, groupid, placeofbirth, tenantid"
+			+ " FROM egeis_employee"
+			+ " WHERE id = ? AND tenantId = ? ";	
+	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
@@ -97,14 +106,17 @@ public class EmployeeRepository {
 
 	@Autowired
 	private EmployeeQueryBuilder employeeQueryBuilder;
+	
+	@Autowired
+	private EmployeeTableRowMapper employeeTableRowMapper;
 
 	@Autowired
 	private EmployeeDocumentsRepository documentsRepository;
 
 	@SuppressWarnings("unchecked")
-	public List<EmployeeInfo> findForCriteria(EmployeeGetRequest employeeGetRequest) {
+	public List<EmployeeInfo> findForCriteria(EmployeeCriteria employeeCriteria) {
 		List<Object> preparedStatementValuesForListOfEmployeeIds = new ArrayList<Object>();
-		String queryStrForListOfEmployeeIds = employeeQueryBuilder.getQueryForListOfEmployeeIds(employeeGetRequest,
+		String queryStrForListOfEmployeeIds = employeeQueryBuilder.getQueryForListOfEmployeeIds(employeeCriteria,
 				preparedStatementValuesForListOfEmployeeIds);
 
 		List<Long> listOfIds = jdbcTemplate.query(queryStrForListOfEmployeeIds,
@@ -115,7 +127,7 @@ public class EmployeeRepository {
 		}
 
 		List<Object> preparedStatementValues = new ArrayList<Object>();
-		String queryStr = employeeQueryBuilder.getQuery(employeeGetRequest, preparedStatementValues, listOfIds);
+		String queryStr = employeeQueryBuilder.getQuery(employeeCriteria, preparedStatementValues, listOfIds);
 
 		List<EmployeeInfo> employeesInfo = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
 				employeeInfoRowMapper);
@@ -225,5 +237,13 @@ public class EmployeeRepository {
 
 	private String getProcessedIdsString(List<Long> ids) {
 		return ids.toString().replace("[", "").replace("]", "");
+	}
+
+	public Employee findById(Long employeeId, String tenantId) {
+		Employee employee = jdbcTemplate.query(SELECT_BY_EMPLOYEEID_QUERY, new Object[] {employeeId, tenantId},
+							employeeTableRowMapper);
+		System.out.println("employee =" + employee);
+		return employee;
+
 	}
 }

@@ -63,7 +63,7 @@ import org.egov.eis.repository.ServiceHistoryRepository;
 import org.egov.eis.repository.TechnicalQualificationRepository;
 import org.egov.eis.service.helper.EmployeeHelper;
 import org.egov.eis.service.helper.EmployeeUserMapper;
-import org.egov.eis.web.contract.EmployeeGetRequest;
+import org.egov.eis.web.contract.EmployeeCriteria;
 import org.egov.eis.web.contract.EmployeeRequest;
 import org.egov.eis.web.contract.RequestInfo;
 import org.egov.eis.web.contract.UserRequest;
@@ -138,13 +138,13 @@ public class EmployeeService {
 
 	public static final String INSERT_PROBATION_QUERY = "SELECT id FROM egeis_departmentaltest WHERE employeeid = ?";
 
-	public List<EmployeeInfo> getEmployees(EmployeeGetRequest employeeGetRequest, RequestInfo requestInfo) {
-		List<EmployeeInfo> employeeInfoList = employeeRepository.findForCriteria(employeeGetRequest);
+	public List<EmployeeInfo> getEmployees(EmployeeCriteria employeeCriteria, RequestInfo requestInfo) {
+		List<EmployeeInfo> employeeInfoList = employeeRepository.findForCriteria(employeeCriteria);
 
 		List<Long> ids = employeeInfoList.stream().map(employeeInfo -> employeeInfo.getId())
 				.collect(Collectors.toList());
 
-		List<User> usersList = userService.getUsers(ids, employeeGetRequest.getTenantId(), requestInfo);
+		List<User> usersList = userService.getUsers(ids, employeeCriteria.getTenantId(), requestInfo);
 		LOGGER.debug("userService: " + usersList);
 		employeeUserMapper.mapUsersWithEmployees(employeeInfoList, usersList);
 
@@ -154,6 +154,14 @@ public class EmployeeService {
 		}
 
 		return employeeInfoList;
+	}
+	
+	public Employee getEmployee(Long employeeId, String tenantId, RequestInfo requestInfo) {
+		Employee employee = employeeRepository.findById(employeeId, tenantId);
+	//	employee.setLanguagesKnown(employeeLanguageRepository.findByEmployeeId(employeeId, tenantId));
+	employee.setAssignments(assignmentRepository.findByEmployeeId(employeeId, tenantId));
+		// ...
+		return employee;
 	}
 
 	public ResponseEntity<?> createAsync(EmployeeRequest employeeRequest) {
@@ -165,6 +173,7 @@ public class EmployeeService {
 		// formats. Fix a common standard
 		try {
 			responseEntity = userService.createUser(userRequest);
+		
 		} catch (Exception e) {
 			LOGGER.debug("Error occurred while creating user", e);
 			return errorHandler.getResponseEntityForUnknownUserDBUpdationError(employeeRequest.getRequestInfo());

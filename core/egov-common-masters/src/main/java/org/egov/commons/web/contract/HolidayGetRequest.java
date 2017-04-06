@@ -41,6 +41,7 @@
 package org.egov.commons.web.contract;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -64,6 +65,8 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class HolidayGetRequest {
 
+	private List<Long> id;
+	
 	private Integer year;
 
 	@Size(min=3, max=200)

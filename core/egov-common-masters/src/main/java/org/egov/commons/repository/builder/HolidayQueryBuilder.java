@@ -79,9 +79,10 @@ public class HolidayQueryBuilder {
 	private void addWhereClause(StringBuilder selectQuery, List preparedStatementValues,
 			HolidayGetRequest holidayGetRequest) {
 
-		if (holidayGetRequest.getYear() == null && holidayGetRequest.getName() == null
-				&& holidayGetRequest.getApplicableOn() == null && holidayGetRequest.getFromDate() == null
-				&& holidayGetRequest.getToDate() == null && holidayGetRequest.getTenantId() == null)
+		if (holidayGetRequest.getId() == null && holidayGetRequest.getYear() == null
+				&& holidayGetRequest.getName() == null && holidayGetRequest.getApplicableOn() == null
+				&& holidayGetRequest.getFromDate() == null && holidayGetRequest.getToDate() == null
+				&& holidayGetRequest.getTenantId() == null)
 			return;
 
 		selectQuery.append(" WHERE");
@@ -94,6 +95,11 @@ public class HolidayQueryBuilder {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" cy.tenantId = ?");
 			preparedStatementValues.add(holidayGetRequest.getTenantId());
+		}
+
+		if (holidayGetRequest.getId() != null) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" h.id IN " + getIdQuery(holidayGetRequest.getId()));
 		}
 
 		if (holidayGetRequest.getYear() != null) {
@@ -183,5 +189,16 @@ public class HolidayQueryBuilder {
 
 	public static String selectHolidayByApplicableOnAndIdNotInQuery() {
 		return "SELECT id FROM eg_holiday where applicableon = ? and tenantId = ? and id!= ?";
+	}
+
+	private static String getIdQuery(List<Long> idList) {
+		StringBuilder query = new StringBuilder("(");
+		if (idList.size() >= 1) {
+			query.append(idList.get(0).toString());
+			for (int i = 1; i < idList.size(); i++) {
+				query.append(", " + idList.get(i));
+			}
+		}
+		return query.append(")").toString();
 	}
 }

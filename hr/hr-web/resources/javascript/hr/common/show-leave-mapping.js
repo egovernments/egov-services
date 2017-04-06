@@ -2,7 +2,7 @@ class ShowLeaveMapping extends React.Component {
   constructor(props) {
     super(props);
     this.state={
-      employees:[],leave:
+      leaveTypeList:[],leave:
       {designation:"",
       leaveType:"",
       noOfDay:""},
@@ -13,51 +13,31 @@ class ShowLeaveMapping extends React.Component {
   }
 
   componentWillMount()
-  {console.log(getUrlVars()["type"]);}
+  {
+    console.log(getUrlVars()["type"]);
+    // console.log(getCommonMaster("hr-masters","grades","Grade").responseJSON["Grade"]);
+
+
+  }
 
 
 
   componentDidMount()
   {
-    let {
-      designation,leaveType,noOfDay}=this.state.leave;
-      // e.preventDefault();
-      //call api call
-      var employees=[];
-      for(var i=1;i<=10;i++)
-      {
-          employees.push({
-              leaveType:"government",noOfDay:"2"
-          })
-      }
-      this.setState({
-        employees
-      })
+    this.setState({
+      leaveTypeList:getCommonMaster("hr-leave","leaveallotments","LeaveAllotment").responseJSON["LeaveAllotment"]
 
-      // $('#employeeTable').DataTable().draw();
-      // console.log($('#employeeTable').length);
-
-
-    // $('#employeeTable').DataTable({
-    //   dom: 'Bfrtip',
-    //   buttons: [
-    //            'copy', 'csv', 'excel', 'pdf', 'print'
-    //    ],
-    //    ordering: false
-    // });
-
-    // console.log($('#employeeTable').length);
-
+    });
   }
 
   componentDidUpdate(prevProps, prevState)
   {
-      if (prevState.employees.length!=this.state.employees.length) {
+      if (prevState.grades.length!=this.state.grades.length) {
           // $('#employeeTable').DataTable().draw();
-          // alert(prevState.employees.length);
-          // alert(this.state.employees.length);
+          // alert(prevState.grades.length);
+          // alert(this.state.grades.length);
           // alert('updated');
-          $('#employeeTable').DataTable({
+          $('#gradeTable').DataTable({
             dom: 'Bfrtip',
             buttons: [
                      'copy', 'csv', 'excel', 'pdf', 'print'
@@ -66,6 +46,7 @@ class ShowLeaveMapping extends React.Component {
           });
       }
   }
+
 
   handleChange(e,name)
   {
@@ -85,22 +66,11 @@ class ShowLeaveMapping extends React.Component {
       open(location, '_self').close();
   }
 
-  // updateTable()
-  // {
-  //   $('#employeeTable').DataTable({
-  //     dom: 'Bfrtip',
-  //     buttons: [
-  //              'copy', 'csv', 'excel', 'pdf', 'print'
-  //      ],
-  //      ordering: false
-  //   });
-  //
-  // }
 
   render() {
     console.log(this.state.leave);
     let {handleChange}=this;
-    let {employees}=this.state;
+    let {leaveTypeList}=this.state;
     let {designation,leaveType,noOfDay}=this.state.leave;
 
 
@@ -121,11 +91,11 @@ class ShowLeaveMapping extends React.Component {
 
     const renderBody=function()
     {
-      return employees.map((item,index)=>
+      return leaveTypeList.map((item,index)=>
       {
             return (<tr key={index}>
-                    <td data-label="leaveType">{item.leaveType}</td>
-                    <td data-label="noOfDay">{item.noOfDay}</td>
+                    <td data-label="leaveType">{item.leaveType.name}</td>
+                    <td data-label="noOfDay">{item.noOfDays}</td>
                     <td data-label="action">
                     {renderAction(getUrlVars()["type"],item.leaveType)}
                     </td>

@@ -131,6 +131,12 @@ paths:
           required: false
           type: string
           format: varchar
+        - name: acknowledgementNumber
+          in: query
+          description: Acknowldgement number given to allottee on submitting the application.
+          required: false
+          type: string
+          format: varchar
         - name: offset
           in: query
           description: Offset value for a the page (in case of pagination on result)
@@ -543,6 +549,10 @@ definitions:
       timePeriod:
         type: string
         description: The validity of agreement period,value will be in no.of years. 
+        maxLength: 64
+      acknowledgementNumber:
+        type: string
+        description: Acknowldgement number given to allottee on submitting the application. 
         maxLength: 64
       documents:
         type: array

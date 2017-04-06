@@ -111,4 +111,4 @@ curl -X POST -H "Content-Type: application/json" -H "Cache-Control: no-cache" -H
     "status": "200",
     "authtoken":"1111"
   
-}' "http://localhost:8086/workflow/designations/_search?businessKey=EgBillregister&approvalDepartmentName=Accounts&departmentRule=&currentState=&additionalRule=&pendingAction=&designation=&amountRule="
+}' "http://localhost:8086/workflow/designations/_search?businessKey=EgBillregister&approvalDepartmentName=Accounts&departmentRule=&currentStatus=&additionalRule=&pendingAction=&designation=&amountRule="

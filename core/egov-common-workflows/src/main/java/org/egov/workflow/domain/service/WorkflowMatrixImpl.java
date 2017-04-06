@@ -82,7 +82,15 @@ public class WorkflowMatrixImpl implements Workflow {
 		state.setStatus(StateStatus.INPROGRESS);
 		state.setValue(wfMatrix.getNextState());
 		state.setComments(processInstance.getComments());
-		state.setOwnerPosition(owner.getId());
+		//FIXME position service is not fetching data
+		if(owner==null)
+		{
+			System.out.println("Owner info is not availble from respective service");
+			state.setOwnerPosition(processInstance.getAssignee().getId());
+		}else
+		{
+			state.setOwnerPosition(owner.getId());
+		}
 		state.setNextAction(wfMatrix.getNextAction());
 		state.setType(processInstance.getBusinessKey());
 		state.setInitiatorPosition(owner.getId());

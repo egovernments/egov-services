@@ -1,14 +1,14 @@
 {
   "RequestInfo": {
-    "api_id": "org.egov.pgr",
+    "apiId": "org.egov.pgr",
     "ver": "1.0",
     "ts": null,
     "action": "create",
     "did": "4354648646",
     "key": "xyz",
-    "msg_id": "f10f89d7-7520-4bbe-bc51-980f3c228ad6",
-    "requester_id": "2",
-    "auth_token": null
+    "msgId": "f10f89d7-7520-4bbe-bc51-980f3c228ad6",
+    "requesterId": "2",
+    "authToken": null
   },
   "ServiceRequest": {
     "tenantId": "ap.public",

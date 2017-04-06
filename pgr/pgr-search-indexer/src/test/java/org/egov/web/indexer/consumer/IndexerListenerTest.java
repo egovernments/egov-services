@@ -2,22 +2,17 @@ package org.egov.web.indexer.consumer;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.egov.web.indexer.adaptor.ComplaintAdapter;
-import org.egov.web.indexer.contract.RequestInfo;
 import org.egov.web.indexer.contract.ServiceRequest;
-import org.egov.web.indexer.contract.SevaRequest;
 import org.egov.web.indexer.repository.ElasticSearchRepository;
 import org.egov.web.indexer.repository.contract.ComplaintIndex;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;

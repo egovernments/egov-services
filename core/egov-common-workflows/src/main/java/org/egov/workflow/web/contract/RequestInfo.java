@@ -1,9 +1,5 @@
 package org.egov.workflow.web.contract;
 
-import java.util.Date;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,8 +15,7 @@ public class RequestInfo {
 
 	private String ver;
 
-	@JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "IST")
-	private Date ts;
+	private String ts;
 
 	private String action;
 

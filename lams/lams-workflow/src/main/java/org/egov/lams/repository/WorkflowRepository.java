@@ -59,6 +59,8 @@ public class WorkflowRepository {
 		String url = propertiesManager.getWorkflowServiceHostName()
 					+ propertiesManager.getWorkflowServiceStartPath();
 		LOGGER.info("string url of the workflow appp : "+url);
+		
+		LOGGER.info("WorkflowRepository processInstanceRequest : "+processInstanceRequest);
 
 		ProcessInstanceResponse  processInstanceRes = null;
 		try {

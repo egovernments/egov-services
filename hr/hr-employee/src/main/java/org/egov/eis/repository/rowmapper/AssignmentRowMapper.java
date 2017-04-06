@@ -65,24 +65,23 @@ public class AssignmentRowMapper implements ResultSetExtractor<List<Assignment>>
 
 			Assignment assignment = assignmentMap.get(assignmentId);
 
-			
 			if (assignment == null) {
 				assignment = new Assignment();
 				assignment.setId(rs.getLong("a_id"));
-				assignment.setPosition(rs.getLong("a_positionId"));
-				assignment.setFund(rs.getLong("a_fundId"));
-				assignment.setFunctionary(rs.getLong("a_functionaryId"));
-				assignment.setFunction(rs.getLong("a_functionId"));
-				assignment.setDesignation(rs.getLong("a_designationId"));
-				assignment.setDepartment(rs.getLong("a_departmentId"));
-				assignment.setIsPrimary(rs.getBoolean("a_isPrimary"));
+				assignment.setPosition((Long) rs.getObject("a_positionId"));
+				assignment.setFund((Long) rs.getObject("a_fundId"));
+				assignment.setFunctionary((Long) rs.getObject("a_functionaryId"));
+				assignment.setFunction((Long) rs.getObject("a_functionId"));
+				assignment.setDesignation((Long) rs.getObject("a_designationId"));
+				assignment.setDepartment((Long) rs.getObject("a_departmentId"));
+				assignment.setIsPrimary((Boolean) rs.getObject("a_isPrimary"));
 				assignment.setFromDate(rs.getDate("a_fromDate"));
 				assignment.setToDate(rs.getDate("a_toDate"));
-				assignment.setGrade(rs.getLong("a_gradeId"));
+				assignment.setGrade((Long) rs.getObject("a_gradeId"));
 				assignment.setGovtOrderNumber(rs.getString("a_govtOrderNumber"));
-				assignment.setCreatedBy(rs.getLong("a_createdBy"));
+				assignment.setCreatedBy((Long) rs.getObject("a_createdBy"));
 				assignment.setCreatedDate(rs.getDate("a_createdDate"));
-				assignment.setLastModifiedBy(rs.getLong("a_lastModifiedBy"));
+				assignment.setLastModifiedBy((Long) rs.getObject("a_lastModifiedBy"));
 				assignment.setLastModifiedDate(rs.getDate("a_lastModifiedDate"));
 				assignment.setTenantId(rs.getString("a_tenantId"));
 
@@ -97,7 +96,7 @@ public class AssignmentRowMapper implements ResultSetExtractor<List<Assignment>>
 			if (rs.getLong("hod_id") != 0) {
 				HODDepartment hodDepartment = new HODDepartment();
 				hodDepartment.setId(rs.getLong("hod_id"));
-				hodDepartment.setDepartment(rs.getLong("hod_departmentId"));
+				hodDepartment.setDepartment((Long) rs.getObject("hod_departmentId"));
 				hodDepartment.setTenantId(rs.getString("a_tenantId"));
 				hodDepartmentsList.add(hodDepartment);
 			}

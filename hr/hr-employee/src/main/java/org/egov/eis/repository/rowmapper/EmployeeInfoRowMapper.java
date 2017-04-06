@@ -91,9 +91,9 @@ public class EmployeeInfoRowMapper implements ResultSetExtractor<List<EmployeeIn
 				empInfo.setId(rs.getLong("e_id"));
 				empInfo.setCode(rs.getString("e_code"));
 				empInfo.setEmployeeStatus(rs.getString("e_employeeStatus"));
-				empInfo.setEmployeeType(rs.getLong("e_employeeTypeId"));
-				empInfo.setBank(rs.getLong("e_bankId"));
-				empInfo.setBankBranch(rs.getLong("e_bankBranchId"));
+				empInfo.setEmployeeType((Long) rs.getObject("e_employeeTypeId"));
+				empInfo.setBank((Long) rs.getObject("e_bankId"));
+				empInfo.setBankBranch((Long) rs.getObject("e_bankBranchId"));
 				empInfo.setBankAccount(rs.getString("e_bankAccount"));
 				empInfo.setTenantId(rs.getString("e_tenantId"));
 				empInfoMap.put(employeeId, empInfo);
@@ -108,20 +108,20 @@ public class EmployeeInfoRowMapper implements ResultSetExtractor<List<EmployeeIn
 			if (assignmentInfo == null) {
 				assignmentInfo = new AssignmentInfo();
 				assignmentInfo.setId(rs.getLong("a_id"));
-				assignmentInfo.setPosition(rs.getLong("a_positionId"));
-				assignmentInfo.setFund(rs.getLong("a_fundId"));
-				assignmentInfo.setFunctionary(rs.getLong("a_functionaryId"));
-				assignmentInfo.setFunction(rs.getLong("a_functionId"));
-				assignmentInfo.setDesignation(rs.getLong("a_designationId"));
-				assignmentInfo.setDepartment(rs.getLong("a_departmentId"));
-				assignmentInfo.setIsPrimary(rs.getBoolean("a_isPrimary"));
+				assignmentInfo.setPosition((Long) rs.getObject("a_positionId"));
+				assignmentInfo.setFund((Long) rs.getObject("a_fundId"));
+				assignmentInfo.setFunctionary((Long) rs.getObject("a_functionaryId"));
+				assignmentInfo.setFunction((Long) rs.getObject("a_functionId"));
+				assignmentInfo.setDesignation((Long) rs.getObject("a_designationId"));
+				assignmentInfo.setDepartment((Long) rs.getObject("a_departmentId"));
+				assignmentInfo.setIsPrimary((Boolean) rs.getObject("a_isPrimary"));
 				assignmentInfo.setFromDate(rs.getDate("a_fromDate"));
 				assignmentInfo.setToDate(rs.getDate("a_toDate"));
-				assignmentInfo.setGrade(rs.getLong("a_gradeId"));
+				assignmentInfo.setGrade((Long) rs.getObject("a_gradeId"));
 				assignmentInfo.setGovtOrderNumber(rs.getString("a_govtOrderNumber"));
-				assignmentInfo.setCreatedBy(rs.getLong("a_createdBy"));
+				assignmentInfo.setCreatedBy((Long) rs.getObject("a_createdBy"));
 				assignmentInfo.setCreatedDate(rs.getDate("a_createdDate"));
-				assignmentInfo.setLastModifiedBy(rs.getLong("a_lastModifiedBy"));
+				assignmentInfo.setLastModifiedBy((Long) rs.getObject("a_lastModifiedBy"));
 				assignmentInfo.setLastModifiedDate(rs.getDate("a_lastModifiedDate"));
 
 				assignmentInfoMap.put(assignmentId, assignmentInfo);
@@ -135,13 +135,13 @@ public class EmployeeInfoRowMapper implements ResultSetExtractor<List<EmployeeIn
 				if (hodDepartment == null) {
 					hodDepartment = new HODDepartment();
 					hodDepartment.setId(rs.getLong("hod_id"));
-					hodDepartment.setDepartment(rs.getLong("hod_departmentId"));
+					hodDepartment.setDepartment((Long) rs.getObject("hod_departmentId"));
 					hodDeptMap.put(hodId, hodDepartment);
 				}
 			}
 
 			List<Long> jurisdictionIds = empInfo.getJurisdictionIds();
-			Long jurisdictionId = rs.getLong("ej_jurisdictionId");
+			Long jurisdictionId = (Long) rs.getObject("ej_jurisdictionId");
 
 			if (jurisdictionId != 0 && !jurisdictionIds.contains(jurisdictionId))
 				jurisdictionIds.add(jurisdictionId);

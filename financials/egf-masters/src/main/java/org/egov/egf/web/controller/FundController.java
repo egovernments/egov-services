@@ -87,7 +87,7 @@ public class FundController {
         return fundContractResponse;
     }
 
-    @GetMapping(value = "/{uniqueId}")
+//    @GetMapping(value = "/{uniqueId}")
     @ResponseStatus(HttpStatus.OK)
     public FundContractResponse view(@ModelAttribute FundContractRequest fundContractRequest, BindingResult errors,
             @PathVariable Long uniqueId) {
@@ -110,32 +110,32 @@ public class FundController {
         return fundContractResponse;
     }
 
-    @PutMapping
-    @ResponseStatus(HttpStatus.OK)
-    public FundContractResponse updateAll(@RequestBody @Valid FundContractRequest fundContractRequest, BindingResult errors) {
-        fundService.validate(fundContractRequest, "updateAll", errors);
-        if (errors.hasErrors()) {
-            throw new CustomBindException(errors);
-        }
-        fundService.fetchRelatedContracts(fundContractRequest);
-
-        FundContractResponse fundContractResponse = new FundContractResponse();
-        fundContractResponse.setFunds(new ArrayList<FundContract>());
-        for (FundContract fundContract : fundContractRequest.getFunds()) {
-            Fund fundFromDb = fundService.findOne(fundContract.getId());
-
-            ModelMapper model = new ModelMapper();
-            model.map(fundContract, fundFromDb);
-            fundFromDb = fundService.update(fundFromDb);
-            model.map(fundFromDb, fundContract);
-            fundContractResponse.getFunds().add(fundContract);
-        }
-
-        fundContractResponse.setResponseInfo(getResponseInfo(fundContractRequest.getRequestInfo()));
-        fundContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
-
-        return fundContractResponse;
-    }
+//    @PutMapping
+//    @ResponseStatus(HttpStatus.OK)
+//    public FundContractResponse updateAll(@RequestBody @Valid FundContractRequest fundContractRequest, BindingResult errors) {
+//        fundService.validate(fundContractRequest, "updateAll", errors);
+//        if (errors.hasErrors()) {
+//            throw new CustomBindException(errors);
+//        }
+//        fundService.fetchRelatedContracts(fundContractRequest);
+//
+//        FundContractResponse fundContractResponse = new FundContractResponse();
+//        fundContractResponse.setFunds(new ArrayList<FundContract>());
+//        for (FundContract fundContract : fundContractRequest.getFunds()) {
+//            Fund fundFromDb = fundService.findOne(fundContract.getId());
+//
+//            ModelMapper model = new ModelMapper();
+//            model.map(fundContract, fundFromDb);
+//            fundFromDb = fundService.update(fundFromDb);
+//            model.map(fundFromDb, fundContract);
+//            fundContractResponse.getFunds().add(fundContract);
+//        }
+//
+//        fundContractResponse.setResponseInfo(getResponseInfo(fundContractRequest.getRequestInfo()));
+//        fundContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
+//
+//        return fundContractResponse;
+//    }
 
     @PostMapping("/_search")
     @ResponseBody
@@ -149,7 +149,7 @@ public class FundController {
         if (errors.hasErrors()) {
             throw new CustomBindException(errors);
         }
-        fundService.fetchRelatedContracts(fundContractRequest);
+//        fundService.fetchRelatedContracts(fundContractRequest);
         FundContractResponse fundContractResponse = new FundContractResponse();
         fundContractResponse.setFunds(new ArrayList<FundContract>());
         fundContractResponse.setPage(new Pagination());

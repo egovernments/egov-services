@@ -22,7 +22,8 @@ public class AgreementQueryBuilder {
 				&& agreementsModel.getStatus() == null && agreementsModel.getTenderNumber() == null
 				&& agreementsModel.getTinNumber() == null && agreementsModel.getTradelicenseNumber() == null
 				&& agreementsModel.getAllottee() == null && agreementsModel.getAsset() == null
-				&& agreementsModel.getTenantId() == null))
+				&& agreementsModel.getTenantId() == null && agreementsModel.getAcknowledgementNumber() == null
+				&& agreementsModel.getStateId() == null))
 		{
 			selectQuery.append(" WHERE");
 			boolean isAppendAndClause = false;
@@ -103,11 +104,6 @@ public class AgreementQueryBuilder {
 			} else if (agreementsModel.getFromDate() != null || agreementsModel.getToDate() != null) 
 				throw new RuntimeException("Invalid date Range, please enter Both fromDate and toDate");
 			
-			if (agreementsModel.getTenantId() != null) {
-				isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-				selectQuery.append(" AGREEMENT.tenantId=?");
-				preparedStatementValues.add(agreementsModel.getTenantId());
-			}
 		}/*else{
 			selectQuery.append(" WHERE");
 			selectQuery.append(" agreement_date>=?");

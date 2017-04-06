@@ -195,9 +195,11 @@ class Attendance extends React.Component {
 
     if(currentAttendance.length > 0) {
         for (var i = 0; i < currentAttendance.length; i++) {
+          if(employees[currentAttendance[i].employee] && employees[currentAttendance[i].employee]["attendance"]) {
             employees[currentAttendance[i].employee]["attendance"][`${parseInt(queryParam["month"])}-${currentAttendance[i].attendanceDate.split("-")[2]}`]=currentAttendance[i].type.code;
             employees[currentAttendance[i].employee]["attendance"][`${parseInt(queryParam["month"])}-${currentAttendance[i].attendanceDate.split("-")[2]}` + "-id"] = currentAttendance[i].id;
-      }
+          }
+        }
     } else {
         //Merge employee with attendance
         for(var emp in employees) {

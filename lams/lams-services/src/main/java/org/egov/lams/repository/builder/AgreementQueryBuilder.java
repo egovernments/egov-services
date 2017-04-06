@@ -68,6 +68,18 @@ public class AgreementQueryBuilder {
 				preparedStatementValues.add(agreementsModel.getTradelicenseNumber());
 			}
 
+			if (agreementsModel.getAcknowledgementNumber() != null) {
+				isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+				selectQuery.append(" AGREEMENT.acknowledgementnumber=?");
+				preparedStatementValues.add(agreementsModel.getAcknowledgementNumber());
+			}
+			
+			if (agreementsModel.getStateId() != null) {
+				isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+				selectQuery.append(" AGREEMENT.stateid=?");
+				preparedStatementValues.add(agreementsModel.getStateId());
+			}
+			
 			if (agreementsModel.getAsset() != null) {
 				isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 				selectQuery.append(" AGREEMENT.ASSET IN (" + getIdQuery(agreementsModel.getAsset()));

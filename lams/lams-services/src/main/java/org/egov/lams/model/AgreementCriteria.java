@@ -21,6 +21,7 @@ public class AgreementCriteria {
 	 private Set<Long> agreementId;
 	 private String agreementNumber;
 	 private String tenderNumber;
+	 private String acknowledgementNumber;
 	 
 	 @JsonFormat(pattern="dd/MM/yyyy")
 	 private Date fromDate;
@@ -41,7 +42,7 @@ public class AgreementCriteria {
 	 private Long mobilenumber;
 	 private String offSet;
 	 private String size;
-	 private String StateId;
+	 private String stateId;
 	
 	/* @Setter(onMethod=@__(@JsonIgnore))
 	 @JsonIgnore*/

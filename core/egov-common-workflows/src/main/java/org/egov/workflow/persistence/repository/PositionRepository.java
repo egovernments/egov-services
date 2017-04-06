@@ -39,10 +39,12 @@ public class PositionRepository {
 
 		PositionResponse positionResponse = restTemplate.postForObject(positionsByIdUrl, requestInfoWrapper,
 				PositionResponse.class, id, tenantId);
+		System.out.println(positionResponse);
 		Position position = positionResponse != null
 				? ((positionResponse.getPosition() != null && !positionResponse.getPosition().isEmpty())
 						? positionResponse.getPosition().get(0) : null)
 				: null;
+			System.out.println(position);			
 		return position;
 	}
 

@@ -87,13 +87,15 @@ public class WorkflowMatrixImpl implements Workflow {
 		{
 			System.out.println("Owner info is not availble from respective service");
 			state.setOwnerPosition(processInstance.getAssignee().getId());
+			state.setInitiatorPosition(processInstance.getAssignee().getId());
 		}else
 		{
 			state.setOwnerPosition(owner.getId());
+			state.setInitiatorPosition(owner.getId());
 		}
 		state.setNextAction(wfMatrix.getNextAction());
 		state.setType(processInstance.getBusinessKey());
-		state.setInitiatorPosition(owner.getId());
+		
 		final WorkflowTypes type = workflowTypeService.getWorkflowTypeByType(state.getType());
 		state.setMyLinkId(type.getLink());
 
@@ -195,6 +197,8 @@ public class WorkflowMatrixImpl implements Workflow {
 		state.setSenderName(taskRequest.getRequestInfo().getUserInfo().getName());
 		if (owner != null)
 			state.setOwnerPosition(owner.getId());
+		else
+			state.setOwnerPosition(task.getAssignee().getId());
 		state.setNextAction(wfMatrix.getNextAction());
 		state.setType(task.getBusinessKey());
 		if (task.getDetails() != null && !task.getDetails().isEmpty())

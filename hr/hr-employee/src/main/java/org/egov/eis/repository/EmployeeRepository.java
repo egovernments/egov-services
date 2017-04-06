@@ -44,7 +44,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.egov.eis.model.Assignment;
 import org.egov.eis.model.Employee;
 import org.egov.eis.model.EmployeeDocument;
 import org.egov.eis.model.EmployeeInfo;

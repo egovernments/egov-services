@@ -40,6 +40,7 @@ public class ModuleRepository {
 		requestInfo.setTs(new Date().toString());
 		requestInfoWrapper.setRequestInfo(requestInfo);
 		ModuleResponse moduleResponse = restTemplate.postForObject(url, requestInfoWrapper, ModuleResponse.class);
+		logger.info("the response from module api call ModuleResponse :::  "+ moduleResponse);
 		return moduleResponse.getModules().get(0);
 	}
 }

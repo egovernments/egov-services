@@ -2,6 +2,8 @@ package org.egov.filters.post;
 
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import static org.egov.constants.RequestContextConstants.CORRELATION_ID_KEY;
@@ -10,6 +12,7 @@ import static org.egov.constants.RequestContextConstants.CORRELATION_ID_KEY;
 public class ResponseEnhancementFilter extends ZuulFilter {
 
     private static final String CORRELATION_HEADER_NAME = "x-correlation-id";
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
     public String filterType() {
@@ -35,6 +38,7 @@ public class ResponseEnhancementFilter extends ZuulFilter {
 
     private String getCorrelationId() {
         RequestContext ctx = RequestContext.getCurrentContext();
+        logger.info("Received response code: {} from upstream", ctx.getResponse().getStatus());
         return (String) ctx.get(CORRELATION_ID_KEY);
     }
 }

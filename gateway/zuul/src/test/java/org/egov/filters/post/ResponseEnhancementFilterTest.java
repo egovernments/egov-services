@@ -4,6 +4,7 @@ import com.netflix.util.Pair;
 import com.netflix.zuul.context.RequestContext;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.mock.web.MockHttpServletResponse;
 
 import java.util.List;
 
@@ -22,6 +23,9 @@ public class ResponseEnhancementFilterTest {
     @Test
     public void test_should_set_correlation_id_response_header() {
         RequestContext.getCurrentContext().set("CORRELATION_ID", "someCorrelationId");
+        final MockHttpServletResponse response = new MockHttpServletResponse();
+        response.setStatus(400);
+        RequestContext.getCurrentContext().setResponse(response);
 
         filter.run();
 

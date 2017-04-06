@@ -1877,7 +1877,7 @@ $("#createEmployeeForm").validate({
 
                     if (response["status"] === 200) {
                         showSuccess("Employee added successfully.");
-                        // window.location.href="../../../../app/hr/common/employee-attendance.html";
+                        window.location.href="app/hr/common/employee-search.html";
                     } else {
                         alert(response["statusText"]);
                     }

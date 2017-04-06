@@ -33,7 +33,7 @@ public class PositionRepository {
 		String tenantId = "";
 		if (requestInfo != null) {
 			requestInfoWrapper.setRequestInfo(requestInfo);
-			tenantId = requestInfo.getTenantId();
+			tenantId = requestInfo.getUserInfo().getTenantId();
 		} else
 			requestInfoWrapper.setRequestInfo(new RequestInfo());
 

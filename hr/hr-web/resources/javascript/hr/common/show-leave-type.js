@@ -2,13 +2,19 @@ class ShowLeaveType extends React.Component {
   constructor(props) {
     super(props);
     this.state={employees:[],leaveType:{
-    name:"",
-    payEligible:"",
-    encashable:"",
-    halfdayAllowed:"",
-    accumulative:"",
-    description:"",
-    active:""
+      "id": "",
+      "name": "",
+      "description": "",
+      "halfdayAllowed": "",
+      "payEligible": "",
+      "accumulative": "",
+      "encashable": "",
+      "active": "",
+      "createdBy": "",
+      "createdDate": "",
+      "lastModifiedBy": "",
+      "lastModifiedDate": "",
+      "tenantId": tenantId
   }}
   this.handleChange=this.handleChange.bind(this);
 }
@@ -76,7 +82,7 @@ handleChange(e,name)
                     <td data-label="name">{item.name}</td>
                     <td data-label="description">{item.description}</td>
                     <td data-label="action">
-                              {renderAction(getUrlVars()["type"])}
+                              {renderAction(getUrlVars()["type"],item.id)}
                     </td>
                 </tr>
             );

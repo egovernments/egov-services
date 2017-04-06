@@ -1,13 +1,21 @@
-class Leavetype extends React.Component{
+class LeaveType extends React.Component{
 
   constructor(props) {
     super(props);
-    this.state={leaveType:{
-    name:"",
-    payEligible:"",
-    encashable:"",
-    halfdayAllowed:"",
-    accumulative:""
+    this.state={LeaveType:{
+        "id": "",
+        "name": "",
+        "description": "",
+        "halfdayAllowed": "",
+        "payEligible": "",
+        "accumulative": "",
+        "encashable": "",
+        "active": "",
+        "createdBy": "",
+        "createdDate": "",
+        "lastModifiedBy": "",
+        "lastModifiedDate": "",
+        "tenantId": tenantId
   },dataType:[]}
     this.handleChange=this.handleChange.bind(this);
     this.addOrUpdate=this.addOrUpdate.bind(this);
@@ -17,8 +25,8 @@ class Leavetype extends React.Component{
   {
 
       this.setState({
-          leaveType:{
-              ...this.state.leaveType,
+          LeaveType:{
+              ...this.state.LeaveType,
               [name]:e.target.value
           }
       })
@@ -32,26 +40,26 @@ class Leavetype extends React.Component{
 
 addOrUpdate(e,mode)
 {
-  e.preventDefault();
+
+        e.preventDefault();
         // console.log(zone);
-        // console.log(this.state.assetCategory);
-        var tempInfo = this.state.leaveType, _this = this, type = getUrlVars()["type"];
+
+        var tempInfo=this.state.LeaveType , type = getUrlVars()["type"];;
         // tempInfo["assetSet"]["assetCategory"]["id"]=parseInt(tempInfo["assetSet"]["assetCategory"]["id"])
         var body={
             "RequestInfo":requestInfo,
-            "leaveType":tempInfo
+            "LeaveType":[tempInfo]
           };
-
         var response=$.ajax({
-              // url:baseUrl+"/hr-leave/leavetypes/_create?tenantId=1",
-              url: baseUrl + "/hr-leave/leavetypes/" + (type == "update" ? ("_update/"+ _this.state.leaveType) : "_create") + "?tenantId=1",
+              //  url: baseUrl+"/hr-leave/leavetypes/_create",
+              url:baseUrl+"/hr-leave/leavetypes/" + (type == "update" ? (this.state.LeaveType.id + "/" + "_update/") : "_create"),
               type: 'POST',
               dataType: 'json',
               data:JSON.stringify(body),
               async: false,
               contentType: 'application/json',
               headers:{
-                'auth-token': authToken
+                'auth-token': '2f22998a-37bc-444b-88b4-3945becae279'
               }
           });
 
@@ -59,42 +67,68 @@ addOrUpdate(e,mode)
         if(response["statusText"]==="OK")
         {
           alert("Successfully added");
+          this.setState({
+            LeaveType:{
+              "id": "",
+              "name": "",
+              "description": "",
+              "halfdayAllowed": "",
+              "payEligible": "",
+              "accumulative": "",
+              "encashable": "",
+              "active": "",
+              "createdBy": "",
+              "createdDate": "",
+              "lastModifiedBy": "",
+              "lastModifiedDate": "",
+              "tenantId": tenantId
+          }
+          })
         }
         else {
           alert(response["statusText"]);
           this.setState({
-            leaveType:{
-            name:"",
-            payEligible:"",
-            encashable:"",
-            halfdayAllowed:"",
-            accumulative:""
+            LeaveType:{
+              "id": "",
+              "name": "",
+              "description": "",
+              "halfdayAllowed": "",
+              "payEligible": "",
+              "accumulative": "",
+              "encashable": "",
+              "active": "",
+              "createdBy": "",
+              "createdDate": "",
+              "lastModifiedBy": "",
+              "lastModifiedDate": "",
+              "tenantId": tenantId
           }
           })
       }
   }
 
 
-componentDidMount()
-{
+  componentDidMount(){
+    var type=getUrlVars()["type"];
+    var id=getUrlVars()["id"];
 
- if (getUrlVars()["type"]==="view")
-  {
-  for (var variable in this.state.leaveType)
+    if(getUrlVars()["type"]==="view")
     {
-      // console.log($(`#${variable}`).length);
+      for (var variable in this.state.LeaveType)
+        document.getElementById(variable).disabled = true;
+      }
 
-      document.getElementById(variable).disabled= true ;
-
-    }
-
+      if(type==="view"||type==="update")
+      {
+          console.log(getCommonMasterById("hr-leave","leavetypes","LeaveType",id).responseJSON["LeaveType"]);
+          this.setState({
+            LeaveType:getCommonMasterById("hr-leave","leavetypes","LeaveType",id).responseJSON["LeaveType"][0]
+          })
+      }
   }
-
-
-}
   render(){
     let {handleChange,addOrUpdate}=this;
-    let{name,payEligible,encashable,halfdayAllowed,accumulative}=this.state.leaveType;
+    let{name,payEligible,encashable,halfdayAllowed,accumulative,description}=this.state.LeaveType;
     let mode=getUrlVars()["type"];
 
       const showActionButton=function() {
@@ -120,25 +154,19 @@ componentDidMount()
                 </div>
             </div>
           </div>
-
           <div className="col-sm-6">
               <div className="row">
                   <div className="col-sm-6 label-text">
-                      <label for="">Is Half Day <span> * </span> </label>
+                      <label for="">Description <span> * </span></label>
                   </div>
                   <div className="col-sm-6">
-                        <label className="radio-inline radioUi">
-                          <input type="radio" name="halfdayAllowed" id="halfdayAllowed"  value="yes"
-                           onChange={(e)=>{handleChange(e,"halfdayAllowed")}} /> Yes
-                        </label>
-                        <label className="radio-inline radioUi">
-                          <input type="radio" name="halfdayAllowed" id="halfdayAllowed" value="no"
-                          onChange={(e)=>{handleChange(e,"halfdayAllowed")}}/> No
-                        </label>
+                      <textarea name="description" id="description" value={description}
+                      onChange={(e)=>{handleChange(e,"description")}} required/>
+
                   </div>
               </div>
             </div>
-          </div>
+      </div>
             <div className="row">
                   <div className="col-sm-6">
                       <div className="row">
@@ -147,35 +175,34 @@ componentDidMount()
                           </div>
                           <div className="col-sm-6">
                                 <label className="radio-inline radioUi">
-                                  <input type="radio" name="payEligible" id="payEligible" value="yes"
+                                  <input type="radio" name="payEligible" id="payEligible" value="true"
                                       onChange={(e)=>{handleChange(e,"payEligible")  }}/> Yes
                                 </label>
                                 <label className="radio-inline radioUi">
-                                  <input type="radio" name="payEligible" id="payEligible" value="no"
+                                  <input type="radio" name="payEligible" id="payEligible" value="false"
                                       onChange={(e)=>{handleChange(e,"payEligible")}}/> No
                                 </label>
                           </div>
                       </div>
                   </div>
-                    <div className="col-sm-6">
-                        <div className="row">
-                            <div className="col-sm-6 label-text">
-                                <label for="">accumulative <span> *</span></label>
-                            </div>
-                            <div className="col-sm-6">
-                                  <label className="radio-inline radioUi">
-                                    <input type="radio" name="accumulative" id="accumulative" value="yes"
-                                        onChange={(e)=>{handleChange(e,"accumulative")}}/> Yes
-
-                                  </label>
-                                  <label className="radio-inline radioUi">
-                                    <input type="radio" name="accumulative" id="accumulative" value="no"
-                                        onChange={(e)=>{handleChange(e,"accumulative")}}/> No
-                                  </label>
-                            </div>
-                        </div>
+                  <div className="col-sm-6">
+                      <div className="row">
+                          <div className="col-sm-6 label-text">
+                              <label for="">Is Half Day <span> * </span> </label>
+                          </div>
+                          <div className="col-sm-6">
+                                <label className="radio-inline radioUi">
+                                  <input type="radio" name="halfdayAllowed" id="halfdayAllowed"  value="true"
+                                   onChange={(e)=>{handleChange(e,"halfdayAllowed")}} /> Yes
+                                </label>
+                                <label className="radio-inline radioUi">
+                                  <input type="radio" name="halfdayAllowed" id="halfdayAllowed" value="false"
+                                  onChange={(e)=>{handleChange(e,"halfdayAllowed")}}/> No
+                                </label>
+                          </div>
+                      </div>
                     </div>
-                  </div>
+                </div>
 
               <div className="row">
                   <div className="col-sm-6">
@@ -185,15 +212,33 @@ componentDidMount()
                           </div>
                           <div className="col-sm-6">
                                 <label className="radio-inline radioUi">
-                                  <input type="radio" name="encashable" id="encashable" value="yes"
+                                  <input type="radio" name="encashable" id="encashable" value="true"
                                    onChange={(e)=>{handleChange(e,"encashable")}}/> Yes
                                 </label>
                                 <label className="radio-inline radioUi">
-                                  <input type="radio" name="encashable" id="encashable" value="no"
+                                  <input type="radio" name="encashable" id="encashable" value="false"
                                   onChange={(e)=>{handleChange(e,"encashable")}}/> No
                                 </label>
                           </div>
                       </div>
+                    </div>
+                    <div className="col-sm-6">
+                        <div className="row">
+                            <div className="col-sm-6 label-text">
+                                <label for="">accumulative <span> *</span></label>
+                            </div>
+                            <div className="col-sm-6">
+                                  <label className="radio-inline radioUi">
+                                    <input type="radio" name="accumulative" id="accumulative" value="true"
+                                        onChange={(e)=>{handleChange(e,"accumulative")}}/> Yes
+
+                                  </label>
+                                  <label className="radio-inline radioUi">
+                                    <input type="radio" name="accumulative" id="accumulative" value="false"
+                                        onChange={(e)=>{handleChange(e,"accumulative")}}/> No
+                                  </label>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -209,6 +254,6 @@ componentDidMount()
 }
 
 ReactDOM.render(
-  <Leavetype />,
+  <LeaveType />,
   document.getElementById('root')
 );

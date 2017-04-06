@@ -14,7 +14,7 @@ import static org.junit.Assert.assertNotEquals;
 public class ActionSearchCriteriaTest {
 
     @Test
-    public void testForEqualsAndHashCode() throws  Exception {
+    public void testForEqualsAndHashCode() {
         List<String> roleCodesList = new ArrayList<String>();
         roleCodesList.add("CITIZEN");
         roleCodesList.add("SUPERUSER");
@@ -26,7 +26,7 @@ public class ActionSearchCriteriaTest {
     }
 
     @Test
-    public void testForNotEqualObjects() throws Exception {
+    public void testForNotEqualObjects() {
         List<String> roleCodesList1 = new ArrayList<String>();
         roleCodesList1.add("CITIZEN");
         roleCodesList1.add("SUPERUSER");

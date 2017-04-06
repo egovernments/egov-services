@@ -1,4 +1,4 @@
-package org.egov.access.web.contact;
+package org.egov.access.web.contract;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;

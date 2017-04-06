@@ -1,7 +1,6 @@
 package org.egov.access.persistence.repository.rowmapper;
 
 import org.egov.access.domain.model.Action;
-import org.egov.access.web.contact.RoleAction;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
@@ -29,9 +28,6 @@ public class ActionRowMapper implements RowMapper<Action> {
                 .tenantId(rs.getString("a_tenantId"))
                 .build();
 
-        final RoleAction roleAction = new RoleAction();
-        roleAction.setAction(rs.getLong("ra_action"));
-        roleAction.setRoleCode(rs.getString("ra_rolecode"));
         return action;
 
     }

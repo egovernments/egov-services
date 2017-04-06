@@ -173,9 +173,7 @@
 									<element>CLASS</element>
 									<excludes>
 										<exclude>org.egov.access.EgovAccesscontrolApplication</exclude>
-										<exclude>org.egov.access.web.contact.*</exclude>
-										<exclude>org.egov.access.domain.model.Action</exclude>
-
+										<exclude>org.egov.access.web.contract.*</exclude>
 									</excludes>
 									<limits>
 										<limit>

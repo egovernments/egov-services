@@ -1,8 +1,9 @@
-package org.egov.access.web.contact;
+package org.egov.access.web.contract;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.egov.common.contract.response.ResponseInfo;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ActionResponse {
 
-    private  ResponseInfo responseInfo;
+    private ResponseInfo responseInfo;
 
     private List<ActionContract> actions;
 

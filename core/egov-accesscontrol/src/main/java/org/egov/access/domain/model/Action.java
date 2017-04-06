@@ -1,7 +1,7 @@
 package org.egov.access.domain.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,6 +10,7 @@ import java.util.Date;
 @Getter
 @Setter
 @Builder
+@EqualsAndHashCode
 public class Action {
 
     private Long id;
@@ -23,12 +24,10 @@ public class Action {
     private String serviceCode;
     private String tenantId;
 
-    @JsonFormat(pattern = "dd/MM/yyyy")
     private Date createdDate;
 
     private Long createdBy;
 
-    @JsonFormat(pattern = "dd/MM/yyyy")
     private Date lastModifiedDate;
 
     private Long lastModifiedBy;

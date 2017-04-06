@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 @RunWith(SpringRunner.class)
@@ -31,6 +32,7 @@ public class ActionRepositoryTest {
         ActionSearchCriteria actionSearchCriteria = ActionSearchCriteria.builder().roleCodes(roleCodesList).build();
         List<Action> actions = actionRepository.findForCriteria(actionSearchCriteria);
         assertFalse(actions.isEmpty());
+        assertEquals(8,actions.size());
 
     }
 

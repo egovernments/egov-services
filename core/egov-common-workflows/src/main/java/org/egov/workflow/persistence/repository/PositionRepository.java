@@ -18,12 +18,12 @@ public class PositionRepository {
 	private final String positionsForEmployeeCodeUrl;
 
 	public PositionRepository(final RestTemplate restTemplate,
-			@Value("${egov.services.eis.host}") final String eisServiceHostname,
+			@Value("${egov.services.hr.host}") final String hrServiceHostname,
 			@Value("${egov.services.eis.position_by_id}") final String positionsByIdUrl,
 			@Value("${egov.services.eis.position_by_employee_code}") final String positionsForEmployeeCodeUrl) {
 		this.restTemplate = restTemplate;
-		this.positionsByIdUrl = eisServiceHostname + positionsByIdUrl;
-		this.positionsForEmployeeCodeUrl = eisServiceHostname + positionsForEmployeeCodeUrl;
+		this.positionsByIdUrl = hrServiceHostname + positionsByIdUrl;
+		this.positionsForEmployeeCodeUrl = hrServiceHostname + positionsForEmployeeCodeUrl;
 
 	}
 

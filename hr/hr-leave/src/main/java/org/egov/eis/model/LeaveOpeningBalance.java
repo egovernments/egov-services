@@ -41,7 +41,7 @@
 package org.egov.eis.model;
 
 
-import java.sql.Date;
+import java.util.Date;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;

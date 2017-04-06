@@ -64,7 +64,7 @@ import lombok.ToString;
 @ToString
 public class LeaveApplication {
 
-	private String id;
+	private Long id;
 
 	@Size(max=100)
 	private String applicationNumber;

@@ -55,22 +55,22 @@ public class LeaveApplicationRowMapper implements RowMapper<LeaveApplication> {
 	@Override
 	public LeaveApplication mapRow(ResultSet rs, int rowNum) throws SQLException {
 		LeaveApplication leaveApplication = new LeaveApplication();
-		leaveApplication.setId(rs.getString("la_id"));
+		leaveApplication.setId(rs.getLong("la_id"));
 		leaveApplication.setApplicationNumber(rs.getString("la_applicationNumber"));
-		leaveApplication.setEmployee(rs.getLong("la_employeeId"));
+		leaveApplication.setEmployee((Long) rs.getObject("la_employeeId"));
 
 		LeaveType leaveType = new LeaveType();
 		leaveType.setId(rs.getLong("lt_id"));
 		leaveType.setName(rs.getString("lt_name"));
 		leaveType.setDescription(rs.getString("lt_description"));
-		leaveType.setHalfdayAllowed(rs.getBoolean("lt_halfdayAllowed"));
-		leaveType.setPayEligible(rs.getBoolean("lt_payEligible"));
-		leaveType.setAccumulative(rs.getBoolean("lt_accumulative"));
-		leaveType.setEncashable(rs.getBoolean("lt_encashable"));
-		leaveType.setActive(rs.getBoolean("lt_active"));
-		leaveType.setCreatedBy(rs.getLong("lt_createdBy"));
+		leaveType.setHalfdayAllowed((Boolean) rs.getObject("lt_halfdayAllowed"));
+		leaveType.setPayEligible((Boolean) rs.getObject("lt_payEligible"));
+		leaveType.setAccumulative((Boolean) rs.getObject("lt_accumulative"));
+		leaveType.setEncashable((Boolean) rs.getObject("lt_encashable"));
+		leaveType.setActive((Boolean) rs.getObject("lt_active"));
+		leaveType.setCreatedBy((Long) rs.getObject("lt_createdBy"));
 		leaveType.setCreatedDate(rs.getDate("lt_createdDate"));
-		leaveType.setLastModifiedBy(rs.getLong("lt_lastModifiedBy"));
+		leaveType.setLastModifiedBy((Long) rs.getObject("lt_lastModifiedBy"));
 		leaveType.setLastModifiedDate(rs.getDate("lt_lastModifiedDate"));
 		leaveType.setTenantId(rs.getString("la_tenantId"));
 
@@ -79,16 +79,16 @@ public class LeaveApplicationRowMapper implements RowMapper<LeaveApplication> {
 		leaveApplication.setFromDate(rs.getDate("la_fromDate"));
 		leaveApplication.setToDate(rs.getDate("la_toDate"));
 		leaveApplication.setCompensatoryForDate(rs.getDate("la_compensatoryForDate"));
-		leaveApplication.setLeaveDays(rs.getFloat("la_leaveDays"));
-		leaveApplication.setAvailableDays(rs.getFloat("la_availableDays"));
-		leaveApplication.setHalfdays(rs.getInt("la_halfdays"));
-		leaveApplication.setFirstHalfleave(rs.getBoolean("la_firstHalfleave"));
+		leaveApplication.setLeaveDays((Float) rs.getObject("la_leaveDays"));
+		leaveApplication.setAvailableDays((Float) rs.getObject("la_availableDays"));
+		leaveApplication.setHalfdays((Integer) rs.getObject("la_halfdays"));
+		leaveApplication.setFirstHalfleave((Boolean) rs.getObject("la_firstHalfleave"));
 		leaveApplication.setReason(rs.getString("la_reason"));
 		leaveApplication.setStatus(LeaveStatus.fromValue(rs.getString("la_status")));
 		leaveApplication.setStateId(rs.getString("la_stateId"));
-		leaveApplication.setCreatedBy(rs.getLong("la_createdBy"));
+		leaveApplication.setCreatedBy((Long) rs.getObject("la_createdBy"));
 		leaveApplication.setCreatedDate(rs.getDate("la_createdDate"));
-		leaveApplication.setLastModifiedBy(rs.getLong("la_lastModifiedBy"));
+		leaveApplication.setLastModifiedBy((Long) rs.getObject("la_lastModifiedBy"));
 		leaveApplication.setLastModifiedDate(rs.getDate("la_lastModifiedDate"));
 		leaveApplication.setTenantId(rs.getString("la_tenantId"));
 		return leaveApplication;

@@ -55,30 +55,30 @@ public class LeaveOpeningBalanceRowMapper implements RowMapper<LeaveOpeningBalan
 	public LeaveOpeningBalance mapRow(ResultSet rs, int rowNum) throws SQLException {
 		LeaveOpeningBalance leaveOpeningBalance = new LeaveOpeningBalance();
 		leaveOpeningBalance.setId(rs.getLong("lob_id"));
-		leaveOpeningBalance.setEmployee(rs.getLong("lob_employeeId"));
-		leaveOpeningBalance.setCalendarYear(rs.getInt("lob_calendarYear"));
+		leaveOpeningBalance.setEmployee((Long) rs.getObject("lob_employeeId"));
+		leaveOpeningBalance.setCalendarYear((Integer) rs.getObject("lob_calendarYear"));
 
 		LeaveType leaveType = new LeaveType();
 		leaveType.setId(rs.getLong("lt_id"));
 		leaveType.setName(rs.getString("lt_name"));
 		leaveType.setDescription(rs.getString("lt_description"));
-		leaveType.setHalfdayAllowed(rs.getBoolean("lt_halfdayAllowed"));
-		leaveType.setPayEligible(rs.getBoolean("lt_payEligible"));
-		leaveType.setAccumulative(rs.getBoolean("lt_accumulative"));
-		leaveType.setEncashable(rs.getBoolean("lt_encashable"));
-		leaveType.setActive(rs.getBoolean("lt_active"));
-		leaveType.setCreatedBy(rs.getLong("lt_createdBy"));
+		leaveType.setHalfdayAllowed((Boolean) rs.getObject("lt_halfdayAllowed"));
+		leaveType.setPayEligible((Boolean) rs.getObject("lt_payEligible"));
+		leaveType.setAccumulative((Boolean) rs.getObject("lt_accumulative"));
+		leaveType.setEncashable((Boolean) rs.getObject("lt_encashable"));
+		leaveType.setActive((Boolean) rs.getObject("lt_active"));
+		leaveType.setCreatedBy((Long) rs.getObject("lt_createdBy"));
 		leaveType.setCreatedDate(rs.getDate("lt_createdDate"));
-		leaveType.setLastModifiedBy(rs.getLong("lt_lastModifiedBy"));
+		leaveType.setLastModifiedBy((Long) rs.getObject("lt_lastModifiedBy"));
 		leaveType.setLastModifiedDate(rs.getDate("lt_lastModifiedDate"));
 		leaveType.setTenantId(rs.getString("lob_tenantId"));
 
 		leaveOpeningBalance.setLeaveType(leaveType);
 
-		leaveOpeningBalance.setNoOfDays(rs.getFloat("lob_noOfDays"));
-		leaveOpeningBalance.setCreatedBy(rs.getLong("lob_createdBy"));
+		leaveOpeningBalance.setNoOfDays((Float) rs.getObject("lob_noOfDays"));
+		leaveOpeningBalance.setCreatedBy((Long) rs.getObject("lob_createdBy"));
 		leaveOpeningBalance.setCreatedDate(rs.getDate("lob_createdDate"));
-		leaveOpeningBalance.setLastModifiedBy(rs.getLong("lob_lastModifiedBy"));
+		leaveOpeningBalance.setLastModifiedBy((Long) rs.getObject("lob_lastModifiedBy"));
 		leaveOpeningBalance.setLastModifiedDate(rs.getDate("lob_lastModifiedDate"));
 		leaveOpeningBalance.setTenantId(rs.getString("lob_tenantId"));
 		return leaveOpeningBalance;

@@ -51,7 +51,7 @@ public class AgreementService {
 				&& (agreementCriteria.getFromDate() == null && agreementCriteria.getToDate() == null)
 				&& agreementCriteria.getTenderNumber() == null && agreementCriteria.getTinNumber() == null
 				&& agreementCriteria.getTradelicenseNumber() == null && agreementCriteria.getAsset() == null
-				&& agreementCriteria.getAllottee() == null;
+				&& agreementCriteria.getAllottee() == null  && agreementCriteria.getTenantId() == null;
 
 		boolean isAllotteeNull = agreementCriteria.getAllotteeName() == null
 				&& agreementCriteria.getMobilenumber() == null;
@@ -59,8 +59,7 @@ public class AgreementService {
 		boolean isAssetNull = agreementCriteria.getAssetCategory() == null
 				&& agreementCriteria.getShoppingComplexNo() == null && agreementCriteria.getAssetCode() == null
 				&& agreementCriteria.getLocality() == null && agreementCriteria.getRevenueWard() == null
-				&& agreementCriteria.getElectionWard() == null && agreementCriteria.getTenantId() == null
-				&& agreementCriteria.getDoorno() == null;
+				&& agreementCriteria.getElectionWard() == null && agreementCriteria.getDoorno() == null;
 
 		if (!isAgreementNull && !isAssetNull && !isAllotteeNull) {
 			logger.info("agreementRepository.findByAllotee");

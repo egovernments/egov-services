@@ -1829,7 +1829,15 @@ addMandatoryStart(user, "user");
 //     }
 // }
 
+function isHavingPrimary() {
+    for (var i = 0; i < employee.assignments.length; i++) {
+      if (employee.assignments[i].isPrimary) {
+          return true;
+      }
 
+    }
+    return false;
+}
 
 
 // Adding Jquery validation dynamically
@@ -1839,7 +1847,7 @@ $("#createEmployeeForm").validate({
         // console.log(form);
         if (!hasAllRequiredFields(employee)) {
             showError("Please enter all mandatory fields.");
-        } else if (employee.assignments.length > 0 && employee.jurisdictions.length > 0) {
+        } else if ((employee.assignments.length > 0 && isHavingPrimary()) && employee.jurisdictions.length > 0) {
             //Call api
 
             var empJuridictiona = employee["jurisdictions"];

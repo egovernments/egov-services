@@ -2,19 +2,13 @@ class ShowLeaveType extends React.Component {
   constructor(props) {
     super(props);
     this.state={employees:[],leaveType:{
-      "id": "",
-      "name": "",
-      "description": "",
-      "halfdayAllowed": "",
-      "payEligible": "",
-      "accumulative": "",
-      "encashable": "",
-      "active": "",
-      "createdBy": "",
-      "createdDate": "",
-      "lastModifiedBy": "",
-      "lastModifiedDate": "",
-      "tenantId": tenantId
+    name:"",
+    payEligible:"",
+    encashable:"",
+    halfdayAllowed:"",
+    accumulative:"",
+    description:"",
+    active:""
   }}
   this.handleChange=this.handleChange.bind(this);
 }
@@ -28,7 +22,6 @@ componentWillMount()
 
 componentDidMount()
 {
-  console.log(getCommonMaster("hr-leave","leavetypes","LeaveType").responseJSON["LeaveType"]);
   this.setState({
   employees:getCommonMaster("hr-leave","leavetypes","LeaveType").responseJSON["LeaveType"]
     });
@@ -43,7 +36,6 @@ componentDidUpdate(prevProps, prevState)
         // alert(prevState.employees.length);
         // alert(this.state.employees.length);
         // alert('updated');
-        console.log(this.state.employees.length);
         $('#employeeTable').DataTable({
           dom: 'Bfrtip',
           buttons: [
@@ -68,9 +60,8 @@ handleChange(e,name)
 }
 
   render() {
-    console.log(this.state.leaveType);
-    let  {name}=this.state.leaveType;
-    let {isSearchClicked,employees}=this.state;
+    let  {name,description}=this.state.leaveType;
+    let {employees}=this.state;
 
     const renderBody=function()
     {

@@ -42,16 +42,15 @@ addOrUpdate(e,mode)
 {
 
         e.preventDefault();
-        // console.log(zone);
 
-        var tempInfo=this.state.LeaveType , type = getUrlVars()["type"];;
-        // tempInfo["assetSet"]["assetCategory"]["id"]=parseInt(tempInfo["assetSet"]["assetCategory"]["id"])
+        var tempInfo=this.state.LeaveType , type = getUrlVars()["type"];
+
         var body={
             "RequestInfo":requestInfo,
             "LeaveType":[tempInfo]
           };
         var response=$.ajax({
-              //  url: baseUrl+"/hr-leave/leavetypes/_create",
+
               url:baseUrl+"/hr-leave/leavetypes/" + (type == "update" ? (this.state.LeaveType.id + "/" + "_update/") : "_create"),
               type: 'POST',
               dataType: 'json',
@@ -59,11 +58,11 @@ addOrUpdate(e,mode)
               async: false,
               contentType: 'application/json',
               headers:{
-                'auth-token': '2f22998a-37bc-444b-88b4-3945becae279'
+                'auth-token': authToken
               }
           });
 
-        // console.log(response);
+
         if(response["statusText"]==="OK")
         {
           alert("Successfully added");
@@ -114,13 +113,12 @@ addOrUpdate(e,mode)
 
     if(getUrlVars()["type"]==="view")
     {
-      for (var variable in this.state.LeaveType)
-        document.getElementById(variable).disabled = true;
+      $("input,select,radio,textarea").prop("disabled", true);
       }
 
       if(type==="view"||type==="update")
       {
-          console.log(getCommonMasterById("hr-leave","leavetypes","LeaveType",id).responseJSON["LeaveType"]);
+
           this.setState({
             LeaveType:getCommonMasterById("hr-leave","leavetypes","LeaveType",id).responseJSON["LeaveType"][0]
           })
@@ -130,7 +128,6 @@ addOrUpdate(e,mode)
     let {handleChange,addOrUpdate}=this;
     let{name,payEligible,encashable,halfdayAllowed,accumulative,description}=this.state.LeaveType;
     let mode=getUrlVars()["type"];
-
       const showActionButton=function() {
       if((!mode)|| mode==="update")
       {
@@ -175,11 +172,11 @@ addOrUpdate(e,mode)
                           </div>
                           <div className="col-sm-6">
                                 <label className="radio-inline radioUi">
-                                  <input type="radio" name="payEligible" id="payEligible" value="true"
+                                  <input type="radio" name="payEligible" id="payEligible" value="true" checked={payEligible?true:false}
                                       onChange={(e)=>{handleChange(e,"payEligible")  }}/> Yes
                                 </label>
                                 <label className="radio-inline radioUi">
-                                  <input type="radio" name="payEligible" id="payEligible" value="false"
+                                  <input type="radio" name="payEligible" id="payEligible" value="false" checked={payEligible?false:true}
                                       onChange={(e)=>{handleChange(e,"payEligible")}}/> No
                                 </label>
                           </div>
@@ -192,11 +189,11 @@ addOrUpdate(e,mode)
                           </div>
                           <div className="col-sm-6">
                                 <label className="radio-inline radioUi">
-                                  <input type="radio" name="halfdayAllowed" id="halfdayAllowed"  value="true"
+                                  <input type="radio" name="halfdayAllowed" id="halfdayAllowed"  value="true" checked={halfdayAllowed?true:false}
                                    onChange={(e)=>{handleChange(e,"halfdayAllowed")}} /> Yes
                                 </label>
                                 <label className="radio-inline radioUi">
-                                  <input type="radio" name="halfdayAllowed" id="halfdayAllowed" value="false"
+                                  <input type="radio" name="halfdayAllowed" id="halfdayAllowed" value="false" checked={halfdayAllowed?false:true}
                                   onChange={(e)=>{handleChange(e,"halfdayAllowed")}}/> No
                                 </label>
                           </div>
@@ -212,11 +209,11 @@ addOrUpdate(e,mode)
                           </div>
                           <div className="col-sm-6">
                                 <label className="radio-inline radioUi">
-                                  <input type="radio" name="encashable" id="encashable" value="true"
+                                  <input type="radio" name="encashable" id="encashable" value="true" checked={encashable?true:false}
                                    onChange={(e)=>{handleChange(e,"encashable")}}/> Yes
                                 </label>
                                 <label className="radio-inline radioUi">
-                                  <input type="radio" name="encashable" id="encashable" value="false"
+                                  <input type="radio" name="encashable" id="encashable" value="false" checked={encashable?false:true}
                                   onChange={(e)=>{handleChange(e,"encashable")}}/> No
                                 </label>
                           </div>
@@ -229,12 +226,12 @@ addOrUpdate(e,mode)
                             </div>
                             <div className="col-sm-6">
                                   <label className="radio-inline radioUi">
-                                    <input type="radio" name="accumulative" id="accumulative" value="true"
+                                    <input type="radio" name="accumulative" id="accumulative" value="true" checked={accumulative?true:false}
                                         onChange={(e)=>{handleChange(e,"accumulative")}}/> Yes
 
                                   </label>
                                   <label className="radio-inline radioUi">
-                                    <input type="radio" name="accumulative" id="accumulative" value="false"
+                                    <input type="radio" name="accumulative" id="accumulative" value="false" checked={accumulative?false:true}
                                         onChange={(e)=>{handleChange(e,"accumulative")}}/> No
                                   </label>
                             </div>

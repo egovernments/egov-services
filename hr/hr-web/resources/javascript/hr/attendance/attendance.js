@@ -30,64 +30,84 @@ let months=[
 class Attendance extends React.Component {
   constructor(props) {
     super(props);
-    this.state={employees:{},attendance:[],month:"",year:"",code:"",designationCode:"",departmentCode:"",employeeType:"",startDate:undefined,endDate:undefined};
-    this.handleCheckAll=this.handleCheckAll.bind(this);
-    this.handleChange=this.handleChange.bind(this);
-    this.markAttedance=this.markAttedance.bind(this);
-    this.markBulkAttendance=this.markBulkAttendance.bind(this);
-    this.save=this.save.bind(this);
+    this.state = {
+        employees: {},
+        attendance: [],
+        month: "",
+        year: "",
+        code: "",
+        designationCode: "",
+        departmentCode: "",
+        employeeType: "",
+        startDate: undefined,
+        endDate: undefined,
+        caLength: 0 //CurrentAttendance length
+    };
+    this.handleCheckAll = this.handleCheckAll.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.markAttedance = this.markAttedance.bind(this);
+    this.markBulkAttendance = this.markBulkAttendance.bind(this);
+    this.save = this.save.bind(this);
   }
 
-  save()
-  {
-      var employees=this.state.employees;
-      var {month,year}=this.state;
-      var attendance=[]
+  save() {
+      var employees = this.state.employees;
+      var {
+          month,
+          year
+      } = this.state;
+      var attendance = []
       for (var emp in employees) {
           for (var att in employees[emp].attendance) {
-              //  console.log(att.split('-')[1]);
-                // var month=month+1;
-                var date=new Date(year,month,att.split('-')[1]);
-                var day=date.getDate().toString().length===1?"0"+date.getDate():date.getDate();
-                var monthIn=date.getMonth().toString().length===1?"0"+(date.getMonth()+1):(date.getMonth()+1);
-                var yearIn=date.getFullYear();
-                // console.log(date.getDate().length);
-                // console.log(employees[emp].attendance[att].split("-")[1]);
-                attendance.push({attendanceDate:day+"/"+monthIn+"/"+yearIn,employee:emp,month:(month+1),year,type:{code:employees[emp].attendance[att]},remarks:"",tenantId});
+             if(!/-id/.test(att)) {
+                var date = new Date(year, month, att.split('-')[1]);
+                var day = date.getDate().toString().length === 1 ? "0" + date.getDate() : date.getDate();
+                var monthIn = date.getMonth().toString().length === 1 ? "0" + (date.getMonth() + 1) : (date.getMonth() + 1);
+                var yearIn = date.getFullYear();
+                attendance.push({
+                    attendanceDate: day + "/" + monthIn + "/" + yearIn,
+                    employee: emp,
+                    month: (month + 1),
+                    year,
+                    type: {
+                        code: employees[emp].attendance[att]
+                    },
+                    remarks: "",
+                    tenantId,
+                    id: employees[emp].attendance[att + "-id"] || undefined
+                });
+             }
           }
       }
-
+      
       this.setState({
-        attendance
+          attendance
       });
 
-      var body={
-        "RequestInfo":requestInfo,
-        "Attendance":attendance
+      var body = {
+          "RequestInfo": requestInfo,
+          "Attendance": attendance
       };
-      var response=$.ajax({
-                url:baseUrl+"/hr-attendance/attendances/_create?tenantId="+tenantId,
-                type: 'POST',
-                dataType: 'json',
-                data:JSON.stringify(body),
-                async: false,
-                contentType: 'application/json',
-                headers: {
-                        'auth-token': authToken
-                }
-            });
+      var response = $.ajax({
+          url: baseUrl + "/hr-attendance/attendances/_create?tenantId=" + tenantId,
+          type: 'POST',
+          dataType: 'json',
+          data: JSON.stringify(body),
+          async: false,
+          contentType: 'application/json',
+          headers: {
+              'auth-token': authToken
+          }
+      });
 
       // console.log(attendance);
       // console.log(response);
-      if(response["status"]===200)
-      {
-        alert("Successfully added");
-        window.location.href="app/hr/common/employee-attendance.html";
+      if (response["status"] === 200) {
+          alert("Successfully added");
+          window.location.href = "app/hr/common/employee-attendance.html";
+      } else {
+          alert(response["statusText"]);
       }
-      else {
-        alert(response["statusText"]);
-      }
-
   }
 
 
@@ -173,48 +193,41 @@ class Attendance extends React.Component {
         };
     }
 
-    // console.log(employeesTemp);
-    //merge employee with attendance
-
-    for(var emp in employees)
-    {
-        // var daysOfYear = [];
-        // console.log(Object.assign({}, startDate));
-        var startDate=new Date((typeof(queryParam["year"])==="undefined")?now.getFullYear():parseInt(queryParam["year"]), (typeof(queryParam["month"])==="undefined")?now.getMonth():parseInt(queryParam["month"]), 1);
-        
-        if(hrConfigurations["HRConfiguration"]["Weekly_holidays"][0]=="5-day week")
-        {
-          for (var d = startDate ; d <= endDate; d.setDate(d.getDate() + 1)) {
-          //  daysOfYear.push(new Date(d));
-              if(holidayList.indexOf(d.getTime()) > -1)
-                employees[emp].attendance[`${d.getMonth()}-${d.getDate().toString().length===1?"0"+d.getDate():d.getDate()}`] = "H";
-              else 
-               employees[emp].attendance[`${d.getMonth()}-${d.getDate().toString().length===1?"0"+d.getDate():d.getDate()}`]=(d.getDay()===0||d.getDay()===6)?"H":"";
-              // console.log(employees[emp]);
-          }
-        }
-        else {
-          for (var d = startDate ; d <= endDate; d.setDate(d.getDate() + 1)) {
-          //  daysOfYear.push(new Date(d));
-              if(holidayList.indexOf(d.getTime()) > -1)
-                employees[emp].attendance[`${d.getMonth()}-${d.getDate().toString().length===1?"0"+d.getDate():d.getDate()}`] = "H";
-              else 
-                employees[emp].attendance[`${d.getMonth()}-${d.getDate().toString().length===1?"0"+d.getDate():d.getDate()}`]=(d.getDay()===0)?"H":"";
-              // console.log(employees[emp]);
-          }
-          //w more
-        }
-
-
-        // empTemp.push(emp);
-    }
-
-    // console.log(employees);
-
-    if(currentAttendance.length>0)
-    {
+    if(currentAttendance.length > 0) {
         for (var i = 0; i < currentAttendance.length; i++) {
             employees[currentAttendance[i].employee]["attendance"][`${parseInt(queryParam["month"])}-${currentAttendance[i].attendanceDate.split("-")[2]}`]=currentAttendance[i].type.code;
+            employees[currentAttendance[i].employee]["attendance"][`${parseInt(queryParam["month"])}-${currentAttendance[i].attendanceDate.split("-")[2]}` + "-id"] = currentAttendance[i].id;
+      }
+    } else {
+        //Merge employee with attendance
+        for(var emp in employees) {
+            // var daysOfYear = [];
+            // console.log(Object.assign({}, startDate));
+            var startDate = new Date((typeof(queryParam["year"])==="undefined")?now.getFullYear():parseInt(queryParam["year"]), (typeof(queryParam["month"])==="undefined")?now.getMonth():parseInt(queryParam["month"]), 1);
+            
+            if(hrConfigurations["HRConfiguration"]["Weekly_holidays"][0]=="5-day week")
+            {
+              for (var d = startDate ; d <= endDate; d.setDate(d.getDate() + 1)) {
+              //  daysOfYear.push(new Date(d));
+                  if(holidayList.indexOf(d.getTime()) > -1)
+                    employees[emp].attendance[`${d.getMonth()}-${d.getDate().toString().length===1?"0"+d.getDate():d.getDate()}`] = "H";
+                  else 
+                  employees[emp].attendance[`${d.getMonth()}-${d.getDate().toString().length===1?"0"+d.getDate():d.getDate()}`]=(d.getDay()===0||d.getDay()===6)?"H":"";
+                  // console.log(employees[emp]);
+              }
+            }
+            else {
+              for (var d = startDate ; d <= endDate; d.setDate(d.getDate() + 1)) {
+              //  daysOfYear.push(new Date(d));
+                  if(holidayList.indexOf(d.getTime()) > -1)
+                    employees[emp].attendance[`${d.getMonth()}-${d.getDate().toString().length===1?"0"+d.getDate():d.getDate()}`] = "H";
+                  else 
+                    employees[emp].attendance[`${d.getMonth()}-${d.getDate().toString().length===1?"0"+d.getDate():d.getDate()}`]=(d.getDay()===0)?"H":"";
+                  // console.log(employees[emp]);
+              }
+              //w more
+            }
+            // empTemp.push(emp);
         }
     }
 

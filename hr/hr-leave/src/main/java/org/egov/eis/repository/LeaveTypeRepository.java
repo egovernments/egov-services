@@ -43,6 +43,8 @@ package org.egov.eis.repository;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -75,10 +77,21 @@ public class LeaveTypeRepository {
 	private LeaveTypeQueryBuilder leaveTypeQueryBuilder;
 
 	public List<LeaveType> findForCriteria(LeaveTypeGetRequest leaveTypeGetRequest) {
+		final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
 		List<Object> preparedStatementValues = new ArrayList<Object>();
 		String queryStr = leaveTypeQueryBuilder.getQuery(leaveTypeGetRequest, preparedStatementValues);
 		List<LeaveType> leaveTypes = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
 				leaveTypeRowMapper);
+		for (LeaveType leaveType : leaveTypes) {
+			try {
+				leaveType.setCreatedDate(sdf.parse(sdf.format(leaveType.getCreatedDate())));
+				leaveType.setLastModifiedDate(sdf.parse(sdf.format(leaveType.getLastModifiedDate())));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		return leaveTypes;
 	}
 
@@ -114,14 +127,21 @@ public class LeaveTypeRepository {
 					ps.setBoolean(4, leaveType.getPayEligible());
 					ps.setBoolean(5, leaveType.getAccumulative());
 					ps.setBoolean(6, leaveType.getEncashable());
-					ps.setBoolean(7, leaveType.getActive() == null ? false : true);
+					ps.setBoolean(7, leaveType.getActive() == null ? true : leaveType.getActive());
 					ps.setLong(8, Long.valueOf(leaveTypeRequest.getRequestInfo().getMsgId()));
-					ps.setDate(9, new Date(leaveType.getCreatedDate().getTime()));
-					ps.setLong(10, Long.valueOf(leaveTypeRequest.getRequestInfo().getMsgId()));
-					ps.setDate(11, new Date(leaveType.getLastModifiedDate().getTime()));
-					ps.setString(12, leaveType.getTenantId());
-					if (leaveType.getId() != null)
+					ps.setLong(9, Long.valueOf(leaveTypeRequest.getRequestInfo().getMsgId()));
+					if (leaveType.getId() != null) {
+						ps.setDate(10, new Date(leaveType.getCreatedDate().getTime()));
+						ps.setDate(11, new Date(leaveType.getLastModifiedDate().getTime()));
+						ps.setString(12, leaveType.getTenantId());
 						ps.setLong(13, leaveType.getId());
+						ps.setString(14, leaveType.getTenantId());
+					} else {
+						ps.setDate(10, new Date(new java.util.Date().getTime()));
+						ps.setDate(11, new Date(new java.util.Date().getTime()));
+						ps.setString(12, leaveType.getTenantId());
+
+					}
 				}
 
 				@Override

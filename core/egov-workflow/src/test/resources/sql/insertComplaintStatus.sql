@@ -1,0 +1,9 @@
+INSERT INTO egpgr_complaintstatus (id, name, version) VALUES (nextval('SEQ_EGPGR_COMPLAINTSTATUS'), 'REGISTERED', 0);
+INSERT INTO egpgr_complaintstatus (id, name, version) VALUES (nextval('SEQ_EGPGR_COMPLAINTSTATUS'), 'FORWARDED', 0);
+INSERT INTO egpgr_complaintstatus (id, name, version) VALUES (nextval('SEQ_EGPGR_COMPLAINTSTATUS'), 'PROCESSING', 0);
+INSERT INTO egpgr_complaintstatus (id, name, version) VALUES (nextval('SEQ_EGPGR_COMPLAINTSTATUS'), 'COMPLETED', 0);
+INSERT INTO egpgr_complaintstatus (id, name, version) VALUES (nextval('SEQ_EGPGR_COMPLAINTSTATUS'), 'REJECTED', 0);
+INSERT INTO egpgr_complaintstatus (id, name, version) VALUES (nextval('SEQ_EGPGR_COMPLAINTSTATUS'), 'NOTCOMPLETED', 0);
+INSERT INTO egpgr_complaintstatus (id, name, version) VALUES (nextval('SEQ_EGPGR_COMPLAINTSTATUS'), 'WITHDRAWN', 0);
+INSERT INTO egpgr_complaintstatus (id, name, version) VALUES (nextval('SEQ_EGPGR_COMPLAINTSTATUS'), 'CLOSED', 0);
+INSERT INTO egpgr_complaintstatus (id, name, version) VALUES (nextval('SEQ_EGPGR_COMPLAINTSTATUS'), 'REOPENED', 0);

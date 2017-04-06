@@ -69,10 +69,8 @@ public class ServiceHistoryRepository {
 			+ " VALUES (?,?,?,?,?,?,?,?,?,?,?)";
 	
 	public static final String UPDATE_SERVICE_HISTORY_QUERY = "UPDATE egeis_serviceHistory"
-			+ " SET (serviceInfo, serviceFrom, remarks, orderNo,"
-			+ " lastModifiedBy, lastModifiedDate)"
-			+ " = (?,?,?,?,?,?)"
-	        + "where id = ? and tenantId=?";
+			+ " SET (serviceInfo, serviceFrom, remarks, orderNo, lastModifiedBy, lastModifiedDate)"
+			+ " = (?,?,?,?,?,?) where id = ? and tenantId=?";
 
 	public static final String CHECK_IF_ID_EXISTS_QUERY = "SELECT id FROM egeis_serviceHistory where "
 			+ "id=? and employeeId=? and tenantId=?";
@@ -147,8 +145,7 @@ public class ServiceHistoryRepository {
 		values.add(id);
 		values.add(empId);
 		values.add(tenantId);
-		System.out.println("id" + id + " empId " +empId + " tenantId " +tenantId);
-		LOGGER.info("id" + id + " empId " +empId + " tenantId " +tenantId);
+		LOGGER.debug("id : " + id + " empId : " +empId + " tenantId : " +tenantId);
 		try {
 			jdbcTemplate.queryForObject(CHECK_IF_ID_EXISTS_QUERY, values.toArray(), Long.class);
 			return true;

@@ -40,7 +40,10 @@
 
 package org.egov.eis.service.helper;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -79,10 +82,14 @@ public class EmployeeHelper {
 	private ResponseInfoFactory responseInfoFactory;
 
 	private enum Sequences {
-		ASSIGNMENT("seq_egeis_assignment"), DEPARTMENTALTEST("seq_egeis_departmentaltest"), EDUCATIONALQUALIFICATION(
-				"seq_egeis_educationalqualification"), HODDEPARTMENT("seq_egeis_hoddepartment"), PROBATION(
-						"seq_egeis_probation"), REGULARISATION("seq_egeis_regularisation"), SERVICEHISTORY(
-								"seq_egeis_servicehistory"), TECHNICALQUALIFICATION("seq_egeis_technicalqualification");
+		ASSIGNMENT("seq_egeis_assignment"),
+		DEPARTMENTALTEST("seq_egeis_departmentaltest"),
+		EDUCATIONALQUALIFICATION("seq_egeis_educationalqualification"),
+		HODDEPARTMENT("seq_egeis_hoddepartment"),
+		PROBATION("seq_egeis_probation"),
+		REGULARISATION("seq_egeis_regularisation"),
+		SERVICEHISTORY("seq_egeis_servicehistory"),
+		TECHNICALQUALIFICATION("seq_egeis_technicalqualification");
 
 		String sequenceName;
 
@@ -104,6 +111,8 @@ public class EmployeeHelper {
 		UserRequest userRequest = new UserRequest();
 		userRequest.setRequestInfo(employeeRequest.getRequestInfo());
 		User user = employeeRequest.getEmployee().getUser();
+		// FIXME : password hard-coded
+		user.setPassword("12345678");
 		user.setTenantId(employeeRequest.getEmployee().getTenantId());
 		userRequest.setUser(user);
 
@@ -155,6 +164,7 @@ public class EmployeeHelper {
 		Employee employee = employeeRequest.getEmployee();
 		RequestInfo requestInfo = employeeRequest.getRequestInfo();
 		String requesterId = requestInfo.getRequesterId();
+		// FIXME : Check - will allow us to set updated tenantId for every object, if employee tenantId is updated
 		String tenantId = employee.getTenantId();
 
 		employee.getAssignments().forEach((assignment) -> {
@@ -167,54 +177,60 @@ public class EmployeeHelper {
 			employee.getEducation().forEach((education) -> {
 				if (education.getId() == null)
 					populateDefaultDataForNewEducation(education, requesterId, tenantId);
-				else
+				else {
 					education.setLastModifiedBy(Long.parseLong(requesterId));
 					education.setLastModifiedDate((new Date()));
+				}
 			});
 		}
 		if (employee.getTest() != null) {
 			employee.getTest().forEach((test) -> {
 				if (test.getId() == null)
 					populateDefaultDataForNewTest(test, requesterId, tenantId);
-				else
+				else {
 					test.setLastModifiedBy(Long.parseLong(requesterId));
 					test.setLastModifiedDate((new Date()));
+				}
 			});
 		}
 		if (employee.getProbation() != null) {
 			employee.getProbation().forEach((probation) -> {
 				if (probation.getId() == null)
 					populateDefaultDataForNewProbation(probation, requesterId, tenantId);
-				else
+				else {
 					probation.setLastModifiedBy(Long.parseLong(requesterId));
 					probation.setLastModifiedDate((new Date()));
+				}
 			});
 		}
 		if (employee.getRegularisation() != null) {
 			employee.getRegularisation().forEach((regularisation) -> {
 				if (regularisation.getId() == null)
 					populateDefaultDataForNewRegularisation(regularisation, requesterId, tenantId);
-				else
+				else {
 					regularisation.setLastModifiedBy(Long.parseLong(requesterId));
 					regularisation.setLastModifiedDate((new Date()));
+				}
 			});
 		}
 		if (employee.getServiceHistory() != null) {
 			employee.getServiceHistory().forEach((serviceHistory) -> {
 				if (serviceHistory.getId() == null)
 					populateDefaultDataForNewServiceHistory(serviceHistory, requesterId, tenantId);
-				else
+				else {
 					serviceHistory.setLastModifiedBy(Long.parseLong(requesterId));
 					serviceHistory.setLastModifiedDate((new Date()));
+				}
 			});
 		}
 		if (employee.getTechnical() != null) {
 			employee.getTechnical().forEach((technical) -> {
 				if (technical.getId() == null)
 					populateDefaultDataForNewTechnical(technical, requesterId, tenantId);
-				else
+				else {
 					technical.setLastModifiedBy(Long.parseLong(requesterId));
 					technical.setLastModifiedDate((new Date()));
+				}
 			});
 		}
 	}
@@ -301,6 +317,10 @@ public class EmployeeHelper {
 	private void populateDefaultDataForUpdateAssignment(Assignment assignment, String requesterId, String tenantId) {
 		assignment.setLastModifiedBy(Long.parseLong(requesterId));
 		assignment.setLastModifiedDate((new Date()));
+		trimTimePartFromDateFields(assignment);
+		if (assignment.getDocuments() == null) {
+			assignment.setDocuments(new ArrayList<>());
+		}
 		if (assignment.getHod() != null) {
 			assignment.getHod().forEach((hod) -> {
 				if (hod.getId() == null)
@@ -309,6 +329,22 @@ public class EmployeeHelper {
 			});
 		}
 	}
+ 
+	private void trimTimePartFromDateFields(Assignment assignment) {
+		assignment.setFromDate(removeTime(assignment.getFromDate()));
+		System.out.println("fromdate = " + assignment.getFromDate());
+		assignment.setToDate(removeTime(assignment.getToDate()));
+	}
+	
+	public static Date removeTime(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal.getTime();
+    }
 
 	public void mapDocumentsWithEmployees(List<EmployeeInfo> employeeInfoList,
 			List<EmployeeDocument> employeeDocuments) {

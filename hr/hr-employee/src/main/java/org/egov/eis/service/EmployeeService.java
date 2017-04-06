@@ -40,10 +40,13 @@
 
 package org.egov.eis.service;
 
+import static org.gov.eis.utils.DateUtils.areDatesEqualWithoutTimePart;
+
 import java.util.List;
 import java.util.stream.Collectors;
 import org.egov.eis.broker.EmployeeProducer;
 import org.egov.eis.config.PropertiesManager;
+import org.egov.eis.model.Assignment;
 import org.egov.eis.model.Employee;
 import org.egov.eis.model.EmployeeDocument;
 import org.egov.eis.model.EmployeeInfo;
@@ -164,12 +167,17 @@ public class EmployeeService {
 			responseEntity = userService.createUser(userRequest);
 		} catch (Exception e) {
 			LOGGER.debug("Error occurred while creating user", e);
-			return errorHandler.getResponseEntityForUnknownUserCreationError(employeeRequest.getRequestInfo());
+			return errorHandler.getResponseEntityForUnknownUserDBUpdationError(employeeRequest.getRequestInfo());
 		}
 
-		if (responseEntity.getBody().getClass().equals(UserErrorResponse.class)
-				|| responseEntity.getBody().getClass().equals(ErrorResponse.class)) {
-			return responseEntity;
+		try {
+			if (responseEntity.getBody().getClass().equals(UserErrorResponse.class)
+					|| responseEntity.getBody().getClass().equals(ErrorResponse.class)) {
+				return responseEntity;
+			}
+		} catch (Exception e) {
+			LOGGER.debug("Error occurred while creating user", e);
+			return errorHandler.getResponseEntityForUnknownUserDBUpdationError(employeeRequest.getRequestInfo());
 		}
 
 		UserResponse userResponse = (UserResponse) responseEntity.getBody();
@@ -246,11 +254,11 @@ public class EmployeeService {
 		Employee employee = employeeRequest.getEmployee();
 		ResponseEntity<?> responseEntity = null;
 
-		try {
+	/*	try {
 			responseEntity = userService.updateUser(userRequest.getUser().getId(), userRequest);
 		} catch (Exception e) {
 			LOGGER.debug("Error occurred while updating user", e);
-			return errorHandler.getResponseEntityForUnknownUserCreationError(employeeRequest.getRequestInfo());
+			return errorHandler.getResponseEntityForUnknownUserDBUpdationError(employeeRequest.getRequestInfo());
 		}
 
 		if (responseEntity.getBody().getClass().equals(UserErrorResponse.class)
@@ -261,7 +269,7 @@ public class EmployeeService {
 		UserResponse userResponse = (UserResponse) responseEntity.getBody();
 		User user = userResponse.getUser().get(0);
 		employee.setUser(user);
-
+*/
 		try {
 			employeeHelper.populateDefaultDataForUpdate(employeeRequest);
 		} catch (Exception e) {
@@ -289,25 +297,29 @@ public class EmployeeService {
 
 	public void update(EmployeeRequest employeeRequest) {
 		Employee employee = employeeRequest.getEmployee();
-		employeeRepository.update(employeeRequest);
+		employeeRepository.update(employee);
 
 		employee.getJurisdictions().forEach((jurisdiction) -> {
-			// if jurisdiction id already exists in table, we dont do anything. When absent, we insert the record.
-			if (!employeeJurisdictionRepository.jurisdictionAlreadyExists(jurisdiction, employee.getId(),employee.getTenantId()))
+			// FIXME can be optimized with single query
+			// if jurisdiction id already exists in table, we don't do anything. When absent, we insert the record.
+			if (!employeeJurisdictionRepository.jurisdictionAlreadyExists(jurisdiction, employee.getId(), employee.getTenantId()))
 				employeeJurisdictionRepository.insert(jurisdiction, employee.getId(), employee.getTenantId());
 			
-			// serviceHistoryRepository.findAndDeleteServiceHistoryInDBThatAreNotInList(employee.getServiceHistory());
+			// employeeJurisdictionRepository.findAndDeleteInDBThatAreNotInList(employee.getServiceHistory());
 		});
+		List<Assignment> assignments = assignmentRepository.findForEmployeeId(employee.getId(), employee.getTenantId());
 		employee.getAssignments().forEach((assignment) -> {
-			if (assignmentRepository.assignmentAlreadyExists(assignment.getId(), employee.getId(),
-					employee.getTenantId())) { // FIXME can be optimized with
-												// single query
-				assignmentRepository.update(assignment);
-			} else {
+			if (assignmentNeedsInsert(assignment, assignments)) {
+				System.out.println("creating assignment");
 				assignmentRepository.insert(assignment, employee.getId());
+			} else if (assignmentNeedsUpdate(assignment, assignments)) {
+				System.out.println("updating assignment");
+				assignmentRepository.update(assignment);
 			}
-			// assignmentRepository.findAndDeleteAssignmentsInDBThatAreNotInList(employee.getAssignments());
+			System.out.println("exit from assignment");
+			// assignmentRepository.findAndDeleteInDBThatAreNotInList(employee.getAssignments());
 			if (assignment.getHod() != null) {
+				// FIXME HOD not handled for update
 				hodDepartmentRepository.save(assignment, employee.getTenantId());
 			}
 		});
@@ -320,7 +332,7 @@ public class EmployeeService {
 			} else {
 				serviceHistoryRepository.insert(service, employee.getId());
 			}
-			// serviceHistoryRepository.findAndDeleteServiceHistoryInDBThatAreNotInList(employee.getServiceHistory());
+			// serviceHistoryRepository.findAndDeleteInDBThatAreNotInList(employee.getServiceHistory());
 		});
 
 		employee.getProbation().forEach((probation) -> {
@@ -331,7 +343,7 @@ public class EmployeeService {
 			} else {
 				probationRepository.insert(probation, employee.getId());
 			}
-			// probationRepository.findAndDeleteProbationInDBThatAreNotInList(employee.getProbation());
+			// probationRepository.findAndDeleteInDBThatAreNotInList(employee.getProbation());
 		});
 
 		employee.getRegularisation().forEach((regularisation) -> {
@@ -342,7 +354,7 @@ public class EmployeeService {
 			} else {
 				regularisationRepository.insert(regularisation, employee.getId());
 			}
-			// regularisationRepository.findAndDeleteRegularisationInDBThatAreNotInList(employee.getRegularisation());
+			// regularisationRepository.findAndDeleteInDBThatAreNotInList(employee.getRegularisation());
 		});
 
 		employee.getTechnical().forEach((technical) -> {
@@ -353,7 +365,7 @@ public class EmployeeService {
 			} else {
 				technicalQualificationRepository.insert(technical, employee.getId());
 			}
-			// technicalQualificationRepository.findAndDeleteThatAreNotInList(employee.getTechnical());
+			// technicalQualificationRepository.findAndDeleteInDBThatAreNotInList(employee.getTechnical());
 		});
 
 		employee.getEducation().forEach((education) -> {
@@ -364,7 +376,7 @@ public class EmployeeService {
 			} else {
 				educationalQualificationRepository.insert(education, employee.getId());
 			}
-			// educationalQualificationRepository.findAndDeleteThatAreNotInList(employee.getEducation());
+			// educationalQualificationRepository.findAndDeleteInDBThatAreNotInList(employee.getEducation());
 		});
 
 		employee.getTest().forEach((test) -> {
@@ -373,38 +385,30 @@ public class EmployeeService {
 			} else {
 				departmentalTestRepository.insert(test, employee.getId());
 			}
-			// departmentalTestRepository.findAndDeleteThatAreNotInList(employee.getTest());
+			// departmentalTestRepository.findAndDeleteInDBThatAreNotInList(employee.getTest());
 		});
 	}
 
-	/**
-	 * Checks if any one of the string in given comma separated values is
-	 * present in db for the given column and given table.
-	 * 
-	 * @param table
-	 * @param field
-	 * @param value
-	 *            is a comma separated value string
-	 * @return
-	 */
-	public Boolean checkForDuplicatesForAnyOneOfGivenCSV(String table, String field, Object value) {
-		return employeeRepository.checkForDuplicates(table, field, value);
-	}
-
-	/**
-	 * Checks if the given string is present in db for the given column and
-	 * given table.
-	 * 
-	 * @param table
-	 * @param column
-	 * @param value
-	 * @param id
-	 * @return
-	 */
-	public Boolean duplicateExists(String table, String column, String value, Long id) {
-		Long idFromDb = employeeRepository.getId(table, column, value);
-		if (idFromDb == 0 || id.equals(idFromDb))
-			return false;
+	private boolean assignmentNeedsInsert(Assignment assignment, List<Assignment> assignments) {
+		for (Assignment oldAssignment : assignments) {
+			if (assignment.getId().equals(oldAssignment.getId()))
+				return false;
+		}
 		return true;
 	}
+
+	private boolean assignmentNeedsUpdate(Assignment assignment, List<Assignment> assignments) {
+		System.out.println("assignment-" +assignment);
+		for (Assignment oldAssignment : assignments) {
+			System.out.println("oldAssignment-" +oldAssignment);
+			if (assignment.equals(oldAssignment)) {
+				System.out.println("equal!!");
+				return false;
+			} else {
+				System.out.println("not equal!!");
+			}
+		}
+		return true;
+	}
+
 }

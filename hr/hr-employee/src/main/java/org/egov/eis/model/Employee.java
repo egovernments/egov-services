@@ -73,6 +73,7 @@ public class Employee {
 
 	private String code;
 
+	@NotNull
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date dateOfAppointment;

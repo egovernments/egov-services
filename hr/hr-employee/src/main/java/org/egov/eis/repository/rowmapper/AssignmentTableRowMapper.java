@@ -38,55 +38,40 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.model;
+package org.egov.eis.repository.rowmapper;
 
-import java.util.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import org.egov.eis.model.Assignment;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
-import org.springframework.format.annotation.DateTimeFormat;
+@Component
+public class AssignmentTableRowMapper implements RowMapper<Assignment> {
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-
-@Builder
-@AllArgsConstructor
-@EqualsAndHashCode
-@Getter
-@NoArgsConstructor
-@Setter
-@ToString
-public class Role {
-
-	private Long id;
-
-	@NotNull
-	@Size(min=2, max=100)
-    private String name;
-
-	@Size(max=256)
-    private String description;
-
-	private Long createdBy;
-
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date createdDate;
-
-	private Long lastModifiedBy;
-
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date lastModifiedDate;
-
-	private String tenantId;
-
+	@Override
+	public Assignment mapRow(ResultSet rs, int rowNum) throws SQLException, DataAccessException {
+		Assignment assignment = new Assignment();
+		assignment.setId(rs.getLong("id"));
+		assignment.setPosition(rs.getLong("positionId"));
+		assignment.setFund(rs.getLong("fundId"));
+		assignment.setFunctionary(rs.getLong("functionaryId"));
+		assignment.setFunction(rs.getLong("functionId"));
+		assignment.setDepartment(rs.getLong("departmentId"));
+		assignment.setDesignation(rs.getLong("designationId"));
+		assignment.setIsPrimary(rs.getBoolean("isPrimary"));
+		assignment.setFromDate(rs.getDate("fromDate"));
+		assignment.setToDate(rs.getDate("toDate"));
+		assignment.setGrade(rs.getLong("gradeId"));
+		assignment.setGovtOrderNumber(rs.getString("govtOrderNumber"));
+		assignment.setCreatedBy(rs.getLong("createdBy"));
+		assignment.setCreatedDate(rs.getDate("createdDate"));
+		assignment.setLastModifiedBy(rs.getLong("lastModifiedBy"));
+		assignment.setLastModifiedDate(rs.getDate("lastModifiedDate"));
+		assignment.setTenantId(rs.getString("tenantId"));
+		
+		return assignment;
+	}
 }

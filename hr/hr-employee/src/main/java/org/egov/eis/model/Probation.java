@@ -51,14 +51,12 @@ import org.springframework.format.annotation.DateTimeFormat;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @AllArgsConstructor
-@EqualsAndHashCode
 @Getter
 @NoArgsConstructor
 @Setter
@@ -99,4 +97,57 @@ public class Probation {
 
 	private String tenantId;
 
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Probation other = (Probation) obj;
+		if (declaredOn == null) {
+			if (other.declaredOn != null)
+				return false;
+		} else if (!declaredOn.equals(other.declaredOn))
+			return false;
+		if (designation == null) {
+			if (other.designation != null)
+				return false;
+		} else if (!designation.equals(other.designation))
+			return false;
+		if (documents == null) {
+			if (other.documents != null)
+				return false;
+		} else if (!documents.equals(other.documents))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (orderDate == null) {
+			if (other.orderDate != null)
+				return false;
+		} else if (!orderDate.equals(other.orderDate))
+			return false;
+		if (orderNo == null) {
+			if (other.orderNo != null)
+				return false;
+		} else if (!orderNo.equals(other.orderNo))
+			return false;
+		if (remarks == null) {
+			if (other.remarks != null)
+				return false;
+		} else if (!remarks.equals(other.remarks))
+			return false;
+		if (tenantId == null) {
+			if (other.tenantId != null)
+				return false;
+		} else if (!tenantId.equals(other.tenantId))
+			return false;
+		return true;
+	}
+
+	
 }

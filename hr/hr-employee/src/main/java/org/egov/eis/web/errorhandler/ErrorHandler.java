@@ -109,9 +109,11 @@ public class ErrorHandler {
 		error.setMessage("Binding Error");
 		error.setDescription("Error while binding request object");
 
+		// FIXME : not able to get fieldError error messages. Remove conditions when fixed
 		if (bindingResult.hasFieldErrors()) {
 			for (FieldError fieldError : bindingResult.getFieldErrors()) {
-				if (fieldError.getField().contains("Date")) {
+				if (fieldError.getField().contains("Date") && !(fieldError.getField().contains("fromDate")
+						|| fieldError.getField().contains("toDate"))) {
 					DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 					String errorDate = dateFormat.format(fieldError.getRejectedValue());
 					error.getFields().put(fieldError.getField(), errorDate);
@@ -121,8 +123,14 @@ public class ErrorHandler {
 							"Invalid " + fieldError.getField() + " - " + fieldError.getRejectedValue());
 				} else if (fieldError.getField().contains("passportNo") || fieldError.getField().contains("gpfNo")
 						|| fieldError.getField().contains("department") || fieldError.getField().contains("documents")) {
-					error.getFields().put(fieldError.getField(), "Concurrent Value - " + fieldError.getField() + " = "
+					error.getFields().put(fieldError.getField(), "Duplicate Value - " + fieldError.getField() + " = "
 							+ fieldError.getRejectedValue() + " Already Exists");
+				} else if (fieldError.getField().contains("fromDate") || fieldError.getField().contains("toDate")) {
+					DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+					String errorDate = dateFormat.format(fieldError.getRejectedValue());
+					error.getFields().put(fieldError.getField(), "Primary Assignments Overlapping : " + errorDate);
+				} else if (fieldError.getField().contains("assignments")) {
+					error.getFields().put(fieldError.getField(), "No Primary Assignment Provided");
 				} else {
 					error.getFields().put(fieldError.getField(), fieldError.getRejectedValue());
 				}
@@ -169,8 +177,8 @@ public class ErrorHandler {
 
 		return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
 	}
-	
-	public ResponseEntity<ErrorResponse> getResponseEntityForUnknownUserCreationError(RequestInfo requestInfo) {
+
+	public ResponseEntity<ErrorResponse> getResponseEntityForUnknownUserDBUpdationError(RequestInfo requestInfo) {
 		Error error = new Error();
 		error.setCode(500);
 		error.setMessage("User Creation Failed");

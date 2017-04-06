@@ -54,7 +54,8 @@ import org.egov.eis.web.contract.RequestInfoWrapper;
 import org.egov.eis.web.contract.ResponseInfo;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
 import org.egov.eis.web.errorhandler.ErrorHandler;
-import org.egov.eis.web.validator.DataIntegrityValidator;
+import org.egov.eis.web.validator.DataIntegrityValidatorForCreate;
+import org.egov.eis.web.validator.DataIntegrityValidatorForUpdate;
 import org.egov.eis.web.validator.EmployeeAssignmentValidator;
 import org.egov.eis.web.validator.RequestValidator;
 import org.slf4j.Logger;
@@ -93,7 +94,10 @@ public class EmployeeController {
 	private EmployeeAssignmentValidator employeeAssignmentValidator;
 
 	@Autowired
-	private DataIntegrityValidator dataIntegrityValidator;
+	private DataIntegrityValidatorForCreate dataIntegrityValidatorForCreate;
+	
+	@Autowired
+	private DataIntegrityValidatorForUpdate dataIntegrityValidatorForUpdate;
 
 	/**
 	 * Maps Post Requests for _search & returns ResponseEntity of either
@@ -131,7 +135,7 @@ public class EmployeeController {
 	}
 
 	/**
-	 * Maps Post Requests for _search & returns ResponseEntity of either
+	 * Maps Post Requests for _create & returns ResponseEntity of either
 	 * EmployeeResponse type or ErrorResponse type
 	 * 
 	 * @param EmployeeRequest
@@ -143,19 +147,27 @@ public class EmployeeController {
 	public ResponseEntity<?> create(@RequestBody @Valid EmployeeRequest employeeRequest, BindingResult bindingResult) {
 		LOGGER.debug("employeeRequest::" + employeeRequest);
 
-		ResponseEntity<?> errorResponseEntity = validateEmployeeCreateRequest(employeeRequest, bindingResult);
+		ResponseEntity<?> errorResponseEntity = validateEmployeeRequest(employeeRequest, bindingResult, false);
 		if (errorResponseEntity != null)
 			return errorResponseEntity;
 
 		return employeeService.createAsync(employeeRequest);
 	}
-	
+
+	/**
+	 * Maps Post Requests for _update & returns ResponseEntity of either
+	 * EmployeeResponse type or ErrorResponse type
+	 * 
+	 * @param EmployeeRequest
+	 * @param BindingResult
+	 * @return ResponseEntity<?>
+	 */
 	@PostMapping(value = "/_update")
 	@ResponseBody
 	public ResponseEntity<?> update(@RequestBody @Valid EmployeeRequest employeeRequest, BindingResult bindingResult) {
 		LOGGER.debug("employeeRequest::" + employeeRequest);
 
-		ResponseEntity<?> errorResponseEntity = validateEmployeeCreateRequest(employeeRequest, bindingResult);
+		ResponseEntity<?> errorResponseEntity = validateEmployeeRequest(employeeRequest, bindingResult, true);
 		if (errorResponseEntity != null)
 			return errorResponseEntity;
 
@@ -170,8 +182,8 @@ public class EmployeeController {
 	 * @param bindingResult
 	 * @return ResponseEntity<?>
 	 */
-	private ResponseEntity<?> validateEmployeeCreateRequest(EmployeeRequest employeeRequest,
-			BindingResult bindingResult) {
+	private ResponseEntity<?> validateEmployeeRequest(EmployeeRequest employeeRequest,
+			BindingResult bindingResult, boolean isUpdate) {
 		// validate input params that can be handled by annotations
 		if (bindingResult.hasErrors()) {
 			return errorHandler.getErrorResponseEntityForBindingErrors(bindingResult, employeeRequest.getRequestInfo());
@@ -179,7 +191,10 @@ public class EmployeeController {
 
 		// validate input params that can't be handled by annotations
 		ValidationUtils.invokeValidator(employeeAssignmentValidator, employeeRequest.getEmployee(), bindingResult);
-		ValidationUtils.invokeValidator(dataIntegrityValidator, employeeRequest.getEmployee(), bindingResult);
+		if (isUpdate)
+			ValidationUtils.invokeValidator(dataIntegrityValidatorForUpdate, employeeRequest.getEmployee(), bindingResult);
+		else
+			ValidationUtils.invokeValidator(dataIntegrityValidatorForCreate, employeeRequest.getEmployee(), bindingResult);
 
 		if (bindingResult.hasErrors()) {
 			return errorHandler.getErrorResponseEntityForBindingErrors(bindingResult, employeeRequest.getRequestInfo());

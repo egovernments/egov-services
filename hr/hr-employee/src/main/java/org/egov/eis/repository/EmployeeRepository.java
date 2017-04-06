@@ -43,7 +43,6 @@ package org.egov.eis.repository;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import org.egov.eis.model.Employee;
 import org.egov.eis.model.EmployeeDocument;
 import org.egov.eis.model.EmployeeInfo;
@@ -73,12 +72,15 @@ public class EmployeeRepository {
 			+ " medicalreportproduced, maritalstatus, passportno, gpfno, bankId, bankbranchId, bankaccount, groupId,"
 			+ " placeofbirth, tenantId)" + " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
-	public static final String UPDATE_EMPLOYEE_QUERY = "UPDATE egeis_employee "
-			+ "SET (dateOfAppointment, dateofjoining, dateofretirement, employeestatus, recruitmentmodeId,"
+	public static final String UPDATE_EMPLOYEE_QUERY = "UPDATE egeis_employee"
+			+ " SET (dateOfAppointment, dateofjoining, dateofretirement, employeestatus, recruitmentmodeId,"
 			+ " recruitmenttypeId, recruitmentquotaId, retirementage, dateofresignation, dateoftermination,"
 			+ " employeetypeId, mothertongueId, religionId, communityId, categoryId, physicallydisabled,"
 			+ " medicalreportproduced, maritalstatus, passportno, gpfno, bankId, bankbranchId, bankaccount, groupId,"
-			+ " placeofbirth, tenantId)" + "= (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" + "WHERE id = ?";
+			+ " placeofbirth)" + "= (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" + "WHERE id = ?";
+
+	public static final String EMPLOYEE_EXISTANCE_CHECK_QUERY = "SELECT exists(SELECT id FROM egeis_employee"
+			+ " WHERE id = ? AND tenantId = ?)";
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -150,9 +152,7 @@ public class EmployeeRepository {
 		jdbcTemplate.update(INSERT_EMPLOYEE_QUERY, obj);
 	}
 
-	public void update(EmployeeRequest employeeRequest) {
-
-		Employee employee = employeeRequest.getEmployee();
+	public void update(Employee employee) {
 		Object[] obj = new Object[] { employee.getDateOfAppointment(), employee.getDateOfJoining(),
 				employee.getDateOfRetirement(), employee.getEmployeeStatus(), employee.getRecruitmentMode(),
 				employee.getRecruitmentType(), employee.getRecruitmentQuota(), employee.getRetirementAge(),
@@ -161,7 +161,7 @@ public class EmployeeRepository {
 				employee.getPhysicallyDisabled(), employee.getMedicalReportProduced(),
 				employee.getMaritalStatus().toString(), employee.getPassportNo(), employee.getGpfNo(),
 				employee.getBank(), employee.getBankBranch(), employee.getBankAccount(), employee.getGroup(),
-				employee.getPlaceOfBirth(), employee.getTenantId(), employee.getId() };
+				employee.getPlaceOfBirth(), employee.getId() };
 
 		jdbcTemplate.update(UPDATE_EMPLOYEE_QUERY, obj);
 	}
@@ -170,27 +170,56 @@ public class EmployeeRepository {
 		return jdbcTemplate.queryForObject("SELECT nextval('" + sequenceName + "')", Long.class);
 	}
 
-	public Boolean checkForDuplicates(String table, String column, Object value) {
-		String query = "SELECT exists(SELECT 1 FROM " + table + " WHERE " + column + " IN (" + value + "))";
+	/**
+	 * Checks if any one of the string in given comma separated values is
+	 * present in db for the given column and given table.
+	 * 
+	 * @param table
+	 * @param field
+	 * @param value
+	 *            is a comma separated value string
+	 * @return
+	 */
+	public Boolean checkForDuplicatesForAnyOneOfGivenCSV(String table, String column, String value) {
+		String query = "SELECT exists(SELECT id FROM " + table + " WHERE " + column + " IN (" + value + "))";
 		return jdbcTemplate.queryForObject(query, Boolean.class);
 	}
-	
+
 	/**
-	 * Checks in given table, field if the given value already exists and returns the id of the row
+	 * Checks in given table, column if the given value already exists and
+	 * returns the id of the row
+	 * 
 	 * @param table
 	 * @param column
 	 * @param value
+	 * @param tenantId
 	 * @return id of the row if exists; 0 otherwise
 	 */
-	public Long getId(String table, String column, String value) {
-		String query = "SELECT id FROM " + table + " WHERE " + column + " = ?";
-		List<Object> preparedStatementValues = new ArrayList<Object>();
-		preparedStatementValues.add(value);
+	public Long getId(String table, String column, String value, String tenantId) {
+		String query = "SELECT id FROM " + table + " WHERE " + column + " = ? AND tenantId = ?";
 		try {
-			return jdbcTemplate.queryForObject(query, preparedStatementValues.toArray(), Long.class);
+			return jdbcTemplate.queryForObject(query, new Object[] { value, tenantId }, Long.class);
 		} catch (EmptyResultDataAccessException e) {
 			return 0L;
 		}
+	}
+
+	/**
+	 * Returns list of ids from given table for a particular employeeId & tenantId
+	 * 
+	 * @param table
+	 * @param field
+	 * @param value
+	 * @return
+	 */
+	public List<Long> getListOfIds(String table, Long employeeId, String tenantId) {
+		String query = "SELECT id FROM " + table + " WHERE employeeId = ? AND tenantId = ?";
+		return jdbcTemplate.query(query, new Object[] { employeeId, tenantId }, employeeIdsRowMapper);
+	}
+
+	public boolean checkIfEmployeeExists(Long id, String tenantId) {
+		return jdbcTemplate.queryForObject(EMPLOYEE_EXISTANCE_CHECK_QUERY, new Object[] { id, tenantId },
+				Boolean.class);
 	}
 
 	private String getProcessedIdsString(List<Long> ids) {

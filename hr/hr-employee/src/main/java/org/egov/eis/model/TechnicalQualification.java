@@ -51,14 +51,12 @@ import org.springframework.format.annotation.DateTimeFormat;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @AllArgsConstructor
-@EqualsAndHashCode
 @Getter
 @NoArgsConstructor
 @Setter
@@ -92,4 +90,52 @@ public class TechnicalQualification {
 
 	private String tenantId;
 
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		TechnicalQualification other = (TechnicalQualification) obj;
+		if (documents == null) {
+			if (other.documents != null)
+				return false;
+		} else if (!documents.equals(other.documents))
+			return false;
+		if (grade == null) {
+			if (other.grade != null)
+				return false;
+		} else if (!grade.equals(other.grade))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (remarks == null) {
+			if (other.remarks != null)
+				return false;
+		} else if (!remarks.equals(other.remarks))
+			return false;
+		if (skill == null) {
+			if (other.skill != null)
+				return false;
+		} else if (!skill.equals(other.skill))
+			return false;
+		if (tenantId == null) {
+			if (other.tenantId != null)
+				return false;
+		} else if (!tenantId.equals(other.tenantId))
+			return false;
+		if (yearOfPassing == null) {
+			if (other.yearOfPassing != null)
+				return false;
+		} else if (!yearOfPassing.equals(other.yearOfPassing))
+			return false;
+		return true;
+	}
+
+	
 }

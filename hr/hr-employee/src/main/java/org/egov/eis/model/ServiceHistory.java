@@ -51,14 +51,12 @@ import org.springframework.format.annotation.DateTimeFormat;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @AllArgsConstructor
-@EqualsAndHashCode
 @Getter
 @NoArgsConstructor
 @Setter
@@ -95,4 +93,50 @@ public class ServiceHistory {
 
 	private String tenantId;
 
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ServiceHistory other = (ServiceHistory) obj;
+		if (documents == null) {
+			if (other.documents != null)
+				return false;
+		} else if (!documents.equals(other.documents))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (orderNo == null) {
+			if (other.orderNo != null)
+				return false;
+		} else if (!orderNo.equals(other.orderNo))
+			return false;
+		if (remarks == null) {
+			if (other.remarks != null)
+				return false;
+		} else if (!remarks.equals(other.remarks))
+			return false;
+		if (serviceFrom == null) {
+			if (other.serviceFrom != null)
+				return false;
+		} else if (!serviceFrom.equals(other.serviceFrom))
+			return false;
+		if (serviceInfo == null) {
+			if (other.serviceInfo != null)
+				return false;
+		} else if (!serviceInfo.equals(other.serviceInfo))
+			return false;
+		if (tenantId == null) {
+			if (other.tenantId != null)
+				return false;
+		} else if (!tenantId.equals(other.tenantId))
+			return false;
+		return true;
+	}	
 }

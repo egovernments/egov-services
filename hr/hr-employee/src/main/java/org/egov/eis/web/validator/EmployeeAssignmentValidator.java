@@ -86,6 +86,11 @@ public class EmployeeAssignmentValidator implements Validator {
 			}
 		};
 
+		// check for atleast 1 primary assignment
+		if(primaryAssignments.size() == 0) {
+			errors.rejectValue("employee.assignments", "incorrect", "no primary assignment");
+		}
+
 		// check if assignmentDates are overlapping for primary assignments
 		for (int i = 0; i < primaryAssignments.size(); i++) {
 			for (int j = i + 1; j < primaryAssignments.size(); j++) {

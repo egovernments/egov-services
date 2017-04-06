@@ -46,13 +46,12 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.egov.eis.model.Assignment;
-import org.egov.eis.model.Employee;
 import org.egov.eis.model.enums.DocumentReferenceType;
 import org.egov.eis.repository.builder.AssignmentQueryBuilder;
 import org.egov.eis.repository.helper.PreparedStatementHelper;
 import org.egov.eis.repository.rowmapper.AssignmentRowMapper;
+import org.egov.eis.repository.rowmapper.AssignmentTableRowMapper;
 import org.egov.eis.web.contract.AssignmentGetRequest;
 import org.egov.eis.web.contract.EmployeeRequest;
 import org.slf4j.Logger;
@@ -74,20 +73,28 @@ public class AssignmentRepository {
 			+ " (id, employeeId, positionId, fundId, functionaryId, functionId, departmentId, designationId,"
 			+ " isPrimary, fromDate, toDate, gradeId, govtOrderNumber, createdBy, createdDate,"
 			+ " lastModifiedBy, lastModifiedDate, tenantId)" + " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-	
+
 	public static final String UPDATE_ASSIGNMENT_QUERY = "UPDATE egeis_assignment"
 			+ " SET (positionId, fundId, functionaryId, functionId, departmentId, designationId,"
-			+ " isPrimary, fromDate, toDate, gradeId, govtOrderNumber,"
-			+ " lastModifiedBy, lastModifiedDate)"
-			+ " = (?,?,?,?,?,?,?,?,?,?,?,?,?)"
-			+ " where id = ? and tenantId=?";
-	
-	public static final String CHECK_IF_ID_EXISTS_QUERY = "SELECT id FROM egeis_assignment where "
-			+ "id=? and employeeId=? and tenantId=?";
+			+ " isPrimary, fromDate, toDate, gradeId, govtOrderNumber," + " lastModifiedBy, lastModifiedDate)"
+			+ " = (?,?,?,?,?,?,?,?,?,?,?,?,?)" + " where id = ? and tenantId=?";
+
+	public static final String SELECT_ASSIGNMENT_QUERY = "SELECT"
+			+ " id, positionId, fundId, functionaryId, functionId, departmentId, designationId,"
+			+ " isPrimary, fromDate, toDate, gradeId, govtOrderNumber, createdBy, createdDate, lastModifiedBy,"
+			+ " lastModifiedDate, tenantId"
+			+ " FROM egeis_assignment"
+			+ " WHERE employeeId = ? AND tenantId = ? ";
+
+	public static final String CHECK_IF_ID_EXISTS_QUERY = "SELECT id FROM egeis_assignment where"
+			+ " id=? and employeeId=? and tenantId=?";
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
+	@Autowired
+	private AssignmentTableRowMapper assignmentTableRowMapper;
+	
 	@Autowired
 	private AssignmentRowMapper assignmentRowMapper;
 
@@ -109,6 +116,7 @@ public class AssignmentRepository {
 		return assignments;
 	}
 
+
 	public void save(EmployeeRequest employeeRequest) {
 		List<Assignment> assignments = employeeRequest.getEmployee().getAssignments();
 
@@ -122,7 +130,7 @@ public class AssignmentRepository {
 				psHelper.setLongOrNull(ps, 4, assignment.getFund());
 				psHelper.setLongOrNull(ps, 5, assignment.getFunctionary());
 				psHelper.setLongOrNull(ps, 6, assignment.getFunction());
-				ps.setLong(7, assignment.getDepartment());
+				ps.setLong(7, assignment.getDepartment()); 
 				ps.setLong(8, assignment.getDesignation());
 				ps.setBoolean(9, assignment.getIsPrimary());
 				ps.setDate(10, new Date(assignment.getFromDate().getTime()));
@@ -150,29 +158,27 @@ public class AssignmentRepository {
 
 	public void update(Assignment assignment) {
 
-		Object[] obj = new Object[] {
-
-				assignment.getPosition(), assignment.getFund(), assignment.getFunctionary(), assignment.getFunction(),
-				assignment.getDepartment(), assignment.getDesignation(), assignment.getIsPrimary(),
-				assignment.getFromDate(), assignment.getToDate(), assignment.getGrade(),
+		Object[] obj = new Object[] { assignment.getPosition(), assignment.getFund(), assignment.getFunctionary(),
+				assignment.getFunction(), assignment.getDepartment(), assignment.getDesignation(),
+				assignment.getIsPrimary(), assignment.getFromDate(), assignment.getToDate(), assignment.getGrade(),
 				assignment.getGovtOrderNumber(), assignment.getLastModifiedBy(), assignment.getLastModifiedDate(),
-				 assignment.getId(), assignment.getTenantId() };
+				assignment.getId(), assignment.getTenantId() };
 
 		jdbcTemplate.update(UPDATE_ASSIGNMENT_QUERY, obj);
-}
+	}
 
 	public void insert(Assignment assignment, Long empId) {
 
-		Object[] obj = new Object[] {
-				assignment.getId(), empId, assignment.getPosition(), assignment.getFund(), assignment.getFunctionary(),
-				assignment.getFunction(), assignment.getDepartment(), assignment.getDesignation(),
-				assignment.getIsPrimary(), assignment.getFromDate(), assignment.getToDate(), assignment.getGrade(),
-				assignment.getGovtOrderNumber(), assignment.getCreatedBy(), assignment.getCreatedDate(),
-				assignment.getLastModifiedBy(), assignment.getLastModifiedDate(), assignment.getTenantId() };
-		
+		Object[] obj = new Object[] { assignment.getId(), empId, assignment.getPosition(), assignment.getFund(),
+				assignment.getFunctionary(), assignment.getFunction(), assignment.getDepartment(),
+				assignment.getDesignation(), assignment.getIsPrimary(), assignment.getFromDate(),
+				assignment.getToDate(), assignment.getGrade(), assignment.getGovtOrderNumber(),
+				assignment.getCreatedBy(), assignment.getCreatedDate(), assignment.getLastModifiedBy(),
+				assignment.getLastModifiedDate(), assignment.getTenantId() };
+
 		jdbcTemplate.update(INSERT_ASSIGNMENT_QUERY, obj);
 	}
-
+/*
 	public boolean assignmentAlreadyExists(Long id, Long empId, String tenantId) {
 		List<Object> values = new ArrayList<Object>();
 		values.add(id);
@@ -184,5 +190,22 @@ public class AssignmentRepository {
 		} catch (EmptyResultDataAccessException e) {
 			return false;
 		}
+	}*/
+
+	public List<Assignment> findForEmployeeId(Long id, String tenantId) {
+		//  select * from egeis_assignment where employeeId = ? and tenantId = ?		
+		
+		List<Assignment> assignment = null;
+		List<Object> values = new ArrayList<Object>();
+		values.add(id);
+		values.add(tenantId);
+		try{
+			assignment = (List<Assignment>) jdbcTemplate.query(SELECT_ASSIGNMENT_QUERY, values.toArray(), assignmentTableRowMapper);
+			System.out.println("list of assignments" +assignment);
+			return assignment;
+		}catch (EmptyResultDataAccessException e) {
+			return null;
+		}
+		
 	}
 }

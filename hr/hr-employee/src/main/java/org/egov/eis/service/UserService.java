@@ -134,7 +134,7 @@ public class UserService {
 		} catch (Exception e) {
 			LOGGER.debug("Following Exception Occurred While Calling User Service : " + e.getMessage());
 			e.printStackTrace();
-			return errorHandler.getResponseEntityForUnknownUserCreationError(userRequest.getRequestInfo());
+			return errorHandler.getResponseEntityForUnknownUserDBUpdationError(userRequest.getRequestInfo());
 		}
 		return new ResponseEntity<UserResponse>(userResponse, HttpStatus.CREATED);
 	}
@@ -179,7 +179,7 @@ public class UserService {
 	}
 	
 	private String getUserUpdatePath(long id){
-		String path = MessageFormat.format(propertiesManager.getUsersServiceUsersUpdatePath(),id);
+		String path = MessageFormat.format(propertiesManager.getUsersServiceUsersUpdatePath(), id);
 		return path;
 	}
 }

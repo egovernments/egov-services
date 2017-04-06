@@ -65,6 +65,7 @@ public class AssignmentRowMapper implements ResultSetExtractor<List<Assignment>>
 
 			Assignment assignment = assignmentMap.get(assignmentId);
 
+			
 			if (assignment == null) {
 				assignment = new Assignment();
 				assignment.setId(rs.getLong("a_id"));

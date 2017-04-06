@@ -53,15 +53,14 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import static org.gov.eis.utils.DateUtils.areDatesEqualWithoutTimePart;
 
 @AllArgsConstructor
 @Builder
-@EqualsAndHashCode
 @Getter
 @NoArgsConstructor
 @Setter
@@ -70,6 +69,7 @@ public class Assignment {
 
 	private Long id;
 
+	@NotNull
 	private Long position;
 
 	private Long fund;
@@ -92,12 +92,12 @@ public class Assignment {
 
 	@NotNull
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@JsonFormat(pattern = "dd/MM/yyyy")
+	@JsonFormat(pattern = "dd/MM/yyyy", timezone="IST")
 	private Date fromDate;
 
 	@NotNull
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@JsonFormat(pattern = "dd/MM/yyyy")
+	@JsonFormat(pattern = "dd/MM/yyyy", timezone="IST")
 	private Date toDate;
 
 	private Long grade;
@@ -119,5 +119,177 @@ public class Assignment {
 	private Date lastModifiedDate;
 
 	private String tenantId;
+/*
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Assignment other = (Assignment) obj;
+		if (department == null) {
+			if (other.department != null)
+				return false;
+		} else if (!department.equals(other.department))
+			return false;
+		if (designation == null) {
+			if (other.designation != null)
+				return false;
+		} else if (!designation.equals(other.designation))
+			return false;
+		if (documents == null) {
+			if (other.documents != null)
+				return false;
+		} else if (!documents.equals(other.documents))
+			return false;
+		System.out.println("crossed documents");
+		if (fromDate == null) {
+			if (other.fromDate != null)
+				return false;
+		} else if (!areDatesEqualWithoutTimePart(fromDate, other.fromDate))
+			return false;
+		if (function == null) {
+			if (other.function != null)
+				return false;
+		} else if (!function.equals(other.function))
+			return false;
+		if (functionary == null) {
+			if (other.functionary != null)
+				return false;
+		} else if (!functionary.equals(other.functionary))
+			return false;
+		System.out.println("crossed functionary");
+		if (fund == null) {
+			if (other.fund != null)
+				return false;
+		} else if (!fund.equals(other.fund))
+			return false;
+		if (govtOrderNumber == null) {
+			if (other.govtOrderNumber != null)
+				return false;
+		} else if (!govtOrderNumber.equals(other.govtOrderNumber))
+			return false;
+		if (grade == null) {
+			if (other.grade != null)
+				return false;
+		} else if (!grade.equals(other.grade))
+			return false;
+		System.out.println("crossed grade");
+		if (hod == null) {
+			if (other.hod != null)
+				return false;
+		} else if (!hod.equals(other.hod))
+			return false;
+		System.out.println("crossed hod");
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (isPrimary == null) {
+			if (other.isPrimary != null)
+				return false;
+		} else if (!isPrimary.equals(other.isPrimary))
+			return false;
+		System.out.println("crossed isprimary");
+		if (position == null) {
+			if (other.position != null)
+				return false;
+		} else if (!position.equals(other.position))
+			return false;
+		System.out.println("crossed position");
+		if (toDate == null) {
+			if (other.toDate != null)
+				return false;
+		} else if (!areDatesEqualWithoutTimePart(toDate, other.fromDate))
+			return false;
+		return true;
+	}
+*/	
+  @Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Assignment other = (Assignment) obj;
+		if (department == null) {
+			if (other.department != null)
+				return false;
+		} else if (!department.equals(other.department))
+			return false;
+		if (designation == null) {
+			if (other.designation != null)
+				return false;
+		} else if (!designation.equals(other.designation))
+			return false;
+		if (documents == null) {
+			if (other.documents != null)
+				return false;
+		} else if (!documents.equals(other.documents))
+			return false;
+		if (fromDate == null) {
+			if (other.fromDate != null)
+				return false;
+		} else if (!areDatesEqualWithoutTimePart(fromDate, other.fromDate))
+			return false;
+		if (function == null) {
+			if (other.function != null)
+				return false;
+		} else if (!function.equals(other.function))
+			return false;
+		if (functionary == null) {
+			if (other.functionary != null)
+				return false;
+		} else if (!functionary.equals(other.functionary))
+			return false;
+		if (fund == null) {
+			if (other.fund != null)
+				return false;
+		} else if (!fund.equals(other.fund))
+			return false;
+		if (govtOrderNumber == null) {
+			if (other.govtOrderNumber != null)
+				return false;
+		} else if (!govtOrderNumber.equals(other.govtOrderNumber))
+			return false;
+		if (grade == null) {
+			if (other.grade != null)
+				return false;
+		} else if (!grade.equals(other.grade))
+			return false;
+		if (hod == null) {
+			if (other.hod != null)
+				return false;
+		} else if (!hod.equals(other.hod))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (isPrimary == null) {
+			if (other.isPrimary != null)
+				return false;
+		} else if (!isPrimary.equals(other.isPrimary))
+			return false;
+		if (position == null) {
+			if (other.position != null)
+				return false;
+		} else if (!position.equals(other.position))
+			return false;
+		if (toDate == null) {
+			if (other.toDate != null)
+				return false;
+		} else if (!areDatesEqualWithoutTimePart(toDate, other.fromDate))
+			return false;
+		return true;
+	}
+	
+
 
 }

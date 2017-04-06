@@ -65,12 +65,12 @@ public class PositionHierarchyRowMapper implements RowMapper<PositionHierarchy> 
 		fromPositionDesignation.setCode(rs.getString("fpDesig_code"));
 		fromPositionDesignation.setChartOfAccounts(rs.getString("fpDesig_chartOfAccounts"));
 		fromPositionDesignation.setDescription(rs.getString("fpDesig_description"));
-		fromPositionDesignation.setActive(rs.getBoolean("fpDesig_active"));
+		fromPositionDesignation.setActive((Boolean) rs.getObject("fpDesig_active"));
 		fromPositionDesignation.setTenantId(rs.getString("ph_tenantId"));
 
 		DepartmentDesignation fromPositionDepartmentDesignation = new DepartmentDesignation();
 		fromPositionDepartmentDesignation.setId(rs.getLong("fpDepDes_id"));
-		fromPositionDepartmentDesignation.setDepartmentId(rs.getLong("fpDepDes_departmentId"));
+		fromPositionDepartmentDesignation.setDepartmentId((Long) rs.getObject("fpDepDes_departmentId"));
 		fromPositionDepartmentDesignation.setDesignation(fromPositionDesignation);
 		fromPositionDepartmentDesignation.setTenantId(rs.getString("ph_tenantId"));
 
@@ -78,8 +78,8 @@ public class PositionHierarchyRowMapper implements RowMapper<PositionHierarchy> 
 		fromPosition.setId(rs.getLong("fp_id"));
 		fromPosition.setName(rs.getString("fp_name"));
 		fromPosition.setDeptdesig(fromPositionDepartmentDesignation);
-		fromPosition.setIsPostOutsourced(rs.getBoolean("fp_isPostOutsourced"));
-		fromPosition.setActive(rs.getBoolean("fp_active"));
+		fromPosition.setIsPostOutsourced((Boolean) rs.getObject("fp_isPostOutsourced"));
+		fromPosition.setActive((Boolean) rs.getObject("fp_active"));
 		fromPosition.setTenantId(rs.getString("ph_tenantId"));
 
 		Designation toPositionDesignation = new Designation();
@@ -88,12 +88,12 @@ public class PositionHierarchyRowMapper implements RowMapper<PositionHierarchy> 
 		toPositionDesignation.setCode(rs.getString("tpDesig_code"));
 		toPositionDesignation.setChartOfAccounts(rs.getString("tpDesig_chartOfAccounts"));
 		toPositionDesignation.setDescription(rs.getString("tpDesig_description"));
-		toPositionDesignation.setActive(rs.getBoolean("tpDesig_active"));
+		toPositionDesignation.setActive((Boolean) rs.getObject("tpDesig_active"));
 		toPositionDesignation.setTenantId(rs.getString("ph_tenantId"));
 
 		DepartmentDesignation toPositionDepartmentDesignation = new DepartmentDesignation();
 		toPositionDepartmentDesignation.setId(rs.getLong("tpDepDes_id"));
-		toPositionDepartmentDesignation.setDepartmentId(rs.getLong("tpDepDes_departmentId"));
+		toPositionDepartmentDesignation.setDepartmentId((Long) rs.getObject("tpDepDes_departmentId"));
 		toPositionDepartmentDesignation.setDesignation(toPositionDesignation);
 		toPositionDepartmentDesignation.setTenantId(rs.getString("ph_tenantId"));
 
@@ -101,8 +101,8 @@ public class PositionHierarchyRowMapper implements RowMapper<PositionHierarchy> 
 		toPosition.setId(rs.getLong("tp_id"));
 		toPosition.setName(rs.getString("tp_name"));
 		toPosition.setDeptdesig(toPositionDepartmentDesignation);
-		toPosition.setIsPostOutsourced(rs.getBoolean("tp_isPostOutsourced"));
-		toPosition.setActive(rs.getBoolean("tp_active"));
+		toPosition.setIsPostOutsourced((Boolean) rs.getObject("tp_isPostOutsourced"));
+		toPosition.setActive((Boolean) rs.getObject("tp_active"));
 		toPosition.setTenantId(rs.getString("ph_tenantId"));
 
 		ObjectType objectType = new ObjectType();

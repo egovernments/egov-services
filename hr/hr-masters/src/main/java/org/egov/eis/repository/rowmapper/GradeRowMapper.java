@@ -56,8 +56,8 @@ public class GradeRowMapper implements RowMapper<Grade> {
 		grade.setId(rs.getLong("id"));
 		grade.setName(rs.getString("name"));
 		grade.setDescription(rs.getString("description"));
-		grade.setOrderNo(rs.getInt("orderNo"));
-		grade.setActive(rs.getBoolean("active"));
+		grade.setOrderNo((Integer) rs.getObject("orderNo"));
+		grade.setActive((Boolean) rs.getObject("active"));
 		grade.setTenantId(rs.getString("tenantId"));
 		return grade;
 	}

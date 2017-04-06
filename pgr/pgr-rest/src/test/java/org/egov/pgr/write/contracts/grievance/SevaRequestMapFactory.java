@@ -19,7 +19,6 @@ public class SevaRequestMapFactory {
         final HashMap<String, String> valuesMap = new HashMap<>();
         valuesMap.put("departmentId", "29");
         valuesMap.put("complainantAddress", "complainant address");
-        valuesMap.put("userId", "3");
         valuesMap.put("receivingMode", "receiving mode");
         valuesMap.put("receivingCenter", "5");
         valuesMap.put("status", "REGISTERED");
@@ -30,7 +29,11 @@ public class SevaRequestMapFactory {
         serviceRequestMap.put("values", valuesMap);
         sevaRequestMap.put("ServiceRequest", serviceRequestMap);
         final HashMap<String, Object> requestInfoMap = new HashMap<>();
+        final HashMap<String, Object> userInfoMap = new HashMap<>();
+        userInfoMap.put("type", "CITIZEN");
+        userInfoMap.put("id", "3");
         requestInfoMap.put("requesterId", "2");
+        requestInfoMap.put("userInfo", userInfoMap);
         sevaRequestMap.put("RequestInfo", requestInfoMap);
         return sevaRequestMap;
     }

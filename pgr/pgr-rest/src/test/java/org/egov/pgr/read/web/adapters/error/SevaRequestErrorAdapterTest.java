@@ -92,21 +92,6 @@ public class SevaRequestErrorAdapterTest {
     }
 
     @Test
-    public void test_should_set_error_when_complainant_user_id_is_not_present() {
-        when(complaint.isComplainantAbsent()).thenReturn(true);
-        when(complaint.isComplainantIdAbsent()).thenReturn(true);
-
-        final ErrorResponse errorResponse = errorAdapter.adapt(complaint);
-
-        final List<ErrorField> errorFields = errorResponse.getErrorFields();
-        assertNotNull(errorFields);
-        assertEquals(1, errorFields.size());
-        assertEquals("pgr.0008", errorFields.get(0).getCode());
-        assertEquals("ServiceRequest.values.userId", errorFields.get(0).getField());
-        assertEquals("User id is required", errorFields.get(0).getMessage());
-    }
-
-    @Test
     public void test_should_set_error_when_receiving_mode_is_not_present() {
         when(complaint.isReceivingModeAbsent()).thenReturn(true);
 

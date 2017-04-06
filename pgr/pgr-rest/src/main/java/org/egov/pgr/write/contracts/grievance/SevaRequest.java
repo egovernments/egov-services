@@ -1,5 +1,8 @@
 package org.egov.pgr.write.contracts.grievance;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.request.User;
 import org.egov.pgr.write.model.ComplaintRecord;
 
 import java.util.HashMap;
@@ -9,14 +12,16 @@ import static org.hibernate.internal.util.StringHelper.isEmpty;
 
 public class SevaRequest {
 
-    private static final String REQUESTER_ID = "requesterId";
     private static final String SERVICE_REQUEST = "ServiceRequest";
     private static final String REQUEST_INFO = "RequestInfo";
+    public static final String CITIZEN = "CITIZEN";
 
     private HashMap<String, Object> sevaRequestMap;
+    private ObjectMapper objectMapper;
 
     public SevaRequest(HashMap<String, Object> sevaRequestMap) {
         this.sevaRequestMap = sevaRequestMap;
+        this.objectMapper = new ObjectMapper();
     }
 
     public ComplaintRecord toDomain() {
@@ -55,10 +60,16 @@ public class SevaRequest {
         return getServiceRequest().getCrn();
     }
 
-    @SuppressWarnings("unchecked")
     private Long getRequesterId() {
-        HashMap<String, Object> requestInfoMap = (HashMap<String, Object>) sevaRequestMap.get(REQUEST_INFO);
-        return Long.parseLong(String.valueOf(requestInfoMap.get(REQUESTER_ID)));
+        return getRequestInfo().getUserInfo().getId();
+    }
+
+    private RequestInfo getRequestInfo() {
+        return objectMapper.convertValue(sevaRequestMap.get(REQUEST_INFO), RequestInfo.class);
+    }
+
+    private User getUserInfo() {
+        return getRequestInfo().getUserInfo();
     }
 
 
@@ -100,7 +111,13 @@ public class SevaRequest {
     }
 
     private Long getUserId() {
-        final String userId = this.getServiceRequest().getValues().get(USER_ID);
-        return isEmpty(userId) ? null : Long.valueOf(userId);
+        if (getUserInfo() == null) {
+            return null;
+        }
+        return isAuthenticatedRoleCitizen() ? getUserInfo().getId() : null;
+    }
+
+    private boolean isAuthenticatedRoleCitizen() {
+        return CITIZEN.equals(getUserInfo().getType());
     }
 }

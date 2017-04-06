@@ -6,13 +6,11 @@ import org.egov.pgr.TestResourceReader;
 import org.egov.pgr.common.contract.SevaRequest;
 import org.egov.pgr.common.model.AuthenticatedUser;
 import org.egov.pgr.common.model.Complainant;
-import org.egov.pgr.common.model.Role;
 import org.egov.pgr.common.model.UserType;
 import org.egov.pgr.common.repository.UserRepository;
 import org.egov.pgr.read.domain.exception.InvalidComplaintException;
 import org.egov.pgr.read.domain.model.*;
 import org.egov.pgr.read.domain.service.ComplaintService;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,21 +59,31 @@ public class ComplaintControllerTest {
         mockMvc.perform(post("/seva")
             .param("foo", "b1", "b2")
             .contentType(MediaType.APPLICATION_JSON_UTF8)
-            .content(resources.getFileContents("createComplaintRequest.json"))).andExpect(status().isBadRequest())
+            .content(resources.getFileContents("createComplaintRequest.json")))
+            .andExpect(status().isBadRequest())
             .andExpect(content().json(resources.getFileContents("createComplaintErrorResponse.json")));
     }
 
     public Complaint getComplaintWithNoTenantId() {
         final ComplaintLocation complaintLocation = ComplaintLocation.builder()
             .coordinates(new Coordinates(11.22d, 12.22d)).build();
-        final Complainant complainant = Complainant.builder().userId("userId").build();
-        return Complaint.builder().complainant(complainant).authenticatedUser(getCitizen())
-            .complaintLocation(complaintLocation).tenantId(null).description("description")
-            .complaintType(new ComplaintType(null, "complaintCode")).build();
+        final Complainant complainant = Complainant.builder()
+            .userId("userId")
+            .firstName("first name")
+            .mobile("mobile number")
+            .build();
+        return Complaint.builder()
+            .complainant(complainant)
+            .authenticatedUser(getCitizen())
+            .complaintLocation(complaintLocation)
+            .tenantId(null)
+            .description("description")
+            .complaintType(new ComplaintType(null, "complaintCode"))
+            .build();
     }
 
     public AuthenticatedUser getCitizen() {
-        return AuthenticatedUser.builder().id(1).type(UserType.CITIZEN).build();
+        return AuthenticatedUser.builder().id(1L).type(UserType.CITIZEN).build();
     }
 
     @Test
@@ -98,19 +106,15 @@ public class ComplaintControllerTest {
         String mobileNumber = null;
         String emailId = null;
         String name = "kumar";
-        Integer id = 67;
+        long id = 67;
         boolean anonymousUser = false;
-        List<Role> roles = new ArrayList<>();
-        roles.add(new Role(1L, "Citizen"));
-        roles.add(new Role(2L, "Employee"));
 
         AuthenticatedUser user = AuthenticatedUser.builder()
             .mobileNumber(mobileNumber)
-            .emailId(emailId)
+            .email(emailId)
             .name(name)
             .id(id)
             .anonymousUser(anonymousUser)
-            .roles(roles)
             .type(UserType.CITIZEN)
             .build();
         final Complainant domainComplainant = new Complainant("kumar", null, null, "mico layout", "user");
@@ -183,16 +187,19 @@ public class ComplaintControllerTest {
             get("/seva")
                 .param("jurisdiction_id", "1")
                 .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
-                .header("ts", "ts").header("action", "action").header("did", "did").header("msg_id", "msg_id")
+                .header("ts", "ts").header("action", "action")
+                .header("did", "did").header("msg_id", "msg_id")
                 .header("auth_token", "auth_token"))
             .andExpect(status().isNotFound());
     }
 
     @Test
-    @Ignore
     public void testShouldUpdateLastAccessedTime() throws Exception {
         mockMvc.perform(
-            post("/seva/updateLastAccessedTime").param("serviceRequestId", "crn")
+            post("/seva/updateLastAccessedTime")
+                .param("serviceRequestId", "crn")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(resources.getFileContents("updateLastAccessTimeRequest.json"))
         ).andExpect(status().isOk());
         verify(complaintService).updateLastAccessedTime("crn");
     }

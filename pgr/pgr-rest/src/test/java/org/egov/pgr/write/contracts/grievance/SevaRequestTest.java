@@ -79,8 +79,8 @@ public class SevaRequestTest {
         assertEquals("crn", complaintRecord.getCRN());
         assertEquals(new Date(1491205848337L), complaintRecord.getEscalationDate());
         assertEquals(Long.valueOf(29), complaintRecord.getDepartment());
-        assertEquals(Long.valueOf(2), complaintRecord.getCreatedBy());
-        assertEquals(Long.valueOf(2), complaintRecord.getLastModifiedBy());
+        assertEquals(Long.valueOf(3), complaintRecord.getCreatedBy());
+        assertEquals(Long.valueOf(3), complaintRecord.getLastModifiedBy());
         assertEquals(0.0d, complaintRecord.getLatitude(), 0);
         assertEquals(0.0d, complaintRecord.getLongitude(), 0);
         assertEquals("complaint description", complaintRecord.getDescription());
@@ -89,7 +89,6 @@ public class SevaRequestTest {
         assertEquals("1234567890", complaintRecord.getComplainantMobileNumber());
         assertEquals("email@email.com", complaintRecord.getComplainantEmail());
         assertEquals("complainant address", complaintRecord.getComplainantAddress());
-        assertEquals(Long.valueOf(3), complaintRecord.getComplainantUserId());
         assertEquals("receiving mode", complaintRecord.getReceivingMode());
         assertEquals(Long.valueOf(5), complaintRecord.getReceivingCenter());
         assertEquals("complaintTypeCode", complaintRecord.getComplaintTypeCode());
@@ -98,6 +97,49 @@ public class SevaRequestTest {
         assertEquals(Long.valueOf(7), complaintRecord.getLocation());
         assertEquals(Long.valueOf(8), complaintRecord.getChildLocation());
         assertEquals(Long.valueOf(9), complaintRecord.getWorkflowStateId());
+    }
+
+    @Test
+    public void test_should_set_complainant_user_id_to_null_for_anonymous_complaint() {
+        final HashMap<String, Object> sevaRequestMap = SevaRequestMapFactory.create();
+        final HashMap<String, Object> requestInfo = (HashMap<String, Object>) sevaRequestMap.get("RequestInfo");
+        final HashMap<String, Object> userInfo = (HashMap<String, Object>) requestInfo.get("userInfo");
+        userInfo.put("type", "SYSTEM");
+        final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
+
+        final ComplaintRecord complaintRecord = sevaRequest.toDomain();
+
+        assertNotNull(complaintRecord);
+        assertNull(complaintRecord.getComplainantUserId());
+    }
+
+    @Test
+    public void test_should_set_complainant_user_id_to_null_for_when_employee_creates_complaint_on_behalf_of_citizen() {
+        final HashMap<String, Object> sevaRequestMap = SevaRequestMapFactory.create();
+        final HashMap<String, Object> requestInfo = (HashMap<String, Object>) sevaRequestMap.get("RequestInfo");
+        final HashMap<String, Object> userInfo = (HashMap<String, Object>) requestInfo.get("userInfo");
+        userInfo.put("type", "EMPLOYEE");
+        final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
+
+        final ComplaintRecord complaintRecord = sevaRequest.toDomain();
+
+        assertNotNull(complaintRecord);
+        assertNull(complaintRecord.getComplainantUserId());
+    }
+
+    @Test
+    public void test_should_set_complainant_user_id_when_logged_in_citizen_creates_complaint() {
+        final HashMap<String, Object> sevaRequestMap = SevaRequestMapFactory.create();
+        final HashMap<String, Object> requestInfo = (HashMap<String, Object>) sevaRequestMap.get("RequestInfo");
+        final HashMap<String, Object> userInfo = (HashMap<String, Object>) requestInfo.get("userInfo");
+        userInfo.put("type", "CITIZEN");
+        userInfo.put("id", "4");
+        final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
+
+        final ComplaintRecord complaintRecord = sevaRequest.toDomain();
+
+        assertNotNull(complaintRecord);
+        assertEquals(Long.valueOf(4), complaintRecord.getComplainantUserId());
     }
 
     @Test

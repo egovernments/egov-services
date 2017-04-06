@@ -22,10 +22,6 @@ public class Complainant {
         return isFirstNameAbsent() || isMobileAbsent();
     }
 
-    public boolean isEmailAbsent() {
-        return isEmpty(email);
-    }
-
     public boolean isMobileAbsent() {
         return isEmpty(mobile);
     }
@@ -33,10 +29,5 @@ public class Complainant {
     public boolean isFirstNameAbsent() {
         return isEmpty(firstName);
     }
-
-    public boolean isUserIdAbsent() {
-        return isEmpty(userId);
-    }
-
 
 }

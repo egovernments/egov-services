@@ -4,23 +4,23 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.util.List;
-
 @Getter
 @AllArgsConstructor
 @Builder
 public class AuthenticatedUser {
     private String mobileNumber;
-    private String emailId;
+    private String email;
     private String name;
-    private Integer id;
+    private Long id;
     private boolean anonymousUser;
-    private List<Role> roles;
     private UserType type;
 
     public static AuthenticatedUser createAnonymousUser() {
-        final UserType type = UserType.SYSTEM;
-        return AuthenticatedUser.builder().anonymousUser(true).type(type).id(0).build();
+        return AuthenticatedUser.builder()
+            .anonymousUser(true)
+            .type(UserType.SYSTEM)
+            .id(0L)
+            .build();
     }
 
     public UserType getType() {

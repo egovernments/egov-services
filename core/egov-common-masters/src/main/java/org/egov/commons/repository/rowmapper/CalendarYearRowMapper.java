@@ -54,10 +54,10 @@ public class CalendarYearRowMapper implements RowMapper<CalendarYear> {
 	public CalendarYear mapRow(ResultSet rs, int rowNum) throws SQLException {
 		CalendarYear calendarYear = new CalendarYear();
 		calendarYear.setId(rs.getLong("id"));
-		calendarYear.setName(rs.getInt("name"));
+		calendarYear.setName((Integer) rs.getObject("name"));
 		calendarYear.setStartDate(rs.getDate("startDate"));
 		calendarYear.setEndDate(rs.getDate("endDate"));
-		calendarYear.setActive(rs.getBoolean("active"));
+		calendarYear.setActive((Boolean) rs.getObject("active"));
 		calendarYear.setTenantId(rs.getString("tenantId"));
 		return calendarYear;
 	}

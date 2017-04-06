@@ -56,7 +56,7 @@ public class DepartmentRowMapper implements RowMapper<Department> {
 		department.setId(rs.getLong("id"));
 		department.setName(rs.getString("name"));
 		department.setCode(rs.getString("code"));
-		department.setActive(rs.getBoolean("active"));
+		department.setActive((Boolean) rs.getObject("active"));
 		department.setTenantId(rs.getString("tenantId"));
 		return department;
 	}

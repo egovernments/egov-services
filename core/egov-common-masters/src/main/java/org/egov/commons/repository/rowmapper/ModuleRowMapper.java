@@ -14,11 +14,11 @@ public class ModuleRowMapper implements RowMapper<Module> {
 		Module module = new Module();
 		module.setId(rs.getLong("id"));
 		module.setName(rs.getString("name"));
-		module.setEnabled(rs.getBoolean("enabled"));
+		module.setEnabled((Boolean) rs.getObject("enabled"));
 		module.setContextRoot(rs.getString("contextroot"));
-		module.setParentModule(rs.getLong("parentmodule"));
+		module.setParentModule((Long) rs.getObject("parentmodule"));
 		module.setDisplayName(rs.getString("displayname"));
-		module.setOrderNumber(rs.getLong("ordernumber"));
+		module.setOrderNumber((Long) rs.getObject("ordernumber"));
 		return module;
 	}
 }

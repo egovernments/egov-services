@@ -67,6 +67,7 @@ public class WorkflowMatrixImpl implements Workflow {
 	@Transactional
 	@Override
 	public ProcessInstanceResponse start(ProcessInstanceRequest processInstanceRequest) {
+		LOG.debug(processInstanceRequest.toString());
 		ProcessInstance processInstance = processInstanceRequest.getProcessInstance();
 		final WorkFlowMatrix wfMatrix = workflowService.getWfMatrix(processInstance.getBusinessKey(), null, null, null,
 				null, null);
@@ -76,7 +77,7 @@ public class WorkflowMatrixImpl implements Workflow {
 					processInstanceRequest.getRequestInfo());
 
 		final State state = new State();
-		state.setTenantId(processInstanceRequest.getRequestInfo().getTenantId());
+		state.setTenantId(processInstanceRequest.getRequestInfo().getUserInfo().getTenantId());
 		state.setType(processInstance.getType());
 		state.setSenderName(processInstance.getSenderName());
 		state.setStatus(StateStatus.INPROGRESS);
@@ -85,7 +86,7 @@ public class WorkflowMatrixImpl implements Workflow {
 		//FIXME position service is not fetching data
 		if(owner==null)
 		{
-			System.out.println("Owner info is not availble from respective service");
+			LOG.error("Owner info is not availble from respective service");
 			state.setOwnerPosition(processInstance.getAssignee().getId());
 			state.setInitiatorPosition(processInstance.getAssignee().getId());
 		}else
@@ -111,10 +112,12 @@ public class WorkflowMatrixImpl implements Workflow {
 	}
 
 	private void updateAuditDetails(State s, User u) {
+		LOG.debug("Updating Logged in user Information... ");
 		s.setCreatedBy(u.getId());
 		s.setLastModifiedBy(u.getId());
 		s.setCreatedDate(new Date());
 		s.setLastModifiedDate(new Date());
+		LOG.debug("Updating Logged in user Information complete. ");
 	}
 
 	private Position getInitiator() {
@@ -145,6 +148,7 @@ public class WorkflowMatrixImpl implements Workflow {
 	@Transactional
 	@Override
 	public TaskResponse update(final TaskRequest taskRequest) {
+		LOG.debug("Update task api "+taskRequest.toString());
 		Task task = taskRequest.getTask();
 		Position owner = task.getAssignee();
 		Long ownerId = task.getAssignee().getId();
@@ -191,7 +195,7 @@ public class WorkflowMatrixImpl implements Workflow {
 
 		state.addStateHistory(new StateHistory(state));
 
-		state.setTenantId(taskRequest.getRequestInfo().getTenantId());
+		state.setTenantId(taskRequest.getRequestInfo().getUserInfo().getTenantId());
 		state.setValue(nextState);
 		state.setComments(task.getComments());
 		state.setSenderName(taskRequest.getRequestInfo().getUserInfo().getName());
@@ -209,7 +213,7 @@ public class WorkflowMatrixImpl implements Workflow {
 		stateService.update(state);
 		TaskResponse response = new TaskResponse();
 		response.setTask(t);
-
+		LOG.debug("Update task api completed . And response sent back is :"+response.toString());
 		return response;
 	}
 
@@ -266,6 +270,7 @@ public class WorkflowMatrixImpl implements Workflow {
 
 	@Override
 	public ProcessInstance getProcess(final String jurisdiction, final ProcessInstance processInstance) {
+		LOG.debug("Starting getProcess for  "+processInstance.toString()+" for tenant"+jurisdiction);
 		final WorkflowBean wfbean = new WorkflowBean();
 		processInstance.setTenantId(jurisdiction);
 		State state = null;
@@ -295,12 +300,13 @@ public class WorkflowMatrixImpl implements Workflow {
 		final Attribute nextAction = new Attribute();
 		nextAction.setCode(getNextAction(wfbean));
 		processInstance.getAttributes().put("nextAction", nextAction);
-
+		LOG.debug("Starting getProcess complted. And response sent back is "+processInstance);
 		return processInstance;
 	}
 
 	@Override
 	public List<Task> getTasks(final String jurisdiction, final ProcessInstance processInstance) {
+		LOG.debug("Starting getTasks for "+processInstance +" for tenant "+jurisdiction);
 		final List<Task> tasks = new ArrayList<Task>();
 		final Long userId = getEmp(1l).getId();
 		final List<String> types = workflowTypeService.getEnabledWorkflowType(false);
@@ -312,11 +318,16 @@ public class WorkflowMatrixImpl implements Workflow {
 			states = stateService.getStates(ownerIds, types, userId);
 		for (final State s : states)
 			tasks.add(s.map());
+		
+		LOG.debug("getTasks completed for tenant "+jurisdiction);
+		if(LOG.isTraceEnabled())
+		LOG.trace("Taks list returned"+tasks);
 		return tasks;
 	}
 
 	@Override
 	public List<Task> getHistoryDetail(final String tenantId, final String workflowId) {
+		LOG.debug("Starting getHistoryDetail for "+workflowId +" for tenant "+tenantId);
 		final List<Task> tasks = new ArrayList<Task>();
 		Task t;
 		final State state = stateService.findOne(Long.valueOf(workflowId));
@@ -327,6 +338,11 @@ public class WorkflowMatrixImpl implements Workflow {
 		}
 		t = state.map();
 		tasks.add(t);
+		LOG.debug("getHistoryDetail for "+workflowId +" for tenant "+tenantId+"completed.");
+		if(LOG.isTraceEnabled())
+		{
+			LOG.trace(tasks.toString());
+		}
 		return tasks;
 	}
 
@@ -344,7 +360,7 @@ public class WorkflowMatrixImpl implements Workflow {
 
 	@Override
 	public List<Designation> getDesignations(Task t, String departmentId) {
-
+		LOG.debug("starting getDesignations "+t+" for department"+departmentId);
 		if (t == null) {
 			throw new InvalidDataException("Task", "task.required", "Task data is required");
 		} else
@@ -382,8 +398,11 @@ public class WorkflowMatrixImpl implements Workflow {
 		if ("END".equals(currentState))
 			currentState = "";
 
-		return workflowService.getNextDesignations(t.getBusinessKey(), departmentId, amtRule, additionalRule,
+		
+		 List<Designation> nextDesignations = workflowService.getNextDesignations(t.getBusinessKey(), departmentId, amtRule, additionalRule,
 				t.getStatus(), pendingAction, new Date(), designation, t.getTenantId());
+		 LOG.debug("getDesignations completed and returning "+nextDesignations);
+		 return nextDesignations;
 	}
 
 	@Override

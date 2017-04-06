@@ -358,7 +358,7 @@ public class WorkFlowMatrixService {
 			for (final String desgName : tempDesignationName)
 				if (desgName != null && !"".equals(desgName.trim())) {
 					if (!desgName.contains(":")) {
-						Log.warn("designations not stored properly in matrix. Please check the api documentation");
+						Log.warn("designations not stored properly in matrix. Please check the api documentation ");
 						Designation d = new Designation();
 						d.setName(desgName);
 						designationList.add(d);

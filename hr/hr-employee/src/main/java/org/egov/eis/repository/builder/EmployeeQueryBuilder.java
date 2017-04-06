@@ -43,7 +43,7 @@ package org.egov.eis.repository.builder;
 import java.util.List;
 
 import org.egov.eis.config.ApplicationProperties;
-import org.egov.eis.web.contract.EmployeeGetRequest;
+import org.egov.eis.web.contract.EmployeeCriteria;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,22 +80,22 @@ public class EmployeeQueryBuilder {
 			+ " LEFT JOIN egeis_employeeJurisdictions ej ON e.id = ej.employeeId AND ej.tenantId = ?";
 
 	@SuppressWarnings("rawtypes")
-	public String getQueryForListOfEmployeeIds(EmployeeGetRequest employeeGetRequest, List preparedStatementValues) {
+	public String getQueryForListOfEmployeeIds(EmployeeCriteria employeeCriteria, List preparedStatementValues) {
 		StringBuilder selectQuery = new StringBuilder(EMPLOYEE_IDS_QUERY);
 
-		addWhereClause(selectQuery, preparedStatementValues, employeeGetRequest, null);
-		addPagingClause(selectQuery, preparedStatementValues, employeeGetRequest);
+		addWhereClause(selectQuery, preparedStatementValues, employeeCriteria, null);
+		addPagingClause(selectQuery, preparedStatementValues, employeeCriteria);
 
 		logger.debug("Query : " + selectQuery);
 		return selectQuery.toString();
 	}
 
 	@SuppressWarnings("rawtypes")
-	public String getQuery(EmployeeGetRequest employeeGetRequest, List preparedStatementValues, List<Long> empIds) {
+	public String getQuery(EmployeeCriteria employeeCriteria, List preparedStatementValues, List<Long> empIds) {
 		StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
 
-		addWhereClause(selectQuery, preparedStatementValues, employeeGetRequest, empIds);
-		addOrderByClause(selectQuery, employeeGetRequest);
+		addWhereClause(selectQuery, preparedStatementValues, employeeCriteria, empIds);
+		addOrderByClause(selectQuery, employeeCriteria);
 
 		logger.debug("Query : " + selectQuery);
 		return selectQuery.toString();
@@ -103,28 +103,28 @@ public class EmployeeQueryBuilder {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void addWhereClause(StringBuilder selectQuery, List preparedStatementValues,
-			EmployeeGetRequest employeeGetRequest, List<Long> empIds) {
+			EmployeeCriteria employeeCriteria, List<Long> empIds) {
 
 		// Pushing 2 tenantIds for hod.tenantId & ej.tenantId
-		preparedStatementValues.add(employeeGetRequest.getTenantId());
-		preparedStatementValues.add(employeeGetRequest.getTenantId());
+		preparedStatementValues.add(employeeCriteria.getTenantId());
+		preparedStatementValues.add(employeeCriteria.getTenantId());
 
-		if (employeeGetRequest.getId() == null && employeeGetRequest.getCode() == null
-				&& employeeGetRequest.getDepartmentId() == null && employeeGetRequest.getIsPrimary() == null
-				&& employeeGetRequest.getDesignationId() == null && employeeGetRequest.getAsOnDate() == null
-				&& employeeGetRequest.getTenantId() == null)
+		if (employeeCriteria.getId() == null && employeeCriteria.getCode() == null
+				&& employeeCriteria.getDepartmentId() == null && employeeCriteria.getIsPrimary() == null
+				&& employeeCriteria.getDesignationId() == null && employeeCriteria.getAsOnDate() == null
+				&& employeeCriteria.getTenantId() == null)
 			return;
 
 		selectQuery.append(" WHERE");
 		boolean isAppendAndClause = false;
 
-		if (employeeGetRequest.getTenantId() != null) {
+		if (employeeCriteria.getTenantId() != null) {
 			isAppendAndClause = true;
 			selectQuery.append(" e.tenantId = ?");
-			preparedStatementValues.add(employeeGetRequest.getTenantId());
+			preparedStatementValues.add(employeeCriteria.getTenantId());
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" a.tenantId = ?");
-			preparedStatementValues.add(employeeGetRequest.getTenantId());
+			preparedStatementValues.add(employeeCriteria.getTenantId());
 		}
 
 		if(empIds != null) {
@@ -132,63 +132,63 @@ public class EmployeeQueryBuilder {
 			selectQuery.append(" e.id IN " + getIdQuery(empIds));
 		}
 
-		if (employeeGetRequest.getId() != null) {
+		if (employeeCriteria.getId() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" e.id IN " + getIdQuery(employeeGetRequest.getId()));
+			selectQuery.append(" e.id IN " + getIdQuery(employeeCriteria.getId()));
 		}
 
-		if (employeeGetRequest.getCode() != null) {
+		if (employeeCriteria.getCode() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" e.code = ?");
-			preparedStatementValues.add(employeeGetRequest.getCode());
+			preparedStatementValues.add(employeeCriteria.getCode());
 		}
 
-		if (employeeGetRequest.getDepartmentId() != null) {
+		if (employeeCriteria.getDepartmentId() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" a.departmentId = ?");
-			preparedStatementValues.add(employeeGetRequest.getDepartmentId());
+			preparedStatementValues.add(employeeCriteria.getDepartmentId());
 		}
 
-		if (employeeGetRequest.getDesignationId() != null) {
+		if (employeeCriteria.getDesignationId() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" a.designationId = ?");
-			preparedStatementValues.add(employeeGetRequest.getDesignationId());
+			preparedStatementValues.add(employeeCriteria.getDesignationId());
 		}
 
-		if (employeeGetRequest.getAsOnDate() != null) {
+		if (employeeCriteria.getAsOnDate() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" ? BETWEEN a.fromDate AND a.toDate");
-			preparedStatementValues.add(employeeGetRequest.getAsOnDate());
+			preparedStatementValues.add(employeeCriteria.getAsOnDate());
 		}
 
-		if (employeeGetRequest.getIsPrimary() != null) {
+		if (employeeCriteria.getIsPrimary() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" a.isPrimary = ?");
-			preparedStatementValues.add(employeeGetRequest.getIsPrimary());
+			preparedStatementValues.add(employeeCriteria.getIsPrimary());
 		}
 	}
 
-	private void addOrderByClause(StringBuilder selectQuery, EmployeeGetRequest employeeGetRequest) {
-		String sortBy = (employeeGetRequest.getSortBy() == null ? "e.id" : employeeGetRequest.getSortBy());
-		String sortOrder = (employeeGetRequest.getSortOrder() == null ? "ASC" : employeeGetRequest.getSortOrder());
+	private void addOrderByClause(StringBuilder selectQuery, EmployeeCriteria employeeCriteria) {
+		String sortBy = (employeeCriteria.getSortBy() == null ? "e.id" : employeeCriteria.getSortBy());
+		String sortOrder = (employeeCriteria.getSortOrder() == null ? "ASC" : employeeCriteria.getSortOrder());
 		selectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void addPagingClause(StringBuilder selectQuery, List preparedStatementValues,
-			EmployeeGetRequest employeeGetRequest) {
+			EmployeeCriteria employeeCriteria) {
 		// handle limit(also called pageSize) here
 		selectQuery.append(" LIMIT ?");
 		long pageSize = Integer.parseInt(applicationProperties.empSearchPageSizeDefault());
-		if (employeeGetRequest.getPageSize() != null)
-			pageSize = employeeGetRequest.getPageSize();
+		if (employeeCriteria.getPageSize() != null)
+			pageSize = employeeCriteria.getPageSize();
 		preparedStatementValues.add(pageSize); // Set limit to pageSize
 
 		// handle offset here
 		selectQuery.append(" OFFSET ?");
 		int pageNumber = 0; // Default pageNo is zero meaning first page
-		if (employeeGetRequest.getPageNumber() != null)
-			pageNumber = employeeGetRequest.getPageNumber() - 1;
+		if (employeeCriteria.getPageNumber() != null)
+			pageNumber = employeeCriteria.getPageNumber() - 1;
 		preparedStatementValues.add(pageNumber * pageSize); // Set offset to pageNo * pageSize
 	}
 

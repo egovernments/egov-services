@@ -38,17 +38,12 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.commons.web.contract;
+package org.egov.workflow.web.contract;
 
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
-import org.springframework.format.annotation.DateTimeFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -57,40 +52,18 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Getter
-@Setter
-@NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @EqualsAndHashCode
-public class HolidayGetRequest {
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+public class PositionResponse {
 
-	private List<Long> id;
-	
-	private Integer year;
+	@JsonProperty("ResponseInfo")
+	private ResponseInfo responseInfo;
 
-	@Size(min=3, max=200)
-	private String name;
-
-	private String applicableOn;
-
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	private Date fromDate;
-
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	private Date toDate;
-
-	@NotNull
-	private String tenantId;
-
-    private String sortBy;
-
-	private String sortOrder;
-
-	@Min(1)
-	@Max(500)
-	private Short pageSize;
-
-	private Short pageNumber;
+	@JsonProperty("Position")
+	private List<Position> position = new ArrayList<Position>();
 
 }

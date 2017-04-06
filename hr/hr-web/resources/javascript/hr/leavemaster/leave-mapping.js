@@ -1,11 +1,15 @@
 class LeaveMaster extends React.Component{
 constructor(props){
   super(props);
-  this.state={leave:
-      {designation:"",
-      leaveType:"",
-      noOfDay:""},
-        designationList:[],leaveTypeList:[]}
+  this.state={leave:{
+
+    "designation": "",
+    "leaveType":"",
+    "noOfDays":"",
+
+    "tenantId":"ap.public"
+    },
+        designationList:[],leaveTypeList:[],}
 
   this.addOrUpdate=this.addOrUpdate.bind(this);
   this.handleChange=this.handleChange.bind(this);
@@ -34,18 +38,93 @@ componentWillMount()
         open(location, '_self').close();
     }
 
-    addOrUpdate(e,mode){
-      e.preventDefault();
-      // console.log(this.state.leave);
-      if (mode==="update") {
-        // console.log("update");
-      } else {
-        this.setState({leave:
-            {designation:"",
-            leaveType:"",
-            noOfDay:""},designationList:[]})
-      }
+
+    // addOrUpdate(e,mode){
+    //   var tempObj={
+    //                 "designation": this.state.leave.designation,
+    //                 "leaveType":
+    //                   {
+    //                       "id":this.state.leave.leaveType
+    //                     },
+    //                   "noOfDays": this.state.leave.noOfDay,
+    //                   "tenantId": "ap.public"
+    //               };
+    //
+    //     e.preventDefault();
+    //     //  console.log(this.state.leave);
+    //     // console.log(mode);
+    //     if (mode==="update") {
+    //         console.log("update");
+    //     } else {
+    //
+    //           console.log(tempObj);
+    //
+    //       }
+        // }
+        addOrUpdate(e){
+          // var finalPost={
+          //   "RequestInfo":requestInfo,
+          //
+          // }
+          var tempObj={
+                          "designation": this.state.leave.designation,
+                          "leaveType":
+                            {
+                                "id":this.state.leave.leaveType
+                              },
+                            "noOfDays": this.state.leave.noOfDays,
+                            "tenantId": "ap.public"
+                        };
+
+          e.preventDefault();
+          //  console.log(tempObj);
+          // var tempInfo=this.state.leave;
+          var body={
+              "RequestInfo":requestInfo,
+              "LeaveAllotment":[tempObj]
+            };
+
+          var response=$.ajax({
+                url:baseUrl+"/hr-leave/leaveallotments/_create",
+                type: 'POST',
+                dataType: 'json',
+                data:JSON.stringify(body),
+                async: false,
+                contentType: 'application/json',
+                headers:{
+                  'auth-token': authToken
+                }
+            });
+
+           console.log(response);
+          if(response["statusText"]==="OK")
+          {
+            alert("Successfully added");
+          }
+          else {
+            console.log(tempObj);
+            // alert(response["statusText"]);
+            // this.setState({
+            //   leave:{
+            //
+            //     "designation": "",
+            //     "leaveType":"",
+            //     "noOfDays":"",
+            //
+            //     "tenantId":"1",
+            //
+            //   },
+            //   leaveType:
+            //    {
+            //             "id": "",
+            //
+            //     },
+            //   designationList:[],
+            //   LeaveAllotmentTypeList:[]
+            // })
+     }
     }
+
 
 
     componentDidMount(){
@@ -58,7 +137,7 @@ componentWillMount()
 
   render(){
     let {handleChange,addOrUpdate}=this;
-    let {leaveType,designation,noOfDay}=this.state.leave;
+    let {leaveType,designation,noOfDays}=this.state.leave;
     let mode=getUrlVars()["type"];
 
     const renderOption=function(list)
@@ -132,8 +211,8 @@ componentWillMount()
                           <label for="">No of day <span>*</span></label>
                       </div>
                       <div className="col-sm-6">
-                      <input type="number" name="noOfDay" value={noOfDay} id="noOfDay" onChange={(e)=>{
-                          handleChange(e,"noOfDay")}} required/>
+                      <input type="number" name="noOfDays" value={noOfDays} id="noOfDays" onChange={(e)=>{
+                          handleChange(e,"noOfDays")}} required/>
 
                       </div>
                   </div>

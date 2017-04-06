@@ -79,8 +79,8 @@ public class AssignmentRepository {
 			+ " SET (positionId, fundId, functionaryId, functionId, departmentId, designationId,"
 			+ " isPrimary, fromDate, toDate, gradeId, govtOrderNumber," + " lastModifiedBy, lastModifiedDate)"
 			+ " = (?,?,?,?,?,?,?,?,?,?,?,?,?)" + " where id = ? and tenantId=?";
-
-	public static final String SELECT_ASSIGNMENT_QUERY = "SELECT"
+	
+	public static final String SELECT_BY_EMPLOYEEID_QUERY = "SELECT"
 			+ " id, positionId, fundId, functionaryId, functionId, departmentId, designationId,"
 			+ " isPrimary, fromDate, toDate, gradeId, govtOrderNumber, createdBy, createdDate, lastModifiedBy,"
 			+ " lastModifiedDate, tenantId"
@@ -201,7 +201,7 @@ public class AssignmentRepository {
 		values.add(id);
 		values.add(tenantId);
 		try{
-			assignment = (List<Assignment>) jdbcTemplate.query(SELECT_ASSIGNMENT_QUERY, values.toArray(), assignmentTableRowMapper);
+			assignment = (List<Assignment>) jdbcTemplate.query(SELECT_BY_EMPLOYEEID_QUERY, values.toArray(), assignmentTableRowMapper);
 			System.out.println("list of assignments" +assignment);
 			return assignment;
 		}catch (EmptyResultDataAccessException e) {
@@ -209,4 +209,20 @@ public class AssignmentRepository {
 		}
 		
 	}
+	
+	public List<Assignment> findByEmployeeId(Long id, String tenantId) {
+		//  select * from egeis_assignment where employeeId = ? and tenantId = ?		
+		
+		List<Assignment> assignment = null;
+		
+		try{
+			assignment = (List<Assignment>) jdbcTemplate.query(SELECT_BY_EMPLOYEEID_QUERY, new Object[] {id, tenantId}, assignmentTableRowMapper);
+			System.out.println("list of assignments" +assignment);
+			return assignment;
+		}catch (EmptyResultDataAccessException e) {
+			return null;
+		}
+		
+	}
+
 }

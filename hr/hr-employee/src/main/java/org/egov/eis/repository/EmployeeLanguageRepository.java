@@ -81,4 +81,22 @@ public class EmployeeLanguageRepository {
 			}
 		});
 	}
+
+	public List<Long> findByEmployeeId(Long Id, String tenantId) {
+		
+		List<Long> employeeLanguage = null;
+		
+/*		try{
+			employeeLanguage = (List<Long>) jdbcTemplate.query(SELECT_ASSIGNMENT_QUERY, new Object[] {Id, tenantId}, assignmentTableRowMapper);
+			System.out.println("list of assignments" +employeeLanguage);
+			return employeeLanguage;
+		}catch (EmptyResultDataAccessException e) {
+			return null;
+		}*/
+		
+		
+		
+		
+		return null;
+	}
 }

@@ -109,7 +109,7 @@ $(document).ready(function(){
 		var currentObj = $(this);
 		$.validator.addMethod("passwordvalidate",function(value){
 		    return /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[?!@$^*-`(){}])(?!.*[&<>#%"'/\\ ]).{8,32}$/.test(value);
-		},"Use atleast 8 characters.Should contain upper and lower case alphabet, number and special character except [&amp; < > # % &quot; ' / \ and space]");
+		},translate('core.error.password'));
 
 		jQuery.validator.addClassRules({
 			passwordvalidate : { passwordvalidate : true }    

@@ -22,7 +22,6 @@ componentWillMount()
 
 componentDidMount()
 {
-  console.log(getCommonMaster("hr-leave","leavetypes","LeaveType").responseJSON["LeaveType"]);
   this.setState({
   employees:getCommonMaster("hr-leave","leavetypes","LeaveType").responseJSON["LeaveType"]
     });
@@ -37,7 +36,6 @@ componentDidUpdate(prevProps, prevState)
         // alert(prevState.employees.length);
         // alert(this.state.employees.length);
         // alert('updated');
-        console.log(this.state.employees.length);
         $('#employeeTable').DataTable({
           dom: 'Bfrtip',
           buttons: [
@@ -62,9 +60,8 @@ handleChange(e,name)
 }
 
   render() {
-    console.log(this.state.leaveType);
-    let  {name}=this.state.leaveType;
-    let {isSearchClicked,employees}=this.state;
+    let  {name,description}=this.state.leaveType;
+    let {employees}=this.state;
 
     const renderBody=function()
     {
@@ -76,7 +73,7 @@ handleChange(e,name)
                     <td data-label="name">{item.name}</td>
                     <td data-label="description">{item.description}</td>
                     <td data-label="action">
-                              {renderAction(getUrlVars()["type"])}
+                              {renderAction(getUrlVars()["type"],item.id)}
                     </td>
                 </tr>
             );

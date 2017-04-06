@@ -102,8 +102,6 @@ $(document).ready(function(){
 			return;
 		}
 		
-		//bootbox.alert('ext'+ext);
-		
 		if(e.target.files.length>0)
 		{
 			filefilled[$(this).attr('id')]=this.files[0].name;

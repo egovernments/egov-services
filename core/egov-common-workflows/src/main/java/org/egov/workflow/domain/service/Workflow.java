@@ -6,6 +6,7 @@ import org.egov.workflow.web.contract.Designation;
 import org.egov.workflow.web.contract.ProcessInstance;
 import org.egov.workflow.web.contract.ProcessInstanceRequest;
 import org.egov.workflow.web.contract.ProcessInstanceResponse;
+import org.egov.workflow.web.contract.RequestInfo;
 import org.egov.workflow.web.contract.Task;
 import org.egov.workflow.web.contract.TaskRequest;
 import org.egov.workflow.web.contract.TaskResponse;
@@ -30,5 +31,5 @@ public interface Workflow {
 
     // List<Object> getAssignee(String deptCode, String designationName);
 
-    Object getAssignee(Long locationId, String complaintTypeId, Long assigneeId);
+    Object getAssignee(Long locationId, String complaintTypeId, Long assigneeId,RequestInfo requestInfo);
 }

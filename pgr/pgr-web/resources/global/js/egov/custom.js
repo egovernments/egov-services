@@ -112,22 +112,21 @@ $(document).ready(function()
 			  this.defaultShowErrors();
 			}
 		});
-			
+
 		jQuery.extend(jQuery.validator.messages, {
-			required: "Required"
+			required: translate('core.error.required')
 		});
+
+		$.validator.addMethod("mobilevalidate",function(value){
+		    return /^\d{10}$/.test(value);
+		},translate('core.lbl.enter.mobilenumber'));
 
 		$.validator.addMethod("emailvalidate",function(value){
 		    return /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(value);
-		},"Enter valid Email ID");
+		},translate('core.error.valid.email'));
 
 	    jQuery.validator.addClassRules({
-			mobilevalidate: {
-				required: true,
-		        minlength: 10,
-		        maxlength : 10,
-		        digits : true
-			},
+			mobilevalidate: { mobilevalidate : true },
 			emailvalidate: { emailvalidate : true }  
 		});
 

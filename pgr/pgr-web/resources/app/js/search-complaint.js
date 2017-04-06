@@ -93,7 +93,7 @@ requestInfo['RequestInfo'] = RequestInfo.requestInfo;
 	    }).serialize();// does the job!
 
 	    if(formData.length == 0){
-	    	bootbox.alert('Atleast one search criteria is required!');
+	    	bootbox.alert('Atleast one search criteria is required');
 	    	return;
 	    }
 

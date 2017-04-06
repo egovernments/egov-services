@@ -23,7 +23,7 @@ public class ActionRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private static final String BASE_QUERY = "SELECT a.id AS a_id, a.name AS a_name, a.url AS "
+    private static final String BASE_QUERY = "SELECT distinct a.id AS a_id, a.name AS a_name, a.url AS "
             + "a_url, a.servicecode AS a_servicecode, a.queryparams AS a_queryparams, a.parentmodule AS a_parentmodule, a.displayname AS a_displayname, a.enabled AS a_enabled, " +
             " a.createdby AS a_createdby, a.createddate AS a_createddate, a.lastmodifiedby"
             + " AS a_lastmodifiedby, a.lastmodifieddate AS a_lastmodifieddate,a.ordernumber AS a_ordernumber, a.tenantId AS a_tenantId, "
@@ -40,6 +40,7 @@ public class ActionRepository {
         final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
 
         addWhereClause(selectQuery, actionSearchCriteria);
+        selectQuery.append(" order by a.name");
 
         logger.debug("Query : " + selectQuery);
         return selectQuery.toString();

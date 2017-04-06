@@ -44,8 +44,11 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.egov.eis.model.Employee;
 import org.egov.eis.model.EmployeeInfo;
 import org.egov.eis.service.EmployeeService;
+import org.egov.eis.service.helper.EmployeeHelper;
+import org.egov.eis.web.contract.EmployeeCriteria;
 import org.egov.eis.web.contract.EmployeeGetRequest;
 import org.egov.eis.web.contract.EmployeeInfoResponse;
 import org.egov.eis.web.contract.EmployeeRequest;
@@ -98,6 +101,9 @@ public class EmployeeController {
 	
 	@Autowired
 	private DataIntegrityValidatorForUpdate dataIntegrityValidatorForUpdate;
+	
+	@Autowired
+	private EmployeeHelper employeeHelper;
 
 	/**
 	 * Maps Post Requests for _search & returns ResponseEntity of either
@@ -111,7 +117,7 @@ public class EmployeeController {
 	 */
 	@PostMapping("_search")
 	@ResponseBody
-	public ResponseEntity<?> search(@ModelAttribute @Valid EmployeeGetRequest employeeGetRequest,
+	public ResponseEntity<?> search(@ModelAttribute @Valid EmployeeCriteria employeeCriteria,
 			BindingResult modelAttributeBindingResult, @RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
 			BindingResult requestBodyBindingResult) {
 		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
@@ -125,13 +131,48 @@ public class EmployeeController {
 		// Call service
 		List<EmployeeInfo> employeesList = null;
 		try {
-			employeesList = employeeService.getEmployees(employeeGetRequest, requestInfo);
+			employeesList = employeeService.getEmployees(employeeCriteria, requestInfo);
 		} catch (Exception exception) {
-			LOGGER.error("Error while processing request " + employeeGetRequest, exception);
+			LOGGER.error("Error while processing request " + employeeCriteria, exception);
 			return errorHandler.getResponseEntityForUnexpectedErrors(requestInfo);
 		}
 
 		return getSuccessResponseForSearch(employeesList, requestInfo);
+	}
+	
+	/**
+	 * Maps Post Requests for _search & returns ResponseEntity of either
+	 * EmployeeResponse type or ErrorResponse type
+	 * 
+	 * @param employeeId,
+	 * @param BindingResult
+	 * @param RequestInfoWrapper
+	 * @param BindingResult
+	 * @return ResponseEntity<?>
+	 */
+	@PostMapping("_get")
+	@ResponseBody
+	public ResponseEntity<?> get(@ModelAttribute @Valid EmployeeGetRequest employeeGetRequest,
+			BindingResult modelAttributeBindingResult, @RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
+			BindingResult requestBodyBindingResult) {
+		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+
+		ResponseEntity<?> errorResponseEntity = requestValidator.validateSearchRequest(requestInfo,
+				modelAttributeBindingResult, requestBodyBindingResult);
+
+		if (errorResponseEntity != null)
+			return errorResponseEntity;
+
+		// Call service
+		Employee employee = null;
+		try {
+			employee = employeeService.getEmployee(employeeGetRequest.getId(), employeeGetRequest.getTenantId(), requestInfo);
+		} catch (Exception exception) {
+			LOGGER.error("Error while processing request " + employeeGetRequest.getId(), exception);
+			return errorHandler.getResponseEntityForUnexpectedErrors(requestInfo);
+		}
+
+		return employeeHelper.getSuccessResponseForGet(employee, requestInfo);
 	}
 
 	/**

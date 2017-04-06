@@ -31,6 +31,7 @@ public class AuthPreCheckFilter extends ZuulFilter {
     private static final String PROCEED_ROUTING_MESSAGE = "Routing to an endpoint: {} - auth provided";
     private static final String NO_REQUEST_INFO_FIELD_MESSAGE = "No request-info field in request body for: {}";
     private static final String AUTH_TOKEN_REQUEST_BODY_FIELD_NAME = "authToken";
+    private static final String FAILED_TO_SERIALIZE_REQUEST_BODY_MESSAGE = "Failed to serialize requestBody";
     private HashSet<String> openEndpointsWhitelist;
     private HashSet<String> anonymousEndpointsWhitelist;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -129,6 +130,7 @@ public class AuthPreCheckFilter extends ZuulFilter {
         try {
             requestWrapper.setPayload(objectMapper.writeValueAsString(requestBody));
         } catch (JsonProcessingException e) {
+            logger.error(FAILED_TO_SERIALIZE_REQUEST_BODY_MESSAGE, e);
             throw new RuntimeException(e);
         }
         RequestContext.getCurrentContext().setRequest(requestWrapper);

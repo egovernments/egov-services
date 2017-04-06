@@ -27,6 +27,7 @@ public class RequestEnrichmentFilter extends ZuulFilter {
     private static final String FAILED_TO_ENRICH_REQUEST_BODY_MESSAGE = "Failed to enrich request body";
     private static final List<String> JSON_MEDIA_TYPES =
         Arrays.asList(MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE);
+    private static final String USER_SERIALIZATION_MESSAGE = "Failed to serialize user";
     private final ObjectMapper objectMapper;
     private static final String CORRELATION_HEADER_NAME = "x-correlation-id";
     private static final String USER_INFO_HEADER_NAME = "x-user-info";
@@ -70,6 +71,7 @@ public class RequestEnrichmentFilter extends ZuulFilter {
             try {
                 ctx.addZuulRequestHeader(USER_INFO_HEADER_NAME, objectMapper.writeValueAsString(user));
             } catch (JsonProcessingException e) {
+                logger.error(USER_SERIALIZATION_MESSAGE, e);
                 throw new RuntimeException(e);
             }
 

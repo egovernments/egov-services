@@ -116,9 +116,9 @@ public class LeaveTypeRepository {
 					ps.setBoolean(6, leaveType.getEncashable());
 					ps.setBoolean(7, leaveType.getActive() == null ? false : true);
 					ps.setLong(8, Long.valueOf(leaveTypeRequest.getRequestInfo().getMsgId()));
-					ps.setDate(9, new Date(new java.util.Date().getTime()));
+					ps.setDate(9, new Date(leaveType.getCreatedDate().getTime()));
 					ps.setLong(10, Long.valueOf(leaveTypeRequest.getRequestInfo().getMsgId()));
-					ps.setDate(11, new Date(new java.util.Date().getTime()));
+					ps.setDate(11, new Date(leaveType.getLastModifiedDate().getTime()));
 					ps.setString(12, leaveType.getTenantId());
 					if (leaveType.getId() != null)
 						ps.setLong(13, leaveType.getId());

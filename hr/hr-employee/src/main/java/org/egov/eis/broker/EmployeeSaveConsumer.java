@@ -66,7 +66,7 @@ public class EmployeeSaveConsumer {
 	
 	@KafkaListener(containerFactory = "kafkaListenerContainerFactory", topics = {"${kafka.topics.employee.savedb.name}", "${kafka.topics.employee.updatedb.name}" })
 	public void listen(ConsumerRecord<String, String> record) {
-		LOGGER.info("key:"+ record.key() +":"+ "value:" +record.value());
+		LOGGER.info("key : "+ record.key() + "\t\t" + "value : " +record.value());
 		
 		if (record.topic().equals(propertiesManager.getSaveEmployeeTopic())){
 		ObjectMapper objectMapper = new ObjectMapper();

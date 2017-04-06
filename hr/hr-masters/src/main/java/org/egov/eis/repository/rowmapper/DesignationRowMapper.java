@@ -58,7 +58,7 @@ public class DesignationRowMapper implements RowMapper<Designation> {
 		designation.setCode(rs.getString("code"));
 		designation.setDescription(rs.getString("description"));
 		designation.setChartOfAccounts(rs.getString("chartOfAccounts"));
-		designation.setActive(rs.getBoolean("active"));
+		designation.setActive((Boolean) rs.getObject("active"));
 		designation.setTenantId(rs.getString("tenantId"));
 		return designation;
 	}

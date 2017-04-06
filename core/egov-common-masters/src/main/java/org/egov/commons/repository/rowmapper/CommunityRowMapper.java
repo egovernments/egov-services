@@ -56,7 +56,7 @@ public class CommunityRowMapper implements RowMapper<Community> {
 		community.setId(rs.getLong("id"));
 		community.setName(rs.getString("name"));
 		community.setDescription(rs.getString("description"));
-		community.setActive(rs.getBoolean("active"));
+		community.setActive((Boolean) rs.getObject("active"));
 		community.setTenantId(rs.getString("tenantId"));
 		return community;
 	}

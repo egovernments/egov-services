@@ -55,29 +55,29 @@ public class LeaveAllotmentRowMapper implements RowMapper<LeaveAllotment> {
 	public LeaveAllotment mapRow(ResultSet rs, int rowNum) throws SQLException {
 		LeaveAllotment leaveAllotment = new LeaveAllotment();
 		leaveAllotment.setId(rs.getLong("la_id"));
-		leaveAllotment.setDesignation(rs.getLong("la_designationId"));
+		leaveAllotment.setDesignation((Long) rs.getObject("la_designationId"));
 
 		LeaveType leaveType = new LeaveType();
 		leaveType.setId(rs.getLong("lt_id"));
 		leaveType.setName(rs.getString("lt_name"));
 		leaveType.setDescription(rs.getString("lt_description"));
-		leaveType.setHalfdayAllowed(rs.getBoolean("lt_halfdayAllowed"));
-		leaveType.setPayEligible(rs.getBoolean("lt_payEligible"));
-		leaveType.setAccumulative(rs.getBoolean("lt_accumulative"));
-		leaveType.setEncashable(rs.getBoolean("lt_encashable"));
-		leaveType.setActive(rs.getBoolean("lt_active"));
-		leaveType.setCreatedBy(rs.getLong("lt_createdBy"));
+		leaveType.setHalfdayAllowed((Boolean) rs.getObject("lt_halfdayAllowed"));
+		leaveType.setPayEligible((Boolean) rs.getObject("lt_payEligible"));
+		leaveType.setAccumulative((Boolean) rs.getObject("lt_accumulative"));
+		leaveType.setEncashable((Boolean) rs.getObject("lt_encashable"));
+		leaveType.setActive((Boolean) rs.getObject("lt_active"));
+		leaveType.setCreatedBy((Long) rs.getObject("lt_createdBy"));
 		leaveType.setCreatedDate(rs.getDate("lt_createdDate"));
-		leaveType.setLastModifiedBy(rs.getLong("lt_lastModifiedBy"));
+		leaveType.setLastModifiedBy((Long) rs.getObject("lt_lastModifiedBy"));
 		leaveType.setLastModifiedDate(rs.getDate("lt_lastModifiedDate"));
 		leaveType.setTenantId(rs.getString("la_tenantId"));
 
 		leaveAllotment.setLeaveType(leaveType);
 
-		leaveAllotment.setNoOfDays(rs.getFloat("la_noOfDays"));
-		leaveAllotment.setCreatedBy(rs.getLong("la_createdBy"));
+		leaveAllotment.setNoOfDays((Float) rs.getObject("la_noOfDays"));
+		leaveAllotment.setCreatedBy((Long) rs.getObject("la_createdBy"));
 		leaveAllotment.setCreatedDate(rs.getDate("la_createdDate"));
-		leaveAllotment.setLastModifiedBy(rs.getLong("la_lastModifiedBy"));
+		leaveAllotment.setLastModifiedBy((Long) rs.getObject("la_lastModifiedBy"));
 		leaveAllotment.setLastModifiedDate(rs.getDate("la_lastModifiedDate"));
 		leaveAllotment.setTenantId(rs.getString("la_tenantId"));
 		return leaveAllotment;

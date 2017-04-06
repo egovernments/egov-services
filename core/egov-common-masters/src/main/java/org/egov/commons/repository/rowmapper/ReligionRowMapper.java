@@ -56,7 +56,7 @@ public class ReligionRowMapper implements RowMapper<Religion> {
 		religion.setId(rs.getLong("id"));
 		religion.setName(rs.getString("name"));
 		religion.setDescription(rs.getString("description"));
-		religion.setActive(rs.getBoolean("active"));
+		religion.setActive((Boolean) rs.getObject("active"));
 		religion.setTenantId(rs.getString("tenantId"));
 		return religion;
 	}

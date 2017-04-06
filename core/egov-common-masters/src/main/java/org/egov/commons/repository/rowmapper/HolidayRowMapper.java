@@ -61,10 +61,10 @@ public class HolidayRowMapper implements RowMapper<Holiday> {
 
 		CalendarYear calendarYear = new CalendarYear();
 		calendarYear.setId(rs.getLong("cy_id"));
-		calendarYear.setName(rs.getInt("cy_name"));
+		calendarYear.setName((Integer) rs.getObject("cy_name"));
 		calendarYear.setStartDate(rs.getDate("cy_startDate"));
 		calendarYear.setEndDate(rs.getDate("cy_endDate"));
-		calendarYear.setActive(rs.getBoolean("cy_active"));
+		calendarYear.setActive((Boolean) rs.getObject("cy_active"));
 		calendarYear.setTenantId(rs.getString("cy_tenantId"));
 
 		holiday.setCalendarYear(calendarYear);

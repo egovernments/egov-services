@@ -56,7 +56,7 @@ public class LanguageRowMapper implements RowMapper<Language> {
 		language.setId(rs.getLong("id"));
 		language.setName(rs.getString("name"));
 		language.setDescription(rs.getString("description"));
-		language.setActive(rs.getBoolean("active"));
+		language.setActive((Boolean) rs.getObject("active"));
 		language.setTenantId(rs.getString("tenantId"));
 		return language;
 	}

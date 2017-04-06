@@ -56,7 +56,7 @@ public class CategoryRowMapper implements RowMapper<Category> {
 		category.setId(rs.getLong("id"));
 		category.setName(rs.getString("name"));
 		category.setDescription(rs.getString("description"));
-		category.setActive(rs.getBoolean("active"));
+		category.setActive((Boolean) rs.getObject("active"));
 		category.setTenantId(rs.getString("tenantId"));
 		return category;
 	}

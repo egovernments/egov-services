@@ -24,10 +24,11 @@ public class Agreement {
 	private String tenantId;
 	private String agreementNumber;
 	private String acknowledgementNumber;
-	private String StateId;
+	private String stateId;
 
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date agreementDate;
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date closeDate;
 	private Long timePeriod;
 	private Allottee allottee;

@@ -43,9 +43,6 @@ public class AgreementCriteria {
 	 private String offSet;
 	 private String size;
 	 private String stateId;
-	
-	/* @Setter(onMethod=@__(@JsonIgnore))
-	 @JsonIgnore*/
 	 private Set<Long> asset;
 	 private Set<Long> allottee;
 }

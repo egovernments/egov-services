@@ -1,7 +1,7 @@
 class ShowLeaveType extends React.Component {
   constructor(props) {
     super(props);
-    this.state={employees:[],leaveType:{
+    this.state={leaveList:[],leaveType:{
     name:"",
     payEligible:"",
     encashable:"",
@@ -15,7 +15,7 @@ class ShowLeaveType extends React.Component {
 
 componentWillMount()
 {
-  //call employee api and get employees
+  //call employee api and get leaveList
   console.log(getUrlVars()["type"]);
 //  var queryParam=getUrlVars();
 }
@@ -23,7 +23,7 @@ componentWillMount()
 componentDidMount()
 {
   this.setState({
-  employees:getCommonMaster("hr-leave","leavetypes","LeaveType").responseJSON["LeaveType"]
+  leaveList:getCommonMaster("hr-leave","leavetypes","LeaveType").responseJSON["LeaveType"]
     });
 }
 
@@ -31,10 +31,10 @@ componentDidMount()
 
 componentDidUpdate(prevProps, prevState)
 {
-    if (prevState.employees.length!=this.state.employees.length) {
+    if (prevState.leaveList.length!=this.state.leaveList.length) {
         // $('#employeeTable').DataTable().draw();
-        // alert(prevState.employees.length);
-        // alert(this.state.employees.length);
+        // alert(prevState.leaveList.length);
+        // alert(this.state.leaveList.length);
         // alert('updated');
         $('#employeeTable').DataTable({
           dom: 'Bfrtip',
@@ -61,12 +61,12 @@ handleChange(e,name)
 
   render() {
     let  {name,description}=this.state.leaveType;
-    let {employees}=this.state;
+    let {leaveList}=this.state;
 
     const renderBody=function()
     {
 
-      return employees.map((item,index)=>
+      return leaveList.map((item,index)=>
       {
             return (<tr key={index}>
                     <td>{index+1}</td>

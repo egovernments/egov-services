@@ -2,11 +2,15 @@ class ShowLeaveMapping extends React.Component {
   constructor(props) {
     super(props);
     this.state={
-      leaveTypeList:[],leave:
-      {designation:"",
-      leaveType:"",
-      noOfDay:""},
-
+      leaveTypeList:[],leave:{
+        "id": "",
+        "designation": "",
+        "leaveType": {
+          "name": "",
+        },
+        "noOfDays": "",
+        "tenantId": tenantId
+      }
     }
     this.handleChange=this.handleChange.bind(this);
 
@@ -25,19 +29,19 @@ class ShowLeaveMapping extends React.Component {
   componentDidMount()
   {
     this.setState({
-      leaveTypeList:getCommonMaster("hr-leave","leaveallotments","LeaveAllotment").responseJSON["LeaveAllotment"]
+      leaveTypeList:commonApiPost("hr-leave","leaveallotments","_search",{tenantId}).responseJSON["LeaveAllotment"]
 
     });
   }
 
   componentDidUpdate(prevProps, prevState)
   {
-      if (prevState.grades.length!=this.state.grades.length) {
+      if (prevState.leaveTypeList.length!=this.state.leaveTypeList.length) {
           // $('#employeeTable').DataTable().draw();
           // alert(prevState.grades.length);
           // alert(this.state.grades.length);
           // alert('updated');
-          $('#gradeTable').DataTable({
+          $('#LeaveTable').DataTable({
             dom: 'Bfrtip',
             buttons: [
                      'copy', 'csv', 'excel', 'pdf', 'print'
@@ -68,22 +72,22 @@ class ShowLeaveMapping extends React.Component {
 
 
   render() {
-    console.log(this.state.leave);
+    // console.log(this.state.leave);
     let {handleChange}=this;
     let {leaveTypeList}=this.state;
     let {designation,leaveType,noOfDay}=this.state.leave;
 
 
-    const renderAction=function(type,leaveType){
+    const renderAction=function(type,id){
       if (type==="update") {
 
               return (
-                      <a href={`app/hr/leavemaster/leave-mapping.html?leaveType=${leaveType}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-pencil"></span></a>
+                      <a href={`app/hr/leavemaster/leave-mapping.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-pencil"></span></a>
               );
 
     }else {
             return (
-                    <a href={`app/hr/leavemaster/leave-mapping.html?leaveType=${leaveType}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-modal-window"></span></a>
+                    <a href={`app/hr/leavemaster/leave-mapping.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-modal-window"></span></a>
             );
         }
 }
@@ -97,7 +101,7 @@ class ShowLeaveMapping extends React.Component {
                     <td data-label="leaveType">{item.leaveType.name}</td>
                     <td data-label="noOfDay">{item.noOfDays}</td>
                     <td data-label="action">
-                    {renderAction(getUrlVars()["type"],item.leaveType)}
+                    {renderAction(getUrlVars()["type"],item.id)}
                     </td>
                 </tr>
             );
@@ -106,7 +110,7 @@ class ShowLeaveMapping extends React.Component {
     }
 
       return (<div>
-        <table id="employeeTable" className="table table-bordered">
+        <table id="LeaveTable" className="table table-bordered">
             <thead>
                 <tr>
                     <th>Leave Type</th>
@@ -116,7 +120,7 @@ class ShowLeaveMapping extends React.Component {
                 </tr>
             </thead>
 
-            <tbody id="employeeSearchResultTableBody">
+            <tbody id="leavesearchResultTableBody">
                 {
                     renderBody()
                 }

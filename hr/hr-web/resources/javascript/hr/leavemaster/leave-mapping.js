@@ -1,18 +1,21 @@
 class LeaveMaster extends React.Component{
 constructor(props){
   super(props);
-  this.state={leave:{
+  this.state={list:[],leave:{
 
     "designation": "",
-    "leaveType":"",
+    "leaveType":{
+      "name":""
+    },
     "noOfDays":"",
 
     "tenantId":"ap.public"
     },
-        designationList:[],leaveTypeList:[],}
+        designationList:[],leaveTypeList:[]}
 
   this.addOrUpdate=this.addOrUpdate.bind(this);
   this.handleChange=this.handleChange.bind(this);
+  this.handleChangeThreeLevel=this.handleChangeThreeLevel.bind(this);
 
 }
 componentWillMount()
@@ -70,7 +73,8 @@ componentWillMount()
                           "designation": this.state.leave.designation,
                           "leaveType":
                             {
-                                "id":this.state.leave.leaveType
+                                "id":this.state.leave.leaveType,
+                                "name":this.state.leave.leaveType.name
                               },
                             "noOfDays": this.state.leave.noOfDays,
                             "tenantId": "ap.public"
@@ -96,13 +100,13 @@ componentWillMount()
                 }
             });
 
-           console.log(response);
+          //  console.log(response);
           if(response["statusText"]==="OK")
           {
             alert("Successfully added");
           }
           else {
-            console.log(tempObj);
+            // console.log(tempObj);
             // alert(response["statusText"]);
             // this.setState({
             //   leave:{
@@ -125,21 +129,46 @@ componentWillMount()
      }
     }
 
+    handleChangeThreeLevel(e,pName,name)
+    {
+      this.setState({
+        leave:{
+          ...this.state.leave,
+          [pName]:{
+              ...this.state.leave[pName],
+              [name]:e.target.value
+          }
+        }
+
+      })
+
+}
+
 
 
     componentDidMount(){
-      if(getUrlVars()["type"]==="view"){
-        for (var variable in this.state.leave)
-          document.getElementById(variable).disabled=true;
-      }
+      var type=getUrlVars()["type"];
+      var id=getUrlVars()["id"];
+
+      if(getUrlVars()["type"]==="view")
+      {
+        $("input,select,radio,textarea").prop("disabled", true);
+        }
+
+        if(type==="view"||type==="update")
+        {
+          // console.log(getCommonMasterById("hr-leave","leaveallotments","LeaveAllotment",id).responseJSON["LeaveAllotment"][0]);
+            this.setState({
+              leave:getCommonMasterById("hr-leave","leaveallotments","LeaveAllotment",id).responseJSON["LeaveAllotment"][0]
+            })
+        }
     }
 
-
   render(){
-    let {handleChange,addOrUpdate}=this;
+    let {handleChange,addOrUpdate,handleChangeThreeLevel}=this;
     let {leaveType,designation,noOfDays}=this.state.leave;
     let mode=getUrlVars()["type"];
-
+    console.log(this.state.leave);
     const renderOption=function(list)
     {
         if(list)
@@ -172,7 +201,7 @@ componentWillMount()
                   </div>
                   <div className="col-sm-6">
                     <div className="styled-select">
-                    <select id="designation" name="designation" onChange={(e)=>{
+                    <select id="designation" name="designation" value={designation} onChange={(e)=>{
                         handleChange(e,"designation")
                     }}required>
                     <option>Select Designation</option>
@@ -194,10 +223,10 @@ componentWillMount()
                     </div>
                     <div className="col-sm-6">
                     <div className="styled-select">
-                    <select id="leaveType"  value={leaveType} required="true" onChange={(e)=>{
-                        handleChange(e,"leaveType")
+                    <select id="leaveType" name="leaveType" value={leaveType.name} required="true" onChange={(e)=>{
+                        handleChangeThreeLevel(e,"leaveType","name")
                     }}>
-                    <option value="" selected></option>
+                    <option> select Leave Type</option>
                     {renderOption(this.state.leaveTypeList)}
                    </select>
                     </div>

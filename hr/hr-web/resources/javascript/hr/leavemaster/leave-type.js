@@ -172,7 +172,9 @@ addOrUpdate(e,mode)
                           </div>
                           <div className="col-sm-6">
                                 <label className="radio-inline radioUi">
-                                  <input type="radio" name="payEligible" id="payEligible" value="true" checked={payEligible?true:false}
+                                  <input type="radio" name="payEligible" id="payEligible" value="true" checked={()=>{
+                                    console.log(payEligible);
+                                    return payEligible?true:false}}
                                       onChange={(e)=>{handleChange(e,"payEligible")  }}/> Yes
                                 </label>
                                 <label className="radio-inline radioUi">

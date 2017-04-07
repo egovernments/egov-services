@@ -40,11 +40,12 @@ componentWillMount(){
     componentDidMount(){
       var type = getUrlVars()["type"], _this = this;
       var id = getUrlVars()["id"];
-      $('#applicableOn').datetimepicker({
-          format: 'DD/MM/YYYY',
+      $('#applicableOn').datepicker({
+          format: 'dd/mm/yyyy',
+          autclose:true
 
       });
-			$('#applicableOn').on("dp.change", function(e) {
+			$('#applicableOn').on("change", function(e) {
 						_this.setState({
 				          Holiday: {
 				              ..._this.state.Holiday,
@@ -80,7 +81,7 @@ componentWillMount(){
     {
 
             e.preventDefault();
-          console.log(this.state.Holiday);
+          // console.log(this.state.Holiday);
 
             var tempInfo=Object.assign({},this.state.Holiday) , type = getUrlVars()["type"];
               // tempInfo.splice(tempInfo.calendarYear.id, tempInfo.calendarYear.active.tempInfo.calendarYear.endDatetempInfo.calendarYear.startDate,tempInfo.calendarYear.tenantId);
@@ -147,11 +148,12 @@ componentWillMount(){
       }
 
       handleChangeThreeLevel(e,pName,name)
-      {console.log(this.state.Holiday[pName]);
-        $('#applicableOn').data("DateTimePicker").minDate(false);
-        $('#applicableOn').data("DateTimePicker").maxDate(false);
-        $('#applicableOn').data("DateTimePicker").minDate(new Date(e.target.value, 0, 1));
-        $('#applicableOn').data("DateTimePicker").maxDate(new Date(e.target.value, 11, 31));
+       {
+        //  console.log(this.state.Holiday[pName]);
+        $('#applicableOn').data("datetimepicker").minDate(false);
+        $('#applicableOn').data("datetimepicker").maxDate(false);
+        $('#applicableOn').data("datetimepicker").minDate(new Date(e.target.value, 0, 1));
+        $('#applicableOn').data("datetimepicker").maxDate(new Date(e.target.value, 11, 31));
 
         this.setState({
           Holiday:{
@@ -229,8 +231,8 @@ componentWillMount(){
                         <span>
                             <i className="glyphicon glyphicon-calendar"></i>
                         </span>
-                        <input type="text" name="applicableOn" value={applicableOn} id="applicableOn" onChange={(e)=>{
-                            handleChange(e,"applicableOn")}}required/>
+                        <input type="text" name="applicableOn" value={applicableOn} id="applicableOn"
+                            onChange={(e)=>{ handleChange(e,"applicableOn")}}required/>
                     </div>
                     </div>
                 </div>
@@ -249,7 +251,7 @@ componentWillMount(){
               </div>
             </div>
 
-            {/*}<div className="row">
+            <div className="row">
               <div className="col-sm-6">
                   <div className="row">
                       <div className="col-sm-6 col-sm-offset-6">
@@ -260,7 +262,7 @@ componentWillMount(){
                       </div>
                   </div>
                 </div>
-            </div>*/}
+            </div>
 
 
     <div className="text-center">

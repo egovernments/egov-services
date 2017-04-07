@@ -5,7 +5,7 @@
 
     <groupId>org.egov.services</groupId>
     <artifactId>services-common</artifactId>
-    <version>0.5.0</version>
+    <version>0.6.0</version>
     <packaging>jar</packaging>
 
     <name>services-common</name>

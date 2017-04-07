@@ -29,7 +29,7 @@ class ShowLeaveMapping extends React.Component {
   componentDidMount()
   {
     this.setState({
-      leaveTypeList:commonApiPost("hr-leave","leaveallotments","_search",{tenantId}).responseJSON["LeaveAllotment"]
+      leaveTypeList:commonApiPost("hr-leave","leaveallotments","_search",{tenantId,pageSize:500}).responseJSON["LeaveAllotment"]
 
     });
   }
@@ -72,7 +72,6 @@ class ShowLeaveMapping extends React.Component {
 
 
   render() {
-    // console.log(this.state.leave);
     let {handleChange}=this;
     let {leaveTypeList}=this.state;
     let {designation,leaveType,noOfDay}=this.state.leave;

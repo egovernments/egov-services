@@ -8,6 +8,7 @@ constructor(props){
     },
     "name": "",
     "applicableOn": "",
+    "active":"",
     "tenantId": tenantId
   },
         year:[], holidays:[],dataType:[]
@@ -22,7 +23,7 @@ constructor(props){
 
 componentWillMount(){
   this.setState({
-    year:getCommonMaster("egov-common-masters","calendaryears","CalendarYear").responseJSON["CalendarYear"] || []
+    year
 })
 }
     handleChange(e,name)
@@ -62,7 +63,6 @@ componentWillMount(){
 
             if(type==="view"||type==="update")
             {
-              console.log(getCommonMasterById("egov-common-masters","holidays","Holiday",id).responseJSON["Holiday"][0]);
                 this.setState({
                   Holiday:getCommonMasterById("egov-common-masters","holidays","Holiday",id).responseJSON["Holiday"][0]
                 })
@@ -81,7 +81,6 @@ componentWillMount(){
     {
 
             e.preventDefault();
-          // console.log(this.state.Holiday);
 
             var tempInfo=Object.assign({},this.state.Holiday) , type = getUrlVars()["type"];
               // tempInfo.splice(tempInfo.calendarYear.id, tempInfo.calendarYear.active.tempInfo.calendarYear.endDatetempInfo.calendarYear.startDate,tempInfo.calendarYear.tenantId);
@@ -96,8 +95,6 @@ componentWillMount(){
                 delete tempInfo.calendarYear.tenantId;
               }
 
-            console.log(tempInfo);
-            // tempInfo["assetSet"]["assetCategory"]["id"]=parseInt(tempInfo["assetSet"]["assetCategory"]["id"])
             var body={
                 "RequestInfo":requestInfo,
                 "Holiday":tempInfo
@@ -127,7 +124,7 @@ componentWillMount(){
                   "name": "",
                   "applicableOn": "",
                   "tenantId": "",
-                  "active": true
+                  "active": ""
                 }
               })
             }
@@ -141,7 +138,7 @@ componentWillMount(){
                   "name": "",
                   "applicableOn": "",
                   "tenantId": "",
-                  "active": true
+                  "active": ""
                 }
               })
           }
@@ -150,10 +147,10 @@ componentWillMount(){
       handleChangeThreeLevel(e,pName,name)
        {
         //  console.log(this.state.Holiday[pName]);
-        $('#applicableOn').data("datetimepicker").minDate(false);
-        $('#applicableOn').data("datetimepicker").maxDate(false);
-        $('#applicableOn').data("datetimepicker").minDate(new Date(e.target.value, 0, 1));
-        $('#applicableOn').data("datetimepicker").maxDate(new Date(e.target.value, 11, 31));
+        // $('#applicableOn').data("datetimepicker").minDate(false);
+        // $('#applicableOn').data("datetimepicker").maxDate(false);
+        // $('#applicableOn').data("datetimepicker").minDate(new Date(e.target.value, 0, 1));
+        // $('#applicableOn').data("datetimepicker").maxDate(new Date(e.target.value, 11, 31));
 
         this.setState({
           Holiday:{
@@ -200,7 +197,7 @@ componentWillMount(){
       <form onSubmit={(e)=>{addOrUpdate(e,mode)}}>
       <fieldset>
         <div className="row">
-          <div className="col-sm-6 col-sm-offset-3">
+          <div className="col-sm-6 ">
               <div className="row">
                   <div className="col-sm-6 label-text">
                     <label for=""> Calendar Year <span>*</span></label>
@@ -216,11 +213,6 @@ componentWillMount(){
                   </div>
               </div>
             </div>
-        </div>
-        <br/>
-        <br/>
-        <br/>
-        <div className="row">
             <div className="col-sm-6">
                 <div className="row">
                     <div className="col-sm-6 label-text">
@@ -237,6 +229,8 @@ componentWillMount(){
                     </div>
                 </div>
             </div>
+          </div>
+            <div className="row">
               <div className="col-sm-6">
                   <div className="row">
                       <div className="col-sm-6 label-text">
@@ -249,19 +243,19 @@ componentWillMount(){
                       </div>
                   </div>
               </div>
-            </div>
-
-            <div className="row">
-              <div className="col-sm-6">
-                  <div className="row">
-                      <div className="col-sm-6 col-sm-offset-6">
+              {/*<div className="col-sm-6">
+                <div className="row">
+                  <div className="col-sm-6 label-text">
+                      <label for="">Active</label>
+                  </div>
+                      <div className="col-sm-6">
                             <label className="radioUi">
                               <input type="checkbox" name="active" id="active" value="true" onChange={(e)=>{
-                                  handleChange(e,"active")}}required/> Active
+                                  handleChange(e,"active")}} required/>
                             </label>
                       </div>
                   </div>
-                </div>
+                </div>*/}
             </div>
 
 

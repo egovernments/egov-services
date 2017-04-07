@@ -63,8 +63,7 @@ search(e)
   {
     e.preventDefault();
     //call api call
-     var list=commonApiPost("egov-common-masters","holidays","_search",{tenantId,year:this.state.holidaySet.calendarYear}).responseJSON["Holiday"];
-      console.log(commonApiPost("egov-common-masters","holidays","_search",{tenantId,year:this.state.holidaySet.calendarYear}).responseJSON["Holiday"]);
+     var list=commonApiPost("egov-common-masters","holidays","_search",{tenantId,year:this.state.holidaySet.calendarYear,pageSize:500}).responseJSON["Holiday"];
     this.setState({
       isSearchClicked:true,
       list

@@ -45,7 +45,7 @@ try { assignments_department = !localStorage.getItem("assignments_department") |
 try { assignments_fund = !localStorage.getItem("assignments_fund") || localStorage.getItem("assignments_fund") == "undefined" ? (localStorage.setItem("assignments_fund", JSON.stringify(getCommonMaster("egf-masters", "funds", "funds").responseJSON["funds"])) || []) : JSON.parse(localStorage.getItem("assignments_fund")); } catch(e) { console.log(e); assignments_fund = []; }
 try { assignments_functionary = !localStorage.getItem("assignments_functionary") || localStorage.getItem("assignments_functionary") == "undefined" ? (localStorage.setItem("assignments_functionary", JSON.stringify(getCommonMaster("egf-masters", "functionaries", "funds").responseJSON["functionaries"])) || []) : JSON.parse(localStorage.getItem("assignments_functionary")); } catch(e) { console.log(e); assignments_functionary = []; }
 try { assignments_function = !localStorage.getItem("assignments_function") || localStorage.getItem("assignments_function") == "undefined" ? (localStorage.setItem("assignments_function", JSON.stringify(getCommonMaster("egf-masters", "functions", "functions").responseJSON["functions"])) || []) : JSON.parse(localStorage.getItem("assignments_function")); } catch(e) { console.log(e); assignments_function = []; }
-
+try { year = !localStorage.getItem("year") || localStorage.getItem("year") == "undefined" ? (localStorage.setItem("year", JSON.stringify(getCommonMaster("egov-common-masters","calendaryears","CalendarYear").responseJSON["CalendarYear"])) || []) : JSON.parse(localStorage.getItem("year"));}  catch(e) { console.log(e); year = []; }
 
 // var response=$.ajax({
 //           url: window.location.origin+"/user/_login?tenantId=ap.public&username=ramakrishna&password=demo&grant_type=password&scope=read",
@@ -73,7 +73,7 @@ try { assignments_function = !localStorage.getItem("assignments_function") || lo
 
 function getCommonMaster(mainRoute, resource, returnObject) {
     return $.ajax({
-        url: baseUrl + "/" + mainRoute + "/" + resource + "/_search?tenantId=" + tenantId,
+        url: baseUrl + "/" + mainRoute + "/" + resource + "/_search?tenantId=" + tenantId + "&" + "pageSize=" + 500,
         type: 'POST',
         dataType: 'json',
         data: JSON.stringify({RequestInfo: requestInfo}),

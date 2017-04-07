@@ -2,14 +2,18 @@ class LeaveMaster extends React.Component{
 constructor(props){
   super(props);
   this.state={list:[],leave:{
-
+    "id": "",
     "designation": "",
     "leaveType":{
-      "name":""
+      "id" :""
     },
     "noOfDays":"",
-
-    "tenantId":"ap.public"
+    "active": "",
+    "createdBy": "",
+    "createdDate": "",
+    "lastModifiedBy": "",
+    "lastModifiedDate": "",
+    "tenantId": tenantId
     },
         designationList:[],leaveTypeList:[]}
 
@@ -41,55 +45,46 @@ componentWillMount()
         open(location, '_self').close();
     }
 
-
-    // addOrUpdate(e,mode){
-    //   var tempObj={
-    //                 "designation": this.state.leave.designation,
-    //                 "leaveType":
-    //                   {
-    //                       "id":this.state.leave.leaveType
-    //                     },
-    //                   "noOfDays": this.state.leave.noOfDay,
-    //                   "tenantId": "ap.public"
-    //               };
-    //
-    //     e.preventDefault();
-    //     //  console.log(this.state.leave);
-    //     // console.log(mode);
-    //     if (mode==="update") {
-    //         console.log("update");
-    //     } else {
-    //
-    //           console.log(tempObj);
-    //
-    //       }
-        // }
         addOrUpdate(e){
           // var finalPost={
           //   "RequestInfo":requestInfo,
           //
           // }
-          var tempObj={
-                          "designation": this.state.leave.designation,
-                          "leaveType":
-                            {
-                                "id":this.state.leave.leaveType,
-                                "name":this.state.leave.leaveType.name
-                              },
-                            "noOfDays": this.state.leave.noOfDays,
-                            "tenantId": "ap.public"
-                        };
+          // var tempObj={
+          //                 "designation": this.state.leave.designation,
+          //                 "leaveType":
+          //                   {
+          //                       "id":this.state.leave.leaveType,
+          //
+          //                     },
+          //                   "noOfDays": this.state.leave.noOfDays,
+          //                   "tenantId": "1"
+          //               };
 
           e.preventDefault();
           //  console.log(tempObj);
           // var tempInfo=this.state.leave;
+          var tempInfo=Object.assign({},this.state.leave) , type = getUrlVars()["type"];
+          // var date1 = new Date(tempInfo.createdDate);
+          // var date2 = new Date(tempInfo.lastModifiedDate);
+          // tempInfo.createdDate = ( date1.getFullYear() + '/' + (date1.getMonth() + 1) + '/' + date1.getDate()     );
+          // tempInfo.lastModifiedDate = ( date2.getDate() + '/' + (date2.getMonth() + 1) + '/' +  date2.getFullYear());
+          if(type==="update"){
+          delete tempInfo.leaveType.name;
+          delete tempInfo.leaveType.active;
+          delete tempInfo.leaveType.description;
+          delete tempInfo.leaveType.createdDate;
+          delete tempInfo.leaveType.lastModifiedDate;
+          delete tempInfo.leaveType.tenantId;
+        }
           var body={
               "RequestInfo":requestInfo,
-              "LeaveAllotment":[tempObj]
+              "LeaveAllotment":[tempInfo]
             };
 
           var response=$.ajax({
-                url:baseUrl+"/hr-leave/leaveallotments/_create",
+                //  url:baseUrl+"/hr-leave/leaveallotments/_create",
+                 url:baseUrl+"/hr-leave/leaveallotments/" + (type == "update" ? (this.state.leave.id + "/" + "_update/") : "_create"),
                 type: 'POST',
                 dataType: 'json',
                 data:JSON.stringify(body),
@@ -104,6 +99,22 @@ componentWillMount()
           if(response["statusText"]==="OK")
           {
             alert("Successfully added");
+            this.setState({
+              leave:{
+                "id": "",
+                "designation": "",
+                "leaveType":{
+                  "id" :""
+                },
+                "noOfDays":"",
+                "active": "",
+                "createdBy": "",
+                "createdDate": "",
+                "lastModifiedBy": "",
+                "lastModifiedDate": "",
+                "tenantId": tenantId
+                }
+            })
           }
           else {
             // console.log(tempObj);
@@ -157,7 +168,6 @@ componentWillMount()
 
         if(type==="view"||type==="update")
         {
-          // console.log(getCommonMasterById("hr-leave","leaveallotments","LeaveAllotment",id).responseJSON["LeaveAllotment"][0]);
             this.setState({
               leave:getCommonMasterById("hr-leave","leaveallotments","LeaveAllotment",id).responseJSON["LeaveAllotment"][0]
             })
@@ -168,7 +178,7 @@ componentWillMount()
     let {handleChange,addOrUpdate,handleChangeThreeLevel}=this;
     let {leaveType,designation,noOfDays}=this.state.leave;
     let mode=getUrlVars()["type"];
-    console.log(this.state.leave);
+
     const renderOption=function(list)
     {
         if(list)
@@ -194,7 +204,7 @@ componentWillMount()
       <form onSubmit={(e)=>{addOrUpdate(e,mode)}}>
       <fieldset>
         <div className="row">
-          <div className="col-sm-6 col-sm-offset-3">
+          <div className="col-sm-6">
               <div className="row">
                   <div className="col-sm-6 label-text">
                     <label for="">Designation </label>
@@ -211,11 +221,6 @@ componentWillMount()
                   </div>
               </div>
             </div>
-        </div>
-        <br/>
-        <br/>
-        <br/>
-        <div className="row">
             <div className="col-sm-6">
                 <div className="row">
                     <div className="col-sm-6 label-text">
@@ -223,8 +228,8 @@ componentWillMount()
                     </div>
                     <div className="col-sm-6">
                     <div className="styled-select">
-                    <select id="leaveType" name="leaveType" value={leaveType.name} required="true" onChange={(e)=>{
-                        handleChangeThreeLevel(e,"leaveType","name")
+                    <select id="leaveType" name="leaveType" value={leaveType.id} required="true" onChange={(e)=>{
+                        handleChangeThreeLevel(e,"leaveType","id")
                     }}>
                     <option> select Leave Type</option>
                     {renderOption(this.state.leaveTypeList)}
@@ -234,6 +239,9 @@ componentWillMount()
                     </div>
                 </div>
             </div>
+        </div>
+
+          <div className="row">
               <div className="col-sm-6">
                   <div className="row">
                       <div className="col-sm-6 label-text">
@@ -246,8 +254,20 @@ componentWillMount()
                       </div>
                   </div>
               </div>
+              <div className="col-sm-6">
+                <div className="row">
+                  <div className="col-sm-6 label-text">
+                      <label for="">Active</label>
+                  </div>
+                      <div className="col-sm-6">
+                            <label className="radioUi">
+                              <input type="checkbox" name="active" id="active" value="true" onChange={(e)=>{
+                                  handleChange(e,"active")}}required/>
+                            </label>
+                      </div>
+                  </div>
+                </div>
             </div>
-
 
     <div className="text-center">
         {showActionButton()} &nbsp;&nbsp;

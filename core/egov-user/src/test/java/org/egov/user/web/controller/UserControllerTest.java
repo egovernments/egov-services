@@ -1,6 +1,7 @@
 package org.egov.user.web.controller;
 
 import org.apache.commons.io.IOUtils;
+import org.egov.user.TestConfiguration;
 import org.egov.user.domain.model.UserSearch;
 import org.egov.user.domain.model.enums.*;
 import org.egov.user.domain.service.UserService;
@@ -11,6 +12,7 @@ import org.mockito.ArgumentMatcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -29,6 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(UserController.class)
+@Import(TestConfiguration.class)
 public class UserControllerTest {
 
     @Autowired

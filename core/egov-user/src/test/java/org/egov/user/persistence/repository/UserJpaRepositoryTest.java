@@ -1,6 +1,7 @@
 package org.egov.user.persistence.repository;
 
 
+import org.egov.user.TestConfiguration;
 import org.egov.user.domain.model.UserSearch;
 import org.egov.user.persistence.entity.User;
 import org.egov.user.persistence.enums.BloodGroup;
@@ -13,6 +14,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -25,6 +27,7 @@ import static org.junit.Assert.assertNull;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
+@Import(TestConfiguration.class)
 public class UserJpaRepositoryTest {
 
     @Autowired

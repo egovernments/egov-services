@@ -75,6 +75,7 @@ public class AgreementController {
 		AgreementResponse agreementResponse = new AgreementResponse();
 		agreementResponse.setAgreement(agreements);
 		agreementResponse.setResposneInfo(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true));
+		System.err.println("before returning from getsucces resposne");
 		return new ResponseEntity<>(agreementResponse, HttpStatus.OK);
 	}
 

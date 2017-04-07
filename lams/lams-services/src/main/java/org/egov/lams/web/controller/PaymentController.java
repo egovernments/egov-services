@@ -6,8 +6,6 @@ import org.egov.lams.model.AgreementCriteria;
 import org.egov.lams.service.AgreementService;
 import org.egov.lams.service.PaymentService;
 import org.egov.lams.web.contract.BillReceiptInfoReq;
-import org.egov.lams.web.contract.BillReceiptReq;
-import org.egov.lams.web.contract.RequestInfo;
 import org.egov.lams.web.contract.RequestInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,8 +31,8 @@ public class PaymentController {
 	@ResponseBody
 	public ResponseEntity<?> create(
 			@RequestBody RequestInfoWrapper requestInfoWrapper,
-			@RequestParam String agreementNumber,
-			@RequestParam String acknowledgementNumber) {
+			@RequestParam (name="agreementNumber", required=false)  String agreementNumber,
+			@RequestParam (name="acknowledgementNumber", required=false)  String acknowledgementNumber) {
 		AgreementCriteria agreementCriteria = new AgreementCriteria();
 		if (StringUtils.isNotBlank(agreementNumber))
 			agreementCriteria.setAgreementNumber(agreementNumber);
@@ -48,11 +46,11 @@ public class PaymentController {
 
 	@PostMapping("/_update")
 	@ResponseBody
-	public ResponseEntity<?> update(@RequestBody BillReceiptReq billReceiptReq) {
-		System.out.print("billReceiptReq--->>>lams-services"+billReceiptReq);
-		BillReceiptInfoReq billReceiptInfoReq = new BillReceiptInfoReq();
+	public ResponseEntity<?> update(@RequestBody BillReceiptInfoReq billReceiptInfoReq) {
+		System.out.print("billReceiptReq--->>>lams-services"+billReceiptInfoReq.getBillReceiptInfo());
+		/*BillReceiptInfoReq billReceiptInfoReq = new BillReceiptInfoReq();
 		billReceiptInfoReq.setBillReceiptInfo(billReceiptReq);
-		billReceiptInfoReq.setRequestInfo(new RequestInfo());
+		billReceiptInfoReq.setRequestInfo(new RequestInfo());*/
 		return new ResponseEntity<>(
 				paymentService.updateDemand(billReceiptInfoReq), HttpStatus.OK);
 	}

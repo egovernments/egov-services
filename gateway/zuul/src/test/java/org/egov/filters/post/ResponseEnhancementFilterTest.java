@@ -4,6 +4,7 @@ import com.netflix.util.Pair;
 import com.netflix.zuul.context.RequestContext;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 import java.util.List;
@@ -26,6 +27,9 @@ public class ResponseEnhancementFilterTest {
         final MockHttpServletResponse response = new MockHttpServletResponse();
         response.setStatus(400);
         RequestContext.getCurrentContext().setResponse(response);
+        final MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setRequestURI("http://host/api/v1");
+        RequestContext.getCurrentContext().setRequest(request);
 
         filter.run();
 

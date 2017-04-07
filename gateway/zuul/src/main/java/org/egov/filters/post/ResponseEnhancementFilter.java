@@ -12,6 +12,7 @@ import static org.egov.constants.RequestContextConstants.CORRELATION_ID_KEY;
 public class ResponseEnhancementFilter extends ZuulFilter {
 
     private static final String CORRELATION_HEADER_NAME = "x-correlation-id";
+    private static final String RECEIVED_RESPONSE_MESSAGE = "Received response code: {} from upstream URI {}";
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
@@ -38,7 +39,8 @@ public class ResponseEnhancementFilter extends ZuulFilter {
 
     private String getCorrelationId() {
         RequestContext ctx = RequestContext.getCurrentContext();
-        logger.info("Received response code: {} from upstream", ctx.getResponse().getStatus());
+        logger.info(RECEIVED_RESPONSE_MESSAGE,
+            ctx.getResponse().getStatus(), ctx.getRequest().getRequestURI());
         return (String) ctx.get(CORRELATION_ID_KEY);
     }
 }

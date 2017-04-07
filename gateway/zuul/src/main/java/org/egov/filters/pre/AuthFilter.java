@@ -7,6 +7,8 @@ import org.egov.contract.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.netflix.zuul.filters.ProxyRequestHelper;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
@@ -52,7 +54,7 @@ public class AuthFilter extends ZuulFilter {
         RequestContext ctx = RequestContext.getCurrentContext();
         String authToken = (String) ctx.get(AUTH_TOKEN_KEY);
         try {
-            User user = getUser(authToken);
+            User user = getUser(authToken, ctx);
             ctx.set(USER_INFO_KEY, user);
         } catch (HttpClientErrorException ex) {
             logger.error(RETRIEVING_USER_FAILED_MESSAGE, ex);
@@ -61,9 +63,12 @@ public class AuthFilter extends ZuulFilter {
         return null;
     }
 
-    private User getUser(String authToken) {
+    private User getUser(String authToken, RequestContext ctx) {
         String authURL = String.format("%s%s%s", authServiceHost, authUri, authToken);
-        return restTemplate.postForObject(authURL, null, User.class);
+        final HttpHeaders headers = new HttpHeaders();
+        headers.add(CORRELATION_ID_HEADER_NAME, (String) ctx.get(CORRELATION_ID_KEY));
+        final HttpEntity<Object> httpEntity = new HttpEntity<>(null, headers);
+        return restTemplate.postForObject(authURL, httpEntity, User.class);
     }
 
     private void abortWithException(RequestContext ctx, HttpClientErrorException ex) {

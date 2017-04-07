@@ -73,10 +73,11 @@ public class AuthFilterTest {
         ctx.setRequest(request);
         ctx.setResponse(new MockHttpServletResponse());
         String authUrl = String.format("%s%s%s", authServiceHost, authUri, authToken);
-        when(restTemplate.postForObject(authUrl, null, User.class))
+        when(restTemplate.postForObject(eq(authUrl), any(), eq(User.class)))
             .thenThrow(new HttpClientErrorException(HttpStatus.UNAUTHORIZED));
 
         authFilter.run();
+
         assertFalse(ctx.sendZuulResponse());
         verify(proxyRequestHelper).setResponse(eq(401), any(), any());
     }

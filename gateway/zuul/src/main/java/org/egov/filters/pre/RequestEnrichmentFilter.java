@@ -29,7 +29,6 @@ public class RequestEnrichmentFilter extends ZuulFilter {
         Arrays.asList(MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE);
     private static final String USER_SERIALIZATION_MESSAGE = "Failed to serialize user";
     private final ObjectMapper objectMapper;
-    private static final String CORRELATION_HEADER_NAME = "x-correlation-id";
     private static final String USER_INFO_HEADER_NAME = "x-user-info";
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -79,7 +78,7 @@ public class RequestEnrichmentFilter extends ZuulFilter {
     }
 
     private void addCorrelationIdHeader(RequestContext ctx) {
-        ctx.addZuulRequestHeader(CORRELATION_HEADER_NAME, getCorrelationId());
+        ctx.addZuulRequestHeader(CORRELATION_ID_HEADER_NAME, getCorrelationId());
     }
 
     private void modifyRequestBody() {

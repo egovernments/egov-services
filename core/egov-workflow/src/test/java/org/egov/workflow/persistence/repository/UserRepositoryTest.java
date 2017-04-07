@@ -36,9 +36,9 @@ public class UserRepositoryTest {
 	public void findUserById() throws Exception {
 
 		final RequestInfo requestInfo = RequestInfo.builder().apiId("org.egov.pgr").ver("1.0").msgId("654654")
-				.authToken("cdaaa28a-f88a-429e-a710-b401097a165c").requesterId("67").build();
+				.authToken("cdaaa28a-f88a-429e-a710-b401097a165c").build();
 
-		final User user = User.builder().id(67l).build();
+		final User user = User.builder().id(67L).build();
 
 		server.expect(once(), requestTo("http://host/pgr/_search")).andExpect(method(HttpMethod.POST))
 				.andExpect(content().string(new Resources().getFileContents("searchUserByIdRequest.json")))

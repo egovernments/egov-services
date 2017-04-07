@@ -92,11 +92,16 @@ public class PgrWorkflowTest {
 		position.setName("Accounts Officer");
 		return position;
 	}
-
+	
+	private org.egov.common.contract.request.User  getUserInfo()
+	{
+		return org.egov.common.contract.request.User.builder().id(16L).build();
+	}
+	
 	private ProcessInstance getProcessInstance() {
 		final Map<String, Attribute> valuesMap = new HashMap<String, Attribute>();
-		final RequestInfo requestInfo = new RequestInfo("apiId", "ver", new Date(), "start", "did", "key", "msgId", "1",
-				null, null, null);
+		final RequestInfo requestInfo = new RequestInfo();
+		requestInfo.setUserInfo(getUserInfo());
 		final Value complaintType = new Value(COMPLAINT_TYPE_CODE, "C001");
 		final Value boundary = new Value(BOUNDARY_ID, "1");
 		final List<Value> value1 = Collections.singletonList(complaintType);
@@ -118,11 +123,11 @@ public class PgrWorkflowTest {
 		expectedState.setId(119L);
 		expectedState.setComments("Workflow Terminated");
 
-		final RequestInfo requestInfo = RequestInfo.builder().requesterId("67").build();
+		final RequestInfo requestInfo = RequestInfo.builder().userInfo(getUserInfo()).build();
 
 		final Role role = Role.builder().name("citizen").id(1l).description("CITIZEN").build();
 
-		final User user = User.builder().id(67l).roles(Collections.singleton(role)).build();
+		final User user = User.builder().id(67L).roles(Collections.singleton(role)).build();
 
 		final UserResponse expectedUserRequest = UserResponse.builder().responseInfo(new ResponseInfo())
 				.user(Collections.singletonList(user)).build();
@@ -134,7 +139,7 @@ public class PgrWorkflowTest {
 
 		when(stateService.getStateById(119L)).thenReturn(expectedState);
 
-		when(userRepository.findUserById(67L)).thenReturn(expectedUserRequest);
+		when(userRepository.findUserById(16L)).thenReturn(expectedUserRequest);
 
 		workflow.end(TENANT_ID, expectedProcessInstance);
 	}
@@ -208,7 +213,7 @@ public class PgrWorkflowTest {
         Task task = getTask();
         State state = prepareState();
         when(stateService.update(new State())).thenReturn(state);
-        when(stateService.getStateById(2l)).thenReturn(state);
+        when(stateService.getStateById(1l)).thenReturn(state);
         Task actualResponse = pgrWorkflow.update("ap.public", task);
         assertEquals(actualResponse.getId(), state.getId().toString());
     }
@@ -216,7 +221,7 @@ public class PgrWorkflowTest {
     private Task getTask() {
         final Map<String, Attribute> valuesMap = new HashMap<String, Attribute>();
         final RequestInfo requestInfo =
-            new RequestInfo("apiId", "ver", new Date(), "start", "did", "key", "msgId", "1", null, null, null);
+            new RequestInfo();
         final Value stateId = new Value(STATE_ID, "2");
         final Value stateDetails = new Value(STATE_DETAILS, "1");
         final Value comments = new Value("approvalComments", "1");
@@ -233,7 +238,7 @@ public class PgrWorkflowTest {
         valuesMap.put(STATE_ID, attributeStateId);
         valuesMap.put(STATE_DETAILS, attributeStateDetails);
         valuesMap.put("approvalComments", attributeComments);
-        Task task = Task.builder().attributes(valuesMap).assignee("3").id("1").sender("narasappa").status("PROCESSING").requestInfo(requestInfo)
+        Task task = Task.builder().attributes(valuesMap).assignee("3").id("2").sender("narasappa").status("PROCESSING").requestInfo(requestInfo)
                 .createdDate(new Date()).build();
         return task;
     }

@@ -56,7 +56,7 @@ public class PgrWorkflow implements Workflow {
         state.setOwnerPosition(resolveAssignee(processInstance));
         state.setExtraInfo(processInstance.getValueForKey("statusDetails"));
         state.setDateInfo(processInstance.getCreatedDate());
-        setAuditableFields(state, Long.valueOf(processInstance.getRequestInfo().getRequesterId()));
+        setAuditableFields(state, Long.valueOf(processInstance.getRequestInfo().getUserInfo().getId()));
         stateService.create(state);
         final Value value = new Value(STATE_ID, String.valueOf(state.getId()));
         final List<Value> values = Collections.singletonList(value);
@@ -89,11 +89,11 @@ public class PgrWorkflow implements Workflow {
             state.setDateInfo(processInstance.getCreatedDate());
             // TODO OWNER POSITION condition to be checked
             UserResponse user = userRepository
-                .findUserById(Long.valueOf(processInstance.getRequestInfo().getRequesterId()));
+                .findUserById(Long.valueOf(processInstance.getRequestInfo().getUserInfo().getId()));
             if (user.isGrievanceOfficer()) {
                 state.setOwnerPosition(state.getOwnerPosition());
             }
-            setAuditableFields(state, Long.valueOf(processInstance.getRequestInfo().getRequesterId()));
+            setAuditableFields(state, Long.valueOf(processInstance.getRequestInfo().getUserInfo().getId()));
             stateService.update(state);
             processInstance.setStateId(state.getId());
             processInstance.setAssignee(state.getOwnerPosition());
@@ -192,7 +192,7 @@ public class PgrWorkflow implements Workflow {
             state.setOwnerPosition(Long.valueOf(task.getAssignee()));
             state.setExtraInfo(task.getValueForKey(STATE_DETAILS));
             state.setDateInfo(task.getCreatedDate());
-            setAuditableFields(state, Long.valueOf(task.getRequestInfo().getRequesterId()));
+            setAuditableFields(state, Long.valueOf(task.getRequestInfo().getUserInfo().getId()));
             stateService.update(state);
             if (state.getId() != null) {
                 task.setId(state.getId().toString());

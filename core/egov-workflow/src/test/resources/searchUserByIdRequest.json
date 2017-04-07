@@ -7,7 +7,6 @@
         "did": null,
         "key": null,
         "msgId": null,
-        "requesterId": null,
         "authToken": null,
         "correlationId": null,
         "userInfo": null

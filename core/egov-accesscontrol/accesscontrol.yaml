@@ -32,10 +32,10 @@ paths:
         - name: roles
           in: query
           required: false
-          description: The list of role id's.
+          description: The list of role codes.
           type: array
           items:
-            type: integer
+            type: string
           format: int64
         - name: features
           in: query

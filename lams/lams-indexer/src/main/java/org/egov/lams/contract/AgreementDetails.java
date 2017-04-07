@@ -94,7 +94,7 @@ public class AgreementDetails {
 		this.tradeLicenseNumber = agreement.getTradelicenseNumber();
 		this.paymentCycle = agreement.getPaymentCycle().toString();
 		// FIX ME change rentincrement type to int
-		this.rentIncrementMethod = agreement.getRentIncrementMethod().toString();
+		this.rentIncrementMethod = agreement.getRentIncrementMethod().getType();
 		this.orderNumber = agreement.getOrderNo();
 		this.orderDate = agreement.getOrderDate();
 		this.rrReadingNumber = agreement.getRrReadingNo();

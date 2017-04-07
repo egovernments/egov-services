@@ -57,3 +57,4 @@ public class ObjectMapperTest {
         private String bar2;
     }
 }
+

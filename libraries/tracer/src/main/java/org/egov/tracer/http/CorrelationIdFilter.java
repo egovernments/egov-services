@@ -73,7 +73,7 @@ public class CorrelationIdFilter implements Filter {
         final String correlationIdFromRequestBody = getCorrelationIdFromRequestBody(httpRequest);
         if (correlationIdFromRequestBody == null) {
             log.warn(NO_CORRELATION_ID_IN_BODY_MESSAGE, httpRequest.getRequestURI());
-            RequestContext.setId(getRandomCorrelationId());
+            setCorrelationIdFromHeader(httpRequest);
         } else {
             log.info(FOUND_CORRELATION_ID_IN_BODY_MESSAGE, correlationIdFromRequestBody, httpRequest.getRequestURI());
             RequestContext.setId(correlationIdFromRequestBody);

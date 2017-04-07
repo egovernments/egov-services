@@ -1,3 +1,41 @@
+const month = [{
+        id: 0,
+        name: "January"
+    }, {
+        id: 1,
+        name: "February"
+    }, {
+        id: 2,
+        name: "March"
+    }, {
+        id: 3,
+        name: "April"
+    }, {
+        id: 4,
+        name: "May"
+    }, {
+        id: 5,
+        name: "June"
+    }, {
+        id: 6,
+        name: "July"
+    }, {
+        id: 7,
+        name: "August"
+    }, {
+        id: 8,
+        name: "September"
+    }, {
+        id: 9,
+        name: "October"
+    }, {
+        id: 10,
+        name: "November"
+    }, {
+        id: 11,
+        name: "December"
+    }
+];
 
 class EmployeeSearch extends React.Component {
   constructor(props) {
@@ -25,44 +63,7 @@ class EmployeeSearch extends React.Component {
   componentWillMount()
   {
     var date = new Date();
-    var _year, month = [{
-            id: 0,
-            name: "January"
-        }, {
-            id: 1,
-            name: "February"
-        }, {
-            id: 2,
-            name: "March"
-        }, {
-            id: 3,
-            name: "April"
-        }, {
-            id: 4,
-            name: "May"
-        }, {
-            id: 5,
-            name: "June"
-        }, {
-            id: 6,
-            name: "July"
-        }, {
-            id: 7,
-            name: "August"
-        }, {
-            id: 8,
-            name: "September"
-        }, {
-            id: 9,
-            name: "October"
-        }, {
-            id: 10,
-            name: "November"
-        }, {
-            id: 11,
-            name: "December"
-        }
-    ];
+    var _year;
 
     try {
         _year = getCommonMaster("egov-common-masters", "calendaryears", "CalendarYear").responseJSON["CalendarYear"] || [];
@@ -80,9 +81,7 @@ class EmployeeSearch extends React.Component {
     })
   }
 
-  handleChange(e,name)
-  {
-
+  handleChange(e,name) {  
       this.setState({
           searchSet:{
               ...this.state.searchSet,
@@ -90,6 +89,23 @@ class EmployeeSearch extends React.Component {
           }
       })
 
+      if(name == "year") {
+          if(e.target.value == new Date().getFullYear()) {
+                var currentMonthId = new Date().getMonth();
+                var _months = month.filter(val => {
+                    return (val.id <= currentMonthId);
+                });
+                this.setState({
+                    ...this.state,
+                    month: _months
+                })
+          } else {
+                this.setState({
+                    ...this.state,
+                    month
+                })
+          }
+      } 
   }
 
 

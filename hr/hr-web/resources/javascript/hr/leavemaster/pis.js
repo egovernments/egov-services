@@ -1,112 +1,211 @@
 class PersonalInform extends React.Component {
   constructor(props) {
     super(props);
-    this.state={employees:[],searchSet:{
-    name:"",
-    employee:"",
-    department:"",
-    designation:"",
-    leaveType:"",
-    noOfDay:"",
-    noOfLeave:"",
-    calendarYear:""},isSearchClicked:false,departmentsList:[],designationList:[],leave:[]}
-    this.handleChange=this.handleChange.bind(this);
-    this.search=this.search.bind(this);
-    this.addOrUpdate=this.addOrUpdate.bind(this);
+    this.state = {
+        employees: [],
+        searchSet: {
+            name: "",
+            employee: "",
+            department: "",
+            designation: "",
+            leaveType: "",
+            noOfDay: "",
+            noOfLeave: "",
+            calendarYear: new Date().getFullYear()
+        },
+        isSearchClicked: false,
+        departmentsList: [],
+        designationList: [],
+        leave: [],
+        years: []
+    } 
+    this.handleChange = this.handleChange.bind(this);
+    this.search = this.search.bind(this);
+    this.addOrUpdate = this.addOrUpdate.bind(this);
+    this.handleChangeSrchRslt = this.handleChangeSrchRslt.bind(this);
   }
 
 
   componentDidMount(){
-    if(getUrlVars()["type"]==="view")
-    {
-      for (var variable in this.state.searchSet)
-        document.getElementById(variable).disabled = true;
-      }
+    
   }
 
-  search(e)
-  {
+  search(e) {
     let {
-    name,
-    employee,
-    department,
-    designation,
-    leaveType,
-    noOfDay,calendarYear}=this.state.searchSet;
+        name,
+        employee,
+        department,
+        designation,
+        leaveType,
+        noOfDay,
+        calendarYear
+    } = this.state.searchSet;
     e.preventDefault();
     //call api call
-    var employees=[];
-    //  employees=commonApiPost("hr-employee","employees","_search",{tenantId}).responseJSON || [];
-    for(var i=1;i<=10;i++)
-    {
+    try {
+        var _emps = commonApiPost("hr-employee","employees","_search",{
+            tenantId,
+            departmentId: department || null,
+            designationId: designation || null,
+            code: employee || null,
+            employeeName: name || null
+        }).responseJSON["Employee"] || [];
+    } catch(e) {
+        var _emps = [];
+    }
+
+    try {
+        var leaveBal = commonApiPost("hr-leave", "leaveopeningbalances", "_search", {
+            tenantId
+        }).responseJSON["LeaveOpeningBalance"] || [];
+    } catch(e) {
+        var leaveBal = [];
+    }
+    var employees = [];
+    for (var i = 0; i < _emps.length; i++) {
+        var _noDays, _leaveId, _createdDate, _lastModifiedDate;
+        for(var j = 0; j < leaveBal.length; j++) {
+            if(leaveBal[j].employee == _emps[i].id && leaveBal[j].calendarYear == this.state.searchSet.calendarYear && leaveBal[j].leaveType && leaveBal[j].leaveType.id == this.state.searchSet.leaveType) {
+                _noDays = leaveBal[i].noOfDays;
+                _leaveId = leaveBal[i].id;
+                _createdDate = leaveBal[i].createdDate
+                _lastModifiedDate = leaveBal[i].lastModifiedDate;
+                break;
+            }
+        }
+
         employees.push({
-            name:"murali",employee:'xyz',noOfLeave:""
+            name: _emps[i].name,
+            employee: _emps[i].id,
+            noOfDays: _noDays || "",
+            code: _emps[i].code,
+            leaveId: _leaveId || "",
+            lastModifiedDate: _lastModifiedDate || "",
+            createdDate: _createdDate
         })
     }
     this.setState({
-      isSearchClicked:true,
-      employees
-    })
-
-
+        isSearchClicked: true,
+        employees
+    })  
   }
-  addOrUpdate(e,mode){
+
+  addOrUpdate(e){
     e.preventDefault();
-      console.log(this.state.searchSet);
-      if (mode==="update") {
-          console.log("update");
+    var tempEmps = [];
+    for(var i=0; i<this.state.employees.length; i++) {
+        if(this.state.employees[i].noOfDays) {
+            tempEmps.push({
+                "id": this.state.employees[i].leaveId || null, 
+                "employee": this.state.employees[i].employee,
+                "calendarYear": this.state.searchSet.calendarYear,
+                "leaveType": {
+                    "id": this.state.searchSet.leaveType
+                },
+                "noOfDays": this.state.employees[i].noOfDays,
+                "createdDate": this.state.employees[i].createdDate,
+                "lastModifiedDate": this.state.employees[i].lastModifiedDate,
+                tenantId
+            })
+        }
+    }
 
-      } else {
-        this.setState({searchSet:{
-        name:"",
-        employee:"",
-        department:"",
-        designation:"",
-        leaveType:"",
-        noOfDay:"",
-        calendarYear:"",
-        noOfLeave:""} })
-      }
-
+    if(tempEmps.length) {
+        if(getUrlVars()["type"] == "update") {
+            var counter = tempEmps.length, breakOut = 0;
+            for(let i=0; i < tempEmps.length; i++) {
+                $.ajax({
+                    url: baseUrl + "/hr-leave/leaveopeningbalances" + (tempEmps[i].id ? "/" + tempEmps[i].id + "/_update" : "/_create"),
+                    type: 'POST',
+                    dataType: 'json',
+                    data: JSON.stringify({
+                        RequestInfo: requestInfo,
+                        LeaveOpeningBalance: [tempEmps[i]]
+                    }),
+                    async: false,
+                    contentType: 'application/json',
+                    headers: {
+                        'auth-token': authToken
+                    },
+                    success: function(res) {
+                        counter--;
+                        if(counter == 0 && breakOut == 0) {
+                            showSuccess("Updated successfully.");
+                        }
+                    },
+                    error: function(err) {
+                        showError(err);
+                        breakOut = 1;
+                    }
+                });
+            }
+        } else {
+            //Call and create leave
+            $.ajax({
+                url: baseUrl + "/hr-leave/leaveopeningbalances/_create",
+                type: 'POST',
+                dataType: 'json',
+                data: JSON.stringify({
+                    RequestInfo: requestInfo,
+                    LeaveOpeningBalance: tempEmps
+                }),
+                async: false,
+                contentType: 'application/json',
+                headers: {
+                    'auth-token': authToken
+                },
+                success: function(res) {
+                    showSuccess("Added successfully.");
+                },
+                error: function(err) {
+                    showError(err);
+                }
+            });
+        }
+    } else {
+        showError("Nothing to update.");
+    }
+    
   }
 
 
-  componentWillMount()
-  {
+  componentWillMount() {
+    try {
+        var _leaveTypes = getCommonMaster("hr-leave", "leavetypes", "LeaveType").responseJSON["LeaveType"] || [];
+    } catch(e) {
+        var _leaveTypes = [];
+    }
 
+    try {
+        var _years = getCommonMaster("egov-common-masters", "calendaryears", "CalendarYear").responseJSON["CalendarYear"] || [];
+    } catch(e) {
+        var _years = [];
+    }
     this.setState({
       departmentsList:assignments_department,
       designationList:assignments_designation,
-      leave:[{
-              id: 1,
-              name: "Casual",
-              description: "",
-              orderno: "1",
-              active: true
-          },
-          {
-              id: 2,
-              name: "Gazette",
-              description: "",
-              orderno: "1",
-              active: true
-          }]
+      leave: _leaveTypes,
+      years: _years
   })
   }
 
-  handleChange(e,noOfLeave,name)
-  {
-
+  handleChange(e, name) {
       this.setState({
           searchSet:{
               ...this.state.searchSet,
               [name]:e.target.value,
-              [noOfLeave]:e.target.value
-
           }
       })
   }
 
+  handleChangeSrchRslt(e, name, ind) {
+    var _emps = Object.assign([], this.state.employees);
+    _emps[ind][name] = e.target.value;
+    this.setState({
+        ...this.state,
+        employees: _emps
+    })
+  }
 
   close(){
       // widow.close();
@@ -133,17 +232,30 @@ class PersonalInform extends React.Component {
   }
 
   render() {
-    console.log(this.state.searchSet);
-    let {handleChange,search,updateTable,addOrUpdate}=this;
-    let {isSearchClicked,employees}=this.state;
-    let {name,
-    employee,
-    department,
-    designation,
-    employeeTypeCode,
-    functionaryCode,
-    leaveType,noOfDay,calendarYear}=this.state.searchSet;
-    let mode=getUrlVars()["type"];
+    let {
+        handleChange,
+        search,
+        updateTable,
+        addOrUpdate,
+        handleChangeSrchRslt
+    } = this;
+    let {
+        isSearchClicked,
+        employees
+    } = this.state;
+    let {
+        name,
+        employee,
+        department,
+        designation,
+        employeeTypeCode,
+        functionaryCode,
+        leaveType,
+        noOfDay,
+        calendarYear
+    } = this.state.searchSet;
+    let mode = getUrlVars()["type"];
+
     const renderOption=function(list)
     {
         if(list)
@@ -186,29 +298,33 @@ class PersonalInform extends React.Component {
       }
 
     }
-    const renderBody=function()
+    const renderBody = function()
     {
-      return employees.map((item,index)=>
+      return employees.map((item, index)=>
       {
             return (<tr key={index}>
                     <td data-label="name">{item.name}</td>
-                    <td data-label="employee">{item.employee}</td>
+                    <td data-label="code">{item.code}</td>
                     <td data-label="noOfDay">
-                    <input type="number" id="noOfDay" name="noOfDay"  value={noOfDay}
-                      onChange={(e)=>{handleChange(e,noOfLeave,"noOfDay")}}/>
+                    <input type="number" id={item.id} name="noOfDays"  value={item.noOfDays}
+                      onChange={(e)=>{handleChangeSrchRslt(e, "noOfDays", index)}}/>
                     </td>
                 </tr>
             );
 
       })
     }
-    const showActionButton=function() {
-      if((!mode) ||mode==="update")
-      {
-        return (<button type="submit" className="btn btn-submit">{mode?"Update":"Add"}</button>);
+    const showActionButton = function() {
+      if(((!mode) || mode==="update") && employees.length) {
+        return (<button type="button" className="btn btn-submit" onClick={(e) => {addOrUpdate(e)}}>{mode?"Update":"Add"}</button>);
       }
     };
 
+    const showCloseButton = function() {
+        if(employees.length) {
+            return (<button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>);
+        }
+    }
 
     return (
       <div>
@@ -278,14 +394,14 @@ class PersonalInform extends React.Component {
                   <div className="col-sm-6">
                       <div className="row">
                           <div className="col-sm-6 label-text">
-                            <label for="">Leave Type  </label>
+                            <label for="">Leave Type  </label> <span className="text-danger">*</span>
                           </div>
                           <div className="col-sm-6">
                           <div className="styled-select">
                               <select id="leaveType" name="leaveType" value={leaveType} onChange={(e)=>{
                                   handleChange(e,"leaveType")
-                              }}>
-                                <option>Select LeaveType</option>
+                              }} required>
+                                <option value="">Select Leave Type</option>
                                 {renderOption(this.state.leave)}
                              </select>
                           </div>
@@ -296,16 +412,16 @@ class PersonalInform extends React.Component {
                     <div className="col-sm-6">
                         <div className="row">
                             <div className="col-sm-6 label-text">
-                                <label for=""> Calendar</label>
+                                <label for=""> Calendar Year</label> <span className="text-danger">*</span>
                             </div>
                             <div className="col-sm-6">
                             <div className="text-no-ui">
-                                <span>
-                                    <i className="glyphicon glyphicon-calendar"></i>
-                                </span>
-                                <input type="date" name="calendarYear" value={calendarYear} id="calendarYear"
-                                onChange={(e)=>{handleChange(e,"calendarYear")}}/>
-
+                                <select id="calendarYear" name="calendarYear" value={calendarYear} onChange={(e)=>{
+                                  handleChange(e,"calendarYear")
+                                }} required>
+                                    <option value="">Select Calendar Year</option>
+                                    {renderOption(this.state.years)}
+                                </select>
                             </div>
                             </div>
                         </div>
@@ -321,19 +437,30 @@ class PersonalInform extends React.Component {
           {showTable()}
           <div className="text-center">
           {showActionButton()} &nbsp;&nbsp;
-          <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>
+          {showCloseButton()}
           </div>
       </div>
     );
   }
 }
 
-
-
-
-
-
 ReactDOM.render(
   <PersonalInform />,
   document.getElementById('root')
 );
+
+function showError(msg) {
+    $('#error-alert-span').text(msg);
+    $('#error-alert-div').show();
+    setTimeout(function() {
+        $('#error-alert-div').hide();
+    }, 3000);
+}
+
+function showSuccess(msg) {
+    $('#success-alert-span').text(msg);
+    $('#success-alert-div').show();
+    setTimeout(function() {
+        $('#success-alert-div').hide();
+    }, 3000);
+}

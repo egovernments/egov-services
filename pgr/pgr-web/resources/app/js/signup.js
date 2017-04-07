@@ -155,7 +155,7 @@ $(document).ready(function(){
 						data : JSON.stringify(reqObj),
 						contentType: "application/json",
 						success : function(userResponse){
-							bootbox.alert('Your account created successfully', function(){ 
+							bootbox.alert(translate('core.account.created.successfully'), function(){ 
 								window.open("../index.html","_self");
 							});
 						},

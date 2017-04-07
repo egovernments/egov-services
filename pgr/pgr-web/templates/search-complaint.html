@@ -85,16 +85,10 @@
 										<div class="col-md-3 col-sm-4 add-margin">
 											<select name="location_id" id="ct-location" class="form-control"></select>
 										</div>
-									</div>
-									<div class="form-group">
-										<div class="col-md-3 add-margin">
-											<label>When </label>
-										</div>
 										<div class="col-md-3 col-sm-4 add-margin">
 											<select id="when_date" class="form-control"
 												data-first-option="false">
-												<option value="">Select
-												</option>
+												<option value="">Select Date Range</option>
 												<option value="all">All</option>
 												<option value="lastsevendays">In Last 7 days</option>
 												<option value="lastthirtydays">In Last 30 days</option>
@@ -104,17 +98,19 @@
 										</div>
 										<div class="col-md-3 col-sm-4 add-margin">
 											<input type="text" name="start_date" class="form-control datepicker checkdate" id="start_date" 
-											data-inputmask="'mask': 'd-m-y'" placeholder="From Date" />
+											data-inputmask="'mask': 'd-m-y'" data-translate="core.lbl.date.fromdate" />
 										</div>
+									</div>
+									<div class="form-group">
 										<div class="col-md-3 col-sm-4 add-margin">
 											<input type="text" name="end_date" class="form-control datepicker checkdate" id="end_date" 
-											data-inputmask="'mask': 'd-m-y'" placeholder="To Date" />
+											data-inputmask="'mask': 'd-m-y'" data-translate="core.lbl.date.todate" />
 										</div>
 									</div>
 									<div class="form-group">
 										<div class="col-md-3 col-xs-12 add-margin">
 											<a href="javascript:void(0);" id="toggle-searchcomp"
-												class="btn btn-secondary">More..</a>
+												class="btn btn-secondary" data-translate="core.lbl.more"></a>
 										</div>
 									</div>
 									<div class="form-group show-searchcomp-more display-hide">
@@ -145,19 +141,19 @@
 						<div class="form-group">
 							<div class="text-center">
 								<button type="button" id="searchComplaints" class="btn btn-primary" data-translate="core.lbl.search"></button>
-								<button type="reset" class="btn btn-default">Reset</button>
+								<button type="reset" class="btn btn-default" data-translate="core.lbl.reset"></button>
 								<a href="javascript:void(0);" id="closeComplaints" class="btn btn-default" onclick="self.close()" data-translate="core.lbl.close"></a>
 							</div>
 						</div>
 						</form>
 					</div>
 				</div>
-				<div class="head-font table-header">The search result is</div>
-				<table class="table table-bordered no-wrap" id="complaintSearchResults">
+				<!-- <div class="head-font table-header">The search result is</div> -->
+				<table class="table table-bordered no-wrap hide" id="complaintSearchResults">
 					<thead>
 						<th data-translate="pgr.lbl.complaintnumber"></th>
 						<th data-translate="pgr.lbl.grievance.type"></th>
-						<th>Name</th>
+						<th data-translate="core.lbl.add.name"></th>
 						<th data-translate="pgr.lbl.grievance.location"></th>
 						<th data-translate="core.lbl.status"></th>
 						<th data-translate="core.lbl.department"></th>

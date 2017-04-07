@@ -93,12 +93,12 @@ $(document).ready(function(){
 		if($.inArray(ext, fileformats) > -1){
 				//do something  
 				if(this.files[0].size > fileSize){
-					bootbox.alert('File size exceeds 5MB limit');
+					bootbox.alert(translate('core.error.file.exceed'));
 					$( this ).val('');	
 					return;
 				}
 			}else{
-				bootbox.alert(ext+" file format is not allowed");
+				bootbox.alert(ext+' '+translate('core.error.fileformat.notallowed'));
 			return;
 		}
 		

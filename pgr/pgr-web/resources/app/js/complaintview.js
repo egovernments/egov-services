@@ -119,7 +119,7 @@ function getComplaint(){
 			updateResponse = JSON.parse(JSON.stringify(response));
 
 			if(response.service_requests.length == 0){
-				bootbox.alert('Not a valid SRN!');
+				bootbox.alert(translate('pgr.error.notvalid.srn'));
 				hideLoader();
 				return;
 			}
@@ -299,7 +299,7 @@ function complaintUpdate(obj){
 					data : formData,
 					success: function(fileresponse){
 						//console.log('file upload success');
-						bootbox.alert('Grievance updated succesfully!', function(){ 
+						bootbox.alert(translate('pgr.msg.success.grievanceupdated'), function(){ 
 							window.location.reload();
 						});
 					},
@@ -310,7 +310,7 @@ function complaintUpdate(obj){
 					}
 				});
 			}else{
-				bootbox.alert('Grievance updated succesfully!', function(){ 
+				bootbox.alert(translate('pgr.msg.success.grievanceupdated'), function(){ 
 					window.location.reload();
 				});
 			}

@@ -71,12 +71,14 @@ requestInfo['RequestInfo'] = RequestInfo.requestInfo;
 	});
 
     $('#toggle-searchcomp').click(function () {
-        if ($(this).html() == "More..") {
-            $(this).html('Less..');
+        if ($(this).data('translate') == "core.lbl.more") {
+            $(this).data('translate', 'core.lbl.less');
+            $(this).html(translate('core.lbl.less'));
             $('.show-searchcomp-more').show();
-			} else {
-            $(this).html('More..');
-            $('.show-searchcomp-more').hide();
+		} else {
+	        $(this).data('translate', 'core.lbl.more');
+	        $(this).html(translate('core.lbl.more'));
+	        $('.show-searchcomp-more').hide();
 		}
 		
 	});
@@ -93,7 +95,7 @@ requestInfo['RequestInfo'] = RequestInfo.requestInfo;
 	    }).serialize();// does the job!
 
 	    if(formData.length == 0){
-	    	bootbox.alert('Atleast one search criteria is required');
+	    	bootbox.alert(translate('core.msg.criteria.required'));
 	    	return;
 	    }
 
@@ -112,6 +114,7 @@ requestInfo['RequestInfo'] = RequestInfo.requestInfo;
 					bootbox.alert('Error loading data!')
 				},
 				complete : function(){
+					$('#complaintSearchResults').removeClass('hide');
 					hideLoader();
 				}
 	        },

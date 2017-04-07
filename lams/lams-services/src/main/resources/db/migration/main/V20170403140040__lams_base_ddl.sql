@@ -60,7 +60,7 @@ CREATE TABLE eglams_agreement
   acknowledgementnumber character varying(64),
   stateid character varying(64),
   tenant_id character varying,
-  goowillamount numeric,
+  goodwillamount numeric,
   closeDate time without time zone,
   timePeriod bigint,
   CONSTRAINT pk_eglams_agreement PRIMARY KEY (id)

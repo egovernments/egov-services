@@ -10,6 +10,7 @@ import org.egov.lams.model.Agreement;
 import org.egov.lams.model.AgreementCriteria;
 import org.egov.lams.model.Demand;
 import org.egov.lams.model.DemandReason;
+import org.egov.lams.model.enums.Status;
 import org.egov.lams.producers.AgreementProducer;
 import org.egov.lams.repository.AgreementRepository;
 import org.egov.lams.repository.DemandRepository;
@@ -106,6 +107,9 @@ public class AgreementService {
 		
 		Agreement agreement = agreementRequest.getAgreement();
 		logger.info("createAgreement service::"+agreement);
+		
+		//FIXME hardcoded value for status enum
+		agreement.setStatus(Status.ACTIVE);
 		
 		ObjectMapper mapper = new ObjectMapper();
 		String agreementValue = null;

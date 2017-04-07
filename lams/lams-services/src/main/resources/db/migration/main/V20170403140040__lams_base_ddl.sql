@@ -22,7 +22,7 @@ CREATE TABLE eglams_rentincrementtype
 CREATE TABLE eglams_agreement
 (
   id bigint NOT NULL,
-  agreement_date timestamp without time zone NOT NULL,
+  agreement_date timestamp without time zone,
   agreement_no character varying(64),
   bank_guarantee_amount numeric(12,2),
   bank_guarantee_date timestamp without time zone,

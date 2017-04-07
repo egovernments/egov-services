@@ -7,57 +7,51 @@ from subprocess import PIPE, Popen
 group = sys.argv[1]
 
 
-def get_deployments():
-    get_deployments_cmd = "kubectl get deployments --namespace=egov -l " \
-                          "'group in ({})'".format(group)
-    filter_headers_cmd = "grep -v NAME"
-    awk_cmd = "awk {'print $1'}"
-    deployments_verbose = Popen(shlex.split(get_deployments_cmd), stdout=PIPE)
-    deployments_verbose_without_headers = Popen(shlex.split(
-        filter_headers_cmd), stdin=deployments_verbose.stdout, stdout=PIPE)
-    deployment_names = Popen(shlex.split(awk_cmd),
-                             stdin=deployments_verbose_without_headers.stdout,
-                             stdout=PIPE)
-    deployments, error = deployment_names.communicate()
+def get_manifests():
+    get_manifests_cmd = "kubectl get svc,deployments --namespace=egov -l " \
+                        "'group in ({})' " \
+                        "-o json".format(group)
+    filter_manifests_cmd = "jq '.items[] | " \
+                           "del(.spec.clusterIP," \
+                           ".spec.sessionAffinity," \
+                           ".spec.type," \
+                           ".status," \
+                           ".metadata.creationTimestamp," \
+                           ".metadata.resourceVersion," \
+                           ".metadata.selfLink," \
+                           ".metadata.uid," \
+                           ".metadata.annotations," \
+                           ".spec.template.spec.dnsPolicy," \
+                           ".spec.template.spec.restartPolicy," \
+                           ".spec.template.spec.securityContext," \
+                           ".spec.template.spec.terminationGracePeriodSeconds," \
+                           ".spec.template.metadata.creationTimestamp," \
+                           ".spec.strategy," \
+                           ".metadata.generation," \
+                           ".spec.template.spec.containers[]?.resources," \
+                           ".spec.template.spec.containers[]?." \
+                           "terminationMessagePath)'"
+    get_full_manifests = Popen(shlex.split(get_manifests_cmd),stdout=PIPE)
+    get_filtered_manifests = Popen(shlex.split(filter_manifests_cmd),
+                                   stdin=get_full_manifests.stdout,
+                                   stdout=PIPE)
+    manifests, error = get_filtered_manifests.communicate()
     if error:
-        raise Exception("Deployments doesn't exist for group {}\nERROR:{}"
+        raise Exception("Manifests doesn't exist for group {}\nERROR:{}"
                         .format(group, error))
-    return deployments.strip().split("\n")
-
-
-def get_image_tags(deployments):
-    deployment_image_tags = {}
-    for d in deployments:
-        deployment_cmd = "kubectl get deployment {} -o json " \
-                         "--namespace=egov".format(d)
-        deployment_config = Popen(shlex.split(deployment_cmd), stdout=PIPE)
-        deployment_json, error = deployment_config.communicate()
-        if error:
-            raise Exception("Cannot find deployment config for {}\nERROR:{}".
-                            format(d, error))
-        deployment = json.loads(deployment_json)
-        containers = deployment['spec']['template']['spec']['containers']
-        image_tags = []
-        for c in containers:
-            name = str(c['name'])
-            image = str(c['image'])
-            image_tags.append({name: image})
-        deployment_image_tags[d] = image_tags
-    return deployment_image_tags
+    return manifests
 
 
 def main():
-    deployments = get_deployments()
-    tags = get_image_tags(deployments)
-    tag_file = "{}/image_tags.txt".format(os.path.dirname(
+    manifests = get_manifests()
+    manifests_file = "{}/kubernetes_manifests.json".format(os.path.dirname(
         os.path.abspath(__file__)))
-    print tag_file
     try:
-        os.remove(tag_file)
+        os.remove(manifests_file)
     except:
         pass
-    with open(tag_file, "w") as f:
-        f.write(json.dumps(tags))
+    with open(manifests_file, "w") as f:
+        f.write(manifests)
 
 
 if __name__ == "__main__":

@@ -1,7 +1,7 @@
 target/
 common-target/
 !.mvn/wrapper/maven-wrapper.jar
-**/*/image_tags.txt
+**/*/kubernetes_manifests.json
 
 ### STS ###
 .apt_generated

@@ -41,15 +41,16 @@
 package org.egov.eis.broker;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.egov.eis.model.LeaveType;
 import org.egov.eis.repository.ElasticSearchRepository;
 import org.egov.eis.service.LeaveAllotmentService;
+import org.egov.eis.service.LeaveApplicationService;
 import org.egov.eis.service.LeaveOpeningBalanceService;
 import org.egov.eis.service.LeaveTypeService;
 import org.egov.eis.web.contract.LeaveAllotmentRequest;
+import org.egov.eis.web.contract.LeaveApplicationSingleRequest;
 import org.egov.eis.web.contract.LeaveOpeningBalanceRequest;
 import org.egov.eis.web.contract.LeaveTypeRequest;
 import org.slf4j.Logger;
@@ -62,67 +63,80 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class LeaveConsumer {
 
-	public static final Logger LOGGER = LoggerFactory.getLogger(LeaveConsumer.class);
+    public static final Logger LOGGER = LoggerFactory.getLogger(LeaveConsumer.class);
 
-	private static final String OBJECT_TYPE_LEAVETYPE = "leavetype";
+    private static final String OBJECT_TYPE_LEAVETYPE = "leavetype";
 
-	@Autowired
-	private LeaveTypeService leaveTypeService;
+    @Value("${kafka.topics.leaveopeningbalance.create.name}")
+    private String leaveOpeningBalanceCreateTopic;
 
-	@Autowired
-	private ElasticSearchRepository elasticSearchRepository;
+    @Value("${kafka.topics.leaveopeningbalance.update.name}")
+    private String leaveOpeningBalanceUpdateTopic;
 
-	@Autowired
-	private LeaveOpeningBalanceService leaveOpeningBalanceService;
+    @Value("${kafka.topics.leavetype.name}")
+    private String leaveTypeTopic;
 
-	@Value("${kafka.topics.leaveopeningbalance.create.name}")
-	private String leaveOpeningBalanceCreateTopic;
+    @Value("${kafka.topics.leaveallotment.create.name}")
+    private String leaveAllotmentCreateTopic;
 
-	@Value("${kafka.topics.leaveopeningbalance.update.name}")
-	private String leaveOpeningBalanceUpdateTopic;
+    @Value("${kafka.topics.leaveallotment.update.name}")
+    private String leaveAllotmentUpdateTopic;
 
-	@Value("${kafka.topics.leavetype.name}")
-	private String leaveTypeTopic;
+    @Value("${kafka.topics.leaveapplication.create.name}")
+    private String leaveApplicationCreateTopic;
 
-	@Autowired
-	private LeaveAllotmentService leaveAllotmentService;
+    @Value("${kafka.topics.leaveapplication.update.name}")
+    private String leaveApplicationUpdateTopic;
 
-	@Value("${kafka.topics.leaveallotment.create.name}")
-	private String leaveAllotmentCreateTopic;
+    @Autowired
+    private LeaveTypeService leaveTypeService;
 
-	@Value("${kafka.topics.leaveallotment.update.name}")
-	private String leaveAllotmentUpdateTopic;
+    @Autowired
+    private ElasticSearchRepository elasticSearchRepository;
 
-	@KafkaListener(containerFactory = "kafkaListenerContainerFactory", topics = {
-			"${kafka.topics.leaveopeningbalance.create.name}", "${kafka.topics.leaveopeningbalance.update.name}",
-			"${kafka.topics.leavetype.name}", "${kafka.topics.leaveallotment.create.name}",
-			"${kafka.topics.leaveallotment.update.name}" })
+    @Autowired
+    private LeaveOpeningBalanceService leaveOpeningBalanceService;
 
-	public void listen(ConsumerRecord<String, String> record) {
-		LOGGER.info("key:" + record.key() + ":" + "value:" + record.value());
-		ObjectMapper objectMapper = new ObjectMapper();
-		try {
-			if (record.topic().equalsIgnoreCase(leaveOpeningBalanceCreateTopic))
-				leaveOpeningBalanceService
-						.create(objectMapper.readValue(record.value(), LeaveOpeningBalanceRequest.class));
-			else if (record.topic().equalsIgnoreCase(leaveOpeningBalanceUpdateTopic))
-				leaveOpeningBalanceService
-						.update(objectMapper.readValue(record.value(), LeaveOpeningBalanceRequest.class));
-			else if (record.topic().equalsIgnoreCase(leaveTypeTopic)) {
-				final SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-				LOGGER.info("SaveLeaveTypeConsumer egov-hr-leavetype leaveTypeService:" + leaveTypeService);
-				final LeaveTypeRequest leaveTypeRequest = leaveTypeService
-						.create(objectMapper.readValue(record.value(), LeaveTypeRequest.class));
-				for (final LeaveType leaveType : leaveTypeRequest.getLeaveType())
-					// TODO : leavetype index id should be changed
-					elasticSearchRepository.index(OBJECT_TYPE_LEAVETYPE,
-							leaveType.getTenantId() + "" + leaveType.getName(), leaveType);
-			} else if (record.topic().equalsIgnoreCase(leaveAllotmentCreateTopic))
-				leaveAllotmentService.create(objectMapper.readValue(record.value(), LeaveAllotmentRequest.class));
-			else if (record.topic().equalsIgnoreCase(leaveAllotmentUpdateTopic))
-				leaveAllotmentService.update(objectMapper.readValue(record.value(), LeaveAllotmentRequest.class));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+    @Autowired
+    private LeaveAllotmentService leaveAllotmentService;
+
+    @Autowired
+    private LeaveApplicationService leaveApplicationService;
+
+    @KafkaListener(containerFactory = "kafkaListenerContainerFactory", topics = {
+            "${kafka.topics.leaveopeningbalance.create.name}", "${kafka.topics.leaveopeningbalance.update.name}",
+            "${kafka.topics.leavetype.name}", "${kafka.topics.leaveallotment.create.name}",
+            "${kafka.topics.leaveallotment.update.name}", "${kafka.topics.leaveapplication.create.name}",
+            "${kafka.topics.leaveapplication.update.name}" })
+
+    public void listen(final ConsumerRecord<String, String> record) {
+        LOGGER.info("key:" + record.key() + ":" + "value:" + record.value());
+        final ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            if (record.topic().equalsIgnoreCase(leaveOpeningBalanceCreateTopic))
+                leaveOpeningBalanceService
+                        .create(objectMapper.readValue(record.value(), LeaveOpeningBalanceRequest.class));
+            else if (record.topic().equalsIgnoreCase(leaveOpeningBalanceUpdateTopic))
+                leaveOpeningBalanceService
+                        .update(objectMapper.readValue(record.value(), LeaveOpeningBalanceRequest.class));
+            else if (record.topic().equalsIgnoreCase(leaveTypeTopic)) {
+                LOGGER.info("SaveLeaveTypeConsumer egov-hr-leavetype leaveTypeService:" + leaveTypeService);
+                final LeaveTypeRequest leaveTypeRequest = leaveTypeService
+                        .create(objectMapper.readValue(record.value(), LeaveTypeRequest.class));
+                for (final LeaveType leaveType : leaveTypeRequest.getLeaveType())
+                    // TODO : leavetype index id should be changed
+                    elasticSearchRepository.index(OBJECT_TYPE_LEAVETYPE,
+                            leaveType.getTenantId() + "" + leaveType.getName(), leaveType);
+            } else if (record.topic().equalsIgnoreCase(leaveAllotmentCreateTopic))
+                leaveAllotmentService.create(objectMapper.readValue(record.value(), LeaveAllotmentRequest.class));
+            else if (record.topic().equalsIgnoreCase(leaveAllotmentUpdateTopic))
+                leaveAllotmentService.update(objectMapper.readValue(record.value(), LeaveAllotmentRequest.class));
+            else if (record.topic().equalsIgnoreCase(leaveApplicationCreateTopic))
+                leaveApplicationService.create(objectMapper.readValue(record.value(), LeaveApplicationSingleRequest.class));
+            else if (record.topic().equalsIgnoreCase(leaveApplicationUpdateTopic))
+                leaveApplicationService.update(objectMapper.readValue(record.value(), LeaveApplicationSingleRequest.class));
+        } catch (final IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -73,9 +73,8 @@ public class LeaveApplicationRowMapper implements RowMapper<LeaveApplication> {
 		leaveType.setLastModifiedBy((Long) rs.getObject("lt_lastModifiedBy"));
 		leaveType.setLastModifiedDate(rs.getDate("lt_lastModifiedDate"));
 		leaveType.setTenantId(rs.getString("la_tenantId"));
-
-		leaveApplication.setLeaveType(leaveType);
-
+		
+                leaveApplication.setLeaveType(leaveType);
 		leaveApplication.setFromDate(rs.getDate("la_fromDate"));
 		leaveApplication.setToDate(rs.getDate("la_toDate"));
 		leaveApplication.setCompensatoryForDate(rs.getDate("la_compensatoryForDate"));
@@ -85,7 +84,7 @@ public class LeaveApplicationRowMapper implements RowMapper<LeaveApplication> {
 		leaveApplication.setFirstHalfleave((Boolean) rs.getObject("la_firstHalfleave"));
 		leaveApplication.setReason(rs.getString("la_reason"));
 		leaveApplication.setStatus(LeaveStatus.fromValue(rs.getString("la_status")));
-		leaveApplication.setStateId(rs.getString("la_stateId"));
+		leaveApplication.setStateId(rs.getLong("la_stateId"));
 		leaveApplication.setCreatedBy((Long) rs.getObject("la_createdBy"));
 		leaveApplication.setCreatedDate(rs.getDate("la_createdDate"));
 		leaveApplication.setLastModifiedBy((Long) rs.getObject("la_lastModifiedBy"));

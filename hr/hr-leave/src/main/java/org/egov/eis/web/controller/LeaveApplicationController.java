@@ -40,6 +40,7 @@
 
 package org.egov.eis.web.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -48,6 +49,7 @@ import org.egov.eis.model.LeaveApplication;
 import org.egov.eis.service.LeaveApplicationService;
 import org.egov.eis.web.contract.LeaveApplicationGetRequest;
 import org.egov.eis.web.contract.LeaveApplicationResponse;
+import org.egov.eis.web.contract.LeaveApplicationSingleRequest;
 import org.egov.eis.web.contract.RequestInfo;
 import org.egov.eis.web.contract.RequestInfoWrapper;
 import org.egov.eis.web.contract.ResponseInfo;
@@ -60,6 +62,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -70,60 +73,116 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/leaveapplications")
 public class LeaveApplicationController {
 
-	private static final Logger logger = LoggerFactory.getLogger(LeaveApplicationController.class);
+    private static final Logger logger = LoggerFactory.getLogger(LeaveApplicationController.class);
 
-	@Autowired
-	private LeaveApplicationService leaveApplicationService;
+    @Autowired
+    private LeaveApplicationService leaveApplicationService;
 
-	@Autowired
-	private ErrorHandler errHandler;
+    @Autowired
+    private ErrorHandler errorHandler;
 
-	@Autowired
-	private ResponseInfoFactory responseInfoFactory;
+    @Autowired
+    private ResponseInfoFactory responseInfoFactory;
 
-	@PostMapping("_search")
-	@ResponseBody
-	public ResponseEntity<?> search(@ModelAttribute @Valid LeaveApplicationGetRequest leaveApplicationGetRequest,
-			BindingResult modelAttributeBindingResult, @RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
-			BindingResult requestBodyBindingResult) {
-		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+    @PostMapping("_search")
+    @ResponseBody
+    public ResponseEntity<?> search(@ModelAttribute @Valid final LeaveApplicationGetRequest leaveApplicationGetRequest,
+            final BindingResult modelAttributeBindingResult, @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+            final BindingResult requestBodyBindingResult) {
+        final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 
-		// validate input params
-		if (modelAttributeBindingResult.hasErrors()) {
-			return errHandler.getErrorResponseEntityForMissingParameters(modelAttributeBindingResult, requestInfo);
-		}
+        // validate input params
+        if (modelAttributeBindingResult.hasErrors())
+            return errorHandler.getErrorResponseEntityForMissingParameters(modelAttributeBindingResult, requestInfo);
 
-		// validate input params
-		if (requestBodyBindingResult.hasErrors()) {
-			return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
-		}
+        // validate input params
+        if (requestBodyBindingResult.hasErrors())
+            return errorHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
 
-		// Call service
-		List<LeaveApplication> leaveApplicationsList = null;
-		try {
-			leaveApplicationsList = leaveApplicationService.getLeaveApplications(leaveApplicationGetRequest);
-		} catch (Exception exception) {
-			logger.error("Error while processing request " + leaveApplicationGetRequest, exception);
-			return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
-		}
+        // Call service
+        List<LeaveApplication> leaveApplicationsList = null;
+        try {
+            leaveApplicationsList = leaveApplicationService.getLeaveApplications(leaveApplicationGetRequest);
+        } catch (final Exception exception) {
+            logger.error("Error while processing request " + leaveApplicationGetRequest, exception);
+            return errorHandler.getResponseEntityForUnexpectedErrors(requestInfo);
+        }
 
-		return getSuccessResponse(leaveApplicationsList, requestInfo);
-	}
+        return getSuccessResponse(leaveApplicationsList, requestInfo);
+    }
 
-	/**
-	 * Populate Response object and returnleaveApplicationsList
-	 * 
-	 * @param leaveApplicationsList
-	 * @return
-	 */
-	private ResponseEntity<?> getSuccessResponse(List<LeaveApplication> leaveApplicationsList, RequestInfo requestInfo) {
-		LeaveApplicationResponse leaveApplicationRes = new LeaveApplicationResponse();
-		leaveApplicationRes.setLeaveApplication(leaveApplicationsList);
-		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
-		responseInfo.setStatus(HttpStatus.OK.toString());
-		leaveApplicationRes.setResponseInfo(responseInfo);
-		return new ResponseEntity<LeaveApplicationResponse>(leaveApplicationRes, HttpStatus.OK);
+    /**
+     * Maps Post Requests for _create & returns ResponseEntity of either LeaveApplicationResponse type or ErrorResponse type
+     * 
+     * @param LeaveApplicationRequest
+     * @param BindingResult
+     * @return ResponseEntity<?>
+     */
 
-	}
+    @PostMapping("_create")
+    @ResponseBody
+    public ResponseEntity<?> create(@RequestBody final LeaveApplicationSingleRequest leaveApplicationRequest,
+            final BindingResult bindingResult) {
+
+        final ResponseEntity<?> errorResponseEntity = validateLeaveApplicationRequest(leaveApplicationRequest,
+                bindingResult);
+        if (errorResponseEntity != null)
+            return errorResponseEntity;
+
+        final LeaveApplication leaveApplication = leaveApplicationService.createLeaveApplication(leaveApplicationRequest);
+        final List<LeaveApplication> applications = new ArrayList<>();
+        applications.add(leaveApplication);
+        return getSuccessResponse(applications, leaveApplicationRequest.getRequestInfo());
+    }
+
+    @PostMapping("/{leaveApplicationId}/_update")
+    @ResponseBody
+    public ResponseEntity<?> update(@RequestBody final LeaveApplicationSingleRequest leaveApplicationRequest,
+            @PathVariable(required = true, name = "leaveApplicationId") final Long leaveApplicationId,
+            final BindingResult bindingResult) {
+
+        final ResponseEntity<?> errorResponseEntity = validateLeaveApplicationRequest(leaveApplicationRequest,
+                bindingResult);
+        if (errorResponseEntity != null)
+            return errorResponseEntity;
+
+        final LeaveApplication leaveApplication = leaveApplicationService.updateLeaveApplication(leaveApplicationRequest);
+        final List<LeaveApplication> applications = new ArrayList<>();
+        applications.add(leaveApplication);
+        return getSuccessResponse(applications, leaveApplicationRequest.getRequestInfo());
+    }
+
+    /**
+     * Populate Response object and returnleaveApplicationsList
+     * 
+     * @param leaveApplicationsList
+     * @return
+     */
+    private ResponseEntity<?> getSuccessResponse(final List<LeaveApplication> leaveApplicationsList,
+            final RequestInfo requestInfo) {
+        final LeaveApplicationResponse leaveApplicationRes = new LeaveApplicationResponse();
+        leaveApplicationRes.setLeaveApplication(leaveApplicationsList);
+        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+        responseInfo.setStatus(HttpStatus.OK.toString());
+        leaveApplicationRes.setResponseInfo(responseInfo);
+        return new ResponseEntity<LeaveApplicationResponse>(leaveApplicationRes, HttpStatus.OK);
+
+    }
+
+    /**
+     * Validate EmployeeRequest object & returns ErrorResponseEntity if there are any errors or else returns null
+     * 
+     * @param EmployeeRequest
+     * @param bindingResult
+     * @return ResponseEntity<?>
+     */
+    private ResponseEntity<?> validateLeaveApplicationRequest(final LeaveApplicationSingleRequest leaveApplicationRequest,
+            final BindingResult bindingResult) {
+        // validate input params that can be handled by annotations
+        if (bindingResult.hasErrors())
+            return errorHandler.getErrorResponseEntityForBindingErrors(bindingResult,
+                    leaveApplicationRequest.getRequestInfo());
+        return null;
+    }
 
 }

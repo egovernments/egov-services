@@ -41,12 +41,14 @@
 package org.egov.eis.repository;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.egov.eis.model.LeaveApplication;
 import org.egov.eis.repository.builder.LeaveApplicationQueryBuilder;
 import org.egov.eis.repository.rowmapper.LeaveApplicationRowMapper;
 import org.egov.eis.web.contract.LeaveApplicationGetRequest;
+import org.egov.eis.web.contract.LeaveApplicationSingleRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -54,19 +56,54 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class LeaveApplicationRepository {
 
-	@Autowired
-	private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
-	@Autowired
-	private LeaveApplicationRowMapper leaveApplicationRowMapper;
+    @Autowired
+    private LeaveApplicationRowMapper leaveApplicationRowMapper;
 
-	@Autowired
-	private LeaveApplicationQueryBuilder leaveApplicationQueryBuilder;
+    @Autowired
+    private LeaveApplicationQueryBuilder leaveApplicationQueryBuilder;
 
-	public List<LeaveApplication> findForCriteria(LeaveApplicationGetRequest leaveApplicationGetRequest) {
-		List<Object> preparedStatementValues = new ArrayList<Object>();
-		String queryStr = leaveApplicationQueryBuilder.getQuery(leaveApplicationGetRequest, preparedStatementValues);
-		List<LeaveApplication> leaveApplications = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), leaveApplicationRowMapper);
-		return leaveApplications;
-	}
+    public List<LeaveApplication> findForCriteria(final LeaveApplicationGetRequest leaveApplicationGetRequest) {
+        final List<Object> preparedStatementValues = new ArrayList<Object>();
+        final String queryStr = leaveApplicationQueryBuilder.getQuery(leaveApplicationGetRequest, preparedStatementValues);
+        final List<LeaveApplication> leaveApplications = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
+                leaveApplicationRowMapper);
+        return leaveApplications;
+    }
+
+    public LeaveApplication saveLeaveApplication(final LeaveApplicationSingleRequest leaveApplicationRequest) {
+        final String leaveApplicationInsertQuery = LeaveApplicationQueryBuilder.insertLeaveApplicationQuery();
+        final Date now = new Date();
+        final LeaveApplication leaveApplication = leaveApplicationRequest.getLeaveApplication();
+        final Object[] obj = new Object[] { leaveApplication.getApplicationNumber(), leaveApplication.getEmployee(),
+                leaveApplication.getLeaveType().getId(),
+                leaveApplication.getFromDate(), leaveApplication.getToDate(), leaveApplication.getCompensatoryForDate(),
+                leaveApplication.getLeaveDays(),
+                leaveApplication.getAvailableDays(), leaveApplication.getHalfdays(), leaveApplication.getFirstHalfleave(),
+                leaveApplication.getReason(),
+                leaveApplication.getStatus().toString(), leaveApplication.getStateId(),
+                leaveApplicationRequest.getRequestInfo().getUserInfo().getId(),
+                now, leaveApplicationRequest.getRequestInfo().getUserInfo().getId(), now, leaveApplication.getTenantId() };
+        jdbcTemplate.update(leaveApplicationInsertQuery, obj);
+        return leaveApplication;
+    }
+
+    public LeaveApplication updateLeaveApplication(final LeaveApplicationSingleRequest leaveApplicationRequest) {
+        final String leaveApplicationInsertQuery = LeaveApplicationQueryBuilder.updateLeaveApplicationQuery();
+        final Date now = new Date();
+        final LeaveApplication leaveApplication = leaveApplicationRequest.getLeaveApplication();
+        final Object[] obj = new Object[] { leaveApplication.getApplicationNumber(), leaveApplication.getEmployee(),
+                leaveApplication.getLeaveType().getId(),
+                leaveApplication.getFromDate(), leaveApplication.getToDate(), leaveApplication.getCompensatoryForDate(),
+                leaveApplication.getLeaveDays(),
+                leaveApplication.getAvailableDays(), leaveApplication.getHalfdays(), leaveApplication.getFirstHalfleave(),
+                leaveApplication.getReason(),
+                leaveApplication.getStatus().toString(), leaveApplication.getStateId(),
+                leaveApplicationRequest.getRequestInfo().getUserInfo().getId(), now, leaveApplication.getId(),
+                leaveApplication.getTenantId() };
+        jdbcTemplate.update(leaveApplicationInsertQuery, obj);
+        return leaveApplication;
+    }
 }

@@ -42,20 +42,95 @@ package org.egov.eis.service;
 
 import java.util.List;
 
+import org.egov.eis.broker.LeaveApplicationProducer;
 import org.egov.eis.model.LeaveApplication;
 import org.egov.eis.repository.LeaveApplicationRepository;
 import org.egov.eis.web.contract.LeaveApplicationGetRequest;
+import org.egov.eis.web.contract.LeaveApplicationSingleRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class LeaveApplicationService {
 
-	@Autowired
-	private LeaveApplicationRepository leaveApplicationRepository;
+    public static final Logger LOGGER = LoggerFactory.getLogger(LeaveApplicationService.class);
 
-	public List<LeaveApplication> getLeaveApplications(LeaveApplicationGetRequest leaveApplicationGetRequest) {
-		return leaveApplicationRepository.findForCriteria(leaveApplicationGetRequest);
-	}
+    @Value("${kafka.topics.leaveapplication.create.name}")
+    private String leaveApplicationCreateTopic;
+
+    @Value("${kafka.topics.leaveapplication.create.key}")
+    private String leaveApplicationCreateKey;
+
+    @Value("${kafka.topics.leaveapplication.update.name}")
+    private String leaveApplicationUpdateTopic;
+
+    @Value("${kafka.topics.leaveapplication.update.key}")
+    private String leaveApplicationUpdateKey;
+
+    @Autowired
+    private LeaveApplicationProducer leaveApplicationProducer;
+
+    @Autowired
+    private LeaveApplicationRepository leaveApplicationRepository;
+
+    public List<LeaveApplication> getLeaveApplications(final LeaveApplicationGetRequest leaveApplicationGetRequest) {
+        return leaveApplicationRepository.findForCriteria(leaveApplicationGetRequest);
+    }
+
+    public LeaveApplication createLeaveApplication(final LeaveApplicationSingleRequest leaveApplicationRequest) {
+        final LeaveApplication leaveApplication = leaveApplicationRequest.getLeaveApplication();
+        String leaveApplicationRequestJson = null;
+        try {
+            final ObjectMapper mapper = new ObjectMapper();
+            leaveApplicationRequestJson = mapper.writeValueAsString(leaveApplicationRequest);
+            LOGGER.info("leaveApplicationRequestJson::" + leaveApplicationRequestJson);
+        } catch (final JsonProcessingException e) {
+            LOGGER.error("Error while converting Leave Application to JSON", e);
+            e.printStackTrace();
+        }
+        try {
+            leaveApplicationProducer.sendMessage(leaveApplicationCreateTopic, leaveApplicationCreateKey,
+                    leaveApplicationRequestJson);
+        } catch (final Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return leaveApplication;
+    }
+
+    public LeaveApplication create(final LeaveApplicationSingleRequest leaveApplicationRequest) {
+        return leaveApplicationRepository.saveLeaveApplication(leaveApplicationRequest);
+    }
+
+    public LeaveApplication updateLeaveApplication(final LeaveApplicationSingleRequest leaveApplicationRequest) {
+        final LeaveApplication leaveApplication = leaveApplicationRequest.getLeaveApplication();
+        String leaveApplicationRequestJson = null;
+        try {
+            final ObjectMapper mapper = new ObjectMapper();
+            leaveApplicationRequestJson = mapper.writeValueAsString(leaveApplicationRequest);
+            LOGGER.info("leaveApplicationRequestJson::" + leaveApplicationRequestJson);
+        } catch (final JsonProcessingException e) {
+            LOGGER.error("Error while converting Leave Application to JSON", e);
+            e.printStackTrace();
+        }
+        try {
+            leaveApplicationProducer.sendMessage(leaveApplicationUpdateTopic, leaveApplicationUpdateKey,
+                    leaveApplicationRequestJson);
+        } catch (final Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return leaveApplication;
+    }
+
+    public LeaveApplication update(final LeaveApplicationSingleRequest leaveApplicationRequest) {
+        return leaveApplicationRepository.updateLeaveApplication(leaveApplicationRequest);
+    }
 
 }

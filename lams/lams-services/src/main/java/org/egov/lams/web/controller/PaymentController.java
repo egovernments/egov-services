@@ -1,5 +1,6 @@
 package org.egov.lams.web.controller;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.AgreementCriteria;
 import org.egov.lams.service.AgreementService;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,24 +31,30 @@ public class PaymentController {
 
 	@PostMapping("/_create")
 	@ResponseBody
-	public ResponseEntity<?> create(@RequestBody RequestInfoWrapper requestInfoWrapper) {
+	public ResponseEntity<?> create(
+			@RequestBody RequestInfoWrapper requestInfoWrapper,
+			@RequestParam String agreementNumber,
+			@RequestParam String acknowledgementNumber) {
 		AgreementCriteria agreementCriteria = new AgreementCriteria();
-		agreementCriteria.setAgreementNumber("LA-17-0001");
+		if (StringUtils.isNotBlank(agreementNumber))
+			agreementCriteria.setAgreementNumber(agreementNumber);
+		else if (StringUtils.isNotBlank(acknowledgementNumber))
+			agreementCriteria.setAcknowledgementNumber(acknowledgementNumber);
 		Agreement agreement = agreementService.searchAgreement(
 				agreementCriteria).get(0);
-		return new ResponseEntity<>(paymentService.generateBillXml(agreement,requestInfoWrapper.getRequestInfo()),
-				HttpStatus.OK);
+		return new ResponseEntity<>(paymentService.generateBillXml(agreement,
+				requestInfoWrapper.getRequestInfo()), HttpStatus.OK);
 	}
-	
-	
+
 	@PostMapping("/_update")
 	@ResponseBody
 	public ResponseEntity<?> update(@RequestBody BillReceiptReq billReceiptReq) {
-		
+		System.out.print("billReceiptReq--->>>lams-services"+billReceiptReq);
 		BillReceiptInfoReq billReceiptInfoReq = new BillReceiptInfoReq();
 		billReceiptInfoReq.setBillReceiptInfo(billReceiptReq);
 		billReceiptInfoReq.setRequestInfo(new RequestInfo());
-		return new ResponseEntity<>(paymentService.updateDemand(billReceiptInfoReq),HttpStatus.OK);
+		return new ResponseEntity<>(
+				paymentService.updateDemand(billReceiptInfoReq), HttpStatus.OK);
 	}
-	
+
 }

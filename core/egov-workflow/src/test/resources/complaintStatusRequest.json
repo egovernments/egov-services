@@ -1,0 +1,19 @@
+{
+  "RequestInfo": {
+    "userInfo": {
+      "roles": [
+        {
+          "id": 1,
+          "name": "Role 1"
+        },
+
+        {
+          "id": 2,
+          "name": "Role 2"
+        }
+      ]
+    }
+  },
+
+  "tenantId": "tenantId"
+}

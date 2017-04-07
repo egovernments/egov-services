@@ -25,4 +25,11 @@ public class ComplaintStatusJpaRepositoryTest {
         List<ComplaintStatus> all = complaintStatusJpaRepository.findAll();
         assertThat(all.size()).isEqualTo(9);
     }
+
+    @Test
+    @Sql(scripts = {"/sql/clearComplaintStatus.sql", "/sql/insertComplaintStatus.sql"})
+    public void test_should_find_by_name() {
+        ComplaintStatus result = complaintStatusJpaRepository.findByName("REJECTED");
+        assertThat(result.getId()).isEqualTo(5);
+    }
 }

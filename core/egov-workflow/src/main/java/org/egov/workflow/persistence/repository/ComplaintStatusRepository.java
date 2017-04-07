@@ -21,5 +21,9 @@ public class ComplaintStatusRepository {
                 .map(org.egov.workflow.persistence.entity.ComplaintStatus::toDomain)
                 .collect(Collectors.toList());
     }
+
+    public ComplaintStatus findByName(String name) {
+        return complaintStatusJpaRepository.findByName(name).toDomain();
+    }
 }
 

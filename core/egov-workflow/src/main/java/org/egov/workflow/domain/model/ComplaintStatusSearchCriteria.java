@@ -4,10 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
-@Getter
+import java.util.List;
+
 @AllArgsConstructor
+@Getter
 @EqualsAndHashCode
-public class ComplaintStatus {
-    private Long id;
-    private String name;
+public class ComplaintStatusSearchCriteria {
+
+    private String complaintStatusName;
+    private List<Long> roles;
 }

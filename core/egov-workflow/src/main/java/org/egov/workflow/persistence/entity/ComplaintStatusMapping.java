@@ -1,6 +1,8 @@
 package org.egov.workflow.persistence.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -12,6 +14,8 @@ import javax.persistence.*;
 @SequenceGenerator(name = ComplaintStatusMapping.SEQ_STATUSMAP,
     sequenceName = ComplaintStatusMapping.SEQ_STATUSMAP,
     allocationSize = 1)
+@AllArgsConstructor
+@NoArgsConstructor
 public class ComplaintStatusMapping extends AbstractPersistable<Long> {
 
     public static final String SEQ_STATUSMAP = "SEQ_EGPGR_COMPLAINTSTATUS_MAPPING";

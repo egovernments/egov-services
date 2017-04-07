@@ -1,6 +1,7 @@
 package org.egov.web.controller;
 
 import org.apache.commons.io.IOUtils;
+import org.egov.TestConfiguration;
 import org.egov.domain.model.RequestContext;
 import org.egov.persistence.entity.Message;
 import org.egov.persistence.repository.MessageRepository;
@@ -9,6 +10,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -26,6 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(MessageController.class)
+@Import(TestConfiguration.class)
 public class MessageControllerTest {
 
     private static final String TENANT_ID = "tenant123";

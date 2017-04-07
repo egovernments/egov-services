@@ -98,9 +98,12 @@ public class DemandConroller {
 			return errHandler.getErrorResponseEntityForBindingErrors(bindingResult, requestInfo);
 		}
 		try {
+			System.out.println("before calling demand repository ");
 			egDemand = demandRepository.findOne(1L);
+			System.out.println("before calling todomain");
 			Demand demand = egDemand.toDomain();
 			for(EgDemandDetails egdemandDetails: egDemand.getEgDemandDetails()){
+				System.out.println("inside the loop");
 				demandDetail = egdemandDetails.toDomain();
 				demandDetails.add(demandDetail);
 			}

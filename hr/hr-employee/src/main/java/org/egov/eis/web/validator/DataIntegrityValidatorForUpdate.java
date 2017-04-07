@@ -173,10 +173,10 @@ public class DataIntegrityValidatorForUpdate implements Validator {
 			if (employeeId != null && assignments.get(index).getId() != null)
 				idsMap.put(assignments.get(index).getId(), index);
 
-			employeeCommonValidator.validateDocumentsForNewAssignment(assignments.get(index), errors, index);
+			//employeeCommonValidator.validateDocumentsForNewAssignment(assignments.get(index), errors, index);
 		}
-		if (!idsMap.isEmpty())
-			validateInvalidIdForAssignment(idsMap, employeeId, tenantId, errors);
+		//if (!idsMap.isEmpty())
+			// validateInvalidIdForAssignment(idsMap, employeeId, tenantId, errors);
 	}
 
 	/**
@@ -206,12 +206,12 @@ public class DataIntegrityValidatorForUpdate implements Validator {
 			for (int index = 0; index < tests.size(); index++) {
 				if (tests.get(index).getId() != null)
 					validateInvalidIdForDepartmentalTest(tests.get(index).getId(), errors);
-				if (tests.get(index).getDocuments() != null && !tests.get(index).getDocuments().isEmpty()
+				/*if (tests.get(index).getDocuments() != null && !tests.get(index).getDocuments().isEmpty()
 						&& employeeRepository.checkForDuplicatesForAnyOneOfGivenCSV("egeis_employeeDocuments", "document",
 								getDocumentsAsCSVs(tests.get(index).getDocuments()))) {
 					errors.rejectValue("employee.test[" + index + "].documents", "concurrent",
 							"document(s) already exists");
-				}
+				}*/
 			}
 		}
 	}
@@ -235,12 +235,12 @@ public class DataIntegrityValidatorForUpdate implements Validator {
 			for (int index = 0; index < educations.size(); index++) {
 				if (educations.get(index).getId() != null)
 					validateInvalidIdForEducationalQualification(educations.get(index).getId(), errors);
-				if (educations.get(index).getDocuments() != null && !educations.get(index).getDocuments().isEmpty()
+				/*if (educations.get(index).getDocuments() != null && !educations.get(index).getDocuments().isEmpty()
 						&& employeeRepository.checkForDuplicatesForAnyOneOfGivenCSV("egeis_employeeDocuments", "document",
 								getDocumentsAsCSVs(educations.get(index).getDocuments()))) {
 					errors.rejectValue("employee.education[" + index + "].documents", "concurrent",
 							"document(s) already exists");
-				}
+				}*/
 			}
 		}
 	}
@@ -263,12 +263,12 @@ public class DataIntegrityValidatorForUpdate implements Validator {
 			for (int index = 0; index < probations.size(); index++) {
 				if (probations.get(index).getId() != null)
 					validateInvalidIdForProbation(probations.get(index).getId(), errors);
-				if (probations.get(index).getDocuments() != null && !probations.get(index).getDocuments().isEmpty()
+				/*if (probations.get(index).getDocuments() != null && !probations.get(index).getDocuments().isEmpty()
 						&& employeeRepository.checkForDuplicatesForAnyOneOfGivenCSV("egeis_employeeDocuments", "document",
 								getDocumentsAsCSVs(probations.get(index).getDocuments()))) {
 					errors.rejectValue("employee.probation[" + index + "].documents", "concurrent",
 							"document(s) already exists");
-				}
+				}*/
 			}
 		}
 	}
@@ -292,13 +292,13 @@ public class DataIntegrityValidatorForUpdate implements Validator {
 			for (int index = 0; index < regularisations.size(); index++) {
 				if (regularisations.get(index).getId() != null)
 					validateInvalidIdForRegularisation(regularisations.get(index).getId(), errors);
-				if (regularisations.get(index).getDocuments() != null
+				/*if (regularisations.get(index).getDocuments() != null
 						&& !regularisations.get(index).getDocuments().isEmpty()
 						&& employeeRepository.checkForDuplicatesForAnyOneOfGivenCSV("egeis_employeeDocuments", "document",
 								getDocumentsAsCSVs(regularisations.get(index).getDocuments()))) {
 					errors.rejectValue("employee.regularisation[" + index + "].documents", "concurrent",
 							"document(s) already exists");
-				}
+				}*/
 			}
 		}
 	}
@@ -322,12 +322,12 @@ public class DataIntegrityValidatorForUpdate implements Validator {
 			for (int index = 0; index < histories.size(); index++) {
 				if (histories.get(index).getId() != null)
 					validateInvalidIdForServiceHistory(histories.get(index).getId(), errors);
-				if (histories.get(index).getDocuments() != null && !histories.get(index).getDocuments().isEmpty()
+				/*if (histories.get(index).getDocuments() != null && !histories.get(index).getDocuments().isEmpty()
 						&& employeeRepository.checkForDuplicatesForAnyOneOfGivenCSV("egeis_employeeDocuments", "document",
 								getDocumentsAsCSVs(histories.get(index).getDocuments()))) {
 					errors.rejectValue("employee.serviceHistory[" + index + "].documents", "concurrent",
 							"document(s) already exists");
-				}
+				}*/
 			}
 		}
 	}
@@ -352,12 +352,12 @@ public class DataIntegrityValidatorForUpdate implements Validator {
 		for (int index = 0; index < technicals.size(); index++) {
 			if (technicals.get(index).getId() != null)
 				validateInvalidIdforTechnicalQualifications(technicals.get(index).getId(), errors);
-			if (technicals.get(index).getDocuments() != null && !technicals.get(index).getDocuments().isEmpty()
+			/*if (technicals.get(index).getDocuments() != null && !technicals.get(index).getDocuments().isEmpty()
 					&& employeeRepository.checkForDuplicatesForAnyOneOfGivenCSV("egeis_employeeDocuments", "document",
 							getDocumentsAsCSVs(technicals.get(index).getDocuments()))) {
 				errors.rejectValue("employee.technical[" + index + "].documents", "concurrent",
 						"document(s) already exists");
-			}
+			}*/
 		}
 	}
 

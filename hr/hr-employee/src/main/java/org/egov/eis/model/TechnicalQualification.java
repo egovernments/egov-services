@@ -99,11 +99,11 @@ public class TechnicalQualification {
 		if (getClass() != obj.getClass())
 			return false;
 		TechnicalQualification other = (TechnicalQualification) obj;
-		if (documents == null) {
+	/*	if (documents == null) {
 			if (other.documents != null)
 				return false;
 		} else if (!documents.equals(other.documents))
-			return false;
+			return false;*/
 		if (grade == null) {
 			if (other.grade != null)
 				return false;
@@ -123,11 +123,6 @@ public class TechnicalQualification {
 			if (other.skill != null)
 				return false;
 		} else if (!skill.equals(other.skill))
-			return false;
-		if (tenantId == null) {
-			if (other.tenantId != null)
-				return false;
-		} else if (!tenantId.equals(other.tenantId))
 			return false;
 		if (yearOfPassing == null) {
 			if (other.yearOfPassing != null)

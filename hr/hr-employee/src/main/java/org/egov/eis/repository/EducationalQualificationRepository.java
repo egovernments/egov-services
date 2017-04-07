@@ -48,6 +48,7 @@ import java.util.List;
 
 import org.egov.eis.model.EducationalQualification;
 import org.egov.eis.model.enums.DocumentReferenceType;
+import org.egov.eis.repository.rowmapper.EducationalQualificationRowMapper;
 import org.egov.eis.web.contract.EmployeeRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,15 +73,21 @@ public class EducationalQualificationRepository {
 			+ " lastModifiedBy, lastModifiedDate)"
 			+ " = (?,?,?,?,?,?)"
 			+"WHERE id = ? and tenantId=?";
-
-	public static final String CHECK_IF_ID_EXISTS_QUERY = "SELECT id FROM egeis_educationalqualification where "
-			+ "id=? and employeeId=? and tenantId=?";
+	
+	public static final String SELECT_BY_EMPLOYEEID_QUERY = "SELECT"
+			+ " id, qualification, majorsubject, yearofpassing, university, createdby, createddate,"
+			+ " lastmodifiedby, lastmodifieddate, tenantId"
+			+ " FROM egeis_educationalqualification"
+			+ " WHERE employeeId = ? AND tenantId = ? ";
 	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
 	@Autowired
 	private EmployeeDocumentsRepository documentsRepository;
+	
+	@Autowired
+	private EducationalQualificationRowMapper educationalQualificationRowMapper;
 
 	public void save(EmployeeRequest employeeRequest) {
 		List<EducationalQualification> educationalQualifications = employeeRequest.getEmployee().getEducation();
@@ -140,16 +147,17 @@ public class EducationalQualificationRepository {
 		
 	}
 
-	public boolean educationAlreadyExists(Long id, Long empId, String tenantId) {
-		List<Object> values = new ArrayList<Object>();
-		values.add(id);
-		values.add(empId);
-		values.add(tenantId);
-		try {
-			jdbcTemplate.queryForObject(CHECK_IF_ID_EXISTS_QUERY, values.toArray(), Long.class);
-			return true;
-		} catch (EmptyResultDataAccessException e) {
-			return false;
+	public List<EducationalQualification> findByEmployeeId(Long id, String tenantId) {
+		//  select * from egeis_assignment where employeeId = ? and tenantId = ?		
+		
+		List<EducationalQualification> educationalQualification = null;
+		
+		try{
+			educationalQualification = jdbcTemplate.query(SELECT_BY_EMPLOYEEID_QUERY, new Object[] {id, tenantId}, educationalQualificationRowMapper);
+			return educationalQualification;
+		}catch (EmptyResultDataAccessException e) {
+			return null;
 		}
+		
 	}
 }

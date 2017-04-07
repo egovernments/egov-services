@@ -44,11 +44,12 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.eis.model.ServiceHistory;
+import org.egov.eis.model.TechnicalQualification;
 import org.egov.eis.model.enums.DocumentReferenceType;
+import org.egov.eis.repository.rowmapper.ServiceHistoryTableRowMapper;
 import org.egov.eis.web.contract.EmployeeRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,15 +72,21 @@ public class ServiceHistoryRepository {
 	public static final String UPDATE_SERVICE_HISTORY_QUERY = "UPDATE egeis_serviceHistory"
 			+ " SET (serviceInfo, serviceFrom, remarks, orderNo, lastModifiedBy, lastModifiedDate)"
 			+ " = (?,?,?,?,?,?) where id = ? and tenantId=?";
-
-	public static final String CHECK_IF_ID_EXISTS_QUERY = "SELECT id FROM egeis_serviceHistory where "
-			+ "id=? and employeeId=? and tenantId=?";
+	
+	public static final String SELECT_BY_EMPLOYEEID_QUERY = "SELECT"
+			+ " id, serviceinfo, servicefrom, remarks, orderno, createdby, createddate,"
+			+ " lastmodifiedby, lastmodifieddate, tenantid"
+			+ " FROM egeis_servicehistory"
+			+ " WHERE employeeId = ? AND tenantId = ? ";
 	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
 	@Autowired
 	private EmployeeDocumentsRepository documentsRepository;
+	
+	@Autowired
+	private ServiceHistoryTableRowMapper serviceHistoryTableRowMapper;
 
 	public void save(EmployeeRequest employeeRequest) {
 		List<ServiceHistory> serviceHistories = employeeRequest.getEmployee().getServiceHistory();
@@ -123,12 +130,6 @@ public class ServiceHistoryRepository {
 	}
 
 	public void insert(ServiceHistory service, Long empId) {
-		/*
-		 * + " (id, employeeId, serviceInfo, serviceFrom, remarks, orderNo,"
-			+ " createdBy, createdDate, lastModifiedBy, lastModifiedDate, tenantId)"
-			+ " VALUES (?,?,?,?,?,?,?,?,?,?,?)";
-	
-		 */
 		Object[] obj = new Object[] {
 
 				service.getId(), empId, service.getServiceInfo(), service.getServiceFrom(), service.getRemarks(),
@@ -139,19 +140,21 @@ public class ServiceHistoryRepository {
 		jdbcTemplate.update(INSERT_SERVICE_HISTORY_QUERY, obj);
 	}
 
-	public boolean serviceHistoryAlreadyExists(Long id, Long empId, String tenantId) {
+	public List<ServiceHistory> findByEmployeeId(Long id, String tenantId) {
 		
-		List<Object> values = new ArrayList<Object>();
-		values.add(id);
-		values.add(empId);
-		values.add(tenantId);
-		LOGGER.debug("id : " + id + " empId : " +empId + " tenantId : " +tenantId);
-		try {
-			jdbcTemplate.queryForObject(CHECK_IF_ID_EXISTS_QUERY, values.toArray(), Long.class);
-			return true;
-		} catch (EmptyResultDataAccessException e) {
-		//	e.printStackTrace();
-			return false;
+		List<ServiceHistory> serviceHistory = null;
+		
+		try{
+			serviceHistory =  jdbcTemplate.query(SELECT_BY_EMPLOYEEID_QUERY, new Object[] {id, tenantId}, serviceHistoryTableRowMapper);
+			return serviceHistory;
+		}catch (EmptyResultDataAccessException e) {
+			return null;
 		}
 	}
+	
+	public void findAndDeleteThatAreNotInList(List<TechnicalQualification> technical) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

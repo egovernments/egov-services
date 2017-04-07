@@ -40,6 +40,8 @@
 
 package org.egov.eis.model;
 
+import static org.gov.eis.utils.DateUtils.areDatesEqualWithoutTimePart;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -109,18 +111,19 @@ public class Probation {
 		if (declaredOn == null) {
 			if (other.declaredOn != null)
 				return false;
-		} else if (!declaredOn.equals(other.declaredOn))
+		} else if (!areDatesEqualWithoutTimePart(declaredOn, other.declaredOn))
 			return false;
+		System.out.println("crossed declaredon");
 		if (designation == null) {
 			if (other.designation != null)
 				return false;
 		} else if (!designation.equals(other.designation))
 			return false;
-		if (documents == null) {
+	/*	if (documents == null) {
 			if (other.documents != null)
 				return false;
 		} else if (!documents.equals(other.documents))
-			return false;
+			return false;*/
 		if (id == null) {
 			if (other.id != null)
 				return false;
@@ -129,7 +132,7 @@ public class Probation {
 		if (orderDate == null) {
 			if (other.orderDate != null)
 				return false;
-		} else if (!orderDate.equals(other.orderDate))
+		} else if (!areDatesEqualWithoutTimePart(orderDate, other.orderDate))
 			return false;
 		if (orderNo == null) {
 			if (other.orderNo != null)
@@ -140,11 +143,6 @@ public class Probation {
 			if (other.remarks != null)
 				return false;
 		} else if (!remarks.equals(other.remarks))
-			return false;
-		if (tenantId == null) {
-			if (other.tenantId != null)
-				return false;
-		} else if (!tenantId.equals(other.tenantId))
 			return false;
 		return true;
 	}

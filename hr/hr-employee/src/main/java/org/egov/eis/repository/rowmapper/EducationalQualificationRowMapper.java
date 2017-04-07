@@ -43,35 +43,29 @@ package org.egov.eis.repository.rowmapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.egov.eis.model.Assignment;
+import org.egov.eis.model.EducationalQualification;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AssignmentTableRowMapper implements RowMapper<Assignment> {
+public class EducationalQualificationRowMapper implements RowMapper<EducationalQualification> {
 
 	@Override
-	public Assignment mapRow(ResultSet rs, int rowNum) throws SQLException, DataAccessException {
-		Assignment assignment = new Assignment();
-		assignment.setId(rs.getLong("id"));
-		assignment.setPosition(rs.getLong("positionId"));
-		assignment.setFund((rs.getLong("fundId") == 0L ? null : rs.getLong("fundId")));
-		assignment.setFunctionary((rs.getLong("functionaryId") == 0L ? null : rs.getLong("functionaryId")));
-		assignment.setFunction((rs.getLong("functionId") == 0L ? null : rs.getLong("functionId")));
-		assignment.setDepartment(rs.getLong("departmentId"));
-		assignment.setDesignation(rs.getLong("designationId"));
-		assignment.setIsPrimary(rs.getBoolean("isPrimary"));
-		assignment.setFromDate(rs.getDate("fromDate"));
-		assignment.setToDate(rs.getDate("toDate"));
-		assignment.setGrade((rs.getLong("gradeId") == 0L ? null : rs.getLong("functionId")));
-		assignment.setGovtOrderNumber(rs.getString("govtOrderNumber"));
-		assignment.setCreatedBy(rs.getLong("createdBy"));
-		assignment.setCreatedDate(rs.getDate("createdDate"));
-		assignment.setLastModifiedBy(rs.getLong("lastModifiedBy"));
-		assignment.setLastModifiedDate(rs.getDate("lastModifiedDate"));
-		assignment.setTenantId(rs.getString("tenantId"));
+	public EducationalQualification mapRow(ResultSet rs, int rowNum) throws SQLException, DataAccessException {
+		EducationalQualification educationalQualification = new EducationalQualification();
 		
-		return assignment;
+		educationalQualification.setId(rs.getLong("id"));
+		educationalQualification.setQualification(rs.getString("qualification"));
+		educationalQualification.setMajorSubject(rs.getString("majorsubject"));
+		educationalQualification.setYearOfPassing(rs.getInt("yearofpassing"));
+		educationalQualification.setUniversity(rs.getString("university"));
+		educationalQualification.setCreatedBy(rs.getLong("createdby"));
+		educationalQualification.setCreatedDate(rs.getDate("createddate"));
+		educationalQualification.setLastModifiedBy(rs.getLong("lastmodifiedby"));
+		educationalQualification.setLastModifiedDate(rs.getDate("lastmodifieddate"));
+		educationalQualification.setTenantId(rs.getString("tenantid"));
+		
+		return educationalQualification;
 	}
 }

@@ -40,6 +40,8 @@
 
 package org.egov.eis.model;
 
+import static org.gov.eis.utils.DateUtils.areDatesEqualWithoutTimePart;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -102,11 +104,11 @@ public class ServiceHistory {
 		if (getClass() != obj.getClass())
 			return false;
 		ServiceHistory other = (ServiceHistory) obj;
-		if (documents == null) {
+		/*if (documents == null) {
 			if (other.documents != null)
 				return false;
 		} else if (!documents.equals(other.documents))
-			return false;
+			return false;*/
 		if (id == null) {
 			if (other.id != null)
 				return false;
@@ -122,20 +124,19 @@ public class ServiceHistory {
 				return false;
 		} else if (!remarks.equals(other.remarks))
 			return false;
+		System.out.println("crossed remarks");
+		System.out.println("service from" +serviceFrom);
+		System.out.println(" other service from" +other.serviceFrom);
 		if (serviceFrom == null) {
 			if (other.serviceFrom != null)
 				return false;
-		} else if (!serviceFrom.equals(other.serviceFrom))
+		} else if (!areDatesEqualWithoutTimePart(serviceFrom, other.serviceFrom))
 			return false;
+		System.out.println("crossed service from");
 		if (serviceInfo == null) {
 			if (other.serviceInfo != null)
 				return false;
 		} else if (!serviceInfo.equals(other.serviceInfo))
-			return false;
-		if (tenantId == null) {
-			if (other.tenantId != null)
-				return false;
-		} else if (!tenantId.equals(other.tenantId))
 			return false;
 		return true;
 	}	

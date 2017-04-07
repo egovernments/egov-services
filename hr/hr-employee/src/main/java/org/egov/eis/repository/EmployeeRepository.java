@@ -144,8 +144,7 @@ public class EmployeeRepository {
 		return documents;
 	}
 
-	public void save(EmployeeRequest employeeRequest) {
-		Employee employee = employeeRequest.getEmployee();
+	public void save(Employee employee) {
 		Object[] obj = new Object[] { employee.getId(), employee.getCode(), employee.getDateOfAppointment(),
 				employee.getDateOfJoining(), employee.getDateOfRetirement(), employee.getEmployeeStatus(),
 				employee.getRecruitmentMode(), employee.getRecruitmentType(), employee.getRecruitmentQuota(),

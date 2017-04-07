@@ -49,6 +49,7 @@ import java.util.List;
 import org.egov.eis.model.TechnicalQualification;
 import org.egov.eis.model.enums.DocumentReferenceType;
 import org.egov.eis.repository.helper.PreparedStatementHelper;
+import org.egov.eis.repository.rowmapper.TechnicalQualificationRowMapper;
 import org.egov.eis.web.contract.EmployeeRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,11 +75,17 @@ public class TechnicalQualificationRepository {
 			+ " = (?,?,?,?,?,?)"
 			+" WHERE id = ? and tenantId=?";
 
-	public static final String CHECK_IF_ID_EXISTS_QUERY = "SELECT id FROM egeis_technicalQualification where "
-			+ "id=? and employeeId=? and tenantId=?";
+	public static final String SELECT_BY_EMPLOYEEID_QUERY = "SELECT"
+			+ " id, skill, grade, yearofpassing, remarks, createdby, createddate,"
+			+ " lastmodifiedby,lastmodifieddate, tenantid"
+			+ " FROM egeis_technicalqualification"
+			+ " WHERE employeeId = ? AND tenantId = ? ";
 	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
+	
+	@Autowired
+	private TechnicalQualificationRowMapper technicalQualificationRowMapper;
 
 	@Autowired
 	private PreparedStatementHelper psHelper;
@@ -136,19 +143,20 @@ public class TechnicalQualificationRepository {
 		jdbcTemplate.update(INSERT_TECHNICAL_QUALIFICATION_QUERY, obj);
 	}
 
-	public boolean technicalAlreadyExists(Long id, Long empId, String tenantId) {
-		List<Object> values = new ArrayList<Object>();
-		values.add(id);
-		values.add(empId);
-		values.add(tenantId);
-		try {
-			jdbcTemplate.queryForObject(CHECK_IF_ID_EXISTS_QUERY, values.toArray(), Long.class);
-			return true;
-		} catch (EmptyResultDataAccessException e) {
-			return false;
+	public List<TechnicalQualification> findByEmployeeId(Long id, String tenantId) {
+		//  select * from egeis_assignment where employeeId = ? and tenantId = ?		
+		
+		List<TechnicalQualification> technicalQualification = null;
+		
+		try{
+			technicalQualification = jdbcTemplate.query(SELECT_BY_EMPLOYEEID_QUERY, new Object[] {id, tenantId}, technicalQualificationRowMapper);
+			System.out.println("details of technical qualification" +technicalQualification);
+			return technicalQualification;
+		}catch (EmptyResultDataAccessException e) {
+			return null;
 		}
 	}
-
+	
 	public void findAndDeleteThatAreNotInList(List<TechnicalQualification> technical) {
 		// TODO Auto-generated method stub
 		

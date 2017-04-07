@@ -106,15 +106,12 @@ public class User {
 	@Size(max=12)
 	private String aadhaarNumber;
 
-	@NotNull
 	@Size(max=300)
 	private String permanentAddress;
 
-	@NotNull
 	@Size(max=50)
 	private String permanentCity;
 
-	@NotNull
 	@Size(max=6)
 	private String permanentPincode;
 

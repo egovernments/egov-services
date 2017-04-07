@@ -315,7 +315,7 @@ public class EmployeeHelper {
 	private void populateDefaultDataForUpdateAssignment(Assignment assignment, String requesterId, String tenantId) {
 		assignment.setLastModifiedBy(Long.parseLong(requesterId));
 		assignment.setLastModifiedDate((new Date()));
-		trimTimePartFromDateFields(assignment);
+		// trimTimePartFromDateFields(assignment);
 		if (assignment.getDocuments() == null) {
 			assignment.setDocuments(new ArrayList<>());
 		}
@@ -328,12 +328,6 @@ public class EmployeeHelper {
 		}
 	}
  
-	private void trimTimePartFromDateFields(Assignment assignment) {
-		assignment.setFromDate(removeTime(assignment.getFromDate()));
-		System.out.println("fromdate = " + assignment.getFromDate());
-		assignment.setToDate(removeTime(assignment.getToDate()));
-	}
-	
 	public static Date removeTime(Date date) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);

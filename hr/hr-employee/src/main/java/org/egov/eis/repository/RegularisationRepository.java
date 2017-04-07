@@ -44,11 +44,11 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.eis.model.Regularisation;
 import org.egov.eis.model.enums.DocumentReferenceType;
+import org.egov.eis.repository.rowmapper.RegularisationTableRowMapper;
 import org.egov.eis.web.contract.EmployeeRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,15 +73,21 @@ public class RegularisationRepository {
 			+ " lastModifiedBy, lastModifiedDate)"
 			+ "= (?,?,?,?,?,?,?)"
 			+"where id = ? and tenantId=?";
-
-	public static final String CHECK_IF_ID_EXISTS_QUERY = "SELECT id FROM egeis_regularisation where "
-			+ "id=? and employeeId=? and tenantId=?";
+	
+	public static final String SELECT_BY_EMPLOYEEID_QUERY = "SELECT"
+			+ " id, designationid, declaredon, orderno, orderdate, remarks, createdby,"
+			+ " createddate, lastmodifiedby, lastmodifieddate, tenantid"
+			+ " FROM egeis_regularisation"
+			+ " WHERE employeeId = ? AND tenantId = ? ";
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
 	@Autowired
 	private EmployeeDocumentsRepository documentsRepository;
+	
+	@Autowired
+	private  RegularisationTableRowMapper regularisationTableRowMapper;
 
 	public void save(EmployeeRequest employeeRequest) {
 		List<Regularisation> regularisations = employeeRequest.getEmployee().getRegularisation();
@@ -138,19 +144,19 @@ public class RegularisationRepository {
 		jdbcTemplate.update(INSERT_REGULARISATION_QUERY, obj);
 	}
 
-	public boolean regularisationAlreadyExists(Long id, Long empId, String tenantId) {
-		List<Object> values = new ArrayList<Object>();
-		values.add(id);
-		values.add(empId);
-		values.add(tenantId);
+	public List<Regularisation> findByEmployeeId(Long id, String tenantId) {
+
+		List<Regularisation> regularisation = null;
 		try {
-			jdbcTemplate.queryForObject(CHECK_IF_ID_EXISTS_QUERY, values.toArray(), Long.class);
-			return true;
+			regularisation = jdbcTemplate.query(SELECT_BY_EMPLOYEEID_QUERY, new Object[] { id, tenantId },
+					regularisationTableRowMapper);
+			System.out.println("list of assignments" + regularisation);
+			return regularisation;
 		} catch (EmptyResultDataAccessException e) {
-			return false;
+			return null;
 		}
 	}
-
+	
 	public void findAndDeleteRegularisationInDBThatAreNotInList(List<Regularisation> regularisation) {
 		// TODO Auto-generated method stub
 		

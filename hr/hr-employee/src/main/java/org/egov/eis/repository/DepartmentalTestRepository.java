@@ -47,8 +47,10 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.eis.model.Assignment;
 import org.egov.eis.model.DepartmentalTest;
 import org.egov.eis.model.enums.DocumentReferenceType;
+import org.egov.eis.repository.rowmapper.DepartmentalTestTableRowMapper;
 import org.egov.eis.web.contract.EmployeeRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,9 +72,12 @@ public class DepartmentalTestRepository {
 	public static final String UPDATE_DEPARTMENTAL_TEST_QUERY = "UPDATE egeis_departmentalTest"
 			+ " SET (test, yearOfPassing, remarks," + " lastModifiedBy, lastModifiedDate)"
 			+ " = (?,?,?,?,?)" + " WHERE id = ? and tenantId=?";
-
-	public static final String CHECK_IF_ID_EXISTS_QUERY = "SELECT id FROM egeis_departmentaltest where "
-			+ "id=? and employeeId=? and tenantId=?";
+	
+	public static final String SELECT_BY_EMPLOYEEID_QUERY = "SELECT"
+			+ " id, test, yearOfPassing, remarks,"
+			+ " createdBy, createdDate, lastModifiedBy, lastModifiedDate, tenantId"
+			+ " FROM egeis_departmentalTest"
+			+ " WHERE employeeId = ? AND tenantId = ? ";
 	
 	public static final String DELETE_QUERY = "DELETE FROM egeis_departmentaltest where "
 			+ "id=? and employeeId=? and tenantId=?";
@@ -82,6 +87,9 @@ public class DepartmentalTestRepository {
 
 	@Autowired
 	private EmployeeDocumentsRepository documentsRepository;
+	
+	@Autowired
+	private DepartmentalTestTableRowMapper departmentalTestTableRowMapper;
 
 	public void save(EmployeeRequest employeeRequest) {
 		List<DepartmentalTest> departmentalTests = employeeRequest.getEmployee().getTest();
@@ -146,17 +154,17 @@ public class DepartmentalTestRepository {
 		
 		// DELETE FROM egeis_departmentaltest where empid=? and id NOT IN <<loop probation and get all ids in csv>>)
 	}
-
-	public boolean testAlreadyExists(Long id, Long empId, String tenantId) {
-		List<Object> values = new ArrayList<Object>();
-		values.add(id);
-		values.add(empId);
-		values.add(tenantId);
-		try {
-			jdbcTemplate.queryForObject(CHECK_IF_ID_EXISTS_QUERY, values.toArray(), Long.class);
-			return true;
-		} catch (EmptyResultDataAccessException e) {
-			return false;
-		}
+	
+	public List<DepartmentalTest> findByEmployeeId(Long id, String tenantId) {
+		//  select * from egeis_assignment where employeeId = ? and tenantId = ?		
+		
+		List<DepartmentalTest> test = null;
+		
+		try{
+			test = (List<DepartmentalTest>) jdbcTemplate.query(SELECT_BY_EMPLOYEEID_QUERY, new Object[] {id, tenantId}, departmentalTestTableRowMapper);
+			return test;
+		}catch (EmptyResultDataAccessException e) {
+			return null;
+		}		
 	}
 }

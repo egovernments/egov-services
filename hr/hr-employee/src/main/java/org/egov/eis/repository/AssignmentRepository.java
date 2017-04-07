@@ -87,9 +87,6 @@ public class AssignmentRepository {
 			+ " FROM egeis_assignment"
 			+ " WHERE employeeId = ? AND tenantId = ? ";
 
-	public static final String CHECK_IF_ID_EXISTS_QUERY = "SELECT id FROM egeis_assignment where"
-			+ " id=? and employeeId=? and tenantId=?";
-
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
@@ -116,7 +113,6 @@ public class AssignmentRepository {
 				assignmentRowMapper);
 		return assignments;
 	}
-
 
 	public void save(EmployeeRequest employeeRequest) {
 		List<Assignment> assignments = employeeRequest.getEmployee().getAssignments();
@@ -149,7 +145,6 @@ public class AssignmentRepository {
 							DocumentReferenceType.ASSIGNMENT.toString(), assignment.getId(), assignment.getTenantId());
 				}
 			}
-
 			@Override
 			public int getBatchSize() {
 				return assignments.size();
@@ -178,36 +173,6 @@ public class AssignmentRepository {
 				assignment.getLastModifiedDate(), assignment.getTenantId() };
 
 		jdbcTemplate.update(INSERT_ASSIGNMENT_QUERY, obj);
-	}
-/*
-	public boolean assignmentAlreadyExists(Long id, Long empId, String tenantId) {
-		List<Object> values = new ArrayList<Object>();
-		values.add(id);
-		values.add(empId);
-		values.add(tenantId);
-		try {
-			jdbcTemplate.queryForObject(CHECK_IF_ID_EXISTS_QUERY, values.toArray(), Long.class);
-			return true;
-		} catch (EmptyResultDataAccessException e) {
-			return false;
-		}
-	}*/
-
-	public List<Assignment> findForEmployeeId(Long id, String tenantId) {
-		//  select * from egeis_assignment where employeeId = ? and tenantId = ?		
-		
-		List<Assignment> assignment = null;
-		List<Object> values = new ArrayList<Object>();
-		values.add(id);
-		values.add(tenantId);
-		try{
-			assignment = (List<Assignment>) jdbcTemplate.query(SELECT_BY_EMPLOYEEID_QUERY, values.toArray(), assignmentTableRowMapper);
-			System.out.println("list of assignments" +assignment);
-			return assignment;
-		}catch (EmptyResultDataAccessException e) {
-			return null;
-		}
-		
 	}
 	
 	public List<Assignment> findByEmployeeId(Long id, String tenantId) {

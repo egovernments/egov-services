@@ -99,11 +99,11 @@ public class EducationalQualification {
 		if (getClass() != obj.getClass())
 			return false;
 		EducationalQualification other = (EducationalQualification) obj;
-		if (documents == null) {
+	/*	if (documents == null) {
 			if (other.documents != null)
 				return false;
 		} else if (!documents.equals(other.documents))
-			return false;
+			return false;*/
 		if (id == null) {
 			if (other.id != null)
 				return false;
@@ -118,11 +118,6 @@ public class EducationalQualification {
 			if (other.qualification != null)
 				return false;
 		} else if (!qualification.equals(other.qualification))
-			return false;
-		if (tenantId == null) {
-			if (other.tenantId != null)
-				return false;
-		} else if (!tenantId.equals(other.tenantId))
 			return false;
 		if (university == null) {
 			if (other.university != null)

@@ -93,12 +93,12 @@ public class Assignment {
 
 	@NotNull
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@JsonFormat(pattern = "dd/MM/yyyy", timezone="IST")
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date fromDate;
 
 	@NotNull
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@JsonFormat(pattern = "dd/MM/yyyy", timezone="IST")
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date toDate;
 
 	private Long grade;
@@ -120,9 +120,10 @@ public class Assignment {
 	private Date lastModifiedDate;
 
 	private String tenantId;
-/*
+
 	@Override
 	public boolean equals(Object obj) {
+		System.out.println("beginning");
 		if (this == obj)
 			return true;
 		if (obj == null)
@@ -145,17 +146,18 @@ public class Assignment {
 				return false;
 		} else if (!documents.equals(other.documents))
 			return false;
-		System.out.println("crossed documents");
 		if (fromDate == null) {
 			if (other.fromDate != null)
 				return false;
-		} else if (!areDatesEqualWithoutTimePart(fromDate, other.fromDate))
+		} 
+		else if (!areDatesEqualWithoutTimePart(fromDate, other.fromDate))
 			return false;
 		if (function == null) {
 			if (other.function != null)
 				return false;
 		} else if (!function.equals(other.function))
 			return false;
+		System.out.println("crossed function");
 		if (functionary == null) {
 			if (other.functionary != null)
 				return false;
@@ -167,23 +169,19 @@ public class Assignment {
 				return false;
 		} else if (!fund.equals(other.fund))
 			return false;
+		System.out.println("crossed fund");
 		if (govtOrderNumber == null) {
 			if (other.govtOrderNumber != null)
 				return false;
 		} else if (!govtOrderNumber.equals(other.govtOrderNumber))
 			return false;
+		System.out.println("crossed govt order number");
 		if (grade == null) {
 			if (other.grade != null)
 				return false;
 		} else if (!grade.equals(other.grade))
 			return false;
 		System.out.println("crossed grade");
-		if (hod == null) {
-			if (other.hod != null)
-				return false;
-		} else if (!hod.equals(other.hod))
-			return false;
-		System.out.println("crossed hod");
 		if (id == null) {
 			if (other.id != null)
 				return false;
@@ -205,11 +203,14 @@ public class Assignment {
 			if (other.toDate != null)
 				return false;
 		} else if (!areDatesEqualWithoutTimePart(toDate, other.fromDate))
+			{
+			System.out.println("crossed position");
 			return false;
+			}
 		return true;
 	}
-*/	
-  @Override
+	
+  /*@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -263,11 +264,6 @@ public class Assignment {
 				return false;
 		} else if (!grade.equals(other.grade))
 			return false;
-		if (hod == null) {
-			if (other.hod != null)
-				return false;
-		} else if (!hod.equals(other.hod))
-			return false;
 		if (id == null) {
 			if (other.id != null)
 				return false;
@@ -286,10 +282,10 @@ public class Assignment {
 		if (toDate == null) {
 			if (other.toDate != null)
 				return false;
-		} else if (!areDatesEqualWithoutTimePart(toDate, other.fromDate))
+		} else if (!areDatesEqualWithoutTimePart(toDate, other.toDate))
 			return false;
 		return true;
-	}
+	}*/
 	
 
 

@@ -46,6 +46,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.eis.model.Employee;
+import org.egov.eis.repository.rowmapper.EmployeeJurisdictionMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,8 +67,16 @@ public class EmployeeJurisdictionRepository {
 	public static final String DELETE_EMPLOYEE_JURISDICTION_QUERY = "DELETE FROM egeis_employeeJurisdictions"
 			+ " WHERE jurisdictionId = ? and employeeId=? and tenantId=?)";
 
+	public static final String SELECT_BY_EMPLOYEEID_QUERY = "SELECT"
+			+ " jurisdictionid"
+			+ " FROM egeis_employeejurisdictions"
+			+ " WHERE employeeId = ? AND tenantId = ? ";
+	
 	public static final String CHECK_IF_ID_EXISTS_QUERY = "SELECT id FROM egeis_employeeJurisdictions where "
 			+ "jurisdictionId=? and employeeId=? and tenantId=?";
+	
+	@Autowired
+	private EmployeeJurisdictionMapper employeeJurisdictionMapper;
 	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -89,6 +98,25 @@ public class EmployeeJurisdictionRepository {
 			}
 		});
 	}
+
+	public void insert(Long jurisdictionId, Long empId, String tenantId) {
+		
+		jdbcTemplate.update(INSERT_EMPLOYEE_JURISDICTION_QUERY, empId, jurisdictionId, tenantId);
+	}
+	
+	public List<Long> findByEmployeeId(Long id, String tenantId) {
+
+		List<Long> employeeJurisdictions = null;
+
+		try {
+			employeeJurisdictions = jdbcTemplate.query(SELECT_BY_EMPLOYEEID_QUERY, new Object[] { id, tenantId },
+					employeeJurisdictionMapper);
+			System.out.println("jusridictions : " + employeeJurisdictions);
+			return employeeJurisdictions;
+		} catch (EmptyResultDataAccessException e) {
+			return null;
+		}
+	}
 	
 	public boolean jurisdictionAlreadyExists(Long jurisdictionId, Long empId, String tenantId) {
 		List<Object> values = new ArrayList<Object>();
@@ -101,10 +129,5 @@ public class EmployeeJurisdictionRepository {
 		} catch (EmptyResultDataAccessException e) {
 			return false;
 		}
-	}
-
-	public void insert(Long jurisdictionId, Long empId, String tenantId) {
-		
-		jdbcTemplate.update(INSERT_EMPLOYEE_JURISDICTION_QUERY, empId, jurisdictionId, tenantId);
 	}
 }

@@ -44,11 +44,11 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.eis.model.Probation;
 import org.egov.eis.model.enums.DocumentReferenceType;
+import org.egov.eis.repository.rowmapper.ProbationTableRowMapper;
 import org.egov.eis.web.contract.EmployeeRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,21 +67,24 @@ public class ProbationRepository {
 			+ " (id, employeeId, designationId, declaredOn, orderNo, orderDate, remarks,"
 			+ " createdBy, createdDate, lastModifiedBy, lastModifiedDate, tenantId)"
 			+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
-	
-	public static final String UPDATE_PROBATION_QUERY = "UPDATE egeis_probation"
-			+ " SET (designationId, declaredOn, orderNo, orderDate, remarks,"
-			+ "lastModifiedBy, lastModifiedDate)"
-			+ " = (?,?,?,?,?,?,?)"
-			+"WHERE id = ? and tenantId=?";
 
-    public static final String CHECK_IF_ID_EXISTS_QUERY = "SELECT id FROM egeis_probation where "
-			+ "id=? and employeeId=? and tenantId=?";
-    
+	public static final String UPDATE_PROBATION_QUERY = "UPDATE egeis_probation"
+			+ " SET (designationId, declaredOn, orderNo, orderDate, remarks," + "lastModifiedBy, lastModifiedDate)"
+			+ " = (?,?,?,?,?,?,?)" + "WHERE id = ? and tenantId=?";
+
+	public static final String SELECT_BY_EMPLOYEEID_QUERY = "SELECT"
+			+ " id,designationid, declaredon, orderno,orderdate, remarks, createdby,"
+			+ " createddate, lastmodifiedby, lastmodifieddate,tenantId" + " FROM egeis_probation"
+			+ " WHERE employeeId = ? AND tenantId = ? ";
+	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
 	@Autowired
 	private EmployeeDocumentsRepository documentsRepository;
+	
+	@Autowired
+	private ProbationTableRowMapper probationRowMapper;
 
 	public void save(EmployeeRequest employeeRequest) {
 		List<Probation> probations = employeeRequest.getEmployee().getProbation();
@@ -95,8 +98,7 @@ public class ProbationRepository {
 				ps.setLong(3, probation.getDesignation());
 				ps.setDate(4, new Date(probation.getDeclaredOn().getTime()));
 				ps.setString(5, probation.getOrderNo());
-				ps.setDate(6, (probation.getOrderDate() == null ? null
-						: new Date(probation.getOrderDate().getTime())));
+				ps.setDate(6, (probation.getOrderDate() == null ? null : new Date(probation.getOrderDate().getTime())));
 				ps.setString(7, probation.getRemarks());
 				ps.setLong(8, Long.parseLong(employeeRequest.getRequestInfo().getRequesterId()));
 				ps.setTimestamp(9, new Timestamp(new java.util.Date().getTime()));
@@ -104,7 +106,7 @@ public class ProbationRepository {
 				ps.setTimestamp(11, new Timestamp(new java.util.Date().getTime()));
 				ps.setString(12, probation.getTenantId());
 
-				if(probation.getDocuments() != null && !probation.getDocuments().isEmpty()) {
+				if (probation.getDocuments() != null && !probation.getDocuments().isEmpty()) {
 					documentsRepository.save(employeeRequest.getEmployee().getId(), probation.getDocuments(),
 							DocumentReferenceType.PROBATION.toString(), probation.getId(), probation.getTenantId());
 				}
@@ -121,7 +123,7 @@ public class ProbationRepository {
 
 		Object[] obj = new Object[] { probation.getDesignation(), probation.getDeclaredOn(), probation.getOrderNo(),
 				probation.getOrderDate(), probation.getRemarks(), probation.getLastModifiedBy(),
-				probation.getLastModifiedDate(), probation.getId(), probation.getTenantId()};
+				probation.getLastModifiedDate(), probation.getId(), probation.getTenantId() };
 
 		jdbcTemplate.update(UPDATE_PROBATION_QUERY, obj);
 	}
@@ -130,23 +132,24 @@ public class ProbationRepository {
 		Object[] obj = new Object[] { probation.getId(), empId, probation.getDesignation(), probation.getDeclaredOn(),
 				probation.getOrderNo(), probation.getOrderDate(), probation.getRemarks(), probation.getCreatedBy(),
 				probation.getCreatedDate(), probation.getLastModifiedBy(), probation.getLastModifiedDate(),
-				probation.getTenantId()
-				};
+				probation.getTenantId() };
 
 		jdbcTemplate.update(INSERT_PROBATION_QUERY, obj);
 	}
 
-	public boolean probationAlreadyExists(Long id, Long empId, String tenantId) {
-		List<Object> values = new ArrayList<Object>();
-		values.add(id);
-		values.add(empId);
-		values.add(tenantId);
+	public List<Probation> findByEmployeeId(Long id, String tenantId) {
+		// select * from egeis_assignment where employeeId = ? and tenantId = ?
+
+		List<Probation> probation = null;
+
 		try {
-			jdbcTemplate.queryForObject(CHECK_IF_ID_EXISTS_QUERY, values.toArray(), Long.class);
-			return true;
+			probation = jdbcTemplate.query(SELECT_BY_EMPLOYEEID_QUERY, new Object[] { id, tenantId },
+					probationRowMapper);
+			System.out.println("list of probation" + probation);
+			return probation;
 		} catch (EmptyResultDataAccessException e) {
-			return false;
+			return null;
 		}
+
 	}
-	
 }

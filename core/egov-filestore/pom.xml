@@ -25,6 +25,13 @@
 	</properties>
 
 	<dependencies>
+
+        <dependency>
+            <groupId>org.egov.services</groupId>
+            <artifactId>tracer</artifactId>
+            <version>0.14.0</version>
+        </dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -66,7 +73,15 @@
 		</dependency>
 	</dependencies>
 
-	<build>
+    <repositories>
+        <repository>
+            <id>repo.egovernments.org</id>
+            <name>eGov ERP Releases Repository</name>
+            <url>http://repo.egovernments.org/nexus/content/repositories/releases/</url>
+        </repository>
+    </repositories>
+
+    <build>
 		<plugins>
 
 			<plugin>
@@ -121,7 +136,7 @@
                                     <element>CLASS</element>
                                     <excludes>
                                         <exclude>*Test</exclude>
-										<exclude>org.egov.filestore.EgovFilestoreApplication</exclude>
+										<exclude>org.egov.filestore.FileStoreApplication</exclude>
 										<exclude>org.egov.filestore.persistence.repository.FileRepository</exclude>
                                         <exclude>org.egov.filestore.persistence.entity.AbstractPersistable</exclude>
 										<exclude>org.egov.filestore.persistence.entity.Artifact</exclude>

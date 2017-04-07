@@ -2,6 +2,7 @@ package org.egov.filestore.web.controller;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.egov.filestore.TestConfiguration;
 import org.egov.filestore.domain.exception.ArtifactNotFoundException;
 import org.egov.filestore.domain.exception.EmptyFileUploadRequestException;
 import org.egov.filestore.domain.model.FileInfo;
@@ -14,6 +15,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -36,6 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(StorageController.class)
+@Import(TestConfiguration.class)
 public class StorageControllerTest {
 
 	private static final String MODULE = "module";

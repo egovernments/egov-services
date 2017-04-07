@@ -2,6 +2,7 @@ Create sequence seq_eglams_agreement;
 Create sequence seq_eglams_rentincrement;
 Create sequence seq_eglams_acknowledgementnumber;
 Create sequence seq_eglams_agreementnumber;
+Create sequence seq_eglams_demand;
 
 CREATE TABLE eglams_rentincrementtype
 (

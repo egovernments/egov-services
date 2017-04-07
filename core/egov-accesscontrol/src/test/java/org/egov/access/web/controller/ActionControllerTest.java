@@ -2,6 +2,7 @@ package org.egov.access.web.controller;
 
 
 import org.egov.access.Resources;
+import org.egov.access.TestConfiguration;
 import org.egov.access.domain.model.Action;
 import org.egov.access.domain.model.ActionSearchCriteria;
 import org.egov.access.domain.service.ActionService;
@@ -10,6 +11,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -24,6 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(ActionController.class)
+@Import(TestConfiguration.class)
 public class ActionControllerTest {
 
     @MockBean

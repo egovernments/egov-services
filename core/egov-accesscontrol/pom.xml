@@ -28,6 +28,12 @@
 
 	<dependencies>
 
+        <dependency>
+            <groupId>org.egov.services</groupId>
+            <artifactId>tracer</artifactId>
+            <version>0.14.0</version>
+        </dependency>
+
 		<dependency>
 			<groupId>org.egov.services</groupId>
 			<artifactId>services-common</artifactId>

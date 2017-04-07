@@ -3,7 +3,9 @@ package org.egov.tracer.http;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.egov.tracer.config.TracerProperties;
+import org.egov.tracer.model.RequestContext;
 import org.springframework.http.HttpRequest;
+import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.web.client.RestTemplate;
@@ -31,24 +33,33 @@ public class LogAwareRestTemplate extends RestTemplate {
         this.setInterceptors(Collections.singletonList(logRequestAndResponse()));
     }
 
+    private void addCorrelationIdHeader(HttpRequest httpRequest) {
+        httpRequest.getHeaders().add(RequestHeader.CORRELATION_ID, RequestContext.getId());
+    }
+
     private ClientHttpRequestInterceptor logRequestAndResponse() {
         return (httpRequest, body, clientHttpRequestExecution) -> {
+            addCorrelationIdHeader(httpRequest);
             logRequest(httpRequest, body);
-            try {
-                final ClientHttpResponse rawResponse = clientHttpRequestExecution.execute(httpRequest, body);
-                if (tracerProperties.isDetailedTracingDisabled()) {
-                    log.info(RESPONSE_MESSAGE, httpRequest.getURI());
-                    return rawResponse;
-                }
-                final CacheableSimpleClientHttpResponse response = new CacheableSimpleClientHttpResponse(rawResponse);
-                logResponse(response, httpRequest.getURI());
-                return response;
-            } catch (Exception e) {
-                log.error(String.format(FAILED_RESPONSE_MESSAGE, httpRequest.getURI()), e);
-                throw e;
-            }
-
+            return executeAndLogResponse(httpRequest, body, clientHttpRequestExecution);
         };
+    }
+
+    private ClientHttpResponse executeAndLogResponse(HttpRequest httpRequest, byte[] body, ClientHttpRequestExecution
+        clientHttpRequestExecution) throws IOException {
+        try {
+			final ClientHttpResponse rawResponse = clientHttpRequestExecution.execute(httpRequest, body);
+			if (tracerProperties.isDetailedTracingDisabled()) {
+				log.info(RESPONSE_MESSAGE, httpRequest.getURI());
+				return rawResponse;
+			}
+			final CacheableSimpleClientHttpResponse response = new CacheableSimpleClientHttpResponse(rawResponse);
+			logResponse(response, httpRequest.getURI());
+			return response;
+		} catch (Exception e) {
+			log.error(String.format(FAILED_RESPONSE_MESSAGE, httpRequest.getURI()), e);
+			throw e;
+		}
     }
 
     private void logResponse(ClientHttpResponse response, URI uri) {

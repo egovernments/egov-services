@@ -19,7 +19,6 @@ import java.util.UUID;
 @Slf4j
 public class CorrelationIdFilter implements Filter {
 
-    private static final String CORRELATION_ID_HEADER_NAME = "X-CORRELATION-ID";
     private static final String FAILED_TO_DESERIALIZE_MESSAGE = "Failed to deserialize body";
     private static final List<String> JSON_MEDIA_TYPES =
         Arrays.asList(MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE);
@@ -86,7 +85,7 @@ public class CorrelationIdFilter implements Filter {
     }
 
     private String getCorrelationIdFromHeader(HttpServletRequest httpRequest) {
-        return httpRequest.getHeader(CORRELATION_ID_HEADER_NAME);
+        return httpRequest.getHeader(RequestHeader.CORRELATION_ID);
     }
 
     private String getCorrelationIdFromRequestBody(HttpServletRequest httpRequest) throws IOException {

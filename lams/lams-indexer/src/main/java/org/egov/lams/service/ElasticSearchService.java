@@ -22,12 +22,10 @@ public class ElasticSearchService {
 	public static final Logger LOGGER = LoggerFactory.getLogger(ElasticSearchService.class);
 	
 	public void saveAgreement(AgreementDetails agreementDetails){
-		
-		String indexServiceHost = propertiesManager.getIndexServiceHostUrl();
-		String indexSericeName = propertiesManager.getIndexServiceIndexName();
 		// check for both index name and type name and id before confirming the url 
-		String url = indexServiceHost+indexSericeName; 
-		  //  for index id + indexId;
+		String url = propertiesManager.getIndexServiceHostUrl()
+				   + propertiesManager.getIndexServiceIndexName();
+		LOGGER.info("the url for posting new agreement object in index ::: "+url);
 		try{
 	    restTemplate.postForObject(url, agreementDetails, Map.class);
 		}catch (Exception e) {
@@ -39,10 +37,10 @@ public class ElasticSearchService {
 	
 	public void updateAgreement(AgreementDetails agreementDetails) {
 
-		String indexServiceHost = propertiesManager.getIndexServiceHostUrl();
-		String indexSericeName = propertiesManager.getIndexServiceIndexName();
 		String id = agreementDetails.getAckNumber();
-		String url = indexServiceHost+indexSericeName + "/" + id;
+		String url = propertiesManager.getIndexServiceHostUrl() +
+					 propertiesManager.getIndexServiceIndexName() + "/" + id;
+		LOGGER.info("the url for posting new agreement object in index ::: "+url);
 		// TODO add unique id
 		try{
 		restTemplate.postForObject(url, agreementDetails, Map.class);

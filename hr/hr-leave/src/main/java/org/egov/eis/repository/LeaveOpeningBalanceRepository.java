@@ -66,7 +66,7 @@ public class LeaveOpeningBalanceRepository {
 			+ " VALUES (nextval('seq_egeis_leaveOpeningBalance'),?,?,?,?,?,?,?,?,?)";
 
 	public static final String UPDATE_LEAVEOPENINGBALANCE_QUERY = "UPDATE egeis_leaveOpeningBalance"
-			+ " SET employeeId=?, calendarYear=?, leaveTypeId=?, noOfDays=?, createdBy=?, createdDate=?,"
+			+ " SET employeeId=?, calendarYear=?, leaveTypeId=?, noOfDays=?,"
 			+ " lastModifiedBy=?, lastModifiedDate=?, tenantId=? where id=? and tenantid=? ";
 
 	@Autowired
@@ -100,10 +100,10 @@ public class LeaveOpeningBalanceRepository {
 					ps.setInt(2, leaveOpeningBalance.getCalendarYear());
 					ps.setLong(3, leaveOpeningBalance.getLeaveType().getId());
 					ps.setFloat(4, leaveOpeningBalance.getNoOfDays());
-					ps.setLong(5, leaveOpeningBalance.getCreatedBy());
-					ps.setDate(6, (Date) leaveOpeningBalance.getCreatedDate());
-					ps.setLong(7, leaveOpeningBalance.getLastModifiedBy());
-					ps.setDate(8, (Date) leaveOpeningBalance.getLastModifiedDate());
+					ps.setLong(5, leaveOpeningBalanceRequest.getRequestInfo().getUserInfo().getId());
+					ps.setDate(6, new Date(System.currentTimeMillis()));
+					ps.setLong(7, leaveOpeningBalanceRequest.getRequestInfo().getUserInfo().getId());
+					ps.setDate(8,  new Date(System.currentTimeMillis()));
 					ps.setString(9, leaveOpeningBalance.getTenantId());
 				}
 
@@ -132,13 +132,11 @@ public class LeaveOpeningBalanceRepository {
 					ps.setInt(2, leaveOpeningBalance.getCalendarYear());
 					ps.setLong(3, leaveOpeningBalance.getLeaveType().getId());
 					ps.setFloat(4, leaveOpeningBalance.getNoOfDays());
-					ps.setLong(5, leaveOpeningBalance.getCreatedBy());
-					ps.setDate(6, (Date) leaveOpeningBalance.getCreatedDate());
-					ps.setLong(7, leaveOpeningBalance.getLastModifiedBy());
-					ps.setDate(8, (Date) leaveOpeningBalance.getLastModifiedDate());
+					ps.setLong(5, leaveOpeningBalanceRequest.getRequestInfo().getUserInfo().getId());
+					ps.setDate(6,  new Date(System.currentTimeMillis()));
+					ps.setString(7, leaveOpeningBalance.getTenantId());
+					ps.setLong(8, leaveOpeningBalance.getId());
 					ps.setString(9, leaveOpeningBalance.getTenantId());
-					ps.setLong(10, leaveOpeningBalance.getId());
-					ps.setString(11, leaveOpeningBalance.getTenantId());
 				}
 
 				@Override

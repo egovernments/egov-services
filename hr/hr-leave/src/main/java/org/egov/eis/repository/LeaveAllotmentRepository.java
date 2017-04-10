@@ -66,7 +66,7 @@ public class LeaveAllotmentRepository {
 			+ " VALUES (nextval('seq_egeis_leaveAllotment'),?,?,?,?,?,?,?,?)";
 
 	public static final String UPDATE_LEAVEALLOTMENT_QUERY = "UPDATE egeis_leaveAllotment"
-			+ " SET designationId=?,  leaveTypeId=?, noOfDays=?, createdBy=?, createdDate=?,"
+			+ " SET designationId=?,  leaveTypeId=?, noOfDays=?,"
 			+ " lastModifiedBy=?, lastModifiedDate=?, tenantId=? where id=? and tenantid=? ";
 
 	@Autowired
@@ -98,10 +98,10 @@ public class LeaveAllotmentRepository {
 					ps.setLong(1, leaveAllotment.getDesignation());
 					ps.setLong(2, leaveAllotment.getLeaveType().getId());
 					ps.setFloat(3, leaveAllotment.getNoOfDays());
-					ps.setLong(4, leaveAllotment.getCreatedBy());
-					ps.setDate(5, (Date) leaveAllotment.getCreatedDate());
-					ps.setLong(6, leaveAllotment.getLastModifiedBy());
-					ps.setDate(7, (Date) leaveAllotment.getLastModifiedDate());
+					ps.setLong(4, leaveAllotmentRequest.getRequestInfo().getUserInfo().getId());
+					ps.setDate(5,  new Date(System.currentTimeMillis()));
+					ps.setLong(6, leaveAllotmentRequest.getRequestInfo().getUserInfo().getId());
+					ps.setDate(7,  new Date(System.currentTimeMillis()));
 					ps.setString(8, leaveAllotment.getTenantId());
 				}
 
@@ -129,13 +129,11 @@ public class LeaveAllotmentRepository {
 					ps.setLong(1, leaveAllotment.getDesignation());
 					ps.setLong(2, leaveAllotment.getLeaveType().getId());
 					ps.setFloat(3, leaveAllotment.getNoOfDays());
-					ps.setLong(4, leaveAllotment.getCreatedBy());
-					ps.setDate(5, (Date) leaveAllotment.getCreatedDate());
-					ps.setLong(6, leaveAllotment.getLastModifiedBy());
-					ps.setDate(7, (Date) leaveAllotment.getLastModifiedDate());
+					ps.setLong(4, leaveAllotmentRequest.getRequestInfo().getUserInfo().getId());
+					ps.setDate(5,  new Date(System.currentTimeMillis()));
+					ps.setString(6, leaveAllotment.getTenantId());
+					ps.setLong(7, leaveAllotment.getId());
 					ps.setString(8, leaveAllotment.getTenantId());
-					ps.setLong(9, leaveAllotment.getId());
-					ps.setString(10, leaveAllotment.getTenantId());
 				}
 
 				@Override

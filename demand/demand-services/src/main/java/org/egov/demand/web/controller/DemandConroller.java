@@ -100,7 +100,7 @@ public class DemandConroller {
 		try {
 			System.out.println("before calling demand repository ");
 			egDemand = demandRepository.findOne(demandSearchCriteria.getDemandId());
-			System.out.println("before calling todomain");
+			System.out.println("before calling todomain ::::   "+demandSearchCriteria.getDemandId());
 			Demand demand = egDemand.toDomain();
 			for(EgDemandDetails egdemandDetails: egDemand.getEgDemandDetails()){
 				System.out.println("inside the loop");

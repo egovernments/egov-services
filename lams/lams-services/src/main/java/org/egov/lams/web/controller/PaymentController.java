@@ -7,6 +7,8 @@ import org.egov.lams.service.AgreementService;
 import org.egov.lams.service.PaymentService;
 import org.egov.lams.web.contract.BillReceiptInfoReq;
 import org.egov.lams.web.contract.RequestInfoWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +28,8 @@ public class PaymentController {
 
 	@Autowired
 	AgreementService agreementService;
+	
+	public static final Logger LOGGER = LoggerFactory.getLogger(PaymentController.class);
 
 	@PostMapping("/_create")
 	@ResponseBody
@@ -33,7 +37,7 @@ public class PaymentController {
 			@RequestBody RequestInfoWrapper requestInfoWrapper,
 			@RequestParam (name="agreementNumber", required=false)  String agreementNumber,
 			@RequestParam (name="acknowledgementNumber", required=false)  String acknowledgementNumber) {
-		System.out.print("PaymentController - create - agreementNumber - "+agreementNumber);
+		LOGGER.info("PaymentController create:"+agreementNumber+","+acknowledgementNumber);
 		AgreementCriteria agreementCriteria = new AgreementCriteria();
 		if (StringUtils.isNotBlank(agreementNumber))
 			agreementCriteria.setAgreementNumber(agreementNumber);
@@ -49,7 +53,7 @@ public class PaymentController {
 	@PostMapping("/_update")
 	@ResponseBody
 	public ResponseEntity<?> update(@RequestBody BillReceiptInfoReq billReceiptInfoReq) {
-		System.out.print("PaymentController - update - billReceiptInfoReqbillReceiptInfoReq - "+billReceiptInfoReq);
+		System.out.print("lams-services PaymentController update ::: "+billReceiptInfoReq.getBillReceiptInfo());
 		/*BillReceiptInfoReq billReceiptInfoReq = new BillReceiptInfoReq();
 		billReceiptInfoReq.setBillReceiptInfo(billReceiptReq);
 		billReceiptInfoReq.setRequestInfo(new RequestInfo());*/

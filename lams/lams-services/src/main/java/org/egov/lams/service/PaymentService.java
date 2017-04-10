@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -170,11 +171,13 @@ public class PaymentService {
 			BigDecimal totalAmount = BigDecimal.ZERO;
 			List<BillDetailInfo> billDetailInfos = new ArrayList<>();
 			int orderNo = 0;
+			System.out.print("PaymentService- generateBillXml - getting purpose");
+			Map<String, String> purposeMap = billRepository.getPurpose();
 			for (DemandDetails demandDetail : demand.getDemandDetails()) {
 				orderNo++;
 				totalAmount = totalAmount.add(demandDetail.getTaxAmount());
 				billDetailInfos.addAll(getBilldetails(demandDetail,
-						functionCode, orderNo, requestInfo));
+						functionCode, orderNo, requestInfo, purposeMap));
 			}
 			billInfo.setTotalAmount(totalAmount.doubleValue());
 			billInfo.setBillAmount(totalAmount.doubleValue());
@@ -196,7 +199,7 @@ public class PaymentService {
 	}
 
 	public List<BillDetailInfo> getBilldetails(
-			final DemandDetails demandDetail, String functionCode, int orderNo, RequestInfo requestInfo) {
+			final DemandDetails demandDetail, String functionCode, int orderNo, RequestInfo requestInfo, Map<String, String> purpose) {
 		final List<BillDetailInfo> billDetails = new ArrayList<>();
 
 		try {
@@ -210,10 +213,8 @@ public class PaymentService {
 			LOGGER.info("getGlCode after >>>>>>>" + demandDetail.getGlCode());
 			billdetail.setDescription(demandDetail.getTaxPeriod());
 			billdetail.setPeriod(demandDetail.getTaxPeriod());
-			billdetail.setPurpose(billRepository.getPurpose()
-					.get("CURRENT_AMOUNT").toString());
-			LOGGER.info("getPurpose after >>>>>>>"
-					+ billRepository.getPurpose().get("CURRENT_AMOUNT"));
+			billdetail.setPurpose(purpose.get("CURRENT_AMOUNT").toString());
+			LOGGER.info("getPurpose after >>>>>>>" + purpose.get("CURRENT_AMOUNT"));
 
 			billdetail.setIsActualDemand(demandDetail.getIsActualDemand());
 			billdetail.setFunctionCode(functionCode);
@@ -305,6 +306,8 @@ public class PaymentService {
 		final ReceiptAmountInfo receiptAmountInfo = new ReceiptAmountInfo();
 		BigDecimal currentInstallmentAmount = BigDecimal.ZERO;
 		BigDecimal arrearAmount = BigDecimal.ZERO;
+		System.out.print("PaymentService- receiptAmountBifurcation - getting purpose");
+		Map<String, String> purposeMap = billRepository.getPurpose();
 		final List<BillDetailInfo> billDetails = new ArrayList<>(
 				billInfo.getBillDetailInfos());
 		for (final ReceiptAccountInfo rcptAccInfo : billReceiptInfo
@@ -314,7 +317,7 @@ public class PaymentService {
 					&& BigDecimal.valueOf(rcptAccInfo.getCreditAmount())
 							.compareTo(BigDecimal.ZERO) == 1) {
 				if (rcptAccInfo.getPurpose().equals(
-						billRepository.getPurpose().get("ARREAR_AMOUNT")
+						purposeMap.get("ARREAR_AMOUNT")
 								.toString()))
 					arrearAmount = arrearAmount.add(BigDecimal
 							.valueOf(rcptAccInfo.getCreditAmount()));

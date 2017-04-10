@@ -15,7 +15,7 @@ class ShowCalenderHoliday extends React.Component {
 
   componentWillMount(){
     this.setState({
-    year:getCommonMaster("egov-common-masters","calendaryears","CalendarYear").responseJSON["CalendarYear"] || []
+    year
   })
   }
 
@@ -113,7 +113,6 @@ const showTable=function()
                       <th>Sl NO.</th>
                         <th>Holiday Date</th>
                         <th>Holiday Name</th>
-                        <th>Active</th>
                         <th>Action</th>
 
                     </tr>
@@ -137,7 +136,6 @@ const showTable=function()
                     <td>{index+1}</td>
                     <td data-label="applicableOn">{item.applicableOn}</td>
                     <td data-label="name">{item.name}</td>
-                    <td data-label="active">{item.active?item.active:"true"}</td>
                     <td data-label="action">
                     {renderAction(getUrlVars()["type"],item.id)}
                     </td>
@@ -147,6 +145,7 @@ const showTable=function()
     }
 
       return (<div>
+        <h3>{getUrlVars()["type"]} Calender Holiday Setup</h3>
         <form onSubmit={(e)=>{search(e)}}>
         <fieldset>
         <div className="row">
@@ -169,15 +168,14 @@ const showTable=function()
         </div>
         <br/>
         <br/>
-        <br/>
         <div className="text-center">
-            <button type="submit"  className="btn btn-submit">Search</button>
+            <button type="submit"  className="btn btn-submit">Search</button>&nbsp;&nbsp;
+            <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>
         </div>
       </fieldset>
       </form>
 
-        <br/>
-        <br/>
+
         <br/>
         <div className="table-cont" id="table">
               {showTable()}

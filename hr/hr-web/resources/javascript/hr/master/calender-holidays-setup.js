@@ -146,11 +146,11 @@ componentWillMount(){
 
       handleChangeThreeLevel(e,pName,name)
        {
-        //  console.log(this.state.Holiday[pName]);
-        // $('#applicableOn').data("datetimepicker").minDate(false);
-        // $('#applicableOn').data("datetimepicker").maxDate(false);
-        // $('#applicableOn').data("datetimepicker").minDate(new Date(e.target.value, 0, 1));
-        // $('#applicableOn').data("datetimepicker").maxDate(new Date(e.target.value, 11, 31));
+
+        // $('#applicableOn').data("datepicker").minDate(false);
+        // $('#applicableOn').data("datetpicker").maxDate(false);
+        // $('#applicableOn').data("datepicker").minDate(new Date(e.target.value, 0, 1));
+        // $('#applicableOn').data("datepicker").maxDate(new Date(e.target.value, 11, 31));
 
         this.setState({
           Holiday:{

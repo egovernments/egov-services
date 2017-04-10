@@ -32,11 +32,11 @@ componentDidMount()
 componentDidUpdate(prevProps, prevState)
 {
     if (prevState.leaveList.length!=this.state.leaveList.length) {
-        // $('#employeeTable').DataTable().draw();
+        // $('#leaveTable').DataTable().draw();
         // alert(prevState.leaveList.length);
         // alert(this.state.leaveList.length);
         // alert('updated');
-        $('#employeeTable').DataTable({
+        $('#leaveTable').DataTable({
           dom: 'Bfrtip',
           buttons: [
                    'copy', 'csv', 'excel', 'pdf', 'print'
@@ -104,7 +104,7 @@ handleChange(e,name)
       <div>
           <br/>
           <div className="land-table">
-                <table id="employeeTable" className="table table-bordered">
+                <table id="leaveTable" className="table table-bordered">
                   <thead>
                       <tr>
                           <th>SL No. </th>

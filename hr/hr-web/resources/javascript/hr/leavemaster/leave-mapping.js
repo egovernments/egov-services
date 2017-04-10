@@ -15,7 +15,7 @@ constructor(props){
     "lastModifiedDate": "",
     "tenantId": tenantId
     },
-        designationList:[],leaveTypeList:[]}
+        assignments_designation:[],leaveTypeList:[]}
 
   this.addOrUpdate=this.addOrUpdate.bind(this);
   this.handleChange=this.handleChange.bind(this);
@@ -25,7 +25,7 @@ constructor(props){
 componentWillMount()
 {
   this.setState({
-    designationList:assignments_designation,
+    assignments_designation,
     leaveTypeList:getCommonMaster("hr-leave","leavetypes","LeaveType").responseJSON["LeaveType"],
 
 })
@@ -83,8 +83,8 @@ componentWillMount()
             };
 
           var response=$.ajax({
-                //  url:baseUrl+"/hr-leave/leaveallotments/_create",
-                 url:baseUrl+"/hr-leave/leaveallotments/" + (type == "update" ? (this.state.leave.id + "/" + "_update/") : "_create"),
+                  url:baseUrl+"/hr-leave/leaveallotments/_create",
+                //  url:baseUrl+"/hr-leave/leaveallotments/" + (type == "update" ? (this.state.leave.id + "/" + "_update/") : "_create"),
                 type: 'POST',
                 dataType: 'json',
                 data:JSON.stringify(body),
@@ -134,7 +134,7 @@ componentWillMount()
             //             "id": "",
             //
             //     },
-            //   designationList:[],
+            //   assignments_designation:[],
             //   LeaveAllotmentTypeList:[]
             // })
      }
@@ -215,7 +215,7 @@ componentWillMount()
                         handleChange(e,"designation")
                     }}required>
                     <option>Select Designation</option>
-                    {renderOption(this.state.designationList)}
+                    {renderOption(this.state.assignments_designation)}
                    </select>
                     </div>
                   </div>
@@ -254,19 +254,20 @@ componentWillMount()
                       </div>
                   </div>
               </div>
-              <div className="col-sm-6">
-                <div className="row">
-                  <div className="col-sm-6 label-text">
-                      <label for="">Active</label>
-                  </div>
-                      <div className="col-sm-6">
-                            <label className="radioUi">
-                              <input type="checkbox" name="active" id="active" value="true" onChange={(e)=>{
-                                  handleChange(e,"active")}}required/>
-                            </label>
-                      </div>
-                  </div>
-                </div>
+              {/*
+                <div className="col-sm-6">
+                  <div className="row">
+                    <div className="col-sm-6 label-text">
+                        <label for="">Active</label>
+                    </div>
+                        <div className="col-sm-6">
+                              <label className="radioUi">
+                                <input type="checkbox" name="active" id="active" value="true" onChange={(e)=>{
+                                    handleChange(e,"active")}}required/>
+                              </label>
+                        </div>
+                    </div>
+                  </div>*/}
             </div>
 
     <div className="text-center">

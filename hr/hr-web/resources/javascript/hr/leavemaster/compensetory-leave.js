@@ -1,7 +1,13 @@
 class CompensetoryLeave extends React.Component {
   constructor(props) {
     super(props);
-    this.state={employees:[],compensetorySet:{  workedOn:"",compensatoryForDate:"",name:"",code:""}}
+    this.state={
+      employees:[],
+      compensetorySet:{
+      workedOn:"",
+      compensatoryForDate:"",
+      name:"",
+      code:""},}
     this.handleChange=this.handleChange.bind(this);
 
   }
@@ -15,7 +21,6 @@ class CompensetoryLeave extends React.Component {
               [name]:e.target.value
           }
       })
-
   }
 
   close(){
@@ -36,6 +41,26 @@ class CompensetoryLeave extends React.Component {
        code:""
      }})
   }
+
+  componentDidMount(){
+    var type = getUrlVars()["type"], _this = this;
+    $('#compensatoryForDate').datepicker({
+        format: 'dd/mm/yyyy',
+        autclose:true
+
+    });
+    $('#compensatoryForDate').on("change", function(e) {
+
+      _this.setState({
+            compensetorySet: {
+                ..._this.state.compensetorySet,
+                "compensatoryForDate":$("#compensatoryForDate").val()
+            }
+      })
+      });
+  }
+
+
 
 
   render() {
@@ -101,7 +126,7 @@ class CompensetoryLeave extends React.Component {
                             <div className="col-sm-6">
                             <div className="text-no-ui">
                           <span><i className="glyphicon glyphicon-calendar"></i></span>
-                          <input type="date" id="compensatoryForDate" name="compensatoryForDate" value={compensatoryForDate}
+                          <input type="text" id="compensatoryForDate" name="compensatoryForDate" value={compensatoryForDate}
                           onChange={(e)=>{  handleChange(e,"compensatoryForDate")}}required/>
 
                           </div>
@@ -116,7 +141,7 @@ class CompensetoryLeave extends React.Component {
 
             <div className="text-center">
                  <button type="submit"  className="btn btn-submit">Forward</button> &nbsp;&nbsp;
-                <button type="button" className="btn btn-submit" onClick={(e)=>{this.close()}}>Close</button>
+                <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>
 
             </div>
           </fieldset>

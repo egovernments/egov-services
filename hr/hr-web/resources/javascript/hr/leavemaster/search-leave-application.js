@@ -1,15 +1,15 @@
-class PersonalInform extends React.Component {
+class SearchLeaveApplication extends React.Component {
   constructor(props) {
     super(props);
     this.state={employees:[],employ:{},searchSet:{
 
     name:"",
-    employee:"",
-    department:"",
-    designation:"",
+    code:"",
+    departmentId:"",
+    designationId:"",
     employeeTypeCode:"",
     functionaryCode:"",
-    employeeStatusCode:""},isSearchClicked:false,employeeType:[],departmentList:[],designationList:[],employeeStatus:[],functionary:[]}
+    employeeStatusCode:""},isSearchClicked:false,employeeType:[],assignments_department:[],assignments_designation:[],employeeStatus:[],assignments_functionary:[]}
     this.handleChange=this.handleChange.bind(this);
     this.search=this.search.bind(this);
 
@@ -23,28 +23,23 @@ class PersonalInform extends React.Component {
       e.preventDefault();
     let {
     name,
-    employee,
-    department,
-    designation,
+    code,
+    departmentId,
+    designationId,
     employeeTypeCode,
     functionaryCode,
     employeeStatusCode}=this.state.searchSet;
     e.preventDefault();
     //call api call
     var employees=[];
-    for(var i=1;i<=10;i++)
-    {
-        employees.push({
-            employee:'5202',name:"murali",designation:'xyz',department:'IT department'
-        })
-    }
+    employees=commonApiPost("hr-employee","employees","_search",{tenantId,code,departmentId,designationId},this.state.searchSet).responseJSON["Employee"] || [];
     this.setState({
       isSearchClicked:true,
       employees,searchSet:{
 
       name:"",
-      employee:"",
-      department:"",
+      code:"",
+      departmentId:"",
       designation:"",
       employeeTypeCode:"",
       functionaryCode:"",
@@ -57,61 +52,11 @@ class PersonalInform extends React.Component {
   {
 
     this.setState({
-      departmentList:getCommonMaster("egov-common-masters","departments","Department").responseJSON["Department"] || [],
-      designationList:getCommonMaster("hr-masters","designations","Designation").responseJSON["Designation"] || [],
-      employeeType:[{
-              id: 1,
-              name: "Deputation",
-              chartOfAccounts: ""
-          },
-          {
-              id: 2,
-              name: "Permanent",
-              chartOfAccounts: ""
-          },
-          {
-              id: 3,
-              name: "Daily Wages`",
-              chartOfAccounts: ""
-          },
-          {
-              id: 4,
-              name: "Temporary",
-              chartOfAccounts: ""
-          },
-          {
-              id: 5,
-              name: "Contract",
-              chartOfAccounts: ""
-          }],
-      employeeStatus:[{
-              id: 1,
-              name: "Juniour Engineer",
-              description: "",
-              orderno: "1",
-              active: true
-          },
-          {
-              id: 2,
-              name: "Assistance Engineer",
-              description: "",
-              orderno: "1",
-              active: true
-          }],
-      functionary:[{
-              id: 1,
-              name: "Juniour Engineer",
-              description: "",
-              orderno: "1",
-              active: true
-          },
-          {
-              id: 2,
-              name: "Assistance Engineer",
-              description: "",
-              orderno: "1",
-              active: true
-          }],
+      assignments_department,
+      assignments_designation,
+      employeeType,
+      employeeStatus,
+      assignments_functionary
   })
   }
 
@@ -153,13 +98,12 @@ class PersonalInform extends React.Component {
   }
 
   render() {
-    console.log(this.state.searchSet);
     let {handleChange,search,updateTable}=this;
     let {isSearchClicked,employees}=this.state;
     let {name,
-    employee,
-    department,
-    designation,
+    code,
+    departmentId,
+    designationId,
     employeeTypeCode,
     functionaryCode,
     employeeStatusCode}=this.state.searchSet;
@@ -208,23 +152,32 @@ class PersonalInform extends React.Component {
     }
     const renderBody=function()
     {
-      return employees.map((item,index)=>
+      if(employees.length>0)
+      {
+      return employees.map((item,index,id)=>
       {
             return (<tr key={index}>
 
-                    <td data-label="employee">{item.employee}</td>
+                    <td data-label="code">{item.code}</td>
                     <td data-label="name">{item.name}</td>
-                    <td data-label="designation">{item.designation}</td>
-                    <td data-label="department">{item.department}</td>
+                    <td data-label="designation">{getNameById(assignments_designation,item.assignments[0].designation)}</td>
+                    <td data-label="department">{getNameById(assignments_department,item.assignments[0].department)}</td>
                     <td data-label="action">
-                      <a href={`../../../../app/hr/leavemaster/apply-leave.html?employee=${item.employee}&name=${item.name}`}>Create</a>
+                      <a href={`app/hr/leavemaster/apply-leave.html?id=${item.id}`}>Create</a>
                     </td>
 
                 </tr>
             );
-
       })
     }
+    else {
+      return (
+          <tr>
+              <td colSpan="6">No records</td>
+          </tr>
+      )
+    }
+  }
     return (
       <div>
           <form onSubmit={(e)=>{search(e)}}>
@@ -237,10 +190,10 @@ class PersonalInform extends React.Component {
                         </div>
                         <div className="col-sm-6">
                           <div className="styled-select">
-                            <select id="designation" name="designation" value={designation} onChange={(e)=>{
-                                handleChange(e,"designation")}}>
+                            <select id="designationId" name="designationId" value={designationId} onChange={(e)=>{
+                                handleChange(e,"designationId")}}>
                             <option>Select Designation</option>
-                            {renderOption(this.state.designationList)}
+                            {renderOption(this.state.assignments_designation)}
                            </select>
                         </div>
                         </div>
@@ -253,10 +206,10 @@ class PersonalInform extends React.Component {
                           </div>
                           <div className="col-sm-6">
                           <div className="styled-select">
-                              <select id="department" name="department" value={department}
-                              onChange={(e)=>{ handleChange(e,"department")}}>
+                              <select id="departmentId" name="departmentId" value={departmentId}
+                              onChange={(e)=>{ handleChange(e,"departmentId")}}>
                                 <option>Select Department</option>
-                                {renderOption(this.state.departmentList)}
+                                {renderOption(this.state.assignments_department)}
                              </select>
                           </div>
                           </div>
@@ -272,8 +225,8 @@ class PersonalInform extends React.Component {
                           <label for="">Employee Code</label>
                         </div>
                         <div className="col-sm-6">
-                            <input type="text" id="employee" name="employee" value={employee}
-                              onChange={(e)=>{handleChange(e,"employee")}}/>
+                            <input type="text" id="code" name="code" value={code}
+                              onChange={(e)=>{handleChange(e,"code")}}/>
                         </div>
                     </div>
                   </div>
@@ -319,7 +272,7 @@ class PersonalInform extends React.Component {
                                       onChange={(e)=>{  handleChange(e,"functionaryCode")}}>
 
                                     <option>Select Functionary</option>
-                                    {renderOption(this.state.functionary)}
+                                    {renderOption(this.state.assignments_functionary)}
                                    </select>
                                 </div>
                                 </div>
@@ -366,6 +319,6 @@ class PersonalInform extends React.Component {
 
 
 ReactDOM.render(
-  <PersonalInform />,
+  <SearchLeaveApplication />,
   document.getElementById('root')
 );

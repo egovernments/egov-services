@@ -2,61 +2,71 @@ class ApplyLeave extends React.Component {
   constructor(props) {
     super(props);
     this.state={employees:[],leaveSet:{
-    name:"",
-    employee:"",
-    workingDay:"",
-    availableDays:"",
-    fromDate:"",
-    toDate:"",
-    reason:"",
-    leaveType:""},leave:[]}
+      "employee": "",
+       "leaveType": {
+       	"id" : ""
+       },
+       "fromDate" : "",
+       "toDate": "",
+       "leaveDays": "",
+       "reason": "",
+       "status": "",
+       "stateId": "",
+       "tenantId" : tenantId
+     },leaveList:[]}
     this.handleChange=this.handleChange.bind(this);
+    this.handleChangeThreeLevel=this.handleChangeThreeLevel.bind(this);
   }
+
+  componentDidMount(){
+    var type = getUrlVars()["type"], _this = this, duration,to,from;
+    var id = getUrlVars()["id"];
+    $('#fromDate').datepicker({
+        format: 'dd/mm/yyyy',
+        autclose:true
+
+    });
+    $('#fromDate').on("change", function(e) {
+      _this.setState({
+            leaveSet: {
+                ..._this.state.leaveSet,
+                "fromDate":$("#fromDate").val()
+            }
+      })
+
+      });
+      $('#toDate').datepicker({
+          format: 'dd/mm/yyyy',
+          autclose:true
+
+      });
+      $('#toDate').on("change", function(e) {
+
+        _this.setState({
+              leaveSet: {
+                  ..._this.state.leaveSet,
+                  "toDate":$("#toDate").val()
+              }
+
+        })
+        var start = $('#fromDate').datepicker('getDate');
+        var end   = $('#toDate').datepicker('getDate');
+        var days   = (end - start)/1000/60/60/24;
+        $('#workingDay').val(days + ' days');
+
+        });
+
+          this.setState({
+            leaveSet:getCommonMasterById("hr-employee","employees","Employee",id).responseJSON["Employee"][0]
+          })
+      }
 
   componentWillMount()
   {
     this.setState({
-      leave:[{
-              id: 1,
-              name: "Casual",
-              description: "",
-              orderno: "1",
-              active: true
-          },
-          {
-              id: 2,
-              name: "Gazette",
-              description: "",
-              orderno: "1",
-              active: true
-          }]
+      leaveList:getCommonMaster("hr-leave","leavetypes","LeaveType").responseJSON["LeaveType"]
     })
   }
-
-
-  // componentDidMount()
-  // {
-    // if(getUrlVars()["type"]==="view")
-    // {
-    //   for (var obj in this.state.searchSet) {
-    //       document.getElementById(obj).disabled = true;
-    //   }
-    // }
-
-    // $('#employeeTable').DataTable({
-    //   dom: 'Bfrtip',
-    //   buttons: [
-    //            'copy', 'csv', 'excel', 'pdf', 'print'
-    //    ],
-    //    ordering: false
-    // });
-
-    // console.log($('#employeeTable').length);
-
-  // }
-  //
-
-
 
   handleChange(e,name)
   {
@@ -75,24 +85,37 @@ class ApplyLeave extends React.Component {
       // widow.close();
       open(location, '_self').close();
   }
+  handleChangeThreeLevel(e,pName,name)
+  {
+    this.setState({
+      leave:{
+        ...this.state.leave,
+        [pName]:{
+            ...this.state.leave[pName],
+            [name]:e.target.value
+        }
+      }
+    })
+}
+
 
   Add(e){
     e.preventDefault();
       console.log(this.state.leaveSet);
       this.setState({leaveSet:{
       name:"",
-      employee:"",
+      code:"",
       workingDay:"",
-      availableDays:"",
+      noOfDays:"",
       fromDate:"",
       toDate:"",
       reason:"",
-      leaveType:""},leave:[] })
+      leaveType:""},leaveList:[] })
   }
 
   render() {
-    let {handleChange}=this;
-    let {name,employee,workingDay,availableDays,fromDate,toDate,reason,leaveType}=this.state.leaveSet;
+    let {handleChange,handleChangeThreeLevel}=this;
+    let {name,code,workingDay,noOfDays,fromDate,toDate,reason,leaveType}=this.state.leaveSet;
 
 
     const renderOption=function(list)
@@ -121,7 +144,7 @@ class ApplyLeave extends React.Component {
                             <label for="">Employee Name</label>
                           </div>
                           <div className="col-sm-6">
-                              <input type="text" id="name" name="name" readonly="true" value={name}
+                              <input type="text" id="name" name="name" value={name}
                               onChange={(e)=>{handleChange(e,"name")}}/>
                               </div>
                           </div>
@@ -132,8 +155,8 @@ class ApplyLeave extends React.Component {
                               <label for="">Employee Code</label>
                             </div>
                             <div className="col-sm-6">
-                                <input type="text" id="employee" readonly="true" name="employee" value={employee}
-                                onChange={(e)=>{handleChange(e,"employee")}}/>
+                                <input type="text" id="code" name="code" value={code}
+                                onChange={(e)=>{handleChange(e,"code")}}/>
                             </div>
                         </div>
                       </div>
@@ -149,7 +172,7 @@ class ApplyLeave extends React.Component {
                           <div className="col-sm-6">
                           <div className="text-no-ui">
                           <span><i className="glyphicon glyphicon-calendar"></i></span>
-                          <input type="date" id="fromDate" name="fromDate" value="fromDate" value={fromDate}
+                          <input type="text" id="fromDate" name="fromDate" value="fromDate" value={fromDate}
                           onChange={(e)=>{handleChange(e,"fromDate")}}required/>
 
                           </div>
@@ -164,7 +187,7 @@ class ApplyLeave extends React.Component {
                             <div className="col-sm-6">
                             <div className="text-no-ui">
                           <span><i className="glyphicon glyphicon-calendar"></i></span>
-                          <input type="date"  id="toDate" name="toDate" value={toDate}
+                          <input type="text"  id="toDate" name="toDate" value={toDate}
                           onChange={(e)=>{
                               handleChange(e,"toDate")}}required/>
                           </div>
@@ -182,12 +205,7 @@ class ApplyLeave extends React.Component {
                         </div>
                         <div className="col-sm-6">
                             <div className="styled-select">
-                            <select id="leaveType" name="leaveType" value={leaveType}
-                              onChange={(e)=>{ handleChange(e,"leaveType")
-                            }}>
-                            <option>Select Leave Type</option>
-                            {renderOption(this.state.leave)}
-                           </select>
+                          //  
                             </div>
                         </div>
                     </div>
@@ -215,7 +233,8 @@ class ApplyLeave extends React.Component {
                             <label for="">Working Days</label>
                           </div>
                           <div className="col-sm-6">
-                              <input type="number" id="workingDay" name="workingDay" value={workingDay}
+
+                              <input type="text" id="workingDay" name="workingDay" value=""
                               onChange={(e)=>{handleChange(e,"workingDay")}}/>
                           </div>
                       </div>
@@ -226,8 +245,8 @@ class ApplyLeave extends React.Component {
                               <label for="">Available Leave</label>
                             </div>
                             <div className="col-sm-6">
-                                <input  type="number" id="availableDays" name="availableDays" value={availableDays}
-                                onChange={(e)=>{handleChange(e,"availableDays")}}/>
+                                <input  type="number" id="noOfDays" name="noOfDays" value={noOfDays}
+                                onChange={(e)=>{handleChange(e,"noOfDays")}}/>
                             </div>
                         </div>
                       </div>

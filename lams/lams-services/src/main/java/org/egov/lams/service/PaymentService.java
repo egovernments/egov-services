@@ -226,31 +226,34 @@ public class PaymentService {
 
 	public ResponseEntity<ReceiptAmountInfo> updateDemand(
 			BillReceiptInfoReq billReceiptInfoReq) {
-
+		System.out.print("PaymentService- updateDemand - billReceiptInfoReq - "+billReceiptInfoReq);
 		BillSearchCriteria billSearchCriteria = new BillSearchCriteria();
+		DemandSearchCriteria demandSearchCriteria = new DemandSearchCriteria();
 		BillReceiptReq billReceiptInfo = billReceiptInfoReq
 				.getBillReceiptInfo();
-		billSearchCriteria.setBillId(Long.valueOf(1));
+		billSearchCriteria.setBillId(Long.valueOf(billReceiptInfo.getBillReferenceNum()));
 		BillInfo billInfo = billRepository.searchBill(billSearchCriteria,
 				billReceiptInfoReq.getRequestInfo());
-		DemandSearchCriteria demandSearchCriteria = new DemandSearchCriteria();
+		System.out.print("PaymentService- updateDemand - billInfo - "+billInfo);
 		demandSearchCriteria.setDemandId(billInfo.getDemandId());
 		Demand currentDemand = demandRepository
 				.getDemandBySearch(demandSearchCriteria,
 						billReceiptInfoReq.getRequestInfo()).getDemands()
 				.get(0);
+		System.out.print("PaymentService- updateDemand - currentDemand - "+currentDemand);
 		if (currentDemand.getMinAmountPayable() != null
 				&& currentDemand.getMinAmountPayable() > 0)
 			currentDemand.setMinAmountPayable(0d);
 
 		updateDemandDetailForReceiptCreate(currentDemand,
 				billReceiptInfoReq.getBillReceiptInfo());
-
+		System.out.print("PaymentService- updateDemand - updateDemandDetailForReceiptCreate done");
 		currentDemand.setPaymentInfos(setPaymentInfos(billReceiptInfo));
 		demandRepository
 				.updateDemand(Arrays.asList(currentDemand),
 						billReceiptInfoReq.getRequestInfo()).getDemands()
 				.get(0);
+		System.out.print("PaymentService- updateDemand - setPaymentInfos done");
 		return receiptAmountBifurcation(billReceiptInfo, billInfo);
 	}
 
@@ -297,7 +300,8 @@ public class PaymentService {
 	public ResponseEntity<ReceiptAmountInfo> receiptAmountBifurcation(
 			final BillReceiptReq billReceiptInfo, BillInfo billInfo) {
 		ResponseEntity<ReceiptAmountInfo> receiptAmountInfoResponse = null;
-
+		System.out.print("PaymentService- receiptAmountBifurcation - billReceiptInfo - "+billReceiptInfo);
+		System.out.print("PaymentService- receiptAmountBifurcation - billInfo - "+billInfo);
 		final ReceiptAmountInfo receiptAmountInfo = new ReceiptAmountInfo();
 		BigDecimal currentInstallmentAmount = BigDecimal.ZERO;
 		BigDecimal arrearAmount = BigDecimal.ZERO;
@@ -305,6 +309,7 @@ public class PaymentService {
 				billInfo.getBillDetailInfos());
 		for (final ReceiptAccountInfo rcptAccInfo : billReceiptInfo
 				.getAccountDetails()) {
+			System.out.print("PaymentService- receiptAmountBifurcation - rcptAccInfo - "+rcptAccInfo);
 			if (rcptAccInfo.getCreditAmount() != null
 					&& BigDecimal.valueOf(rcptAccInfo.getCreditAmount())
 							.compareTo(BigDecimal.ZERO) == 1) {
@@ -332,6 +337,7 @@ public class PaymentService {
 							receiptAmountInfo, HttpStatus.OK);
 				}
 			}
+			System.out.print("PaymentService- receiptAmountBifurcation - receiptAmountInfo - "+receiptAmountInfo);
 		}
 		return receiptAmountInfoResponse;
 	}

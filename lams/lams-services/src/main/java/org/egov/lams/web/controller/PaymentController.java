@@ -33,6 +33,7 @@ public class PaymentController {
 			@RequestBody RequestInfoWrapper requestInfoWrapper,
 			@RequestParam (name="agreementNumber", required=false)  String agreementNumber,
 			@RequestParam (name="acknowledgementNumber", required=false)  String acknowledgementNumber) {
+		System.out.print("PaymentController - create - agreementNumber - "+agreementNumber);
 		AgreementCriteria agreementCriteria = new AgreementCriteria();
 		if (StringUtils.isNotBlank(agreementNumber))
 			agreementCriteria.setAgreementNumber(agreementNumber);
@@ -40,6 +41,7 @@ public class PaymentController {
 			agreementCriteria.setAcknowledgementNumber(acknowledgementNumber);
 		Agreement agreement = agreementService.searchAgreement(
 				agreementCriteria).get(0);
+		System.out.print("PaymentController - create - agreement - "+agreement);
 		return new ResponseEntity<>(paymentService.generateBillXml(agreement,
 				requestInfoWrapper.getRequestInfo()), HttpStatus.OK);
 	}
@@ -47,7 +49,7 @@ public class PaymentController {
 	@PostMapping("/_update")
 	@ResponseBody
 	public ResponseEntity<?> update(@RequestBody BillReceiptInfoReq billReceiptInfoReq) {
-		System.out.print("billReceiptReq--->>>lams-services"+billReceiptInfoReq.getBillReceiptInfo());
+		System.out.print("PaymentController - update - billReceiptInfoReqbillReceiptInfoReq - "+billReceiptInfoReq);
 		/*BillReceiptInfoReq billReceiptInfoReq = new BillReceiptInfoReq();
 		billReceiptInfoReq.setBillReceiptInfo(billReceiptReq);
 		billReceiptInfoReq.setRequestInfo(new RequestInfo());*/

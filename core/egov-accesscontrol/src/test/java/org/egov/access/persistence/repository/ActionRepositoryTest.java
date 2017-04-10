@@ -47,8 +47,7 @@ public class ActionRepositoryTest {
         assertEquals(currDate,actions.get(0).getCreatedDate().toString());
         assertEquals(currDate,actions.get(0).getLastModifiedDate().toString());
         assertEquals("PgrComp",actions.get(0).getParentModule());
-        //TODO - @Sanjeev fix it
-        //assertEquals("PGR",actions.get(0).getServiceCode());
+        assertEquals("PGR",actions.get(0).getServiceCode());
 
     }
 

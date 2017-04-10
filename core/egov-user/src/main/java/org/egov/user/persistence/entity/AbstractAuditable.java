@@ -42,9 +42,7 @@ package org.egov.user.persistence.entity;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -59,20 +57,16 @@ public abstract class AbstractAuditable extends AbstractPersistable<Long> {
 
 	private static final long serialVersionUID = -3061749263902787420L;
 
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "createdby")
-	@CreatedBy
-	private User createdBy;
+	@Column(name = "createdby")
+	private Long createdBy;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
 	@Column(name = "createddate")
 	private Date createdDate;
 
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "lastmodifiedby")
-	@LastModifiedBy
-	private User lastModifiedBy;
+	@Column(name = "lastmodifiedby")
+	private Long lastModifiedBy;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@LastModifiedDate

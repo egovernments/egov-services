@@ -121,9 +121,9 @@ public class UserTest {
                 .identificationMark("identification mark")
                 .build();
 
-        userEntity.setCreatedBy(userEntity);
+        userEntity.setCreatedBy(1L);
         userEntity.setCreatedDate(date);
-        userEntity.setLastModifiedBy(userEntity);
+        userEntity.setLastModifiedBy(1L);
         userEntity.setLastModifiedDate(date);
 
         return userEntity;
@@ -176,9 +176,9 @@ public class UserTest {
                 .name("name of the role 1")
                 .description("description")
                 .build();
-        role1.setCreatedBy(user);
+        role1.setCreatedBy(1L);
         role1.setCreatedDate(calendar.getTime());
-        role1.setLastModifiedBy(user);
+        role1.setLastModifiedBy(1L);
         role1.setLastModifiedDate(calendar.getTime());
 
         org.egov.user.persistence.entity.Role role2 = org.egov.user.persistence.entity.Role.builder()
@@ -186,9 +186,9 @@ public class UserTest {
                 .name("name of the role 2")
                 .description("description")
                 .build();
-        role2.setCreatedBy(user);
+        role2.setCreatedBy(1L);
         role2.setCreatedDate(calendar.getTime());
-        role2.setLastModifiedBy(user);
+        role2.setLastModifiedBy(1L);
         role2.setLastModifiedDate(calendar.getTime());
 
         return new HashSet<Role>() {{

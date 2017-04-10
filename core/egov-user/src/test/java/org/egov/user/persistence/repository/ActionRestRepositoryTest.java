@@ -42,15 +42,15 @@ public class ActionRestRepositoryTest {
                 .andExpect(method(HttpMethod.POST))
                 .andRespond(withSuccess(getFileContents("getActionUrls.json"),
                         MediaType.APPLICATION_JSON_UTF8));
-        final ActionResponse actionResponse = actionRestRepository.getActionByRoleId(getRoles());
+        final ActionResponse actionResponse = actionRestRepository.getActionByRoleCodes(getRoles());
         server.verify();
         assertTrue(actionResponse != null);
     }
 
-    public List<Long> getRoles(){
-        List<Long> roleIds=new ArrayList<Long>();
-        roleIds.add(15L);
-        return  roleIds;
+    public List<String> getRoles(){
+        List<String> roleCodes=new ArrayList<String>();
+        roleCodes.add("EMPLOYEE");
+        return  roleCodes;
     }
 
     private String getFileContents(String fileName) {

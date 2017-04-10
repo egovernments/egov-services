@@ -24,9 +24,9 @@ public class RoleRequestTest {
                 .name("name of the roleRequest 1")
                 .description("description")
                 .build();
-        roleEntity.setCreatedBy(user);
+        roleEntity.setCreatedBy(1L);
         roleEntity.setCreatedDate(date);
-        roleEntity.setLastModifiedBy(user);
+        roleEntity.setLastModifiedBy(1L);
         roleEntity.setLastModifiedDate(date);
 
         RoleRequest roleRequest = new RoleRequest(roleEntity);

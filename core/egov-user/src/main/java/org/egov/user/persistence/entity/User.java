@@ -226,11 +226,11 @@ public class User extends AbstractAuditable {
     }
 
     private Long getLastModifiedId() {
-        return getLastModifiedBy() == null ? null : getLastModifiedBy().getId();
+        return  getLastModifiedBy();
     }
 
     private Long getCreatedById() {
-        return getCreatedBy() == null ? null : getCreatedBy().getId();
+        return getCreatedBy();
     }
 
     private List<org.egov.user.domain.model.Role> convertEntityRoleToDomain(Set<Role> entityRoles) {

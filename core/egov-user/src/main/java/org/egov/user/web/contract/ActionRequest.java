@@ -14,6 +14,8 @@ public class ActionRequest {
 
     @JsonProperty("RequestInfo")
     private RequestInfo requestInfo;
-    @JsonProperty("RoleIds")
-    private List<Long> roleIds;
+    @JsonProperty("RoleCodes")
+    private List<String> roleCodes;
+    @JsonProperty("TenantId")
+    private String tenantId;
 }

@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 public class UserController {
 
     private UserService userService;
-    // private ActionRestRepository actionRestRepository;
     private TokenService tokenService;
 
     public UserController(UserService userService,TokenService tokenService) {

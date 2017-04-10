@@ -97,7 +97,7 @@ public class UserRepositoryTest {
                 .roles(roles)
                 .build();
         final Role role = new Role();
-        when(roleRepository.findByNameIgnoreCase(roleName)).thenReturn(role);
+        when(roleRepository.findByName(roleName)).thenReturn(role);
 
         User actualUser = userRepository.save(domainUser);
 
@@ -117,7 +117,7 @@ public class UserRepositoryTest {
                 .password(rawPassword)
                 .build();
         final Role role = new Role();
-        when(roleRepository.findByNameIgnoreCase(roleName)).thenReturn(role);
+        when(roleRepository.findByName(roleName)).thenReturn(role);
         final String expectedEncodedPassword = "encodedPassword";
         when(passwordEncoder.encode(rawPassword)).thenReturn(expectedEncodedPassword);
 
@@ -140,8 +140,8 @@ public class UserRepositoryTest {
                 .build();
         final Role role1 = Role.builder().id(1L).build();
         final Role role2 = Role.builder().id(2L).build();
-        when(roleRepository.findByNameIgnoreCase(roleName1)).thenReturn(role1);
-        when(roleRepository.findByNameIgnoreCase(roleName2)).thenReturn(role2);
+        when(roleRepository.findByName(roleName1)).thenReturn(role1);
+        when(roleRepository.findByName(roleName2)).thenReturn(role2);
 
         userRepository.save(domainUser);
 
@@ -204,7 +204,7 @@ public class UserRepositoryTest {
             return expectedRoles.equals(acutalUser.getRoles());
         }
     }
-    
+
     @Test
     public void test_should_update_entity_user() {
         org.egov.user.persistence.entity.User entityUser = mock(org.egov.user.persistence.entity.User.class);
@@ -221,13 +221,13 @@ public class UserRepositoryTest {
 
         assertEquals(expectedUser, actualUser);
     }
-    
+
     @Test
     public void test_should_return_user() {
         org.egov.user.persistence.entity.User entityUser = mock(org.egov.user.persistence.entity.User.class);
         when(userJpaRepository.findOne(any(Long.class))).thenReturn(entityUser);
         org.egov.user.persistence.entity.User actualUser = userRepository.getUserById(any(Long.class));
-        
+
         assertEquals(entityUser, actualUser);
     }
 }

@@ -45,7 +45,7 @@ public class TokenServiceTest {
         when(tokenStore.readAuthentication("c80e0ade-f48d-4077-b0d2-4e58526a6bfd")).thenReturn(oAuth2Authentication);
         SecureUser secureUser = new SecureUser(getUser());
         when(oAuth2Authentication.getPrincipal()).thenReturn(secureUser);
-        when(actionRestRepository.getActionByRoleId(getRoleIds())).thenReturn(getActionResponse());
+        when(actionRestRepository.getActionByRoleCodes(getRoleCodes())).thenReturn(getActionResponse());
         CustomUserDetails customUserDetails=tokenService.getUser("c80e0ade-f48d-4077-b0d2-4e58526a6bfd");
 
         assertEquals(expectedCustomUserDetails.getId(),customUserDetails.getId());
@@ -83,6 +83,7 @@ public class TokenServiceTest {
         org.egov.user.domain.model.Role roleModel=new org.egov.user.domain.model.Role();
         roleModel.setId(15L);
         roleModel.setName("Employee");
+        roleModel.setCode("Employee");
 
         Role role=new Role(roleModel);
 
@@ -102,8 +103,8 @@ public class TokenServiceTest {
         return actions;
     }
 
-    public List<Long> getRoleIds(){
-       return  getRoles().stream().map(role ->role.getId()) .collect(Collectors.toList());
+    public List<String> getRoleCodes(){
+       return  getUser().getRoles().stream().map(role -> role.getCode()) .collect(Collectors.toList());
     }
 
     public ActionResponse getActionResponse(){

@@ -7,8 +7,6 @@ import org.egov.user.domain.model.Role;
 
 import java.util.Date;
 
-import static org.springframework.util.ObjectUtils.isEmpty;
-
 @Setter
 @Getter
 @Builder
@@ -42,9 +40,9 @@ public class RoleRequest {
         this.id = roleEntity.getId();
         this.name = roleEntity.getName();
         this.description = roleEntity.getDescription();
-        this.createdBy = isEmpty(roleEntity.getCreatedBy()) ? 0L : roleEntity.getCreatedBy().getId();
+        this.createdBy = roleEntity.getCreatedBy()==null ? 0L : roleEntity.getCreatedBy();
         this.createdDate = roleEntity.getCreatedDate();
-        this.lastModifiedBy = isEmpty(roleEntity.getLastModifiedBy()) ? 0L : roleEntity.getLastModifiedBy().getId();
+        this.lastModifiedBy = roleEntity.getLastModifiedBy()==null ? 0L : roleEntity.getLastModifiedBy();
         this.lastModifiedDate = roleEntity.getLastModifiedDate();
     }
 
@@ -52,9 +50,9 @@ public class RoleRequest {
         this.id = domainRole.getId();
         this.name = domainRole.getName();
         this.description = domainRole.getDescription();
-        this.createdBy = isEmpty(domainRole.getCreatedBy()) ? 0L : domainRole.getCreatedBy();
+        this.createdBy = domainRole.getCreatedBy()==null ? 0L : domainRole.getCreatedBy();
         this.createdDate = domainRole.getCreatedDate();
-        this.lastModifiedBy = isEmpty(domainRole.getLastModifiedBy()) ? 0L : domainRole.getLastModifiedBy();
+        this.lastModifiedBy = domainRole.getLastModifiedBy()==null ? 0L : domainRole.getLastModifiedBy();
         this.lastModifiedDate = domainRole.getLastModifiedDate();
     }
     

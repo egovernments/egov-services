@@ -13,9 +13,11 @@ public class Role implements Serializable {
     private static final long serialVersionUID = 2090518436085399889L;
     private Long id;
     private String name;
+    private String code;
 
     public Role(org.egov.user.domain.model.Role role) {
         this.id = role.getId();
         this.name = role.getName();
+        this.code= role.getCode();
     }
 }

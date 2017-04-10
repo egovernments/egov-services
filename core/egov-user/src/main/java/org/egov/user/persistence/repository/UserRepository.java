@@ -94,7 +94,7 @@ public class UserRepository {
     private Set<Role> fetchRolesByName(User user) {
         return user.getRoles()
                 .stream()
-                .map((role) -> roleRepository.findByNameIgnoreCase(role.getName()))
+                .map((role) -> roleRepository.findByName(role.getName()))
                 .collect(Collectors.toSet());
     }
 

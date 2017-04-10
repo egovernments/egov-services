@@ -50,8 +50,8 @@ public class RoleTest {
                 .description("description").build();
         entityRole.setLastModifiedDate(date);
         entityRole.setCreatedDate(date);
-        entityRole.setCreatedBy(user);
-        entityRole.setLastModifiedBy(user);
+        entityRole.setCreatedBy(1L);
+        entityRole.setLastModifiedBy(1L);
 
         org.egov.user.domain.model.Role domainRole = entityRole.toDomain();
 
@@ -60,7 +60,7 @@ public class RoleTest {
         assertThat(domainRole.getDescription()).isEqualTo(entityRole.getDescription());
         assertThat(domainRole.getLastModifiedDate()).isEqualTo(entityRole.getLastModifiedDate());
         assertThat(domainRole.getCreatedDate()).isEqualTo(entityRole.getCreatedDate());
-        assertThat(domainRole.getCreatedBy()).isEqualTo(entityRole.getCreatedBy().getId());
-        assertThat(domainRole.getLastModifiedBy()).isEqualTo(entityRole.getLastModifiedBy().getId());
+        assertThat(domainRole.getCreatedBy()).isEqualTo(entityRole.getCreatedBy());
+        assertThat(domainRole.getLastModifiedBy()).isEqualTo(entityRole.getLastModifiedBy());
     }
 }

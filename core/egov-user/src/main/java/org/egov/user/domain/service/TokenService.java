@@ -7,8 +7,8 @@ import org.egov.user.persistence.repository.ActionRestRepository;
 import org.egov.user.web.contract.ActionResponse;
 import org.egov.user.web.contract.auth.Action;
 import org.egov.user.web.contract.auth.CustomUserDetails;
+import org.egov.user.web.contract.auth.Role;
 import org.egov.user.web.contract.auth.SecureUser;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.stereotype.Service;
@@ -41,10 +41,9 @@ public class TokenService {
         }
         SecureUser secureUser = ((SecureUser) authentication.getPrincipal());
 
-         List<Long> roleId = secureUser.getUser().getRoles().stream().map(role ->
-          role.getId()) .collect(Collectors.toList());
-        if(!roleId.isEmpty()) {
-            ActionResponse actions = actionRestRepository.getActionByRoleId(roleId);
+         List<String> roleCodes = secureUser.getUser().getRoles().stream().map(Role::getCode).collect(Collectors.toList());
+        if(!roleCodes.isEmpty()) {
+            ActionResponse actions = actionRestRepository.getActionByRoleCodes(roleCodes);
             if (!actions.isActions()) {
                 return new CustomUserDetails(secureUser, actions.getActions());
             }

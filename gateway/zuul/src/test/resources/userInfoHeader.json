@@ -7,10 +7,14 @@
     "emailId": "fu@bar.com",
     "roles": [
         {
-            "name": "Employee"
+            "id": 1,
+            "name": "Employee",
+            "code": "EMPLOYEE"
         },
         {
-            "name": "ULB Operator"
+            "id": 2,
+            "name": "ULB Operator",
+            "code": "ULB"
         }
     ]
 }

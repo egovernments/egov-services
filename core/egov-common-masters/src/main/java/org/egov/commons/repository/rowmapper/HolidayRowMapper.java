@@ -53,17 +53,19 @@ public class HolidayRowMapper implements RowMapper<Holiday> {
 
 	@Override
 	public Holiday mapRow(ResultSet rs, int rowNum) throws SQLException {
+		final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
 		Holiday holiday = new Holiday();
 		holiday.setId(rs.getLong("h_id"));
 		holiday.setName(rs.getString("h_name"));
-		holiday.setApplicableOn(rs.getDate("h_applicableOn"));
+		holiday.setApplicableOn(sdf.parse(sdf.format(rs.getDate("h_applicableOn"))));
 		holiday.setTenantId(rs.getString("h_tenantId"));
 
 		CalendarYear calendarYear = new CalendarYear();
 		calendarYear.setId(rs.getLong("cy_id"));
 		calendarYear.setName((Integer) rs.getObject("cy_name"));
-		calendarYear.setStartDate(rs.getDate("cy_startDate"));
-		calendarYear.setEndDate(rs.getDate("cy_endDate"));
+		calendarYear.setStartDate(sdf.parse(sdf.format(rs.getDate("cy_startDate"))));
+		calendarYear.setEndDate(sdf.parse(sdf.format(rs.getDate("cy_endDate"))));
 		calendarYear.setActive((Boolean) rs.getObject("cy_active"));
 		calendarYear.setTenantId(rs.getString("cy_tenantId"));
 

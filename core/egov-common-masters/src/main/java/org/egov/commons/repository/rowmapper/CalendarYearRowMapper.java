@@ -52,11 +52,13 @@ public class CalendarYearRowMapper implements RowMapper<CalendarYear> {
 
 	@Override
 	public CalendarYear mapRow(ResultSet rs, int rowNum) throws SQLException {
+		final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
 		CalendarYear calendarYear = new CalendarYear();
 		calendarYear.setId(rs.getLong("id"));
 		calendarYear.setName((Integer) rs.getObject("name"));
-		calendarYear.setStartDate(rs.getDate("startDate"));
-		calendarYear.setEndDate(rs.getDate("endDate"));
+		calendarYear.setStartDate(sdf.parse(sdf.format(rs.getDate("startDate"))));
+		calendarYear.setEndDate(sdf.parse(sdf.format(rs.getDate("endDate"))));
 		calendarYear.setActive((Boolean) rs.getObject("active"));
 		calendarYear.setTenantId(rs.getString("tenantId"));
 		return calendarYear;

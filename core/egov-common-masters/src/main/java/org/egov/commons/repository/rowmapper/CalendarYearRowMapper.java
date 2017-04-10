@@ -42,6 +42,8 @@ package org.egov.commons.repository.rowmapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import org.egov.commons.model.CalendarYear;
 import org.springframework.jdbc.core.RowMapper;
@@ -57,8 +59,14 @@ public class CalendarYearRowMapper implements RowMapper<CalendarYear> {
 		CalendarYear calendarYear = new CalendarYear();
 		calendarYear.setId(rs.getLong("id"));
 		calendarYear.setName((Integer) rs.getObject("name"));
-		calendarYear.setStartDate(sdf.parse(sdf.format(rs.getDate("startDate"))));
-		calendarYear.setEndDate(sdf.parse(sdf.format(rs.getDate("endDate"))));
+
+		try {
+			calendarYear.setStartDate(sdf.parse(sdf.format(rs.getDate("startDate"))));
+			calendarYear.setEndDate(sdf.parse(sdf.format(rs.getDate("endDate"))));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
 		calendarYear.setActive((Boolean) rs.getObject("active"));
 		calendarYear.setTenantId(rs.getString("tenantId"));
 		return calendarYear;

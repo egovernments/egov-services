@@ -42,6 +42,8 @@ package org.egov.commons.repository.rowmapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import org.egov.commons.model.CalendarYear;
 import org.egov.commons.model.Holiday;
@@ -58,16 +60,21 @@ public class HolidayRowMapper implements RowMapper<Holiday> {
 		Holiday holiday = new Holiday();
 		holiday.setId(rs.getLong("h_id"));
 		holiday.setName(rs.getString("h_name"));
-		holiday.setApplicableOn(sdf.parse(sdf.format(rs.getDate("h_applicableOn"))));
 		holiday.setTenantId(rs.getString("h_tenantId"));
 
 		CalendarYear calendarYear = new CalendarYear();
 		calendarYear.setId(rs.getLong("cy_id"));
 		calendarYear.setName((Integer) rs.getObject("cy_name"));
-		calendarYear.setStartDate(sdf.parse(sdf.format(rs.getDate("cy_startDate"))));
-		calendarYear.setEndDate(sdf.parse(sdf.format(rs.getDate("cy_endDate"))));
 		calendarYear.setActive((Boolean) rs.getObject("cy_active"));
 		calendarYear.setTenantId(rs.getString("cy_tenantId"));
+
+		try {
+			calendarYear.setStartDate(sdf.parse(sdf.format(rs.getDate("cy_startDate"))));
+			calendarYear.setEndDate(sdf.parse(sdf.format(rs.getDate("cy_endDate"))));
+			holiday.setApplicableOn(sdf.parse(sdf.format(rs.getDate("h_applicableOn"))));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 
 		holiday.setCalendarYear(calendarYear);
 

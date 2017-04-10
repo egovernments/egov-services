@@ -44,6 +44,7 @@ import java.util.List;
 
 import org.egov.eis.broker.LeaveApplicationProducer;
 import org.egov.eis.model.LeaveApplication;
+import org.egov.eis.model.enums.LeaveStatus;
 import org.egov.eis.repository.LeaveApplicationRepository;
 import org.egov.eis.web.contract.LeaveApplicationGetRequest;
 import org.egov.eis.web.contract.LeaveApplicationSingleRequest;
@@ -110,6 +111,7 @@ public class LeaveApplicationService {
 
     public LeaveApplication updateLeaveApplication(final LeaveApplicationSingleRequest leaveApplicationRequest) {
         final LeaveApplication leaveApplication = leaveApplicationRequest.getLeaveApplication();
+        leaveApplication.setStatus(LeaveStatus.APPROVED);
         String leaveApplicationRequestJson = null;
         try {
             final ObjectMapper mapper = new ObjectMapper();

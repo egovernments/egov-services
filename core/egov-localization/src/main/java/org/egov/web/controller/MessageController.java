@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/messages")
 public class MessageController {
 
+    private static String LOCALE_EN = "en_IN";
     private MessageRepository messageRepository;
 
     @Autowired
@@ -52,7 +53,10 @@ public class MessageController {
     }
 
     private List<Message> getMessages(String locale, String tenantId) {
-        return mapToContractMessages(messageRepository.findByTenantIdAndLocale(tenantId, locale));
+        List<org.egov.persistence.entity.Message> messages = messageRepository.findByTenantIdAndLocale(tenantId, locale);
+        if(messages.isEmpty())
+            messages = messageRepository.findByTenantIdAndLocale(tenantId, LOCALE_EN);
+        return mapToContractMessages(messages);
     }
 
 }

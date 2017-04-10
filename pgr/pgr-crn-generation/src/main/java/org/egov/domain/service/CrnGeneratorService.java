@@ -1,5 +1,6 @@
 package org.egov.domain.service;
 
+import lombok.EqualsAndHashCode;
 import org.egov.persistence.util.DBSequenceGenerator;
 import org.egov.persistence.util.SequenceNumberGenerator;
 import org.egov.persistence.util.Utils;
@@ -10,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.Serializable;
 import java.sql.SQLException;
 
+@EqualsAndHashCode
 @Service
 public class CrnGeneratorService {
 

@@ -151,7 +151,7 @@ public class PaymentService {
 			LOGGER.info("after Bill Number"
 					+ billNumberService.generateBillNumber());
 			DemandSearchCriteria demandSearchCriteria = new DemandSearchCriteria();
-			demandSearchCriteria.setDemandId(1L);
+			demandSearchCriteria.setDemandId(Long.valueOf(agreement.getDemands().get(0)));
 
 			LOGGER.info("demand before>>>>>>>" + demandSearchCriteria);
 

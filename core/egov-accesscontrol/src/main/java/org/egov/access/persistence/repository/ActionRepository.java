@@ -33,23 +33,23 @@ public class ActionRepository {
     public List<Action> findForCriteria(final ActionSearchCriteria actionSearchCriteria) throws ParseException {
         final List<Object> preparedStatementValues = new ArrayList<Object>();
         preparedStatementValues.add(actionSearchCriteria.getTenantId());
-        final String queryStr = getQuery(actionSearchCriteria,preparedStatementValues);
+        final String queryStr = getQuery(actionSearchCriteria);
         final List<Action> actions = jdbcTemplate.query(queryStr,preparedStatementValues.toArray(),
                 new ActionRowMapper());
         return actions;
     }
 
-    private String getQuery(ActionSearchCriteria actionSearchCriteria,final List preparedStatementValues) {
+    private String getQuery(ActionSearchCriteria actionSearchCriteria) {
         final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
 
-        addWhereClause(selectQuery, preparedStatementValues,actionSearchCriteria);
+        addWhereClause(selectQuery,actionSearchCriteria);
         selectQuery.append(" order by a.name");
 
         logger.debug("Query : " + selectQuery);
         return selectQuery.toString();
     }
 
-    private void addWhereClause(final StringBuilder selectQuery,final List preparedStatementValues,
+    private void addWhereClause(final StringBuilder selectQuery,
                                   final ActionSearchCriteria actionSearchCriteria) {
 
         if (actionSearchCriteria != null && actionSearchCriteria.getRoleCodes() == null && actionSearchCriteria.getRoleCodes().isEmpty())

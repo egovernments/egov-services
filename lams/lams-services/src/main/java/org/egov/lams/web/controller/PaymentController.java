@@ -6,6 +6,7 @@ import org.egov.lams.model.AgreementCriteria;
 import org.egov.lams.service.AgreementService;
 import org.egov.lams.service.PaymentService;
 import org.egov.lams.web.contract.BillReceiptInfoReq;
+import org.egov.lams.web.contract.BillReceiptReq;
 import org.egov.lams.web.contract.RequestInfoWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,11 +53,15 @@ public class PaymentController {
 
 	@PostMapping("/_update")
 	@ResponseBody
-	public ResponseEntity<?> update(@RequestBody BillReceiptInfoReq billReceiptInfoReq) {
-		System.out.print("lams-services PaymentController update ::: "+billReceiptInfoReq.getBillReceiptInfo());
+	public ResponseEntity<?> update(@RequestBody BillReceiptReq billReceiptReq) {
+		
+		System.out.print("lams-services PaymentController update ::: "+billReceiptReq);
 		/*BillReceiptInfoReq billReceiptInfoReq = new BillReceiptInfoReq();
 		billReceiptInfoReq.setBillReceiptInfo(billReceiptReq);
 		billReceiptInfoReq.setRequestInfo(new RequestInfo());*/
+		BillReceiptInfoReq billReceiptInfoReq = new BillReceiptInfoReq();
+		billReceiptInfoReq.setBillReceiptInfo(billReceiptReq);
+		
 		return new ResponseEntity<>(
 				paymentService.updateDemand(billReceiptInfoReq), HttpStatus.OK);
 	}

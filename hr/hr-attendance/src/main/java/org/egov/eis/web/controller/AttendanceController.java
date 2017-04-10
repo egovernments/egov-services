@@ -172,7 +172,7 @@ public class AttendanceController {
         boolean isEmployeeDate = true;
         boolean isTypeExists = false;
         boolean isAttendanceExists = false;
-        boolean isEmployeePresent = true;
+//        boolean isEmployeePresent = true;
         boolean isEmployeeRetired = false;
         boolean isFutureDate = false;
 
@@ -186,12 +186,12 @@ public class AttendanceController {
                     && attendanceService.getByEmployeeAndDate(attendance.getEmployee(), attendance.getAttendanceDate(), tenantId))
                 isAttendanceExists = true;
 
-            final List<EmployeeInfo> employeeInfos = employeeService.getEmployee(attendance.getEmployee(), tenantId,
-                    attendanceRequest.getRequestInfo());
-            if (employeeInfos.isEmpty())
-                isEmployeePresent = false;
-            else if (EmployeeStatus.RETIRED.toString().equals(employeeInfos.get(0).getEmployeeStatus()))
-                isEmployeeRetired = true;
+//            final List<EmployeeInfo> employeeInfos = employeeService.getEmployee(attendance.getEmployee(), tenantId,
+//                    attendanceRequest.getRequestInfo());
+//            if (employeeInfos.isEmpty())
+//                isEmployeePresent = false;
+//            else if (EmployeeStatus.RETIRED.toString().equals(employeeInfos.get(0).getEmployeeStatus()))
+//                isEmployeeRetired = true;
 
             if ("".equals(attendance.getType().getCode()))
                 isTypeExists = true;
@@ -226,7 +226,7 @@ public class AttendanceController {
                     if (attendance.getAttendanceDate().getDay() == 0
                             || isSecondOrFourthSaturdayOfMonth(attendance.getAttendanceDate()))
                         isHoliday = true;
-            if (!isTypeExists || !isEmployeeDate || !isHoliday || isAttendanceExists || !isEmployeePresent || isEmployeeRetired)
+            if (!isTypeExists || !isEmployeeDate || !isHoliday || isAttendanceExists || isEmployeeRetired)
                 break;
         }
         if (isFutureDate) {
@@ -265,13 +265,13 @@ public class AttendanceController {
             errorResponse.setError(error);
             errorResponses.add(errorResponse);
         }
-        if (!isEmployeePresent) {
-            final ErrorResponse errorResponse = new ErrorResponse();
-            final Error error = new Error();
-            error.setDescription(applicationConstants.getErrorMessage(ApplicationConstants.MSG_ATTENDANCE_INVALID_EMPLOYEE));
-            errorResponse.setError(error);
-            errorResponses.add(errorResponse);
-        }
+//        if (!isEmployeePresent) {
+//            final ErrorResponse errorResponse = new ErrorResponse();
+//            final Error error = new Error();
+//            error.setDescription(applicationConstants.getErrorMessage(ApplicationConstants.MSG_ATTENDANCE_INVALID_EMPLOYEE));
+//            errorResponse.setError(error);
+//            errorResponses.add(errorResponse);
+//        }
         if (isEmployeeRetired) {
             final ErrorResponse errorResponse = new ErrorResponse();
             final Error error = new Error();

@@ -44,9 +44,6 @@ public class WorkFlowControllerTest {
     @MockBean
     private Workflow workflow;
 
-    public WorkFlowControllerTest() {
-    }
-
     @Test
     public void test_should_create_workflow() throws Exception {
         final ProcessInstance expectedProcessInstance = ProcessInstance.builder()

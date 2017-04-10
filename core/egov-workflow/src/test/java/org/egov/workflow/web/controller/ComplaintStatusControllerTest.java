@@ -2,6 +2,8 @@ package org.egov.workflow.web.controller;
 
 
 import org.egov.workflow.Resources;
+import org.egov.workflow.domain.exception.InvalidComplaintStatusException;
+import org.egov.workflow.domain.exception.InvalidComplaintStatusSearchException;
 import org.egov.workflow.domain.model.ComplaintStatus;
 import org.egov.workflow.domain.model.ComplaintStatusSearchCriteria;
 import org.egov.workflow.domain.service.ComplaintStatusService;
@@ -18,6 +20,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -65,5 +68,37 @@ public class ComplaintStatusControllerTest {
                         .content(resources.getFileContents("complaintStatusRequest.json")))
                 .andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(content().json(resources.getFileContents("complaintStatusResponse.json")));
+    }
+
+    @Test
+    public void should_return_400_when_request_fields_are_invalid() throws Exception {
+        InvalidComplaintStatusSearchException exception =
+                new InvalidComplaintStatusSearchException(
+                        new ComplaintStatusSearchCriteria("", Collections.emptyList())
+                );
+        when(complaintStatusService.getNextStatuses(any(ComplaintStatusSearchCriteria.class))).thenThrow(exception);
+
+        mockMvc.perform(post("/_getnextstatuses")
+                .param("currentStatus", "")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(resources.getFileContents("complaintStatusRequest.json")))
+                .andExpect(status().isBadRequest()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().json(resources.getFileContents("getNextStatusErrorResponseForFieldValidationErrors.json")));
+    }
+
+    @Test
+    public void should_return_400_when_current_status_does_not_exist() throws Exception {
+        final String CURRENT_STATUS = "SLEEPING";
+        ComplaintStatus complaintStatus = new ComplaintStatus(0L, CURRENT_STATUS);
+        InvalidComplaintStatusException exception = new InvalidComplaintStatusException(complaintStatus);
+        when(complaintStatusService.getNextStatuses(any(ComplaintStatusSearchCriteria.class))).thenThrow(exception);
+
+        mockMvc.perform(post("/_getnextstatuses")
+                .param("currentStatus", CURRENT_STATUS)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(resources.getFileContents("complaintStatusRequest.json")))
+                .andExpect(status().isBadRequest()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().json(resources.getFileContents("getNextStatusErrorResponseForInvalidCurrentStatus.json")));
+
     }
 }

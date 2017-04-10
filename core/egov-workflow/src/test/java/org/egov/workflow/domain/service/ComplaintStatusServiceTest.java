@@ -1,5 +1,7 @@
 package org.egov.workflow.domain.service;
 
+import org.egov.workflow.domain.exception.InvalidComplaintStatusException;
+import org.egov.workflow.domain.exception.InvalidComplaintStatusSearchException;
 import org.egov.workflow.domain.model.ComplaintStatus;
 import org.egov.workflow.domain.model.ComplaintStatusSearchCriteria;
 import org.egov.workflow.persistence.repository.ComplaintStatusMappingRepository;
@@ -8,14 +10,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.Collections;
 import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ComplaintStatusServiceTest {
@@ -67,18 +69,19 @@ public class ComplaintStatusServiceTest {
         assertThat(nextStatuses).isEqualTo(complaintStatuses);
     }
 
-    @Test
-    public void test_find_next_statuses_should_return_empty_list_when_user_roles_is_empty() {
-        final String CURRENT_STATUS_NAME = "REJECTED";
-        ComplaintStatusSearchCriteria complaintStatusSearchCriteria =
-                new ComplaintStatusSearchCriteria(CURRENT_STATUS_NAME, Collections.emptyList());
-        List<ComplaintStatus> nextStatuses = complaintStatusService.getNextStatuses(complaintStatusSearchCriteria);
+    @Test(expected = InvalidComplaintStatusSearchException.class)
+    public void test_should_validate_search_criteria_before_proceeding() {
+        ComplaintStatusSearchCriteria complaintStatusSearchCriteria = mock(ComplaintStatusSearchCriteria.class);
+        Mockito.doThrow(new InvalidComplaintStatusSearchException(complaintStatusSearchCriteria))
+                .when(complaintStatusSearchCriteria).validate();
 
-        assertThat(nextStatuses.size()).isEqualTo(0);
+        complaintStatusService.getNextStatuses(complaintStatusSearchCriteria);
+
+        verify(complaintStatusSearchCriteria).validate();
     }
 
-    @Test
-    public void test_find_next_statuses_should_return_empty_list_when_currentstatus_is_not_found() {
+    @Test(expected = InvalidComplaintStatusException.class)
+    public void test_find_next_statuses_should_throw_exception_when_currentstatus_is_not_found() {
         final String CURRENT_STATUS_NAME = "REJECTED";
         List<Long> listOfRoles = asList(1L, 2L);
         when(complaintStatusRepository.findByName(CURRENT_STATUS_NAME)).thenReturn(null);

@@ -1,0 +1,20 @@
+{
+  "responseInfo": null,
+  "error": {
+    "code": 0,
+    "message": null,
+    "description": null,
+    "fields": [
+      {
+        "code": "",
+        "message": "Current status is required",
+        "field": ""
+      },
+      {
+        "code": "",
+        "message": "User has no roles associated with",
+        "field": ""
+      }
+    ]
+  }
+}

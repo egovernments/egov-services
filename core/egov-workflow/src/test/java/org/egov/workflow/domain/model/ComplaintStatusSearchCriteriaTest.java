@@ -1,7 +1,10 @@
 package org.egov.workflow.domain.model;
 
 
+import org.egov.workflow.domain.exception.InvalidComplaintStatusSearchException;
 import org.junit.Test;
+
+import java.util.Collections;
 
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -25,5 +28,37 @@ public class ComplaintStatusSearchCriteriaTest {
         assertThat(complaintStatusSearchCriteria1).isEqualTo(complaintStatusSearchCriteria2);
         assertThat(complaintStatusSearchCriteria1).isNotEqualTo(complaintStatusSearchCriteria3);
         assertThat(complaintStatusSearchCriteria3).isNotEqualTo(complaintStatusSearchCriteria4);
+    }
+
+    @Test(expected = InvalidComplaintStatusSearchException.class)
+    public void test_should_fail_validation_when_name_is_empty() {
+        ComplaintStatusSearchCriteria complaintStatusSearchCriteria =
+                new ComplaintStatusSearchCriteria("", asList(1L, 2L));
+
+        complaintStatusSearchCriteria.validate();
+    }
+
+    @Test(expected = InvalidComplaintStatusSearchException.class)
+    public void test_should_fail_validation_when_name_is_null() {
+        ComplaintStatusSearchCriteria complaintStatusSearchCriteria =
+                new ComplaintStatusSearchCriteria(null, asList(1L, 2L));
+
+        complaintStatusSearchCriteria.validate();
+    }
+
+    @Test(expected = InvalidComplaintStatusSearchException.class)
+    public void test_should_fail_validation_when_roles_is_empty() {
+        ComplaintStatusSearchCriteria complaintStatusSearchCriteria =
+                new ComplaintStatusSearchCriteria("NAME", Collections.emptyList());
+
+        complaintStatusSearchCriteria.validate();
+    }
+
+    @Test(expected = InvalidComplaintStatusSearchException.class)
+    public void test_should_fail_validation_when_roles_is_null() {
+        ComplaintStatusSearchCriteria complaintStatusSearchCriteria =
+                new ComplaintStatusSearchCriteria("NAME", null);
+
+        complaintStatusSearchCriteria.validate();
     }
 }

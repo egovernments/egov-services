@@ -1,12 +1,12 @@
 package org.egov.workflow.domain.service;
 
+import org.egov.workflow.domain.exception.InvalidComplaintStatusException;
 import org.egov.workflow.domain.model.ComplaintStatus;
 import org.egov.workflow.domain.model.ComplaintStatusSearchCriteria;
 import org.egov.workflow.persistence.repository.ComplaintStatusMappingRepository;
 import org.egov.workflow.persistence.repository.ComplaintStatusRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -26,14 +26,14 @@ public class ComplaintStatusService {
     }
 
     public List<ComplaintStatus> getNextStatuses(ComplaintStatusSearchCriteria complaintStatusSearchCriteria) {
-        if(complaintStatusSearchCriteria.getRoles().isEmpty()) {
-            return Collections.emptyList();
-        }
+        complaintStatusSearchCriteria.validate();
 
         ComplaintStatus currentStatus = complaintStatusRepository.findByName(complaintStatusSearchCriteria.getComplaintStatusName());
 
         if(currentStatus == null) {
-            return Collections.emptyList();
+            throw new InvalidComplaintStatusException(
+                    new ComplaintStatus(0L, complaintStatusSearchCriteria.getComplaintStatusName())
+            );
         }
 
         return complaintStatusMappingRepository.getNextStatuses(currentStatus.getId(), complaintStatusSearchCriteria.getRoles());

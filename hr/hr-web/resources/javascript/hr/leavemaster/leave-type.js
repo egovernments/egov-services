@@ -124,14 +124,15 @@ addOrUpdate(e,mode)
           })
       }
   }
-  render(){
+  render()
+  {
     let {handleChange,addOrUpdate}=this;
-    let{name,payEligible,encashable,halfdayAllowed,accumulative,description}=this.state.LeaveType;
+    let {name,payEligible,encashable,halfdayAllowed,accumulative,description}=this.state.LeaveType;
     let mode=getUrlVars()["type"];
-      const showActionButton=function() {
+    const showActionButton=function() {
       if((!mode)|| mode==="update")
       {
-          ;return (<button type="submit" className="btn btn-submit">{mode?"Update":"Add"}</button>);
+          return (<button type="submit" className="btn btn-submit">{mode?"Update":"Add"}</button>);
       }
     }
 

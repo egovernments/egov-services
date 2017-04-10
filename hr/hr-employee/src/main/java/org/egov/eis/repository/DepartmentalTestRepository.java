@@ -44,10 +44,10 @@ package org.egov.eis.repository;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import org.egov.eis.model.Assignment;
 import org.egov.eis.model.DepartmentalTest;
 import org.egov.eis.model.enums.DocumentReferenceType;
 import org.egov.eis.repository.rowmapper.DepartmentalTestTableRowMapper;
@@ -58,6 +58,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -79,8 +80,8 @@ public class DepartmentalTestRepository {
 			+ " FROM egeis_departmentalTest"
 			+ " WHERE employeeId = ? AND tenantId = ? ";
 	
-	public static final String DELETE_QUERY = "DELETE FROM egeis_departmentaltest where "
-			+ "id=? and employeeId=? and tenantId=?";
+	public static final String DELETE__QUERY = "DELETE FROM egeis_departmentalTest"
+			+ " WHERE id IN (:id) AND employeeId = :employeeId AND tenantId = :tenantId";
 	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -90,6 +91,16 @@ public class DepartmentalTestRepository {
 	
 	@Autowired
 	private DepartmentalTestTableRowMapper departmentalTestTableRowMapper;
+	
+	@Autowired
+	 private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+	 
+	 /**
+	  * @param namedParameterJdbcTemplate the namedParameterJdbcTemplate to set
+	  */
+	 public void setNamedParameterJdbcTemplate(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+	  this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+	 }
 
 	public void save(EmployeeRequest employeeRequest) {
 		List<DepartmentalTest> departmentalTests = employeeRequest.getEmployee().getTest();
@@ -156,15 +167,17 @@ public class DepartmentalTestRepository {
 	}
 	
 	public List<DepartmentalTest> findByEmployeeId(Long id, String tenantId) {
-		//  select * from egeis_assignment where employeeId = ? and tenantId = ?		
+		return jdbcTemplate.query(SELECT_BY_EMPLOYEEID_QUERY, new Object[] {id, tenantId}, departmentalTestTableRowMapper);
+	}
+
+	public void delete(List<Long> testsIdsToDelete, Long employeeId, String tenantId) {
+	
+		Map<String, Object> namedParameters = new HashMap<>();
+		namedParameters.put("id", testsIdsToDelete );
+		namedParameters.put("employeeId", employeeId);
+		namedParameters.put("tenantId", tenantId);
 		
-		List<DepartmentalTest> test = null;
+		namedParameterJdbcTemplate.update(DELETE__QUERY, namedParameters);
 		
-		try{
-			test = (List<DepartmentalTest>) jdbcTemplate.query(SELECT_BY_EMPLOYEEID_QUERY, new Object[] {id, tenantId}, departmentalTestTableRowMapper);
-			return test;
-		}catch (EmptyResultDataAccessException e) {
-			return null;
-		}		
 	}
 }

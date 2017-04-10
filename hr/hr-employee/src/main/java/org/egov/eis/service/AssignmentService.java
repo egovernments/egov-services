@@ -40,10 +40,16 @@
 
 package org.egov.eis.service;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.eis.model.Assignment;
+import org.egov.eis.model.Employee;
+import org.egov.eis.model.HODDepartment;
 import org.egov.eis.repository.AssignmentRepository;
+import org.egov.eis.repository.HODDepartmentRepository;
 import org.egov.eis.web.contract.AssignmentGetRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,9 +59,98 @@ public class AssignmentService {
 
 	@Autowired
 	private AssignmentRepository assignmentRepository;
+	
+	@Autowired
+	private HODDepartmentRepository hodDepartmentRepository;
 
 	public List<Assignment> getAssignments(Long employeeId, AssignmentGetRequest assignmentGetRequest) {
 		return assignmentRepository.findForCriteria(employeeId, assignmentGetRequest);
 	}
 
+	public void update(Employee employee) {
+		List<Assignment> assignments = assignmentRepository.findByEmployeeId(employee.getId(), employee.getTenantId());
+		employee.getAssignments().forEach((assignment) -> {
+			if (needsInsert(assignment, assignments)) {
+				assignmentRepository.insert(assignment, employee.getId());
+			} else if (needsUpdate(assignment, assignments)) {
+				assignment.setTenantId(employee.getTenantId());
+				assignmentRepository.update(assignment);
+			}
+			if (!isEmpty(assignment.getHod())) {
+				updateHod(assignment, employee.getTenantId());
+			}
+		});
+		deleteAssignmentsInDBThatAreNotInInput(employee.getAssignments(), assignments, employee.getId(), employee.getTenantId());
+	}
+	
+	private void updateHod(Assignment assignment, String tenantId) {
+		List<Long> hodsFromDb = hodDepartmentRepository.findByAssignmentId(assignment.getId(), tenantId);
+		if (!isEmpty(hodsFromDb))
+			updateHod(assignment.getHod(), hodsFromDb, assignment.getId(), tenantId);
+				
+		deleteHodsInDbThatAreNotInInput(assignment.getHod(), hodsFromDb, assignment.getId(), tenantId);
+	}
+
+	private void updateHod(List<HODDepartment> hods, List<Long> hodsFromDb, Long assignmentId, String tenantId) {
+		for (HODDepartment hod : hods) {
+			if (!hodsFromDb.contains(hod.getDepartment())) {
+				hodDepartmentRepository.insert(assignmentId, hod.getDepartment(), tenantId);	
+			}
+		}
+	}
+
+	private void deleteHodsInDbThatAreNotInInput(List<HODDepartment> hods, List<Long> hodsFromDb, Long assignmentId, String tenantId) {
+		List<Long> hodIdsToDelete = getListOfHodIdsToDelete(hods, hodsFromDb);
+		if (!hodIdsToDelete.isEmpty())
+			hodDepartmentRepository.delete(hodIdsToDelete, assignmentId, tenantId);
+	}
+
+	private List<Long> getListOfHodIdsToDelete(List<HODDepartment> hods, List<Long> hodsFromDb) {
+		List<Long> hodsIdsToDelete = new ArrayList<>();
+		for (Long hodInDb : hodsFromDb) {
+			boolean found = false;
+			for (HODDepartment hod : hods)
+				if (hod.getDepartment().equals(hodInDb)) {
+					found = true;
+					break;
+				}
+			if (!found) hodsIdsToDelete.add(hodInDb);
+		}
+		return hodsIdsToDelete;
+	}
+
+	private void deleteAssignmentsInDBThatAreNotInInput(List<Assignment> inputAssignments, List<Assignment> assignmentsFromDb,
+			Long employeeId, String tenantId) {
+		List<Long> assignmentsIdsToDelete = getListOfAssignmentsIdsToDelete(inputAssignments, assignmentsFromDb);
+		if (!assignmentsIdsToDelete.isEmpty())
+			assignmentRepository.delete(assignmentsIdsToDelete, employeeId, tenantId);
+		
+	}
+
+	private List<Long> getListOfAssignmentsIdsToDelete(List<Assignment> inputAssignments,
+			List<Assignment> assignmentsFromDb) {
+		List<Long> assignmentsIdsToDelete = new ArrayList<>();
+		for (Assignment assignmentInDb : assignmentsFromDb) {
+			boolean found = false;
+			for (Assignment inputAssignment : inputAssignments)
+				if (inputAssignment.getId().equals(assignmentInDb.getId())) {
+					found = true;
+					break;
+				}
+			if (!found) assignmentsIdsToDelete.add(assignmentInDb.getId());
+		}
+		return assignmentsIdsToDelete;
+	}
+
+	private boolean needsInsert(Assignment assignment, List<Assignment> assignments) {
+		for (Assignment oldAssignment : assignments) 
+			if (assignment.getId().equals(oldAssignment.getId())) return false;
+		return true;
+	}
+
+	private boolean needsUpdate(Assignment assignment, List<Assignment> assignments) {
+		for (Assignment oldAssignment : assignments) 
+			if (assignment.equals(oldAssignment))	return false;
+		return true;
+	}
 }

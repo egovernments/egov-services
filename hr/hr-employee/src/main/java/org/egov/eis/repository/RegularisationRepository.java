@@ -44,7 +44,9 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.egov.eis.model.Regularisation;
 import org.egov.eis.model.enums.DocumentReferenceType;
@@ -56,6 +58,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -79,6 +82,9 @@ public class RegularisationRepository {
 			+ " createddate, lastmodifiedby, lastmodifieddate, tenantid"
 			+ " FROM egeis_regularisation"
 			+ " WHERE employeeId = ? AND tenantId = ? ";
+	
+	public static final String DELETE__QUERY = "DELETE FROM egeis_regularisation"
+			+ " WHERE id IN (:id) AND employeeId = :employeeId AND tenantId = :tenantId";
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -88,6 +94,16 @@ public class RegularisationRepository {
 	
 	@Autowired
 	private  RegularisationTableRowMapper regularisationTableRowMapper;
+	
+	@Autowired
+	 private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+	 
+	 /**
+	  * @param namedParameterJdbcTemplate the namedParameterJdbcTemplate to set
+	  */
+	 public void setNamedParameterJdbcTemplate(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+	  this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+	 }
 
 	public void save(EmployeeRequest employeeRequest) {
 		List<Regularisation> regularisations = employeeRequest.getEmployee().getRegularisation();
@@ -150,15 +166,19 @@ public class RegularisationRepository {
 		try {
 			regularisation = jdbcTemplate.query(SELECT_BY_EMPLOYEEID_QUERY, new Object[] { id, tenantId },
 					regularisationTableRowMapper);
-			System.out.println("list of assignments" + regularisation);
 			return regularisation;
 		} catch (EmptyResultDataAccessException e) {
 			return null;
 		}
 	}
-	
-	public void findAndDeleteRegularisationInDBThatAreNotInList(List<Regularisation> regularisation) {
-		// TODO Auto-generated method stub
+
+	public void delete(List<Long> regularisationsIdsToDelete, Long employeeId, String tenantId) {
+		 
+		Map<String, Object> namedParameters = new HashMap<>();
+		namedParameters.put("id", regularisationsIdsToDelete );
+		namedParameters.put("employeeId", employeeId);
+		namedParameters.put("tenantId", tenantId);
 		
+		namedParameterJdbcTemplate.update(DELETE__QUERY, namedParameters);
 	}
 }

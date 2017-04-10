@@ -42,15 +42,21 @@ package org.egov.eis.repository;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.egov.eis.model.Assignment;
 import org.egov.eis.model.HODDepartment;
+import org.egov.eis.repository.rowmapper.AssignmentHodRowMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -59,11 +65,32 @@ public class HODDepartmentRepository {
 	public static final Logger LOGGER = LoggerFactory.getLogger(HODDepartmentRepository.class);
 
 	public static final String INSERT_HOD_DEPARTMENT_QUERY = "INSERT INTO egeis_hodDepartment"
-			+ " (id, assignmentId, departmentId, tenantId)"
-			+ " VALUES (?,?,?,?)";
+			+ " (id, assignmentId, departmentId, tenantId)" + " VALUES (NEXTVAL('seq_egeis_employeeLanguages'),?,?,?)";
 
+	public static final String SELECT_BY_ASSIGNMENT_QUERY = "SELECT" + " departmentid" + " FROM egeis_hodDepartment"
+			+ " WHERE assignmentId = ? AND tenantId = ? ";
+
+	public static final String CHECK_IF_ID_EXISTS_QUERY = "SELECT id FROM egeis_hodDepartment where "
+			+ "assignmentId=? and departmentId=? and tenantId=?";
+
+	public static final String DELETE__QUERY = "DELETE FROM egeis_hodDepartment"
+			+ " WHERE departmentId IN (:departmentId) AND assignmentId = :assignmentId AND tenantId = :tenantId";
+	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
+
+	@Autowired
+	private AssignmentHodRowMapper assignmentHodRowMapper;
+	
+	@Autowired
+	 private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+	 
+	 /**
+	  * @param namedParameterJdbcTemplate the namedParameterJdbcTemplate to set
+	  */
+	 public void setNamedParameterJdbcTemplate(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+	  this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+	 }
 
 	public void save(Assignment assignment, String tenantId) {
 		List<HODDepartment> hodDepartments = assignment.getHod();
@@ -83,5 +110,43 @@ public class HODDepartmentRepository {
 				return hodDepartments.size();
 			}
 		});
+	}
+
+	public List<Long> findByAssignmentId(Long assignmentId, String tenantId) {
+		List<Long> assignmentHod = null;
+		try {
+			assignmentHod = jdbcTemplate.query(SELECT_BY_ASSIGNMENT_QUERY, new Object[] { assignmentId, tenantId },
+					assignmentHodRowMapper);
+			return assignmentHod;
+		} catch (EmptyResultDataAccessException e) {
+			return null;
+		}
+	}
+
+	public boolean hodAlreadyExists(Long assignmentId, Long departmentId, String tenantId) {
+		List<Object> values = new ArrayList<Object>();
+		values.add(assignmentId);
+		values.add(departmentId);
+		values.add(tenantId);
+		try {
+			jdbcTemplate.queryForObject(CHECK_IF_ID_EXISTS_QUERY, values.toArray(), Long.class);
+			return true;
+		} catch (EmptyResultDataAccessException e) {
+			return false;
+		}
+	}
+
+	public void insert(Long assignmentId, Long departmentId, String tenantId) {
+		jdbcTemplate.update(INSERT_HOD_DEPARTMENT_QUERY, assignmentId, departmentId, tenantId);
+
+	}
+
+	public void delete(List<Long> hodIdsToDelete, Long assignmentId, String tenantId) {
+		Map<String, Object> namedParameters = new HashMap<>();
+		namedParameters.put("departmentId", hodIdsToDelete );
+		namedParameters.put("assignmentId", assignmentId);
+		namedParameters.put("tenantId", tenantId);
+		
+		namedParameterJdbcTemplate.update(DELETE__QUERY, namedParameters);
 	}
 }

@@ -44,7 +44,9 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.egov.eis.model.TechnicalQualification;
 import org.egov.eis.model.enums.DocumentReferenceType;
@@ -57,6 +59,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -81,6 +84,9 @@ public class TechnicalQualificationRepository {
 			+ " FROM egeis_technicalqualification"
 			+ " WHERE employeeId = ? AND tenantId = ? ";
 	
+    public static final String DELETE__QUERY = "DELETE FROM egeis_technicalqualification"
+			+ " WHERE id IN (:id) AND employeeId = :employeeId AND tenantId = :tenantId";
+	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 	
@@ -92,6 +98,17 @@ public class TechnicalQualificationRepository {
 
 	@Autowired
 	private EmployeeDocumentsRepository documentsRepository;
+	
+	@Autowired
+	 private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+	 
+	 /**
+	  * @param namedParameterJdbcTemplate the namedParameterJdbcTemplate to set
+	  */
+	 public void setNamedParameterJdbcTemplate(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+	  this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+	 }
+
 
 	public void save(EmployeeRequest employeeRequest) {
 		List<TechnicalQualification> technicalQualifications = employeeRequest.getEmployee().getTechnical();
@@ -144,21 +161,24 @@ public class TechnicalQualificationRepository {
 	}
 
 	public List<TechnicalQualification> findByEmployeeId(Long id, String tenantId) {
-		//  select * from egeis_assignment where employeeId = ? and tenantId = ?		
 		
 		List<TechnicalQualification> technicalQualification = null;
-		
 		try{
 			technicalQualification = jdbcTemplate.query(SELECT_BY_EMPLOYEEID_QUERY, new Object[] {id, tenantId}, technicalQualificationRowMapper);
-			System.out.println("details of technical qualification" +technicalQualification);
 			return technicalQualification;
 		}catch (EmptyResultDataAccessException e) {
 			return null;
 		}
 	}
-	
-	public void findAndDeleteThatAreNotInList(List<TechnicalQualification> technical) {
-		// TODO Auto-generated method stub
+
+	public void delete(List<Long> technicalsIdsToDelete, Long employeeId, String tenantId) {
+		
+		Map<String, Object> namedParameters = new HashMap<>();
+		namedParameters.put("id", technicalsIdsToDelete );
+		namedParameters.put("employeeId", employeeId);
+		namedParameters.put("tenantId", tenantId);
+		
+		namedParameterJdbcTemplate.update(DELETE__QUERY, namedParameters);
 		
 	}
 }

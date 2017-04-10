@@ -45,7 +45,9 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.egov.eis.model.Assignment;
 import org.egov.eis.model.enums.DocumentReferenceType;
@@ -61,6 +63,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -86,6 +89,10 @@ public class AssignmentRepository {
 			+ " lastModifiedDate, tenantId"
 			+ " FROM egeis_assignment"
 			+ " WHERE employeeId = ? AND tenantId = ? ";
+	
+	public static final String DELETE__QUERY = "DELETE FROM egeis_assignment"
+			+ " WHERE id IN (:id) AND employeeId = :employeeId AND tenantId = :tenantId";
+			
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -104,6 +111,16 @@ public class AssignmentRepository {
 
 	@Autowired
 	private EmployeeDocumentsRepository documentsRepository;
+	
+	@Autowired
+	 private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+	 
+	 /**
+	  * @param namedParameterJdbcTemplate the namedParameterJdbcTemplate to set
+	  */
+	 public void setNamedParameterJdbcTemplate(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+	  this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+	 }
 
 	@Transactional(readOnly = true)
 	public List<Assignment> findForCriteria(Long employeeId, AssignmentGetRequest assignmentGetRequest) {
@@ -182,12 +199,21 @@ public class AssignmentRepository {
 		
 		try{
 			assignment = (List<Assignment>) jdbcTemplate.query(SELECT_BY_EMPLOYEEID_QUERY, new Object[] {id, tenantId}, assignmentTableRowMapper);
-			System.out.println("list of assignments" +assignment);
 			return assignment;
 		}catch (EmptyResultDataAccessException e) {
 			return null;
 		}
 		
+	}
+
+	public void delete(List<Long> assignmentsIdsToDelete, Long employeeId, String tenantId) {
+		
+		Map<String, Object> namedParameters = new HashMap<>();
+		namedParameters.put("id", assignmentsIdsToDelete );
+		namedParameters.put("employeeId", employeeId);
+		namedParameters.put("tenantId", tenantId);
+		
+		namedParameterJdbcTemplate.update(DELETE__QUERY, namedParameters);
 	}
 
 }

@@ -44,7 +44,9 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.egov.eis.model.ServiceHistory;
 import org.egov.eis.model.TechnicalQualification;
@@ -57,6 +59,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -79,6 +82,9 @@ public class ServiceHistoryRepository {
 			+ " FROM egeis_servicehistory"
 			+ " WHERE employeeId = ? AND tenantId = ? ";
 	
+	public static final String DELETE__QUERY = "DELETE FROM egeis_servicehistory"
+			+ " WHERE id IN (:id) AND employeeId = :employeeId AND tenantId = :tenantId";
+	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
@@ -87,6 +93,17 @@ public class ServiceHistoryRepository {
 	
 	@Autowired
 	private ServiceHistoryTableRowMapper serviceHistoryTableRowMapper;
+	
+	@Autowired
+	 private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+	 
+	 /**
+	  * @param namedParameterJdbcTemplate the namedParameterJdbcTemplate to set
+	  */
+	 public void setNamedParameterJdbcTemplate(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+	  this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+	 }
+
 
 	public void save(EmployeeRequest employeeRequest) {
 		List<ServiceHistory> serviceHistories = employeeRequest.getEmployee().getServiceHistory();
@@ -151,10 +168,14 @@ public class ServiceHistoryRepository {
 			return null;
 		}
 	}
-	
-	public void findAndDeleteThatAreNotInList(List<TechnicalQualification> technical) {
-		// TODO Auto-generated method stub
+
+	public void delete(List<Long> servicesIdsToDelete, Long employeeId, String tenantId) {
+		Map<String, Object> namedParameters = new HashMap<>();
+		namedParameters.put("id", servicesIdsToDelete );
+		namedParameters.put("employeeId", employeeId);
+		namedParameters.put("tenantId", tenantId);
 		
+		namedParameterJdbcTemplate.update(DELETE__QUERY, namedParameters);
 	}
 
 }

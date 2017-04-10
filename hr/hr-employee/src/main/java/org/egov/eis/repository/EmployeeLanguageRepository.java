@@ -60,14 +60,14 @@ public class EmployeeLanguageRepository {
 	public static final Logger LOGGER = LoggerFactory.getLogger(EmployeeLanguageRepository.class);
 
 	public static final String INSERT_EMPLOYEE_LANGUAGE_QUERY = "INSERT INTO egeis_employeeLanguages"
-			+ " (id, employeeId, languageId, tenantId)"
-			+ " VALUES (NEXTVAL('seq_egeis_employeeLanguages'),?,?,?)";
+			+ " (id, employeeId, languageId, tenantId)" + " VALUES (NEXTVAL('seq_egeis_employeeLanguages'),?,?,?)";
 
-	public static final String SELECT_BY_EMPLOYEEID_QUERY = "SELECT"
-			+ " languageid"
-			+ " FROM egeis_employeeLanguages"
+	public static final String SELECT_BY_EMPLOYEEID_QUERY = "SELECT" + " languageid" + " FROM egeis_employeeLanguages"
 			+ " WHERE employeeId = ? AND tenantId = ? ";
 
+	public static final String DELETE_EMPLOYEE_LANGUAGE_QUERY = "DELETE FROM egeis_employeeLanguages"
+			+" WHERE employeeId = ? AND languageId = ? AND tenantId = ?";
+			
 	@Autowired
 	private EmployeeLanguagesRowMapper employeeLanguagesRowMapper;
 
@@ -95,14 +95,22 @@ public class EmployeeLanguageRepository {
 	public List<Long> findByEmployeeId(Long id, String tenantId) {
 
 		List<Long> employeeLanguage = null;
-
-		try {
+           try {
 			employeeLanguage = jdbcTemplate.query(SELECT_BY_EMPLOYEEID_QUERY, new Object[] { id, tenantId },
 					employeeLanguagesRowMapper);
-			System.out.println("employee language" + employeeLanguage);
 			return employeeLanguage;
 		} catch (EmptyResultDataAccessException e) {
 			return null;
 		}
+	}
+
+	public void save(Long inputlanguage, Long employeeId, String tenantId) {
+
+		jdbcTemplate.update(INSERT_EMPLOYEE_LANGUAGE_QUERY, employeeId, inputlanguage, tenantId);
+	}
+
+	public void delete(Long employeeId, Long languageInDb, String tenantId) {
+
+		jdbcTemplate.update(DELETE_EMPLOYEE_LANGUAGE_QUERY, employeeId, languageInDb, tenantId);
 	}
 }

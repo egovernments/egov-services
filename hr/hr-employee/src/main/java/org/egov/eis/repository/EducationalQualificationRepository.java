@@ -43,8 +43,10 @@ package org.egov.eis.repository;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.egov.eis.model.EducationalQualification;
 import org.egov.eis.model.enums.DocumentReferenceType;
@@ -56,6 +58,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -80,6 +85,9 @@ public class EducationalQualificationRepository {
 			+ " FROM egeis_educationalqualification"
 			+ " WHERE employeeId = ? AND tenantId = ? ";
 	
+	public static final String DELETE_QUERY = "DELETE FROM egeis_educationalQualification"
+			+ " WHERE id IN (:id) AND employeeId = :employeeId AND tenantId = :tenantId";
+			
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
@@ -88,6 +96,16 @@ public class EducationalQualificationRepository {
 	
 	@Autowired
 	private EducationalQualificationRowMapper educationalQualificationRowMapper;
+	
+	@Autowired
+	 private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+	 
+	 /**
+	  * @param namedParameterJdbcTemplate the namedParameterJdbcTemplate to set
+	  */
+	 public void setNamedParameterJdbcTemplate(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+	  this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+	 }
 
 	public void save(EmployeeRequest employeeRequest) {
 		List<EducationalQualification> educationalQualifications = employeeRequest.getEmployee().getEducation();
@@ -148,16 +166,17 @@ public class EducationalQualificationRepository {
 	}
 
 	public List<EducationalQualification> findByEmployeeId(Long id, String tenantId) {
-		//  select * from egeis_assignment where employeeId = ? and tenantId = ?		
+		return jdbcTemplate.query(SELECT_BY_EMPLOYEEID_QUERY, new Object[] { id, tenantId },
+					educationalQualificationRowMapper);
+   }
+
+	public void delete(List<Long> educationsIdsToDelete, Long employeeId, String tenantId) {
+		 
+		Map<String, Object> namedParameters = new HashMap<>();
+		namedParameters.put("id", educationsIdsToDelete );
+		namedParameters.put("employeeId", employeeId);
+		namedParameters.put("tenantId", tenantId);
 		
-		List<EducationalQualification> educationalQualification = null;
-		
-		try{
-			educationalQualification = jdbcTemplate.query(SELECT_BY_EMPLOYEEID_QUERY, new Object[] {id, tenantId}, educationalQualificationRowMapper);
-			return educationalQualification;
-		}catch (EmptyResultDataAccessException e) {
-			return null;
-		}
-		
+		namedParameterJdbcTemplate.update(DELETE_QUERY, namedParameters);
 	}
 }

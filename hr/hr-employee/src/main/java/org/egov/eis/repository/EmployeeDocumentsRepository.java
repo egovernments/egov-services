@@ -109,7 +109,6 @@ public class EmployeeDocumentsRepository {
 		try {
 			employeeDocuments = jdbcTemplate.query(SELECT_BY_EMPLOYEEID_QUERY, new Object[] { id, tenantId },
 					employeeDocumentsTableRowMapper);
-			System.out.println("list of documents" + employeeDocuments);
 			return employeeDocuments;
 		} catch (EmptyResultDataAccessException e) {
 			return null;

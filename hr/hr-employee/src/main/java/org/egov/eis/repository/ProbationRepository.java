@@ -44,7 +44,9 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.egov.eis.model.Probation;
 import org.egov.eis.model.enums.DocumentReferenceType;
@@ -56,6 +58,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -77,6 +80,9 @@ public class ProbationRepository {
 			+ " createddate, lastmodifiedby, lastmodifieddate,tenantId" + " FROM egeis_probation"
 			+ " WHERE employeeId = ? AND tenantId = ? ";
 	
+	public static final String DELETE__QUERY = "DELETE FROM egeis_probation"
+			+ " WHERE id IN (:id) AND employeeId = :employeeId AND tenantId = :tenantId";
+	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
@@ -85,6 +91,17 @@ public class ProbationRepository {
 	
 	@Autowired
 	private ProbationTableRowMapper probationRowMapper;
+	
+	@Autowired
+	 private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+	 
+	 /**
+	  * @param namedParameterJdbcTemplate the namedParameterJdbcTemplate to set
+	  */
+	 public void setNamedParameterJdbcTemplate(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+	  this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+	 }
+
 
 	public void save(EmployeeRequest employeeRequest) {
 		List<Probation> probations = employeeRequest.getEmployee().getProbation();
@@ -138,18 +155,24 @@ public class ProbationRepository {
 	}
 
 	public List<Probation> findByEmployeeId(Long id, String tenantId) {
-		// select * from egeis_assignment where employeeId = ? and tenantId = ?
 
 		List<Probation> probation = null;
-
 		try {
 			probation = jdbcTemplate.query(SELECT_BY_EMPLOYEEID_QUERY, new Object[] { id, tenantId },
 					probationRowMapper);
-			System.out.println("list of probation" + probation);
 			return probation;
 		} catch (EmptyResultDataAccessException e) {
 			return null;
 		}
+	}
 
+	public void delete(List<Long> probationsIdsToDelete, Long employeeId, String tenantId) {
+		 
+		Map<String, Object> namedParameters = new HashMap<>();
+		namedParameters.put("id", probationsIdsToDelete );
+		namedParameters.put("employeeId", employeeId);
+		namedParameters.put("tenantId", tenantId);
+		
+		namedParameterJdbcTemplate.update(DELETE__QUERY, namedParameters);
 	}
 }

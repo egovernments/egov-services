@@ -60,7 +60,8 @@ public class PaymentService {
 			List<BillInfo> billInfos = new ArrayList<>();
 			BillInfo billInfo = new BillInfo();
 			billInfo.setId(null);
-			billInfo.setDemandId(1L);
+			if(agreement.getDemands()!= null && !agreement.getDemands().isEmpty())
+			billInfo.setDemandId(Long.valueOf(agreement.getDemands().get(0)));
 			billInfo.setCitizenName(agreement.getAllottee().getName());
 			// billInfo.setCitizenAddress(agreement.getAllottee().getAddress());
 			// TODO: Fix me after the issue is fixed by user service

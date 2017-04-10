@@ -15,7 +15,7 @@ public class AgreementQueryBuilder {
 	public static String agreementQueryBuilder(AgreementCriteria agreementsModel,
 			@SuppressWarnings("rawtypes") List preparedStatementValues) {
 
-		StringBuilder selectQuery = new StringBuilder("SELECT * FROM EGLAMS_AGREEMENT AGREEMENT");
+		StringBuilder selectQuery = new StringBuilder("SELECT *,agreement.id as agreementid FROM EGLAMS_AGREEMENT AGREEMENT INNER JOIN eglams_demand demand ON agreement.id=demand.agreementid ");
 
 		if (!(agreementsModel.getAgreementId() == null && agreementsModel.getAgreementNumber() == null
 				&& (agreementsModel.getFromDate() == null && agreementsModel.getToDate() == null)

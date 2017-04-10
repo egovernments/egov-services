@@ -89,7 +89,7 @@ public class DemandConroller {
 	public ResponseEntity<?> search(@ModelAttribute @Valid DemandSearchCriteria demandSearchCriteria,@RequestBody RequestInfo requestInfo,
 			 BindingResult bindingResult) {
 
-		System.out.println("the request info object : "+requestInfo);
+		System.out.println("the request info object : "+requestInfo + "the modelatribute values ::: "+demandSearchCriteria);
 		List<Demand> demands = new ArrayList<Demand>();
 		List<DemandDetails> demandDetails = new ArrayList<DemandDetails>();
 		EgDemand egDemand = null;
@@ -98,7 +98,7 @@ public class DemandConroller {
 			return errHandler.getErrorResponseEntityForBindingErrors(bindingResult, requestInfo);
 		}
 		try {
-			System.out.println("before calling demand repository ");
+			System.out.println("before calling demand repository :::  "+demandSearchCriteria);
 			egDemand = demandRepository.findOne(demandSearchCriteria.getDemandId());
 			System.out.println("before calling todomain ::::   "+demandSearchCriteria.getDemandId());
 			Demand demand = egDemand.toDomain();

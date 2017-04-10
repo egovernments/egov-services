@@ -958,7 +958,7 @@ $('#dateOfAppointment').datepicker({
 });
 
 $('#dateOfAppointment').on("change", function(e) {
-    fillValueToObject(this);
+    // fillValueToObject(this);
     $('#dateOfJoining').val(this.value);
     var date_received = $("#dateOfJoining").val();
     var date_completed = $("#dateOfAppointment").val();
@@ -985,7 +985,7 @@ $('#dateOfJoining').datepicker({
 });
 
 $('#dateOfJoining').on("change", function(e) {
-    fillValueToObject(this);
+    // fillValueToObject(this);
     var date_received = $("#dateOfJoining").val();
     var date_completed = $("#dateOfAppointment").val();
     var dateParts = date_received.split("/");
@@ -1008,7 +1008,7 @@ $('#dateOfJoining').datepicker({
 });
 
 $('#dateOfJoining').on("change", function(e) {
-    fillValueToObject(this);
+    // fillValueToObject(this);
     var date_received = $("#dateOfJoining").val();
     var date_completed = $("#dateOfRetirement").val();
     var dateParts = date_received.split("/");
@@ -1033,7 +1033,7 @@ $('#dateOfRetirement').datepicker({
 });
 
 $('#dateOfRetirement').on("change", function(e) {
-    fillValueToObject(this);
+    // fillValueToObject(this);
     var date_received = $("#dateOfJoining").val();
     var date_completed = $("#dateOfRetirement").val();
     var dateParts = date_received.split("/");
@@ -1057,7 +1057,7 @@ $('#dateOfJoining').datepicker({
 });
 
 $('#dateOfJoining').on("change", function(e) {
-    fillValueToObject(this);
+    // fillValueToObject(this);
     var date_received = $("#dateOfJoining").val();
     var date_completed = $("#dateOfTermination").val();
     var dateParts = date_received.split("/");
@@ -1081,7 +1081,7 @@ $('#dateOfTermination').datepicker({
 });
 
 $('#dateOfTermination').on("change", function(e) {
-    fillValueToObject(this);
+    // fillValueToObject(this);
     var date_received = $("#dateOfJoining").val();
     var date_completed = $("#dateOfTermination").val();
     var dateParts = date_received.split("/");
@@ -1104,7 +1104,7 @@ $('#dateOfJoining').datepicker({
 });
 
 $('#dateOfJoining').on("change", function(e) {
-    fillValueToObject(this);
+    // fillValueToObject(this);
     var date_received = $("#dateOfJoining").val();
     var date_completed = $("#dateOfResignation").val();
     var dateParts = date_received.split("/");
@@ -1127,7 +1127,7 @@ $('#dateOfResignation').datepicker({
 });
 
 $('#dateOfResignation').on("change", function(e) {
-    fillValueToObject(this);
+    // fillValueToObject(this);
     var date_received = $("#dateOfJoining").val();
     var date_completed = $("#dateOfResignation").val();
     var dateParts = date_received.split("/");
@@ -1151,7 +1151,7 @@ $("input[name='assignments.fromDate']").datepicker({
 });
 
 $("input[name='assignments.fromDate']").on("change", function(e) {
-    fillValueToObject(this);
+    // fillValueToObject(this);
     var from = $("input[name='assignments.fromDate']").val();
     var to = $("input[name='assignments.toDate']").val();
     var dateParts = from.split("/");
@@ -1175,13 +1175,12 @@ $("input[name='assignments.toDate']").datepicker({
 });
 
 $("input[name='assignments.toDate']").on("change", function(e) {
-    fillValueToObject(this);
+    // fillValueToObject(this);
     var from = $("input[name='assignments.fromDate']").val();
     var to = $("input[name='assignments.toDate']").val();
     var dateParts = from.split("/");
     var newDateStr = dateParts[1] + "/" + dateParts[0] + "/ " + dateParts[2];
     var date1 = new Date(newDateStr);
-
     var dateParts = to.split("/");
     var newDateStr = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2];
     var date2 = new Date(newDateStr);

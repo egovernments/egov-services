@@ -31,14 +31,14 @@ public class ActionRepositoryTest {
         List<String> roleCodesList = new ArrayList<String>();
         roleCodesList.add("CITIZEN");
         roleCodesList.add("SUPERUSER");
-        ActionSearchCriteria actionSearchCriteria = ActionSearchCriteria.builder().roleCodes(roleCodesList).build();
+        ActionSearchCriteria actionSearchCriteria = ActionSearchCriteria.builder().tenantId("ap.public").roleCodes(roleCodesList).build();
         List<Action> actions = actionRepository.findForCriteria(actionSearchCriteria);
         assertEquals(8,actions.size());
         assertEquals(Long.valueOf(3),actions.get(0).getId());
         assertEquals("Get ComplaintType by type,count and tenantId",actions.get(0).getName());
         assertEquals("/pgr/services",actions.get(0).getUrl());
         assertEquals("Get ComplaintType by type,count and tenantId",actions.get(0).getDisplayName());
-        assertEquals("ap.kurnool",actions.get(0).getTenantId());
+        assertEquals("ap.public",actions.get(0).getTenantId());
         assertEquals(Integer.valueOf(5),actions.get(0).getOrderNumber());
         assertEquals(false,actions.get(0).isEnabled());
         assertEquals(Long.valueOf(1),actions.get(0).getCreatedBy());

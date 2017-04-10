@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.egov.lams.config.PropertiesManager;
 import org.egov.lams.web.contract.AgreementRequest;
 import org.egov.lams.web.contract.DemandReasonResponse;
@@ -14,12 +15,15 @@ import org.egov.lams.web.contract.RequestInfo;
 import org.egov.lams.model.Demand;
 import org.egov.lams.model.DemandDetails;
 import org.egov.lams.model.DemandReason;
+import org.egov.lams.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 
 @Repository
 public class DemandRepository {
+	
+	private static final Logger LOGGER = Logger.getLogger(DemandRepository.class);
 	
 	@Autowired
 	private RestTemplate restTemplate;
@@ -89,6 +93,7 @@ public class DemandRepository {
 			DemandSearchCriteria demandSearchCriteria, RequestInfo requestInfo) {
 		String url = propertiesManager.getDemandServiceHostName()
 				+ propertiesManager.getDemandSearchService();
+		LOGGER.info(demandSearchCriteria);
 		return restTemplate.postForObject(url, requestInfo, DemandResponse.class, demandSearchCriteria);
 	}
 	

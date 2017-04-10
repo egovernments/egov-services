@@ -98,7 +98,7 @@ public class DemandConroller {
 			return errHandler.getErrorResponseEntityForBindingErrors(bindingResult, requestInfo);
 		}
 		try {
-			System.out.println("before calling demand repository :::  "+demandSearchCriteria);
+			System.out.println("before calling demand repository the id value of demand :::  "+demandSearchCriteria.getDemandId());
 			egDemand = demandRepository.findOne(demandSearchCriteria.getDemandId());
 			System.out.println("before calling todomain ::::   "+demandSearchCriteria.getDemandId());
 			Demand demand = egDemand.toDomain();

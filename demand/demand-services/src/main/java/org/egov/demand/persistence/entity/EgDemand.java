@@ -96,7 +96,7 @@ public class EgDemand implements java.io.Serializable {
 	private Date modifiedDate;
 	@OneToMany(mappedBy = "egDemand", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<EgDemandDetails> egDemandDetails = new HashSet<>(0);
-	@OneToMany(mappedBy = "egDemand", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "egDemand", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<EgBill> egBills = new HashSet<>(0);
 	@Column(name = "amt_collected")
 	private BigDecimal amtCollected = BigDecimal.ZERO;

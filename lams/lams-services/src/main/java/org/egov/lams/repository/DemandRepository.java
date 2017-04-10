@@ -94,7 +94,7 @@ public class DemandRepository {
 		String url = propertiesManager.getDemandServiceHostName()
 				+ propertiesManager.getDemandSearchService() + "?demandId="+demandSearchCriteria.getDemandId();
 		LOGGER.info(url);
-		return restTemplate.postForObject(url, requestInfo, DemandResponse.class, demandSearchCriteria);
+		return restTemplate.postForObject(url, requestInfo, DemandResponse.class);
 	}
 	
 	public DemandResponse updateDemand(List<Demand> demands, RequestInfo requestInfo){

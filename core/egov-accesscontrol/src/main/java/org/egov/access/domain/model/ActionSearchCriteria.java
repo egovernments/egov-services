@@ -14,4 +14,5 @@ import java.util.List;
 public class ActionSearchCriteria {
     private List<String> roleCodes;
     private List<Long> featureIds;
+    private String tenantId;
 }

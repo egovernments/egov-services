@@ -34,7 +34,7 @@ CREATE TABLE eg_action
   tenantid character varying(50) NOT NULL,
   CONSTRAINT eg_action_pkey PRIMARY KEY (id),
   CONSTRAINT eg_action_name_key UNIQUE (name),
-  CONSTRAINT eg_action_url_queryparams_context_root_key UNIQUE (url, queryparams)
+  CONSTRAINT eg_action_url_queryparams_key UNIQUE (url, queryparams)
 );
 
 CREATE TABLE eg_roleaction

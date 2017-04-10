@@ -5,6 +5,7 @@ import lombok.*;
 import org.egov.access.domain.model.ActionSearchCriteria;
 import org.egov.common.contract.request.*;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Getter
@@ -20,7 +21,11 @@ public class ActionRequest {
     private List<String> roleCodes;
     private List<Long> featureIds;
 
+    @NotNull
+    @JsonProperty("TenantId")
+    private String tenantId;
+
     public ActionSearchCriteria toDomain() {
-        return ActionSearchCriteria.builder().roleCodes(roleCodes).build();
+        return ActionSearchCriteria.builder().tenantId(tenantId).roleCodes(roleCodes).build();
     }
 }

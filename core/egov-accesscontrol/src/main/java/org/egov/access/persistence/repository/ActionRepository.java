@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -30,32 +31,34 @@ public class ActionRepository {
             + "ra.actionid AS ra_action, ra.rolecode AS ra_rolecode FROM eg_action AS a JOIN eg_roleaction AS ra ON a.id = ra.actionid";
 
     public List<Action> findForCriteria(final ActionSearchCriteria actionSearchCriteria) throws ParseException {
-        final String queryStr = getQuery(actionSearchCriteria);
-        final List<Action> actions = jdbcTemplate.query(queryStr,
+        final List<Object> preparedStatementValues = new ArrayList<Object>();
+        preparedStatementValues.add(actionSearchCriteria.getTenantId());
+        final String queryStr = getQuery(actionSearchCriteria,preparedStatementValues);
+        final List<Action> actions = jdbcTemplate.query(queryStr,preparedStatementValues.toArray(),
                 new ActionRowMapper());
         return actions;
     }
 
-    private String getQuery(ActionSearchCriteria actionSearchCriteria) {
+    private String getQuery(ActionSearchCriteria actionSearchCriteria,final List preparedStatementValues) {
         final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
 
-        addWhereClause(selectQuery, actionSearchCriteria);
+        addWhereClause(selectQuery, preparedStatementValues,actionSearchCriteria);
         selectQuery.append(" order by a.name");
 
         logger.debug("Query : " + selectQuery);
         return selectQuery.toString();
     }
 
-    private void addWhereClause(final StringBuilder selectQuery,
+    private void addWhereClause(final StringBuilder selectQuery,final List preparedStatementValues,
                                   final ActionSearchCriteria actionSearchCriteria) {
 
         if (actionSearchCriteria != null && actionSearchCriteria.getRoleCodes() == null && actionSearchCriteria.getRoleCodes().isEmpty())
             return;
 
-        selectQuery.append(" WHERE");
+        selectQuery.append(" WHERE ra.tenantId = a.tenantId and a.tenantId = ? ");
 
         if (actionSearchCriteria.getRoleCodes() != null) {
-            selectQuery.append(" ra.rolecode in "+getIdQuery(actionSearchCriteria.getRoleCodes()));
+            selectQuery.append(" and ra.rolecode in "+getIdQuery(actionSearchCriteria.getRoleCodes()));
         }
     }
 

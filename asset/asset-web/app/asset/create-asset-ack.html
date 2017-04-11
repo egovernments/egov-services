@@ -6,9 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>EIS</title>
-    <base href="/hr-web/"/>
-
+    <title>Asset</title>
+    <base href="/lams-web/">
     <!-- Bootstrap -->
     <link rel="stylesheet" type="text/css" href="resources/stylesheet/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="resources/stylesheet/global/multi-level-menu/jquery.multilevelpushmenu.min.css">
@@ -20,6 +19,8 @@
     <link rel="stylesheet" type="text/css" href="resources/stylesheet/jquery.dataTables.min.css">
     <link rel="stylesheet" type="text/css" href="resources/stylesheet/responsive.bootstrap.css">
     <link rel="stylesheet" type="text/css" href="resources/stylesheet/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" type="text/css" href="resources/stylesheet/buttons.dataTables.min.css">
+    <!-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.13/css/dataTables.bootstrap.min.css"> -->
 
     <style>
         body {
@@ -87,16 +88,29 @@
     <script type="text/javascript" src="resources/javascript/dataTables.responsive.min.js"></script>
     <script type="text/javascript" src="resources/javascript/moment.js"></script>
     <script type="text/javascript" src="resources/javascript/bootstrap-datetimepicker.js"></script>
+    <script type="text/javascript" src="resources/javascript/data-table/dataTables.buttons.min.js">
+
+    </script>
+    <script type="text/javascript" src="resources/javascript/data-table/buttons.flash.min.js">
+
+    </script>
+    <script type="text/javascript" src="resources/javascript/data-table/jszip.min.js">
+
+    </script>
+    <script src="resources/javascript/data-table/pdfmake.min.js" charset="utf-8"></script>
+    <script src="resources/javascript/data-table/vfs_fonts.js" charset="utf-8"></script>
+    <script src="resources/javascript/data-table/buttons.html5.min.js" charset="utf-8"></script>
+    <script src="resources/javascript/data-table/buttons.print.min.js" charset="utf-8"></script>
+    <!-- <script src="https://cdn.datatables.net/1.10.13/js/dataTables.bootstrap.min.js" charset="utf-8"></script> -->
+    <script type="text/javascript" src="resources/javascript/dataTables.responsive.min.js"></script>
+
     <!-- Jquery form validator -->
     <script type="text/javascript" src="resources/javascript/global/jquery-validation/jquery.validate.min.js"></script>
     <script type="text/javascript" src="resources/javascript/global/jquery-validation/additional-methods.min.js"></script>
-    <script src="https://unpkg.com/react@15/dist/react.min.js"></script>
-    <script src="https://unpkg.com/react-dom@15/dist/react-dom.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.js"></script>
-    <script src="resources/javascript/hr/common/commonAPI.js" charset="utf-8"></script>
-
-
-
+    <script src="resources/javascript/reactjs/react.min.js"></script>
+    <script src="resources/javascript/reactjs/react-dom.min.js"></script>
+    <script src="resources/javascript/reactjs/browser.js"></script>
+    <script src="resources/javascript/common/common.js" charset="utf-8"></script>
 </head>
 
 <body class="page-body">
@@ -118,7 +132,7 @@
                 </div>
 
                 <div class="navbar-brand">
-                    <h3 class="horizontal-page-title homepage hidden-xs hidden-sm" id="hp-citizen-title">EIS</h3>
+                    <h3 class="horizontal-page-title homepage hidden-xs hidden-sm" id="hpCitizenTitle">Lease & Agreement</h3>
                 </div>
 
                 <!-- notifications and other links -->
@@ -199,8 +213,6 @@
                 </ul>
             </div>
         </header>
-
-        <!-- Multi level menu content -->
         <div class="home-container">
             <!-- <div id="menu" class="homepage" style="min-height: 242px; width: 250px; height: 242px; min-width: 250px;"></div> -->
             <div class="inline-main-content" style="width:100%">
@@ -208,35 +220,32 @@
                     <div class="col-xs-12">
                         <!-- Middle Section -->
                         <div class="body-cont">
-                            <div class="body-cont-inner">
-                                <div class="form-section">
-                                    <h3>Create Leave Mapping</h3>
-                                    <div id="root"></div>
-                                      <script type="text/babel" src="resources/javascript/hr/leavemaster/leave-mapping.js"></script>
-                                </div>
+                            <form  id="createAgreementForm" name="createAgreementForm" >
+                                <div class="body-cont-inner">
+                                   <div id="shopAssetDetailsBlock">
+                                        <div id="root"></div>
+                                        <script type="text/babel"  src="resources/javascript/asset/create-asset-ack.js"></script>
+                                    </div>
+                                  </div>
+                                </form>
+                              </div>
                             </div>
+                          </div>
                         </div>
-                        <!-- /Middle Section -->
-                    </div>
-                </div>
-            </div>
-        </div>
+                      </div>
 
-    </div>
 
-    <footer class="clearfix simple">
+        <footer class="clearfix simple">
         <div class="constrain">
             <div id="legal">
-                <span class="copyright">Copyright <span><i class="fa fa-copyright"></i></span> 2017 <a href="http://www.egovernments.org" target="_blank"> eGovernments Foundation.<sup>®</sup></a></span>
+                <span class="copyright">Copyright <span><i class="fa fa-copyright"></i></span> 2017 <a href="http://www.egovernments.org" target="_blank"> eGovernments Foundation.<sup>Â®</sup></a></span>
                 <span class="version">eGov ERP - 2.1.0-SNAPSHOT_2486 @ Core - 2.1.0-SNAPSHOT_2486</span>
             </div>
         </div>
     </footer>
 
-
     <script src="resources/javascript/egov/custom.js"></script>
     <script src="resources/javascript/js.cookies.js"></script>
-
 
 
     <script type="text/javascript">

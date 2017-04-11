@@ -31,7 +31,7 @@ public class RequestEnrichmentFilterTest {
 
     @Test
     public void test_should_set_filter_order_to_execute_last() {
-        assertEquals(3, filter.filterOrder());
+        assertEquals(5, filter.filterOrder());
     }
 
     @Test

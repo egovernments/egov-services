@@ -41,7 +41,7 @@ public class AuthFilter extends ZuulFilter {
 
     @Override
     public int filterOrder() {
-        return 2;
+        return 3;
     }
 
     @Override
@@ -75,8 +75,8 @@ public class AuthFilter extends ZuulFilter {
         ctx.setSendZuulResponse(false);
         try {
             helper.setResponse(ex.getStatusCode().value(),
-					IOUtils.toInputStream(ex.getResponseBodyAsString()),
-                    ex.getResponseHeaders());
+                IOUtils.toInputStream(ex.getResponseBodyAsString()),
+                ex.getResponseHeaders());
         } catch (IOException e) {
             logger.error(INPUT_STREAM_CONVERSION_FAILED_MESSAGE, e);
             throw new RuntimeException(e);

@@ -1,6 +1,7 @@
 package org.egov.contract;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -29,7 +30,17 @@ public class User {
     @JsonProperty("roles")
     private List<Role> roles;
 
+    @JsonIgnore
+    @JsonProperty("actions")
+    private List<Action> actions;
+
     public User() {
+    }
+
+    @JsonIgnore
+    public List<Action> getActions(){
+        return this.actions;
+
     }
 
     public void setId(Integer id) {
@@ -58,5 +69,9 @@ public class User {
 
     public void setRoles(List<Role> roles) {
         this.roles = roles;
+    }
+
+    public void setActions(List<Action> actions) {
+        this.actions = actions;
     }
 }

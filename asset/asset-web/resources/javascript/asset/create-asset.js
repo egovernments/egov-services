@@ -381,7 +381,7 @@ class CreateAsset extends React.Component {
                               </div>
                             </div>
                           </div>*/}
-                          {showFields()}
+                          {checkFields()}
                       </div>
                   </div>
                 </div>
@@ -389,24 +389,115 @@ class CreateAsset extends React.Component {
         }
     }
 
-    const showFields = function() {
+    const checkFields = function() {
         return customFields.map((item, index)=>
         {
-            return (
-              <div className="col-sm-6" key={index}>
-                <div className="row">
-                  <div className="col-sm-6 label-text">
-                    <label for={item.name}>{titleCase(item.name)}  {showStart(item.isActive)}</label>
-                  </div>
-                  <div className="col-sm-6">
-                    <input id={item.name} name={item.name} value={item.values} type={item.type==="String"?"text":item.type}
-                      onChange={(e)=>{handleChangeTwoLevel(e,"properties",item.name)}} required disabled={readonly}/>
-                  </div>
-                </div>
-              </div>
-            )
+						switch (item.type) {
+
+
+							case "Text":
+								return showTextBox(item,index);
+
+
+							case "Number":
+								return showTextBox(item,index);
+
+							case "Email":
+								return showTextBox(item,index);
+
+							case "Radio":
+								return showRadioButton(item,index);
+
+							case "Check Box":
+								return showCheckBox(item,index);
+
+							case "Select":
+								return showSelect(item,index);
+
+							default:
+								return showTextBox(item,index);
+
+
+						}
+
+
         })
     }
+
+		const showTextBox=function(item,index)
+		{
+			return (
+				<div className="col-sm-6" key={index}>
+					<div className="row">
+						<div className="col-sm-6 label-text">
+							<label for={item.name}>{titleCase(item.name)}  {showStart(item.isActive)}</label>
+						</div>
+						<div className="col-sm-6">
+							<input id={item.name} name={item.name} value={item.values} type={item.type=="String"?"text":item.type}
+								onChange={(e)=>{handleChangeTwoLevel(e,"properties",item.name)}} required={item.isMandatory} disabled={readonly}/>
+						</div>
+					</div>
+				</div>
+			);
+		}
+
+		const showSelect=function(item,index)
+		{
+			return (
+				<div className="col-sm-6" key={index}>
+					<div className="row">
+						<div className="col-sm-6 label-text">
+							<label for={item.name}>{titleCase(item.name)}  {showStart(item.isActive)}</label>
+						</div>
+						<div className="col-sm-6">
+							<select id={item.name} name={item.name}
+								onChange={(e)=>{handleChangeTwoLevel(e,"properties",item.name)}} required={item.isMandatory} disabled={readonly}/>
+								<option value="">Select</option>
+								{renderOption(item.values.split(','))}
+						</div>
+					</div>
+				</div>
+			);
+		}
+
+		const showRadioButton=function(item,index)
+		{
+			return (
+				<div className="col-sm-6" key={index}>
+					<div className="row">
+						<div className="col-sm-6 label-text">
+							<label for={item.name}>{titleCase(item.name)}  {showStart(item.isActive)}</label>
+						</div>
+						<div className="col-sm-6">
+							<select id={item.name} name={item.name}
+								onChange={(e)=>{handleChangeTwoLevel(e,"properties",item.name)}} required={item.isMandatory} disabled={readonly}/>
+								<option value="">Select</option>
+								{renderOption(item.values.split(','))}
+						</div>
+					</div>
+				</div>
+			);
+		}
+
+		const showCheckBox=function(item,index)
+		{
+			return (
+				<div className="col-sm-6" key={index}>
+					<div className="row">
+						<div className="col-sm-6 label-text">
+							<label for={item.name}>{titleCase(item.name)}  {showStart(item.isActive)}</label>
+						</div>
+						<div className="col-sm-6">
+							<select id={item.name} name={item.name}
+								onChange={(e)=>{handleChangeTwoLevel(e,"properties",item.name)}} required={item.isMandatory} disabled={readonly}/>
+								<option value="">Select</option>
+								{renderOption(item.values.split(','))}
+						</div>
+					</div>
+				</div>
+			);
+		}
+
 
     const showStart = function(status)
     {

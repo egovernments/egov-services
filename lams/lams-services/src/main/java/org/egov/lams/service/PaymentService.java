@@ -367,7 +367,7 @@ public class PaymentService {
 		BoundaryResponse boundaryResponse = null;
 		String boundaryUrl = propertiesManager.getBoundaryserviceHostName() 
 				            + propertiesManager.getBoundaryserviceSearchPath()
-				            + "Boundary.id=" + boundaryId;
+				            + "?Boundary.id=" + boundaryId;
 		//FIXME in boundary contract id is string
 		try{
 			boundaryResponse = restTemplate.getForObject(boundaryUrl,BoundaryResponse.class);

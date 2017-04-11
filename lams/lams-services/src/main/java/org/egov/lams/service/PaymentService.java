@@ -367,7 +367,7 @@ public class PaymentService {
 		BoundaryResponse boundaryResponse = null;
 		String boundaryUrl = propertiesManager.getBoundaryserviceHostName() 
 				            + propertiesManager.getBoundaryserviceSearchPath()
-				            + "id=" + boundaryId.toString();
+				            + "Boundary.id=" + boundaryId;
 		//FIXME in boundary contract id is string
 		try{
 			boundaryResponse = restTemplate.getForObject(boundaryUrl,BoundaryResponse.class);
@@ -375,7 +375,6 @@ public class PaymentService {
 			e.printStackTrace();
 			LOGGER.info("the exception thrown from boundary request is :: "+e);
 		}
-		
 		return boundaryResponse;
 	}
 

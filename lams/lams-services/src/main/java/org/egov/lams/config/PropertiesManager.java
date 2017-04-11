@@ -90,4 +90,10 @@ public class PropertiesManager {
 
 	@Value("${egov.services.financial.chartofaccounts}")
 	public String financialGetChartOfAccountsService;
+	
+	@Value("${egov.services.boundary_service.hostname}")
+	public String boundaryserviceHostName;
+	
+	@Value("${egov.services.boundary_service.searchpath}")
+	public String boundaryserviceSearchPath;
 }

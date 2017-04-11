@@ -159,7 +159,7 @@ class Attendance extends React.Component {
           tenantId,
           month: parseInt(queryParam["month"]) + 1,
           year: queryParam["year"],
-          pageSize: 500,
+          pageSize: 9999,
           pageNumber: 1
       }).responseJSON["Attendance"] || [];
     } catch(e) {

@@ -1282,6 +1282,7 @@ $("#dateOfRetirement").datepicker({
 //Getting data for user input
 $("input").on("keyup change", function() {
     fillValueToObject(this);
+    getPositions(this);
 });
 
 //Getting data for user input
@@ -1319,18 +1320,7 @@ $("select").on("change", function() {
         }
         // return;
     }
-    if (($("#assignments\\.department").val() != "" && $("#assignments\\.designation").val() != "") && (this.id == "assignments.department" || this.id == "assignments.designation")) {
-        commonObject["assignments_position"] = commonApiPost("hr-masters", "positions", "_search", {
-            tenantId,
-            departmentId: $("#assignments\\.department").val(),
-            designationId: $("#assignments\\.designation").val()
-        }).responseJSON["Position"] || [];
-        $(`#assignments\\.position`).html(`<option value=''>Select</option>`)
-
-        for (var i = 0; i < commonObject["assignments_position"].length; i++) {
-            $(`#assignments\\.position`).append(`<option value='${commonObject["assignments_position"][i]['id']}'>${commonObject["assignments_position"][i]['name']}</option>`)
-        }
-    }
+    getPositions(this);
     fillValueToObject(this);
     // }
 });
@@ -2219,4 +2209,31 @@ function validateDates(employee, objectType, subObject) {
     }
 
     return true;
+}
+
+function getPositions(_this) {
+    if (($("#assignments\\.department").val() != "" && $("#assignments\\.designation").val() != "") && (_this.id == "assignments.department" || _this.id == "assignments.designation" || _this.id == "assignment.fromDate" || _this.id == "assignments.isPrimary")) {
+        if(employeeSubObject["assignments"].isPrimary == "true") {
+            if($("#assignments\\.fromDate").val()) {
+                var _date = $("#assignments\\.fromDate").val();
+                commonObject["assignments_position"] = commonApiPost("hr-masters", "vacantpositions", "_search", {
+                    tenantId,
+                    departmentId: $("#assignments\\.department").val(),
+                    designationId: $("#assignments\\.designation").val(),
+                    asOnDate: _date
+                }).responseJSON["Position"] || [];
+            }
+        } else {
+            commonObject["assignments_position"] = commonApiPost("hr-masters", "positions", "_search", {
+                tenantId,
+                departmentId: $("#assignments\\.department").val(),
+                designationId: $("#assignments\\.designation").val()
+            }).responseJSON["Position"] || [];
+        }
+
+        $(`#assignments\\.position`).html(`<option value=''>Select</option>`);
+        for (var i = 0; i < commonObject["assignments_position"].length; i++) {
+            $(`#assignments\\.position`).append(`<option value='${commonObject["assignments_position"][i]['id']}'>${commonObject["assignments_position"][i]['name']}</option>`)
+        }
+    }
 }

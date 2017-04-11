@@ -160,32 +160,32 @@ class CreateAsset extends React.Component {
   componentWillMount(){
       this.setState({
         typeList:[{
-                id: 1,
+                id: "Text",
                 name: "Text",
                 active: true
             },
             {
-                id: 2,
+                id: "Number",
                 name: "Number",
                 active: true
             },
             {
-                id: 3,
+                id: "Email",
                 name: "Email",
                 active: true
             },
             {
-                id: 4,
+                id: "Check Box",
                 name: "Check Box",
                 active: true
             },
             {
-                id: 5,
+                id: "Radio",
                 name: "Radio",
                 active: true
             },
             {
-                id: 6,
+                id: "Select",
                 name: "Select",
                 active: true
             }]

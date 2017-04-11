@@ -73,7 +73,7 @@ public class Holiday {
     private String name;
 
     @NotNull
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private Date applicableOn;
 
     @NotNull

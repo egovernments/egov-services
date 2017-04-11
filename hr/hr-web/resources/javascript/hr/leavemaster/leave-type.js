@@ -6,11 +6,11 @@ class LeaveType extends React.Component{
         "id": "",
         "name": "",
         "description": "",
-        "halfdayAllowed": "",
-        "payEligible": "",
-        "accumulative": "",
-        "encashable": "",
-        "active": "",
+        "halfdayAllowed": "false",
+        "payEligible": "false",
+        "accumulative": "false",
+        "encashable": "false",
+        "active": "true",
         "createdBy": "",
         "createdDate": "",
         "lastModifiedBy": "",
@@ -23,7 +23,7 @@ class LeaveType extends React.Component{
 
   handleChange(e,name)
   {
-
+    console.log(e.target.value);
       this.setState({
           LeaveType:{
               ...this.state.LeaveType,
@@ -173,13 +173,11 @@ addOrUpdate(e,mode)
                           </div>
                           <div className="col-sm-6">
                                 <label className="radio-inline radioUi">
-                                  <input type="radio" name="payEligible"  value="true" checked={()=>{
-                                    console.log(payEligible);
-                                    return payEligible?true:false}}
+                                  <input type="radio" name="payEligible"  value="true" checked={payEligible == "true"}
                                       onChange={(e)=>{handleChange(e,"payEligible")  }}/> Yes
                                 </label>
                                 <label className="radio-inline radioUi">
-                                  <input type="radio" name="payEligible" value="false" checked={payEligible?false:true}
+                                  <input type="radio" name="payEligible" value="false" checked={payEligible == "false" || !payEligible}
                                       onChange={(e)=>{handleChange(e,"payEligible")}}/> No
                                 </label>
                           </div>
@@ -192,11 +190,11 @@ addOrUpdate(e,mode)
                           </div>
                           <div className="col-sm-6">
                                 <label className="radio-inline radioUi">
-                                  <input type="radio" name="halfdayAllowed"   value="true"
-                                   onChange={(e)=>{handleChange(e,"halfdayAllowed")}} checked/> Yes
+                                  <input type="radio" name="halfdayAllowed" value="true" checked={halfdayAllowed == "true"}
+                                   onChange={(e)=>{handleChange(e,"halfdayAllowed")}}  /> Yes
                                 </label>
                                 <label className="radio-inline radioUi">
-                                  <input type="radio"  name="halfdayAllowed" value="false"
+                                  <input type="radio"  name="halfdayAllowed" value="false" checked={halfdayAllowed == "false" || !halfdayAllowed}
                                   onChange={(e)=>{handleChange(e,"halfdayAllowed")}}/> No
                                 </label>
                           </div>
@@ -212,11 +210,11 @@ addOrUpdate(e,mode)
                           </div>
                           <div className="col-sm-6">
                                 <label className="radio-inline radioUi">
-                                  <input type="radio" name="encashable" value="true" checked={encashable?true:false}
+                                  <input type="radio" name="encashable" value="true" checked={encashable == "true"}
                                    onChange={(e)=>{handleChange(e,"encashable")}}/> Yes
                                 </label>
                                 <label className="radio-inline radioUi">
-                                  <input type="radio" name="encashable"  value="false" checked={encashable?false:true}
+                                  <input type="radio" name="encashable"  value="false" checked={encashable == "false" || !encashable}
                                   onChange={(e)=>{handleChange(e,"encashable")}}/> No
                                 </label>
                           </div>
@@ -229,12 +227,12 @@ addOrUpdate(e,mode)
                             </div>
                             <div className="col-sm-6">
                                   <label className="radio-inline radioUi">
-                                    <input type="radio" name="accumulative"  value="true" checked={accumulative?true:false}
+                                    <input type="radio" name="accumulative"  value="true" checked={accumulative == "true"}
                                         onChange={(e)=>{handleChange(e,"accumulative")}}/> Yes
 
                                   </label>
                                   <label className="radio-inline radioUi">
-                                    <input type="radio" name="accumulative" value="false" checked={accumulative?false:true}
+                                    <input type="radio" name="accumulative" value="false" checked={accumulative == "false" || !accumulative}
                                         onChange={(e)=>{handleChange(e,"accumulative")}}/> No
                                   </label>
                             </div>

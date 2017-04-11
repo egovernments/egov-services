@@ -327,11 +327,17 @@ class CreateAsset extends React.Component {
         if(list)
         {
             if (list.length) {
-              return list.map((item)=>
-              {
-                  return (<option key={item.id} value={item.id}>
+              return list.map((item, ind)=>
+              { 
+                  if(typeof item == "object") {
+                    return (<option key={ind} value={item.id}>
                           {item.name}
                     </option>)
+                  } else {
+                    return (<option key={ind} value={item}>
+                          {item}
+                    </option>)
+                  }
               })
 
             } else {

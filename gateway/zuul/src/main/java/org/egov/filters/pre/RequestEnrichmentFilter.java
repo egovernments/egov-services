@@ -43,7 +43,7 @@ public class RequestEnrichmentFilter extends ZuulFilter {
 
     @Override
     public int filterOrder() {
-        return 3;
+        return 5;
     }
 
     @Override

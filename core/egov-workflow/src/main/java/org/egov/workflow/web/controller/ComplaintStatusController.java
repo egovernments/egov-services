@@ -20,15 +20,15 @@ public class ComplaintStatusController {
     @Autowired
     private ComplaintStatusService complaintStatusService;
 
-    @PostMapping("/_statuses")
-    public List<ComplaintStatus> getAllStatus(@RequestParam final String tenantId) {
+    @PostMapping("/statuses/_search")
+    public List<ComplaintStatus> getAllStatus(@RequestBody final ComplaintStatusRequest request) {
         return complaintStatusService.findAll()
                 .stream()
                 .map(ComplaintStatus::new)
                 .collect(Collectors.toList());
     }
 
-    @PostMapping("/_getnextstatuses")
+    @PostMapping("/nextstatuses/_search")
     public List<ComplaintStatus> getNextStatuses(@RequestBody final ComplaintStatusRequest request,
                                                  @RequestParam final String currentStatus) {
         List<Long> roles = request.getRequestInfo().getUserInfo().getRoles().stream()

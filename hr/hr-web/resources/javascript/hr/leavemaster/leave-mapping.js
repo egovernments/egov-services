@@ -83,8 +83,8 @@ componentWillMount()
             };
 
           var response=$.ajax({
-                  url:baseUrl+"/hr-leave/leaveallotments/_create",
-                //  url:baseUrl+"/hr-leave/leaveallotments/" + (type == "update" ? (this.state.leave.id + "/" + "_update/") : "_create"),
+                  // url:baseUrl+"/hr-leave/leaveallotments/_create",
+               url:baseUrl+"/hr-leave/leaveallotments/" + (type == "update" ? (this.state.leave.id + "/" + "_update/") : "_create"),
                 type: 'POST',
                 dataType: 'json',
                 data:JSON.stringify(body),
@@ -213,7 +213,7 @@ componentWillMount()
                     <div className="styled-select">
                     <select id="designation" name="designation" value={designation} onChange={(e)=>{
                         handleChange(e,"designation")
-                    }}required>
+                    }}>
                     <option>Select Designation</option>
                     {renderOption(this.state.assignments_designation)}
                    </select>

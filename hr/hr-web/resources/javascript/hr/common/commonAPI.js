@@ -71,9 +71,9 @@ try { year = !localStorage.getItem("year") || localStorage.getItem("year") == "u
 
 
 
-function getCommonMaster(mainRoute, resource, returnObject) {
+function getCommonMaster(mainRoute, resource, returnObject, pageSize) {
     return $.ajax({
-        url: baseUrl + "/" + mainRoute + "/" + resource + "/_search?tenantId=" + tenantId + "&" + "pageSize=" + 500,
+        url: baseUrl + "/" + mainRoute + "/" + resource + "/_search?tenantId=" + tenantId + "&" + "pageSize=" + (pageSize || 500),
         type: 'POST',
         dataType: 'json',
         data: JSON.stringify({RequestInfo: requestInfo}),

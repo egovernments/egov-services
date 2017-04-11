@@ -11,6 +11,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.egov.lams.config.PropertiesManager;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.Demand;
 import org.egov.lams.model.DemandDetails;
@@ -23,6 +24,7 @@ import org.egov.lams.web.contract.BillInfo;
 import org.egov.lams.web.contract.BillReceiptInfoReq;
 import org.egov.lams.web.contract.BillReceiptReq;
 import org.egov.lams.web.contract.BillSearchCriteria;
+import org.egov.lams.web.contract.BoundaryResponse;
 import org.egov.lams.web.contract.ChartOfAccountContract;
 import org.egov.lams.web.contract.DemandSearchCriteria;
 import org.egov.lams.web.contract.LamsConfigurationGetRequest;
@@ -33,12 +35,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 public class PaymentService {
 
 	private static final Logger LOGGER = Logger.getLogger(PaymentService.class);
+	
+	@Autowired
+	PropertiesManager propertiesManager;
 
+	@Autowired
+	RestTemplate restTemplate;
+	
 	@Autowired
 	LamsConfigurationService lamsConfigurationService;
 
@@ -111,8 +120,10 @@ public class PaymentService {
 			LOGGER.info("after departmentCode>>>>>>>" + departmentCode);
 
 			billInfo.setCollModesNotAllowed("");
-			billInfo.setBoundaryNumber(agreement.getAsset()
+			
+			BoundaryResponse boundaryResponse = getBoundariesById(agreement.getAsset()
 					.getLocationDetails().getElectionWard());
+			billInfo.setBoundaryNumber(boundaryResponse.getBoundarys().get(0).getBoundaryNum());
 			lamsGetRequest.setName("BOUNDARY_TYPE");
 			String boundaryType = lamsConfigurationService
 					.getLamsConfigurations(lamsGetRequest).get("BOUNDARY_TYPE")
@@ -349,6 +360,23 @@ public class PaymentService {
 		ChartOfAccountContract chartOfAccountContract= new ChartOfAccountContract();
 		chartOfAccountContract.setId(id);
 		return financialsRepository.getChartOfAccountGlcodeById(chartOfAccountContract, requestInfo);
+	}
+	
+	private BoundaryResponse getBoundariesById(Long boundaryId){
+		
+		BoundaryResponse boundaryResponse = null;
+		String boundaryUrl = propertiesManager.getBoundaryserviceHostName() 
+				            + propertiesManager.getBoundaryserviceSearchPath()
+				            + "?Boundary.id=" + boundaryId;
+		//FIXME in boundary contract id is string
+		LOGGER.info(boundaryUrl);
+		try{
+			boundaryResponse = restTemplate.getForObject(boundaryUrl,BoundaryResponse.class);
+		}catch (Exception e) {
+			e.printStackTrace();
+			LOGGER.info("the exception thrown from boundary request is :: "+e);
+		}
+		return boundaryResponse;
 	}
 
 }

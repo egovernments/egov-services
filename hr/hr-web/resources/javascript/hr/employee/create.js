@@ -1162,7 +1162,7 @@ $("input[name='assignments.fromDate']").on("change", function(e) {
     var newDateStr = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2];
     var date2 = new Date(newDateStr);
     if (date1 > date2) {
-        howError("End date must be after From date");
+        showError("End date must be after From date");
         $("input[name='assignments.toDate']").val("");
     } else {}
 });
@@ -1282,6 +1282,7 @@ $("#dateOfRetirement").datepicker({
 //Getting data for user input
 $("input").on("keyup change", function() {
     fillValueToObject(this);
+    getPositions(this);
 });
 
 //Getting data for user input
@@ -1319,18 +1320,7 @@ $("select").on("change", function() {
         }
         // return;
     }
-    if (($("#assignments\\.department").val() != "" && $("#assignments\\.designation").val() != "") && (this.id == "assignments.department" || this.id == "assignments.designation")) {
-        commonObject["assignments_position"] = commonApiPost("hr-masters", "positions", "_search", {
-            tenantId,
-            departmentId: $("#assignments\\.department").val(),
-            designationId: $("#assignments\\.designation").val()
-        }).responseJSON["Position"] || [];
-        $(`#assignments\\.position`).html(`<option value=''>Select</option>`)
-
-        for (var i = 0; i < commonObject["assignments_position"].length; i++) {
-            $(`#assignments\\.position`).append(`<option value='${commonObject["assignments_position"][i]['id']}'>${commonObject["assignments_position"][i]['name']}</option>`)
-        }
-    }
+    getPositions(this);
     fillValueToObject(this);
     // }
 });
@@ -1433,6 +1423,10 @@ function clearModalInput(object, properties) {
             $("#" + object + "\\." + variable).val(properties[variable]);
         }
     }
+
+    $('#assignmentDetailModal input[type="radio":checked]').each(function(){
+        this.checked = false;  
+    });
 }
 
 //need to cleat editIndex and temprory pbject
@@ -1643,25 +1637,32 @@ function commonAddAndUpdate(tableName, modalName, object) {
     // if(switchValidation(object))
     if ($("#createEmployeeForm").valid()) {
         if (checkIfNoDup(employee, object, employeeSubObject[object])) {
-            if (editIndex != -1) {
-                employee[object][editIndex] = employeeSubObject[object];
-                updateTable("#" + tableName, modalName, object);
-            } else {
-                if (object == "assignments") {
-                    employeeSubObject[object]["hod"] = [];
-                    if (tempListBox.length > 0) {
-                        employeeSubObject[object]["hod"].push(tempListBox);
-                    }
-                    employee[object].push(Object.assign({}, employeeSubObject[object]));
+
+            if(validateDates(employee, object, employeeSubObject[object])) {
+                if (editIndex != -1) {
+                    employee[object][editIndex] = employeeSubObject[object];
                     updateTable("#" + tableName, modalName, object);
                 } else {
-                    employee[object].push(Object.assign({}, employeeSubObject[object]));
-                    updateTable("#" + tableName, modalName, object);
-                }
+                    if (object == "assignments") {
+                        employeeSubObject[object]["hod"] = [];
+                        if (tempListBox.length > 0) {
+                            employeeSubObject[object]["hod"].push(tempListBox);
+                        }
+                        employee[object].push(Object.assign({}, employeeSubObject[object]));
+                        updateTable("#" + tableName, modalName, object);
+                    } else {
+                        employee[object].push(Object.assign({}, employeeSubObject[object]));
+                        updateTable("#" + tableName, modalName, object);
+                    }
 
+                }
+                $(`#${modalName}`).modal("hide");
+            } else {
+                $(".error-p").text("Assignment dates overlapping.");
+                $(".error-p").show();
             }
-            $(`#${modalName}`).modal("hide");
         } else {
+            $(".error-p").text("Duplicate entry not allowed.");
             $(".error-p").show();
         }
     } else {
@@ -2174,12 +2175,7 @@ function showSuccess(msg) {
 function checkIfNoDup(employee, objectType, subObject) {
     if (employee[objectType].length === 0)
         return true;
-    else if (objectType === "assignments") {
-        for (let i = 0; i < employee[objectType].length; i++) {
-            if (employee[objectType][i].fromDate == subObject.fromDate || employee[objectType][i].toDate == subObject.toDate)
-                return false;
-        }
-    } else if (objectType == "jurisdictions") {
+    else if (objectType == "jurisdictions") {
         for (let i = 0; i < employee[objectType].length; i++) {
             if (employee[objectType][i].jurisdictionsType == subObject.jurisdictionsType || employee[objectType][i].boundary == subObject.boundary)
                 return false;
@@ -2187,4 +2183,57 @@ function checkIfNoDup(employee, objectType, subObject) {
     }
 
     return true;
+}
+
+function validateDates(employee, objectType, subObject) {
+    if(objectType == "assignments" && subObject.isPrimary) {
+        for (let i = 0; i < employee[objectType].length; i++) {
+            if(employee[objectType][i].isPrimary) {
+                var subFromDate = new Date(subObject.fromDate.split("/")[1] + "/" + subObject.fromDate.split("/")[0] + "/" + subObject.fromDate.split("/")[2]).getTime();
+                var fromDate = new Date(employee[objectType][i].fromDate.split("/")[1] + "/" + employee[objectType][i].fromDate.split("/")[0] + "/" + employee[objectType][i].fromDate.split("/")[2]).getTime();
+                var subToDate = new Date(subObject.toDate.split("/")[1] + "/" + subObject.toDate.split("/")[0] + "/" + subObject.toDate.split("/")[2]).getTime();
+                var toDate = new Date(employee[objectType][i].toDate.split("/")[1] + "/" + employee[objectType][i].toDate.split("/")[0] + "/" + employee[objectType][i].toDate.split("/")[2]).getTime();
+
+                if(((fromDate >= subFromDate)
+                    && (fromDate <= subToDate))
+                || ((toDate >= subFromDate)
+                    && (toDate <= subToDate))
+                || ((subFromDate >= fromDate)
+                    && (subFromDate <= toDate))
+                || ((subToDate >= fromDate)
+                    && (subToDate <= toDate))) {
+                    return false; 
+                }
+            }
+        }
+    }
+
+    return true;
+}
+
+function getPositions(_this) {
+    if (($("#assignments\\.department").val() != "" && $("#assignments\\.designation").val() != "") && (_this.id == "assignments.department" || _this.id == "assignments.designation" || _this.id == "assignment.fromDate" || _this.id == "assignments.isPrimary")) {
+        if(employeeSubObject["assignments"].isPrimary == "true") {
+            if($("#assignments\\.fromDate").val()) {
+                var _date = $("#assignments\\.fromDate").val();
+                commonObject["assignments_position"] = commonApiPost("hr-masters", "vacantpositions", "_search", {
+                    tenantId,
+                    departmentId: $("#assignments\\.department").val(),
+                    designationId: $("#assignments\\.designation").val(),
+                    asOnDate: _date
+                }).responseJSON["Position"] || [];
+            }
+        } else {
+            commonObject["assignments_position"] = commonApiPost("hr-masters", "positions", "_search", {
+                tenantId,
+                departmentId: $("#assignments\\.department").val(),
+                designationId: $("#assignments\\.designation").val()
+            }).responseJSON["Position"] || [];
+        }
+
+        $(`#assignments\\.position`).html(`<option value=''>Select</option>`);
+        for (var i = 0; i < commonObject["assignments_position"].length; i++) {
+            $(`#assignments\\.position`).append(`<option value='${commonObject["assignments_position"][i]['id']}'>${commonObject["assignments_position"][i]['name']}</option>`)
+        }
+    }
 }

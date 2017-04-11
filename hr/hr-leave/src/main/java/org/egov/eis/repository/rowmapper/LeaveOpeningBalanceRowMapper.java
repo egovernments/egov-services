@@ -75,7 +75,7 @@ public class LeaveOpeningBalanceRowMapper implements RowMapper<LeaveOpeningBalan
 
 		leaveOpeningBalance.setLeaveType(leaveType);
 
-		leaveOpeningBalance.setNoOfDays((Float) rs.getObject("lob_noOfDays"));
+		leaveOpeningBalance.setNoOfDays(Float.valueOf(rs.getObject("lob_noOfDays").toString()));
 		leaveOpeningBalance.setCreatedBy((Long) rs.getObject("lob_createdBy"));
 		leaveOpeningBalance.setCreatedDate(rs.getDate("lob_createdDate"));
 		leaveOpeningBalance.setLastModifiedBy((Long) rs.getObject("lob_lastModifiedBy"));

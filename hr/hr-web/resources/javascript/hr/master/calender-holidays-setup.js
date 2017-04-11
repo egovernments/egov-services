@@ -109,7 +109,16 @@ componentWillMount(){
                   contentType: 'application/json',
                   headers:{
                     'auth-token': authToken
-                  }
+                  },
+              //     success: function(res) {
+              //
+              //             showSuccess("Updated successfully.");
+              //
+              //     },
+              //     error: function(err) {
+              //         showError(err);
+              //         breakOut = 1;
+              //     }
               });
 
             // console.log(response);
@@ -147,10 +156,10 @@ componentWillMount(){
       handleChangeThreeLevel(e,pName,name)
        {
 
-        // $('#applicableOn').data("datepicker").minDate(false);
-        // $('#applicableOn').data("datetpicker").maxDate(false);
-        // $('#applicableOn').data("datepicker").minDate(new Date(e.target.value, 0, 1));
-        // $('#applicableOn').data("datepicker").maxDate(new Date(e.target.value, 11, 31));
+        $('#applicableOn').data("datepicker").setStartDate(false);
+        $('#applicableOn').data("datepicker").setEndDate(false);
+        $('#applicableOn').data("datepicker").setStartDate(new Date(e.target.value, 0, 1));
+        $('#applicableOn').data("datepicker").setEndDate(new Date(e.target.value, 11, 31));
 
         this.setState({
           Holiday:{
@@ -275,3 +284,19 @@ ReactDOM.render(
   <Calenderholiday />,
   document.getElementById('root')
 );
+
+function showError(msg) {
+    $('#error-alert-span').text(msg);
+    $('#error-alert-div').show();
+    setTimeout(function() {
+        $('#error-alert-div').hide();
+    }, 3000);
+}
+
+function showSuccess(msg) {
+    $('#success-alert-span').text(msg);
+    $('#success-alert-div').show();
+    setTimeout(function() {
+        $('#success-alert-div').hide();
+    }, 3000);
+}

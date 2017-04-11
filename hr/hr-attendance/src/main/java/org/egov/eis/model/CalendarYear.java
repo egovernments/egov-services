@@ -68,11 +68,11 @@ public class CalendarYear {
     private Integer name;
 
     @NotNull
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private Date startDate;
 
     @NotNull
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private Date endDate;
 
     @NotNull

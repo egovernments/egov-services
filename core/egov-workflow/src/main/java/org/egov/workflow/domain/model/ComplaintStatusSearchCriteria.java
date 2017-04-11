@@ -16,16 +16,16 @@ public class ComplaintStatusSearchCriteria {
     private List<Long> roles;
 
     public void validate() {
-        if (isNameNotPresent() || isRolesNotPresesnt()) {
+        if (isNameAbsent() || isRolesAbsent()) {
             throw new InvalidComplaintStatusSearchException(this);
         }
     }
 
-    public boolean isNameNotPresent() {
+    public boolean isNameAbsent() {
         return complaintStatusName==null || complaintStatusName.isEmpty();
     }
 
-    public boolean isRolesNotPresesnt() {
+    public boolean isRolesAbsent() {
         return roles == null || roles.isEmpty();
     }
 }

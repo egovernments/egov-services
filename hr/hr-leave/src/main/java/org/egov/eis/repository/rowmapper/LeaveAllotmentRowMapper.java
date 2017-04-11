@@ -74,7 +74,7 @@ public class LeaveAllotmentRowMapper implements RowMapper<LeaveAllotment> {
 
 		leaveAllotment.setLeaveType(leaveType);
 
-		leaveAllotment.setNoOfDays((Float) rs.getObject("la_noOfDays"));
+		leaveAllotment.setNoOfDays(Float.valueOf(rs.getObject("la_noOfDays").toString()));
 		leaveAllotment.setCreatedBy((Long) rs.getObject("la_createdBy"));
 		leaveAllotment.setCreatedDate(rs.getDate("la_createdDate"));
 		leaveAllotment.setLastModifiedBy((Long) rs.getObject("la_lastModifiedBy"));

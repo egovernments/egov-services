@@ -6,7 +6,9 @@ import org.joda.time.DateTime;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
+
 import java.util.ArrayList;
+
 import java.util.Date;
 import java.util.List;
 
@@ -48,7 +50,8 @@ public class SevaSpecification implements Specification<Complaint> {
         }
 
         if (criteria.getStatus() != null) {
-            predicates.add(criteriaBuilder.equal(status, criteria.getStatus()));
+           predicates.add(status.in(criteria.getStatus()));
+
         }
 
         if (criteria.getStartDate() != null) {
@@ -99,3 +102,6 @@ public class SevaSpecification implements Specification<Complaint> {
         return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
     }
 }
+
+
+

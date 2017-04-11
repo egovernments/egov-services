@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -41,7 +42,7 @@ public class ComplaintJpaRepositoryTest {
                 .serviceRequestId("0005-2017-AB")
                 .assignmentId(1L)
                 .serviceCode("AODTDGC")
-                .status("REGISTERED")
+                .status(Arrays.asList("REGISTERED","FORWARDED"))
                 .startDate(startDate.toDate())
                 .endDate(endDate.toDate())
                 .lastModifiedDatetime(lastModifiedDate.toDate())

@@ -22,6 +22,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -143,7 +144,7 @@ public class ComplaintControllerTest {
             .lastModifiedDatetime(null)
             .serviceCode("serviceCode_123")
             .serviceRequestId("serid_123").startDate(null)
-            .status("registered")
+            .status(Arrays.asList("REGISTERED", "FORWARDED"))
             .userId(10L)
             .emailId("abc@gmail.com")
             .mobileNumber("74742487428")
@@ -162,7 +163,7 @@ public class ComplaintControllerTest {
 
         mockMvc.perform(
             get("/seva?jurisdiction_id=1&service_request_id=serid_123&service_code=serviceCode_123&status" +
-                "=registered&assignment_id=10&user_id=10&name=kumar&email_id=abc@gmail" +
+                "=REGISTERED,FORWARDED&assignment_id=10&user_id=10&name=kumar&email_id=abc@gmail" +
                 ".com&mobile_number=74742487428&receiving_mode=5&location_id=4&child_location_id=5")
                 .accept(MediaType.parseMediaType("application/json;charset=UTF-8")).header("api_id", "api_id")
                 .header("ver", "ver").header("ts", "ts").header("action", "action").header("did", "did")

@@ -25,6 +25,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -175,8 +176,8 @@ public class ComplaintServiceTest {
     public void testShouldUpdateLastAccessedTime() {
         Date currentDate = new Date();
         complaintService.updateLastAccessedTime("crn");
-        verify(complaintJpaRepository).updateLastAccessedTime(currentDate, "crn");
-    }
+        verify(complaintJpaRepository).updateLastAccessedTime(any(Date.class), eq("crn"));
+        }
 
     public void test_should_fetch_all_modified_citizen_complaints_by_user_id() {
         final Complaint expectedComplaint = getComplaint();

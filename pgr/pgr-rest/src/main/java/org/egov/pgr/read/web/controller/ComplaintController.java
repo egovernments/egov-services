@@ -60,7 +60,7 @@ public class ComplaintController {
                                                   (pattern = "dd-MM-yyyy") Date startDate,
                                               @RequestParam(value = "end_date", required = false) @DateTimeFormat
                                                   (pattern = "dd-MM-yyyy") Date endDate,
-                                              @RequestParam(value = "status", required = false) String status,
+                                              @RequestParam(value = "status", required = false)List <String> status,
                                               @RequestParam(value = "last_modified_datetime", required = false)
                                                   @DateTimeFormat(pattern = "dd-MM-yyyy") Date lastModifiedDate,
                                               @RequestParam(value = "assignment_id", required = false) Long

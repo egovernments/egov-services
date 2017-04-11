@@ -41,8 +41,6 @@
 package org.egov.eis.repository;
 
 import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,7 +51,6 @@ import org.egov.eis.web.contract.LeaveAllotmentGetRequest;
 import org.egov.eis.web.contract.LeaveAllotmentRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -87,30 +84,18 @@ public class LeaveAllotmentRepository {
 	}
 
 	public void create(LeaveAllotmentRequest leaveAllotmentRequest) {
+		List<Object[]> batchArgs = new ArrayList<>();
+		for (LeaveAllotment la : leaveAllotmentRequest.getLeaveAllotment()) {
+			Object[] laRecord = { la.getDesignation(), la.getLeaveType().getId(), la.getNoOfDays(),
+					leaveAllotmentRequest.getRequestInfo().getUserInfo().getId(), new Date(System.currentTimeMillis()),
+					leaveAllotmentRequest.getRequestInfo().getUserInfo().getId(), new Date(System.currentTimeMillis()),
+					la.getTenantId() };
+			batchArgs.add(laRecord);
+		}
 
 		try {
-			jdbcTemplate.batchUpdate(INSERT_LEAVEALLOTMENT_QUERY, new BatchPreparedStatementSetter() {
-
-				@Override
-				public void setValues(final PreparedStatement ps, final int i) throws SQLException {
-					final LeaveAllotment leaveAllotment = ((List<LeaveAllotment>) leaveAllotmentRequest
-							.getLeaveAllotment()).get(i);
-					ps.setLong(1, leaveAllotment.getDesignation());
-					ps.setLong(2, leaveAllotment.getLeaveType().getId());
-					ps.setFloat(3, leaveAllotment.getNoOfDays());
-					ps.setLong(4, leaveAllotmentRequest.getRequestInfo().getUserInfo().getId());
-					ps.setDate(5,  new Date(System.currentTimeMillis()));
-					ps.setLong(6, leaveAllotmentRequest.getRequestInfo().getUserInfo().getId());
-					ps.setDate(7,  new Date(System.currentTimeMillis()));
-					ps.setString(8, leaveAllotment.getTenantId());
-				}
-
-				@Override
-				public int getBatchSize() {
-					return leaveAllotmentRequest.getLeaveAllotment().size();
-				}
-			});
-		} catch (final DataAccessException ex) {
+			jdbcTemplate.batchUpdate(INSERT_LEAVEALLOTMENT_QUERY, batchArgs);
+		} catch (DataAccessException ex) {
 			ex.printStackTrace();
 			throw new RuntimeException(ex.getMessage());
 		}
@@ -118,30 +103,17 @@ public class LeaveAllotmentRepository {
 	}
 
 	public void update(LeaveAllotmentRequest leaveAllotmentRequest) {
+		List<Object[]> batchArgs = new ArrayList<>();
+		for (LeaveAllotment la : leaveAllotmentRequest.getLeaveAllotment()) {
+			Object[] laRecord = { la.getDesignation(), la.getLeaveType().getId(), la.getNoOfDays(),
+					leaveAllotmentRequest.getRequestInfo().getUserInfo().getId(), new Date(System.currentTimeMillis()),
+					la.getTenantId(), la.getId(), la.getTenantId() };
+			batchArgs.add(laRecord);
+		}
 
 		try {
-			jdbcTemplate.batchUpdate(UPDATE_LEAVEALLOTMENT_QUERY, new BatchPreparedStatementSetter() {
-
-				@Override
-				public void setValues(final PreparedStatement ps, final int i) throws SQLException {
-					final LeaveAllotment leaveAllotment = ((List<LeaveAllotment>) leaveAllotmentRequest
-							.getLeaveAllotment()).get(i);
-					ps.setLong(1, leaveAllotment.getDesignation());
-					ps.setLong(2, leaveAllotment.getLeaveType().getId());
-					ps.setFloat(3, leaveAllotment.getNoOfDays());
-					ps.setLong(4, leaveAllotmentRequest.getRequestInfo().getUserInfo().getId());
-					ps.setDate(5,  new Date(System.currentTimeMillis()));
-					ps.setString(6, leaveAllotment.getTenantId());
-					ps.setLong(7, leaveAllotment.getId());
-					ps.setString(8, leaveAllotment.getTenantId());
-				}
-
-				@Override
-				public int getBatchSize() {
-					return leaveAllotmentRequest.getLeaveAllotment().size();
-				}
-			});
-		} catch (final DataAccessException ex) {
+			jdbcTemplate.batchUpdate(UPDATE_LEAVEALLOTMENT_QUERY, batchArgs);
+		} catch (DataAccessException ex) {
 			ex.printStackTrace();
 			throw new RuntimeException(ex.getMessage());
 		}

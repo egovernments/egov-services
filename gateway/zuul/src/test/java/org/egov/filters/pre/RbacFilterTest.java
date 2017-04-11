@@ -79,7 +79,6 @@ public class RbacFilterTest {
         rbacFilter.run();
 
         assertEquals(null, ctx.get(ERROR_CODE_KEY));
-        assertTrue(ctx.sendZuulResponse());
     }
 
     @Test

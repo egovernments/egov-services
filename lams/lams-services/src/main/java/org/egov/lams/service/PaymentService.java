@@ -369,6 +369,7 @@ public class PaymentService {
 				            + propertiesManager.getBoundaryserviceSearchPath()
 				            + "?Boundary.id=" + boundaryId;
 		//FIXME in boundary contract id is string
+		LOGGER.info(boundaryUrl);
 		try{
 			boundaryResponse = restTemplate.getForObject(boundaryUrl,BoundaryResponse.class);
 		}catch (Exception e) {

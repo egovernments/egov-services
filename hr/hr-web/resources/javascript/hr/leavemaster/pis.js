@@ -56,20 +56,22 @@ class PersonalInform extends React.Component {
 
     try {
         var leaveBal = commonApiPost("hr-leave", "leaveopeningbalances", "_search", {
-            tenantId
+            tenantId,
+            pageSize: 500
         }).responseJSON["LeaveOpeningBalance"] || [];
     } catch(e) {
         var leaveBal = [];
     }
     var employees = [];
+    var _noDays, _leaveId, _createdDate, _lastModifiedDate;
     for (var i = 0; i < _emps.length; i++) {
-        var _noDays, _leaveId, _createdDate, _lastModifiedDate;
         for(var j = 0; j < leaveBal.length; j++) {
+            _noDays = _leaveId = _createdDate = _lastModifiedDate = "";
             if(leaveBal[j].employee == _emps[i].id && leaveBal[j].calendarYear == this.state.searchSet.calendarYear && leaveBal[j].leaveType && leaveBal[j].leaveType.id == this.state.searchSet.leaveType) {
-                _noDays = leaveBal[i].noOfDays;
-                _leaveId = leaveBal[i].id;
-                _createdDate = leaveBal[i].createdDate
-                _lastModifiedDate = leaveBal[i].lastModifiedDate;
+                _noDays = leaveBal[j].noOfDays;
+                _leaveId = leaveBal[j].id;
+                _createdDate = leaveBal[j].createdDate
+                _lastModifiedDate = leaveBal[j].lastModifiedDate;
                 break;
             }
         }

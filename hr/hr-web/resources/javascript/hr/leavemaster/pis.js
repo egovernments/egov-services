@@ -18,7 +18,7 @@ class PersonalInform extends React.Component {
         designationList: [],
         leave: [],
         years: []
-    } 
+    }
     this.handleChange = this.handleChange.bind(this);
     this.search = this.search.bind(this);
     this.addOrUpdate = this.addOrUpdate.bind(this);
@@ -27,7 +27,7 @@ class PersonalInform extends React.Component {
 
 
   componentDidMount(){
-    
+
   }
 
   search(e) {
@@ -48,7 +48,8 @@ class PersonalInform extends React.Component {
             departmentId: department || null,
             designationId: designation || null,
             code: employee || null,
-            employeeName: name || null
+            employeeName: name || null,
+
         }).responseJSON["Employee"] || [];
     } catch(e) {
         var _emps = [];
@@ -87,7 +88,7 @@ class PersonalInform extends React.Component {
     this.setState({
         isSearchClicked: true,
         employees
-    })  
+    })
   }
 
   addOrUpdate(e){
@@ -96,7 +97,7 @@ class PersonalInform extends React.Component {
     for(var i=0; i<this.state.employees.length; i++) {
         if(this.state.employees[i].noOfDays) {
             tempEmps.push({
-                "id": this.state.employees[i].leaveId || null, 
+                "id": this.state.employees[i].leaveId || null,
                 "employee": this.state.employees[i].employee,
                 "calendarYear": this.state.searchSet.calendarYear,
                 "leaveType": {
@@ -165,7 +166,7 @@ class PersonalInform extends React.Component {
     } else {
         showError("Nothing to update.");
     }
-    
+
   }
 
 

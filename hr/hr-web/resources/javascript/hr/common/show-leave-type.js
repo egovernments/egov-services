@@ -102,8 +102,7 @@ handleChange(e,name)
 
      return (
       <div>
-          <br/>
-          <div className="land-table">
+          <h3>{getUrlVars()["type"]} leave Type</h3>
                 <table id="leaveTable" className="table table-bordered">
                   <thead>
                       <tr>
@@ -118,8 +117,6 @@ handleChange(e,name)
                     {renderBody()}
                   </tbody>
               </table>
-          </div>
-
       </div>
 
     );

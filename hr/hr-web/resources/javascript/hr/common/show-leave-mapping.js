@@ -109,6 +109,7 @@ class ShowLeaveMapping extends React.Component {
     }
 
       return (<div>
+        <h3>{getUrlVars()["type"]} leave Mapping</h3>
         <table id="LeaveTable" className="table table-bordered">
             <thead>
                 <tr>

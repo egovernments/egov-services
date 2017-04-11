@@ -1426,6 +1426,7 @@ function clearModalInput(object, properties) {
                 $('[data-primary="yes"]').prop("checked", false);
                 $('[data-primary="no"]').prop("checked", true);
             } else if(variable == "hod") {
+                $('#departments').hide();
                 $('[data-hod="yes"]').prop("checked", false);
                 $('[data-hod="no"]').prop("checked", true);
             } else
@@ -1645,6 +1646,7 @@ function markEditIndex(index = -1, modalName = "", object = "") {
                     if(employeeSubObject[object][key] && employeeSubObject[object][key].constructor == Array && employeeSubObject[object][key].length) {
                         $('[data-hod="yes"]').prop("checked", true);
                         $('[data-hod="no"]').prop("checked", false);
+                        $("#departments").show();
                     } else {
                         $('[data-hod="yes"]').prop("checked", false);
                         $('[data-hod="no"]').prop("checked", true);

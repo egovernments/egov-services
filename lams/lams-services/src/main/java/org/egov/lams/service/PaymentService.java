@@ -24,8 +24,6 @@ import org.egov.lams.web.contract.BillInfo;
 import org.egov.lams.web.contract.BillReceiptInfoReq;
 import org.egov.lams.web.contract.BillReceiptReq;
 import org.egov.lams.web.contract.BillSearchCriteria;
-import org.egov.lams.web.contract.Boundary;
-import org.egov.lams.web.contract.BoundaryRequest;
 import org.egov.lams.web.contract.BoundaryResponse;
 import org.egov.lams.web.contract.ChartOfAccountContract;
 import org.egov.lams.web.contract.DemandSearchCriteria;

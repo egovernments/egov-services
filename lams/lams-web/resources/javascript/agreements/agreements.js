@@ -1031,8 +1031,14 @@ $(".datetimepicker").on("dp.change", function() {
 
                         if(response["status"]===200)
                         {
-                        alert("Successfully added");
-                        // window.location.href="../../../../app/hr/common/employee-attendance.html";
+                          if (typeof(response["responseJSON"]["Error"])!="undefined") {
+                            alert(response["responseJSON"]["Error"]["message"]);
+                          }
+                          else {
+                            alert("Successfully added");
+                            window.location.href="app/search-assets/create-agreement-ack.html?name"+=getNameById(employees,agreement["approverName"])+"&ackNo="+responseJSON["Agreements"][0]["acknowledgementNumber"];      
+                          }
+
                         }
                         else {
                         alert(response["statusText"]);

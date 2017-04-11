@@ -8,11 +8,12 @@ class CreateAgreement extends React.Component {
                   <form>
                       <h3 > Acknowledgement of Agreement </h3>
                     <h4> <center><font color="ass"> Acknowledgement  Created </font> </center></h4>
+                    <h3> <center><font color="ass"><strong> {getUrlVars()["ackNo"]}</strong>  </font> </center></h3>
+                    <h3><center> <font color="ass"> Successfully Forward to {getUrlVars()["name"]} </font></center></h3>
 
 
                     <div className="text-center">
 
-                        <h3> <font color="ass"> Successfully Forward to Murali M </font></h3>
                         <button type="button" className="btn btn-submit" onClick={(e)=>{this.close()}}>Close</button>
                     </div>
             </form>

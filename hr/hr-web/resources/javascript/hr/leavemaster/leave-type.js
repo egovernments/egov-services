@@ -173,13 +173,13 @@ addOrUpdate(e,mode)
                           </div>
                           <div className="col-sm-6">
                                 <label className="radio-inline radioUi">
-                                  <input type="radio" name="payEligible" id="payEligible" value="true" checked={()=>{
+                                  <input type="radio" name="payEligible"  value="true" checked={()=>{
                                     console.log(payEligible);
                                     return payEligible?true:false}}
                                       onChange={(e)=>{handleChange(e,"payEligible")  }}/> Yes
                                 </label>
                                 <label className="radio-inline radioUi">
-                                  <input type="radio" name="payEligible" id="payEligible" value="false" checked={payEligible?false:true}
+                                  <input type="radio" name="payEligible" value="false" checked={payEligible?false:true}
                                       onChange={(e)=>{handleChange(e,"payEligible")}}/> No
                                 </label>
                           </div>
@@ -192,11 +192,11 @@ addOrUpdate(e,mode)
                           </div>
                           <div className="col-sm-6">
                                 <label className="radio-inline radioUi">
-                                  <input type="radio" name="halfdayAllowed" id="halfdayAllowed"  value="true" checked={halfdayAllowed?true:false}
-                                   onChange={(e)=>{handleChange(e,"halfdayAllowed")}} /> Yes
+                                  <input type="radio" name="halfdayAllowed"   value="true"
+                                   onChange={(e)=>{handleChange(e,"halfdayAllowed")}} checked/> Yes
                                 </label>
                                 <label className="radio-inline radioUi">
-                                  <input type="radio" name="halfdayAllowed" id="halfdayAllowed" value="false" checked={halfdayAllowed?false:true}
+                                  <input type="radio"  name="halfdayAllowed" value="false"
                                   onChange={(e)=>{handleChange(e,"halfdayAllowed")}}/> No
                                 </label>
                           </div>
@@ -212,11 +212,11 @@ addOrUpdate(e,mode)
                           </div>
                           <div className="col-sm-6">
                                 <label className="radio-inline radioUi">
-                                  <input type="radio" name="encashable" id="encashable" value="true" checked={encashable?true:false}
+                                  <input type="radio" name="encashable" value="true" checked={encashable?true:false}
                                    onChange={(e)=>{handleChange(e,"encashable")}}/> Yes
                                 </label>
                                 <label className="radio-inline radioUi">
-                                  <input type="radio" name="encashable" id="encashable" value="false" checked={encashable?false:true}
+                                  <input type="radio" name="encashable"  value="false" checked={encashable?false:true}
                                   onChange={(e)=>{handleChange(e,"encashable")}}/> No
                                 </label>
                           </div>
@@ -229,17 +229,32 @@ addOrUpdate(e,mode)
                             </div>
                             <div className="col-sm-6">
                                   <label className="radio-inline radioUi">
-                                    <input type="radio" name="accumulative" id="accumulative" value="true" checked={accumulative?true:false}
+                                    <input type="radio" name="accumulative"  value="true" checked={accumulative?true:false}
                                         onChange={(e)=>{handleChange(e,"accumulative")}}/> Yes
 
                                   </label>
                                   <label className="radio-inline radioUi">
-                                    <input type="radio" name="accumulative" id="accumulative" value="false" checked={accumulative?false:true}
+                                    <input type="radio" name="accumulative" value="false" checked={accumulative?false:true}
                                         onChange={(e)=>{handleChange(e,"accumulative")}}/> No
                                   </label>
                             </div>
                         </div>
                     </div>
+                </div>
+                <div className="row">
+                <div className="col-sm-6">
+                  <div className="row">
+                    <div className="col-sm-6 label-text">
+                        <label for="">Active</label>
+                    </div>
+                        <div className="col-sm-6">
+                              <label className="radioUi">
+                                <input type="checkbox" name="active" id="active" value="true" onChange={(e)=>{
+                                    handleChange(e,"active")}} checked/>
+                              </label>
+                        </div>
+                    </div>
+                  </div>
                 </div>
 
                 <div className="text-center">

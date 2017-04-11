@@ -205,7 +205,12 @@ class ApplyLeave extends React.Component {
                         </div>
                         <div className="col-sm-6">
                             <div className="styled-select">
-                            
+                            <select id="leaveType" name="leaveType" value={leaveType}
+                            onChange={(e)=>{ handleChange(e,"leaveType")}}>
+                              <option>Select leave Type</option>
+                              {renderOption(this.state.leaveList)}
+                           </select>
+
                             </div>
                         </div>
                     </div>

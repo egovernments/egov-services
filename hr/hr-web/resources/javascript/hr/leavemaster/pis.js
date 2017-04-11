@@ -48,7 +48,8 @@ class PersonalInform extends React.Component {
             departmentId: department || null,
             designationId: designation || null,
             code: employee || null,
-            employeeName: name || null,
+            employeeName: name || null
+
 
         }).responseJSON["Employee"] || [];
     } catch(e) {

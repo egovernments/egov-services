@@ -1422,13 +1422,20 @@ function fillValueToObject(currentState) {
 function clearModalInput(object, properties) {
     for (var variable in properties) {
         if (properties.hasOwnProperty(variable)) {
-            $("#" + object + "\\." + variable).val(properties[variable]);
+            if(variable == "isPrimary") {
+                $('[data-primary="yes"]').prop("checked", false);
+                $('[data-primary="no"]').prop("checked", true);
+            } else if(variable == "hod") {
+                $('[data-hod="yes"]').prop("checked", false);
+                $('[data-hod="no"]').prop("checked", true);
+            } else
+                $("#" + object + "\\." + variable).val(properties[variable]);
         }
     }
 
-    $('#assignmentDetailModal input[type="radio":checked]').each(function(){
+    /*$('#assignmentDetailModal input[type="radio":checked]').each(function(){
         this.checked = false;
-    });
+    });*/
 }
 
 //need to cleat editIndex and temprory pbject
@@ -1626,7 +1633,24 @@ function markEditIndex(index = -1, modalName = "", object = "") {
                 //     $(`#${object}\\.${key}`).val(employeeSubObject[object][key]);
                 // }
 
-                $(`#${object}\\.${key}`).val(employeeSubObject[object][key]);
+                if(key == "isPrimary") {
+                    if(employeeSubObject[object][key] == "true") {
+                        $('[data-primary="yes"]').prop("checked", true);
+                        $('[data-primary="no"]').prop("checked", false);
+                    } else {
+                        $('[data-primary="yes"]').prop("checked", false);
+                        $('[data-primary="no"]').prop("checked", true);
+                    }
+                } else if(key == "hod") {
+                    if(employeeSubObject[object][key] && employeeSubObject[object][key].constructor == Array && employeeSubObject[object][key].length) {
+                        $('[data-hod="yes"]').prop("checked", true);
+                        $('[data-hod="no"]').prop("checked", false);
+                    } else {
+                        $('[data-hod="yes"]').prop("checked", false);
+                        $('[data-hod="no"]').prop("checked", true);
+                    }
+                } else  
+                    $(`#${object}\\.${key}`).val(employeeSubObject[object][key]);
 
             }
         }
@@ -2190,7 +2214,7 @@ function checkIfNoDup(employee, objectType, subObject) {
 function validateDates(employee, objectType, subObject) {
     if(objectType == "assignments" && subObject.isPrimary) {
         for (let i = 0; i < employee[objectType].length; i++) {
-            if(employee[objectType][i].isPrimary) {
+            if(employee[objectType][i].isPrimary && (editIndex == -1 || (editIndex > -1 && i != editIndex))) {
                 var subFromDate = new Date(subObject.fromDate.split("/")[1] + "/" + subObject.fromDate.split("/")[0] + "/" + subObject.fromDate.split("/")[2]).getTime();
                 var fromDate = new Date(employee[objectType][i].fromDate.split("/")[1] + "/" + employee[objectType][i].fromDate.split("/")[0] + "/" + employee[objectType][i].fromDate.split("/")[2]).getTime();
                 var subToDate = new Date(subObject.toDate.split("/")[1] + "/" + subObject.toDate.split("/")[0] + "/" + subObject.toDate.split("/")[2]).getTime();

@@ -451,9 +451,10 @@ class CreateAsset extends React.Component {
 						</div>
 						<div className="col-sm-6">
 							<select id={item.name} name={item.name}
-								onChange={(e)=>{handleChangeTwoLevel(e,"properties",item.name)}} required={item.isMandatory} disabled={readonly}/>
+								onChange={(e)=>{handleChangeTwoLevel(e,"properties", item.name)}} required={item.isMandatory} disabled={readonly}>
 								<option value="">Select</option>
 								{renderOption(item.values.split(','))}
+                            </select>
 						</div>
 					</div>
 				</div>

@@ -21,7 +21,7 @@ public class ComplaintStatusController {
     private ComplaintStatusService complaintStatusService;
 
     @PostMapping("/statuses/_search")
-    public List<ComplaintStatus> getAllStatus(@RequestParam final String tenantId) {
+    public List<ComplaintStatus> getAllStatus(@RequestBody final ComplaintStatusRequest request) {
         return complaintStatusService.findAll()
                 .stream()
                 .map(ComplaintStatus::new)

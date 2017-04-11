@@ -1,0 +1,51 @@
+{
+	"variables": [],
+	"info": {
+		"name": "workflow",
+		"_postman_id": "be85dc52-0f62-3263-4f22-d2d7f02e89b1",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Next Complaint Status From Current Complaint Status",
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/workflow/nextstatuses/_search?currentStatus=REGISTERED",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"RequestInfo\": {\n\t\t\"apiId\":\"org.egov.pgr\",\n\t\t\"ver\":\"1.0\",\n\t\t\"ts\":\"4-10-2017 1:04:20 PM\",\n\t\t\"action\":\"POST\",\n\t\t\"did\":\"4354648646\",\n\t\t\"key\":\"xyz\",\n\t\t\"msgId\":\"654654\",\n\t\t\"requesterId\":\"61\",\n\t\t\"authToken\":\"260ae51f-7b99-4839-be89-d196c8571879\"\n\t},\n\t\"tenantId\": \"ap.public\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Complaint Statuses",
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/workflow/statuses/_search",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"RequestInfo\": {\n\t\t\"apiId\":\"org.egov.pgr\",\n\t\t\"ver\":\"1.0\",\n\t\t\"ts\":\"4-10-2017 1:04:20 PM\",\n\t\t\"action\":\"POST\",\n\t\t\"did\":\"4354648646\",\n\t\t\"key\":\"xyz\",\n\t\t\"msgId\":\"654654\",\n\t\t\"requesterId\":\"61\",\n\t\t\"authToken\":\"260ae51f-7b99-4839-be89-d196c8571879\"\n\t},\n\t\"tenantId\": \"ap.public\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

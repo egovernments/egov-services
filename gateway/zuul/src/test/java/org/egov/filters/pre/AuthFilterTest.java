@@ -51,7 +51,7 @@ public class AuthFilterTest {
     @Test
     public void testBasicProperties() {
         assertThat(authFilter.filterType(), is("pre"));
-        assertThat(authFilter.filterOrder(), is(2));
+        assertThat(authFilter.filterOrder(), is(3));
     }
 
     @Test

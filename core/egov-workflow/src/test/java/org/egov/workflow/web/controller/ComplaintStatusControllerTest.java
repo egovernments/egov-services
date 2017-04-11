@@ -46,7 +46,7 @@ public class ComplaintStatusControllerTest {
 
         when(complaintStatusService.findAll()).thenReturn(complaintStatuses);
 
-        mockMvc.perform(post("/_statuses?tenantId=" + TENANT_ID)).andExpect(status().isOk())
+        mockMvc.perform(post("/statuses/_search?tenantId=" + TENANT_ID)).andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(content().json(new Resources().getFileContents("complaintStatusResponse.json")));
     }
@@ -62,7 +62,7 @@ public class ComplaintStatusControllerTest {
                 new ComplaintStatusSearchCriteria(status, Arrays.asList(1L, 2L));
         when(complaintStatusService.getNextStatuses(complaintStatusSearchCriteria)).thenReturn(complaintStatuses);
 
-        mockMvc.perform(post("/_getnextstatuses")
+        mockMvc.perform(post("/nextstatuses/_search")
                         .param("currentStatus", status)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(resources.getFileContents("complaintStatusRequest.json")))
@@ -78,7 +78,7 @@ public class ComplaintStatusControllerTest {
                 );
         when(complaintStatusService.getNextStatuses(any(ComplaintStatusSearchCriteria.class))).thenThrow(exception);
 
-        mockMvc.perform(post("/_getnextstatuses")
+        mockMvc.perform(post("/nextstatuses/_search")
                 .param("currentStatus", "")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(resources.getFileContents("complaintStatusRequest.json")))
@@ -93,7 +93,7 @@ public class ComplaintStatusControllerTest {
         InvalidComplaintStatusException exception = new InvalidComplaintStatusException(complaintStatus);
         when(complaintStatusService.getNextStatuses(any(ComplaintStatusSearchCriteria.class))).thenThrow(exception);
 
-        mockMvc.perform(post("/_getnextstatuses")
+        mockMvc.perform(post("/nextstatuses/_search")
                 .param("currentStatus", CURRENT_STATUS)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(resources.getFileContents("complaintStatusRequest.json")))

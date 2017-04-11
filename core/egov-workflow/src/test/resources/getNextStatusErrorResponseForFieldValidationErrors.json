@@ -2,17 +2,17 @@
   "responseInfo": null,
   "error": {
     "code": 0,
-    "message": null,
+    "message": "Complaint status search criteria has invalid fields.",
     "description": null,
     "fields": [
       {
         "code": "",
-        "message": "Current status is required",
+        "message": "Current status is required.",
         "field": ""
       },
       {
         "code": "",
-        "message": "User has no roles associated with",
+        "message": "User has no roles associated with.",
         "field": ""
       }
     ]

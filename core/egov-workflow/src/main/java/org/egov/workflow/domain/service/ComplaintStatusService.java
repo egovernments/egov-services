@@ -28,14 +28,16 @@ public class ComplaintStatusService {
     public List<ComplaintStatus> getNextStatuses(ComplaintStatusSearchCriteria complaintStatusSearchCriteria) {
         complaintStatusSearchCriteria.validate();
 
-        ComplaintStatus currentStatus = complaintStatusRepository.findByName(complaintStatusSearchCriteria.getComplaintStatusName());
+        ComplaintStatus currentStatus =
+                complaintStatusRepository.findByName(complaintStatusSearchCriteria.getComplaintStatusName());
 
-        if(currentStatus == null) {
+        if (currentStatus == null) {
             throw new InvalidComplaintStatusException(
                     new ComplaintStatus(0L, complaintStatusSearchCriteria.getComplaintStatusName())
             );
         }
 
-        return complaintStatusMappingRepository.getNextStatuses(currentStatus.getId(), complaintStatusSearchCriteria.getRoles());
+        return complaintStatusMappingRepository
+                .getNextStatuses(currentStatus.getId(), complaintStatusSearchCriteria.getRoles());
     }
 }

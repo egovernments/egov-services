@@ -25,25 +25,25 @@ public class ComplaintStatusSearchErrorAdaptorTest {
 
     @Test
     public void should_set_error_fields_when_name_is_not_present() {
-        when(complaintStatusSearchCriteria.isNameNotPresent()).thenReturn(true);
+        when(complaintStatusSearchCriteria.isNameAbsent()).thenReturn(true);
 
         ErrorResponse errorResponse = complaintStatusSearchErrorAdaptor.adapt(complaintStatusSearchCriteria);
 
         List<ErrorField> fields = errorResponse.getError().getFields();
 
         assertThat(fields.size()).isEqualTo(1);
-        assertThat(fields.get(0).getMessage()).isEqualTo("Current status is required");
+        assertThat(fields.get(0).getMessage()).isEqualTo("Current status is required.");
     }
 
     @Test
     public void should_set_error_fields_when_user_roles_are_missing() {
-        when(complaintStatusSearchCriteria.isRolesNotPresesnt()).thenReturn(true);
+        when(complaintStatusSearchCriteria.isRolesAbsent()).thenReturn(true);
 
         ErrorResponse errorResponse = complaintStatusSearchErrorAdaptor.adapt(complaintStatusSearchCriteria);
 
         List<ErrorField> fields = errorResponse.getError().getFields();
 
         assertThat(fields.size()).isEqualTo(1);
-        assertThat(fields.get(0).getMessage()).isEqualTo("User has no roles associated with");
+        assertThat(fields.get(0).getMessage()).isEqualTo("User has no roles associated with.");
     }
 }

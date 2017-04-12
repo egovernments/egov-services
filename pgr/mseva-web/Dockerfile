@@ -13,5 +13,5 @@ COPY ./js ${WEB_DIR}/js
 COPY ./static ${WEB_DIR}/static
 COPY ./styles ${WEB_DIR}/styles
 COPY ./asset-manifest.json ${WEB_DIR}/
-COPY ./favicon.ico ${WEB_DIR}/
+COPY ./favicon.png ${WEB_DIR}/
 COPY ./index.html ${WEB_DIR}/

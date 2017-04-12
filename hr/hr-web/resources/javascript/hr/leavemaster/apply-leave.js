@@ -1,29 +1,31 @@
 class ApplyLeave extends React.Component {
   constructor(props) {
     super(props);
-    this.state={employees:[],leaveSet:{
+    this.state={list:[],leaveSet:{
       "employee": "",
        "leaveType": {
        	"id" : ""
        },
        "fromDate" : "",
        "toDate": "",
-       "noOfDays": "",
+       "availableDays": "",
+       "leaveDays":"",
        "reason": "",
-       "status": "",
-       "stateId": "",
+       "status": "APPROVED",
+       "stateId": 1,
        "tenantId" : tenantId
-     },leaveList:[],list:[]}
+     },leaveList:[]}
     this.handleChange=this.handleChange.bind(this);
+    this.addOrUpdate=this.addOrUpdate.bind(this);
     this.handleChangeThreeLevel=this.handleChangeThreeLevel.bind(this);
   }
 
   componentDidMount(){
-    var type = getUrlVars()["type"], _this = this, duration,to,from;
+    var type = getUrlVars()["type"], _this = this;
     var id = getUrlVars()["id"];
     $('#fromDate').datepicker({
         format: 'dd/mm/yyyy',
-        autclose:true
+        autoclose:true
 
     });
     $('#fromDate').on("change", function(e) {
@@ -37,7 +39,7 @@ class ApplyLeave extends React.Component {
       });
       $('#toDate').datepicker({
           format: 'dd/mm/yyyy',
-          autclose:true
+          autoclose:true
 
       });
       $('#toDate').on("change", function(e) {
@@ -52,12 +54,25 @@ class ApplyLeave extends React.Component {
         var start = $('#fromDate').datepicker('getDate');
         var end   = $('#toDate').datepicker('getDate');
         var days   = (end - start)/1000/60/60/24;
-        $('#workingDay').val(days + ' days');
+        $('#leaveDays').val(days);
+        _this.setState({
+          leaveSet:{
+              ..._this.state.leaveSet,
+              leaveDays:days
+            }
+        })
 
         });
+        var obj = getCommonMasterById("hr-employee","employees","Employee",id).responseJSON["Employee"][0]
+          _this.setState({
+            leaveSet:{
+                ..._this.state.leaveSet,
+                name:obj.name,
+                code:obj.code,
+                employee:obj.id
 
-          this.setState({
-            leaveSet:getCommonMasterById("hr-employee","employees","Employee",id).responseJSON["Employee"][0]
+              }
+
           })
       }
 
@@ -68,9 +83,9 @@ class ApplyLeave extends React.Component {
     })
   }
 
-  handleChange(e,name)
+  handleChangeThreeLevel(e,pName,name)
   {
-    if(name=="leaveType"){
+    if(pName=="leaveType"){
       var leaveType=e.target.value;
       try{
         var object =  getCommonMasterById("hr-leave","leaveopeningbalances","LeaveOpeningBalance",leaveType,tenantId).responseJSON["LeaveOpeningBalance"][0];
@@ -78,8 +93,12 @@ class ApplyLeave extends React.Component {
         this.setState({
           leaveSet:{
             ...this.state.leaveSet,
-            noOfDays: object.noOfDays,
-            [name]: e.target.value
+            availableDays: object.noOfDays,
+            [pName]:{
+                ...this.state.leaveSet[pName],
+                [name]:e.target.value
+            }
+
           }
         })
       }
@@ -91,10 +110,24 @@ class ApplyLeave extends React.Component {
       this.setState({
           leaveSet:{
               ...this.state.leaveSet,
-              [name]:e.target.value
+              [pName]:{
+                  ...this.state.leaveSet[pName],
+                  [name]:e.target.value
+              }
           }
       })
     }
+  }
+
+  handleChange(e,name)
+  {
+      this.setState({
+          leaveSet:{
+              ...this.state.leaveSet,
+              [name]:e.target.value
+          }
+      })
+
   }
 
 
@@ -102,36 +135,104 @@ class ApplyLeave extends React.Component {
       // widow.close();
       open(location, '_self').close();
   }
-  handleChangeThreeLevel(e,pName,name)
-  {
-    this.setState({
-      leaveSet:{
-        ...this.state.leaveSet,
-        [pName]:{
-            ...this.state.leaveSet[pName],
-            [name]:e.target.value
+
+addOrUpdate(e,mode)
+{
+
+        e.preventDefault();
+
+        var tempInfo=Object.assign({},this.state.leaveSet) , type = getUrlVars()["type"];
+        delete  tempInfo.name;
+        delete tempInfo.code;
+        var body={
+            "RequestInfo":requestInfo,
+            "LeaveApplication":tempInfo
+          },_this=this;
+            if(type == "update") {
+              $.ajax({
+
+                    url:baseUrl+"/egov-common-masters/holidays/" + this.state.Holiday.id + "/" + "_update/",
+                    type: 'POST',
+                    dataType: 'json',
+                    data:JSON.stringify(body),
+
+                    contentType: 'application/json',
+                    headers:{
+                      'auth-token': authToken
+                    },
+                    success: function(res) {
+                            showSuccess("Leave Application Modified successfully.");
+                            _this.setState({
+                              leaveSet:{
+                                "employee": "",
+                                 "leaveType": {
+                                 	"id" : ""
+                                 },
+                                 "fromDate" : "",
+                                 "toDate": "",
+                                 "availableDays": "",
+                                 "reason": "",
+                                 "leaveDays":"",
+                                 "status": "",
+                                 "stateId": "",
+                                 "tenantId" : tenantId
+                               },leaveList:[]
+                            })
+
+                    },
+                    error: function(err) {
+                        showError(err);
+
+                    }
+                });
+            }
+            else{
+              $.ajax({
+                    url: baseUrl+"/hr-leave/leaveapplications/_create",
+                    type: 'POST',
+                    dataType: 'json',
+                    data:JSON.stringify(body),
+
+                    contentType: 'application/json',
+                    headers:{
+                      'auth-token': authToken
+                    },
+                    success: function(res) {
+                            showSuccess("Leave Application Created successfully.");
+                            _this.setState({
+                              leaveSet:{
+                                "employee": "",
+                                 "leaveType": {
+                                 	"id" : ""
+                                 },
+                                 "fromDate" : "",
+                                 "toDate": "",
+                                 "availableDays": "",
+                                 "leaveDays":"",
+                                 "reason": "",
+                                 "status": "",
+                                 "stateId": "",
+                                 "tenantId" : tenantId
+                               },leaveList:[]
+                            })
+
+
+                    },
+                    error: function(err) {
+                        showError(err);
+
+                    }
+                });
+            }
         }
-      }
-    })
-}
 
-
-  Add(e){
-    e.preventDefault();
-      this.setState({leaveSet:{
-      name:"",
-      code:"",
-      workingDay:"",
-      noOfDays:"",
-      fromDate:"",
-      toDate:"",
-      reason:"",
-      leaveType:""},leaveList:[],list:[] })
-  }
 
   render() {
-    let {handleChange,handleChangeThreeLevel}=this;
-    let {name,code,workingDay,noOfDays,fromDate,toDate,reason,leaveType}=this.state.leaveSet;
+    let {handleChange,addOrUpdate,handleChangeThreeLevel}=this;
+    let {leaveSet}=this.state;
+    let {name,code,leaveDays,availableDays,fromDate,toDate,reason,leaveType}=leaveSet;
+    let id = this.state.leaveSet.leaveType.id;
+
 
 
     const renderOption=function(list)
@@ -151,7 +252,7 @@ class ApplyLeave extends React.Component {
 
     return (
       <div>
-        <form onSubmit={(e)=>{this.Add(e)}}>
+        <form onSubmit={(e)=>{addOrUpdate(e)}}>
           <fieldset>
               <div className="row">
                   <div className="col-sm-6">
@@ -217,14 +318,15 @@ class ApplyLeave extends React.Component {
                 <div className="col-sm-6">
                     <div className="row">
                         <div className="col-sm-6 label-text">
-                            <label for="leaveType">Leave Type</label>
+                            <label for="leaveType">Leave Type<span>*</span></label>
                         </div>
                         <div className="col-sm-6">
                             <div className="styled-select">
-                            <select id="leaveType" name="leaveType" value={leaveType}
-                            onChange={(e)=>{ handleChange(e,"leaveType")}}>
-                              <option>Select leave Type</option>
-                              {renderOption(this.state.leaveList)}
+                            <select id="leaveType" name="leaveType" value={id} required="true" onChange={(e)=>{
+                                handleChangeThreeLevel(e,"leaveType","id")
+                            }}>
+                            <option value=""> select Leave Type</option>
+                            {renderOption(this.state.leaveList)}
                            </select>
 
                             </div>
@@ -255,8 +357,8 @@ class ApplyLeave extends React.Component {
                           </div>
                           <div className="col-sm-6">
 
-                              <input type="text" id="workingDay" name="workingDay" value=""
-                              onChange={(e)=>{handleChange(e,"workingDay")}}/>
+                              <input type="number" id="leaveDays" name="leaveDays" value={leaveDays}
+                              onChange={(e)=>{handleChange(e,"leaveDays")}}/>
                           </div>
                       </div>
                   </div>
@@ -266,8 +368,8 @@ class ApplyLeave extends React.Component {
                               <label for="">Available Leave</label>
                             </div>
                             <div className="col-sm-6">
-                                <input  type="number" id="noOfDays" name="noOfDays" value={noOfDays}
-                                onChange={(e)=>{handleChange(e,"noOfDays")}}/>
+                                <input  type="number" id="availableDays" name="availableDays" value={availableDays}
+                                onChange={(e)=>{handleChange(e,"availableDays")}}/>
                             </div>
                         </div>
                       </div>

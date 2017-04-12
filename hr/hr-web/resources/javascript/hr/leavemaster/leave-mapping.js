@@ -46,21 +46,6 @@ componentWillMount()
     }
 
         addOrUpdate(e){
-          // var finalPost={
-          //   "RequestInfo":requestInfo,
-          //
-          // }
-          // var tempObj={
-          //                 "designation": this.state.leave.designation,
-          //                 "leaveType":
-          //                   {
-          //                       "id":this.state.leave.leaveType,
-          //
-          //                     },
-          //                   "noOfDays": this.state.leave.noOfDays,
-          //                   "tenantId": "1"
-          //               };
-
           e.preventDefault();
           //  console.log(tempObj);
           // var tempInfo=this.state.leave;
@@ -80,65 +65,73 @@ componentWillMount()
           var body={
               "RequestInfo":requestInfo,
               "LeaveAllotment":[tempInfo]
-            };
+            },_this=this;
+            if (type == "update") {
+              $.ajax({
+                   url:baseUrl+"/hr-leave/leaveallotments/" + this.state.leave.id + "/" + "_update/",
+                    type: 'POST',
+                    dataType: 'json',
+                    data:JSON.stringify(body),
+                    async: false,
+                    contentType: 'application/json',
+                    headers:{
+                      'auth-token': authToken
+                    },
+                    success: function(res) {
+                            showSuccess("Leave Mapping Modified successfully.");
+                            _this.setState({
+                              leave:{
+                                "id": "",
+                                "designation": "",
+                                "leaveType":{
+                                  "id" :""
+                                },
+                                "noOfDays":"",
+                                "active": "",
+                                "tenantId": tenantId
+                                }
+                            })
 
-          var response=$.ajax({
-                  // url:baseUrl+"/hr-leave/leaveallotments/_create",
-               url:baseUrl+"/hr-leave/leaveallotments/" + (type == "update" ? (this.state.leave.id + "/" + "_update/") : "_create"),
-                type: 'POST',
-                dataType: 'json',
-                data:JSON.stringify(body),
-                async: false,
-                contentType: 'application/json',
-                headers:{
-                  'auth-token': authToken
-                }
-            });
+                    },
+                    error: function(err) {
+                        showError(err);
 
-          //  console.log(response);
-          if(response["statusText"]==="OK")
-          {
-            alert("Successfully added");
-            this.setState({
-              leave:{
-                "id": "",
-                "designation": "",
-                "leaveType":{
-                  "id" :""
-                },
-                "noOfDays":"",
-                "active": "",
-                "createdBy": "",
-                "createdDate": "",
-                "lastModifiedBy": "",
-                "lastModifiedDate": "",
-                "tenantId": tenantId
-                }
-            })
-          }
-          else {
-            // console.log(tempObj);
-            // alert(response["statusText"]);
-            // this.setState({
-            //   leave:{
-            //
-            //     "designation": "",
-            //     "leaveType":"",
-            //     "noOfDays":"",
-            //
-            //     "tenantId":"1",
-            //
-            //   },
-            //   leaveType:
-            //    {
-            //             "id": "",
-            //
-            //     },
-            //   assignments_designation:[],
-            //   LeaveAllotmentTypeList:[]
-            // })
+                    }
+                });
+            } else {
+              $.ajax({
+                    url:baseUrl+"/hr-leave/leaveallotments/_create",
+                    type: 'POST',
+                    dataType: 'json',
+                    data:JSON.stringify(body),
+                    async: false,
+                    contentType: 'application/json',
+                    headers:{
+                      'auth-token': authToken
+                    },
+                    success: function(res) {
+                            showSuccess("Leave Mapping Created successfully.");
+                            _this.setState({
+                              leave:{
+                                "id": "",
+                                "designation": "",
+                                "leaveType":{
+                                  "id" :""
+                                },
+                                "noOfDays":"",
+                                "active": "",
+                                "tenantId": tenantId
+                                }
+                            })
+
+                    },
+                    error: function(err) {
+                        showError(err);
+
+                    }
+                });
+            }
      }
-    }
 
     handleChangeThreeLevel(e,pName,name)
     {
@@ -231,7 +224,7 @@ componentWillMount()
                     <select id="leaveType" name="leaveType" value={leaveType.id} required="true" onChange={(e)=>{
                         handleChangeThreeLevel(e,"leaveType","id")
                     }}>
-                    <option> select Leave Type</option>
+                    <option value=""> select Leave Type</option>
                     {renderOption(this.state.leaveTypeList)}
                    </select>
                     </div>

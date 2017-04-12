@@ -187,10 +187,34 @@ class PersonalInform extends React.Component {
                         showError(err);
                     } else {
                         getUrlVars()["type"] == "update" ? showSuccess("Updated successfully.") : showSuccess("Added successfully.");
+                        _this.setState({
+                          searchSet: {
+                              name: "",
+                              employee: "",
+                              department: "",
+                              designation: "",
+                              leaveType: "",
+                              noOfDay: "",
+                              noOfLeave: "",
+                              calendarYear: new Date().getFullYear()
+                          },employees:[]
+                        })
                     }
-                })        
+                })
             } else {
                 getUrlVars()["type"] == "update" ? showSuccess("Updated successfully.") : showSuccess("Added successfully.");
+                _this.setState({
+                  searchSet: {
+                      name: "",
+                      employee: "",
+                      department: "",
+                      designation: "",
+                      leaveType: "",
+                      noOfDay: "",
+                      noOfLeave: "",
+                      calendarYear: new Date().getFullYear()
+                  },employees:[]
+                })
             }
         })
     } else {
@@ -199,8 +223,20 @@ class PersonalInform extends React.Component {
                 showError(err);
             } else {
                 getUrlVars()["type"] == "update" ? showSuccess("Updated successfully.") : showSuccess("Added successfully.");
+                _this.setState({
+                  searchSet: {
+                      name: "",
+                      employee: "",
+                      department: "",
+                      designation: "",
+                      leaveType: "",
+                      noOfDay: "",
+                      noOfLeave: "",
+                      calendarYear: new Date().getFullYear()
+                  },employees:[]
+                })
             }
-         })   
+         })
     }
   }
 

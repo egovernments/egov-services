@@ -83,11 +83,7 @@ componentWillMount(){
             e.preventDefault();
 
             var tempInfo=Object.assign({},this.state.Holiday) , type = getUrlVars()["type"];
-              // tempInfo.splice(tempInfo.calendarYear.id, tempInfo.calendarYear.active.tempInfo.calendarYear.endDatetempInfo.calendarYear.startDate,tempInfo.calendarYear.tenantId);
               if(type==="update"){
-              var date = new Date(tempInfo.applicableOn);
-              tempInfo.applicableOn = ( date.getDate() + '/' + (date.getMonth() + 1) + '/' +  date.getFullYear());
-
                 delete tempInfo.calendarYear.id;
                 delete tempInfo.calendarYear.active;
                 delete tempInfo.calendarYear.endDate;
@@ -98,59 +94,72 @@ componentWillMount(){
             var body={
                 "RequestInfo":requestInfo,
                 "Holiday":tempInfo
-              };
-            var response=$.ajax({
-                  // url: baseUrl+"/egov-common-masters/holidays/_create",
-                  url:baseUrl+"/egov-common-masters/holidays/" + (type == "update" ? (this.state.Holiday.id + "/" + "_update/") : "_create"),
-                  type: 'POST',
-                  dataType: 'json',
-                  data:JSON.stringify(body),
-                  async: false,
-                  contentType: 'application/json',
-                  headers:{
-                    'auth-token': authToken
-                  },
-              //     success: function(res) {
-              //
-              //             showSuccess("Updated successfully.");
-              //
-              //     },
-              //     error: function(err) {
-              //         showError(err);
-              //         breakOut = 1;
-              //     }
-              });
+              },_this=this;
+                if(type == "update") {
+                  $.ajax({
+                        url:baseUrl+"/egov-common-masters/holidays/" + this.state.Holiday.id + "/" + "_update/",
+                        type: 'POST',
+                        dataType: 'json',
+                        data:JSON.stringify(body),
 
-            // console.log(response);
-            if(response["statusText"]==="OK")
-            {
-              alert("Successfully added");
-              this.setState({
-                Holiday:{
-                  "calendarYear": {
-                    "name": ""
-                  },
-                  "name": "",
-                  "applicableOn": "",
-                  "tenantId": "",
-                  "active": ""
+                        contentType: 'application/json',
+                        headers:{
+                          'auth-token': authToken
+                        },
+                        success: function(res) {
+                                showSuccess("Holiday Modified successfully.");
+                                _this.setState({
+                                  Holiday:{
+                                    "calendarYear": {
+                                      "name": ""
+                                    },
+                                    "name": "",
+                                    "applicableOn": "",
+                                    "tenantId": "",
+                                    "active": ""
+                                  }
+                                })
+
+                        },
+                        error: function(err) {
+                            showError(err);
+
+                        }
+                    });
                 }
-              })
-            }
-            else {
-              alert(response["statusText"]);
-              this.setState({
-                Holiday:{
-                  "calendarYear": {
-                    "name": ""
-                  },
-                  "name": "",
-                  "applicableOn": "",
-                  "tenantId": "",
-                  "active": ""
+                else{
+                  $.ajax({
+                        url: baseUrl+"/egov-common-masters/holidays/_create",
+                        type: 'POST',
+                        dataType: 'json',
+                        data:JSON.stringify(body),
+
+                        contentType: 'application/json',
+                        headers:{
+                          'auth-token': authToken
+                        },
+                        success: function(res) {
+                                showSuccess("Holiday Created successfully.");
+                                _this.setState({
+                                  Holiday:{
+                                    "calendarYear": {
+                                      "name": ""
+                                    },
+                                    "name": "",
+                                    "applicableOn": "",
+                                    "tenantId": "",
+                                    "active": ""
+                                  }
+                                })
+
+
+                        },
+                        error: function(err) {
+                            showError(err);
+
+                        }
+                    });
                 }
-              })
-          }
       }
 
       handleChangeThreeLevel(e,pName,name)
@@ -284,19 +293,3 @@ ReactDOM.render(
   <Calenderholiday />,
   document.getElementById('root')
 );
-
-function showError(msg) {
-    $('#error-alert-span').text(msg);
-    $('#error-alert-div').show();
-    setTimeout(function() {
-        $('#error-alert-div').hide();
-    }, 3000);
-}
-
-function showSuccess(msg) {
-    $('#success-alert-span').text(msg);
-    $('#success-alert-div').show();
-    setTimeout(function() {
-        $('#success-alert-div').hide();
-    }, 3000);
-}

@@ -15,7 +15,7 @@ var requestInfo = {
     "authToken":authToken
 };
 
-var tenantId = "1";
+var tenantId = null;
 
 
 

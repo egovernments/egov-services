@@ -322,6 +322,31 @@ class CreateAsset extends React.Component {
         }
     };
 
+    const renderRadio = function(list, name, isMandatory) {
+        if(list && list.length) {
+            return list.map((item, ind) => {
+                return (
+                    <label class="radio-inline radioUi">
+                        <input type="radio" name={name} value={item} disabled={readonly} required={isMandatory}/> {item} &nbsp;&nbsp;
+                    </label>
+                )
+            })
+        }
+    }
+
+    const renderCheckBox = function(list, name) {
+        if(list && list.length) {
+            return list.map((item, ind) => {
+                return (
+                    <label class="radio-inline radioUi">
+                        <input type="checkbox" name={item} value={item} disabled={readonly}/> &nbsp; {item} &nbsp;&nbsp;
+                    </label>
+                )
+            })
+        }
+
+    }
+
     const renderOption = function(list)
     {
         if(list)
@@ -412,7 +437,7 @@ class CreateAsset extends React.Component {
 								return showTextBox(item,index);
 
 							case "Radio":
-								return showRadioButton(item,index);
+								return showRadioButton(item, index);
 
 							case "Check Box":
 								return showCheckBox(item,index);
@@ -467,7 +492,7 @@ class CreateAsset extends React.Component {
 			);
 		}
 
-		const showRadioButton=function(item,index)
+		const showRadioButton = function(item,index)
 		{
 			return (
 				<div className="col-sm-6" key={index}>
@@ -476,17 +501,14 @@ class CreateAsset extends React.Component {
 							<label for={item.name}>{titleCase(item.name)}  {showStart(item.isActive)}</label>
 						</div>
 						<div className="col-sm-6">
-							<select id={item.name} name={item.name}
-								onChange={(e)=>{handleChangeTwoLevel(e,"properties",item.name)}} required={item.isMandatory} disabled={readonly}/>
-								<option value="">Select</option>
-								{renderOption(item.values.split(','))}
+                            {renderRadio(item.values.split(","), item.name, item.isMandatory)}
 						</div>
 					</div>
 				</div>
 			);
 		}
 
-		const showCheckBox=function(item,index)
+		const showCheckBox = function(item,index)
 		{
 			return (
 				<div className="col-sm-6" key={index}>
@@ -495,10 +517,7 @@ class CreateAsset extends React.Component {
 							<label for={item.name}>{titleCase(item.name)}  {showStart(item.isActive)}</label>
 						</div>
 						<div className="col-sm-6">
-							<select id={item.name} name={item.name}
-								onChange={(e)=>{handleChangeTwoLevel(e,"properties",item.name)}} required={item.isMandatory} disabled={readonly}/>
-								<option value="">Select</option>
-								{renderOption(item.values.split(','))}
+							{renderCheckBox(item.values.split(","), item.name)}
 						</div>
 					</div>
 				</div>

@@ -260,6 +260,7 @@ public class PaymentService {
 		updateDemandDetailForReceiptCreate(currentDemand,
 				billReceiptInfoReq.getBillReceiptInfo());
 		System.out.print("PaymentService- updateDemand - updateDemandDetailForReceiptCreate done");
+		LOGGER.info("The amount collected from citizen is ::: "+currentDemand.getCollectionAmount());
 		currentDemand.setPaymentInfos(setPaymentInfos(billReceiptInfo));
 		demandRepository
 				.updateDemand(Arrays.asList(currentDemand),

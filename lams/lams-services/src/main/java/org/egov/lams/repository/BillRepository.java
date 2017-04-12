@@ -45,14 +45,14 @@ public class BillRepository {
 
 	public BillInfo searchBill(BillSearchCriteria billSearchCriteria, RequestInfo requestInfo) {
 		String url = propertiesManager.getDemandServiceHostName()
-				+ propertiesManager.getDemandBillSearchService();
+				+ propertiesManager.getDemandBillSearchService()
+				+ "?billId="+billSearchCriteria.getBillId();
 			
 		LOGGER.info("The url for search bill API ::: "+url);
 		BillResponse billResponse = null;
 		
 		try{
-			billResponse = restTemplate.postForObject(url, requestInfo,
-				 BillResponse.class,billSearchCriteria);
+			billResponse = restTemplate.postForObject(url, requestInfo, BillResponse.class);
 		}catch (Exception e) {
 			e.printStackTrace();
 			LOGGER.info("the exception from billsearch API call ::: "+e);

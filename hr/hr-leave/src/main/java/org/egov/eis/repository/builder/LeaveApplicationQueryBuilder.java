@@ -129,13 +129,13 @@ public class LeaveApplicationQueryBuilder {
 
         if (leaveApplicationGetRequest.getFromDate() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" la.fromDate = ?");
+            selectQuery.append(" la.fromDate > ?");
             preparedStatementValues.add(leaveApplicationGetRequest.getFromDate());
         }
 
         if (leaveApplicationGetRequest.getToDate() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" la.toDate = ?");
+            selectQuery.append(" la.toDate < ?");
             preparedStatementValues.add(leaveApplicationGetRequest.getToDate());
         }
     }

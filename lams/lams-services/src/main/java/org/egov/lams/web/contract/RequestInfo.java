@@ -14,7 +14,6 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@JsonRootName("RequestInfo")
 public class RequestInfo {
 
 	private String apiId;	

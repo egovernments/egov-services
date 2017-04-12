@@ -755,6 +755,8 @@ definitions:
         type: string
         description: Unique Identifier of which tenant this data is defined. For example, AP, AP-Kurnool etc.
         maxLength: 256
+      workflowDetails:
+        $ref: '#/definitions/WorkFlowDetails' 
     required:
       - employee
       - leaveType
@@ -788,6 +790,26 @@ definitions:
         $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/RequestInfo'
       LeaveApplication:
         $ref: '#/definitions/LeaveApplication'
+  WorkFlowDetails:
+    type: object
+    description: This object holds info about the assignee and other workflow related info
+    properties:
+      department:
+        type: string
+        description: Selected department.
+      designation:
+        type: string
+        description: Selected designation.
+      assignee:
+        type: integer
+        format: int64
+        description: Selected assignee.
+      action:
+        type: string
+        description: chosen action.
+      status:
+        type: string
+        description: current status.
 parameters:
   sortLeaveTypes:
     name: sort

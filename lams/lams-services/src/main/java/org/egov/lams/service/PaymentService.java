@@ -286,8 +286,11 @@ public class PaymentService {
 	private void updateDemandDetailForReceiptCreate(Demand demand,
 			BillReceiptReq billReceiptInfo) {
 		BigDecimal totalAmountCollected = BigDecimal.ZERO;
+		
+		LOGGER.info("updateDemandDetailForReceiptCreate rcptAccInfo ::: "+ billReceiptInfo.getBillReferenceNum());
 		for (final ReceiptAccountInfo rcptAccInfo : billReceiptInfo
-				.getAccountDetails())
+				.getAccountDetails()){
+			LOGGER.info("updateDemandDetailForReceiptCreate rcptAccInfo ::: "+rcptAccInfo);
 			if (rcptAccInfo.getCreditAmount() != null
 					&& rcptAccInfo.getCreditAmount() > 0
 					&& !rcptAccInfo.isRevenueAccount()
@@ -307,6 +310,8 @@ public class PaymentService {
 										.getCreditAmount()));
 					}
 			}
+		}
+		
 		demand.setCollectionAmount(totalAmountCollected);
 	}
 

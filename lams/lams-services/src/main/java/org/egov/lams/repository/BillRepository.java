@@ -11,17 +11,13 @@ import org.egov.lams.web.contract.BillResponse;
 import org.egov.lams.web.contract.BillSearchCriteria;
 import org.egov.lams.web.contract.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 @Repository
 public class BillRepository {
-	
+
 	private static final Logger LOGGER = Logger.getLogger(BillRepository.class);
 
 	@Autowired
@@ -30,66 +26,56 @@ public class BillRepository {
 	@Autowired
 	private PropertiesManager propertiesManager;
 
-	public String createBillAndGetXml(List<BillInfo> billInfos,
-			RequestInfo requestInfo) {
+	public String createBillAndGetXml(List<BillInfo> billInfos, RequestInfo requestInfo) {
 
 		BillRequest billRequest = new BillRequest();
 		billRequest.setRequestInfo(requestInfo);
 		billRequest.setBillInfos(billInfos);
 
-		String url = propertiesManager.getDemandServiceHostName()
-				+ propertiesManager.getDemandBillCreateService();
-		System.out.println("billRequest url ++++++++++++ "+url);
-		BillResponse billResponse = restTemplate.postForObject(url,
-				billRequest, BillResponse.class);
-		System.out.println("billResponse>>>>>>>>>>"+billResponse.getBillXmls());
+		String url = propertiesManager.getDemandServiceHostName() + propertiesManager.getDemandBillCreateService();
+		System.out.println("billRequest url ++++++++++++ " + url);
+		BillResponse billResponse = restTemplate.postForObject(url, billRequest, BillResponse.class);
+		System.out.println("billResponse>>>>>>>>>>" + billResponse.getBillXmls());
 
 		return billResponse.getBillXmls().get(0);
 	}
 
 	public BillInfo searchBill(BillSearchCriteria billSearchCriteria, RequestInfo requestInfo) {
-		String url = propertiesManager.getDemandServiceHostName()
-				+ propertiesManager.getDemandBillSearchService()
-				+ "?billId="+billSearchCriteria.getBillId();
-			
-		LOGGER.info("The url for search bill API ::: "+url);
-		ResponseEntity<BillResponse> billResponse = null;
-		//BillResponse billResponse = null;
-		
-		requestInfo =new RequestInfo();
-		requestInfo.setApiId("apiid");
-		requestInfo.setVer("ver");
-		requestInfo.setTs("ts");
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		//ObjectMapper objectMapper = ne w
-		HttpEntity<RequestInfo> entity = new HttpEntity<RequestInfo>(requestInfo,headers);
-		
-		try{
-			//billResponse = restTemplate.postForObject(url, requestInfo, BillResponse.class);
-			billResponse = restTemplate.postForEntity(url, entity, BillResponse.class);
-		}catch (Exception e) {
-			e.printStackTrace();
-			LOGGER.info("the exception from billsearch API call ::: "+e);
+		String url = propertiesManager.getDemandServiceHostName() + propertiesManager.getDemandBillSearchService()
+				+ "?billId=" + billSearchCriteria.getBillId();
+
+		LOGGER.info("The url for search bill API ::: " + url);
+		BillResponse billResponse = null;
+		if (requestInfo == null) {
+			// FIXME remove this when application is running good
+			LOGGER.info("requestInfo ::: is null ");
+			requestInfo = new RequestInfo();
+			requestInfo.setApiId("apiid");
+			requestInfo.setVer("ver");
+			requestInfo.setTs("ts");
 		}
-		LOGGER.info("the response for bill search API call ::: "+billResponse.getBody().getBillInfos().get(0));
-		
-		return billResponse.getBody().getBillInfos().get(0);
+
+		try {
+			billResponse = restTemplate.postForObject(url, requestInfo, BillResponse.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+			LOGGER.info("the exception from billsearch API call ::: " + e);
+		}
+		LOGGER.info("the response for bill search API call ::: " + billResponse.getBillInfos().get(0));
+
+		return billResponse.getBillInfos().get(0);
 	}
-	
-	
-	public Map getPurpose()
-	{
-		String url = propertiesManager.getPurposeHostName()
-				+ propertiesManager.getPurposeService();
+
+	public Map getPurpose() {
+		String url = propertiesManager.getPurposeHostName() + propertiesManager.getPurposeService();
 		Map purpose = null;
 		try {
-		System.out.println("url>>>>>>>>>>"+url);
+			System.out.println("url>>>>>>>>>>" + url);
 			purpose = restTemplate.getForObject(url, Map.class);
 		} catch (RestClientException e) {
 			e.printStackTrace();
 		}
-		System.out.println("Purpose>>>>>>>>>>"+purpose);
+		System.out.println("Purpose>>>>>>>>>>" + purpose);
 
 		return purpose;
 	}

@@ -17,8 +17,9 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class User {
+	
     @JsonProperty("id")
-    private Integer id;
+    private Long id;
 
     @JsonProperty("userName")
     private String userName;

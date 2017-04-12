@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.apache.log4j.Logger;
 import org.egov.demand.domain.service.BillService;
 import org.egov.demand.persistence.entity.EgBill;
 import org.egov.demand.persistence.repository.BillRepository;
@@ -32,6 +33,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("demand/bill")
 public class BillController {
+	
+	private static final Logger LOGGER = Logger.getLogger(BillController.class);
+	
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
 
@@ -48,6 +52,7 @@ public class BillController {
 	@ResponseBody
 	public ResponseEntity<?> search(@ModelAttribute @Valid BillSearchCriteria billSearchCriteria,
 			@RequestBody RequestInfo requestInfo, BindingResult bindingResult) {
+		LOGGER.info("BillController  search  ::: Inside Bill controller ");
 		org.egov.demand.web.contract.BillInfo billContract = null;
 		List<org.egov.demand.web.contract.BillInfo> billContracts = new ArrayList<org.egov.demand.web.contract.BillInfo>();
 		if (bindingResult.hasErrors()) {

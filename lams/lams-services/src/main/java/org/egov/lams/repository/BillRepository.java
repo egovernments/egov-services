@@ -53,24 +53,24 @@ public class BillRepository {
 				+ "?billId="+billSearchCriteria.getBillId();
 			
 		LOGGER.info("The url for search bill API ::: "+url);
-		//ResponseEntity<BillResponse> billResponse = null;
-		BillResponse billResponse = null;
+		ResponseEntity<BillResponse> billResponse = null;
+		//BillResponse billResponse = null;
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		//ObjectMapper objectMapper = ne w
-		//HttpEntity<RequestInfo> entity = new HttpEntity<RequestInfo>(requestInfo,headers);
+		HttpEntity<RequestInfo> entity = new HttpEntity<RequestInfo>(requestInfo,headers);
 		
 		try{
-			billResponse = restTemplate.postForObject(url, requestInfo, BillResponse.class);
-		//	billResponse = restTemplate.postForEntity(url, entity, BillResponse.class);
+			//billResponse = restTemplate.postForObject(url, requestInfo, BillResponse.class);
+			billResponse = restTemplate.postForEntity(url, entity, BillResponse.class);
 		}catch (Exception e) {
 			e.printStackTrace();
 			LOGGER.info("the exception from billsearch API call ::: "+e);
 		}
-		LOGGER.info("the response for bill search API call ::: "+billResponse.getBillInfos().get(0));
+		LOGGER.info("the response for bill search API call ::: "+billResponse.getBody().getBillInfos().get(0));
 		
-		return billResponse.getBillInfos().get(0);
+		return billResponse.getBody().getBillInfos().get(0);
 	}
 	
 	

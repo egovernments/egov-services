@@ -238,7 +238,7 @@ public class PaymentService {
 
 	public ResponseEntity<ReceiptAmountInfo> updateDemand(
 			BillReceiptInfoReq billReceiptInfoReq) {
-		System.out.print("PaymentService- updateDemand - billReceiptInfoReq - "+billReceiptInfoReq);
+		System.out.print("PaymentService- updateDemand - billReceiptInfoReq - "+billReceiptInfoReq.getBillReceiptInfo().getBillReferenceNum());
 		BillSearchCriteria billSearchCriteria = new BillSearchCriteria();
 		DemandSearchCriteria demandSearchCriteria = new DemandSearchCriteria();
 		BillReceiptReq billReceiptInfo = billReceiptInfoReq
@@ -246,13 +246,13 @@ public class PaymentService {
 		billSearchCriteria.setBillId(Long.valueOf(billReceiptInfo.getBillReferenceNum()));
 		BillInfo billInfo = billRepository.searchBill(billSearchCriteria,
 				billReceiptInfoReq.getRequestInfo());
-		System.out.print("PaymentService- updateDemand - billInfo - "+billInfo);
+		System.out.print("PaymentService- updateDemand - billInfo - "+billInfo.getBillNumber());
 		demandSearchCriteria.setDemandId(billInfo.getDemandId());
 		Demand currentDemand = demandRepository
 				.getDemandBySearch(demandSearchCriteria,
 						billReceiptInfoReq.getRequestInfo()).getDemands()
 				.get(0);
-		System.out.print("PaymentService- updateDemand - currentDemand - "+currentDemand);
+		System.out.print("PaymentService- updateDemand - currentDemand - "+currentDemand.getId());
 		if (currentDemand.getMinAmountPayable() != null
 				&& currentDemand.getMinAmountPayable() > 0)
 			currentDemand.setMinAmountPayable(0d);

@@ -1,5 +1,8 @@
 package org.egov.eis.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.egov.eis.model.Employee;
 import org.egov.eis.repository.EmployeeJurisdictionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,16 +13,46 @@ public class EmployeeJurisdictionService {
 
 	@Autowired
 	private EmployeeJurisdictionRepository employeeJurisdictionRepository;
-	
+
 	public void update(Employee employee) {
+		List<Long> jurisdictionsFromDb = employeeJurisdictionRepository.findByEmployeeId(employee.getId(),
+				employee.getTenantId());
 		employee.getJurisdictions().forEach((jurisdiction) -> {
-			// if jurisdiction id already exists in table, we don't do anything. When absent, we insert the record.
-			if (!employeeJurisdictionRepository.jurisdictionAlreadyExists(jurisdiction, employee.getId(), employee.getTenantId()))
+			if (needsInsert(jurisdiction, jurisdictionsFromDb))
 				employeeJurisdictionRepository.insert(jurisdiction, employee.getId(), employee.getTenantId());
-			
-			// employeeJurisdictionRepository.findAndDeleteInDBThatAreNotInList(employee.getServiceHistory());
 		});
+		deleteJurisdictionsInDbThatAreNotInInput(employee.getJurisdictions(), jurisdictionsFromDb, employee.getId(),
+				employee.getTenantId());
+
 	}
 
+	private void deleteJurisdictionsInDbThatAreNotInInput(List<Long> jurisdictions, List<Long> jurisdictionsFromDb,
+			Long employeeId, String tenantId) {
+		List<Long> jurisdictionsIdsToDelete = getListOfJurisdictionsIdsToDelete(jurisdictions, jurisdictionsFromDb);
+		if (!jurisdictionsIdsToDelete.isEmpty())
+			employeeJurisdictionRepository.delete(jurisdictionsIdsToDelete, employeeId, tenantId);
 
+	}
+
+	private List<Long> getListOfJurisdictionsIdsToDelete(List<Long> jurisdictions, List<Long> jurisdictionsFromDb) {
+		List<Long> assignmentsIdsToDelete = new ArrayList<>();
+		for (Long jurisdictionInDb : jurisdictionsFromDb) {
+			boolean found = false;
+			for (Long jurisdiction : jurisdictions)
+				if (jurisdiction.equals(jurisdictionInDb)) {
+					found = true;
+					break;
+				}
+			if (!found)
+				assignmentsIdsToDelete.add(jurisdictionInDb);
+		}
+		return assignmentsIdsToDelete;
+	}
+
+	private boolean needsInsert(Long jurisdiction, List<Long> jurisdictionsFromDb) {
+		for (Long jurisdictionInDb : jurisdictionsFromDb)
+			if (jurisdiction.equals(jurisdictionInDb))
+				return false;
+		return true;
+	}
 }

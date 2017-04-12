@@ -157,31 +157,26 @@ public class Assignment {
 				return false;
 		} else if (!function.equals(other.function))
 			return false;
-		System.out.println("crossed function");
 		if (functionary == null) {
 			if (other.functionary != null)
 				return false;
 		} else if (!functionary.equals(other.functionary))
 			return false;
-		System.out.println("crossed functionary");
 		if (fund == null) {
 			if (other.fund != null)
 				return false;
 		} else if (!fund.equals(other.fund))
 			return false;
-		System.out.println("crossed fund");
 		if (govtOrderNumber == null) {
 			if (other.govtOrderNumber != null)
 				return false;
 		} else if (!govtOrderNumber.equals(other.govtOrderNumber))
 			return false;
-		System.out.println("crossed govt order number");
 		if (grade == null) {
 			if (other.grade != null)
 				return false;
 		} else if (!grade.equals(other.grade))
 			return false;
-		System.out.println("crossed grade");
 		if (id == null) {
 			if (other.id != null)
 				return false;
@@ -192,19 +187,16 @@ public class Assignment {
 				return false;
 		} else if (!isPrimary.equals(other.isPrimary))
 			return false;
-		System.out.println("crossed isprimary");
 		if (position == null) {
 			if (other.position != null)
 				return false;
 		} else if (!position.equals(other.position))
 			return false;
-		System.out.println("crossed position");
 		if (toDate == null) {
 			if (other.toDate != null)
 				return false;
 		} else if (!areDatesEqualWithoutTimePart(toDate, other.fromDate))
 			{
-			System.out.println("crossed position");
 			return false;
 			}
 		return true;

@@ -1,5 +1,7 @@
 package org.egov.eis.service;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +18,8 @@ public class TechnicalQualificationService {
 	private TechnicalQualificationRepository technicalQualificationRepository;
 
 	public void update(Employee employee) {
+		if(isEmpty(employee.getTechnical()))
+			return;
 		List<TechnicalQualification> technicals = technicalQualificationRepository.findByEmployeeId(employee.getId(), employee.getTenantId());
 		employee.getTechnical().forEach((technical) -> {
 			if (needsInsert(technical, technicals)) {

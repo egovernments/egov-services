@@ -49,7 +49,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.eis.model.Probation;
-import org.egov.eis.model.enums.DocumentReferenceType;
+import org.egov.eis.model.enums.EntityType;
 import org.egov.eis.repository.rowmapper.ProbationTableRowMapper;
 import org.egov.eis.web.contract.EmployeeRequest;
 import org.slf4j.Logger;
@@ -80,7 +80,7 @@ public class ProbationRepository {
 			+ " createddate, lastmodifiedby, lastmodifieddate,tenantId" + " FROM egeis_probation"
 			+ " WHERE employeeId = ? AND tenantId = ? ";
 	
-	public static final String DELETE__QUERY = "DELETE FROM egeis_probation"
+	public static final String DELETE_QUERY = "DELETE FROM egeis_probation"
 			+ " WHERE id IN (:id) AND employeeId = :employeeId AND tenantId = :tenantId";
 	
 	@Autowired
@@ -125,7 +125,7 @@ public class ProbationRepository {
 
 				if (probation.getDocuments() != null && !probation.getDocuments().isEmpty()) {
 					documentsRepository.save(employeeRequest.getEmployee().getId(), probation.getDocuments(),
-							DocumentReferenceType.PROBATION.toString(), probation.getId(), probation.getTenantId());
+							EntityType.PROBATION.toString(), probation.getId(), probation.getTenantId());
 				}
 			}
 
@@ -155,12 +155,9 @@ public class ProbationRepository {
 	}
 
 	public List<Probation> findByEmployeeId(Long id, String tenantId) {
-
-		List<Probation> probation = null;
 		try {
-			probation = jdbcTemplate.query(SELECT_BY_EMPLOYEEID_QUERY, new Object[] { id, tenantId },
+			return jdbcTemplate.query(SELECT_BY_EMPLOYEEID_QUERY, new Object[] { id, tenantId },
 					probationRowMapper);
-			return probation;
 		} catch (EmptyResultDataAccessException e) {
 			return null;
 		}
@@ -173,6 +170,6 @@ public class ProbationRepository {
 		namedParameters.put("employeeId", employeeId);
 		namedParameters.put("tenantId", tenantId);
 		
-		namedParameterJdbcTemplate.update(DELETE__QUERY, namedParameters);
+		namedParameterJdbcTemplate.update(DELETE_QUERY, namedParameters);
 	}
 }

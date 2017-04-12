@@ -124,15 +124,11 @@ public class ServiceHistory {
 				return false;
 		} else if (!remarks.equals(other.remarks))
 			return false;
-		System.out.println("crossed remarks");
-		System.out.println("service from" +serviceFrom);
-		System.out.println(" other service from" +other.serviceFrom);
 		if (serviceFrom == null) {
 			if (other.serviceFrom != null)
 				return false;
 		} else if (!areDatesEqualWithoutTimePart(serviceFrom, other.serviceFrom))
 			return false;
-		System.out.println("crossed service from");
 		if (serviceInfo == null) {
 			if (other.serviceInfo != null)
 				return false;

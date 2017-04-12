@@ -109,11 +109,12 @@ public class ErrorHandler {
 		error.setMessage("Binding Error");
 		error.setDescription("Error while binding request object");
 
-		// FIXME : not able to get fieldError error messages. Remove conditions when fixed
+		// FIXME : not able to get fieldError error messages. Remove conditions
+		// when fixed
 		if (bindingResult.hasFieldErrors()) {
 			for (FieldError fieldError : bindingResult.getFieldErrors()) {
-				if (fieldError.getField().contains("Date") && !(fieldError.getField().contains("fromDate")
-						|| fieldError.getField().contains("toDate"))) {
+				if (fieldError.getField().contains("Date")
+						&& !(fieldError.getField().contains("fromDate") || fieldError.getField().contains("toDate"))) {
 					DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 					String errorDate = dateFormat.format(fieldError.getRejectedValue());
 					error.getFields().put(fieldError.getField(), errorDate);
@@ -121,16 +122,47 @@ public class ErrorHandler {
 						|| fieldError.getField().contains("dateOf")) {
 					error.getFields().put(fieldError.getField(),
 							"Invalid " + fieldError.getField() + " - " + fieldError.getRejectedValue());
-				} else if (fieldError.getField().contains("passportNo") || fieldError.getField().contains("gpfNo")
-						|| fieldError.getField().contains("department") || fieldError.getField().contains("documents")) {
+				} else if (fieldError.getField().contains("code") || fieldError.getField().contains("passportNo")
+						|| fieldError.getField().contains("gpfNo") || fieldError.getField().contains("department")
+						|| fieldError.getField().contains("documents")) {
 					error.getFields().put(fieldError.getField(), "Duplicate Value - " + fieldError.getField() + " = "
 							+ fieldError.getRejectedValue() + " Already Exists");
 				} else if (fieldError.getField().contains("fromDate") || fieldError.getField().contains("toDate")) {
 					DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 					String errorDate = dateFormat.format(fieldError.getRejectedValue());
 					error.getFields().put(fieldError.getField(), "Primary Assignments Overlapping : " + errorDate);
-				} else if (fieldError.getField().contains("assignments")) {
+				} else if (fieldError.getField().contains("assignments")
+						&& (fieldError.getDefaultMessage().contains("no primary assignment"))) {
 					error.getFields().put(fieldError.getField(), "No Primary Assignment Provided");
+				} else if (fieldError.getField().contains("employee.id")
+						&& (fieldError.getDefaultMessage().contains("provide employee id for update"))) {
+					error.getFields().put(fieldError.getField(), "provide employee id for update");
+				} else if (fieldError.getField().contains("employee.id")
+						&& (fieldError.getDefaultMessage().contains("employee id doesn't exist"))) {
+					error.getFields().put(fieldError.getField(), "employee id doesn't exist");
+				} else if (fieldError.getField().contains("employee.assignment")
+						&& (fieldError.getDefaultMessage().contains("assignment doesn't exist"))) {
+					error.getFields().put(fieldError.getField(), "assignments doesn't exist for this employee");
+				} else if (fieldError.getField().contains("employee.test")
+						&& (fieldError.getDefaultMessage().contains("test doesn't exist"))) {
+					error.getFields().put(fieldError.getField(), "Departmental test doesn't exist for this employee");
+				} else if (fieldError.getField().contains("employee.educationalQualification")
+						&& (fieldError.getDefaultMessage().contains("educational doesn't exist"))) {
+					error.getFields().put(fieldError.getField(),
+							"educationalQualification doesn't exist for this employee");
+				} else if (fieldError.getField().contains("employee.probation")
+						&& (fieldError.getDefaultMessage().contains("probation test doesn't exist"))) {
+					error.getFields().put(fieldError.getField(), "probation doesn't exist for this employee");
+				} else if (fieldError.getField().contains("employee.regularisation")
+						&& (fieldError.getDefaultMessage().contains("regularisation test doesn't exist"))) {
+					error.getFields().put(fieldError.getField(), "regularisation doesn't exist for this employee");
+				} else if (fieldError.getField().contains("employee.serviceHistory")
+						&& (fieldError.getDefaultMessage().contains("service test doesn't exist"))) {
+					error.getFields().put(fieldError.getField(), "serviceHistory doesn't exist for this employee");
+				} else if (fieldError.getField().contains("employee.technicalQualification")
+						&& (fieldError.getDefaultMessage().contains("technical test doesn't exist"))) {
+					error.getFields().put(fieldError.getField(),
+							"technicalQualification doesn't exist for this employee");
 				} else {
 					error.getFields().put(fieldError.getField(), fieldError.getRejectedValue());
 				}
@@ -183,9 +215,8 @@ public class ErrorHandler {
 		error.setCode(500);
 		error.setMessage("User Creation Failed");
 		error.setDescription("Unknown error");
-		
-		ResponseInfo responseInfo = responseInfoFactory
-				.createResponseInfoFromRequestInfo(requestInfo, false);
+
+		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, false);
 
 		ErrorResponse errorResponse = new ErrorResponse();
 		errorResponse.setResponseInfo(responseInfo);
@@ -199,9 +230,8 @@ public class ErrorHandler {
 		error.setCode(500);
 		error.setMessage("User Updation Failed");
 		error.setDescription("Unknown error");
-		
-		ResponseInfo responseInfo = responseInfoFactory
-				.createResponseInfoFromRequestInfo(requestInfo, false);
+
+		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, false);
 
 		ErrorResponse errorResponse = new ErrorResponse();
 		errorResponse.setResponseInfo(responseInfo);

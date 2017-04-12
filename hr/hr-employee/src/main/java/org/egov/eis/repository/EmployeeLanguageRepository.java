@@ -42,7 +42,9 @@ package org.egov.eis.repository;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.egov.eis.model.Employee;
 import org.egov.eis.repository.rowmapper.EmployeeLanguagesRowMapper;
@@ -52,6 +54,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -65,14 +68,25 @@ public class EmployeeLanguageRepository {
 	public static final String SELECT_BY_EMPLOYEEID_QUERY = "SELECT" + " languageid" + " FROM egeis_employeeLanguages"
 			+ " WHERE employeeId = ? AND tenantId = ? ";
 
-	public static final String DELETE_EMPLOYEE_LANGUAGE_QUERY = "DELETE FROM egeis_employeeLanguages"
-			+" WHERE employeeId = ? AND languageId = ? AND tenantId = ?";
-			
+	public static final String DELETE_QUERY = "DELETE FROM egeis_employeeLanguages"
+			+ " WHERE languageid IN (:languageid) and employeeId = :employeeId and tenantId = :tenantId";
+
 	@Autowired
 	private EmployeeLanguagesRowMapper employeeLanguagesRowMapper;
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
+
+	@Autowired
+	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+	/**
+	 * @param namedParameterJdbcTemplate
+	 *            the namedParameterJdbcTemplate to set
+	 */
+	public void setNamedParameterJdbcTemplate(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+	}
 
 	public void save(Employee employee) {
 		List<Long> employeeLanguages = employee.getLanguagesKnown();
@@ -93,24 +107,26 @@ public class EmployeeLanguageRepository {
 	}
 
 	public List<Long> findByEmployeeId(Long id, String tenantId) {
-
-		List<Long> employeeLanguage = null;
-           try {
-			employeeLanguage = jdbcTemplate.query(SELECT_BY_EMPLOYEEID_QUERY, new Object[] { id, tenantId },
+		try {
+			return jdbcTemplate.query(SELECT_BY_EMPLOYEEID_QUERY, new Object[] { id, tenantId },
 					employeeLanguagesRowMapper);
-			return employeeLanguage;
 		} catch (EmptyResultDataAccessException e) {
 			return null;
 		}
 	}
 
-	public void save(Long inputlanguage, Long employeeId, String tenantId) {
+	public void insert(Long inputlanguage, Long employeeId, String tenantId) {
 
 		jdbcTemplate.update(INSERT_EMPLOYEE_LANGUAGE_QUERY, employeeId, inputlanguage, tenantId);
 	}
 
-	public void delete(Long employeeId, Long languageInDb, String tenantId) {
+	public void delete(List<Long> languagesIdsToDelete, Long employeeId, String tenantId) {
 
-		jdbcTemplate.update(DELETE_EMPLOYEE_LANGUAGE_QUERY, employeeId, languageInDb, tenantId);
+		Map<String, Object> namedParameters = new HashMap<>();
+		namedParameters.put("languageid", languagesIdsToDelete);
+		namedParameters.put("employeeId", employeeId);
+		namedParameters.put("tenantId", tenantId);
+
+		namedParameterJdbcTemplate.update(DELETE_QUERY, namedParameters);
 	}
 }

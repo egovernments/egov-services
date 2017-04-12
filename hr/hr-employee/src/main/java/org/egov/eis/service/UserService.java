@@ -86,6 +86,7 @@ public class UserService {
 
 		UserGetRequest userGetRequest = new UserGetRequest();
 		userGetRequest.setId(ids);
+		userGetRequest.setPageSize(ids.size());
 		userGetRequest.setRequestInfo(requestInfo);
 		userGetRequest.setTenantId(tenantId);
 
@@ -108,6 +109,7 @@ public class UserService {
 		String url = propertiesManager.getUsersServiceHostName() + propertiesManager.getUsersServiceUsersBasePath()
 				+ propertiesManager.getUsersServiceUsersCreatePath();
 
+		
 		UserResponse userResponse = null;
 		try {
 			userResponse = new RestTemplate().postForObject(url, userRequest, UserResponse.class);

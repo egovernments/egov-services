@@ -71,6 +71,7 @@ public class Employee {
 
 	private Long id;
 
+	@NotNull
 	private String code;
 
 	@NotNull

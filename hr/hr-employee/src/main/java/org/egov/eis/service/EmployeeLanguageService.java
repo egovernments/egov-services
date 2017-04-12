@@ -1,5 +1,8 @@
 package org.egov.eis.service;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.eis.model.Employee;
@@ -14,37 +17,44 @@ public class EmployeeLanguageService {
 	private EmployeeLanguageRepository employeeLanguageRepository;
 	
 	public void update(Employee employee) {
-		
+		if(isEmpty(employee.getLanguagesKnown()))
+			return;
 		List<Long> languagesFromDb = employeeLanguageRepository.findByEmployeeId(employee.getId(), employee.getTenantId());
-		if(employee.getLanguagesKnown() != null){
-			updateLanguagesKnown(employee.getLanguagesKnown(), languagesFromDb, employee.getId(), employee.getTenantId());
-		}
+		employee.getLanguagesKnown().forEach((language) -> {
+			if (needsInsert(language, languagesFromDb))
+				employeeLanguageRepository.insert(language, employee.getId(), employee.getTenantId());
+		});
+		deleteJLanguagesInDbThatAreNotInInput(employee.getLanguagesKnown(), languagesFromDb, employee.getId(),
+				employee.getTenantId());
+
 	}
 
-	private void updateLanguagesKnown(List<Long> inputlanguages, List<Long> languagesFromDb, Long employeeId, String tenantId) {
-		
-			for (Long inputlanguage : inputlanguages) {
-				if (!LanguagesInDB(inputlanguage, languagesFromDb)) {
-					employeeLanguageRepository.save(inputlanguage, employeeId, tenantId);
-				}
-			}
-			// delete all languages from db that are not in input list
-			for (Long languageInDb : languagesFromDb) {
-				if (!inputlanguages.contains(languageInDb)) {
-					employeeLanguageRepository.delete(employeeId, languageInDb, tenantId);
-			}
-		}
+	private void deleteJLanguagesInDbThatAreNotInInput(List<Long> languages, List<Long> languagesFromDb, Long employeeId,
+			String tenantId) {
+		List<Long> languagesIdsToDelete = getListOfLanguagesIdsToDelete(languages, languagesFromDb);
+		if (!languagesIdsToDelete.isEmpty())
+			employeeLanguageRepository.delete(languagesIdsToDelete, employeeId, tenantId);		
 	}
 
-	private boolean LanguagesInDB(Long inputlanguage, List<Long> languagesFromDb) {
-		boolean foundLanguageInDb = false;
+	private List<Long> getListOfLanguagesIdsToDelete(List<Long> languages, List<Long> languagesFromDb) {
+		List<Long> languagesIdsToDelete = new ArrayList<>();
 		for (Long languageInDb : languagesFromDb) {
-			if (languageInDb.equals(inputlanguage)) {
-				foundLanguageInDb = true;
+			boolean found = false;
+			for (Long language : languages)
+				if (language.equals(languageInDb)) {
+					found = true;
 					break;
-			}
+				}
+			if (!found)
+				languagesIdsToDelete.add(languageInDb);
 		}
-		return foundLanguageInDb;
+		return languagesIdsToDelete;
+	}
+
+	private boolean needsInsert(Long language, List<Long> languagesFromDb) {
+		for (Long languageInDb : languagesFromDb)
+			if (language.equals(languageInDb)) return false;
+		return true;
 	}
 
 }

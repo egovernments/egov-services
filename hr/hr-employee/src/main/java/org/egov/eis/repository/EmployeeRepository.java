@@ -47,14 +47,13 @@ import java.util.List;
 import org.egov.eis.model.Employee;
 import org.egov.eis.model.EmployeeDocument;
 import org.egov.eis.model.EmployeeInfo;
-import org.egov.eis.model.enums.DocumentReferenceType;
+import org.egov.eis.model.enums.EntityType;
 import org.egov.eis.repository.builder.EmployeeQueryBuilder;
 import org.egov.eis.repository.rowmapper.EmployeeDocumentsRowMapper;
 import org.egov.eis.repository.rowmapper.EmployeeIdsRowMapper;
 import org.egov.eis.repository.rowmapper.EmployeeInfoRowMapper;
 import org.egov.eis.repository.rowmapper.EmployeeTableRowMapper;
 import org.egov.eis.web.contract.EmployeeCriteria;
-import org.egov.eis.web.contract.EmployeeRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,16 +80,23 @@ public class EmployeeRepository {
 			+ " medicalreportproduced, maritalstatus, passportno, gpfno, bankId, bankbranchId, bankaccount, groupId,"
 			+ " placeofbirth)" + "= (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" + "WHERE id = ?";
 
-	public static final String EMPLOYEE_EXISTANCE_CHECK_QUERY = "SELECT exists(SELECT id FROM egeis_employee"
+	public static final String EMPLOYEE_EXISTENCE_CHECK_QUERY = "SELECT exists(SELECT id FROM egeis_employee"
 			+ " WHERE id = ? AND tenantId = ?)";
 	
+	public static final String GET_LIST_OF_IDS_QUERY = "SELECT id FROM  $table  WHERE employeeId = ? AND tenantId = ?";
+	
+	public static final String GET_ID_QUERY = "SELECT id FROM $table WHERE $column = ? AND tenantId = ?";
+
 	public static final String SELECT_BY_EMPLOYEEID_QUERY = "SELECT"
 			+ " id, code, dateofappointment, dateofjoining, dateofretirement, employeestatus, recruitmentmodeid,"
 			+ " recruitmenttypeid, recruitmentquotaid, retirementage, dateofresignation, dateoftermination, employeetypeid, mothertongueid, religionid,"
 			+ " communityid, categoryid, physicallydisabled, medicalReportproduced, passportno, gpfno, bankid, bankbranchid, bankaccount, groupid, placeofbirth, tenantid"
-			+ " FROM egeis_employee"
-			+ " WHERE id = ? AND tenantId = ? ";	
+			+ " FROM egeis_employee" + " WHERE id = ? AND tenantId = ? ";
 	
+	
+	// Do String replacement for $table and $column and proceed for prepared statement.
+	public static final String DUPLICATE_EXISTS_QUERY = "SELECT exists(SELECT id FROM $table WHERE $column = ? AND tenantId = ?)";
+
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
@@ -105,7 +111,7 @@ public class EmployeeRepository {
 
 	@Autowired
 	private EmployeeQueryBuilder employeeQueryBuilder;
-	
+
 	@Autowired
 	private EmployeeTableRowMapper employeeTableRowMapper;
 
@@ -157,7 +163,7 @@ public class EmployeeRepository {
 
 		if (employee.getDocuments() != null && !employee.getDocuments().isEmpty()) {
 			documentsRepository.save(employee.getId(), employee.getDocuments(),
-					DocumentReferenceType.EMPLOYEE_HEADER.toString(), employee.getId(), employee.getTenantId());
+					EntityType.EMPLOYEE.toString(), employee.getId(), employee.getTenantId());
 		}
 
 		jdbcTemplate.update(INSERT_EMPLOYEE_QUERY, obj);
@@ -207,7 +213,7 @@ public class EmployeeRepository {
 	 * @return id of the row if exists; 0 otherwise
 	 */
 	public Long getId(String table, String column, String value, String tenantId) {
-		String query = "SELECT id FROM " + table + " WHERE " + column + " = ? AND tenantId = ?";
+		String query = GET_ID_QUERY.replace("$table", table).replace("$column", column);
 		try {
 			return jdbcTemplate.queryForObject(query, new Object[] { value, tenantId }, Long.class);
 		} catch (EmptyResultDataAccessException e) {
@@ -216,7 +222,8 @@ public class EmployeeRepository {
 	}
 
 	/**
-	 * Returns list of ids from given table for a particular employeeId & tenantId
+	 * Returns list of ids from given table for a particular employeeId &
+	 * tenantId
 	 * 
 	 * @param table
 	 * @param field
@@ -224,12 +231,13 @@ public class EmployeeRepository {
 	 * @return
 	 */
 	public List<Long> getListOfIds(String table, Long employeeId, String tenantId) {
-		String query = "SELECT id FROM " + table + " WHERE employeeId = ? AND tenantId = ?";
+		// FIXME hard coded query
+		String query = GET_LIST_OF_IDS_QUERY.replace("$table", table);
 		return jdbcTemplate.query(query, new Object[] { employeeId, tenantId }, employeeIdsRowMapper);
 	}
 
 	public boolean checkIfEmployeeExists(Long id, String tenantId) {
-		return jdbcTemplate.queryForObject(EMPLOYEE_EXISTANCE_CHECK_QUERY, new Object[] { id, tenantId },
+		return jdbcTemplate.queryForObject(EMPLOYEE_EXISTENCE_CHECK_QUERY, new Object[] { id, tenantId },
 				Boolean.class);
 	}
 
@@ -238,10 +246,16 @@ public class EmployeeRepository {
 	}
 
 	public Employee findById(Long employeeId, String tenantId) {
-		Employee employee = jdbcTemplate.query(SELECT_BY_EMPLOYEEID_QUERY, new Object[] {employeeId, tenantId},
-							employeeTableRowMapper);
-		System.out.println("employee =" + employee);
-		return employee;
+		try {
+			return jdbcTemplate.query(SELECT_BY_EMPLOYEEID_QUERY, new Object[] { employeeId, tenantId },
+					employeeTableRowMapper);
+		} catch (EmptyResultDataAccessException e) {
+			return null;
+		}
+	}
 
+	public Boolean duplicateExists(String table, String column, String value, String tenantId) {
+		String query = DUPLICATE_EXISTS_QUERY.replace("$table", table).replace("$column", column);
+		return jdbcTemplate.queryForObject(query, new Object[] { value, tenantId },	Boolean.class);
 	}
 }

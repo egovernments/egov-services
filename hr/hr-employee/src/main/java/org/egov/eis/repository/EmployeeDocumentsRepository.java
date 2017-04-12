@@ -63,17 +63,16 @@ public class EmployeeDocumentsRepository {
 			+ " (id, employeeId, document, referenceType, referenceId, tenantId)"
 			+ " VALUES (nextval('seq_egeis_employeeDocuments'),?,?,?,?,?)";
 
-	public static final String DELETE_EMPLOYEE_DOCUMENTS_QUERY = "DELETE FROM egeis_employeeDocuments"
+	public static final String DELETE_QUERY = "DELETE FROM egeis_employeeDocuments"
 			+ " WHERE employeeId = ? AND document = ? AND referenceType = ? AND referenceId =? AND tenantId = ?";
-	
+
 	public static final String SELECT_BY_EMPLOYEEID_QUERY = "SELECT"
-			+ " id, document, referencetype, referenceid, tenantId"
-			+ " FROM egeis_employeeDocuments"
+			+ " id, document, referencetype, referenceid, tenantId" + " FROM egeis_employeeDocuments"
 			+ " WHERE employeeId = ? AND tenantId = ? ";
-	
+
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
-	
+
 	@Autowired
 	private EmployeeDocumentsTableRowMapper employeeDocumentsTableRowMapper;
 
@@ -97,19 +96,17 @@ public class EmployeeDocumentsRepository {
 	}
 
 	public void save(Long employeeId, String docUrl, String referenceType, Long referenceID, String tenantId) {
-		jdbcTemplate.update(INSERT_EMPLOYEE_DOCUMENTS_QUERY, employeeId, docUrl, referenceType, referenceID, tenantId );
+		jdbcTemplate.update(INSERT_EMPLOYEE_DOCUMENTS_QUERY, employeeId, docUrl, referenceType, referenceID, tenantId);
 	}
 
 	public void delete(Long employeeId, String document, String referenceType, Long referenceID, String tenantId) {
-		jdbcTemplate.update(DELETE_EMPLOYEE_DOCUMENTS_QUERY, employeeId, document, referenceType, referenceID, tenantId );
+		jdbcTemplate.update(DELETE_QUERY, employeeId, document, referenceType, referenceID, tenantId);
 	}
-	
+
 	public List<EmployeeDocument> findByEmployeeId(Long id, String tenantId) {
-		List<EmployeeDocument> employeeDocuments = null;
 		try {
-			employeeDocuments = jdbcTemplate.query(SELECT_BY_EMPLOYEEID_QUERY, new Object[] { id, tenantId },
+			return jdbcTemplate.query(SELECT_BY_EMPLOYEEID_QUERY, new Object[] { id, tenantId },
 					employeeDocumentsTableRowMapper);
-			return employeeDocuments;
 		} catch (EmptyResultDataAccessException e) {
 			return null;
 		}

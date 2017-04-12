@@ -113,7 +113,6 @@ public class Probation {
 				return false;
 		} else if (!areDatesEqualWithoutTimePart(declaredOn, other.declaredOn))
 			return false;
-		System.out.println("crossed declaredon");
 		if (designation == null) {
 			if (other.designation != null)
 				return false;

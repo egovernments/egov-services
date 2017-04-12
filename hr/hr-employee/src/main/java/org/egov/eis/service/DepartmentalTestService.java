@@ -2,6 +2,7 @@ package org.egov.eis.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import static org.springframework.util.ObjectUtils.isEmpty;
 
 import org.egov.eis.model.DepartmentalTest;
 import org.egov.eis.model.Employee;
@@ -16,6 +17,8 @@ public class DepartmentalTestService {
 	private DepartmentalTestRepository departmentalTestRepository;
 	
 	public void update(Employee employee) {
+		if(isEmpty(employee.getTest()))
+				return;
 		List<DepartmentalTest> tests = departmentalTestRepository.findByEmployeeId(employee.getId(),
 				employee.getTenantId());
 

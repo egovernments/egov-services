@@ -40,6 +40,8 @@
 
 package org.egov.eis.web.validator;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +54,7 @@ import org.egov.eis.model.Probation;
 import org.egov.eis.model.Regularisation;
 import org.egov.eis.model.ServiceHistory;
 import org.egov.eis.model.TechnicalQualification;
+import org.egov.eis.model.enums.EntityType;
 import org.egov.eis.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -61,50 +64,37 @@ import org.springframework.validation.Validator;
 @Component
 public class DataIntegrityValidatorForUpdate implements Validator {
 
-	private enum DBTables {
-		ASSIGNMENT("egeis_assignment"), HODDEPARTMENT("egeis_hoddepartment"), EDUCATIONALQUALIFICATION(
-				"egeis_educationalqualification"), DEPARTMENTALTEST("egeis_departmentaltest"), PROBATION(
-						"egeis_probation"), REGULARISATION("egeis_regularisation"), SERVICEHISTORY(
-								"egeis_servicehistory"), TECHNICALQUALIFICATION("egeis_technicalqualification");
-
-		String dbTableName;
-
-		private DBTables(String dbTableName) {
-			this.dbTableName = dbTableName;
-		}
-
-		@Override
-		public String toString() {
-			return dbTableName;
-		}
-	}
-
 	@Autowired
 	private EmployeeCommonValidator employeeCommonValidator;
-	
+
 	@Autowired
 	private EmployeeRepository employeeRepository;
-	
-	/**
-	 * This Validator validates *just* Employee instances
-	 */
+
 	@Override
 	public boolean supports(Class<?> paramClass) {
 		return Employee.class.equals(paramClass);
 	}
 
-	// FIXME Table names and column names are hard-coded
 	@Override
 	public void validate(Object targetObject, Errors errors) {
 		if (!(targetObject instanceof Employee))
 			return;
 
 		Employee employee = (Employee) targetObject;
+		Long employeeId = employee.getId();
 		String tenantId = employee.getTenantId();
 
-		Long employeeId = null;
-		if (employee.getId() != null && employeeRepository.checkIfEmployeeExists(employee.getId(), tenantId)) {
-			employeeId = employee.getId();
+		// FIXME employee.getId == null or empty then throw error employee id is
+		// required
+		if (employeeId == null) {
+			errors.rejectValue("employee.id", "no value", "provide employee id for update");
+			return;
+		}
+		
+		if (!employeeRepository.checkIfEmployeeExists(employeeId, tenantId)) {
+			// FIXME throw error employee id does not exist
+			errors.rejectValue("employee.id", "no value present", "employee id doesn't exist");
+			return;
 		}
 
 		validateEmployee(employee, errors);
@@ -120,258 +110,214 @@ public class DataIntegrityValidatorForUpdate implements Validator {
 	// FIXME Validate data existence of Religion, Languages etc. for every data
 	// in separate methods
 	private void validateExternalAPIData() {
-
 	}
 
 	private void validateEmployee(Employee employee, Errors errors) {
-		if (employee.getRetirementAge() != null && employee.getRetirementAge() > 100)
-			errors.rejectValue("employee.retirementAge", "invalid", "Invalid retirementAge");
-
-		if ((employee.getDateOfAppointment() != null && employee.getDateOfJoining() != null)
-				&& (employee.getDateOfAppointment().after(employee.getDateOfJoining()))) {
-			errors.rejectValue("employee.dateOfAppointment", "invalid", "Invalid dateOfAppointment");
-			errors.rejectValue("employee.dateOfJoining", "invalid", "Invalid dateOfJoining");
-		}
-		if ((employee.getDateOfResignation() != null && employee.getDateOfJoining() != null)
-				&& (employee.getDateOfResignation().before(employee.getDateOfJoining()))) {
-			errors.rejectValue("employee.dateOfJoining", "invalid", "Invalid dateOfJoining");
-			errors.rejectValue("employee.dateOfResignation", "invalid", "Invalid dateOfResignation");
-		}
-		if ((employee.getDateOfTermination() != null && employee.getDateOfJoining() != null)
-				&& (employee.getDateOfTermination().before(employee.getDateOfJoining()))) {
-			errors.rejectValue("employee.dateOfJoining", "invalid", "Invalid dateOfJoining");
-			errors.rejectValue("employee.dateOfTermination", "invalid", "Invalid dateOfTermination");
-		}
-		if ((employee.getDateOfRetirement() != null && employee.getDateOfJoining() != null)
-				&& (employee.getDateOfRetirement().before(employee.getDateOfJoining()))) {
-			errors.rejectValue("employee.dateOfJoining", "invalid", "Invalid dateOfJoining");
-			errors.rejectValue("employee.dateOfRetirement", "invalid", "Invalid dateOfRetirement");
-		}
+		// FIXME call common validator.validateEmployee
+		employeeCommonValidator.validateEmployee(employee, errors);
 
 		if ((employee.getPassportNo() != null) && duplicateExists("egeis_employee", "passportNo",
 				employee.getPassportNo(), employee.getId(), employee.getTenantId())) {
 			errors.rejectValue("employee.passportNo", "concurrent", "passportNo already exists");
 		}
 
-		if ((employee.getGpfNo() != null) && duplicateExists("egeis_employee", "gpfNo",
-				employee.getGpfNo(), employee.getId(), employee.getTenantId())) {
+		if ((employee.getGpfNo() != null) && duplicateExists("egeis_employee", "gpfNo", employee.getGpfNo(),
+				employee.getId(), employee.getTenantId())) {
 			errors.rejectValue("employee.gpfNo", "concurrent", "gpfNo already exists");
 		}
-		
-		
 
-		/*if ((employee.getDocuments() != null) && !employee.getDocuments().isEmpty()
-				&& employeeService.checkForDuplicatesForAnyOneOfGivenCSV("egeis_employeeDocuments", "document",
-						getDocumentsAsCSVs(employee.getDocuments()))) {
-			errors.rejectValue("employee.documents", "concurrent", "document(s) already exists");
-		}*/
+		/*
+		 * if ((employee.getDocuments() != null) &&
+		 * !employee.getDocuments().isEmpty() &&
+		 * employeeService.checkForDuplicatesForAnyOneOfGivenCSV(
+		 * "egeis_employeeDocuments", "document",
+		 * getDocumentsAsCSVs(employee.getDocuments()))) {
+		 * errors.rejectValue("employee.documents", "concurrent",
+		 * "document(s) already exists"); }
+		 */
 	}
 
 	private void validateAssignments(List<Assignment> assignments, Long employeeId, String tenantId, Errors errors) {
-		Map<Long, Integer> idsMap = new HashMap<>();
+		validateIdsForAssignment(assignments, employeeId, tenantId, errors);
+		
 		for (int index = 0; index < assignments.size(); index++) {
-			if (employeeId != null && assignments.get(index).getId() != null)
-				idsMap.put(assignments.get(index).getId(), index);
-
-			//employeeCommonValidator.validateDocumentsForNewAssignment(assignments.get(index), errors, index);
+			// employeeCommonValidator.validateDocumentsForNewAssignment(assignments.get(index),
+			// errors, index);
 		}
-		//if (!idsMap.isEmpty())
-			// validateInvalidIdForAssignment(idsMap, employeeId, tenantId, errors);
 	}
 
-	/**
-	 * Ids should always be generated by sequence. Any id populated will be in
-	 * general considered as an existing record. But what if someone passes an
-	 * id that does no exist? This validation takes care of this by checking in
-	 * the db for the existence of the record.
-	 * 
-	 * @param idsMap
-	 * @param employeeId
-	 * @param tenantId
-	 * @param errors
-	 */
-	private void validateInvalidIdForAssignment(Map<Long, Integer> idsMap, Long employeeId, String tenantId, Errors errors) {
-		List<Long> idsFromDB = employeeRepository.getListOfIds(DBTables.ASSIGNMENT.toString(), employeeId, tenantId);
-
-		idsFromDB.forEach((id) -> {
-			if (!idsMap.containsKey(id))
-				errors.rejectValue("employee.assignments[" + idsMap.get(id) + "].id", "doesn't exist",
-						"assignments doesn't already exist for this employee");
-		});
+	private void validateIdsForAssignment(List<Assignment> assignments, Long employeeId, String tenantId, Errors errors) {
+		Map<Long, Integer> idsMap = new HashMap<>();
+		for (int index = 0; index < assignments.size(); index++) {
+			if (assignments.get(index).getId() != null) // FIXME check if long gets default value of 0L 
+				idsMap.put(assignments.get(index).getId(), index);
+		}
+		if (!idsMap.isEmpty())
+			employeeCommonValidator.validateEntityId(idsMap, EntityType.ASSIGNMENT, employeeId, tenantId, errors);	
 	}
 
 	private void validateDepartmentalTest(List<DepartmentalTest> tests, Long employeeId, String tenantId,
 			Errors errors) {
-		if (tests != null && !tests.isEmpty()) {
-			for (int index = 0; index < tests.size(); index++) {
-				if (tests.get(index).getId() != null)
-					validateInvalidIdForDepartmentalTest(tests.get(index).getId(), errors);
-				/*if (tests.get(index).getDocuments() != null && !tests.get(index).getDocuments().isEmpty()
-						&& employeeRepository.checkForDuplicatesForAnyOneOfGivenCSV("egeis_employeeDocuments", "document",
-								getDocumentsAsCSVs(tests.get(index).getDocuments()))) {
-					errors.rejectValue("employee.test[" + index + "].documents", "concurrent",
-							"document(s) already exists");
-				}*/
-			}
-		}
+		if (isEmpty(tests))
+			return;
+		validateIdsForDepaartmentalTest(tests, employeeId, tenantId, errors);
+	
+		/*
+		 * if (tests.get(index).getDocuments() != null &&
+		 * !tests.get(index).getDocuments().isEmpty() &&
+		 * employeeRepository.checkForDuplicatesForAnyOneOfGivenCSV(
+		 * "egeis_employeeDocuments", "document",
+		 * getDocumentsAsCSVs(tests.get(index).getDocuments()))) {
+		 * errors.rejectValue("employee.test[" + index + "].documents",
+		 * "concurrent", "document(s) already exists"); }
+		 */
+		
 	}
 
-	/**
-	 * Ids should always be generated by sequence. Any id populated will be in
-	 * general considered as an existing record. But what if someone passes an
-	 * id that does no exist? This validation takes care of this by checking in
-	 * the db for the existence of the record.
-	 * 
-	 * @param id
-	 */
-	private void validateInvalidIdForDepartmentalTest(Long id, Errors errors) {
-		// TODO query table and populate error
-
+	private void validateIdsForDepaartmentalTest(List<DepartmentalTest> tests, Long employeeId, String tenantId,
+			Errors errors) {
+		Map<Long, Integer> idsMap = new HashMap<>();
+		for (int index = 0; index < tests.size(); index++) {
+			if (tests.get(index).getId() != null)
+				idsMap.put(tests.get(index).getId(), index);
+		}
+		if (!idsMap.isEmpty())
+			employeeCommonValidator.validateEntityId(idsMap, EntityType.TEST, employeeId, tenantId, errors);		
 	}
 
 	private void validateEducationalQualification(List<EducationalQualification> educations, Long employeeId,
 			String tenantId, Errors errors) {
-		if (educations != null && !educations.isEmpty()) {
-			for (int index = 0; index < educations.size(); index++) {
-				if (educations.get(index).getId() != null)
-					validateInvalidIdForEducationalQualification(educations.get(index).getId(), errors);
-				/*if (educations.get(index).getDocuments() != null && !educations.get(index).getDocuments().isEmpty()
-						&& employeeRepository.checkForDuplicatesForAnyOneOfGivenCSV("egeis_employeeDocuments", "document",
-								getDocumentsAsCSVs(educations.get(index).getDocuments()))) {
-					errors.rejectValue("employee.education[" + index + "].documents", "concurrent",
-							"document(s) already exists");
-				}*/
-			}
-		}
+		if (isEmpty(educations))
+			return;
+		validateIdsForEducationalQualification(educations, employeeId, tenantId, errors);
+	
+		/*
+		 * if (educations.get(index).getDocuments() != null &&
+		 * !educations.get(index).getDocuments().isEmpty() &&
+		 * employeeRepository.checkForDuplicatesForAnyOneOfGivenCSV(
+		 * "egeis_employeeDocuments", "document",
+		 * getDocumentsAsCSVs(educations.get(index).getDocuments()))) {
+		 * errors.rejectValue("employee.education[" + index + "].documents",
+		 * "concurrent", "document(s) already exists"); }
+		 */
 	}
 
-	/**
-	 * Ids should always be generated by sequence. Any id populated will be in
-	 * general considered as an existing record. But what if someone passes an
-	 * id that does no exist? This validation takes care of this by checking in
-	 * the db for the existence of the record.
-	 * 
-	 * @param id
-	 */
-	private void validateInvalidIdForEducationalQualification(Long id, Errors errors) {
-		// TODO query table and populate error
-
+	private void validateIdsForEducationalQualification(List<EducationalQualification> educations, Long employeeId,
+			String tenantId, Errors errors) {
+		Map<Long, Integer> idsMap = new HashMap<>();
+		for (int index = 0; index < educations.size(); index++) {
+			if (educations.get(index).getId() != null)
+				idsMap.put(educations.get(index).getId(), index);
+		}
+		if (!idsMap.isEmpty())
+			employeeCommonValidator.validateEntityId(idsMap, EntityType.EDUCATION, employeeId, tenantId, errors);		
 	}
 
 	private void validateProbation(List<Probation> probations, Long employeeId, String tenantId, Errors errors) {
-		if (probations != null && !probations.isEmpty()) {
-			for (int index = 0; index < probations.size(); index++) {
-				if (probations.get(index).getId() != null)
-					validateInvalidIdForProbation(probations.get(index).getId(), errors);
-				/*if (probations.get(index).getDocuments() != null && !probations.get(index).getDocuments().isEmpty()
-						&& employeeRepository.checkForDuplicatesForAnyOneOfGivenCSV("egeis_employeeDocuments", "document",
-								getDocumentsAsCSVs(probations.get(index).getDocuments()))) {
-					errors.rejectValue("employee.probation[" + index + "].documents", "concurrent",
-							"document(s) already exists");
-				}*/
-			}
-		}
+		if (isEmpty(probations))
+			return;
+		validateIdsForProbation(probations, employeeId, tenantId, errors);
+		/*
+		 * if (probations.get(index).getDocuments() != null &&
+		 * !probations.get(index).getDocuments().isEmpty() &&
+		 * employeeRepository.checkForDuplicatesForAnyOneOfGivenCSV(
+		 * "egeis_employeeDocuments", "document",
+		 * getDocumentsAsCSVs(probations.get(index).getDocuments()))) {
+		 * errors.rejectValue("employee.probation[" + index + "].documents",
+		 * "concurrent", "document(s) already exists"); }
+		 */
 	}
 
-	/**
-	 * Ids should always be generated by sequence. Any id populated will be in
-	 * general considered as an existing record. But what if someone passes an
-	 * id that does no exist? This validation takes care of this by checking in
-	 * the db for the existence of the record.
-	 * 
-	 * @param id
-	 */
-	private void validateInvalidIdForProbation(Long id, Errors errors) {
-		// TODO query table and populate error
-
+	private void validateIdsForProbation(List<Probation> probations, Long employeeId, String tenantId, Errors errors) {
+		Map<Long, Integer> idsMap = new HashMap<>();
+		for (int index = 0; index < probations.size(); index++) {
+			if (probations.get(index).getId() != null)
+				idsMap.put(probations.get(index).getId(), index);
+		}
+		if (!idsMap.isEmpty())
+			employeeCommonValidator.validateEntityId(idsMap, EntityType.PROBATION, employeeId, tenantId, errors);		
 	}
 
 	private void validateRegularisation(List<Regularisation> regularisations, Long employeeId, String tenantId,
 			Errors errors) {
-		if (regularisations != null && !regularisations.isEmpty()) {
-			for (int index = 0; index < regularisations.size(); index++) {
-				if (regularisations.get(index).getId() != null)
-					validateInvalidIdForRegularisation(regularisations.get(index).getId(), errors);
-				/*if (regularisations.get(index).getDocuments() != null
-						&& !regularisations.get(index).getDocuments().isEmpty()
-						&& employeeRepository.checkForDuplicatesForAnyOneOfGivenCSV("egeis_employeeDocuments", "document",
-								getDocumentsAsCSVs(regularisations.get(index).getDocuments()))) {
-					errors.rejectValue("employee.regularisation[" + index + "].documents", "concurrent",
-							"document(s) already exists");
-				}*/
-			}
-		}
+		if (isEmpty(regularisations))
+			return;
+		validateIdsForRegularisation(regularisations, employeeId, tenantId, errors);
+		/*
+		 * if (regularisations.get(index).getDocuments() != null &&
+		 * !regularisations.get(index).getDocuments().isEmpty() &&
+		 * employeeRepository.checkForDuplicatesForAnyOneOfGivenCSV(
+		 * "egeis_employeeDocuments", "document",
+		 * getDocumentsAsCSVs(regularisations.get(index).getDocuments()))) {
+		 * errors.rejectValue("employee.regularisation[" + index +
+		 * "].documents", "concurrent", "document(s) already exists"); }
+		 */
 	}
 
-	/**
-	 * Ids should always be generated by sequence. Any id populated will be in
-	 * general considered as an existing record. But what if someone passes an
-	 * id that does no exist? This validation takes care of this by checking in
-	 * the db for the existence of the record.
-	 * 
-	 * @param id
-	 */
-	private void validateInvalidIdForRegularisation(Long id, Errors errors) {
-		// TODO query table and populate error
-
-	}
-
-	private void validateServiceHistory(List<ServiceHistory> histories, Long employeeId, String tenantId,
+	private void validateIdsForRegularisation(List<Regularisation> regularisations, Long employeeId, String tenantId,
 			Errors errors) {
-		if (histories != null && !histories.isEmpty()) {
-			for (int index = 0; index < histories.size(); index++) {
-				if (histories.get(index).getId() != null)
-					validateInvalidIdForServiceHistory(histories.get(index).getId(), errors);
-				/*if (histories.get(index).getDocuments() != null && !histories.get(index).getDocuments().isEmpty()
-						&& employeeRepository.checkForDuplicatesForAnyOneOfGivenCSV("egeis_employeeDocuments", "document",
-								getDocumentsAsCSVs(histories.get(index).getDocuments()))) {
-					errors.rejectValue("employee.serviceHistory[" + index + "].documents", "concurrent",
-							"document(s) already exists");
-				}*/
-			}
+		Map<Long, Integer> idsMap = new HashMap<>();
+		for (int index = 0; index < regularisations.size(); index++) {
+			if (regularisations.get(index).getId() != null)
+				idsMap.put(regularisations.get(index).getId(), index);
 		}
+		if (!idsMap.isEmpty())
+			employeeCommonValidator.validateEntityId(idsMap, EntityType.REGULARISATION, employeeId, tenantId, errors);		
 	}
 
-	/**
-	 * Ids should always be generated by sequence. Any id populated will be in
-	 * general considered as an existing record. But what if someone passes an
-	 * id that does no exist? This validation takes care of this by checking in
-	 * the db for the existence of the record.
-	 * 
-	 * @param id
-	 */
-	private void validateInvalidIdForServiceHistory(Long id, Errors errors) {
-		// TODO query table and populate error
+	private void validateServiceHistory(List<ServiceHistory> serviceHistories, Long employeeId, String tenantId,
+			Errors errors) {
+		if (isEmpty(serviceHistories))
+			return;
+		validateIdsForServiceHistory(serviceHistories, employeeId, tenantId, errors);
+		/*
+		 * if (histories.get(index).getDocuments() != null &&
+		 * !histories.get(index).getDocuments().isEmpty() &&
+		 * employeeRepository.checkForDuplicatesForAnyOneOfGivenCSV(
+		 * "egeis_employeeDocuments", "document",
+		 * getDocumentsAsCSVs(histories.get(index).getDocuments()))) {
+		 * errors.rejectValue("employee.serviceHistory[" + index +
+		 * "].documents", "concurrent", "document(s) already exists"); }
+		 */
+	}
 
+	private void validateIdsForServiceHistory(List<ServiceHistory> serviceHistories, Long employeeId, String tenantId,
+			Errors errors) {
+		Map<Long, Integer> idsMap = new HashMap<>();
+		for (int index = 0; index < serviceHistories.size(); index++) {
+			if (serviceHistories.get(index).getId() != null)
+				idsMap.put(serviceHistories.get(index).getId(), index);
+		
+		}
+		if (!idsMap.isEmpty())
+			employeeCommonValidator.validateEntityId(idsMap, EntityType.SERVICE, employeeId, tenantId, errors);		
 	}
 
 	private void validateTechnicalQualification(List<TechnicalQualification> technicals, Long employeeId,
 			String tenantId, Errors errors) {
-		if (technicals == null || technicals.isEmpty())
+		if (isEmpty(technicals))
 			return;
-		for (int index = 0; index < technicals.size(); index++) {
-			if (technicals.get(index).getId() != null)
-				validateInvalidIdforTechnicalQualifications(technicals.get(index).getId(), errors);
-			/*if (technicals.get(index).getDocuments() != null && !technicals.get(index).getDocuments().isEmpty()
-					&& employeeRepository.checkForDuplicatesForAnyOneOfGivenCSV("egeis_employeeDocuments", "document",
-							getDocumentsAsCSVs(technicals.get(index).getDocuments()))) {
-				errors.rejectValue("employee.technical[" + index + "].documents", "concurrent",
-						"document(s) already exists");
-			}*/
-		}
+		validateIdsForTechnicalQualification(technicals, employeeId, tenantId, errors);
+		/*
+		 * if (technicals.get(index).getDocuments() != null &&
+		 * !technicals.get(index).getDocuments().isEmpty() &&
+		 * employeeRepository.checkForDuplicatesForAnyOneOfGivenCSV(
+		 * "egeis_employeeDocuments", "document",
+		 * getDocumentsAsCSVs(technicals.get(index).getDocuments()))) {
+		 * errors.rejectValue("employee.technical[" + index + "].documents",
+		 * "concurrent", "document(s) already exists"); }
+		 */
 	}
 
-	/**
-	 * Ids should always be generated by sequence. Any id populated will be in
-	 * general considered as an existing record. But what if someone passes an
-	 * id that does no exist? This validation takes care of this by checking in
-	 * the db for the existence of the record.
-	 * 
-	 * @param id
-	 */
-	private void validateInvalidIdforTechnicalQualifications(Long id, Errors errors) {
-		// TODO query table and populate error
-
+	private void validateIdsForTechnicalQualification(List<TechnicalQualification> technicals, Long employeeId,
+			String tenantId, Errors errors) {
+		Map<Long, Integer> idsMap = new HashMap<>();
+		for (int index = 0; index < technicals.size(); index++) {
+			if (technicals.get(index).getId() != null)
+				idsMap.put(technicals.get(index).getId(), index);
+		}
+		if (!idsMap.isEmpty())
+			employeeCommonValidator.validateEntityId(idsMap, EntityType.TECHNICAL, employeeId, tenantId, errors);		
 	}
 
 	private String getDocumentsAsCSVs(List<String> documents) {

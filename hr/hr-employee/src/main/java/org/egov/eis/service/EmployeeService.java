@@ -40,8 +40,6 @@
 
 package org.egov.eis.service;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -230,10 +228,8 @@ public class EmployeeService {
 		UserResponse userResponse = (UserResponse) responseEntity.getBody();
 		User user = userResponse.getUser().get(0);
 
-		String code = employeeHelper.getEmployeeCode(user.getId());
 		Employee employee = employeeRequest.getEmployee();
 		employee.setId(user.getId());
-		employee.setCode(code);
 		employee.setUser(user);
 
 		try {
@@ -243,9 +239,6 @@ public class EmployeeService {
 			return errorHandler.getResponseEntityForUnexpectedErrors(employeeRequest.getRequestInfo());
 		}
 
-		System.out.println("create appointment date:" +employee.getDateOfAppointment());
-		System.out.println("create from date:" +employee.getAssignments().get(0).getFromDate());
-		
 		String employeeRequestJson = null;
 		try {
 			ObjectMapper mapper = new ObjectMapper();
@@ -255,11 +248,7 @@ public class EmployeeService {
 			LOGGER.error("Error while converting Employee to JSON", e);
 			e.printStackTrace();
 		}
-		LocalDateTime time = LocalDateTime.ofInstant(
-				employee.getAssignments().get(0).getFromDate().toInstant(), 
-				ZoneId.systemDefault());
 		
-		System.out.printf("After Json Day:%d,hour:%d,minute:%d,seconds:%d",time.getDayOfMonth(),time.getHour(),time.getMinute(),time.getSecond());
 		try {
 			employeeProducer.sendMessage(propertiesManager.getSaveEmployeeTopic(),
 					propertiesManager.getEmployeeSaveKey(), employeeRequestJson);
@@ -364,6 +353,5 @@ public class EmployeeService {
 		technicalQualificationService.update(employee);
 		educationalQualificationService.update(employee);
 		employeeDocumentsService.update(employee);
-
 	}	
 }

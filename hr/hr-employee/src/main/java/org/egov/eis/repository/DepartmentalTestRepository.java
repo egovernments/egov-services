@@ -40,7 +40,6 @@
 
 package org.egov.eis.repository;
 
-
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -49,7 +48,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.eis.model.DepartmentalTest;
-import org.egov.eis.model.enums.DocumentReferenceType;
+import org.egov.eis.model.enums.EntityType;
 import org.egov.eis.repository.rowmapper.DepartmentalTestTableRowMapper;
 import org.egov.eis.web.contract.EmployeeRequest;
 import org.slf4j.Logger;
@@ -71,36 +70,35 @@ public class DepartmentalTestRepository {
 			+ " createdBy, createdDate, lastModifiedBy, lastModifiedDate, tenantId)" + " VALUES (?,?,?,?,?,?,?,?,?,?)";
 
 	public static final String UPDATE_DEPARTMENTAL_TEST_QUERY = "UPDATE egeis_departmentalTest"
-			+ " SET (test, yearOfPassing, remarks," + " lastModifiedBy, lastModifiedDate)"
-			+ " = (?,?,?,?,?)" + " WHERE id = ? and tenantId=?";
-	
-	public static final String SELECT_BY_EMPLOYEEID_QUERY = "SELECT"
-			+ " id, test, yearOfPassing, remarks,"
-			+ " createdBy, createdDate, lastModifiedBy, lastModifiedDate, tenantId"
-			+ " FROM egeis_departmentalTest"
+			+ " SET (test, yearOfPassing, remarks," + " lastModifiedBy, lastModifiedDate)" + " = (?,?,?,?,?)"
+			+ " WHERE id = ? and tenantId=?";
+
+	public static final String SELECT_BY_EMPLOYEEID_QUERY = "SELECT" + " id, test, yearOfPassing, remarks,"
+			+ " createdBy, createdDate, lastModifiedBy, lastModifiedDate, tenantId" + " FROM egeis_departmentalTest"
 			+ " WHERE employeeId = ? AND tenantId = ? ";
-	
-	public static final String DELETE__QUERY = "DELETE FROM egeis_departmentalTest"
+
+	public static final String DELETE_QUERY = "DELETE FROM egeis_departmentalTest"
 			+ " WHERE id IN (:id) AND employeeId = :employeeId AND tenantId = :tenantId";
-	
+
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
 	@Autowired
 	private EmployeeDocumentsRepository documentsRepository;
-	
+
 	@Autowired
 	private DepartmentalTestTableRowMapper departmentalTestTableRowMapper;
-	
+
 	@Autowired
-	 private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-	 
-	 /**
-	  * @param namedParameterJdbcTemplate the namedParameterJdbcTemplate to set
-	  */
-	 public void setNamedParameterJdbcTemplate(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
-	  this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
-	 }
+	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+	/**
+	 * @param namedParameterJdbcTemplate
+	 *            the namedParameterJdbcTemplate to set
+	 */
+	public void setNamedParameterJdbcTemplate(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+	}
 
 	public void save(EmployeeRequest employeeRequest) {
 		List<DepartmentalTest> departmentalTests = employeeRequest.getEmployee().getTest();
@@ -122,7 +120,7 @@ public class DepartmentalTestRepository {
 
 				if (departmentalTest.getDocuments() != null && !departmentalTest.getDocuments().isEmpty()) {
 					documentsRepository.save(employeeRequest.getEmployee().getId(), departmentalTest.getDocuments(),
-							DocumentReferenceType.TEST.toString(), departmentalTest.getId(),
+							EntityType.TEST.toString(), departmentalTest.getId(),
 							departmentalTest.getTenantId());
 				}
 			}
@@ -136,7 +134,7 @@ public class DepartmentalTestRepository {
 
 	public void update(DepartmentalTest test) {
 		Object[] obj = new Object[] { test.getTest(), test.getYearOfPassing(), test.getRemarks(),
-				test.getLastModifiedBy(), test.getLastModifiedDate(),test.getId(), test.getTenantId() };
+				test.getLastModifiedBy(), test.getLastModifiedDate(), test.getId(), test.getTenantId() };
 
 		jdbcTemplate.update(UPDATE_DEPARTMENTAL_TEST_QUERY, obj);
 	}
@@ -148,36 +146,24 @@ public class DepartmentalTestRepository {
 
 		jdbcTemplate.update(INSERT_DEPARTMENTAL_TEST_QUERY, obj);
 	}
-	
-	public void findAndDeleteThatAreNotInList(List<DepartmentalTest> test) {
-/*		for(test) -> {
-		});
-		
-		StringWriter stringWriter = new StringWriter();
-		Long id[] = 
-		String[] b = new String[a.length];
-		for ( int i = 0; i < a.length; i++) {
-		    b[i] = a[i];
-		}
-		CSVWriter csvWriter = new CSVWriter(stringWriter, ",");
-		csvWriter.writeNext(b);*/
-		// TODO Auto-generated method stub
-		
-		// DELETE FROM egeis_departmentaltest where empid=? and id NOT IN <<loop probation and get all ids in csv>>)
-	}
-	
+
 	public List<DepartmentalTest> findByEmployeeId(Long id, String tenantId) {
-		return jdbcTemplate.query(SELECT_BY_EMPLOYEEID_QUERY, new Object[] {id, tenantId}, departmentalTestTableRowMapper);
+		try {
+			return jdbcTemplate.query(SELECT_BY_EMPLOYEEID_QUERY, new Object[] { id, tenantId },
+					departmentalTestTableRowMapper);
+		} catch (EmptyResultDataAccessException e) {
+			return null;
+		}
 	}
 
 	public void delete(List<Long> testsIdsToDelete, Long employeeId, String tenantId) {
-	
+
 		Map<String, Object> namedParameters = new HashMap<>();
-		namedParameters.put("id", testsIdsToDelete );
+		namedParameters.put("id", testsIdsToDelete);
 		namedParameters.put("employeeId", employeeId);
 		namedParameters.put("tenantId", tenantId);
-		
-		namedParameterJdbcTemplate.update(DELETE__QUERY, namedParameters);
-		
+
+		namedParameterJdbcTemplate.update(DELETE_QUERY, namedParameters);
+
 	}
 }

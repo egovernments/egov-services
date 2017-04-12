@@ -40,6 +40,7 @@
 
 package org.egov.eis.web.contract;
 
+import java.util.Collections;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -63,6 +64,26 @@ public class UserGetRequest {
 	private RequestInfo requestInfo;
 
 	private List<Long> id;
+
+    private String userName;
+
+    private String name;
+
+    private String mobileNumber;
+
+    private String aadhaarNumber;
+
+    private String pan;
+
+    private String emailId;
+
+    private boolean active = true;
+
+    private int pageSize = 20;
+
+    private int pageNumber = 0;
+
+    private List<String> sort = Collections.singletonList("name");
 
 	private String tenantId;
 

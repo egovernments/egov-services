@@ -1,5 +1,7 @@
 package org.egov.eis.service;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,16 +15,18 @@ import org.springframework.stereotype.Component;
 public class ServiceHistoryService {
 	
 	@Autowired
-	private ServiceHistoryRepository repository;
+	private ServiceHistoryRepository serviceHistoryRepository;
 
 	public void update(Employee employee) {
-		List<ServiceHistory> services = repository.findByEmployeeId(employee.getId(), employee.getTenantId());
+		if(isEmpty(employee.getServiceHistory()))
+			return;
+		List<ServiceHistory> services = serviceHistoryRepository.findByEmployeeId(employee.getId(), employee.getTenantId());
 		employee.getServiceHistory().forEach((service) -> {
 			if (needsInsert(service, services)) {
-				repository.insert(service, employee.getId());
+				serviceHistoryRepository.insert(service, employee.getId());
 			} else if (needsUpdate(service, services)) {
 				service.setTenantId(employee.getTenantId());
-				repository.update(service);
+				serviceHistoryRepository.update(service);
 			}
      });
 		deleteInDBThatAreNotInInput(employee.getServiceHistory(), services,  employee.getId(),employee.getTenantId());
@@ -32,7 +36,7 @@ public class ServiceHistoryService {
 			List<ServiceHistory> servicesFromDb, Long employeeId, String tenantId) {
 		List<Long> servicesIdsToDelete = getListIdsToDelete(inputServices, servicesFromDb);
 		if (!servicesIdsToDelete.isEmpty())
-			repository.delete(servicesIdsToDelete, employeeId, tenantId);
+			serviceHistoryRepository.delete(servicesIdsToDelete, employeeId, tenantId);
     }
 
 	private List<Long> getListIdsToDelete(List<ServiceHistory> inputServices, List<ServiceHistory> serviceHistoriesFromDb) {

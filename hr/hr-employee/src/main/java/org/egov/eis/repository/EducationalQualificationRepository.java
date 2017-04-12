@@ -43,13 +43,12 @@ package org.egov.eis.repository;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.egov.eis.model.EducationalQualification;
-import org.egov.eis.model.enums.DocumentReferenceType;
+import org.egov.eis.model.enums.EntityType;
 import org.egov.eis.repository.rowmapper.EducationalQualificationRowMapper;
 import org.egov.eis.web.contract.EmployeeRequest;
 import org.slf4j.Logger;
@@ -58,9 +57,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -72,40 +69,38 @@ public class EducationalQualificationRepository {
 			+ " (id, employeeId, qualification, majorSubject, yearOfPassing, university,"
 			+ " createdBy, createdDate, lastModifiedBy, lastModifiedDate, tenantId)"
 			+ " VALUES (?,?,?,?,?,?,?,?,?,?,?)";
-	
+
 	public static final String UPDATE_EDUCATIONAL_QUALIFICATION_QUERY = "UPDATE egeis_educationalQualification"
-			+ " SET (qualification, majorSubject, yearOfPassing, university,"
-			+ " lastModifiedBy, lastModifiedDate)"
-			+ " = (?,?,?,?,?,?)"
-			+"WHERE id = ? and tenantId=?";
-	
+			+ " SET (qualification, majorSubject, yearOfPassing, university," + " lastModifiedBy, lastModifiedDate)"
+			+ " = (?,?,?,?,?,?)" + "WHERE id = ? and tenantId=?";
+
 	public static final String SELECT_BY_EMPLOYEEID_QUERY = "SELECT"
 			+ " id, qualification, majorsubject, yearofpassing, university, createdby, createddate,"
-			+ " lastmodifiedby, lastmodifieddate, tenantId"
-			+ " FROM egeis_educationalqualification"
+			+ " lastmodifiedby, lastmodifieddate, tenantId" + " FROM egeis_educationalqualification"
 			+ " WHERE employeeId = ? AND tenantId = ? ";
-	
+
 	public static final String DELETE_QUERY = "DELETE FROM egeis_educationalQualification"
 			+ " WHERE id IN (:id) AND employeeId = :employeeId AND tenantId = :tenantId";
-			
+
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
 	@Autowired
 	private EmployeeDocumentsRepository documentsRepository;
-	
+
 	@Autowired
 	private EducationalQualificationRowMapper educationalQualificationRowMapper;
-	
+
 	@Autowired
-	 private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-	 
-	 /**
-	  * @param namedParameterJdbcTemplate the namedParameterJdbcTemplate to set
-	  */
-	 public void setNamedParameterJdbcTemplate(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
-	  this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
-	 }
+	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+	/**
+	 * @param namedParameterJdbcTemplate
+	 *            the namedParameterJdbcTemplate to set
+	 */
+	public void setNamedParameterJdbcTemplate(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+	}
 
 	public void save(EmployeeRequest employeeRequest) {
 		List<EducationalQualification> educationalQualifications = employeeRequest.getEmployee().getEducation();
@@ -129,7 +124,7 @@ public class EducationalQualificationRepository {
 				if (educationalQualification.getDocuments() != null
 						&& !educationalQualification.getDocuments().isEmpty()) {
 					documentsRepository.save(employeeRequest.getEmployee().getId(),
-							educationalQualification.getDocuments(), DocumentReferenceType.EDUCATION.toString(),
+							educationalQualification.getDocuments(), EntityType.EDUCATION.toString(),
 							educationalQualification.getId(), educationalQualification.getTenantId());
 				}
 			}
@@ -160,23 +155,22 @@ public class EducationalQualificationRepository {
 		jdbcTemplate.update(INSERT_EDUCATIONAL_QUALIFICATION_QUERY, obj);
 	}
 
-	public void findAndDeleteThatAreNotInList(List<EducationalQualification> education) {
-		// TODO Auto-generated method stub
-		
+	public List<EducationalQualification> findByEmployeeId(Long id, String tenantId) {
+		try {
+			return jdbcTemplate.query(SELECT_BY_EMPLOYEEID_QUERY, new Object[] { id, tenantId },
+					educationalQualificationRowMapper);
+		} catch (EmptyResultDataAccessException e) {
+			return null;
+		}
 	}
 
-	public List<EducationalQualification> findByEmployeeId(Long id, String tenantId) {
-		return jdbcTemplate.query(SELECT_BY_EMPLOYEEID_QUERY, new Object[] { id, tenantId },
-					educationalQualificationRowMapper);
-   }
-
 	public void delete(List<Long> educationsIdsToDelete, Long employeeId, String tenantId) {
-		 
+
 		Map<String, Object> namedParameters = new HashMap<>();
-		namedParameters.put("id", educationsIdsToDelete );
+		namedParameters.put("id", educationsIdsToDelete);
 		namedParameters.put("employeeId", employeeId);
 		namedParameters.put("tenantId", tenantId);
-		
+
 		namedParameterJdbcTemplate.update(DELETE_QUERY, namedParameters);
 	}
 }

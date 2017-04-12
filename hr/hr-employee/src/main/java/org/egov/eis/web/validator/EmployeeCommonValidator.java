@@ -1,14 +1,16 @@
 package org.egov.eis.web.validator;
 
-import java.util.List;
+import static org.springframework.util.ObjectUtils.isEmpty;
 
-import org.egov.eis.model.Assignment;
+import java.util.List;
+import java.util.Map;
+
 import org.egov.eis.model.Employee;
+import org.egov.eis.model.enums.EntityType;
 import org.egov.eis.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
-
 /**
  * Has all validations that are common to create and update employee
  * @author ibm
@@ -46,27 +48,27 @@ public class EmployeeCommonValidator {
 		}
 	}
 	
-	public void validateDocumentsForNewAssignment(Assignment assignment, Errors errors, int index) {
-		if (assignment.getDocuments() != null && !assignment.getDocuments().isEmpty()
-				&& employeeRepository.checkForDuplicatesForAnyOneOfGivenCSV(
-						"egeis_employeeDocuments", "document", getDocumentsAsCSVs(assignment.getDocuments()))) {
-			errors.rejectValue("employee.assignments[" + index + "].documents", "concurrent",
+	public void validateDocumentsForNewEntity(List<String> docs, EntityType docType, Errors errors, int index) {
+		if (isEmpty(docs))
+			return;
+		if (employeeRepository.checkForDuplicatesForAnyOneOfGivenCSV(
+						"egeis_employeeDocuments", "document", getDocumentsAsCSVs(docs))) {
+			errors.rejectValue("employee." + docType.toString().toLowerCase() + "[" + index + "].documents", "concurrent",
 					"document(s) already exists");
 		}
+	}
+	
+	public void validateEntityId(Map<Long, Integer> idsMap, EntityType entityType, Long employeeId,
+			String tenantId, Errors errors) {
+		List<Long> idsFromDB = employeeRepository.getListOfIds(entityType.getDbTable(), employeeId, tenantId);
+		idsMap.keySet().forEach((id) -> {
+			if (!idsFromDB.contains(id))
+				errors.rejectValue("employee." + entityType.getValue().toLowerCase() + "[" + idsMap.get(id) + "].id", "doesn't exist",
+						" " +entityType.getValue().toLowerCase() + " doesn't exist for this employee");
+		});
 	}
 	
 	private String getDocumentsAsCSVs(List<String> documents) {
 		return "'" + String.join("','", documents) + "'";
 	}
-	
-	/**
-	 * Checks if the given string is present in db for the given column and given table.
-	 */
-	public Boolean duplicateExists(String table, String column, String value, Long id, String tenantId) {
-		Long idFromDb = employeeRepository.getId(table, column, value, tenantId);
-		if (idFromDb == 0 || (id != null && id.equals(idFromDb)))
-			return false;
-		return true;
-	}
-
 }

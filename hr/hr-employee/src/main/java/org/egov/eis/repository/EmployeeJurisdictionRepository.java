@@ -42,8 +42,9 @@ package org.egov.eis.repository;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.egov.eis.model.Employee;
 import org.egov.eis.repository.rowmapper.EmployeeJurisdictionMapper;
@@ -53,6 +54,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -63,23 +65,32 @@ public class EmployeeJurisdictionRepository {
 	public static final String INSERT_EMPLOYEE_JURISDICTION_QUERY = "INSERT INTO egeis_employeeJurisdictions"
 			+ " (id, employeeId, jurisdictionId, tenantId)"
 			+ " VALUES (NEXTVAL('seq_egeis_employeeJurisdictions'),?,?,?)";
-	
-	public static final String DELETE_EMPLOYEE_JURISDICTION_QUERY = "DELETE FROM egeis_employeeJurisdictions"
-			+ " WHERE jurisdictionId = ? and employeeId=? and tenantId=?)";
 
-	public static final String SELECT_BY_EMPLOYEEID_QUERY = "SELECT"
-			+ " jurisdictionid"
-			+ " FROM egeis_employeejurisdictions"
-			+ " WHERE employeeId = ? AND tenantId = ? ";
-	
+	public static final String DELETE_QUERY = "DELETE FROM egeis_employeeJurisdictions"
+			+ " WHERE jurisdictionId IN (:jurisdictionId) and employeeId = :employeeId and tenantId = :tenantId";
+
+	public static final String SELECT_BY_EMPLOYEEID_QUERY = "SELECT" + " jurisdictionid"
+			+ " FROM egeis_employeejurisdictions" + " WHERE employeeId = ? AND tenantId = ? ";
+
 	public static final String CHECK_IF_ID_EXISTS_QUERY = "SELECT id FROM egeis_employeeJurisdictions where "
 			+ "jurisdictionId=? and employeeId=? and tenantId=?";
-	
+
 	@Autowired
 	private EmployeeJurisdictionMapper employeeJurisdictionMapper;
-	
+
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
+
+	@Autowired
+	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+	/**
+	 * @param namedParameterJdbcTemplate
+	 *            the namedParameterJdbcTemplate to set
+	 */
+	public void setNamedParameterJdbcTemplate(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+	}
 
 	public void save(Employee employee) {
 		List<Long> employeeJurisdictions = employee.getJurisdictions();
@@ -91,7 +102,7 @@ public class EmployeeJurisdictionRepository {
 				ps.setLong(2, jurisdictionId);
 				ps.setString(3, employee.getTenantId());
 			}
-	
+
 			@Override
 			public int getBatchSize() {
 				return employeeJurisdictions.size();
@@ -100,34 +111,26 @@ public class EmployeeJurisdictionRepository {
 	}
 
 	public void insert(Long jurisdictionId, Long empId, String tenantId) {
-		
+
 		jdbcTemplate.update(INSERT_EMPLOYEE_JURISDICTION_QUERY, empId, jurisdictionId, tenantId);
 	}
-	
+
 	public List<Long> findByEmployeeId(Long id, String tenantId) {
-
-		List<Long> employeeJurisdictions = null;
-
 		try {
-			employeeJurisdictions = jdbcTemplate.query(SELECT_BY_EMPLOYEEID_QUERY, new Object[] { id, tenantId },
+			return jdbcTemplate.query(SELECT_BY_EMPLOYEEID_QUERY, new Object[] { id, tenantId },
 					employeeJurisdictionMapper);
-			System.out.println("jusridictions : " + employeeJurisdictions);
-			return employeeJurisdictions;
 		} catch (EmptyResultDataAccessException e) {
 			return null;
 		}
 	}
-	
-	public boolean jurisdictionAlreadyExists(Long jurisdictionId, Long empId, String tenantId) {
-		List<Object> values = new ArrayList<Object>();
-		values.add(jurisdictionId);
-		values.add(empId); 
-		values.add(tenantId);
-		try {
-			jdbcTemplate.queryForObject(CHECK_IF_ID_EXISTS_QUERY, values.toArray(), Long.class);
-			return true;
-		} catch (EmptyResultDataAccessException e) {
-			return false;
-		}
+
+	public void delete(List<Long> jurisdictionsIdsToDelete, Long employeeId, String tenantId) {
+
+		Map<String, Object> namedParameters = new HashMap<>();
+		namedParameters.put("jurisdictionId", jurisdictionsIdsToDelete);
+		namedParameters.put("employeeId", employeeId);
+		namedParameters.put("tenantId", tenantId);
+
+		namedParameterJdbcTemplate.update(DELETE_QUERY, namedParameters);
 	}
 }

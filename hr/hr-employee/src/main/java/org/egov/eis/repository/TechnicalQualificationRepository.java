@@ -43,13 +43,12 @@ package org.egov.eis.repository;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.egov.eis.model.TechnicalQualification;
-import org.egov.eis.model.enums.DocumentReferenceType;
+import org.egov.eis.model.enums.EntityType;
 import org.egov.eis.repository.helper.PreparedStatementHelper;
 import org.egov.eis.repository.rowmapper.TechnicalQualificationRowMapper;
 import org.egov.eis.web.contract.EmployeeRequest;
@@ -84,7 +83,7 @@ public class TechnicalQualificationRepository {
 			+ " FROM egeis_technicalqualification"
 			+ " WHERE employeeId = ? AND tenantId = ? ";
 	
-    public static final String DELETE__QUERY = "DELETE FROM egeis_technicalqualification"
+    public static final String DELETE_QUERY = "DELETE FROM egeis_technicalqualification"
 			+ " WHERE id IN (:id) AND employeeId = :employeeId AND tenantId = :tenantId";
 	
 	@Autowired
@@ -131,7 +130,7 @@ public class TechnicalQualificationRepository {
 
 				if(technicalQualification.getDocuments() != null && !technicalQualification.getDocuments().isEmpty()) {
 					documentsRepository.save(employeeRequest.getEmployee().getId(), technicalQualification.getDocuments(),
-							DocumentReferenceType.TECHNICAL.toString(), technicalQualification.getId(), technicalQualification.getTenantId());
+							EntityType.TECHNICAL.toString(), technicalQualification.getId(), technicalQualification.getTenantId());
 				}
 			}
 
@@ -161,12 +160,10 @@ public class TechnicalQualificationRepository {
 	}
 
 	public List<TechnicalQualification> findByEmployeeId(Long id, String tenantId) {
-		
-		List<TechnicalQualification> technicalQualification = null;
-		try{
-			technicalQualification = jdbcTemplate.query(SELECT_BY_EMPLOYEEID_QUERY, new Object[] {id, tenantId}, technicalQualificationRowMapper);
-			return technicalQualification;
-		}catch (EmptyResultDataAccessException e) {
+		try {
+			return jdbcTemplate.query(SELECT_BY_EMPLOYEEID_QUERY, new Object[] { id, tenantId },
+					technicalQualificationRowMapper);
+		} catch (EmptyResultDataAccessException e) {
 			return null;
 		}
 	}
@@ -178,7 +175,7 @@ public class TechnicalQualificationRepository {
 		namedParameters.put("employeeId", employeeId);
 		namedParameters.put("tenantId", tenantId);
 		
-		namedParameterJdbcTemplate.update(DELETE__QUERY, namedParameters);
+		namedParameterJdbcTemplate.update(DELETE_QUERY, namedParameters);
 		
 	}
 }

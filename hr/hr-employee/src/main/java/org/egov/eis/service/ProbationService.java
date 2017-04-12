@@ -1,5 +1,7 @@
 package org.egov.eis.service;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +18,8 @@ public class ProbationService {
 	private ProbationRepository probationRepository;
 
 	public void update(Employee employee) {
+		if(isEmpty(employee.getProbation()))
+			return;
 		List<Probation> probations = probationRepository.findByEmployeeId(employee.getId(), employee.getTenantId());
 		employee.getProbation().forEach((probation) -> {
 			if (needsInsert(probation, probations)) {
@@ -24,17 +28,18 @@ public class ProbationService {
 				probation.setTenantId(employee.getTenantId());
 				probationRepository.update(probation);
 			}
-     });
-		deleteProbationsInDBThatAreNotInInput(employee.getProbation(), probations,  employee.getId(),employee.getTenantId());
+		});
+		deleteProbationsInDBThatAreNotInInput(employee.getProbation(), probations, employee.getId(),
+				employee.getTenantId());
 	}
 
-	private void deleteProbationsInDBThatAreNotInInput(List<Probation> inputProbations, List<Probation> probationsFromDb, Long employeeId,
-			String tenantId) {
-		
+	private void deleteProbationsInDBThatAreNotInInput(List<Probation> inputProbations,
+			List<Probation> probationsFromDb, Long employeeId, String tenantId) {
+
 		List<Long> probationsIdsToDelete = getListOfProbationIdsToDelete(inputProbations, probationsFromDb);
 		if (!probationsIdsToDelete.isEmpty())
 			probationRepository.delete(probationsIdsToDelete, employeeId, tenantId);
-		
+
 	}
 
 	private List<Long> getListOfProbationIdsToDelete(List<Probation> inputProbations,
@@ -47,14 +52,16 @@ public class ProbationService {
 					found = true;
 					break;
 				}
-			if (!found) probationsIdsToDelete.add(probationInDb.getId());
+			if (!found)
+				probationsIdsToDelete.add(probationInDb.getId());
 		}
 		return probationsIdsToDelete;
 	}
 
 	private boolean needsUpdate(Probation probation, List<Probation> probations) {
-		for (Probation oldProbation : probations) 
-			if (probation.equals(oldProbation)) return false;
+		for (Probation oldProbation : probations)
+			if (probation.equals(oldProbation))
+				return false;
 		return true;
 	}
 

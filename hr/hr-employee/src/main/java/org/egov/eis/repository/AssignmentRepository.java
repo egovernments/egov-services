@@ -50,7 +50,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.eis.model.Assignment;
-import org.egov.eis.model.enums.DocumentReferenceType;
+import org.egov.eis.model.enums.EntityType;
 import org.egov.eis.repository.builder.AssignmentQueryBuilder;
 import org.egov.eis.repository.helper.PreparedStatementHelper;
 import org.egov.eis.repository.rowmapper.AssignmentRowMapper;
@@ -82,24 +82,21 @@ public class AssignmentRepository {
 			+ " SET (positionId, fundId, functionaryId, functionId, departmentId, designationId,"
 			+ " isPrimary, fromDate, toDate, gradeId, govtOrderNumber," + " lastModifiedBy, lastModifiedDate)"
 			+ " = (?,?,?,?,?,?,?,?,?,?,?,?,?)" + " where id = ? and tenantId=?";
-	
+
 	public static final String SELECT_BY_EMPLOYEEID_QUERY = "SELECT"
 			+ " id, positionId, fundId, functionaryId, functionId, departmentId, designationId,"
 			+ " isPrimary, fromDate, toDate, gradeId, govtOrderNumber, createdBy, createdDate, lastModifiedBy,"
-			+ " lastModifiedDate, tenantId"
-			+ " FROM egeis_assignment"
-			+ " WHERE employeeId = ? AND tenantId = ? ";
-	
-	public static final String DELETE__QUERY = "DELETE FROM egeis_assignment"
+			+ " lastModifiedDate, tenantId" + " FROM egeis_assignment" + " WHERE employeeId = ? AND tenantId = ? ";
+
+	public static final String DELETE_QUERY = "DELETE FROM egeis_assignment"
 			+ " WHERE id IN (:id) AND employeeId = :employeeId AND tenantId = :tenantId";
-			
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
 	@Autowired
 	private AssignmentTableRowMapper assignmentTableRowMapper;
-	
+
 	@Autowired
 	private AssignmentRowMapper assignmentRowMapper;
 
@@ -111,16 +108,17 @@ public class AssignmentRepository {
 
 	@Autowired
 	private EmployeeDocumentsRepository documentsRepository;
-	
+
 	@Autowired
-	 private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-	 
-	 /**
-	  * @param namedParameterJdbcTemplate the namedParameterJdbcTemplate to set
-	  */
-	 public void setNamedParameterJdbcTemplate(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
-	  this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
-	 }
+	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+	/**
+	 * @param namedParameterJdbcTemplate
+	 *            the namedParameterJdbcTemplate to set
+	 */
+	public void setNamedParameterJdbcTemplate(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+	}
 
 	@Transactional(readOnly = true)
 	public List<Assignment> findForCriteria(Long employeeId, AssignmentGetRequest assignmentGetRequest) {
@@ -144,7 +142,7 @@ public class AssignmentRepository {
 				psHelper.setLongOrNull(ps, 4, assignment.getFund());
 				psHelper.setLongOrNull(ps, 5, assignment.getFunctionary());
 				psHelper.setLongOrNull(ps, 6, assignment.getFunction());
-				ps.setLong(7, assignment.getDepartment()); 
+				ps.setLong(7, assignment.getDepartment());
 				ps.setLong(8, assignment.getDesignation());
 				ps.setBoolean(9, assignment.getIsPrimary());
 				ps.setDate(10, new Date(assignment.getFromDate().getTime()));
@@ -159,9 +157,10 @@ public class AssignmentRepository {
 
 				if (assignment.getDocuments() != null && !assignment.getDocuments().isEmpty()) {
 					documentsRepository.save(employeeRequest.getEmployee().getId(), assignment.getDocuments(),
-							DocumentReferenceType.ASSIGNMENT.toString(), assignment.getId(), assignment.getTenantId());
+							EntityType.ASSIGNMENT.toString(), assignment.getId(), assignment.getTenantId());
 				}
 			}
+
 			@Override
 			public int getBatchSize() {
 				return assignments.size();
@@ -191,29 +190,23 @@ public class AssignmentRepository {
 
 		jdbcTemplate.update(INSERT_ASSIGNMENT_QUERY, obj);
 	}
-	
+
 	public List<Assignment> findByEmployeeId(Long id, String tenantId) {
-		//  select * from egeis_assignment where employeeId = ? and tenantId = ?		
-		
-		List<Assignment> assignment = null;
-		
-		try{
-			assignment = (List<Assignment>) jdbcTemplate.query(SELECT_BY_EMPLOYEEID_QUERY, new Object[] {id, tenantId}, assignmentTableRowMapper);
-			return assignment;
-		}catch (EmptyResultDataAccessException e) {
+		try {
+			return jdbcTemplate.query(SELECT_BY_EMPLOYEEID_QUERY, new Object[] { id, tenantId },
+					assignmentTableRowMapper);
+		} catch (EmptyResultDataAccessException e) {
 			return null;
 		}
-		
 	}
 
 	public void delete(List<Long> assignmentsIdsToDelete, Long employeeId, String tenantId) {
-		
 		Map<String, Object> namedParameters = new HashMap<>();
-		namedParameters.put("id", assignmentsIdsToDelete );
+		namedParameters.put("id", assignmentsIdsToDelete);
 		namedParameters.put("employeeId", employeeId);
 		namedParameters.put("tenantId", tenantId);
-		
-		namedParameterJdbcTemplate.update(DELETE__QUERY, namedParameters);
+
+		namedParameterJdbcTemplate.update(DELETE_QUERY, namedParameters);
 	}
 
 }

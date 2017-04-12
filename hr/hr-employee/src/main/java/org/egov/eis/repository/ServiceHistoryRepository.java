@@ -49,8 +49,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.eis.model.ServiceHistory;
-import org.egov.eis.model.TechnicalQualification;
-import org.egov.eis.model.enums.DocumentReferenceType;
+import org.egov.eis.model.enums.EntityType;
 import org.egov.eis.repository.rowmapper.ServiceHistoryTableRowMapper;
 import org.egov.eis.web.contract.EmployeeRequest;
 import org.slf4j.Logger;
@@ -71,39 +70,38 @@ public class ServiceHistoryRepository {
 			+ " (id, employeeId, serviceInfo, serviceFrom, remarks, orderNo,"
 			+ " createdBy, createdDate, lastModifiedBy, lastModifiedDate, tenantId)"
 			+ " VALUES (?,?,?,?,?,?,?,?,?,?,?)";
-	
+
 	public static final String UPDATE_SERVICE_HISTORY_QUERY = "UPDATE egeis_serviceHistory"
 			+ " SET (serviceInfo, serviceFrom, remarks, orderNo, lastModifiedBy, lastModifiedDate)"
 			+ " = (?,?,?,?,?,?) where id = ? and tenantId=?";
-	
+
 	public static final String SELECT_BY_EMPLOYEEID_QUERY = "SELECT"
 			+ " id, serviceinfo, servicefrom, remarks, orderno, createdby, createddate,"
-			+ " lastmodifiedby, lastmodifieddate, tenantid"
-			+ " FROM egeis_servicehistory"
+			+ " lastmodifiedby, lastmodifieddate, tenantid" + " FROM egeis_servicehistory"
 			+ " WHERE employeeId = ? AND tenantId = ? ";
-	
-	public static final String DELETE__QUERY = "DELETE FROM egeis_servicehistory"
+
+	public static final String DELETE_QUERY = "DELETE FROM egeis_servicehistory"
 			+ " WHERE id IN (:id) AND employeeId = :employeeId AND tenantId = :tenantId";
-	
+
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
 	@Autowired
 	private EmployeeDocumentsRepository documentsRepository;
-	
+
 	@Autowired
 	private ServiceHistoryTableRowMapper serviceHistoryTableRowMapper;
-	
-	@Autowired
-	 private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-	 
-	 /**
-	  * @param namedParameterJdbcTemplate the namedParameterJdbcTemplate to set
-	  */
-	 public void setNamedParameterJdbcTemplate(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
-	  this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
-	 }
 
+	@Autowired
+	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+	/**
+	 * @param namedParameterJdbcTemplate
+	 *            the namedParameterJdbcTemplate to set
+	 */
+	public void setNamedParameterJdbcTemplate(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+	}
 
 	public void save(EmployeeRequest employeeRequest) {
 		List<ServiceHistory> serviceHistories = employeeRequest.getEmployee().getServiceHistory();
@@ -124,9 +122,10 @@ public class ServiceHistoryRepository {
 				ps.setTimestamp(10, new Timestamp(new java.util.Date().getTime()));
 				ps.setString(11, serviceHistory.getTenantId());
 
-				if(serviceHistory.getDocuments() != null && !serviceHistory.getDocuments().isEmpty()) {
+				if (serviceHistory.getDocuments() != null && !serviceHistory.getDocuments().isEmpty()) {
 					documentsRepository.save(employeeRequest.getEmployee().getId(), serviceHistory.getDocuments(),
-							DocumentReferenceType.SERVICE.toString(), serviceHistory.getId(), serviceHistory.getTenantId());
+							EntityType.SERVICE.toString(), serviceHistory.getId(),
+							serviceHistory.getTenantId());
 				}
 			}
 
@@ -139,8 +138,8 @@ public class ServiceHistoryRepository {
 
 	public void update(ServiceHistory service) {
 		Object[] obj = new Object[] { service.getServiceInfo(), service.getServiceFrom(), service.getRemarks(),
-				service.getOrderNo(), service.getLastModifiedBy(), service.getLastModifiedDate(),
-				service.getId(), service.getTenantId() };
+				service.getOrderNo(), service.getLastModifiedBy(), service.getLastModifiedDate(), service.getId(),
+				service.getTenantId() };
 
 		jdbcTemplate.update(UPDATE_SERVICE_HISTORY_QUERY, obj);
 
@@ -151,31 +150,27 @@ public class ServiceHistoryRepository {
 
 				service.getId(), empId, service.getServiceInfo(), service.getServiceFrom(), service.getRemarks(),
 				service.getOrderNo(), service.getCreatedBy(), service.getCreatedDate(), service.getLastModifiedBy(),
-				service.getLastModifiedDate(), service.getTenantId()
-				};
+				service.getLastModifiedDate(), service.getTenantId() };
 
 		jdbcTemplate.update(INSERT_SERVICE_HISTORY_QUERY, obj);
 	}
 
 	public List<ServiceHistory> findByEmployeeId(Long id, String tenantId) {
-		
-		List<ServiceHistory> serviceHistory = null;
-		
-		try{
-			serviceHistory =  jdbcTemplate.query(SELECT_BY_EMPLOYEEID_QUERY, new Object[] {id, tenantId}, serviceHistoryTableRowMapper);
-			return serviceHistory;
-		}catch (EmptyResultDataAccessException e) {
+		try {
+			return jdbcTemplate.query(SELECT_BY_EMPLOYEEID_QUERY, new Object[] { id, tenantId },
+					serviceHistoryTableRowMapper);
+		} catch (EmptyResultDataAccessException e) {
 			return null;
 		}
 	}
 
 	public void delete(List<Long> servicesIdsToDelete, Long employeeId, String tenantId) {
 		Map<String, Object> namedParameters = new HashMap<>();
-		namedParameters.put("id", servicesIdsToDelete );
+		namedParameters.put("id", servicesIdsToDelete);
 		namedParameters.put("employeeId", employeeId);
 		namedParameters.put("tenantId", tenantId);
-		
-		namedParameterJdbcTemplate.update(DELETE__QUERY, namedParameters);
+
+		namedParameterJdbcTemplate.update(DELETE_QUERY, namedParameters);
 	}
 
 }

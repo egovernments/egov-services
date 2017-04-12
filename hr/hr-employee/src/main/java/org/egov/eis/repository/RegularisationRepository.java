@@ -49,7 +49,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.eis.model.Regularisation;
-import org.egov.eis.model.enums.DocumentReferenceType;
+import org.egov.eis.model.enums.EntityType;
 import org.egov.eis.repository.rowmapper.RegularisationTableRowMapper;
 import org.egov.eis.web.contract.EmployeeRequest;
 import org.slf4j.Logger;
@@ -70,20 +70,17 @@ public class RegularisationRepository {
 			+ " (id, employeeId, designationId, declaredOn, orderNo, orderDate, remarks,"
 			+ " createdBy, createdDate, lastModifiedBy, lastModifiedDate, tenantId)"
 			+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
-	
+
 	public static final String UPDATE_REGULARISATION_QUERY = "UPDATE egeis_regularisation"
-			+ " SET (designationId, declaredOn, orderNo, orderDate, remarks,"
-			+ " lastModifiedBy, lastModifiedDate)"
-			+ "= (?,?,?,?,?,?,?)"
-			+"where id = ? and tenantId=?";
-	
+			+ " SET (designationId, declaredOn, orderNo, orderDate, remarks," + " lastModifiedBy, lastModifiedDate)"
+			+ "= (?,?,?,?,?,?,?)" + "where id = ? and tenantId=?";
+
 	public static final String SELECT_BY_EMPLOYEEID_QUERY = "SELECT"
 			+ " id, designationid, declaredon, orderno, orderdate, remarks, createdby,"
-			+ " createddate, lastmodifiedby, lastmodifieddate, tenantid"
-			+ " FROM egeis_regularisation"
+			+ " createddate, lastmodifiedby, lastmodifieddate, tenantid" + " FROM egeis_regularisation"
 			+ " WHERE employeeId = ? AND tenantId = ? ";
-	
-	public static final String DELETE__QUERY = "DELETE FROM egeis_regularisation"
+
+	public static final String DELETE_QUERY = "DELETE FROM egeis_regularisation"
 			+ " WHERE id IN (:id) AND employeeId = :employeeId AND tenantId = :tenantId";
 
 	@Autowired
@@ -91,19 +88,20 @@ public class RegularisationRepository {
 
 	@Autowired
 	private EmployeeDocumentsRepository documentsRepository;
-	
+
 	@Autowired
-	private  RegularisationTableRowMapper regularisationTableRowMapper;
-	
+	private RegularisationTableRowMapper regularisationTableRowMapper;
+
 	@Autowired
-	 private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-	 
-	 /**
-	  * @param namedParameterJdbcTemplate the namedParameterJdbcTemplate to set
-	  */
-	 public void setNamedParameterJdbcTemplate(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
-	  this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
-	 }
+	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+	/**
+	 * @param namedParameterJdbcTemplate
+	 *            the namedParameterJdbcTemplate to set
+	 */
+	public void setNamedParameterJdbcTemplate(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+	}
 
 	public void save(EmployeeRequest employeeRequest) {
 		List<Regularisation> regularisations = employeeRequest.getEmployee().getRegularisation();
@@ -126,9 +124,10 @@ public class RegularisationRepository {
 				ps.setTimestamp(11, new Timestamp(new java.util.Date().getTime()));
 				ps.setString(12, regularisation.getTenantId());
 
-				if(regularisation.getDocuments() != null && !regularisation.getDocuments().isEmpty()) {
+				if (regularisation.getDocuments() != null && !regularisation.getDocuments().isEmpty()) {
 					documentsRepository.save(employeeRequest.getEmployee().getId(), regularisation.getDocuments(),
-							DocumentReferenceType.REGULARISATION.toString(), regularisation.getId(), regularisation.getTenantId());
+							EntityType.REGULARISATION.toString(), regularisation.getId(),
+							regularisation.getTenantId());
 				}
 			}
 
@@ -143,8 +142,8 @@ public class RegularisationRepository {
 
 		Object[] obj = new Object[] { regularisation.getDesignation(), regularisation.getDeclaredOn(),
 				regularisation.getOrderNo(), regularisation.getOrderDate(), regularisation.getRemarks(),
-				regularisation.getLastModifiedBy(), regularisation.getLastModifiedDate(),
-				regularisation.getId(), regularisation.getTenantId() };
+				regularisation.getLastModifiedBy(), regularisation.getLastModifiedDate(), regularisation.getId(),
+				regularisation.getTenantId() };
 
 		jdbcTemplate.update(UPDATE_REGULARISATION_QUERY, obj);
 
@@ -154,31 +153,28 @@ public class RegularisationRepository {
 		Object[] obj = new Object[] { regularisation.getId(), empId, regularisation.getDesignation(),
 				regularisation.getDeclaredOn(), regularisation.getOrderNo(), regularisation.getOrderDate(),
 				regularisation.getRemarks(), regularisation.getCreatedBy(), regularisation.getCreatedDate(),
-				regularisation.getLastModifiedBy(), regularisation.getLastModifiedDate(), regularisation.getTenantId(),
-				 };
+				regularisation.getLastModifiedBy(), regularisation.getLastModifiedDate(),
+				regularisation.getTenantId(), };
 
 		jdbcTemplate.update(INSERT_REGULARISATION_QUERY, obj);
 	}
 
 	public List<Regularisation> findByEmployeeId(Long id, String tenantId) {
-
-		List<Regularisation> regularisation = null;
 		try {
-			regularisation = jdbcTemplate.query(SELECT_BY_EMPLOYEEID_QUERY, new Object[] { id, tenantId },
+			return jdbcTemplate.query(SELECT_BY_EMPLOYEEID_QUERY, new Object[] { id, tenantId },
 					regularisationTableRowMapper);
-			return regularisation;
 		} catch (EmptyResultDataAccessException e) {
 			return null;
 		}
 	}
 
 	public void delete(List<Long> regularisationsIdsToDelete, Long employeeId, String tenantId) {
-		 
+
 		Map<String, Object> namedParameters = new HashMap<>();
-		namedParameters.put("id", regularisationsIdsToDelete );
+		namedParameters.put("id", regularisationsIdsToDelete);
 		namedParameters.put("employeeId", employeeId);
 		namedParameters.put("tenantId", tenantId);
-		
-		namedParameterJdbcTemplate.update(DELETE__QUERY, namedParameters);
+
+		namedParameterJdbcTemplate.update(DELETE_QUERY, namedParameters);
 	}
 }

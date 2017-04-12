@@ -1,5 +1,7 @@
 package org.egov.eis.service;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +18,8 @@ public class RegularisationService {
 	private RegularisationRepository regularisationRepository;
 	
 	public void update(Employee employee) {
+		if(isEmpty(employee.getRegularisation()))
+			return;
 		List<Regularisation> regularisations = regularisationRepository.findByEmployeeId(employee.getId(), employee.getTenantId());
 		employee.getRegularisation().forEach((regularisation) -> {
 			if (needsInsert(regularisation, regularisations)) {

@@ -45,15 +45,17 @@ import org.apache.commons.lang.StringUtils;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-public enum DocumentReferenceType {
-	EMPLOYEE_HEADER("EMPLOYEE_HEADER"), ASSIGNMENT("ASSIGNMENT"), JURISDICTION("JURISDICTION"),
-	SERVICE("SERVICE"), TECHNICAL("TECHNICAL"), EDUCATION("EDUCATION"),
-	TEST("TEST"), REGULARISATION("REGULARISATION"), PROBATION("PROBATION");
+public enum EntityType {
+	EMPLOYEE("EMPLOYEE", "egeis_employee"), ASSIGNMENT("ASSIGNMENT", "egeis_assignment"), JURISDICTION("JURISDICTION", "egeis_employeejurisdiction"),
+	SERVICE("SERVICE", "egeis_servicehistory"), TECHNICAL("TECHNICAL", "egeis_technicalqualification"), EDUCATION("EDUCATION", "egeis_educationalqualification"),
+	TEST("TEST", "egeis_departmentaltest"), REGULARISATION("REGULARISATION", "egeis_regularisation"), PROBATION("PROBATION", "egeis_probation");
 
 	private String value;
+	private String dbTable;
 
-	DocumentReferenceType(String value) {
+	EntityType(String value, String dbTable) {
 		this.value = value;
+		this.dbTable = dbTable;
 	}
 
 	@Override
@@ -61,10 +63,26 @@ public enum DocumentReferenceType {
     public String toString() {
         return StringUtils.capitalize(name());
     }
+	
+	public String getDbTable() {
+		return dbTable;
+	}
+	
+	public String getValue() {
+		return value;
+	}
+	
+	public void setValue(String value){
+		this.value = value;
+	}
+	
+	public void setDbTable(String dbTable){
+		this.dbTable = dbTable;
+	}
 
 	@JsonCreator
-	public static DocumentReferenceType fromValue(String passedValue) {
-		for (DocumentReferenceType obj : DocumentReferenceType.values()) {
+	public static EntityType fromValue(String passedValue) {
+		for (EntityType obj : EntityType.values()) {
 			if (String.valueOf(obj.value).equals(passedValue.toUpperCase())) {
 				return obj;
 			}

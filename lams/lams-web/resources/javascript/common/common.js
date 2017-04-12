@@ -19,6 +19,8 @@ var tenantId = null;
 
 
 
+
+
 // var employeeType=JSON.parse(localStorage.getItem("employeeType"))==null?(localStorage.setItem("employeeType",JSON.stringify(getCommonMaster("hr-masters", "employeetypes", "EmployeeType").responseJSON["EmployeeType"]))|| []) :JSON.parse(localStorage.getItem("employeeType"));
 // var employeeStatus=JSON.parse(localStorage.getItem("employeeStatus"))==null?(localStorage.setItem("employeeStatus",JSON.stringify(getCommonMaster("hr-masters", "hrstatuses", "HRStatus").responseJSON["HRStatus"])) || []) :JSON.parse(localStorage.getItem("employeeStatus"));
 // var group=JSON.parse(localStorage.getItem("group"))==null?(localStorage.setItem("group",JSON.stringify(getCommonMaster("hr-masters", "groups", "Group").responseJSON["Group"])) || []) :JSON.parse(localStorage.getItem("group"));

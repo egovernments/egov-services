@@ -31,10 +31,13 @@ $(document).ready(function() {
             }).responseJSON["Agreements"][0] || [];
         }
 
+<<<<<<< 9fcca9fd5d42b78410e38cd917c585017279dfa6
         var assetDetails = commonApiPost("asset-services", "assets", "_search", {
             assetCategory: (getUrlVars()["assetId"] || agreementDetail.asset.id)
         }).responseJSON["Assets"][0] || [];
         
+=======
+>>>>>>> view Agrement issue is fixed
         printValue("", agreementDetail);
         printValue("", assetDetails, true);
     } catch(e) {
@@ -53,29 +56,29 @@ $(document).ready(function() {
                             if(isAsset && key == "locationDetails" && ["locality", "electionWard", "street", "revenueWard", "revenueZone", "revenueBlock"].indexOf(ckey) > -1) {
                                 var _obj;
                                 switch(ckey) {
-                                    case 'locality': 
+                                    case 'locality':
                                         _obj = locality;
                                         break;
                                     case 'electionWard':
                                         _obj = electionwards;
-                                        break; 
+                                        break;
                                     case 'street':
                                         _obj = street;
-                                        break; 
+                                        break;
                                     case 'revenueWard':
                                         _obj = revenueWard;
-                                        break; 
+                                        break;
                                     case 'revenueZone':
                                         _obj = revenueZone;
-                                        break; 
+                                        break;
                                     case 'revenueBlock':
                                         _obj = revenueZone;
-                                        break; 
+                                        break;
                                 }
                                 $("[name='" + (isAsset ? "asset." : "") + key + "." + ckey + "']").text(getNameById(_obj, ckey));
                             }
                             else
-                                $("[name='" + (isAsset ? "asset." : "") + key + "." + ckey + "']").text(values[key][ckey]);
+                                $("[name='" + (isAsset ? "asset." : "") + key + "." + ckey + "']").text(values[key][ckey]?values[key][ckey]:"NA");
                         }
                     }
                 } else if(values[key]) {
@@ -334,7 +337,7 @@ $(document).ready(function() {
     $("#renewAgreementForm").validate({
         rules: final_validatin_rules,
         submitHandler: function(form) {
-            
+
         }
     })
 });

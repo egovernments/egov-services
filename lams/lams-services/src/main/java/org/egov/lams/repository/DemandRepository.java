@@ -86,9 +86,10 @@ public class DemandRepository {
 	}
 
 	public DemandResponse getDemandBySearch(DemandSearchCriteria demandSearchCriteria, RequestInfo requestInfo) {
+		
 		String url = propertiesManager.getDemandServiceHostName() + propertiesManager.getDemandSearchService()
 				+ "?demandId=" + demandSearchCriteria.getDemandId();
-		LOGGER.info(url);
+		LOGGER.info("the url of demand search API call ::: is "+url);
 		
 		requestInfo = new RequestInfo();
 		requestInfo.setApiId("apiid");

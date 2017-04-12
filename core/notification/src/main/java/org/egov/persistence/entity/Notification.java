@@ -15,6 +15,8 @@ import javax.persistence.*;
 public class Notification extends AbstractAuditable {
 
     public static final String SEQ_NOTIFICATION = "SEQ_NOTIFICATION";
+    private static final String YES = "Y";
+    private static final String NO = "N";
 
     @Id
     @GeneratedValue(generator = Notification.SEQ_NOTIFICATION, strategy = GenerationType.SEQUENCE)
@@ -34,5 +36,9 @@ public class Notification extends AbstractAuditable {
 
     @Column(name = "read")
     private String read;
+
+    public boolean isRead() {
+        return YES.equalsIgnoreCase(read);
+    }
 
 }

@@ -22,7 +22,7 @@ public class NotificationJpaRepositoryTest {
 
     @Test
     @Sql(scripts = { "/sql/clear_notification_table.sql", "/sql/insert_notifications.sql"})
-    public void test_should_save_notification() throws Exception {
+    public void test_should_save_notification() {
         Notification notification = new Notification();
         notification.setMessageCode("message.code");
         notification.setMessageValues("key:value");
@@ -37,5 +37,15 @@ public class NotificationJpaRepositoryTest {
 
         List<Notification> notifications = notificationJpaRepository.findAll();
         assertThat(notifications.size()).isEqualTo(2);
+    }
+
+    @Test
+    @Sql(scripts = { "/sql/clear_notification_table.sql", "/sql/insert_notifications.sql"})
+    public void test_should_mark_notification_as_read() {
+        final Notification notification = notificationJpaRepository.findOne(1L);
+        assertThat(notification.isRead()).isFalse();
+
+        final int count = notificationJpaRepository.markNotificationAsRead(1L);
+        assertThat(count).isEqualTo(1);
     }
 }

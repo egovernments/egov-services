@@ -118,7 +118,7 @@ addOrUpdate(e,mode)
 
       if(type==="view"||type==="update")
       {
-
+          console.log(getCommonMasterById("hr-leave","leavetypes","LeaveType",id).responseJSON["LeaveType"]);
           this.setState({
             LeaveType:getCommonMasterById("hr-leave","leavetypes","LeaveType",id).responseJSON["LeaveType"][0]
           })
@@ -126,6 +126,7 @@ addOrUpdate(e,mode)
   }
   render()
   {
+    console.log(this.state.LeaveType);
     let {handleChange,addOrUpdate}=this;
     let {name,payEligible,encashable,halfdayAllowed,accumulative,description}=this.state.LeaveType;
     let mode=getUrlVars()["type"];
@@ -173,7 +174,7 @@ addOrUpdate(e,mode)
                           </div>
                           <div className="col-sm-6">
                                 <label className="radio-inline radioUi">
-                                  <input type="radio" name="payEligible"  value="true" checked={payEligible == "true"}
+                                  <input type="radio" name="payEligible"  value="true" checked={payEligible == "true" || payEligible  ==  true}
                                       onChange={(e)=>{handleChange(e,"payEligible")  }}/> Yes
                                 </label>
                                 <label className="radio-inline radioUi">
@@ -190,7 +191,7 @@ addOrUpdate(e,mode)
                           </div>
                           <div className="col-sm-6">
                                 <label className="radio-inline radioUi">
-                                  <input type="radio" name="halfdayAllowed" value="true" checked={halfdayAllowed == "true"}
+                                  <input type="radio" name="halfdayAllowed" value="true" checked={halfdayAllowed == "true" || halfdayAllowed  ==  true }
                                    onChange={(e)=>{handleChange(e,"halfdayAllowed")}}  /> Yes
                                 </label>
                                 <label className="radio-inline radioUi">
@@ -210,7 +211,7 @@ addOrUpdate(e,mode)
                           </div>
                           <div className="col-sm-6">
                                 <label className="radio-inline radioUi">
-                                  <input type="radio" name="encashable" value="true" checked={encashable == "true"}
+                                  <input type="radio" name="encashable" value="true" checked={encashable == "true" || encashable  ==  true}
                                    onChange={(e)=>{handleChange(e,"encashable")}}/> Yes
                                 </label>
                                 <label className="radio-inline radioUi">
@@ -227,7 +228,7 @@ addOrUpdate(e,mode)
                             </div>
                             <div className="col-sm-6">
                                   <label className="radio-inline radioUi">
-                                    <input type="radio" name="accumulative"  value="true" checked={accumulative == "true"}
+                                    <input type="radio" name="accumulative"  value="true" checked={accumulative == "true" || accumulative  ==  true }
                                         onChange={(e)=>{handleChange(e,"accumulative")}}/> Yes
 
                                   </label>

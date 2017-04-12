@@ -238,7 +238,7 @@ public class PaymentService {
 
 	public ResponseEntity<ReceiptAmountInfo> updateDemand(
 			BillReceiptInfoReq billReceiptInfoReq) {
-		System.out.print("PaymentService- updateDemand - billReceiptInfoReq - "+billReceiptInfoReq.getBillReceiptInfo().getBillReferenceNum());
+		System.out.print("PaymentService- updateDemand - billReceiptInfoReq::: - "+billReceiptInfoReq.getBillReceiptInfo().getBillReferenceNum());
 		BillSearchCriteria billSearchCriteria = new BillSearchCriteria();
 		DemandSearchCriteria demandSearchCriteria = new DemandSearchCriteria();
 		BillReceiptReq billReceiptInfo = billReceiptInfoReq

@@ -22,88 +22,97 @@ import org.springframework.web.client.RestTemplate;
 
 @Repository
 public class DemandRepository {
-	
+
 	private static final Logger LOGGER = Logger.getLogger(DemandRepository.class);
-	
+
 	@Autowired
 	private RestTemplate restTemplate;
-	
+
 	@Autowired
 	private PropertiesManager propertiesManager;
-	
-	public List<DemandReason> getDemandReason(AgreementRequest agreementRequest){
-		String url = propertiesManager.getDemandServiceHostName()
-					+propertiesManager.getDemandReasonSearchService()
-					+"?moduleName="
-					+propertiesManager.getGetDemandModuleName();
-		System.out.println("DemandRepository getDemandReason url:"+url);
-		DemandReasonResponse demandReasonResponse=null;
+
+	public List<DemandReason> getDemandReason(AgreementRequest agreementRequest) {
+		String url = propertiesManager.getDemandServiceHostName() + propertiesManager.getDemandReasonSearchService()
+				+ "?moduleName=" + propertiesManager.getGetDemandModuleName();
+		System.out.println("DemandRepository getDemandReason url:" + url);
+		DemandReasonResponse demandReasonResponse = null;
 		try {
 			demandReasonResponse = restTemplate.postForObject(url, agreementRequest.getRequestInfo(),
 					DemandReasonResponse.class);
 		} catch (Exception exception) {
 			exception.printStackTrace();
-			throw new RuntimeException("DemandRepository : "+exception.getMessage(), exception.getCause());
+			throw new RuntimeException("DemandRepository : " + exception.getMessage(), exception.getCause());
 		}
 		System.out.println("demandReasonResponse:" + demandReasonResponse);
 		// Todo if api returns exception object
 		return demandReasonResponse.getDemandReasons();
 	}
-	
+
 	public List<Demand> getDemandList(AgreementRequest agreementRequest, List<DemandReason> demandReasons) {
-		
+
 		List<Demand> demands = new ArrayList<>();
 		List<DemandDetails> demandDetails = new ArrayList<>();
-		Demand demand=new Demand();
+		Demand demand = new Demand();
 		demand.setInstallment(demandReasons.get(0).getTaxPeriod());
 		demand.setModuleName("Leases And Agreements");
-		
+
 		DemandDetails demandDetail = null;
-		for(DemandReason demandReason: demandReasons){
+		for (DemandReason demandReason : demandReasons) {
 			demandDetail = new DemandDetails();
-			//rent has to be not null
+			// rent has to be not null
 			demandDetail.setTaxAmount(BigDecimal.valueOf(agreementRequest.getAgreement().getRent()));
 			demandDetail.setCollectionAmount(BigDecimal.ZERO);
 			demandDetail.setRebateAmount(BigDecimal.ZERO);
 			demandDetail.setTaxReason(demandReason.getName());
 			demandDetail.setTaxPeriod(demandReason.getTaxPeriod());
-			
+
 			demandDetails.add(demandDetail);
 		}
 		demand.setDemandDetails(demandDetails);
 		demands.add(demand);
-	 
+
 		return demands;
 	}
-	
-	public DemandResponse createDemand(List<Demand> demands, RequestInfo requestInfo){
-		System.out.println("DemandRepository createDemand demands:"+demands.toString());
+
+	public DemandResponse createDemand(List<Demand> demands, RequestInfo requestInfo) {
+		System.out.println("DemandRepository createDemand demands:" + demands.toString());
 		DemandRequest demandRequest = new DemandRequest();
 		demandRequest.setRequestInfo(requestInfo);
 		demandRequest.setDemand(demands);
-		
-		String url = propertiesManager.getDemandServiceHostName()
-				+propertiesManager.getCreateDemandSevice();
-		
+
+		String url = propertiesManager.getDemandServiceHostName() + propertiesManager.getCreateDemandSevice();
+
 		return restTemplate.postForObject(url, demandRequest, DemandResponse.class);
 	}
-	
 
-	public DemandResponse getDemandBySearch(
-			DemandSearchCriteria demandSearchCriteria, RequestInfo requestInfo) {
-		String url = propertiesManager.getDemandServiceHostName()
-				+ propertiesManager.getDemandSearchService() + "?demandId="+demandSearchCriteria.getDemandId();
+	public DemandResponse getDemandBySearch(DemandSearchCriteria demandSearchCriteria, RequestInfo requestInfo) {
+		String url = propertiesManager.getDemandServiceHostName() + propertiesManager.getDemandSearchService()
+				+ "?demandId=" + demandSearchCriteria.getDemandId();
 		LOGGER.info(url);
-		return restTemplate.postForObject(url, requestInfo, DemandResponse.class);
-	}
-	
-	public DemandResponse updateDemand(List<Demand> demands, RequestInfo requestInfo){
 		
-		System.out.println("DemandRepository createDemand demands:"+demands.toString());
+		requestInfo = new RequestInfo();
+		requestInfo.setApiId("apiid");
+		requestInfo.setVer("ver");
+		requestInfo.setTs("ts");
+
+		DemandResponse demandResponse = null;
+		try {
+			demandResponse = restTemplate.postForObject(url, requestInfo, DemandResponse.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+			LOGGER.info("the exception thrown from demand search api call ::: "+e);
+		}
+			LOGGER.info("the response form demand search api call ::: "+demandResponse);
+		return demandResponse;
+	}
+
+	public DemandResponse updateDemand(List<Demand> demands, RequestInfo requestInfo) {
+
+		System.out.println("DemandRepository createDemand demands:" + demands.toString());
 		DemandRequest demandRequest = new DemandRequest();
 		demandRequest.setRequestInfo(requestInfo);
 		demandRequest.setDemand(demands);
-		
+
 		String url = propertiesManager.getDemandServiceHostName() + propertiesManager.getUpdateDemandBasePath()
 				+ demands.get(0).getId() + propertiesManager.getUpdateDemandService();
 		LOGGER.info("the url for update demand API call is  ::: " + url);
@@ -116,5 +125,5 @@ public class DemandRepository {
 			LOGGER.info("the exception raised during update demand API call ::: " + e);
 		}
 		return demandResponse;
-}
+	}
 }

@@ -57,7 +57,7 @@ public class EmployeeQueryBuilder {
 	@Autowired
 	private ApplicationProperties applicationProperties;
 	
-	private static final String EMPLOYEE_IDS_QUERY = "SELECT distinct e.id AS e_id "
+	private static final String EMPLOYEE_IDS_QUERY = "SELECT distinct e.id AS id "
 			+ " FROM egeis_employee e"
 			+ " JOIN egeis_assignment a ON e.id = a.employeeId"
 			+ " LEFT JOIN egeis_hodDepartment hod ON a.id = hod.assignmentId AND hod.tenantId = ?"

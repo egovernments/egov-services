@@ -1,7 +1,4 @@
-class PersonalInform extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
+const defaultState = {
         employees: [],
         searchSet: {
             name: "",
@@ -13,7 +10,68 @@ class PersonalInform extends React.Component {
             noOfLeave: "",
             calendarYear: new Date().getFullYear()
         },
-        isSearchClicked: false,
+        isSearchClicked: false
+};
+const callAjax = (type, empArr, cb) => {
+    if(type == "update") {
+        var counter = empArr.length, breakOut = 0;
+        for(let i=0; i < empArr.length; i++) {
+            $.ajax({
+                url: baseUrl + "/hr-leave/leaveopeningbalances" + (empArr[i].id ? "/" + empArr[i].id + "/_update" : "/_create"),
+                type: 'POST',
+                dataType: 'json',
+                data: JSON.stringify({
+                    RequestInfo: requestInfo,
+                    LeaveOpeningBalance: [empArr[i]]
+                }),
+                async: false,
+                contentType: 'application/json',
+                headers: {
+                    'auth-token': authToken
+                },
+                success: function(res) {
+                    counter--;
+                    if(counter == 0 && breakOut == 0) {
+                        cb();
+                    }
+                },
+                error: function(err) {
+                    if(breakOut == 0)
+                        cb(err + "");
+                    breakOut = 1;
+                }
+            });
+        }
+    } else {
+        //Call and create leave
+        $.ajax({
+            url: baseUrl + "/hr-leave/leaveopeningbalances/_create",
+            type: 'POST',
+            dataType: 'json',
+            data: JSON.stringify({
+                RequestInfo: requestInfo,
+                LeaveOpeningBalance: empArr
+            }),
+            async: false,
+            contentType: 'application/json',
+            headers: {
+                'auth-token': authToken
+            },
+            success: function(res) {
+                cb();
+            },
+            error: function(err) {
+                cb(err);
+            }
+        });
+    }
+}
+
+class PersonalInform extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+        ...defaultState,
         departmentsList: [],
         designationList: [],
         leave: [],
@@ -67,8 +125,8 @@ class PersonalInform extends React.Component {
     var employees = [];
     var _noDays, _leaveId, _createdDate, _lastModifiedDate;
     for (var i = 0; i < _emps.length; i++) {
+        _noDays = _leaveId = _createdDate = _lastModifiedDate = "";
         for(var j = 0; j < leaveBal.length; j++) {
-            _noDays = _leaveId = _createdDate = _lastModifiedDate = "";
             if(leaveBal[j].employee == _emps[i].id && leaveBal[j].calendarYear == this.state.searchSet.calendarYear && leaveBal[j].leaveType && leaveBal[j].leaveType.id == this.state.searchSet.leaveType) {
                 _noDays = leaveBal[j].noOfDays;
                 _leaveId = leaveBal[j].id;
@@ -96,10 +154,11 @@ class PersonalInform extends React.Component {
 
   addOrUpdate(e){
     e.preventDefault();
-    var tempEmps = [];
+    var tempEmpsCreate = [], tempEmpsUpdate = [], _this = this;
+
     for(var i=0; i<this.state.employees.length; i++) {
         if(this.state.employees[i].noOfDays) {
-            tempEmps.push({
+            var tmp = {
                 "id": this.state.employees[i].leaveId || null,
                 "employee": this.state.employees[i].employee,
                 "calendarYear": this.state.searchSet.calendarYear,
@@ -110,66 +169,39 @@ class PersonalInform extends React.Component {
                 "createdDate": this.state.employees[i].createdDate,
                 "lastModifiedDate": this.state.employees[i].lastModifiedDate,
                 tenantId
-            })
+            };
+
+            (!tmp.id) ? tempEmpsCreate.push(tmp) : tempEmpsUpdate.push(tmp);
         }
     }
 
-    if(tempEmps.length) {
-        if(getUrlVars()["type"] == "update") {
-            var counter = tempEmps.length, breakOut = 0;
-            for(let i=0; i < tempEmps.length; i++) {
-                $.ajax({
-                    url: baseUrl + "/hr-leave/leaveopeningbalances" + (tempEmps[i].id ? "/" + tempEmps[i].id + "/_update" : "/_create"),
-                    type: 'POST',
-                    dataType: 'json',
-                    data: JSON.stringify({
-                        RequestInfo: requestInfo,
-                        LeaveOpeningBalance: [tempEmps[i]]
-                    }),
-                    async: false,
-                    contentType: 'application/json',
-                    headers: {
-                        'auth-token': authToken
-                    },
-                    success: function(res) {
-                        counter--;
-                        if(counter == 0 && breakOut == 0) {
-                            showSuccess("Updated successfully.");
-                        }
-                    },
-                    error: function(err) {
+    if(tempEmpsCreate.length == 0 && tempEmpsUpdate.length == 0) {
+        getUrlVars()["type"] == "update" ? showError("Nothing to update.") : showError("Nothing to create.");
+    } else if(tempEmpsCreate.length) {
+        callAjax("create", tempEmpsCreate, function(err) {
+            if(err) {
+                showError(err);
+            } else if(tempEmpsUpdate.length) {
+                callAjax("update", tempEmpsUpdate, function(err) {
+                    if(err) {
                         showError(err);
-                        breakOut = 1;
+                    } else {
+                        getUrlVars()["type"] == "update" ? showSuccess("Updated successfully.") : showSuccess("Added successfully.");
                     }
-                });
+                })        
+            } else {
+                getUrlVars()["type"] == "update" ? showSuccess("Updated successfully.") : showSuccess("Added successfully.");
             }
-        } else {
-            //Call and create leave
-            $.ajax({
-                url: baseUrl + "/hr-leave/leaveopeningbalances/_create",
-                type: 'POST',
-                dataType: 'json',
-                data: JSON.stringify({
-                    RequestInfo: requestInfo,
-                    LeaveOpeningBalance: tempEmps
-                }),
-                async: false,
-                contentType: 'application/json',
-                headers: {
-                    'auth-token': authToken
-                },
-                success: function(res) {
-                    showSuccess("Added successfully.");
-                },
-                error: function(err) {
-                    showError(err);
-                }
-            });
-        }
+        })
     } else {
-        showError("Nothing to update.");
+         callAjax("update", tempEmpsUpdate, function(err) {
+            if(err) {
+                showError(err);
+            } else {
+                getUrlVars()["type"] == "update" ? showSuccess("Updated successfully.") : showSuccess("Added successfully.");
+            }
+         })   
     }
-
   }
 
 
@@ -220,11 +252,7 @@ class PersonalInform extends React.Component {
 
   componentDidUpdate(prevProps, prevState)
   {
-      if (prevState.employees.length!=this.state.employees.length) {
-          // $('#employeeTable').DataTable().draw();
-          // alert(prevState.employees.length);
-          // alert(this.state.employees.length);
-          // alert('updated');
+      if (prevState.employees.length != this.state.employees.length && this.state.employees.length) {
           $('#employeeTable').DataTable({
             dom: 'Bfrtip',
             buttons: [
@@ -274,8 +302,7 @@ class PersonalInform extends React.Component {
     }
     const showTable=function()
     {
-      if(isSearchClicked)
-      {
+      if(isSearchClicked) {
           return (
             <table id="employeeTable" className="table table-bordered">
                 <thead>
@@ -297,8 +324,8 @@ class PersonalInform extends React.Component {
             </table>
 
           )
-
-
+      } else {
+        return "";
       }
 
     }

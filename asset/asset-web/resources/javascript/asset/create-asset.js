@@ -149,7 +149,6 @@ class CreateAsset extends React.Component {
 
   handleChangeTwoLevel(e, pName, name) {
       let text, type, codeNo;
-
       if (pName == "assetCategory") {
 
           let el = document.getElementById('assetCategory');
@@ -185,7 +184,6 @@ class CreateAsset extends React.Component {
       if(text) {
         innerJSON["name"] = text;
       }
-
       this.setState({
           assetSet: {
               ...this.state.assetSet,
@@ -327,7 +325,7 @@ class CreateAsset extends React.Component {
             return list.map((item, ind) => {
                 return (
                     <label class="radio-inline radioUi">
-                        <input type="radio" name={name} value={item} disabled={readonly} required={isMandatory}/> {item} &nbsp;&nbsp;
+                        <input type="radio" name={name} value={item} disabled={readonly} required={isMandatory} onClick={(e)=>{handleChangeTwoLevel(e,"properties", name)}}/> {item} &nbsp;&nbsp;
                     </label>
                 )
             })
@@ -339,7 +337,7 @@ class CreateAsset extends React.Component {
             return list.map((item, ind) => {
                 return (
                     <label class="radio-inline radioUi">
-                        <input type="checkbox" name={item} value={item} disabled={readonly}/> &nbsp; {item} &nbsp;&nbsp;
+                        <input type="checkbox" name={item} value={item} disabled={readonly} onClick={(e)=>{handleChangeTwoLevel(e,"properties", name)}}/> &nbsp; {item} &nbsp;&nbsp;
                     </label>
                 )
             })

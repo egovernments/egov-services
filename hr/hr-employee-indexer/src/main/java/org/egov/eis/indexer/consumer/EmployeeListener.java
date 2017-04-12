@@ -1,13 +1,16 @@
 package org.egov.eis.indexer.consumer;
 
-
 import java.io.IOException;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.egov.eis.indexer.adaptor.EmployeeAdapter;
+import org.egov.eis.indexer.config.PropertiesManager;
 import org.egov.eis.indexer.model.es.EmployeeIndex;
 import org.egov.eis.indexer.repository.ElasticSearchRepository;
+import org.egov.eis.indexer.service.BoundaryService;
 import org.egov.eis.web.contract.EmployeeRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
@@ -26,18 +29,23 @@ public class EmployeeListener {
 	private ElasticSearchRepository elasticSearchRepository;
 	private EmployeeAdapter employeeAdapter;
 
+	public static final Logger LOGGER = LoggerFactory.getLogger(BoundaryService.class);
+
+	@Autowired
+	private PropertiesManager propertiesManager;
+
 	@Autowired
 	public EmployeeListener(ElasticSearchRepository elasticSearchRepository, EmployeeAdapter employeeAdapter) {
 		this.elasticSearchRepository = elasticSearchRepository;
-		
 		this.employeeAdapter = employeeAdapter;
 	}
 
-	@KafkaListener(containerFactory="kafkaListenerContainerFactory", topics = "${kafka.topics.egov.index.name}")
+	@KafkaListener(containerFactory = "kafkaListenerContainerFactory", topics = {
+			"${kafka.topics.employee.esindex.savedb.name}", "${kafka.topics.employee.esindex.updatedb.name}" })
 	public void listen(ConsumerRecord<String, String> record) {
-		
-		//System.err.println(record.value());
-		ObjectMapper objectMapper=new ObjectMapper();
+		LOGGER.info("key : " + record.key() + "\t\t" + "value : " + record.value());
+
+		ObjectMapper objectMapper = new ObjectMapper();
 		EmployeeRequest employeeRequest = null;
 
 		try {
@@ -45,18 +53,17 @@ public class EmployeeListener {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 		if (employeeRequest != null) {
-			EmployeeIndex employeeIndex = employeeAdapter.indexOnCreate(employeeRequest);
-			/*ObjectMapper objectMapper2 = new ObjectMapper();
-			try {
-				System.err.println(objectMapper2.writeValueAsString(employeeIndex));
-			} catch (JsonProcessingException e) {
-				e.printStackTrace();
-			}*/
+			EmployeeIndex newEmployeeIndex = employeeAdapter.indexOnCreate(employeeRequest);
 
-			elasticSearchRepository.index(INDEX_NAME, INDEX_TYPE, employeeIndex.getEmployeeDetails().getEmployeeId(),
-					employeeIndex);
+			if (record.topic().equals(propertiesManager.getUpdateEmployeeIndexerTopic())) {
+				EmployeeIndex esEmployeeIndex = elasticSearchRepository.getIndex(INDEX_NAME, INDEX_TYPE,
+						employeeRequest.getEmployee().getId());
+				employeeAdapter.setOldCreatedByAndCreatedDateForEditEmployee(esEmployeeIndex, newEmployeeIndex);
+			}
+
+			elasticSearchRepository.index(INDEX_NAME, INDEX_TYPE, newEmployeeIndex.getEmployeeDetails().getEmployeeId(),
+					newEmployeeIndex);
 		}
 	}
 }

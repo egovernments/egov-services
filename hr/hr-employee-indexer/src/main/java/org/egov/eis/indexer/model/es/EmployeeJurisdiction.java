@@ -39,7 +39,7 @@ public class EmployeeJurisdiction {
 	private String ulbGrade;
 
 	@JsonProperty("employeeid")
-	private long employeeId;
+	private Long employeeId;
 
 	@JsonProperty("employeecode")
 	private String employeeCode;

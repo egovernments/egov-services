@@ -28,7 +28,7 @@
                     "index": "not_analyzed"
                 },
                 "employeeid": {
-                    "type": "integer"
+                    "type": "long"
                 },
                 "employeecode": {
                     "type": "string",
@@ -300,7 +300,7 @@
                     "index": "not_analyzed"
                 },
                 "employeeid": {
-                    "type": "integer"
+                    "type": "long"
                 },
                 "employeecode": {
                     "type": "string",
@@ -308,7 +308,7 @@
                     "index": "not_analyzed"
                 },
                 "assignmentid": {
-                    "type": "integer"
+                    "type": "long"
                 },
                 "fund": {
                     "type": "string",
@@ -401,8 +401,11 @@
                     "store": true,
                     "index": "not_analyzed"
                 },
+                "testid": {
+                    "type": "long"
+                },
                 "employeeid": {
-                    "type": "integer"
+                    "type": "long"
                 },
                 "employeecode": {
                     "type": "string",
@@ -464,8 +467,11 @@
                     "store": true,
                     "index": "not_analyzed"
                 },
+                "technicalid": {
+                    "type": "long"
+                },
                 "employeeid": {
-                    "type": "integer"
+                    "type": "long"
                 },
                 "employeecode": {
                     "type": "string",
@@ -532,16 +538,16 @@
                     "store": true,
                     "index": "not_analyzed"
                 },
+                "serviceid": {
+                    "type": "long"
+                },
                 "employeeid": {
-                    "type": "integer"
+                    "type": "long"
                 },
                 "employeecode": {
                     "type": "string",
                     "store": true,
                     "index": "not_analyzed"
-                },
-                "serviceid": {
-                    "type": "integer"
                 },
                 "serviceentry": {
                     "type": "string",
@@ -602,8 +608,11 @@
                     "store": true,
                     "index": "not_analyzed"
                 },
+                "educationid": {
+                    "type": "long"
+                },
                 "employeeid": {
-                    "type": "integer"
+                    "type": "long"
                 },
                 "employeecode": {
                     "type": "string",
@@ -643,7 +652,8 @@
             }
         },
 
-        "employeejurisdiction": {
+
+        "employeeregularisation": {
             "properties": {
                 "ulbname": {
                     "type": "string",
@@ -670,34 +680,51 @@
                     "store": true,
                     "index": "not_analyzed"
                 },
+                "regularisationid": {
+                    "type": "long"
+                },
                 "employeeid": {
-                    "type": "integer"
+                    "type": "long"
                 },
                 "employeecode": {
                     "type": "string",
                     "store": true,
                     "index": "not_analyzed"
                 },
-                "boundarytype": {
+                "regularisationdesignation": {
                     "type": "string",
                     "store": true,
                     "index": "not_analyzed"
                 },
-                "boundaryname": {
+                "regularisationdeclareddate": {
+                    "type": "date",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "regularisationordernumber": {
                     "type": "string",
                     "store": true,
                     "index": "not_analyzed"
                 },
-                "jurisdictioncreateddate": {
+                "regularisationremarks": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "regularisationorderdate": {
+                    "type": "date",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "regularisationcreateddate": {
                     "format": "dateOptionalTime",
                     "type": "date"
                 },
-                "jurisdictioncreatedby": {
+                "regularisationcreatedby": {
                     "type": "string",
                     "store": true,
                     "index": "not_analyzed"
                 }
-
             }
         },
 
@@ -728,8 +755,11 @@
                     "store": true,
                     "index": "not_analyzed"
                 },
+                "probationid": {
+                    "type": "long"
+                },
                 "employeeid": {
-                    "type": "integer"
+                    "type": "long"
                 },
                 "employeecode": {
                     "type": "string",
@@ -764,6 +794,64 @@
                     "type": "date"
                 },
                 "probationcreatedby": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                }
+
+            }
+        },
+
+        "employeejurisdiction": {
+            "properties": {
+                "ulbname": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "ulbcode": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "distname": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "regname": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "ulbgrade": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "employeeid": {
+                    "type": "long"
+                },
+                "employeecode": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "boundarytype": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "boundaryname": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "jurisdictioncreateddate": {
+                    "format": "dateOptionalTime",
+                    "type": "date"
+                },
+                "jurisdictioncreatedby": {
                     "type": "string",
                     "store": true,
                     "index": "not_analyzed"

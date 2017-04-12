@@ -37,8 +37,11 @@ public class EmployeeTechnical {
 	@JsonProperty("ulbgrade")
 	private String ulbGrade;
 
+	@JsonProperty("technicalid")
+	private Long technicalId;
+
 	@JsonProperty("employeeid")
-	private long employeeId;
+	private Long employeeId;
 
 	@JsonProperty("employeecode")
 	private String employeeCode;

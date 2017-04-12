@@ -1,7 +1,6 @@
 package org.egov.boundary.web.contract;
 
-
-	import java.util.ArrayList;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.boundary.persistence.entity.Boundary;
@@ -14,16 +13,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-	@Getter
-	@Setter
-	@AllArgsConstructor
-	@NoArgsConstructor
-	public class BoundaryResponse {
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class BoundaryResponse {
 
-		@JsonProperty("ResponseInfo")
-		private ResponseInfo responseInfo = null;
-		@JsonProperty("Boundary")
-		private List<Boundary> boundarys = new ArrayList<Boundary>();
+	@JsonProperty("ResponseInfo")
+	private ResponseInfo responseInfo = null;
 
-	}
+	@JsonProperty("Boundary")
+	private List<Boundary> boundarys = new ArrayList<Boundary>();
 
+}

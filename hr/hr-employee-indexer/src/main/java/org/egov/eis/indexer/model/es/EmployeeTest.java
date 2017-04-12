@@ -38,8 +38,11 @@ public class EmployeeTest {
 	@JsonProperty("ulbgrade")
 	private String ulbGrade;
 
+	@JsonProperty("testid")
+	private Long testId;
+
 	@JsonProperty("employeeid")
-	private long employeeId;
+	private Long employeeId;
 
 	@JsonProperty("employeecode")
 	private String employeeCode;

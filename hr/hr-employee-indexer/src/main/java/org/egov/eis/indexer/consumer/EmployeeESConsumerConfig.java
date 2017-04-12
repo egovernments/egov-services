@@ -73,7 +73,4 @@ public class EmployeeESConsumerConfig {
 	    public EmployeeListener listener() {
 	        return new EmployeeListener();
 	    }
-	    
-	    
-
 }

@@ -38,14 +38,14 @@ public class EmployeeServiceHistory {
 	@JsonProperty("ulbgrade")
 	private String ulbGrade;
 
+	@JsonProperty("serviceid")
+	private Long serviceId;
+
 	@JsonProperty("employeeid")
-	private long employeeId;
+	private Long employeeId;
 
 	@JsonProperty("employeecode")
 	private String employeeCode;
-
-	@JsonProperty("serviceid")
-	private int serviceId;
 
 	@JsonProperty("serviceentry")
 	private String serviceEntry;

@@ -78,14 +78,14 @@ public class EmployeeAssignment {
 	@JsonProperty("ulbgrade")
 	private String ulbGrade;
 
+	@JsonProperty("assignmentid")
+	private Long assignmentId;
+
 	@JsonProperty("employeeid")
-	private long employeeId;
+	private Long employeeId;
 
 	@JsonProperty("employeecode")
 	private String employeeCode;
-
-	@JsonProperty("assignmentid")
-	private String assignmentId;
 
 	@JsonProperty("fund")
 	private String fund;

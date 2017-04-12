@@ -38,7 +38,7 @@ public class EmployeeDetails {
 	private String ulbGrade;
 
 	@JsonProperty("employeeid")
-	private long employeeId;
+	private Long employeeId;
 
 	@JsonProperty("employeecode")
 	private String employeeCode;
@@ -62,7 +62,7 @@ public class EmployeeDetails {
 
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	@JsonProperty("pwdexpirydate")
-	private Date pwdExpiryDate;
+	private String pwdExpiryDate;
 
 	@JsonProperty("mobilenumber")
 	private String mobileNumber;
@@ -115,7 +115,7 @@ public class EmployeeDetails {
 	private String recruitmentQuota;
 
 	@JsonProperty("retirementage")
-	private int retirementAge;
+	private Short retirementAge;
 
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	@JsonProperty("dateofresignation")
@@ -199,6 +199,5 @@ public class EmployeeDetails {
 
 	@JsonProperty("identificationmark")
 	private String identificationMark;
-
 
 }

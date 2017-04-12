@@ -81,6 +81,7 @@ public class WorkflowRepository {
 
 	public TaskResponse updateWorkflow(AgreementRequest agreementRequest) {
 
+		LOGGER.info("isnide update workflow workflow details value ::: "+agreementRequest.getAgreement().getWorkflowDetails());
 		Agreement agreement = agreementRequest.getAgreement();
 		RequestInfo requestInfo = agreementRequest.getRequestInfo();
 		
@@ -117,6 +118,7 @@ public class WorkflowRepository {
 				e.printStackTrace();
 				LOGGER.info("exception from search workflow call ::: "+e);
 			}
+			LOGGER.info("process instance responce ::: from search ::: "+processInstanceResponse);
 			ProcessInstance processInstance = processInstanceResponse.getProcessInstance();
 			//FIXME not sure how to process it 
 			List<Attribute> attributes = new ArrayList<>(processInstance.getAttributes().values());
@@ -136,13 +138,14 @@ public class WorkflowRepository {
 		LOGGER.error("the task object :::: "+ task + " ::url:: "+ url);
 
 		TaskResponse taskResponse = null;
+		LOGGER.info("task request to update workflow ::: "+taskRequest);
 		try {
 			taskResponse = restTemplate.postForObject(url, taskRequest, TaskResponse.class);
 		} catch (Exception e) {
 			LOGGER.info(e.toString());
 			e.printStackTrace();
 		}
-			LOGGER.info("the response from task update : "+taskResponse.getTask());
+			LOGGER.info("the response from workflow update : "+taskResponse.getTask());
 		return taskResponse;
 	}
 

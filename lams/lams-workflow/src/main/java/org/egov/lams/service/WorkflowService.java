@@ -41,6 +41,7 @@ public class WorkflowService {
 		workflowRepository.updateWorkflow(agreementRequest);
 		if (agreementRequest.getAgreement().getWorkflowDetails() != null)
 			updateAgreement(agreementRequest);
+		LOGGER.info("workflow update for non collection and agreement update ");
 		//FIXME Can i call update agreement for collection update
 	}
 

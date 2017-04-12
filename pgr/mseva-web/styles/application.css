@@ -1128,6 +1128,7 @@ ul{padding: 0; margin: 0; list-style-type: none;}
 
 .Select-control {
     height:49px !important;
+    font-size: 18px !important;
 }
 
 .Select-loading-zone {
@@ -1143,6 +1144,10 @@ ul{padding: 0; margin: 0; list-style-type: none;}
 .Select-value {
     margin-top: 6px !important;
     font-size: 18px !important;
+}
+
+.Select-input {
+    margin-top: -10px !important;
 }
 
 .pad-r-body {
@@ -1173,3 +1178,7 @@ ul{padding: 0; margin: 0; list-style-type: none;}
 }
 .dash-colm{display: flex; margin-bottom: 19px;}
 .dash-colm-inner{flex: 1;}
+.av-block-ui-message-container {
+    position: fixed !important;
+    top: 48% !important;
+}

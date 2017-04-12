@@ -1,4 +1,3 @@
-# Example YAML to get you started quickly.
 # Be aware that YAML has indentation based scoping.
 # Code completion support is available so start typing for available options.
 swagger: '2.0'
@@ -119,7 +118,31 @@ paths:
           description: Invalid Input.
           schema:
             $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ErrorRes'
-
+            
+  /employees/{id}/_search:  
+    parameters:
+      - $ref: "#/parameters/id"
+    post:
+      summary: Search for a particular Employee to get all the employee data. 
+      description: To get the existing employee's employee details and all other details like assignment, jurisdiction, qualification service details and porbation for which the code is passed.
+      parameters:
+        - name: employee
+          in: body
+          description: Request header for the employee with new of values.
+          required: true
+          schema:
+            $ref: '#/definitions/EmployeeReq'
+      tags:
+        - Employee
+      responses:
+        '200':
+          description: Employee updated.
+          schema:
+            $ref: '#/definitions/EmployeeRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ErrorRes'
   /employees/{id}/_update:  
     parameters:
       - $ref: "#/parameters/id"
@@ -596,7 +619,13 @@ definitions:
       govtOrderNumber:
         type: string
         description: The order number issued for any transfer, promotion, demotion or delegation of power.
-
+      documents:
+        type: array
+        description: List of all the documents associated with assignment.
+        maxItems: 50
+        uniqueItems: true
+        items:
+          type: string
       createdBy:
         type: integer
         format: int64
@@ -642,6 +671,13 @@ definitions:
       orderNo:
         type: string
         description: The government order number passed for the service change.
+      documents:
+        type: array
+        description: List of all the documents associated with service.
+        maxItems: 50
+        uniqueItems: true
+        items:
+          type: string
       createdBy:
         type: integer
         format: int64
@@ -686,7 +722,14 @@ definitions:
         description: The date on which GO over was given.
       remarks:
         type: string
-        description: Any remarks to be captured for this service change.
+        description: Any remarks to be captured for this probation.
+      documents:
+        type: array
+        description: List of all the documents associated with probation.
+        maxItems: 50
+        uniqueItems: true
+        items:
+          type: string
       createdBy:
         type: integer
         format: int64
@@ -732,7 +775,14 @@ definitions:
         description: The date on which GO over was given.
       remarks:
         type: string
-        description: Any remarks to be captured for this service change.
+        description: Any remarks to be captured for this regularisation.
+      documents:
+        type: array
+        description: List of all the documents associated with regularisation.
+        maxItems: 50
+        uniqueItems: true
+        items:
+          type: string
       createdBy:
         type: integer
         format: int64
@@ -773,6 +823,13 @@ definitions:
       university:
         type: string
         description: Name of the university/board from which the mentioned qualification was acquired.
+      documents:
+        type: array
+        description: List of all the documents associated with education.
+        maxItems: 50
+        uniqueItems: true
+        items:
+          type: string
       createdBy:
         type: integer
         format: int64
@@ -812,7 +869,14 @@ definitions:
         description: The year in which the employee has finished the skill course.
       remarks:
         type: string
-        description: Any remarks to be captured for this service change.
+        description: Any remarks to be captured for this technical qualification.
+      documents:
+        type: array
+        description: List of all the documents associated with technical qualification.
+        maxItems: 50
+        uniqueItems: true
+        items:
+          type: string
       createdBy:
         type: integer
         format: int64
@@ -849,6 +913,13 @@ definitions:
       remarks:
         type: string
         description: Any general remarks.
+      documents:
+        type: array
+        description: List of all the documents associated with department test.
+        maxItems: 50
+        uniqueItems: true
+        items:
+          type: string
       createdBy:
         type: integer
         format: int64

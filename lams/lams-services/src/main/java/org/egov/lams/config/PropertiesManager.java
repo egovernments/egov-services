@@ -73,8 +73,11 @@ public class PropertiesManager {
 	@Value("${egov.services.lams.billnumber_prefix}")
 	private String lamsBillNumberPrefix;
 
+	@Value("${egov.services.demand_service.updatedemandbasepath}")
+	private String updateDemandBasePath;
+	
 	@Value("${egov.services.demand_service.updatedemand}")
-	private String updateDemandSevice;
+	private String updateDemandService;
 	
 	@Value("${egov.services.demand_service.bill.search}")
 	private String demandBillSearchService;

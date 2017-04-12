@@ -98,14 +98,23 @@ public class DemandRepository {
 	}
 	
 	public DemandResponse updateDemand(List<Demand> demands, RequestInfo requestInfo){
+		
 		System.out.println("DemandRepository createDemand demands:"+demands.toString());
 		DemandRequest demandRequest = new DemandRequest();
 		demandRequest.setRequestInfo(requestInfo);
 		demandRequest.setDemand(demands);
 		
-		String url = propertiesManager.getDemandServiceHostName()
-				+propertiesManager.getUpdateDemandSevice();
-		
-		return restTemplate.postForObject(url, demandRequest, DemandResponse.class);
-	}
+		String url = propertiesManager.getDemandServiceHostName() + propertiesManager.getUpdateDemandBasePath()
+				+ demands.get(0).getId() + propertiesManager.getUpdateDemandService();
+		LOGGER.info("the url for update demand API call is  ::: " + url);
+
+		DemandResponse demandResponse = null;
+		try {
+			demandResponse = restTemplate.postForObject(url, demandRequest, DemandResponse.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+			LOGGER.info("the exception raised during update demand API call ::: " + e);
+		}
+		return demandResponse;
+}
 }

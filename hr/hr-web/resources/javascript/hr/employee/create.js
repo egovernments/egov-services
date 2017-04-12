@@ -2184,22 +2184,6 @@ function hasAllRequiredFields(emp) {
     return (emp.user.name && emp.code && emp.employeeType && emp.employeeStatus && emp.user.dob && emp.user.gender && emp.maritalStatus && emp.user.userName && emp.user.mobileNumber && emp.user.permanentAddress && emp.user.permanentCity && emp.user.permanentPincode && emp.dateOfAppointment);
 }
 
-function showError(msg) {
-    $('#error-alert-span').text(msg);
-    $('#error-alert-div').show();
-    setTimeout(function() {
-        $('#error-alert-div').hide();
-    }, 3000);
-}
-
-function showSuccess(msg) {
-    $('#success-alert-span').text(msg);
-    $('#success-alert-div').show();
-    setTimeout(function() {
-        $('#success-alert-div').hide();
-    }, 3000);
-}
-
 function checkIfNoDup(employee, objectType, subObject) {
     if (employee[objectType].length === 0)
         return true;

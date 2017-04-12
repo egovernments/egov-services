@@ -231,3 +231,32 @@ function getNameById(object,id,property="") {
 }
 
 // commonApiPost("asset","assetCategories","",{boundaryTypeName:"LOCALITY",hierarchyTypeName:"LOCATION"})
+
+function showSuccess(message) {
+    $("body").append(
+        `<div id="error-alert-div" class="alert alert-danger alert-dismissible alert-toast" role="alert" style="display:none; z-index:100000">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <span id="error-alert-span"></span>
+        </div>`
+    );
+
+    $('#success-alert-span').text(message);
+    $('#success-alert-div').show();
+    setTimeout(function() {
+        $('#success-alert-div').remove();
+    }, 3000);
+}
+
+function showError(message) {
+    $("body").append(
+        `<div id="error-alert-div" class="alert alert-danger alert-dismissible alert-toast" role="alert" style="display:none; z-index:100000">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <span id="error-alert-span"></span>
+        </div>`
+    )
+    $('#error-alert-span').text(message);
+    $('#error-alert-div').show();
+    setTimeout(function() {
+        $('#error-alert-div').remove();
+    }, 3000);
+}

@@ -479,19 +479,3 @@ ReactDOM.render(
   <PersonalInform />,
   document.getElementById('root')
 );
-
-function showError(msg) {
-    $('#error-alert-span').text(msg);
-    $('#error-alert-div').show();
-    setTimeout(function() {
-        $('#error-alert-div').hide();
-    }, 3000);
-}
-
-function showSuccess(msg) {
-    $('#success-alert-span').text(msg);
-    $('#success-alert-div').show();
-    setTimeout(function() {
-        $('#success-alert-div').hide();
-    }, 3000);
-}

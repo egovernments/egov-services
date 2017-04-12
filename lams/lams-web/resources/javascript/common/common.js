@@ -15,7 +15,7 @@ var requestInfo = {
     "authToken":authToken
 };
 
-var tenantId="ap.kurnool";
+var tenantId = null;
 
 
 

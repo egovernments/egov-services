@@ -15,7 +15,7 @@ var requestInfo = {
     "authToken":authToken
 };
 
-var tenantId="ap.kurnool";
+var tenantId=null;
 
 
 // var natureOfAllotments = !localStorage.getItem("natureOfAllotments") || localStorage.getItem("natureOfAllotments") == "undefined" ? (localStorage.setItem("natureOfAllotments", JSON.stringify(commonApiPost("lams-services","","getnatureofallotment",{}).responseJSON)) || {}) : JSON.parse(localStorage.getItem("natureOfAllotments"));

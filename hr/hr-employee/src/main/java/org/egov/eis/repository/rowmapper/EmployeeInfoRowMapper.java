@@ -143,7 +143,7 @@ public class EmployeeInfoRowMapper implements ResultSetExtractor<List<EmployeeIn
 			List<Long> jurisdictionIds = empInfo.getJurisdictionIds();
 			Long jurisdictionId = (Long) rs.getObject("ej_jurisdictionId");
 
-			if (jurisdictionId != 0 && jurisdictionIds != null && jurisdictionIds.size() > 0
+			if (jurisdictionId != null && jurisdictionId != 0 && jurisdictionIds != null && jurisdictionIds.size() > 0
 					&& !jurisdictionIds.contains(jurisdictionId))
 				jurisdictionIds.add(jurisdictionId);
 
@@ -155,7 +155,7 @@ public class EmployeeInfoRowMapper implements ResultSetExtractor<List<EmployeeIn
 	 * Convert intermediate Map into List of EmployeeInfo
 	 * 
 	 * @param empInfoMap
-	 * @return
+	 * @return 
 	 */
 	private List<EmployeeInfo> getEmployeeInfoList(Map<Long, EmpInfo> empInfoMap) {
 		List<EmployeeInfo> employeeInfoList = new ArrayList<>();

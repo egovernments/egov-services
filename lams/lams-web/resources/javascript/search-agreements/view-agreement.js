@@ -10,6 +10,14 @@
 //     return vars;
 // }
 
+function getValueByName(name,id) {
+    for (var i = 0; i < assetCategories.length; i++) {
+        if (assetCategories[i].id==id) {
+            return assetCategories[i][name];
+        }
+    }
+}
+
 var _type;
 $(document).ready(function() {
 
@@ -24,17 +32,17 @@ $(document).ready(function() {
         if(getUrlVars()["agreementNumber"]) {
             var agreementDetail = commonApiPost("lams-services", "agreements", "_search", {
                 agreementNumber: getUrlVars()["agreementNumber"]
-            }).responseJSON["Agreements"][0] || [];
+            }).responseJSON["Agreements"][0] || {};
         } else {
              var agreementDetail = commonApiPost("lams-services", "agreements", "_search", {
                 stateId: getUrlVars()["state"]
-            }).responseJSON["Agreements"][0] || [];
+            }).responseJSON["Agreements"][0] || {};
         }
 
 
         var assetDetails = commonApiPost("asset-services", "assets", "_search", {
             assetCategory: (getUrlVars()["assetId"] || agreementDetail.asset.id)
-        }).responseJSON["Assets"][0] || [];
+        }).responseJSON["Assets"][0] || {};
 
 
         printValue("", agreementDetail);
@@ -74,14 +82,16 @@ $(document).ready(function() {
                                         _obj = revenueZone;
                                         break;
                                 }
-                                $("[name='" + (isAsset ? "asset." : "") + key + "." + ckey + "']").text(getNameById(_obj, ckey));
+                                $("[name='" + (isAsset ? "asset." : "") + key + "." + ckey + "']").text(getNameById(_obj, ckey) || "NA");
                             }
                             else
-                                $("[name='" + (isAsset ? "asset." : "") + key + "." + ckey + "']").text(values[key][ckey]?values[key][ckey]:"NA");
+                                $("[name='" + (isAsset ? "asset." : "") + key + "." + ckey + "']").text(values[key][ckey] ? values[key][ckey] : "NA");
                         }
                     }
                 } else if(values[key]) {
                     $("[name='" + (isAsset ? "asset." : "") + key + "']").text(values[key]);
+                } else {
+                    $("[name='" + (isAsset ? "asset." : "") + key + "']").text("NA");
                 }
 
                 if (key.search('date')>0) {

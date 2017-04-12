@@ -15,7 +15,7 @@ import lombok.ToString;
 @ToString
 public class BillReceiptInfoReq {
 	
-	@JsonProperty("RequestInfo")
+	@JsonProperty("requestInfo")
 	private RequestInfo requestInfo = null;
 
 	private BillReceiptReq billReceiptInfo;

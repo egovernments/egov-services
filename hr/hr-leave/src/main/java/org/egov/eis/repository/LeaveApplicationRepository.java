@@ -47,12 +47,8 @@ import java.util.List;
 import org.egov.eis.model.LeaveApplication;
 import org.egov.eis.repository.builder.LeaveApplicationQueryBuilder;
 import org.egov.eis.repository.rowmapper.LeaveApplicationRowMapper;
-import org.egov.eis.service.WorkFlowService;
 import org.egov.eis.web.contract.LeaveApplicationGetRequest;
 import org.egov.eis.web.contract.LeaveApplicationSingleRequest;
-import org.egov.eis.web.contract.Position;
-import org.egov.eis.web.contract.ProcessInstance;
-import org.egov.eis.web.contract.ProcessInstanceRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -68,9 +64,6 @@ public class LeaveApplicationRepository {
 
     @Autowired
     private LeaveApplicationQueryBuilder leaveApplicationQueryBuilder;
-    
-    @Autowired
-    private WorkFlowService workFlowService;
 
     public List<LeaveApplication> findForCriteria(final LeaveApplicationGetRequest leaveApplicationGetRequest) {
         final List<Object> preparedStatementValues = new ArrayList<Object>();
@@ -94,12 +87,6 @@ public class LeaveApplicationRepository {
                 leaveApplicationRequest.getRequestInfo().getUserInfo().getId(),
                 now, leaveApplicationRequest.getRequestInfo().getUserInfo().getId(), now, leaveApplication.getTenantId() };
         jdbcTemplate.update(leaveApplicationInsertQuery, obj);
-        ProcessInstanceRequest processInstanceRequest = new ProcessInstanceRequest();
-        ProcessInstance processInstance = new ProcessInstance();
-        Position assignee = new Position();
-        processInstance.setAssignee(assignee);
-        processInstanceRequest.setRequestInfo(leaveApplicationRequest.getRequestInfo());
-        workFlowService.start(processInstanceRequest);
         return leaveApplication;
     }
 

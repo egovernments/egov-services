@@ -192,7 +192,8 @@ function getBoundariesbyId(wardId){
 	var wardObj = ward.filter(function( obj ) {
 	  return obj.id == wardId;
 	});
-	return Object.values(wardObj[0])[1];
+	var value = (wardObj[0]) ? (Object.values(wardObj[0])[1]) : '-';
+	return value;
 }
  
 function populatedate(id) {
@@ -283,7 +284,7 @@ function complaintType(){
 
 function loadStatus(){
 	$.ajax({
-		url: "/pgr/_statuses?tenantId=ap-public",
+		url: "/workflow/statuses/_search",
 		type : 'POST',
 		dataType: 'json',
 		processData : false,

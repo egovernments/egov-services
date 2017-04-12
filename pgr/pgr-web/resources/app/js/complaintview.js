@@ -345,7 +345,7 @@ function complaintType(loadDD, serviceName){
 
 function nextStatus(loadDD){
 	$.ajax({
-		url: "/pgr/_getnextstatuses?userId="+localStorage.getItem("id")+"&currentStatus="+status+"&tenantId=ap.public",
+		url : '/workflow/nextstatuses/_search?currentStatus='+status,
 		type : 'POST',
 		dataType: 'json',
 		processData : false,

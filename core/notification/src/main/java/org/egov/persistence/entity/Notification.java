@@ -41,4 +41,15 @@ public class Notification extends AbstractAuditable {
         return YES.equalsIgnoreCase(read);
     }
 
+    public org.egov.domain.model.Notification toDomain() {
+        return org.egov.domain.model.Notification.builder()
+                .id(id)
+                .messageCode(messageCode)
+                .messageValues(messageValues)
+                .reference(reference)
+                .userId(userId)
+                .read(isRead())
+                .createdDate(getCreatedDate())
+                .build();
+    }
 }

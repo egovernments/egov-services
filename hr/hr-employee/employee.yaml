@@ -1,3 +1,4 @@
+# Example YAML to get you started quickly.
 # Be aware that YAML has indentation based scoping.
 # Code completion support is available so start typing for available options.
 swagger: '2.0'
@@ -168,7 +169,52 @@ paths:
           schema:
             $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ErrorRes'
 
-         
+  /HOD/employees/_search:
+    # This is a HTTP operation
+    post:
+      # Describe this verb here. Note: you can use markdown 
+      summary: Get the list of employees defined in the system who are the head of the department.
+      description: |
+        There can be one or more head of department for a department as on any given date. This API will give the employee details who are HOD.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Commmon request info for getting employee.
+          required: true
+          schema:
+            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/RequestInfo'
+        - name: departmentId
+          in: query
+          description: Unique id of the department for which the HOD needs to be searched.
+          required: true
+          type: integer
+          format: int64
+        - name: asOnDate
+          in: query
+          description: The date as on which employee assignment has to be checked against. Assignment will be for a date range and hence `as_on_date` should fall within the assignment from_date and to_date.
+          required: true
+          type: string
+          format: date
+          pattern: "[dd/mm/yyyy]"
+        - $ref: "swagger-yaml/hr-masters.yaml/#/parameters/tenantId"
+        - $ref: '#/parameters/sortEmployees'
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Successful response
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "#/definitions/EmployeeInfoRes"
+
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ErrorRes'
+      tags: 
+       - Employee        
   /employees/{id}/assignments/_search:
     parameters:
       - $ref: "#/parameters/id"
@@ -722,7 +768,7 @@ definitions:
         description: The date on which GO over was given.
       remarks:
         type: string
-        description: Any remarks to be captured for this probation.
+        description: Any remarks to be captured for probation.
       documents:
         type: array
         description: List of all the documents associated with probation.
@@ -775,7 +821,7 @@ definitions:
         description: The date on which GO over was given.
       remarks:
         type: string
-        description: Any remarks to be captured for this regularisation.
+        description: Any remarks to be captured for regularisation.
       documents:
         type: array
         description: List of all the documents associated with regularisation.

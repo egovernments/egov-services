@@ -11,6 +11,10 @@ import org.egov.lams.web.contract.BillResponse;
 import org.egov.lams.web.contract.BillSearchCriteria;
 import org.egov.lams.web.contract.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -49,16 +53,23 @@ public class BillRepository {
 				+ "?billId="+billSearchCriteria.getBillId();
 			
 		LOGGER.info("The url for search bill API ::: "+url);
-		BillResponse billResponse = null;
+		ResponseEntity<BillResponse> billResponse = null;
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		//ObjectMapper objectMapper = ne w
+		HttpEntity<RequestInfo> entity = new HttpEntity<RequestInfo>(requestInfo,headers);
 		
 		try{
-			billResponse = restTemplate.postForObject(url, requestInfo, BillResponse.class);
+			//billResponse = restTemplate.postForObject(url, requestInfo, BillResponse.class);
+			billResponse = restTemplate.postForEntity(url, entity, BillResponse.class);
 		}catch (Exception e) {
 			e.printStackTrace();
 			LOGGER.info("the exception from billsearch API call ::: "+e);
 		}
-		LOGGER.info("the response for bill search API call ::: "+billResponse);
-		return billResponse.getBillInfos().get(0);
+		LOGGER.info("the response for bill search API call ::: "+billResponse.getBody().getBillInfos().get(0));
+		
+		return billResponse.getBody().getBillInfos().get(0);
 	}
 	
 	

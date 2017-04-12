@@ -19,7 +19,10 @@ public class PropertiesManager {
 
 	@Value("${egov.services.workflow_service.updatepath}")
 	private String workflowServiceUpdatePath;
-
+	
+	@Value("${egov.services.workflow_service.searchpath}")
+	private String workflowServiceSearchPath;
+	
 	@Value("${egov.services.workflow_service.taskpath}")
 	private String workflowServiceTaskPAth;
 	

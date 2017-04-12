@@ -1,17 +1,25 @@
 package org.egov.lams.service;
 
+import org.egov.lams.config.PropertiesManager;
 import org.egov.lams.contract.AgreementRequest;
+import org.egov.lams.contract.ProcessInstance;
 import org.egov.lams.model.Agreement;
-import org.egov.lams.model.ProcessInstance;
 import org.egov.lams.repository.WorkflowRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 public class WorkflowService {
+	
+	@Autowired
+	PropertiesManager propertiesManager;
 
+	@Autowired
+	RestTemplate restTemplate;
+	
 	@Autowired
 	private WorkflowRepository workflowRepository;
 	
@@ -28,9 +36,12 @@ public class WorkflowService {
 		saveAgreement(agreementRequest);
 	}
 	
-	public void updateWorkflow(AgreementRequest agreementRequest){
+	public void updateWorkflow(AgreementRequest agreementRequest) {
+
 		workflowRepository.updateWorkflow(agreementRequest);
-		updateAgreement(agreementRequest);
+		if (agreementRequest.getAgreement().getWorkflowDetails() != null)
+			updateAgreement(agreementRequest);
+		//FIXME Can i call update agreement for collection update
 	}
 
 	private void saveAgreement(AgreementRequest agreementRequest) {

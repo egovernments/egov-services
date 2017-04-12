@@ -1,15 +1,20 @@
 package org.egov.lams.repository;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.egov.lams.config.PropertiesManager;
 import org.egov.lams.contract.AgreementRequest;
+import org.egov.lams.contract.Attribute;
+import org.egov.lams.contract.Position;
+import org.egov.lams.contract.ProcessInstance;
 import org.egov.lams.contract.ProcessInstanceRequest;
 import org.egov.lams.contract.ProcessInstanceResponse;
+import org.egov.lams.contract.RequestInfo;
+import org.egov.lams.contract.Task;
 import org.egov.lams.contract.TaskRequest;
 import org.egov.lams.contract.TaskResponse;
 import org.egov.lams.model.Agreement;
-import org.egov.lams.model.Position;
-import org.egov.lams.model.ProcessInstance;
-import org.egov.lams.model.Task;
 import org.egov.lams.model.WorkFlowDetails;
 import org.egov.lams.producers.AgreementProducer;
 import org.slf4j.Logger;
@@ -77,31 +82,58 @@ public class WorkflowRepository {
 	public TaskResponse updateWorkflow(AgreementRequest agreementRequest) {
 
 		Agreement agreement = agreementRequest.getAgreement();
-		WorkFlowDetails workFlowDetails = agreement.getWorkflowDetails();
-
+		RequestInfo requestInfo = agreementRequest.getRequestInfo();
+		
 		TaskRequest taskRequest = new TaskRequest();
-		taskRequest.setRequestInfo(agreementRequest.getRequestInfo());
-
+		taskRequest.setRequestInfo(requestInfo);
+		
 		Task task = new Task();
-		task.setAction(workFlowDetails.getAction());
-		// FIXME business key get confirmed form workflow module
 		task.setBusinessKey(propertiesManager.getWorkflowServiceBusinessKey());
 		task.setType(propertiesManager.getWorkflowServiceBusinessKey());
+		// FIXME business key get confirmed form workflow module
 		task.setId(agreement.getStateId());
-		task.setStatus(workFlowDetails.getStatus());
-		// task.setStatus(workFlowDetails.get); FIXME ask mani about status	// issue not updating
-
+		
 		Position assignee = new Position();
-		assignee.setId(workFlowDetails.getAssignee());
-		task.setAssignee(assignee);
-		taskRequest.setTask(task);
-
+		
+		if (agreementRequest.getAgreement().getWorkflowDetails() != null) {
+			
+			WorkFlowDetails workFlowDetails = agreement.getWorkflowDetails();
+			task.setAction(workFlowDetails.getAction());
+			task.setStatus(workFlowDetails.getStatus());
+			assignee.setId(workFlowDetails.getAssignee());
+			task.setAssignee(assignee);
+		}else
+		{
+			LOGGER.info("The workflow object before collection update ::: "+agreement.getWorkflowDetails());
+			String url = propertiesManager.getWorkflowServiceHostName()
+					   + propertiesManager.getWorkflowServiceSearchPath()
+					   + "?id="+agreement.getStateId()
+					   + "&tenantId="+requestInfo.getUserInfo().getTenantId();
+			
+			ProcessInstanceResponse processInstanceResponse = null;
+			try{
+				processInstanceResponse = restTemplate.postForObject(url, requestInfo, ProcessInstanceResponse.class);
+			}catch (Exception e) {
+				e.printStackTrace();
+				LOGGER.info("exception from search workflow call ::: "+e);
+			}
+			ProcessInstance processInstance = processInstanceResponse.getProcessInstance();
+			//FIXME not sure how to process it 
+			List<Attribute> attributes = new ArrayList<>(processInstance.getAttributes().values());
+			task.setAction(attributes.get(0).getValues().get(0).getKey());
+			task.setStatus(processInstance.getStatus());
+			assignee = processInstance.getAssignee();
+			task.setAssignee(assignee);
+			
+		}
+			taskRequest.setTask(task);
+		
 		String url = propertiesManager.getWorkflowServiceHostName()
 					+ propertiesManager.getWorkflowServiceTaskPAth() 
 					+ "/"+agreement.getStateId()
 					+ propertiesManager.getWorkflowServiceUpdatePath();
 		
-		LOGGER.error("the task object : "+ task.toString()+ " : "+ url);
+		LOGGER.error("the task object :::: "+ task + " ::url:: "+ url);
 
 		TaskResponse taskResponse = null;
 		try {
@@ -136,7 +168,7 @@ public class WorkflowRepository {
 			throw new RuntimeException(e);
 		}
 		//FIXME TODO remove the hard coding and place the property manager string
-		agreementProducer.sendMessage("agreement-update-db", "key", agreementRequestMessage);
+		agreementProducer.sendMessage(propertiesManager.getKafkaUpdateAgreementTopic(), "key", agreementRequestMessage);
 	}
 
 }

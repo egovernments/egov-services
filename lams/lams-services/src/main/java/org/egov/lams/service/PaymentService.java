@@ -16,9 +16,12 @@ import org.egov.lams.model.Agreement;
 import org.egov.lams.model.Demand;
 import org.egov.lams.model.DemandDetails;
 import org.egov.lams.model.PaymentInfo;
+import org.egov.lams.producers.AgreementProducer;
 import org.egov.lams.repository.BillRepository;
 import org.egov.lams.repository.DemandRepository;
 import org.egov.lams.repository.FinancialsRepository;
+import org.egov.lams.repository.rowmapper.AgreementRowMapper;
+import org.egov.lams.web.contract.AgreementRequest;
 import org.egov.lams.web.contract.BillDetailInfo;
 import org.egov.lams.web.contract.BillInfo;
 import org.egov.lams.web.contract.BillReceiptInfoReq;
@@ -32,8 +35,10 @@ import org.egov.lams.web.contract.ReceiptAccountInfo;
 import org.egov.lams.web.contract.ReceiptAmountInfo;
 import org.egov.lams.web.contract.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -45,6 +50,12 @@ public class PaymentService {
 	@Autowired
 	PropertiesManager propertiesManager;
 
+	@Autowired
+	JdbcTemplate jdbcTemplate;
+	
+	@Autowired
+	AgreementProducer agreementProducer;
+	
 	@Autowired
 	RestTemplate restTemplate;
 	
@@ -239,18 +250,20 @@ public class PaymentService {
 	public ResponseEntity<ReceiptAmountInfo> updateDemand(
 			BillReceiptInfoReq billReceiptInfoReq) {
 		System.out.print("PaymentService- updateDemand - billReceiptInfoReq::: - "+billReceiptInfoReq.getBillReceiptInfo().getBillReferenceNum());
+		
+		RequestInfo requestInfo = billReceiptInfoReq.getRequestInfo();
 		BillSearchCriteria billSearchCriteria = new BillSearchCriteria();
 		DemandSearchCriteria demandSearchCriteria = new DemandSearchCriteria();
 		BillReceiptReq billReceiptInfo = billReceiptInfoReq
 				.getBillReceiptInfo();
 		billSearchCriteria.setBillId(Long.valueOf(billReceiptInfo.getBillReferenceNum()));
 		BillInfo billInfo = billRepository.searchBill(billSearchCriteria,
-				billReceiptInfoReq.getRequestInfo());
+				requestInfo);
 		System.out.print("PaymentService- updateDemand - billInfo - "+billInfo.getBillNumber());
 		demandSearchCriteria.setDemandId(billInfo.getDemandId());
 		Demand currentDemand = demandRepository
 				.getDemandBySearch(demandSearchCriteria,
-						billReceiptInfoReq.getRequestInfo()).getDemands()
+						requestInfo).getDemands()
 				.get(0);
 		System.out.print("PaymentService- updateDemand - currentDemand - "+currentDemand.getId());
 		if (currentDemand.getMinAmountPayable() != null
@@ -264,10 +277,34 @@ public class PaymentService {
 		currentDemand.setPaymentInfos(setPaymentInfos(billReceiptInfo));
 		demandRepository
 				.updateDemand(Arrays.asList(currentDemand),
-						billReceiptInfoReq.getRequestInfo()).getDemands()
+						requestInfo).getDemands()
 				.get(0);
 		System.out.print("PaymentService- updateDemand - setPaymentInfos done");
+		
+		///FIXME put update workflow here  here 
+		
+		updateWorkflow(billInfo.getConsumerCode(),requestInfo);
 		return receiptAmountBifurcation(billReceiptInfo, billInfo);
+	}
+
+	private void updateWorkflow(String consumerCode, RequestInfo requestInfo) {
+		
+		// FIXME get the query String from query builder //FIXME do the jdbctemplate in repository
+		String sql = "select * from eglams_agreement agreement where agreement.acknowledgementnumber=" + consumerCode
+				+ "OR agreement.agreement_no=" + consumerCode;
+
+		List<Agreement> agreements = null;
+		try {
+			agreements = jdbcTemplate.query(sql, new AgreementRowMapper());
+		} catch (DataAccessException e) {
+			e.printStackTrace();
+			LOGGER.info("exception while fetching agreemment in paymentService");
+		}
+		AgreementRequest agreementRequest = new AgreementRequest();
+		agreementRequest.setRequestInfo(requestInfo);
+		agreementRequest.setAgreement(agreements.get(0));
+		agreementProducer.sendMessage(propertiesManager.getUpdateWorkflowTopic(), "key", agreementRequest);
+		LOGGER.info("Workflow update for collection has been put into Kafka Queue");
 	}
 
 	private List<PaymentInfo> setPaymentInfos(BillReceiptReq billReceiptInfo) {

@@ -1,4 +1,4 @@
-package org.egov.lams.model;
+package org.egov.lams.contract;
 
 import java.util.Date;
 

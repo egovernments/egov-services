@@ -56,6 +56,10 @@ public class BillRepository {
 		ResponseEntity<BillResponse> billResponse = null;
 		//BillResponse billResponse = null;
 		
+		requestInfo =new RequestInfo();
+		requestInfo.setApiId("apiid");
+		requestInfo.setVer("ver");
+		requestInfo.setTs("ts");
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		//ObjectMapper objectMapper = ne w

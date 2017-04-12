@@ -1,0 +1,2 @@
+insert into tenant values(nextval('seq_tenant'),'ap.public','ap.public','Public tenant details',10.12,10.12,1,2);
+insert into tenant values(nextval('seq_tenant'),'ap.kurnool','ap.kurnool','Kurnool tenant details',20.12,20.12,1,2);

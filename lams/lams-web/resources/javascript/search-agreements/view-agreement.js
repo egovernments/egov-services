@@ -31,13 +31,12 @@ $(document).ready(function() {
             }).responseJSON["Agreements"][0] || [];
         }
 
-<<<<<<< 9fcca9fd5d42b78410e38cd917c585017279dfa6
+
         var assetDetails = commonApiPost("asset-services", "assets", "_search", {
             assetCategory: (getUrlVars()["assetId"] || agreementDetail.asset.id)
         }).responseJSON["Assets"][0] || [];
-        
-=======
->>>>>>> view Agrement issue is fixed
+
+
         printValue("", agreementDetail);
         printValue("", assetDetails, true);
     } catch(e) {

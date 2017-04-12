@@ -8,12 +8,12 @@ class ApplyLeave extends React.Component {
        },
        "fromDate" : "",
        "toDate": "",
-       "leaveDays": "",
+       "noOfDays": "",
        "reason": "",
        "status": "",
        "stateId": "",
        "tenantId" : tenantId
-     },leaveList:[]}
+     },leaveList:[],list:[]}
     this.handleChange=this.handleChange.bind(this);
     this.handleChangeThreeLevel=this.handleChangeThreeLevel.bind(this);
   }
@@ -70,14 +70,31 @@ class ApplyLeave extends React.Component {
 
   handleChange(e,name)
   {
+    if(name=="leaveType"){
+      var leaveType=e.target.value;
+      try{
+        var object =  getCommonMasterById("hr-leave","leaveopeningbalances","LeaveOpeningBalance",leaveType,tenantId).responseJSON["LeaveOpeningBalance"][0];
 
+        this.setState({
+          leaveSet:{
+            ...this.state.leaveSet,
+            noOfDays: object.noOfDays,
+            [name]: e.target.value
+          }
+        })
+      }
+      catch (e){
+        console.log(e);
+      }
+
+    } else {
       this.setState({
           leaveSet:{
               ...this.state.leaveSet,
               [name]:e.target.value
           }
       })
-
+    }
   }
 
 
@@ -88,10 +105,10 @@ class ApplyLeave extends React.Component {
   handleChangeThreeLevel(e,pName,name)
   {
     this.setState({
-      leave:{
-        ...this.state.leave,
+      leaveSet:{
+        ...this.state.leaveSet,
         [pName]:{
-            ...this.state.leave[pName],
+            ...this.state.leaveSet[pName],
             [name]:e.target.value
         }
       }
@@ -101,7 +118,6 @@ class ApplyLeave extends React.Component {
 
   Add(e){
     e.preventDefault();
-      console.log(this.state.leaveSet);
       this.setState({leaveSet:{
       name:"",
       code:"",
@@ -110,7 +126,7 @@ class ApplyLeave extends React.Component {
       fromDate:"",
       toDate:"",
       reason:"",
-      leaveType:""},leaveList:[] })
+      leaveType:""},leaveList:[],list:[] })
   }
 
   render() {

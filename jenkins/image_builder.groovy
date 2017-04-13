@@ -17,14 +17,14 @@ def build_image(dockerfile_path, image_name, commit_id){
 
 def publish(service_name, commit_id){
     stage("Publish docker image") {
-        sh "docker images | grep egovio/${service_name} | awk {'print $2'} | while read x; do docker push egovio/${service_name}:$x; done"
+        sh "docker images | grep egovio/${service_name} | awk {'print \$2'} | while read x; do docker push egovio/${service_name}:\$x; done"
     }
 }
 
 
 def clean(service_name, commit_id){
     stage("Clean docker image") {
-        sh "docker images | grep egovio/${service_name} | awk {'print $3'} | xargs docker rmi"
+        sh "docker images | grep egovio/${service_name} | awk {'print \$3'} | xargs docker rmi"
     }
 }
 

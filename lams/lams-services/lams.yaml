@@ -241,11 +241,33 @@ paths:
           schema:
             $ref: '#/definitions/ErrorRes'
 
-  /notice/{agreementId}:
+  /agreement/notice/_create:
     post:
-      summary: Agreement notice
       description: >
-        Generates a Agreement notice for a agreement.
+        Generates a notice for a agreement.
+      parameters:
+        - name: agreement
+          in: body
+          description: Details for the new Agreement to lease a asset.
+          required: true
+          schema:
+            $ref: '#/definitions/NoticeRequest'
+      tags:
+        - Notice
+      responses:
+        '200':
+          description: returns a notice.
+          schema:
+            $ref: '#/definitions/NoticeResponse'
+        '400':
+          description: tenantId was not provided or General service error
+          schema:
+            $ref: '#/definitions/ErrorRes'
+            
+  /agreement/notice/_search:
+    post:
+      description: |
+        Returns a list of `Notice` for given different input params.
       parameters:
         - name: requestInfo
           in: body
@@ -259,28 +281,93 @@ paths:
           required: true
           type: string
           format: varchar
-        - name: agreementId
-          in: path
-          description: Unique service code for service to be updated .
-          required: true
+        - name: noticeId
+          in: query
+          description: Primary key of Agreement object.
+          required: false
           type: string
+          format: varchar
+        - name: agreementNumber
+          in: query
+          description: Agreement number.
+          required: false
+          type: string
+          format: varchar
+        - name: noticeNumber
+          in: query
+          description: Notice number.
+          required: false
+          type: string
+          format: varchar
+        - name: fromDate
+          in: query
+          description: Notice date, here search will happen as notice date is greater or equal to given fromDate.
+          required: false
+          type: string
+          format: varchar
+        - name: toDate
+          in: query
+          description: Notice date, here search will happen as notice date is lesser or equal to given toDate.
+          required: false
+          type: string
+          format: varchar
+        - name: ackNumber
+          in: query
+          description: Agreement acknowledgement number.
+          required: false
+          type: string
+          format: varchar
+        - name: assetCategory
+          in: query
+          description: Asset category against which agreement made
+          required: false
+          type: string
+          format: varchar
+        - name: zone
+          in: query
+          description: Zone boundary where the asset is located against which the agreement made.
+          required: false
+          type: string
+          format: varchar
+        - name: locality
+          in: query
+          description: Locality boundary where the asset is located against which the agreement made.
+          required: false
+          type: string
+          format: varchar
+        - name: revenueWard
+          in: query
+          description: Revenue ward boundary where the asset is located against which the agreement made.
+          required: false
+          type: string
+          format: varchar
+        - name: electionWard
+          in: query
+          description: Election ward boundary where the asset is located against which the agreement made.
+          required: false
+          type: string
+          format: varchar
+        - name: offset
+          in: query
+          description: Offset value for a the page (in case of pagination on result)
+          required: false
+          type: string
+          format: varchar
+        - name: size
+          in: query
+          description: No.of notices to be returned by API
+          required: false
+          type: string
+          format: varchar
       tags:
-        - Agreement
+        - Notice
       responses:
         '200':
           description: returns list of agreements.
           schema:
-            $ref: '#/definitions/Notice'
+            $ref: '#/definitions/NoticeResponse'
         '400':
           description: tenantId was not provided or General service error
-          schema:
-            $ref: '#/definitions/ErrorRes'
-        '404':
-          description: tenantId provided was not found
-          schema:
-            $ref: '#/definitions/ErrorRes'
-        default:
-          description: Unexpected error
           schema:
             $ref: '#/definitions/ErrorRes'
             
@@ -711,16 +798,107 @@ definitions:
     type: object 
 
   Notice:
+    type: object
     properties:
-      number:
+      noticeNo:
         type: string
         description: notice number
-      noticedata:
+      notice  Date:
         type: string
-        description: a byte stream for notice pdf.
-        format: byte
-    type: object 
-
+        format: date
+        description: Date of Commencement of Agreement.
+      agreementNumber:
+        type: string
+        description: unique agreement number.
+        maxLength: 64
+      assetCategory:
+        type: string
+        description: Asset category of the asset on which the agreement is done.
+        format: String
+        maxLength: 64
+      acknowledgementNumber:
+        type: string
+        description: Acknowldgement number given to allottee on submitting the application. 
+        maxLength: 64
+      assetNo:
+        type: string
+        description: Asset no on which the agreement is done. 
+        maxLength: 32
+      allotteeName:
+        type: string
+        description: Allotee name
+        maxLength: 100
+      allotteeAddress:
+        type: string
+        description: Allottee address
+        maxLength: 256
+      allotteeMobileNumber:
+        type: number
+        description: Allottee contact number
+        maxLength: 10
+      agreementPeriod:
+        type: number
+        description: The validity of agreement period,value will be in no.of months.
+      commencementDate:
+        type: string
+        format: date
+        description: Date of Commencement of Agreement.
+      expiryDate:
+        type: string
+        format: date
+        description: Date of expiry for Agreement.
+      rent:
+        type: number
+        format: double
+        description: rent to be paid per payment cycle.
+      securityDeposit:
+        type: number
+        format: double
+        description: Security deposit.
+      commissionerName:
+        type: string
+        description: Name of the city commissioner.
+      locality:
+        type: number
+        description: locality (a boundary in a ULB) which the asset belongs to on which the agreement is done
+      street:
+        type: number
+        description: Street (a boundary in a ULB) which the asset belongs to on which the agreement is done
+      zone:
+        type: number
+        description: Zone (a boundary in a ULB) which the asset belongs to on which the agreement is done
+      ward:
+        type: number
+        description: Ward (a boundary in a ULB) which the asset belongs to on which the agreement is done
+      block:
+        type: number
+        description: Block (a boundary in a ULB) which the asset belongs to on which the agreement is done
+      electionward:
+        type: number
+        description: Election Ward (a boundary in a ULB) which the asset belongs to on which the agreement is done
+        
+  NoticeRequest:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: '#/definitions/RequestInfo'
+      tenantId:
+        type: string
+        description: unique id for a ULB
+      agreementNumber:
+        type: string
+        description: Agreement number for which the notice to be generated.
+        
+  NoticeResponse:
+    properties:
+      ResposneInfo:
+        $ref: '#/definitions/ResponseInfo'
+      Agreements:
+        type: array
+        items:
+          $ref: '#/definitions/Notice'
+    type: object
+    
   RequestInfo:
     type: object
     properties:

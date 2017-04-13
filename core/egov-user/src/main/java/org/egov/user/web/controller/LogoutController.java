@@ -24,8 +24,7 @@ public class LogoutController {
 
 	@PostMapping("/_logout")
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseInfo deleteToken(@RequestParam("access_token") String accessToken,
-									@RequestParam(value = "tenantId", required = true) String tenantId) throws Exception {
+	public ResponseInfo deleteToken(@RequestParam("access_token") String accessToken) throws Exception {
 		OAuth2AccessToken redisToken = tokenStore.readAccessToken(accessToken);
 		tokenStore.removeAccessToken(redisToken);
 		ResponseInfo responseInfo = new ResponseInfo("", "", new Date().toString(), "", "", "Logout successfully");

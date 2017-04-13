@@ -86,6 +86,7 @@ public class LeaveApplicationService {
 
     public LeaveApplication createLeaveApplication(final LeaveApplicationSingleRequest leaveApplicationRequest) {
         final LeaveApplication leaveApplication = leaveApplicationRequest.getLeaveApplication();
+        leaveApplication.setStatus(LeaveStatus.APPLIED);
         String leaveApplicationRequestJson = null;
         try {
             final ObjectMapper mapper = new ObjectMapper();

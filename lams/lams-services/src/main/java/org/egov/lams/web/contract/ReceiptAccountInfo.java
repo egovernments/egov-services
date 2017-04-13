@@ -1,34 +1,35 @@
 package org.egov.lams.web.contract;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
-@Setter
-@Getter
 @NoArgsConstructor
-@AllArgsConstructor
-@ToString
+@Data
 public class ReceiptAccountInfo {
-  private String glCode = null;
+  private String glCode ;
 
-  private String accountDescription = null;
+  private String accountDescription ;
 
-  private String functionCode = null;
+  private String function ;
+  
+  private String functionName;
 
-  private Double debitAmount = null;
+  private Double drAmount ;
 
-  private Double creditAmount = null;
+  private Double crAmount ;
 
-  private Integer orderNumber = null;
+  private Long orderNumber ;
 
-  private boolean isRevenueAccount;
+  private boolean isRevenueAccount; 
   
   private String description;
 
   private String purpose;
 
+  private String accountName;
+  
+  private String financialYear;
+
+  private Double creditAmountToBePaid;
 }
 

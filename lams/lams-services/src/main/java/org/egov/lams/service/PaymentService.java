@@ -336,8 +336,8 @@ public class PaymentService {
 		for (final ReceiptAccountInfo rcptAccInfo : billReceiptInfo
 				.getAccountDetails()){
 			LOGGER.info("updateDemandDetailForReceiptCreate rcptAccInfo ::: "+rcptAccInfo);
-			if (rcptAccInfo.getCreditAmount() != null
-					&& rcptAccInfo.getCreditAmount() > 0
+			if (rcptAccInfo.getCrAmount() != null
+					&& rcptAccInfo.getCrAmount() > 0
 					&& !rcptAccInfo.isRevenueAccount()
 					&& rcptAccInfo.getAccountDescription() != null) {
 				// updating the existing demand detail..
@@ -348,11 +348,11 @@ public class PaymentService {
 									rcptAccInfo.getDescription())) {
 
 						demandDetail.setCollectionAmount(BigDecimal
-								.valueOf(rcptAccInfo.getCreditAmount()));
+								.valueOf(rcptAccInfo.getCrAmount()));
 
 						totalAmountCollected = totalAmountCollected
 								.add(BigDecimal.valueOf(rcptAccInfo
-										.getCreditAmount()));
+										.getCrAmount()));
 					}
 			}
 		}
@@ -375,18 +375,18 @@ public class PaymentService {
 		for (final ReceiptAccountInfo rcptAccInfo : billReceiptInfo
 				.getAccountDetails()) {
 			System.out.print("PaymentService- receiptAmountBifurcation - rcptAccInfo - "+rcptAccInfo);
-			if (rcptAccInfo.getCreditAmount() != null
-					&& BigDecimal.valueOf(rcptAccInfo.getCreditAmount())
+			if (rcptAccInfo.getCrAmount() != null
+					&& BigDecimal.valueOf(rcptAccInfo.getCrAmount())
 							.compareTo(BigDecimal.ZERO) == 1) {
 				if (rcptAccInfo.getPurpose().equals(
 						purposeMap.get("ARREAR_AMOUNT")
 								.toString()))
 					arrearAmount = arrearAmount.add(BigDecimal
-							.valueOf(rcptAccInfo.getCreditAmount()));
+							.valueOf(rcptAccInfo.getCrAmount()));
 				else
 					currentInstallmentAmount = currentInstallmentAmount
 							.add(BigDecimal.valueOf(rcptAccInfo
-									.getCreditAmount()));
+									.getCrAmount()));
 
 				for (final BillDetailInfo billDet : billDetails) {
 					if (billDet.getOrderNo() == 1) {

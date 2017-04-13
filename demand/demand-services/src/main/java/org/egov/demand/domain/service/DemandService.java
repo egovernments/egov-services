@@ -67,6 +67,7 @@ public class DemandService {
 		for (DemandDetails demandDetails : demand.getDemandDetails()) {
 			for (EgDemandDetails egDemandDetail : egDemand.getEgDemandDetails()) {
 				if (egDemandDetail.getId().equals(demandDetails.getId())) {
+					LOGGER.info("match is occuring in update service");
 					egDemandDetail.addCollected(demandDetails.getCollectionAmount());
 				}
 			}

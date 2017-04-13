@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class DemandDetails {
+	private Long id;
 	private BigDecimal taxAmount;
 	private BigDecimal collectionAmount;
 	private BigDecimal rebateAmount;

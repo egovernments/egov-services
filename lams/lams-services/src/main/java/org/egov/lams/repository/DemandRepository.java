@@ -128,6 +128,7 @@ public class DemandRepository {
 			e.printStackTrace();
 			LOGGER.info("the exception raised during update demand API call ::: " + e);
 		}
+		LOGGER.info("the exception raised during update demand API call ::: " +demandResponse );
 		return demandResponse;
 	}
 }

@@ -2,7 +2,7 @@ var baseUrl = window.location.origin;
 
 
 
-var tenantId = null;
+var tenantId = "ap.kurnool";
 var authToken = localStorage.getItem("auth-token");
 var now=new Date();
 var year=now.getFullYear();

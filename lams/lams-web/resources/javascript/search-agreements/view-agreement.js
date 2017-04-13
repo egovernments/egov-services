@@ -209,12 +209,22 @@ $(document).ready(function() {
                     </tr>
                 `);
             }
+        }
 
-            if(process && process.attributes && process.attributes.validActions && process.attributes.validActions.values && process.attributes.validActions.values.length) {
-                for(var i=0;i<process.attributes.validActions.values.length;i++) {
-                    $("#footer-btn-grp").append($(`<button data-action=${process.attributes.validActions.values[i].key} id=${process.attributes.validActions.values[i].key} type="button" class="btn btn-submit">${process.attributes.validActions.values[i].name}<button/>`));
-                }
+        if(process && process.attributes && process.attributes.validActions && process.attributes.validActions.values && process.attributes.validActions.values.length) {
+            for(var i=0;i<process.attributes.validActions.values.length;i++) {
+                $("#footer-btn-grp").append($(`<button data-action=${process.attributes.validActions.values[i].key} id=${process.attributes.validActions.values[i].key} type="button" class="btn btn-submit">${process.attributes.validActions.values[i].name}<button/>`));
             }
+        } else {
+            $("#workFlowDetails").remove();
+        }
+
+        if(process) {
+            getDesignations(process.status, function(designations) {
+                for (var variable in designations) {
+                    $(`#approver_designation`).append(`<option value='${designations[variable]["id"]}'>${designations[variable]["name"]}</option>`)
+                }
+            });
         }
     } else {
         $("#viewDcb").remove();
@@ -226,12 +236,6 @@ $(document).ready(function() {
    /* for (var variable in designation) {
       $(`#approver_designation`).append(`<option value='${designation[variable]["id"]}'>${designation[variable]["name"]}</option>`)
     }*/
-
-    getDesignations(getUrlVars()["state"], function(designations) {
-      for (var variable in designations) {
-        $(`#approver_designation`).append(`<option value='${designations[variable]["id"]}'>${designations[variable]["name"]}</option>`)
-      }
-    });
 
     _type = getUrlVars()["type"] ? decodeURIComponent(getUrlVars()["type"]) : getValueByName("name",agreementDetail.asset.assetCategory.id);
     if (_type == "land") {

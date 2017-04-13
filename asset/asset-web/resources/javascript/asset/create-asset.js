@@ -453,8 +453,7 @@ class CreateAsset extends React.Component {
         })
     }
 
-		const showTextBox=function(item,index)
-		{
+		const showTextBox = function(item, index) {
 			return (
 				<div className="col-sm-6" key={index}>
 					<div className="row">
@@ -462,16 +461,15 @@ class CreateAsset extends React.Component {
 							<label for={item.name}>{titleCase(item.name)}  {showStart(item.isActive)}</label>
 						</div>
 						<div className="col-sm-6">
-							<input id={item.name} name={item.name} value={item.values} type={item.type=="String"?"text":item.type}
-								onChange={(e)=>{handleChangeTwoLevel(e,"properties",item.name)}} required={item.isMandatory} disabled={readonly}/>
+							<input id={item.name} name={item.name} type="text"
+								defaultValue={item.values} onChange={(e)=>{handleChangeTwoLevel(e, "properties", item.name)}} required={item.isMandatory} disabled={readonly}/>
 						</div>
 					</div>
 				</div>
 			);
 		}
 
-		const showSelect=function(item,index)
-		{
+		const showSelect = function(item,index) {
 			return (
 				<div className="col-sm-6" key={index}>
 					<div className="row">

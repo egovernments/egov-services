@@ -138,7 +138,9 @@ class CreateAsset extends React.Component {
             success: type == "update" ? "Asset successfully modified!" : "Asset successfully added!",
             customFields: type == "update" ? _this.state.customFields : []
           });
-					window.location.href=`app/asset/create-asset-ack.html?name=${tempInfo.name}&type="" `;
+
+					window.location.href=`app/asset/create-asset-ack.html?name=${tempInfo.name}&type=""`;
+
       } else {
            this.setState({
             ...this.state,

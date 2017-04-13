@@ -8,7 +8,9 @@ class CreateAsset extends React.Component {
                 <form>
                     <h3> Acknowledgement of Asset </h3>
                     <h4> <center><font color="ass"> Acknowledgement  Created </font> </center></h4>
-                    <h3> <center><font color="ass"> Create {getUrlVars()["type"]} with name <strong> {getUrlVars()["name"]}</strong>  </font> </center></h3>
+
+                    <h3> <center><font color="ass"> Asset {getUrlVars()["type"]} with name <strong> {getUrlVars()["name"]}</strong> created.  </font> </center></h3>
+
 
 
                     <div className="text-center">

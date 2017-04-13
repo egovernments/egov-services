@@ -138,7 +138,9 @@ class CreateAsset extends React.Component {
         // console.log(response);
         if(response["statusText"]==="OK")
         {
-          window.location.href=`app/asset/create-asset-ack.html?name=${tempInfo.name}&type="category" `;
+
+    window.location.href=`app/asset/create-asset-ack.html?name=${tempInfo.name}&type=category`;
+
         }
         else {
           alert(response["statusText"]);
@@ -183,7 +185,6 @@ class CreateAsset extends React.Component {
 }
 }
   componentWillMount(){
->>>>>>> LeaveApplicationForviewDone
       this.setState({
         assetCategory: {
           "tenantId": "ap.kurnool",

@@ -339,21 +339,24 @@ public class PaymentService {
 			if (rcptAccInfo.getCrAmount() != null
 					&& rcptAccInfo.getCrAmount() > 0
 					&& !rcptAccInfo.isRevenueAccount()
-					&& rcptAccInfo.getAccountDescription() != null) {
+					&& rcptAccInfo.getDescription() != null) {
+				
 				// updating the existing demand detail..
 				for (final DemandDetails demandDetail : demand
-						.getDemandDetails())
+						.getDemandDetails()){
+					LOGGER.info("updateDemandDetailForReceiptCreate ::: demanddetail "+demandDetail.getTaxReason());
+					LOGGER.info("updateDemandDetailForReceiptCreate ::: rcptAccInfo.getDescription() ::: "+rcptAccInfo.getDescription());
 					if (demandDetail.getTaxReason() != null
 							&& demandDetail.getTaxReason().equalsIgnoreCase(
 									rcptAccInfo.getDescription())) {
-
+						LOGGER.info("updateDemandDetailForReceiptCreate inside if statement ::: demanddetail");
 						demandDetail.setCollectionAmount(BigDecimal
 								.valueOf(rcptAccInfo.getCrAmount()));
 
 						totalAmountCollected = totalAmountCollected
 								.add(BigDecimal.valueOf(rcptAccInfo
 										.getCrAmount()));
-					}
+					}}
 			}
 		}
 		

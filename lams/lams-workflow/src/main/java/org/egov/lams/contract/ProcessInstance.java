@@ -26,6 +26,7 @@ public class ProcessInstance   {
 	private String comments = null;
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date createdDate = null;
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date lastupdatedSince = null;
 	private Position owner = null;
 	private String state = null;

@@ -8,8 +8,6 @@ import lombok.NoArgsConstructor;
 public class ReceiptAccountInfo {
   private String glCode ;
 
-  private String accountDescription ;
-
   private String function ;
   
   private String functionName;

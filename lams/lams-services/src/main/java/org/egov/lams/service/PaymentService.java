@@ -245,7 +245,7 @@ public class PaymentService {
 			billdetail.setGlCode(getGlcodeById(demandDetail.getGlCode(),
 					requestInfo));
 			LOGGER.info("getGlCode after >>>>>>>" + demandDetail.getGlCode());
-			billdetail.setDescription(demandDetail.getTaxPeriod().concat("-")
+			billdetail.setDescription(demandDetail.getTaxPeriod().concat(":")
 					.concat(demandDetail.getTaxReason()));
 			billdetail.setPeriod(demandDetail.getTaxPeriod());
 			// TODO: Fix me: As per the rules for the purpose for demanddetails
@@ -377,7 +377,7 @@ public class PaymentService {
 		if (rcptAccInfo.getCrAmount() != null && rcptAccInfo.getCrAmount() > 0 && !rcptAccInfo.isRevenueAccount()
 
 				&& rcptAccInfo.getDescription() != null) {
-			String[] description = rcptAccInfo.getDescription().split("-");
+			String[] description = rcptAccInfo.getDescription().split(":");
 			String taxPeriod = description[0];
 			String taxReason = description[1];
 			LOGGER.info("taxPeriod  ::: " + taxPeriod + "taxReason ::::::"

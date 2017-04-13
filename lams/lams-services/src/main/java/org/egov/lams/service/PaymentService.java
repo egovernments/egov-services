@@ -322,13 +322,13 @@ public class PaymentService {
 			for (final DemandDetails demandDetail : demand.getDemandDetails()) {
 				if (demandDetail.getTaxPeriod() != null
 						&& demandDetail.getTaxPeriod().equalsIgnoreCase(rcptAccInfo.getDescription())) {
-					int i = 0;
-					LOGGER.info("the matched if statement insided uodatedemanddetails :: "+ ++i);
 					demandDetail.setCollectionAmount(BigDecimal.valueOf(rcptAccInfo.getCrAmount()));
 					totalAmountCollected = totalAmountCollected.add(BigDecimal.valueOf(rcptAccInfo.getCrAmount()));
+					LOGGER.info("everytime totalAmountCollected ::: " + totalAmountCollected);
 				}
 			}
 		}
+		
 		return totalAmountCollected;
 	}
 

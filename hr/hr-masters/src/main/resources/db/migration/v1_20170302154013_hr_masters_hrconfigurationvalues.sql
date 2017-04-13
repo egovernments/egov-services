@@ -9,7 +9,7 @@ CREATE TABLE egeis_hrConfigurationValues (
 	lastModifiedDate DATE,
 	tenantId CHARACTER VARYING(250) NOT NULL,
 
-	CONSTRAINT pk_egeis_hrConfigurationValues PRIMARY KEY (Id),
+	CONSTRAINT pk_egeis_hrConfigurationValues PRIMARY KEY (Id)
 	--CONSTRAINT uk_egeis_hrConfigurationValues_keyId UNIQUE (keyId)
 );
 

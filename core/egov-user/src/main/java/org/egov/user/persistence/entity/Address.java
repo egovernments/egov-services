@@ -102,6 +102,9 @@ public class Address extends AbstractPersistable<Long> {
     @Enumerated(EnumType.STRING)
     private AddressType type;
 
+    @Column(name = "tenantid")
+    private String tenantId;
+
     public org.egov.user.domain.model.Address toDomain() {
         return org.egov.user.domain.model.Address.builder()
                 .id(id)
@@ -117,6 +120,7 @@ public class Address extends AbstractPersistable<Long> {
                 .country(country)
                 .pinCode(pinCode)
                 .type(type)
+                .tenantId(tenantId)
                 .build();
     }
 }

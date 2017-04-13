@@ -42,8 +42,9 @@ public class TokenService {
         SecureUser secureUser = ((SecureUser) authentication.getPrincipal());
 
          List<String> roleCodes = secureUser.getUser().getRoles().stream().map(Role::getCode).collect(Collectors.toList());
+        String tenantId= secureUser.getUser().getTenantId();
         if(!roleCodes.isEmpty()) {
-            ActionResponse actions = actionRestRepository.getActionByRoleCodes(roleCodes);
+            ActionResponse actions = actionRestRepository.getActionByRoleCodes(roleCodes,tenantId);
             if (!actions.isActions()) {
                 return new CustomUserDetails(secureUser, actions.getActions());
             }

@@ -33,4 +33,6 @@ public class Address {
     private String pinCode;
 
     private AddressType type;
+
+    private String tenantId;
 }

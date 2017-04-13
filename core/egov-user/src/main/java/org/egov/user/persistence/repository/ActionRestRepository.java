@@ -22,7 +22,7 @@ public class ActionRestRepository{
 		this.url = accessControlHost + url;
 	}
 
-	public ActionResponse getActionByRoleCodes(final List<String> roleCodes) {
+	public ActionResponse getActionByRoleCodes(final List<String> roleCodes,String tenantId) {
 		RequestInfo requestInfo = new RequestInfo();
 		requestInfo.setApiId("org.egov.pgr");
 		requestInfo.setVer("1");
@@ -34,7 +34,7 @@ public class ActionRestRepository{
 		requestInfo.setRequesterId("");
 		requestInfo.setAuthToken(null);
 		// TODO: pass tenantId to the action request as of now its hard coded
-		ActionRequest actionRequest=ActionRequest.builder().requestInfo(requestInfo).roleCodes(roleCodes).tenantId("ap.public").build();
+		ActionRequest actionRequest=ActionRequest.builder().requestInfo(requestInfo).roleCodes(roleCodes).tenantId(tenantId).build();
 
 		return restTemplate.postForObject(url,actionRequest,ActionResponse.class);
 	}

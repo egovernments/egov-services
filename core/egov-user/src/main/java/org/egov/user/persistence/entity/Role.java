@@ -62,6 +62,7 @@ public class Role extends AbstractAuditable {
         this.description = domainRole.getDescription();
         this.setLastModifiedDate(domainRole.getLastModifiedDate());
         this.setCreatedDate(domainRole.getCreatedDate());
+        this.tenantId=domainRole.getTenantId();
     }
 
     @Id
@@ -77,6 +78,9 @@ public class Role extends AbstractAuditable {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "tenantid")
+    private String tenantId;
+
     public org.egov.user.domain.model.Role toDomain() {
         return org.egov.user.domain.model.Role.builder()
                 .id(id)
@@ -86,6 +90,7 @@ public class Role extends AbstractAuditable {
                 .createdDate(getCreatedDate())
                 .lastModifiedDate(getLastModifiedDate())
                 .createdBy(getCreatedBy())
+                .tenantId(tenantId)
                 .lastModifiedBy(getLastModifiedBy()).build();
     }
 }

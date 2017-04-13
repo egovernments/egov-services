@@ -53,7 +53,7 @@ public class User {
 
     public void validate() {
         if (isUsernameAbsent() || isNameAbsent() || isGenderAbsent() || isMobileNumberAbsent()
-                || isActiveIndicatorAbsent() || isTypeAbsent()) {
+                || isActiveIndicatorAbsent() || isTypeAbsent()  || isTenantIdAbsent()) {
             throw new InvalidUserException(this);
         }
     }
@@ -82,4 +82,6 @@ public class User {
         return isEmpty(username);
     }
 
+    public boolean isTenantIdAbsent() { return isEmpty(tenantId);
+    }
 }

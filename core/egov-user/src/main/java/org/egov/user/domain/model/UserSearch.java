@@ -38,4 +38,6 @@ public class UserSearch {
     private List<String> sort;
 
     private String type;
+
+    private String tenantId;
 }

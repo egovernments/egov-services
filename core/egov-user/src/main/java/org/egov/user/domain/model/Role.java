@@ -18,4 +18,5 @@ public class Role {
     private Date createdDate;
     private Long lastModifiedBy;
     private Date lastModifiedDate;
+    private String tenantId;
 }

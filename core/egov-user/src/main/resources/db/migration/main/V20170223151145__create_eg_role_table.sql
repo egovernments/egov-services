@@ -8,5 +8,6 @@ CREATE TABLE eg_role (
     lastmodifiedby bigint,
     lastmodifieddate timestamp,
     version bigint,
+    tenantid character varying(256) not null,
     CONSTRAINT eg_roles_role_name_key UNIQUE (name)
 );

@@ -40,7 +40,7 @@
     "identificationMark": null,
     "photo": null,
     "otpReference": null,
-    "tenantId": null,
+    "tenantId": "ap.public",
     "roles": []
   }
 }

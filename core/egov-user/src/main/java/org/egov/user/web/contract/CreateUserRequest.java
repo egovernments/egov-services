@@ -23,4 +23,6 @@ public class CreateUserRequest {
     public User toUpdateDomain() {
         return userRequest.toUpdateDomain();
     }
+
+    public boolean isTenantIdPresent(){return this.getUserRequest().getTenantId()!=null && !this.getUserRequest().getTenantId().isEmpty();}
 }

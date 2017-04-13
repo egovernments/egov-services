@@ -44,18 +44,18 @@ public class UserRepositoryTest {
 
     @Test
     public void test_should_return_true_when_user_exists_with_given_user_name() {
-        when(userJpaRepository.isUserPresent("userName", 1L)).thenReturn(1L);
+        when(userJpaRepository.isUserPresent("userName", 1L,"ap.public")).thenReturn(1L);
 
-        boolean isPresent = userRepository.isUserPresent("userName", 1L);
+        boolean isPresent = userRepository.isUserPresent("userName", 1L,"ap.public");
 
         assertTrue(isPresent);
     }
 
     @Test
     public void test_should_return_false_when_user_does_not_exist_with_given_user_name() {
-        when(userJpaRepository.isUserPresent("userName", 1L)).thenReturn(null);
+        when(userJpaRepository.isUserPresent("userName", 1L,"ap.public")).thenReturn(null);
 
-        boolean isPresent = userRepository.isUserPresent("userName", 1L);
+        boolean isPresent = userRepository.isUserPresent("userName", 1L,"ap.public");
 
         assertFalse(isPresent);
     }
@@ -97,7 +97,7 @@ public class UserRepositoryTest {
                 .roles(roles)
                 .build();
         final Role role = new Role();
-        when(roleRepository.findByNameIgnoreCase(roleName)).thenReturn(role);
+        when(roleRepository.findByTenantIdAndNameIgnoreCase("ap.public",roleName)).thenReturn(role);
 
         User actualUser = userRepository.save(domainUser);
 
@@ -117,7 +117,7 @@ public class UserRepositoryTest {
                 .password(rawPassword)
                 .build();
         final Role role = new Role();
-        when(roleRepository.findByNameIgnoreCase(roleName)).thenReturn(role);
+        when(roleRepository.findByTenantIdAndNameIgnoreCase("ap.public",roleName)).thenReturn(role);
         final String expectedEncodedPassword = "encodedPassword";
         when(passwordEncoder.encode(rawPassword)).thenReturn(expectedEncodedPassword);
 
@@ -133,15 +133,16 @@ public class UserRepositoryTest {
         final List<org.egov.user.domain.model.Role> roles = new ArrayList<>();
         final String roleName1 = "roleName1";
         final String roleName2 = "roleName2";
-        roles.add(org.egov.user.domain.model.Role.builder().name(roleName1).build());
-        roles.add(org.egov.user.domain.model.Role.builder().name(roleName2).build());
+        roles.add(org.egov.user.domain.model.Role.builder().name(roleName1).tenantId("ap.public").build());
+        roles.add(org.egov.user.domain.model.Role.builder().name(roleName2).tenantId("ap.public").build());
         org.egov.user.domain.model.User domainUser = org.egov.user.domain.model.User.builder()
                 .roles(roles)
+                .tenantId("ap.public")
                 .build();
-        final Role role1 = Role.builder().id(1L).build();
-        final Role role2 = Role.builder().id(2L).build();
-        when(roleRepository.findByNameIgnoreCase(roleName1)).thenReturn(role1);
-        when(roleRepository.findByNameIgnoreCase(roleName2)).thenReturn(role2);
+        final Role role1 = Role.builder().id(1L).tenantId("ap.public").build();
+        final Role role2 = Role.builder().id(2L).tenantId("ap.public").build();
+        when(roleRepository.findByTenantIdAndNameIgnoreCase("ap.public",roleName1)).thenReturn(role1);
+        when(roleRepository.findByTenantIdAndNameIgnoreCase("ap.public",roleName2)).thenReturn(role2);
 
         userRepository.save(domainUser);
 

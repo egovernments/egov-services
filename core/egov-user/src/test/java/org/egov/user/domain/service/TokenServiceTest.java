@@ -45,7 +45,7 @@ public class TokenServiceTest {
         when(tokenStore.readAuthentication("c80e0ade-f48d-4077-b0d2-4e58526a6bfd")).thenReturn(oAuth2Authentication);
         SecureUser secureUser = new SecureUser(getUser());
         when(oAuth2Authentication.getPrincipal()).thenReturn(secureUser);
-        when(actionRestRepository.getActionByRoleCodes(getRoleCodes())).thenReturn(getActionResponse());
+        when(actionRestRepository.getActionByRoleCodes(getRoleCodes(),"ap.public")).thenReturn(getActionResponse());
         CustomUserDetails customUserDetails=tokenService.getUser("c80e0ade-f48d-4077-b0d2-4e58526a6bfd");
 
         assertEquals(expectedCustomUserDetails.getId(),customUserDetails.getId());
@@ -74,7 +74,7 @@ public class TokenServiceTest {
     public User getUser(){
         User user=User.builder().id(18L).userName("narasappa").name("narasappa")
                 .mobileNumber("123456789").emailId("abc@gmail.com").locale("en_IN").type("EMPLOYEE").active(Boolean.TRUE)
-                .roles(getRoles()).build();
+                .roles(getRoles()).tenantId("ap.public").build();
         return user;
     }
 
@@ -84,7 +84,7 @@ public class TokenServiceTest {
         roleModel.setId(15L);
         roleModel.setName("Employee");
         roleModel.setCode("Employee");
-
+        roleModel.setTenantId("ap.public");
         Role role=new Role(roleModel);
 
         roles.add(role);

@@ -119,6 +119,9 @@ public class User extends AbstractAuditable {
     @Column(name = "accountlocked")
     private Boolean accountLocked;
 
+    @Column(name = "tenantid")
+    private String tenantId;
+
     public User (org.egov.user.domain.model.User user) {
         this.name = user.getName();
         this.id = user.getId();
@@ -147,6 +150,7 @@ public class User extends AbstractAuditable {
         this.setLastModifiedDate(user.getLastModifiedDate());
         this.setCreatedDate(user.getCreatedDate());
         this.roles = convertDomainRolesToEntity(user.getRoles());
+        this.tenantId = user.getTenantId();
     }
 
 
@@ -187,7 +191,8 @@ public class User extends AbstractAuditable {
                 .lastModifiedDate(getLastModifiedDate())
                 .createdDate(getCreatedDate())
                 .lastModifiedBy(getLastModifiedId())
-                .createdBy(getCreatedById()).build();
+                .createdBy(getCreatedById())
+                .tenantId(tenantId).build();
     }
 
     private org.egov.user.domain.model.enums.GuardianRelation toDomainGuardianRelation() {

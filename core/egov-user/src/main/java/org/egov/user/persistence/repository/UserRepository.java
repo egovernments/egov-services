@@ -46,8 +46,8 @@ public class UserRepository {
         return entityUser != null ? entityUser.toDomain() : null;
     }
 
-    public boolean isUserPresent(String userName, Long id) {
-        return userJpaRepository.isUserPresent(userName, id) != null;
+    public boolean isUserPresent(String userName, Long id, String tenantId) {
+        return userJpaRepository.isUserPresent(userName, id, tenantId) != null;
     }
 
     public org.egov.user.domain.model.User findByEmailId(String emailId) {
@@ -94,7 +94,7 @@ public class UserRepository {
     private Set<Role> fetchRolesByName(User user) {
         return user.getRoles()
                 .stream()
-                .map((role) -> roleRepository.findByNameIgnoreCase(role.getName()))
+                .map((role) -> roleRepository.findByTenantIdAndNameIgnoreCase(user.getTenantId(),role.getName()))
                 .collect(Collectors.toSet());
     }
 

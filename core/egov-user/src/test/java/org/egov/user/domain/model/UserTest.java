@@ -88,6 +88,7 @@ public class UserTest {
                 .active(Boolean.TRUE)
                 .gender(Gender.FEMALE)
                 .type(UserType.CITIZEN)
+                .tenantId("ap.public")
                 .build();
 
         try {
@@ -98,6 +99,7 @@ public class UserTest {
             assertFalse(user.isNameAbsent());
             assertFalse(user.isMobileNumberAbsent());
             assertFalse(user.isUsernameAbsent());
+            assertFalse(user.isTenantIdAbsent());
         } catch (InvalidUserException ie) {
             fail();
         }

@@ -21,4 +21,5 @@ public class User implements Serializable {
 	private String type;
 	private List<Role> roles;
 	private boolean active;
+	private String tenantId;
 }

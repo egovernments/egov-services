@@ -39,7 +39,7 @@ public class UserService {
     }
 
     private void validateDuplicateUserName(Long id, User user) {
-        if(userRepository.isUserPresent(user.getUsername(), id)) {
+        if( userRepository.isUserPresent(user.getUsername(), id, user.getTenantId())) {
             throw new DuplicateUserNameException(user);
         }
     }

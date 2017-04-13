@@ -91,11 +91,10 @@ public class UserServiceTest {
     public void test_should_raise_exception_when_duplicate_user_name_exists() throws Exception {
         org.egov.user.domain.model.User domainUser = validDomainUser();
         when(otpRepository.isOtpValidationComplete(domainUser)).thenReturn(true);
-        when(userRepository.isUserPresent("supandi_rocks", null)).thenReturn(true);
+        when(userRepository.isUserPresent("supandi_rocks", null, "tenantId")).thenReturn(true);
 
         userService.save(domainUser, true);
     }
-
 
     @Test(expected = OtpValidationPendingException.class)
     public void test_exception_is_raised_when_otp_validation_fails() throws Exception {
@@ -135,61 +134,47 @@ public class UserServiceTest {
     }
 
     private org.egov.user.domain.model.User.UserBuilder getUserBuilder() {
-        return org.egov.user.domain.model.User.builder().username("supandi_rocks")
-                .name("Supandi").gender(Gender.MALE).type(UserType.CITIZEN)
-                .active(Boolean.TRUE).mobileNumber("9988776655").accountLocked(false);
+        return org.egov.user.domain.model.User.builder().username("supandi_rocks").name("Supandi").gender(Gender.MALE)
+                .type(UserType.CITIZEN).active(Boolean.TRUE).mobileNumber("9988776655").tenantId("tenantId").accountLocked(false);
     }
 
     private List<User> getListOfUsers() {
-        return Arrays.asList(
-                User.builder()
-                        .id(ID.get(0))
-                        .emailId(EMAIL)
-                        .username(USER_NAME)
-                        .build(),
+        return Arrays.asList(User.builder().id(ID.get(0)).emailId(EMAIL).username(USER_NAME).build(),
 
-                User.builder()
-                        .id(ID.get(1))
-                        .emailId(EMAIL)
-                        .username(USER_NAME)
-                        .build()
-        );
+                User.builder().id(ID.get(1)).emailId(EMAIL).username(USER_NAME).build());
     }
 
     private User getUserObject() {
-        return User.builder()
-                .id(ID.get(0))
-                .emailId(EMAIL)
-                .username(USER_NAME)
-                .build();
+        return User.builder().id(ID.get(0)).emailId(EMAIL).username(USER_NAME).build();
     }
-    
+
     @Test
     public void test_should_update_a_valid_user() throws Exception {
         User domainUser = validDomainUser();
         org.egov.user.persistence.entity.User user = new org.egov.user.persistence.entity.User();
         final User expectedEntityUser = User.builder().build();
-        when(userRepository.update(any(Long.class), any(org.egov.user.domain.model.User.class))).thenReturn(expectedEntityUser);
+        when(userRepository.update(any(Long.class), any(org.egov.user.domain.model.User.class)))
+                .thenReturn(expectedEntityUser);
         when(userRepository.getUserById(any(Long.class))).thenReturn(user);
-        when(userRepository.isUserPresent(any(String.class), any(Long.class))).thenReturn(false);
+        when(userRepository.isUserPresent(any(String.class), any(Long.class), any(String.class))).thenReturn(false);
 
         User returnedUser = userService.updateWithoutValidation(1L, domainUser);
 
         assertEquals(expectedEntityUser, returnedUser);
     }
-    
+
     @Test(expected = DuplicateUserNameException.class)
     public void test_should_throw_error_when_username_exists_while_updating() throws Exception {
         User domainUser = validDomainUser();
-        when(userRepository.isUserPresent(any(String.class), any(Long.class))).thenReturn(true);
+        when(userRepository.isUserPresent(any(String.class), any(Long.class), any(String.class))).thenReturn(true);
 
         userService.updateWithoutValidation(1L, domainUser);
     }
-    
+
     @Test(expected = UserNotFoundException.class)
     public void test_should_throw_error_when_user_not_exists_while_updating() throws Exception {
         User domainUser = validDomainUser();
-        when(userRepository.isUserPresent(any(String.class), any(Long.class))).thenReturn(false);
+        when(userRepository.isUserPresent(any(String.class), any(Long.class), any(String.class))).thenReturn(false);
         when(userRepository.getUserById(any(Long.class))).thenReturn(null);
 
         userService.updateWithoutValidation(1L, domainUser);

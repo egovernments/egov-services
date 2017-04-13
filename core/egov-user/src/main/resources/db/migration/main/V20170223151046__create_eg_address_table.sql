@@ -13,5 +13,5 @@ CREATE TABLE eg_address (
     state character varying(100),
     pincode character varying(10),
     id serial NOT NULL primary key,
-    version bigint DEFAULT 0
-);
+    version bigint DEFAULT 0,
+    tenantid character varying(256) not null);

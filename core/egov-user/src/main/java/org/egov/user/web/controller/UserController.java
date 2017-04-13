@@ -25,6 +25,8 @@ public class UserController {
     @PostMapping("/users/_create")
     public UserDetailResponse createUserWithValidation(
             @RequestBody CreateUserRequest createUserRequest) {
+        if(!createUserRequest.isTenantIdPresent())
+            return new UserDetailResponse(null,null);
         return createUser(createUserRequest, true);
     }
 

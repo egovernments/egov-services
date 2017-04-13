@@ -42,7 +42,7 @@ public class ActionRestRepositoryTest {
                 .andExpect(method(HttpMethod.POST))
                 .andRespond(withSuccess(getFileContents("getActionUrls.json"),
                         MediaType.APPLICATION_JSON_UTF8));
-        final ActionResponse actionResponse = actionRestRepository.getActionByRoleCodes(getRoles());
+        final ActionResponse actionResponse = actionRestRepository.getActionByRoleCodes(getRoles(),"ap.public");
         server.verify();
         assertTrue(actionResponse != null);
     }

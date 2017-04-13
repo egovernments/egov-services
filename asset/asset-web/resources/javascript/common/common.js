@@ -234,9 +234,9 @@ function getNameById(object,id,property="") {
 
 function showSuccess(message) {
     $("body").append(
-        `<div id="error-alert-div" class="alert alert-danger alert-dismissible alert-toast" role="alert" style="display:none; z-index:100000">
+        `<div id="success-alert-div" class="alert alert-success alert-dismissible alert-toast" role="alert" style="display:none">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <span id="error-alert-span"></span>
+            <span id="success-alert-span"></span>
         </div>`
     );
 

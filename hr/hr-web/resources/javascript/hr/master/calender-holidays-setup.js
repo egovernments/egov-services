@@ -8,7 +8,6 @@ constructor(props){
     },
     "name": "",
     "applicableOn": "",
-    "active":"",
     "tenantId": tenantId
   },
         year:[], holidays:[],dataType:[]
@@ -97,7 +96,7 @@ componentWillMount(){
               },_this=this;
                 if(type == "update") {
                   $.ajax({
-                        url:baseUrl+"/egov-common-masters/holidays/" + this.state.Holiday.id + "/" + "_update/",
+                        url:baseUrl+"/egov-common-masters/holidays/" + this.state.Holiday.id + "/" + "_update",
                         type: 'POST',
                         dataType: 'json',
                         data:JSON.stringify(body),
@@ -115,14 +114,13 @@ componentWillMount(){
                                     },
                                     "name": "",
                                     "applicableOn": "",
-                                    "tenantId": "",
-                                    "active": ""
+                                    "tenantId": ""
                                   }
                                 })
 
                         },
                         error: function(err) {
-                            showError(err);
+                            showError("Holiday already defined on present date");
 
                         }
                     });
@@ -147,15 +145,12 @@ componentWillMount(){
                                     },
                                     "name": "",
                                     "applicableOn": "",
-                                    "tenantId": "",
-                                    "active": ""
+                                    "tenantId": ""
                                   }
                                 })
-
-
                         },
                         error: function(err) {
-                            showError(err);
+                            showError("Holiday already defined on present date");
 
                         }
                     });
@@ -186,7 +181,7 @@ componentWillMount(){
 
   render(){
     let {handleChange,addOrUpdate,handleChangeThreeLevel}=this;
-    let {name,calendarYear,applicableOn,active}=this.state.Holiday;
+    let {name,calendarYear,applicableOn}=this.state.Holiday;
     let holidays=this.state.holidays;
     let mode=getUrlVars()["type"];
 

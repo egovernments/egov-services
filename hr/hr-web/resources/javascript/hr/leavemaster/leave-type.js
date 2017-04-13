@@ -43,20 +43,18 @@ addOrUpdate(e,mode)
 
         e.preventDefault();
 
-        var tempInfo=this.state.LeaveType , type = getUrlVars()["type"];
+        var tempInfo=Object.assign({},this.state.LeaveType) , type = getUrlVars()["type"];
 
         var body={
             "RequestInfo":requestInfo,
             "LeaveType":[tempInfo]
-          };
+          },_this=this;
             if(type == "update") {
         $.ajax({
-
-              url:baseUrl+"/hr-leave/leavetypes/" + this.state.LeaveType.id + "/" + "_update/",
+              url:baseUrl+"/hr-leave/leavetypes/" + _this.state.LeaveType.id + "/" + "_update",
               type: 'POST',
               dataType: 'json',
               data:JSON.stringify(body),
-              async: false,
               contentType: 'application/json',
               headers:{
                 'auth-token': authToken
@@ -83,18 +81,17 @@ addOrUpdate(e,mode)
 
               },
               error: function(err) {
-                  showError(err);
+                  showError("Leave Type already defined");
 
               }
           });
         } else {
           $.ajax({
 
-                url:baseUrl+"/hr-leave/leavetypes/_create" ,
+                url:baseUrl+"/hr-leave/leavetypes/_create",
                 type: 'POST',
                 dataType: 'json',
                 data:JSON.stringify(body),
-                async: false,
                 contentType: 'application/json',
                 headers:{
                   'auth-token': authToken
@@ -121,7 +118,7 @@ addOrUpdate(e,mode)
 
                 },
                 error: function(err) {
-                    showError(err);
+                    showError("Leave Type already defined");
 
                 }
             });

@@ -340,7 +340,70 @@ paths:
           schema:
             $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ErrorRes'
 
-
+  /eligibleleaves/_search:
+    # This is a HTTP operation
+    post:
+      # Describe this verb here. Note: you can use markdown
+      summary: Get the number of days of leave an employee is eligible for as on any date for each leave type.
+      description: |
+        Get the leave eligible for an employee as on any given date for any leave type. Eligibility will be based on the leave allotment, leave opening balance and the number of days of leave already availed. Number of days of leave alloted for the year will be prorated where as any leaves that are been carry forwarded will not be prorated. Only approved leaves will be considered as leave availed.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Commmon request info for getting the eligible leave.
+          required: true
+          schema:
+            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/RequestInfo'
+        - $ref: "swagger-yaml/hr-masters.yaml/#/parameters/tenantId"
+        - name: leaveType
+          description: List of Unique id of the leave type.
+          in: query
+          required: true
+          type: array
+          items:
+            type: integer
+          format: int64
+        - name: designationId
+          description: List of Unique id for designation.
+          in: query
+          required: false
+          type: array
+          items:
+            type: integer
+          format: int64
+        - name: employeeid
+          description: List of Unique id of the employee.
+          in: query
+          required: true
+          type: array
+          items:
+            type: integer
+          format: int64
+        - name: asOnDate
+          description: Date for which the leave eligibility needs to be checked for.
+          in: query
+          required: true
+          type: string
+          format: date
+        - $ref: "#/parameters/sortEligibleLeave"
+        - $ref: "#/parameters/pageSize"
+        - $ref: "#/parameters/pageNumber"
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Successful response
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "#/definitions/EligibleLeave"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ErrorRes'
+      tags: 
+       - Leave Allotment
   /leaveapplications/_search:
     # This is a HTTP operation
     post:
@@ -606,7 +669,34 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/LeaveAllotment'
-          
+   
+  EligibleLeave:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ResponseInfo'
+      EligibleLeave:
+        type: array
+        items: 
+         type: object
+         properties:
+          leaveType:
+            type: integer
+            format: int64
+            description: The unique id of leave type.
+          employee:
+            type: integer
+            format: int64
+            description: Unique id of the employee for whom the leave is applicable.
+          noOfDays:
+            type: number
+            format: float
+            description: Eligible leaves for a leave type for an employee. This will be the total of the number of opening balance leave + the prorated leave allotment - the already availed leaves. While prorating round up if it is greater than 0.5 and round down if it is less than 0.5
+          asOnDate:
+            type: string
+            format: date
+            pattern: "dd/mm/yyyy"
+            description: Eligible as on this date.
   LeaveOpeningBalance:
     title: Each employee's leave balance carry forwarded from previous year will be captured here.
     type: object
@@ -631,7 +721,7 @@ definitions:
       noOfDays:
         type: number
         format: float
-        description: Available number of years as of the year.Only whole number and 0.5 to be allowed. Allow maximum value till 2000.
+        description: Available number of days as of the year.Only whole number and 0.5 to be allowed. Allow maximum value till 2000.
       createdBy:
         type: string
         description: Id of the user who created the record. 
@@ -839,6 +929,21 @@ parameters:
       pattern: '[-+](year|employee|leaveType)'
     default:
       - +year
+  sortEligibleLeave:
+    name: sort
+    in: query
+    description: Result will be sorted by employee and  leave type ascending by default if this parameter is not provided.
+    type: array
+    uniqueItems: true
+    minItems: 1
+    maxItems: 2
+    collectionFormat: pipes
+    items:
+      type: string
+      pattern: '[+-](employee|leaveType)'
+    default:
+      - +employee
+      - +leaveType
   sortLeaveApplications:
     name: sort
     in: query
@@ -853,7 +958,8 @@ parameters:
       pattern: '[-+](fromDate|employee|leaveType)'
     default:
       - +leaveType
-      - +fromDate
+      - +fromDate    
+ 
   designation:
     name: designationId
     in: query

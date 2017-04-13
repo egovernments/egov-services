@@ -381,8 +381,12 @@ public class PaymentService {
 			String[] description = rcptAccInfo.getDescription().split("-");
 			String taxPeriod = description[0];
 			String taxReason = description[1];
+			LOGGER.info("taxPeriod  ::: " + taxPeriod + "taxReason ::::::"
+					+ taxReason);
 			// updating the existing demand detail..
 			for (final DemandDetails demandDetail : demand.getDemandDetails()) {
+				LOGGER.info("demandDetail.getTaxPeriod()  ::: " + demandDetail.getTaxPeriod() + "demandDetail.getTaxReason() ::::::"
+						+ demandDetail.getTaxReason());
 				if (demandDetail.getTaxPeriod() != null
 						&& demandDetail.getTaxPeriod().equalsIgnoreCase(
 								taxPeriod)

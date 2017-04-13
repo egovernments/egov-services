@@ -28,6 +28,10 @@ $(document).ready(function() {
         window.location = "app/search-agreement/view-dcb.html"
     });
 
+    $("#close").on("click", function() {
+        open(location, '_self').close();
+    })
+
     try {
         if(getUrlVars()["agreementNumber"]) {
             var agreementDetail = commonApiPost("lams-services", "agreements", "_search", {
@@ -41,7 +45,7 @@ $(document).ready(function() {
 
 
         var assetDetails = commonApiPost("asset-services", "assets", "_search", {
-            assetCategory: (getUrlVars()["assetId"] || agreementDetail.asset.id)
+            id: (getUrlVars()["assetId"] || agreementDetail.asset.id)
         }).responseJSON["Assets"][0] || {};
 
 
@@ -184,10 +188,10 @@ $(document).ready(function() {
         $("#renew").remove();
         $("#renewBtn").remove();
         //Fetch workFlow
-        var workflow = commonApiGet("egov-common-workflows", "history", "", {
+        var workflow = commonApiPost("egov-common-workflows", "history", "", {
             tenantId: tenantId,
             workflowId: agreementDetail.stateId
-        }).responseJSON;
+        }).responseJSON["tasks"];
 
         var process = commonApiPost("egov-common-workflows", "process", "_search", {
             tenantId: tenantId,

@@ -38,65 +38,70 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.commons.service;
+package org.egov.eis.service;
 
-import java.util.Date;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import org.egov.commons.model.Holiday;
-import org.egov.commons.producers.HolidayProducer;
-import org.egov.commons.repository.HolidayRepository;
-import org.egov.commons.web.contract.HolidayGetRequest;
-import org.egov.commons.web.contract.HolidayRequest;
+import org.egov.eis.config.PropertiesManager;
+import org.egov.eis.model.EmployeeDocument;
+import org.egov.eis.model.EmployeeInfo;
+import org.egov.eis.model.User;
+import org.egov.eis.repository.HODEmployeeRepository;
+import org.egov.eis.service.helper.EmployeeHelper;
+import org.egov.eis.service.helper.EmployeeUserMapper;
+import org.egov.eis.web.contract.HODEmployeeCriteria;
+import org.egov.eis.web.contract.RequestInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 @Service
-public class HolidayService {
-	public static final Logger logger = LoggerFactory.getLogger(HolidayService.class);
+public class HODEmployeeService {
+
+	public static final Logger LOGGER = LoggerFactory.getLogger(HODEmployeeService.class);
 
 	@Autowired
-	private HolidayRepository holidayRepository;
+	private HODEmployeeRepository hodEmployeeRepository;	
 
 	@Autowired
-	private HolidayProducer holidayProducer;
+	private UserService userService;
 
-	public List<Holiday> getHolidays(HolidayGetRequest holidayGetRequest) {
-		return holidayRepository.findForCriteria(holidayGetRequest);
-	}
+	@Autowired
+	private EmployeeHelper employeeHelper;
 
-	public Holiday createHoliday(final HolidayRequest holidayRequest) {
-		final ObjectMapper mapper = new ObjectMapper();
-		String holidayValue = null;
-		try {
-			logger.info("createHoliday service::" + holidayRequest);
-			holidayValue = mapper.writeValueAsString(holidayRequest);
-			logger.info("holidayValue::" + holidayValue);
-		} catch (final JsonProcessingException e) {
-			e.printStackTrace();
+	@Autowired
+	private EmployeeUserMapper employeeUserMapper;
+
+	@Autowired
+	PropertiesManager propertiesManager;	
+
+	@SuppressWarnings("unchecked")
+	public List<EmployeeInfo> getHODEmployees(HODEmployeeCriteria hodEmployeeCriteria, RequestInfo requestInfo) {
+		List<Long> listOfIds = hodEmployeeRepository.findIdsForCriteria(hodEmployeeCriteria);
+
+		if(listOfIds.isEmpty())
+			return Collections.EMPTY_LIST;
+
+		List<EmployeeInfo> employeeInfoList = hodEmployeeRepository.findForCriteria(hodEmployeeCriteria, listOfIds);
+
+		if(employeeInfoList.isEmpty())
+			return employeeInfoList;
+		
+		List<Long> ids = employeeInfoList.stream().map(employeeInfo -> employeeInfo.getId())
+				.collect(Collectors.toList());
+
+		List<User> usersList = userService.getUsers(ids, hodEmployeeCriteria.getTenantId(), requestInfo);
+		LOGGER.debug("userService: " + usersList);
+		employeeUserMapper.mapUsersWithEmployees(employeeInfoList, usersList);
+
+		if (!ids.isEmpty()) {
+			List<EmployeeDocument> employeeDocuments = hodEmployeeRepository.getDocumentsForListOfHODEmployeeIds(ids);
+			employeeHelper.mapDocumentsWithEmployees(employeeInfoList, employeeDocuments);
 		}
-		try {
-			holidayProducer.sendMessage("egov-common-holiday", "save-holiday", holidayValue);
-		} catch (final Exception ex) {
-			ex.printStackTrace();
-		}
-		return holidayRequest.getHoliday();
+		
+		return employeeInfoList;
 	}
-
-	public HolidayRequest create(final HolidayRequest holidayRequest) {
-		if (holidayRequest.getHoliday().getId() == null)
-			return holidayRepository.saveHoliday(holidayRequest);
-		else
-			return holidayRepository.modifyHoliday(holidayRequest);
-	}
-
-	public boolean getHolidayByApplicableOn(final Long id, final Date applicableOn, final String tenantId) {
-		return holidayRepository.checkHolidayByApplicableOn(id, applicableOn, tenantId);
-	}
-
 }

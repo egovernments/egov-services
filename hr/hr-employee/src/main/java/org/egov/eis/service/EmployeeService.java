@@ -168,6 +168,9 @@ public class EmployeeService {
 	public List<EmployeeInfo> getEmployees(EmployeeCriteria employeeCriteria, RequestInfo requestInfo) {
 		List<EmployeeInfo> employeeInfoList = employeeRepository.findForCriteria(employeeCriteria);
 
+		if(employeeInfoList.isEmpty())
+			return employeeInfoList;
+
 		List<Long> ids = employeeInfoList.stream().map(employeeInfo -> employeeInfo.getId())
 				.collect(Collectors.toList());
 
@@ -205,8 +208,7 @@ public class EmployeeService {
 
 		ResponseEntity<?> responseEntity = null;
 
-		// FIXME : User service is expecting & sending dates in multiple
-		// formats. Fix a common standard
+		// FIXME : User service is expecting & sending dates in multiple formats. Fix a common standard
 		try {
 			responseEntity = userService.createUser(userRequest);
 		

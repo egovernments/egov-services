@@ -6,7 +6,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class EmployeeGetRequest {
+
 	Long id;
+
 	String tenantId;
 
 }

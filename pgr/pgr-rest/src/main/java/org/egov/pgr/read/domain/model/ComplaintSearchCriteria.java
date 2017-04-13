@@ -17,6 +17,7 @@ public class ComplaintSearchCriteria {
 	private String serviceCode;
 	private Date startDate;
 	private Date endDate;
+	private Date escalationDate;
 	private List <String> status;
 	private Date lastModifiedDatetime;
 	private Long userId;

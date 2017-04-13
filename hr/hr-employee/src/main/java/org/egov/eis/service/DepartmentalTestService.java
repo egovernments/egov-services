@@ -1,8 +1,9 @@
 package org.egov.eis.service;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
 import java.util.ArrayList;
 import java.util.List;
-import static org.springframework.util.ObjectUtils.isEmpty;
 
 import org.egov.eis.model.DepartmentalTest;
 import org.egov.eis.model.Employee;

@@ -143,7 +143,7 @@ public class EmployeeRepository {
 	// FIXME : Figure out a better way to do this
 	public List<EmployeeDocument> getDocumentsForListOfEmployeeIds(List<Long> employeeIds) {
 		String SELECT_EMPLOYEE_DOCUMENTS_QUERY = "SELECT employeeId, document"
-				+ " FROM egeis_employeeDocuments where employeeId IN (" + getProcessedIdsString(employeeIds) + ")";
+				+ " FROM egeis_employeeDocuments where employeeId IN (" + getIdsAsCSVs(employeeIds) + ")";
 
 		List<EmployeeDocument> documents = jdbcTemplate.query(SELECT_EMPLOYEE_DOCUMENTS_QUERY,
 				employeeDocumentsRowMapper);
@@ -241,7 +241,7 @@ public class EmployeeRepository {
 				Boolean.class);
 	}
 
-	private String getProcessedIdsString(List<Long> ids) {
+	private String getIdsAsCSVs(List<Long> ids) {
 		return ids.toString().replace("[", "").replace("]", "");
 	}
 

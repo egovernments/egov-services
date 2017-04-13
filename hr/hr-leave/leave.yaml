@@ -424,6 +424,11 @@ paths:
           in: query
           required: false
           type: string
+        - name: status
+          description: Status of leave application.
+          in: query
+          required: false
+          type: string
         - name: employee
           description: List of Unique id for employee.
           in: query

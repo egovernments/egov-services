@@ -72,7 +72,8 @@ public class HolidayGetRequest {
 	@Size(min=3, max=200)
 	private String name;
 
-	private String applicableOn;
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
+	private Date applicableOn;
 
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	private Date fromDate;

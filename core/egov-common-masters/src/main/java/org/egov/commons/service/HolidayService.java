@@ -93,7 +93,6 @@ public class HolidayService {
 			return holidayRepository.saveHoliday(holidayRequest);
 		else
 			return holidayRepository.modifyHoliday(holidayRequest);
-
 	}
 
 	public boolean getHolidayByApplicableOn(final Long id, final Date applicableOn, final String tenantId) {

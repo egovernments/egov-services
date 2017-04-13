@@ -39,15 +39,10 @@ public class WorkflowService {
 
 	public void updateWorkflow(AgreementRequest agreementRequest) {
 
-		if (!agreementRequest.getAgreement().getStatus().equals(Status.ACTIVE)) {
-			// FIXME APROOVED
 			workflowRepository.updateWorkflow(agreementRequest);
-			if (agreementRequest.getAgreement().getWorkflowDetails() != null)
+			if (agreementRequest.getAgreement().getWorkflowDetails() != null){
 				updateAgreement(agreementRequest);
-			LOGGER.info("workflow update for non collection and agreement update ");
-		}else
-			updateAgreement(agreementRequest);
-			// FIXME Can i call update agreement for collection update
+			}
 	}
 
 	private void saveAgreement(AgreementRequest agreementRequest) {

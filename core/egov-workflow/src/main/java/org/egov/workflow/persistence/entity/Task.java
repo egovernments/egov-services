@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -85,6 +86,16 @@ public class Task {
             return attributes.get(key).getValues().get(0).getName();
 
         return "";
+    }
+
+    @JsonIgnore
+    public String getComplaintTypeCode(){
+        return getValueForKey("complaintTypeCode");
+    }
+
+    @JsonIgnore
+    public Long getCurrentAssignee(){
+        return Long.valueOf(getValueForKey("currentAssignee"));
     }
 
 }

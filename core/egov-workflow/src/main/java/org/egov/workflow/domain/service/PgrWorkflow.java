@@ -189,7 +189,13 @@ public class PgrWorkflow implements Workflow {
             state.setValue(task.getStatus());
             state.setComments(task.getValueForKey("approvalComments"));
             state.setSenderName(task.getSender());
-            state.setOwnerPosition(Long.valueOf(task.getAssignee()));
+            //Logic to handle escalation
+            if(null == task.getAssignee()) {
+                state.setOwnerPosition(getAssignee(null, task.getComplaintTypeCode(), task.getCurrentAssignee()).getId());
+                state.setPreviousOwner(task.getCurrentAssignee());
+            }
+            else
+                state.setOwnerPosition(Long.valueOf(task.getAssignee()));
             state.setExtraInfo(task.getValueForKey(STATE_DETAILS));
             state.setDateInfo(task.getCreatedDate());
             setAuditableFields(state, Long.valueOf(task.getRequestInfo().getUserInfo().getId()));

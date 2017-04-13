@@ -114,6 +114,9 @@ public class StateHistory implements Serializable {
     @Column(name = "INITIATOR_POS")
     private Long initiatorPosition;
 
+    @Column(name = "PREVIOUS_OWNER")
+    private Long previousOwner;
+
     StateHistory() {
     }
 
@@ -270,6 +273,14 @@ public class StateHistory implements Serializable {
 
     public void setInitiatorPosition(Long initiatorPosition) {
         this.initiatorPosition = initiatorPosition;
+    }
+
+    public Long getPreviousOwner() {
+        return previousOwner;
+    }
+
+    public void setPreviousOwner(Long previousOwner) {
+        this.previousOwner = previousOwner;
     }
 
     public Task map() {

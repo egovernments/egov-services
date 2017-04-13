@@ -100,6 +100,9 @@ public class State extends AbstractAuditable {
     @Column(name = "INITIATOR_POS")
     private Long initiatorPosition;
 
+    @Column(name = "PREVIOUS_OWNER")
+    private Long previousOwner;
+
     public State() {
     }
 
@@ -236,6 +239,14 @@ public class State extends AbstractAuditable {
 
     public void setInitiatorPosition(Long initiatorPosition) {
         this.initiatorPosition = initiatorPosition;
+    }
+
+    public Long getPreviousOwner() {
+        return previousOwner;
+    }
+
+    public void setPreviousOwner(Long previousOwner) {
+        this.previousOwner = previousOwner;
     }
 
     public enum StateStatus {

@@ -186,6 +186,24 @@ public class PgrWorkflowTest {
 		assertEquals(actualResponse.getId(), state.getId().toString());
 	}
 
+	@Test
+	public void testForUpdateWorkflowForEscalation(){
+        Task task = getTaskForEscalation();
+        State state = prepareState();
+        PositionResponse expectedPositionResponse = PositionResponse.builder()
+            .id(3L)
+            .name("kiran")
+            .build();
+
+        when(stateService.update(new State())).thenReturn(state);
+        when(stateService.getStateById(2l)).thenReturn(state);
+        when(complaintRouterService.getAssignee(null,"",4L)).thenReturn(expectedPositionResponse);
+
+        Task actualResponse = pgrWorkflow.update("ap.public", task);
+
+        assertEquals(actualResponse.getId(), state.getId().toString());
+    }
+
 	private UserResponse getUserResponse() {
 		final Role role = Role.builder().name("citizen").id(1l).description("CITIZEN").build();
 		final User user = User.builder().id(1l).roles(Collections.singleton(role)).build();
@@ -270,4 +288,32 @@ public class PgrWorkflowTest {
 				.requestInfo(requestInfo).createdDate(new Date()).build();
 		return task;
 	}
+
+	private Task getTaskForEscalation(){
+        final Map<String, Attribute> valuesMap = new HashMap<String, Attribute>();
+        final RequestInfo requestInfo = new RequestInfo();
+        requestInfo.setUserInfo(getUserInfo());
+        final Value stateId = new Value(STATE_ID, "2");
+        final Value stateDetails = new Value(STATE_DETAILS, "1");
+        final Value comments = new Value("Complaint escalated", "3");
+        final Value currentAssignee = new Value("2", "4");
+        final List<Value> value1 = Collections.singletonList(stateId);
+        final Attribute attributeStateId = new Attribute(false, "", "", true, "", value1);
+        final List<Value> value2 = Collections.singletonList(stateDetails);
+        final Attribute attributeStateDetails = new Attribute(false, "", "", true, "", value2);
+        final List<Value> value3 = Collections.singletonList(comments);
+        final Attribute attributeComments = new Attribute(false, "", "", true, "", value3);
+        final List<Value> value4 = Collections.singletonList(currentAssignee);
+        final Attribute attributeCurrentAssignee = new Attribute(false,"","",true,"",value4);
+
+        valuesMap.put(STATE_ID, attributeStateId);
+        valuesMap.put(STATE_DETAILS, attributeStateDetails);
+        valuesMap.put("approvalComments", attributeComments);
+        valuesMap.put("currentAssignee",attributeCurrentAssignee);
+
+        Task task = Task.builder().attributes(valuesMap).assignee(null).id("2").sender("narasappa").status("PROCESSING")
+            .requestInfo(requestInfo).createdDate(new Date()).build();
+
+        return task;
+    }
 }

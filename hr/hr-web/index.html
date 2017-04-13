@@ -631,20 +631,31 @@
                                       }]
                                     },
                                     {
-                                          name: 'Apply Leave',
-                                          icon: 'fa fa-phone',
-                                          link: './app/hr/leavemaster/apply-leave.html'
-                                      },
+                                        name: 'Leave Application',
+                                        icon: 'fa fa-phone',
+                                        link: '#',
+                                        items: [{
+                                          title: 'PIS',
+                                          icon: 'fa fa-desktop',
+                                          link: '#',
+                                          items: [{
+                                                name: 'Apply Leave Application',
+                                                icon: 'fa fa-phone',
+                                                link: './app/hr/leavemaster/search-leave-application.html'
+                                            },
+                                            {
+                                                  name: 'View Leave Application',
+                                                  icon: 'fa fa-phone',
+                                                  link: './app/hr/leavemaster/view-apply.html?type=view'
+                                              }
+                                        ]
+                                      }]
+                                    },                                
                                       {
                                           name: 'Compensetory Leave',
                                           icon: 'fa fa-phone',
                                           link: './app/hr/leavemaster/compensetory-leave.html'
-                                      },
-                                      {
-                                            name: 'Search Leave Application',
-                                            icon: 'fa fa-phone',
-                                            link: './app/hr/leavemaster/search-leave-application.html'
-                                        }]
+                                      }]
                                 }]
                             },
 

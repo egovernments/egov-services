@@ -104,6 +104,86 @@ class CreateAsset extends React.Component {
       alert("Successfully added");
     } else {
       alert(response["statusText"]);
+
+
+
+
+  addOrUpdate(e){
+        // var finalPost={
+        //   "RequestInfo":requestInfo,
+        //
+        // }
+        e.preventDefault();
+        // console.log(zone);
+        // console.log(this.state.assetCategory);
+        var tempInfo=this.state.assetCategory;
+        // tempInfo["assetSet"]["assetCategory"]["id"]=parseInt(tempInfo["assetSet"]["assetCategory"]["id"])
+        var body={
+            "RequestInfo":requestInfo,
+            "AssetCategory":tempInfo
+          };
+
+        var response=$.ajax({
+              url:baseUrl+"/asset-services/assetCategories/_create?tenantId=ap.kurnool",
+              type: 'POST',
+              dataType: 'json',
+              data:JSON.stringify(body),
+              async: false,
+              contentType: 'application/json',
+              headers:{
+                'auth-token': authToken
+              }
+          });
+
+        // console.log(response);
+        if(response["statusText"]==="OK")
+        {
+          window.location.href=`app/asset/create-asset-ack.html?name=${tempInfo.name}&type="category" `;
+        }
+        else {
+          alert(response["statusText"]);
+          this.setState({
+            assetCategory:{
+              "tenantId": "ap.kurnool",
+              "name": "",
+              "assetCategoryType": "",
+              "parent":"",
+              "depreciationMethod": "",
+              "assetAccount": "",
+              "accumulatedDepreciationAccount": "",
+              "revaluationReserveAccount": "",
+              "depreciationExpenseAccount": "",
+              "unitOfMeasurement": "",
+              "depreciationRate": null,
+              "customFields":[]
+
+
+            },
+            customField:
+             {
+                      "name": "",
+                      "type": "",
+                      "isActive": "",
+                      "isMandatory": "",
+                      "values": "",
+                      "localText": "",
+                      "regExFormate": ""
+                    },
+            asset_category_type:[],
+            assetCategories:[],
+            depreciationMethod:{},
+            assetAccount:[],
+            accumulatedDepreciationAccount:[],
+            revaluationReserveAccount:[],
+            depreciationExpenseAccount:[],
+            assignments_unitOfMeasurement:[],
+            typeList:[]
+
+          })
+}
+}
+  componentWillMount(){
+>>>>>>> LeaveApplicationForviewDone
       this.setState({
         assetCategory: {
           "tenantId": "ap.kurnool",
@@ -294,7 +374,7 @@ class CreateAsset extends React.Component {
     const renderBody=function()
     {
         if(customFields.length>0) {
-            return customFields.map((item,index)=> { 
+            return customFields.map((item,index)=> {
                 return (<tr  key={index} className="text-center">
                   <td  >
                 {item.name}

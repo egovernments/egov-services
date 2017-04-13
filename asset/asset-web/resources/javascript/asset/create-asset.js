@@ -138,6 +138,7 @@ class CreateAsset extends React.Component {
             success: type == "update" ? "Asset successfully modified!" : "Asset successfully added!",
             customFields: type == "update" ? _this.state.customFields : []
           });
+					window.location.href=`app/asset/create-asset-ack.html?name=${tempInfo.name}&type="" `;
       } else {
            this.setState({
             ...this.state,
@@ -351,7 +352,7 @@ class CreateAsset extends React.Component {
         {
             if (list.length) {
               return list.map((item, ind)=>
-              { 
+              {
                   if(typeof item == "object") {
                     return (<option key={ind} value={item.id}>
                           {item.name}

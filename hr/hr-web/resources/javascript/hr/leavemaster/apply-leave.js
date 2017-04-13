@@ -3,6 +3,8 @@ class ApplyLeave extends React.Component {
     super(props);
     this.state={list:[],leaveSet:{
       "employee": "",
+      "name":"",
+      "code":"",
        "leaveType": {
        	"id" : ""
        },
@@ -11,8 +13,8 @@ class ApplyLeave extends React.Component {
        "availableDays": "",
        "leaveDays":"",
        "reason": "",
-       "status": "APPROVED",
-       "stateId": 1,
+       "status": "",
+       "stateId": "",
        "tenantId" : tenantId
      },leaveList:[]}
     this.handleChange=this.handleChange.bind(this);
@@ -29,6 +31,19 @@ class ApplyLeave extends React.Component {
 
     });
     $('#fromDate').on("change", function(e) {
+      var from = $('#fromDate').val();
+      var to = $('#toDate').val();
+      var dateParts = from.split("/");
+      var newDateStr = dateParts[1] + "/" + dateParts[0] + "/ " + dateParts[2];
+      var date1 = new Date(newDateStr);
+
+      var dateParts = to.split("/");
+      var newDateStr = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2];
+      var date2 = new Date(newDateStr);
+      if (date1 > date2) {
+          showError("From date must be before of End date");
+          $('#fromDate').val("");
+      }
       _this.setState({
             leaveSet: {
                 ..._this.state.leaveSet,
@@ -37,6 +52,7 @@ class ApplyLeave extends React.Component {
       })
 
       });
+
       $('#toDate').datepicker({
           format: 'dd/mm/yyyy',
           autoclose:true
@@ -53,7 +69,7 @@ class ApplyLeave extends React.Component {
         var newDateStr = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2];
         var date2 = new Date(newDateStr);
         if (date1 > date2) {
-            showError("End date must be after From date");
+            showError("End date must be after of From date");
             $('#toDate').val("");
         }
 
@@ -66,8 +82,30 @@ class ApplyLeave extends React.Component {
         })
         var start = $('#fromDate').datepicker('getDate');
         var end   = $('#toDate').datepicker('getDate');
-        var days   = (end - start)/1000/60/60/24;
-        $('#leaveDays').val(days);
+        var timeDiff = 1 + Math.round(end.getTime() - start.getTime());
+             var days = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+             if(days){
+                   // Subtract two weekend days for every week in between
+                   var weeks = Math.floor(days / 7);
+                   days = days - (weeks * 2);
+
+                   // Handle special cases
+                   var startDay = start.getDay();
+                   var endDay = end.getDay();
+
+                   // Remove weekend not previously removed.
+                   if (startDay - endDay > 1)
+                       days = days - 2;
+
+                   // Remove start day if span starts on Sunday but ends before Saturday
+                   if (startDay == 0 && endDay != 6)
+                       days = days - 1;
+
+                   // Remove end day if span ends on Saturday but starts after Sunday
+                   if (endDay == 6 && startDay != 0)
+                       days = days - 1;
+               }
         _this.setState({
           leaveSet:{
               ..._this.state.leaveSet,
@@ -164,7 +202,7 @@ addOrUpdate(e,mode)
             if(type == "update") {
               $.ajax({
 
-                    url:baseUrl+"/egov-common-masters/holidays/" + this.state.Holiday.id + "/" + "_update/",
+                    url:baseUrl+"/hr-leave/leaveapplications/" + this.state.leaveSet.id + "/" + "_update",
                     type: 'POST',
                     dataType: 'json',
                     data:JSON.stringify(body),
@@ -177,6 +215,8 @@ addOrUpdate(e,mode)
                             showSuccess("Leave Application Modified successfully.");
                             _this.setState({
                               leaveSet:{
+                                "name":"",
+                                "code":"",
                                 "employee": "",
                                  "leaveType": {
                                  	"id" : ""
@@ -214,6 +254,8 @@ addOrUpdate(e,mode)
                             showSuccess("Leave Application Created successfully.");
                             _this.setState({
                               leaveSet:{
+                                "name":"",
+                                "code":"",
                                 "employee": "",
                                  "leaveType": {
                                  	"id" : ""
@@ -244,7 +286,6 @@ addOrUpdate(e,mode)
     let {handleChange,addOrUpdate,handleChangeThreeLevel}=this;
     let {leaveSet}=this.state;
     let {name,code,leaveDays,availableDays,fromDate,toDate,reason,leaveType}=leaveSet;
-    let id = this.state.leaveSet.leaveType.id;
 
 
 
@@ -335,7 +376,7 @@ addOrUpdate(e,mode)
                         </div>
                         <div className="col-sm-6">
                             <div className="styled-select">
-                            <select id="leaveType" name="leaveType" value={id} required="true" onChange={(e)=>{
+                            <select id="leaveType" name="leaveType" value={leaveType.id} required="true" onChange={(e)=>{
                                 handleChangeThreeLevel(e,"leaveType","id")
                             }}>
                             <option value=""> select Leave Type</option>

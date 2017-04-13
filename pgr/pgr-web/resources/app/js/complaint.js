@@ -424,7 +424,7 @@ function doCheckUser(){
 			contentType: "application/json",
 			data : JSON.stringify(requestInfo),
 			success : function(userResponse){
-				userName = userResponse.user[0].userName;
+				userName = userResponse.user[0].name;
 				userMobile = userResponse.user[0].mobileNumber;
 				userEmail = userResponse.user[0].emailId;
 			},

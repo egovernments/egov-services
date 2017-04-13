@@ -154,7 +154,7 @@ class SearchLeaveApplication extends React.Component {
     {
       if(employees.length>0)
       {
-      return employees.map((item,index,employee)=>
+      return employees.map((item,index,id)=>
       {
             return (<tr key={index}>
 
@@ -163,7 +163,7 @@ class SearchLeaveApplication extends React.Component {
                     <td data-label="designation">{getNameById(assignments_designation,item.assignments[0].designation)}</td>
                     <td data-label="department">{getNameById(assignments_department,item.assignments[0].department)}</td>
                     <td data-label="action">
-                      <a href={`app/hr/leavemaster/apply-leave.html?employee=${item.id}`}>Create</a>
+                      <a href={`app/hr/leavemaster/apply-leave.html?id=${item.id}`}>Create</a>
                     </td>
 
                 </tr>

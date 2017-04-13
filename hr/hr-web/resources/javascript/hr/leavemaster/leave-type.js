@@ -49,9 +49,10 @@ addOrUpdate(e,mode)
             "RequestInfo":requestInfo,
             "LeaveType":[tempInfo]
           };
-        var response=$.ajax({
+            if(type == "update") {
+        $.ajax({
 
-              url:baseUrl+"/hr-leave/leavetypes/" + (type == "update" ? (this.state.LeaveType.id + "/" + "_update/") : "_create"),
+              url:baseUrl+"/hr-leave/leavetypes/" + this.state.LeaveType.id + "/" + "_update/",
               type: 'POST',
               dataType: 'json',
               data:JSON.stringify(body),
@@ -59,51 +60,73 @@ addOrUpdate(e,mode)
               contentType: 'application/json',
               headers:{
                 'auth-token': authToken
+              },
+              success: function(res) {
+                      showSuccess("Leave Modified successfully.");
+                      _this.setState({
+                        LeaveType:{
+                          "id": "",
+                          "name": "",
+                          "description": "",
+                          "halfdayAllowed": "",
+                          "payEligible": "",
+                          "accumulative": "",
+                          "encashable": "",
+                          "active": "",
+                          "createdBy": "",
+                          "createdDate": "",
+                          "lastModifiedBy": "",
+                          "lastModifiedDate": "",
+                          "tenantId": tenantId
+                      }
+                      })
+
+              },
+              error: function(err) {
+                  showError(err);
+
               }
           });
+        } else {
+          $.ajax({
 
+                url:baseUrl+"/hr-leave/leavetypes/_create" ,
+                type: 'POST',
+                dataType: 'json',
+                data:JSON.stringify(body),
+                async: false,
+                contentType: 'application/json',
+                headers:{
+                  'auth-token': authToken
+                },
+                success: function(res) {
+                        showSuccess("Leave Created successfully.");
+                        _this.setState({
+                          LeaveType:{
+                            "id": "",
+                            "name": "",
+                            "description": "",
+                            "halfdayAllowed": "",
+                            "payEligible": "",
+                            "accumulative": "",
+                            "encashable": "",
+                            "active": "",
+                            "createdBy": "",
+                            "createdDate": "",
+                            "lastModifiedBy": "",
+                            "lastModifiedDate": "",
+                            "tenantId": tenantId
+                        }
+                        })
 
-        if(response["statusText"]==="OK")
-        {
-          alert("Successfully added");
-          this.setState({
-            LeaveType:{
-              "id": "",
-              "name": "",
-              "description": "",
-              "halfdayAllowed": "",
-              "payEligible": "",
-              "accumulative": "",
-              "encashable": "",
-              "active": "",
-              "createdBy": "",
-              "createdDate": "",
-              "lastModifiedBy": "",
-              "lastModifiedDate": "",
-              "tenantId": tenantId
-          }
-          })
+                },
+                error: function(err) {
+                    showError(err);
+
+                }
+            });
+
         }
-        else {
-          alert(response["statusText"]);
-          this.setState({
-            LeaveType:{
-              "id": "",
-              "name": "",
-              "description": "",
-              "halfdayAllowed": "",
-              "payEligible": "",
-              "accumulative": "",
-              "encashable": "",
-              "active": "",
-              "createdBy": "",
-              "createdDate": "",
-              "lastModifiedBy": "",
-              "lastModifiedDate": "",
-              "tenantId": tenantId
-          }
-          })
-      }
   }
 
 

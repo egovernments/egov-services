@@ -43,6 +43,19 @@ class ApplyLeave extends React.Component {
 
       });
       $('#toDate').on("change", function(e) {
+        var from = $('#fromDate').val();
+        var to = $('#toDate').val();
+        var dateParts = from.split("/");
+        var newDateStr = dateParts[1] + "/" + dateParts[0] + "/ " + dateParts[2];
+        var date1 = new Date(newDateStr);
+
+        var dateParts = to.split("/");
+        var newDateStr = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2];
+        var date2 = new Date(newDateStr);
+        if (date1 > date2) {
+            showError("End date must be after From date");
+            $('#toDate').val("");
+        }
 
         _this.setState({
               leaveSet: {

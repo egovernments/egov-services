@@ -169,7 +169,7 @@ paths:
           schema:
             $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ErrorRes'
 
-  /HOD/employees/_search:
+  /hod/employees/_search:
     # This is a HTTP operation
     post:
       # Describe this verb here. Note: you can use markdown 

@@ -239,4 +239,19 @@ public class ErrorHandler {
 
 		return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
 	}
+
+	public ResponseEntity<?> getResponseEntityForInvalidEmployeeId(BindingResult modelAttributeBindingResult,
+			RequestInfo requestInfo) {
+		Error error = new Error();
+		error.setCode(400);
+		error.setMessage("Employee id does not exist");
+		error.setDescription("Employee id does not exist");
+		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, false);
+
+		ErrorResponse errorResponse = new ErrorResponse();
+		errorResponse.setResponseInfo(responseInfo);
+		errorResponse.setError(error);
+
+		return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
+	}
 }

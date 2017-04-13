@@ -1,5 +1,7 @@
 package org.egov.eis.web.contract;
 
+import javax.validation.constraints.NotNull;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,8 +9,10 @@ import lombok.Setter;
 @Setter
 public class EmployeeGetRequest {
 
+	@NotNull
 	Long id;
-
+	
+	@NotNull
 	String tenantId;
 
 }

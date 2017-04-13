@@ -13,7 +13,8 @@ public class EmployeeTableRowMapper implements ResultSetExtractor<Employee> {
 	
 	@Override
 	public Employee extractData(ResultSet rs) throws SQLException, DataAccessException {
-		rs.next();
+		if (!rs.next())
+			return null;
 		Employee employee = new Employee();
 		employee.setId(rs.getLong("id"));
 		employee.setCode(rs.getString("code"));

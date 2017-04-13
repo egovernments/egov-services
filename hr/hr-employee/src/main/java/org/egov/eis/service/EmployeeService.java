@@ -60,6 +60,7 @@ import org.egov.eis.repository.ProbationRepository;
 import org.egov.eis.repository.RegularisationRepository;
 import org.egov.eis.repository.ServiceHistoryRepository;
 import org.egov.eis.repository.TechnicalQualificationRepository;
+import org.egov.eis.service.exception.EmployeeIdNotFoundException;
 import org.egov.eis.service.helper.EmployeeHelper;
 import org.egov.eis.service.helper.EmployeeUserMapper;
 import org.egov.eis.web.contract.EmployeeCriteria;
@@ -188,6 +189,8 @@ public class EmployeeService {
 	
 	public Employee getEmployee(Long employeeId, String tenantId, RequestInfo requestInfo) {
 		Employee employee = employeeRepository.findById(employeeId, tenantId);
+		if (employee == null) 
+			throw new EmployeeIdNotFoundException(employeeId);
 		employee.setLanguagesKnown(employeeLanguageRepository.findByEmployeeId(employeeId, tenantId));
 		employee.setAssignments(assignmentRepository.findByEmployeeId(employeeId, tenantId));
 		employee.setServiceHistory(serviceHistoryRepository.findByEmployeeId(employeeId, tenantId));

@@ -47,6 +47,7 @@ import javax.validation.Valid;
 import org.egov.eis.model.Employee;
 import org.egov.eis.model.EmployeeInfo;
 import org.egov.eis.service.EmployeeService;
+import org.egov.eis.service.exception.EmployeeIdNotFoundException;
 import org.egov.eis.service.helper.EmployeeHelper;
 import org.egov.eis.web.contract.EmployeeCriteria;
 import org.egov.eis.web.contract.EmployeeGetRequest;
@@ -98,10 +99,10 @@ public class EmployeeController {
 
 	@Autowired
 	private DataIntegrityValidatorForCreate dataIntegrityValidatorForCreate;
-	
+
 	@Autowired
 	private DataIntegrityValidatorForUpdate dataIntegrityValidatorForUpdate;
-	
+
 	@Autowired
 	private EmployeeHelper employeeHelper;
 
@@ -139,7 +140,7 @@ public class EmployeeController {
 
 		return getSuccessResponseForSearch(employeesList, requestInfo);
 	}
-	
+
 	/**
 	 * Maps Post Requests for _search & returns ResponseEntity of either
 	 * EmployeeResponse type or ErrorResponse type
@@ -150,13 +151,13 @@ public class EmployeeController {
 	 * @param BindingResult
 	 * @return ResponseEntity<?>
 	 */
-	@PostMapping("_get")
+	@PostMapping("{id}/_search")
 	@ResponseBody
 	public ResponseEntity<?> get(@ModelAttribute @Valid EmployeeGetRequest employeeGetRequest,
 			BindingResult modelAttributeBindingResult, @RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
 			BindingResult requestBodyBindingResult) {
+		
 		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
-
 		ResponseEntity<?> errorResponseEntity = requestValidator.validateSearchRequest(requestInfo,
 				modelAttributeBindingResult, requestBodyBindingResult);
 
@@ -166,12 +167,15 @@ public class EmployeeController {
 		// Call service
 		Employee employee = null;
 		try {
-			employee = employeeService.getEmployee(employeeGetRequest.getId(), employeeGetRequest.getTenantId(), requestInfo);
+			employee = employeeService.getEmployee(employeeGetRequest.getId(), employeeGetRequest.getTenantId(),
+					requestInfo);
+		} catch (EmployeeIdNotFoundException idNotFoundException) {
+			LOGGER.error("Error while processing request " + employeeGetRequest.getId(), idNotFoundException);
+			return errorHandler.getResponseEntityForInvalidEmployeeId(modelAttributeBindingResult, requestInfo);
 		} catch (Exception exception) {
 			LOGGER.error("Error while processing request " + employeeGetRequest.getId(), exception);
 			return errorHandler.getResponseEntityForUnexpectedErrors(requestInfo);
 		}
-
 		return employeeHelper.getSuccessResponseForGet(employee, requestInfo);
 	}
 
@@ -223,8 +227,8 @@ public class EmployeeController {
 	 * @param bindingResult
 	 * @return ResponseEntity<?>
 	 */
-	private ResponseEntity<?> validateEmployeeRequest(EmployeeRequest employeeRequest,
-			BindingResult bindingResult, boolean isUpdate) {
+	private ResponseEntity<?> validateEmployeeRequest(EmployeeRequest employeeRequest, BindingResult bindingResult,
+			boolean isUpdate) {
 		// validate input params that can be handled by annotations
 		if (bindingResult.hasErrors()) {
 			return errorHandler.getErrorResponseEntityForBindingErrors(bindingResult, employeeRequest.getRequestInfo());
@@ -233,9 +237,11 @@ public class EmployeeController {
 		// validate input params that can't be handled by annotations
 		ValidationUtils.invokeValidator(employeeAssignmentValidator, employeeRequest.getEmployee(), bindingResult);
 		if (isUpdate)
-			ValidationUtils.invokeValidator(dataIntegrityValidatorForUpdate, employeeRequest.getEmployee(), bindingResult);
+			ValidationUtils.invokeValidator(dataIntegrityValidatorForUpdate, employeeRequest.getEmployee(),
+					bindingResult);
 		else
-			ValidationUtils.invokeValidator(dataIntegrityValidatorForCreate, employeeRequest.getEmployee(), bindingResult);
+			ValidationUtils.invokeValidator(dataIntegrityValidatorForCreate, employeeRequest.getEmployee(),
+					bindingResult);
 
 		if (bindingResult.hasErrors()) {
 			return errorHandler.getErrorResponseEntityForBindingErrors(bindingResult, employeeRequest.getRequestInfo());

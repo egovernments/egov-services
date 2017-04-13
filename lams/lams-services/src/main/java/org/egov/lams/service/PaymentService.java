@@ -294,7 +294,7 @@ public class PaymentService {
 		
 		// FIXME get the query String from query builder //FIXME do the jdbctemplate in repository
 		String sql = "select * from eglams_agreement agreement where agreement.acknowledgementnumber=" + consumerCode
-				+ "OR agreement.agreement_no=" + consumerCode;
+				+ " OR agreement.agreement_no=" + consumerCode;
 
 		List<Agreement> agreements = null;
 		try {

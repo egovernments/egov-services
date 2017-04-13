@@ -115,6 +115,12 @@ public class LeaveApplicationQueryBuilder {
             selectQuery.append(" la.applicationNumber = ?");
             preparedStatementValues.add(leaveApplicationGetRequest.getApplicationNumber());
         }
+        
+        if (leaveApplicationGetRequest.getStatus() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" la.status = ?");
+            preparedStatementValues.add(leaveApplicationGetRequest.getStatus());
+        }
 
         if (leaveApplicationGetRequest.getEmployee() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);

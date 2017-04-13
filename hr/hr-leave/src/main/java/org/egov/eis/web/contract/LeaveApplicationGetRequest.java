@@ -69,6 +69,8 @@ public class LeaveApplicationGetRequest {
 	private Long leaveType;
 
 	private String applicationNumber;
+	
+	private String status;
 
 	private List<Long> employee;
 

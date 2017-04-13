@@ -167,6 +167,10 @@ $(document).ready(function()
 		});
 	});
 
+	$('[data-include=header]').append('<nav class="navbar navbar-default navbar-custom navbar-fixed-top"> <div class="container-fluid"> <div class="navbar-header col-md-10 col-xs-10"> <a class="navbar-brand" href="javascript:void(0);"> <img src="../resources/global/images/logo@2x.png" height="60"> <div> <span class="title2" data-translate='+$('header').data('header-title')+'></span> </div> </a> </div> <div class="nav-right-menu col-md-2 col-xs-2"> <ul class="hr-menu text-right"> <li class="ico-menu"> <a href="http://www.egovernments.org" data-strwindname = "egovsite" class="open-popup"> <img src="../resources/global/images/egov_logo_tr_h.png" title="Powered by eGovernments" height="37" alt=""> </a> </li> </ul> </div> </div> </nav>');
+
+	$('[data-include=footer]').append('<a href="http://eGovernments.org" target="_blank"><span data-translate="core.lbl.page.footer"></span></a>')
+
 	translate();
 
 });

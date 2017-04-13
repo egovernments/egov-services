@@ -30,30 +30,8 @@
 	</head>
     <body class="page-body" oncontextmenu="return false;">
         <div class="page-container">
-            
-			<header class="navbar navbar-fixed-top"><!-- set fixed position by adding class "navbar-fixed-top" -->
-				<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
-					<div class="container-fluid">
-					<div class="navbar-header col-md-10 col-xs-10">
-						<a class="navbar-brand" href="javascript:void(0);">
-							<img src="../resources/global/images/logo@2x.png" height="60">
-							<div><span class="title2" data-translate="pgr.title.create.grievence"></span></div>
-						</a>
-					</div>
 
-					<div class="nav-right-menu col-md-2 col-xs-2">
-						<ul class="hr-menu text-right">
-							<li class="ico-menu">
-								<a href="http://www.egovernments.org" target="_blank">
-									<img src="../resources/global/images/logo@2x.png" title="Powered by eGovernments" height="20px">
-								</a>
-							</li>
-							
-						</ul>
-					</div>
-
-					</div>
-				</nav>
+        	<header class="navbar navbar-fixed-top" data-include="header" data-header-title="pgr.title.create.grievence">
 			</header>
 
 	        <div class="main-content">
@@ -61,7 +39,7 @@
 				<div class="row">
 					<div class="col-md-12" style="position:relative;">
 						<ol class="breadcrumb hide">
-							<li><a href="javascript:void(0)" data-translate="pgr.title.create.grievence">Create Grievance</a></li>
+							<li><a href="javascript:void(0)" data-translate="pgr.title.create.grievence"></a></li>
 						</ol>
 						<div class="tour-section" data-toggle="tooltip" title="Click for demo!"><i class="fa fa-question" aria-hidden="true"></i></div>
 						<form id="complaintform" class="form-horizontal form-groups-bordered" role="form" method="post" enctype="multipart/form-data" autocomplete="off">
@@ -90,7 +68,7 @@
 
 										<div class="officialremove">
 											<div class="form-group hide receivingModeSection">
-												<label class="col-sm-3 control-label required" data-translate="pgr.lbl.receivingmode">Receiving Mode</label>
+												<label class="col-sm-3 control-label required" data-translate="pgr.lbl.receivingmode"></label>
 												<div class="col-sm-6 col-xs-12">
 													<select name="receivingMode" data-extra id="receivingMode" class="form-control" required=""></select>
 												</div>
@@ -242,47 +220,48 @@
 						</form>
 					</div>
 				</div>
-
-				<div class="modal fade" id="modal-6">
-					<div class="modal-dialog">
-						<div class="modal-content">
-							<div class="modal-body">
-								<div class="row">
-									<div class="col-md-12">
-										<div class="panel panel-primary" data-collapsed="0"><!-- to apply shadow add class "panel-shadow" -->
-											<!-- panel head -->
-											<div class="panel-heading">
-												<div class="panel-title" data-translate="pgr.lbl.grievance.location"></div>
-											</div>
-										
-											<!-- panel body -->
-											<div class="panel-body no-padding">
-												<script type="text/javascript" src="https://maps.google.com/maps/api/js?key=AIzaSyB4Rn4dQ1hivzYaXNvpxxUB5i3x2j4ytic&libraries=places"></script>
-												<script type="text/javascript" src="../resources/global/js/geolocation/geolocation-marker.js"></script>
-												<div id="normal" class="img-prop"></div>
-												<input id="pac-input" class="controls" type="text" placeholder="Enter a location">
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							
-							<div class="modal-footer">
-								<button type="button" class="btn btn-info btn-save-location" data-dismiss="modal" data-translate="core.lbl.ok"></button>
-								<button type="button" class="btn btn-default" data-dismiss="modal" data-translate="core.lbl.close"></button>
-							</div>
-						</div>
-					</div>
-				</div>
 	        </div>
-				
-			<footer class="main">
-			    <a href="http://egovernments.org/" target="_blank" data-translate="core.lbl.page.footer"></a>
+
+			<footer class="main" data-include="footer">
 			</footer>
+
         </div>
 
         <input type="hidden" value="" id="getcitylat">
         <input type="hidden" value="" id="getcitylng">
+
+
+        <div class="modal fade" id="modal-6">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-body">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="panel panel-primary" data-collapsed="0"><!-- to apply shadow add class "panel-shadow" -->
+									<!-- panel head -->
+									<div class="panel-heading">
+										<div class="panel-title" data-translate="pgr.lbl.grievance.location"></div>
+									</div>
+								
+									<!-- panel body -->
+									<div class="panel-body no-padding">
+										<script type="text/javascript" src="https://maps.google.com/maps/api/js?key=AIzaSyB4Rn4dQ1hivzYaXNvpxxUB5i3x2j4ytic&libraries=places"></script>
+										<script type="text/javascript" src="../resources/global/js/geolocation/geolocation-marker.js"></script>
+										<div id="normal" class="img-prop"></div>
+										<input id="pac-input" class="controls" type="text" placeholder="Enter a location">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<div class="modal-footer">
+						<button type="button" class="btn btn-info btn-save-location" data-dismiss="modal" data-translate="core.lbl.ok"></button>
+						<button type="button" class="btn btn-default" data-dismiss="modal" data-translate="core.lbl.close"></button>
+					</div>
+				</div>
+			</div>
+		</div>
 
         <div class="modal fade loader-class" data-backdrop="static">
 			<div class="modal-dialog">

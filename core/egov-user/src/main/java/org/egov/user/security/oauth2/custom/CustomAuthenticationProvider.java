@@ -60,75 +60,76 @@ import java.util.stream.Collectors;
 @Component
 public class CustomAuthenticationProvider implements AuthenticationProvider {
 
-	/**
-	 * TO-Do:Need to remove this and provide authentication for web, based on
-	 * authentication_code.
-	 */
-	private final String WEB_CHEAT_PASSWORD = "Pgr-weB-pa$$word";
+    /**
+     * TO-Do:Need to remove this and provide authentication for web, based on
+     * authentication_code.
+     */
+    private final String WEB_CHEAT_PASSWORD = "Pgr-weB-pa$$word";
 
-	@Autowired
-	private UserService userService;
-
-	@Override
-	public Authentication authenticate(Authentication authentication) {
-
-		String userName = authentication.getName();
-		String password = authentication.getCredentials().toString();
-		User user;
-		if (userName.contains("@") && userName.contains(".")) {
-			user = userService.getUserByEmailId(userName);
-		} else {
-			user = userService.getUserByUsername(userName);
-		}
-		if (user == null) {
-			throw new OAuth2Exception("Invalid login credentials");
-		}
-
-		BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
-
-		if (WEB_CHEAT_PASSWORD.equals(password) || bcrypt.matches(password, user.getPassword())) {
-
-			if (!user.getActive()) {
-				throw new OAuth2Exception("Please activate your account");
-			}
-			/**
-			 * We assume that there will be only one type. If it is multimple
-			 * then we have change below code Seperate by comma or other and
-			 * iterate
-			 */
-			List<GrantedAuthority> grantedAuths = new ArrayList<>();
-			grantedAuths.add(new SimpleGrantedAuthority("ROLE_" + user.getType()));
-			final SecureUser secureUser = new SecureUser(getUser(user));
-			return new UsernamePasswordAuthenticationToken(secureUser, password,
-					grantedAuths);
-		} else {
-			throw new OAuth2Exception("Invalid login credentials");
-		}
-	}
-
-	private org.egov.user.web.contract.auth.User getUser(User user) {
-		return org.egov.user.web.contract.auth.User.builder()
-                .id(user.getId())
-				.userName(user.getUsername())
-				.name(user.getName())
-                .mobileNumber(user.getMobileNumber())
-				.emailId(user.getEmailId())
-				.locale(user.getLocale())
-                .active(user.getActive())
-				.type(user.getType().name())
-				.roles(toAuthRole(user.getRoles()))
-				.build();
-	}
-
-	private List<org.egov.user.web.contract.auth.Role> toAuthRole(List<org.egov.user.domain.model.Role> domainRoles) {
-		if (domainRoles == null) return new ArrayList<>();
-		return domainRoles.stream().map(org.egov.user.web.contract.auth.Role::new)
-				.collect(Collectors.toList());
-	}
+    @Autowired
+    private UserService userService;
 
     @Override
-	public boolean supports(final Class<?> authentication) {
-		return authentication.equals(UsernamePasswordAuthenticationToken.class);
-	}
+    public Authentication authenticate(Authentication authentication) {
+
+        String userName = authentication.getName();
+        String password = authentication.getCredentials().toString();
+        User user;
+        if (userName.contains("@") && userName.contains(".")) {
+            user = userService.getUserByEmailId(userName);
+        } else {
+            user = userService.getUserByUsername(userName);
+        }
+        if (user == null) {
+            throw new OAuth2Exception("Invalid login credentials");
+        }
+
+        BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
+
+        if (WEB_CHEAT_PASSWORD.equals(password) || bcrypt.matches(password, user.getPassword())) {
+
+            if (!user.getActive()) {
+                throw new OAuth2Exception("Please activate your account");
+            }
+            /**
+             * We assume that there will be only one type. If it is multimple
+             * then we have change below code Seperate by comma or other and
+             * iterate
+             */
+            List<GrantedAuthority> grantedAuths = new ArrayList<>();
+            grantedAuths.add(new SimpleGrantedAuthority("ROLE_" + user.getType()));
+            final SecureUser secureUser = new SecureUser(getUser(user));
+            return new UsernamePasswordAuthenticationToken(secureUser, password,
+                    grantedAuths);
+        } else {
+            throw new OAuth2Exception("Invalid login credentials");
+        }
+    }
+
+    private org.egov.user.web.contract.auth.User getUser(User user) {
+        return org.egov.user.web.contract.auth.User.builder()
+                .id(user.getId())
+                .userName(user.getUsername())
+                .name(user.getName())
+                .mobileNumber(user.getMobileNumber())
+                .emailId(user.getEmailId())
+                .locale(user.getLocale())
+                .active(user.getActive())
+                .type(user.getType().name())
+                .roles(toAuthRole(user.getRoles()))
+                .tenantId(user.getTenantId())
+                .build();
+    }
+
+    private List<org.egov.user.web.contract.auth.Role> toAuthRole(List<org.egov.user.domain.model.Role> domainRoles) {
+        if (domainRoles == null) return new ArrayList<>();
+        return domainRoles.stream().map(org.egov.user.web.contract.auth.Role::new)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean supports(final Class<?> authentication) {
+        return authentication.equals(UsernamePasswordAuthenticationToken.class);
+    }
 
 }

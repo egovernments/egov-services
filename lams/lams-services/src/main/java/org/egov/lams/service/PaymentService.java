@@ -373,10 +373,9 @@ public class PaymentService {
 
 		BigDecimal totalAmountCollected = BigDecimal.ZERO;
 
-		LOGGER.info("updateDemandDetailForReceiptCreate rcptAccInfo ::: "
-				+ rcptAccInfo);
-		if (rcptAccInfo.getCrAmount() != null && rcptAccInfo.getCrAmount() > 0
-				&& !rcptAccInfo.isRevenueAccount()
+		LOGGER.info("updateDemandDetailForReceiptCreate rcptAccInfo ::: " + rcptAccInfo);
+		if (rcptAccInfo.getCrAmount() != null && rcptAccInfo.getCrAmount() > 0 && !rcptAccInfo.isRevenueAccount()
+
 				&& rcptAccInfo.getDescription() != null) {
 			String[] description = rcptAccInfo.getDescription().split("-");
 			String taxPeriod = description[0];

@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 import static org.egov.constants.RequestContextConstants.*;
 
@@ -25,13 +26,13 @@ import static org.egov.constants.RequestContextConstants.*;
 public class RequestEnrichmentFilter extends ZuulFilter {
 
     private static final String FAILED_TO_ENRICH_REQUEST_BODY_MESSAGE = "Failed to enrich request body";
-    private static final List<String> JSON_MEDIA_TYPES =
-        Arrays.asList(MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE);
     private static final String USER_SERIALIZATION_MESSAGE = "Failed to serialize user";
     private static final String SKIPPED_BODY_ENRICHMENT_DUE_TO_NO_KNOWN_FIELD_MESSAGE =
         "Skipped enriching request body since request info field is not present.";
     private static final String BODY_ENRICHED_MESSAGE = "Enriched request payload.";
     private static final String ADDED_USER_INFO_TO_HEADER_MESSAGE = "Adding user info to header.";
+    private static final String EMPTY_STRING = "";
+    private static final String JSON_TYPE = "json";
     private final ObjectMapper objectMapper;
     private static final String USER_INFO_HEADER_NAME = "x-user-info";
     private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -101,7 +102,7 @@ public class RequestEnrichmentFilter extends ZuulFilter {
     private boolean isRequestBodyCompatible() {
         return POST.equalsIgnoreCase(getRequestMethod())
             && !getRequestURI().matches(FILESTORE_REGEX)
-            && JSON_MEDIA_TYPES.contains(getRequestContentType());
+            && getRequestContentType().contains(JSON_TYPE);
     }
 
     private HttpServletRequest getRequest() {
@@ -114,7 +115,7 @@ public class RequestEnrichmentFilter extends ZuulFilter {
     }
 
     private String getRequestContentType() {
-        return getRequest().getContentType();
+        return Optional.ofNullable(getRequest().getContentType()).orElse(EMPTY_STRING).toLowerCase();
     }
 
     private String getRequestURI() {

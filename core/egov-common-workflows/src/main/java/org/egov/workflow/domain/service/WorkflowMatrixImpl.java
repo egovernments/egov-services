@@ -282,6 +282,16 @@ public class WorkflowMatrixImpl implements Workflow {
 				processInstance.setOwner(positionRepository.getById(state.getOwnerPosition(), null));
 			else if (state.getOwnerUser() != null)
 				processInstance.setOwner(positionRepository.getById(state.getOwnerUser(), null));
+			
+			if(processInstance.getOwner()==null)
+			{
+				Position p = new Position();
+				if (state.getOwnerPosition() != null)
+					p.setId(state.getOwnerPosition());
+				else if (state.getOwnerUser() != null)
+					p.setId(state.getOwnerUser());
+				processInstance.setOwner(p);
+			}
 			processInstance.setStatus(state.getValue());
 			processInstance.setState(state.getStatus().toString());
 			processInstance.setSenderName(state.getSenderName());

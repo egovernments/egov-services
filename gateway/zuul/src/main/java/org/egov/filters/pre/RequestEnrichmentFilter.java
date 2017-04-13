@@ -28,6 +28,10 @@ public class RequestEnrichmentFilter extends ZuulFilter {
     private static final List<String> JSON_MEDIA_TYPES =
         Arrays.asList(MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE);
     private static final String USER_SERIALIZATION_MESSAGE = "Failed to serialize user";
+    private static final String SKIPPED_BODY_ENRICHMENT_DUE_TO_NO_KNOWN_FIELD_MESSAGE =
+        "Skipped enriching request body since request info field is not present.";
+    private static final String BODY_ENRICHED_MESSAGE = "Enriched request payload.";
+    private static final String ADDED_USER_INFO_TO_HEADER_MESSAGE = "Adding user info to header.";
     private final ObjectMapper objectMapper;
     private static final String USER_INFO_HEADER_NAME = "x-user-info";
     private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -69,6 +73,7 @@ public class RequestEnrichmentFilter extends ZuulFilter {
             User user = getUser();
             try {
                 ctx.addZuulRequestHeader(USER_INFO_HEADER_NAME, objectMapper.writeValueAsString(user));
+                logger.info(ADDED_USER_INFO_TO_HEADER_MESSAGE);
             } catch (JsonProcessingException e) {
                 logger.error(USER_SERIALIZATION_MESSAGE, e);
                 throw new RuntimeException(e);
@@ -122,6 +127,7 @@ public class RequestEnrichmentFilter extends ZuulFilter {
         HashMap<String, Object> requestBody = getRequestBody(ctx);
         HashMap<String, Object> requestInfo = (HashMap<String, Object>) requestBody.get(REQUEST_INFO_FIELD_NAME);
         if (requestInfo == null) {
+            logger.info(SKIPPED_BODY_ENRICHMENT_DUE_TO_NO_KNOWN_FIELD_MESSAGE);
             return;
         }
         setUserInfo(requestInfo);
@@ -129,6 +135,7 @@ public class RequestEnrichmentFilter extends ZuulFilter {
         requestBody.put(REQUEST_INFO_FIELD_NAME, requestInfo);
         CustomRequestWrapper requestWrapper = new CustomRequestWrapper(ctx.getRequest());
         requestWrapper.setPayload(objectMapper.writeValueAsString(requestBody));
+        logger.info(BODY_ENRICHED_MESSAGE);
         ctx.setRequest(requestWrapper);
     }
 

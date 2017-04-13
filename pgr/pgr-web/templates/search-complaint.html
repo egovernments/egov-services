@@ -43,33 +43,7 @@
     <body class="page-body" oncontextmenu="return false;">
         <div class="page-container">
 
-			<header class="navbar navbar-fixed-top"><!-- set fixed position by adding class "navbar-fixed-top" -->
-				<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
-					<div class="container-fluid">
-						<div class="navbar-header col-md-10 col-xs-10">
-							<a class="navbar-brand" href="javascript:void(0);">
-								
-								<img src="../resources/global/images/logo@2x.png" height="60">
-								
-								<div>
-									<span class="title2" data-translate="pgr.lbl.search.grievance"></span>
-								</div>
-							</a>
-						</div>
-						
-						<div class="nav-right-menu col-md-2 col-xs-2">
-							<ul class="hr-menu text-right">
-								<li class="ico-menu">
-									<a href="http://www.egovernments.org" target="_blank">
-										<img src="../resources/global/images/logo@2x.png" title="Powered by eGovernments" height="20px">
-									</a>
-								</li>
-								
-							</ul>
-						</div>
-						
-					</div>
-				</nav>
+        	<header class="navbar navbar-fixed-top" data-include="header" data-header-title="pgr.lbl.search.grievance">
 			</header>
 
             <div class="main-content">
@@ -167,8 +141,7 @@
 				</table>
         	</div>
 				
-			<footer class="main">
-			    <a href="http://egovernments.org/" target="_blank" data-translate="core.lbl.page.footer"></a>
+			<footer class="main" data-include="footer">
 			</footer>
         </div>
         <div class="modal fade loader-class" data-backdrop="static">

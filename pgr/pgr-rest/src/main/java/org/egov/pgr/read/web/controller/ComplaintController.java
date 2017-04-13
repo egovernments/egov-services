@@ -60,6 +60,8 @@ public class ComplaintController {
                                                   (pattern = "dd-MM-yyyy") Date startDate,
                                               @RequestParam(value = "end_date", required = false) @DateTimeFormat
                                                   (pattern = "dd-MM-yyyy") Date endDate,
+                                              @RequestParam(value="escalation_date",required=false)@DateTimeFormat 
+                                                  (pattern="dd-MM-yyyy")Date escalationDate,
                                               @RequestParam(value = "status", required = false)List <String> status,
                                               @RequestParam(value = "last_modified_datetime", required = false)
                                                   @DateTimeFormat(pattern = "dd-MM-yyyy") Date lastModifiedDate,
@@ -79,7 +81,7 @@ public class ComplaintController {
 
         ComplaintSearchCriteria complaintSearchCriteria = ComplaintSearchCriteria.builder().assignmentId(assignmentId)
             .endDate(endDate).lastModifiedDatetime(lastModifiedDate).serviceCode(serviceCode)
-            .serviceRequestId(serviceRequestId).startDate(startDate).status(status).userId(userId).name(name)
+            .serviceRequestId(serviceRequestId).startDate(startDate).escalationDate(escalationDate).status(status).userId(userId).name(name)
             .mobileNumber(mobileNumber).emailId(emailId).receivingMode(receivingMode).locationId(locationId)
             .childLocationId(childLocationId).build();
         final List<Complaint> complaints = complaintService.findAll(complaintSearchCriteria);

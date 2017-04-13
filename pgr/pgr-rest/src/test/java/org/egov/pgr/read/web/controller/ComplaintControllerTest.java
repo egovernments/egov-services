@@ -141,6 +141,7 @@ public class ComplaintControllerTest {
         ComplaintSearchCriteria criteria = ComplaintSearchCriteria.builder()
             .assignmentId(10L)
             .endDate(null)
+            .escalationDate(null)
             .lastModifiedDatetime(null)
             .serviceCode("serviceCode_123")
             .serviceRequestId("serid_123").startDate(null)

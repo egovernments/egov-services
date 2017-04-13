@@ -39,6 +39,7 @@ public class SevaSpecification implements Specification<Complaint> {
         Path<Long> childLocationId = root.get(Complaint_.childLocation);
         Path<ReceivingMode> receivingMode = root.get(Complaint_.receivingMode);
         Path<Long> mode = receivingMode.get(ReceivingMode_.id);
+        Path <Date> escalationDate=root.get(Complaint_.escalationDate);
 
         List<Predicate> predicates = new ArrayList<>();
         if (criteria.getServiceRequestId() != null) {
@@ -97,6 +98,11 @@ public class SevaSpecification implements Specification<Complaint> {
         }
         if (criteria.getReceivingMode() != null) {
             predicates.add(criteriaBuilder.equal(mode, criteria.getReceivingMode()));
+        }
+        
+        if(criteria.getEscalationDate() !=null)
+        {
+        	predicates.add(criteriaBuilder.lessThan(escalationDate, criteria.getEscalationDate()));
         }
 
         return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));

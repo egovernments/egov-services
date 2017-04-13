@@ -17,7 +17,7 @@ def build_image(dockerfile_path, image_name, commit_id){
 
 def publish(service_name, commit_id){
     stage("Publish docker image") {
-        sh "docker images | grep egovio/${service_name} | awk '{b=\$1\":\"\$2' print b}' | while read x; do docker push \$x; done"
+        sh "docker images | grep egovio/${service_name} | awk '{b=\$1\":\"\$2; print b}' | while read x; do docker push \$x; done"
     }
 }
 

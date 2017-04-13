@@ -285,8 +285,8 @@ public class PaymentService {
 		System.out.print("PaymentService- updateDemand - setPaymentInfos done");
 		
 		///FIXME put update workflow here  here 
-		
 		updateWorkflow(billInfo.getConsumerCode(),requestInfo);
+		LOGGER.info("the consumer code from bill object ::: "+billInfo.getConsumerCode());
 		return receiptAmountBifurcation(billReceiptInfo, billInfo);
 	}
 
@@ -303,6 +303,7 @@ public class PaymentService {
 			e.printStackTrace();
 			LOGGER.info("exception while fetching agreemment in paymentService");
 		}
+		LOGGER.info("the result form jdbc query ::: "+agreements);
 		AgreementRequest agreementRequest = new AgreementRequest();
 		agreementRequest.setRequestInfo(requestInfo);
 		agreementRequest.setAgreement(agreements.get(0));

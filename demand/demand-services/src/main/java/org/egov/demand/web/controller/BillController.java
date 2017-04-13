@@ -61,6 +61,7 @@ public class BillController {
 		try {
 			EgBill bill = billRepository.findOne(billSearchCriteria.getBillId());
 			billContract = bill.toDomain();
+			billContract.setConsumerCode(bill.getConsumerId());
 			billContracts.add(billContract);
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -54,6 +54,9 @@ public class PaymentService {
 	JdbcTemplate jdbcTemplate;
 	
 	@Autowired
+	AgreementService agreementService;
+	
+	@Autowired
 	AgreementProducer agreementProducer;
 	
 	@Autowired
@@ -303,7 +306,8 @@ public class PaymentService {
 		AgreementRequest agreementRequest = new AgreementRequest();
 		agreementRequest.setRequestInfo(requestInfo);
 		agreementRequest.setAgreement(agreements.get(0));
-		agreementProducer.sendMessage(propertiesManager.getUpdateWorkflowTopic(), "key", agreementRequest);
+		LOGGER.info("calling agreement service todo agreement update");
+		agreementService.updateAgreement(agreementRequest);
 		LOGGER.info("Workflow update for collection has been put into Kafka Queue");
 	}
 

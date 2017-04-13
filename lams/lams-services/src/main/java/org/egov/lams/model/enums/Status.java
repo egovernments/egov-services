@@ -16,7 +16,7 @@ public enum Status {
 	@Override
 	@JsonValue
 	public String toString() {
-		return this.value;
+		return String.valueOf(value);
 	}
 
 	@JsonCreator

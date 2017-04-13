@@ -48,7 +48,7 @@ public class AgreementDao {
 				agreement.getOrderDetails(), agreement.getOrderNo(), PaymentCycle.ANNUAL.toString(),
 				agreement.getRegistrationFee(), agreement.getRemarks(), agreement.getRent(),
 				agreement.getRrReadingNo(),agreement.getSecurityDeposit(), agreement.getSecurityDepositDate(),
-				agreement.getSolvencyCertificateDate(),agreement.getSolvencyCertificateNo(),Status.ACTIVE.toString(),
+				agreement.getSolvencyCertificateDate(),agreement.getSolvencyCertificateNo(),Status.WORKFLOW.toString(),
 				agreement.getTinNumber(),agreement.getTenderDate(),agreement.getTenderNumber(), agreement.getTradelicenseNumber(),
 				agreement.getTenantId(),agreement.getTenantId(), new Date(), new Date(),agreement.getAllottee().getId(),
 				agreement.getAsset().getId(),agreement.getRentIncrementMethod().getId(), agreement.getAcknowledgementNumber(),

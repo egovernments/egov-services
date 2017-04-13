@@ -4,6 +4,7 @@ import org.egov.lams.config.PropertiesManager;
 import org.egov.lams.contract.AgreementRequest;
 import org.egov.lams.contract.ProcessInstance;
 import org.egov.lams.model.Agreement;
+import org.egov.lams.model.enums.Status;
 import org.egov.lams.repository.WorkflowRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,14 +36,18 @@ public class WorkflowService {
 		agreement.setStateId(processInstanceResponse.getId());
 		saveAgreement(agreementRequest);
 	}
-	
+
 	public void updateWorkflow(AgreementRequest agreementRequest) {
 
-		workflowRepository.updateWorkflow(agreementRequest);
-		if (agreementRequest.getAgreement().getWorkflowDetails() != null)
+		if (!agreementRequest.getAgreement().getStatus().equals(Status.ACTIVE)) {
+			// FIXME APROOVED
+			workflowRepository.updateWorkflow(agreementRequest);
+			if (agreementRequest.getAgreement().getWorkflowDetails() != null)
+				updateAgreement(agreementRequest);
+			LOGGER.info("workflow update for non collection and agreement update ");
+		}else
 			updateAgreement(agreementRequest);
-		LOGGER.info("workflow update for non collection and agreement update ");
-		//FIXME Can i call update agreement for collection update
+			// FIXME Can i call update agreement for collection update
 	}
 
 	private void saveAgreement(AgreementRequest agreementRequest) {

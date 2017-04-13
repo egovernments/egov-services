@@ -300,31 +300,36 @@ public class PaymentService {
 
 	private void updateDemandDetailForReceiptCreate(Demand demand, BillReceiptReq billReceiptInfo) {
 		BigDecimal totalAmountCollected = BigDecimal.ZERO;
-
-		LOGGER.info("updateDemandDetailForReceiptCreate rcptAccInfo ::: " + billReceiptInfo.getBillReferenceNum());
+		LOGGER.info("the size of objects ::: "+billReceiptInfo.getAccountDetails().size()
+						+ "the size of demand details ::"+demand.getDemandDetails().size());
 		for (final ReceiptAccountInfo rcptAccInfo : billReceiptInfo.getAccountDetails()) {
 
-			LOGGER.info("updateDemandDetailForReceiptCreate rcptAccInfo ::: " + rcptAccInfo);
-			if (rcptAccInfo.getCrAmount() != null && rcptAccInfo.getCrAmount() > 0 && !rcptAccInfo.isRevenueAccount()
-					&& rcptAccInfo.getDescription() != null) {
-
-				// updating the existing demand detail..
-				for (final DemandDetails demandDetail : demand.getDemandDetails()) {
-					if (demandDetail.getTaxPeriod() != null
-							&& demandDetail.getTaxPeriod().equalsIgnoreCase(rcptAccInfo.getDescription())) {
-						LOGGER.info("updateDemandDetailForReceiptCreate inside if statement ::: demanddetail id"
-								+ demandDetail.getId());
-						demandDetail.setCollectionAmount(BigDecimal.valueOf(rcptAccInfo.getCrAmount()));
-						LOGGER.info("inside if statement ::: demanddetail :::" + demand.getDemandDetails());
-						// demand.DemandDetails(demandDetail);
-
-						totalAmountCollected = totalAmountCollected.add(BigDecimal.valueOf(rcptAccInfo.getCrAmount()));
-					}
-				}
-			}
+			totalAmountCollected =  totalAmountCollected.add(updateDemandDetails(demand,rcptAccInfo));
 		}
 		LOGGER.info("updateDemandDetailForReceiptCreate  ::: totalAmountCollected " + totalAmountCollected);
 		demand.setCollectionAmount(totalAmountCollected);
+	}
+
+	private BigDecimal updateDemandDetails(Demand demand, final ReceiptAccountInfo rcptAccInfo) {
+
+		BigDecimal totalAmountCollected = BigDecimal.ZERO;
+
+		LOGGER.info("updateDemandDetailForReceiptCreate rcptAccInfo ::: " + rcptAccInfo);
+		if (rcptAccInfo.getCrAmount() != null && rcptAccInfo.getCrAmount() > 0 && !rcptAccInfo.isRevenueAccount()
+				&& rcptAccInfo.getDescription() != null) {
+
+			// updating the existing demand detail..
+			for (final DemandDetails demandDetail : demand.getDemandDetails()) {
+				if (demandDetail.getTaxPeriod() != null
+						&& demandDetail.getTaxPeriod().equalsIgnoreCase(rcptAccInfo.getDescription())) {
+					int i = 0;
+					LOGGER.info("the matched if statement insided uodatedemanddetails :: "+ ++i);
+					demandDetail.setCollectionAmount(BigDecimal.valueOf(rcptAccInfo.getCrAmount()));
+					totalAmountCollected = totalAmountCollected.add(BigDecimal.valueOf(rcptAccInfo.getCrAmount()));
+				}
+			}
+		}
+		return totalAmountCollected;
 	}
 
 	public ResponseEntity<ReceiptAmountInfo> receiptAmountBifurcation(final BillReceiptReq billReceiptInfo,

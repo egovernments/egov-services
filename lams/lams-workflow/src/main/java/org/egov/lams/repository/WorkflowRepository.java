@@ -124,7 +124,7 @@ public class WorkflowRepository {
 			List<Attribute> attributes = new ArrayList<>(processInstance.getAttributes().values());
 			task.setAction(attributes.get(0).getValues().get(0).getKey());
 			task.setStatus(processInstance.getStatus());
-			assignee = processInstance.getAssignee();
+			assignee = processInstance.getOwner();
 			task.setAssignee(assignee);
 			
 		}

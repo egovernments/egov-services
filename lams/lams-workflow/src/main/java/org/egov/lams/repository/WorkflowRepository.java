@@ -125,8 +125,9 @@ public class WorkflowRepository {
 			task.setAction(attributes.get(0).getValues().get(0).getKey());
 			task.setStatus(processInstance.getStatus());
 			assignee = processInstance.getOwner();
+			LOGGER.info("the owner object from response is ::: "+assignee);
 			task.setAssignee(assignee);
-			
+			LOGGER.info("the assignee value is ::: "+task.getAssignee());
 		}
 			taskRequest.setTask(task);
 		

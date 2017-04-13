@@ -18,6 +18,8 @@ import org.egov.workflow.web.contract.Task;
 import org.egov.workflow.web.contract.TaskRequest;
 import org.egov.workflow.web.contract.TaskResponse;
 import org.egov.workflow.web.contract.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,6 +29,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class WorkFlowController {
+	
+	public static final Logger LOGGER = LoggerFactory.getLogger(WorkFlowController.class);
 
 	@Autowired
 	private PgrWorkflowImpl workflow;
@@ -118,6 +122,7 @@ public class WorkFlowController {
 		p = matrixWorkflow.getProcess(tenantId, p);
 		pres.setProcessInstance(p);
 		pres.setResponseInfo(getResponseInfo(requestInfo));
+		LOGGER.info("The response  owner value before sending :::"+pres.getProcessInstance().getOwner());
 		return pres;
 
 	}

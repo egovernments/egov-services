@@ -1,222 +1,197 @@
 class CreateAsset extends React.Component {
   constructor(props) {
     super(props);
-    this.state={list:[],assetCategory:{
-      "tenantId": "ap.kurnool",
-      "name": "",
-      "assetCategoryType": "",
-      "parent":"",
-      "depreciationMethod": "",
-      "assetAccount": "",
-      "accumulatedDepreciationAccount": "",
-      "revaluationReserveAccount": "",
-      "depreciationExpenseAccount": "",
-      "unitOfMeasurement": "",
-      "depreciationRate": null,
-      "customFields":[]
-
-
-    },
-    customField:
-     {
-              "name": "",
-              "type": "",
-              "isActive": "",
-              "isMandatory": "",
-              "values": "",
-              "localText": "",
-              "regExFormate": ""
-            },
-    asset_category_type:[],
-    assetCategories:[],
-    depreciationMethod:{},
-    assetAccount:[],
-    accumulatedDepreciationAccount:[],
-    revaluationReserveAccount:[],
-    depreciationExpenseAccount:[],
-    assignments_unitOfMeasurement:[],
-    dataType:[],isEdit:false,index:-1,typeList:[]
-
+    this.state = {
+      list: [],
+      assetCategory: {
+        "tenantId": "ap.kurnool",
+        "name": "",
+        "assetCategoryType": "",
+        "parent": "",
+        "depreciationMethod": "",
+        "assetAccount": "",
+        "accumulatedDepreciationAccount": "",
+        "revaluationReserveAccount": "",
+        "depreciationExpenseAccount": "",
+        "unitOfMeasurement": "",
+        "depreciationRate": null,
+        "customFields": []
+      },
+      customField: {
+        "name": "",
+        "type": "",
+        "isActive": "",
+        "isMandatory": "",
+        "values": "",
+        "localText": "",
+        "regExFormate": ""
+      },
+      asset_category_type: [],
+      assetCategories: [],
+      depreciationMethod: {},
+      assetAccount: [],
+      accumulatedDepreciationAccount: [],
+      revaluationReserveAccount: [],
+      depreciationExpenseAccount: [],
+      assignments_unitOfMeasurement: [],
+      dataType: [],
+      isEdit: false,
+      index: -1,
+      typeList: []
+    }
+    this.handleChange = this.handleChange.bind(this);
+    this.addAsset = this.addAsset.bind(this);
+    this.renderDelEvent = this.renderDelEvent.bind(this);
+    this.addOrUpdate = this.addOrUpdate.bind(this);
+    this.handleChangeTwoLevel = this.handleChangeTwoLevel.bind(this);
   }
-  this.handleChange=this.handleChange.bind(this);
-  this.addAsset=this.addAsset.bind(this);
-  this.renderDelEvent=this.renderDelEvent.bind(this);
-  this.addOrUpdate=this.addOrUpdate.bind(this);
-  this.handleChangeTwoLevel=this.handleChangeTwoLevel.bind(this);
-
-
-
-}
-
-
-  close(){
-      // widow.close();
-      open(location, '_self').close();
+  close() {
+    // widow.close();
+    open(location, '_self').close();
   }
-
-
-  handleChange(e,name)
-  {
-
+  handleChange(e, name) {
+    this.setState({
+      assetCategory: {
+        ...this.state.assetCategory,
+        [name]: e.target.value
+      }
+    })
+  }
+  handleChangeTwoLevel(e, pName, name, isCheckBox) {
+    if(isCheckBox) {
       this.setState({
-          assetCategory:{
-              ...this.state.assetCategory,
-              [name]:e.target.value
-          }
-      })
-
-  }
-  handleChangeTwoLevel(e,pName,name)
-  {
-    // console.log(pName);
-    // console.log(name);
-
-
-      this.setState({
-          [pName]:{
-              ...this.state[pName],
-              [name]:e.target.value
-          }
-      })
-
-  }
-
-
-
-  addOrUpdate(e){
-        // var finalPost={
-        //   "RequestInfo":requestInfo,
-        //
-        // }
-        e.preventDefault();
-        // console.log(zone);
-        // console.log(this.state.assetCategory);
-        var tempInfo=this.state.assetCategory;
-        // tempInfo["assetSet"]["assetCategory"]["id"]=parseInt(tempInfo["assetSet"]["assetCategory"]["id"])
-        var body={
-            "RequestInfo":requestInfo,
-            "AssetCategory":tempInfo
-          };
-
-        var response=$.ajax({
-              url:baseUrl+"/asset-services/assetCategories/_create?tenantId=ap.kurnool",
-              type: 'POST',
-              dataType: 'json',
-              data:JSON.stringify(body),
-              async: false,
-              contentType: 'application/json',
-              headers:{
-                'auth-token': authToken
-              }
-          });
-
-        // console.log(response);
-        if(response["statusText"]==="OK")
-        {
-          alert("Successfully added");
+        [pName]: {
+          ...this.state[pName],
+          [name]: e.target.checked
         }
-        else {
-          alert(response["statusText"]);
-          this.setState({
-            assetCategory:{
-              "tenantId": "ap.kurnool",
-              "name": "",
-              "assetCategoryType": "",
-              "parent":"",
-              "depreciationMethod": "",
-              "assetAccount": "",
-              "accumulatedDepreciationAccount": "",
-              "revaluationReserveAccount": "",
-              "depreciationExpenseAccount": "",
-              "unitOfMeasurement": "",
-              "depreciationRate": null,
-              "customFields":[]
-
-
-            },
-            customField:
-             {
-                      "name": "",
-                      "type": "",
-                      "isActive": "",
-                      "isMandatory": "",
-                      "values": "",
-                      "localText": "",
-                      "regExFormate": ""
-                    },
-            asset_category_type:[],
-            assetCategories:[],
-            depreciationMethod:{},
-            assetAccount:[],
-            accumulatedDepreciationAccount:[],
-            revaluationReserveAccount:[],
-            depreciationExpenseAccount:[],
-            assignments_unitOfMeasurement:[],
-            typeList:[]
-
-          })
-}
-}
-  componentWillMount(){
+      })
+    } else {
       this.setState({
-        typeList:[{
-                id: "Text",
-                name: "Text",
-                active: true
-            },
-            {
-                id: "Number",
-                name: "Number",
-                active: true
-            },
-            {
-                id: "Email",
-                name: "Email",
-                active: true
-            },
-            {
-                id: "Check Box",
-                name: "Check Box",
-                active: true
-            },
-            {
-                id: "Radio",
-                name: "Radio",
-                active: true
-            },
-            {
-                id: "Select",
-                name: "Select",
-                active: true
-            }]
+        [pName]: {
+          ...this.state[pName],
+          [name]: e.target.value
+        }
       })
     }
-
-
-  componentDidMount()
-  {
+  }
+  addOrUpdate(e) {
+    // var finalPost={
+    //   "RequestInfo":requestInfo,
+    //
+    // }
+    e.preventDefault();
+    // console.log(zone);
+    // console.log(this.state.assetCategory);
+    var tempInfo = this.state.assetCategory;
+    // tempInfo["assetSet"]["assetCategory"]["id"]=parseInt(tempInfo["assetSet"]["assetCategory"]["id"])
+    var body = {
+      "RequestInfo": requestInfo,
+      "AssetCategory": tempInfo
+    };
+    var response = $.ajax({
+      url: baseUrl + "/asset-services/assetCategories/_create?tenantId=ap.kurnool",
+      type: 'POST',
+      dataType: 'json',
+      data: JSON.stringify(body),
+      async: false,
+      contentType: 'application/json',
+      headers: {
+        'auth-token': authToken
+      }
+    });
+    // console.log(response);
+    if (response["statusText"] === "OK") {
+      alert("Successfully added");
+    } else {
+      alert(response["statusText"]);
+      this.setState({
+        assetCategory: {
+          "tenantId": "ap.kurnool",
+          "name": "",
+          "assetCategoryType": "",
+          "parent": "",
+          "depreciationMethod": "",
+          "assetAccount": "",
+          "accumulatedDepreciationAccount": "",
+          "revaluationReserveAccount": "",
+          "depreciationExpenseAccount": "",
+          "unitOfMeasurement": "",
+          "depreciationRate": null,
+          "customFields": []
+        },
+        customField: {
+          "name": "",
+          "type": "",
+          "isActive": "",
+          "isMandatory": "",
+          "values": "",
+          "localText": "",
+          "regExFormate": ""
+        },
+        asset_category_type: [],
+        assetCategories: [],
+        depreciationMethod: {},
+        assetAccount: [],
+        accumulatedDepreciationAccount: [],
+        revaluationReserveAccount: [],
+        depreciationExpenseAccount: [],
+        assignments_unitOfMeasurement: [],
+        typeList: []
+      })
+    }
+  }
+  componentWillMount() {
+    this.setState({
+      typeList: [{
+          id: "Text",
+          name: "Text",
+          active: true
+        },
+        {
+          id: "Number",
+          name: "Number",
+          active: true
+        },
+        {
+          id: "Email",
+          name: "Email",
+          active: true
+        },
+        {
+          id: "Check Box",
+          name: "Check Box",
+          active: true
+        },
+        {
+          id: "Radio",
+          name: "Radio",
+          active: true
+        },
+        {
+          id: "Select",
+          name: "Select",
+          active: true
+        }
+      ]
+    })
+  }
+  componentDidMount() {
     var type = getUrlVars()["type"];
     var id = getUrlVars()["id"];
-
-    if(getUrlVars()["type"]==="view")
-    {
+    if (getUrlVars()["type"] === "view") {
       // for (var variable in this.state.assetCategory)
       //   // document.getElementById(variable).disabled = true;
       //   console.log($('#'+variable).length);
       $("input,select").prop("disabled", true);
     }
-
-
     if (type === "view" || type === "update") {
-        // console.log(getCommonMasterById("asset-services", "assetCategories", "AssetCategory", id).responseJSON);
-        this.setState({
-            assetCategory: getCommonMasterById("asset-services", "assetCategories", "AssetCategory", id).responseJSON["AssetCategory"][0]
-        })
+      // console.log(getCommonMasterById("asset-services", "assetCategories", "AssetCategory", id).responseJSON);
+      this.setState({
+        assetCategory: getCommonMasterById("asset-services", "assetCategories", "AssetCategory", id).responseJSON["AssetCategory"][0]
+      })
     }
-      // console.log(commonApiPost("egf-masters","chartofaccounts","_search",{tenantId}).responseJSON["chartOfAccounts"]);
-
-     this.setState({
-
+    // console.log(commonApiPost("egf-masters","chartofaccounts","_search",{tenantId}).responseJSON["chartOfAccounts"]);
+    this.setState({
       assetCategories,
       asset_category_type,
       depreciationMethod,
@@ -227,54 +202,51 @@ class CreateAsset extends React.Component {
       assignments_unitOfMeasurement
     })
   }
+  addAsset() {
+    var {
+      isEdit,
+      index,
+      list,
+      customField,
+      assetCategory
+    } = this.state;
 
-
-  addAsset(){
-    var {isEdit,index,list,customField,assetCategory}= this.state;
-      if (isEdit) {
-        // console.log(isEdit,index);
-        //update holidays with current holiday
-        assetCategory["customFields"][index]=customField
-        this.setState({
-          assetCategory,isEdit:false
-        })
-        //this.setState({isEdit:false})
-
-      } else {
-        //get asset Category from state
-        var temp =assetCategory;
-        temp.customFields.push(customField);
-        this.setState({
-          assetCategory:temp,
-          customField:{
-
-                   "name": "",
-                   "type": "",
-                   "isActive": "",
-                   "isMandatory": "",
-                   "values": "",
-                   "localText": "",
-                   "regExFormate": ""
-                 }
-        })
-        //use push to add new customField inside assetCategory
-
-        //set back assetCategory to state
-
-      }
+    if (isEdit) {
+      // console.log(isEdit,index);
+      //update holidays with current holiday
+      assetCategory["customFields"][index] = customField
+      this.setState({
+        assetCategory,
+        isEdit: false
+      })
+      //this.setState({isEdit:false})
+    } else {
+      //get asset Category from state
+      var temp = assetCategory;
+      temp.customFields.push(customField);
+      this.setState({
+        assetCategory: temp,
+        customField: {
+          "name": "",
+          "type": "",
+          "isActive": "",
+          "isMandatory": "",
+          "values": "",
+          "localText": "",
+          "regExFormate": ""
+        }
+      })
+      //use push to add new customField inside assetCategory
+      //set back assetCategory to state
     }
-
-
-
-
-  renderDelEvent (index) {
-        var customFields = this.state.assetCategory.customFields;
-          customFields.splice(index,1);
-            this.setState({customFields});
-
-     }
-
-
+  }
+  renderDelEvent(index) {
+    var customFields = this.state.assetCategory.customFields;
+    customFields.splice(index, 1);
+    this.setState({
+      customFields
+    });
+  }
 
   render() {
     // console.log(this.state);
@@ -321,10 +293,8 @@ class CreateAsset extends React.Component {
     }
     const renderBody=function()
     {
-        if(customFields.length>0)
-        {
-            return customFields.map((item,index)=>
-            {
+        if(customFields.length>0) {
+            return customFields.map((item,index)=> { 
                 return (<tr  key={index} className="text-center">
                   <td  >
                 {item.name}
@@ -336,10 +306,10 @@ class CreateAsset extends React.Component {
                   {item.regExFormate}
                   </td>
                   <td  >
-                {item.isActive?item.isActive:"true"}
+                {item.isActive?"true":"false"}
                   </td>
                   <td  >
-                {item.isMandatory?item.isMandatory:"true"}
+                {item.isMandatory?"true":"false"}
                   </td>
                   <td  >
                 {item.values}
@@ -368,11 +338,11 @@ class CreateAsset extends React.Component {
                         <div className="col-sm-6">
                         <div className="row">
                         <div className="col-sm-6 label-text">
-                                <label for="name">Name</label>
+                                <label for="name">Name <span> * </span> </label>
                         </div>
                         <div className="col-sm-6">
                                 <input type="text" id="name" name="name" value={name}
-                                onChange={(e)=>{handleChange(e,"name")}}/>
+                                onChange={(e)=>{handleChange(e,"name")}} required/>
                         </div>
                         </div>
                         </div>
@@ -602,7 +572,7 @@ class CreateAsset extends React.Component {
                                               </div>
                                               <div className="col-sm-6">
                                               <input type="checkbox" name="isActive" id="isActive" value={customField.isActive} onChange={(e)=>{
-                                          handleChangeTwoLevel(e,"customField","isActive")}} />
+                                          handleChangeTwoLevel(e,"customField","isActive", true)}} checked={customField.isActive ? true : false} />
                                               </div>
                                           </div>
                                           </div>
@@ -616,7 +586,7 @@ class CreateAsset extends React.Component {
                           </div>
                           <div className="col-sm-6">
                           <input type="checkbox" name="isMandatory" id="isMandatory" value={customField.isMandatory} onChange={(e)=>{
-                    handleChangeTwoLevel(e,"customField","isMandatory")}} />
+                    handleChangeTwoLevel(e,"customField","isMandatory", true)}} checked={customField.isMandatory ? true : false}/>
                           </div>
                       </div>
                       </div>

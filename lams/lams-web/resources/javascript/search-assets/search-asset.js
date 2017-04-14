@@ -88,14 +88,11 @@ class AssetSearch extends React.Component {
   {
     console.log(type);
     console.log(category);
-    // if (type === "view") {
-    //             window.open("../../../../app/agreements/new.html", "fs", "fullscreen=yes")
-    //          }
-    //          else {
-    //
-    //             window.open("../../../../app/agreements/new.html", "fs", "fullscreen=yes")
-    //         }
-    window.open("app/agreements/new.html?type="+category+"&assetId="+id, "fs", "fullscreen=yes")
+    if (type === "create") {
+                  window.open("app/agreements/new.html?type="+category+"&assetId="+id, "fs", "fullscreen=yes")
+             }
+
+    // window.open("app/agreements/new.html?type="+category+"&assetId="+id, "fs", "fullscreen=yes")
   }
 
 

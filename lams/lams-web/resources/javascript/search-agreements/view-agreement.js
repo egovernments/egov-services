@@ -346,7 +346,7 @@ $(document).ready(function() {
                     contentType: 'application/json'
                 });
             if(response["status"] === 201) {
-                open(location, '_self').close();
+              window.location.href="app/search-assets/create-agreement-ack.html?name="+getNameById(employees,agreement["approverName"])+"&ackNo="+responseJSON["Agreements"][0]["acknowledgementNumber"];
             } else {
                 console.log("Handle error.");
             }

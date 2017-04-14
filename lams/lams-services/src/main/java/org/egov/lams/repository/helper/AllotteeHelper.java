@@ -14,7 +14,7 @@ public class AllotteeHelper {
 
 	public String getAllotteeParams(AgreementCriteria searchAllottee) {
 
-		if (searchAllottee.getAllottee() == null && searchAllottee.getMobilenumber() == null)
+		if (searchAllottee.getAllottee() == null && searchAllottee.getMobileNumber() == null)
 			throw new RuntimeException("all asset search fields are null");
 
 		boolean isAppendAndClause = false;
@@ -25,9 +25,9 @@ public class AllotteeHelper {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, allotteeParams);
 		}
 
-		if (searchAllottee.getMobilenumber() != null) {
+		if (searchAllottee.getMobileNumber() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, allotteeParams);
-			allotteeParams.append("mobileNumber=" + searchAllottee.getMobilenumber());
+			allotteeParams.append("mobileNumber=" + searchAllottee.getMobileNumber());
 		}
 		return allotteeParams.toString();
 	}

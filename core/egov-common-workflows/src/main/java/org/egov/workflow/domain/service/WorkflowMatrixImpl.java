@@ -298,6 +298,7 @@ public class WorkflowMatrixImpl implements Workflow {
 			processInstance.setComments(state.getComments());
 			processInstance.setCreatedDate(state.getCreatedDate());
 			processInstance.setLastupdatedSince(state.getLastModifiedDate());
+			processInstance.setInitiatorPosition(state.getInitiatorPosition());
 		} else {
 			throw new NoDataFoundException("ProcessInstance with id " + processInstance.getId() + " not found");
 		}

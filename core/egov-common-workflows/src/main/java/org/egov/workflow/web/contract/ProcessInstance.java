@@ -24,7 +24,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ProcessInstance {
 
-	
 	/**
 	 * Id of the ProcessInstance gets created. This field Maps to Id of the Task
 	 * in case of eGov internal Work flow or the Work flow Matrix based
@@ -123,13 +122,15 @@ public class ProcessInstance {
 	 */
 
 	List<Task> tasks = new ArrayList<Task>();
-	
+
 	private String tenantId;
 	/**
 	 * attributes used to pass any additional properties which is not defined in
 	 * here .
 	 */
 	private Map<String, Attribute> attributes = new HashMap<String, Attribute>();
+
+	private Long initiatorPosition;
 
 	/*
 	 * @JsonIgnore public String getComments() { return
@@ -144,11 +145,13 @@ public class ProcessInstance {
 	 * Collections.singletonList(value); Attribute attribute = new
 	 * Attribute(true, "stateId", "String", true, "This is the id of state",
 	 * attributeValues,null); attributeValues.put("stateId", attribute); }
-	 *  */
-	  // To be used to fetch single value attributes 
-	  public String  getValueForKey(String key) { if (Objects.nonNull(attributes.get(key))) return
-			  attributes.get(key).getValues().get(0).getName();
-	   
-	  return ""; }
-	
+	 */
+	// To be used to fetch single value attributes
+	public String getValueForKey(String key) {
+		if (Objects.nonNull(attributes.get(key)))
+			return attributes.get(key).getValues().get(0).getName();
+
+		return "";
+	}
+
 }

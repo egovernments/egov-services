@@ -72,6 +72,7 @@ public class DemandService {
 				}
 			}
 		}
+		egDemand.addCollected(demand.getCollectionAmount());
 		return demandRepository.save(egDemand);
 	}
 }

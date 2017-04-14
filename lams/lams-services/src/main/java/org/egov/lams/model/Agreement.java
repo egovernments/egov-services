@@ -30,6 +30,7 @@ public class Agreement {
 	private Date agreementDate;
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date closeDate;
+	@NotNull
 	private Long timePeriod;
 	private Allottee allottee;
 	private Asset asset;

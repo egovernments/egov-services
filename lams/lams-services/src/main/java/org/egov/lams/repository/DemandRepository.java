@@ -9,6 +9,7 @@ import org.egov.lams.config.PropertiesManager;
 import org.egov.lams.model.Demand;
 import org.egov.lams.model.DemandDetails;
 import org.egov.lams.model.DemandReason;
+import org.egov.lams.repository.helper.DemandHelper;
 import org.egov.lams.web.contract.AgreementRequest;
 import org.egov.lams.web.contract.DemandReasonResponse;
 import org.egov.lams.web.contract.DemandRequest;
@@ -29,10 +30,16 @@ public class DemandRepository {
 
 	@Autowired
 	private PropertiesManager propertiesManager;
+	
+	@Autowired
+	DemandHelper demandHelper;
 
 	public List<DemandReason> getDemandReason(AgreementRequest agreementRequest) {
-		String url = propertiesManager.getDemandServiceHostName() + propertiesManager.getDemandReasonSearchService()
-				+ "?moduleName=" + propertiesManager.getGetDemandModuleName();
+		
+		String url = propertiesManager.getDemandServiceHostName()
+				   + propertiesManager.getDemandReasonSearchService()
+				   + demandHelper.getDemandReasonUrlParams(agreementRequest);
+		
 		System.out.println("DemandRepository getDemandReason url:" + url);
 		DemandReasonResponse demandReasonResponse = null;
 		try {

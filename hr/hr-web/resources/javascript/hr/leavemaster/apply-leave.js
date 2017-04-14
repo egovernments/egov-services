@@ -31,10 +31,16 @@ class ApplyLeave extends React.Component {
         $("input,select,textarea").prop("disabled", true);
       }
 
-      if(type==="view"){
-
+      if(type === "view"){
+        var _leaveSet = getCommonMasterById("hr-leave","leaveapplications","LeaveApplication",id).responseJSON["LeaveApplication"][0];
+        var employee = commonApiPost("hr-employee", "employees", "_search", {
+            tenantId,
+            id: _leaveSet.employee
+        }).responseJSON["Employee"][0];
+        _leaveSet.name = employee.name;
+        _leaveSet.code = employee.code;
         _this.setState({
-           leaveSet:getCommonMasterById("hr-leave","leaveapplications","LeaveApplication",id).responseJSON["LeaveApplication"][0]
+           leaveSet: _leaveSet
         })
 
       }

@@ -21,8 +21,7 @@ class ViewApply extends React.Component {
 
   }
 
-  componentWillMount()
-  {
+  componentWillMount() {
     console.log(getUrlVars()["type"]);
     // console.log(getCommonMaster("hr-masters","grades","Grade").responseJSON["Grade"]);
 
@@ -31,20 +30,36 @@ class ViewApply extends React.Component {
 
 
 
-  componentDidMount()
-  {
+  componentDidMount() {
+    var leaveApp = getCommonMaster("hr-leave","leaveapplications","LeaveApplication").responseJSON["LeaveApplication"];
+    var empIds = [];
+    for(var i=0; i<leaveApp.length; i++) {
+      if(empIds.indexOf(leaveApp[i].employee) == -1)
+        empIds.push(leaveApp[i].employee);
+    }
+    
+    if(empIds.length > 0) {
+      var employees = commonApiPost("hr-employee", "employees", "_search", {
+        tenantId,
+        id: empIds.join(",")
+      }).responseJSON["Employee"];
+
+      for(var i=0; i<leaveApp.length; i++) {
+        employees.map(function(item, ind) {
+          if(item.id == leaveApp[i].employee) {
+            leaveApp[i].name = item.name;
+            employees.splice(ind, 1);
+          }
+        }) 
+      }
+    }
     this.setState({
-      list:getCommonMaster("hr-leave","leaveapplications","LeaveApplication").responseJSON["LeaveApplication"]
+      list: leaveApp
     });
   }
 
-  componentDidUpdate(prevProps, prevState)
-  {
+  componentDidUpdate(prevProps, prevState) {
       if (prevState.list.length!=this.state.list.length) {
-          // $('#employeeTable').DataTable().draw();
-          // alert(prevState.list.length);
-          // alert(this.state.list.length);
-          // alert('updated');
           $('#viewleaveTable').DataTable({
             dom: 'Bfrtip',
             buttons: [
@@ -57,7 +72,7 @@ class ViewApply extends React.Component {
 
 
 
-  close(){
+  close() {
       // widow.close();
       open(location, '_self').close();
   }

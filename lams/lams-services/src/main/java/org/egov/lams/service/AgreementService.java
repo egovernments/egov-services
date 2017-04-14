@@ -1,19 +1,22 @@
 package org.egov.lams.service;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.egov.lams.config.PropertiesManager;
-import org.egov.lams.web.contract.AgreementRequest;
-import org.egov.lams.web.contract.DemandResponse;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.AgreementCriteria;
 import org.egov.lams.model.Demand;
 import org.egov.lams.model.DemandReason;
+import org.egov.lams.model.WorkFlowDetails;
 import org.egov.lams.model.enums.Status;
 import org.egov.lams.producers.AgreementProducer;
 import org.egov.lams.repository.AgreementRepository;
 import org.egov.lams.repository.DemandRepository;
+import org.egov.lams.web.contract.AgreementRequest;
+import org.egov.lams.web.contract.DemandResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +39,10 @@ public class AgreementService {
 	private DemandRepository demandRepository;
 	
 	@Autowired
-	private AcknowledgementNumberService acknowledgementNumberService;	
+	private AcknowledgementNumberService acknowledgementNumberService;
+	
+	@Autowired
+	private AgreementNumberService agreementNumberService;
 	
 	@Autowired
 	private PropertiesManager propertiesManager;
@@ -108,11 +114,15 @@ public class AgreementService {
 		Agreement agreement = agreementRequest.getAgreement();
 		logger.info("createAgreement service::"+agreement);
 		
-		//FIXME hardcoded value for status enum
-		agreement.setStatus(Status.ACTIVE);
-		
 		ObjectMapper mapper = new ObjectMapper();
 		String agreementValue = null;
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(agreement.getCommencementDate());
+		calendar.add(Calendar.YEAR,agreement.getTimePeriod().intValue());
+		Date closeDate = calendar.getTime();
+		agreement.setCloseDate(closeDate);
+		logger.info("The closeDate calculated is " + closeDate + "from commencementDate of "
+				+ agreement.getCommencementDate() + "by adding with no of years " + agreement.getTimePeriod());	
 	    
 		List<DemandReason> demandReasons = demandRepository.getDemandReason(agreementRequest);
 		if(demandReasons.isEmpty())
@@ -150,10 +160,21 @@ public class AgreementService {
 	public Agreement updateAgreement(AgreementRequest agreementRequest) {
 		
 		Agreement agreement = agreementRequest.getAgreement();
+		WorkFlowDetails workFlowDetails = agreement.getWorkflowDetails();
 		logger.info("createAgreement service::" + agreement);
 		ObjectMapper mapper = new ObjectMapper();
 		String agreementValue = null;
 
+		if (workFlowDetails != null) {
+			//FIXME approve and reject should come from 
+			if ("Approve".equals(workFlowDetails.getStatus())) {
+				agreement.setAgreementNumber(agreementNumberService.generateAgrementNumber());
+				agreement.setAgreementDate(new Date());
+				agreement.setStatus(Status.ACTIVE);
+			} else if ("Reject".equals(workFlowDetails.getStatus())) {
+				agreement.setStatus(Status.CANCELLED);
+			}
+		}
 		// TODO  FIXME put agreement number generator here and change
 		try {
 			agreementValue = mapper.writeValueAsString(agreementRequest);

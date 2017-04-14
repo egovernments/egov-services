@@ -81,26 +81,22 @@ public class AgreementController {
 
 	@PostMapping("/_create")
 	@ResponseBody
-	public ResponseEntity<?> create(
-			@RequestBody @Valid AgreementRequest agreementRequest,
-			BindingResult errors) {
+	public ResponseEntity<?> create(@RequestBody @Valid AgreementRequest agreementRequest, BindingResult errors) {
 
-		System.err.println(agreementRequest);
 		if (errors.hasErrors()) {
 			ErrorResponse errRes = populateErrors(errors);
-			return new ResponseEntity<>(errRes,
-					HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}
 		LOGGER.info("agreementRequest::" + agreementRequest);
 		agreementValidator.validateAgreement(agreementRequest);
+		
 		Agreement agreement = agreementService.createAgreement(agreementRequest);
 		List<Agreement> agreements = new ArrayList<>();
 		agreements.add(agreement);
 		AgreementResponse agreementResponse = new AgreementResponse();
 		agreementResponse.setAgreement(agreements);
 
-		return new ResponseEntity<>(agreementResponse,
-				HttpStatus.CREATED);
+		return new ResponseEntity<>(agreementResponse, HttpStatus.CREATED);
 	}
 	
 	@PostMapping("_update/{code}")

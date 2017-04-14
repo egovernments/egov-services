@@ -3,6 +3,8 @@ package org.egov.lams.model;
 import java.util.Date;
 import java.util.List;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import org.egov.lams.model.enums.NatureOfAllotment;
@@ -30,7 +32,10 @@ public class Agreement {
 	private Date agreementDate;
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date closeDate;
+	
 	@NotNull
+	@Max(5)
+	@Min(1)
 	private Long timePeriod;
 	private Allottee allottee;
 	private Asset asset;

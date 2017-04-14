@@ -843,6 +843,12 @@ definitions:
         type: string
         format: date
         description: Date of Commencement of Agreement.
+      ackNumber:
+        type: string
+        description: Acknowledgement number for a Agreement.
+      templateVersion:
+        type: string
+        description: Notice template version.
       expiryDate:
         type: string
         format: date
@@ -893,7 +899,7 @@ definitions:
     properties:
       ResposneInfo:
         $ref: '#/definitions/ResponseInfo'
-      Agreements:
+      Notices:
         type: array
         items:
           $ref: '#/definitions/Notice'

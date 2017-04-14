@@ -45,7 +45,7 @@ public class WorkFlowController {
 	public ProcessInstanceResponse startWorkflow(@RequestBody final ProcessInstanceRequest processInstanceRequest) {
 
 		User user = processInstanceRequest.getRequestInfo().getUserInfo();
-        
+        LOGGER.info("the request info ::: "+processInstanceRequest.getRequestInfo());
 		 
 
 		ProcessInstance processInstance = processInstanceRequest.getProcessInstance();

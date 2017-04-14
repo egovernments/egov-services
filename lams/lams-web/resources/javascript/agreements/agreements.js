@@ -199,6 +199,9 @@ function fillValueToObject(currentState) {
         },
         solvencyCertificateDate: {
             required: true
+        },
+        timePeriod: {
+            required: true
         }
     };
     if (decodeURIComponent(getUrlVars()["type"]) == "land") {

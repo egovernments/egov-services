@@ -79,10 +79,10 @@ public class AssetQueryBuilder {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void addWhereClause(StringBuilder selectQuery, List preparedStatementValues, AssetCriteria searchAsset) {
 
-		if (searchAsset.getId() == null && searchAsset.getName() == null
-				&& searchAsset.getCode() == null && searchAsset.getDepartment() == null 
-				&& searchAsset.getAssetCategory() == null 
-				&& searchAsset.getTenantId() == null)
+		if (searchAsset.getId() == null && searchAsset.getName() == null && searchAsset.getCode() == null
+				&& searchAsset.getDepartment() == null && searchAsset.getAssetCategory() == null
+				&& searchAsset.getTenantId() == null && searchAsset.getDoorNo() == null)
+			//FIXME location object criterias need to be added to if block assetcategory is mandatory
 			return;
 
 		selectQuery.append(" WHERE");
@@ -175,6 +175,12 @@ public class AssetQueryBuilder {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" ASSET.pinCode = ?");
 			preparedStatementValues.add(searchAsset.getPinCode());
+		}
+		
+		if (searchAsset.getDoorNo() != null) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" ASSET.doorno = ?");
+			preparedStatementValues.add(searchAsset.getDoorNo());
 		}
 		
 	}

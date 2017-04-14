@@ -25,107 +25,124 @@ class ApplyLeave extends React.Component {
   componentDidMount(){
     var type = getUrlVars()["type"], _this = this;
     var id = getUrlVars()["id"];
-    $('#fromDate').datepicker({
-        format: 'dd/mm/yyyy',
-        autoclose:true
 
-    });
-    $('#fromDate').on("change", function(e) {
-      var from = $('#fromDate').val();
-      var to = $('#toDate').val();
-      var dateParts = from.split("/");
-      var newDateStr = dateParts[1] + "/" + dateParts[0] + "/ " + dateParts[2];
-      var date1 = new Date(newDateStr);
-
-      var dateParts = to.split("/");
-      var newDateStr = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2];
-      var date2 = new Date(newDateStr);
-      if (date1 > date2) {
-          showError("From date must be before of End date");
-          $('#fromDate').val("");
+    if(getUrlVars()["type"]==="view")
+    {
+        $("input,select,textarea").prop("disabled", true);
       }
-      _this.setState({
-            leaveSet: {
-                ..._this.state.leaveSet,
-                "fromDate":$("#fromDate").val()
-            }
-      })
 
-      });
-
-      $('#toDate').datepicker({
-          format: 'dd/mm/yyyy',
-          autoclose:true
-
-      });
-      $('#toDate').on("change", function(e) {
-        var from = $('#fromDate').val();
-        var to = $('#toDate').val();
-        var dateParts = from.split("/");
-        var newDateStr = dateParts[1] + "/" + dateParts[0] + "/ " + dateParts[2];
-        var date1 = new Date(newDateStr);
-
-        var dateParts = to.split("/");
-        var newDateStr = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2];
-        var date2 = new Date(newDateStr);
-        if (date1 > date2) {
-            showError("End date must be after of From date");
-            $('#toDate').val("");
-        }
+      if(type==="view"){
 
         _this.setState({
-              leaveSet: {
-                  ..._this.state.leaveSet,
-                  "toDate":$("#toDate").val()
-              }
-
+           leaveSet:getCommonMasterById("hr-leave","leaveapplications","LeaveApplication",id).responseJSON["LeaveApplication"][0]
         })
-        var start = $('#fromDate').datepicker('getDate');
-        var end   = $('#toDate').datepicker('getDate');
-        var timeDiff = 1 + Math.round(end.getTime() - start.getTime());
-             var days = Math.ceil(timeDiff / (1000 * 3600 * 24));
 
-             if(days){
-                   // Subtract two weekend days for every week in between
-                   var weeks = Math.floor(days / 7);
-                   days = days - (weeks * 2);
-
-                   // Handle special cases
-                   var startDay = start.getDay();
-                   var endDay = end.getDay();
-
-                   // Remove weekend not previously removed.
-                   if (startDay - endDay > 1)
-                       days = days - 2;
-
-                   // Remove start day if span starts on Sunday but ends before Saturday
-                   if (startDay == 0 && endDay != 6)
-                       days = days - 1;
-
-                   // Remove end day if span ends on Saturday but starts after Sunday
-                   if (endDay == 6 && startDay != 0)
-                       days = days - 1;
-               }
-        _this.setState({
-          leaveSet:{
-              ..._this.state.leaveSet,
-              leaveDays:days
-            }
-        })
+      }
+      else{
+        $('#fromDate').datepicker({
+            format: 'dd/mm/yyyy',
+            autoclose:true
 
         });
-        var obj = getCommonMasterById("hr-employee","employees","Employee",id).responseJSON["Employee"][0]
+        $('#fromDate').on("change", function(e) {
+          var from = $('#fromDate').val();
+          var to = $('#toDate').val();
+          var dateParts = from.split("/");
+          var newDateStr = dateParts[1] + "/" + dateParts[0] + "/ " + dateParts[2];
+          var date1 = new Date(newDateStr);
+
+          var dateParts = to.split("/");
+          var newDateStr = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2];
+          var date2 = new Date(newDateStr);
+          if (date1 > date2) {
+              showError("From date must be before of End date");
+              $('#fromDate').val("");
+          }
           _this.setState({
-            leaveSet:{
-                ..._this.state.leaveSet,
-                name:obj.name,
-                code:obj.code,
-                employee:obj.id
-
-              }
-
+                leaveSet: {
+                    ..._this.state.leaveSet,
+                    "fromDate":$("#fromDate").val()
+                }
           })
+
+          });
+
+          $('#toDate').datepicker({
+              format: 'dd/mm/yyyy',
+              autoclose:true
+
+          });
+          $('#toDate').on("change", function(e) {
+            var from = $('#fromDate').val();
+            var to = $('#toDate').val();
+            var dateParts = from.split("/");
+            var newDateStr = dateParts[1] + "/" + dateParts[0] + "/ " + dateParts[2];
+            var date1 = new Date(newDateStr);
+
+            var dateParts = to.split("/");
+            var newDateStr = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2];
+            var date2 = new Date(newDateStr);
+            if (date1 > date2) {
+                showError("End date must be after of From date");
+                $('#toDate').val("");
+            }
+
+            _this.setState({
+                  leaveSet: {
+                      ..._this.state.leaveSet,
+                      "toDate":$("#toDate").val()
+                  }
+
+            })
+            var start = $('#fromDate').datepicker('getDate');
+            var end   = $('#toDate').datepicker('getDate');
+            var timeDiff = 1 + Math.round(end.getTime() - start.getTime());
+                 var days = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+                 if(days){
+                       // Subtract two weekend days for every week in between
+                       var weeks = Math.floor(days / 7);
+                       days = days - (weeks * 2);
+
+                       // Handle special cases
+                       var startDay = start.getDay();
+                       var endDay = end.getDay();
+
+                       // Remove weekend not previously removed.
+                       if (startDay - endDay > 1)
+                           days = days - 2;
+
+                       // Remove start day if span starts on Sunday but ends before Saturday
+                       if (startDay == 0 && endDay != 6)
+                           days = days - 1;
+
+                       // Remove end day if span ends on Saturday but starts after Sunday
+                       if (endDay == 6 && startDay != 0)
+                           days = days - 1;
+                   }
+            _this.setState({
+              leaveSet:{
+                  ..._this.state.leaveSet,
+                  leaveDays:days
+                }
+            })
+
+            });
+            var obj = getCommonMasterById("hr-employee","employees","Employee",id).responseJSON["Employee"][0]
+              _this.setState({
+                leaveSet:{
+                    ..._this.state.leaveSet,
+                    name:obj.name,
+                    code:obj.code,
+                    employee:obj.id
+
+                  }
+
+              })
+
       }
+
+    }
 
   componentWillMount()
   {

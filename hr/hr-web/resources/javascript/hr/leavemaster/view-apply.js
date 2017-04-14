@@ -68,19 +68,15 @@ class ViewApply extends React.Component {
     let {list}=this.state;
     let {employee,name,code,leaveType,fromDate,toDate,availableDays,leaveDays,reason}=this.state.leaveSet;
 
-//     const renderAction=function(type,id){
-//       if (type==="update") {
-//
-//               return (
-//                       <a href={`app/hr/leavemaster/apply-leave.html?id=${item.id}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-pencil"></span></a>
-//               );
-//
-//     }else {
-//             return (
-//                     <a href={`app/hr/leavemaster/apply-leave.html?id=${item.id}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-modal-window"></span></a>
-//             );
-//         }
-// }
+    const renderAction=function(type,id){
+      if (type==="view") {
+
+              return (
+                      <a href={`app/hr/leavemaster/apply-leave.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-modal-window"></span></a>
+              );
+
+    }
+}
 
 
     const renderBody=function()
@@ -96,7 +92,7 @@ class ViewApply extends React.Component {
                     <td data-label="leaveDays">{item.leaveDays}</td>
                     <td data-label="reason">{item.reason}</td>
                     <td data-label="action">
-                    {<a href={`app/hr/leavemaster/apply-leave.html?id=${item.id}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-modal-window"></span></a>}
+                    {renderAction(getUrlVars()["type"],item.id)}
                     </td>
                 </tr>
             );

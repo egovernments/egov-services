@@ -180,7 +180,7 @@ public class EmployeeService {
 		employeeUserMapper.mapUsersWithEmployees(employeeInfoList, usersList);
 
 		if (!ids.isEmpty()) {
-			List<EmployeeDocument> employeeDocuments = employeeRepository.getDocumentsForListOfEmployeeIds(ids);
+			List<EmployeeDocument> employeeDocuments = employeeRepository.getDocumentsForListOfEmployeeIds(ids, employeeCriteria.getTenantId());
 			employeeHelper.mapDocumentsWithEmployees(employeeInfoList, employeeDocuments);
 		}
 
@@ -207,7 +207,7 @@ public class EmployeeService {
 
 
 	public ResponseEntity<?> createAsync(EmployeeRequest employeeRequest) {
-		UserRequest userRequest = employeeHelper.getUserRequest(employeeRequest);
+	UserRequest userRequest = employeeHelper.getUserRequest(employeeRequest);
 
 		ResponseEntity<?> responseEntity = null;
 
@@ -232,6 +232,7 @@ public class EmployeeService {
 
 		UserResponse userResponse = (UserResponse) responseEntity.getBody();
 		User user = userResponse.getUser().get(0);
+
 
 		Employee employee = employeeRequest.getEmployee();
 		employee.setId(user.getId());
@@ -299,11 +300,12 @@ public class EmployeeService {
 
 	public ResponseEntity<?> updateAsync(EmployeeRequest employeeRequest) {
 
-		UserRequest userRequest = employeeHelper.getUserRequest(employeeRequest);
 		Employee employee = employeeRequest.getEmployee();
+		/*UserRequest userRequest = employeeHelper.getUserRequest(employeeRequest);
+		
 		ResponseEntity<?> responseEntity = null;
 
-	/*	try {
+	try {
 			responseEntity = userService.updateUser(userRequest.getUser().getId(), userRequest);
 		} catch (Exception e) {
 			LOGGER.debug("Error occurred while updating user", e);
@@ -317,8 +319,8 @@ public class EmployeeService {
 
 		UserResponse userResponse = (UserResponse) responseEntity.getBody();
 		User user = userResponse.getUser().get(0);
-		employee.setUser(user);
-*/
+		employee.setUser(user);*/
+
 		try {
 			employeeHelper.populateDefaultDataForUpdate(employeeRequest);
 		} catch (Exception e) {

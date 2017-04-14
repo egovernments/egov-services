@@ -69,6 +69,10 @@ public class EmployeeDocumentsRepository {
 	public static final String SELECT_BY_EMPLOYEEID_QUERY = "SELECT"
 			+ " id, document, referencetype, referenceid, tenantId" + " FROM egeis_employeeDocuments"
 			+ " WHERE employeeId = ? AND tenantId = ? ";
+	
+	// select document, referencetype, employeeid for given set of document urls
+	public static final String DUPLICATE_EXISTS_QUERY_FOR_UPDATE = "SELECT exists(SELECT id FROM $table WHERE $column = ?"
+			+ " tenantId = ?)";
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;

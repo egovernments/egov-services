@@ -78,7 +78,7 @@ public class EmployeeRepository {
 			+ " recruitmenttypeId, recruitmentquotaId, retirementage, dateofresignation, dateoftermination,"
 			+ " employeetypeId, mothertongueId, religionId, communityId, categoryId, physicallydisabled,"
 			+ " medicalreportproduced, maritalstatus, passportno, gpfno, bankId, bankbranchId, bankaccount, groupId,"
-			+ " placeofbirth)" + "= (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" + "WHERE id = ?";
+			+ " placeofbirth)" + "= (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" + "WHERE id = ? AND tenantId = ?";
 
 	public static final String EMPLOYEE_EXISTENCE_CHECK_QUERY = "SELECT exists(SELECT id FROM egeis_employee"
 			+ " WHERE id = ? AND tenantId = ?)";
@@ -93,9 +93,8 @@ public class EmployeeRepository {
 			+ " communityid, categoryid, physicallydisabled, medicalReportproduced, passportno, gpfno, bankid, bankbranchid, bankaccount, groupid, placeofbirth, tenantid"
 			+ " FROM egeis_employee" + " WHERE id = ? AND tenantId = ? ";
 	
-	
-	// Do String replacement for $table and $column and proceed for prepared statement.
-	public static final String DUPLICATE_EXISTS_QUERY = "SELECT exists(SELECT id FROM $table WHERE $column = ? AND tenantId = ?)";
+		public static final String DUPLICATE_EXISTS_QUERY = "SELECT exists(SELECT id FROM $table WHERE $column = ?"
+			+ " AND tenantId = ?)";
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -141,7 +140,7 @@ public class EmployeeRepository {
 	}
 
 	// FIXME : Figure out a better way to do this
-	public List<EmployeeDocument> getDocumentsForListOfEmployeeIds(List<Long> employeeIds) {
+	public List<EmployeeDocument> getDocumentsForListOfEmployeeIds(List<Long> employeeIds, String tenantId) {
 		String SELECT_EMPLOYEE_DOCUMENTS_QUERY = "SELECT employeeId, document"
 				+ " FROM egeis_employeeDocuments where employeeId IN (" + getIdsAsCSVs(employeeIds) + ")";
 
@@ -163,7 +162,7 @@ public class EmployeeRepository {
 
 		if (employee.getDocuments() != null && !employee.getDocuments().isEmpty()) {
 			documentsRepository.save(employee.getId(), employee.getDocuments(),
-					EntityType.EMPLOYEE.toString(), employee.getId(), employee.getTenantId());
+					EntityType.EMPLOYEE_HEADER.toString(), employee.getId(), employee.getTenantId());
 		}
 
 		jdbcTemplate.update(INSERT_EMPLOYEE_QUERY, obj);
@@ -178,7 +177,7 @@ public class EmployeeRepository {
 				employee.getPhysicallyDisabled(), employee.getMedicalReportProduced(),
 				employee.getMaritalStatus().toString(), employee.getPassportNo(), employee.getGpfNo(),
 				employee.getBank(), employee.getBankBranch(), employee.getBankAccount(), employee.getGroup(),
-				employee.getPlaceOfBirth(), employee.getId() };
+				employee.getPlaceOfBirth(), employee.getId(), employee.getTenantId() };
 
 		jdbcTemplate.update(UPDATE_EMPLOYEE_QUERY, obj);
 	}
@@ -197,9 +196,10 @@ public class EmployeeRepository {
 	 *            is a comma separated value string
 	 * @return
 	 */
-	public Boolean checkForDuplicatesForAnyOneOfGivenCSV(String table, String column, String value) {
-		String query = "SELECT exists(SELECT id FROM " + table + " WHERE " + column + " IN (" + value + "))";
-		return jdbcTemplate.queryForObject(query, Boolean.class);
+	public Boolean checkForDuplicatesForAnyOneOfGivenCSV(String table, String column, String documentsAsCSVs, String tenantId) {
+		return jdbcTemplate.queryForObject(
+				DUPLICATE_EXISTS_QUERY.replace("$table", table).replace("$column", column), 
+				new Object[] { documentsAsCSVs, tenantId }, Boolean.class);
 	}
 
 	/**
@@ -258,4 +258,5 @@ public class EmployeeRepository {
 		String query = DUPLICATE_EXISTS_QUERY.replace("$table", table).replace("$column", column);
 		return jdbcTemplate.queryForObject(query, new Object[] { value, tenantId },	Boolean.class);
 	}
+
 }

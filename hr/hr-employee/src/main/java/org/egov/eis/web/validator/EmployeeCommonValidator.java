@@ -48,11 +48,11 @@ public class EmployeeCommonValidator {
 		}
 	}
 	
-	public void validateDocumentsForNewEntity(List<String> docs, EntityType docType, Errors errors, int index) {
+	public void validateDocumentsForNewEntity(List<String> docs, EntityType docType, String tenantId, Errors errors, int index) {
 		if (isEmpty(docs))
 			return;
 		if (employeeRepository.checkForDuplicatesForAnyOneOfGivenCSV(
-						"egeis_employeeDocuments", "document", getDocumentsAsCSVs(docs))) {
+						"egeis_employeeDocuments", "document", getDocumentsAsCSVs(docs), tenantId)) {
 			errors.rejectValue("employee." + docType.toString().toLowerCase() + "[" + index + "].documents", "concurrent",
 					"document(s) already exists");
 		}

@@ -86,7 +86,7 @@ public class DataIntegrityValidatorForUpdate implements Validator {
 
 		// FIXME employee.getId == null or empty then throw error employee id is
 		// required
-		if (employeeId == null) {
+		if (isEmpty(employeeId)) {
 			errors.rejectValue("employee.id", "no value", "provide employee id for update");
 			return;
 		}
@@ -107,8 +107,6 @@ public class DataIntegrityValidatorForUpdate implements Validator {
 		validateTechnicalQualification(employee.getTechnical(), employeeId, tenantId, errors);
 	}
 
-	// FIXME Validate data existence of Religion, Languages etc. for every data
-	// in separate methods
 	private void validateExternalAPIData() {
 	}
 
@@ -126,6 +124,14 @@ public class DataIntegrityValidatorForUpdate implements Validator {
 			errors.rejectValue("employee.gpfNo", "concurrent", "gpfNo already exists");
 		}
 
+		// check if documents dont belong to any other employee/referencetype. return error
+
+		/*if (employee.getDocuments() != null && !employee.getDocuments().isEmpty()
+			&& employeeRepository.checkForDuplicatesForAnyOneOfGivenCSVForUpdate("egeis_employeeDocuments", "document",
+						getDocumentsAsCSVs(employee.getDocuments()), EntityType.EMPLOYEE_HEADER, employee.getId(), employee.getTenantId())) {
+			errors.rejectValue("employee.documents", "concurrent", "document(s) already exists");
+		}
+*/
 		/*
 		 * if ((employee.getDocuments() != null) &&
 		 * !employee.getDocuments().isEmpty() &&

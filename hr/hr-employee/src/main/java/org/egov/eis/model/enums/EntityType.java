@@ -46,7 +46,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum EntityType {
-	EMPLOYEE("EMPLOYEE", "egeis_employee"), ASSIGNMENT("ASSIGNMENT", "egeis_assignment"), JURISDICTION("JURISDICTION", "egeis_employeejurisdiction"),
+	EMPLOYEE_HEADER("EMPLOYEE_HEADER", "egeis_employee"), ASSIGNMENT("ASSIGNMENT", "egeis_assignment"), JURISDICTION("JURISDICTION", "egeis_employeejurisdiction"),
 	SERVICE("SERVICE", "egeis_servicehistory"), TECHNICAL("TECHNICAL", "egeis_technicalqualification"), EDUCATION("EDUCATION", "egeis_educationalqualification"),
 	TEST("TEST", "egeis_departmentaltest"), REGULARISATION("REGULARISATION", "egeis_regularisation"), PROBATION("PROBATION", "egeis_probation");
 

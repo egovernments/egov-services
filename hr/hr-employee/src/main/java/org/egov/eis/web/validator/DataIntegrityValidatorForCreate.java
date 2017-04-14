@@ -126,7 +126,7 @@ public class DataIntegrityValidatorForCreate implements Validator {
 
 		if ((employee.getDocuments() != null) && !employee.getDocuments().isEmpty()
 				&& employeeRepository.checkForDuplicatesForAnyOneOfGivenCSV("egeis_employeeDocuments", "document",
-						getDocumentsAsCSVs(employee.getDocuments()))) {
+						getDocumentsAsCSVs(employee.getDocuments()), employee.getTenantId())) {
 			errors.rejectValue("employee.documents", "concurrent", "document(s) already exists");
 		}
 	}
@@ -135,7 +135,7 @@ public class DataIntegrityValidatorForCreate implements Validator {
 		// Employee will have at least one assignment during creation. So, null check is not done.
 		for (int index = 0; index < assignments.size(); index++)
 			employeeCommonValidator.validateDocumentsForNewEntity(assignments.get(index).getDocuments(), 
-					EntityType.ASSIGNMENT, errors, index);
+					EntityType.ASSIGNMENT, tenantId, errors, index);
 	}
 
 	private void validateDepartmentalTest(List<DepartmentalTest> tests, Long employeeId, String tenantId,
@@ -144,7 +144,7 @@ public class DataIntegrityValidatorForCreate implements Validator {
 			return;
 		for (int index = 0; index < tests.size(); index++) {
 			employeeCommonValidator.validateDocumentsForNewEntity(tests.get(index).getDocuments(), 
-					EntityType.TEST, errors, index);
+					EntityType.TEST, tenantId, errors, index);
 		}
 	}
 
@@ -154,7 +154,7 @@ public class DataIntegrityValidatorForCreate implements Validator {
 			return;
 			for (int index = 0; index < educations.size(); index++) {
 				employeeCommonValidator.validateDocumentsForNewEntity(educations.get(index).getDocuments(), 
-						EntityType.EDUCATION, errors, index);
+						EntityType.EDUCATION, tenantId, errors, index);
 		}
 	}
 
@@ -163,7 +163,7 @@ public class DataIntegrityValidatorForCreate implements Validator {
 			return;
 			for (int index = 0; index < probations.size(); index++) {
 				employeeCommonValidator.validateDocumentsForNewEntity(probations.get(index).getDocuments(), 
-						EntityType.PROBATION, errors, index);
+						EntityType.PROBATION, tenantId, errors, index);
 		}
 	}
 
@@ -173,7 +173,7 @@ public class DataIntegrityValidatorForCreate implements Validator {
 			return;
 			for (int index = 0; index < regularisations.size(); index++) {
 				employeeCommonValidator.validateDocumentsForNewEntity(regularisations.get(index).getDocuments(), 
-						EntityType.REGULARISATION, errors, index);
+						EntityType.REGULARISATION, tenantId, errors, index);
 		}
 	}
 
@@ -183,7 +183,7 @@ public class DataIntegrityValidatorForCreate implements Validator {
 			return;
 			for (int index = 0; index < serviceHistories.size(); index++) {
 				employeeCommonValidator.validateDocumentsForNewEntity(serviceHistories.get(index).getDocuments(), 
-						EntityType.SERVICE, errors, index);
+						EntityType.SERVICE, tenantId, errors, index);
 		}
 	}
 
@@ -193,7 +193,7 @@ public class DataIntegrityValidatorForCreate implements Validator {
 			return;
 		for (int index = 0; index < technicals.size(); index++) {
 			employeeCommonValidator.validateDocumentsForNewEntity(technicals.get(index).getDocuments(), 
-					EntityType.TECHNICAL, errors, index);
+					EntityType.TECHNICAL, tenantId, errors, index);
 	}
 	}
 	

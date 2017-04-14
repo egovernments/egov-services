@@ -40,7 +40,7 @@ public class EmployeeDocumentsService {
 				employee.getTenantId());
 
 		if (employee.getDocuments() != null) {
-			updateDocuments(employee.getDocuments(), EntityType.EMPLOYEE, employee.getId(), documentsFromDb,
+			updateDocuments(employee.getDocuments(), EntityType.EMPLOYEE_HEADER, employee.getId(), documentsFromDb,
 					employee.getId(), employee.getTenantId());
 		}
 
@@ -123,7 +123,7 @@ public class EmployeeDocumentsService {
 
 			EntityType referenceType = EntityType.valueOf(document.getReferenceType());
 			switch (referenceType) {
-			case EMPLOYEE:
+			case EMPLOYEE_HEADER:
 				employee.getDocuments().add(document.getDocument());
 				break;
 			case ASSIGNMENT:

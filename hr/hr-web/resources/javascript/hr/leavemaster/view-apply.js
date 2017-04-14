@@ -37,7 +37,7 @@ class ViewApply extends React.Component {
       if(empIds.indexOf(leaveApp[i].employee) == -1)
         empIds.push(leaveApp[i].employee);
     }
-    
+
     if(empIds.length > 0) {
       var employees = commonApiPost("hr-employee", "employees", "_search", {
         tenantId,
@@ -50,7 +50,7 @@ class ViewApply extends React.Component {
             leaveApp[i].name = item.name;
             employees.splice(ind, 1);
           }
-        }) 
+        })
       }
     }
     this.setState({

@@ -32,7 +32,7 @@ class SearchLeaveApplication extends React.Component {
     e.preventDefault();
     //call api call
     var employees=[];
-    employees=commonApiPost("hr-employee","employees","_search",{tenantId,code,departmentId,designationId},this.state.searchSet).responseJSON["Employee"] || [];
+    employees=commonApiPost("hr-employee","employees","_search",{tenantId,code,departmentId,designationId,pageSize:500},this.state.searchSet).responseJSON["Employee"] || [];
     this.setState({
       isSearchClicked:true,
       employees,searchSet:{

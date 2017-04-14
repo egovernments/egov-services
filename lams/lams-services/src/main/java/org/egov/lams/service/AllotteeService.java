@@ -36,6 +36,7 @@ public class AllotteeService {
 		UserSearchRequest userSearchRequest = new UserSearchRequest();
 		userSearchRequest.setRequestInfo(requestInfo);
 		List<Long> allotteeId = new ArrayList<>();
+		if(agreementCriteria != null)
 		allotteeId.addAll(agreementCriteria.getAllottee());
 		userSearchRequest.setId(allotteeId);
 		userSearchRequest.setName(agreementCriteria.getAllotteeName());

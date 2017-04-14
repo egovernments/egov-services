@@ -13,6 +13,7 @@ var date=now.getDate();
 if(getCookie("SESSIONID") && getCookie("SESSIONID") != localStorage.getItem("SESSIONID")) {
     localStorage.clear();
     localStorage.SESSIONID = getCookie("SESSIONID");
+    if(authToken) localStorage["auth-token"] = authToken;
 }
 //====================================================================//
 

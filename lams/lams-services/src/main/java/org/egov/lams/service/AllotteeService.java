@@ -37,7 +37,7 @@ public class AllotteeService {
 		userSearchRequest.setRequestInfo(requestInfo);
 		logger.info("url for allottee api post call :: " + url);
 		List<Long> allotteeId = new ArrayList<>();
-		if(agreementCriteria != null)
+		if(agreementCriteria.getAllottee() != null)
 		allotteeId.addAll(agreementCriteria.getAllottee());
 		userSearchRequest.setId(allotteeId);
 		userSearchRequest.setName(agreementCriteria.getAllotteeName());

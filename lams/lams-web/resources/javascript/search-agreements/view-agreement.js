@@ -214,6 +214,9 @@ $(document).ready(function() {
         if(process && process.attributes && process.attributes.validActions && process.attributes.validActions.values && process.attributes.validActions.values.length) {
             for(var i=0;i<process.attributes.validActions.values.length;i++) {
                 $("#footer-btn-grp").append($(`<button data-action=${process.attributes.validActions.values[i].key} id=${process.attributes.validActions.values[i].key} type="button" class="btn btn-submit">${process.attributes.validActions.values[i].name}<button/>`));
+                if(process.attributes.validActions.values[i].key == "Approve") {
+                    $("#workFlowDetails").remove();
+                }
             }
         } else {
             $("#workFlowDetails").remove();
@@ -323,7 +326,7 @@ $(document).ready(function() {
             _agrmntDet.workflowDetails = {
                     "businessKey": process.businessKey,
                     "type":"Agreement",
-                    "assignee": $("#approver_name").val(),
+                    "assignee": $("#approver_name") && $("#approver_name").val() ? $("#approver_name").val() : process.initiator,
                     "status": process.status,
                     "action": data.action
             };

@@ -35,6 +35,7 @@ public class AllotteeService {
 				+ propertiesManager.getAllotteeServiceSearchPath();
 		UserSearchRequest userSearchRequest = new UserSearchRequest();
 		userSearchRequest.setRequestInfo(requestInfo);
+		logger.info("url for allottee api post call :: " + url);
 		List<Long> allotteeId = new ArrayList<>();
 		if(agreementCriteria != null)
 		allotteeId.addAll(agreementCriteria.getAllottee());
@@ -42,8 +43,7 @@ public class AllotteeService {
 		userSearchRequest.setName(agreementCriteria.getAllotteeName());
 		if (agreementCriteria.getMobileNumber() != null)
 			userSearchRequest.setMobileNumber(agreementCriteria.getMobileNumber().toString());
-		logger.info("url for allottee api post call :: " + url
-				+ "the request object for allotte search is userSearchRequest ::: " + userSearchRequest);
+		logger.info("the request object for allotte search is userSearchRequest ::: " + userSearchRequest);
 		AllotteeResponse allotteeResponse = callAllotteSearch(url, userSearchRequest);
 		logger.info("response object for Allottee search ::: " + allotteeResponse);
 		return allotteeResponse;

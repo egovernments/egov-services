@@ -74,39 +74,6 @@ class CreateAsset extends React.Component {
       })
     }
   }
-  addOrUpdate(e) {
-    // var finalPost={
-    //   "RequestInfo":requestInfo,
-    //
-    // }
-    e.preventDefault();
-    // console.log(zone);
-    // console.log(this.state.assetCategory);
-    var tempInfo = this.state.assetCategory;
-    // tempInfo["assetSet"]["assetCategory"]["id"]=parseInt(tempInfo["assetSet"]["assetCategory"]["id"])
-    var body = {
-      "RequestInfo": requestInfo,
-      "AssetCategory": tempInfo
-    };
-    var response = $.ajax({
-      url: baseUrl + "/asset-services/assetCategories/_create?tenantId=ap.kurnool",
-      type: 'POST',
-      dataType: 'json',
-      data: JSON.stringify(body),
-      async: false,
-      contentType: 'application/json',
-      headers: {
-        'auth-token': authToken
-      }
-    });
-    // console.log(response);
-    if (response["statusText"] === "OK") {
-      alert("Successfully added");
-    } else {
-      alert(response["statusText"]);
-
-
-
 
   addOrUpdate(e){
         // var finalPost={
@@ -136,13 +103,9 @@ class CreateAsset extends React.Component {
           });
 
         // console.log(response);
-        if(response["statusText"]==="OK")
-        {
-
-    window.location.href=`app/asset/create-asset-ack.html?name=${tempInfo.name}&type=category`;
-
-        }
-        else {
+        if(response["statusText"]==="OK") {
+          window.location.href=`app/asset/create-asset-ack.html?name=${tempInfo.name}&type=category`;
+        } else {
           alert(response["statusText"]);
           this.setState({
             assetCategory:{
@@ -161,8 +124,7 @@ class CreateAsset extends React.Component {
 
 
             },
-            customField:
-             {
+            customField: {
                       "name": "",
                       "type": "",
                       "isActive": "",
@@ -182,8 +144,8 @@ class CreateAsset extends React.Component {
             typeList:[]
 
           })
-}
-}
+        }
+  }
   componentWillMount(){
       this.setState({
         assetCategory: {
@@ -219,7 +181,6 @@ class CreateAsset extends React.Component {
         assignments_unitOfMeasurement: [],
         typeList: []
       })
-    }
   }
   componentWillMount() {
     this.setState({

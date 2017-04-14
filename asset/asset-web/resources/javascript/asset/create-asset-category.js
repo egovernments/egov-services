@@ -102,11 +102,7 @@ class CreateAsset extends React.Component {
               }
           });
 
-        // console.log(response);
-        if(response["statusText"]==="OK") {
-          window.location.href=`app/asset/create-asset-ack.html?name=${tempInfo.name}&type=category`;
-        } else {
-          alert(response["statusText"]);
+        if(response["status"]==  201 || response["status"]==  200) {
           this.setState({
             assetCategory:{
               "tenantId": "ap.kurnool",
@@ -121,8 +117,6 @@ class CreateAsset extends React.Component {
               "unitOfMeasurement": "",
               "depreciationRate": null,
               "customFields":[]
-
-
             },
             customField: {
                       "name": "",
@@ -144,6 +138,9 @@ class CreateAsset extends React.Component {
             typeList:[]
 
           })
+          window.location.href=`app/asset/create-asset-ack.html?name=${tempInfo.name}&type=category`;
+        } else {
+          showError(response["statusText"]);
         }
   }
   componentWillMount(){

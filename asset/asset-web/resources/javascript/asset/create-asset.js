@@ -461,7 +461,7 @@ class CreateAsset extends React.Component {
 				<div className="col-sm-6" key={index}>
 					<div className="row">
 						<div className="col-sm-6 label-text">
-							<label for={item.name}>{titleCase(item.name)}  {showStart(item.isActive)}</label>
+							<label for={item.name}>{titleCase(item.name)}  {showStart(item.isMandatory)}</label>
 						</div>
 						<div className="col-sm-6">
 							<input id={item.name} name={item.name} type="text"
@@ -477,7 +477,7 @@ class CreateAsset extends React.Component {
 				<div className="col-sm-6" key={index}>
 					<div className="row">
 						<div className="col-sm-6 label-text">
-							<label for={item.name}>{titleCase(item.name)}  {showStart(item.isActive)}</label>
+							<label for={item.name}>{titleCase(item.name)}  {showStart(item.isMandatory)}</label>
 						</div>
 						<div className="col-sm-6">
 							<select id={item.name} name={item.name}
@@ -497,7 +497,7 @@ class CreateAsset extends React.Component {
 				<div className="col-sm-6" key={index}>
 					<div className="row">
 						<div className="col-sm-6 label-text">
-							<label for={item.name}>{titleCase(item.name)}  {showStart(item.isActive)}</label>
+							<label for={item.name}>{titleCase(item.name)}  {showStart(item.isMandatory)}</label>
 						</div>
 						<div className="col-sm-6">
                             {renderRadio(item.values.split(","), item.name, item.isMandatory)}
@@ -507,13 +507,12 @@ class CreateAsset extends React.Component {
 			);
 		}
 
-		const showCheckBox = function(item,index)
-		{
+		const showCheckBox = function(item,index) {
 			return (
 				<div className="col-sm-6" key={index}>
 					<div className="row">
 						<div className="col-sm-6 label-text">
-							<label for={item.name}>{titleCase(item.name)}  {showStart(item.isActive)}</label>
+							<label for={item.name}>{titleCase(item.name)}  {showStart(item.isMandatory)}</label>
 						</div>
 						<div className="col-sm-6">
 							{renderCheckBox(item.values.split(","), item.name)}
@@ -524,8 +523,7 @@ class CreateAsset extends React.Component {
 		}
 
 
-    const showStart = function(status)
-    {
+    const showStart = function(status) {
         if (status) {
             return(
               <span> * </span>
@@ -836,13 +834,13 @@ class CreateAsset extends React.Component {
                       <div className="col-sm-6">
                         <div className="row">
                           <div className="col-sm-6 label-text">
-                              <label for="status"> Asset Status </label>
+                              <label for="status"> Asset Status <span> *</span></label>
                           </div>
                           <div className="col-sm-6">
                               <div className="styled-select">
                                 <select id="status" name="status" value={status}
                                     onChange={(e)=>
-                                    { handleChange(e,"status")}} disabled={readonly}>
+                                    { handleChange(e,"status")}} disabled={readonly} required>
                                     <option value="">Choose Status</option>
                                     {renderOption(this.state.statusList)}
                                 </select>

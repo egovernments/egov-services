@@ -20,16 +20,16 @@ import org.springframework.web.client.RestTemplate;
 
 @Repository
 public class AllotteeService {
-	
+
 	public static final Logger logger = LoggerFactory.getLogger(Allottee.class);
 
 	@Autowired
 	private PropertiesManager propertiesManager;
-	
+
 	@Autowired
 	private RestTemplate restTemplate;
 
-	public AllotteeResponse getAllottees(AgreementCriteria agreementCriteria,RequestInfo requestInfo) {
+	public AllotteeResponse getAllottees(AgreementCriteria agreementCriteria, RequestInfo requestInfo) {
 
 		String url = propertiesManager.getAllotteeServiceHostName() + propertiesManager.getAllotteeServiceBasePAth()
 				+ propertiesManager.getAllotteeServiceSearchPath();
@@ -39,15 +39,18 @@ public class AllotteeService {
 		allotteeId.addAll(agreementCriteria.getAllottee());
 		userSearchRequest.setId(allotteeId);
 		userSearchRequest.setName(agreementCriteria.getAllotteeName());
-		if(agreementCriteria.getMobilenumber()!= null)
-		userSearchRequest.setMobileNumber(agreementCriteria.getMobilenumber().toString());
-		logger.info("url for allottee api post call",url);
-		return callAllotteSearch(url,userSearchRequest);
+		if (agreementCriteria.getMobilenumber() != null)
+			userSearchRequest.setMobileNumber(agreementCriteria.getMobilenumber().toString());
+		logger.info("url for allottee api post call :: " + url
+				+ "the request object for allotte search is userSearchRequest ::: " + userSearchRequest);
+		AllotteeResponse allotteeResponse = callAllotteSearch(url, userSearchRequest);
+		logger.info("response object for Allottee search ::: " + allotteeResponse);
+		return allotteeResponse;
 	}
-	
-	public AllotteeResponse isAllotteeExist(Allottee allottee,RequestInfo requestInfo) {
 
-		String url = propertiesManager.getAllotteeServiceHostName()	+ propertiesManager.getAllotteeServiceBasePAth()
+	public AllotteeResponse isAllotteeExist(Allottee allottee, RequestInfo requestInfo) {
+
+		String url = propertiesManager.getAllotteeServiceHostName() + propertiesManager.getAllotteeServiceBasePAth()
 				+ propertiesManager.getAllotteeServiceSearchPath();
 		UserSearchRequest userSearchRequest = new UserSearchRequest();
 		userSearchRequest.setRequestInfo(requestInfo);
@@ -56,28 +59,31 @@ public class AllotteeService {
 		userSearchRequest.setName(allottee.getName());
 		userSearchRequest.setEmailId(allottee.getEmailId());
 		userSearchRequest.setMobileNumber(allottee.getMobileNumber());
-		logger.info("url for allottee api post call",url);
+		logger.info("url for allottee api post call :: " + url
+				+ "the request object for isAllotteeExist is userSearchRequest ::: " + userSearchRequest);
 		AllotteeResponse allotteeResponse = callAllotteSearch(url, userSearchRequest);
+		logger.info("response object for isAllotteeExist ::: " + allotteeResponse);
 		return allotteeResponse;
 	}
-	
-	public AllotteeResponse createAllottee(Allottee allottee,RequestInfo requestInfo) {
-		
-		 String url = propertiesManager.getAllotteeServiceHostName() + propertiesManager.getAllotteeServiceBasePAth()
-			    	+ propertiesManager.getAllotteeServiceCreatePAth();
-		 allottee.setUserName(allottee.getName()+allottee.getMobileNumber());
-		 allottee.setPassword(allottee.getMobileNumber().toString());
-		 allottee.setGender(Gender.FEMALE);
-		 allottee.setType(UserType.CITIZEN);
-		 allottee.setActive(true); //FIXME set user name and password using any gen service
-		 CreateUserRequest createUserRequest = new CreateUserRequest(requestInfo,allottee);
-		 logger.info("url for allottee api post call : "+url+"  the user request obj is : "+ createUserRequest);
-		 AllotteeResponse allotteeResponse = callAllotteSearch(url,createUserRequest);
-		 allottee.setId(allotteeResponse.getAllottee().get(0).getId());
-		 System.err.println("the id from alottee ::: "+allotteeResponse.getAllottee().get(0).getId());
-		 return allotteeResponse;
+
+	public AllotteeResponse createAllottee(Allottee allottee, RequestInfo requestInfo) {
+
+		String url = propertiesManager.getAllotteeServiceHostName() + propertiesManager.getAllotteeServiceBasePAth()
+				+ propertiesManager.getAllotteeServiceCreatePAth();
+		allottee.setUserName(allottee.getName() + allottee.getMobileNumber());
+		allottee.setPassword(allottee.getMobileNumber().toString());
+		allottee.setGender(Gender.FEMALE);
+		allottee.setType(UserType.CITIZEN);
+		allottee.setActive(true); // FIXME set user name and password using any
+									// gen service
+		CreateUserRequest createUserRequest = new CreateUserRequest(requestInfo, allottee);
+		logger.info("url for allottee api post call : " + url + "  the user request obj is : " + createUserRequest);
+		AllotteeResponse allotteeResponse = callAllotteSearch(url, createUserRequest);
+		allottee.setId(allotteeResponse.getAllottee().get(0).getId());
+		logger.info("the id from alottee ::: " + allotteeResponse.getAllottee().get(0).getId());
+		return allotteeResponse;
 	}
-	
+
 	public AllotteeResponse callAllotteSearch(String url, Object userRequest) {
 
 		UserSearchRequest userSearchRequest;
@@ -102,7 +108,6 @@ public class AllotteeService {
 				throw new RuntimeException(e.getMessage() + e);
 			}
 		}
-		logger.info("list of allottes from allotteresponse from allotte api call for get allottees ::: "+allotteeResponse.getAllottee());
 		return allotteeResponse;
 	}
 }

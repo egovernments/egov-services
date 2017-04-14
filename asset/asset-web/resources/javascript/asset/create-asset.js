@@ -132,14 +132,7 @@ class CreateAsset extends React.Component {
       });
 
      if (response["status"] === 201 || response["status"] == 200 || response["status"] == 204) {
-          this.setState({
-            ...this.state,
-            assetSet: Object.assign({}, (type == "update" ? _this.state.assetSet : defaultAssetSetState)),
-            success: type == "update" ? "Asset successfully modified!" : "Asset successfully added!",
-            customFields: type == "update" ? _this.state.customFields : []
-          });
-
-					window.location.href=`app/asset/create-asset-ack.html?name=${tempInfo.name}&type=""`;
+					window.location.href=`app/asset/create-asset-ack.html?name=${tempInfo.name}&type=`;
 
       } else {
            this.setState({

@@ -13,8 +13,6 @@ CREATE TABLE egeis_attendance (
 	tenantId CHARACTER VARYING(250) NOT NULL,
 
 	CONSTRAINT pk_egeis_attendance PRIMARY KEY (id),
-	CONSTRAINT fk_egeis_attendance_employee FOREIGN KEY (employee)
-		REFERENCES egeis_employee(id),
 	CONSTRAINT fk_egeis_attendance_type FOREIGN KEY (type)
 		REFERENCES egeis_attendance_type(id)
 );

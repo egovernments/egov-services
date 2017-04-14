@@ -61,7 +61,7 @@ public class ComplaintController {
                                               @RequestParam(value = "end_date", required = false) @DateTimeFormat
                                                   (pattern = "dd-MM-yyyy") Date endDate,
                                               @RequestParam(value="escalation_date",required=false)@DateTimeFormat 
-                                                  (pattern="dd-MM-yyyy")Date escalationDate,
+                                                  (pattern="dd-MM-yyyy HH:mm:ss")Date escalationDate,
                                               @RequestParam(value = "status", required = false)List <String> status,
                                               @RequestParam(value = "last_modified_datetime", required = false)
                                                   @DateTimeFormat(pattern = "dd-MM-yyyy") Date lastModifiedDate,

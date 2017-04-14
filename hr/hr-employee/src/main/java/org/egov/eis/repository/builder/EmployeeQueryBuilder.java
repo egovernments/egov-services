@@ -130,9 +130,7 @@ public class EmployeeQueryBuilder {
 		if(empIds != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" e.id IN " + getIdQuery(empIds));
-		}
-
-		if (employeeCriteria.getId() != null) {
+		} else if (employeeCriteria.getId() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" e.id IN " + getIdQuery(employeeCriteria.getId()));
 		}

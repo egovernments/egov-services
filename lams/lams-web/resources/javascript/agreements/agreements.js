@@ -8,19 +8,6 @@ $('#close').on("click", function() {
     var agreement = {};
     var employees=[];
 
-    try {
-        rentInc = commonApiPost("lams-services", "getrentincrements", "", {
-      }).responseJSON;
-
-      if(rentInc && rentInc.constructor == Array) {
-        for (var i = 0; i < rentInc.length; i++) {
-          $(`#rentIncrementMethod`).append(`<option value='${rentInc[i]['id']}'>${rentInc[i]['type']}</option>`)
-        }
-      }
-    } catch(e) {
-        console.log(e);
-    }
-
     $(".disabled").attr("disabled", true);
     //Getting data for user input
     $("input").on("keyup", function() {
@@ -736,6 +723,19 @@ function fillValueToObject(currentState) {
       alert("Agreement is not applicable for selected category");
     }
 
+    try {
+        rentInc = commonApiPost("lams-services", "getrentincrements", "", {
+      }).responseJSON;
+
+      if(rentInc && rentInc.constructor == Array) {
+        for (var i = 0; i < rentInc.length; i++) {
+          $(`#rentIncrementMethod`).append(`<option value='${rentInc[i]['id']}'>${rentInc[i]['type']}</option>`)
+        }
+      }
+    } catch(e) {
+        console.log(e);
+    }
+
     // finalValidatinRules = Object.assign(validationRules, commomFieldsRules);
     finalValidatinRules = Object.assign({}, commomFieldsRules);
 
@@ -866,7 +866,7 @@ function fillValueToObject(currentState) {
 
     // $("#"+name).val("murali");
 
-  var assetDetails=commonApiPost("asset-services","assets","_search",{id:getUrlVars()["assetId"]}).responseJSON["Assets"][0] ||[];
+  var assetDetails=commonApiPost("asset-services","assets","_search",{id:getUrlVars()["assetId"]}).responseJSON["Assets"][0] ||{};
   // var natureOfAllotments=commonApiPost("lams-services","","getnatureofallotment",{}).responseJSON ||{};
   // var designation= getCommonMaster("hr-masters", "designations", "Designation").responseJSON["Designation"] || [];
   // var department= getCommonMaster("egov-common-masters", "departments", "Department").responseJSON["Department"] || [];
@@ -885,8 +885,7 @@ function fillValueToObject(currentState) {
     }
   }
 
-  $(`#approverDepartment`).html(`<option value=''>Select</option>`)
-
+  $(`#approverDepartment`).html(`<option value=''>Select</option>`);
   for (var variable in department) {
       $(`#approverDepartment`).append(`<option value='${department[variable]["id"]}'>${department[variable]["name"]}</option>`)
 
@@ -910,26 +909,27 @@ function fillValueToObject(currentState) {
   // var locality=commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"LOCALITY",hierarchyTypeName:"LOCATION"}).responseJSON["Boundary"] || [],
   // var electionwards=commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"WARD",hierarchyTypeName:"ADMINISTRATION"}).responseJSON["Boundary"] || [],
   // var revenueWardss=commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"WARD",hierarchyTypeName:"REVENUE"}).responseJSON["Boundary"] || []
-  $("#assetCategory\\.name").val(assetDetails["assetCategory"]["name"]);
+  if(assetDetails && Object.keys(assetDetails).length) {
+    $("#assetCategory\\.name").val(assetDetails["assetCategory"]["name"]);
 
-  $("#aName").val(assetDetails["name"]);
+    $("#aName").val(assetDetails["name"]);
 
-  $("#totalArea").val(assetDetails["totalArea"]);
+    $("#totalArea").val(assetDetails["totalArea"]);
 
-  $("#code").val(assetDetails["code"]);
+    $("#code").val(assetDetails["code"]);
 
-  $("#locationDetails\\.locality").val(getNameById(locality,assetDetails["locationDetails"]["locality"]));
+    $("#locationDetails\\.locality").val(getNameById(locality,assetDetails["locationDetails"]["locality"]));
 
-  $("#locationDetails\\.street").val(getNameById(street,assetDetails["locationDetails"]["street"]));
+    $("#locationDetails\\.street").val(getNameById(street,assetDetails["locationDetails"]["street"]));
 
-  $("#locationDetails\\.zone").val(getNameById(revenueZone,assetDetails["locationDetails"]["zone"]));
+    $("#locationDetails\\.zone").val(getNameById(revenueZone,assetDetails["locationDetails"]["zone"]));
 
-  $("#locationDetails\\.revenueWards").val(getNameById(revenueWards,assetDetails["locationDetails"]["revenueWards"]));
+    $("#locationDetails\\.revenueWards").val(getNameById(revenueWards,assetDetails["locationDetails"]["revenueWards"]));
 
-  $("#locationDetails\\.block").val(getNameById(revenueBlock,assetDetails["locationDetails"]["block"]));
+    $("#locationDetails\\.block").val(getNameById(revenueBlock,assetDetails["locationDetails"]["block"]));
 
-  $("#locationDetails\\.electionWard").val(getNameById(electionwards,assetDetails["locationDetails"]["electionWard"]));
-
+    $("#locationDetails\\.electionWard").val(getNameById(electionwards,assetDetails["locationDetails"]["electionWard"]));
+  }
 
   $('.datetimepicker').datetimepicker({
       format: 'DD/MM/YYYY'

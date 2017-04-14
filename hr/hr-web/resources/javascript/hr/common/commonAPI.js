@@ -9,14 +9,6 @@ var year=now.getFullYear();
 var month=now.getMonth();
 var date=now.getDate();
 
-//====================================================================//
-if(getCookie("SESSIONID") && getCookie("SESSIONID") != localStorage.getItem("SESSIONID")) {
-    localStorage.clear();
-    localStorage.SESSIONID = getCookie("SESSIONID");
-    if(authToken) localStorage["auth-token"] = authToken;
-}
-//====================================================================//
-
 //request info from cookies
 var requestInfo = {
     "apiId": "eis",

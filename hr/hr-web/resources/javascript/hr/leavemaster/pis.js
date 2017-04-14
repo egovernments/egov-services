@@ -323,13 +323,12 @@ class PersonalInform extends React.Component {
     } = this.state.searchSet;
     let mode = getUrlVars()["type"];
 
-    const renderOption=function(list)
-    {
+    const renderOption = function(list, setNameBool) {
         if(list)
         {
             return list.map((item)=>
             {
-                return (<option key={item.id} value={item.id}>
+                return (<option key={item.id} value={setNameBool ? item.name : item.id}>
                         {item.name}
                   </option>)
             })
@@ -486,7 +485,7 @@ class PersonalInform extends React.Component {
                                   handleChange(e,"calendarYear")
                                 }} required>
                                     <option value="">Select Calendar Year</option>
-                                    {renderOption(this.state.years)}
+                                    {renderOption(this.state.years, true)}
                                 </select>
                             </div>
                             </div>

@@ -28,7 +28,7 @@ public class AssetCriteria {
 	private Long block;
 	private Long street;
 	private Long electionWard;
-	private Long doorNo;
+	private String doorNo;
 	private Long pinCode;
 	
 	private String tenantId;

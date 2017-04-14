@@ -55,7 +55,7 @@ public class AgreementService {
 				&& agreementCriteria.getAllottee() == null  && agreementCriteria.getTenantId() == null;
 
 		boolean isAllotteeNull = agreementCriteria.getAllotteeName() == null
-				&& agreementCriteria.getMobilenumber() == null;
+				&& agreementCriteria.getMobileNumber() == null;
 
 		boolean isAssetNull = agreementCriteria.getAssetCategory() == null
 				&& agreementCriteria.getShoppingComplexNo() == null && agreementCriteria.getAssetCode() == null

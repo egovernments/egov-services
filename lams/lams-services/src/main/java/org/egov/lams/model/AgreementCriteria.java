@@ -39,7 +39,7 @@ public class AgreementCriteria {
 	 private Long electionWard;
 	 private Long doorno;
 	 private String allotteeName;
-	 private Long mobilenumber;
+	 private Long mobileNumber;
 	 private String offSet;
 	 private String size;
 	 private String stateId;

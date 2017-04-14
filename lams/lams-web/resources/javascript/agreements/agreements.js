@@ -27,7 +27,7 @@ $('#close').on("click", function() {
         fillValueToObject(this);
         if(this.id == "rent") {
             $('#securityDeposit').val(this.value*3);
-            $("input").attr({
+            $("#securityDeposit").attr({
                 "min": this.value*3
             });
             agreement["securityDeposit"] = this.value*3;

@@ -1,28 +1,16 @@
-//getting current guerry strings
-// function getUrlVars() {
-//     var vars = [],
-//         hash;
-//     var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-//     for (var i = 0; i < hashes.length; i++) {
-//         hash = hashes[i].split('=');
-//         vars.push(hash[0]);
-//         vars[hash[0]] = hash[1];
-//     }
-//     return vars;
-// }
 
 let months=[
-  "January", 
-  "February", 
-  "March", 
-  "April", 
+  "January",
+  "February",
+  "March",
+  "April",
   "May",
-  "June", 
-  "July", 
-  "August", 
-  "September", 
+  "June",
+  "July",
+  "August",
+  "September",
   "October",
-  "November", 
+  "November",
   "December"
 ];
 
@@ -79,7 +67,7 @@ class Attendance extends React.Component {
              }
           }
       }
-      
+
       this.setState({
           attendance
       });
@@ -106,16 +94,16 @@ class Attendance extends React.Component {
           alert("Successfully added");
           window.location.href = "app/hr/common/employee-attendance.html";
       } else {
-          alert(response["statusText"]);
+          alert(response["responseJSON"][0]["error"]["description"]);
       }
   }
 
 
 
-  componentWillMount()
-  {
-
-  }
+  // componentWillMount()
+  // {
+  //
+  // }
 
   componentDidMount()
   {
@@ -148,11 +136,30 @@ class Attendance extends React.Component {
           employeeType: queryParam["type"],
           code: queryParam["code"],
           "assignment.isPrimary": true,
-          asOnDate: (currentDate.getDate().toString().length == 2 ? currentDate.getDate() : "0" + currentDate.getDate()) + "/" + (currentDate.getMonth().toString().length == 2 ? (currentDate.getMonth() + 1) : "0" + (currentDate.getMonth() + 1)) + "/" + currentDate.getFullYear()
+          asOnDate: (currentDate.getDate().toString().length == 2 ? currentDate.getDate() : "0" + currentDate.getDate()) + "/" + (currentDate.getMonth().toString().length == 2 ? (currentDate.getMonth() + 1) : "0" + (currentDate.getMonth() + 1)) + "/" + currentDate.getFullYear(),
+          pageSize:500
       }).responseJSON["Employee"] || [];
     } catch(e) {
       var employeesTemp = [];
     }
+
+    var employee="";
+    if (employeesTemp.length>0) {
+        for (var i = 0; i < employeesTemp.length; i++) {
+          employee+=employeesTemp[i]["id"]+",";
+        }
+    }
+
+    try {
+      var empLeaveList = commonApiPost("hr-leave", "leaveapplications", "_search", {
+          tenantId,
+          employee,
+          pageSize:500
+      }).responseJSON["LeaveApplication"] || [];
+    } catch(e) {
+      var empLeaveList = [];
+    }
+
 
     try {
       var currentAttendance = commonApiPost("hr-attendance", "attendances", "_search", {
@@ -160,7 +167,10 @@ class Attendance extends React.Component {
           month: parseInt(queryParam["month"]) + 1,
           year: queryParam["year"],
           pageSize: 9999,
-          pageNumber: 1
+          pageNumber: 1 ,
+          departmentId: queryParam["departmentCode"],
+          designationId: queryParam["designationCode"],
+          code: queryParam["code"]
       }).responseJSON["Attendance"] || [];
     } catch(e) {
       var currentAttendance = [];
@@ -194,10 +204,10 @@ class Attendance extends React.Component {
     }
 
     if(currentAttendance.length > 0) {
-        for (var i = 0; i < currentAttendance.length; i++) {
-          if(employees[currentAttendance[i].employee] && employees[currentAttendance[i].employee]["attendance"]) {
-            employees[currentAttendance[i].employee]["attendance"][`${parseInt(queryParam["month"])}-${currentAttendance[i].attendanceDate.split("-")[2]}`]=currentAttendance[i].type.code;
-            employees[currentAttendance[i].employee]["attendance"][`${parseInt(queryParam["month"])}-${currentAttendance[i].attendanceDate.split("-")[2]}` + "-id"] = currentAttendance[i].id;
+        for (var j = 0; j < currentAttendance.length; j++) {
+          if(employees[currentAttendance[j].employee] && employees[currentAttendance[j].employee]["attendance"]) {
+            employees[currentAttendance[j].employee]["attendance"][`${parseInt(queryParam["month"])}-${currentAttendance[j].attendanceDate.split("-")[2]}`]=currentAttendance[j].type.code;
+            employees[currentAttendance[j].employee]["attendance"][`${parseInt(queryParam["month"])}-${currentAttendance[j].attendanceDate.split("-")[2]}` + "-id"] = currentAttendance[j].id;
           }
         }
     } else {
@@ -206,14 +216,14 @@ class Attendance extends React.Component {
             // var daysOfYear = [];
             // console.log(Object.assign({}, startDate));
             var startDate = new Date((typeof(queryParam["year"])==="undefined")?now.getFullYear():parseInt(queryParam["year"]), (typeof(queryParam["month"])==="undefined")?now.getMonth():parseInt(queryParam["month"]), 1);
-            
+
             if(hrConfigurations["HRConfiguration"]["Weekly_holidays"][0]=="5-day week")
             {
               for (var d = startDate ; d <= endDate; d.setDate(d.getDate() + 1)) {
               //  daysOfYear.push(new Date(d));
-                  if(holidayList.indexOf(d.getTime()) > -1)
+                  if(holidayList.indexOf(d.getTime()) > -1 && hrConfigurations["HRConfiguration"]["Include_enclosed_holidays"][0]=="Y")
                     employees[emp].attendance[`${d.getMonth()}-${d.getDate().toString().length===1?"0"+d.getDate():d.getDate()}`] = "H";
-                  else 
+                  else
                   employees[emp].attendance[`${d.getMonth()}-${d.getDate().toString().length===1?"0"+d.getDate():d.getDate()}`]=(d.getDay()===0||d.getDay()===6)?"H":"";
                   // console.log(employees[emp]);
               }
@@ -221,9 +231,9 @@ class Attendance extends React.Component {
             else {
               for (var d = startDate ; d <= endDate; d.setDate(d.getDate() + 1)) {
               //  daysOfYear.push(new Date(d));
-                  if(holidayList.indexOf(d.getTime()) > -1)
+                  if(holidayList.indexOf(d.getTime()) > -1 && hrConfigurations["HRConfiguration"]["Include_enclosed_holidays"][0]=="Y")
                     employees[emp].attendance[`${d.getMonth()}-${d.getDate().toString().length===1?"0"+d.getDate():d.getDate()}`] = "H";
-                  else 
+                  else
                     employees[emp].attendance[`${d.getMonth()}-${d.getDate().toString().length===1?"0"+d.getDate():d.getDate()}`]=(d.getDay()===0)?"H":"";
                   // console.log(employees[emp]);
               }
@@ -231,6 +241,32 @@ class Attendance extends React.Component {
             }
             // empTemp.push(emp);
         }
+
+
+        for (var k = 0; k < empLeaveList.length; k++) {
+          if (empLeaveList[k].fromDate==empLeaveList[k].toDate) {
+            var date=new Date();
+            if (date.getFullYear()==empLeaveList[k].fromDate.split("-")[0] && date.getMonth()==empLeaveList[k].fromDate.split("-")[1]) {
+              employees[empLeaveList[k].employee]["attendance"][`${parseInt(queryParam["month"])}-${empLeaveList[k].fromDate.split("-")[2]}`]="L";
+            }
+          }
+          else {
+            var fromDate=new Date(empLeaveList[k].fromDate.split("-")[0],empLeaveList[k].fromDate.split("-")[1],empLeaveList[k].fromDate.split("-")[2]);
+            var toDate=new Date(empLeaveList[k].toDate.split("-")[0],empLeaveList[k].toDate.split("-")[1],empLeaveList[k].toDate.split("-")[2]);
+            var date=new Date();
+            for (var f = fromDate; f <= toDate; f.setDate(f.getDate() + 1)) {
+              if (date.getFullYear()==f.getFullYear() && date.getMonth()==f.month) {
+                  employees[empLeaveList[f].employee]["attendance"][`${parseInt(queryParam["month"])}-${f.getDate()}`]="L";
+              }
+            }
+
+
+            // if (date.getFullYear()==empLeaveList[i].fromDate.split("-")[0] && date.getMonth()==empLeaveList[i].fromDate.split("-")[1]) {
+            //   employees[empLeaveList[i].employee]["attendance"][-]="L";
+            // }
+          }
+        }
+
     }
 
     this.setState({

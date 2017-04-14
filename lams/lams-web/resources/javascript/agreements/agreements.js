@@ -8,6 +8,19 @@ $('#close').on("click", function() {
     var agreement = {};
     var employees=[];
 
+    try {
+        rentInc = commonApiPost("lams-services", "getrentincrements", "", {
+      }).responseJSON;
+
+      if(rentInc && rentInc.constructor == Array) {
+        for (var i = 0; i < rentInc.length; i++) {
+          $(`#rentIncrementMethod`).append(`<option value='${rentInc[i]['id']}'>${rentInc[i]['type']}</option>`)
+        }
+      }
+    } catch(e) {
+        console.log(e);
+    }
+
     $(".disabled").attr("disabled", true);
     //Getting data for user input
     $("input").on("keyup", function() {
@@ -44,7 +57,6 @@ $('#close').on("click", function() {
       for (var i = 0; i < employees.length; i++) {
           $(`#approverName`).append(`<option value='${employees[i]['id']}'>${employees[i]['name']}</option>`)
       }
-      console.log(employees);
   }
 
         // agreement[this.id] = this.value;
@@ -1001,7 +1013,7 @@ $(".datetimepicker").on("dp.change", function() {
             agreement["asset"]={};
             agreement["asset"]["id"]=getUrlVars()["assetId"];
             agreement["rentIncrementMethod"]={};
-            agreement["rentIncrementMethod"]["id"]=1;
+            agreement["rentIncrementMethod"]["id"]= $("#rentIncrementMethod").val();
             agreement["tenantId"]=tenantId;
             uploadFiles(agreement, function(err, _agreement)
             {

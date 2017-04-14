@@ -1,6 +1,6 @@
 var baseUrl = window.location.origin;
 
-var authToken=localStorage.getItem("auth-token");
+var authToken="c999067e-b35e-428c-a284-f3fefbf600b5"//localStorage.getItem("auth-token");
 
 //request info from cookies
 var requestInfo = {
@@ -15,7 +15,7 @@ var requestInfo = {
     "authToken":authToken
 };
 
-var tenantId = "ap.kurnool";
+var tenantId = "1";
 
 
 

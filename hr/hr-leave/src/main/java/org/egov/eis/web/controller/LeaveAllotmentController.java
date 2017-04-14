@@ -104,6 +104,13 @@ public class LeaveAllotmentController {
 		List<LeaveAllotment> leaveAllotmentsList = null;
 		try {
 			leaveAllotmentsList = leaveAllotmentService.getLeaveAllotments(leaveAllotmentGetRequest);
+			if (leaveAllotmentGetRequest.getDesignationId() != null
+					&& !leaveAllotmentGetRequest.getDesignationId().isEmpty()
+					&& ((leaveAllotmentsList != null && leaveAllotmentsList.isEmpty())
+							|| leaveAllotmentsList == null)) {
+				leaveAllotmentGetRequest.setDesignationId(null);
+				leaveAllotmentsList = leaveAllotmentService.getLeaveAllotments(leaveAllotmentGetRequest);
+			}
 		} catch (Exception exception) {
 			logger.error("Error while processing request " + leaveAllotmentGetRequest, exception);
 			return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);

@@ -103,12 +103,12 @@ public class LeaveOpeningBalanceQueryBuilder {
 			preparedStatementValues.add(leaveOpeningBalanceGetRequest.getTenantId());
 		}
 
-		if (leaveOpeningBalanceGetRequest.getId() != null) {
+		if (leaveOpeningBalanceGetRequest.getId() != null && !leaveOpeningBalanceGetRequest.getId().isEmpty()) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" lob.id IN " + getIdQuery(leaveOpeningBalanceGetRequest.getId()));
 		}
 
-		if (leaveOpeningBalanceGetRequest.getEmployee() != null) {
+		if (leaveOpeningBalanceGetRequest.getEmployee() != null && !leaveOpeningBalanceGetRequest.getEmployee().isEmpty()) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" lob.employeeId IN " + getIdQuery(leaveOpeningBalanceGetRequest.getEmployee()));
 		}
@@ -119,7 +119,7 @@ public class LeaveOpeningBalanceQueryBuilder {
 			preparedStatementValues.add(leaveOpeningBalanceGetRequest.getYear());
 		}
 
-		if (leaveOpeningBalanceGetRequest.getLeaveType() != null) {
+		if (leaveOpeningBalanceGetRequest.getLeaveType() != null && !leaveOpeningBalanceGetRequest.getLeaveType().isEmpty() ) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" lob.leaveTypeId IN " + getIdQuery(leaveOpeningBalanceGetRequest.getLeaveType()));
 		}

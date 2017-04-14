@@ -40,6 +40,7 @@
 
 package org.egov.eis.web.contract;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -63,16 +64,16 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 public class LeaveApplicationGetRequest {
-    
-	private List<Long> id;
+
+	private List<Long> id = new ArrayList<Long>();
 
 	private Long leaveType;
 
 	private String applicationNumber;
-	
+
 	private String status;
 
-	private List<Long> employee;
+	private List<Long> employee = new ArrayList<Long>();
 
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date fromDate;
@@ -80,7 +81,7 @@ public class LeaveApplicationGetRequest {
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date toDate;
 
-    private String sortBy;
+	private String sortBy;
 
 	private String sortOrder;
 

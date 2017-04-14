@@ -43,9 +43,7 @@ package org.egov.eis.web.contract;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -54,33 +52,18 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Getter
-@Setter
-@NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @EqualsAndHashCode
-public class LeaveOpeningBalanceGetRequest {
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+public class EligibleLeaveResponse {
 
-	private List<Long> id = new ArrayList<Long>();
+	@JsonProperty("ResponseInfo")
+	private ResponseInfo responseInfo;
 
-	private List<Long> leaveType = new ArrayList<Long>();
-
-	private List<Long> employee = new ArrayList<Long>();
-
-	private Integer year;
-
-	private String sortBy;
-
-	private String sortOrder;
-
-	@NotNull
-	private String tenantId;
-
-	@Min(1)
-	@Max(500)
-	private Short pageSize;
-
-	private Short pageNumber;
+	@JsonProperty("EligibleLeave")
+	private List<EligibleLeave> eligibleLeave = new ArrayList<EligibleLeave>();
 
 }

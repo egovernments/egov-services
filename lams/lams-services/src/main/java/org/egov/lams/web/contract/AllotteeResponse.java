@@ -6,15 +6,11 @@ import org.egov.lams.model.Allottee;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
-@Getter
-@Setter
-@ToString
+@NoArgsConstructor
+@Data
 public class AllotteeResponse {
     @JsonProperty("responseInfo")
     ResponseInfo responseInfo;

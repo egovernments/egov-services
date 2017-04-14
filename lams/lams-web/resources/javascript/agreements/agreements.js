@@ -14,6 +14,9 @@ $('#close').on("click", function() {
         fillValueToObject(this);
         if(this.id == "rent") {
             $('#securityDeposit').val(this.value*3);
+            $("input").attr({
+                "min": this.value*3
+            });
             agreement["securityDeposit"] = this.value*3;
         }
     });
@@ -22,14 +25,11 @@ $('#close').on("click", function() {
     $("select").on("change", function() {
         // console.log(this.value);
         if (this.id=="natureOfAllotment") {
-            if(this.value=="Direct")
-            {
+            if(this.value=="DIRECT") {
                $(".disabled").attr("disabled", false);
-
             }
             else {
-              $(".disabled").attr("disabled", true);
-
+               $(".disabled").attr("disabled", true);
             }
         }
 
@@ -1035,16 +1035,12 @@ $(".datetimepicker").on("dp.change", function() {
                             alert(response["responseJSON"]["Error"]["message"]);
                           }
                           else {
-
                             window.location.href="app/search-assets/create-agreement-ack.html?name="+getNameById(employees,agreement["approverName"])+"&ackNo="+responseJSON["Agreements"][0]["acknowledgementNumber"];
                           }
 
                         }
                         else {
-                          error: function(err) {
                           showError(err);
-
-                  }
                         }
                 }
             })

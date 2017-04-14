@@ -6,9 +6,6 @@ import java.util.List;
 
 import org.egov.lams.contract.AgreementRequest;
 import org.egov.lams.model.Agreement;
-import org.egov.lams.model.enums.NatureOfAllotment;
-import org.egov.lams.model.enums.PaymentCycle;
-import org.egov.lams.model.enums.Status;
 import org.egov.lams.querybuilder.AgreementQueryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,15 +37,16 @@ public class AgreementDao {
 		}
 
 		String agreementinsert = AgreementQueryBuilder.insertAgreementQuery();
+		
 
 		Object[] obj = new Object[] { agreement.getId(), agreement.getAgreementDate(), agreement.getAgreementNumber(),
 				agreement.getBankGuaranteeAmount(), agreement.getBankGuaranteeDate(), agreement.getCaseNo(),
 				agreement.getCommencementDate(), agreement.getCouncilDate(), agreement.getCouncilNumber(),
-				agreement.getExpiryDate(), NatureOfAllotment.AUCTION.toString(), agreement.getOrderDate(),
-				agreement.getOrderDetails(), agreement.getOrderNo(), PaymentCycle.ANNUAL.toString(),
+				agreement.getExpiryDate(), agreement.getNatureOfAllotment().toString(), agreement.getOrderDate(),
+				agreement.getOrderDetails(), agreement.getOrderNo(), agreement.getPaymentCycle().toString(),
 				agreement.getRegistrationFee(), agreement.getRemarks(), agreement.getRent(),
 				agreement.getRrReadingNo(),agreement.getSecurityDeposit(), agreement.getSecurityDepositDate(),
-				agreement.getSolvencyCertificateDate(),agreement.getSolvencyCertificateNo(),Status.WORKFLOW.toString(),
+				agreement.getSolvencyCertificateDate(),agreement.getSolvencyCertificateNo(),agreement.getStatus().toString(),
 				agreement.getTinNumber(),agreement.getTenderDate(),agreement.getTenderNumber(), agreement.getTradelicenseNumber(),
 				agreement.getTenantId(),agreement.getTenantId(), new Date(), new Date(),agreement.getAllottee().getId(),
 				agreement.getAsset().getId(),agreement.getRentIncrementMethod().getId(), agreement.getAcknowledgementNumber(),
@@ -87,12 +85,12 @@ public class AgreementDao {
 		Object[] obj = new Object[] { agreement.getId(),agreement.getAgreementDate(), agreement.getAgreementNumber(),
 				agreement.getBankGuaranteeAmount(), agreement.getBankGuaranteeDate(), agreement.getCaseNo(),
 				agreement.getCommencementDate(), agreement.getCouncilDate(), agreement.getCouncilNumber(),
-				agreement.getExpiryDate(), NatureOfAllotment.AUCTION.toString(), agreement.getOrderDate(),
-				agreement.getOrderDetails(), agreement.getOrderNo(), PaymentCycle.ANNUAL.toString(),
+				agreement.getExpiryDate(), agreement.getNatureOfAllotment().toString(), agreement.getOrderDate(),
+				agreement.getOrderDetails(), agreement.getOrderNo(), agreement.getPaymentCycle().toString(),
 				agreement.getRegistrationFee(), agreement.getRemarks(), agreement.getRent(), agreement.getRrReadingNo(),
 				agreement.getSecurityDeposit(), agreement.getSecurityDepositDate(),
 				agreement.getSolvencyCertificateDate(), agreement.getSolvencyCertificateNo(),
-				Status.EVICTED.toString(), agreement.getTinNumber(), agreement.getTenderDate(),
+				agreement.getStatus().toString(), agreement.getTinNumber(), agreement.getTenderDate(),
 				agreement.getTenderNumber(), agreement.getTradelicenseNumber(), 1, null, new Date(), null,
 				agreement.getAllottee().getId(), agreement.getAsset().getId(),
 				agreement.getRentIncrementMethod().getId(), agreement.getAcknowledgementNumber(),
@@ -124,5 +122,6 @@ public class AgreementDao {
 				throw new RuntimeException(ex.getMessage());
 			}
 		}*/
+		//FIXME do we need to update demand 
 	}
 }

@@ -123,6 +123,9 @@ public class AgreementService {
 		agreement.setCloseDate(closeDate);
 		logger.info("The closeDate calculated is " + closeDate + "from commencementDate of "
 				+ agreement.getCommencementDate() + "by adding with no of years " + agreement.getTimePeriod());	
+		
+		agreement.setStatus(Status.WORKFLOW);
+		//FIXME get confirmed with ramki and ghanshyam
 	    
 		List<DemandReason> demandReasons = demandRepository.getDemandReason(agreementRequest);
 		if(demandReasons.isEmpty())

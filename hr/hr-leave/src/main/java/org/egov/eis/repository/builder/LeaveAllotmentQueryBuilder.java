@@ -60,14 +60,12 @@ public class LeaveAllotmentQueryBuilder {
 	private static final String BASE_QUERY = "SELECT la.id AS la_id, la.designationId AS la_designationId,"
 			+ " la.noOfDays AS la_noOfDays, la.createdBy AS la_createdBy, la.createdDate AS la_createdDate,"
 			+ " la.lastModifiedBy AS la_lastModifiedBy, la.lastModifiedDate AS la_lastModifiedDate,"
-			+ " la.tenantId AS la_tenantId,"
-			+ " lt.id AS lt_id, lt.name AS lt_name, lt.description AS lt_description,"
+			+ " la.tenantId AS la_tenantId," + " lt.id AS lt_id, lt.name AS lt_name, lt.description AS lt_description,"
 			+ " lt.halfdayAllowed AS lt_halfdayAllowed, lt.payEligible AS lt_payEligible,"
 			+ " lt.accumulative AS lt_accumulative, lt.encashable AS lt_encashable,"
 			+ " lt.active AS lt_active, lt.createdBy AS lt_createdBy, lt.createdDate AS lt_createdDate,"
 			+ " lt.lastModifiedBy AS lt_lastModifiedBy, lt.lastModifiedDate AS lt_lastModifiedDate"
-			+ " FROM egeis_leaveAllotment la"
-			+ " JOIN egeis_leaveType lt ON la.leaveTypeId = lt.id";
+			+ " FROM egeis_leaveAllotment la" + " JOIN egeis_leaveType lt ON la.leaveTypeId = lt.id";
 
 	@SuppressWarnings("rawtypes")
 	public String getQuery(LeaveAllotmentGetRequest leaveAllotmentGetRequest, List preparedStatementValues) {
@@ -101,17 +99,18 @@ public class LeaveAllotmentQueryBuilder {
 			preparedStatementValues.add(leaveAllotmentGetRequest.getTenantId());
 		}
 
-		if (leaveAllotmentGetRequest.getId() != null) {
+		if (leaveAllotmentGetRequest.getId() != null && !leaveAllotmentGetRequest.getId().isEmpty()) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" la.id IN " + getIdQuery(leaveAllotmentGetRequest.getId()));
 		}
 
-		if (leaveAllotmentGetRequest.getDesignationId() != null) {
+		if (leaveAllotmentGetRequest.getDesignationId() != null
+				&& !leaveAllotmentGetRequest.getDesignationId().isEmpty() && leaveAllotmentGetRequest.getDesignationId().get(0) != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" la.designationId IN " + getIdQuery(leaveAllotmentGetRequest.getDesignationId()));
 		}
 
-		if (leaveAllotmentGetRequest.getLeaveType() != null) {
+		if (leaveAllotmentGetRequest.getLeaveType() != null && !leaveAllotmentGetRequest.getLeaveType().isEmpty()) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" la.leaveTypeId IN " + getIdQuery(leaveAllotmentGetRequest.getLeaveType()));
 		}
@@ -140,7 +139,8 @@ public class LeaveAllotmentQueryBuilder {
 		int pageNumber = 0; // Default pageNo is zero meaning first page
 		if (leaveAllotmentGetRequest.getPageNumber() != null)
 			pageNumber = leaveAllotmentGetRequest.getPageNumber() - 1;
-		preparedStatementValues.add(pageNumber * pageSize); // Set offset to pageNo * pageSize
+		preparedStatementValues.add(pageNumber * pageSize); // Set offset to
+															// pageNo * pageSize
 	}
 
 	/**
@@ -153,14 +153,14 @@ public class LeaveAllotmentQueryBuilder {
 	 */
 	private boolean addAndClauseIfRequired(boolean appendAndClauseFlag, StringBuilder queryString) {
 		if (appendAndClauseFlag)
-			queryString.append(" AND");
+			queryString.append(" AND ");
 
 		return true;
 	}
 
 	private static String getIdQuery(List<Long> idList) {
 		StringBuilder query = new StringBuilder("(");
-		if (idList.size() >= 1) {
+		if (idList.size() >= 1 && idList.get(0) != null) {
 			query.append(idList.get(0).toString());
 			for (int i = 1; i < idList.size(); i++) {
 				query.append(", " + idList.get(i));

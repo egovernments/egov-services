@@ -1,18 +1,23 @@
 class CreateAsset extends React.Component {
+    close() {
+      // widow.close();
+      open(location, '_self').close();
+    }
     render() {
+
       return (
           <div>
             <div className="form-section">
                 <form>
-                  <h3> Acknowledgement of Asset </h3>
+                  <h3> Acknowledgement for Asset </h3>
                   <h4>
-                      <center><font color="ass"> Acknowledgement  Created </font> </center>
+                      <center><font color="ass"> Asset {getUrlVars()["type"]} Created </font> </center>
                   </h4>
                   <h3>
                       <center><font color="ass"> Asset {getUrlVars()["type"]} with name <strong style={{'fontWeight':700}}> {getUrlVars()["name"]}</strong> created.  </font> </center>
                   </h3>
                   <div className="text-center">
-                      <button type="button" className="btn btn-submit" onClick={(e)=>{this.close()}}>Close</button>
+                      <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>
                   </div>
                 </form>
             </div>

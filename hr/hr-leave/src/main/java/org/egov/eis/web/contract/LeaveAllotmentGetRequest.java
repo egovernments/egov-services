@@ -40,6 +40,7 @@
 
 package org.egov.eis.web.contract;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.constraints.Max;
@@ -61,13 +62,13 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class LeaveAllotmentGetRequest {
 
-	private List<Long> id;
+	private List<Long> id = new ArrayList<Long>();
 
-	private List<Long> designationId;
+	private List<Long> designationId = new ArrayList<Long>();
 
-	private List<Long> leaveType;
+	private List<Long> leaveType = new ArrayList<Long>();
 
-    private String sortBy;
+	private String sortBy;
 
 	private String sortOrder;
 

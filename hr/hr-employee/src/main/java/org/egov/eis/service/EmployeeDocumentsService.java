@@ -53,41 +53,31 @@ public class EmployeeDocumentsService {
 						employee.getId(), employee.getTenantId());
 			}
 		});
-		
-		if(!isEmpty(employee.getProbation()))
-		employee.getProbation().forEach((probation) -> {
+		employee.getProbations().forEach((probation) -> {
 			if (probation.getDocuments() != null) {
 				updateDocuments(probation.getDocuments(), EntityType.PROBATION, probation.getId(), documentsFromDb,
 						employee.getId(), employee.getTenantId());
 			}
 		});
-		
-		if(!isEmpty(employee.getRegularisation()))
-		employee.getRegularisation().forEach((regularisation) -> {
+		employee.getRegularisations().forEach((regularisation) -> {
 			if (regularisation.getDocuments() != null) {
 				updateDocuments(regularisation.getDocuments(), EntityType.REGULARISATION, regularisation.getId(),
 						documentsFromDb, employee.getId(), employee.getTenantId());
 			}
 		});
-		
-		if(!isEmpty(employee.getTest()))
-		employee.getTest().forEach((test) -> {
+		employee.getTests().forEach((test) -> {
 			if (test.getDocuments() != null) {
 				updateDocuments(test.getDocuments(), EntityType.TEST, test.getId(), documentsFromDb, employee.getId(),
 						employee.getTenantId());
 			}
 		});
-		
-		if(!isEmpty(employee.getTechnical()))
-		employee.getTechnical().forEach((technical) -> {
+		employee.getTechnicals().forEach((technical) -> {
 			if (technical.getDocuments() != null) {
 				updateDocuments(technical.getDocuments(), EntityType.TECHNICAL, technical.getId(), documentsFromDb,
 						employee.getId(), employee.getTenantId());
 			}
 		});
-		
-		if(!isEmpty(employee.getEducation()))
-		employee.getEducation().forEach((education) -> {
+		employee.getEducations().forEach((education) -> {
 			if (education.getDocuments() != null) {
 				updateDocuments(education.getDocuments(), EntityType.EDUCATION, education.getId(), documentsFromDb,
 						employee.getId(), employee.getTenantId());
@@ -143,32 +133,32 @@ public class EmployeeDocumentsService {
 						assignment.getDocuments().add(document.getDocument());
 				break;
 			case SERVICE:
-				for (ServiceHistory serviceHistory : employee.getServiceHistory())
+				for (ServiceHistory serviceHistory : employee.getServiceHistories())
 					if (serviceHistory.getId().equals(document.getReferenceId()))
 						serviceHistory.getDocuments().add(document.getDocument());
 				break;
 			case TECHNICAL:
-				for (TechnicalQualification technicalQualification : employee.getTechnical())
+				for (TechnicalQualification technicalQualification : employee.getTechnicals())
 					if (technicalQualification.getId().equals(document.getReferenceId()))
 						technicalQualification.getDocuments().add(document.getDocument());
 				break;
 			case EDUCATION:
-				for (EducationalQualification educationalQualification : employee.getEducation())
+				for (EducationalQualification educationalQualification : employee.getEducations())
 					if (educationalQualification.getId().equals(document.getReferenceId()))
 						educationalQualification.getDocuments().add(document.getDocument());
 				break;
 			case TEST:
-				for (DepartmentalTest departmentalTest : employee.getTest())
+				for (DepartmentalTest departmentalTest : employee.getTests())
 					if (departmentalTest.getId().equals(document.getReferenceId()))
 						departmentalTest.getDocuments().add(document.getDocument());
 				break;
 			case REGULARISATION:
-				for (Regularisation regularisation : employee.getRegularisation())
+				for (Regularisation regularisation : employee.getRegularisations())
 					if (regularisation.getId().equals(document.getReferenceId()))
 						regularisation.getDocuments().add(document.getDocument());
 				break;
 			case PROBATION:
-				for (Probation probation : employee.getProbation())
+				for (Probation probation : employee.getProbations())
 					if (probation.getId().equals(document.getReferenceId()))
 						probation.getDocuments().add(document.getDocument());
 				break;

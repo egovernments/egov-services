@@ -118,6 +118,8 @@ public class ErrorHandler {
 					DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 					String errorDate = dateFormat.format(fieldError.getRejectedValue());
 					error.getFields().put(fieldError.getField(), errorDate);
+				} else if (fieldError.getField().contains("code") && fieldError.getRejectedValue() == null) {
+					error.getFields().put(fieldError.getField(), fieldError.getRejectedValue());
 				} else if (fieldError.getField().contains("retirementAge")
 						|| fieldError.getField().contains("dateOf")) {
 					error.getFields().put(fieldError.getField(),

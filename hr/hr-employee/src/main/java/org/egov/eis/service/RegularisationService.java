@@ -18,10 +18,10 @@ public class RegularisationService {
 	private RegularisationRepository regularisationRepository;
 	
 	public void update(Employee employee) {
-		if(isEmpty(employee.getRegularisation()))
+		if(isEmpty(employee.getRegularisations()))
 			return;
 		List<Regularisation> regularisations = regularisationRepository.findByEmployeeId(employee.getId(), employee.getTenantId());
-		employee.getRegularisation().forEach((regularisation) -> {
+		employee.getRegularisations().forEach((regularisation) -> {
 			if (needsInsert(regularisation, regularisations)) {
 				regularisationRepository.insert(regularisation, employee.getId());
 			} else if (needsUpdate(regularisation, regularisations)) {
@@ -29,7 +29,7 @@ public class RegularisationService {
 				regularisationRepository.update(regularisation);
 			}
      });
-		deleteRegularisationsInDBThatAreNotInInput(employee.getRegularisation(), regularisations,  employee.getId(),employee.getTenantId());
+		deleteRegularisationsInDBThatAreNotInInput(employee.getRegularisations(), regularisations,  employee.getId(),employee.getTenantId());
 	}
 
 	private void deleteRegularisationsInDBThatAreNotInInput(List<Regularisation> inputRegularisations,

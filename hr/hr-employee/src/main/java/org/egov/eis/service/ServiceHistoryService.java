@@ -18,10 +18,10 @@ public class ServiceHistoryService {
 	private ServiceHistoryRepository serviceHistoryRepository;
 
 	public void update(Employee employee) {
-		if(isEmpty(employee.getServiceHistory()))
+		if(isEmpty(employee.getServiceHistories()))
 			return;
 		List<ServiceHistory> services = serviceHistoryRepository.findByEmployeeId(employee.getId(), employee.getTenantId());
-		employee.getServiceHistory().forEach((service) -> {
+		employee.getServiceHistories().forEach((service) -> {
 			if (needsInsert(service, services)) {
 				serviceHistoryRepository.insert(service, employee.getId());
 			} else if (needsUpdate(service, services)) {
@@ -29,7 +29,7 @@ public class ServiceHistoryService {
 				serviceHistoryRepository.update(service);
 			}
      });
-		deleteInDBThatAreNotInInput(employee.getServiceHistory(), services,  employee.getId(),employee.getTenantId());
+		deleteInDBThatAreNotInInput(employee.getServiceHistories(), services,  employee.getId(),employee.getTenantId());
 	}
 
 	private void deleteInDBThatAreNotInInput(List<ServiceHistory> inputServices,

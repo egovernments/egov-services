@@ -104,7 +104,7 @@ public class RegularisationRepository {
 	}
 
 	public void save(EmployeeRequest employeeRequest) {
-		List<Regularisation> regularisations = employeeRequest.getEmployee().getRegularisation();
+		List<Regularisation> regularisations = employeeRequest.getEmployee().getRegularisations();
 
 		jdbcTemplate.batchUpdate(INSERT_REGULARISATION_QUERY, new BatchPreparedStatementSetter() {
 			@Override

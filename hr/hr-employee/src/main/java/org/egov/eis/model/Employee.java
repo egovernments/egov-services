@@ -53,6 +53,7 @@ import org.egov.eis.model.enums.MaritalStatus;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -154,22 +155,28 @@ public class Employee {
 	private String placeOfBirth;
 
 	@Valid
-	private List<ServiceHistory> serviceHistory = new ArrayList<ServiceHistory>();
+	@JsonProperty("serviceHistory")
+	private List<ServiceHistory> serviceHistories = new ArrayList<ServiceHistory>();
 
 	@Valid
-	private List<Probation> probation = new ArrayList<Probation>();
+	@JsonProperty("probation")
+	private List<Probation> probations = new ArrayList<Probation>();
 
 	@Valid
-	private List<Regularisation> regularisation = new ArrayList<Regularisation>();
+	@JsonProperty("regularisation")
+	private List<Regularisation> regularisations = new ArrayList<Regularisation>();
 
 	@Valid
-	private List<TechnicalQualification> technical = new ArrayList<TechnicalQualification>();
+	@JsonProperty("technical")
+	private List<TechnicalQualification> technicals = new ArrayList<TechnicalQualification>();
 
 	@Valid
-	private List<EducationalQualification> education = new ArrayList<EducationalQualification>();
+	@JsonProperty("education")
+	private List<EducationalQualification> educations = new ArrayList<EducationalQualification>();
 
 	@Valid
-	private List<DepartmentalTest> test = new ArrayList<DepartmentalTest>();
+	@JsonProperty("test")
+	private List<DepartmentalTest> tests = new ArrayList<DepartmentalTest>();
 
 	private List<String> documents = new ArrayList<String>();
 

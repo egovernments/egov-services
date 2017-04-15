@@ -114,11 +114,13 @@ public class DataIntegrityValidatorForUpdate extends EmployeeCommonValidator imp
 		// FIXME call common validator.validateEmployee
 		super.validateEmployee(employee, errors);
 
+		// FIXME : check only for different employees
+/*
 		if (checkIfColumnValueIsSameInDB("egeis_employee", "code",
 				employee.getCode(), employee.getId(), employee.getTenantId())) {
 			errors.rejectValue("employee.code", "invalid", "Employee Code cannot be changed.");
 		}
-
+*/
 		if ((employee.getPassportNo() != null) && duplicateExists("egeis_employee", "passportNo",
 				employee.getPassportNo(), employee.getId(), employee.getTenantId())) {
 			errors.rejectValue("employee.passportNo", "concurrent", "passportNo already exists");

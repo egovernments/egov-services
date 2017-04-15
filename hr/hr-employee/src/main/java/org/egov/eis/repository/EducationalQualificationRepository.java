@@ -103,7 +103,7 @@ public class EducationalQualificationRepository {
 	}
 
 	public void save(EmployeeRequest employeeRequest) {
-		List<EducationalQualification> educationalQualifications = employeeRequest.getEmployee().getEducations();
+		List<EducationalQualification> educationalQualifications = employeeRequest.getEmployee().getEducation();
 
 		jdbcTemplate.batchUpdate(INSERT_EDUCATIONAL_QUALIFICATION_QUERY, new BatchPreparedStatementSetter() {
 			@Override

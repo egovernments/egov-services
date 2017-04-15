@@ -18,10 +18,10 @@ public class TechnicalQualificationService {
 	private TechnicalQualificationRepository technicalQualificationRepository;
 
 	public void update(Employee employee) {
-		if(isEmpty(employee.getTechnicals()))
+		if(isEmpty(employee.getTechnical()))
 			return;
 		List<TechnicalQualification> technicals = technicalQualificationRepository.findByEmployeeId(employee.getId(), employee.getTenantId());
-		employee.getTechnicals().forEach((technical) -> {
+		employee.getTechnical().forEach((technical) -> {
 			if (needsInsert(technical, technicals)) {
 				technicalQualificationRepository.insert(technical, employee.getId());
 			} else if (needsUpdate(technical, technicals)) {
@@ -30,7 +30,7 @@ public class TechnicalQualificationService {
 			}
 			
      });
-		deleteTechnicalsInDBThatAreNotInInput(employee.getTechnicals(), technicals,  employee.getId(),employee.getTenantId());
+		deleteTechnicalsInDBThatAreNotInInput(employee.getTechnical(), technicals,  employee.getId(),employee.getTenantId());
 	}
 
 	private void deleteTechnicalsInDBThatAreNotInInput(List<TechnicalQualification> inputTechnicals,

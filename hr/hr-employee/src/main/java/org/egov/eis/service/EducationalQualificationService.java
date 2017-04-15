@@ -18,10 +18,10 @@ public class EducationalQualificationService {
 	private EducationalQualificationRepository educationalQualificationRepository;
 
 	public void update(Employee employee) {
-		if(isEmpty(employee.getEducations()))
+		if(isEmpty(employee.getEducation()))
 			return;
 		List<EducationalQualification> educations = educationalQualificationRepository.findByEmployeeId(employee.getId(), employee.getTenantId());
-		employee.getEducations().forEach((education) -> {
+		employee.getEducation().forEach((education) -> {
 			if (needsInsert(education, educations)) {
 				educationalQualificationRepository.insert(education, employee.getId());
 			} else if (needsUpdate(education, educations)) {
@@ -29,7 +29,7 @@ public class EducationalQualificationService {
 				educationalQualificationRepository.update(education);
 			}		
 	 });
-	deleteEducationsInDBThatAreNotInInput(employee.getEducations(),educations,  employee.getId(),employee.getTenantId());
+	deleteEducationsInDBThatAreNotInInput(employee.getEducation(),educations,  employee.getId(),employee.getTenantId());
 	}
 	
 	private void deleteEducationsInDBThatAreNotInInput(List<EducationalQualification> inputEducations, List<EducationalQualification> educationsFromDb, Long employeeId, String tenantId) {

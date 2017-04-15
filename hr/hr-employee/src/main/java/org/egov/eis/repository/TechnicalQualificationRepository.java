@@ -110,7 +110,7 @@ public class TechnicalQualificationRepository {
 
 
 	public void save(EmployeeRequest employeeRequest) {
-		List<TechnicalQualification> technicalQualifications = employeeRequest.getEmployee().getTechnicals();
+		List<TechnicalQualification> technicalQualifications = employeeRequest.getEmployee().getTechnical();
 
 		jdbcTemplate.batchUpdate(INSERT_TECHNICAL_QUALIFICATION_QUERY, new BatchPreparedStatementSetter() {
 			@Override

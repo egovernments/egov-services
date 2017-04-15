@@ -104,7 +104,7 @@ public class ProbationRepository {
 
 
 	public void save(EmployeeRequest employeeRequest) {
-		List<Probation> probations = employeeRequest.getEmployee().getProbations();
+		List<Probation> probations = employeeRequest.getEmployee().getProbation();
 
 		jdbcTemplate.batchUpdate(INSERT_PROBATION_QUERY, new BatchPreparedStatementSetter() {
 			@Override

@@ -155,28 +155,22 @@ public class Employee {
 	private String placeOfBirth;
 
 	@Valid
-	@JsonProperty("serviceHistory")
-	private List<ServiceHistory> serviceHistories = new ArrayList<ServiceHistory>();
+	private List<ServiceHistory> serviceHistory = new ArrayList<ServiceHistory>();
 
 	@Valid
-	@JsonProperty("probation")
-	private List<Probation> probations = new ArrayList<Probation>();
+	private List<Probation> probation = new ArrayList<Probation>();
 
 	@Valid
-	@JsonProperty("regularisation")
-	private List<Regularisation> regularisations = new ArrayList<Regularisation>();
+	private List<Regularisation> regularisation = new ArrayList<Regularisation>();
 
 	@Valid
-	@JsonProperty("technical")
-	private List<TechnicalQualification> technicals = new ArrayList<TechnicalQualification>();
+	private List<TechnicalQualification> technical = new ArrayList<TechnicalQualification>();
 
 	@Valid
-	@JsonProperty("education")
-	private List<EducationalQualification> educations = new ArrayList<EducationalQualification>();
+	private List<EducationalQualification> education = new ArrayList<EducationalQualification>();
 
 	@Valid
-	@JsonProperty("test")
-	private List<DepartmentalTest> tests = new ArrayList<DepartmentalTest>();
+	private List<DepartmentalTest> test = new ArrayList<DepartmentalTest>();
 
 	private List<String> documents = new ArrayList<String>();
 

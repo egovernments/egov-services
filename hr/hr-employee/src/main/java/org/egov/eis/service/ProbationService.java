@@ -18,10 +18,10 @@ public class ProbationService {
 	private ProbationRepository probationRepository;
 
 	public void update(Employee employee) {
-		if(isEmpty(employee.getProbations()))
+		if(isEmpty(employee.getProbation()))
 			return;
 		List<Probation> probations = probationRepository.findByEmployeeId(employee.getId(), employee.getTenantId());
-		employee.getProbations().forEach((probation) -> {
+		employee.getProbation().forEach((probation) -> {
 			if (needsInsert(probation, probations)) {
 				probationRepository.insert(probation, employee.getId());
 			} else if (needsUpdate(probation, probations)) {
@@ -29,7 +29,7 @@ public class ProbationService {
 				probationRepository.update(probation);
 			}
 		});
-		deleteProbationsInDBThatAreNotInInput(employee.getProbations(), probations, employee.getId(),
+		deleteProbationsInDBThatAreNotInInput(employee.getProbation(), probations, employee.getId(),
 				employee.getTenantId());
 	}
 

@@ -99,43 +99,43 @@ public abstract class EmployeeCommonValidator {
 					document, EntityType.ASSIGNMENT.getValue(), assignment.getId(), null)).collect(Collectors.toList()));
 		});
 
-		if(!isEmpty(employee.getTests()))
-		employee.getTests().forEach(test -> {
+		if(!isEmpty(employee.getTest()))
+		employee.getTest().forEach(test -> {
 			if(!isEmpty(test.getDocuments()))
 			inputDocuments.addAll(test.getDocuments().stream().map(document -> new EmployeeDocument(null, null,
 					document, EntityType.TEST.getValue(), test.getId(), null)).collect(Collectors.toList()));
 		});
 
-		if(!isEmpty(employee.getEducations()))
-		employee.getEducations().forEach(education -> {
+		if(!isEmpty(employee.getEducation()))
+		employee.getEducation().forEach(education -> {
 			if(!isEmpty(education.getDocuments()))
 			inputDocuments.addAll(education.getDocuments().stream().map(document -> new EmployeeDocument(null, null,
 					document, EntityType.EDUCATION.getValue(), education.getId(), null)).collect(Collectors.toList()));
 		});
 
-		if(!isEmpty(employee.getProbations()))
-		employee.getProbations().forEach(probation -> {
+		if(!isEmpty(employee.getProbation()))
+		employee.getProbation().forEach(probation -> {
 			if(!isEmpty(probation.getDocuments()))
 			inputDocuments.addAll(probation.getDocuments().stream().map(document -> new EmployeeDocument(null, null,
 					document, EntityType.PROBATION.getValue(), probation.getId(), null)).collect(Collectors.toList()));
 		});
 
-		if(!isEmpty(employee.getRegularisations()))
-		employee.getRegularisations().forEach(regularisation -> {
+		if(!isEmpty(employee.getRegularisation()))
+		employee.getRegularisation().forEach(regularisation -> {
 			if(!isEmpty(regularisation.getDocuments()))
 			inputDocuments.addAll(regularisation.getDocuments().stream().map(document -> new EmployeeDocument(null,
 					null, document, EntityType.REGULARISATION.getValue(), regularisation.getId(), null)).collect(Collectors.toList()));
 		});
 
-		if(!isEmpty(employee.getServiceHistories()))
-		employee.getServiceHistories().forEach(serviceHistory -> {
+		if(!isEmpty(employee.getServiceHistory()))
+		employee.getServiceHistory().forEach(serviceHistory -> {
 			if(!isEmpty(serviceHistory.getDocuments()))
 			inputDocuments.addAll(serviceHistory.getDocuments().stream().map(document -> new EmployeeDocument(null,
 					null, document, EntityType.SERVICE.getValue(), serviceHistory.getId(), null)).collect(Collectors.toList()));
 		});
 
-		if(!isEmpty(employee.getTechnicals()))
-		employee.getTechnicals().forEach(technical -> {
+		if(!isEmpty(employee.getTechnical()))
+		employee.getTechnical().forEach(technical -> {
 			if(!isEmpty(technical.getDocuments()))
 			inputDocuments.addAll(technical.getDocuments().stream().map(document -> new EmployeeDocument(null, null,
 					document, EntityType.TECHNICAL.getValue(), technical.getId(), null)).collect(Collectors.toList()));
@@ -201,47 +201,47 @@ public abstract class EmployeeCommonValidator {
 						return Arrays.asList(i, j);
 			break;
 		case SERVICE: 
-			for (int i=0; i<employee.getServiceHistories().size(); i++)
-				for (int j=0; j<employee.getServiceHistories().get(i).getDocuments().size(); j++)
-					if (employee.getServiceHistories().get(i).getDocuments().get(j).equals(document))
+			for (int i=0; i<employee.getServiceHistory().size(); i++)
+				for (int j=0; j<employee.getServiceHistory().get(i).getDocuments().size(); j++)
+					if (employee.getServiceHistory().get(i).getDocuments().get(j).equals(document))
 						return Arrays.asList(i, j);
 			break;
 		case TECHNICAL: 
-			for (int i=0; i<employee.getTechnicals().size(); i++)
-				for (int j=0; j<employee.getTechnicals().get(i).getDocuments().size(); j++)
-					if (employee.getTechnicals().get(i).getDocuments().get(j).equals(document))
+			for (int i=0; i<employee.getTechnical().size(); i++)
+				for (int j=0; j<employee.getTechnical().get(i).getDocuments().size(); j++)
+					if (employee.getTechnical().get(i).getDocuments().get(j).equals(document))
 						return Arrays.asList(i, j);
 			break;
 		case EDUCATION: 
-			for (int i=0; i<employee.getEducations().size(); i++)
-				for (int j=0; j<employee.getEducations().get(i).getDocuments().size(); j++)
-					if (employee.getEducations().get(i).getDocuments().get(j).equals(document))
+			for (int i=0; i<employee.getEducation().size(); i++)
+				for (int j=0; j<employee.getEducation().get(i).getDocuments().size(); j++)
+					if (employee.getEducation().get(i).getDocuments().get(j).equals(document))
 						return Arrays.asList(i, j);
 			break;
 		case TEST: 
-			for (int i=0; i<employee.getTests().size(); i++)
-				for (int j=0; j<employee.getTests().get(i).getDocuments().size(); j++)
-					if (employee.getTests().get(i).getDocuments().get(j).equals(document))
+			for (int i=0; i<employee.getTest().size(); i++)
+				for (int j=0; j<employee.getTest().get(i).getDocuments().size(); j++)
+					if (employee.getTest().get(i).getDocuments().get(j).equals(document))
 						return Arrays.asList(i, j);
 			break;
 		case REGULARISATION: 
-			if (isEmpty(employee.getRegularisations()))
+			if (isEmpty(employee.getRegularisation()))
 				break;
-			for (int i=0; i<employee.getRegularisations().size(); i++) {
-				if (isEmpty(employee.getRegularisations().get(i).getDocuments()))
+			for (int i=0; i<employee.getRegularisation().size(); i++) {
+				if (isEmpty(employee.getRegularisation().get(i).getDocuments()))
 					continue;
-				for (int j=0; j<employee.getRegularisations().get(i).getDocuments().size(); j++) {
-					System.out.printf("i=%d,j=%d,regsize=%d,docsize=%d\n",i,j,employee.getRegularisations().size(), 
-							employee.getRegularisations().get(i).getDocuments().size());
-					if (employee.getRegularisations().get(i).getDocuments().get(j).equals(document))
+				for (int j=0; j<employee.getRegularisation().get(i).getDocuments().size(); j++) {
+					System.out.printf("i=%d,j=%d,regsize=%d,docsize=%d\n",i,j,employee.getRegularisation().size(), 
+							employee.getRegularisation().get(i).getDocuments().size());
+					if (employee.getRegularisation().get(i).getDocuments().get(j).equals(document))
 						return Arrays.asList(i, j);
 				};
 			};
 			break;
 		case PROBATION: 
-			for (int i=0; i<employee.getProbations().size(); i++)
-				for (int j=0; j<employee.getProbations().get(i).getDocuments().size(); j++)
-					if (employee.getProbations().get(i).getDocuments().get(j).equals(document))
+			for (int i=0; i<employee.getProbation().size(); i++)
+				for (int j=0; j<employee.getProbation().get(i).getDocuments().size(); j++)
+					if (employee.getProbation().get(i).getDocuments().get(j).equals(document))
 						return Arrays.asList(i, j);
 			break;
 		default:

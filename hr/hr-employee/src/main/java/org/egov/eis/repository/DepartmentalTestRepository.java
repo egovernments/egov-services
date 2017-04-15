@@ -101,7 +101,7 @@ public class DepartmentalTestRepository {
 	}
 
 	public void save(EmployeeRequest employeeRequest) {
-		List<DepartmentalTest> departmentalTests = employeeRequest.getEmployee().getTests();
+		List<DepartmentalTest> departmentalTests = employeeRequest.getEmployee().getTest();
 
 		jdbcTemplate.batchUpdate(INSERT_DEPARTMENTAL_TEST_QUERY, new BatchPreparedStatementSetter() {
 			@Override

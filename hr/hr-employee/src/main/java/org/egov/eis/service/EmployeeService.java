@@ -193,13 +193,13 @@ public class EmployeeService {
 			throw new EmployeeIdNotFoundException(employeeId);
 		employee.setLanguagesKnown(employeeLanguageRepository.findByEmployeeId(employeeId, tenantId));
 		employee.setAssignments(assignmentRepository.findByEmployeeId(employeeId, tenantId));
-		employee.setServiceHistories(serviceHistoryRepository.findByEmployeeId(employeeId, tenantId));
-		employee.setProbations(probationRepository.findByEmployeeId(employeeId, tenantId));
+		employee.setServiceHistory(serviceHistoryRepository.findByEmployeeId(employeeId, tenantId));
+		employee.setProbation(probationRepository.findByEmployeeId(employeeId, tenantId));
 		employee.setJurisdictions(employeeJurisdictionRepository.findByEmployeeId(employeeId, tenantId));
-		employee.setRegularisations(regularisationRepository.findByEmployeeId(employeeId, tenantId));
-		employee.setTechnicals(technicalQualificationRepository.findByEmployeeId(employeeId, tenantId));
-		employee.setEducations(educationalQualificationRepository.findByEmployeeId(employeeId, tenantId));
-		employee.setTests(departmentalTestRepository.findByEmployeeId(employeeId, tenantId));
+		employee.setRegularisation(regularisationRepository.findByEmployeeId(employeeId, tenantId));
+		employee.setTechnical(technicalQualificationRepository.findByEmployeeId(employeeId, tenantId));
+		employee.setEducation(educationalQualificationRepository.findByEmployeeId(employeeId, tenantId));
+		employee.setTest(departmentalTestRepository.findByEmployeeId(employeeId, tenantId));
 		employeeDocumentsService.populateDocumentsInRespectiveObjects(employee);
 		
 		return employee;
@@ -278,22 +278,22 @@ public class EmployeeService {
 				hodDepartmentRepository.save(assignment, employee.getTenantId());
 			}
 		});
-		if (employee.getServiceHistories() != null) {
+		if (employee.getServiceHistory() != null) {
 			serviceHistoryRepository.save(employeeRequest);
 		}
-		if (employee.getProbations() != null) {
+		if (employee.getProbation() != null) {
 			probationRepository.save(employeeRequest);
 		}
-		if (employee.getRegularisations() != null) {
+		if (employee.getRegularisation() != null) {
 			regularisationRepository.save(employeeRequest);
 		}
-		if (employee.getTechnicals() != null) {
+		if (employee.getTechnical() != null) {
 			technicalQualificationRepository.save(employeeRequest);
 		}
-		if (employee.getEducations() != null) {
+		if (employee.getEducation() != null) {
 			educationalQualificationRepository.save(employeeRequest);
 		}
-		if (employee.getTests() != null) {
+		if (employee.getTest() != null) {
 			departmentalTestRepository.save(employeeRequest);
 		}
 	}

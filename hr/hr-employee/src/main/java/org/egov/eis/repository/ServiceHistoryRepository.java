@@ -104,7 +104,7 @@ public class ServiceHistoryRepository {
 	}
 
 	public void save(EmployeeRequest employeeRequest) {
-		List<ServiceHistory> serviceHistories = employeeRequest.getEmployee().getServiceHistories();
+		List<ServiceHistory> serviceHistories = employeeRequest.getEmployee().getServiceHistory();
 
 		jdbcTemplate.batchUpdate(INSERT_SERVICE_HISTORY_QUERY, new BatchPreparedStatementSetter() {
 			@Override

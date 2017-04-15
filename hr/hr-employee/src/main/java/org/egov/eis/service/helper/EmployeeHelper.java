@@ -126,33 +126,33 @@ public class EmployeeHelper {
 		employee.getAssignments().forEach((assignment) -> {
 			populateDefaultDataForNewAssignment(assignment, requesterId, tenantId);
 		});
-		if (employee.getEducations() != null) {
-			employee.getEducations().forEach((education) -> {
+		if (employee.getEducation() != null) {
+			employee.getEducation().forEach((education) -> {
 				populateDefaultDataForNewEducation(education, requesterId, tenantId);
 			});
 		}
-		if (employee.getTests() != null) {
-			employee.getTests().forEach((test) -> {
+		if (employee.getTest() != null) {
+			employee.getTest().forEach((test) -> {
 				populateDefaultDataForNewTest(test, requesterId, tenantId);
 			});
 		}
-		if (employee.getProbations() != null) {
-			employee.getProbations().forEach((probation) -> {
+		if (employee.getProbation() != null) {
+			employee.getProbation().forEach((probation) -> {
 				populateDefaultDataForNewProbation(probation, requesterId, tenantId);
 			});
 		}
-		if (employee.getRegularisations() != null) {
-			employee.getRegularisations().forEach((regularisation) -> {
+		if (employee.getRegularisation() != null) {
+			employee.getRegularisation().forEach((regularisation) -> {
 				populateDefaultDataForNewRegularisation(regularisation, requesterId, tenantId);
 			});
 		}
-		if (employee.getServiceHistories() != null) {
-			employee.getServiceHistories().forEach((serviceHistory) -> {
+		if (employee.getServiceHistory() != null) {
+			employee.getServiceHistory().forEach((serviceHistory) -> {
 				populateDefaultDataForNewServiceHistory(serviceHistory, requesterId, tenantId);
 			});
 		}
-		if (employee.getTechnicals() != null) {
-			employee.getTechnicals().forEach((technical) -> {
+		if (employee.getTechnical() != null) {
+			employee.getTechnical().forEach((technical) -> {
 				populateDefaultDataForNewTechnical(technical, requesterId, tenantId);
 			});
 		}
@@ -171,8 +171,8 @@ public class EmployeeHelper {
 			else
 				populateDefaultDataForUpdateAssignment(assignment, requesterId, tenantId);
 		});
-		if (employee.getEducations() != null) {
-			employee.getEducations().forEach((education) -> {
+		if (employee.getEducation() != null) {
+			employee.getEducation().forEach((education) -> {
 				if (education.getId() == null)
 					populateDefaultDataForNewEducation(education, requesterId, tenantId);
 				else {
@@ -181,8 +181,8 @@ public class EmployeeHelper {
 				}
 			});
 		}
-		if (employee.getTests() != null) {
-			employee.getTests().forEach((test) -> {
+		if (employee.getTest() != null) {
+			employee.getTest().forEach((test) -> {
 				if (test.getId() == null)
 					populateDefaultDataForNewTest(test, requesterId, tenantId);
 				else {
@@ -191,8 +191,8 @@ public class EmployeeHelper {
 				}
 			});
 		}
-		if (employee.getProbations() != null) {
-			employee.getProbations().forEach((probation) -> {
+		if (employee.getProbation() != null) {
+			employee.getProbation().forEach((probation) -> {
 				if (probation.getId() == null)
 					populateDefaultDataForNewProbation(probation, requesterId, tenantId);
 				else {
@@ -201,8 +201,8 @@ public class EmployeeHelper {
 				}
 			});
 		}
-		if (employee.getRegularisations() != null) {
-			employee.getRegularisations().forEach((regularisation) -> {
+		if (employee.getRegularisation() != null) {
+			employee.getRegularisation().forEach((regularisation) -> {
 				if (regularisation.getId() == null)
 					populateDefaultDataForNewRegularisation(regularisation, requesterId, tenantId);
 				else {
@@ -211,8 +211,8 @@ public class EmployeeHelper {
 				}
 			});
 		}
-		if (employee.getServiceHistories() != null) {
-			employee.getServiceHistories().forEach((serviceHistory) -> {
+		if (employee.getServiceHistory() != null) {
+			employee.getServiceHistory().forEach((serviceHistory) -> {
 				if (serviceHistory.getId() == null)
 					populateDefaultDataForNewServiceHistory(serviceHistory, requesterId, tenantId);
 				else {
@@ -221,8 +221,8 @@ public class EmployeeHelper {
 				}
 			});
 		}
-		if (employee.getTechnicals() != null) {
-			employee.getTechnicals().forEach((technical) -> {
+		if (employee.getTechnical() != null) {
+			employee.getTechnical().forEach((technical) -> {
 				if (technical.getId() == null)
 					populateDefaultDataForNewTechnical(technical, requesterId, tenantId);
 				else {

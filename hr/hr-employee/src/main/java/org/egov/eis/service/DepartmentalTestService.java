@@ -18,12 +18,12 @@ public class DepartmentalTestService {
 	private DepartmentalTestRepository departmentalTestRepository;
 	
 	public void update(Employee employee) {
-		if(isEmpty(employee.getTests()))
+		if(isEmpty(employee.getTest()))
 				return;
 		List<DepartmentalTest> tests = departmentalTestRepository.findByEmployeeId(employee.getId(),
 				employee.getTenantId());
 
-		employee.getTests().forEach((test) -> {
+		employee.getTest().forEach((test) -> {
 			if (needsInsert(test, tests)) {
 				departmentalTestRepository.insert(test, employee.getId());
 			} else if (needsUpdate(test, tests)) {
@@ -31,7 +31,7 @@ public class DepartmentalTestService {
 				departmentalTestRepository.update(test);
 			}
 		});
-		deleteTestsInDBThatAreNotInInput(employee.getTests(), tests, employee.getId(), employee.getTenantId());
+		deleteTestsInDBThatAreNotInInput(employee.getTest(), tests, employee.getId(), employee.getTenantId());
 	}
 
 	private void deleteTestsInDBThatAreNotInInput(List<DepartmentalTest> inputTests, List<DepartmentalTest> testsFromDb,

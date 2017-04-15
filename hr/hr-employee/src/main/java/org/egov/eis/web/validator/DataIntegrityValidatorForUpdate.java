@@ -98,12 +98,12 @@ public class DataIntegrityValidatorForUpdate extends EmployeeCommonValidator imp
 		validateEmployee(employee, errors);
 		validateDocuments(employee, errors);
 		validateAssignments(employee.getAssignments(), employeeId, tenantId, errors);
-		validateDepartmentalTest(employee.getTests(), employeeId, tenantId, errors);
-		validateEducationalQualification(employee.getEducations(), employeeId, tenantId, errors);
-		validateProbation(employee.getProbations(), employeeId, tenantId, errors);
-		validateRegularisation(employee.getRegularisations(), employeeId, tenantId, errors);
-		validateServiceHistory(employee.getServiceHistories(), employeeId, tenantId, errors);
-		validateTechnicalQualification(employee.getTechnicals(), employeeId, tenantId, errors);
+		validateDepartmentalTest(employee.getTest(), employeeId, tenantId, errors);
+		validateEducationalQualification(employee.getEducation(), employeeId, tenantId, errors);
+		validateProbation(employee.getProbation(), employeeId, tenantId, errors);
+		validateRegularisation(employee.getRegularisation(), employeeId, tenantId, errors);
+		validateServiceHistory(employee.getServiceHistory(), employeeId, tenantId, errors);
+		validateTechnicalQualification(employee.getTechnical(), employeeId, tenantId, errors);
 	}
 
 	// FIXME

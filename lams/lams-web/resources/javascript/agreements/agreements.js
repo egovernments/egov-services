@@ -59,7 +59,6 @@ $('#close').on("click", function() {
 
     $(".onlyNumber").on("keydown", function(e) {
         var key = e.keyCode ? e.keyCode : e.which;
-
         if (!([8, 9, 13, 27, 46, 110, 190].indexOf(key) !== -1 ||
                 (key == 65 && (e.ctrlKey || e.metaKey)) ||
                 (key >= 35 && key <= 40) ||
@@ -68,10 +67,9 @@ $('#close').on("click", function() {
             )) {
             e.preventDefault();
         }
-        if(this.value.length>11)
-        {
+        /*if(this.value.length > 11 && [8, 46, 37, 39].indexOf(key) == -1) {
           e.preventDefault();
-        }
+        }*/
     });
 
     //it will split object string where it has .

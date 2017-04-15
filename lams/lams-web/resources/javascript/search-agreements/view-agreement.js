@@ -77,7 +77,7 @@ $(document).ready(function() {
                                         _obj = street;
                                         break;
                                     case 'revenueWard':
-                                        _obj = revenueWard;
+                                        _obj = revenueWards;
                                         break;
                                     case 'revenueZone':
                                         _obj = revenueZone;

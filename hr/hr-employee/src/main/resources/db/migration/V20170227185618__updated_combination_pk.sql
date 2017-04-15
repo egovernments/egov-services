@@ -1,14 +1,15 @@
 ---------------------------- DROP FOREIGN KEYS ----------------------------
 
+ALTER TABLE egeis_assignment DROP CONSTRAINT fk_egeis_assignment_employeeid;
 ALTER TABLE egeis_hoddepartment DROP CONSTRAINT fk_egeis_hoddepartment_assignmentid;
 ALTER TABLE egeis_employeejurisdictions DROP CONSTRAINT fk_egeis_employeejurisdictions_employeeid;
 ALTER TABLE egeis_employeelanguages DROP CONSTRAINT fk_egeis_employeelanguages_employeeid;
-ALTER TABLE egeis_departmentaltest DROP CONSTRAINT egeis_departmentaltest_employeeid;
-ALTER TABLE egeis_educationalqualification DROP CONSTRAINT egeis_educationalqualification_employeeid;
-ALTER TABLE egeis_probation DROP CONSTRAINT egeis_probation_employeeid;
-ALTER TABLE egeis_regularisation DROP CONSTRAINT egeis_regularisation_employeeid;
-ALTER TABLE egeis_servicehistory DROP CONSTRAINT egeis_servicehistory_employeeid;
-ALTER TABLE egeis_technicalqualification DROP CONSTRAINT egeis_technicalqualification_employeeid;
+ALTER TABLE egeis_departmentaltest DROP CONSTRAINT fk_egeis_departmentaltest_employeeid;
+ALTER TABLE egeis_educationalqualification DROP CONSTRAINT fk_egeis_educationalqualification_employeeid;
+ALTER TABLE egeis_probation DROP CONSTRAINT fk_egeis_probation_employeeid;
+ALTER TABLE egeis_regularisation DROP CONSTRAINT fk_egeis_regularisation_employeeid;
+ALTER TABLE egeis_servicehistory DROP CONSTRAINT fk_egeis_servicehistory_employeeid;
+ALTER TABLE egeis_technicalqualification DROP CONSTRAINT fk_egeis_technicalqualification_employeeid;
 
 
 --------------------------- UPDATE PRIMARY KEYS ---------------------------

@@ -40,18 +40,10 @@
 
 package org.egov.eis.web.validator;
 
-import static org.springframework.util.ObjectUtils.isEmpty;
-
 import java.util.List;
 
-import org.egov.eis.model.Assignment;
-import org.egov.eis.model.DepartmentalTest;
-import org.egov.eis.model.EducationalQualification;
 import org.egov.eis.model.Employee;
-import org.egov.eis.model.Probation;
-import org.egov.eis.model.Regularisation;
-import org.egov.eis.model.ServiceHistory;
-import org.egov.eis.model.TechnicalQualification;
+import org.egov.eis.model.EmployeeDocument;
 import org.egov.eis.model.enums.EntityType;
 import org.egov.eis.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,10 +52,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 @Component
-public class DataIntegrityValidatorForCreate implements Validator {
-	
-	@Autowired
-	private EmployeeCommonValidator employeeCommonValidator;
+public class DataIntegrityValidatorForCreate extends EmployeeCommonValidator implements Validator {
 	
 	@Autowired
 	private EmployeeRepository employeeRepository;
@@ -83,21 +72,21 @@ public class DataIntegrityValidatorForCreate implements Validator {
 			return;
 
 		Employee employee = (Employee) targetObject;
-		String tenantId = employee.getTenantId();
-
-		Long employeeId = null;
-		if (employee.getId() != null && employeeRepository.checkIfEmployeeExists(employee.getId(), tenantId)) {
-			employeeId = employee.getId();
-		}
-
 		validateEmployee(employee, errors);
-		validateAssignments(employee.getAssignments(), employeeId, tenantId, errors);
-		validateDepartmentalTest(employee.getTest(), employeeId, tenantId, errors);
-		validateEducationalQualification(employee.getEducation(), employeeId, tenantId, errors);
-		validateProbation(employee.getProbation(), employeeId, tenantId, errors);
-		validateRegularisation(employee.getRegularisation(), employeeId, tenantId, errors);
-		validateServiceHistory(employee.getServiceHistory(), employeeId, tenantId, errors);
-		validateTechnicalQualification(employee.getTechnical(), employeeId, tenantId, errors);
+		validateDocuments(employee, errors);
+	}
+
+	protected void populateDocumentErrors(List<EmployeeDocument> inputDocuments,
+			List<EmployeeDocument> employeeDocumentsFromDb, Employee employee, Errors errors) {
+		for (EmployeeDocument inputDocument : inputDocuments) {
+			for (EmployeeDocument documentInDb : employeeDocumentsFromDb) {
+				if (inputDocument.getDocument().equals(documentInDb.getDocument())) {
+					List<Integer> index = getIndex(employee, EntityType.valueOf(inputDocument.getReferenceType()), inputDocument.getDocument());
+					System.out.println("index=" + index);
+					errors.rejectValue(getDocErrorMsg(index, EntityType.valueOf(inputDocument.getReferenceType())), "concurrent", "document(s) already exists");
+				}
+			}
+		}	
 	}
 
 	// FIXME Validate data existence of Religion, Languages etc. for every data
@@ -106,8 +95,8 @@ public class DataIntegrityValidatorForCreate implements Validator {
 
 	}
 
-	private void validateEmployee(Employee employee, Errors errors) {
-		employeeCommonValidator.validateEmployee(employee, errors);
+	protected void validateEmployee(Employee employee, Errors errors) {
+		super.validateEmployee(employee, errors);
 
 		if ((employee.getCode() != null) && duplicateExists("egeis_employee", "code",
 				employee.getCode(), employee.getTenantId())) {
@@ -124,21 +113,9 @@ public class DataIntegrityValidatorForCreate implements Validator {
 			errors.rejectValue("employee.gpfNo", "concurrent", "gpfNo already exists");
 		}
 
-		if ((employee.getDocuments() != null) && !employee.getDocuments().isEmpty()
-				&& employeeRepository.checkForDuplicatesForAnyOneOfGivenCSV("egeis_employeeDocuments", "document",
-						getDocumentsAsCSVs(employee.getDocuments()), employee.getTenantId())) {
-			errors.rejectValue("employee.documents", "concurrent", "document(s) already exists");
-		}
 	}
 
-	private void validateAssignments(List<Assignment> assignments, Long employeeId, String tenantId, Errors errors) {
-		// Employee will have at least one assignment during creation. So, null check is not done.
-		for (int index = 0; index < assignments.size(); index++)
-			employeeCommonValidator.validateDocumentsForNewEntity(assignments.get(index).getDocuments(), 
-					EntityType.ASSIGNMENT, tenantId, errors, index);
-	}
-
-	private void validateDepartmentalTest(List<DepartmentalTest> tests, Long employeeId, String tenantId,
+	/*private void validateDepartmentalTest(List<DepartmentalTest> tests, Long employeeId, String tenantId,
 			Errors errors) {
 		if (isEmpty(tests))
 			return;
@@ -146,60 +123,11 @@ public class DataIntegrityValidatorForCreate implements Validator {
 			employeeCommonValidator.validateDocumentsForNewEntity(tests.get(index).getDocuments(), 
 					EntityType.TEST, tenantId, errors, index);
 		}
-	}
-
-	private void validateEducationalQualification(List<EducationalQualification> educations, Long employeeId,
-			String tenantId, Errors errors) {
-		if (isEmpty(educations))
-			return;
-			for (int index = 0; index < educations.size(); index++) {
-				employeeCommonValidator.validateDocumentsForNewEntity(educations.get(index).getDocuments(), 
-						EntityType.EDUCATION, tenantId, errors, index);
-		}
-	}
-
-	private void validateProbation(List<Probation> probations, Long employeeId, String tenantId, Errors errors) {
-		if (isEmpty(probations))
-			return;
-			for (int index = 0; index < probations.size(); index++) {
-				employeeCommonValidator.validateDocumentsForNewEntity(probations.get(index).getDocuments(), 
-						EntityType.PROBATION, tenantId, errors, index);
-		}
-	}
-
-	private void validateRegularisation(List<Regularisation> regularisations, Long employeeId, String tenantId,
-			Errors errors) {
-		if (isEmpty(regularisations))
-			return;
-			for (int index = 0; index < regularisations.size(); index++) {
-				employeeCommonValidator.validateDocumentsForNewEntity(regularisations.get(index).getDocuments(), 
-						EntityType.REGULARISATION, tenantId, errors, index);
-		}
-	}
-
-	private void validateServiceHistory(List<ServiceHistory> serviceHistories, Long employeeId, String tenantId,
-			Errors errors) {
-		if (isEmpty(serviceHistories))
-			return;
-			for (int index = 0; index < serviceHistories.size(); index++) {
-				employeeCommonValidator.validateDocumentsForNewEntity(serviceHistories.get(index).getDocuments(), 
-						EntityType.SERVICE, tenantId, errors, index);
-		}
-	}
-
-	private void validateTechnicalQualification(List<TechnicalQualification> technicals, Long employeeId,
-			String tenantId, Errors errors) {
-		if (isEmpty(technicals))
-			return;
-		for (int index = 0; index < technicals.size(); index++) {
-			employeeCommonValidator.validateDocumentsForNewEntity(technicals.get(index).getDocuments(), 
-					EntityType.TECHNICAL, tenantId, errors, index);
-	}
-	}
+	}*/
 	
-	private String getDocumentsAsCSVs(List<String> documents) {
+	/*private String getDocumentsAsCSVs(List<String> documents) {
 		return "'" + String.join("','", documents) + "'";
-	}
+	}*/
 	
 	/**
 	 * Checks if the given string is present in db for the given column and given table.

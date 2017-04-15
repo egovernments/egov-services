@@ -46,16 +46,27 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum EntityType {
-	EMPLOYEE_HEADER("EMPLOYEE_HEADER", "egeis_employee"), ASSIGNMENT("ASSIGNMENT", "egeis_assignment"), JURISDICTION("JURISDICTION", "egeis_employeejurisdiction"),
-	SERVICE("SERVICE", "egeis_servicehistory"), TECHNICAL("TECHNICAL", "egeis_technicalqualification"), EDUCATION("EDUCATION", "egeis_educationalqualification"),
-	TEST("TEST", "egeis_departmentaltest"), REGULARISATION("REGULARISATION", "egeis_regularisation"), PROBATION("PROBATION", "egeis_probation");
+	EMPLOYEE_HEADER("EMPLOYEE_HEADER", "egeis_employee","employee"), 
+	ASSIGNMENT("ASSIGNMENT", "egeis_assignment", "assignments"), 
+	JURISDICTION("JURISDICTION", "egeis_employeejurisdiction", "jurisdictions"),
+	SERVICE("SERVICE", "egeis_servicehistory", "serviceHistory"), 
+	TECHNICAL("TECHNICAL", "egeis_technicalqualification", "technical"), 
+	EDUCATION("EDUCATION", "egeis_educationalqualification", "education"),
+	TEST("TEST", "egeis_departmentaltest", "test"), 
+	REGULARISATION("REGULARISATION", "egeis_regularisation", "regularisation"), 
+	PROBATION("PROBATION", "egeis_probation", "probation");
 
 	private String value;
 	private String dbTable;
+	/**
+	 * 
+	 */
+	private String contractFieldName;
 
-	EntityType(String value, String dbTable) {
+	EntityType(String value, String dbTable, String contractFieldName) {
 		this.value = value;
 		this.dbTable = dbTable;
+		this.contractFieldName = contractFieldName;
 	}
 
 	@Override
@@ -78,6 +89,14 @@ public enum EntityType {
 	
 	public void setDbTable(String dbTable){
 		this.dbTable = dbTable;
+	}
+
+	public void setContractFieldName(String contractFieldName) {
+		this.contractFieldName = contractFieldName;
+	}
+
+	public String getContractFieldName() {
+		return contractFieldName;
 	}
 
 	@JsonCreator

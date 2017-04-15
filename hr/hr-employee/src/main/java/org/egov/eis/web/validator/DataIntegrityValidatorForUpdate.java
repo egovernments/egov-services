@@ -50,6 +50,7 @@ import org.egov.eis.model.Assignment;
 import org.egov.eis.model.DepartmentalTest;
 import org.egov.eis.model.EducationalQualification;
 import org.egov.eis.model.Employee;
+import org.egov.eis.model.EmployeeDocument;
 import org.egov.eis.model.Probation;
 import org.egov.eis.model.Regularisation;
 import org.egov.eis.model.ServiceHistory;
@@ -62,10 +63,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 @Component
-public class DataIntegrityValidatorForUpdate implements Validator {
-
-	@Autowired
-	private EmployeeCommonValidator employeeCommonValidator;
+public class DataIntegrityValidatorForUpdate extends EmployeeCommonValidator implements Validator {
 
 	@Autowired
 	private EmployeeRepository employeeRepository;
@@ -90,7 +88,7 @@ public class DataIntegrityValidatorForUpdate implements Validator {
 			errors.rejectValue("employee.id", "no value", "provide employee id for update");
 			return;
 		}
-		
+
 		if (!employeeRepository.checkIfEmployeeExists(employeeId, tenantId)) {
 			// FIXME throw error employee id does not exist
 			errors.rejectValue("employee.id", "no value present", "employee id doesn't exist");
@@ -98,6 +96,7 @@ public class DataIntegrityValidatorForUpdate implements Validator {
 		}
 
 		validateEmployee(employee, errors);
+		validateDocuments(employee, errors);
 		validateAssignments(employee.getAssignments(), employeeId, tenantId, errors);
 		validateDepartmentalTest(employee.getTest(), employeeId, tenantId, errors);
 		validateEducationalQualification(employee.getEducation(), employeeId, tenantId, errors);
@@ -110,9 +109,14 @@ public class DataIntegrityValidatorForUpdate implements Validator {
 	private void validateExternalAPIData() {
 	}
 
-	private void validateEmployee(Employee employee, Errors errors) {
+	public void validateEmployee(Employee employee, Errors errors) {
 		// FIXME call common validator.validateEmployee
-		employeeCommonValidator.validateEmployee(employee, errors);
+		super.validateEmployee(employee, errors);
+		
+		if (checkIfColumnValueIsSameInDB("egeis_employee", "code",
+				employee.getCode(), employee.getId(), employee.getTenantId())) {
+			errors.rejectValue("employee.code", "invalid", "Employee Code cannot be changed.");
+		}
 
 		if ((employee.getPassportNo() != null) && duplicateExists("egeis_employee", "passportNo",
 				employee.getPassportNo(), employee.getId(), employee.getTenantId())) {
@@ -123,64 +127,63 @@ public class DataIntegrityValidatorForUpdate implements Validator {
 				employee.getId(), employee.getTenantId())) {
 			errors.rejectValue("employee.gpfNo", "concurrent", "gpfNo already exists");
 		}
-
-		// check if documents dont belong to any other employee/referencetype. return error
-
-		/*if (employee.getDocuments() != null && !employee.getDocuments().isEmpty()
-			&& employeeRepository.checkForDuplicatesForAnyOneOfGivenCSVForUpdate("egeis_employeeDocuments", "document",
-						getDocumentsAsCSVs(employee.getDocuments()), EntityType.EMPLOYEE_HEADER, employee.getId(), employee.getTenantId())) {
-			errors.rejectValue("employee.documents", "concurrent", "document(s) already exists");
+	}
+	
+	protected void populateDocumentErrors(List<EmployeeDocument> inputDocuments,
+			List<EmployeeDocument> employeeDocumentsFromDb, Employee employee, Errors errors) {
+		for (EmployeeDocument inputDocument : inputDocuments) {
+			for (EmployeeDocument documentInDb : employeeDocumentsFromDb) {
+				boolean duplicateDocumentExists = false;
+				if (inputDocument.getDocument().equals(documentInDb.getDocument())
+						&& !employee.getId().equals(documentInDb.getEmployeeId())) 	duplicateDocumentExists = true;
+				else if (inputDocument.getDocument().equals(documentInDb.getDocument())
+						&& employee.getId().equals(documentInDb.getEmployeeId())
+						&& !inputDocument.getReferenceType().equals(documentInDb.getReferenceType())) duplicateDocumentExists = true;
+				else if (inputDocument.getDocument().equals(documentInDb.getDocument())
+						&& employee.getId().equals(documentInDb.getEmployeeId())
+						&& inputDocument.getReferenceType().equals(documentInDb.getReferenceType())
+						&& (inputDocument.getReferenceId() == null || (!inputDocument.getReferenceId().equals(documentInDb.getReferenceId())))) 
+							duplicateDocumentExists = true;
+				if (duplicateDocumentExists) {
+					List<Integer> index = getIndex(employee, EntityType.valueOf(inputDocument.getReferenceType()), inputDocument.getDocument());
+					System.out.println("index=" + index);
+					errors.rejectValue(getDocErrorMsg(index, EntityType.valueOf(inputDocument.getReferenceType())), "concurrent", "document(s) already exists");
+				}
+			}
 		}
-*/
-		/*
-		 * if ((employee.getDocuments() != null) &&
-		 * !employee.getDocuments().isEmpty() &&
-		 * employeeService.checkForDuplicatesForAnyOneOfGivenCSV(
-		 * "egeis_employeeDocuments", "document",
-		 * getDocumentsAsCSVs(employee.getDocuments()))) {
-		 * errors.rejectValue("employee.documents", "concurrent",
-		 * "document(s) already exists"); }
-		 */
+			
 	}
 
 	private void validateAssignments(List<Assignment> assignments, Long employeeId, String tenantId, Errors errors) {
 		validateIdsForAssignment(assignments, employeeId, tenantId, errors);
-		
+
 		for (int index = 0; index < assignments.size(); index++) {
-			// employeeCommonValidator.validateDocumentsForNewAssignment(assignments.get(index),
+			// validateDocumentsForNewAssignment(assignments.get(index),
 			// errors, index);
 		}
 	}
 
-	private void validateIdsForAssignment(List<Assignment> assignments, Long employeeId, String tenantId, Errors errors) {
+	private void validateIdsForAssignment(List<Assignment> assignments, Long employeeId, String tenantId,
+			Errors errors) {
 		Map<Long, Integer> idsMap = new HashMap<>();
 		for (int index = 0; index < assignments.size(); index++) {
-			if (assignments.get(index).getId() != null) // FIXME check if long gets default value of 0L 
+			if (assignments.get(index).getId() != null) // FIXME check if long
+														// gets default value of
+														// 0L
 				idsMap.put(assignments.get(index).getId(), index);
 		}
 		if (!idsMap.isEmpty())
-			employeeCommonValidator.validateEntityId(idsMap, EntityType.ASSIGNMENT, employeeId, tenantId, errors);	
+			validateEntityId(idsMap, EntityType.ASSIGNMENT, employeeId, tenantId, errors);
 	}
 
 	private void validateDepartmentalTest(List<DepartmentalTest> tests, Long employeeId, String tenantId,
 			Errors errors) {
 		if (isEmpty(tests))
 			return;
-		validateIdsForDepaartmentalTest(tests, employeeId, tenantId, errors);
-	
-		/*
-		 * if (tests.get(index).getDocuments() != null &&
-		 * !tests.get(index).getDocuments().isEmpty() &&
-		 * employeeRepository.checkForDuplicatesForAnyOneOfGivenCSV(
-		 * "egeis_employeeDocuments", "document",
-		 * getDocumentsAsCSVs(tests.get(index).getDocuments()))) {
-		 * errors.rejectValue("employee.test[" + index + "].documents",
-		 * "concurrent", "document(s) already exists"); }
-		 */
-		
+		validateIdsForDepartmentalTest(tests, employeeId, tenantId, errors);
 	}
 
-	private void validateIdsForDepaartmentalTest(List<DepartmentalTest> tests, Long employeeId, String tenantId,
+	private void validateIdsForDepartmentalTest(List<DepartmentalTest> tests, Long employeeId, String tenantId,
 			Errors errors) {
 		Map<Long, Integer> idsMap = new HashMap<>();
 		for (int index = 0; index < tests.size(); index++) {
@@ -188,7 +191,7 @@ public class DataIntegrityValidatorForUpdate implements Validator {
 				idsMap.put(tests.get(index).getId(), index);
 		}
 		if (!idsMap.isEmpty())
-			employeeCommonValidator.validateEntityId(idsMap, EntityType.TEST, employeeId, tenantId, errors);		
+			validateEntityId(idsMap, EntityType.TEST, employeeId, tenantId, errors);
 	}
 
 	private void validateEducationalQualification(List<EducationalQualification> educations, Long employeeId,
@@ -196,16 +199,6 @@ public class DataIntegrityValidatorForUpdate implements Validator {
 		if (isEmpty(educations))
 			return;
 		validateIdsForEducationalQualification(educations, employeeId, tenantId, errors);
-	
-		/*
-		 * if (educations.get(index).getDocuments() != null &&
-		 * !educations.get(index).getDocuments().isEmpty() &&
-		 * employeeRepository.checkForDuplicatesForAnyOneOfGivenCSV(
-		 * "egeis_employeeDocuments", "document",
-		 * getDocumentsAsCSVs(educations.get(index).getDocuments()))) {
-		 * errors.rejectValue("employee.education[" + index + "].documents",
-		 * "concurrent", "document(s) already exists"); }
-		 */
 	}
 
 	private void validateIdsForEducationalQualification(List<EducationalQualification> educations, Long employeeId,
@@ -216,22 +209,13 @@ public class DataIntegrityValidatorForUpdate implements Validator {
 				idsMap.put(educations.get(index).getId(), index);
 		}
 		if (!idsMap.isEmpty())
-			employeeCommonValidator.validateEntityId(idsMap, EntityType.EDUCATION, employeeId, tenantId, errors);		
+			validateEntityId(idsMap, EntityType.EDUCATION, employeeId, tenantId, errors);
 	}
 
 	private void validateProbation(List<Probation> probations, Long employeeId, String tenantId, Errors errors) {
 		if (isEmpty(probations))
 			return;
 		validateIdsForProbation(probations, employeeId, tenantId, errors);
-		/*
-		 * if (probations.get(index).getDocuments() != null &&
-		 * !probations.get(index).getDocuments().isEmpty() &&
-		 * employeeRepository.checkForDuplicatesForAnyOneOfGivenCSV(
-		 * "egeis_employeeDocuments", "document",
-		 * getDocumentsAsCSVs(probations.get(index).getDocuments()))) {
-		 * errors.rejectValue("employee.probation[" + index + "].documents",
-		 * "concurrent", "document(s) already exists"); }
-		 */
 	}
 
 	private void validateIdsForProbation(List<Probation> probations, Long employeeId, String tenantId, Errors errors) {
@@ -241,7 +225,7 @@ public class DataIntegrityValidatorForUpdate implements Validator {
 				idsMap.put(probations.get(index).getId(), index);
 		}
 		if (!idsMap.isEmpty())
-			employeeCommonValidator.validateEntityId(idsMap, EntityType.PROBATION, employeeId, tenantId, errors);		
+			validateEntityId(idsMap, EntityType.PROBATION, employeeId, tenantId, errors);
 	}
 
 	private void validateRegularisation(List<Regularisation> regularisations, Long employeeId, String tenantId,
@@ -249,15 +233,6 @@ public class DataIntegrityValidatorForUpdate implements Validator {
 		if (isEmpty(regularisations))
 			return;
 		validateIdsForRegularisation(regularisations, employeeId, tenantId, errors);
-		/*
-		 * if (regularisations.get(index).getDocuments() != null &&
-		 * !regularisations.get(index).getDocuments().isEmpty() &&
-		 * employeeRepository.checkForDuplicatesForAnyOneOfGivenCSV(
-		 * "egeis_employeeDocuments", "document",
-		 * getDocumentsAsCSVs(regularisations.get(index).getDocuments()))) {
-		 * errors.rejectValue("employee.regularisation[" + index +
-		 * "].documents", "concurrent", "document(s) already exists"); }
-		 */
 	}
 
 	private void validateIdsForRegularisation(List<Regularisation> regularisations, Long employeeId, String tenantId,
@@ -268,7 +243,7 @@ public class DataIntegrityValidatorForUpdate implements Validator {
 				idsMap.put(regularisations.get(index).getId(), index);
 		}
 		if (!idsMap.isEmpty())
-			employeeCommonValidator.validateEntityId(idsMap, EntityType.REGULARISATION, employeeId, tenantId, errors);		
+			validateEntityId(idsMap, EntityType.REGULARISATION, employeeId, tenantId, errors);
 	}
 
 	private void validateServiceHistory(List<ServiceHistory> serviceHistories, Long employeeId, String tenantId,
@@ -276,15 +251,6 @@ public class DataIntegrityValidatorForUpdate implements Validator {
 		if (isEmpty(serviceHistories))
 			return;
 		validateIdsForServiceHistory(serviceHistories, employeeId, tenantId, errors);
-		/*
-		 * if (histories.get(index).getDocuments() != null &&
-		 * !histories.get(index).getDocuments().isEmpty() &&
-		 * employeeRepository.checkForDuplicatesForAnyOneOfGivenCSV(
-		 * "egeis_employeeDocuments", "document",
-		 * getDocumentsAsCSVs(histories.get(index).getDocuments()))) {
-		 * errors.rejectValue("employee.serviceHistory[" + index +
-		 * "].documents", "concurrent", "document(s) already exists"); }
-		 */
 	}
 
 	private void validateIdsForServiceHistory(List<ServiceHistory> serviceHistories, Long employeeId, String tenantId,
@@ -293,10 +259,10 @@ public class DataIntegrityValidatorForUpdate implements Validator {
 		for (int index = 0; index < serviceHistories.size(); index++) {
 			if (serviceHistories.get(index).getId() != null)
 				idsMap.put(serviceHistories.get(index).getId(), index);
-		
+
 		}
 		if (!idsMap.isEmpty())
-			employeeCommonValidator.validateEntityId(idsMap, EntityType.SERVICE, employeeId, tenantId, errors);		
+			validateEntityId(idsMap, EntityType.SERVICE, employeeId, tenantId, errors);
 	}
 
 	private void validateTechnicalQualification(List<TechnicalQualification> technicals, Long employeeId,
@@ -304,15 +270,6 @@ public class DataIntegrityValidatorForUpdate implements Validator {
 		if (isEmpty(technicals))
 			return;
 		validateIdsForTechnicalQualification(technicals, employeeId, tenantId, errors);
-		/*
-		 * if (technicals.get(index).getDocuments() != null &&
-		 * !technicals.get(index).getDocuments().isEmpty() &&
-		 * employeeRepository.checkForDuplicatesForAnyOneOfGivenCSV(
-		 * "egeis_employeeDocuments", "document",
-		 * getDocumentsAsCSVs(technicals.get(index).getDocuments()))) {
-		 * errors.rejectValue("employee.technical[" + index + "].documents",
-		 * "concurrent", "document(s) already exists"); }
-		 */
 	}
 
 	private void validateIdsForTechnicalQualification(List<TechnicalQualification> technicals, Long employeeId,
@@ -323,7 +280,7 @@ public class DataIntegrityValidatorForUpdate implements Validator {
 				idsMap.put(technicals.get(index).getId(), index);
 		}
 		if (!idsMap.isEmpty())
-			employeeCommonValidator.validateEntityId(idsMap, EntityType.TECHNICAL, employeeId, tenantId, errors);		
+			validateEntityId(idsMap, EntityType.TECHNICAL, employeeId, tenantId, errors);
 	}
 
 	private String getDocumentsAsCSVs(List<String> documents) {
@@ -345,5 +302,12 @@ public class DataIntegrityValidatorForUpdate implements Validator {
 		if (idFromDb == 0 || id.equals(idFromDb))
 			return false;
 		return true;
+	}
+	
+	public Boolean checkIfColumnValueIsSameInDB(String table, String column, String value, Long id, String tenantId) {
+		Long idFromDb = employeeRepository.getId(table, column, value, tenantId);
+		if (id.equals(idFromDb))
+			return true;
+		return false;
 	}
 }

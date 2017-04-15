@@ -9,18 +9,17 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class EmployeeDocumentsTableRowMapper implements RowMapper<EmployeeDocument> {
+public class EmployeeDocumentsUpdateTableRowMapper implements RowMapper<EmployeeDocument> {
 
 	@Override
 	public EmployeeDocument mapRow(ResultSet rs, int rowNum) throws SQLException, DataAccessException {
 
 		EmployeeDocument employeeDocument = new EmployeeDocument();
 
-		employeeDocument.setId(rs.getLong("id"));
 		employeeDocument.setDocument(rs.getString("document"));
+		employeeDocument.setEmployeeId(rs.getLong("employeeId"));
 		employeeDocument.setReferenceType(rs.getString("referencetype"));
-		employeeDocument.setReferenceId(rs.getLong("referenceid"));
-		employeeDocument.setTenantId(rs.getString("tenantid"));
+		employeeDocument.setReferenceId(rs.getLong("referenceId"));
 
 		return employeeDocument;
 

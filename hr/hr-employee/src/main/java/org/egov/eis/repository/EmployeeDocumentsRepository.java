@@ -42,16 +42,21 @@ package org.egov.eis.repository;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.egov.eis.model.EmployeeDocument;
 import org.egov.eis.repository.rowmapper.EmployeeDocumentsTableRowMapper;
+import org.egov.eis.repository.rowmapper.EmployeeDocumentsUpdateTableRowMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -71,14 +76,29 @@ public class EmployeeDocumentsRepository {
 			+ " WHERE employeeId = ? AND tenantId = ? ";
 	
 	// select document, referencetype, employeeid for given set of document urls
-	public static final String DUPLICATE_EXISTS_QUERY_FOR_UPDATE = "SELECT exists(SELECT id FROM $table WHERE $column = ?"
-			+ " tenantId = ?)";
+	public static final String SELECT_BY_TENANTID_QUERY = "SELECT"
+			+ " document, employeeId, referenceType, referenceId FROM egeis_employeeDocuments"
+			+ " WHERE document IN (:document) AND tenantId = :tenantId";
+	
+	@Autowired
+	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+	
+	/**
+	 * @param namedParameterJdbcTemplate
+	 *            the namedParameterJdbcTemplate to set
+	 */
+	public void setNamedParameterJdbcTemplate(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+	}
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
 	@Autowired
 	private EmployeeDocumentsTableRowMapper employeeDocumentsTableRowMapper;
+	
+	@Autowired
+	private EmployeeDocumentsUpdateTableRowMapper employeeDocumentsUpdateTableRowMapper;
 
 	public void save(Long employeeId, List<String> documents, String referenceType, Long referenceId, String tenantId) {
 		System.err.println("documents: " + documents);
@@ -111,6 +131,23 @@ public class EmployeeDocumentsRepository {
 		try {
 			return jdbcTemplate.query(SELECT_BY_EMPLOYEEID_QUERY, new Object[] { id, tenantId },
 					employeeDocumentsTableRowMapper);
+		} catch (EmptyResultDataAccessException e) {
+			return null;
+		}
+	}
+	
+	public List<EmployeeDocument> findByTenantID(List<String> inputDocuments, String tenantId) {
+		
+	/*	MapSqlParameterSource parameters = new MapSqlParameterSource();
+		parameters.addValue("document", inputDocuments);
+		parameters.addValue("tenantId", tenantId);*/
+		
+		Map<String, Object> namedParameters = new HashMap<>();
+		namedParameters.put("document", inputDocuments);
+		namedParameters.put("tenantId", tenantId);
+		
+		try {
+			return namedParameterJdbcTemplate.query(SELECT_BY_TENANTID_QUERY, namedParameters, employeeDocumentsUpdateTableRowMapper);
 		} catch (EmptyResultDataAccessException e) {
 			return null;
 		}

@@ -44,6 +44,7 @@ public class EmployeeDocumentsService {
 					employee.getId(), employee.getTenantId());
 		}
 
+		if(!isEmpty(employee.getAssignments()))
 		employee.getAssignments().forEach((assignment) -> {
 			if (assignment.getDocuments() != null) {
 				// updateDocumentsForAssignment(assignment, documentsFromDb,
@@ -52,30 +53,40 @@ public class EmployeeDocumentsService {
 						employee.getId(), employee.getTenantId());
 			}
 		});
+		
+		if(!isEmpty(employee.getProbation()))
 		employee.getProbation().forEach((probation) -> {
 			if (probation.getDocuments() != null) {
 				updateDocuments(probation.getDocuments(), EntityType.PROBATION, probation.getId(), documentsFromDb,
 						employee.getId(), employee.getTenantId());
 			}
 		});
+		
+		if(!isEmpty(employee.getRegularisation()))
 		employee.getRegularisation().forEach((regularisation) -> {
 			if (regularisation.getDocuments() != null) {
 				updateDocuments(regularisation.getDocuments(), EntityType.REGULARISATION, regularisation.getId(),
 						documentsFromDb, employee.getId(), employee.getTenantId());
 			}
 		});
+		
+		if(!isEmpty(employee.getTest()))
 		employee.getTest().forEach((test) -> {
 			if (test.getDocuments() != null) {
 				updateDocuments(test.getDocuments(), EntityType.TEST, test.getId(), documentsFromDb, employee.getId(),
 						employee.getTenantId());
 			}
 		});
+		
+		if(!isEmpty(employee.getTechnical()))
 		employee.getTechnical().forEach((technical) -> {
 			if (technical.getDocuments() != null) {
 				updateDocuments(technical.getDocuments(), EntityType.TECHNICAL, technical.getId(), documentsFromDb,
 						employee.getId(), employee.getTenantId());
 			}
 		});
+		
+		if(!isEmpty(employee.getEducation()))
 		employee.getEducation().forEach((education) -> {
 			if (education.getDocuments() != null) {
 				updateDocuments(education.getDocuments(), EntityType.EDUCATION, education.getId(), documentsFromDb,

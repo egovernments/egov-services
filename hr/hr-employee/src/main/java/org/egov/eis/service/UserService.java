@@ -142,12 +142,11 @@ public class UserService {
 	}
 
 	public ResponseEntity<?> updateUser(Long userId, UserRequest userRequest) {
-
 		String url = propertiesManager.getUsersServiceHostName() + propertiesManager.getUsersServiceUsersBasePath()
 		+  getUserUpdatePath(userId);
-		
-		LOGGER.info("update url" + url);
-		
+
+		LOGGER.info("update url : " + url);
+
 		UserResponse userResponse = null;
 		try {
 			userResponse = new RestTemplate().postForObject(url, userRequest, UserResponse.class);
@@ -176,8 +175,8 @@ public class UserService {
 			e.printStackTrace();
 			return errorHandler.getResponseEntityForUnknownUserUpdationError(userRequest.getRequestInfo());
 		}
+		System.err.println(userResponse.getUser().get(0));
 		return new ResponseEntity<UserResponse>(userResponse, HttpStatus.OK);
-		
 	}
 	
 	private String getUserUpdatePath(long id){

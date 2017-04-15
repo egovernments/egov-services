@@ -40,6 +40,7 @@
 
 package org.egov.eis.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -189,8 +190,14 @@ public class EmployeeService {
 	
 	public Employee getEmployee(Long employeeId, String tenantId, RequestInfo requestInfo) {
 		Employee employee = employeeRepository.findById(employeeId, tenantId);
+		List<Long> ids = new ArrayList<>();
+		ids.add(employeeId);
 		if (employee == null) 
 			throw new EmployeeIdNotFoundException(employeeId);
+
+		User user = userService.getUsers(ids, tenantId, requestInfo).get(0);
+		employee.setUser(user);
+
 		employee.setLanguagesKnown(employeeLanguageRepository.findByEmployeeId(employeeId, tenantId));
 		employee.setAssignments(assignmentRepository.findByEmployeeId(employeeId, tenantId));
 		employee.setServiceHistory(serviceHistoryRepository.findByEmployeeId(employeeId, tenantId));
@@ -301,11 +308,11 @@ public class EmployeeService {
 	public ResponseEntity<?> updateAsync(EmployeeRequest employeeRequest) {
 
 		Employee employee = employeeRequest.getEmployee();
-		/*UserRequest userRequest = employeeHelper.getUserRequest(employeeRequest);
-		
+		UserRequest userRequest = employeeHelper.getUserRequest(employeeRequest);
+
 		ResponseEntity<?> responseEntity = null;
 
-	try {
+		try {
 			responseEntity = userService.updateUser(userRequest.getUser().getId(), userRequest);
 		} catch (Exception e) {
 			LOGGER.debug("Error occurred while updating user", e);
@@ -319,7 +326,7 @@ public class EmployeeService {
 
 		UserResponse userResponse = (UserResponse) responseEntity.getBody();
 		User user = userResponse.getUser().get(0);
-		employee.setUser(user);*/
+		employee.setUser(user);
 
 		try {
 			employeeHelper.populateDefaultDataForUpdate(employeeRequest);

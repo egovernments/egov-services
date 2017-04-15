@@ -113,7 +113,7 @@ public class DataIntegrityValidatorForUpdate extends EmployeeCommonValidator imp
 	public void validateEmployee(Employee employee, Errors errors) {
 		// FIXME call common validator.validateEmployee
 		super.validateEmployee(employee, errors);
-		
+
 		if (checkIfColumnValueIsSameInDB("egeis_employee", "code",
 				employee.getCode(), employee.getId(), employee.getTenantId())) {
 			errors.rejectValue("employee.code", "invalid", "Employee Code cannot be changed.");

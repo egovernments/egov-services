@@ -3,7 +3,6 @@ package org.egov.tenant.web.contract;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.tenant.domain.model.Tenant;
 import org.egov.tenant.domain.model.TenantSearchCriteria;
 
 import java.util.List;

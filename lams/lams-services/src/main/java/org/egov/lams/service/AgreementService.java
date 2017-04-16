@@ -172,10 +172,13 @@ public class AgreementService {
 			//FIXME approve and reject should come from 
 			if ("Approve".equals(workFlowDetails.getStatus())) {
 				agreement.setAgreementNumber(agreementNumberService.generateAgrementNumber());
+				logger.info("createAgreement service Agreement_No::" + agreement.getAgreementNumber);
 				agreement.setAgreementDate(new Date());
 				agreement.setStatus(Status.ACTIVE);
+				logger.info("createAgreement service Agreement_No::" + agreement.getStatus);
 			} else if ("Reject".equals(workFlowDetails.getStatus())) {
 				agreement.setStatus(Status.CANCELLED);
+				logger.info("createAgreement service Agreement_No::" + agreement.getStatus);
 			}
 		}
 		// TODO  FIXME put agreement number generator here and change

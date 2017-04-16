@@ -171,7 +171,7 @@ public class AgreementService {
 		if (workFlowDetails != null) {
 			//FIXME approve and reject should come from 
 			logger.info("the workflow details status :: "+ workFlowDetails.getAction());
-			if ("Approve".equalsIgnoreCase(workFlowDetails.getStatus())) {
+			if ("Approve".equalsIgnoreCase(workFlowDetails.getAction())) {
 				agreement.setAgreementNumber(agreementNumberService.generateAgrementNumber());
 				logger.info("createAgreement service Agreement_No::" + agreement.getAgreementNumber());
 				agreement.setAgreementDate(new Date());

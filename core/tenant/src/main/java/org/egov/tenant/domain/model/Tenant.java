@@ -14,17 +14,8 @@ public class Tenant {
 
     private Long id;
     private String code;
-    private String name;
-    private double longitude;
-    private double latitude;
     private String description;
-    private Long logoId;
-    private Long backgroundId;
+    private String logoId;
+    private String imageId;
     private String domainUrl;
-    private String regionName;
-    private String districtCode;
-    private String districtName;
-    private String grade;
-    private boolean active;
-    private String localName;
 }

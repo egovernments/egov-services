@@ -26,15 +26,7 @@ public class TenantContract {
     private String regionName;
 
     public Tenant toDomain() {
-        return Tenant.builder().code(code).name(name).longitude(longitude).latitude(latitude)
-                .domainUrl(domainurl).active(active)
-                .localName(localName).grade(grade)
-                .districtCode(districtCode)
-                .districtName(districtName)
-                .regionName(regionName)
-                .logoId(logoId)
-                .backgroundId(backgroundImageId)
-                .build();
+        return null;
     }
 
 }

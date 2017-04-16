@@ -1,7 +1,7 @@
 package org.egov.tenant.persistence.rowmapper;
 
 
-import org.egov.tenant.domain.model.Tenant;
+import org.egov.tenant.persistence.entity.Tenant;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
@@ -11,21 +11,15 @@ public class TenantRowMapper implements RowMapper<Tenant> {
 
     @Override
     public Tenant mapRow(final ResultSet rs, final int rowNum) throws SQLException {
-        final Tenant tenant = Tenant.builder().id(rs.getLong("t_id"))
-                .name(rs.getString("t_name"))
-                .code(rs.getString("t_code"))
-                .description(rs.getString("t_description"))
-                .latitude(rs.getDouble("t_longitude"))
-                .localName(rs.getString("t_localname"))
-                .longitude(rs.getDouble("t_latitude"))
-                .regionName(rs.getString("t_regionName"))
-                .active(rs.getBoolean("t_active"))
-                .districtName(rs.getString("t_districtName"))
-                .districtCode(rs.getString("t_districtCode"))
-                .grade(rs.getString("t_grade"))
+        final Tenant tenant = Tenant.builder()
+                .id(rs.getLong(Tenant.Fields.ID.getValue()))
+                .code(rs.getString(Tenant.Fields.CODE.getValue()))
+                .description(rs.getString(Tenant.Fields.DESCRIPTION.getValue()))
+                .domainUrl(rs.getString(Tenant.Fields.DOMAIN_URL.getValue()))
+                .logoId(rs.getString(Tenant.Fields.LOGO_ID.getValue()))
+                .imageId(rs.getString(Tenant.Fields.IMAGE_ID.getValue()))
                 .build();
 
         return tenant;
-
     }
 }

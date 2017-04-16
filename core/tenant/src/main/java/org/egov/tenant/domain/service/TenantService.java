@@ -3,8 +3,6 @@ package org.egov.tenant.domain.service;
 import org.egov.tenant.domain.model.Tenant;
 import org.egov.tenant.domain.model.TenantSearchCriteria;
 import org.egov.tenant.persistence.repository.TenantRepository;
-import org.egov.tenant.web.contract.TenantResponse;
-import org.egov.tenant.web.contract.TenantSearchRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,7 +16,7 @@ public class TenantService {
         this.tenantRepository = tenantRepository;
     }
 
-    public List<Tenant> searchTenantsForCodes(final TenantSearchCriteria tenantSearchCriteria) {
+    public List<Tenant> find(final TenantSearchCriteria tenantSearchCriteria) {
        return tenantRepository.findForCriteria(tenantSearchCriteria);
     }
 

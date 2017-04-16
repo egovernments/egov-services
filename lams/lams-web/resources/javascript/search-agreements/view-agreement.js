@@ -1,18 +1,6 @@
-// function getUrlVars() {
-//     var vars = [],
-//         hash;
-//     var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-//     for (var i = 0; i < hashes.length; i++) {
-//         hash = hashes[i].split('=');
-//         vars.push(hash[0]);
-//         vars[hash[0]] = hash[1];
-//     }
-//     return vars;
-// }
-
-function getValueByName(name,id) {
+function getValueByName(name, id) {
     for (var i = 0; i < assetCategories.length; i++) {
-        if (assetCategories[i].id==id) {
+        if (assetCategories[i].id == id) {
             return assetCategories[i][name];
         }
     }
@@ -32,13 +20,55 @@ $(document).ready(function() {
         open(location, '_self').close();
     })
 
+    $('#printNotice').on("click", function() {
+        // call api
+        // alert("asda");
+        var doc = new jsPDF();
+        doc.setFontType("bold");
+        doc.text(15, 20, 'Kurnool Municipal Corporation(HHHHH)');
+        doc.text(15, 30, 'Kurnool District(JJJJJ)');
+        doc.text(15, 40, 'Asset Category Lease/Agreement Notice');
+        doc.setLineWidth(0.5);
+        doc.line(15, 42, 195, 42);
+        doc.text(15, 47, 'Lease details:');
+        doc.text(110, 47, 'Agreement No:');
+        doc.text(15, 57, 'Lease Name:	');
+        doc.text(110, 57, 'Asset No:');
+        doc.text(15, 67, 'Contact number, Door No, Address, ULB Name.');
+
+        doc.setFontType("normal");
+        doc.text(15, 77, doc.splitTextToSize('1.The period of lease shall be __AAA____ months commencing from _____BBB_____(dd-mm-yyyy) to ____CCC__________(dd-mm-yyyy).', (210 - 15 - 15)));
+        doc.text(15, 93, doc.splitTextToSize('2.The property leased is shop No___GGG_____and shall be leased for a sum of Rs. ________/-DDD (Rupees _______________________________________ only) per month exclusive of the payment of electricity and other charges.', (210 - 15 - 15)));
+        doc.text(15, 123, doc.splitTextToSize('3.The lessee has paid a sum of Rs. ______EEE____/- (Rupees ______________________________ only) as security deposit for the tenancy and the said sum is repayable or adjusted only at the end of the tenancy on the lease delivery vacant possession of the shop let out, subject to deductions, if any, lawfully and legally payable by the lessee under the terms of this lease deed and in law.', (210 - 15 - 15)));
+        doc.text(15, 163, doc.splitTextToSize('4.The rent for every month shall be payable on or before __5th___ of the succeeding month.', (210 - 15 - 15)));
+        doc.text(15, 178, doc.splitTextToSize('5.The lessee shall pay electricity charges to the Electricity Board every month without fail.', (210 - 15 - 15)));
+        doc.text(15, 193, doc.splitTextToSize('6.The lessor or his agent shall have a right to inspect the shop at any hour during the day time.', (210 - 15 - 15)));
+        doc.text(15, 208, doc.splitTextToSize('7.The Lessee shall use the shop let out duly for the business of General Merchandise and not use the same for any other purpose.  (The lessee shall not enter into partnership) and conduct the business in the premises in the name of the firm.  The lessee can only use the premises for his own business.', (210 - 15 - 15)));
+        doc.addPage()
+        doc.text(15, 20, doc.splitTextToSize('8.The lessee shall not have any right to assign, sub-let, re-let, under-let or transfer the tenancy or any portion thereof.', (210 - 15 - 15)));
+        doc.text(15, 35, doc.splitTextToSize('9.The lessee shall not carry out any addition or alteration to the shop without the previous consent and approval in writing of the lessor.', (210 - 15 - 15)));
+        doc.text(15, 50, doc.splitTextToSize('10. The lessee on the expiry of the lease period of __AAA_____ months shall hand over vacant possession of the ceased shop peacefully or the lease agreement can be renewed for a further period on mutually agreed terms.', (210 - 15 - 15)));
+
+        doc.text(15, 90, 'Commissioner ');
+        doc.text(160, 90, 'LESSEE');
+        doc.text(15, 100, 'Signature: 	');
+        doc.text(160, 100, 'Signature: 	');
+        doc.text(15, 110, 'ULB Name');
+
+        doc.save('Notice.pdf');
+    })
+
+    // function wordWrap(doc, paragraph, lMargin, rMargin, pdfInMM) {
+    //     return doc.splitTextToSize(paragraph, (pdfInMM - lMargin - rMargin));
+    // }
+
     try {
-        if(getUrlVars()["agreementNumber"]) {
+        if (getUrlVars()["agreementNumber"]) {
             var agreementDetail = commonApiPost("lams-services", "agreements", "_search", {
                 agreementNumber: getUrlVars()["agreementNumber"]
             }).responseJSON["Agreements"][0] || {};
         } else {
-             var agreementDetail = commonApiPost("lams-services", "agreements", "_search", {
+            var agreementDetail = commonApiPost("lams-services", "agreements", "_search", {
                 stateId: getUrlVars()["state"]
             }).responseJSON["Agreements"][0] || {};
         }
@@ -51,7 +81,7 @@ $(document).ready(function() {
 
         printValue("", agreementDetail);
         printValue("", assetDetails, true);
-    } catch(e) {
+    } catch (e) {
         console.log(e);
     }
 
@@ -62,11 +92,11 @@ $(document).ready(function() {
             for (var key in values) {
                 if (typeof values[key] === "object") {
                     for (ckey in values[key]) {
-                        if(values[key][ckey]) {
+                        if (values[key][ckey]) {
                             //Get description
-                            if(isAsset && key == "locationDetails" && ["locality", "electionWard", "street", "revenueWard", "revenueZone", "revenueBlock"].indexOf(ckey) > -1) {
+                            if (isAsset && key == "locationDetails" && ["locality", "electionWard", "street", "revenueWard", "revenueZone", "revenueBlock"].indexOf(ckey) > -1) {
                                 var _obj;
-                                switch(ckey) {
+                                switch (ckey) {
                                     case 'locality':
                                         _obj = locality;
                                         break;
@@ -87,20 +117,19 @@ $(document).ready(function() {
                                         break;
                                 }
                                 $("[name='" + (isAsset ? "asset." : "") + key + "." + ckey + "']").text(getNameById(_obj, ckey) || "NA");
-                            }
-                            else
+                            } else
                                 $("[name='" + (isAsset ? "asset." : "") + key + "." + ckey + "']").text(values[key][ckey] ? values[key][ckey] : "NA");
                         }
                     }
-                } else if(values[key]) {
+                } else if (values[key]) {
                     $("[name='" + (isAsset ? "asset." : "") + key + "']").text(values[key]);
                 } else {
                     $("[name='" + (isAsset ? "asset." : "") + key + "']").text("NA");
                 }
 
-                if (key.search('date')>0) {
-                        var d = new Date(values[key]);
-                        $(`#${key}`).val(`${d.getDate()}-${d.getMonth()+1}-${d.getFullYear()}`);
+                if (key.search('date') > 0) {
+                    var d = new Date(values[key]);
+                    $(`#${key}`).val(`${d.getDate()}-${d.getMonth()+1}-${d.getFullYear()}`);
                 }
             }
         }
@@ -137,7 +166,7 @@ $(document).ready(function() {
         renewAgreement[this.id] = this.value;
 
         if (($("#approver_department").val() != "" && $("#approver_designation").val() != "") && (this.id == "approver_department" || this.id == "approver_designation")) {
-                employees = commonApiPost("hr-employee", "employees", "_search", {
+            employees = commonApiPost("hr-employee", "employees", "_search", {
                 tenantId,
                 departmentId: $("#approver_department").val(),
                 designationId: $("#approver_designation").val()
@@ -180,10 +209,10 @@ $(document).ready(function() {
     };
 
     //remove renew part and related buttons from dom
-     if (getUrlVars()["view"] == "new") {
+    if (getUrlVars()["view"] == "new") {
         //removing renew section and renew button
         $("#renew,#workFlowDetails").remove();
-    } else if(getUrlVars()["view"] == "inbox") {
+    } else if (getUrlVars()["view"] == "inbox") {
         $("#historyTable").show();
         $("#renew").remove();
         $("#renewBtn").remove();
@@ -198,9 +227,9 @@ $(document).ready(function() {
             id: agreementDetail.stateId
         }).responseJSON["processInstance"];
 
-        if(workflow && workflow.length) {
+        if (workflow && workflow.length) {
             workflow = workflow.sort();
-            for(var i=0; i < workflow.length; i++) {
+            for (var i = 0; i < workflow.length; i++) {
                 $("#historyTable tbody").append(`<tr>
                     <td data-label="createdDate">${workflow[i].createdDate}</td>
                     <td data-label="updatedBy">${workflow[i].senderName}</td>
@@ -211,10 +240,10 @@ $(document).ready(function() {
             }
         }
 
-        if(process && process.attributes && process.attributes.validActions && process.attributes.validActions.values && process.attributes.validActions.values.length) {
-            for(var i=0;i<process.attributes.validActions.values.length;i++) {
+        if (process && process.attributes && process.attributes.validActions && process.attributes.validActions.values && process.attributes.validActions.values.length) {
+            for (var i = 0; i < process.attributes.validActions.values.length; i++) {
                 $("#footer-btn-grp").append($(`<button data-action=${process.attributes.validActions.values[i].key} id=${process.attributes.validActions.values[i].key} type="button" class="btn btn-submit">${process.attributes.validActions.values[i].name}<button/>`));
-                if(process.attributes.validActions.values[i].key == "Approve") {
+                if (process.attributes.validActions.values[i].key == "Approve") {
                     $("#workFlowDetails").remove();
                 }
             }
@@ -222,7 +251,7 @@ $(document).ready(function() {
             $("#workFlowDetails").remove();
         }
 
-        if(process) {
+        if (process) {
             getDesignations(process.status, function(designations) {
                 for (var variable in designations) {
                     $(`#approver_designation`).append(`<option value='${designations[variable]["id"]}'>${designations[variable]["name"]}</option>`)
@@ -234,13 +263,13 @@ $(document).ready(function() {
     }
 
     for (var variable in department) {
-      $(`#approver_department`).append(`<option value='${department[variable]["id"]}'>${department[variable]["name"]}</option>`)
+        $(`#approver_department`).append(`<option value='${department[variable]["id"]}'>${department[variable]["name"]}</option>`)
     }
-   /* for (var variable in designation) {
-      $(`#approver_designation`).append(`<option value='${designation[variable]["id"]}'>${designation[variable]["name"]}</option>`)
-    }*/
+    /* for (var variable in designation) {
+       $(`#approver_designation`).append(`<option value='${designation[variable]["id"]}'>${designation[variable]["name"]}</option>`)
+     }*/
 
-    _type = getUrlVars()["type"] ? decodeURIComponent(getUrlVars()["type"]) : getValueByName("name",agreementDetail.asset.assetCategory.id);
+    _type = getUrlVars()["type"] ? decodeURIComponent(getUrlVars()["type"]) : getValueByName("name", agreementDetail.asset.assetCategory.id);
     if (_type == "land") {
 
         // remove all other Asset Details block from DOM except land asset related fields
@@ -319,34 +348,34 @@ $(document).ready(function() {
 
     $('body').on('click', 'button', function(e) {
         e.preventDefault();
-        if(!e.target.id) return;
+        if (!e.target.id) return;
         var data = $("#" + e.target.id).data();
-        if(data.action) {
+        if (data.action) {
             var _agrmntDet = Object.assign({}, agreementDetail);
             _agrmntDet.workflowDetails = {
-                    "businessKey": process.businessKey,
-                    "type":"Agreement",
-                    "assignee": $("#approver_name") && $("#approver_name").val() ? $("#approver_name").val() : process.initiatorPosition,
-                    "status": process.status,
-                    "action": data.action
+                "businessKey": process.businessKey,
+                "type": "Agreement",
+                "assignee": $("#approver_name") && $("#approver_name").val() ? $("#approver_name").val() : process.initiatorPosition,
+                "status": process.status,
+                "action": data.action
             };
 
             var response = $.ajax({
-                    url: baseUrl + `/lams-services/agreements/_update/${agreementDetail.acknowledgementNumber}?tenantId=`+tenantId,
-                    type: 'POST',
-                    dataType: 'json',
-                    data:JSON.stringify({
-                        RequestInfo: requestInfo,
-                        Agreement: _agrmntDet
-                    }),
-                    async: false,
-                    headers: {
-                            'auth-token': authToken
-                        },
-                    contentType: 'application/json'
-                });
-            if(response["status"] === 201) {
-              window.location.href="app/search-assets/create-agreement-ack.html?name="+getNameById(employees,agreement["approverName"])+"&ackNo="+responseJSON["Agreements"][0]["acknowledgementNumber"];
+                url: baseUrl + `/lams-services/agreements/_update/${agreementDetail.acknowledgementNumber}?tenantId=` + tenantId,
+                type: 'POST',
+                dataType: 'json',
+                data: JSON.stringify({
+                    RequestInfo: requestInfo,
+                    Agreement: _agrmntDet
+                }),
+                async: false,
+                headers: {
+                    'auth-token': authToken
+                },
+                contentType: 'application/json'
+            });
+            if (response["status"] === 201) {
+                window.location.href = "app/search-assets/create-agreement-ack.html?name=" + getNameById(employees, agreement["approverName"]) + "&ackNo=" + responseJSON["Agreements"][0]["acknowledgementNumber"];
             } else {
                 console.log("Handle error.");
             }
@@ -360,4 +389,8 @@ $(document).ready(function() {
 
         }
     })
+
+
+
+
 });

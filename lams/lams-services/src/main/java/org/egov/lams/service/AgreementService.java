@@ -164,19 +164,20 @@ public class AgreementService {
 		
 		Agreement agreement = agreementRequest.getAgreement();
 		WorkFlowDetails workFlowDetails = agreement.getWorkflowDetails();
-		logger.info("createAgreement service::" + agreement);
+		logger.info("updateAgreement service::" + workFlowDetails);
 		ObjectMapper mapper = new ObjectMapper();
 		String agreementValue = null;
 
 		if (workFlowDetails != null) {
 			//FIXME approve and reject should come from 
-			if ("Approve".equals(workFlowDetails.getStatus())) {
+			logger.info("the workflow details status :: "+ workFlowDetails.getStatus());
+			if ("Approve".equalsIgnoreCase(workFlowDetails.getStatus())) {
 				agreement.setAgreementNumber(agreementNumberService.generateAgrementNumber());
 				logger.info("createAgreement service Agreement_No::" + agreement.getAgreementNumber());
 				agreement.setAgreementDate(new Date());
 				agreement.setStatus(Status.ACTIVE);
 				logger.info("createAgreement service Agreement_No::" + agreement.getStatus());
-			} else if ("Reject".equals(workFlowDetails.getStatus())) {
+			} else if ("Reject".equalsIgnoreCase(workFlowDetails.getStatus())) {
 				agreement.setStatus(Status.CANCELLED);
 				logger.info("createAgreement service Agreement_No::" + agreement.getStatus());
 			}

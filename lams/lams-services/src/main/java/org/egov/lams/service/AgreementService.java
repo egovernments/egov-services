@@ -170,14 +170,14 @@ public class AgreementService {
 
 		if (workFlowDetails != null) {
 			//FIXME approve and reject should come from 
-			logger.info("the workflow details status :: "+ workFlowDetails.getStatus());
+			logger.info("the workflow details status :: "+ workFlowDetails.getAction());
 			if ("Approve".equalsIgnoreCase(workFlowDetails.getStatus())) {
 				agreement.setAgreementNumber(agreementNumberService.generateAgrementNumber());
 				logger.info("createAgreement service Agreement_No::" + agreement.getAgreementNumber());
 				agreement.setAgreementDate(new Date());
 				agreement.setStatus(Status.ACTIVE);
 				logger.info("createAgreement service Agreement_No::" + agreement.getStatus());
-			} else if ("Reject".equalsIgnoreCase(workFlowDetails.getStatus())) {
+			} else if ("Reject".equalsIgnoreCase(workFlowDetails.getAction())) {
 				agreement.setStatus(Status.CANCELLED);
 				logger.info("createAgreement service Agreement_No::" + agreement.getStatus());
 			}

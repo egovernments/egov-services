@@ -115,7 +115,7 @@ public class UserRepositoryTest {
 				.roles(roles)
 				.build();
 		final Role role = new Role();
-		when(roleRepository.findByTenantIdAndNameIgnoreCase("ap.public", roleName)).thenReturn(role);
+		when(roleRepository.findByTenantIdAndCodeIgnoreCase("ap.public", roleName)).thenReturn(role);
 
 		User actualUser = userRepository.save(domainUser);
 
@@ -135,7 +135,7 @@ public class UserRepositoryTest {
 				.password(rawPassword)
 				.build();
 		final Role role = new Role();
-		when(roleRepository.findByTenantIdAndNameIgnoreCase("ap.public", roleName)).thenReturn(role);
+		when(roleRepository.findByTenantIdAndCodeIgnoreCase("ap.public", roleName)).thenReturn(role);
 		final String expectedEncodedPassword = "encodedPassword";
 		when(passwordEncoder.encode(rawPassword)).thenReturn(expectedEncodedPassword);
 
@@ -159,8 +159,8 @@ public class UserRepositoryTest {
 				.build();
 		final Role role1 = Role.builder().id(1L).tenantId("ap.public").build();
 		final Role role2 = Role.builder().id(2L).tenantId("ap.public").build();
-		when(roleRepository.findByTenantIdAndNameIgnoreCase("ap.public", roleName1)).thenReturn(role1);
-		when(roleRepository.findByTenantIdAndNameIgnoreCase("ap.public", roleName2)).thenReturn(role2);
+		when(roleRepository.findByTenantIdAndCodeIgnoreCase("ap.public", roleName1)).thenReturn(role1);
+		when(roleRepository.findByTenantIdAndCodeIgnoreCase("ap.public", roleName2)).thenReturn(role2);
 
 		userRepository.save(domainUser);
 

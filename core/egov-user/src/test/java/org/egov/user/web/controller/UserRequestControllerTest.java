@@ -152,7 +152,7 @@ public class UserRequestControllerTest {
     @Test
     @WithMockUser
     public void testShouldUpdateACitizen() throws Exception {
-        when(userService.updateWithoutValidation(any(Long.class), any(org.egov.user.domain.model.User.class))).thenReturn(buildUser());
+        when(userService.updateWithoutOtpValidation(any(Long.class), any(org.egov.user.domain.model.User.class))).thenReturn(buildUser());
 
         String fileContents = getFileContents("updateValidatedCitizenSuccessRequest.json");
         mockMvc.perform(post("/users/1/_updatenovalidate")
@@ -168,7 +168,7 @@ public class UserRequestControllerTest {
     @WithMockUser
     public void testShouldThrowErrorWhileUpdatingWithDuplicateCitizen() throws Exception {
         DuplicateUserNameException exception = new DuplicateUserNameException(org.egov.user.domain.model.User.builder().build());
-        when(userService.updateWithoutValidation(any(Long.class), any(org.egov.user.domain.model.User.class))).thenThrow(exception);
+        when(userService.updateWithoutOtpValidation(any(Long.class), any(org.egov.user.domain.model.User.class))).thenThrow(exception);
 
         String fileContents = getFileContents("updateCitizenUnsuccessfulRequest.json");
         mockMvc.perform(post("/users/1/_updatenovalidate")
@@ -184,7 +184,7 @@ public class UserRequestControllerTest {
     @WithMockUser
     public void testShouldThrowErrorWhileUpdatingWithInvalidCitizen() throws Exception {
         UserNotFoundException exception = new UserNotFoundException(org.egov.user.domain.model.User.builder().build());
-        when(userService.updateWithoutValidation(any(Long.class), any(org.egov.user.domain.model.User.class))).thenThrow(exception);
+        when(userService.updateWithoutOtpValidation(any(Long.class), any(org.egov.user.domain.model.User.class))).thenThrow(exception);
 
         String fileContents = getFileContents("updateCitizenUnsuccessfulRequest.json");
         mockMvc.perform(post("/users/1/_updatenovalidate")

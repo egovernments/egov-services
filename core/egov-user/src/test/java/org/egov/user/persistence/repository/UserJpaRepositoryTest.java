@@ -35,7 +35,7 @@ public class UserJpaRepositoryTest {
     @Test
     @Sql(scripts = { "/sql/clearUserRoles.sql", "/sql/clearAddresses.sql", "/sql/clearRoles.sql", "/sql/clearUsers.sql",
             "/sql/createUser.sql" })
-    public void test_should_return_count_of_users_with_given_user_name_id_and_tenant() {
+    public void test_should_return_count_of_users_with_given_user_name_and_tenant_and_id_not_matching() {
         Long count = userJpaRepository.isUserPresent("bigcat399", 5L, "ap.public");
         assertEquals(Long.valueOf(1), count);
     }
@@ -51,8 +51,8 @@ public class UserJpaRepositoryTest {
     @Test
     @Sql(scripts = { "/sql/clearUserRoles.sql", "/sql/clearAddresses.sql", "/sql/clearRoles.sql", "/sql/clearUsers.sql",
             "/sql/createUser.sql" })
-    public void test_should_return_null_when_user_does_not_exist_for_given_user_name_id_and_tenant() {
-        Long count = userJpaRepository.isUserPresent("unknown", 1L, "tenantId");
+    public void test_should_return_zero_count_when_usesr_does_not_exist_for_given_user_name_and_tenant_not_having_id() {
+        Long count = userJpaRepository.isUserPresent("bigcat399", 1L, "ap.public");
 		assertEquals(Long.valueOf(0), count);
 	}
 

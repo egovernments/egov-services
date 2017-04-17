@@ -20,8 +20,7 @@ import static org.junit.Assert.assertNull;
 public class RoleRepositoryTest {
 
     @Autowired
-    private
-    RoleRepository roleRepository;
+    private RoleRepository roleRepository;
 
     @Test
     @Sql(scripts = {
@@ -29,7 +28,7 @@ public class RoleRepositoryTest {
             "/sql/createRoles.sql"
     })
     public void test_should_return_role_by_name_ignoring_case() {
-        final Role actualRole = roleRepository.findByTenantIdAndNameIgnoreCase("ap.public","Employee");
+        final Role actualRole = roleRepository.findByTenantIdAndCodeIgnoreCase("ap.public","emp");
 
         assertNotNull(actualRole);
         assertEquals(Long.valueOf(1), actualRole.getId());
@@ -42,10 +41,8 @@ public class RoleRepositoryTest {
             "/sql/createRoles.sql"
     })
     public void test_should_return_null_when_role_with_given_name_does_not_exist() {
-        final Role actualRole = roleRepository.findByTenantIdAndNameIgnoreCase("tenantId","unknown");
+        final Role actualRole = roleRepository.findByTenantIdAndCodeIgnoreCase("tenantId","unknown");
 
         assertNull(actualRole);
     }
-
-
 }

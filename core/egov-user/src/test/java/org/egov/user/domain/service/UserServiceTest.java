@@ -9,9 +9,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import org.egov.user.domain.exception.DuplicateUserNameException;
 import org.egov.user.domain.exception.InvalidUserException;
@@ -132,7 +131,7 @@ public class UserServiceTest {
 		when(userRepository.getUserById(any(Long.class))).thenReturn(user);
 		when(userRepository.isUserPresent(any(String.class), any(Long.class), any(String.class))).thenReturn(false);
 
-		User returnedUser = userService.updateWithoutValidation(1L, domainUser);
+		User returnedUser = userService.updateWithoutOtpValidation(1L, domainUser);
 
 		assertEquals(expectedEntityUser, returnedUser);
 	}
@@ -142,7 +141,7 @@ public class UserServiceTest {
 		User domainUser = validDomainUser();
 		when(userRepository.isUserPresent(any(String.class), any(Long.class), any(String.class))).thenReturn(true);
 
-		userService.updateWithoutValidation(1L, domainUser);
+		userService.updateWithoutOtpValidation(1L, domainUser);
 	}
 
 	@Test(expected = UserNotFoundException.class)
@@ -151,7 +150,7 @@ public class UserServiceTest {
 		when(userRepository.isUserPresent(any(String.class), any(Long.class), any(String.class))).thenReturn(false);
 		when(userRepository.getUserById(any(Long.class))).thenReturn(null);
 
-		userService.updateWithoutValidation(1L, domainUser);
+		userService.updateWithoutOtpValidation(1L, domainUser);
 	}
 
 	private org.egov.user.domain.model.User validDomainUser() {
@@ -171,6 +170,7 @@ public class UserServiceTest {
 				.active(Boolean.TRUE)
 				.mobileNumber("9988776655")
 				.tenantId("tenantId")
+				.roles(Collections.singletonList(Role.builder().code("roleCode1").build()))
 				.accountLocked(false);
 	}
 

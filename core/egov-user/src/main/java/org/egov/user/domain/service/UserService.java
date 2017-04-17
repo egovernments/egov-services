@@ -63,9 +63,9 @@ public class UserService {
             throw new OtpValidationPendingException(user);
     }
     
-    public User updateWithoutValidation(final Long id, final User user) {
+    public User updateWithoutOtpValidation(final Long id, final User user) {
         validateUser(id, user);
-        return persistOldUser(id, user);
+        return updateExistingUser(id, user);
     }
     
     private void validateUser(final Long id, final User user) {
@@ -75,7 +75,7 @@ public class UserService {
         }
     }
 
-    private User persistOldUser(final Long id, final User user) {
+    private User updateExistingUser(final Long id, final User user) {
         return userRepository.update(id, user);
     }
 }

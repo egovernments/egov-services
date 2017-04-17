@@ -17,10 +17,10 @@ public class TenantService {
     }
 
     public List<Tenant> find(final TenantSearchCriteria tenantSearchCriteria) {
-       return tenantRepository.findForCriteria(tenantSearchCriteria);
+       return tenantRepository.find(tenantSearchCriteria);
     }
 
     public Tenant createTenant(Tenant tenant) {
-        return tenantRepository.saveTenant(tenant);
+        return tenantRepository.save(tenant);
     }
 }

@@ -27,7 +27,7 @@ public class TenantController {
     private TenantService tenantService;
 
     @PostMapping(value="_search")
-    public TenantResponse searchTenantsForCodes(@RequestBody TenantSearchRequest tenantSearchRequest) {
+    public TenantResponse search(@RequestBody TenantSearchRequest tenantSearchRequest) {
         RequestInfo requestInfo = tenantSearchRequest.getRequestInfo();
         List<Tenant> tenants =  tenantService.find(tenantSearchRequest.toDomain());
         return getSuccessResponse(tenants,requestInfo);

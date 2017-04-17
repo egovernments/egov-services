@@ -13,10 +13,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,7 +34,7 @@ public class TenantQueryBuilderTest {
                 .tenantCodes(TENANT_CODES)
                 .build();
         TenantQueryBuilder tenantQueryBuilder = new TenantQueryBuilder();
-        String query = tenantQueryBuilder.getQuery(tenantSearchCriteria);
+        String query = tenantQueryBuilder.getSearchQuery(tenantSearchCriteria);
 
         List<Map<String, Object>> result = jdbcTemplate.query(query, new TenantResultExtractor());
 
@@ -56,6 +53,27 @@ public class TenantQueryBuilderTest {
         assertThat(result.get(1).get("code")).isEqualTo("AP.GUNTOOR");
     }
 
+    @Test
+    @Sql(scripts = {"/sql/clearTenant.sql"})
+    public void test_should_save_tenant() throws Exception {
+        TenantQueryBuilder tenantQueryBuilder = new TenantQueryBuilder();
+        String query = tenantQueryBuilder.getInsertQuery();
+
+        jdbcTemplate.update(query, "AP.KURNOOL", "description", "http://egov.ap.gov.in/kurnool", "d45d7118-2013-11e7-93ae-92361f002671", "8716872c-cd50-4fbb-a0d6-722e6bc9c143", 1L, new Date(), 1L, new Date());
+
+        List<Map<String, Object>> result = jdbcTemplate.query("SELECT * FROM tenant", new TenantResultExtractor());
+        Map<String, Object> row = result.get(0);
+        assertThat(row.get("id")).isEqualTo(1L);
+        assertThat(row.get("code")).isEqualTo("AP.KURNOOL");
+        assertThat(row.get("description")).isEqualTo("description");
+        assertThat(row.get("domainurl")).isEqualTo("http://egov.ap.gov.in/kurnool");
+        assertThat(row.get("logoid")).isEqualTo("d45d7118-2013-11e7-93ae-92361f002671");
+        assertThat(row.get("imageid")).isEqualTo("8716872c-cd50-4fbb-a0d6-722e6bc9c143");
+        assertThat(row.get("createdby")).isEqualTo(1L);
+        assertThat(row.get("createddate")).isNotNull();
+        assertThat(row.get("lastmodifiedby")).isEqualTo(1L);
+        assertThat(row.get("lastmodifieddate")).isNotNull();
+    }
 
     class TenantResultExtractor implements ResultSetExtractor<List<Map<String, Object>>> {
         @Override

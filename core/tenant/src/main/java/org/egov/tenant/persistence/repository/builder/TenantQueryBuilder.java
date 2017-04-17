@@ -17,13 +17,13 @@ public class TenantQueryBuilder {
 
     private static final String TENANT_BASE_QUERY = "SELECT distinct id, code, description, domainurl, logoid, imageid, createdby, createddate, lastmodifiedby, lastmodifieddate from tenant";
 
-    public String insertTenantQuery() {
-        return "INSERT INTO tenant values "
-                + "(nextval('seq_tenant'),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    public String getInsertQuery() {
+        return "INSERT INTO tenant (id, code, description, domainurl, logoid, imageid, createdby, createddate, lastmodifiedby, lastmodifieddate) " +
+                "values ( nextval('seq_tenant'), ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     }
 
 
-    public String getQuery(TenantSearchCriteria tenantSearchCriteria) {
+    public String getSearchQuery(TenantSearchCriteria tenantSearchCriteria) {
 
         final StringBuilder selectQuery = new StringBuilder(TENANT_BASE_QUERY);
         addWhereClause(selectQuery,tenantSearchCriteria);

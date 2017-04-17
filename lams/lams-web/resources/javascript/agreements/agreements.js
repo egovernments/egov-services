@@ -1045,7 +1045,7 @@ $(".datetimepicker").on("dp.change", function() {
                         if(response["status"]===200)
                         {
                           if (typeof(response["responseJSON"]["Error"])!="undefined") {
-                            alert(response["responseJSON"]["Error"]["message"]);
+                            showError(response["responseJSON"]["Error"]["message"]);
                           }
                           else {
                             window.location.href="app/search-assets/create-agreement-ack.html?name="+getNameById(employees,agreement["approverName"])+"&ackNo="+responseJSON["Agreements"][0]["acknowledgementNumber"];

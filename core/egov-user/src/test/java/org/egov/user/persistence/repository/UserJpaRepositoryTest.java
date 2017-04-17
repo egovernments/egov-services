@@ -35,21 +35,36 @@ public class UserJpaRepositoryTest {
     @Test
     @Sql(scripts = { "/sql/clearUserRoles.sql", "/sql/clearAddresses.sql", "/sql/clearRoles.sql", "/sql/clearUsers.sql",
             "/sql/createUser.sql" })
-    public void test_should_return_id_for_user_with_given_user_name() {
-        Long id = userJpaRepository.isUserPresent("bigcat399", 5L, "ap.public");
-        assertEquals(Long.valueOf(1), id);
-        ;
+    public void test_should_return_count_of_users_with_given_user_name_id_and_tenant() {
+        Long count = userJpaRepository.isUserPresent("bigcat399", 5L, "ap.public");
+        assertEquals(Long.valueOf(1), count);
     }
+
+	@Test
+	@Sql(scripts = { "/sql/clearUserRoles.sql", "/sql/clearAddresses.sql", "/sql/clearRoles.sql", "/sql/clearUsers.sql",
+			"/sql/createUser.sql" })
+	public void test_should_return_count_of_users_with_given_user_name_and_tenant() {
+		Long id = userJpaRepository.isUserPresent("bigcat399", "ap.public");
+		assertEquals(Long.valueOf(1), id);
+	}
 
     @Test
     @Sql(scripts = { "/sql/clearUserRoles.sql", "/sql/clearAddresses.sql", "/sql/clearRoles.sql", "/sql/clearUsers.sql",
             "/sql/createUser.sql" })
-    public void test_should_return_null_when_user_does_not_exist_for_given_user_name() {
-        Long id = userJpaRepository.isUserPresent("unknown", 1L, "tenantId");
-        assertNull(id);
-    }
+    public void test_should_return_null_when_user_does_not_exist_for_given_user_name_id_and_tenant() {
+        Long count = userJpaRepository.isUserPresent("unknown", 1L, "tenantId");
+		assertEquals(Long.valueOf(0), count);
+	}
 
-    @Test
+	@Test
+	@Sql(scripts = { "/sql/clearUserRoles.sql", "/sql/clearAddresses.sql", "/sql/clearRoles.sql", "/sql/clearUsers.sql",
+			"/sql/createUser.sql" })
+	public void test_should_return_zero_count_when_user_does_not_exist_for_given_user_name_and_tenant() {
+		Long count = userJpaRepository.isUserPresent("unknown", "tenantId");
+		assertEquals(Long.valueOf(0), count);
+	}
+
+	@Test
     @Sql(scripts = { "/sql/clearUserRoles.sql", "/sql/clearAddresses.sql", "/sql/clearRoles.sql", "/sql/clearUsers.sql",
             "/sql/createUser.sql" })
     public void should_fetch_user_by_name() {

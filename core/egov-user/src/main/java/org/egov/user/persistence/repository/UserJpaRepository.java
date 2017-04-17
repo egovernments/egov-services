@@ -19,7 +19,10 @@ public interface UserJpaRepository extends JpaRepository<User, Long>, JpaSpecifi
 
     User findByEmailId(String emailId);
 
-    @Query("select u.id from User u where u.username = :username and u.id != :id and u.tenantId = :tenantId")
+    @Query("select count(u.id) from User u where u.username = :username and u.id != :id and u.tenantId = :tenantId")
     Long isUserPresent(@Param("username") String userName, @Param("id") Long id, @Param("tenantId") String tenantId);
+
+	@Query("select count(u.id) from User u where u.username = :username and u.tenantId = :tenantId")
+	Long isUserPresent(@Param("username") String userName, @Param("tenantId") String tenantId);
 
 }

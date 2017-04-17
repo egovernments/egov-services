@@ -47,8 +47,12 @@ public class UserRepository {
     }
 
     public boolean isUserPresent(String userName, Long id, String tenantId) {
-        return userJpaRepository.isUserPresent(userName, id, tenantId) != null;
+        return userJpaRepository.isUserPresent(userName, id, tenantId) > 0;
     }
+
+	public boolean isUserPresent(String userName, String tenantId) {
+		return userJpaRepository.isUserPresent(userName, tenantId) > 0;
+	}
 
     public org.egov.user.domain.model.User findByEmailId(String emailId) {
         final User entityUser = userJpaRepository.findByEmailId(emailId);

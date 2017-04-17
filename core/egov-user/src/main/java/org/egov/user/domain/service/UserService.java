@@ -34,7 +34,7 @@ public class UserService {
     public User save(User user, boolean ensureOtpValidation) {
         user.validate();
         validateOtp(user, ensureOtpValidation);
-        validateDuplicateUserName(user.getId(), user);
+        validateDuplicateUserName(user);
         return persistNewUser(user);
     }
 
@@ -43,6 +43,12 @@ public class UserService {
             throw new DuplicateUserNameException(user);
         }
     }
+
+	private void validateDuplicateUserName(User user) {
+		if( userRepository.isUserPresent(user.getUsername(), user.getTenantId())) {
+			throw new DuplicateUserNameException(user);
+		}
+	}
 
     public List<org.egov.user.domain.model.User> searchUsers(UserSearch userSearch) {
         return userRepository.findAll(userSearch);

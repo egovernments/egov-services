@@ -27,208 +27,226 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class UserRepositoryTest {
 
-    @Mock
-    private UserJpaRepository userJpaRepository;
+	@Mock
+	private UserJpaRepository userJpaRepository;
 
-    @Mock
-    private UserSearchSpecificationFactory userSearchSpecificationFactory;
+	@Mock
+	private UserSearchSpecificationFactory userSearchSpecificationFactory;
 
-    @Mock
-    private RoleRepository roleRepository;
+	@Mock
+	private RoleRepository roleRepository;
 
-    @Mock
-    private PasswordEncoder passwordEncoder;
+	@Mock
+	private PasswordEncoder passwordEncoder;
 
-    @InjectMocks
-    private UserRepository userRepository;
+	@InjectMocks
+	private UserRepository userRepository;
 
-    @Test
-    public void test_should_return_true_when_user_exists_with_given_user_name() {
-        when(userJpaRepository.isUserPresent("userName", 1L,"ap.public")).thenReturn(1L);
+	@Test
+	public void test_should_return_true_when_user_exists_with_given_user_name_id_and_tenant() {
+		when(userJpaRepository.isUserPresent("userName", 1L, "ap.public")).thenReturn(1L);
 
-        boolean isPresent = userRepository.isUserPresent("userName", 1L,"ap.public");
+		boolean isPresent = userRepository.isUserPresent("userName", 1L, "ap.public");
 
-        assertTrue(isPresent);
-    }
+		assertTrue(isPresent);
+	}
 
-    @Test
-    public void test_should_return_false_when_user_does_not_exist_with_given_user_name() {
-        when(userJpaRepository.isUserPresent("userName", 1L,"ap.public")).thenReturn(null);
+	@Test
+	public void test_should_return_true_when_user_exists_with_given_user_name_and_tenant() {
+		when(userJpaRepository.isUserPresent("userName",  "ap.public")).thenReturn(1L);
 
-        boolean isPresent = userRepository.isUserPresent("userName", 1L,"ap.public");
+		boolean isPresent = userRepository.isUserPresent("userName", "ap.public");
 
-        assertFalse(isPresent);
-    }
+		assertTrue(isPresent);
+	}
 
-    @Test
-    public void test_get_user_by_userName() {
-        User expectedUser = mock(User.class);
-        final org.egov.user.persistence.entity.User entityUser = mock(org.egov.user.persistence.entity.User.class);
-        when(entityUser.toDomain()).thenReturn(expectedUser);
-        when(userJpaRepository.findByUsername("userName")).thenReturn(entityUser);
+	@Test
+	public void test_should_return_false_when_user_does_not_exist_with_given_user_name_id_and_tenant() {
+		when(userJpaRepository.isUserPresent("userName", 1L, "ap.public")).thenReturn(0L);
 
-        User actualUser = userRepository.findByUsername("userName");
+		boolean isPresent = userRepository.isUserPresent("userName", 1L, "ap.public");
 
-        assertThat(expectedUser).isEqualTo(actualUser);
-    }
+		assertFalse(isPresent);
+	}
 
-    @Test
-    public void test_get_user_by_emailId() {
-        User expectedUser = mock(User.class);
-        final org.egov.user.persistence.entity.User entityUser = mock(org.egov.user.persistence.entity.User.class);
-        when(entityUser.toDomain()).thenReturn(expectedUser);
-        when(userJpaRepository.findByEmailId("userName")).thenReturn(entityUser);
+	@Test
+	public void test_should_return_false_when_user_does_not_exist_with_given_user_name_and_tenant() {
+		when(userJpaRepository.isUserPresent("userName", "ap.public")).thenReturn(0L);
 
-        User actualUser = userRepository.findByEmailId("userName");
+		boolean isPresent = userRepository.isUserPresent("userName", "ap.public");
 
-        assertThat(expectedUser).isEqualTo(actualUser);
-    }
+		assertFalse(isPresent);
+	}
 
-    @Test
-    public void test_should_save_entity_user() {
-        org.egov.user.persistence.entity.User entityUser = mock(org.egov.user.persistence.entity.User.class);
-        when(userJpaRepository.save(any(org.egov.user.persistence.entity.User.class))).thenReturn(entityUser);
-        final User expectedUser = mock(User.class);
-        when(entityUser.toDomain()).thenReturn(expectedUser);
-        final List<org.egov.user.domain.model.Role> roles = new ArrayList<>();
-        final String roleName = "roleName1";
-        roles.add(org.egov.user.domain.model.Role.builder().name(roleName).build());
-        org.egov.user.domain.model.User domainUser = org.egov.user.domain.model.User.builder()
-                .roles(roles)
-                .build();
-        final Role role = new Role();
-        when(roleRepository.findByTenantIdAndNameIgnoreCase("ap.public",roleName)).thenReturn(role);
+	@Test
+	public void test_get_user_by_userName() {
+		User expectedUser = mock(User.class);
+		final org.egov.user.persistence.entity.User entityUser = mock(org.egov.user.persistence.entity.User.class);
+		when(entityUser.toDomain()).thenReturn(expectedUser);
+		when(userJpaRepository.findByUsername("userName")).thenReturn(entityUser);
 
-        User actualUser = userRepository.save(domainUser);
+		User actualUser = userRepository.findByUsername("userName");
 
-        assertEquals(expectedUser, actualUser);
-    }
+		assertThat(expectedUser).isEqualTo(actualUser);
+	}
 
-    @Test
-    public void test_should_set_encrypted_password_to_new_user() {
-        org.egov.user.persistence.entity.User expectedUser = mock(org.egov.user.persistence.entity.User.class);
-        when(userJpaRepository.save(any(org.egov.user.persistence.entity.User.class))).thenReturn(expectedUser);
-        final List<org.egov.user.domain.model.Role> roles = new ArrayList<>();
-        final String roleName = "roleName1";
-        roles.add(org.egov.user.domain.model.Role.builder().name(roleName).build());
-        final String rawPassword = "rawPassword";
-        org.egov.user.domain.model.User domainUser = org.egov.user.domain.model.User.builder()
-                .roles(roles)
-                .password(rawPassword)
-                .build();
-        final Role role = new Role();
-        when(roleRepository.findByTenantIdAndNameIgnoreCase("ap.public",roleName)).thenReturn(role);
-        final String expectedEncodedPassword = "encodedPassword";
-        when(passwordEncoder.encode(rawPassword)).thenReturn(expectedEncodedPassword);
+	@Test
+	public void test_get_user_by_emailId() {
+		User expectedUser = mock(User.class);
+		final org.egov.user.persistence.entity.User entityUser = mock(org.egov.user.persistence.entity.User.class);
+		when(entityUser.toDomain()).thenReturn(expectedUser);
+		when(userJpaRepository.findByEmailId("userName")).thenReturn(entityUser);
 
-        userRepository.save(domainUser);
+		User actualUser = userRepository.findByEmailId("userName");
 
-        verify(userJpaRepository).save(argThat(new UserWithPasswordMatcher(expectedEncodedPassword)));
-    }
+		assertThat(expectedUser).isEqualTo(actualUser);
+	}
 
-    @Test
-    public void test_should_save_new_user_when_enriched_roles() {
-        org.egov.user.persistence.entity.User expectedUser = mock(org.egov.user.persistence.entity.User.class);
-        when(userJpaRepository.save(any(org.egov.user.persistence.entity.User.class))).thenReturn(expectedUser);
-        final List<org.egov.user.domain.model.Role> roles = new ArrayList<>();
-        final String roleName1 = "roleName1";
-        final String roleName2 = "roleName2";
-        roles.add(org.egov.user.domain.model.Role.builder().name(roleName1).tenantId("ap.public").build());
-        roles.add(org.egov.user.domain.model.Role.builder().name(roleName2).tenantId("ap.public").build());
-        org.egov.user.domain.model.User domainUser = org.egov.user.domain.model.User.builder()
-                .roles(roles)
-                .tenantId("ap.public")
-                .build();
-        final Role role1 = Role.builder().id(1L).tenantId("ap.public").build();
-        final Role role2 = Role.builder().id(2L).tenantId("ap.public").build();
-        when(roleRepository.findByTenantIdAndNameIgnoreCase("ap.public",roleName1)).thenReturn(role1);
-        when(roleRepository.findByTenantIdAndNameIgnoreCase("ap.public",roleName2)).thenReturn(role2);
+	@Test
+	public void test_should_save_entity_user() {
+		org.egov.user.persistence.entity.User entityUser = mock(org.egov.user.persistence.entity.User.class);
+		when(userJpaRepository.save(any(org.egov.user.persistence.entity.User.class))).thenReturn(entityUser);
+		final User expectedUser = mock(User.class);
+		when(entityUser.toDomain()).thenReturn(expectedUser);
+		final List<org.egov.user.domain.model.Role> roles = new ArrayList<>();
+		final String roleName = "roleName1";
+		roles.add(org.egov.user.domain.model.Role.builder().name(roleName).build());
+		org.egov.user.domain.model.User domainUser = org.egov.user.domain.model.User.builder()
+				.roles(roles)
+				.build();
+		final Role role = new Role();
+		when(roleRepository.findByTenantIdAndNameIgnoreCase("ap.public", roleName)).thenReturn(role);
 
-        userRepository.save(domainUser);
+		User actualUser = userRepository.save(domainUser);
 
-        final HashSet<Role> expectedRoles = new HashSet<>(Arrays.asList(role1, role2));
-        verify(userJpaRepository).save(argThat(new UserWithRolesMatcher(expectedRoles)));
-    }
+		assertEquals(expectedUser, actualUser);
+	}
 
-    @Test
-    public void test_search_user() {
-        Page<org.egov.user.persistence.entity.User> page = mock(Page.class);
-        org.egov.user.persistence.entity.User mockUserEntity = mock(org.egov.user.persistence.entity.User.class);
-        org.egov.user.domain.model.User mockUserModel = mock(org.egov.user.domain.model.User.class);
-        when(mockUserEntity.toDomain()).thenReturn(mockUserModel);
-        List<org.egov.user.persistence.entity.User> listOfEntities = Collections.singletonList(mockUserEntity);
-        List<org.egov.user.domain.model.User> listOfModels = Collections.singletonList(mockUserModel);
-        UserSearch userSearch = mock(UserSearch.class);
-        Specification<org.egov.user.persistence.entity.User> userSpecification = mock(Specification.class);
-        when(userSearch.getPageNumber()).thenReturn(1);
-        when(userSearch.getPageSize()).thenReturn(20);
-        when(userSearch.getSort()).thenReturn(Arrays.asList("name", "userName", "unknownField", "fourthField"));
-        Sort sort = new Sort(Sort.Direction.ASC, "name", "username");
-        PageRequest pageRequest = new PageRequest(1, 20, sort);
-        when(userSearchSpecificationFactory.getSpecification(userSearch)).thenReturn(userSpecification);
-        when(userJpaRepository.findAll(userSpecification, pageRequest)).thenReturn(page);
-        when(page.getContent()).thenReturn(listOfEntities);
+	@Test
+	public void test_should_set_encrypted_password_to_new_user() {
+		org.egov.user.persistence.entity.User expectedUser = mock(org.egov.user.persistence.entity.User.class);
+		when(userJpaRepository.save(any(org.egov.user.persistence.entity.User.class))).thenReturn(expectedUser);
+		final List<org.egov.user.domain.model.Role> roles = new ArrayList<>();
+		final String roleName = "roleName1";
+		roles.add(org.egov.user.domain.model.Role.builder().name(roleName).build());
+		final String rawPassword = "rawPassword";
+		org.egov.user.domain.model.User domainUser = org.egov.user.domain.model.User.builder()
+				.roles(roles)
+				.password(rawPassword)
+				.build();
+		final Role role = new Role();
+		when(roleRepository.findByTenantIdAndNameIgnoreCase("ap.public", roleName)).thenReturn(role);
+		final String expectedEncodedPassword = "encodedPassword";
+		when(passwordEncoder.encode(rawPassword)).thenReturn(expectedEncodedPassword);
 
-        List<org.egov.user.domain.model.User> actualList = userRepository.findAll(userSearch);
+		userRepository.save(domainUser);
 
-        assertThat(listOfModels).isEqualTo(actualList);
-    }
+		verify(userJpaRepository).save(argThat(new UserWithPasswordMatcher(expectedEncodedPassword)));
+	}
 
-    private class UserWithPasswordMatcher extends CustomMatcher<org.egov.user.persistence.entity.User> {
+	@Test
+	public void test_should_save_new_user_when_enriched_roles() {
+		org.egov.user.persistence.entity.User expectedUser = mock(org.egov.user.persistence.entity.User.class);
+		when(userJpaRepository.save(any(org.egov.user.persistence.entity.User.class))).thenReturn(expectedUser);
+		final List<org.egov.user.domain.model.Role> roles = new ArrayList<>();
+		final String roleName1 = "roleName1";
+		final String roleName2 = "roleName2";
+		roles.add(org.egov.user.domain.model.Role.builder().name(roleName1).tenantId("ap.public").build());
+		roles.add(org.egov.user.domain.model.Role.builder().name(roleName2).tenantId("ap.public").build());
+		org.egov.user.domain.model.User domainUser = org.egov.user.domain.model.User.builder()
+				.roles(roles)
+				.tenantId("ap.public")
+				.build();
+		final Role role1 = Role.builder().id(1L).tenantId("ap.public").build();
+		final Role role2 = Role.builder().id(2L).tenantId("ap.public").build();
+		when(roleRepository.findByTenantIdAndNameIgnoreCase("ap.public", roleName1)).thenReturn(role1);
+		when(roleRepository.findByTenantIdAndNameIgnoreCase("ap.public", roleName2)).thenReturn(role2);
 
-        private String expectedPassword;
+		userRepository.save(domainUser);
 
-        UserWithPasswordMatcher(String expectedPassword) {
-            super("User password matcher");
-            this.expectedPassword = expectedPassword;
-        }
+		final HashSet<Role> expectedRoles = new HashSet<>(Arrays.asList(role1, role2));
+		verify(userJpaRepository).save(argThat(new UserWithRolesMatcher(expectedRoles)));
+	}
 
-        @Override
-        public boolean matches(Object o) {
-            final org.egov.user.persistence.entity.User actualUser = (org.egov.user.persistence.entity.User) o;
-            return expectedPassword.equals(actualUser.getPassword());
-        }
-    }
+	@Test
+	public void test_search_user() {
+		Page<org.egov.user.persistence.entity.User> page = mock(Page.class);
+		org.egov.user.persistence.entity.User mockUserEntity = mock(org.egov.user.persistence.entity.User.class);
+		org.egov.user.domain.model.User mockUserModel = mock(org.egov.user.domain.model.User.class);
+		when(mockUserEntity.toDomain()).thenReturn(mockUserModel);
+		List<org.egov.user.persistence.entity.User> listOfEntities = Collections.singletonList(mockUserEntity);
+		List<org.egov.user.domain.model.User> listOfModels = Collections.singletonList(mockUserModel);
+		UserSearch userSearch = mock(UserSearch.class);
+		Specification<org.egov.user.persistence.entity.User> userSpecification = mock(Specification.class);
+		when(userSearch.getPageNumber()).thenReturn(1);
+		when(userSearch.getPageSize()).thenReturn(20);
+		when(userSearch.getSort()).thenReturn(Arrays.asList("name", "userName", "unknownField", "fourthField"));
+		Sort sort = new Sort(Sort.Direction.ASC, "name", "username");
+		PageRequest pageRequest = new PageRequest(1, 20, sort);
+		when(userSearchSpecificationFactory.getSpecification(userSearch)).thenReturn(userSpecification);
+		when(userJpaRepository.findAll(userSpecification, pageRequest)).thenReturn(page);
+		when(page.getContent()).thenReturn(listOfEntities);
 
-    private class UserWithRolesMatcher extends CustomMatcher<org.egov.user.persistence.entity.User> {
+		List<org.egov.user.domain.model.User> actualList = userRepository.findAll(userSearch);
 
-        private HashSet<Role> expectedRoles;
+		assertThat(listOfModels).isEqualTo(actualList);
+	}
 
-        UserWithRolesMatcher(HashSet<Role> expectedRoles) {
-            super("User roles matcher");
-            this.expectedRoles = expectedRoles;
-        }
+	private class UserWithPasswordMatcher extends CustomMatcher<org.egov.user.persistence.entity.User> {
 
-        @Override
-        public boolean matches(Object o) {
-            final org.egov.user.persistence.entity.User acutalUser = (org.egov.user.persistence.entity.User) o;
-            return expectedRoles.equals(acutalUser.getRoles());
-        }
-    }
+		private String expectedPassword;
 
-    @Test
-    public void test_should_update_entity_user() {
-        org.egov.user.persistence.entity.User entityUser = mock(org.egov.user.persistence.entity.User.class);
-        when(userJpaRepository.save(any(org.egov.user.persistence.entity.User.class))).thenReturn(entityUser);
-        when(userJpaRepository.findOne(any(Long.class))).thenReturn(entityUser);
-        final User expectedUser = mock(User.class);
-        when(entityUser.toDomain()).thenReturn(expectedUser);
-        final List<org.egov.user.domain.model.Role> roles = new ArrayList<>();
-        org.egov.user.domain.model.User domainUser = org.egov.user.domain.model.User.builder()
-                .roles(roles)
-                .build();
+		UserWithPasswordMatcher(String expectedPassword) {
+			super("User password matcher");
+			this.expectedPassword = expectedPassword;
+		}
 
-        User actualUser = userRepository.update(1L, domainUser);
+		@Override
+		public boolean matches(Object o) {
+			final org.egov.user.persistence.entity.User actualUser = (org.egov.user.persistence.entity.User) o;
+			return expectedPassword.equals(actualUser.getPassword());
+		}
+	}
 
-        assertEquals(expectedUser, actualUser);
-    }
+	private class UserWithRolesMatcher extends CustomMatcher<org.egov.user.persistence.entity.User> {
 
-    @Test
-    public void test_should_return_user() {
-        org.egov.user.persistence.entity.User entityUser = mock(org.egov.user.persistence.entity.User.class);
-        when(userJpaRepository.findOne(any(Long.class))).thenReturn(entityUser);
-        org.egov.user.persistence.entity.User actualUser = userRepository.getUserById(any(Long.class));
+		private HashSet<Role> expectedRoles;
 
-        assertEquals(entityUser, actualUser);
-    }
+		UserWithRolesMatcher(HashSet<Role> expectedRoles) {
+			super("User roles matcher");
+			this.expectedRoles = expectedRoles;
+		}
+
+		@Override
+		public boolean matches(Object o) {
+			final org.egov.user.persistence.entity.User acutalUser = (org.egov.user.persistence.entity.User) o;
+			return expectedRoles.equals(acutalUser.getRoles());
+		}
+	}
+
+	@Test
+	public void test_should_update_entity_user() {
+		org.egov.user.persistence.entity.User entityUser = mock(org.egov.user.persistence.entity.User.class);
+		when(userJpaRepository.save(any(org.egov.user.persistence.entity.User.class))).thenReturn(entityUser);
+		when(userJpaRepository.findOne(any(Long.class))).thenReturn(entityUser);
+		final User expectedUser = mock(User.class);
+		when(entityUser.toDomain()).thenReturn(expectedUser);
+		final List<org.egov.user.domain.model.Role> roles = new ArrayList<>();
+		org.egov.user.domain.model.User domainUser = org.egov.user.domain.model.User.builder()
+				.roles(roles)
+				.build();
+
+		User actualUser = userRepository.update(1L, domainUser);
+
+		assertEquals(expectedUser, actualUser);
+	}
+
+	@Test
+	public void test_should_return_user() {
+		org.egov.user.persistence.entity.User entityUser = mock(org.egov.user.persistence.entity.User.class);
+		when(userJpaRepository.findOne(any(Long.class))).thenReturn(entityUser);
+		org.egov.user.persistence.entity.User actualUser = userRepository.getUserById(any(Long.class));
+
+		assertEquals(entityUser, actualUser);
+	}
 }

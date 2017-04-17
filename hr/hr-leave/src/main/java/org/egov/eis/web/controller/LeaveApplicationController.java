@@ -113,7 +113,7 @@ public class LeaveApplicationController {
 
     /**
      * Maps Post Requests for _create & returns ResponseEntity of either LeaveApplicationResponse type or ErrorResponse type
-     * 
+     *
      * @param LeaveApplicationRequest
      * @param BindingResult
      * @return ResponseEntity<?>
@@ -146,6 +146,8 @@ public class LeaveApplicationController {
         if (errorResponseEntity != null)
             return errorResponseEntity;
 
+        leaveApplicationRequest.getLeaveApplication().setId(leaveApplicationId);
+
         final LeaveApplication leaveApplication = leaveApplicationService.updateLeaveApplication(leaveApplicationRequest);
         final List<LeaveApplication> applications = new ArrayList<>();
         applications.add(leaveApplication);
@@ -154,7 +156,7 @@ public class LeaveApplicationController {
 
     /**
      * Populate Response object and returnleaveApplicationsList
-     * 
+     *
      * @param leaveApplicationsList
      * @return
      */
@@ -171,7 +173,7 @@ public class LeaveApplicationController {
 
     /**
      * Validate EmployeeRequest object & returns ErrorResponseEntity if there are any errors or else returns null
-     * 
+     *
      * @param EmployeeRequest
      * @param bindingResult
      * @return ResponseEntity<?>

@@ -40,6 +40,7 @@
 
 package org.egov.eis.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.eis.broker.LeaveApplicationProducer;
@@ -106,13 +107,19 @@ public class LeaveApplicationService {
         return leaveApplication;
     }
 
-    public LeaveApplication create(final LeaveApplicationSingleRequest leaveApplicationRequest) {
+    public LeaveApplicationSingleRequest create(final LeaveApplicationSingleRequest leaveApplicationRequest) {
         return leaveApplicationRepository.saveLeaveApplication(leaveApplicationRequest);
     }
 
     public LeaveApplication updateLeaveApplication(final LeaveApplicationSingleRequest leaveApplicationRequest) {
         final LeaveApplication leaveApplication = leaveApplicationRequest.getLeaveApplication();
-        leaveApplication.setStatus(LeaveStatus.APPROVED);
+        final LeaveApplicationGetRequest leaveApplicationGetRequest = new LeaveApplicationGetRequest();
+        final List<Long> ids = new ArrayList<>();
+        ids.add(leaveApplication.getId());
+        leaveApplicationGetRequest.setId(ids);
+        final List<LeaveApplication> leaveApplications = leaveApplicationRepository.findForCriteria(leaveApplicationGetRequest);
+        leaveApplication.setStatus(leaveApplications.get(0).getStatus());
+        leaveApplication.setStateId(leaveApplications.get(0).getStateId());
         String leaveApplicationRequestJson = null;
         try {
             final ObjectMapper mapper = new ObjectMapper();
@@ -128,8 +135,20 @@ public class LeaveApplicationService {
         } catch (final Exception ex) {
             ex.printStackTrace();
         }
-
+        leaveApplicationStatusChange(leaveApplication);
         return leaveApplication;
+    }
+
+    private void leaveApplicationStatusChange(LeaveApplication leaveApplication) {
+        final String workFlowAction = leaveApplication.getWorkFlowDetails().getAction();
+        if ("Approve".equalsIgnoreCase(workFlowAction))
+            leaveApplication.setStatus(LeaveStatus.APPROVED);
+        else if ("Reject".equalsIgnoreCase(workFlowAction))
+            leaveApplication.setStatus(LeaveStatus.REJECTED);
+        else if ("Cancel".equalsIgnoreCase(workFlowAction))
+            leaveApplication.setStatus(LeaveStatus.CANCELLED);
+        else if ("submit".contains(workFlowAction))
+            leaveApplication.setStatus(LeaveStatus.APPLIED);
     }
 
     public LeaveApplication update(final LeaveApplicationSingleRequest leaveApplicationRequest) {

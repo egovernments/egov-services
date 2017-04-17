@@ -45,10 +45,14 @@ import java.util.Date;
 import java.util.List;
 
 import org.egov.eis.model.LeaveApplication;
+import org.egov.eis.model.enums.LeaveStatus;
 import org.egov.eis.repository.builder.LeaveApplicationQueryBuilder;
 import org.egov.eis.repository.rowmapper.LeaveApplicationRowMapper;
+import org.egov.eis.service.WorkFlowService;
 import org.egov.eis.web.contract.LeaveApplicationGetRequest;
 import org.egov.eis.web.contract.LeaveApplicationSingleRequest;
+import org.egov.eis.web.contract.ProcessInstance;
+import org.egov.eis.web.contract.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -65,6 +69,9 @@ public class LeaveApplicationRepository {
     @Autowired
     private LeaveApplicationQueryBuilder leaveApplicationQueryBuilder;
 
+    @Autowired
+    private WorkFlowService workFlowService;
+
     public List<LeaveApplication> findForCriteria(final LeaveApplicationGetRequest leaveApplicationGetRequest) {
         final List<Object> preparedStatementValues = new ArrayList<Object>();
         final String queryStr = leaveApplicationQueryBuilder.getQuery(leaveApplicationGetRequest, preparedStatementValues);
@@ -73,37 +80,55 @@ public class LeaveApplicationRepository {
         return leaveApplications;
     }
 
-    public LeaveApplication saveLeaveApplication(final LeaveApplicationSingleRequest leaveApplicationRequest) {
+    public LeaveApplicationSingleRequest saveLeaveApplication(final LeaveApplicationSingleRequest leaveApplicationRequest) {
+        final ProcessInstance processInstance = workFlowService.start(leaveApplicationRequest);
         final String leaveApplicationInsertQuery = LeaveApplicationQueryBuilder.insertLeaveApplicationQuery();
         final Date now = new Date();
         final LeaveApplication leaveApplication = leaveApplicationRequest.getLeaveApplication();
+        leaveApplication.setStateId(Long.valueOf(processInstance.getId()));
+        leaveApplicationStatusChange(leaveApplication);
         final Object[] obj = new Object[] { leaveApplication.getApplicationNumber(), leaveApplication.getEmployee(),
                 leaveApplication.getLeaveType().getId(),
                 leaveApplication.getFromDate(), leaveApplication.getToDate(), leaveApplication.getCompensatoryForDate(),
                 leaveApplication.getLeaveDays(),
                 leaveApplication.getAvailableDays(), leaveApplication.getHalfdays(), leaveApplication.getFirstHalfleave(),
                 leaveApplication.getReason(),
-                leaveApplication.getStatus().toString(), leaveApplication.getStateId(),
+                leaveApplication.getStatus().toString(), Long.valueOf(processInstance.getId()),
                 leaveApplicationRequest.getRequestInfo().getUserInfo().getId(),
                 now, leaveApplicationRequest.getRequestInfo().getUserInfo().getId(), now, leaveApplication.getTenantId() };
         jdbcTemplate.update(leaveApplicationInsertQuery, obj);
-        return leaveApplication;
+        return leaveApplicationRequest;
     }
 
     public LeaveApplication updateLeaveApplication(final LeaveApplicationSingleRequest leaveApplicationRequest) {
+        final Task task = workFlowService.update(leaveApplicationRequest);
         final String leaveApplicationInsertQuery = LeaveApplicationQueryBuilder.updateLeaveApplicationQuery();
         final Date now = new Date();
         final LeaveApplication leaveApplication = leaveApplicationRequest.getLeaveApplication();
+        leaveApplication.setStateId(Long.valueOf(task.getId()));
+        leaveApplicationStatusChange(leaveApplication);
         final Object[] obj = new Object[] { leaveApplication.getApplicationNumber(), leaveApplication.getEmployee(),
                 leaveApplication.getLeaveType().getId(),
                 leaveApplication.getFromDate(), leaveApplication.getToDate(), leaveApplication.getCompensatoryForDate(),
                 leaveApplication.getLeaveDays(),
                 leaveApplication.getAvailableDays(), leaveApplication.getHalfdays(), leaveApplication.getFirstHalfleave(),
                 leaveApplication.getReason(),
-                leaveApplication.getStatus().toString(), leaveApplication.getStateId(),
+                leaveApplication.getStatus().toString(), Long.valueOf(task.getId()),
                 leaveApplicationRequest.getRequestInfo().getUserInfo().getId(), now, leaveApplication.getId(),
                 leaveApplication.getTenantId() };
         jdbcTemplate.update(leaveApplicationInsertQuery, obj);
         return leaveApplication;
+    }
+
+    private void leaveApplicationStatusChange(final LeaveApplication leaveApplication) {
+        final String workFlowAction = leaveApplication.getWorkFlowDetails().getAction();
+        if ("Approve".equalsIgnoreCase(workFlowAction))
+            leaveApplication.setStatus(LeaveStatus.APPROVED);
+        else if ("Reject".equalsIgnoreCase(workFlowAction))
+            leaveApplication.setStatus(LeaveStatus.REJECTED);
+        else if ("Cancel".equalsIgnoreCase(workFlowAction))
+            leaveApplication.setStatus(LeaveStatus.CANCELLED);
+        else if ("submit".contains(workFlowAction))
+            leaveApplication.setStatus(LeaveStatus.APPLIED);
     }
 }

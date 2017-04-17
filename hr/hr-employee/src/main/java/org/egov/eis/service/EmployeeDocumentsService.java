@@ -83,13 +83,19 @@ public class EmployeeDocumentsService {
 						employee.getId(), employee.getTenantId());
 			}
 		});
+		employee.getServiceHistory().forEach((serviceHistory) -> {
+			if (serviceHistory.getDocuments() != null) {
+				updateDocuments(serviceHistory.getDocuments(), EntityType.SERVICE, serviceHistory.getId(), documentsFromDb,
+						employee.getId(), employee.getTenantId());
+			}
+		});
 	}
 
-	private void updateDocuments(List<String> inputDocuments, EntityType entityType, Long referenceId,
+	protected void updateDocuments(List<String> inputDocuments, EntityType entityType, Long referenceId,
 			List<EmployeeDocument> documentsFromDb, Long employeeId, String tenantId) {
 		// insert all documents in input list but not in db
 		for (String docUrl : inputDocuments) {
-			if (!documentPresentInDB(documentsFromDb, docUrl, entityType)) {
+			if (!documentPresentInDB(documentsFromDb, docUrl, entityType, referenceId)) {
 				employeeDocumentsRepository.save(employeeId, docUrl, entityType.getValue().toString(), referenceId,
 						tenantId);
 			}
@@ -98,6 +104,7 @@ public class EmployeeDocumentsService {
 		// delete all docs from db that are not in input list
 		for (EmployeeDocument documentInDb : documentsFromDb) {
 			if (EntityType.valueOf(documentInDb.getReferenceType()) == entityType
+					&& documentInDb.getReferenceId().equals(referenceId)
 					&& !inputDocuments.contains(documentInDb.getDocument())) {
 				employeeDocumentsRepository.delete(employeeId, documentInDb.getDocument(), entityType.toString(),
 						referenceId, tenantId);
@@ -105,10 +112,11 @@ public class EmployeeDocumentsService {
 		}
 	}
 
-	private boolean documentPresentInDB(List<EmployeeDocument> documentsFromDb, String docUrl, EntityType entityType) {
+	private boolean documentPresentInDB(List<EmployeeDocument> documentsFromDb, String docUrl, EntityType entityType, Long referenceId) {
 		boolean foundDocInDb = false;
 		for (EmployeeDocument documentInDb : documentsFromDb) {
 			if (EntityType.valueOf(documentInDb.getReferenceType()) == entityType
+					&& documentInDb.getReferenceId().equals(referenceId)
 					&& documentInDb.getDocument().equals(docUrl)) {
 				foundDocInDb = true;
 				break;
@@ -165,4 +173,22 @@ public class EmployeeDocumentsService {
 			}
 		}
 	}
+
+	/**
+	 * Added for junit testing
+	 * @return
+	 */
+	public EmployeeDocumentsRepository getEmployeeDocumentsRepository() {
+		return employeeDocumentsRepository;
+	}
+
+	/**
+	 * Added for junit testing
+	 * @return
+	 */
+	public void setEmployeeDocumentsRepository(EmployeeDocumentsRepository employeeDocumentsRepository) {
+		this.employeeDocumentsRepository = employeeDocumentsRepository;
+	}
+	
+	
 }

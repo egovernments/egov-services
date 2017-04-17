@@ -48,7 +48,6 @@ import lombok.Setter;
 import lombok.ToString;
 
 @AllArgsConstructor
-@EqualsAndHashCode
 @Getter
 @NoArgsConstructor
 @Setter
@@ -66,5 +65,56 @@ public class EmployeeDocument {
 	private Long referenceId;
 
 	private String tenantId;
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((document == null) ? 0 : document.hashCode());
+		result = prime * result + ((employeeId == null) ? 0 : employeeId.hashCode());
+		result = prime * result + ((referenceId == null) ? 0 : referenceId.hashCode());
+		result = prime * result + ((referenceType == null) ? 0 : referenceType.hashCode());
+		result = prime * result + ((tenantId == null) ? 0 : tenantId.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		EmployeeDocument other = (EmployeeDocument) obj;
+		if (document == null) {
+			if (other.document != null)
+				return false;
+		} else if (!document.equals(other.document))
+			return false;
+		if (employeeId == null) {
+			if (other.employeeId != null)
+				return false;
+		} else if (!employeeId.equals(other.employeeId))
+			return false;
+		if (referenceId == null) {
+			if (other.referenceId != null)
+				return false;
+		} else if (!referenceId.equals(other.referenceId))
+			return false;
+		if (referenceType == null) {
+			if (other.referenceType != null)
+				return false;
+		} else if (!referenceType.equals(other.referenceType))
+			return false;
+		if (tenantId == null) {
+			if (other.tenantId != null)
+				return false;
+		} else if (!tenantId.equals(other.tenantId))
+			return false;
+		return true;
+	}
+	
+	
 
 }

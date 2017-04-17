@@ -41,6 +41,7 @@ public class TenantControllerTest {
         when(tenantService.find(tenantSearchCriteria)).thenReturn(tenants);
 
         mockMvc.perform(post("/v1/tenant/_search")
+                .param("code", "AP.KURNOOL, AP.GUNTOOR")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new Resources().getFileContents("tenantSearchRequest.json")))
                 .andExpect(status().isOk())

@@ -1,8 +1,8 @@
 {
   "responseInfo": {
-    "apiId" : "apiId",
-    "ver" : "ver",
-    "msgId" : "msgId"
+    "apiId" : null,
+    "ver" : null,
+    "msgId" : null
   },
   "actions": [
     {

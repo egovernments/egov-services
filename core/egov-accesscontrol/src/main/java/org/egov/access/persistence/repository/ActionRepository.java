@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,13 +29,12 @@ public class ActionRepository {
             + " AS a_lastmodifiedby, a.lastmodifieddate AS a_lastmodifieddate,a.ordernumber AS a_ordernumber, a.tenantId AS a_tenantId, "
             + "ra.actionid AS ra_action, ra.rolecode AS ra_rolecode FROM eg_action AS a JOIN eg_roleaction AS ra ON a.id = ra.actionid";
 
-    public List<Action> findForCriteria(final ActionSearchCriteria actionSearchCriteria) throws ParseException {
+    public List<Action> findForCriteria(final ActionSearchCriteria actionSearchCriteria) {
         final List<Object> preparedStatementValues = new ArrayList<Object>();
         preparedStatementValues.add(actionSearchCriteria.getTenantId());
         final String queryStr = getQuery(actionSearchCriteria);
-        final List<Action> actions = jdbcTemplate.query(queryStr,preparedStatementValues.toArray(),
-                new ActionRowMapper());
-        return actions;
+		return jdbcTemplate.query(queryStr,preparedStatementValues.toArray(),
+				new ActionRowMapper());
     }
 
     private String getQuery(ActionSearchCriteria actionSearchCriteria) {

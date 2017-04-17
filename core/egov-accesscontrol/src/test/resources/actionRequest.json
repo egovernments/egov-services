@@ -1,5 +1,5 @@
 {
-  "RoleCodes" : ["CITIZEN","SUPERUSER"],
+  "roleCodes" : ["CITIZEN","SUPERUSER"],
   "RequestInfo" : {
     "apiId" : "apiId",
     "ver" : "ver",

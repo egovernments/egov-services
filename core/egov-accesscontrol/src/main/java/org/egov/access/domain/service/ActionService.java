@@ -5,7 +5,6 @@ import org.egov.access.domain.model.ActionSearchCriteria;
 import org.egov.access.persistence.repository.ActionRepository;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
 import java.util.List;
 
 
@@ -18,7 +17,7 @@ public class ActionService {
         this.actionRepository = actionRepository;
     }
 
-    public List<Action> getActions(ActionSearchCriteria actionSearchCriteria) throws ParseException {
+    public List<Action> getActions(ActionSearchCriteria actionSearchCriteria) {
        return actionRepository.findForCriteria(actionSearchCriteria);
     }
 }

@@ -18,10 +18,12 @@ public class TenantRepository {
     private JdbcTemplate jdbcTemplate;
 
     private TenantQueryBuilder tenantQueryBuilder;
+    private CityRepository cityRepository;
 
-    public TenantRepository(JdbcTemplate jdbcTemplate, TenantQueryBuilder tenantQueryBuilder) {
+    public TenantRepository(JdbcTemplate jdbcTemplate, TenantQueryBuilder tenantQueryBuilder, CityRepository cityRepository) {
         this.jdbcTemplate = jdbcTemplate;
         this.tenantQueryBuilder = tenantQueryBuilder;
+        this.cityRepository = cityRepository;
     }
 
 
@@ -48,7 +50,7 @@ public class TenantRepository {
         }};
 
         jdbcTemplate.update(tenantInsertQuery, values);
-
+        cityRepository.save(tenant.getCity(), tenant.getCode());
         return tenant;
     }
 }

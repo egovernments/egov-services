@@ -1,0 +1,20 @@
+{
+  "responseInfo": {},
+  "tenant": {
+    "code": "AP.KURNOOL",
+    "description": "description",
+    "logoId": "logoId",
+    "imageId": "imageId",
+    "domainUrl": "domainUrl",
+    "type": "CITY",
+    "city": {
+      "name": "name",
+      "localName": "localname",
+      "districtCode": "districtcode",
+      "districtName": "districtname",
+      "regionName": "regionname",
+      "longitude": 35.456,
+      "latitude": 75.443
+    }
+  }
+}

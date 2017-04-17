@@ -3,11 +3,8 @@ package org.egov.tenant.web.controller;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
-import org.egov.tenant.domain.model.Tenant;
 import org.egov.tenant.domain.service.TenantService;
-import org.egov.tenant.web.contract.CreateTenantRequest;
-import org.egov.tenant.web.contract.TenantResponse;
-import org.egov.tenant.web.contract.TenantSearchRequest;
+import org.egov.tenant.web.contract.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,20 +25,17 @@ public class TenantController {
     @PostMapping(value="_search")
     public TenantResponse search(@RequestBody TenantSearchRequest tenantSearchRequest) {
         RequestInfo requestInfo = tenantSearchRequest.getRequestInfo();
-        List<Tenant> tenants =  tenantService.find(tenantSearchRequest.toDomain());
+        List<org.egov.tenant.domain.model.Tenant> tenants =  tenantService.find(tenantSearchRequest.toDomain());
         return getSuccessResponse(tenants,requestInfo);
     }
 
     @PostMapping(value="_create")
-    public TenantResponse createTenant(@RequestBody CreateTenantRequest createTenantRequest) {
-        RequestInfo requestInfo = createTenantRequest.getRequestInfo();
-        Tenant tenant = tenantService.createTenant(createTenantRequest.toDomainForCreateTenantRequest());
-        List<Tenant> tenantList = new ArrayList<Tenant>();
-        tenantList.add(tenant);
-        return getSuccessResponse(tenantList,requestInfo);
+    public SingleTenantResponse createTenant(@RequestBody CreateTenantRequest createTenantRequest) {
+        org.egov.tenant.domain.model.Tenant tenant = tenantService.createTenant(createTenantRequest.toDomainForCreateTenantRequest());
+        return new SingleTenantResponse(new ResponseInfo(), new Tenant(tenant));
     }
 
-    private TenantResponse getSuccessResponse(final List<Tenant> tenant, final RequestInfo requestInfo) {
+    private TenantResponse getSuccessResponse(final List<org.egov.tenant.domain.model.Tenant> tenant, final RequestInfo requestInfo) {
         final ResponseInfo responseInfo = ResponseInfo.builder().apiId(requestInfo.getApiId())
                 .ver(requestInfo.getVer()).msgId(requestInfo.getMsgId()).status(HttpStatus.OK.toString()).build();
         List<org.egov.tenant.web.contract.Tenant> tenants = tenant

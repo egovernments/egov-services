@@ -5,6 +5,7 @@ import lombok.Getter;
 import org.egov.tenant.domain.model.TenantType;
 
 import java.util.Date;
+import java.util.Map;
 
 @Getter
 @Builder

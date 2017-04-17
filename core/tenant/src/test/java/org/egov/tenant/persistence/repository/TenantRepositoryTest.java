@@ -1,5 +1,6 @@
 package org.egov.tenant.persistence.repository;
 
+import org.egov.tenant.domain.model.City;
 import org.egov.tenant.domain.model.TenantSearchCriteria;
 import org.egov.tenant.persistence.entity.Tenant;
 import org.egov.tenant.persistence.repository.builder.TenantQueryBuilder;
@@ -33,9 +34,12 @@ public class TenantRepositoryTest {
     @Mock
     private TenantQueryBuilder tenantQueryBuilder;
 
+    @Mock
+    private CityRepository cityRepository;
+
     @Before
     public void setUp() throws Exception {
-        tenantRepository = new TenantRepository(jdbcTemplate, tenantQueryBuilder);
+        tenantRepository = new TenantRepository(jdbcTemplate, tenantQueryBuilder, cityRepository);
     }
 
     @Test
@@ -65,16 +69,20 @@ public class TenantRepositoryTest {
         }};
         when(jdbcTemplate.update(eq("insert query"), argThat(new ListArgumentMatcher(fields)))).thenReturn(1);
 
+        City city = new City();
+
         org.egov.tenant.domain.model.Tenant tenant = org.egov.tenant.domain.model.Tenant.builder()
                 .code("AP.KURNOOL")
                 .description("description")
                 .domainUrl("domainUrl")
                 .logoId("logoid")
                 .imageId("imageid")
+                .city(city)
                 .build();
 
         tenantRepository.save(tenant);
 
+        verify(cityRepository).save(city, "AP.KURNOOL");
         verify(jdbcTemplate).update(eq("insert query"), argThat(new ListArgumentMatcher(fields)));
     }
 

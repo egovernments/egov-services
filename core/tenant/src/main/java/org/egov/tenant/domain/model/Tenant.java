@@ -19,4 +19,5 @@ public class Tenant {
     private String imageId;
     private String domainUrl;
     private TenantType type;
+    private City city;
 }

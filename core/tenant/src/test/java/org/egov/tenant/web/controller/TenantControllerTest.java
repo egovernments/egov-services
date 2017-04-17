@@ -1,6 +1,7 @@
 package org.egov.tenant.web.controller;
 
 import org.egov.tenant.Resources;
+import org.egov.tenant.domain.model.City;
 import org.egov.tenant.domain.model.Tenant;
 import org.egov.tenant.domain.model.TenantSearchCriteria;
 import org.egov.tenant.domain.model.TenantType;
@@ -47,7 +48,50 @@ public class TenantControllerTest {
                 .andExpect(content().json(new Resources().getFileContents("tenantSearchResponse.json")));
     }
 
+    @Test
+    public void test_should_create_tenant() throws Exception {
+
+        City city = City.builder()
+                .name("name")
+                .localName("localname")
+                .districtCode("districtcode")
+                .districtName("districtname")
+                .regionName("regionname")
+                .longitude(35.456)
+                .latitude(75.443)
+                .build();
+
+        Tenant tenant = Tenant.builder()
+                .code("AP.KURNOOL")
+                .description("description")
+                .logoId("logoId")
+                .imageId("imageId")
+                .domainUrl("domainUrl")
+                .type(TenantType.CITY)
+                .city(city)
+                .build();
+
+        when(tenantService.createTenant(tenant)).thenReturn(tenant);
+
+        mockMvc.perform(post("/v1/tenant/_create")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new Resources().getFileContents("tenantCreateRequest.json")))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(content().json(new Resources().getFileContents("tenantCreateResponse.json")));
+    }
+
     private List<Tenant> getListOfTenants() {
+        City city = City.builder()
+                .name("name")
+                .localName("localname")
+                .districtCode("districtcode")
+                .districtName("districtname")
+                .regionName("regionname")
+                .longitude(35.456)
+                .latitude(75.443)
+                .build();
+
         return asList(
                 Tenant.builder()
                         .id(1L)
@@ -57,6 +101,7 @@ public class TenantControllerTest {
                         .imageId("imageId")
                         .domainUrl("domainUrl")
                         .type(TenantType.CITY)
+                        .city(city)
                         .build(),
 
                 Tenant.builder()
@@ -67,7 +112,9 @@ public class TenantControllerTest {
                         .imageId("imageId")
                         .domainUrl("domainUrl")
                         .type(TenantType.CITY)
+                        .city(city)
                         .build()
         );
     }
+
 }

@@ -6,6 +6,7 @@ import org.egov.tenant.persistence.repository.builder.TenantQueryBuilder;
 import org.egov.tenant.persistence.rowmapper.TenantRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -33,23 +34,11 @@ public class TenantRepository {
         return tenants.stream().map(Tenant::toDomain).collect(Collectors.toList());
     }
 
-
+    @Transactional
     public org.egov.tenant.domain.model.Tenant save(final org.egov.tenant.domain.model.Tenant tenant) {
         final String tenantInsertQuery = tenantQueryBuilder.getInsertQuery();
 
-        List<Object> values = new ArrayList<Object>() {{
-            add(tenant.getCode());
-            add(tenant.getDescription());
-            add(tenant.getDomainUrl());
-            add(tenant.getLogoId());
-            add(tenant.getImageId());
-            add(1L);
-            add(new Date());
-            add(1L);
-            add(new Date());
-        }};
-
-        jdbcTemplate.update(tenantInsertQuery, values);
+        jdbcTemplate.update(tenantInsertQuery, tenant.getCode(), tenant.getDescription(), tenant.getDomainUrl(), tenant.getLogoId(), tenant.getImageId(), tenant.getType().toString(), 1L, new Date(), 1L, new Date());
         cityRepository.save(tenant.getCity(), tenant.getCode());
         return tenant;
     }

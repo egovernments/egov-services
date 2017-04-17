@@ -23,22 +23,7 @@ public class CityRepository {
 
     public City save(City city, String tenantCode) {
         String query = cityQueryBuilder.getInsertQuery();
-        List<Object> values = new ArrayList<Object>() {{
-            add(city.getName());
-            add(city.getLocalName());
-            add(city.getDistrictCode());
-            add(city.getDistrictName());
-            add(city.getRegionName());
-            add(city.getLongitude());
-            add(city.getLatitude());
-            add(tenantCode);
-            add(1L);
-            add(new Date());
-            add(1L);
-            add(new Date());
-        }};
-
-        jdbcTemplate.update(query, values);
+        jdbcTemplate.update(query, city.getName(), city.getLocalName(), city.getDistrictCode(), city.getDistrictName(), city.getRegionName(), city.getLongitude(), city.getLatitude(), tenantCode, 1L, new Date(), 1L, new Date());
 
         return city;
     }

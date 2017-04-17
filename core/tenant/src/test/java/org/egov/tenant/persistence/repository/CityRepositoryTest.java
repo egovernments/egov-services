@@ -6,22 +6,19 @@ import org.egov.tenant.persistence.rowmapper.CityRowMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CityRepositoryTest {
@@ -56,7 +53,21 @@ public class CityRepositoryTest {
             add(1L);
         }};
 
-        when(jdbcTemplate.update(eq("insert query"), argThat(new ListArgumentMatcher(fields)))).thenReturn(1);
+        when(jdbcTemplate.update(
+                eq("insert query"),
+                eq("name"),
+                eq("localname"),
+                eq("districtcode"),
+                eq("districtname"),
+                eq("regionname"),
+                eq(37.345),
+                eq(75.232),
+                eq("tenantCode"),
+                eq(1L),
+                any(Date.class),
+                eq(1L),
+                any(Date.class))
+        ).thenReturn(1);
 
         City city = City.builder()
                 .name("name")
@@ -70,7 +81,21 @@ public class CityRepositoryTest {
 
         cityRepository.save(city, "tenantCode");
 
-        verify(jdbcTemplate).update(eq("insert query"), argThat(new ListArgumentMatcher(fields)));
+        verify(jdbcTemplate).update(
+                eq("insert query"),
+                eq("name"),
+                eq("localname"),
+                eq("districtcode"),
+                eq("districtname"),
+                eq("regionname"),
+                eq(37.345),
+                eq(75.232),
+                eq("tenantCode"),
+                eq(1L),
+                any(Date.class),
+                eq(1L),
+                any(Date.class)
+        );
     }
 
     @Test
@@ -88,33 +113,4 @@ public class CityRepositoryTest {
         assertThat(result).isEqualTo(cityModel);
     }
 
-    private class ListArgumentMatcher extends ArgumentMatcher<List<Object>> {
-
-        private List<Object> expectedValue;
-
-        public ListArgumentMatcher(List<Object> expectedValue) {
-            this.expectedValue = expectedValue;
-        }
-
-        @Override
-        public boolean matches(Object o) {
-            ArrayList<Object> actualValue = (ArrayList<Object>) o;
-
-            //Check if the dates are not null
-            if (actualValue.get(9) == null && actualValue.get(11) == null) {
-                return false;
-            }
-
-            return expectedValue.get(0).equals(actualValue.get(0)) &&
-                    expectedValue.get(1).equals(actualValue.get(1)) &&
-                    expectedValue.get(2).equals(actualValue.get(2)) &&
-                    expectedValue.get(3).equals(actualValue.get(3)) &&
-                    expectedValue.get(4).equals(actualValue.get(4)) &&
-                    expectedValue.get(5).equals(actualValue.get(5)) &&
-                    expectedValue.get(6).equals(actualValue.get(6)) &&
-                    expectedValue.get(7).equals(actualValue.get(7)) &&
-                    expectedValue.get(8).equals(actualValue.get(8)) &&
-                    expectedValue.get(9).equals(actualValue.get(10));
-        }
-    }
 }

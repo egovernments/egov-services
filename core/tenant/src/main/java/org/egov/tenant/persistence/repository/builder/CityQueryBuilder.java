@@ -6,8 +6,8 @@ import org.springframework.stereotype.Component;
 public class CityQueryBuilder {
 
     public String getInsertQuery() {
-        return "INSERT INTO city (id, name, localname, districtcode, districtname, regionname, longitude, latitude, tenantcode, createdby, createddate, lastmodifiedby, lastmodifieddate) " +
-                "values ( nextval('seq_city'), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        return "INSERT INTO city(id, name, localname, districtcode, districtname, regionname, longitude, latitude, tenantcode, createdby, createddate, lastmodifiedby, lastmodifieddate) " +
+                "VALUES (nextval('seq_city'), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     }
 
     public String getSelectQuery(String tenantCode) {

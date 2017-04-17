@@ -9,7 +9,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,12 +34,14 @@ public class TenantRepository {
 
         return tenants.stream()
                 .map(Tenant::toDomain)
-                .map(tenant -> {
-                    City city = cityRepository.find(tenant.getCode());
-                    tenant.setCity(city);
-                    return tenant;
-                })
+                .map(this::getCityForTenant)
                 .collect(Collectors.toList());
+    }
+
+    private org.egov.tenant.domain.model.Tenant getCityForTenant(org.egov.tenant.domain.model.Tenant tenant) {
+        City city = cityRepository.find(tenant.getCode());
+        tenant.setCity(city);
+        return tenant;
     }
 
     @Transactional

@@ -1,5 +1,6 @@
 package org.egov.tenant.persistence.rowmapper;
 
+import org.egov.tenant.domain.model.TenantType;
 import org.egov.tenant.persistence.entity.Tenant;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,6 +26,7 @@ public class TenantRowMapperTest {
         when(resultSet.getString(Tenant.Fields.DOMAIN_URL.getValue())).thenReturn("domainurl");
         when(resultSet.getString(Tenant.Fields.LOGO_ID.getValue())).thenReturn("logoid");
         when(resultSet.getString(Tenant.Fields.IMAGE_ID.getValue())).thenReturn("imageid");
+        when(resultSet.getString(Tenant.Fields.TYPE.getValue())).thenReturn("CITY");
         TenantRowMapper tenantRowMapper = new TenantRowMapper();
 
         Tenant tenant = tenantRowMapper.mapRow(resultSet, 1);
@@ -35,5 +37,6 @@ public class TenantRowMapperTest {
         assertThat(tenant.getDomainUrl()).isEqualTo("domainurl");
         assertThat(tenant.getLogoId()).isEqualTo("logoid");
         assertThat(tenant.getImageId()).isEqualTo("imageid");
+        assertThat(tenant.getType()).isEqualTo(TenantType.CITY);
     }
 }

@@ -18,4 +18,5 @@ public class Tenant {
     private String logoId;
     private String imageId;
     private String domainUrl;
+    private TenantType type;
 }

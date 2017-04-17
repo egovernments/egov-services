@@ -2,6 +2,7 @@ package org.egov.tenant.persistence.entity;
 
 import lombok.Builder;
 import lombok.Getter;
+import org.egov.tenant.domain.model.TenantType;
 
 import java.util.Date;
 
@@ -14,6 +15,7 @@ public class Tenant {
     private String logoId;
     private String imageId;
     private String domainUrl;
+    private TenantType type;
     private Long createdBy;
     private Date createdDate;
     private Long lastModifiedBy;
@@ -27,6 +29,7 @@ public class Tenant {
                 .imageId(imageId)
                 .logoId(logoId)
                 .domainUrl(domainUrl)
+                .type(type)
                 .build();
     }
 
@@ -37,6 +40,7 @@ public class Tenant {
         LOGO_ID("logoid"),
         IMAGE_ID("imageid"),
         DOMAIN_URL("domainurl"),
+        TYPE("type"),
         CREATED_BY("createdby"),
         CREATED_DATE("createddate"),
         LAST_MODIFIED_BY("lastmodifiedby"),

@@ -7,7 +7,8 @@
       "description": "description",
       "logoId": "logoId",
       "imageId": "imageId",
-      "domainUrl": "domainUrl"
+      "domainUrl": "domainUrl",
+      "type": "CITY"
     },
 
     {

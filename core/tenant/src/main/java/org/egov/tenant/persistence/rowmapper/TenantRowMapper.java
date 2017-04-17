@@ -1,6 +1,7 @@
 package org.egov.tenant.persistence.rowmapper;
 
 
+import org.egov.tenant.domain.model.TenantType;
 import org.egov.tenant.persistence.entity.Tenant;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -18,6 +19,7 @@ public class TenantRowMapper implements RowMapper<Tenant> {
                 .domainUrl(rs.getString(Tenant.Fields.DOMAIN_URL.getValue()))
                 .logoId(rs.getString(Tenant.Fields.LOGO_ID.getValue()))
                 .imageId(rs.getString(Tenant.Fields.IMAGE_ID.getValue()))
+                .type(TenantType.valueOf(rs.getString(Tenant.Fields.TYPE.getValue())))
                 .build();
 
         return tenant;

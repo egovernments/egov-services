@@ -3,6 +3,7 @@ package org.egov.tenant.web.controller;
 import org.egov.tenant.Resources;
 import org.egov.tenant.domain.model.Tenant;
 import org.egov.tenant.domain.model.TenantSearchCriteria;
+import org.egov.tenant.domain.model.TenantType;
 import org.egov.tenant.domain.service.TenantService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -55,6 +56,7 @@ public class TenantControllerTest {
                         .logoId("logoId")
                         .imageId("imageId")
                         .domainUrl("domainUrl")
+                        .type(TenantType.CITY)
                         .build(),
 
                 Tenant.builder()
@@ -64,6 +66,7 @@ public class TenantControllerTest {
                         .logoId("logoId")
                         .imageId("imageId")
                         .domainUrl("domainUrl")
+                        .type(TenantType.CITY)
                         .build()
         );
     }

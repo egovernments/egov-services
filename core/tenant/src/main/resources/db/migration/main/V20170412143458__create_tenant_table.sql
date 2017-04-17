@@ -7,9 +7,10 @@ CREATE TABLE tenant (
   domainurl varchar(128),
   logoid varchar(36) NOT NULL,
   imageid varchar(36) NOT NULL,
-  createdby bigint DEFAULT 1,
+  type varchar(35) NOT NULL,
+  createdby bigint,
   createddate timestamp DEFAULT now(),
-  lastmodifiedby bigint DEFAULT 1,
+  lastmodifiedby bigint,
   lastmodifieddate timestamp DEFAULT now(),
   CONSTRAINT tenant_pkey PRIMARY KEY (id),
   CONSTRAINT tenant_code_ukey UNIQUE (code)

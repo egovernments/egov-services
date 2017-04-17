@@ -12,6 +12,7 @@ public class Tenant {
     private String logoId;
     private String imageId;
     private String domainUrl;
+    private String type;
 
     public Tenant(org.egov.tenant.domain.model.Tenant domain) {
         this.id = domain.getId();
@@ -20,6 +21,7 @@ public class Tenant {
         this.logoId = domain.getLogoId();
         this.imageId = domain.getImageId();
         this.domainUrl = domain.getDomainUrl();
+        this.type = domain.getType().toString();
     }
 
     public org.egov.tenant.domain.model.Tenant toDomain() {

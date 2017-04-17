@@ -46,6 +46,7 @@ public class TenantQueryBuilderTest {
         assertThat(row.get("domainurl")).isEqualTo("http://egov.ap.gov.in/kurnool");
         assertThat(row.get("logoid")).isEqualTo("d45d7118-2013-11e7-93ae-92361f002671");
         assertThat(row.get("imageid")).isEqualTo("8716872c-cd50-4fbb-a0d6-722e6bc9c143");
+        assertThat(row.get("type")).isEqualTo("CITY");
         assertThat(row.get("createdby")).isEqualTo(1L);
         assertThat(row.get("createddate")).isEqualTo("1990-07-23 00:00:00.0");
         assertThat(row.get("lastmodifiedby")).isEqualTo(0L);
@@ -59,7 +60,7 @@ public class TenantQueryBuilderTest {
         TenantQueryBuilder tenantQueryBuilder = new TenantQueryBuilder();
         String query = tenantQueryBuilder.getInsertQuery();
 
-        jdbcTemplate.update(query, "AP.KURNOOL", "description", "http://egov.ap.gov.in/kurnool", "d45d7118-2013-11e7-93ae-92361f002671", "8716872c-cd50-4fbb-a0d6-722e6bc9c143", 1L, new Date(), 1L, new Date());
+        jdbcTemplate.update(query, "AP.KURNOOL", "description", "http://egov.ap.gov.in/kurnool", "d45d7118-2013-11e7-93ae-92361f002671", "8716872c-cd50-4fbb-a0d6-722e6bc9c143", "CITY", 1L, new Date(), 1L, new Date());
 
         List<Map<String, Object>> result = jdbcTemplate.query("SELECT * FROM tenant", new TenantResultExtractor());
         Map<String, Object> row = result.get(0);
@@ -69,6 +70,7 @@ public class TenantQueryBuilderTest {
         assertThat(row.get("domainurl")).isEqualTo("http://egov.ap.gov.in/kurnool");
         assertThat(row.get("logoid")).isEqualTo("d45d7118-2013-11e7-93ae-92361f002671");
         assertThat(row.get("imageid")).isEqualTo("8716872c-cd50-4fbb-a0d6-722e6bc9c143");
+        assertThat(row.get("type")).isEqualTo("CITY");
         assertThat(row.get("createdby")).isEqualTo(1L);
         assertThat(row.get("createddate")).isNotNull();
         assertThat(row.get("lastmodifiedby")).isEqualTo(1L);
@@ -87,6 +89,7 @@ public class TenantQueryBuilderTest {
                     put("domainurl", resultSet.getString("domainurl"));
                     put("logoid", resultSet.getString("logoid"));
                     put("imageid", resultSet.getString("imageid"));
+                    put("type", resultSet.getString("type"));
                     put("createdby", resultSet.getLong("createdby"));
                     put("createddate", resultSet.getString("createddate"));
                     put("lastmodifiedby", resultSet.getLong("lastmodifiedby"));

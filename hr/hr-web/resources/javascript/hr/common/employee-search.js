@@ -316,14 +316,14 @@ const getTodaysDate = function() {
                     <div className="col-sm-6">
                         <input type="text" name="code" id="code" onChange={(e)=>{
                             handleChange(e,"code")
-                        }} />
+                        }} maxLength="100"/>
                     </div>
                 </div>
               </div>
               <div className="col-sm-6">
                         <div className="row">
                           <div className="col-sm-6 label-text">
-                              <label for="description">As On date</label>
+                              <label for="description">As On Date</label>
                           </div>
                           <div className="col-sm-6">
                               <input type="text" id="asOnDate" name="asOnDate" value= {asOnDate}

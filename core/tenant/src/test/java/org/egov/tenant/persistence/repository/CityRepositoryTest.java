@@ -2,6 +2,7 @@ package org.egov.tenant.persistence.repository;
 
 import org.egov.tenant.domain.model.City;
 import org.egov.tenant.persistence.repository.builder.CityQueryBuilder;
+import org.egov.tenant.persistence.rowmapper.CityRowMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,10 +12,14 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -66,6 +71,21 @@ public class CityRepositoryTest {
         cityRepository.save(city, "tenantCode");
 
         verify(jdbcTemplate).update(eq("insert query"), argThat(new ListArgumentMatcher(fields)));
+    }
+
+    @Test
+    public void test_should_retrieve_city() {
+        City cityModel = mock(City.class);
+        org.egov.tenant.persistence.entity.City cityEntity = mock(org.egov.tenant.persistence.entity.City.class);
+        when(cityEntity.toDomain()).thenReturn(cityModel);
+
+        when(cityQueryBuilder.getSelectQuery("tenantCode")).thenReturn("select query");
+        List<org.egov.tenant.persistence.entity.City> listOfEntity = Collections.singletonList(cityEntity);
+        when(jdbcTemplate.query(eq("select query"), any(CityRowMapper.class))).thenReturn(listOfEntity);
+
+        City result = cityRepository.find("tenantCode");
+
+        assertThat(result).isEqualTo(cityModel);
     }
 
     private class ListArgumentMatcher extends ArgumentMatcher<List<Object>> {

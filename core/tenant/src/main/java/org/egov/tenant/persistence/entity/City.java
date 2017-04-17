@@ -23,6 +23,24 @@ public class City {
     private Long lastModifiedBy;
     private Date lastModifiedDate;
 
+    public org.egov.tenant.domain.model.City toDomain() {
+        return org.egov.tenant.domain.model.City.builder()
+                .id(id)
+                .name(name)
+                .localName(localName)
+                .districtCode(districtCode)
+                .districtName(districtName)
+                .regionName(regionName)
+                .longitude(longitude)
+                .latitude(latitude)
+                .tenantCode(tenantCode)
+                .createdBy(createdBy)
+                .createdDate(createdDate)
+                .lastModifiedBy(lastModifiedBy)
+                .lastModifiedDate(lastModifiedDate)
+                .build();
+    }
+
     public enum Fields {
         ID("id"),
         NAME("name"),

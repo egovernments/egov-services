@@ -2,6 +2,7 @@ package org.egov.tenant.persistence.repository;
 
 import org.egov.tenant.domain.model.City;
 import org.egov.tenant.persistence.repository.builder.CityQueryBuilder;
+import org.egov.tenant.persistence.rowmapper.CityRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -40,5 +41,10 @@ public class CityRepository {
         jdbcTemplate.update(query, values);
 
         return city;
+    }
+
+    public City find(String tenantCode) {
+        String selectQuery = cityQueryBuilder.getSelectQuery(tenantCode);
+        return this.jdbcTemplate.query(selectQuery, new CityRowMapper()).get(0).toDomain();
     }
 }

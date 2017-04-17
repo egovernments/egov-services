@@ -24,8 +24,20 @@ public class CityQueryBuilderTest {
     private JdbcTemplate jdbcTemplate;
 
     @Test
+    @Sql(scripts = {"/sql/clearCity.sql", "/sql/clearTenant.sql", "/sql/insertTenantData.sql", "/sql/insertCityData.sql"})
+    public void test_should_retrieve_city() {
+        CityQueryBuilder cityQueryBuilder = new CityQueryBuilder();
+        String selectQuery = cityQueryBuilder.getSelectQuery("AP.KURNOOL");
+
+        List<Map<String, Object>> result = jdbcTemplate.query(selectQuery, new CityResultExtractor());
+
+        Map<String, Object> row = result.get(0);
+        assertThat(row.get("id")).isEqualTo(1L);
+    }
+
+    @Test
     @Sql(scripts = {"/sql/clearCity.sql", "/sql/clearTenant.sql", "/sql/insertTenantData.sql"})
-    public void test_should_retrieve_tenant() throws Exception {
+    public void test_should_save_city() throws Exception {
         CityQueryBuilder cityQueryBuilder = new CityQueryBuilder();
 
         String insertQuery = cityQueryBuilder.getInsertQuery();

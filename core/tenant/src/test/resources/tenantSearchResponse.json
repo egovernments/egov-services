@@ -8,9 +8,18 @@
       "logoId": "logoId",
       "imageId": "imageId",
       "domainUrl": "domainUrl",
-      "type": "CITY"
+      "type": "CITY",
+      "city": {
+        "id": 1,
+        "name": "name",
+        "localName": "localname",
+        "districtCode": "districtcode",
+        "districtName": "districtname",
+        "regionName": "regionname",
+        "longitude": 35.456,
+        "latitude": 75.443
+      }
     },
-
     {
       "id": 2,
       "code": "AP.GUNTOOR",
@@ -18,7 +27,17 @@
       "logoId": "logoId",
       "imageId": "imageId",
       "domainUrl": "domainUrl",
-      "type": "CITY"
+      "type": "CITY",
+      "city": {
+        "id": 1,
+        "name": "name",
+        "localName": "localname",
+        "districtCode": "districtcode",
+        "districtName": "districtname",
+        "regionName": "regionname",
+        "longitude": 35.456,
+        "latitude": 75.443
+      }
     }
   ]
 }

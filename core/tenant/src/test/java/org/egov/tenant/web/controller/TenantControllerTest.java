@@ -83,6 +83,7 @@ public class TenantControllerTest {
 
     private List<Tenant> getListOfTenants() {
         City city = City.builder()
+                .id(1L)
                 .name("name")
                 .localName("localname")
                 .districtCode("districtcode")

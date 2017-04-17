@@ -25,6 +25,14 @@
 		<joda-time-version>2.9.6</joda-time-version>
 	</properties>
 
+	<repositories>
+		<repository>
+			<id>repo.egovernments.org</id>
+			<name>eGov ERP Releases Repository</name>
+			<url>http://repo.egovernments.org/nexus/content/repositories/releases/</url>
+		</repository>
+	</repositories>
+	
 	<dependencies>
 		<dependency>
 			<groupId>org.egov.services</groupId>

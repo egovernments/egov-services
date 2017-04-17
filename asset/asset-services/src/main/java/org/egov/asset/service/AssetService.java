@@ -81,6 +81,7 @@ public class AssetService {
 		
 		assetRequest.getAsset().setCode(assetRepository.getAssetCode());
 		
+		// TODO validate assetcategory for an asset
 		ObjectMapper objectMapper=new ObjectMapper();
 		System.out.println("assetRequest createAsync::"+assetRequest);
 		String value=null;

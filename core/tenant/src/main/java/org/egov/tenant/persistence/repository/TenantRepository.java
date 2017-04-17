@@ -1,5 +1,6 @@
 package org.egov.tenant.persistence.repository;
 
+import org.egov.tenant.domain.model.City;
 import org.egov.tenant.domain.model.TenantSearchCriteria;
 import org.egov.tenant.persistence.entity.Tenant;
 import org.egov.tenant.persistence.repository.builder.TenantQueryBuilder;
@@ -31,7 +32,15 @@ public class TenantRepository {
     public List<org.egov.tenant.domain.model.Tenant> find(TenantSearchCriteria tenantSearchCriteria) {
         final String queryStr = tenantQueryBuilder.getSearchQuery(tenantSearchCriteria);
         final List<Tenant> tenants = jdbcTemplate.query(queryStr, new TenantRowMapper());
-        return tenants.stream().map(Tenant::toDomain).collect(Collectors.toList());
+
+        return tenants.stream()
+                .map(Tenant::toDomain)
+                .map(tenant -> {
+                    City city = cityRepository.find(tenant.getCode());
+                    tenant.setCity(city);
+                    return tenant;
+                })
+                .collect(Collectors.toList());
     }
 
     @Transactional

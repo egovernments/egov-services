@@ -49,10 +49,17 @@ public class TenantRepositoryTest {
         when(tenantQueryBuilder.getSearchQuery(tenantSearchCriteria)).thenReturn("query");
         when(jdbcTemplate.query(eq("query"), any(TenantRowMapper.class))).thenReturn(listOfEntities);
 
+        City city = new City();
+
+        when(cityRepository.find("AP.KURNOOL")).thenReturn(city);
+        when(cityRepository.find("AP.GUNTOOR")).thenReturn(city);
+
         List<org.egov.tenant.domain.model.Tenant> result = tenantRepository.find(tenantSearchCriteria);
 
         assertThat(result.get(0).getId()).isEqualTo(1);
+        assertThat(result.get(0).getCity()).isEqualTo(city);
         assertThat(result.get(1).getId()).isEqualTo(2);
+        assertThat(result.get(1).getCity()).isEqualTo(city);
     }
 
     @Test
@@ -113,8 +120,8 @@ public class TenantRepositoryTest {
 
     private List<Tenant> getListOfEntities() {
         return asList(
-                Tenant.builder().id(1L).build(),
-                Tenant.builder().id(2L).build()
+                Tenant.builder().id(1L).code("AP.KURNOOL").build(),
+                Tenant.builder().id(2L).code("AP.GUNTOOR").build()
         );
     }
 

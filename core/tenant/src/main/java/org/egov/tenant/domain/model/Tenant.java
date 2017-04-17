@@ -1,10 +1,7 @@
 package org.egov.tenant.domain.model;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.*;
 
 @Getter
 @Builder
@@ -19,5 +16,6 @@ public class Tenant {
     private String imageId;
     private String domainUrl;
     private TenantType type;
+    @Setter
     private City city;
 }

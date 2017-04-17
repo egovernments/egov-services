@@ -959,9 +959,9 @@ $('#dateOfAppointment').datepicker({
 
 $('#dateOfAppointment').on("change", function(e) {
     // fillValueToObject(this);
-    $('#dateOfJoining').val(this.value);
-    this.id="dateOfJoining";
-    fillValueToObject(this);
+    // $('#dateOfJoining').val(this.value);
+    // this.id="dateOfJoining";
+    // fillValueToObject(this);
     var date_received = $("#dateOfJoining").val();
     var date_completed = $("#dateOfAppointment").val();
     var dateParts = date_received.split("/");

@@ -1651,7 +1651,7 @@ function markEditIndex(index = -1, modalName = "", object = "") {
                         $('[data-hod="yes"]').prop("checked", false);
                         $('[data-hod="no"]').prop("checked", true);
                     }
-                } else  
+                } else
                     $(`#${object}\\.${key}`).val(employeeSubObject[object][key]);
 
             }

@@ -143,18 +143,22 @@ class Designation extends React.Component{
               </div>
           </div>
 
-          <div className="row">
-            <div className="col-sm-6">
-                <div className="row">
-                    <div className="col-sm-6 col-sm-offset-6">
+        <div className="row">
+          <div className="col-sm-6">
+              <div className="row">
+                <div className="col-sm-6 label-text">
+                    <label for="">Active</label>
+                </div>
+                    <div className="col-sm-6">
                           <label className="radioUi">
                             <input type="checkbox" name="active" id="active" value="true" onChange={(e)=>{
-                                handleChange(e,"active")}}required/> Active
+                                handleChange(e,"active")}} checked={active == "true" || active  ==  true }/>
                           </label>
                     </div>
                 </div>
               </div>
-          </div>
+            </div>
+
 
           <div className="text-center">
                 {showActionButton()} &nbsp;&nbsp;

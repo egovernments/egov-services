@@ -174,8 +174,6 @@ class PositionMaster extends React.Component{
                   </div>
               </div>
             </div>
-        </div>
-        <div className="row">
           <div className="col-sm-6">
               <div className="row">
                   <div className="col-sm-6 label-text">
@@ -183,18 +181,34 @@ class PositionMaster extends React.Component{
                   </div>
                   <div className="col-sm-6">
                         <label className="radio-inline radioUi">
-                          <input type="radio" name="isPostOutsourced" id="isPostOutsourced" value="yes"  onChange={(e)=>{
-                              handleChange(e,"isPostOutsourced")}}/> Yes
+                          <input type="radio" name="isPostOutsourced" value="true" checked={isPostOutsourced == "true" || isPostOutsourced  ==  true }
+                            onChange={(e)=>{ handleChange(e,"isPostOutsourced")}}/> Yes
+
                         </label>
                         <label className="radio-inline radioUi">
-                          <input type="radio" name="isPostOutsourced" id="isPostOutsourced" value="No" onChange={(e)=>{
-                              handleChange(e,"isPostOutsourced")}}/> No
+                          <input type="radio" name="isPostOutsourced" value="false" checked={isPostOutsourced == "false" || !isPostOutsourced}
+                              onChange={(e)=>{handleChange(e,"isPostOutsourced")}}/> No
                         </label>
                   </div>
               </div>
             </div>
         </div>
-        <div className="text-center">
+          <div className="row">
+            <div className="col-sm-6">
+              <div className="row">
+                <div className="col-sm-6 label-text">
+                    <label for="">Active</label>
+                </div>
+                    <div className="col-sm-6">
+                          <label className="radioUi">
+                            <input type="checkbox" name="active" id="active" value="true" onChange={(e)=>{
+                                handleChange(e,"active")}} checked={active == "true" || active  ==  true }/>
+                          </label>
+                    </div>
+                </div>
+              </div>
+            </div>
+            <div className="text-center">
             {showActionButton()} &nbsp;&nbsp;
             <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>
 

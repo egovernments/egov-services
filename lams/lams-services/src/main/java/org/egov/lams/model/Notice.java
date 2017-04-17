@@ -2,6 +2,10 @@ package org.egov.lams.model;
 
 import java.util.Date;
 
+import javax.validation.constraints.NotNull;
+
+import org.egov.lams.repository.helper.AmountInWordUtil;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -62,6 +66,9 @@ public class Notice   {
 
   @JsonProperty("templateVersion")
   private String templateVersion = null;
+  
+  @JsonProperty("rentInWord")
+  private String rentInWord = null;
 
   @JsonProperty("expiryDate")
   private Date expiryDate = null;
@@ -105,6 +112,7 @@ public class Notice   {
 	  this.block = agreement.getAsset().getLocationDetails().getBlock();
 	  this.commencementDate = agreement.getCommencementDate();
 	  //TODO this.commissionerName = agreement.get
+	  this.rentInWord = AmountInWordUtil.amountInWords(agreement.getRent());
 	  this.electionward = agreement.getAsset().getLocationDetails().getElectionWard();
 	  this.expiryDate = agreement.getExpiryDate();
 	  this.locality = agreement.getAsset().getLocationDetails().getLocality();
@@ -113,6 +121,7 @@ public class Notice   {
 	  this.street = agreement.getAsset().getLocationDetails().getStreet();
 	  this.ward = agreement.getAsset().getLocationDetails().getRevenueWard();
 	  this.zone = agreement.getAsset().getLocationDetails().getZone();
+	  
 	  
   }
 

@@ -8,6 +8,7 @@ import org.egov.lams.model.AgreementCriteria;
 import org.egov.lams.model.Notice;
 import org.egov.lams.model.NoticeResponse;
 import org.egov.lams.repository.NoticeRepository;
+import org.egov.lams.repository.helper.AmountInWordUtil;
 import org.egov.lams.web.contract.NoticeRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,7 @@ public class NoticeService {
 											noticeRequest.getNotice().getAcknowledgementNumber());
 		
 		noticeRequest.getNotice().toNotice(agreements.get(0));
+		
 		Notice notice = noticeRepository.createNotice(noticeRequest);
 		List<Notice> notices = new ArrayList<Notice>();
 		notices.add(notice);

@@ -22,23 +22,29 @@ var requestInfo = {
     "authToken": authToken
 };
 
-$( document ).ajaxStart(function() {
-  $.blockUI({
-        message: "<span>Please wait...</span>",
-        css: {
-            border: 'none',
-            padding: '15px',
-            backgroundColor: '#000',
-            '-webkit-border-radius': '5px',
-            '-moz-border-radius': '5px',
-            opacity: .5,
-            color: '#fff'
-        } });
-});
+$(document).ready(function() {
+    $( document ).ajaxStart(function() {
+        try {
+            $.blockUI({
+                message: "<span>Please wait...</span>",
+                css: {
+                    border: 'none',
+                    padding: '15px',
+                    backgroundColor: '#000',
+                    '-webkit-border-radius': '5px',
+                    '-moz-border-radius': '5px',
+                    opacity: .5,
+                    color: '#fff'
+                } });
+        } catch(e) {
+            console.log(e);
+        }
+    });
 
-$( document ).ajaxStop(function() {
-  setTimeout($.unblockUI, 100);
-});
+    $( document ).ajaxStop(function() {
+        setTimeout($.unblockUI, 100);
+    });
+})
 
 
 var employeeType, employeeStatus, group, motherTounge, religion, community, category, bank, recruitmentMode, recruitmentType, recruitmentQuota, assignments_grade, assignments_designation, assignments_department, assignments_fund, assignments_functionary, assignments_function;

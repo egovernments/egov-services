@@ -1,13 +1,11 @@
 package org.egov.tenant.web.controller;
 
 
-import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.tenant.domain.model.TenantSearchCriteria;
 import org.egov.tenant.domain.service.TenantService;
 import org.egov.tenant.web.contract.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,7 +23,7 @@ public class TenantController {
                                  @RequestBody TenantSearchRequest tenantSearchRequest) {
         TenantSearchCriteria tenantSearchCriteria = new TenantSearchCriteria(code);
         List<Tenant> tenants =  tenantService.find(tenantSearchCriteria).stream()
-                .map(org.egov.tenant.web.contract.Tenant::new)
+                .map(Tenant::new)
                 .collect(Collectors.toList());
 
         return new TenantResponse(new ResponseInfo(), tenants);
@@ -33,17 +31,7 @@ public class TenantController {
 
     @PostMapping(value="_create")
     public SingleTenantResponse createTenant(@RequestBody CreateTenantRequest createTenantRequest) {
-        org.egov.tenant.domain.model.Tenant tenant = tenantService.createTenant(createTenantRequest.toDomainForCreateTenantRequest());
+        org.egov.tenant.domain.model.Tenant tenant = tenantService.createTenant(createTenantRequest.getTenant().toDomain());
         return new SingleTenantResponse(new ResponseInfo(), new Tenant(tenant));
-    }
-
-    private TenantResponse getSuccessResponse(final List<org.egov.tenant.domain.model.Tenant> tenant, final RequestInfo requestInfo) {
-        final ResponseInfo responseInfo = ResponseInfo.builder().apiId(requestInfo.getApiId())
-                .ver(requestInfo.getVer()).msgId(requestInfo.getMsgId()).status(HttpStatus.OK.toString()).build();
-        List<org.egov.tenant.web.contract.Tenant> tenants = tenant
-                .stream()
-                .map(org.egov.tenant.web.contract.Tenant::new)
-                .collect(Collectors.toList());
-        return new TenantResponse(responseInfo, tenants);
     }
 }

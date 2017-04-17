@@ -1,9 +1,10 @@
 package org.egov.tenant.web.contract;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
-
-import java.util.Date;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Builder

@@ -800,6 +800,9 @@ definitions:
   Notice:
     type: object
     properties:
+      tenantId:
+        type: string
+        description: unique id for a ULB
       noticeNo:
         type: string
         description: notice number
@@ -857,6 +860,9 @@ definitions:
         type: number
         format: double
         description: rent to be paid per payment cycle.
+      rentInWord:
+        type: string
+        description: rent amount in word.
       securityDeposit:
         type: number
         format: double
@@ -888,12 +894,8 @@ definitions:
     properties:
       RequestInfo:
         $ref: '#/definitions/RequestInfo'
-      tenantId:
-        type: string
-        description: unique id for a ULB
-      agreementNumber:
-        type: string
-        description: Agreement number for which the notice to be generated.
+      Notice:
+        $ref: '#/definitions/Notice'
         
   NoticeResponse:
     properties:

@@ -27,13 +27,13 @@ public class PositionController {
 	@GetMapping(value = "/employee/{code}/positions")
 	public PositionRes getPositions(@PathVariable("code") String code,
 			@RequestParam(value = "tenantId", required = true) String tenantId,
-			@RequestParam(value = "departmentCode") String departmentCode,
-			@RequestParam(value = "designationCode") String designationCode,
+			@RequestParam(value = "departmentCode", required = false) String departmentCode,
+			@RequestParam(value = "designationCode", required = false) String designationCode,
 			@RequestParam(value = "pageSize", required = false, defaultValue = "20") Integer pageSize,
 			@RequestParam(value = "pageNumber", required = false, defaultValue = "1") Integer pageNumber,
 			@RequestParam(value = "sort", required = false, defaultValue = "[-fromDate, -primary]") List<String> sort,
 			@RequestParam(value = "asOnDate", required = false) LocalDate asOnDate,
-			@RequestParam(value = "isPrimary") Boolean isPrimary) throws Exception {
+			@RequestParam(value = "isPrimary", required = false) Boolean isPrimary) throws Exception {
 
 		PositionRes response = new PositionRes();
 		response.setResponseInfo(new ResponseInfo());

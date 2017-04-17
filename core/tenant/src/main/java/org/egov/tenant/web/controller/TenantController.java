@@ -32,7 +32,7 @@ public class TenantController {
     }
 
     @PostMapping(value="_create")
-    public SingleTenantResponse createTenant(@RequestParam CreateTenantRequest createTenantRequest) {
+    public SingleTenantResponse createTenant(@RequestBody CreateTenantRequest createTenantRequest) {
         org.egov.tenant.domain.model.Tenant tenant = tenantService.createTenant(createTenantRequest.toDomainForCreateTenantRequest());
         return new SingleTenantResponse(new ResponseInfo(), new Tenant(tenant));
     }

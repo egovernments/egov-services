@@ -1,35 +1,29 @@
 package org.egov.user.web.contract.auth;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-@Setter
-@Builder
 @AllArgsConstructor
+@Builder
 public class Action {
-    @JsonProperty("name")
-    private String name;
+	private String name;
+	private String url;
+	private String displayName;
+	private Integer orderNumber;
+	private String queryParams;
+	private String parentModule;
+	private String serviceCode;
 
-    @JsonProperty("url")
-    private String url;
-
-    @JsonProperty("displayName")
-    private String displayName;
-
-    @JsonProperty("orderNumber")
-    private Integer orderNumber;
-
-    @JsonProperty("queryParams")
-    private String queryParams;
-
-    @JsonProperty("parentModule")
-    private String parentModule;
-
-    @JsonProperty("serviceCode")
-    private String serviceCode;
+	public Action(org.egov.user.domain.model.Action domainAction) {
+		this.name = domainAction.getName();
+		this.url = domainAction.getUrl();
+		this.displayName = domainAction.getDisplayName();
+		this.orderNumber = domainAction.getOrderNumber();
+		this.queryParams = domainAction.getQueryParams();
+		this.parentModule = domainAction.getParentModule();
+		this.serviceCode = domainAction.getServiceCode();
+	}
 }
 

@@ -1,9 +1,9 @@
 package org.egov.user.web.adapters.errors;
 
+import org.egov.common.contract.response.Error;
+import org.egov.common.contract.response.ErrorField;
+import org.egov.common.contract.response.ErrorResponse;
 import org.egov.user.domain.model.User;
-import org.egov.user.web.contract.Error;
-import org.egov.user.web.contract.ErrorField;
-import org.egov.user.web.contract.ErrorRes;
 import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
@@ -33,9 +33,9 @@ public class UserRequestErrorAdapter implements ErrorAdapter<User> {
     private static final String USER_USERNAME = "User.username";
     private static final String USERNAME_MISSING_ERROR = "Username is required";
 
-    public ErrorRes adapt(User user) {
+    public ErrorResponse adapt(User user) {
         final Error error = getError(user);
-        return new ErrorRes(null, error);
+        return new ErrorResponse(null, error);
     }
 
     private Error getError(User user) {

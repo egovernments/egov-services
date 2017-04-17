@@ -1,9 +1,0 @@
-{
-  "name": "Get all ReceivingMode",
-  "url": "/pgr/receivingmode",
-  "displayName": "Get all ReceivingMode",
-  "orderNumber": "0",
-  "queryParams": "tenantId=",
-  "parentModule": "1",
-  "serviceCode": "PGR"
-}

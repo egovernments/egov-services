@@ -2,7 +2,6 @@
   "RequestInfo": {
     "apiId": "apiId",
     "ver": "version",
-    "ts": "timeStamp",
     "action": "action",
     "did": "did",
     "key": "key",

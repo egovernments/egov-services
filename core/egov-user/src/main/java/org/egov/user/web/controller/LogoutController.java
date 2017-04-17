@@ -2,9 +2,9 @@ package org.egov.user.web.controller;
 
 import java.util.Date;
 
-import org.egov.user.web.contract.Error;
-import org.egov.user.web.contract.ErrorRes;
-import org.egov.user.web.contract.ResponseInfo;
+import org.egov.common.contract.response.Error;
+import org.egov.common.contract.response.ErrorResponse;
+import org.egov.common.contract.response.ResponseInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,20 +27,19 @@ public class LogoutController {
 	public ResponseInfo deleteToken(@RequestParam("access_token") String accessToken) throws Exception {
 		OAuth2AccessToken redisToken = tokenStore.readAccessToken(accessToken);
 		tokenStore.removeAccessToken(redisToken);
-		ResponseInfo responseInfo = new ResponseInfo("", "", new Date().toString(), "", "", "Logout successfully");
-		return responseInfo;
+		return new ResponseInfo("", "", new Date().toString(), "", "", "Logout successfully");
 	}
 
 	@ExceptionHandler(Exception.class)
-	public ResponseEntity<ErrorRes> handleError(Exception ex) {
+	public ResponseEntity<ErrorResponse> handleError(Exception ex) {
 		ex.printStackTrace();
-		ErrorRes response = new ErrorRes();
+		ErrorResponse response = new ErrorResponse();
 		ResponseInfo responseInfo = new ResponseInfo("", "", new Date().toString(), "", "", "Logout failed");
 		response.setResponseInfo(responseInfo);
 		Error error = new Error();
 		error.setCode(400);
 		error.setDescription("Logout failed");
 		response.setError(error);
-		return new ResponseEntity<ErrorRes>(response, HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	}
 }

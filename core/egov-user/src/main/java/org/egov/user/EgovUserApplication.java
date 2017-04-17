@@ -1,6 +1,8 @@
 package org.egov.user;
 
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.tracer.config.TracerConfiguration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -9,6 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.provider.token.TokenStore;
@@ -17,9 +20,14 @@ import org.springframework.web.servlet.config.annotation.ContentNegotiationConfi
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import redis.clients.jedis.JedisShardInfo;
 
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
 @SpringBootApplication
 @Import(TracerConfiguration.class)
 public class EgovUserApplication {
+
+	private static final String DATE_FORMAT = "dd-MM-yyyy HH:mm:ss";
 
 	@Value("${spring.redis.host}")
 	private String host;
@@ -33,6 +41,16 @@ public class EgovUserApplication {
 				configurer.defaultContentType(MediaType.APPLICATION_JSON_UTF8);
 			}
 		};
+	}
+
+	@Bean
+	public MappingJackson2HttpMessageConverter jacksonConverter() {
+		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+		mapper.setDateFormat(new SimpleDateFormat(DATE_FORMAT, Locale.ENGLISH));
+		converter.setObjectMapper(mapper);
+		return converter;
 	}
 
 	@Bean

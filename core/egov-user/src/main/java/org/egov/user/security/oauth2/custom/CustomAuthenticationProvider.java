@@ -42,7 +42,7 @@ package org.egov.user.security.oauth2.custom;
 
 import org.egov.user.domain.model.User;
 import org.egov.user.domain.service.UserService;
-import org.egov.user.web.contract.auth.SecureUser;
+import org.egov.user.domain.model.SecureUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

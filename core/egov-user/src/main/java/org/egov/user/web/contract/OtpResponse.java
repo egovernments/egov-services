@@ -2,6 +2,7 @@ package org.egov.user.web.contract;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.egov.common.contract.response.ResponseInfo;
 
 @Getter
 @NoArgsConstructor

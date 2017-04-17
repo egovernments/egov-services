@@ -9,6 +9,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Getter
 @Setter
+//This class is serialized to Redis
 public class Role implements Serializable {
     private static final long serialVersionUID = 2090518436085399889L;
     private Long id;

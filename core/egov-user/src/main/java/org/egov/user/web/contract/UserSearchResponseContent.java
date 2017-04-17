@@ -1,34 +1,26 @@
 package org.egov.user.web.contract;
 
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.apache.commons.lang3.StringUtils.trim;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Formatter;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.egov.user.domain.model.Role;
 import org.egov.user.domain.model.User;
 import org.egov.user.domain.model.enums.AddressType;
 import org.egov.user.domain.model.enums.GuardianRelation;
 import org.egov.user.domain.model.enums.UserType;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.*;
+import java.util.stream.Collectors;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.apache.commons.lang3.StringUtils.trim;
 
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class UserSearchResponseContent {
 
     private Long id;
@@ -84,7 +76,7 @@ public class UserSearchResponseContent {
         this.aadhaarNumber = user.getAadhaarNumber();
         this.active = user.getActive();
         this.dob = user.getDob();
-        this.pwdExpiryDate = user.getPwdExpiryDate() != null ? user.getPwdExpiryDate() : null;
+        this.pwdExpiryDate = user.getPwdExpiryDate();
         this.locale = user.getLocale();
         this.type = user.getType();
         this.accountLocked = user.getAccountLocked();

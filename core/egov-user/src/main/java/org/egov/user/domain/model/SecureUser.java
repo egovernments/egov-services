@@ -1,5 +1,7 @@
-package org.egov.user.web.contract.auth;
+package org.egov.user.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.egov.user.web.contract.auth.Role;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,13 +10,14 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SecureUser implements UserDetails {
 	private static final long serialVersionUID = -8756608845278722035L;
-	private final User user;
+	private final org.egov.user.web.contract.auth.User user;
 	private final List<SimpleGrantedAuthority> authorities = new ArrayList<>();
 
-	public SecureUser(User user) {
+	public SecureUser(org.egov.user.web.contract.auth.User user) {
 		if (user == null) {
 			throw new UsernameNotFoundException("UserRequest not found");
 		} else {
@@ -58,15 +61,19 @@ public class SecureUser implements UserDetails {
 		return this.user.getUserName();
 	}
 
-	public Long getUserId() {
-		return this.user.getId();
-	}
-
-	public String getUserType() {
-		return this.user.getType();
-	}
-
-	public User getUser() {
+	public org.egov.user.web.contract.auth.User getUser() {
 		return this.user;
+	}
+
+	@JsonIgnore
+	public List<String> getRoleCodes() {
+		return user.getRoles()
+				.stream()
+				.map(Role::getCode)
+				.collect(Collectors.toList());
+	}
+
+	public String getTenantId() {
+		return user.getTenantId();
 	}
 }

@@ -1,9 +1,9 @@
 package org.egov.user.web.adapters.errors;
 
 import lombok.Getter;
-import org.egov.user.web.contract.Error;
-import org.egov.user.web.contract.ErrorField;
-import org.egov.user.web.contract.ErrorRes;
+import org.egov.common.contract.response.Error;
+import org.egov.common.contract.response.ErrorField;
+import org.egov.common.contract.response.ErrorResponse;
 import org.springframework.http.HttpStatus;
 
 import java.util.Collections;
@@ -14,10 +14,11 @@ public class UserDetailsErrorHandler extends RuntimeException {
 
     private static final String USER_DETAILS_NOT_FOUND_CODE = "USER_DETAILS_NOT_FOUND";
     private static final String USER_DETAILS_NOT_FOUND = "Error while fetching user details";
+	private static final long serialVersionUID = -6686068213873485044L;
 
-    public ErrorRes adapt() {
+	public ErrorResponse adapt() {
         final Error error = getError();
-        return new ErrorRes(null, error);
+        return new ErrorResponse(null, error);
     }
 
     private Error getError() {

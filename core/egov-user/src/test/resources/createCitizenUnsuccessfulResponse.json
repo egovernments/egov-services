@@ -1,6 +1,6 @@
 {
-  "ResponseInfo": null,
-  "Error": {
+  "responseInfo": null,
+  "error": {
     "code": 400,
     "message": "Invalid user object",
     "description": null,

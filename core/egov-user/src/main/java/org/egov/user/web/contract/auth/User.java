@@ -10,6 +10,7 @@ import java.util.List;
 @Setter
 @Getter
 @Builder
+//This class is serialized to Redis
 public class User implements Serializable {
 	private static final long serialVersionUID = -1053170163821651014L;
 	private Long id;

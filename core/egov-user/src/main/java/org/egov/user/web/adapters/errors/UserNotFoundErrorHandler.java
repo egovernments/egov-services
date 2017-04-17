@@ -1,9 +1,9 @@
 package org.egov.user.web.adapters.errors;
 
+import org.egov.common.contract.response.Error;
+import org.egov.common.contract.response.ErrorField;
+import org.egov.common.contract.response.ErrorResponse;
 import org.egov.user.domain.model.User;
-import org.egov.user.web.contract.Error;
-import org.egov.user.web.contract.ErrorField;
-import org.egov.user.web.contract.ErrorRes;
 import org.springframework.http.HttpStatus;
 
 import java.util.Collections;
@@ -15,9 +15,9 @@ public class UserNotFoundErrorHandler implements ErrorAdapter<User> {
     private static final String USER_NOT_FOUND_MESSAGE = "User not found";
     private static final String USER_ID_FIELD = "User.id";
 
-    public ErrorRes adapt(final User user) {
+    public ErrorResponse adapt(final User user) {
         final Error error = getError();
-        return new ErrorRes(null, error);
+        return new ErrorResponse(null, error);
     }
 
     private Error getError() {

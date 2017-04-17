@@ -1,9 +1,12 @@
 package org.egov.user.web.controller;
 
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.user.domain.model.User;
+import org.egov.user.domain.model.UserDetail;
 import org.egov.user.domain.service.TokenService;
 import org.egov.user.domain.service.UserService;
 import org.egov.user.web.contract.*;
+import org.egov.user.web.contract.auth.CustomUserDetails;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -50,8 +53,9 @@ public class UserController {
     }
 
     @PostMapping("/_details")
-    public ResponseEntity<?> getUser(@RequestParam(value = "access_token") String accessToken) {
-        return new ResponseEntity<>(tokenService.getUser(accessToken), HttpStatus.OK);
+    public CustomUserDetails getUser(@RequestParam(value = "access_token") String accessToken) {
+		final UserDetail userDetail = tokenService.getUser(accessToken);
+		return new CustomUserDetails(userDetail);
     }
 
     private UserDetailResponse createUser(@RequestBody CreateUserRequest createUserRequest,

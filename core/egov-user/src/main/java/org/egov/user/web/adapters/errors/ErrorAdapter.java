@@ -1,7 +1,7 @@
 package org.egov.user.web.adapters.errors;
 
-import org.egov.user.web.contract.ErrorRes;
+import org.egov.common.contract.response.ErrorResponse;
 
 public interface ErrorAdapter<T> {
-    ErrorRes adapt(T model);
+    ErrorResponse adapt(T model);
 }

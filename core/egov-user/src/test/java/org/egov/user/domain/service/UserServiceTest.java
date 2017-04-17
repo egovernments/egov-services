@@ -66,7 +66,7 @@ public class UserServiceTest {
 
     @Test
     public void test_should_search_user() throws Exception {
-        UserSearch userSearch = new UserSearch();
+        UserSearch userSearch = UserSearch.builder().build();
         List<org.egov.user.domain.model.User> expectedListOfUsers = mock(List.class);
         when(userRepository.findAll(userSearch)).thenReturn(expectedListOfUsers);
 

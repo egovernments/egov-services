@@ -15,7 +15,7 @@ RUN wget https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/${FLYWAY
 
 COPY ./migration/main /flyway/sql
 
-COPY ./migration/seed /flyway/seed
+#COPY ./migration/seed /flyway/seed
 
 COPY migrate.sh /usr/bin/migrate.sh
 

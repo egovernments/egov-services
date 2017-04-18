@@ -28,7 +28,6 @@ public class WorkflowService {
 
 	public void startWorkflow(AgreementRequest agreementRequest) {
 		
-		
 		Agreement agreement = agreementRequest.getAgreement();
 		//FIXME ask mani, it should be ProcessInstanceResponse
 		ProcessInstance processInstanceResponse = workflowRepository.startWorkflow(agreementRequest);

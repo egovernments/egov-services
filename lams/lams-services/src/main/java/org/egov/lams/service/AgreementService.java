@@ -1,8 +1,11 @@
 package org.egov.lams.service;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.egov.lams.config.PropertiesManager;
@@ -17,10 +20,16 @@ import org.egov.lams.repository.AgreementRepository;
 import org.egov.lams.repository.DemandRepository;
 import org.egov.lams.web.contract.AgreementRequest;
 import org.egov.lams.web.contract.DemandResponse;
+import org.egov.lams.web.contract.LamsConfigurationGetRequest;
+import org.egov.lams.web.contract.Position;
+import org.egov.lams.web.contract.PositionGetRequest;
+import org.egov.lams.web.contract.PositionResponse;
+import org.egov.lams.web.contract.RequestInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,6 +40,12 @@ public class AgreementService {
 
 	@Autowired
 	private AgreementRepository agreementRepository;
+	
+	@Autowired
+	private RestTemplate restTemplate;
+	
+	@Autowired
+	private LamsConfigurationService lamsConfigurationService;
 	
 	@Autowired
 	private AgreementProducer agreementProducer;
@@ -125,6 +140,7 @@ public class AgreementService {
 				+ agreement.getCommencementDate() + "by adding with no of years " + agreement.getTimePeriod());	
 		
 		agreement.setStatus(Status.WORKFLOW);
+		getPositions(agreementRequest);
 		//FIXME get confirmed with ramki and ghanshyam
 	    
 		List<DemandReason> demandReasons = demandRepository.getDemandReason(agreementRequest);
@@ -152,6 +168,57 @@ public class AgreementService {
 				throw exception;
 		}
 		return agreement;
+	}
+
+	private void getPositions(AgreementRequest agreementRequest) {
+
+		RequestInfo requestInfo = agreementRequest.getRequestInfo();
+		Agreement agreement = agreementRequest.getAgreement();
+		WorkFlowDetails workFlowDetails = agreement.getWorkflowDetails();
+		agreement.setWorkflowDetails(workFlowDetails);
+
+		PositionGetRequest positionGetRequest = new PositionGetRequest();
+
+		PositionResponse positionResponse = null;
+		String positionUrl = propertiesManager.getEmployeeServiceHostName() + propertiesManager
+				.getEmployeeServiceSearchPath().replace(propertiesManager.getEmployeeServiceSearchPathVariable(),
+						requestInfo.getUserInfo().getId().toString());
+		
+		logger.info("the request object to position get call :: " + positionGetRequest);
+
+		// FIXME move the resttemplate to positionrepository later
+		try {
+			positionResponse = restTemplate.postForObject(positionUrl, positionGetRequest, PositionResponse.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.info("the exception from poisition search :: " + e);
+			throw e;
+		}
+
+		logger.info("the response form position get call :: " + positionResponse);
+
+		List<Position> positionList = positionResponse.getPosition();
+		Map<String, Long> positionMap = new HashMap<>();
+
+		for (Position position : positionList) {
+			positionMap.put(position.getDeptdesig().getDesignation().getName(),
+					position.getDeptdesig().getDesignation().getId());
+		}
+
+		LamsConfigurationGetRequest lamsConfigurationGetRequest = new LamsConfigurationGetRequest();
+		String keyName = propertiesManager.getWorkflowInitiatorPositionkey();
+		lamsConfigurationGetRequest.setName(keyName);
+		List<String> assistantDesignations = lamsConfigurationService.getLamsConfigurations(lamsConfigurationGetRequest)
+				.get(keyName);
+		
+		for (String desginationName : assistantDesignations) {
+			if(positionMap.containsKey(desginationName)){
+				workFlowDetails.setInitiatorPosition(positionMap.get(desginationName));
+				logger.info(" the initiator name  :: "+desginationName+"the value for key" + workFlowDetails.getInitiatorPosition());
+			}
+		}
+
+		// allottee -> allottee.getId()).collect(Collectors.toList()));
 	}
 
 	/***

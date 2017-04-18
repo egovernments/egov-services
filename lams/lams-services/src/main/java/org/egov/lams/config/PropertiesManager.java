@@ -98,8 +98,24 @@ public class PropertiesManager {
 	public String financialGetChartOfAccountsService;
 	
 	@Value("${egov.services.boundary_service.hostname}")
-	public String boundaryserviceHostName;
+	public String boundaryServiceHostName;
 	
 	@Value("${egov.services.boundary_service.searchpath}")
-	public String boundaryserviceSearchPath;
+	public String boundaryServiceSearchPath;
+	
+	@Value("${egov.services.employee_service.hostname}")
+	public String employeeServiceHostName;
+	
+	@Value("${egov.services.employee_service.searchpath}")
+	public String employeeServiceSearchPath;
+	
+	@Value("${egov.services.employee_service.searchpath.pathvariable}")
+	public String employeeServiceSearchPathVariable;
+	
+	@Value("${egov.services.lams.workflow_initiator_position_key}")
+	public String workflowInitiatorPositionkey;
+	
+	@Value("${egov.services.lams.rentincrement_assetcategories}")
+	public String rentIncrementAssetCategoryKey;
+	
 }

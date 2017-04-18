@@ -43,8 +43,9 @@ public class WorkflowRepository {
 
 		Agreement agreement = agreementRequest.getAgreement();
 		WorkFlowDetails workFlowDetails = agreement.getWorkflowDetails();
-		System.err.println(agreement);
-
+		RequestInfo requestInfo = agreementRequest.getRequestInfo();
+		LOGGER.info(agreement.toString());
+		
 		Position assignee = new Position();
 		assignee.setId(workFlowDetails.getAssignee());
 
@@ -55,8 +56,9 @@ public class WorkflowRepository {
 		processInstance.setType(propertiesManager.getWorkflowServiceBusinessKey());
 		processInstance.setAssignee(assignee);
 		processInstance.setComments("statrting workflow from lams consumer app");
+		//set initator position in process instance
 		processInstanceRequest.setProcessInstance(processInstance);
-		processInstanceRequest.setRequestInfo(agreementRequest.getRequestInfo());
+		processInstanceRequest.setRequestInfo(requestInfo);
 		
 		processInstance.setTenantId(agreement.getTenantId());
 		// TODO put business  key ina pp.propscomments

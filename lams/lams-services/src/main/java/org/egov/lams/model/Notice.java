@@ -84,6 +84,9 @@ public class Notice   {
 
   @JsonProperty("commissionerName")
   private String commissionerName = null;
+  
+  @JsonProperty("rentInWord")
+  private String rentInWord;
 
   @JsonProperty("locality")
   private Long locality = null;

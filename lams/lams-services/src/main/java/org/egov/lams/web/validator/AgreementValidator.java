@@ -1,17 +1,22 @@
 package org.egov.lams.web.validator;
 
 import java.util.Date;
+import java.util.List;
 
+import org.egov.lams.config.PropertiesManager;
 import org.egov.lams.exception.LamsException;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.Allottee;
+import org.egov.lams.model.AssetCategory;
 import org.egov.lams.model.RentIncrementType;
 import org.egov.lams.service.AllotteeService;
 import org.egov.lams.service.AssetService;
+import org.egov.lams.service.LamsConfigurationService;
 import org.egov.lams.service.RentIncrementService;
 import org.egov.lams.web.contract.AgreementRequest;
 import org.egov.lams.web.contract.AllotteeResponse;
 import org.egov.lams.web.contract.AssetResponse;
+import org.egov.lams.web.contract.LamsConfigurationGetRequest;
 import org.egov.lams.web.contract.RequestInfo;
 import org.egov.lams.web.contract.RequestInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +33,12 @@ public class AgreementValidator {
 	
 	@Autowired
 	private RentIncrementService rentIncrementService;
+	
+	@Autowired
+	private PropertiesManager propertiesManager;
+	
+	@Autowired
+	private LamsConfigurationService lamsConfigurationService;
 	
 
 	public void validateAgreement(AgreementRequest agreementRequest) {
@@ -52,7 +63,7 @@ public class AgreementValidator {
 		// FIXME uncomment this part before pushing-->
 		validateAllottee(agreementRequest);
 		validateAsset(agreementRequest);
-		validateRentIncrementType(agreement.getRentIncrementMethod());
+		validateRentIncrementType(agreement);
 	}
 
 	public void validateAsset(AgreementRequest agreementRequest) {
@@ -81,11 +92,34 @@ public class AgreementValidator {
 			allottee.setId(allotteeResponse.getAllottee().get(0).getId());
 	}
 
-	public void validateRentIncrementType(RentIncrementType rentIncrement) {
-		Long rentIncrementId = rentIncrement.getId();
-		RentIncrementType responseRentIncrement = rentIncrementService.getRentIncrementById(rentIncrementId);
-		if(!responseRentIncrement.getId().equals(rentIncrement.getId()))
-			throw new RuntimeException("invalid rentincrement type object");
-		//FIXME use apt custom exception
+	public void validateRentIncrementType(Agreement agreement) {
+
+		RentIncrementType rentIncrement = agreement.getRentIncrementMethod();
+		AssetCategory assetCategory = agreement.getAsset().getCategory();
+
+		LamsConfigurationGetRequest lamsConfigurationGetRequest = new LamsConfigurationGetRequest();
+		String keyName = propertiesManager.getRentIncrementAssetCategoryKey();
+		lamsConfigurationGetRequest.setName(keyName);
+		List<String> assetCategoryNames = lamsConfigurationService.getLamsConfigurations(lamsConfigurationGetRequest)
+				.get(keyName);
+
+		for (String string : assetCategoryNames) {
+			if (string.equals(assetCategory.getName())) {
+				if (rentIncrement != null) {
+					Long rentIncrementId = rentIncrement.getId();
+					RentIncrementType responseRentIncrement = rentIncrementService
+							.getRentIncrementById(rentIncrementId);
+					if (!responseRentIncrement.getId().equals(rentIncrement.getId()))
+						throw new RuntimeException("invalid rentincrement type object");
+				} else {
+					throw new RuntimeException("please enter a rentincrement type value for given agreement");
+				}
+			}
+		}
+
+		if (rentIncrement == null) {
+			rentIncrement = new RentIncrementType();
+			rentIncrement.setId(null);
+		}
 	}
 }

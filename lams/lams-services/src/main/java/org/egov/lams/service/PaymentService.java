@@ -469,8 +469,8 @@ public class PaymentService {
 	private BoundaryResponse getBoundariesById(Long boundaryId) {
 
 		BoundaryResponse boundaryResponse = null;
-		String boundaryUrl = propertiesManager.getBoundaryserviceHostName()
-				+ propertiesManager.getBoundaryserviceSearchPath()
+		String boundaryUrl = propertiesManager.getBoundaryServiceHostName()
+				+ propertiesManager.getBoundaryServiceSearchPath()
 				+ "?Boundary.id=" + boundaryId;
 		// FIXME in boundary contract id is string
 		LOGGER.info(boundaryUrl);

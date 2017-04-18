@@ -1889,7 +1889,7 @@ $("#createEmployeeForm").validate({
                     //Handle error
                 } else {
                     var response = $.ajax({
-                        url: baseUrl + "/hr-employee/employees/_create?tenantId=1",
+                        url: baseUrl + "/hr-employee/employees/_create?tenantId="+tenantId,
                         type: 'POST',
                         dataType: 'json',
                         data: JSON.stringify({

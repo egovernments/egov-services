@@ -33,7 +33,15 @@ public class UserRequestErrorAdapter implements ErrorAdapter<User> {
     private static final String USER_USERNAME = "User.username";
     private static final String USERNAME_MISSING_ERROR = "Username is required";
 
-    public ErrorResponse adapt(User user) {
+	private static final String TENANT_MISSING_CODE = "core-user.TENANT_MANDATORY";
+	private static final String TENANT_FIELD = "tenantId";
+	private static final String TENANT_MISSING_MESSAGE = "Tenant is required";
+
+	private static final String ROLES_MISSING_CODE = "core-user.ROLES_MANDATORY";
+	private static final String ROLES_FIELD = "roles";
+	private static final String ROLES_MISSING_MESSAGE = "Role(s) is required";
+
+	public ErrorResponse adapt(User user) {
         final Error error = getError(user);
         return new ErrorResponse(null, error);
     }
@@ -54,6 +62,8 @@ public class UserRequestErrorAdapter implements ErrorAdapter<User> {
         addMobileNumberMissingError(user, errorFields);
         addUsernameMissingError(user, errorFields);
         addNameMissingError(user, errorFields);
+        addTenantMissingError(user, errorFields);
+        addRolesMissingError(user, errorFields);
         return errorFields;
     }
 
@@ -63,6 +73,20 @@ public class UserRequestErrorAdapter implements ErrorAdapter<User> {
                     .code(NAME_MISSING_CODE).field(USER_NAME).message(NAME_MISSING_ERROR).build());
         }
     }
+
+	private void addRolesMissingError(User user, List<ErrorField> errorFields) {
+		if (user.isRolesAbsent()) {
+			errorFields.add(ErrorField.builder()
+					.code(ROLES_MISSING_CODE).field(ROLES_FIELD).message(ROLES_MISSING_MESSAGE).build());
+		}
+	}
+
+    private void addTenantMissingError(User user, List<ErrorField> errorFields) {
+		if (user.isTenantIdAbsent()) {
+			errorFields.add(ErrorField.builder()
+					.code(TENANT_MISSING_CODE).field(TENANT_FIELD).message(TENANT_MISSING_MESSAGE).build());
+		}
+	}
 
     private void addUsernameMissingError(User user, List<ErrorField> errorFields) {
         if (user.isUsernameAbsent()) {

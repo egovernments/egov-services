@@ -73,7 +73,7 @@ public class UserController {
 	}
 
 	private UserDetailResponse updateUser(final Long id, final CreateUserRequest createUserRequest) {
-		User user = createUserRequest.toUpdateDomain();
+		User user = createUserRequest.toDomain();
 		final User updatedUser = userService.updateWithoutOtpValidation(id, user);
 		return createResponse(updatedUser);
 	}

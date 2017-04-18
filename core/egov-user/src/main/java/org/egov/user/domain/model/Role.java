@@ -9,6 +9,7 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(of = "code")
 public class Role {
     private Long id;
     private String name;

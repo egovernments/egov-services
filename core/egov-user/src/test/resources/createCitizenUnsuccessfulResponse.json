@@ -29,6 +29,16 @@
         "code": "core-user.005",
         "message": "Name is required",
         "field": "User.name"
+      },
+      {
+        "code":"core-user.TENANT_MANDATORY",
+        "message":"Tenant is required",
+        "field":"tenantId"
+      },
+      {
+        "code":"core-user.ROLES_MANDATORY",
+        "message":"Role(s) is required",
+        "field":"roles"
       }
     ]
   }

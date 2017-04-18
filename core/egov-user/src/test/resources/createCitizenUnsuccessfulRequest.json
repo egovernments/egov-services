@@ -41,6 +41,8 @@
     "photo": null,
     "otpReference": null,
     "tenantId": "ap.public",
-    "roles": []
+    "roles": [{
+      "code": "foo"
+    }]
   }
 }

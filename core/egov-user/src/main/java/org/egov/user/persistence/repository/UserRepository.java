@@ -98,7 +98,7 @@ public class UserRepository {
 	private Set<Role> fetchRolesByCode(User user) {
 		return user.getRoles()
 				.stream()
-				.map((role) -> roleRepository.findByTenantIdAndCodeIgnoreCase(user.getTenantId(), role.getName()))
+				.map((role) -> roleRepository.findByTenantIdAndCodeIgnoreCase(user.getTenantId(), role.getCode()))
 				.collect(Collectors.toSet());
 	}
 

@@ -151,8 +151,8 @@ public class UserRepositoryTest {
 		final List<org.egov.user.domain.model.Role> roles = new ArrayList<>();
 		final String roleName1 = "roleName1";
 		final String roleName2 = "roleName2";
-		roles.add(org.egov.user.domain.model.Role.builder().name(roleName1).tenantId("ap.public").build());
-		roles.add(org.egov.user.domain.model.Role.builder().name(roleName2).tenantId("ap.public").build());
+		roles.add(org.egov.user.domain.model.Role.builder().code(roleName1).tenantId("ap.public").build());
+		roles.add(org.egov.user.domain.model.Role.builder().code(roleName2).tenantId("ap.public").build());
 		org.egov.user.domain.model.User domainUser = org.egov.user.domain.model.User.builder()
 				.roles(roles)
 				.tenantId("ap.public")

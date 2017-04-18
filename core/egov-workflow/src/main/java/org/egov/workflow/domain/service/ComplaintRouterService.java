@@ -40,28 +40,19 @@
 
 package org.egov.workflow.domain.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.lang3.StringUtils;
 import org.egov.workflow.domain.exception.ApplicationRuntimeException;
 import org.egov.workflow.domain.exception.EscalationException;
 import org.egov.workflow.persistence.entity.ComplaintRouter;
-import org.egov.workflow.persistence.repository.BoundaryRepository;
-import org.egov.workflow.persistence.repository.ComplaintRouterRepository;
-import org.egov.workflow.persistence.repository.ComplaintTypeRepository;
-import org.egov.workflow.persistence.repository.EmployeeRepository;
-import org.egov.workflow.persistence.repository.PositionHierarchyRepository;
-import org.egov.workflow.persistence.repository.PositionRepository;
-import org.egov.workflow.web.contract.BoundaryResponse;
-import org.egov.workflow.web.contract.ComplaintTypeResponse;
-import org.egov.workflow.web.contract.Employee;
-import org.egov.workflow.web.contract.PositionHierarchyResponse;
-import org.egov.workflow.web.contract.PositionResponse;
+import org.egov.workflow.persistence.repository.*;
+import org.egov.workflow.web.contract.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ComplaintRouterService {

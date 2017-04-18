@@ -1,28 +1,19 @@
 package org.egov.workflow.domain.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import org.egov.workflow.persistence.entity.ComplaintRouter;
-import org.egov.workflow.persistence.repository.BoundaryRepository;
-import org.egov.workflow.persistence.repository.ComplaintRouterRepository;
-import org.egov.workflow.persistence.repository.ComplaintTypeRepository;
-import org.egov.workflow.persistence.repository.EmployeeRepository;
-import org.egov.workflow.persistence.repository.PositionHierarchyRepository;
-import org.egov.workflow.persistence.repository.PositionRepository;
-import org.egov.workflow.web.contract.BoundaryResponse;
-import org.egov.workflow.web.contract.ComplaintTypeResponse;
-import org.egov.workflow.web.contract.Employee;
-import org.egov.workflow.web.contract.PositionHierarchyResponse;
-import org.egov.workflow.web.contract.PositionResponse;
+import org.egov.workflow.persistence.repository.*;
+import org.egov.workflow.web.contract.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ComplaintRouterServiceTest {

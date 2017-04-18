@@ -120,7 +120,7 @@ class CreateAsset extends React.Component {
       };
 
       var response = $.ajax({
-          url: baseUrl + "/asset-services/assets/" + (type == "update" ? ("_update/"+ _this.state.assetSet.code) : "_create") + "?tenantId=ap.kurnool",
+          url: baseUrl + "/asset-services/assets/" + (type == "update" ? ("_update/"+ _this.state.assetSet.code) : "_create") + "?tenantId=" + tenantId,
           type: 'POST',
           dataType: 'json',
           data: JSON.stringify(body),

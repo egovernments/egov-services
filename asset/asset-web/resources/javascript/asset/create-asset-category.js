@@ -4,7 +4,7 @@ class CreateAsset extends React.Component {
     this.state = {
       list: [],
       assetCategory: {
-        "tenantId": "ap.kurnool",
+        "tenantId": tenantId,
         "name": "",
         "assetCategoryType": "",
         "parent": "",
@@ -95,7 +95,7 @@ class CreateAsset extends React.Component {
           };
 
         var response=$.ajax({
-              url:baseUrl+"/asset-services/assetCategories/_create?tenantId=ap.kurnool",
+              url:baseUrl+"/asset-services/assetCategories/_create?tenantId=" + tenantId,
               type: 'POST',
               dataType: 'json',
               data:JSON.stringify(body),
@@ -109,7 +109,7 @@ class CreateAsset extends React.Component {
         if(response["status"]==  201 || response["status"]==  200) {
           this.setState({
             assetCategory:{
-              "tenantId": "ap.kurnool",
+              "tenantId": tenantId,
               "name": "",
               "assetCategoryType": "",
               "parent":"",

@@ -2,7 +2,7 @@ class SearchAsset extends React.Component {
   constructor(props) {
     super(props);
     this.state={list:[],searchSet:{
-      "tenantId": "",
+      "tenantId": tenantId,
       "name": "",
       "department": "",
       "assetCategory": "",
@@ -14,8 +14,7 @@ class SearchAsset extends React.Component {
 
   }
 
-  handleChange(e,name)
-  {
+  handleChange(e,name) {
 
       this.setState({
           searchSet:{
@@ -26,8 +25,7 @@ class SearchAsset extends React.Component {
 
   }
 
-  search(e)
-  {
+  search(e) {
     e.preventDefault();
     //call api call
     var list=commonApiPost("asset-services","assets","_search",this.state.searchSet).responseJSON["Assets"];

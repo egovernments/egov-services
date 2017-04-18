@@ -1,3 +1,6 @@
+CREATE SEQUENCE seq_egasset_asset;
+CREATE SEQUENCE seq_egasset_assetcode;
+
 CREATE TABLE egasset_asset
 (
   id bigint NOT NULL,
@@ -30,6 +33,5 @@ CREATE TABLE egasset_asset
   lastmodifieddate timestamp without time zone,
   grossvalue numeric,
   accumulateddepreciation numeric,
-  CONSTRAINT pk_egasset_asset PRIMARY KEY (id)
+  CONSTRAINT pk_egasset_asset PRIMARY KEY (id,tenantid)
 );
-CREATE SEQUENCE SEQ_EGASSET_ASSET;

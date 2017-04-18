@@ -800,6 +800,10 @@ definitions:
   Notice:
     type: object
     properties:
+      id:
+        type: integer
+        format: int64
+        description: unique id of the Notice.
       tenantId:
         type: string
         description: unique id for a ULB
@@ -846,9 +850,6 @@ definitions:
         type: string
         format: date
         description: Date of Commencement of Agreement.
-      ackNumber:
-        type: string
-        description: Acknowledgement number for a Agreement.
       templateVersion:
         type: string
         description: Notice template version.
@@ -866,7 +867,11 @@ definitions:
       securityDeposit:
         type: number
         format: double
-        description: Security deposit.
+        description: Security deposit amount.
+      securityDepositInWord:
+        type: number
+        format: double
+        description: Security deposit amount in word.
       commissionerName:
         type: string
         description: Name of the city commissioner.

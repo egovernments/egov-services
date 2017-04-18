@@ -113,7 +113,7 @@ class AgreementSearch extends React.Component {
 
   handleSelectChange(type, id, number, assetCategory, acknowledgementNumber) {
     if (type === "renew") {
-        window.open("app/search-agreement/view-renew-agreement.html?view=renew&type="+assetCategory+"&agreementNumber="+number+"&assetId="+id, "fs", "fullscreen=yes")
+        window.open("app/search-agreement/view-renew-agreement.html?view=renew&type=" + assetCategory + (number ? "&agreementNumber=" + number : "&acknowledgementNumber=" + acknowledgementNumber) + "&assetId=" + id, "fs", "fullscreen=yes")
     } else if(type == "collTax") {
         $.ajax({
           url: "/lams-services/payment/_create?tenantId=" + tenantId + "&" + (number ? "agreementNumber=" + number : "acknowledgementNumber=" + acknowledgementNumber),

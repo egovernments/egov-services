@@ -72,6 +72,11 @@ $(document).ready(function() {
                 agreementNumber: getUrlVars()["agreementNumber"],
                 tenantId
             }).responseJSON["Agreements"][0] || {};
+        } else if(getUrlVars()["acknowledgementNumber"]) {
+            var agreementDetail = commonApiPost("lams-services", "agreements", "_search", {
+                acknowledgementNumber: getUrlVars()["acknowledgementNumber"],
+                tenantId
+            }).responseJSON["Agreements"][0] || {};
         } else {
             var agreementDetail = commonApiPost("lams-services", "agreements", "_search", {
                 stateId: getUrlVars()["state"],

@@ -15,7 +15,7 @@ var requestInfo = {
     "authToken":authToken
 };
 
-var tenantId = "ap.kurnool";
+var tenantId = "ap."+window.location.origin.split("-")[0].split("//")[1];
 
 $( document ).ajaxStart(function() {
   $.blockUI({

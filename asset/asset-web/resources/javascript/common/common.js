@@ -15,24 +15,24 @@ var requestInfo = {
     "authToken":authToken
 };
 
-var tenantId="ap.kurnool";
+var tenantId="ap."+window.location.origin.split("-")[0].split("//")[1];
 
 $( document ).ajaxStart(function() {
-  $.blockUI({ 
+  $.blockUI({
         message: "<span>Please wait...</span>",
-        css: { 
-            border: 'none', 
-            padding: '15px', 
-            backgroundColor: '#000', 
-            '-webkit-border-radius': '5px', 
-            '-moz-border-radius': '5px', 
-            opacity: .5, 
-            color: '#fff' 
-        } }); 
+        css: {
+            border: 'none',
+            padding: '15px',
+            backgroundColor: '#000',
+            '-webkit-border-radius': '5px',
+            '-moz-border-radius': '5px',
+            opacity: .5,
+            color: '#fff'
+        } });
 });
 
 $( document ).ajaxStop(function() {
-  setTimeout($.unblockUI, 100); 
+  setTimeout($.unblockUI, 100);
 });
 
 

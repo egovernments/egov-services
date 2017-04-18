@@ -104,20 +104,25 @@
 			"remarks": "",
 			"orderNo": "",
 			"documents": 
-			[
-				
-			]
+				[
+					"http://www.egov.org/egovservices/employee/100/service/10/relievingLetter.pdf"
+				]
 		}
 	],
-
+	
 	"probation": 
 	[
 		{
+			"id": 10,
 			"designation": "2",
 			"declaredOn": "20/02/2017",
 			"orderNo": "",
 			"orderDate": null,
-			"remarks": ""
+			"remarks": "",
+			"documents": 
+				[
+					"http://www.egov.org/egovservices/employee/100/probation/10/offer_letter.pdf"
+				]
 		}
 	],
 
@@ -129,36 +134,58 @@
 			"declaredOn": "20/02/2017",
 			"orderNo": "",
 			"orderDate": "20/02/2017",
-			"remarks": ""
+			"remarks": "",
+			"documents": 
+				[
+					"http://www.egov.org/egovservices/employee/100/reg/5/appointment.pdf",
+					"http://www.egov.org/egovservices/employee/100/reg/5/nda.pdf"
+				]
 		}
 	],
 
 	"technical": 
 	[
 		{
+			"id": "5000",
 			"skill": "sad",
 			"grade": "",
 			"yearOfPassing": "2017",
-			"remarks": ""
+			"remarks": "",
+			"documents": 
+				[
+					"http://www.egov.org/egovservices/employee/100/tech/5000/java_cert.pdf"
+				]
 		}
 	],
 
 	"education": 
 	[
 		{
+			"id": "501",
 			"qualification": "as",
 			"majorSubject": "",
 			"yearOfPassing": "2017",
-			"university": ""
+			"university": "",
+			"documents": 
+				[
+					"http://www.egov.org/egovservices/employee/100/edu/501/degree_cert.pdf",
+					"http://www.egov.org/egovservices/employee/100/edu/501/degree_marksheet.pdf"
+				]
 		}
 	],
 
 	"test": 
 	[
 		{
+			"id": "1",
 			"test": "asda",
 			"yearOfPassing": "2017",
-			"remarks": ""
+			"remarks": "",
+			"documents": 
+				[
+					"http://www.egov.org/egovservices/employee/100/test/1/postgres_test.pdf",
+					"http://www.egov.org/egovservices/employee/100/test/1/java_test.pdf"
+				]
 		}
 	],
 

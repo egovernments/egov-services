@@ -12,6 +12,7 @@
 	"dateOfResignation": "20/02/2017",
 	"dateOfTermination": "20/02/2017",
 	"employeeType": "4",
+	"documents": [],
 	"assignments": 
 	[
 		{
@@ -32,11 +33,7 @@
 
 			"govtOrderNumber": "sadsa",
 			"isPrimary": true,
-			"documents": 
-			[
-				"http://www.egov.org/egovservices/employee/100/assgn/1_1.pdf",
-				"http://www.egov.org/egovservices/employee/100/assgn/1_2.pdf"
-			]
+			"documents": []
 		},
 
 		{
@@ -57,11 +54,7 @@
 
 			"govtOrderNumber": "sadsa",
 			"isPrimary": true,
-			"documents": 
-			[
-				"http://www.egov.org/egovservices/employee/100/assgn/2_1.pdf",
-				"http://www.egov.org/egovservices/employee/100/assgn/2_2.pdf"
-			]
+			"documents": []
 		}
 	],
 
@@ -89,11 +82,6 @@
 	"bankAccount": "343534",
 	"group": "2",
 	"placeOfBirth": "siravanthe",
-	"documents": 
-	[
-		"http://www.egov.org/egovservices/employee/dob_100.pdf",
-		"http://www.egov.org/egovservices/employee/addr_proof_100.pdf"
-	],
 
 	"serviceHistory": 
 	[
@@ -103,21 +91,20 @@
 			"serviceFrom": "20/02/2017",
 			"remarks": "",
 			"orderNo": "",
-			"documents": 
-			[
-				
-			]
+			"documents": []
 		}
 	],
-
+	
 	"probation": 
 	[
 		{
+			"id": 10,
 			"designation": "2",
 			"declaredOn": "20/02/2017",
 			"orderNo": "",
 			"orderDate": null,
-			"remarks": ""
+			"remarks": "",
+			"documents": []
 		}
 	],
 
@@ -129,36 +116,43 @@
 			"declaredOn": "20/02/2017",
 			"orderNo": "",
 			"orderDate": "20/02/2017",
-			"remarks": ""
+			"remarks": "",
+			"documents": []
 		}
 	],
 
 	"technical": 
 	[
 		{
+			"id": "5000",
 			"skill": "sad",
 			"grade": "",
 			"yearOfPassing": "2017",
-			"remarks": ""
+			"remarks": "",
+			"documents": []
 		}
 	],
 
 	"education": 
 	[
 		{
+			"id": "501",
 			"qualification": "as",
 			"majorSubject": "",
 			"yearOfPassing": "2017",
-			"university": ""
+			"university": "",
+			"documents": []
 		}
 	],
 
 	"test": 
 	[
 		{
+			"id": "1",
 			"test": "asda",
 			"yearOfPassing": "2017",
-			"remarks": ""
+			"remarks": "",
+			"documents": []
 		}
 	],
 

@@ -58,6 +58,7 @@ public class LocationServiceTest {
         final HashMap<Object, Object> serviceRequestMap = new HashMap<>();
         serviceRequestMap.put("lat", 1.2d);
         serviceRequestMap.put("lng", 4.5d);
+        serviceRequestMap.put("tenantId","ap.kurnool");
         sevaRequestMap.put("ServiceRequest", serviceRequestMap);
         final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
 

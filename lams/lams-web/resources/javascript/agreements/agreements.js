@@ -1043,7 +1043,7 @@ $(".datetimepicker").on("dp.change", function() {
                             contentType: 'application/json'
                         });
 
-                        if(response["status"]===200)
+                        if(response["status"]===201)
                         {
                           if (typeof(response["responseJSON"]["Error"])!="undefined") {
                             showError(response["responseJSON"]["Error"]["message"]);

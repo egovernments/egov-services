@@ -256,7 +256,7 @@ $(document).ready(function() {
             for (var i = 0; i < process.attributes.validActions.values.length; i++) {
                 if(process.attributes.validActions.values[i].key)
                     $("#footer-btn-grp").append($(`<button data-action=${process.attributes.validActions.values[i].key} id=${process.attributes.validActions.values[i].key} type="button" class="btn btn-submit">${process.attributes.validActions.values[i].name}<button/>`));
-                if (process.attributes.validActions.values[i].key == "Approve") {
+                if (process.attributes.validActions.values[i].key.toLowerCase() == "approve" || process.attributes.validActions.values[i].key.toLowerCase() == "print notice") {
                     $("#workFlowDetails").remove();
                 }
             }
@@ -411,6 +411,7 @@ $(document).ready(function() {
               },
               contentType: 'application/json'
           });
+
           if (response["status"] === 201) {
               printNotice(response["responseJSON"].Notices[0]);
               // window.location.href = "app/search-assets/create-agreement-ack.html?name=" + getNameById(employees, agreement["approverName"]) + "&ackNo=" + responseJSON["Agreements"][0]["acknowledgementNumber"];

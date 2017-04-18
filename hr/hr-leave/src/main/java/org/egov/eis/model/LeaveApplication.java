@@ -85,9 +85,9 @@ public class LeaveApplication {
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date compensatoryForDate;
 
-    private Float leaveDays;
+    private Double leaveDays;
 
-    private Float availableDays;
+    private Double availableDays;
 
     private Integer halfdays;
 
@@ -112,5 +112,7 @@ public class LeaveApplication {
 
     @Size(max = 256)
     private String tenantId;
+
+    private WorkFlowDetails workFlowDetails;
 
 }

@@ -1,0 +1,15 @@
+CREATE TABLE egeis_employeeType (
+	id BIGINT NOT NULL,
+	name CHARACTER VARYING(50) NOT NULL,
+	chartOfAccounts CHARACTER VARYING(10) NOT NULL,
+	tenantId CHARACTER VARYING(250) NOT NULL,
+
+	CONSTRAINT pk_egeis_employeeType PRIMARY KEY (id)
+);
+
+CREATE SEQUENCE seq_egeis_employeeType
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;

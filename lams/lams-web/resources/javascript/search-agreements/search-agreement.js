@@ -137,9 +137,9 @@ class AgreementSearch extends React.Component {
               console.log(data);
           }
         });
-    } else if(type=== ""){
-
-  }
+    } else if(type=== "view"){
+        window.open("app/search-agreement/view-renew-agreement.html?view=new&type="+assetCategory+"&agreementNumber="+number+"&assetId="+id, "fs", "fullscreen=yes");
+    }
 }
 
 

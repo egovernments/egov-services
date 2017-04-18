@@ -57,16 +57,16 @@ import lombok.ToString;
 @ToString
 public class EligibleLeave {
 
-	@JsonProperty("leaveType")
-	private Long leaveType;
+    @JsonProperty("leaveType")
+    private Long leaveType;
 
-	@JsonProperty("employee")
-	private Long employee;
+    @JsonProperty("employee")
+    private Long employee;
 
-	@JsonProperty("noOfDays")
-	private Float noOfDays;
+    @JsonProperty("noOfDays")
+    private Double noOfDays;
 
-	@JsonProperty("asOnDate")
-	private String asOnDate;
+    @JsonProperty("asOnDate")
+    private String asOnDate;
 
 }

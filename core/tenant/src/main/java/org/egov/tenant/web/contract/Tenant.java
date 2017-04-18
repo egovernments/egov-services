@@ -1,10 +1,16 @@
 package org.egov.tenant.web.contract;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.egov.tenant.domain.model.TenantType;
 
 @Getter
+@Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class Tenant {
     private Long id;
     private String code;
@@ -13,6 +19,7 @@ public class Tenant {
     private String imageId;
     private String domainUrl;
     private String type;
+    private City city;
 
     public Tenant(org.egov.tenant.domain.model.Tenant domain) {
         this.id = domain.getId();
@@ -22,9 +29,21 @@ public class Tenant {
         this.imageId = domain.getImageId();
         this.domainUrl = domain.getDomainUrl();
         this.type = domain.getType().toString();
+        this.city = new City(domain.getCity());
     }
 
+    @JsonIgnore
     public org.egov.tenant.domain.model.Tenant toDomain() {
-        return null;
+        org.egov.tenant.domain.model.City city = this.city.toDomain();
+
+        return org.egov.tenant.domain.model.Tenant.builder()
+                .code(code)
+                .description(description)
+                .logoId(logoId)
+                .imageId(imageId)
+                .domainUrl(domainUrl)
+                .type(TenantType.valueOf(type))
+                .city(city)
+                .build();
     }
 }

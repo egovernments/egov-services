@@ -264,7 +264,7 @@ public class BoundaryService {
 						if (geom.contains(point)) {
 							LOG.debug("Found coordinates in shape file");
 							return getBoundaryByNumberAndType((Long) feature.getAttribute("bndrynum"),
-									(String) feature.getAttribute("bndrytype"));
+									(String) feature.getAttribute("bndrytype"),tenantId);
 						}
 					}
 				} finally {
@@ -278,7 +278,7 @@ public class BoundaryService {
 		}
 	}
 
-	public Optional<Boundary> getBoundaryByNumberAndType(Long boundaryNum, String boundaryTypeName) {
+	public Optional<Boundary> getBoundaryByNumberAndType(Long boundaryNum, String boundaryTypeName ,String tenantId) {
 		if (boundaryNum != null && !StringUtils.isEmpty(boundaryTypeName)) {
 			final BoundaryType boundaryType = boundaryTypeService
 					.getBoundaryTypeByNameAndHierarchyTypeName(boundaryTypeName, "ADMINISTRATION");
@@ -286,7 +286,7 @@ public class BoundaryService {
 			if (boundary == null) {
 				final BoundaryType cityBoundaryType = boundaryTypeService
 						.getBoundaryTypeByNameAndHierarchyTypeName("City", "ADMINISTRATION");
-				return Optional.ofNullable(this.getAllBoundariesByBoundaryTypeIdAndTenantId(cityBoundaryType.getId(),"").get(0));
+				return Optional.ofNullable(this.getAllBoundariesByBoundaryTypeIdAndTenantId(cityBoundaryType.getId(),tenantId).get(0));
 			}
 			return Optional.of(boundary);
 		}

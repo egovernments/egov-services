@@ -18,8 +18,7 @@ public class TenantQueryBuilder {
     private static final String TENANT_BASE_QUERY = "SELECT distinct id, code, description, domainurl, logoid, imageid, type, createdby, createddate, lastmodifiedby, lastmodifieddate from tenant";
 
     public String getInsertQuery() {
-        return "INSERT INTO tenant (id, code, description, domainurl, logoid, imageid, type, createdby, createddate, lastmodifiedby, lastmodifieddate) " +
-                "values ( nextval('seq_tenant'), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        return "INSERT INTO tenant (id, code, description, domainurl, logoid, imageid, type, createdby, createddate, lastmodifiedby, lastmodifieddate) VALUES (nextval('seq_tenant'), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     }
 
 

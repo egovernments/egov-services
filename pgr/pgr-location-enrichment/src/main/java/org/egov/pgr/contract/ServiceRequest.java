@@ -21,6 +21,10 @@ public class ServiceRequest {
 
     @JsonProperty("lat")
     private Double lat;
+    
+    
+    @JsonProperty("tenantId")
+    private String tenantId;
 
     public String getLatitude() {
         return lat.toString();

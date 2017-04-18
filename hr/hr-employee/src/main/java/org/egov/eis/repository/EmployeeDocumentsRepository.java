@@ -55,7 +55,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
@@ -119,12 +118,12 @@ public class EmployeeDocumentsRepository {
 		});
 	}
 
-	public void save(Long employeeId, String docUrl, String referenceType, Long referenceID, String tenantId) {
-		jdbcTemplate.update(INSERT_EMPLOYEE_DOCUMENTS_QUERY, employeeId, docUrl, referenceType, referenceID, tenantId);
+	public int save(Long employeeId, String docUrl, String referenceType, Long referenceID, String tenantId) {
+		return jdbcTemplate.update(INSERT_EMPLOYEE_DOCUMENTS_QUERY, employeeId, docUrl, referenceType, referenceID, tenantId);
 	}
 
-	public void delete(Long employeeId, String document, String referenceType, Long referenceID, String tenantId) {
-		jdbcTemplate.update(DELETE_QUERY, employeeId, document, referenceType, referenceID, tenantId);
+	public int delete(Long employeeId, String document, String referenceType, Long referenceID, String tenantId) {
+		return jdbcTemplate.update(DELETE_QUERY, employeeId, document, referenceType, referenceID, tenantId);
 	}
 
 	public List<EmployeeDocument> findByEmployeeId(Long id, String tenantId) {

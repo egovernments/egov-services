@@ -6,10 +6,9 @@ import java.util.List;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.AgreementCriteria;
 import org.egov.lams.model.Notice;
-import org.egov.lams.model.NoticeResponse;
 import org.egov.lams.repository.NoticeRepository;
-import org.egov.lams.repository.helper.AmountInWordUtil;
 import org.egov.lams.web.contract.NoticeRequest;
+import org.egov.lams.web.contract.NoticeResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

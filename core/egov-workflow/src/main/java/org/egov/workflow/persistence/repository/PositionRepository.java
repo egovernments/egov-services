@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.egov.workflow.web.contract.PositionResponse;
 import org.egov.workflow.web.contract.PositionServiceResponse;
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -33,7 +34,7 @@ public class PositionRepository {
 
     public List<PositionResponse> getByEmployeeCode(final String code) {
         final PositionServiceResponse positionServiceResponse = restTemplate.getForObject(positionsForEmployeeCodeUrl,
-                PositionServiceResponse.class, code);
+                PositionServiceResponse.class, code,new LocalDate().toString("dd/MM/yyyy"),"default");
         return positionServiceResponse.getPositions();
     }
 

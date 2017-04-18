@@ -84,160 +84,157 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/eligibleleaves")
 public class EligibleLeavesController {
 
-	private static final Logger logger = LoggerFactory.getLogger(LeaveAllotmentController.class);
+    private static final Logger logger = LoggerFactory.getLogger(LeaveAllotmentController.class);
 
-	@Autowired
-	private LeaveAllotmentService leaveAllotmentService;
+    @Autowired
+    private LeaveAllotmentService leaveAllotmentService;
 
-	@Autowired
-	private LeaveOpeningBalanceService leaveOpeningBalanceService;
+    @Autowired
+    private LeaveOpeningBalanceService leaveOpeningBalanceService;
 
-	@Autowired
-	private LeaveApplicationService leaveApplicationService;
+    @Autowired
+    private LeaveApplicationService leaveApplicationService;
 
-	@Autowired
-	private ErrorHandler errHandler;
+    @Autowired
+    private ErrorHandler errHandler;
 
-	@Autowired
-	private ResponseInfoFactory responseInfoFactory;
+    @Autowired
+    private ResponseInfoFactory responseInfoFactory;
 
-	@PostMapping("_search")
-	@ResponseBody
-	public ResponseEntity<?> search(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
-			BindingResult requestBodyBindingResult, @RequestParam(name = "tenantId", required = true) String tenantId,
-			@RequestParam(name = "leaveType", required = true) Long leaveType,
-			@RequestParam(name = "designationId", required = false) Long designationId,
-			@RequestParam(name = "employeeid", required = true) Long employeeid,
-			@RequestParam(name = "asOnDate", required = true) String asOnDate,
-			@RequestParam(name = "sort", required = false) String sort,
-			@RequestParam(name = "pageSize", required = false) Integer pageSize,
-			@RequestParam(name = "pageNumber", required = false) Integer pageNumber) {
-		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
-		LocalDate yearStartDate = null, asondate = null;
-		if (asOnDate != null && !asOnDate.isEmpty()) {
-			asondate = LocalDate.parse(asOnDate, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-			yearStartDate = LocalDate.parse("01/01/" + asondate.getYear(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-		}
-		Float openingBalanceValue = 0f, allotmentValue = 0f, proratedAllotmentValue = 0f, applicationValue = 0f;
+    @PostMapping("_search")
+    @ResponseBody
+    public ResponseEntity<?> search(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+            final BindingResult requestBodyBindingResult, @RequestParam(name = "tenantId", required = true) final String tenantId,
+            @RequestParam(name = "leaveType", required = true) final Long leaveType,
+            @RequestParam(name = "designationId", required = false) final Long designationId,
+            @RequestParam(name = "employeeid", required = true) final Long employeeid,
+            @RequestParam(name = "asOnDate", required = true) final String asOnDate,
+            @RequestParam(name = "sort", required = false) final String sort,
+            @RequestParam(name = "pageSize", required = false) final Integer pageSize,
+            @RequestParam(name = "pageNumber", required = false) final Integer pageNumber) {
+        final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+        LocalDate yearStartDate = null, asondate = null;
+        if (asOnDate != null && !asOnDate.isEmpty()) {
+            asondate = LocalDate.parse(asOnDate, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+            yearStartDate = LocalDate.parse("01/01/" + asondate.getYear(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        }
+        Float openingBalanceValue = 0f, allotmentValue = 0f, proratedAllotmentValue = 0f;
+        Double applicationValue = 0D;
 
-		// validate input params
-		if (requestBodyBindingResult.hasErrors()) {
-			return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
-		}
+        // validate input params
+        if (requestBodyBindingResult.hasErrors())
+            return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
 
-		LeaveOpeningBalanceGetRequest leaveOpeningBalanceGetRequest = new LeaveOpeningBalanceGetRequest();
+        final LeaveOpeningBalanceGetRequest leaveOpeningBalanceGetRequest = new LeaveOpeningBalanceGetRequest();
 
-		leaveOpeningBalanceGetRequest.getEmployee().add(employeeid);
+        leaveOpeningBalanceGetRequest.getEmployee().add(employeeid);
 
-		leaveOpeningBalanceGetRequest.getLeaveType().add(leaveType);
+        leaveOpeningBalanceGetRequest.getLeaveType().add(leaveType);
 
-		leaveOpeningBalanceGetRequest.setTenantId(tenantId);
+        leaveOpeningBalanceGetRequest.setTenantId(tenantId);
 
-		leaveOpeningBalanceGetRequest.setYear(asondate != null ? asondate.getYear() : null);
+        leaveOpeningBalanceGetRequest.setYear(asondate != null ? asondate.getYear() : null);
 
-		List<LeaveOpeningBalance> leaveOpeningBalancesList = null;
-		try {
-			leaveOpeningBalancesList = leaveOpeningBalanceService
-					.getLeaveOpeningBalances(leaveOpeningBalanceGetRequest);
-		} catch (Exception exception) {
-			logger.error("Error while processing request " + leaveOpeningBalanceGetRequest, exception);
-			return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
-		}
+        List<LeaveOpeningBalance> leaveOpeningBalancesList = null;
+        try {
+            leaveOpeningBalancesList = leaveOpeningBalanceService
+                    .getLeaveOpeningBalances(leaveOpeningBalanceGetRequest);
+        } catch (final Exception exception) {
+            logger.error("Error while processing request " + leaveOpeningBalanceGetRequest, exception);
+            return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
+        }
 
-		if (leaveOpeningBalancesList != null && !leaveOpeningBalancesList.isEmpty()) {
-			openingBalanceValue = leaveOpeningBalancesList.get(0).getNoOfDays();
-		}
+        if (leaveOpeningBalancesList != null && !leaveOpeningBalancesList.isEmpty())
+            openingBalanceValue = leaveOpeningBalancesList.get(0).getNoOfDays();
 
-		LeaveAllotmentGetRequest leaveAllotmentGetRequest = new LeaveAllotmentGetRequest();
+        final LeaveAllotmentGetRequest leaveAllotmentGetRequest = new LeaveAllotmentGetRequest();
 
-		leaveAllotmentGetRequest.getDesignationId().add(designationId);
+        leaveAllotmentGetRequest.getDesignationId().add(designationId);
 
-		leaveAllotmentGetRequest.getLeaveType().add(leaveType);
+        leaveAllotmentGetRequest.getLeaveType().add(leaveType);
 
-		leaveAllotmentGetRequest.setTenantId(tenantId);
+        leaveAllotmentGetRequest.setTenantId(tenantId);
 
-		List<LeaveAllotment> leaveAllotmentsList = null;
-		try {
-			leaveAllotmentsList = leaveAllotmentService.getLeaveAllotments(leaveAllotmentGetRequest);
-			if (leaveAllotmentGetRequest.getDesignationId() != null
-					&& !leaveAllotmentGetRequest.getDesignationId().isEmpty()
-					&& ((leaveAllotmentsList != null && leaveAllotmentsList.isEmpty())
-							|| leaveAllotmentsList == null)) {
-				leaveAllotmentGetRequest.setDesignationId(null);
-				leaveAllotmentsList = leaveAllotmentService.getLeaveAllotments(leaveAllotmentGetRequest);
-			}
-		} catch (Exception exception) {
-			logger.error("Error while processing request " + leaveAllotmentGetRequest, exception);
-			return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
-		}
+        List<LeaveAllotment> leaveAllotmentsList = null;
+        try {
+            leaveAllotmentsList = leaveAllotmentService.getLeaveAllotments(leaveAllotmentGetRequest);
+            if (leaveAllotmentGetRequest.getDesignationId() != null
+                    && !leaveAllotmentGetRequest.getDesignationId().isEmpty()
+                    && (leaveAllotmentsList != null && leaveAllotmentsList.isEmpty()
+                            || leaveAllotmentsList == null)) {
+                leaveAllotmentGetRequest.setDesignationId(null);
+                leaveAllotmentsList = leaveAllotmentService.getLeaveAllotments(leaveAllotmentGetRequest);
+            }
+        } catch (final Exception exception) {
+            logger.error("Error while processing request " + leaveAllotmentGetRequest, exception);
+            return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
+        }
 
-		if (leaveAllotmentsList != null && !leaveAllotmentsList.isEmpty()) {
-			allotmentValue = leaveAllotmentsList.get(0).getNoOfDays();
-		}
+        if (leaveAllotmentsList != null && !leaveAllotmentsList.isEmpty())
+            allotmentValue = leaveAllotmentsList.get(0).getNoOfDays();
 
-		if (allotmentValue != null)
-			proratedAllotmentValue = (allotmentValue / 356)
-					* Duration.between(yearStartDate.atTime(0, 0), asondate.atTime(0, 0)).toDays();
+        if (allotmentValue != null)
+            proratedAllotmentValue = allotmentValue / 356
+                    * Duration.between(yearStartDate.atTime(0, 0), asondate.atTime(0, 0)).toDays();
 
-		LeaveApplicationGetRequest leaveApplicationGetRequest = new LeaveApplicationGetRequest();
+        final LeaveApplicationGetRequest leaveApplicationGetRequest = new LeaveApplicationGetRequest();
 
-		leaveApplicationGetRequest.getEmployee().add(employeeid);
+        leaveApplicationGetRequest.getEmployee().add(employeeid);
 
-		leaveApplicationGetRequest.setLeaveType(leaveType);
+        leaveApplicationGetRequest.setLeaveType(leaveType);
 
-		leaveApplicationGetRequest.setStatus(LeaveStatus.APPROVED.toString());
+        leaveApplicationGetRequest.setStatus(LeaveStatus.APPROVED.toString());
 
-		leaveApplicationGetRequest
-				.setFromDate(Date.from(yearStartDate.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        leaveApplicationGetRequest
+                .setFromDate(Date.from(yearStartDate.atStartOfDay(ZoneId.systemDefault()).toInstant()));
 
-		leaveApplicationGetRequest.setToDate(Date.from(asondate.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        leaveApplicationGetRequest.setToDate(Date.from(asondate.atStartOfDay(ZoneId.systemDefault()).toInstant()));
 
-		List<LeaveApplication> leaveApplicationsList = null;
-		try {
-			leaveApplicationsList = leaveApplicationService.getLeaveApplications(leaveApplicationGetRequest);
-		} catch (final Exception exception) {
-			logger.error("Error while processing request " + leaveApplicationGetRequest, exception);
-			return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
-		}
+        List<LeaveApplication> leaveApplicationsList = null;
+        try {
+            leaveApplicationsList = leaveApplicationService.getLeaveApplications(leaveApplicationGetRequest);
+        } catch (final Exception exception) {
+            logger.error("Error while processing request " + leaveApplicationGetRequest, exception);
+            return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
+        }
 
-		if (leaveApplicationsList != null && !leaveApplicationsList.isEmpty()) {
-			applicationValue = leaveApplicationsList.get(0).getLeaveDays();
-		}
+        if (leaveApplicationsList != null && !leaveApplicationsList.isEmpty())
+            applicationValue = leaveApplicationsList.get(0).getLeaveDays();
 
-		EligibleLeave eligibleLeave = new EligibleLeave();
+        final EligibleLeave eligibleLeave = new EligibleLeave();
 
-		eligibleLeave.setAsOnDate(asOnDate);
+        eligibleLeave.setAsOnDate(asOnDate);
 
-		eligibleLeave.setEmployee(employeeid);
+        eligibleLeave.setEmployee(employeeid);
 
-		eligibleLeave.setLeaveType(leaveType);
+        eligibleLeave.setLeaveType(leaveType);
 
-		eligibleLeave.setNoOfDays((openingBalanceValue + proratedAllotmentValue) - applicationValue);
+        eligibleLeave.setNoOfDays(openingBalanceValue + proratedAllotmentValue - applicationValue);
 
-		Long iPart = eligibleLeave.getNoOfDays().longValue();
-		Double fPart = (double) (eligibleLeave.getNoOfDays() - iPart);
+        Long iPart = eligibleLeave.getNoOfDays().longValue();
+        final Double fPart = (double) (eligibleLeave.getNoOfDays() - iPart);
 
-		if (fPart > 0.5)
-			iPart++;
+        if (fPart > 0.5)
+            iPart++;
 
-		eligibleLeave.setNoOfDays(iPart.floatValue());
-		return getSuccessResponse(Collections.singletonList(eligibleLeave), requestInfo);
-	}
+        eligibleLeave.setNoOfDays(iPart.doubleValue());
+        return getSuccessResponse(Collections.singletonList(eligibleLeave), requestInfo);
+    }
 
-	/**
-	 * Populate Response object and return EligibleLeaveResponse
-	 * 
-	 * @param eligibleLeavesList
-	 * @return
-	 */
-	private ResponseEntity<?> getSuccessResponse(List<EligibleLeave> eligibleLeavesList, RequestInfo requestInfo) {
-		EligibleLeaveResponse eligibleLeaveResponse = new EligibleLeaveResponse();
-		eligibleLeaveResponse.setEligibleLeave(eligibleLeavesList);
-		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
-		responseInfo.setStatus(HttpStatus.OK.toString());
-		eligibleLeaveResponse.setResponseInfo(responseInfo);
-		return new ResponseEntity<EligibleLeaveResponse>(eligibleLeaveResponse, HttpStatus.OK);
+    /**
+     * Populate Response object and return EligibleLeaveResponse
+     * 
+     * @param eligibleLeavesList
+     * @return
+     */
+    private ResponseEntity<?> getSuccessResponse(final List<EligibleLeave> eligibleLeavesList, final RequestInfo requestInfo) {
+        final EligibleLeaveResponse eligibleLeaveResponse = new EligibleLeaveResponse();
+        eligibleLeaveResponse.setEligibleLeave(eligibleLeavesList);
+        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+        responseInfo.setStatus(HttpStatus.OK.toString());
+        eligibleLeaveResponse.setResponseInfo(responseInfo);
+        return new ResponseEntity<EligibleLeaveResponse>(eligibleLeaveResponse, HttpStatus.OK);
 
-	}
+    }
 
 }

@@ -159,11 +159,15 @@ class ApplyLeave extends React.Component {
 
   handleChangeThreeLevel(e,pName,name)
   {
+    var _this=this;
     if(pName=="leaveType"){
       var leaveType=e.target.value;
-      try{
-        var object =  getCommonMasterById("hr-leave","leaveopeningbalances","LeaveOpeningBalance",leaveType,tenantId).responseJSON["LeaveOpeningBalance"][0];
 
+      try{
+      var employeeid =getUrlVars()["id"];
+      var asOnDate = _this.state.leaveSet.toDate;
+      var object =  commonApiPost("hr-leave","eligibleleaves","_search",{leaveType,tenantId,asOnDate,employeeid}).responseJSON["EligibleLeave"][0];
+      console.log(object);
         this.setState({
           leaveSet:{
             ...this.state.leaveSet,

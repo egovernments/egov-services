@@ -1,0 +1,19 @@
+CREATE TABLE egeis_designation (
+	id BIGINT NOT NULL,
+	name CHARACTER VARYING(100) NOT NULL,
+	code CHARACTER VARYING(20) NOT NULL,
+	description CHARACTER VARYING(250),
+	chartOfAccounts CHARACTER VARYING(10),
+	active BOOLEAN NOT NULL,
+	tenantId CHARACTER VARYING(250) NOT NULL,
+
+	CONSTRAINT pk_egeis_designation PRIMARY KEY (id),
+	CONSTRAINT uk_egeis_designation_code UNIQUE (code)
+);
+
+CREATE SEQUENCE seq_egeis_designation
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;

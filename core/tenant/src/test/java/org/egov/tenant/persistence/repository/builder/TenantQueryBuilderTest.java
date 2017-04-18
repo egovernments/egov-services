@@ -28,7 +28,7 @@ public class TenantQueryBuilderTest {
     private JdbcTemplate jdbcTemplate;
 
     @Test
-    @Sql(scripts = {"/sql/clearTenant.sql", "/sql/insertTenantData.sql"})
+    @Sql(scripts = {"/sql/clearCity.sql", "/sql/clearTenant.sql", "/sql/insertTenantData.sql"})
     public void test_should_retrieve_tenant() throws Exception {
         TenantSearchCriteria tenantSearchCriteria = TenantSearchCriteria.builder()
                 .tenantCodes(TENANT_CODES)
@@ -55,7 +55,7 @@ public class TenantQueryBuilderTest {
     }
 
     @Test
-    @Sql(scripts = {"/sql/clearTenant.sql"})
+    @Sql(scripts = {"/sql/clearCity.sql", "/sql/clearTenant.sql"})
     public void test_should_save_tenant() throws Exception {
         TenantQueryBuilder tenantQueryBuilder = new TenantQueryBuilder();
         String query = tenantQueryBuilder.getInsertQuery();

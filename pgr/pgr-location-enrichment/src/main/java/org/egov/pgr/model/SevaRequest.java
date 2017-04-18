@@ -17,6 +17,7 @@ public class SevaRequest {
     private static final String CHILD_LOCATION_ID = "child_location_id";
     private final static String SERVICE_REQUEST = "ServiceRequest";
     private static final String VALUES = "values";
+  
     private final ServiceRequest serviceRequestObject;
 
     private HashMap<String, Object> sevaRequestMap;
@@ -56,7 +57,10 @@ public class SevaRequest {
     public String getLocationId() {
         return getValues().get(LOCATION_ID);
     }
-
+    
+    public String gettenantId() {
+        return serviceRequestObject.getTenantId();
+    }
     public String getLocationName() {
         return getValues().get(LOCATION_NAME);
     }

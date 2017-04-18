@@ -5,9 +5,9 @@ import java.util.List;
 
 import org.egov.lams.model.Notice;
 import org.egov.lams.model.NoticeCriteria;
-import org.egov.lams.model.NoticeResponse;
 import org.egov.lams.service.NoticeService;
 import org.egov.lams.web.contract.NoticeRequest;
+import org.egov.lams.web.contract.NoticeResponse;
 import org.egov.lams.web.errorhandlers.Error;
 import org.egov.lams.web.errorhandlers.ErrorResponse;
 import org.slf4j.Logger;

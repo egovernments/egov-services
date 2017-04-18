@@ -99,8 +99,13 @@ public class BoundaryTypeService {
 	}
 
 	public List<BoundaryType> getAllBoundarTypesByHierarchyTypeIdAndTenantId(final Long hierarchyTypeId,
-																			 final String tenantId) {
+			final String tenantId) {
 		return boundaryTypeRepository.findByHierarchyTypeIdAndTenantId(hierarchyTypeId, tenantId);
+	}
+
+	public List<BoundaryType> getAllBoundarTypesByHierarchyTypeIdAndTenantName(final String hierarchyTypeName,
+			final String tenantId) {
+		return boundaryTypeRepository.findByHierarchyTypeIdAndTenantName(hierarchyTypeName, tenantId);
 	}
 
 	public BoundaryType getBoundaryTypeByParent(final Long parentId) {
@@ -130,7 +135,7 @@ public class BoundaryTypeService {
 	}
 
 	public BoundaryType getBoundaryTypeByNameAndHierarchyTypeName(final String boundaryTypename,
-																  final String hierarchyTypeName) {
+			final String hierarchyTypeName) {
 		return boundaryTypeRepository.findByNameAndHierarchyTypeName(boundaryTypename, hierarchyTypeName);
 	}
 
@@ -162,7 +167,8 @@ public class BoundaryTypeService {
 							boundarytypeRequest.getBoundaryType().getTenantId()));
 
 				} else {
-					boundaryTypes.addAll(boundaryTypeRepository.findAllByTenantId(boundarytypeRequest.getBoundaryType().getTenantId()));
+					boundaryTypes.addAll(boundaryTypeRepository
+							.findAllByTenantId(boundarytypeRequest.getBoundaryType().getTenantId()));
 				}
 			}
 		}

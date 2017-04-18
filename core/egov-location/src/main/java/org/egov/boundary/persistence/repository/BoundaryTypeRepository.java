@@ -64,6 +64,10 @@ public interface BoundaryTypeRepository extends JpaRepository<BoundaryType, Long
     @Query("select bt from BoundaryType bt where bt.hierarchyType.id=:hierarchyId and bt.tenantId=:tenantId")
     List<BoundaryType> findByHierarchyTypeIdAndTenantId(@Param("hierarchyId") Long id,
                                                         @Param("tenantId") String tenantId);
+    
+    @Query("select bt from BoundaryType bt where bt.hierarchyType.name=:hierarchyName and bt.tenantId=:tenantId")
+    List<BoundaryType> findByHierarchyTypeIdAndTenantName(@Param("hierarchyName") String hierarchyName,
+                                                        @Param("tenantId") String tenantId);
 
     @Query("select bt from BoundaryType bt where bt.parent.id=:parentId")
     BoundaryType findByParent(@Param("parentId") Long parentId);

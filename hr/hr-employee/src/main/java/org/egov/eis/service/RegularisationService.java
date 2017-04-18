@@ -18,26 +18,29 @@ public class RegularisationService {
 	private RegularisationRepository regularisationRepository;
 	
 	public void update(Employee employee) {
-		if(isEmpty(employee.getRegularisation()))
-			return;
-		List<Regularisation> regularisations = regularisationRepository.findByEmployeeId(employee.getId(), employee.getTenantId());
-		employee.getRegularisation().forEach((regularisation) -> {
-			if (needsInsert(regularisation, regularisations)) {
-				regularisationRepository.insert(regularisation, employee.getId());
-			} else if (needsUpdate(regularisation, regularisations)) {
-				regularisation.setTenantId(employee.getTenantId());
-				regularisationRepository.update(regularisation);
-			}
-     });
+		List<Regularisation> regularisations = regularisationRepository.findByEmployeeId(employee.getId(),
+				employee.getTenantId());
+		if (!isEmpty(employee.getRegularisation())) {
+			employee.getRegularisation().forEach((regularisation) -> {
+				if (needsInsert(regularisation, regularisations)) {
+					regularisationRepository.insert(regularisation, employee.getId());
+				} else if (needsUpdate(regularisation, regularisations)) {
+					regularisation.setTenantId(employee.getTenantId());
+					regularisationRepository.update(regularisation);
+				}
+			});
+		}
 		deleteRegularisationsInDBThatAreNotInInput(employee.getRegularisation(), regularisations,  employee.getId(),employee.getTenantId());
 	}
 
 	private void deleteRegularisationsInDBThatAreNotInInput(List<Regularisation> inputRegularisations,
-			List<Regularisation> RegularisationsFromDb, Long employeeId, String tenantId) {
+			List<Regularisation> regularisationsFromDb, Long employeeId, String tenantId) {
 		
-		List<Long> regularisationsIdsToDelete = getListOfRegulationIdsToDelete(inputRegularisations, RegularisationsFromDb);
-		if (!regularisationsIdsToDelete.isEmpty())
+		List<Long> regularisationsIdsToDelete = getListOfRegulationIdsToDelete(inputRegularisations, regularisationsFromDb);
+		if (!regularisationsIdsToDelete.isEmpty()) {
 			regularisationRepository.delete(regularisationsIdsToDelete, employeeId, tenantId);
+			// FIXME delete from employeedocuments
+		}
 	}
 
 	private List<Long> getListOfRegulationIdsToDelete(List<Regularisation> inputRegularisations,
@@ -45,19 +48,27 @@ public class RegularisationService {
 		List<Long> regularisationsIdsToDelete = new ArrayList<>();
 		for (Regularisation regularisationInDb : regularisationsFromDb) {
 			boolean found = false;
-			for (Regularisation inputRegularisation : inputRegularisations)
-				if (inputRegularisation.getId().equals(regularisationInDb.getId())) {
-					found = true;
-					break;
-				}
+			if (isEmpty(inputRegularisations))
+				found = true;
+			else {
+				for (Regularisation inputRegularisation : inputRegularisations)
+					if (inputRegularisation.getId().equals(regularisationInDb.getId())) {
+						found = true;
+						break;
+					}
+			}
 			if (!found) regularisationsIdsToDelete.add(regularisationInDb.getId());
 		}
 		return regularisationsIdsToDelete;
 	}
 
+	/**
+	 * Note: needsUpdate checks if any field has changed by comparing with contents
+	 * from db. If yes, then only do an update.
+	 */
 	private boolean needsUpdate(Regularisation regularisation, List<Regularisation> regularisations) {
 		for (Regularisation oldRegularisation : regularisations) 
-			if (regularisation.equals(oldRegularisation)) return false;
+			if (regularisation.equals(oldRegularisation)) return false; 
 		return true;
 	}
 

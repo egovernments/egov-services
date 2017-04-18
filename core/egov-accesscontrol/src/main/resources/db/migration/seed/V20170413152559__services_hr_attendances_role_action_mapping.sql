@@ -9,18 +9,18 @@ insert into eg_action (ID,NAME,URL,SERVICECODE,QUERYPARAMS,PARENTMODULE,ORDERNUM
 insert into eg_action (ID,NAME,URL,SERVICECODE,QUERYPARAMS,PARENTMODULE,ORDERNUMBER,DISPLAYNAME,ENABLED,CREATEDBY,CREATEDDATE,LASTMODIFIEDBY,LASTMODIFIEDDATE,TENANTID) values (NEXTVAL('SEQ_EG_ACTION'),'AjaxUpdateAttendances','/hr-attendance/attendances/_update','EIS',null,(select code from service where name='Attendance' and contextroot='eis'),0,'Ajax Update Attendances','false',1,now(),1,now(),'default');
 
 ---adding role action mappings
-insert into eg_roleaction(roleCode, actionid, tenantId) values ('Employee Admin', (select id from eg_action where name = 'SearchAttendancePage'), 'default');
-insert into eg_roleaction(roleCode, actionid, tenantId) values ('Employee Admin', (select id from eg_action where name = 'AttendanceResults'), 'default');
-insert into eg_roleaction(roleCode, actionid, tenantId) values ('Employee Admin', (select id from eg_action where name = 'AjaxSearchAttendances'), 'default');
-insert into eg_roleaction(roleCode, actionid, tenantId) values ('Employee Admin', (select id from eg_action where name = 'AjaxCreateAttendances'), 'default');
-insert into eg_roleaction(roleCode, actionid, tenantId) values ('Employee Admin', (select id from eg_action where name = 'AjaxUpdateAttendances'), 'default');
-insert into eg_roleaction(roleCode, actionid, tenantId) values ('Super User', (select id from eg_action where name = 'SearchAttendancePage'), 'default');
-insert into eg_roleaction(roleCode, actionid, tenantId) values ('Super User', (select id from eg_action where name = 'AttendanceResults'), 'default');
-insert into eg_roleaction(roleCode, actionid, tenantId) values ('Super User', (select id from eg_action where name = 'AjaxSearchAttendances'), 'default');
-insert into eg_roleaction(roleCode, actionid, tenantId) values ('Super User', (select id from eg_action where name = 'AjaxCreateAttendances'), 'default');
-insert into eg_roleaction(roleCode, actionid, tenantId) values ('Super User', (select id from eg_action where name = 'AjaxUpdateAttendances'), 'default');
+insert into eg_roleaction(roleCode, actionid, tenantId) values ('EMPLOYEE ADMIN', (select id from eg_action where name = 'SearchAttendancePage'), 'default');
+insert into eg_roleaction(roleCode, actionid, tenantId) values ('EMPLOYEE ADMIN', (select id from eg_action where name = 'AttendanceResults'), 'default');
+insert into eg_roleaction(roleCode, actionid, tenantId) values ('EMPLOYEE ADMIN', (select id from eg_action where name = 'AjaxSearchAttendances'), 'default');
+insert into eg_roleaction(roleCode, actionid, tenantId) values ('EMPLOYEE ADMIN', (select id from eg_action where name = 'AjaxCreateAttendances'), 'default');
+insert into eg_roleaction(roleCode, actionid, tenantId) values ('EMPLOYEE ADMIN', (select id from eg_action where name = 'AjaxUpdateAttendances'), 'default');
+insert into eg_roleaction(roleCode, actionid, tenantId) values ('SUPERUSER', (select id from eg_action where name = 'SearchAttendancePage'), 'default');
+insert into eg_roleaction(roleCode, actionid, tenantId) values ('SUPERUSER', (select id from eg_action where name = 'AttendanceResults'), 'default');
+insert into eg_roleaction(roleCode, actionid, tenantId) values ('SUPERUSER', (select id from eg_action where name = 'AjaxSearchAttendances'), 'default');
+insert into eg_roleaction(roleCode, actionid, tenantId) values ('SUPERUSER', (select id from eg_action where name = 'AjaxCreateAttendances'), 'default');
+insert into eg_roleaction(roleCode, actionid, tenantId) values ('SUPERUSER', (select id from eg_action where name = 'AjaxUpdateAttendances'), 'default');
 
 --rollback scripts
---rollback delete from eg_roleaction where rolecode in ('Employee Admin', 'Super User') and actionid in (select id from eg_action where name in ('AjaxSearchAttendances','AjaxCreateAttendances','AjaxUpdateAttendances', 'SearchAttendancePage', 'AttendanceResults'));
+--rollback delete from eg_roleaction where rolecode in ('EMPLOYEE ADMIN', 'SUPERUSER') and actionid in (select id from eg_action where name in ('AjaxSearchAttendances','AjaxCreateAttendances','AjaxUpdateAttendances', 'SearchAttendancePage', 'AttendanceResults'));
 --rollback delete from eg_action where name in ('AjaxUpdateAttendances', 'AjaxCreateAttendances', 'AjaxSearchAttendances', 'SearchAttendancePage', 'AttendanceResults');
 --rollback delete from service where name = 'Attendance';

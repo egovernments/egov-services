@@ -7,6 +7,8 @@ import java.util.List;
 
 import org.egov.eis.model.Employee;
 import org.egov.eis.model.Regularisation;
+import org.egov.eis.model.enums.EntityType;
+import org.egov.eis.repository.EmployeeDocumentsRepository;
 import org.egov.eis.repository.RegularisationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,6 +18,9 @@ public class RegularisationService {
 	
 	@Autowired
 	private RegularisationRepository regularisationRepository;
+	
+	@Autowired
+	private EmployeeDocumentsRepository employeeDocumentsRepository; 
 	
 	public void update(Employee employee) {
 		List<Regularisation> regularisations = regularisationRepository.findByEmployeeId(employee.getId(),
@@ -40,6 +45,7 @@ public class RegularisationService {
 		if (!regularisationsIdsToDelete.isEmpty()) {
 			regularisationRepository.delete(regularisationsIdsToDelete, employeeId, tenantId);
 			// FIXME delete from employeedocuments
+			employeeDocumentsRepository.deleteForReferenceType(employeeId, EntityType.REGULARISATION, tenantId);	
 		}
 	}
 
@@ -48,15 +54,15 @@ public class RegularisationService {
 		List<Long> regularisationsIdsToDelete = new ArrayList<>();
 		for (Regularisation regularisationInDb : regularisationsFromDb) {
 			boolean found = false;
-			if (isEmpty(inputRegularisations))
-				found = true;
-			else {
+			if (!isEmpty(inputRegularisations)) {
+				// if empty, found remains false and the record becomes eligible for deletion.
 				for (Regularisation inputRegularisation : inputRegularisations)
 					if (inputRegularisation.getId().equals(regularisationInDb.getId())) {
 						found = true;
 						break;
 					}
 			}
+			
 			if (!found) regularisationsIdsToDelete.add(regularisationInDb.getId());
 		}
 		return regularisationsIdsToDelete;

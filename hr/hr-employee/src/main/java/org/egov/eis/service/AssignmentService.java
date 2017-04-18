@@ -49,7 +49,9 @@ import java.util.stream.Collectors;
 import org.egov.eis.model.Assignment;
 import org.egov.eis.model.Employee;
 import org.egov.eis.model.HODDepartment;
+import org.egov.eis.model.enums.EntityType;
 import org.egov.eis.repository.AssignmentRepository;
+import org.egov.eis.repository.EmployeeDocumentsRepository;
 import org.egov.eis.repository.HODDepartmentRepository;
 import org.egov.eis.web.contract.AssignmentGetRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,6 +65,9 @@ public class AssignmentService {
 
 	@Autowired
 	private HODDepartmentRepository hodDepartmentRepository;
+	
+	@Autowired
+	private EmployeeDocumentsRepository employeeDocumentsRepository; 
 
 	public List<Assignment> getAssignments(Long employeeId, AssignmentGetRequest assignmentGetRequest) {
 		return assignmentRepository.findForCriteria(employeeId, assignmentGetRequest);
@@ -133,6 +138,7 @@ public class AssignmentService {
 		if (!assignmentsIdsToDelete.isEmpty()) {
 			hodDepartmentRepository.delete(assignmentsIdsToDelete, tenantId);
 			assignmentRepository.delete(assignmentsIdsToDelete, employeeId, tenantId);
+			employeeDocumentsRepository.deleteForReferenceType(employeeId, EntityType.ASSIGNMENT, tenantId);
 		}
 	}
 
@@ -141,11 +147,14 @@ public class AssignmentService {
 		List<Assignment> assignmentsToDelete = new ArrayList<>();
 		for (Assignment assignmentInDb : assignmentsFromDb) {
 			boolean found = false;
+			if (!isEmpty(inputAssignments)) {
+				// if empty, found remains false and the record becomes eligible for deletion.
 			for (Assignment inputAssignment : inputAssignments)
 				if (inputAssignment.getId().equals(assignmentInDb.getId())) {
 					found = true;
 					break;
 				}
+			}
 			if (!found)
 				assignmentsToDelete.add(assignmentInDb);
 		}
@@ -159,6 +168,10 @@ public class AssignmentService {
 		return true;
 	}
 
+	/**
+	 * Note: needsUpdate checks if any field has changed by comparing with contents
+	 * from db. If yes, then only do an update.
+	 */
 	private boolean needsUpdate(Assignment assignment, List<Assignment> assignments) {
 		for (Assignment oldAssignment : assignments)
 			if (assignment.equals(oldAssignment))

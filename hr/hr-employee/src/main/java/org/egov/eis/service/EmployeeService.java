@@ -308,7 +308,7 @@ public class EmployeeService {
 	public ResponseEntity<?> updateAsync(EmployeeRequest employeeRequest) {
 
 		Employee employee = employeeRequest.getEmployee();
-		UserRequest userRequest = employeeHelper.getUserRequest(employeeRequest);
+		/*UserRequest userRequest = employeeHelper.getUserRequest(employeeRequest);
 
 		ResponseEntity<?> responseEntity = null;
 
@@ -326,7 +326,7 @@ public class EmployeeService {
 
 		UserResponse userResponse = (UserResponse) responseEntity.getBody();
 		User user = userResponse.getUser().get(0);
-		employee.setUser(user);
+		employee.setUser(user);*/
 
 		try {
 			employeeHelper.populateDefaultDataForUpdate(employeeRequest);
@@ -357,6 +357,7 @@ public class EmployeeService {
 	public void update(EmployeeRequest employeeRequest) {
 		Employee employee = employeeRequest.getEmployee();
 		employeeRepository.update(employee);
+		
 		employeeLanguageService.update(employee);
 		employeeJurisdictionService.update(employee);
 		assignmentService.update(employee);

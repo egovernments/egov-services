@@ -7,6 +7,8 @@ import java.util.List;
 
 import org.egov.eis.model.Employee;
 import org.egov.eis.model.Probation;
+import org.egov.eis.model.enums.EntityType;
+import org.egov.eis.repository.EmployeeDocumentsRepository;
 import org.egov.eis.repository.ProbationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,6 +18,9 @@ public class ProbationService {
 
 	@Autowired
 	private ProbationRepository probationRepository;
+	
+	@Autowired
+	private EmployeeDocumentsRepository employeeDocumentsRepository; 
 
 	public void update(Employee employee) {
 		if(isEmpty(employee.getProbation()))
@@ -39,7 +44,7 @@ public class ProbationService {
 		List<Long> probationsIdsToDelete = getListOfProbationIdsToDelete(inputProbations, probationsFromDb);
 		if (!probationsIdsToDelete.isEmpty())
 			probationRepository.delete(probationsIdsToDelete, employeeId, tenantId);
-
+		    employeeDocumentsRepository.deleteForReferenceType(employeeId, EntityType.PROBATION, tenantId);
 	}
 
 	private List<Long> getListOfProbationIdsToDelete(List<Probation> inputProbations,

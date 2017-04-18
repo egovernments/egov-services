@@ -7,6 +7,8 @@ import java.util.List;
 
 import org.egov.eis.model.Employee;
 import org.egov.eis.model.TechnicalQualification;
+import org.egov.eis.model.enums.EntityType;
+import org.egov.eis.repository.EmployeeDocumentsRepository;
 import org.egov.eis.repository.TechnicalQualificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,6 +18,9 @@ public class TechnicalQualificationService {
 	
 	@Autowired
 	private TechnicalQualificationRepository technicalQualificationRepository;
+	
+	@Autowired
+	private EmployeeDocumentsRepository employeeDocumentsRepository; 
 
 	public void update(Employee employee) {
 		if(isEmpty(employee.getTechnical()))
@@ -39,6 +44,7 @@ public class TechnicalQualificationService {
 		List<Long> technicalsIdsToDelete = getListOfTechnicalIdsToDelete(inputTechnicals, technicalsFromDb);
 		if (!technicalsIdsToDelete.isEmpty())
 			technicalQualificationRepository.delete(technicalsIdsToDelete, employeeId, tenantId);
+		    employeeDocumentsRepository.deleteForReferenceType(employeeId, EntityType.TECHNICAL, tenantId);
 	}
 
 	private List<Long> getListOfTechnicalIdsToDelete(List<TechnicalQualification> inputTechnicals,
@@ -46,16 +52,23 @@ public class TechnicalQualificationService {
 		List<Long> technicalsIdsToDelete = new ArrayList<>();
 		for (TechnicalQualification technicalInDb : technicalsFromDb) {
 			boolean found = false;
+			if (!isEmpty(inputTechnicals)) {
+				// if empty, found remains false and the record becomes eligible for deletion.
 			for (TechnicalQualification inputTechnical : inputTechnicals)
 				if (inputTechnical.getId().equals(technicalInDb.getId())) {
 					found = true;
 					break;
 				}
+			}
 			if (!found) technicalsIdsToDelete.add(technicalInDb.getId());
 		}
 		return technicalsIdsToDelete;
 	}
 
+	/**
+	 * Note: needsUpdate checks if any field has changed by comparing with contents
+	 * from db. If yes, then only do an update.
+	 */
 	private boolean needsUpdate(TechnicalQualification technical, List<TechnicalQualification> technicals) {
 		for (TechnicalQualification oldTechnical : technicals) 
 			if (technical.equals(oldTechnical)) return false;

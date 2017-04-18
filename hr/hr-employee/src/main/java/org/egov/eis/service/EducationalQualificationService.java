@@ -7,7 +7,9 @@ import java.util.List;
 
 import org.egov.eis.model.EducationalQualification;
 import org.egov.eis.model.Employee;
+import org.egov.eis.model.enums.EntityType;
 import org.egov.eis.repository.EducationalQualificationRepository;
+import org.egov.eis.repository.EmployeeDocumentsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +18,9 @@ public class EducationalQualificationService {
 
 	@Autowired
 	private EducationalQualificationRepository educationalQualificationRepository;
+	
+	@Autowired
+	private EmployeeDocumentsRepository employeeDocumentsRepository; 
 
 	public void update(Employee employee) {
 		if(isEmpty(employee.getEducation()))
@@ -36,6 +41,7 @@ public class EducationalQualificationService {
 		List<Long> educationsIdsToDelete = getListOfEducationIdsToDelete(inputEducations, educationsFromDb);
 		if (!educationsIdsToDelete.isEmpty())
 			educationalQualificationRepository.delete(educationsIdsToDelete, employeeId, tenantId);
+		    employeeDocumentsRepository.deleteForReferenceType(employeeId, EntityType.EDUCATION, tenantId);
 	}
 
 	private List<Long> getListOfEducationIdsToDelete(List<EducationalQualification> inputEducations,
@@ -43,16 +49,23 @@ public class EducationalQualificationService {
 		List<Long> educationsIdsToDelete = new ArrayList<>();
 		for (EducationalQualification educationInDb : educationsFromDb) {
 			boolean found = false;
+			if (!isEmpty(inputEducations)) {
+				// if empty, found remains false and the record becomes eligible for deletion.
 			for (EducationalQualification inputEducation : inputEducations)
 				if (inputEducation.getId().equals(educationInDb.getId())) {
 					found = true;
 					break;
 				}
+			}
 			if (!found) educationsIdsToDelete.add(educationInDb.getId());
 		}
 		return educationsIdsToDelete;
 	}
 
+	/**
+	 * Note: needsUpdate checks if any field has changed by comparing with contents
+	 * from db. If yes, then only do an update.
+	 */
 	private boolean needsUpdate(EducationalQualification education, List<EducationalQualification> educations) {
 		for (EducationalQualification oldEducation : educations)
 			if (education.equals(oldEducation)) return false;

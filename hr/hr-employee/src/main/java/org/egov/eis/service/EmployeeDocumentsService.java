@@ -2,6 +2,7 @@ package org.egov.eis.service;
 
 import static org.springframework.util.ObjectUtils.isEmpty;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.eis.model.Assignment;
@@ -34,60 +35,56 @@ public class EmployeeDocumentsService {
 	 * @param employee
 	 */
 	public void update(Employee employee) {
-		if(isEmpty(employee.getDocuments()))
-			return;
+		
 		List<EmployeeDocument> documentsFromDb = employeeDocumentsRepository.findByEmployeeId(employee.getId(),
 				employee.getTenantId());
+		
+		if (employee.getDocuments() == null) employee.setDocuments(new ArrayList<>());
 
-		if (employee.getDocuments() != null) {
-			updateDocuments(employee.getDocuments(), EntityType.EMPLOYEE_HEADER, employee.getId(), documentsFromDb,
-					employee.getId(), employee.getTenantId());
-		}
+		updateDocuments(employee.getDocuments(), EntityType.EMPLOYEE_HEADER, employee.getId(), documentsFromDb,
+				employee.getId(), employee.getTenantId());	
 
 		if(!isEmpty(employee.getAssignments()))
 		employee.getAssignments().forEach((assignment) -> {
-			if (assignment.getDocuments() != null) {
-				// updateDocumentsForAssignment(assignment, documentsFromDb,
-				// employee.getId(), employee.getTenantId());
-				updateDocuments(assignment.getDocuments(), EntityType.ASSIGNMENT, assignment.getId(), documentsFromDb,
-						employee.getId(), employee.getTenantId());
-			}
+			if (assignment.getDocuments() == null) assignment.setDocuments(new ArrayList<>());
+			updateDocuments(assignment.getDocuments(), EntityType.ASSIGNMENT, assignment.getId(), documentsFromDb,
+					employee.getId(), employee.getTenantId());
 		});
+		if(!isEmpty(employee.getProbation()))
 		employee.getProbation().forEach((probation) -> {
-			if (probation.getDocuments() != null) {
+			if (probation.getDocuments() == null) probation.setDocuments(new ArrayList<>());
 				updateDocuments(probation.getDocuments(), EntityType.PROBATION, probation.getId(), documentsFromDb,
 						employee.getId(), employee.getTenantId());
-			}
 		});
+		if(!isEmpty(employee.getRegularisation()))
 		employee.getRegularisation().forEach((regularisation) -> {
-			if (regularisation.getDocuments() != null) {
+			if (regularisation.getDocuments() == null) regularisation.setDocuments(new ArrayList<>());
 				updateDocuments(regularisation.getDocuments(), EntityType.REGULARISATION, regularisation.getId(),
 						documentsFromDb, employee.getId(), employee.getTenantId());
-			}
 		});
+		if(!isEmpty(employee.getTest()))
 		employee.getTest().forEach((test) -> {
-			if (test.getDocuments() != null) {
+			if (test.getDocuments() == null) test.setDocuments(new ArrayList<>());
 				updateDocuments(test.getDocuments(), EntityType.TEST, test.getId(), documentsFromDb, employee.getId(),
 						employee.getTenantId());
-			}
 		});
+		if(!isEmpty(employee.getTechnical()))
 		employee.getTechnical().forEach((technical) -> {
-			if (technical.getDocuments() != null) {
+			if (technical.getDocuments() == null) technical.setDocuments(new ArrayList<>());
 				updateDocuments(technical.getDocuments(), EntityType.TECHNICAL, technical.getId(), documentsFromDb,
 						employee.getId(), employee.getTenantId());
-			}
 		});
+		if(!isEmpty(employee.getEducation()))
 		employee.getEducation().forEach((education) -> {
-			if (education.getDocuments() != null) {
+			if (education.getDocuments() == null) education.setDocuments(new ArrayList<>());
 				updateDocuments(education.getDocuments(), EntityType.EDUCATION, education.getId(), documentsFromDb,
 						employee.getId(), employee.getTenantId());
-			}
 		});
+		if(!isEmpty(employee.getServiceHistory()))
 		employee.getServiceHistory().forEach((serviceHistory) -> {
-			if (serviceHistory.getDocuments() != null) {
+			if (serviceHistory.getDocuments() == null) serviceHistory.setDocuments(new ArrayList<>());
 				updateDocuments(serviceHistory.getDocuments(), EntityType.SERVICE, serviceHistory.getId(), documentsFromDb,
 						employee.getId(), employee.getTenantId());
-			}
 		});
 	}
 

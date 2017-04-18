@@ -47,6 +47,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.eis.model.EmployeeDocument;
+import org.egov.eis.model.enums.EntityType;
 import org.egov.eis.repository.rowmapper.EmployeeDocumentsTableRowMapper;
 import org.egov.eis.repository.rowmapper.EmployeeDocumentsUpdateTableRowMapper;
 import org.slf4j.Logger;
@@ -69,6 +70,9 @@ public class EmployeeDocumentsRepository {
 
 	public static final String DELETE_QUERY = "DELETE FROM egeis_employeeDocuments"
 			+ " WHERE employeeId = ? AND document = ? AND referenceType = ? AND referenceId =? AND tenantId = ?";
+	
+	public static final String DELETE_QUERY_FOR_REFERENCE_TYPE = "DELETE FROM egeis_employeeDocuments"
+			+ " WHERE employeeId = ? AND referenceType = ? AND tenantId = ?";
 
 	public static final String SELECT_BY_EMPLOYEEID_QUERY = "SELECT"
 			+ " id, document, referencetype, referenceid, tenantId" + " FROM egeis_employeeDocuments"
@@ -125,6 +129,11 @@ public class EmployeeDocumentsRepository {
 	public int delete(Long employeeId, String document, String referenceType, Long referenceID, String tenantId) {
 		return jdbcTemplate.update(DELETE_QUERY, employeeId, document, referenceType, referenceID, tenantId);
 	}
+	
+	public int deleteForReferenceType(Long employeeId, EntityType entityType, String tenantId) {
+		String referenceType = entityType.getValue().toString();
+		return jdbcTemplate.update(DELETE_QUERY_FOR_REFERENCE_TYPE, employeeId, referenceType, tenantId);
+	}
 
 	public List<EmployeeDocument> findByEmployeeId(Long id, String tenantId) {
 		try {
@@ -136,10 +145,6 @@ public class EmployeeDocumentsRepository {
 	}
 	
 	public List<EmployeeDocument> findByTenantID(List<String> inputDocuments, String tenantId) {
-		
-	/*	MapSqlParameterSource parameters = new MapSqlParameterSource();
-		parameters.addValue("document", inputDocuments);
-		parameters.addValue("tenantId", tenantId);*/
 		
 		Map<String, Object> namedParameters = new HashMap<>();
 		namedParameters.put("document", inputDocuments);

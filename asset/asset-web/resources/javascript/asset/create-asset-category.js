@@ -50,12 +50,16 @@ class CreateAsset extends React.Component {
     open(location, '_self').close();
   }
   handleChange(e, name) {
-    this.setState({
-      assetCategory: {
-        ...this.state.assetCategory,
-        [name]: e.target.value
-      }
-    })
+    if(name == "name" && !e.target.value.trim() && e.target.value == " ") {
+      e.preventDefault();
+    } else {
+      this.setState({
+        assetCategory: {
+          ...this.state.assetCategory,
+          [name]: e.target.value
+        }
+      })
+    }
   }
   handleChangeTwoLevel(e, pName, name, isCheckBox) {
     if(isCheckBox) {

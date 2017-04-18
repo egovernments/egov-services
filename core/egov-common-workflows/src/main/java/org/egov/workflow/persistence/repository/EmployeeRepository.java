@@ -21,15 +21,15 @@ public class EmployeeRepository {
 
 	@Autowired
 	public EmployeeRepository(final RestTemplate restTemplate,
-			@Value("${egov.services.eis.host}") final String eisServiceHostname,
+			@Value("${egov.services.hr-employee.host}") final String hrEmployeeServiceHostname,
 			@Value("${egov.services.eis.employee_by_userid}") final String employeesByUserIdUrl,
 			@Value("${egov.services.eis.employee_by_position}") final String employeesByPositionIdurl,
 			@Value("${egov.services.eis.employee_by_role}") final String employeesByRoleNameurl) {
 
 		this.restTemplate = restTemplate;
-		this.employeesByUserIdUrl = eisServiceHostname + employeesByUserIdUrl;
-		this.employeesByPositionIdurl = eisServiceHostname + employeesByPositionIdurl;
-		this.employeesByRoleNameurl = eisServiceHostname + employeesByRoleNameurl;
+		this.employeesByUserIdUrl = hrEmployeeServiceHostname + employeesByUserIdUrl;
+		this.employeesByPositionIdurl = hrEmployeeServiceHostname + employeesByPositionIdurl;
+		this.employeesByRoleNameurl = hrEmployeeServiceHostname + employeesByRoleNameurl;
 	}
 
 	public List<Employee> getByRoleName(final String roleName) {
@@ -44,4 +44,7 @@ public class EmployeeRepository {
 	public EmployeeRes getEmployeeForUserId(final Long userId) {
 		return restTemplate.getForObject(employeesByUserIdUrl, EmployeeRes.class, userId);
 	}
+	
+	
+	
 }

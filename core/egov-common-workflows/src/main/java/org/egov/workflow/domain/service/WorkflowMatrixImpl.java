@@ -83,7 +83,6 @@ public class WorkflowMatrixImpl implements Workflow {
 		state.setStatus(StateStatus.INPROGRESS);
 		state.setValue(wfMatrix.getNextState());
 		state.setComments(processInstance.getComments());
-		// FIXME position service is not fetching data
 		if (owner == null) {
 			LOG.error("Owner info is not availble from respective service");
 			state.setOwnerPosition(processInstance.getAssignee().getId());
@@ -93,8 +92,9 @@ public class WorkflowMatrixImpl implements Workflow {
 
 		RequestInfo requestInfo = processInstanceRequest.getRequestInfo();
 
-		if (requestInfo != null && requestInfo.getUserInfo() != null && requestInfo.getUserInfo().getId() != null) {
-			state.setInitiatorPosition(processInstance.getAssignee().getId());
+		if (processInstance.getInitiatorPosition() != null)
+			state.setInitiatorPosition(processInstance.getInitiatorPosition());
+		else {
 			Position initiator = positionRepository.getPrimaryPositionByEmployeeId(requestInfo.getUserInfo().getId(),
 					requestInfo);
 			if (initiator != null && initiator.getId() != null)
@@ -132,7 +132,7 @@ public class WorkflowMatrixImpl implements Workflow {
 		try {
 
 			String code = employeeRepository.getEmployeeForUserId(1l).getEmployees().get(0).getCode();
-			List<Position> byEmployeeCode = positionRepository.getByEmployeeCode(code, null);
+			List<Position> byEmployeeCode = positionRepository.getByEmployeeId(code, null);
 			byEmployeeCode.get(0);
 		} catch (final Exception e) {
 			LOG.error("Error while setting initiator position");
@@ -181,18 +181,16 @@ public class WorkflowMatrixImpl implements Workflow {
 				Position p = new Position();
 				p.setId(ownerId);
 				task.setAssignee(p);
-			} else
-				owner = getInitiator();
-
-			// Employee emp =
-			// employeeRepository.getEmployeeForUserId(1l).getEmployees().get(0);
+			}
+			//below logic required to show the messages only....
+/*
 			final Attribute approverDesignationName = new Attribute();
 			approverDesignationName.setCode(owner.getDeptdesig().getDesignation().getName());
 			task.getAttributes().put("approverDesignationName", approverDesignationName);
 
 			final Attribute approverName = new Attribute();
 			approverName.setCode(getApproverName(owner));
-			task.getAttributes().put("approverName", approverName);
+			task.getAttributes().put("approverName", approverName);*/
 			nextState = "Rejected";
 		}
 		if (task.getAction().equalsIgnoreCase(WorkflowConstants.ACTION_CANCEL)) {
@@ -322,13 +320,13 @@ public class WorkflowMatrixImpl implements Workflow {
 	}
 
 	@Override
-	public List<Task> getTasks(final String jurisdiction, final ProcessInstance processInstance) {
-		LOG.debug("Starting getTasks for " + processInstance + " for tenant " + jurisdiction);
+	public TaskResponse getTasks(TaskRequest taskRequest) {
+		LOG.debug("Starting getTasks for " + taskRequest + " for tenant " + taskRequest.getRequestInfo().getTenantId());
 		final List<Task> tasks = new ArrayList<Task>();
-		final Long userId = getEmp(1l).getId();
+		final Long userId = taskRequest.getRequestInfo().getUserInfo().getId();
 		final List<String> types = workflowTypeService.getEnabledWorkflowType(false);
 		final List<Long> ownerIds = positionRepository
-				.getByEmployeeCode(employeeRepository.getEmployeeForUserId(1l).getEmployees().get(0).getCode(), null)
+				.getByEmployeeId(userId.toString(),taskRequest.getRequestInfo())
 				.parallelStream().map(position -> position.getId()).collect(Collectors.toList());
 		List<State> states = new ArrayList<State>();
 		if (!types.isEmpty())
@@ -336,10 +334,12 @@ public class WorkflowMatrixImpl implements Workflow {
 		for (final State s : states)
 			tasks.add(s.map());
 
-		LOG.debug("getTasks completed for tenant " + jurisdiction);
+		LOG.debug("getTasks completed for tenant " + taskRequest.getRequestInfo().getTenantId());
 		if (LOG.isTraceEnabled())
 			LOG.trace("Taks list returned" + tasks);
-		return tasks;
+		TaskResponse response = new TaskResponse();
+		response.setTasks(tasks);
+		return response;
 	}
 
 	@Override

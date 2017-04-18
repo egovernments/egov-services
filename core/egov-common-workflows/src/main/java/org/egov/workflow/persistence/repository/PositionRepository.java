@@ -21,15 +21,18 @@ public class PositionRepository {
 	private final String primaryPositionsForEmployeeIdUrl;
 
 	public PositionRepository(final RestTemplate restTemplate,
-			@Value("${egov.services.hr.employee.host}") final String hrEmployeeServiceHostname,
-			@Value("${egov.services.hr.host}") final String hrServiceHostname,
-			@Value("${egov.services.eis.position_by_id}") final String positionsByIdUrl,
-			@Value("${egov.services.eis.position_by_employee_code}") final String positionsForEmployeeCodeUrl,
-			@Value("${egov.services.hr.position_by_employee}") final String primaryPositionsForEmployeeIdUrl) {
+			@Value("${egov.services.hr-employee.host}") final String hrEmployeeServiceHostname,
+			@Value("${egov.services.hr-masters.host}") final String hrServiceHostname,
+			@Value("${position_by_id}") final String positionsByIdUrl,
+			@Value("${position_by_employee_code}") final String positionsForEmployeeCodeUrl,
+			@Value("${position_by_employee}") final String primaryPositionsForEmployeeIdUrl,
+			@Value("${position_by_employee_id}") final String positionsForEmployeeIdUrl )
+			{
 		this.restTemplate = restTemplate;
 		this.positionsByIdUrl = hrServiceHostname + positionsByIdUrl;
-		this.positionsForEmployeeCodeUrl = hrServiceHostname + positionsForEmployeeCodeUrl;
+		this.positionsForEmployeeCodeUrl = hrServiceHostname + positionsForEmployeeIdUrl;
 		this.primaryPositionsForEmployeeIdUrl = hrEmployeeServiceHostname + primaryPositionsForEmployeeIdUrl;
+		//positionsForEmployeeCodeUrl=hrEmployeeServiceHostname + primaryPositionsForEmployeeIdUrl;
 
 	}
 
@@ -76,7 +79,7 @@ public class PositionRepository {
 		return position;
 	}
 
-	public List<Position> getByEmployeeCode(final String code, RequestInfo requestInfo) {
+	public List<Position> getByEmployeeId(final String id, RequestInfo requestInfo) {
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		String tenantId = "";
 		if (requestInfo != null) {
@@ -85,10 +88,13 @@ public class PositionRepository {
 		} else
 			requestInfoWrapper.setRequestInfo(new RequestInfo());
 
-		PositionResponse positionResponse = restTemplate.postForObject(positionsForEmployeeCodeUrl, requestInfoWrapper,
-				PositionResponse.class, code, tenantId);
+		PositionResponse positionResponse = restTemplate.postForObject(positionsForEmployeeCodeUrl+"?tenantId={tenantId}", requestInfoWrapper,
+				PositionResponse.class, id, tenantId);
 
 		return positionResponse.getPosition();
 	}
 
+	
+	
+	
 }

@@ -217,11 +217,7 @@ public class PgrWorkflowImpl implements Workflow {
 		return null;
 	}
 
-	@Override
-	public List<Task> getTasks(String jurisdiction, ProcessInstance processInstance) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 
 	@Override
 	public ProcessInstance update(String jurisdiction, ProcessInstance processInstance) {
@@ -246,6 +242,12 @@ public class PgrWorkflowImpl implements Workflow {
 
 	@Override
 	public List<Designation> getDesignations(Task t, String departmentName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public TaskResponse getTasks(TaskRequest taskRequest) {
 		// TODO Auto-generated method stub
 		return null;
 	}

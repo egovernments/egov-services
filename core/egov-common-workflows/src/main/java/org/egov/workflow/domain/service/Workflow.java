@@ -19,7 +19,7 @@ public interface Workflow {
 
      ProcessInstance getProcess(String jurisdiction, ProcessInstance processInstance);
 
-     List<Task> getTasks(String jurisdiction, ProcessInstance processInstance);
+     TaskResponse getTasks(TaskRequest taskRequest);
 
      ProcessInstance update(String jurisdiction, ProcessInstance processInstance);
 

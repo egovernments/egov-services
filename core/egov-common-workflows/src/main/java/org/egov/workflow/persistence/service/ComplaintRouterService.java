@@ -175,7 +175,7 @@ public class ComplaintRouterService {
 					if (!employees.isEmpty())
 						employeeResponse = employees.iterator().next();
 					if (employeeResponse != null)
-						positions = positionRepository.getByEmployeeCode(employeeResponse.getCode(), requestInfo);
+						positions = positionRepository.getByEmployeeId(employeeResponse.getCode(), requestInfo);
 					if (!positions.isEmpty())
 						positionResponse = positionRepository.getById(positions.iterator().next().getId(), requestInfo);
 				} else

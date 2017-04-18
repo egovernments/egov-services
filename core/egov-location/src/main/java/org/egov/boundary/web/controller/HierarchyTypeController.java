@@ -1,5 +1,9 @@
 package org.egov.boundary.web.controller;
 
+import java.util.List;
+
+import javax.validation.Valid;
+
 import org.egov.boundary.domain.service.HierarchyTypeService;
 import org.egov.boundary.persistence.entity.HierarchyType;
 import org.egov.boundary.web.contract.HierarchyTypeRequest;
@@ -18,6 +22,16 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/hierarchytypes")
@@ -28,49 +42,54 @@ public class HierarchyTypeController {
 	@PostMapping
 	@ResponseBody
 	public ResponseEntity<?> create(@Valid @RequestBody HierarchyTypeRequest hierarchyTypeRequest,
-			BindingResult errors) {
+									BindingResult errors) {
 
 		if (errors.hasErrors()) {
 			ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
 		}
-		RequestInfo requestInfo = hierarchyTypeRequest.getRequestInfo();
-		HierarchyType hierarchyType = hierarchyTypeService.createHierarchyType(hierarchyTypeRequest.getHierarchyType());
-
 		HierarchyTypeResponse hierarchyTypeResponse = new HierarchyTypeResponse();
-		hierarchyTypeResponse.getHierarchyTypes().add(hierarchyType);
+		if (hierarchyTypeRequest.getHierarchyType() != null
+				&& hierarchyTypeRequest.getHierarchyType().getTenantId() != null
+				&& !hierarchyTypeRequest.getHierarchyType().getTenantId().isEmpty()) {
+			RequestInfo requestInfo = hierarchyTypeRequest.getRequestInfo();
+			HierarchyType hierarchyType = hierarchyTypeService
+					.createHierarchyType(hierarchyTypeRequest.getHierarchyType());
 
-		ResponseInfo responseInfo = new ResponseInfo();
-		responseInfo.setStatus(HttpStatus.CREATED.toString());
-		responseInfo.setApiId(requestInfo.getApiId());
-		hierarchyTypeResponse.setResponseInfo(responseInfo);
+			hierarchyTypeResponse.getHierarchyTypes().add(hierarchyType);
+
+			ResponseInfo responseInfo = new ResponseInfo();
+			responseInfo.setStatus(HttpStatus.CREATED.toString());
+			responseInfo.setApiId(requestInfo.getApiId());
+			hierarchyTypeResponse.setResponseInfo(responseInfo);
+		}
 		return new ResponseEntity<HierarchyTypeResponse>(hierarchyTypeResponse, HttpStatus.CREATED);
 	}
 
 	@PutMapping(value = "/{code}")
 	@ResponseBody
 	public ResponseEntity<?> update(@Valid @RequestBody HierarchyTypeRequest hierarchyTypeRequest, BindingResult errors,
-			@PathVariable String code) {
+									@PathVariable String code, @RequestParam(value = "tenantId", required = true) String tenantId) {
 
 		if (errors.hasErrors()) {
 			ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
 		}
-		RequestInfo requestInfo = hierarchyTypeRequest.getRequestInfo();
-		HierarchyType hierarchyTypeFromDb = hierarchyTypeService.findByCode(code);
-		HierarchyType hierarchyType = hierarchyTypeRequest.getHierarchyType();
-		hierarchyType.setId(hierarchyTypeFromDb.getId());
-		hierarchyType.setVersion(hierarchyTypeFromDb.getVersion());
-		hierarchyType = hierarchyTypeService.updateHierarchyType(hierarchyType);
-
 		HierarchyTypeResponse hierarchyTypeResponse = new HierarchyTypeResponse();
-		hierarchyTypeResponse.getHierarchyTypes().add(hierarchyType);
-
-		ResponseInfo responseInfo = new ResponseInfo();
-		responseInfo.setStatus(HttpStatus.CREATED.toString());
-		responseInfo.setApiId(requestInfo.getApiId());
-		hierarchyTypeResponse.setResponseInfo(responseInfo);
-		return new ResponseEntity<>(hierarchyTypeResponse, HttpStatus.CREATED);
+		if (tenantId != null && !tenantId.isEmpty()) {
+			RequestInfo requestInfo = hierarchyTypeRequest.getRequestInfo();
+			HierarchyType hierarchyTypeFromDb = hierarchyTypeService.findByCodeAndTenantId(code, tenantId);
+			HierarchyType hierarchyType = hierarchyTypeRequest.getHierarchyType();
+			hierarchyType.setId(hierarchyTypeFromDb.getId());
+			hierarchyType.setVersion(hierarchyTypeFromDb.getVersion());
+			hierarchyType = hierarchyTypeService.updateHierarchyType(hierarchyType);
+			hierarchyTypeResponse.getHierarchyTypes().add(hierarchyType);
+			ResponseInfo responseInfo = new ResponseInfo();
+			responseInfo.setStatus(HttpStatus.CREATED.toString());
+			responseInfo.setApiId(requestInfo.getApiId());
+			hierarchyTypeResponse.setResponseInfo(responseInfo);
+		}
+		return new ResponseEntity<HierarchyTypeResponse>(hierarchyTypeResponse, HttpStatus.CREATED);
 	}
 
 	@GetMapping
@@ -78,11 +97,15 @@ public class HierarchyTypeController {
 	public ResponseEntity<?> search(@ModelAttribute HierarchyTypeRequest hierarchyTypeRequest) {
 
 		HierarchyTypeResponse hierarchyTypeResponse = new HierarchyTypeResponse();
-		List<HierarchyType> allHierarchyTypes = hierarchyTypeService.getAllHierarchyTypes(hierarchyTypeRequest);
-		hierarchyTypeResponse.getHierarchyTypes().addAll(allHierarchyTypes);
-		ResponseInfo responseInfo = new ResponseInfo();
-		responseInfo.setStatus(HttpStatus.CREATED.toString());
-		hierarchyTypeResponse.setResponseInfo(responseInfo);
+		if (hierarchyTypeRequest.getHierarchyType() != null
+				&& hierarchyTypeRequest.getHierarchyType().getTenantId() != null
+				&& !hierarchyTypeRequest.getHierarchyType().getTenantId().isEmpty()) {
+			List<HierarchyType> allHierarchyTypes = hierarchyTypeService.getAllHierarchyTypes(hierarchyTypeRequest);
+			hierarchyTypeResponse.getHierarchyTypes().addAll(allHierarchyTypes);
+			ResponseInfo responseInfo = new ResponseInfo();
+			responseInfo.setStatus(HttpStatus.CREATED.toString());
+			hierarchyTypeResponse.setResponseInfo(responseInfo);
+		}
 		return new ResponseEntity<>(hierarchyTypeResponse, HttpStatus.OK);
 	}
 

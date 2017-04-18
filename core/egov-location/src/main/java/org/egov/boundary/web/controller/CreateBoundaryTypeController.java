@@ -43,8 +43,6 @@ package org.egov.boundary.web.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.validation.Valid;
-
 import org.egov.boundary.domain.service.BoundaryTypeService;
 import org.egov.boundary.domain.service.HierarchyTypeService;
 import org.egov.boundary.persistence.entity.BoundaryType;
@@ -55,66 +53,72 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-@RequestMapping(value ="/boundarytype/create")
+@RequestMapping(value = "/boundarytype/create")
 public class CreateBoundaryTypeController {
 
 	private HierarchyTypeService hierarchyTypeService;
 	private BoundaryTypeService boundaryTypeService;
-	
+
 	@Autowired
-	public CreateBoundaryTypeController(BoundaryTypeService boundaryTypeService,HierarchyTypeService hierarchyTypeService) {
+	public CreateBoundaryTypeController(BoundaryTypeService boundaryTypeService,
+										HierarchyTypeService hierarchyTypeService) {
 		this.boundaryTypeService = boundaryTypeService;
 		this.hierarchyTypeService = hierarchyTypeService;
 	}
-	
+
 	@ModelAttribute
-	 public BoundaryType boundaryTypeModel() {
-	        return new BoundaryType();
-	 }
-	
-	@RequestMapping(method = RequestMethod.GET)
-	public String newForm() {
-		HierarchyType hh=hierarchyTypeService.getHierarchyTypeByName("Kmani");
-				/*new HierarchyType();
-		hh.setName("Hmani");
-		hh.setCode("H001");
-		hierarchyTypeService.createHierarchyType(hh);*/
-		BoundaryType boundaryType=new BoundaryType();  
-		boundaryType.setName("Kiran");
-		boundaryType.setHierarchyType(hh);
-		
-		boundaryTypeService.createBoundaryType(boundaryType);
-		
-	    return "boundaryType-form";
+	public BoundaryType boundaryTypeModel() {
+		return new BoundaryType();
 	}
-	
+
+	@RequestMapping(method = RequestMethod.GET)
+	public String newForm(@RequestParam(value = "tenantId", required = true) String tenantId) {
+		if (tenantId != null && !tenantId.isEmpty()) {
+			HierarchyType hh = hierarchyTypeService.getHierarchyTypeByNameAndTenantId("Kmani", tenantId);
+			/*
+			 * new HierarchyType(); hh.setName("Hmani"); hh.setCode("H001");
+			 * hierarchyTypeService.createHierarchyType(hh);
+			 */
+			BoundaryType boundaryType = new BoundaryType();
+			boundaryType.setName("Kiran");
+			boundaryType.setHierarchyType(hh);
+			boundaryType.setTenantId(tenantId);
+
+			boundaryTypeService.createBoundaryType(boundaryType);
+		}
+		return "boundaryType-form";
+	}
+
 	@ModelAttribute("hierarchyTypes")
-	public List<HierarchyType> getHierarchyTypes(){
+	public List<HierarchyType> getHierarchyTypes() {
 		final List<HierarchyType> heirarchyList = new ArrayList<HierarchyType>();
-		/*List<HierarchyType> hierarchyTypeList = hierarchyTypeService.getAllHierarchyTypes();
-		for (final HierarchyType hierarchyType : hierarchyTypeList) {
-			BoundaryType bType = boundaryTypeService.getBoundaryTypeByHierarchyTypeNameAndLevel(hierarchyType.getName(),1l);
-			if(bType == null){
-				heirarchyList.add(hierarchyType);
-			}
-		}*/
+		/*
+		 * List<HierarchyType> hierarchyTypeList =
+		 * hierarchyTypeService.getAllHierarchyTypes(); for (final HierarchyType
+		 * hierarchyType : hierarchyTypeList) { BoundaryType bType =
+		 * boundaryTypeService.getBoundaryTypeByHierarchyTypeNameAndLevel(
+		 * hierarchyType.getName(),1l); if(bType == null){
+		 * heirarchyList.add(hierarchyType); } }
+		 */
 		return heirarchyList;
 	}
-	
-	@RequestMapping(method =RequestMethod.POST)
-	public String create(@ModelAttribute BoundaryType boundaryType, final BindingResult errors, RedirectAttributes redirectAttrs) {
-    	
-        if (errors.hasErrors())
-            return "boundaryType-form";
-        
-        boundaryTypeService.setHierarchyLevel(boundaryType, "create");
-        boundaryTypeService.createBoundaryType(boundaryType);
-        redirectAttrs.addFlashAttribute("message", "msg.bndrytype.create.success");
 
-        return "redirect:/boundarytype/view/"+boundaryType.getId();
-    }
-	
+	@RequestMapping(method = RequestMethod.POST)
+	public String create(@ModelAttribute BoundaryType boundaryType, final BindingResult errors,
+						 RedirectAttributes redirectAttrs) {
+
+		if (errors.hasErrors())
+			return "boundaryType-form";
+		if (boundaryType != null && boundaryType.getTenantId() != null && !boundaryType.getTenantId().isEmpty()) {
+			boundaryTypeService.setHierarchyLevel(boundaryType, "create");
+			boundaryTypeService.createBoundaryType(boundaryType);
+			redirectAttrs.addFlashAttribute("message", "msg.bndrytype.create.success");
+		}
+		return "redirect:/boundarytype/view/" + boundaryType.getId();
+	}
+
 }

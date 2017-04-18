@@ -83,6 +83,9 @@ public class City extends AbstractPersistable<Long> {
 	@Fetch(FetchMode.JOIN)
 	private CityPreferences preferences;
 
+	@Column(name = "tenantid")
+	private String tenantId;
+
 	@Override
 	public Long getId() {
 		return id;

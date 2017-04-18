@@ -17,39 +17,39 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class BoundaryServiceTest {
 
-	@Mock
-	private BoundaryRepository boundaryRepository;
+    @Mock
+    private BoundaryRepository boundaryRepository;
 
-	@InjectMocks
-	private BoundaryService boundaryService;
+    @InjectMocks
+    private BoundaryService boundaryService;
 
-	@Test
-	public void TestShouldFetchBoundariesForBoundarytypeAndHierarchytypeName() {
-		when(boundaryRepository.findBoundariesByBndryTypeNameAndHierarchyTypeName("Ward", "ADMINISTRATION"))
-				.thenReturn(getExpectedBoundaryDetails());
+    @Test
+    public void TestShouldFetchBoundariesForBoundarytypeAndHierarchytypeName() {
+        when(boundaryRepository.getBoundariesByBndryTypeNameAndHierarchyTypeNameAndTenantId("Ward", "ADMINISTRATION", "tenantId"))
+                .thenReturn(getExpectedBoundaryDetails());
 
-		List<Boundary> boundaryList = boundaryService.getBoundariesByBndryTypeNameAndHierarchyTypeName("Ward",
-				"ADMINISTRATION");
+        List<Boundary> boundaryList = boundaryService.getBoundariesByBndryTypeNameAndHierarchyTypeNameAndTenantId("Ward",
+                "ADMINISTRATION", "tenantId");
 
-		assertEquals("Election Ward No 1", boundaryList.get(0).getName());
-	}
+        assertEquals("Election Ward No 1", boundaryList.get(0).getName());
+    }
 
-	@Test
-	public void TestShouldFetchBoundariesForBoundarytypeAndTenantId() {
-		when(boundaryRepository.findBoundariesByBoundaryType_IdAndTenantId(7L, "tenantId"))
-				.thenReturn(getExpectedBoundaryDetails());
+    @Test
+    public void TestShouldFetchBoundariesForBoundarytypeAndTenantId() {
+        when(boundaryRepository.findBoundariesByBoundaryType_IdAndTenantId(7L, "tenantId"))
+                .thenReturn(getExpectedBoundaryDetails());
 
-		List<Boundary> boundaryList = boundaryService.getAllBoundariesByBoundaryTypeIdAndTenantId(7L, "tenantId");
+        List<Boundary> boundaryList = boundaryService.getAllBoundariesByBoundaryTypeIdAndTenantId(7L, "tenantId");
 
-		assertEquals("Election Ward No 1", boundaryList.get(0).getName());
-	}
+        assertEquals("Election Ward No 1", boundaryList.get(0).getName());
+    }
 
-	private List<Boundary> getExpectedBoundaryDetails() {
-		final List<Boundary> boundaryList = new ArrayList<>();
-		final Boundary boundary1 = Boundary.builder().id(1L).name("Election Ward No 1").build();
-		final Boundary boundary2 = Boundary.builder().id(2L).name("Election Ward No 2").build();
-		boundaryList.add(boundary1);
-		boundaryList.add(boundary2);
-		return boundaryList;
-	}
+    private List<Boundary> getExpectedBoundaryDetails() {
+        final List<Boundary> boundaryList = new ArrayList<>();
+        final Boundary boundary1 = Boundary.builder().id(1L).name("Election Ward No 1").build();
+        final Boundary boundary2 = Boundary.builder().id(2L).name("Election Ward No 2").build();
+        boundaryList.add(boundary1);
+        boundaryList.add(boundary2);
+        return boundaryList;
+    }
 }

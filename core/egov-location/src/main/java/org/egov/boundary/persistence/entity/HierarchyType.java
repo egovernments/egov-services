@@ -40,6 +40,7 @@
 
 package org.egov.boundary.persistence.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -59,7 +60,7 @@ public class HierarchyType extends AbstractAuditable  {
 
     public static final String SEQ_HIERARCHY_TYPE = "SEQ_EG_HIERARCHY_TYPE";
     private static final long serialVersionUID = -7131667806935923935L;
-    
+
     @Id
     @GeneratedValue(generator = SEQ_HIERARCHY_TYPE, strategy = GenerationType.SEQUENCE)
     private Long id;
@@ -78,12 +79,22 @@ public class HierarchyType extends AbstractAuditable  {
     @SafeHtml
     private String localName;
 
- 
+    @Column(name = "tenantid")
+    private String tenantId;
+
+    public String getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
+    }
+
     public Long getId() {
         return id;
     }
 
- 
+
     public void setId(final Long id) {
         this.id = id;
     }
@@ -150,5 +161,5 @@ public class HierarchyType extends AbstractAuditable  {
     }
 
 
-	
+
 }

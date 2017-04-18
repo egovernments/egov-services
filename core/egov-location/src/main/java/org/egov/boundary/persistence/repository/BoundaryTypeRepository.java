@@ -55,33 +55,37 @@ public interface BoundaryTypeRepository extends JpaRepository<BoundaryType, Long
 
 	BoundaryType findByName(String name);
 
-	BoundaryType findByNameContainingIgnoreCase(String name);
+    BoundaryType findByNameContainingIgnoreCase(String name);
 
-	@Query("select bt from BoundaryType bt where bt.hierarchyType.name=:hierarchyName and bt.hierarchy=:hierarchyLevel")
-	BoundaryType findByHierarchyTypeNameAndLevel(@Param("hierarchyName") String name,
-			@Param("hierarchyLevel") Long hierarchyLevel);
+    @Query("select bt from BoundaryType bt where bt.hierarchyType.name=:hierarchyName and bt.hierarchy=:hierarchyLevel")
+    BoundaryType findByHierarchyTypeNameAndLevel(@Param("hierarchyName") String name,
+                                                 @Param("hierarchyLevel") Long hierarchyLevel);
 
-	@Query("select bt from BoundaryType bt where bt.hierarchyType.id=:hierarchyId and bt.tenantId=:tenantId")
-	List<BoundaryType> findByHierarchyTypeIdAndTenantId(@Param("hierarchyId") Long id,
-			@Param("tenantId") String tenantId);
+    @Query("select bt from BoundaryType bt where bt.hierarchyType.id=:hierarchyId and bt.tenantId=:tenantId")
+    List<BoundaryType> findByHierarchyTypeIdAndTenantId(@Param("hierarchyId") Long id,
+                                                        @Param("tenantId") String tenantId);
 
-	@Query("select bt from BoundaryType bt where bt.parent.id=:parentId")
-	BoundaryType findByParent(@Param("parentId") Long parentId);
+    @Query("select bt from BoundaryType bt where bt.parent.id=:parentId")
+    BoundaryType findByParent(@Param("parentId") Long parentId);
 
-	@Query("select bt from BoundaryType bt where bt.id = :id and bt.hierarchyType.id = :hierarchyId")
-	BoundaryType findByIdAndHierarchy(@Param("id") Long id, @Param("hierarchyId") Long hierarchyId);
+    @Query("select bt from BoundaryType bt where bt.id = :id and bt.hierarchyType.id = :hierarchyId")
+    BoundaryType findByIdAndHierarchy(@Param("id") Long id, @Param("hierarchyId") Long hierarchyId);
 
-	BoundaryType findByNameAndHierarchyType(String name, HierarchyType hierarchyType);
+    BoundaryType findByNameAndHierarchyType(String name, HierarchyType hierarchyType);
 
-	@Query("select bt from BoundaryType bt where bt.name = :boundaryTypeName and bt.hierarchyType.name = :hierarchyTypeName")
-	BoundaryType findByNameAndHierarchyTypeName(@Param("boundaryTypeName") String name,
-			@Param("hierarchyTypeName") String hierarchyTypeName);
+    @Query("select bt from BoundaryType bt where bt.name = :boundaryTypeName and bt.hierarchyType.name = :hierarchyTypeName")
+    BoundaryType findByNameAndHierarchyTypeName(@Param("boundaryTypeName") String name,
+                                                @Param("hierarchyTypeName") String hierarchyTypeName);
 
-	@Query("select bt from BoundaryType bt where bt.hierarchyType.name=:name")
-	List<BoundaryType> findByHierarchyTypeName(@Param("name") String hierarchyName);
+    @Query("select bt from BoundaryType bt where bt.hierarchyType.name=:name")
+    List<BoundaryType> findByHierarchyTypeName(@Param("name") String hierarchyName);
 
-	@Query("select bt from BoundaryType bt where bt.hierarchyType.code in :names and bt.name like 'W%'")
-	List<BoundaryType> findByHierarchyTypeNames(@Param("names") final Set<String> names);
+    @Query("select bt from BoundaryType bt where bt.hierarchyType.code in :names and bt.name like 'W%'")
+    List<BoundaryType> findByHierarchyTypeNames(@Param("names") final Set<String> names);
 
-	BoundaryType findByCode(String code);
+    BoundaryType findByTenantIdAndCode(String tenantId, String code);
+
+    BoundaryType findByIdAndTenantId(Long id, String tenantId);
+
+    List<BoundaryType> findAllByTenantId(String tenantId);
 }

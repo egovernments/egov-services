@@ -77,6 +77,9 @@ public class CityPreferences extends AbstractPersistable<Long> {
 	@Column(name = "municipality_twitterlink")
 	private String municipalityTwitterLink;
 
+	@Column(name = "tenantid")
+	private String tenantId;
+
 	@Override
 	public Long getId() {
 		return id;

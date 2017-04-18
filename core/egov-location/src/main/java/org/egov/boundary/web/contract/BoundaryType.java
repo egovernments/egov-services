@@ -86,17 +86,21 @@ public class BoundaryType {
 	@JsonProperty("childBoundaryTypes")
 	private Set<BoundaryType> childBoundaryTypes;
 
-	public BoundaryType(org.egov.boundary.persistence.entity.BoundaryType entityBoundaryType) {
-		this.id = entityBoundaryType.getId().toString();
-		this.name = entityBoundaryType.getName();
-		this.code = entityBoundaryType.getCode();
-		this.hierarchyType = entityBoundaryType.getHierarchyType();
-		if (entityBoundaryType.getParent() != null) {
-			this.setParent(new BoundaryType(entityBoundaryType.getParent()));
-		}
-		this.hierarchy = entityBoundaryType.getHierarchy();
-		this.localName = entityBoundaryType.getLocalName();
-		this.parentName = entityBoundaryType.getParentName();
-	}
+    @JsonProperty("tenantId")
+    private String tenantId;
+
+    public BoundaryType(org.egov.boundary.persistence.entity.BoundaryType entityBoundaryType) {
+        this.id = entityBoundaryType.getId().toString();
+        this.name = entityBoundaryType.getName();
+        this.code = entityBoundaryType.getCode();
+        this.hierarchyType = entityBoundaryType.getHierarchyType();
+        if (entityBoundaryType.getParent() != null) {
+            this.setParent(new BoundaryType(entityBoundaryType.getParent()));
+        }
+        this.hierarchy = entityBoundaryType.getHierarchy();
+        this.localName = entityBoundaryType.getLocalName();
+        this.parentName = entityBoundaryType.getParentName();
+        this.tenantId = entityBoundaryType.getTenantId();
+    }
 
 }

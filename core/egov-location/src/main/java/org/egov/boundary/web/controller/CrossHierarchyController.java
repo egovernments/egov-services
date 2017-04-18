@@ -18,6 +18,16 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/crosshierarchys")
@@ -34,42 +44,45 @@ public class CrossHierarchyController {
 			ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
 		}
-		RequestInfo requestInfo = crossHierarchyRequest.getRequestInfo();
-		CrossHierarchy crossHierarchy = crossHierarchyService.create(crossHierarchyRequest.getCrossHierarchy());
-
 		CrossHierarchyResponse crossHierarchyResponse = new CrossHierarchyResponse();
-		crossHierarchyResponse.getCrossHierarchys().add(crossHierarchy);
-
-		ResponseInfo responseInfo = new ResponseInfo();
-		responseInfo.setStatus(HttpStatus.CREATED.toString());
-		responseInfo.setApiId(requestInfo.getApiId());
-		crossHierarchyResponse.setResponseInfo(responseInfo);
+		if (crossHierarchyRequest.getCrossHierarchy() != null
+				&& crossHierarchyRequest.getCrossHierarchy().getTenantId() != null
+				&& !crossHierarchyRequest.getCrossHierarchy().getTenantId().isEmpty()) {
+			RequestInfo requestInfo = crossHierarchyRequest.getRequestInfo();
+			CrossHierarchy crossHierarchy = crossHierarchyService.create(crossHierarchyRequest.getCrossHierarchy());
+			crossHierarchyResponse.getCrossHierarchys().add(crossHierarchy);
+			ResponseInfo responseInfo = new ResponseInfo();
+			responseInfo.setStatus(HttpStatus.CREATED.toString());
+			responseInfo.setApiId(requestInfo.getApiId());
+			crossHierarchyResponse.setResponseInfo(responseInfo);
+		}
 		return new ResponseEntity<CrossHierarchyResponse>(crossHierarchyResponse, HttpStatus.CREATED);
 	}
 
 	@PutMapping(value = "/{code}")
 	@ResponseBody
 	public ResponseEntity<?> update(@RequestBody @Valid CrossHierarchyRequest crossHierarchyRequest,
-									BindingResult errors, @PathVariable String code) {
-
+									BindingResult errors, @PathVariable String code,
+									@RequestParam(value = "tenantId", required = true) String tenantId) {
 		if (errors.hasErrors()) {
 			ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
 		}
-		RequestInfo requestInfo = crossHierarchyRequest.getRequestInfo();
-		CrossHierarchy crossHierarchyFromDb = crossHierarchyService.findByCode(code);
-		CrossHierarchy crossHierarchy = crossHierarchyRequest.getCrossHierarchy();
-		crossHierarchy.setId(crossHierarchyFromDb.getId());
-		crossHierarchy.setVersion(crossHierarchyFromDb.getVersion());
-		crossHierarchy = crossHierarchyService.update(crossHierarchy);
-
 		CrossHierarchyResponse crossHierarchyResponse = new CrossHierarchyResponse();
-		crossHierarchyResponse.getCrossHierarchys().add(crossHierarchy);
-
-		ResponseInfo responseInfo = new ResponseInfo();
-		responseInfo.setStatus(HttpStatus.CREATED.toString());
-		responseInfo.setApiId(requestInfo.getApiId());
-		crossHierarchyResponse.setResponseInfo(responseInfo);
+		if (tenantId != null && !tenantId.isEmpty()) {
+			RequestInfo requestInfo = crossHierarchyRequest.getRequestInfo();
+			CrossHierarchy crossHierarchyFromDb = crossHierarchyService.findByCodeAndTenantId(code,
+					tenantId);
+			CrossHierarchy crossHierarchy = crossHierarchyRequest.getCrossHierarchy();
+			crossHierarchy.setId(crossHierarchyFromDb.getId());
+			crossHierarchy.setVersion(crossHierarchyFromDb.getVersion());
+			crossHierarchy = crossHierarchyService.update(crossHierarchy);
+			crossHierarchyResponse.getCrossHierarchys().add(crossHierarchy);
+			ResponseInfo responseInfo = new ResponseInfo();
+			responseInfo.setStatus(HttpStatus.CREATED.toString());
+			responseInfo.setApiId(requestInfo.getApiId());
+			crossHierarchyResponse.setResponseInfo(responseInfo);
+		}
 		return new ResponseEntity<CrossHierarchyResponse>(crossHierarchyResponse, HttpStatus.CREATED);
 	}
 
@@ -78,12 +91,17 @@ public class CrossHierarchyController {
 	public ResponseEntity<?> search(@ModelAttribute CrossHierarchyRequest crossHierarchyRequest) {
 
 		CrossHierarchyResponse crossHierarchyResponse = new CrossHierarchyResponse();
-		List<CrossHierarchy> allCrossHierarchys = crossHierarchyService.getAllCrossHierarchys(crossHierarchyRequest);
-		crossHierarchyResponse.getCrossHierarchys().addAll(allCrossHierarchys);
-		ResponseInfo responseInfo = new ResponseInfo();
-		responseInfo.setStatus(HttpStatus.OK.toString());
-		// responseInfo.setApi_id(body.getRequestInfo().getApi_id());
-		crossHierarchyResponse.setResponseInfo(responseInfo);
+		if (crossHierarchyRequest.getCrossHierarchy() != null
+				&& crossHierarchyRequest.getCrossHierarchy().getTenantId() != null
+				&& !crossHierarchyRequest.getCrossHierarchy().getTenantId().isEmpty()) {
+			List<CrossHierarchy> allCrossHierarchys = crossHierarchyService
+					.getAllCrossHierarchys(crossHierarchyRequest);
+			crossHierarchyResponse.getCrossHierarchys().addAll(allCrossHierarchys);
+			ResponseInfo responseInfo = new ResponseInfo();
+			responseInfo.setStatus(HttpStatus.OK.toString());
+			// responseInfo.setApi_id(body.getRequestInfo().getApi_id());
+			crossHierarchyResponse.setResponseInfo(responseInfo);
+		}
 		return new ResponseEntity<CrossHierarchyResponse>(crossHierarchyResponse, HttpStatus.OK);
 	}
 

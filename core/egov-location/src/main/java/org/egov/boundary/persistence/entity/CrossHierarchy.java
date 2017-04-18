@@ -40,6 +40,7 @@
 
 package org.egov.boundary.persistence.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -68,7 +69,7 @@ public class CrossHierarchy extends AbstractAuditable {
     @JoinColumn(name = "parent")
     @Fetch(value = FetchMode.JOIN)
     private Boundary parent;
-    
+
     private String code;
     @ManyToOne
     @JoinColumn(name = "child")
@@ -84,6 +85,16 @@ public class CrossHierarchy extends AbstractAuditable {
     @JoinColumn(name = "childtype")
     @Fetch(value = FetchMode.JOIN)
     private BoundaryType childType;
+    @Column(name = "tenantid")
+    private String tenantId;
+
+    public String getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
+    }
 
     @Override
     public Long getId() {
@@ -127,12 +138,12 @@ public class CrossHierarchy extends AbstractAuditable {
         this.childType = childType;
     }
 
-	public String getCode() {
-		return code;
-	}
+    public String getCode() {
+        return code;
+    }
 
-	public void setCode(String code) {
-		this.code = code;
-	}
+    public void setCode(String code) {
+        this.code = code;
+    }
 
 }

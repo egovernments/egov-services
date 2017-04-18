@@ -26,16 +26,16 @@ public class CrossHierarchyServiceTest {
 	@Test
 	public void test_should_fetch_child_locations_for_boundary_id() {
 
-		when(crossHierarchyRepository.findActiveBoundariesById(1L)).thenReturn(getExpectedBoundaryDetails());
+		when(crossHierarchyRepository.findActiveBoundariesByIdAndTenantId(1L,"tenantId")).thenReturn(getExpectedBoundaryDetails());
 
-		List<Boundary> boundaryList = crossHierarchyService.getActiveChildBoundariesByBoundaryId(1L);
+		List<Boundary> boundaryList = crossHierarchyService.getActiveChildBoundariesByBoundaryIdAndTenantId(1L,"tenantId");
 
 		assertEquals("Bank Road", boundaryList.get(0).getName());
 	}
 
 	private List<Boundary> getExpectedBoundaryDetails() {
 		final List<Boundary> boundaryList = new ArrayList<>();
-		final Boundary boundary = Boundary.builder().id(1L).name("Bank Road").build();
+		final Boundary boundary = Boundary.builder().id(1L).name("Bank Road").tenantId("tenantId").build();
 		boundaryList.add(boundary);
 		return boundaryList;
 	}

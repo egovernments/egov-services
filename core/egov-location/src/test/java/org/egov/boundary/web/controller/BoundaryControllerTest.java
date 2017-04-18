@@ -26,84 +26,84 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(BoundaryController.class)
 public class BoundaryControllerTest {
 
-	@Autowired
-	private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-	@MockBean
-	private BoundaryService boundaryService;
+    @MockBean
+    private BoundaryService boundaryService;
 
-	@MockBean
-	private CrossHierarchyService crossHierarchyService;
+    @MockBean
+    private CrossHierarchyService crossHierarchyService;
 
-	@Test
-	public void testShouldFetchAllLocationsForGivenWard() throws Exception {
-		final Boundary expectedBoundary = Boundary.builder().id(1L).name("Bank Road").build();
-		when(crossHierarchyService.getActiveChildBoundariesByBoundaryId(any(Long.class)))
-				.thenReturn(Collections.singletonList(expectedBoundary));
-		mockMvc.perform(post("/boundarys/childLocationsByBoundaryId")
-				.param("boundaryId", "1"))
-				.andExpect(status().isOk())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(content().json(getFileContents("boundaryResponse.json")));
-	}
+    @Test
+    public void testShouldFetchAllLocationsForGivenWard() throws Exception {
+        final Boundary expectedBoundary = Boundary.builder().id(1L).name("Bank Road").build();
+        when(crossHierarchyService.getActiveChildBoundariesByBoundaryIdAndTenantId(any(Long.class), any(String.class)))
+                .thenReturn(Collections.singletonList(expectedBoundary));
+        mockMvc.perform(post("/boundarys/childLocationsByBoundaryId").param("boundaryId", "1")
+                .param("tenantId", "ap.public")).andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().json(getFileContents("boundaryResponse.json")));
+    }
 
-	@Test
-	public void testShouldReturnBadRequestWhenWardIsEmpty() throws Exception {
-		when(crossHierarchyService.getActiveChildBoundariesByBoundaryId(any(Long.class))).thenReturn(null);
-		mockMvc.perform(post("/boundarys/childLocationsByBoundaryId").param("boundaryId", "")
-				.header("X-CORRELATION-ID", "someId").contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(status().isBadRequest());
-	}
+    @Test
+    public void testShouldReturnBadRequestWhenWardIsEmpty() throws Exception {
+        when(crossHierarchyService.getActiveChildBoundariesByBoundaryIdAndTenantId(any(Long.class), any(String.class))).thenReturn(null);
+        mockMvc.perform(
+                post("/boundarys/childLocationsByBoundaryId").param("boundaryId", "").param("tenantId", "ap.public")
+                        .header("X-CORRELATION-ID", "someId").contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isBadRequest());
+    }
 
-	@Test
-	public void testShouldFetchAllBoundariesForBoundarytypenameAndHierarchytypename() throws Exception {
-		final Boundary expectedBoundary = Boundary.builder().id(1L).name("Bank Road").build();
-		when(boundaryService.getBoundariesByBndryTypeNameAndHierarchyTypeName(any(String.class), any(String.class)))
-				.thenReturn(Collections.singletonList(expectedBoundary));
-		mockMvc.perform(
-				post("/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName").param("boundaryTypeName", "Ward")
-						.param("hierarchyTypeName", "Admin").header("X-CORRELATION-ID", "someId"))
-				.andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(content().json(getFileContents("boundaryResponse.json")));
-	}
+    @Test
+    public void testShouldFetchAllBoundariesForBoundarytypenameAndHierarchytypename() throws Exception {
+        final Boundary expectedBoundary = Boundary.builder().id(1L).name("Bank Road").build();
+        when(boundaryService.getBoundariesByBndryTypeNameAndHierarchyTypeNameAndTenantId(any(String.class), any(String.class), any(String.class)))
+                .thenReturn(Collections.singletonList(expectedBoundary));
+        mockMvc.perform(post("/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName").param("tenantId", "ap.public")
+                .param("boundaryTypeName", "Ward").param("hierarchyTypeName", "Admin")
+                .header("X-CORRELATION-ID", "someId")).andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().json(getFileContents("boundaryResponse.json")));
+    }
 
-	@Test
-	public void testShouldReturnBadRequestWhenBoundarytypenameAndHierarchytypenameIsEmpty() throws Exception {
-		when(boundaryService.getBoundariesByBndryTypeNameAndHierarchyTypeName(any(String.class), any(String.class)))
-				.thenReturn(null);
-		mockMvc.perform(post("/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName").param("boundaryTypeName", "")
-				.param("hierarchyTypeName", "").header("X-CORRELATION-ID", "someId")
-				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().isBadRequest());
-	}
+    @Test
+    public void testShouldReturnBadRequestWhenBoundarytypenameAndHierarchytypenameIsEmpty() throws Exception {
+        when(boundaryService.getBoundariesByBndryTypeNameAndHierarchyTypeNameAndTenantId(any(String.class), any(String.class), any(String.class)))
+                .thenReturn(null);
+        mockMvc.perform(post("/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName").param("tenantId", "ap.public")
+                .param("boundaryTypeName", "").param("hierarchyTypeName", "").header("X-CORRELATION-ID", "someId")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().isBadRequest());
+    }
 
-	@Test
-	public void testShouldFetchAllBoundariesForBoundarytypeidAndtenantId() throws Exception {
-		final Boundary expectedBoundary = Boundary.builder().id(1L).name("Bank Road").build();
-		when(boundaryService.getAllBoundariesByBoundaryTypeIdAndTenantId(any(Long.class), any(String.class)))
-				.thenReturn(Collections.singletonList(expectedBoundary));
-		mockMvc.perform(post("/boundarys/getByBoundaryType")
-				.param("boundaryTypeId", "7")
-				.param("tenantId", "tenantId"))
-				.andExpect(status().isOk())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(content().json(getFileContents("boundaryResponse.json")));
-	}
+    @Test
+    public void testShouldFetchAllBoundariesForBoundarytypeidAndtenantId() throws Exception {
+        final Boundary expectedBoundary = Boundary.builder().id(1L).name("Bank Road").build();
+        when(boundaryService.getAllBoundariesByBoundaryTypeIdAndTenantId(any(Long.class), any(String.class)))
+                .thenReturn(Collections.singletonList(expectedBoundary));
+        mockMvc.perform(post("/boundarys/getByBoundaryType")
+                .param("boundaryTypeId", "7")
+                .param("tenantId", "tenantId"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().json(getFileContents("boundaryResponse.json")));
+    }
 
-	@Test
-	public void testShouldReturnBadRequestWhenBoundarytypeidAndTenmantIdIsEmpty() throws Exception {
-		when(boundaryService.getAllBoundariesByBoundaryTypeIdAndTenantId(any(Long.class), any(String.class)))
-				.thenReturn(null);
-		mockMvc.perform(post("/boundarys/getByBoundaryType").param("boundaryTypeId", "")
-				.param("tenantId", "").header("X-CORRELATION-ID", "someId")
-				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().isBadRequest());
-	}
-	
-	private String getFileContents(String fileName) {
-		try {
-			return IOUtils.toString(this.getClass().getClassLoader().getResourceAsStream(fileName), "UTF-8");
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-	}
+    @Test
+    public void testShouldReturnBadRequestWhenBoundarytypeidAndTenmantIdIsEmpty() throws Exception {
+        when(boundaryService.getAllBoundariesByBoundaryTypeIdAndTenantId(any(Long.class), any(String.class)))
+                .thenReturn(null);
+        mockMvc.perform(post("/boundarys/getByBoundaryType").param("boundaryTypeId", "")
+                .param("tenantId", "").header("X-CORRELATION-ID", "someId")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().isBadRequest());
+    }
+
+    private String getFileContents(String fileName) {
+        try {
+            return IOUtils.toString(this.getClass().getClassLoader().getResourceAsStream(fileName), "UTF-8");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 }

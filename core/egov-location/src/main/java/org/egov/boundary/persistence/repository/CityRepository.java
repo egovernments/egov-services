@@ -13,5 +13,7 @@ import org.springframework.stereotype.Repository;
 public interface CityRepository extends JpaRepository<City, Long> {
 
 	@QueryHints({ @QueryHint(name = HINT_CACHEABLE, value = "true") })
-	City findByCode(String code);
+	City findByCodeAndTenantId(String code, String tenantId);
+
+	City findByIdAndTenantId(Long id, String tenantId);
 }

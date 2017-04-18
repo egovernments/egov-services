@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.egov.boundary.persistence.entity.City;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class CityRepositoryTest {
 	@Test
 	@Sql(scripts = { "/sql/clearCity.sql", "/sql/createCity.sql" })
 	public void shouldFetchCityForGivenCityCode() {
-		final City city = cityRepository.findByCode("0001");
+		final City city = cityRepository.findByCodeAndTenantId("0001","ap.public");
 		assertEquals("0001", city.getCode());
 	}
 
@@ -32,9 +33,9 @@ public class CityRepositoryTest {
 	@Sql(scripts = { "/sql/clearCity.sql", "/sql/createCity.sql" })
 	public void shouldSaveCity() {
 		final City city = City.builder().code("0002").name("Kurnool Municipal Corporation").domainURL("kurnool")
-				.districtName("Kurnool").districtCode("KMC").localName("Kurnool").build();
+				.districtName("Kurnool").districtCode("KMC").localName("Kurnool").tenantId("ap.public").build();
 		final City savedCity = cityRepository.save(city);
 		assertTrue("Id generated for city", savedCity.getId() > 0);
-		assertEquals("0002", cityRepository.findByCode("0002").getCode());
+		assertEquals("0002", cityRepository.findByCodeAndTenantId("0002","ap.public").getCode());
 	}
 }

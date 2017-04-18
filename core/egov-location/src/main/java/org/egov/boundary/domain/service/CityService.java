@@ -22,10 +22,10 @@ public class CityService {
 	public City getCityByCityReq(CityRequest cityRequest) {
 		City city = new City();
 		if (cityRequest.getCity().getId() != null) {
-			city = (cityRepository.findOne(Long.valueOf(cityRequest.getCity().getId())));
+			city = (cityRepository.findByIdAndTenantId(Long.valueOf(cityRequest.getCity().getId()),cityRequest.getCity().getTenantId()));
 
 		} else if (!StringUtils.isEmpty(cityRequest.getCity().getCode())) {
-			city = (cityRepository.findByCode(cityRequest.getCity().getCode()));
+			city = (cityRepository.findByCodeAndTenantId(cityRequest.getCity().getCode(),cityRequest.getCity().getTenantId()));
 		}
 		return city;
 	}

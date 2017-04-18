@@ -24,11 +24,11 @@ public class CityServiceTest {
 	@Test
 	public void test_should_fetch_city_for_given_id() {
 		final org.egov.boundary.web.contract.City cityContract = org.egov.boundary.web.contract.City.builder().id("1")
-				.build();
+				.code("0001").tenantId("tenantID").build();
 		final CityRequest cityRequestForCityId = CityRequest.builder().city(cityContract).build();
 
-		when(cityRepository.findOne(Long.valueOf(cityRequestForCityId.getCity().getId())))
-				.thenReturn(getExpectedCityDetails());
+		when(cityRepository.findByIdAndTenantId(Long.valueOf(cityRequestForCityId.getCity().getId()),
+				cityRequestForCityId.getCity().getTenantId())).thenReturn(getExpectedCityDetails());
 
 		City city = cityService.getCityByCityReq(cityRequestForCityId);
 
@@ -39,10 +39,10 @@ public class CityServiceTest {
 	@Test
 	public void test_should_fetch_city_for_given_code() {
 		final org.egov.boundary.web.contract.City cityContract = org.egov.boundary.web.contract.City.builder()
-				.code("0001").build();
+				.code("0001").tenantId("tenantId").build();
 		final CityRequest cityRequestForCityCode = CityRequest.builder().city(cityContract).build();
-		when(cityRepository.findByCode(cityRequestForCityCode.getCity().getCode()))
-				.thenReturn(getExpectedCityDetails());
+		when(cityRepository.findByCodeAndTenantId(cityRequestForCityCode.getCity().getCode(),
+				cityRequestForCityCode.getCity().getTenantId())).thenReturn(getExpectedCityDetails());
 
 		City city = cityService.getCityByCityReq(cityRequestForCityCode);
 
@@ -52,7 +52,7 @@ public class CityServiceTest {
 
 	private City getExpectedCityDetails() {
 		final City city = City.builder().code("0001").name("Kurnool Municipal Corporation").domainURL("kurnool")
-				.districtName("Kurnool").districtCode("KMC").localName("Kurnool").build();
+				.districtName("Kurnool").districtCode("KMC").localName("Kurnool").tenantId("tenantId").build();
 		return city;
 	}
 }

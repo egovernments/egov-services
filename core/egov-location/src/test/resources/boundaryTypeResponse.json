@@ -10,7 +10,8 @@
   "BoundaryType": [
     {
       "id": "1",
-      "name": "City"
+      "name": "City",
+      "tenantId": "tenantId"
     }
    ]
 }

@@ -39,8 +39,8 @@ public class CityController {
 	private ObjectMapper objectMapper;
 
 	@GetMapping
-	public String getCity(@RequestParam(value = "code", required = false) String code) {
-
+	public String getCity(@RequestParam(value = "tenantId", required = true) String tenantId,
+						  @RequestParam(value = "code", required = false) String code) {
 		List<District> districts;
 		List<District> result = new ArrayList<>();
 		String jsonInString = "";
@@ -51,10 +51,11 @@ public class CityController {
 					new ClassPathResource("/json/citiesUrl.json").getInputStream(),
 					new TypeReference<List<District>>() {
 					});
-			if (code != null && !code.isEmpty())
+			if (tenantId != null && !tenantId.isEmpty() && code != null && !code.isEmpty())
 				for (District d : districts) {
 					List<CityModel> cities = d.getCities().stream()
-							.filter(c -> c.getCityCode().compareTo(Integer.valueOf(code)) == 0)
+							.filter(c -> c.getCityCode().compareTo(Integer.valueOf(code)) == 0
+									&& c.getTenantId().equalsIgnoreCase(tenantId))
 							.collect(Collectors.toList());
 
 					jsonInString = objectMapper.writeValueAsString(!cities.isEmpty() ? cities.get(0) : cities);
@@ -72,7 +73,8 @@ public class CityController {
 	@ResponseBody
 	public ResponseEntity<?> search(@RequestBody CityRequest cityRequest) {
 		CityResponse cityResponse = new CityResponse();
-		if (cityRequest.getCity() != null) {
+		if (cityRequest.getCity() != null && cityRequest.getCity().getTenantId() != null
+				&& !cityRequest.getCity().getTenantId().isEmpty()) {
 			ResponseInfo responseInfo = new ResponseInfo();
 			responseInfo.setStatus(HttpStatus.CREATED.toString());
 			cityResponse.setCity(getCity(cityRequest));

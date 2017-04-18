@@ -94,25 +94,26 @@ public class CrossHierarchyService {
 		return crossHierarchyRepository.findByParentAndChildBoundaryType(boundary, boundaryType);
 	}
 
-	public List<CrossHierarchy> getChildBoundaryNameAndBndryTypeAndHierarchyType(final String boundaryTypeName,
-			final String hierarchyTypeName, final String parenthierarchyTypeName, final String name) {
-		return crossHierarchyRepository.findActiveBoundariesByNameAndBndryTypeNameAndHierarchyTypeName(boundaryTypeName,
-				hierarchyTypeName, parenthierarchyTypeName, name);
+	public List<CrossHierarchy> getChildBoundaryNameAndBndryTypeAndHierarchyTypeAndTenantId(
+			final String boundaryTypeName, final String hierarchyTypeName, final String parenthierarchyTypeName,
+			final String name, final String tenantId) {
+		return crossHierarchyRepository.findActiveBoundariesByNameAndBndryTypeNameAndHierarchyTypeNameAndTenantId(
+				boundaryTypeName, hierarchyTypeName, parenthierarchyTypeName, name, tenantId);
 	}
 
 	public List<Boundary> getChildBoundariesNameAndBndryTypeAndHierarchyType(final String boundaryTypeName,
-			final String hierarchyTypeName) {
+																			 final String hierarchyTypeName) {
 		return crossHierarchyRepository.findChildBoundariesNameAndBndryTypeAndHierarchyType(boundaryTypeName,
 				hierarchyTypeName);
 	}
 
 	public List<Boundary> getParentBoundaryByChildBoundaryAndParentBoundaryType(final Long childId,
-			final Long parentTypeId) {
+																				final Long parentTypeId) {
 		return crossHierarchyRepository.findParentBoundaryByChildBoundaryAndParentBoundaryType(childId, parentTypeId);
 	}
 
-	public List<Boundary> getActiveChildBoundariesByBoundaryId(final Long id) {
-		return crossHierarchyRepository.findActiveBoundariesById(id);
+	public List<Boundary> getActiveChildBoundariesByBoundaryIdAndTenantId(final Long id, final String tenantId) {
+		return crossHierarchyRepository.findActiveBoundariesByIdAndTenantId(id, tenantId);
 	}
 
 	public CrossHierarchy findById(final Long id) {
@@ -124,7 +125,7 @@ public class CrossHierarchyService {
 	}
 
 	public List<Boundary> findChildBoundariesByParentBoundary(final String boundaryTypeName,
-			final String hierarchyTypeName, final String parentBoundary) {
+															  final String hierarchyTypeName, final String parentBoundary) {
 		return crossHierarchyRepository.findChildBoundariesByParentBoundary(boundaryTypeName, hierarchyTypeName,
 				parentBoundary);
 	}
@@ -147,7 +148,7 @@ public class CrossHierarchyService {
 		 * .getConfigValuesByModuleAndKey(ADMINISTRATION,
 		 * CROSSHIERARCHY_BOUNDARYTYPES).get(0).getValue(); final List<String>
 		 * configList = new ArrayList<String>();
-		 * 
+		 *
 		 * if (StringUtils.isNotBlank(appConfigValue)) { final List<String>
 		 * boundaryHierarchyType = Arrays.asList(appConfigValue.split(",")); for
 		 * (final String bhType : boundaryHierarchyType) configList.add(bhType);
@@ -160,24 +161,30 @@ public class CrossHierarchyService {
 		return boundaryTypes;
 	}
 
-	public CrossHierarchy findByCode(String code) {
-		return crossHierarchyRepository.findByCode(code);
+	public CrossHierarchy findByCodeAndTenantId(String code, String tenantId) {
+		return crossHierarchyRepository.findByCodeAndTenantId(code, tenantId);
 	}
 
 	public List<CrossHierarchy> getAllCrossHierarchys(CrossHierarchyRequest crossHierarchyRequest) {
 		List<CrossHierarchy> crossHierarchy = new ArrayList<CrossHierarchy>();
-		if (crossHierarchyRequest.getCrossHierarchy().getId() != null) {
-			crossHierarchy.add(crossHierarchyRepository.findById(crossHierarchyRequest.getCrossHierarchy().getId()));
-
-		} else {
-			if (crossHierarchyRequest.getCrossHierarchy().getCode() != null) {
-				crossHierarchy.add(findByCode(crossHierarchyRequest.getCrossHierarchy().getCode()));
+		if (crossHierarchyRequest.getCrossHierarchy() != null
+				&& crossHierarchyRequest.getCrossHierarchy().getTenantId() != null
+				&& !crossHierarchyRequest.getCrossHierarchy().getTenantId().isEmpty()) {
+			if (crossHierarchyRequest.getCrossHierarchy().getId() != null) {
+				crossHierarchy.add(
+						crossHierarchyRepository.findByIdAndTenantId(crossHierarchyRequest.getCrossHierarchy().getId(),
+								crossHierarchyRequest.getCrossHierarchy().getTenantId()));
 
 			} else {
-				crossHierarchy.addAll(crossHierarchyRepository.findAll());
+				if (crossHierarchyRequest.getCrossHierarchy().getCode() != null) {
+					crossHierarchy.add(findByCodeAndTenantId(crossHierarchyRequest.getCrossHierarchy().getCode(),
+							crossHierarchyRequest.getCrossHierarchy().getTenantId()));
+
+				} else {
+					crossHierarchy.addAll(crossHierarchyRepository.findAllByTenantId(crossHierarchyRequest.getCrossHierarchy().getTenantId()));
+				}
 			}
 		}
-
 		return crossHierarchy;
 	}
 }

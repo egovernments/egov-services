@@ -40,8 +40,6 @@ package org.egov.boundary.persistence.repository;
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-
-
 import java.util.List;
 
 import org.egov.boundary.persistence.entity.HierarchyType;
@@ -50,9 +48,13 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface HierarchyTypeRepository extends JpaRepository<HierarchyType, Long> {
-    HierarchyType findByName(String name);
+    HierarchyType findByNameAndTenantId(String name,String tenantId);
 
     List<HierarchyType> findByNameContainingIgnoreCase(String name);
 
-    HierarchyType findByCode(String code);
+    HierarchyType findByCodeAndTenantId(String code, String tenantId);
+
+    HierarchyType findByIdAndTenantId(Long id, String tenantId);
+
+    List<HierarchyType> findAllByTenantId(String tenantId);
 }

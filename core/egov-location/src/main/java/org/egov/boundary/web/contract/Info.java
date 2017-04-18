@@ -3,7 +3,7 @@ package org.egov.boundary.web.contract;
 import org.joda.time.DateTime;
 
 public class Info {
-	
+
 	private String api_id = null;
 
 	private String ver = null;
@@ -11,8 +11,6 @@ public class Info {
 	private DateTime ts = null;
 
 	private String key = null;
-	
-	private String tenantId = null;
 
 	public String getApi_id() {
 		return api_id;
@@ -44,13 +42,5 @@ public class Info {
 
 	public void setKey(String key) {
 		this.key = key;
-	}
-
-	public String getTenantId() {
-		return tenantId;
-	}
-
-	public void setTenantId(String tenantId) {
-		this.tenantId = tenantId;
 	}
 }

@@ -17,29 +17,32 @@ import lombok.Setter;
 @Builder
 public class Boundary {
 
-	@NotEmpty
-	@JsonProperty("id")
-	private String id;
-	@JsonProperty("name")
-	private String name;
-	@JsonProperty("longitude")
-	private Float longitude;
-	@JsonProperty("latitude")
-	private Float latitude;
-	@JsonProperty("boundaryNum")
-	private Long boundaryNum;
+    @NotEmpty
+    @JsonProperty("id")
+    private String id;
+    @JsonProperty("name")
+    private String name;
+    @JsonProperty("longitude")
+    private Float longitude;
+    @JsonProperty("latitude")
+    private Float latitude;
+    @JsonProperty("boundaryNum")
+    private Long boundaryNum;
 
-	private Boundary parent;
+    private Boundary parent;
+    @JsonProperty("tenantId")
+    private String tenantId;
 
-	public Boundary(org.egov.boundary.persistence.entity.Boundary entityBoundary) {
-		this.id = entityBoundary.getId().toString();
-		this.name = entityBoundary.getName();
-		if (entityBoundary.getParent() != null) {
-			this.setParent(new Boundary(entityBoundary.getParent()));
-		}
-		this.longitude = entityBoundary.getLongitude();
-		this.latitude = entityBoundary.getLatitude();
-		this.boundaryNum = entityBoundary.getBoundaryNum();
-	}
+    public Boundary(org.egov.boundary.persistence.entity.Boundary entityBoundary) {
+        this.id = entityBoundary.getId().toString();
+        this.name = entityBoundary.getName();
+        if (entityBoundary.getParent() != null) {
+            this.setParent(new Boundary(entityBoundary.getParent()));
+        }
+        this.longitude = entityBoundary.getLongitude();
+        this.latitude = entityBoundary.getLatitude();
+        this.boundaryNum = entityBoundary.getBoundaryNum();
+        this.tenantId = entityBoundary.getTenantId();
+    }
 
 }

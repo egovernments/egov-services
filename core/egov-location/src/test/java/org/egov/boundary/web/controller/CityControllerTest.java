@@ -35,10 +35,10 @@ public class CityControllerTest {
 
 		final org.egov.boundary.persistence.entity.City expectedCity = org.egov.boundary.persistence.entity.City
 				.builder().id(1L).code("KC").name("Kurnool").domainURL("Localhost").grade("Grade A")
-				.districtName("Kurnool District").districtCode("KC01").regionName("Kurnool Region").build();
+				.districtName("Kurnool District").districtCode("KC01").regionName("Kurnool Region").tenantId("ap.public").build();
 
 		when(cityService.getCityByCityReq(any(CityRequest.class))).thenReturn(expectedCity);
-		mockMvc.perform(post("/city/getCitybyCityRequest?city.id=1").header("X-CORRELATION-ID", "someId")
+		mockMvc.perform(post("/city/getCitybyCityRequest?city.id=1&city.tenantId=ap.public").header("X-CORRELATION-ID", "someId")
 				.content(getFileContents("cityRequest.json")).contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(getFileContents("cityResponse.json")));

@@ -78,8 +78,8 @@ public class HierarchyTypeService {
 		return hierarchyTypeRepository.save(hierarchyType);
 	}
 
-	public HierarchyType getHierarchyTypeByName(String name) {
-		return hierarchyTypeRepository.findByName(name);
+	public HierarchyType getHierarchyTypeByNameAndTenantId(String name, String tenantId) {
+		return hierarchyTypeRepository.findByNameAndTenantId(name, tenantId);
 	}
 
 	@Transactional
@@ -88,29 +88,32 @@ public class HierarchyTypeService {
 
 	}
 
-	public HierarchyType findByCode(String code) {
-		return hierarchyTypeRepository.findByCode(code);
+	public HierarchyType findByCodeAndTenantId(String code, String tenantId) {
+		return hierarchyTypeRepository.findByCodeAndTenantId(code, tenantId);
 
 	}
 
-	public HierarchyType findById(Long id) {
-		return hierarchyTypeRepository.findOne(id);
+	public HierarchyType findByIdAndTenantId(Long id, String tenantId) {
+		return hierarchyTypeRepository.findByIdAndTenantId(id, tenantId);
 
 	}
 
 	public List<HierarchyType> getAllHierarchyTypes(HierarchyTypeRequest hierarchyTypeRequest) {
 		List<HierarchyType> hierarchyTypes = new ArrayList<HierarchyType>();
-		if (hierarchyTypeRequest.getHierarchyType().getId() != null) {
-			hierarchyTypes.add(hierarchyTypeRepository.findOne(hierarchyTypeRequest.getHierarchyType().getId()));
-
-		} else {
-			if (!StringUtils.isEmpty(hierarchyTypeRequest.getHierarchyType().getCode())) {
-				hierarchyTypes.add(findByCode(hierarchyTypeRequest.getHierarchyType().getCode()));
+		if (hierarchyTypeRequest.getHierarchyType() != null
+				&& hierarchyTypeRequest.getHierarchyType().getTenantId() != null
+				&& !hierarchyTypeRequest.getHierarchyType().getTenantId().isEmpty()) {
+			if (hierarchyTypeRequest.getHierarchyType().getId() != null) {
+				hierarchyTypes.add(hierarchyTypeRepository.findByIdAndTenantId(hierarchyTypeRequest.getHierarchyType().getId(),hierarchyTypeRequest.getHierarchyType().getTenantId()));
 
 			} else {
-				hierarchyTypes.addAll(hierarchyTypeRepository.findAll());
-			}
+				if (!StringUtils.isEmpty(hierarchyTypeRequest.getHierarchyType().getCode())) {
+					hierarchyTypes.add(findByCodeAndTenantId(hierarchyTypeRequest.getHierarchyType().getCode(),hierarchyTypeRequest.getHierarchyType().getTenantId()));
 
+				} else {
+					hierarchyTypes.addAll(hierarchyTypeRepository.findAllByTenantId(hierarchyTypeRequest.getHierarchyType().getTenantId()));
+				}
+			}
 		}
 		return hierarchyTypes;
 

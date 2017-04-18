@@ -96,8 +96,10 @@ public class BoundaryService {
 	public Boundary createBoundary(final Boundary boundary) {
 		boundary.setHistory(false);
 		boundary.setMaterializedPath(getMaterializedPath(null, boundary.getParent()));
-		if (boundary.getBoundaryType() != null && boundary.getBoundaryType().getId() != null) {
-			boundary.setBoundaryType(boundaryTypeService.findById(boundary.getBoundaryType().getId()));
+		if (boundary.getTenantId() != null && !boundary.getTenantId().isEmpty() && boundary.getBoundaryType() != null
+				&& boundary.getBoundaryType().getId() != null) {
+			boundary.setBoundaryType(boundaryTypeService.findByIdAndTenantId(boundary.getBoundaryType().getId(),
+					boundary.getTenantId()));
 		}
 		return boundaryRepository.save(boundary);
 	}
@@ -169,10 +171,10 @@ public class BoundaryService {
 				hierarchyTypeName);
 	}
 
-	public List<Boundary> getBoundariesByBndryTypeNameAndHierarchyTypeName(final String boundaryTypeName,
-			final String hierarchyTypeName) {
-		return boundaryRepository.findBoundariesByBndryTypeNameAndHierarchyTypeName(boundaryTypeName,
-				hierarchyTypeName);
+	public List<Boundary> getBoundariesByBndryTypeNameAndHierarchyTypeNameAndTenantId(final String boundaryTypeName,
+																					  final String hierarchyTypeName, final String tenantId) {
+		return boundaryRepository.getBoundariesByBndryTypeNameAndHierarchyTypeNameAndTenantId(boundaryTypeName,
+				hierarchyTypeName, tenantId);
 	}
 
 	public Boundary getBoundaryByBndryTypeNameAndHierarchyTypeName(final String boundaryTypeName,
@@ -196,16 +198,16 @@ public class BoundaryService {
 				hierarchyTypeName, name);
 	}
 
-	public List<Map<String, Object>> getBoundaryDataByNameLike(final String name) {
+	public List<Map<String, Object>> getBoundaryDataByTenantIdAndNameLike(final String tenantId, final String name) {
 		final List<Map<String, Object>> list = new ArrayList<>();
 
-		crossHierarchyService.getChildBoundaryNameAndBndryTypeAndHierarchyType("Locality", "Location", "Administration",
-				'%' + name + '%').stream().forEach(location -> {
-					final Map<String, Object> res = new HashMap<>();
-					res.put("id", location.getId());
-					res.put("name", location.getChild().getName() + " - " + location.getParent().getName());
-					list.add(res);
-				});
+		crossHierarchyService.getChildBoundaryNameAndBndryTypeAndHierarchyTypeAndTenantId("Locality", "Location",
+				"Administration", '%' + name + '%', tenantId).stream().forEach(location -> {
+			final Map<String, Object> res = new HashMap<>();
+			res.put("id", location.getId());
+			res.put("name", location.getChild().getName() + " - " + location.getParent().getName());
+			list.add(res);
+		});
 		return list;
 	}
 
@@ -278,7 +280,7 @@ public class BoundaryService {
 		}
 	}
 
-	public Optional<Boundary> getBoundaryByNumberAndType(Long boundaryNum, String boundaryTypeName ,String tenantId) {
+	public Optional<Boundary> getBoundaryByNumberAndType(Long boundaryNum, String boundaryTypeName, String tenantId) {
 		if (boundaryNum != null && !StringUtils.isEmpty(boundaryTypeName)) {
 			final BoundaryType boundaryType = boundaryTypeService
 					.getBoundaryTypeByNameAndHierarchyTypeName(boundaryTypeName, "ADMINISTRATION");
@@ -294,30 +296,33 @@ public class BoundaryService {
 		return Optional.empty();
 	}
 
-	public Boundary findByCode(String code) {
-		return boundaryRepository.findByBoundaryNum(code);
+	public Boundary findByTenantIdAndCode(String tenantId, String code) {
+		return boundaryRepository.findByTenantIdAndBoundaryNum(tenantId, code);
 	}
 
 	public List<Boundary> getAllBoundary(BoundaryRequest boundaryRequest) {
 		List<Boundary> boundaries = new ArrayList<Boundary>();
-		if (boundaryRequest.getBoundary().getId() != null) {
-			boundaries.add(boundaryRepository.findOne(boundaryRequest.getBoundary().getId()));
-
-		} else {
-			if (!StringUtils.isEmpty(boundaryRequest.getBoundary().getLatitude())
-					&& !StringUtils.isEmpty(boundaryRequest.getBoundary().getLongitude())) {
-				Optional<Boundary> boundary = getBoundary(boundaryRequest.getBoundary().getLatitude().doubleValue(),
-						boundaryRequest.getBoundary().getLongitude().doubleValue(),
-						boundaryRequest.getBoundary().getTenantId());
-				if (boundary.isPresent())
-					boundaries.add(boundary.get());
-				else
-					boundaries = new ArrayList<Boundary>();
+		if (boundaryRequest.getBoundary().getTenantId() != null
+				&& !boundaryRequest.getBoundary().getTenantId().isEmpty()) {
+			if (boundaryRequest.getBoundary().getId() != null) {
+				boundaries.add(boundaryRepository.findByTenantIdAndId(boundaryRequest.getBoundary().getTenantId(),
+						boundaryRequest.getBoundary().getId()));
 			} else {
-				boundaries.addAll(boundaryRepository.findAll());
+				if (!StringUtils.isEmpty(boundaryRequest.getBoundary().getLatitude())
+						&& !StringUtils.isEmpty(boundaryRequest.getBoundary().getLongitude())) {
+					Optional<Boundary> boundary = getBoundary(boundaryRequest.getBoundary().getLatitude().doubleValue(),
+							boundaryRequest.getBoundary().getLongitude().doubleValue(),
+							boundaryRequest.getBoundary().getTenantId());
+					if (boundary.isPresent())
+						boundaries.add(boundary.get());
+					else
+						boundaries = new ArrayList<Boundary>();
+				} else {
+					boundaries
+							.addAll(boundaryRepository.findAllByTenantId(boundaryRequest.getBoundary().getTenantId()));
+				}
 			}
 		}
-
 		return boundaries;
 	}
 

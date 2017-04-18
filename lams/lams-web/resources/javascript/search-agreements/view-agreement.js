@@ -20,43 +20,47 @@ $(document).ready(function() {
         open(location, '_self').close();
     })
 
-    $('#printNotice').on("click", function() {
-        // call api
-        // alert("asda");
-        var doc = new jsPDF();
-        doc.setFontType("bold");
-        doc.text(15, 20, 'Kurnool Municipal Corporation(HHHHH)');
-        doc.text(15, 30, 'Kurnool District(JJJJJ)');
-        doc.text(15, 40, 'Asset Category Lease/Agreement Notice');
-        doc.setLineWidth(0.5);
-        doc.line(15, 42, 195, 42);
-        doc.text(15, 47, 'Lease details:');
-        doc.text(110, 47, 'Agreement No:');
-        doc.text(15, 57, 'Lease Name:	');
-        doc.text(110, 57, 'Asset No:');
-        doc.text(15, 67, 'Contact number, Door No, Address, ULB Name.');
+    // $('#printNotice').on("click", function() {
+    //     // call api
+    //     // alert("asda");
+    //
+    // })
 
-        doc.setFontType("normal");
-        doc.text(15, 77, doc.splitTextToSize('1.The period of lease shall be __AAA____ months commencing from _____BBB_____(dd-mm-yyyy) to ____CCC__________(dd-mm-yyyy).', (210 - 15 - 15)));
-        doc.text(15, 93, doc.splitTextToSize('2.The property leased is shop No___GGG_____and shall be leased for a sum of Rs. ________/-DDD (Rupees _______________________________________ only) per month exclusive of the payment of electricity and other charges.', (210 - 15 - 15)));
-        doc.text(15, 123, doc.splitTextToSize('3.The lessee has paid a sum of Rs. ______EEE____/- (Rupees ______________________________ only) as security deposit for the tenancy and the said sum is repayable or adjusted only at the end of the tenancy on the lease delivery vacant possession of the shop let out, subject to deductions, if any, lawfully and legally payable by the lessee under the terms of this lease deed and in law.', (210 - 15 - 15)));
-        doc.text(15, 163, doc.splitTextToSize('4.The rent for every month shall be payable on or before __5th___ of the succeeding month.', (210 - 15 - 15)));
-        doc.text(15, 178, doc.splitTextToSize('5.The lessee shall pay electricity charges to the Electricity Board every month without fail.', (210 - 15 - 15)));
-        doc.text(15, 193, doc.splitTextToSize('6.The lessor or his agent shall have a right to inspect the shop at any hour during the day time.', (210 - 15 - 15)));
-        doc.text(15, 208, doc.splitTextToSize('7.The Lessee shall use the shop let out duly for the business of General Merchandise and not use the same for any other purpose.  (The lessee shall not enter into partnership) and conduct the business in the premises in the name of the firm.  The lessee can only use the premises for his own business.', (210 - 15 - 15)));
-        doc.addPage()
-        doc.text(15, 20, doc.splitTextToSize('8.The lessee shall not have any right to assign, sub-let, re-let, under-let or transfer the tenancy or any portion thereof.', (210 - 15 - 15)));
-        doc.text(15, 35, doc.splitTextToSize('9.The lessee shall not carry out any addition or alteration to the shop without the previous consent and approval in writing of the lessor.', (210 - 15 - 15)));
-        doc.text(15, 50, doc.splitTextToSize('10. The lessee on the expiry of the lease period of __AAA_____ months shall hand over vacant possession of the ceased shop peacefully or the lease agreement can be renewed for a further period on mutually agreed terms.', (210 - 15 - 15)));
+    function printNotice(noticeData) {
+      var doc = new jsPDF();
+      doc.setFontType("bold");
+      doc.text(15, 20, 'Kurnool Municipal Corporation');
+      doc.text(15, 30, 'Kurnool District');
+      doc.text(15, 40, 'Asset Category Lease/Agreement Notice');
+      doc.setLineWidth(0.5);
+      doc.line(15, 42, 195, 42);
+      doc.text(15, 47, 'Lease details:');
+      doc.text(110, 47, 'Agreement No:'+noticeData.agreementNumber);
+      doc.text(15, 57, 'Lease Name:	'+noticeData.allotteeName);
+      doc.text(110, 57, 'Asset No:'+noticeData.assetNo);
+      doc.text(15, 67, noticeData.allotteeMobileNumber+","+ "Door No"+","+ noticeData.allotteeAddress+","+noticeData.locality +".");
 
-        doc.text(15, 90, 'Commissioner ');
-        doc.text(160, 90, 'LESSEE');
-        doc.text(15, 100, 'Signature: 	');
-        doc.text(160, 100, 'Signature: 	');
-        doc.text(15, 110, 'ULB Name');
+      doc.setFontType("normal");
+      doc.text(15, 77, doc.splitTextToSize('1.The period of lease shall be __'+noticeData.agreementPeriod *12+'____ months commencing from _____'+noticeData.commencementDate+'_____(dd-mm-yyyy) to ____'+noticeData.expiryDate+'__________(dd-mm-yyyy).', (210 - 15 - 15)));
+      doc.text(15, 93, doc.splitTextToSize('2.The property leased is shop No___'+noticeData.assetNo+'_____and shall be leased for a sum of Rs. ____'+noticeData.rent+'____/-DDD (Rupees _____'+noticeData.rentInWord+'______ only) per month exclusive of the payment of electricity and other charges.', (210 - 15 - 15)));
+      doc.text(15, 123, doc.splitTextToSize('3.The lessee has paid a sum of Rs. ____'+noticeData.securityDeposit+'____/- (Rupees ____'+noticeData.securityDepositInWord+'____ only) as security deposit for the tenancy and the said sum is repayable or adjusted only at the end of the tenancy on the lease delivery vacant possession of the shop let out, subject to deductions, if any, lawfully and legally payable by the lessee under the terms of this lease deed and in law.', (210 - 15 - 15)));
+      doc.text(15, 163, doc.splitTextToSize('4.The rent for every month shall be payable on or before __'+noticeData.rentPayableDate+'___ of the succeeding month.', (210 - 15 - 15)));
+      doc.text(15, 178, doc.splitTextToSize('5.The lessee shall pay electricity charges to the Electricity Board every month without fail.', (210 - 15 - 15)));
+      doc.text(15, 193, doc.splitTextToSize('6.The lessor or his agent shall have a right to inspect the shop at any hour during the day time.', (210 - 15 - 15)));
+      doc.text(15, 208, doc.splitTextToSize('7.The Lessee shall use the shop let out duly for the business of General Merchandise and not use the same for any other purpose.  (The lessee shall not enter into partnership) and conduct the business in the premises in the name of the firm.  The lessee can only use the premises for his own business.', (210 - 15 - 15)));
+      doc.addPage()
+      doc.text(15, 20, doc.splitTextToSize('8.The lessee shall not have any right to assign, sub-let, re-let, under-let or transfer the tenancy or any portion thereof.', (210 - 15 - 15)));
+      doc.text(15, 35, doc.splitTextToSize('9.The lessee shall not carry out any addition or alteration to the shop without the previous consent and approval in writing of the lessor.', (210 - 15 - 15)));
+      doc.text(15, 50, doc.splitTextToSize('10. The lessee on the expiry of the lease period of __'+noticeData.expiryDate+'___ months shall hand over vacant possession of the ceased shop peacefully or the lease agreement can be renewed for a further period on mutually agreed terms.', (210 - 15 - 15)));
 
-        doc.save('Notice.pdf');
-    })
+      doc.text(15, 90, 'Commissioner ');
+      doc.text(160, 90, 'LESSEE');
+      doc.text(15, 100, 'Signature: 	');
+      doc.text(160, 100, 'Signature: 	');
+      doc.text(15, 110, 'ULB Name');
+
+      doc.save('Notice.pdf');
+    }
 
     // function wordWrap(doc, paragraph, lMargin, rMargin, pdfInMM) {
     //     return doc.splitTextToSize(paragraph, (pdfInMM - lMargin - rMargin));
@@ -350,7 +354,7 @@ $(document).ready(function() {
         e.preventDefault();
         if (!e.target.id) return;
         var data = $("#" + e.target.id).data();
-        if (data.action) {
+        if (data.action && data.action!="Print Notice") {
             var _agrmntDet = Object.assign({}, agreementDetail);
             _agrmntDet.workflowDetails = {
                 "businessKey": process.businessKey,
@@ -379,6 +383,31 @@ $(document).ready(function() {
             } else {
                 console.log("Handle error.");
             }
+        }
+        else {
+          var response = $.ajax({
+              url: baseUrl + `/lams-services/agreement/notice/_create?tenantId=` + tenantId,
+              type: 'POST',
+              dataType: 'json',
+              data: JSON.stringify({
+                  RequestInfo: requestInfo,
+                  Notice: {
+                    tenantId,
+                    agreementNumber:_agrmntDet.agreementNumber
+                  }
+              }),
+              async: false,
+              headers: {
+                  'auth-token': authToken
+              },
+              contentType: 'application/json'
+          });
+          if (response["status"] === 201) {
+              printNotice(response["responseJSON"].Notices[0]);
+              // window.location.href = "app/search-assets/create-agreement-ack.html?name=" + getNameById(employees, agreement["approverName"]) + "&ackNo=" + responseJSON["Agreements"][0]["acknowledgementNumber"];
+          } else {
+              console.log("Handle error.");
+          }
         }
     });
 

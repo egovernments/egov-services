@@ -35,9 +35,9 @@ public class BoundaryTypeControllerTest {
     @Test
     public void testShouldFetchAllBoundarieTypesForHierarchyTypeidAndtenantId() throws Exception {
         final BoundaryType expectedBoundaryType = BoundaryType.builder().id(1L).name("City").tenantId("tenantId").build();
-        when(boundaryTypeService.getAllBoundarTypesByHierarchyTypeIdAndTenantId(any(Long.class), any(String.class)))
+        when(boundaryTypeService.getAllBoundarTypesByHierarchyTypeIdAndTenantName(any(String.class), any(String.class)))
                 .thenReturn(Collections.singletonList(expectedBoundaryType));
-        mockMvc.perform(post("/boundarytypes/getByHierarchyType").param("hierarchyTypeId", "1").param("tenantId", "tenantId")
+        mockMvc.perform(post("/boundarytypes/getByHierarchyType").param("hierarchyTypeName", "ADMINISTRATION").param("tenantId", "tenantId")
                 .header("X-CORRELATION-ID", "someId")).andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(content().json(getFileContents("boundaryTypeResponse.json")));

@@ -35,7 +35,9 @@ $(document).ready(function() {
                     '-moz-border-radius': '5px',
                     opacity: .5,
                     color: '#fff'
-                } });
+                },
+                baseZ: 100000
+            });
         } catch(e) {
             console.log(e);
         }

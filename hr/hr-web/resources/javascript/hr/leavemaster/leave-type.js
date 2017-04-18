@@ -51,7 +51,7 @@ addOrUpdate(e,mode)
           },_this=this;
             if(type == "update") {
         $.ajax({
-              url:baseUrl+"/hr-leave/leavetypes/" + _this.state.LeaveType.id + "/" + "_update",
+              url:baseUrl+"/hr-leave/leavetypes/" + _this.state.LeaveType.id + "/" + "_update?tenantId=" + tenantId,
               type: 'POST',
               dataType: 'json',
               data:JSON.stringify(body),
@@ -88,7 +88,7 @@ addOrUpdate(e,mode)
         } else {
           $.ajax({
 
-                url:baseUrl+"/hr-leave/leavetypes/_create",
+                url:baseUrl+"/hr-leave/leavetypes/_create?tenantId=" + tenantId,
                 type: 'POST',
                 dataType: 'json',
                 data:JSON.stringify(body),
@@ -138,7 +138,6 @@ addOrUpdate(e,mode)
 
       if(type==="view"||type==="update")
       {
-          console.log(getCommonMasterById("hr-leave","leavetypes","LeaveType",id).responseJSON["LeaveType"]);
           this.setState({
             LeaveType:getCommonMasterById("hr-leave","leavetypes","LeaveType",id).responseJSON["LeaveType"][0]
           })

@@ -25,7 +25,6 @@ class Community extends React.Component{
 
         if(type==="view"||type==="update")
         {
-            console.log(getCommonMasterById("egov-common-masters","communities","Community",id).responseJSON["Community"][0]);
             this.setState({
               communitySet:getCommonMasterById("egov-common-masters","communities","Community",id).responseJSON["Community"][0]
             })

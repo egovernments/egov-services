@@ -37,8 +37,6 @@ class Calender_setup extends React.Component{
 
         if(type==="view"||type==="update")
         {
-            console.log("fired");
-            console.log(getCommonMasterById("egov-common-masters","calendaryears","CalendarYear",id).responseJSON["CalendarYear"][0]);
             this.setState({
               calenderSet:getCommonMasterById("egov-common-masters","calendaryears","CalendarYear",id).responseJSON["CalendarYear"][0]
             })

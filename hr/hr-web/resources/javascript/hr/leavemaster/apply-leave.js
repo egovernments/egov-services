@@ -229,7 +229,7 @@ addOrUpdate(e,mode)
             if(type == "update") {
               $.ajax({
 
-                    url:baseUrl+"/hr-leave/leaveapplications/" + this.state.leaveSet.id + "/" + "_update",
+                    url:baseUrl+"/hr-leave/leaveapplications/" + this.state.leaveSet.id + "/" + "_update?tenantId=" + tenantId,
                     type: 'POST',
                     dataType: 'json',
                     data:JSON.stringify(body),
@@ -268,7 +268,7 @@ addOrUpdate(e,mode)
             }
             else{
               $.ajax({
-                    url: baseUrl+"/hr-leave/leaveapplications/_create",
+                    url: baseUrl+"/hr-leave/leaveapplications/_create?tenantId=" + tenantId,
                     type: 'POST',
                     dataType: 'json',
                     data:JSON.stringify(body),

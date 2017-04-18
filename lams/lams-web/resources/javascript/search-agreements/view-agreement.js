@@ -379,9 +379,9 @@ $(document).ready(function() {
                 contentType: 'application/json'
             });
             if (response["status"] === 201) {
-                window.location.href = "app/search-assets/create-agreement-ack.html?name=" + getNameById(employees, agreement["approverName"]) + "&ackNo=" + responseJSON["Agreements"][0]["acknowledgementNumber"];
+                window.location.href = "app/search-assets/create-agreement-ack.html?name=" + getNameById(employees, _agrmntDet["assignee"]) + "&ackNo=" + responseJSON["Agreements"][0]["acknowledgementNumber"];
             } else {
-                console.log("Handle error.");
+                showError(response["statusText"]);
             }
         }
         else {

@@ -59,7 +59,6 @@ class PositionMaster extends React.Component{
 
         if(type==="view"||type==="update")
         {
-            console.log(getCommonMasterById("hr-masters","positions","Position",id).responseJSON["Position"][0]);
             this.setState({
               positionSet:getCommonMasterById("hr-masters","positions","Position",id).responseJSON["Position"][0]
             })

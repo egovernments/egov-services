@@ -2165,7 +2165,7 @@ function makeAjaxUpload(file, cb) {
     formData.append("module", "PGR");
     formData.append("file", file);
     $.ajax({
-        url: baseUrl + "/filestore/v1/files",
+        url: baseUrl + "/filestore/v1/files?tenantId=" + tenantId,
         data: formData,
         cache: false,
         contentType: false,

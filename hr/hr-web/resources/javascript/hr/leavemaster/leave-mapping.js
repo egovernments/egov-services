@@ -68,7 +68,7 @@ componentWillMount()
             },_this=this;
             if (type == "update") {
               $.ajax({
-                   url:baseUrl+"/hr-leave/leaveallotments/" + this.state.leave.id + "/" + "_update/",
+                   url:baseUrl+"/hr-leave/leaveallotments/" + this.state.leave.id + "/" + "_update?tenantId=" + tenantId,
                     type: 'POST',
                     dataType: 'json',
                     data:JSON.stringify(body),
@@ -100,7 +100,7 @@ componentWillMount()
                 });
             } else {
               $.ajax({
-                    url:baseUrl+"/hr-leave/leaveallotments/_create",
+                    url:baseUrl+"/hr-leave/leaveallotments/_create?tenantId=" + tenantId,
                     type: 'POST',
                     dataType: 'json',
                     data:JSON.stringify(body),

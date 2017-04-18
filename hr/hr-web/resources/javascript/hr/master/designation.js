@@ -42,9 +42,7 @@ class Designation extends React.Component{
 
           if(type==="update"||type==="view")
           {
-               console.log("fired");
-              console.log(getCommonMasterById("hr-masters","designations","Designation",id).responseJSON["Designation"][0]);
-              this.setState({
+               this.setState({
                 designationSet:getCommonMasterById("hr-masters","designations","Designation",id).responseJSON["Designation"][0]
               })
           }

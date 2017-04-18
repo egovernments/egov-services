@@ -17,7 +17,7 @@ const callAjax = (type, empArr, cb) => {
         var counter = empArr.length, breakOut = 0;
         for(let i=0; i < empArr.length; i++) {
             $.ajax({
-                url: baseUrl + "/hr-leave/leaveopeningbalances" + (empArr[i].id ? "/" + empArr[i].id + "/_update" : "/_create"),
+                url: baseUrl + "/hr-leave/leaveopeningbalances" + (empArr[i].id ? "/" + empArr[i].id + "/_update" : "/_create") + "?tenantId=" + tenantId,
                 type: 'POST',
                 dataType: 'json',
                 data: JSON.stringify({
@@ -45,7 +45,7 @@ const callAjax = (type, empArr, cb) => {
     } else {
         //Call and create leave
         $.ajax({
-            url: baseUrl + "/hr-leave/leaveopeningbalances/_create",
+            url: baseUrl + "/hr-leave/leaveopeningbalances/_create?tenantId=" + tenantId,
             type: 'POST',
             dataType: 'json',
             data: JSON.stringify({

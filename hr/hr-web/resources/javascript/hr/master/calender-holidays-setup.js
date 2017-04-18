@@ -96,7 +96,7 @@ componentWillMount(){
               },_this=this;
                 if(type == "update") {
                   $.ajax({
-                        url:baseUrl+"/egov-common-masters/holidays/" + this.state.Holiday.id + "/" + "_update",
+                        url:baseUrl+"/egov-common-masters/holidays/" + this.state.Holiday.id + "/" + "_update?tenantId=" + tenantId,
                         type: 'POST',
                         dataType: 'json',
                         data:JSON.stringify(body),
@@ -127,7 +127,7 @@ componentWillMount(){
                 }
                 else{
                   $.ajax({
-                        url: baseUrl+"/egov-common-masters/holidays/_create",
+                        url: baseUrl+"/egov-common-masters/holidays/_create?tenantId=" + tenantId,
                         type: 'POST',
                         dataType: 'json',
                         data:JSON.stringify(body),

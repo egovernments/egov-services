@@ -38,7 +38,6 @@ class GradeMaster extends React.Component{
 
       if(type==="view"||type==="update")
       {
-          console.log(getCommonMasterById("hr-masters","grades","Grade",id).responseJSON["Grade"][0]);
           this.setState({
             gradeSet:getCommonMasterById("hr-masters","grades","Grade",id).responseJSON["Grade"][0]
           })

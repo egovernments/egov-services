@@ -29,8 +29,8 @@ $(document).ready(function() {
     function printNotice(noticeData) {
       var doc = new jsPDF();
       doc.setFontType("bold");
-      doc.text(15, 20, 'Kurnool Municipal Corporation');
-      doc.text(15, 30, 'Kurnool District');
+      doc.text(15, 20, tenantId.split(".")[1]+' Municipal Corporation');
+      doc.text(15, 30, tenantId.split(".")[1]+' District');
       doc.text(15, 40, 'Asset Category Lease/Agreement Notice');
       doc.setLineWidth(0.5);
       doc.line(15, 42, 195, 42);
@@ -38,7 +38,7 @@ $(document).ready(function() {
       doc.text(110, 47, 'Agreement No:'+noticeData.agreementNumber);
       doc.text(15, 57, 'Lease Name:	'+noticeData.allotteeName);
       doc.text(110, 57, 'Asset No:'+noticeData.assetNo);
-      doc.text(15, 67, noticeData.allotteeMobileNumber+","+ "Door No"+","+ noticeData.allotteeAddress+","+noticeData.locality +".");
+      doc.text(15, 67, noticeData.allotteeMobileNumber+","+noticeData.doorNo +","+ noticeData.allotteeAddress+","+tenantId.split(".")[1] +".");
 
       doc.setFontType("normal");
       doc.text(15, 77, doc.splitTextToSize('1.The period of lease shall be __'+noticeData.agreementPeriod *12+'____ months commencing from _____'+noticeData.commencementDate+'_____(dd-mm-yyyy) to ____'+noticeData.expiryDate+'__________(dd-mm-yyyy).', (210 - 15 - 15)));
@@ -53,11 +53,11 @@ $(document).ready(function() {
       doc.text(15, 35, doc.splitTextToSize('9.The lessee shall not carry out any addition or alteration to the shop without the previous consent and approval in writing of the lessor.', (210 - 15 - 15)));
       doc.text(15, 50, doc.splitTextToSize('10. The lessee on the expiry of the lease period of __'+noticeData.expiryDate+'___ months shall hand over vacant possession of the ceased shop peacefully or the lease agreement can be renewed for a further period on mutually agreed terms.', (210 - 15 - 15)));
 
-      doc.text(15, 90, 'Commissioner ');
+      doc.text(15, 90, noticeData.commissionerName);
       doc.text(160, 90, 'LESSEE');
       doc.text(15, 100, 'Signature: 	');
       doc.text(160, 100, 'Signature: 	');
-      doc.text(15, 110, 'ULB Name');
+      doc.text(15, 110, tenantId.split(".")[1]);
 
       doc.save('Notice.pdf');
     }

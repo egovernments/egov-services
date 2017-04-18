@@ -169,25 +169,7 @@ var commonObject = {
     assignments_designation,
     assignments_position: [],
     assignments_department,
-    jurisdictions_jurisdictionsType: [{
-            id: "CITY",
-            name: "City",
-            description: "",
-            active: true
-        },
-        {
-            id: "WARD",
-            name: "Ward",
-            description: "",
-            active: true
-        },
-        {
-            id: "ZONE",
-            name: "Zone",
-            description: "",
-            active: true
-        }
-    ],
+    jurisdictions_jurisdictionsType,
     jurisdictions_boundary: [],
     yearOfPassing,
     juridictionTypeForCity: [],
@@ -1302,9 +1284,9 @@ $("select").on("change", function() {
         }
     }
     if (this.id == "jurisdictions.jurisdictionsType") {
-        commonObject["jurisdictions_boundary"] = commonApiPost("v1/location", "boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", {
-            boundaryTypeName: this.value,
-            hierarchyTypeName: "ADMINISTRATION"
+        commonObject["jurisdictions_boundary"] = commonApiPost("v1/location", "boundarys", "getByBoundaryType", {
+            boundaryTypeId: this.value,
+            tenantId
         }).responseJSON["Boundary"] || [];
         if (this.value == "CITY") {
             commonObject["juridictionTypeForCity"] = commonObject["jurisdictions_boundary"];

@@ -4,6 +4,7 @@ class SearchAssetCategory extends React.Component {
     this.state={list:[],searchSet:{
       "name": "",
       "assetCategoryType": "",
+      tenantId
    },isSearchClicked:false,assetCategories:[]}
     this.handleChange=this.handleChange.bind(this);
     this.search=this.search.bind(this);
@@ -34,7 +35,7 @@ class SearchAssetCategory extends React.Component {
   {
     //console.log(commonApiGet("asset-services","","GET_STATUS",{}).responseJSON);
      this.setState({
-      assetCategories:commonApiGet("asset-services","","GET_ASSET_CATEGORY_TYPE",{}).responseJSON|| {}
+      assetCategories:commonApiGet("asset-services","","GET_ASSET_CATEGORY_TYPE",{tenantId}).responseJSON|| {}
     })
   }
 

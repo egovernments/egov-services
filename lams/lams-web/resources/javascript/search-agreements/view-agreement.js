@@ -69,17 +69,20 @@ $(document).ready(function() {
     try {
         if (getUrlVars()["agreementNumber"]) {
             var agreementDetail = commonApiPost("lams-services", "agreements", "_search", {
-                agreementNumber: getUrlVars()["agreementNumber"]
+                agreementNumber: getUrlVars()["agreementNumber"],
+                tenantId
             }).responseJSON["Agreements"][0] || {};
         } else {
             var agreementDetail = commonApiPost("lams-services", "agreements", "_search", {
-                stateId: getUrlVars()["state"]
+                stateId: getUrlVars()["state"],
+                tenantId
             }).responseJSON["Agreements"][0] || {};
         }
 
 
         var assetDetails = commonApiPost("asset-services", "assets", "_search", {
-            id: (getUrlVars()["assetId"] || agreementDetail.asset.id)
+            id: (getUrlVars()["assetId"] || agreementDetail.asset.id),
+            tenantId
         }).responseJSON["Assets"][0] || {};
 
 

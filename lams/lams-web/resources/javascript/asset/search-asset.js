@@ -2,7 +2,7 @@ class SearchAsset extends React.Component {
   constructor(props) {
     super(props);
     this.state={list:[],searchSet:{
-      "tenantId": "",
+      "tenantId": tenantId,
       "name": "",
       "department": "",
       "assetCategory": "",
@@ -67,9 +67,9 @@ class SearchAsset extends React.Component {
     //console.log(commonApiGet("asset-services","","GET_STATUS",{}).responseJSON);
 
      this.setState({
-      assetCategories:commonApiPost("asset-services","assetCategories","_search",{}).responseJSON["AssetCategory"] ||[],
+      assetCategories:commonApiPost("asset-services","assetCategories","_search",{tenantId}).responseJSON["AssetCategory"] ||[],
       departments:commonApiPost("egov-common-masters","departments","_search",{tenantId}).responseJSON["Department"] || [],
-      statusList:commonApiGet("asset-services","","GET_STATUS",{}).responseJSON|| {}
+      statusList:commonApiGet("asset-services","","GET_STATUS",{tenantId}).responseJSON|| {}
     })
   }
 

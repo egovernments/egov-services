@@ -120,7 +120,7 @@ class CreateAsset extends React.Component {
       };
 
       var response = $.ajax({
-          url: baseUrl + "/asset-services/assets/" + (type == "update" ? ("_update/"+ _this.state.assetSet.code) : "_create") + "?tenantId=1",
+          url: baseUrl + "/asset-services/assets/" + (type == "update" ? ("_update/"+ _this.state.assetSet.code) : "_create") + "?tenantId=" + tenantId,
           type: 'POST',
           dataType: 'json',
           data: JSON.stringify(body),
@@ -195,37 +195,43 @@ class CreateAsset extends React.Component {
 				});
 
       this.setState({
-          assetCategories: commonApiPost("asset-services", "assetCategories", "_search", {}).responseJSON["AssetCategory"] || [],
+          assetCategories: commonApiPost("asset-services", "assetCategories", "_search", {tenantId}).responseJSON["AssetCategory"] || [],
           departments: commonApiPost("egov-common-masters", "departments", "_search", {
               tenantId
           }).responseJSON["Department"] || [],
           acquisitionList: commonApiGet("asset-services", "", "GET_MODE_OF_ACQUISITION", {}).responseJSON || [],
           localityList: commonApiPost("v1/location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", {
               boundaryTypeName: "LOCALITY",
-              hierarchyTypeName: "LOCATION"
+              hierarchyTypeName: "LOCATION",
+              tenantId
           }).responseJSON["Boundary"] || [],
           electionwards: commonApiPost("v1/location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", {
               boundaryTypeName: "WARD",
-              hierarchyTypeName: "ADMINISTRATION"
+              hierarchyTypeName: "ADMINISTRATION",
+              tenantId
           }).responseJSON["Boundary"] || [],
           zoneList: commonApiPost("v1/location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", {
               boundaryTypeName: "ZONE",
-              hierarchyTypeName: "REVENUE"
+              hierarchyTypeName: "REVENUE",
+              tenantId
           }).responseJSON["Boundary"] || [],
           streetList: commonApiPost("v1/location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", {
               boundaryTypeName: "STREET",
-              hierarchyTypeName: "REVENUE"
+              hierarchyTypeName: "REVENUE",
+              tenantId
           }).responseJSON["Boundary"] || [],
           WardList: commonApiPost("v1/location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", {
               boundaryTypeName: "WARD",
-              hierarchyTypeName: "REVENUE"
+              hierarchyTypeName: "REVENUE",
+              tenantId
           }).responseJSON["Boundary"] || [],
           blockList: commonApiPost("v1/location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", {
               boundaryTypeName: "BLOCK",
-              hierarchyTypeName: "REVENUE"
+              hierarchyTypeName: "REVENUE",
+              tenantId
           }).responseJSON["Boundary"] || [],
-          statusList: commonApiGet("asset-services", "", "GET_STATUS", {}).responseJSON || {},
-          assetCategoriesType: commonApiGet("asset-services", "", "GET_ASSET_CATEGORY_TYPE", {}).responseJSON || {},
+          statusList: commonApiGet("asset-services", "", "GET_STATUS", {tenantId}).responseJSON || {},
+          assetCategoriesType: commonApiGet("asset-services", "", "GET_ASSET_CATEGORY_TYPE", {tenantId}).responseJSON || {},
           readonly: (type === "view")
       });
 

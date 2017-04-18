@@ -7,7 +7,8 @@ class AssetSearch extends React.Component {
     assetCategory:"",
     name:"",
     electionWard:"",
-    code:""},isSearchClicked:false,assetCategories:[],locality:[],electionwards:[]}
+    code:"",
+    tenantId},isSearchClicked:false,assetCategories:[],locality:[],electionwards:[]}
     this.handleChange=this.handleChange.bind(this);
     this.search=this.search.bind(this);
   }

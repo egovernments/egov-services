@@ -10,7 +10,8 @@ class AgreementSearch extends React.Component {
     revenueWard:"",
     electionWard:"",
     code:"",
-    tenderNumber:"",createdDate:"",endDate:""},isSearchClicked:false,assetCategories:[],locality:[],revenueWards:[],electionwards:[]}
+    tenderNumber:"",createdDate:"",endDate:"",
+    tenantId},isSearchClicked:false,assetCategories:[],locality:[],revenueWards:[],electionwards:[]}
     this.handleChange=this.handleChange.bind(this);
     this.search=this.search.bind(this);
   }
@@ -115,7 +116,7 @@ class AgreementSearch extends React.Component {
         window.open("app/search-agreement/view-renew-agreement.html?view=renew&type="+assetCategory+"&agreementNumber="+number+"&assetId="+id, "fs", "fullscreen=yes")
     } else if(type == "collTax") {
         $.ajax({
-          url: "/lams-services/payment/_create?" + (number ? "agreementNumber=" + number : "acknowledgementNumber=" + acknowledgementNumber),
+          url: "/lams-services/payment/_create?tenantId=" + tenantId + "&" + (number ? "agreementNumber=" + number : "acknowledgementNumber=" + acknowledgementNumber),
           type: 'POST',
           contentType: 'application/json',
           data: JSON.stringify({

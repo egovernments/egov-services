@@ -9,7 +9,7 @@ class DcbReport extends React.Component {
             "assetCategoryType": "",
             "electionWard": "",
             "locality": "",
-
+            tenantId
         },
         "assetCategories": [],
         "electionwards": [],
@@ -26,14 +26,16 @@ class DcbReport extends React.Component {
   componentDidMount() {
      this.setState({
          ...this.state,
-        assetCategories:commonApiPost("asset-services","assetCategories","_search",{}).responseJSON["AssetCategory"],
+        assetCategories:commonApiPost("asset-services","assetCategories","_search",{tenantId}).responseJSON["AssetCategory"],
         electionwards: commonApiPost("v1/location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", {
             boundaryTypeName: "WARD",
-            hierarchyTypeName: "ADMINISTRATION"
+            hierarchyTypeName: "ADMINISTRATION",
+            tenantId
         }).responseJSON["Boundary"] || [],
         localityList: commonApiPost("v1/location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", {
             boundaryTypeName: "LOCALITY",
-            hierarchyTypeName: "LOCATION"
+            hierarchyTypeName: "LOCATION",
+            tenantId
         }).responseJSON["Boundary"] || []
 
      });
@@ -86,8 +88,7 @@ class DcbReport extends React.Component {
   {
     e.preventDefault();
     //call api call
-     var list=commonApiPost("asset-services","assets","_search",this.state.searchSet).responseJSON["Assets"];
-      console.log(commonApiPost("asset-services","assets","_search",this.state.searchSet).responseJSON["Assets"]);
+    var list=commonApiPost("asset-services","assets","_search",this.state.searchSet).responseJSON["Assets"];
     this.setState({
       isSearchClicked:true,
       list

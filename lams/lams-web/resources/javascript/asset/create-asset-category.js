@@ -99,7 +99,7 @@ class CreateAsset extends React.Component {
           };
 
         var response=$.ajax({
-              url:baseUrl+"/asset-services/assetCategories/_create?tenantId=1",
+              url:baseUrl+"/asset-services/assetCategories/_create?tenantId=" + tenantId,
               type: 'POST',
               dataType: 'json',
               data:JSON.stringify(body),
@@ -181,14 +181,14 @@ class CreateAsset extends React.Component {
 
      this.setState({
 
-      parent:commonApiPost("asset-services","assetCategories","_search",{}).responseJSON["AssetCategory"],
-      assetCategories:commonApiGet("asset-services","","GET_ASSET_CATEGORY_TYPE",{}).responseJSON|| {},
-      depreciationMethod:commonApiGet("asset-services","","GET_DEPRECIATION_METHOD",{}).responseJSON|| {},
+      parent:commonApiPost("asset-services","assetCategories","_search",{tenantId}).responseJSON["AssetCategory"],
+      assetCategories:commonApiGet("asset-services","","GET_ASSET_CATEGORY_TYPE",{tenantId}).responseJSON|| {},
+      depreciationMethod:commonApiGet("asset-services","","GET_DEPRECIATION_METHOD",{tenantId}).responseJSON|| {},
       assetAccount:commonApiPost("egf-masters","chartofaccounts","_search",{tenantId}).responseJSON["chartOfAccounts"],
       accumulatedDepreciationAccount:commonApiPost("egf-masters","chartofaccounts","_search",{tenantId}).responseJSON["chartOfAccounts"],
       revaluationReserveAccount:commonApiPost("egf-masters","chartofaccounts","_search",{tenantId}).responseJSON["chartOfAccounts"],
       depreciationExpenseAccount:commonApiPost("egf-masters","chartofaccounts","_search",{tenantId}).responseJSON["chartOfAccounts"],
-      unitOfMeasurement:commonApiPost("egov-common-masters","uom","_search",{}).responseJSON["uoms"]
+      unitOfMeasurement:commonApiPost("egov-common-masters","uom","_search",{tenantId}).responseJSON["uoms"]
 
     })
   }

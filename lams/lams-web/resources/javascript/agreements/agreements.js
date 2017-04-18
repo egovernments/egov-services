@@ -723,6 +723,7 @@ function fillValueToObject(currentState) {
 
     try {
         rentInc = commonApiPost("lams-services", "getrentincrements", "", {
+            tenantId
       }).responseJSON;
 
       if(rentInc && rentInc.constructor == Array) {
@@ -864,7 +865,7 @@ function fillValueToObject(currentState) {
 
     // $("#"+name).val("murali");
 
-  var assetDetails=commonApiPost("asset-services","assets","_search",{id:getUrlVars()["assetId"]}).responseJSON["Assets"][0] ||{};
+  var assetDetails=commonApiPost("asset-services","assets","_search",{id:getUrlVars()["assetId"], tenantId}).responseJSON["Assets"][0] ||{};
   // var natureOfAllotments=commonApiPost("lams-services","","getnatureofallotment",{}).responseJSON ||{};
   // var designation= getCommonMaster("hr-masters", "designations", "Designation").responseJSON["Designation"] || [];
   // var department= getCommonMaster("egov-common-masters", "departments", "Department").responseJSON["Department"] || [];
@@ -1089,7 +1090,7 @@ $(".datetimepicker").on("dp.change", function() {
         formData.append("module", "PGR");
         formData.append("file", file);
         $.ajax({
-            url: baseUrl + "/filestore/v1/files",
+            url: baseUrl + "/filestore/v1/files?tenantId=" + tenantId,
             data: formData,
             cache: false,
             contentType: false,

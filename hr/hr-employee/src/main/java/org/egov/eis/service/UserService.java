@@ -80,7 +80,7 @@ public class UserService {
 
 	@Autowired
 	private ErrorHandler errorHandler;
-	
+
 	public List<User> getUsers(List<Long> ids, String tenantId, RequestInfo requestInfo) {
 		String url = userSearchURLHelper.searchURL(ids, tenantId);
 
@@ -100,16 +100,15 @@ public class UserService {
 			LOGGER.debug("Following Exception Occurred While Calling User Service : " + e.getMessage());
 			e.printStackTrace();
 		}
-
 		return users;
 	}
 
-	// FIXME : User service is expecting & sending dates in multiple formats. Fix a common standard for date formats.
+	// FIXME : User service is expecting & sending dates in multiple formats.
+	// Fix a common standard for date formats.
 	public ResponseEntity<?> createUser(UserRequest userRequest) {
 		String url = propertiesManager.getUsersServiceHostName() + propertiesManager.getUsersServiceUsersBasePath()
 				+ propertiesManager.getUsersServiceUsersCreatePath();
 
-		
 		UserResponse userResponse = null;
 		try {
 			userResponse = new RestTemplate().postForObject(url, userRequest, UserResponse.class);
@@ -143,7 +142,7 @@ public class UserService {
 
 	public ResponseEntity<?> updateUser(Long userId, UserRequest userRequest) {
 		String url = propertiesManager.getUsersServiceHostName() + propertiesManager.getUsersServiceUsersBasePath()
-		+  getUserUpdatePath(userId);
+				+ getUserUpdatePath(userId);
 
 		LOGGER.info("update url : " + url);
 
@@ -178,8 +177,8 @@ public class UserService {
 		System.err.println(userResponse.getUser().get(0));
 		return new ResponseEntity<UserResponse>(userResponse, HttpStatus.OK);
 	}
-	
-	private String getUserUpdatePath(long id){
+
+	private String getUserUpdatePath(long id) {
 		String path = MessageFormat.format(propertiesManager.getUsersServiceUsersUpdatePath(), id);
 		return path;
 	}

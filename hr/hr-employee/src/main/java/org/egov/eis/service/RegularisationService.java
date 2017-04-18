@@ -43,9 +43,8 @@ public class RegularisationService {
 		
 		List<Long> regularisationsIdsToDelete = getListOfRegulationIdsToDelete(inputRegularisations, regularisationsFromDb);
 		if (!regularisationsIdsToDelete.isEmpty()) {
+			employeeDocumentsRepository.deleteForReferenceIds(employeeId, EntityType.REGULARISATION, regularisationsIdsToDelete, tenantId);
 			regularisationRepository.delete(regularisationsIdsToDelete, employeeId, tenantId);
-			// FIXME delete from employeedocuments
-			employeeDocumentsRepository.deleteForReferenceType(employeeId, EntityType.REGULARISATION, tenantId);	
 		}
 	}
 

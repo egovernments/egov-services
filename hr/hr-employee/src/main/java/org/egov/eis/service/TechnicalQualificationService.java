@@ -15,17 +15,18 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class TechnicalQualificationService {
-	
+
 	@Autowired
 	private TechnicalQualificationRepository technicalQualificationRepository;
-	
+
 	@Autowired
-	private EmployeeDocumentsRepository employeeDocumentsRepository; 
+	private EmployeeDocumentsRepository employeeDocumentsRepository;
 
 	public void update(Employee employee) {
-		if(isEmpty(employee.getTechnical()))
+		if (isEmpty(employee.getTechnical()))
 			return;
-		List<TechnicalQualification> technicals = technicalQualificationRepository.findByEmployeeId(employee.getId(), employee.getTenantId());
+		List<TechnicalQualification> technicals = technicalQualificationRepository.findByEmployeeId(employee.getId(),
+				employee.getTenantId());
 		employee.getTechnical().forEach((technical) -> {
 			if (needsInsert(technical, technicals)) {
 				technicalQualificationRepository.insert(technical, employee.getId());
@@ -33,18 +34,20 @@ public class TechnicalQualificationService {
 				technical.setTenantId(employee.getTenantId());
 				technicalQualificationRepository.update(technical);
 			}
-			
-     });
-		deleteTechnicalsInDBThatAreNotInInput(employee.getTechnical(), technicals,  employee.getId(),employee.getTenantId());
+
+		});
+		deleteTechnicalsInDBThatAreNotInInput(employee.getTechnical(), technicals, employee.getId(),
+				employee.getTenantId());
 	}
 
 	private void deleteTechnicalsInDBThatAreNotInInput(List<TechnicalQualification> inputTechnicals,
 			List<TechnicalQualification> technicalsFromDb, Long employeeId, String tenantId) {
-		
+
 		List<Long> technicalsIdsToDelete = getListOfTechnicalIdsToDelete(inputTechnicals, technicalsFromDb);
-		if (!technicalsIdsToDelete.isEmpty())
+		if (!technicalsIdsToDelete.isEmpty()) {
+			employeeDocumentsRepository.deleteForReferenceIds(employeeId, EntityType.TECHNICAL, technicalsIdsToDelete, tenantId);
 			technicalQualificationRepository.delete(technicalsIdsToDelete, employeeId, tenantId);
-		    employeeDocumentsRepository.deleteForReferenceType(employeeId, EntityType.TECHNICAL, tenantId);
+		}
 	}
 
 	private List<Long> getListOfTechnicalIdsToDelete(List<TechnicalQualification> inputTechnicals,
@@ -54,24 +57,26 @@ public class TechnicalQualificationService {
 			boolean found = false;
 			if (!isEmpty(inputTechnicals)) {
 				// if empty, found remains false and the record becomes eligible for deletion.
-			for (TechnicalQualification inputTechnical : inputTechnicals)
-				if (inputTechnical.getId().equals(technicalInDb.getId())) {
-					found = true;
-					break;
-				}
+				for (TechnicalQualification inputTechnical : inputTechnicals)
+					if (inputTechnical.getId().equals(technicalInDb.getId())) {
+						found = true;
+						break;
+					}
 			}
-			if (!found) technicalsIdsToDelete.add(technicalInDb.getId());
+			if (!found)
+				technicalsIdsToDelete.add(technicalInDb.getId());
 		}
 		return technicalsIdsToDelete;
 	}
 
 	/**
-	 * Note: needsUpdate checks if any field has changed by comparing with contents
-	 * from db. If yes, then only do an update.
+	 * Note: needsUpdate checks if any field has changed by comparing with
+	 * contents from db. If yes, then only do an update.
 	 */
 	private boolean needsUpdate(TechnicalQualification technical, List<TechnicalQualification> technicals) {
-		for (TechnicalQualification oldTechnical : technicals) 
-			if (technical.equals(oldTechnical)) return false;
+		for (TechnicalQualification oldTechnical : technicals)
+			if (technical.equals(oldTechnical))
+				return false;
 		return true;
 	}
 

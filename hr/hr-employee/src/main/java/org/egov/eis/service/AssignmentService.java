@@ -65,9 +65,9 @@ public class AssignmentService {
 
 	@Autowired
 	private HODDepartmentRepository hodDepartmentRepository;
-	
+
 	@Autowired
-	private EmployeeDocumentsRepository employeeDocumentsRepository; 
+	private EmployeeDocumentsRepository employeeDocumentsRepository;
 
 	public List<Assignment> getAssignments(Long employeeId, AssignmentGetRequest assignmentGetRequest) {
 		return assignmentRepository.findForCriteria(employeeId, assignmentGetRequest);
@@ -137,8 +137,8 @@ public class AssignmentService {
 				.collect(Collectors.toList());
 		if (!assignmentsIdsToDelete.isEmpty()) {
 			hodDepartmentRepository.delete(assignmentsIdsToDelete, tenantId);
+			employeeDocumentsRepository.deleteForReferenceIds(employeeId, EntityType.ASSIGNMENT, assignmentsIdsToDelete, tenantId);
 			assignmentRepository.delete(assignmentsIdsToDelete, employeeId, tenantId);
-			employeeDocumentsRepository.deleteForReferenceType(employeeId, EntityType.ASSIGNMENT, tenantId);
 		}
 	}
 
@@ -149,11 +149,11 @@ public class AssignmentService {
 			boolean found = false;
 			if (!isEmpty(inputAssignments)) {
 				// if empty, found remains false and the record becomes eligible for deletion.
-			for (Assignment inputAssignment : inputAssignments)
-				if (inputAssignment.getId().equals(assignmentInDb.getId())) {
-					found = true;
-					break;
-				}
+				for (Assignment inputAssignment : inputAssignments)
+					if (inputAssignment.getId().equals(assignmentInDb.getId())) {
+						found = true;
+						break;
+					}
 			}
 			if (!found)
 				assignmentsToDelete.add(assignmentInDb);
@@ -169,8 +169,8 @@ public class AssignmentService {
 	}
 
 	/**
-	 * Note: needsUpdate checks if any field has changed by comparing with contents
-	 * from db. If yes, then only do an update.
+	 * Note: needsUpdate checks if any field has changed by comparing with
+	 * contents from db. If yes, then only do an update.
 	 */
 	private boolean needsUpdate(Assignment assignment, List<Assignment> assignments) {
 		for (Assignment oldAssignment : assignments)

@@ -64,7 +64,7 @@ public class HODEmployeeService {
 	public static final Logger LOGGER = LoggerFactory.getLogger(HODEmployeeService.class);
 
 	@Autowired
-	private HODEmployeeRepository hodEmployeeRepository;	
+	private HODEmployeeRepository hodEmployeeRepository;
 
 	@Autowired
 	private UserService userService;
@@ -76,20 +76,20 @@ public class HODEmployeeService {
 	private EmployeeUserMapper employeeUserMapper;
 
 	@Autowired
-	PropertiesManager propertiesManager;	
+	PropertiesManager propertiesManager;
 
 	@SuppressWarnings("unchecked")
 	public List<EmployeeInfo> getHODEmployees(HODEmployeeCriteria hodEmployeeCriteria, RequestInfo requestInfo) {
 		List<Long> listOfIds = hodEmployeeRepository.findIdsForCriteria(hodEmployeeCriteria);
 
-		if(listOfIds.isEmpty())
+		if (listOfIds.isEmpty())
 			return Collections.EMPTY_LIST;
 
 		List<EmployeeInfo> employeeInfoList = hodEmployeeRepository.findForCriteria(hodEmployeeCriteria, listOfIds);
 
-		if(employeeInfoList.isEmpty())
+		if (employeeInfoList.isEmpty())
 			return employeeInfoList;
-		
+
 		List<Long> ids = employeeInfoList.stream().map(employeeInfo -> employeeInfo.getId())
 				.collect(Collectors.toList());
 
@@ -101,7 +101,7 @@ public class HODEmployeeService {
 			List<EmployeeDocument> employeeDocuments = hodEmployeeRepository.getDocumentsForListOfHODEmployeeIds(ids);
 			employeeHelper.mapDocumentsWithEmployees(employeeInfoList, employeeDocuments);
 		}
-		
+
 		return employeeInfoList;
 	}
 }

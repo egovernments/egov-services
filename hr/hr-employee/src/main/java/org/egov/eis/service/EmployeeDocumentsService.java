@@ -35,57 +35,65 @@ public class EmployeeDocumentsService {
 	 * @param employee
 	 */
 	public void update(Employee employee) {
-		
+
 		List<EmployeeDocument> documentsFromDb = employeeDocumentsRepository.findByEmployeeId(employee.getId(),
 				employee.getTenantId());
-		
-		if (employee.getDocuments() == null) employee.setDocuments(new ArrayList<>());
+
+		if (employee.getDocuments() == null)
+			employee.setDocuments(new ArrayList<>());
 
 		updateDocuments(employee.getDocuments(), EntityType.EMPLOYEE_HEADER, employee.getId(), documentsFromDb,
-				employee.getId(), employee.getTenantId());	
+				employee.getId(), employee.getTenantId());
 
-		if(!isEmpty(employee.getAssignments()))
-		employee.getAssignments().forEach((assignment) -> {
-			if (assignment.getDocuments() == null) assignment.setDocuments(new ArrayList<>());
-			updateDocuments(assignment.getDocuments(), EntityType.ASSIGNMENT, assignment.getId(), documentsFromDb,
-					employee.getId(), employee.getTenantId());
-		});
-		if(!isEmpty(employee.getProbation()))
-		employee.getProbation().forEach((probation) -> {
-			if (probation.getDocuments() == null) probation.setDocuments(new ArrayList<>());
+		if (!isEmpty(employee.getAssignments()))
+			employee.getAssignments().forEach((assignment) -> {
+				if (assignment.getDocuments() == null)
+					assignment.setDocuments(new ArrayList<>());
+				updateDocuments(assignment.getDocuments(), EntityType.ASSIGNMENT, assignment.getId(), documentsFromDb,
+						employee.getId(), employee.getTenantId());
+			});
+		if (!isEmpty(employee.getProbation()))
+			employee.getProbation().forEach((probation) -> {
+				if (probation.getDocuments() == null)
+					probation.setDocuments(new ArrayList<>());
 				updateDocuments(probation.getDocuments(), EntityType.PROBATION, probation.getId(), documentsFromDb,
 						employee.getId(), employee.getTenantId());
-		});
-		if(!isEmpty(employee.getRegularisation()))
-		employee.getRegularisation().forEach((regularisation) -> {
-			if (regularisation.getDocuments() == null) regularisation.setDocuments(new ArrayList<>());
+			});
+		if (!isEmpty(employee.getRegularisation()))
+			employee.getRegularisation().forEach((regularisation) -> {
+				if (regularisation.getDocuments() == null)
+					regularisation.setDocuments(new ArrayList<>());
 				updateDocuments(regularisation.getDocuments(), EntityType.REGULARISATION, regularisation.getId(),
 						documentsFromDb, employee.getId(), employee.getTenantId());
-		});
-		if(!isEmpty(employee.getTest()))
-		employee.getTest().forEach((test) -> {
-			if (test.getDocuments() == null) test.setDocuments(new ArrayList<>());
+			});
+		if (!isEmpty(employee.getTest()))
+			employee.getTest().forEach((test) -> {
+				if (test.getDocuments() == null)
+					test.setDocuments(new ArrayList<>());
 				updateDocuments(test.getDocuments(), EntityType.TEST, test.getId(), documentsFromDb, employee.getId(),
 						employee.getTenantId());
-		});
-		if(!isEmpty(employee.getTechnical()))
-		employee.getTechnical().forEach((technical) -> {
-			if (technical.getDocuments() == null) technical.setDocuments(new ArrayList<>());
+			});
+		if (!isEmpty(employee.getTechnical()))
+			employee.getTechnical().forEach((technical) -> {
+				if (technical.getDocuments() == null)
+					technical.setDocuments(new ArrayList<>());
 				updateDocuments(technical.getDocuments(), EntityType.TECHNICAL, technical.getId(), documentsFromDb,
 						employee.getId(), employee.getTenantId());
-		});
-		if(!isEmpty(employee.getEducation()))
-		employee.getEducation().forEach((education) -> {
-			if (education.getDocuments() == null) education.setDocuments(new ArrayList<>());
+			});
+		if (!isEmpty(employee.getEducation()))
+			employee.getEducation().forEach((education) -> {
+				if (education.getDocuments() == null)
+					education.setDocuments(new ArrayList<>());
 				updateDocuments(education.getDocuments(), EntityType.EDUCATION, education.getId(), documentsFromDb,
 						employee.getId(), employee.getTenantId());
-		});
-		if(!isEmpty(employee.getServiceHistory()))
-		employee.getServiceHistory().forEach((serviceHistory) -> {
-			if (serviceHistory.getDocuments() == null) serviceHistory.setDocuments(new ArrayList<>());
-				updateDocuments(serviceHistory.getDocuments(), EntityType.SERVICE, serviceHistory.getId(), documentsFromDb,
-						employee.getId(), employee.getTenantId());
-		});
+			});
+		if (!isEmpty(employee.getServiceHistory()))
+			employee.getServiceHistory().forEach((serviceHistory) -> {
+				if (serviceHistory.getDocuments() == null)
+					serviceHistory.setDocuments(new ArrayList<>());
+				updateDocuments(serviceHistory.getDocuments(), EntityType.SERVICE, serviceHistory.getId(),
+						documentsFromDb, employee.getId(), employee.getTenantId());
+			});
 	}
 
 	protected void updateDocuments(List<String> inputDocuments, EntityType entityType, Long referenceId,
@@ -109,12 +117,12 @@ public class EmployeeDocumentsService {
 		}
 	}
 
-	private boolean documentPresentInDB(List<EmployeeDocument> documentsFromDb, String docUrl, EntityType entityType, Long referenceId) {
+	private boolean documentPresentInDB(List<EmployeeDocument> documentsFromDb, String docUrl, EntityType entityType,
+			Long referenceId) {
 		boolean foundDocInDb = false;
 		for (EmployeeDocument documentInDb : documentsFromDb) {
 			if (EntityType.valueOf(documentInDb.getReferenceType()) == entityType
-					&& documentInDb.getReferenceId().equals(referenceId)
-					&& documentInDb.getDocument().equals(docUrl)) {
+					&& documentInDb.getReferenceId().equals(referenceId) && documentInDb.getDocument().equals(docUrl)) {
 				foundDocInDb = true;
 				break;
 			}
@@ -173,6 +181,7 @@ public class EmployeeDocumentsService {
 
 	/**
 	 * Added for junit testing
+	 * 
 	 * @return
 	 */
 	public EmployeeDocumentsRepository getEmployeeDocumentsRepository() {
@@ -181,11 +190,11 @@ public class EmployeeDocumentsService {
 
 	/**
 	 * Added for junit testing
+	 * 
 	 * @return
 	 */
 	public void setEmployeeDocumentsRepository(EmployeeDocumentsRepository employeeDocumentsRepository) {
 		this.employeeDocumentsRepository = employeeDocumentsRepository;
 	}
-	
-	
+
 }

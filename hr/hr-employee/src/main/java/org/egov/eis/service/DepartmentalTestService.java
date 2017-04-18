@@ -18,13 +18,13 @@ public class DepartmentalTestService {
 
 	@Autowired
 	private DepartmentalTestRepository departmentalTestRepository;
-	
+
 	@Autowired
-	private EmployeeDocumentsRepository employeeDocumentsRepository; 
-	
+	private EmployeeDocumentsRepository employeeDocumentsRepository;
+
 	public void update(Employee employee) {
-		if(isEmpty(employee.getTest()))
-				return;
+		if (isEmpty(employee.getTest()))
+			return;
 		List<DepartmentalTest> tests = departmentalTestRepository.findByEmployeeId(employee.getId(),
 				employee.getTenantId());
 
@@ -42,9 +42,10 @@ public class DepartmentalTestService {
 	private void deleteTestsInDBThatAreNotInInput(List<DepartmentalTest> inputTests, List<DepartmentalTest> testsFromDb,
 			Long employeeId, String tenantId) {
 		List<Long> testsIdsToDelete = getListOfTestsIdsToDelete(inputTests, testsFromDb);
-		if (!testsIdsToDelete.isEmpty())
+		if (!testsIdsToDelete.isEmpty()) {
+			employeeDocumentsRepository.deleteForReferenceIds(employeeId, EntityType.TEST, testsIdsToDelete, tenantId);
 			departmentalTestRepository.delete(testsIdsToDelete, employeeId, tenantId);
-		    employeeDocumentsRepository.deleteForReferenceType(employeeId, EntityType.TEST, tenantId);
+		}
 	}
 
 	private List<Long> getListOfTestsIdsToDelete(List<DepartmentalTest> inputTests,
@@ -54,11 +55,11 @@ public class DepartmentalTestService {
 			boolean found = false;
 			if (!isEmpty(inputTests)) {
 				// if empty, found remains false and the record becomes eligible for deletion.
-			for (DepartmentalTest inputTest : inputTests)
-				if (inputTest.getId().equals(testInDb.getId())) {
-					found = true;
-					break;
-				}
+				for (DepartmentalTest inputTest : inputTests)
+					if (inputTest.getId().equals(testInDb.getId())) {
+						found = true;
+						break;
+					}
 			}
 			if (!found)
 				testsIdsToDelete.add(testInDb.getId());
@@ -67,12 +68,13 @@ public class DepartmentalTestService {
 	}
 
 	/**
-	 * Note: needsUpdate checks if any field has changed by comparing with contents
-	 * from db. If yes, then only do an update.
+	 * Note: needsUpdate checks if any field has changed by comparing with
+	 * contents from db. If yes, then only do an update.
 	 */
 	private boolean needsUpdate(DepartmentalTest test, List<DepartmentalTest> tests) {
-		for (DepartmentalTest oldTest : tests) 
-			if (test.equals(oldTest)) return false;
+		for (DepartmentalTest oldTest : tests)
+			if (test.equals(oldTest))
+				return false;
 		return true;
 	}
 

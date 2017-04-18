@@ -71,8 +71,8 @@ public class EmployeeDocumentsRepository {
 	public static final String DELETE_QUERY = "DELETE FROM egeis_employeeDocuments"
 			+ " WHERE employeeId = ? AND document = ? AND referenceType = ? AND referenceId =? AND tenantId = ?";
 	
-	public static final String DELETE_QUERY_FOR_REFERENCE_TYPE = "DELETE FROM egeis_employeeDocuments"
-			+ " WHERE employeeId = ? AND referenceType = ? AND tenantId = ?";
+	public static final String DELETE_QUERY_FOR_REFERENCE_IDS = "DELETE FROM egeis_employeeDocuments"
+			+ " WHERE employeeId = :employeeId AND referenceType = :referenceType AND referenceId IN (:referenceIds) AND tenantId = :tenantId";
 
 	public static final String SELECT_BY_EMPLOYEEID_QUERY = "SELECT"
 			+ " id, document, referencetype, referenceid, tenantId" + " FROM egeis_employeeDocuments"
@@ -130,9 +130,15 @@ public class EmployeeDocumentsRepository {
 		return jdbcTemplate.update(DELETE_QUERY, employeeId, document, referenceType, referenceID, tenantId);
 	}
 	
-	public int deleteForReferenceType(Long employeeId, EntityType entityType, String tenantId) {
+	public int deleteForReferenceIds(Long employeeId, EntityType entityType, List<Long> referenceIds, String tenantId) {
 		String referenceType = entityType.getValue().toString();
-		return jdbcTemplate.update(DELETE_QUERY_FOR_REFERENCE_TYPE, employeeId, referenceType, tenantId);
+		Map<String, Object> namedParameters = new HashMap<>();
+		namedParameters.put("employeeId", employeeId);
+		namedParameters.put("referenceType", referenceType);
+		namedParameters.put("referenceIds", referenceIds);
+		namedParameters.put("tenantId", tenantId);
+		
+		return namedParameterJdbcTemplate.update(DELETE_QUERY_FOR_REFERENCE_IDS, namedParameters);
 	}
 
 	public List<EmployeeDocument> findByEmployeeId(Long id, String tenantId) {

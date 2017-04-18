@@ -112,13 +112,13 @@ public class EmployeeService {
 
 	@Autowired
 	private EmployeeLanguageService employeeLanguageService;
- 
+
 	@Autowired
 	private EmployeeDocumentsService employeeDocumentsService;
-	
+
 	@Autowired
 	private EmployeeRepository employeeRepository;
-	
+
 	@Autowired
 	private AssignmentRepository assignmentRepository;
 
@@ -165,12 +165,12 @@ public class EmployeeService {
 	private ErrorHandler errorHandler;
 
 	@Autowired
-	PropertiesManager propertiesManager;	
+	PropertiesManager propertiesManager;
 
 	public List<EmployeeInfo> getEmployees(EmployeeCriteria employeeCriteria, RequestInfo requestInfo) {
 		List<EmployeeInfo> employeeInfoList = employeeRepository.findForCriteria(employeeCriteria);
 
-		if(employeeInfoList.isEmpty())
+		if (employeeInfoList.isEmpty())
 			return employeeInfoList;
 
 		List<Long> ids = employeeInfoList.stream().map(employeeInfo -> employeeInfo.getId())
@@ -181,18 +181,19 @@ public class EmployeeService {
 		employeeUserMapper.mapUsersWithEmployees(employeeInfoList, usersList);
 
 		if (!ids.isEmpty()) {
-			List<EmployeeDocument> employeeDocuments = employeeRepository.getDocumentsForListOfEmployeeIds(ids, employeeCriteria.getTenantId());
+			List<EmployeeDocument> employeeDocuments = employeeRepository.getDocumentsForListOfEmployeeIds(ids,
+					employeeCriteria.getTenantId());
 			employeeHelper.mapDocumentsWithEmployees(employeeInfoList, employeeDocuments);
 		}
 
 		return employeeInfoList;
 	}
-	
+
 	public Employee getEmployee(Long employeeId, String tenantId, RequestInfo requestInfo) {
 		Employee employee = employeeRepository.findById(employeeId, tenantId);
 		List<Long> ids = new ArrayList<>();
 		ids.add(employeeId);
-		if (employee == null) 
+		if (employee == null)
 			throw new EmployeeIdNotFoundException(employeeId);
 
 		User user = userService.getUsers(ids, tenantId, requestInfo).get(0);
@@ -208,20 +209,20 @@ public class EmployeeService {
 		employee.setEducation(educationalQualificationRepository.findByEmployeeId(employeeId, tenantId));
 		employee.setTest(departmentalTestRepository.findByEmployeeId(employeeId, tenantId));
 		employeeDocumentsService.populateDocumentsInRespectiveObjects(employee);
-		
+
 		return employee;
 	}
 
-
 	public ResponseEntity<?> createAsync(EmployeeRequest employeeRequest) {
-	UserRequest userRequest = employeeHelper.getUserRequest(employeeRequest);
+		UserRequest userRequest = employeeHelper.getUserRequest(employeeRequest);
 
 		ResponseEntity<?> responseEntity = null;
 
-		// FIXME : User service is expecting & sending dates in multiple formats. Fix a common standard
+		// FIXME : User service is expecting & sending dates in multiple
+		// formats. Fix a common standard
 		try {
 			responseEntity = userService.createUser(userRequest);
-		
+
 		} catch (Exception e) {
 			LOGGER.debug("Error occurred while creating user", e);
 			return errorHandler.getResponseEntityForUnknownUserDBUpdationError(employeeRequest.getRequestInfo());
@@ -239,7 +240,6 @@ public class EmployeeService {
 
 		UserResponse userResponse = (UserResponse) responseEntity.getBody();
 		User user = userResponse.getUser().get(0);
-
 
 		Employee employee = employeeRequest.getEmployee();
 		employee.setId(user.getId());
@@ -261,7 +261,7 @@ public class EmployeeService {
 			LOGGER.error("Error while converting Employee to JSON", e);
 			e.printStackTrace();
 		}
-		
+
 		try {
 			employeeProducer.sendMessage(propertiesManager.getSaveEmployeeTopic(),
 					propertiesManager.getEmployeeSaveKey(), employeeRequestJson);
@@ -308,25 +308,27 @@ public class EmployeeService {
 	public ResponseEntity<?> updateAsync(EmployeeRequest employeeRequest) {
 
 		Employee employee = employeeRequest.getEmployee();
-		/*UserRequest userRequest = employeeHelper.getUserRequest(employeeRequest);
-
-		ResponseEntity<?> responseEntity = null;
-
-		try {
-			responseEntity = userService.updateUser(userRequest.getUser().getId(), userRequest);
-		} catch (Exception e) {
-			LOGGER.debug("Error occurred while updating user", e);
-			return errorHandler.getResponseEntityForUnknownUserDBUpdationError(employeeRequest.getRequestInfo());
-		}
-
-		if (responseEntity.getBody().getClass().equals(UserErrorResponse.class)
-				|| responseEntity.getBody().getClass().equals(ErrorResponse.class)) {
-			return responseEntity;
-		}
-
-		UserResponse userResponse = (UserResponse) responseEntity.getBody();
-		User user = userResponse.getUser().get(0);
-		employee.setUser(user);*/
+		/*
+		 * UserRequest userRequest =
+		 * employeeHelper.getUserRequest(employeeRequest);
+		 * 
+		 * ResponseEntity<?> responseEntity = null;
+		 * 
+		 * try { responseEntity =
+		 * userService.updateUser(userRequest.getUser().getId(), userRequest); }
+		 * catch (Exception e) {
+		 * LOGGER.debug("Error occurred while updating user", e); return
+		 * errorHandler.getResponseEntityForUnknownUserDBUpdationError(
+		 * employeeRequest.getRequestInfo()); }
+		 * 
+		 * if
+		 * (responseEntity.getBody().getClass().equals(UserErrorResponse.class)
+		 * || responseEntity.getBody().getClass().equals(ErrorResponse.class)) {
+		 * return responseEntity; }
+		 * 
+		 * UserResponse userResponse = (UserResponse) responseEntity.getBody();
+		 * User user = userResponse.getUser().get(0); employee.setUser(user);
+		 */
 
 		try {
 			employeeHelper.populateDefaultDataForUpdate(employeeRequest);
@@ -344,7 +346,7 @@ public class EmployeeService {
 			LOGGER.error("Error while converting Employee to JSON during update", e);
 			e.printStackTrace();
 		}
-	
+
 		try {
 			employeeProducer.sendMessage(propertiesManager.getUpdateEmployeeTopic(),
 					propertiesManager.getEmployeeSaveKey(), employeeUpdateRequestJson);
@@ -357,7 +359,6 @@ public class EmployeeService {
 	public void update(EmployeeRequest employeeRequest) {
 		Employee employee = employeeRequest.getEmployee();
 		employeeRepository.update(employee);
-		
 		employeeLanguageService.update(employee);
 		employeeJurisdictionService.update(employee);
 		assignmentService.update(employee);
@@ -368,5 +369,5 @@ public class EmployeeService {
 		technicalQualificationService.update(employee);
 		educationalQualificationService.update(employee);
 		employeeDocumentsService.update(employee);
-	}	
+	}
 }

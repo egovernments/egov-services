@@ -18,12 +18,12 @@ public class ProbationService {
 
 	@Autowired
 	private ProbationRepository probationRepository;
-	
+
 	@Autowired
-	private EmployeeDocumentsRepository employeeDocumentsRepository; 
+	private EmployeeDocumentsRepository employeeDocumentsRepository;
 
 	public void update(Employee employee) {
-		if(isEmpty(employee.getProbation()))
+		if (isEmpty(employee.getProbation()))
 			return;
 		List<Probation> probations = probationRepository.findByEmployeeId(employee.getId(), employee.getTenantId());
 		employee.getProbation().forEach((probation) -> {
@@ -42,9 +42,10 @@ public class ProbationService {
 			List<Probation> probationsFromDb, Long employeeId, String tenantId) {
 
 		List<Long> probationsIdsToDelete = getListOfProbationIdsToDelete(inputProbations, probationsFromDb);
-		if (!probationsIdsToDelete.isEmpty())
+		if (!probationsIdsToDelete.isEmpty()) {
+			employeeDocumentsRepository.deleteForReferenceIds(employeeId, EntityType.PROBATION, probationsIdsToDelete, tenantId);
 			probationRepository.delete(probationsIdsToDelete, employeeId, tenantId);
-		    employeeDocumentsRepository.deleteForReferenceType(employeeId, EntityType.PROBATION, tenantId);
+		}
 	}
 
 	private List<Long> getListOfProbationIdsToDelete(List<Probation> inputProbations,

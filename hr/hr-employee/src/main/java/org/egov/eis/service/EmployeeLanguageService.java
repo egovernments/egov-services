@@ -15,11 +15,12 @@ public class EmployeeLanguageService {
 
 	@Autowired
 	private EmployeeLanguageRepository employeeLanguageRepository;
-	
+
 	public void update(Employee employee) {
-		if(isEmpty(employee.getLanguagesKnown()))
+		if (isEmpty(employee.getLanguagesKnown()))
 			return;
-		List<Long> languagesFromDb = employeeLanguageRepository.findByEmployeeId(employee.getId(), employee.getTenantId());
+		List<Long> languagesFromDb = employeeLanguageRepository.findByEmployeeId(employee.getId(),
+				employee.getTenantId());
 		employee.getLanguagesKnown().forEach((language) -> {
 			if (needsInsert(language, languagesFromDb))
 				employeeLanguageRepository.insert(language, employee.getId(), employee.getTenantId());
@@ -29,11 +30,11 @@ public class EmployeeLanguageService {
 
 	}
 
-	private void deleteJLanguagesInDbThatAreNotInInput(List<Long> languages, List<Long> languagesFromDb, Long employeeId,
-			String tenantId) {
+	private void deleteJLanguagesInDbThatAreNotInInput(List<Long> languages, List<Long> languagesFromDb,
+			Long employeeId, String tenantId) {
 		List<Long> languagesIdsToDelete = getListOfLanguagesIdsToDelete(languages, languagesFromDb);
 		if (!languagesIdsToDelete.isEmpty())
-			employeeLanguageRepository.delete(languagesIdsToDelete, employeeId, tenantId);		
+			employeeLanguageRepository.delete(languagesIdsToDelete, employeeId, tenantId);
 	}
 
 	private List<Long> getListOfLanguagesIdsToDelete(List<Long> languages, List<Long> languagesFromDb) {
@@ -53,7 +54,8 @@ public class EmployeeLanguageService {
 
 	private boolean needsInsert(Long language, List<Long> languagesFromDb) {
 		for (Long languageInDb : languagesFromDb)
-			if (language.equals(languageInDb)) return false;
+			if (language.equals(languageInDb))
+				return false;
 		return true;
 	}
 

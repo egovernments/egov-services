@@ -2,8 +2,6 @@ package org.egov.lams.model;
 
 import java.util.Date;
 
-import javax.validation.constraints.NotNull;
-
 import org.egov.lams.repository.helper.AmountInWordUtil;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -84,9 +82,6 @@ public class Notice   {
 
   @JsonProperty("commissionerName")
   private String commissionerName = null;
-  
-  @JsonProperty("rentInWord")
-  private String rentInWord;
 
   @JsonProperty("locality")
   private Long locality = null;

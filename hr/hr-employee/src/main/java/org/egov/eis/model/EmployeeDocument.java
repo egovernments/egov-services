@@ -67,18 +67,6 @@ public class EmployeeDocument {
 	private String tenantId;
 
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((document == null) ? 0 : document.hashCode());
-		result = prime * result + ((employeeId == null) ? 0 : employeeId.hashCode());
-		result = prime * result + ((referenceId == null) ? 0 : referenceId.hashCode());
-		result = prime * result + ((referenceType == null) ? 0 : referenceType.hashCode());
-		result = prime * result + ((tenantId == null) ? 0 : tenantId.hashCode());
-		return result;
-	}
-
-	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;

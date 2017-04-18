@@ -19,6 +19,11 @@ import org.junit.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/**
+ * This test class could have been written using Mockito like RegularisationServiceTest.
+ * Nevertheless, mocking of dependencies is done without a framework and it is still
+ * a unit test.
+ */
 public class EmployeeDocumentsServiceTest {
 	
 	private EmployeeDocumentsService employeeDocumentsService;
@@ -79,9 +84,9 @@ public class EmployeeDocumentsServiceTest {
 		System.out.println("expectedDocuments = " + expectedDocuments);
 		System.out.println("savedDocuments = " + savedDocuments);
 		
-		// The following two lines ensure expectedDocuments have save contents
+		// The following two lines ensure expectedDocuments is identical to savedDocuments
 		assertTrue(expectedDocuments.containsAll(savedDocuments));
-		assertTrue(savedDocuments.containsAll(expectedDocuments));
+		assertEquals(expectedDocuments.size(), savedDocuments.size());
 		assertTrue(deletedDocuments.isEmpty());
 	}
 	
@@ -178,9 +183,9 @@ public class EmployeeDocumentsServiceTest {
 		
 		System.out.println("expectedDocuments = " + expectedDocuments);
 		System.out.println("savedDocuments = " + savedDocuments);
-		// The following two lines ensure expectedDocuments have save contents
+		// The following two lines ensure expectedDocuments is identical to savedDocuments
 		assertTrue(expectedDocuments.containsAll(savedDocuments));
-		assertTrue(savedDocuments.containsAll(expectedDocuments));
+		assertEquals(expectedDocuments.size(), savedDocuments.size());
 		assertTrue(deletedDocuments.isEmpty());
 	}
 	
@@ -194,7 +199,7 @@ public class EmployeeDocumentsServiceTest {
 		return employeeDocuments;
 	}
 	
-	//------------------test Delete-------------------------------------//
+	//------------------test Delete starts here-------------------------------------//
 	
 	/**
 	 * 1) Test Scenario: DB has some documents that are not in input list. Hence these will be removed from db.
@@ -268,13 +273,13 @@ public class EmployeeDocumentsServiceTest {
 		System.out.println("expectedDocumentsToDelete = " + expectedDocumentsToDelete);
 		System.out.println("deletedDocuments = " + deletedDocuments);
 		
-		// The following two lines ensure expectedDocuments have same contents
+		// The following two lines ensure expectedDocumentsToSave is identical to savedDocuments
 		assertTrue(expectedDocumentsToSave.containsAll(savedDocuments));
-		assertTrue(savedDocuments.containsAll(expectedDocumentsToSave));
+		assertEquals(expectedDocumentsToSave.size(), savedDocuments.size());
 		
-		// The following two lines ensure expectedDocumentsToDelete have same contents
+		// The following two lines ensure expectedDocumentsToDelete is identical to deletedDocuments
 		assertTrue(expectedDocumentsToDelete.containsAll(deletedDocuments));
-		assertTrue(deletedDocuments.containsAll(expectedDocumentsToDelete));
+		assertEquals(expectedDocumentsToDelete.size(), deletedDocuments.size());
 	}
 
 	private List<EmployeeDocument> getExpectedEmployeeDocumentsForSaveInvolvingBothSaveAndDeleteSomeDocumentsInDB() {

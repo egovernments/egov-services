@@ -10,5 +10,5 @@ ALTER TABLE eg_action ADD CONSTRAINT eg_action_name_key_tenantid UNIQUE (name,te
 ALTER TABLE eg_action DROP CONSTRAINT eg_action_url_queryparams_key;
 ALTER TABLE eg_action ADD CONSTRAINT eg_action_url_queryparams_key_tenantid UNIQUE (url, queryparams,tenantid);
 
-ALTER TABLE eg_action DROP CONSTRAINT eg_roleaction_ukey;
-ALTER TABLE eg_action ADD CONSTRAINT eg_roleaction_ukey_tenantid PRIMARY KEY (rolecode, actionid, tenantid);
+ALTER TABLE eg_roleaction DROP CONSTRAINT eg_roleaction_ukey;
+ALTER TABLE eg_roleaction ADD CONSTRAINT eg_roleaction_ukey_tenantid PRIMARY KEY (rolecode, actionid, tenantid);

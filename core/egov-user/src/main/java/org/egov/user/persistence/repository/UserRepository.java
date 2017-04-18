@@ -1,5 +1,6 @@
 package org.egov.user.persistence.repository;
 
+import org.egov.user.domain.exception.InvalidRoleCodeException;
 import org.egov.user.domain.model.UserSearch;
 import org.egov.user.persistence.entity.Role;
 import org.egov.user.persistence.entity.User;
@@ -98,8 +99,16 @@ public class UserRepository {
 	private Set<Role> fetchRolesByCode(User user) {
 		return user.getRoles()
 				.stream()
-				.map((role) -> roleRepository.findByTenantIdAndCodeIgnoreCase(user.getTenantId(), role.getCode()))
+				.map((role) -> fetchRole(user, role))
 				.collect(Collectors.toSet());
+	}
+
+	private Role fetchRole(User user, Role role) {
+		final Role enrichedRole = roleRepository.findByTenantIdAndCodeIgnoreCase(user.getTenantId(), role.getCode());
+		if (enrichedRole == null) {
+			throw new InvalidRoleCodeException(role.getCode());
+		}
+		return enrichedRole;
 	}
 
 	private void setEnrichedRolesToUser(User user) {

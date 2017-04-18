@@ -1,5 +1,6 @@
 package org.egov.user.persistence.repository;
 
+import org.egov.user.domain.exception.InvalidRoleCodeException;
 import org.egov.user.domain.model.User;
 import org.egov.user.domain.model.UserSearch;
 import org.egov.user.persistence.entity.Role;
@@ -107,19 +108,38 @@ public class UserRepositoryTest {
 		org.egov.user.persistence.entity.User entityUser = mock(org.egov.user.persistence.entity.User.class);
 		when(userJpaRepository.save(any(org.egov.user.persistence.entity.User.class))).thenReturn(entityUser);
 		final User expectedUser = mock(User.class);
+		when(expectedUser.getTenantId()).thenReturn("ap.public");
 		when(entityUser.toDomain()).thenReturn(expectedUser);
 		final List<org.egov.user.domain.model.Role> roles = new ArrayList<>();
-		final String roleName = "roleName1";
-		roles.add(org.egov.user.domain.model.Role.builder().name(roleName).build());
+		final String roleCode = "roleCode1";
+		roles.add(org.egov.user.domain.model.Role.builder().code(roleCode).build());
 		org.egov.user.domain.model.User domainUser = org.egov.user.domain.model.User.builder()
 				.roles(roles)
+				.tenantId("ap.public")
 				.build();
 		final Role role = new Role();
-		when(roleRepository.findByTenantIdAndCodeIgnoreCase("ap.public", roleName)).thenReturn(role);
+		when(roleRepository.findByTenantIdAndCodeIgnoreCase("ap.public", roleCode)).thenReturn(role);
 
 		User actualUser = userRepository.save(domainUser);
 
 		assertEquals(expectedUser, actualUser);
+	}
+
+	@Test(expected = InvalidRoleCodeException.class)
+	public void test_should_throw_exception_when_role_does_not_exist_for_given_role_code() {
+		org.egov.user.persistence.entity.User entityUser = mock(org.egov.user.persistence.entity.User.class);
+		final User expectedUser = mock(User.class);
+		when(entityUser.toDomain()).thenReturn(expectedUser);
+		final String roleCode = "roleCode1";
+		final org.egov.user.domain.model.Role domainRole = org.egov.user.domain.model.Role.builder()
+						.name(roleCode)
+						.build();
+		org.egov.user.domain.model.User domainUser = org.egov.user.domain.model.User.builder()
+				.roles(Collections.singletonList(domainRole))
+				.build();
+		when(roleRepository.findByTenantIdAndCodeIgnoreCase("ap.public", roleCode)).thenReturn(null);
+
+		userRepository.save(domainUser);
 	}
 
 	@Test
@@ -127,15 +147,16 @@ public class UserRepositoryTest {
 		org.egov.user.persistence.entity.User expectedUser = mock(org.egov.user.persistence.entity.User.class);
 		when(userJpaRepository.save(any(org.egov.user.persistence.entity.User.class))).thenReturn(expectedUser);
 		final List<org.egov.user.domain.model.Role> roles = new ArrayList<>();
-		final String roleName = "roleName1";
-		roles.add(org.egov.user.domain.model.Role.builder().name(roleName).build());
+		final String roleCode = "roleCode1";
+		roles.add(org.egov.user.domain.model.Role.builder().code(roleCode).build());
 		final String rawPassword = "rawPassword";
 		org.egov.user.domain.model.User domainUser = org.egov.user.domain.model.User.builder()
 				.roles(roles)
 				.password(rawPassword)
+				.tenantId("ap.public")
 				.build();
 		final Role role = new Role();
-		when(roleRepository.findByTenantIdAndCodeIgnoreCase("ap.public", roleName)).thenReturn(role);
+		when(roleRepository.findByTenantIdAndCodeIgnoreCase("ap.public", roleCode)).thenReturn(role);
 		final String expectedEncodedPassword = "encodedPassword";
 		when(passwordEncoder.encode(rawPassword)).thenReturn(expectedEncodedPassword);
 
@@ -239,6 +260,30 @@ public class UserRepositoryTest {
 		User actualUser = userRepository.update(1L, domainUser);
 
 		assertEquals(expectedUser, actualUser);
+	}
+
+	@Test(expected = InvalidRoleCodeException.class)
+	public void test_should_throw_exception_when_updating_user_with_invalid_role_code() {
+		org.egov.user.persistence.entity.User entityUser = mock(org.egov.user.persistence.entity.User.class);
+		when(userJpaRepository.save(any(org.egov.user.persistence.entity.User.class))).thenReturn(entityUser);
+		when(userJpaRepository.findOne(any(Long.class))).thenReturn(entityUser);
+		final User expectedUser = mock(User.class);
+		when(entityUser.toDomain()).thenReturn(expectedUser);
+		final org.egov.user.domain.model.Role role1 = org.egov.user.domain.model.Role.builder()
+				.code("roleCode1")
+				.build();
+		final List<org.egov.user.domain.model.Role> roles = Collections.singletonList(role1);
+		final HashSet<Role> roleSet = new HashSet<>(Collections.singletonList(Role.builder()
+				.code("roleCode1")
+				.build()));
+		when(entityUser.getRoles()).thenReturn(roleSet);
+		org.egov.user.domain.model.User domainUser = org.egov.user.domain.model.User.builder()
+				.roles(roles)
+				.tenantId("tenantId")
+				.build();
+		when(roleRepository.findByTenantIdAndCodeIgnoreCase("tenantId", "roleCode1")).thenReturn(null);
+
+		userRepository.update(1L, domainUser);
 	}
 
 	@Test

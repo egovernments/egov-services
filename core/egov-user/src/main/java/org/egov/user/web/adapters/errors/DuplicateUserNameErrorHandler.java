@@ -38,3 +38,4 @@ public class DuplicateUserNameErrorHandler implements ErrorAdapter<User> {
         );
     }
 }
+

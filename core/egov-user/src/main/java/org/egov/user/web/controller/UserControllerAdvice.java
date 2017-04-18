@@ -43,6 +43,12 @@ public class UserControllerAdvice {
         return new InvalidAccessTokenErrorHandler().adapt();
     }
 
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(InvalidRoleCodeException.class)
+	public ErrorResponse handleInvalidRoleCodeException(InvalidRoleCodeException ex) {
+		return new InvalidRoleCodeErrorHandler().adapt(ex.getRoleCode());
+	}
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(UserDetailsException.class)
     public ErrorResponse userDetailsException() {

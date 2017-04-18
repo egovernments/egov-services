@@ -78,6 +78,9 @@ public class Notice   {
 
   @JsonProperty("securityDeposit")
   private Double securityDeposit = null;
+  
+  @JsonProperty("securityDepositInWord")
+  private String securityDepositInWord = null;
 
   @JsonProperty("commissionerName")
   private String commissionerName = null;
@@ -100,6 +103,9 @@ public class Notice   {
   @JsonProperty("electionward")
   private Long electionward = null;
   
+  @JsonProperty("doorNo")
+  private String doorNo = null;
+  
   public void toNotice(Agreement agreement){
 	  this.acknowledgementNumber = agreement.getAcknowledgementNumber();
 	  this.agreementNumber = agreement.getAgreementNumber();
@@ -112,17 +118,18 @@ public class Notice   {
 	  this.block = agreement.getAsset().getLocationDetails().getBlock();
 	  this.commencementDate = agreement.getCommencementDate();
 	  //TODO this.commissionerName = agreement.get
-	  this.rentInWord = AmountInWordUtil.amountInWords(agreement.getRent());
+	  
 	  this.electionward = agreement.getAsset().getLocationDetails().getElectionWard();
 	  this.expiryDate = agreement.getExpiryDate();
 	  this.locality = agreement.getAsset().getLocationDetails().getLocality();
 	  this.rent = agreement.getRent();
+	  this.rentInWord = AmountInWordUtil.amountInWords(agreement.getRent());
 	  this.securityDeposit = agreement.getSecurityDeposit();
+	  this.securityDepositInWord = AmountInWordUtil.amountInWords(agreement.getSecurityDeposit());
 	  this.street = agreement.getAsset().getLocationDetails().getStreet();
 	  this.ward = agreement.getAsset().getLocationDetails().getRevenueWard();
 	  this.zone = agreement.getAsset().getLocationDetails().getZone();
-	  
-	  
+	  this.doorNo = agreement.getAsset().getLocationDetails().getDoorNo();
   }
 
 }

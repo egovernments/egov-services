@@ -1,0 +1,18 @@
+INSERT INTO eg_reason_category (id, name, code, "order", modified_date, tenantid)  values (nextval('seq_eg_reason_category'),'TAX','TAX',1,current_timestamp, 'default');
+INSERT INTO eg_reason_category (id, name, code, "order", modified_date, tenantid)  values (nextval('seq_eg_reason_category'),'Fee','Fee',2,current_timestamp, 'default');
+INSERT INTO eg_reason_category (id, name, code, "order", modified_date, tenantid)  values (nextval('seq_eg_reason_category'),'REBATE','REBATE',3,current_timestamp, 'default');
+INSERT INTO eg_reason_category (id, name, code, "order", modified_date, tenantid)  values (nextval('seq_eg_reason_category'),'Advance Collection','ADVANCE',4,current_timestamp, 'default');
+INSERT INTO eg_reason_category (id, name, code, "order", modified_date, tenantid)  values (nextval('seq_eg_reason_category'),'PENALTY','PENALTY',5,current_timestamp, 'default');
+INSERT INTO eg_reason_category (id, name, code, "order", modified_date, tenantid)  values (nextval('seq_eg_reason_category'),'FINES','FINES',6,current_timestamp, 'default');
+
+INSERT INTO EG_DEMAND_REASON_MASTER ( ID, REASONMASTER, "category", ISDEBIT, module, CODE, "order", create_date, modified_date, isdemand, tenantid) VALUES(nextval('seq_eg_demand_reason_master'), 'Rent', (select id from eg_reason_category where code='TAX' and tenantid='default'), 'N', 'Leases And Agreements', 'RENT', 1, current_timestamp, current_timestamp,'true', 'default');
+
+INSERT INTO EG_DEMAND_REASON_MASTER ( ID, REASONMASTER, "category", ISDEBIT, module, CODE, "order", create_date, modified_date, isdemand, tenantid) VALUES(nextval('seq_eg_demand_reason_master'), 'Advance Tax', (select id from eg_reason_category where code='TAX' and tenantid='default'), 'N', 'Leases And Agreements', 'ADVANCE_TAX', 2, current_timestamp, current_timestamp,'true', 'default');
+
+INSERT INTO EG_DEMAND_REASON_MASTER ( ID, REASONMASTER, "category", ISDEBIT, module, CODE, "order", create_date, modified_date, isdemand, tenantid) VALUES(nextval('seq_eg_demand_reason_master'), 'Goodwill Amount', (select id from eg_reason_category where code='TAX' and tenantid='default'), 'N', 'Leases And Agreements', 'GOODWILL_AMOUNT', 3, current_timestamp, current_timestamp,'true', 'default');
+
+Insert into EG_DEMAND_REASON (ID,ID_DEMAND_REASON_MASTER,ID_INSTALLMENT,PERCENTAGE_BASIS,ID_BASE_REASON,create_date,modified_date,GLCODE, tenantid) select nextval('seq_eg_demand_reason'), (select id from eg_demand_reason_master where reasonmaster='Rent' and module='Leases And Agreements' and tenantid='default'), inst.id, null, null, current_timestamp, current_timestamp, '43110', 'default' from eg_installment_master inst where inst.module='Leases And Agreements' and inst.tenantid='default';
+
+Insert into EG_DEMAND_REASON (ID,ID_DEMAND_REASON_MASTER,ID_INSTALLMENT,PERCENTAGE_BASIS,ID_BASE_REASON,create_date,modified_date,GLCODE, tenantid) select nextval('seq_eg_demand_reason'), (select id from eg_demand_reason_master where reasonmaster='Advance Tax' and module='Leases And Agreements' and tenantid='default'), inst.id, null, null, current_timestamp, current_timestamp, '43110', 'default' from eg_installment_master inst where inst.module='Leases And Agreements' and inst.tenantid='default';
+
+Insert into EG_DEMAND_REASON (ID,ID_DEMAND_REASON_MASTER,ID_INSTALLMENT,PERCENTAGE_BASIS,ID_BASE_REASON,create_date,modified_date,GLCODE, tenantid) select nextval('seq_eg_demand_reason'), (select id from eg_demand_reason_master where reasonmaster='Goodwill Amount' and module='Leases And Agreements' and tenantid='default'), inst.id, null, null, current_timestamp, current_timestamp, '43110', 'default' from eg_installment_master inst where inst.module='Leases And Agreements' and inst.tenantid='default';

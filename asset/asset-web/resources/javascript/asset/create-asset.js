@@ -10,6 +10,64 @@ const titleCase = (field) => {
     return newField;
 }
 
+const makeAjaxUpload = function(file, cb) {
+    let formData = new FormData();
+    formData.append("jurisdictionId", "ap.public");
+    formData.append("module", "PGR");
+    formData.append("file", file);
+    $.ajax({
+        url: baseUrl + "/filestore/v1/files?tenantId=" + tenantId,
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        type: 'POST',
+        success: function(res) {
+            cb(null, res);
+        },
+        error: function(jqXHR, exception) {
+            cb(jqXHR.responseText || jqXHR.statusText);
+        }
+    });
+}
+
+const uploadFiles = function(body, cb) {
+    if(body.Asset.properties && Object.keys(body.Asset.properties).length) {
+        var counter1 = Object.keys(body.Asset.properties).length;
+        for(var key in body.Asset.properties) {
+            if(body.Asset.properties[key].constructor == FileList) {
+                var counter = body.Asset.properties[key].length;
+                var breakout = 0;
+                for(let j=0; j<body.Asset.properties[key].length; j++) {
+                    makeAjaxUpload(body.Asset.properties[key][j], function(err, res) {
+                        if (breakout == 1)
+                            return;
+                        else if (err) {
+                            cb(err);
+                            breakout = 1;
+                        } else {
+                            counter--;
+                            body.Asset.properties[key][j] = `/filestore/v1/files/id?fileStoreId=${res.files[0].fileStoreId}`;
+                            if(counter == 0) {
+                                counter1--;
+                                if(counter1 == 0 && breakout == 0)
+                                    cb(null, body);
+                            }
+                        }
+                    })
+                }
+            } else {
+                counter1--;
+                if(counter1 == 0 && breakout == 0) {
+                    cb(null, body);
+                }
+            }
+        }
+    } else {
+        cb(null, body);
+    }
+}
+
 const defaultAssetSetState = {
     "tenantId": tenantId,
     "name": "",
@@ -119,34 +177,38 @@ class CreateAsset extends React.Component {
           "Asset": tempInfo
       };
 
-      var response = $.ajax({
-          url: baseUrl + "/asset-services/assets/" + (type == "update" ? ("_update/"+ _this.state.assetSet.code) : "_create") + "?tenantId=" + tenantId,
-          type: 'POST',
-          dataType: 'json',
-          data: JSON.stringify(body),
-          async: false,
-          contentType: 'application/json',
-          headers:{
-              'auth-token' :authToken
-          }
-      });
+      uploadFiles(body, function(err, _body) {
+        if(err) {
+            showError(err);
+        } else {
+            var response = $.ajax({
+                url: baseUrl + "/asset-services/assets/" + (type == "update" ? ("_update/"+ _this.state.assetSet.code) : "_create") + "?tenantId=" + tenantId,
+                type: 'POST',
+                dataType: 'json',
+                data: JSON.stringify(_body),
+                async: false,
+                contentType: 'application/json',
+                headers:{
+                    'auth-token' :authToken
+                }
+            });
 
-     if (response["status"] === 201 || response["status"] == 200 || response["status"] == 204) {
-					window.location.href=`app/asset/create-asset-ack.html?name=${tempInfo.name}&type=`;
-
-      } else {
-           this.setState({
-            ...this.state,
-            error: response["statusText"]
-          })
-      }
+            if (response["status"] === 201 || response["status"] == 200 || response["status"] == 204) {
+                window.location.href=`app/asset/create-asset-ack.html?name=${tempInfo.name}&type=`;
+            } else {
+                this.setState({
+                    ...this.state,
+                    error: response["statusText"]
+                })
+            }
+        }
+      })
   }
 
 
   handleChangeTwoLevel(e, pName, name) {
       let text, type, codeNo;
       if (pName == "assetCategory") {
-
           let el = document.getElementById('assetCategory');
           text = el.options[el.selectedIndex].innerHTML;
           this.setState({
@@ -154,32 +216,33 @@ class CreateAsset extends React.Component {
               properties: {}
           })
           e.target.value = parseInt(e.target.value);
-					for(var i=0;i< this.state.assetCategories.length; i++){
-
-						if (e.target.value==this.state.assetCategories[i].id) {
-								type = this.state.assetCategories[i].assetCategoryType;
-								codeNo = this.state.assetCategories[i].code;
-								break;
-						}
-					}
+          for(var i=0;i< this.state.assetCategories.length; i++){
+            if (e.target.value==this.state.assetCategories[i].id) {
+                type = this.state.assetCategories[i].assetCategoryType;
+                codeNo = this.state.assetCategories[i].code;
+                break;
+            }
+         }
 
       }
-
+      
       let innerJSON = {
             ...this.state.assetSet[pName],
-            [name]: e.target.value
+            [name]: e.target.type == "file" ? e.target.files : e.target.value
       };
 
-			if(type) {
-				innerJSON["assetCategoryType"] = type;
-			}
-			if(codeNo) {
-				innerJSON["code"] = codeNo;
-			}
+      if(type) {
+        innerJSON["assetCategoryType"] = type;
+      }
+
+      if(codeNo) {
+        innerJSON["code"] = codeNo;
+      }
 
       if(text) {
         innerJSON["name"] = text;
       }
+
       this.setState({
           assetSet: {
               ...this.state.assetSet,
@@ -193,18 +256,25 @@ class CreateAsset extends React.Component {
   componentDidMount() {
       var type = getUrlVars()["type"], _this = this;
       var id = getUrlVars()["id"];
+      $(document).on('focus',".custom-date-picker", function(){
+            $(this).datetimepicker({
+                format: 'DD/MM/YYYY'
+            });
+      });
+
       $('#dateOfCreation').datetimepicker({
           format: 'DD/MM/YYYY',
           maxDate: new Date()
       });
-			$('#dateOfCreation').on("dp.change", function(e) {
-						_this.setState({
-				          assetSet: {
-				              ..._this.state.assetSet,
-				              "dateOfCreation":$("#dateOfCreation").val()
-				          }
-			      })
-				});
+
+      $('#dateOfCreation').on("dp.change", function(e) {
+         _this.setState({
+            assetSet: {
+                ..._this.state.assetSet,
+                "dateOfCreation":$("#dateOfCreation").val()
+            }
+         })
+      });
 
       this.setState({
           assetCategories,
@@ -415,39 +485,29 @@ class CreateAsset extends React.Component {
     }
 
     const checkFields = function() {
-        return customFields.map((item, index)=>
-        {
-						switch (item.type) {
-
-
-							case "Text":
-								return showTextBox(item,index);
-
-
-							case "Number":
-								return showTextBox(item,index);
-
-							case "Email":
-								return showTextBox(item,index);
-
-							case "Radio":
-								return showRadioButton(item, index);
-
-							case "Check Box":
-								return showCheckBox(item,index);
-
-							case "Select":
-								return showSelect(item,index);
-
-							default:
-								return showTextBox(item,index);
-
-
-						}
-
-
-        })
-    }
+	return customFields.map((item, index) => {
+		switch (item.type) {
+			case "Text":
+				return showTextBox(item, index);
+			case "Number":
+				return showTextBox(item, index);
+			case "Email":
+				return showTextBox(item, index);
+			case "Radio":
+				return showRadioButton(item, index);
+			case "Check Box":
+				return showCheckBox(item, index);
+			case "Select":
+				return showSelect(item, index);
+			case "Date":
+                return showDatePicker(item, index);
+            case "File": 
+                return showFile(item, index);
+			default:
+				return showTextBox(item, index);
+		}
+	})
+}
 
 		const showTextBox = function(item, index) {
 			return (
@@ -484,8 +544,7 @@ class CreateAsset extends React.Component {
 			);
 		}
 
-		const showRadioButton = function(item,index)
-		{
+		const showRadioButton = function(item, index) {
 			return (
 				<div className="col-sm-6" key={index}>
 					<div className="row">
@@ -515,6 +574,31 @@ class CreateAsset extends React.Component {
 			);
 		}
 
+        const showDatePicker = function(item, index) {
+            return (<div className="col-sm-6" key={index}>
+                <div className="row">
+                    <div className="col-sm-6 label-text">
+                        <label for={item.name}>{titleCase(item.name)}  {showStart(item.isMandatory)}</label>
+                    </div>
+                    <div className="col-sm-6">
+                        <input id={item.name} className="custom-date-picker" name={item.name} type="text" defaultValue={item.values} onChange={(e)=>{handleChangeTwoLevel(e, "properties", item.name)}} required={item.isMandatory} disabled={readonly}/>
+                    </div>
+                </div>
+            </div>)
+        }
+
+        const showFile = function(item, index) {
+            return (<div className="col-sm-6" key={index}>
+                <div className="row">
+                    <div className="col-sm-6 label-text">
+                        <label for={item.name}>{titleCase(item.name)}  {showStart(item.isMandatory)}</label>
+                    </div>
+                    <div className="col-sm-6">
+                        <input id={item.name} name={item.name} type="file" onChange={(e)=>{handleChangeTwoLevel(e, "properties", item.name)}} required={item.isMandatory} disabled={readonly} multiple/>
+                    </div>
+                </div>
+            </div>)
+        }
 
     const showStart = function(status) {
         if (status) {

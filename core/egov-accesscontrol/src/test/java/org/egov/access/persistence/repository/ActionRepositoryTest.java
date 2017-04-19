@@ -51,14 +51,4 @@ public class ActionRepositoryTest {
 
     }
 
-    private List<Action> getActions() {
-        List<Action> actions = new ArrayList<Action>();
-        Action action1 = Action.builder().id(1L).name("Create Complaint").displayName("Create Complaint").url("/createcomplaint")
-                .createdDate(new Date()).createdBy(1L).lastModifiedBy(1L).lastModifiedDate(new Date()).build();
-
-        Action action2 = Action.builder().id(1L).name("Update Complaint").displayName("Update Complaint").url("/updatecomplaint")
-                .createdDate(new Date()).createdBy(2L).lastModifiedBy(2L).lastModifiedDate(new Date()).build();
-        return actions;
-    }
-
 }

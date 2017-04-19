@@ -1,7 +1,7 @@
-INSERT INTO service (id, name, enabled, contextroot, parentmodule, displayname, ordernumber) VALUES (nextval('seq_service'), 'Financials_MS', false, '/egf-masters', NULL, 'Financials', 20);
-INSERT INTO service (id, name, enabled, contextroot, parentmodule, displayname, ordernumber) VALUES (nextval('seq_service'), 'Financials_Masters_MS', false, '/egf-masters', (select id from service where name='Financials_MS' and parentmodule is null), 'Masters', 20);
+INSERT INTO service (id, code, name, enabled, contextroot, parentmodule, displayname, ordernumber) VALUES (nextval('seq_service'), 'Financials_MS', 'Financials_MS', false, '/egf-masters', NULL, 'Financials', 20);
+INSERT INTO service (id, code, name, enabled, contextroot, parentmodule, displayname, ordernumber) VALUES (nextval('seq_service'), 'Financials_MS', 'Financials_Masters_MS', false, '/egf-masters', (select id from service where name='Financials_MS' and parentmodule is null), 'Masters', 20);
 --Account Detail key
-INSERT INTO service (id, name, enabled, contextroot, parentmodule, displayname, ordernumber) VALUES (nextval('seq_service'), 'Account Detail key', false, '/egf-masters', (select id from service where name='Masters'), 'Account Detail key', 1);
+INSERT INTO service (id, code, name, enabled, contextroot, parentmodule, displayname, ordernumber) VALUES (nextval('seq_service'), 'Account Detail key', 'Account Detail key', false, '/egf-masters', (select id from service where name='Masters'), 'Account Detail key', 1);
 
 insert into eg_action (ID,NAME,URL,QUERYPARAMS,PARENTMODULE,ORDERNUMBER,DISPLAYNAME,ENABLED,CONTEXTROOT,VERSION,CREATEDBY,CREATEDDATE,LASTMODIFIEDBY,LASTMODIFIEDDATE,APPLICATION) values (NEXTVAL('SEQ_EG_ACTION'),'createAccountDetailKey',
 '/accountdetailkeys/_create',null,(select id from service where name='Account Detail key' and contextroot='/egf-masters'),1,'Create Account Detail Key',false,'/egf-masters',0,1,now(),1,now(),(select id from service where name='Financials_MS' and parentmodule is null));
@@ -21,7 +21,7 @@ insert into eg_roleaction(roleid, actionid) values ((select id from eg_role wher
 insert into eg_roleaction(roleid, actionid) values ((select id from eg_role where name = 'Super User'), (select id from eg_action where name = 'searchAccountDetailKey' and contextroot = '/egf-masters'));
 
 --Bank
-INSERT INTO service (id, name, enabled, contextroot, parentmodule, displayname, ordernumber) VALUES (nextval('seq_service'), 'Bank_MS', false, '/egf-masters', (select id from service where name='Masters'), 'Bank', 2);
+INSERT INTO service (id, code, name, enabled, contextroot, parentmodule, displayname, ordernumber) VALUES (nextval('seq_service'), 'Bank_MS', 'Bank_MS', false, '/egf-masters', (select id from service where name='Masters'), 'Bank', 2);
 
 insert into eg_action (ID,NAME,URL,QUERYPARAMS,PARENTMODULE,ORDERNUMBER,DISPLAYNAME,ENABLED,CONTEXTROOT,VERSION,CREATEDBY,CREATEDDATE,LASTMODIFIEDBY,LASTMODIFIEDDATE,APPLICATION) values (NEXTVAL('SEQ_EG_ACTION'),'createBank',
 '/banks/_create',null,(select id from service where name='Bank_MS' and contextroot='/egf-masters'),1,'Create Bank',false,'/egf-masters',0,1,now(),1,now(),(select id from service where name='Financials_MS' and parentmodule is null));
@@ -41,7 +41,7 @@ insert into eg_roleaction(roleid, actionid) values ((select id from eg_role wher
 insert into eg_roleaction(roleid, actionid) values ((select id from eg_role where name = 'Super User'), (select id from eg_action where name = 'searchBank' and contextroot = '/egf-masters'));
 
 --Bankaccounts
-INSERT INTO service (id, name, enabled, contextroot, parentmodule, displayname, ordernumber) VALUES (nextval('seq_service'), 'Bankaccount', false, '/egf-masters', (select id from service where name='Masters'), 'Bankaccount', 3);
+INSERT INTO service (id, code, name, enabled, contextroot, parentmodule, displayname, ordernumber) VALUES (nextval('seq_service'), 'Bankaccount', 'Bankaccount', false, '/egf-masters', (select id from service where name='Masters'), 'Bankaccount', 3);
 
 insert into eg_action (ID,NAME,URL,QUERYPARAMS,PARENTMODULE,ORDERNUMBER,DISPLAYNAME,ENABLED,CONTEXTROOT,VERSION,CREATEDBY,CREATEDDATE,LASTMODIFIEDBY,LASTMODIFIEDDATE,APPLICATION) values (NEXTVAL('SEQ_EG_ACTION'),'createBankAccount',
 '/bankaccounts/_create',null,(select id from service where name='Bankaccount' and contextroot='/egf-masters'),1,'Create BankAccount',false,'/egf-masters',0,1,now(),1,now(),(select id from service where name='Financials_MS' and parentmodule is null));
@@ -61,7 +61,7 @@ insert into eg_roleaction(roleid, actionid) values ((select id from eg_role wher
 insert into eg_roleaction(roleid, actionid) values ((select id from eg_role where name = 'Super User'), (select id from eg_action where name = 'searchBankAccount' and contextroot = '/egf-masters'));
 
 --Account Code Purpose
-INSERT INTO service (id, name, enabled, contextroot, parentmodule, displayname, ordernumber) VALUES (nextval('seq_service'), 'AccountCodePurpose', false, '/egf-masters', (select id from service where name='Masters'), 'Account Code Purpose', 4);
+INSERT INTO service (id, code, name, enabled, contextroot, parentmodule, displayname, ordernumber) VALUES (nextval('seq_service'), 'AccountCodePurpose', 'AccountCodePurpose', false, '/egf-masters', (select id from service where name='Masters'), 'Account Code Purpose', 4);
 
 insert into eg_action (ID,NAME,URL,QUERYPARAMS,PARENTMODULE,ORDERNUMBER,DISPLAYNAME,ENABLED,CONTEXTROOT,VERSION,CREATEDBY,CREATEDDATE,LASTMODIFIEDBY,LASTMODIFIEDDATE,APPLICATION) values (NEXTVAL('SEQ_EG_ACTION'),'createAccountCodePurpose',
 '/accountcodepurposes/_create',null,(select id from service where name='AccountCodePurpose' and contextroot='/egf-masters'),1,'Create Account Code Purpose',false,'/egf-masters',0,1,now(),1,now(),(select id from service where name='Financials_MS' and parentmodule is null));
@@ -82,7 +82,7 @@ insert into eg_roleaction(roleid, actionid) values ((select id from eg_role wher
 
 
 --Supplier
-INSERT INTO service (id, name, enabled, contextroot, parentmodule, displayname, ordernumber) VALUES (nextval('seq_service'), 'Supplier', false, '/egf-masters', (select id from service where name='Masters'), 'Supplier', 5);
+INSERT INTO service (id, code, name, enabled, contextroot, parentmodule, displayname, ordernumber) VALUES (nextval('seq_service'), 'Supplier', 'Supplier', false, '/egf-masters', (select id from service where name='Masters'), 'Supplier', 5);
 
 insert into eg_action (ID,NAME,URL,QUERYPARAMS,PARENTMODULE,ORDERNUMBER,DISPLAYNAME,ENABLED,CONTEXTROOT,VERSION,CREATEDBY,CREATEDDATE,LASTMODIFIEDBY,LASTMODIFIEDDATE,APPLICATION) values (NEXTVAL('SEQ_EG_ACTION'),'createSupplier',
 '/suppliers/_create',null,(select id from service where name='Supplier' and contextroot='/egf-masters'),1,'Create Supplier',false,'/egf-masters',0,1,now(),1,now(),(select id from service where name='Financials_MS' and parentmodule is null));
@@ -102,7 +102,7 @@ insert into eg_roleaction(roleid, actionid) values ((select id from eg_role wher
 insert into eg_roleaction(roleid, actionid) values ((select id from eg_role where name = 'Super User'), (select id from eg_action where name = 'searchSupplier' and contextroot = '/egf-masters'));
 
 --Fund
-INSERT INTO service (id, name, enabled, contextroot, parentmodule, displayname, ordernumber) VALUES (nextval('seq_service'), 'Fund_MS', false, '/egf-masters', (select id from service where name='Masters'), 'Fund', 6);
+INSERT INTO service (id, code, name, enabled, contextroot, parentmodule, displayname, ordernumber) VALUES (nextval('seq_service'), 'Fund_MS', 'Fund_MS', false, '/egf-masters', (select id from service where name='Masters'), 'Fund', 6);
 
 insert into eg_action (ID,NAME,URL,QUERYPARAMS,PARENTMODULE,ORDERNUMBER,DISPLAYNAME,ENABLED,CONTEXTROOT,VERSION,CREATEDBY,CREATEDDATE,LASTMODIFIEDBY,LASTMODIFIEDDATE,APPLICATION) values (NEXTVAL('SEQ_EG_ACTION'),'createFund',
 '/funds/_create',null,(select id from service where name='Fund_MS' and contextroot='/egf-masters'),1,'Create Fund',false,'/egf-masters',0,1,now(),1,now(),(select id from service where name='Financials_MS' and parentmodule is null));
@@ -123,7 +123,7 @@ insert into eg_roleaction(roleid, actionid) values ((select id from eg_role wher
 
 
 --subschemes
-INSERT INTO service (id, name, enabled, contextroot, parentmodule, displayname, ordernumber) VALUES (nextval('seq_service'), 'SubScheme', false, '/egf-masters', (select id from service where name='Masters'), 'SubScheme', 7);
+INSERT INTO service (id, code, name, enabled, contextroot, parentmodule, displayname, ordernumber) VALUES (nextval('seq_service'), 'SubScheme', 'SubScheme', false, '/egf-masters', (select id from service where name='Masters'), 'SubScheme', 7);
 
 insert into eg_action (ID,NAME,URL,QUERYPARAMS,PARENTMODULE,ORDERNUMBER,DISPLAYNAME,ENABLED,CONTEXTROOT,VERSION,CREATEDBY,CREATEDDATE,LASTMODIFIEDBY,LASTMODIFIEDDATE,APPLICATION) values (NEXTVAL('SEQ_EG_ACTION'),'createSubScheme_MS',
 '/subschemes/_create',null,(select id from service where name='SubScheme' and contextroot='/egf-masters'),1,'Create SubScheme',false,'/egf-masters',0,1,now(),1,now(),(select id from service where name='Financials_MS' and parentmodule is null));
@@ -143,7 +143,7 @@ insert into eg_roleaction(roleid, actionid) values ((select id from eg_role wher
 insert into eg_roleaction(roleid, actionid) values ((select id from eg_role where name = 'Super User'), (select id from eg_action where name = 'searchSubScheme_MS' and contextroot = '/egf-masters'));
 
 --functions
-INSERT INTO service (id, name, enabled, contextroot, parentmodule, displayname, ordernumber) VALUES (nextval('seq_service'), 'Function_MS', false, '/egf-masters', (select id from service where name='Masters'), 'Function', 8);
+INSERT INTO service (id, code, name, enabled, contextroot, parentmodule, displayname, ordernumber) VALUES (nextval('seq_service'), 'Function_MS', 'Function_MS', false, '/egf-masters', (select id from service where name='Masters'), 'Function', 8);
 insert into eg_action (ID,NAME,URL,QUERYPARAMS,PARENTMODULE,ORDERNUMBER,DISPLAYNAME,ENABLED,CONTEXTROOT,VERSION,CREATEDBY,CREATEDDATE,LASTMODIFIEDBY,LASTMODIFIEDDATE,APPLICATION) values (NEXTVAL('SEQ_EG_ACTION'),'createFunction_MS',
 '/functions/_create',null,(select id from service where name='Function_MS' and contextroot='/egf-masters'),1,'Create Function',false,'/egf-masters',0,1,now(),1,now(),(select id from service where name='Financials_MS' and parentmodule is null));
 
@@ -162,7 +162,7 @@ insert into eg_roleaction(roleid, actionid) values ((select id from eg_role wher
 insert into eg_roleaction(roleid, actionid) values ((select id from eg_role where name = 'Super User'), (select id from eg_action where name = 'searchFunction_MS' and contextroot = '/egf-masters'));
 
 --budgetgroups
-INSERT INTO service (id, name, enabled, contextroot, parentmodule, displayname, ordernumber) VALUES (nextval('seq_service'), 'BudgetGroup', false, '/egf-masters', (select id from service where name='Masters'), 'Budget Group', 9);
+INSERT INTO service (id, code, name, enabled, contextroot, parentmodule, displayname, ordernumber) VALUES (nextval('seq_service'), 'BudgetGroup', 'BudgetGroup', false, '/egf-masters', (select id from service where name='Masters'), 'Budget Group', 9);
 
 insert into eg_action (ID,NAME,URL,QUERYPARAMS,PARENTMODULE,ORDERNUMBER,DISPLAYNAME,ENABLED,CONTEXTROOT,VERSION,CREATEDBY,CREATEDDATE,LASTMODIFIEDBY,LASTMODIFIEDDATE,APPLICATION) values (NEXTVAL('SEQ_EG_ACTION'),'createBudgetGroup_MS',
 '/budgetgroups/_create',null,(select id from service where name='BudgetGroup' and contextroot='/egf-masters'),1,'Create Budget Group',false,'/egf-masters',0,1,now(),1,now(),(select id from service where name='Financials_MS' and parentmodule is null));
@@ -183,7 +183,8 @@ insert into eg_roleaction(roleid, actionid) values ((select id from eg_role wher
 
 
 --schemes
-INSERT INTO service (id, name, enabled, contextroot, parentmodule, displayname, ordernumber) VALUES (nextval('seq_service'), 'Scheme', false, '/egf-masters', (select id from service where name='Masters'), 'Scheme', 10);
+INSERT INTO service (id, code, name, enabled, contextroot, parentmodule, displayname, ordernumber) VALUES
+ (nextval('seq_service'), 'Scheme', 'Scheme', false, '/egf-masters', (select id from service where name='Masters'), 'Scheme', 10);
 
 insert into eg_action (ID,NAME,URL,QUERYPARAMS,PARENTMODULE,ORDERNUMBER,DISPLAYNAME,ENABLED,CONTEXTROOT,VERSION,CREATEDBY,CREATEDDATE,LASTMODIFIEDBY,LASTMODIFIEDDATE,APPLICATION) values (NEXTVAL('SEQ_EG_ACTION'),'createScheme_MS',
 '/schemes/_create',null,(select id from service where name='Scheme' and contextroot='/egf-masters'),1,'Create Scheme',false,'/egf-masters',0,1,now(),1,now(),(select id from service where name='Financials_MS' and parentmodule is null));
@@ -203,7 +204,8 @@ insert into eg_roleaction(roleid, actionid) values ((select id from eg_role wher
 insert into eg_roleaction(roleid, actionid) values ((select id from eg_role where name = 'Super User'), (select id from eg_action where name = 'searchScheme_MS' and contextroot = '/egf-masters'));
 
 --bank brances
-INSERT INTO service (id, name, enabled, contextroot, parentmodule, displayname, ordernumber) VALUES (nextval('seq_service'), 'BankBranch', false, '/egf-masters', (select id from service where name='Masters'), 'Bank Branch', 11);
+INSERT INTO service (id, code, name, enabled, contextroot, parentmodule, displayname, ordernumber) VALUES
+(nextval('seq_service'), 'BankBranch', 'BankBranch', false, '/egf-masters', (select id from service where name='Masters'), 'Bank Branch', 11);
 
 insert into eg_action (ID,NAME,URL,QUERYPARAMS,PARENTMODULE,ORDERNUMBER,DISPLAYNAME,ENABLED,CONTEXTROOT,VERSION,CREATEDBY,CREATEDDATE,LASTMODIFIEDBY,LASTMODIFIEDDATE,APPLICATION) values (NEXTVAL('SEQ_EG_ACTION'),'createBankBranch',
 '/bankbranches/_create',null,(select id from service where name='BankBranch' and contextroot='/egf-masters'),1,'Create BankBranch',false,'/egf-masters',0,1,now(),1,now(),(select id from service where name='Financials_MS' and parentmodule is null));
@@ -223,7 +225,8 @@ insert into eg_roleaction(roleid, actionid) values ((select id from eg_role wher
 insert into eg_roleaction(roleid, actionid) values ((select id from eg_role where name = 'Super User'), (select id from eg_action where name = 'searchBankBranch' and contextroot = '/egf-masters'));
 
 --fundsources
-INSERT INTO service (id, name, enabled, contextroot, parentmodule, displayname, ordernumber) VALUES (nextval('seq_service'), 'FundSource', false, '/egf-masters', (select id from service where name='Masters'), 'Fund Source', 12);
+INSERT INTO service (id, code, name, enabled, contextroot, parentmodule, displayname, ordernumber) VALUES
+(nextval('seq_service'), 'FundSource', 'FundSource', false, '/egf-masters', (select id from service where name='Masters'), 'Fund Source', 12);
 
 insert into eg_action (ID,NAME,URL,QUERYPARAMS,PARENTMODULE,ORDERNUMBER,DISPLAYNAME,ENABLED,CONTEXTROOT,VERSION,CREATEDBY,CREATEDDATE,LASTMODIFIEDBY,LASTMODIFIEDDATE,APPLICATION) values (NEXTVAL('SEQ_EG_ACTION'),'createFundSource',
 '/fundsources/_create',null,(select id from service where name='FundSource' and contextroot='/egf-masters'),1,'Create Fund Source',false,'/egf-masters',0,1,now(),1,now(),(select id from service where name='Financials_MS' and parentmodule is null));
@@ -243,7 +246,8 @@ insert into eg_roleaction(roleid, actionid) values ((select id from eg_role wher
 insert into eg_roleaction(roleid, actionid) values ((select id from eg_role where name = 'Super User'), (select id from eg_action where name = 'searchFundSource' and contextroot = '/egf-masters'));
 
 --functionaries
-INSERT INTO service (id, name, enabled, contextroot, parentmodule, displayname, ordernumber) VALUES (nextval('seq_service'), 'Functionary', false, '/egf-masters', (select id from service where name='Masters'), 'Functionary', 13);
+INSERT INTO service (id, code, name, enabled, contextroot, parentmodule, displayname, ordernumber) VALUES
+(nextval('seq_service'), 'Functionary', 'Functionary', false, '/egf-masters', (select id from service where name='Masters'), 'Functionary', 13);
 
 insert into eg_action (ID,NAME,URL,QUERYPARAMS,PARENTMODULE,ORDERNUMBER,DISPLAYNAME,ENABLED,CONTEXTROOT,VERSION,CREATEDBY,CREATEDDATE,LASTMODIFIEDBY,LASTMODIFIEDDATE,APPLICATION) values (NEXTVAL('SEQ_EG_ACTION'),'createFunctionary',
 '/functionaries/_create',null,(select id from service where name='Functionary' and contextroot='/egf-masters'),1,'Create Functionary',false,'/egf-masters',0,1,now(),1,now(),(select id from service where name='Financials_MS' and parentmodule is null));
@@ -263,7 +267,8 @@ insert into eg_roleaction(roleid, actionid) values ((select id from eg_role wher
 insert into eg_roleaction(roleid, actionid) values ((select id from eg_role where name = 'Super User'), (select id from eg_action where name = 'searchFunctionary' and contextroot = '/egf-masters'));
 
 --COA
-INSERT INTO service (id, name, enabled, contextroot, parentmodule, displayname, ordernumber) VALUES (nextval('seq_service'), 'ChartOfAccount', false, '/egf-masters', (select id from service where name='Masters'), 'Chart Of Accounts', 14);
+INSERT INTO service (id, code, name, enabled, contextroot, parentmodule, displayname, ordernumber) VALUES
+(nextval('seq_service'), 'ChartOfAccount', 'ChartOfAccount', false, '/egf-masters', (select id from service where name='Masters'), 'Chart Of Accounts', 14);
 
 insert into eg_action (ID,NAME,URL,QUERYPARAMS,PARENTMODULE,ORDERNUMBER,DISPLAYNAME,ENABLED,CONTEXTROOT,VERSION,CREATEDBY,CREATEDDATE,LASTMODIFIEDBY,LASTMODIFIEDDATE,APPLICATION) values (NEXTVAL('SEQ_EG_ACTION'),'createChartOfAccount',
 '/chartofaccounts/_create',null,(select id from service where name='ChartOfAccount' and contextroot='/egf-masters'),1,'Create Chart Of Accounts',false,'/egf-masters',0,1,now(),1,now(),(select id from service where name='Financials_MS' and parentmodule is null));
@@ -283,7 +288,8 @@ insert into eg_roleaction(roleid, actionid) values ((select id from eg_role wher
 insert into eg_roleaction(roleid, actionid) values ((select id from eg_role where name = 'Super User'), (select id from eg_action where name = 'searchChartOfAccount' and contextroot = '/egf-masters'));
 
 --COADetails
-INSERT INTO service (id, name, enabled, contextroot, parentmodule, displayname, ordernumber) VALUES (nextval('seq_service'), 'ChartOfAccountDetail', false, '/egf-masters', (select id from service where name='Masters'), 'Chart Of Accounts Detail', 15);
+INSERT INTO service (id, code, name, enabled, contextroot, parentmodule, displayname, ordernumber) VALUES
+(nextval('seq_service'), 'ChartOfAccountDetail', 'ChartOfAccountDetail', false, '/egf-masters', (select id from service where name='Masters'), 'Chart Of Accounts Detail', 15);
 
 insert into eg_action (ID,NAME,URL,QUERYPARAMS,PARENTMODULE,ORDERNUMBER,DISPLAYNAME,ENABLED,CONTEXTROOT,VERSION,CREATEDBY,CREATEDDATE,LASTMODIFIEDBY,LASTMODIFIEDDATE,APPLICATION) values (NEXTVAL('SEQ_EG_ACTION'),'createChartOfAccountDetail',
 '/chartofaccountdetails/_create',null,(select id from service where name='ChartOfAccountDetail' and contextroot='/egf-masters'),1,'Create Chart Of Accounts Detail',false,'/egf-masters',0,1,now(),1,now(),(select id from service where name='Financials_MS' and parentmodule is null));
@@ -303,7 +309,8 @@ insert into eg_roleaction(roleid, actionid) values ((select id from eg_role wher
 insert into eg_roleaction(roleid, actionid) values ((select id from eg_role where name = 'Super User'), (select id from eg_action where name = 'searchChartOfAccountDetail' and contextroot = '/egf-masters'));
 
 --accountentities
-INSERT INTO service (id, name, enabled, contextroot, parentmodule, displayname, ordernumber) VALUES (nextval('seq_service'), 'AccountEntiy', false, '/egf-masters', (select id from service where name='Masters'), 'Account Entity', 16);
+INSERT INTO service (id, code, name, enabled, contextroot, parentmodule, displayname, ordernumber) VALUES
+(nextval('seq_service'), 'AccountEntiy', 'AccountEntiy', false, '/egf-masters', (select id from service where name='Masters'), 'Account Entity', 16);
 
 insert into eg_action (ID,NAME,URL,QUERYPARAMS,PARENTMODULE,ORDERNUMBER,DISPLAYNAME,ENABLED,CONTEXTROOT,VERSION,CREATEDBY,CREATEDDATE,LASTMODIFIEDBY,LASTMODIFIEDDATE,APPLICATION) values (NEXTVAL('SEQ_EG_ACTION'),'createAccountEntiy',
 '/accountentities/_create',null,(select id from service where name='AccountEntiy' and contextroot='/egf-masters'),1,'Create Account Entity',false,'/egf-masters',0,1,now(),1,now(),(select id from service where name='Financials_MS' and parentmodule is null));
@@ -323,7 +330,8 @@ insert into eg_roleaction(roleid, actionid) values ((select id from eg_role wher
 insert into eg_roleaction(roleid, actionid) values ((select id from eg_role where name = 'Super User'), (select id from eg_action where name = 'searchAccountEntiy' and contextroot = '/egf-masters'));
 
 --financialyears
-INSERT INTO service (id, name, enabled, contextroot, parentmodule, displayname, ordernumber) VALUES (nextval('seq_service'), 'FinancialYear', false, '/egf-masters', (select id from service where name='Masters'), 'Financial Year', 17);
+INSERT INTO service (id, code, name, enabled, contextroot, parentmodule, displayname, ordernumber) VALUES
+(nextval('seq_service'), 'FinancialYear', 'FinancialYear', false, '/egf-masters', (select id from service where name='Masters'), 'Financial Year', 17);
 
 insert into eg_action (ID,NAME,URL,QUERYPARAMS,PARENTMODULE,ORDERNUMBER,DISPLAYNAME,ENABLED,CONTEXTROOT,VERSION,CREATEDBY,CREATEDDATE,LASTMODIFIEDBY,LASTMODIFIEDDATE,APPLICATION) values (NEXTVAL('SEQ_EG_ACTION'),'createFinancialYear',
 '/financialyears/_create',null,(select id from service where name='FinancialYear' and contextroot='/egf-masters'),1,'Create Financial Year',false,'/egf-masters',0,1,now(),1,now(),(select id from service where name='Financials_MS' and parentmodule is null));
@@ -343,7 +351,8 @@ insert into eg_roleaction(roleid, actionid) values ((select id from eg_role wher
 insert into eg_roleaction(roleid, actionid) values ((select id from eg_role where name = 'Super User'), (select id from eg_action where name = 'searchFinancialYear' and contextroot = '/egf-masters'));
 
 --fiscalperiods
-INSERT INTO service (id, name, enabled, contextroot, parentmodule, displayname, ordernumber) VALUES (nextval('seq_service'), 'FiscalPeriod', false, '/egf-masters', (select id from service where name='Masters'), 'Fiscal Period', 18);
+INSERT INTO service (id, code, name, enabled, contextroot, parentmodule, displayname, ordernumber) VALUES
+(nextval('seq_service'), 'FiscalPeriod', 'FiscalPeriod', false, '/egf-masters', (select id from service where name='Masters'), 'Fiscal Period', 18);
 
 insert into eg_action (ID,NAME,URL,QUERYPARAMS,PARENTMODULE,ORDERNUMBER,DISPLAYNAME,ENABLED,CONTEXTROOT,VERSION,CREATEDBY,CREATEDDATE,LASTMODIFIEDBY,LASTMODIFIEDDATE,APPLICATION) values (NEXTVAL('SEQ_EG_ACTION'),'createFiscalPeriod',
 '/fiscalperiods/_create',null,(select id from service where name='FiscalPeriod' and contextroot='/egf-masters'),1,'Create Fiscal Period',false,'/egf-masters',0,1,now(),1,now(),(select id from service where name='Financials_MS' and parentmodule is null));
@@ -363,7 +372,8 @@ insert into eg_roleaction(roleid, actionid) values ((select id from eg_role wher
 insert into eg_roleaction(roleid, actionid) values ((select id from eg_role where name = 'Super User'), (select id from eg_action where name = 'searchFiscalPeriod' and contextroot = '/egf-masters'));
 
 --accountdetailtypes
-INSERT INTO service (id, name, enabled, contextroot, parentmodule, displayname, ordernumber) VALUES (nextval('seq_service'), 'AccountDetailType', false, '/egf-masters', (select id from service where name='Masters'), 'Account Detail Type', 19);
+INSERT INTO service (id, code, name, enabled, contextroot, parentmodule, displayname, ordernumber) VALUES
+(nextval('seq_service'), 'AccountDetailType', 'AccountDetailType', false, '/egf-masters', (select id from service where name='Masters'), 'Account Detail Type', 19);
 
 insert into eg_action (ID,NAME,URL,QUERYPARAMS,PARENTMODULE,ORDERNUMBER,DISPLAYNAME,ENABLED,CONTEXTROOT,VERSION,CREATEDBY,CREATEDDATE,LASTMODIFIEDBY,LASTMODIFIEDDATE,APPLICATION) values (NEXTVAL('SEQ_EG_ACTION'),'createAccountDetailType',
 '/accountdetailtypes/_create',null,(select id from service where name='AccountDetailType' and contextroot='/egf-masters'),1,'Create Account Detail Type',false,'/egf-masters',0,1,now(),1,now(),(select id from service where name='Financials_MS' and parentmodule is null));

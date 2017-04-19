@@ -4,6 +4,8 @@ import lombok.*;
 
 import java.util.Date;
 
+import static org.apache.commons.lang3.StringUtils.isEmpty;
+
 @Getter
 @Builder
 @NoArgsConstructor
@@ -24,4 +26,12 @@ public class City {
     private Date createdDate;
     private Long lastModifiedBy;
     private Date lastModifiedDate;
+
+    public boolean isValid() {
+        return !isNameAbsent();
+    }
+
+    public boolean isNameAbsent() {
+        return isEmpty(name);
+    }
 }

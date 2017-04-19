@@ -1,6 +1,7 @@
 package org.egov.tenant.web.controller;
 
 import org.egov.tenant.Resources;
+import org.egov.tenant.domain.exception.InvalidTenantDetailsException;
 import org.egov.tenant.domain.model.City;
 import org.egov.tenant.domain.model.Tenant;
 import org.egov.tenant.domain.model.TenantSearchCriteria;
@@ -18,6 +19,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -80,6 +83,29 @@ public class TenantControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(new Resources().getFileContents("tenantCreateResponse.json")));
+    }
+
+    @Test
+    public void test_should_return_400_when_invalid_tenant_exception() throws Exception {
+
+        Tenant tenant = Tenant.builder()
+            .code("AP.KURNOOL")
+            .description("description")
+            .logoId("logoId")
+            .imageId("imageId")
+            .domainUrl("domainUrl")
+            .type(TenantType.CITY)
+            .city(null)
+            .build();
+
+        when(tenantService.createTenant(any(Tenant.class))).thenThrow(new InvalidTenantDetailsException(tenant));
+
+        mockMvc.perform(post("/v1/tenant/_create")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(new Resources().getFileContents("tenantCreateRequest.json")))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+            .andExpect(content().json(new Resources().getFileContents("tenantCreateErrorResponse.json")));
     }
 
     private List<Tenant> getListOfTenants() {

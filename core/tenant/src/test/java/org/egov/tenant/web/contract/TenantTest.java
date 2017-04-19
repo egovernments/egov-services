@@ -13,22 +13,10 @@ import static org.mockito.Mockito.when;
 public class TenantTest {
 
     @Mock
-    City city;
+    private City cityContract;
 
     @Test
     public void test_should_convert_contract_to_model() {
-        City cityContract = City.builder()
-                .name("Bengaluru")
-                .localName("localname")
-                .districtCode("districtcode")
-                .districtName("districtname")
-                .regionName("regionname")
-                .longitude(35.456)
-                .latitude(75.443)
-                .build();
-
-
-
 
         org.egov.tenant.domain.model.City expectedCityModel = org.egov.tenant.domain.model.City.builder()
                 .name("Bengaluru")
@@ -50,7 +38,7 @@ public class TenantTest {
                 .city(expectedCityModel)
                 .build();
 
-        when(city.toDomain()).thenReturn(expectedCityModel);
+        when(cityContract.toDomain()).thenReturn(expectedCityModel);
 
         Tenant tenantContract = Tenant.builder()
                 .code("AP.KURNOOL")
@@ -59,13 +47,13 @@ public class TenantTest {
                 .imageId("imageId")
                 .domainUrl("domainUrl")
                 .type("CITY")
-                .city(city)
+                .city(cityContract)
                 .build();
 
 
         org.egov.tenant.domain.model.Tenant actualTenantModel = tenantContract.toDomain();
 
-        assertThat(expectedTenantModel).isEqualTo(actualTenantModel);
+        assertThat(actualTenantModel).isEqualTo(expectedTenantModel);
 
     }
 }

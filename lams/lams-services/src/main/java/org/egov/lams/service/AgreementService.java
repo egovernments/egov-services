@@ -141,8 +141,7 @@ public class AgreementService {
 		
 		agreement.setStatus(Status.WORKFLOW);
 		getPositions(agreementRequest);
-		//FIXME get confirmed with ramki and ghanshyam
-	    
+		//FIXME get confirmed with ramki and ghanshyam2  please uncomment the getpositions
 		List<DemandReason> demandReasons = demandRepository.getDemandReason(agreementRequest);
 		if(demandReasons.isEmpty())
 			throw new RuntimeException("No demand reason found for given criteria");

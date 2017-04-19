@@ -91,6 +91,8 @@ public class EgdmCollectedReceipt implements Cloneable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_demand_detail")
 	private EgDemandDetails egdemandDetail;
+	@Column(name = "tenantid")
+	private String tenantId;
 
 	public String toString() {
 		return receiptNumber;

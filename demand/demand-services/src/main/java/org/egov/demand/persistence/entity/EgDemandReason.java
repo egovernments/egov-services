@@ -98,86 +98,17 @@ public class EgDemandReason implements java.io.Serializable {
 	private Date modifiedDate;
 	@OneToMany(mappedBy = "egDemandReason", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<EgDemandReasonDetails> egDemandReasonDetails = new HashSet<EgDemandReasonDetails>(0);
-	@Column(name = "glcodeid")
-	private Long glcodeId;
-
+	@Column(name = "glcode")
+	private Long glcode;
+	@Column(name = "tenantid")
+	private String tenantId;
+	
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append(egDemandReasonMaster).append("-").append(egInstallmentMaster);
 		return sb.toString();
 	}
 
-	public Long getId() {
-		return this.id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public EgDemandReason getEgDemandReason() {
-		return this.egDemandReason;
-	}
-
-	public void setEgDemandReason(EgDemandReason egDemandReason) {
-		this.egDemandReason = egDemandReason;
-	}
-
-	public EgDemandReasonMaster getEgDemandReasonMaster() {
-		return this.egDemandReasonMaster;
-	}
-
-	public void setEgDemandReasonMaster(EgDemandReasonMaster egDemandReasonMaster) {
-		this.egDemandReasonMaster = egDemandReasonMaster;
-	}
-
-	public Installment getEgInstallmentMaster() {
-		return this.egInstallmentMaster;
-	}
-
-	public void setEgInstallmentMaster(Installment egInstallmentMaster) {
-		this.egInstallmentMaster = egInstallmentMaster;
-	}
-
-	public BigDecimal getPercentageBasis() {
-		return this.percentageBasis;
-	}
-
-	public void setPercentageBasis(BigDecimal percentageBasis) {
-		this.percentageBasis = percentageBasis;
-	}
-
-	public Set<EgDemandReasonDetails> getEgDemandReasonDetails() {
-		return egDemandReasonDetails;
-	}
-
-	public void setEgDemandReasonDetails(Set<EgDemandReasonDetails> egDemandReasonDetails) {
-		this.egDemandReasonDetails = egDemandReasonDetails;
-	}
-
-	public void addEgDemandReasonDetails(EgDemandReasonDetails egDemandReasonDetails) {
-		getEgDemandReasonDetails().add(egDemandReasonDetails);
-	}
-
-	public void removeEgDemandReasonDetails(EgDemandReasonDetails egDemandReasonDetails) {
-		getEgDemandReasonDetails().remove(egDemandReasonDetails);
-	}
-
-	public Date getCreateDate() {
-		return createDate;
-	}
-
-	public void setCreateDate(Date createDate) {
-		this.createDate = createDate;
-	}
-
-	public Date getModifiedDate() {
-		return modifiedDate;
-	}
-
-	public void setModifiedDate(Date modifiedDate) {
-		this.modifiedDate = modifiedDate;
-	}
 
 	/**
 	 * @return Returns if the given Object is equal to PropertyImpl
@@ -227,13 +158,4 @@ public class EgDemandReason implements java.io.Serializable {
 		}
 		return hashCode;
 	}
-
-	public Long getGlcodeId() {
-		return glcodeId;
-	}
-
-	public void setGlcodeId(Long glcodeId) {
-		this.glcodeId = glcodeId;
-	}
-
 }

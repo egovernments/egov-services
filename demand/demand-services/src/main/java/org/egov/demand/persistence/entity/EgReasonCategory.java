@@ -87,7 +87,9 @@ public class EgReasonCategory implements java.io.Serializable {
 	private Set<EgDemandReasonMaster> egDemandReasonMasters = new HashSet<EgDemandReasonMaster>(0);
 	@Column(name = "modified_date")
 	private Date modifiedDate;
-
+	@Column(name = "tenantid")
+	private String tenantId;
+	
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append(name).append("(").append(code).append(")");

@@ -3,7 +3,7 @@ package org.egov.lams.repository.builder;
 import java.util.List;
 import java.util.Set;
 
-import org.egov.lams.model.AgreementCriteria;
+import org.egov.lams.model.NoticeCriteria;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -25,39 +25,66 @@ public class NoticeQueryBuilder {
 	
 
 	@SuppressWarnings("unchecked")
-	public static String getNoticeQuery(AgreementCriteria agreementsModel,
-			@SuppressWarnings("rawtypes") List preparedStatementValues) {
+	public static String getNoticeQuery(NoticeCriteria noticeCriteria,@SuppressWarnings("rawtypes") List preparedStatementValues) {
 
-		StringBuilder selectQuery = new StringBuilder("SELECT *,agreement.id as agreementid FROM EGLAMS_AGREEMENT AGREEMENT INNER JOIN eglams_demand demand ON agreement.id=demand.agreementid ");
+		StringBuilder selectQuery = new StringBuilder("SELECT * FROM eglams_notice notice");
 
-		if (!(agreementsModel.getAgreementId() == null && agreementsModel.getAgreementNumber() == null
-				&& (agreementsModel.getFromDate() == null && agreementsModel.getToDate() == null)
-				&& agreementsModel.getStatus() == null && agreementsModel.getTenderNumber() == null
-				&& agreementsModel.getTinNumber() == null && agreementsModel.getTradelicenseNumber() == null
-				&& agreementsModel.getAllottee() == null && agreementsModel.getAsset() == null
-				&& agreementsModel.getTenantId() == null && agreementsModel.getAcknowledgementNumber() == null
-				&& agreementsModel.getStateId() == null))
+		if (!(noticeCriteria.getId() == null && noticeCriteria.getAgreementNumber() == null
+				&& (noticeCriteria.getAckNumber() == null && noticeCriteria.getAssetCategory() == null)
+				&& noticeCriteria.getNoticeNo() == null && noticeCriteria.getNoticeNumber() == null
+				&& noticeCriteria.getTenantId() == null))
 		{
 			selectQuery.append(" WHERE");
 			boolean isAppendAndClause = false;
 
-			if (agreementsModel.getAgreementId() != null) {
-				selectQuery.append(" AGREEMENT.ID IN (" + getIdQuery(agreementsModel.getAgreementId()));
+			if (noticeCriteria.getId() != null) {
+				selectQuery.append(" notice.id IN (" + getIdQuery(noticeCriteria.getId()));
 				isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			}
+			
+			if (noticeCriteria.getAgreementNumber() != null) {
+				isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+				selectQuery.append(" notice.AgreementNumber=?");
+				preparedStatementValues.add(noticeCriteria.getAgreementNumber());
+			}
+			if (noticeCriteria != null) {
+				isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+				selectQuery.append(" notice.AckNumber=?");
+				preparedStatementValues.add(noticeCriteria.getAckNumber());
+			}
+			if (noticeCriteria != null) {
+				isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+				selectQuery.append(" notice.AssetCategory=?");
+				preparedStatementValues.add(noticeCriteria.getAssetCategory());
+			}
+			if (noticeCriteria != null) {
+				isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+				selectQuery.append(" notice.NoticeNo=?");
+				preparedStatementValues.add(noticeCriteria.getNoticeNo());
+			}
+			if (noticeCriteria != null) {
+				isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+				selectQuery.append(" notice.NoticeNumber=?");
+				preparedStatementValues.add(noticeCriteria.getNoticeNumber());
+			}
+			if (noticeCriteria != null) {
+				isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+				selectQuery.append(" notice.TenantId=?");
+				preparedStatementValues.add(noticeCriteria.getTenantId());
 			}
 		}
 
-		selectQuery.append(" ORDER BY AGREEMENT.ID");
+		selectQuery.append(" ORDER BY notice.ID");
 		selectQuery.append(" LIMIT ?");
-		if (agreementsModel.getSize() != null)
-			preparedStatementValues.add(Integer.parseInt(agreementsModel.getSize()));
+		if (noticeCriteria.getSize() != null)
+			preparedStatementValues.add(noticeCriteria.getSize());
 		else
 			preparedStatementValues.add(20);
 
 		selectQuery.append(" OFFSET ?");
 
-		if (agreementsModel.getOffSet() != null)
-			preparedStatementValues.add(Integer.parseInt(agreementsModel.getOffSet()));
+		if (noticeCriteria.getOffset() != null)
+			preparedStatementValues.add(noticeCriteria.getOffset());
 		else
 			preparedStatementValues.add(0);
 		System.err.println(selectQuery.toString());

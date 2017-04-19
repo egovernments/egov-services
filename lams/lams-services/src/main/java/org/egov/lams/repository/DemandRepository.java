@@ -59,6 +59,7 @@ public class DemandRepository {
 		List<Demand> demands = new ArrayList<>();
 		List<DemandDetails> demandDetails = new ArrayList<>();
 		Demand demand = new Demand();
+		demand.setTenantId(agreementRequest.getAgreement().getTenantId());
 		demand.setInstallment(demandReasons.get(0).getTaxPeriod());
 		demand.setModuleName("Leases And Agreements");
 
@@ -76,6 +77,7 @@ public class DemandRepository {
 		}
 		demand.setDemandDetails(demandDetails);
 		demands.add(demand);
+		System.err.println(demand);
 
 		return demands;
 	}

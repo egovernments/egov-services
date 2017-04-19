@@ -84,8 +84,8 @@ public class Installment implements java.io.Serializable {
 	private Date fromDate;
 	@Column(name = "end_date")
 	private Date toDate;
-	@Column(name = "id_module")
-	private Long module;
+	@Column(name = "module")
+	private String module;
 	@Column(name = "installment_num")
 	private Integer installmentNumber;
 	@Column(name = "description")
@@ -98,7 +98,8 @@ public class Installment implements java.io.Serializable {
 	private String installmentType;
 	@Column(name = "financial_year")
 	private String finYearRange;
-
+	@Column(name = "tenantid")
+	private String tenantId;
 	/**
 	 * @return Returns the id.
 	 */
@@ -155,24 +156,6 @@ public class Installment implements java.io.Serializable {
 	 * @param fromDate
 	 *            The fromDate to set.
 	 */
-	public void setFromDate(final java.util.Date fromDate) {
-		this.fromDate = fromDate;
-	}
-
-	/**
-	 * @return Returns the module.
-	 */
-	public Long getModule() {
-		return module;
-	}
-
-	/**
-	 * @param module
-	 *            The module to set.
-	 */
-	public void setModule(final Long module) {
-		this.module = module;
-	}
 
 	/**
 	 * @return Returns the toDate.

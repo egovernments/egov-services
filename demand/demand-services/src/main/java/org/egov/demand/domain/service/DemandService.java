@@ -43,6 +43,7 @@ public class DemandService {
 		egDemand.setIsHistory("N");
 		egDemand.setCreateDate(new Date());
 		egDemand.setModifiedDate(new Date());
+		egDemand.setTenantId(demand.getTenantId());
 		for (DemandDetails demandDetail : demand.getDemandDetails()) {
 			if (demandDetail.getTaxAmount() != null && demandDetail.getTaxReason() != null
 					&& !demandDetail.getTaxPeriod().isEmpty()) {
@@ -51,6 +52,7 @@ public class DemandService {
 				if (demandReason != null) {
 					egDemandDetails = EgDemandDetails.fromReasonAndAmounts(demandDetail.getTaxAmount(), demandReason,
 							BigDecimal.ZERO);
+					egDemandDetails.setTenantId(demand.getTenantId());
 					egDemandDetails.setEgDemand(egDemand);
 					demandDetailsList.add(egDemandDetails);
 				} else

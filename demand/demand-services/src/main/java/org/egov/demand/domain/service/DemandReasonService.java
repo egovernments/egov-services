@@ -17,12 +17,10 @@ public class DemandReasonService {
 	private ModuleRepository moduleRepository;
 
 	public EgDemandReason findByCodeInstModule(String demandReasonCode, String instDescription, String moduleName) {
-		Long moduleId = moduleRepository.fetchModuleByName(moduleName).getId();
-		return demandReasonRepository.findByCodeInstModule(demandReasonCode, instDescription, moduleId);
+		return demandReasonRepository.findByCodeInstModule(demandReasonCode, instDescription, moduleName);
 	}
 
 	public List<EgDemandReason> search(DemandReasonCriteria demandReasonCriteria) {
-		Long moduleId = moduleRepository.fetchModuleByName(demandReasonCriteria.getModuleName()).getId();
-		return demandReasonRepository.search(moduleId);
+		return demandReasonRepository.search(demandReasonCriteria.getModuleName());
 	}
 }

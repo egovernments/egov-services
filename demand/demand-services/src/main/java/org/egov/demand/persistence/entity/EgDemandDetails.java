@@ -109,12 +109,14 @@ public class EgDemandDetails implements Serializable, Cloneable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_demand")
 	private EgDemand egDemand;
+	@Column(name = "tenantid")
+	private String tenantId;
 
 	public DemandDetails toDomain() {
 		return DemandDetails.builder().id(id).taxAmount(amount).collectionAmount(amtCollected).rebateAmount(amtRebate)
 				.taxReason(egDemandReason.getEgDemandReasonMaster().getReasonMaster())
 				.taxPeriod(egDemandReason.getEgInstallmentMaster().getDescription())
-				.glCode(egDemandReason.getGlcodeId()).isActualDemand(1).build();
+				.glCode(egDemandReason.getGlcode()).isActualDemand(1).build();
 	}
 
 	/**

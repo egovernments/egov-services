@@ -12,11 +12,11 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 public interface InstallmentRepository
 		extends JpaRepository<Installment, java.lang.Long>, JpaSpecificationExecutor<Installment> {
 
-	Installment findByDescriptionAndModule(String description, Long module);
+	Installment findByDescriptionAndModule(String description, String moduleName);
 
-	List<Installment> findByFromDateAndToDateAndModule(Date fromDate, Date toDate, Long module);
+	List<Installment> findByFromDateAndToDateAndModule(Date fromDate, Date toDate, String moduleName);
 	
-	List<Installment> findByFromDateAndToDateAndInstallmentTypeAndModule(Date fromDate, Date toDate, String installmentType, Long module);
+	List<Installment> findByFromDateAndToDateAndInstallmentTypeAndModule(Date fromDate, Date toDate, String installmentType, String moduleName);
 
 	@Transactional
 	Installment save(Installment installment);

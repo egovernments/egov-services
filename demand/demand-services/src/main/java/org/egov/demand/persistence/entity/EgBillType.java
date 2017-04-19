@@ -80,7 +80,9 @@ public class EgBillType implements java.io.Serializable {
 	private Date createDate;
 	@Column(name = "modified_date")
 	private Date modifiedDate;
-
+	@Column(name = "tenantid")
+	private String tenantId;
+	
 	public Long getId() {
 		return this.id;
 	}

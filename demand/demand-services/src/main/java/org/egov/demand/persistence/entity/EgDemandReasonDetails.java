@@ -96,7 +96,8 @@ public class EgDemandReasonDetails implements java.io.Serializable {
 	private BigDecimal flatAmount;
 	@Column(name = "is_flatamnt_max")
 	private Integer isFlatAmntMax;
-
+	@Column(name = "tenantid")
+	private String tenantId;
 	// Property accessors
 
 	@Override

@@ -110,6 +110,8 @@ public class EgBillDetails implements java.io.Serializable, Comparable<EgBillDet
 	private EgDemandReason egDemandReason;
 	@Column(name = "purpose")
 	private String purpose;
+	@Column(name = "tenantid")
+	private String tenantId;
 
 	public EgBillDetails(BillDetailInfo billDetail) {
 		this.createDate = new Date();

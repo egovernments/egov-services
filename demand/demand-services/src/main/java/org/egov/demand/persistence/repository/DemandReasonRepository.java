@@ -12,12 +12,12 @@ import org.springframework.data.repository.query.Param;
 
 public interface DemandReasonRepository
 		extends JpaRepository<EgDemandReason, java.lang.Long>, JpaSpecificationExecutor<EgDemandReason> {
-	@Query(" from EgDemandReason dr where dr.egDemandReasonMaster.code=:demandReasonCode and dr.egInstallmentMaster.description=:instDescription and dr.egInstallmentMaster.module=:moduleId")
+	@Query(" from EgDemandReason dr where dr.egDemandReasonMaster.code=:demandReasonCode and dr.egInstallmentMaster.description=:instDescription and dr.egInstallmentMaster.module=:moduleName")
 	EgDemandReason findByCodeInstModule(@Param("demandReasonCode") String demandReasonCode,
-			@Param("instDescription") String instDescription, @Param("moduleId") Long moduleId);
+			@Param("instDescription") String instDescription, @Param("moduleName") String moduleName);
 
-	@Query(" from EgDemandReason dr where dr.egInstallmentMaster.module=:moduleId")
-	List<EgDemandReason> search(@Param("moduleId") Long moduleId);
+	@Query(" from EgDemandReason dr where dr.egInstallmentMaster.module=:moduleName")
+	List<EgDemandReason> search(@Param("moduleName") String moduleName);
 
 	@Transactional
 	EgDemandReason save(EgDemandReason demandReason);

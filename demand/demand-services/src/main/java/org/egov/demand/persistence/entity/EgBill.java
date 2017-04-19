@@ -101,8 +101,8 @@ public class EgBill implements java.io.Serializable {
 	private Date issueDate;
 	@Column(name = "last_date")
 	private Date lastDate;
-	@Column(name = "module_id")
-	private Long module;
+	@Column(name = "module")
+	private String module;
 	@Column(name = "user_id")
 	private Long userId;
 	@Column(name = "create_date")
@@ -153,6 +153,8 @@ public class EgBill implements java.io.Serializable {
 	private Character callBackForApportion;
 	@Column(name = "emailid")
 	private String emailId;
+	@Column(name = "tenantid")
+	private String tenantId;
 
 	public EgBill(BillInfo bill) {
 		this.egDemand = bill.getDemandId();
@@ -162,7 +164,7 @@ public class EgBill implements java.io.Serializable {
 		this.billNo = bill.getBillNumber();
 		this.issueDate = bill.getIssuedDate();
 		this.lastDate = bill.getLastDate();
-		// this.module = bill.getModuleName();
+		this.module = bill.getModuleName();
 		// this.userId = bill.getUserid();
 		this.createDate = new Date();
 		this.modifiedDate = new Date();

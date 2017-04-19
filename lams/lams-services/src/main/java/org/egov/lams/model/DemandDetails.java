@@ -16,4 +16,5 @@ public class DemandDetails {
 	private String taxPeriod;
 	private Long glCode;
 	private Integer isActualDemand;
+	private String tenantId;
 }

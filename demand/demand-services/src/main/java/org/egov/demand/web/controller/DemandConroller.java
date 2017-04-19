@@ -119,6 +119,8 @@ public class DemandConroller {
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> create(@RequestBody @Valid DemandRequest demandRequest, BindingResult bindingResult) {
 		EgDemand egDemand = null;
+		
+		System.err.println(demandRequest.getDemand().get(0));
 		if (bindingResult.hasErrors()) {
 			return errHandler.getErrorResponseEntityForBindingErrors(bindingResult, demandRequest.getRequestInfo());
 		}

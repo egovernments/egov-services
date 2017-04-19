@@ -106,6 +106,8 @@ public class EgDemand implements java.io.Serializable {
 	private BigDecimal minAmtPayable = BigDecimal.ZERO;
 	@Column(name = "amt_rebate")
 	private BigDecimal amtRebate = BigDecimal.ZERO;
+	@Column(name = "tenantid")
+	private String tenantId;
 
 	public Demand toDomain() {
 		return Demand.builder().id(id).installment(egInstallmentMaster.getDescription())

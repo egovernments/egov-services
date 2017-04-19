@@ -79,7 +79,7 @@ public class EgDemandReasonMaster implements java.io.Serializable {
 	@GeneratedValue(generator = SEQ_EGDEMANDREASONMASTER, strategy = GenerationType.SEQUENCE)
 	private Long id;
 	@Column(name = "module")
-	private Long egModule;
+	private String module;
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "category")
 	private EgReasonCategory egReasonCategory;
@@ -99,97 +99,6 @@ public class EgDemandReasonMaster implements java.io.Serializable {
 	private Set<EgDemandReason> egDemandReasons = new HashSet<EgDemandReason>(0);
 	@Column(name = "isdemand")
 	private Boolean isDemand;
-
-	public String toString() {
-		return code;
-	}
-
-	public Long getId() {
-		return this.id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public Long getEgModule() {
-		return this.egModule;
-	}
-
-	public void setEgModule(Long egModule) {
-		this.egModule = egModule;
-	}
-
-	public EgReasonCategory getEgReasonCategory() {
-		return this.egReasonCategory;
-	}
-
-	public void setEgReasonCategory(EgReasonCategory egReasonCategory) {
-		this.egReasonCategory = egReasonCategory;
-	}
-
-	public String getReasonMaster() {
-		return this.reasonMaster;
-	}
-
-	public void setReasonMaster(String reasonMaster) {
-		this.reasonMaster = reasonMaster;
-	}
-
-	public String getIsDebit() {
-		return this.isDebit;
-	}
-
-	public void setIsDebit(String isDebit) {
-		this.isDebit = isDebit;
-	}
-
-	public String getCode() {
-		return this.code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
-	public Long getOrderId() {
-		return this.orderId;
-	}
-
-	public void setOrderId(Long orderId) {
-		this.orderId = orderId;
-	}
-
-	public Set<EgDemandReason> getEgDemandReasons() {
-		return this.egDemandReasons;
-	}
-
-	public void setEgDemandReasons(Set<EgDemandReason> egDemandReasons) {
-		this.egDemandReasons = egDemandReasons;
-	}
-
-	public Date getCreatedDate() {
-		return createdDate;
-	}
-
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-
-	public Date getModifiedDate() {
-		return modifiedDate;
-	}
-
-	public void setModifiedDate(Date modifiedDate) {
-		this.modifiedDate = modifiedDate;
-	}
-
-	public Boolean getIsDemand() {
-		return isDemand;
-	}
-
-	public void setIsDemand(Boolean isDemand) {
-		this.isDemand = isDemand;
-	}
-
+	@Column(name = "tenantid")
+	private String tenantId;
 }

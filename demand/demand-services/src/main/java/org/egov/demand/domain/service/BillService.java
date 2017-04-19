@@ -28,7 +28,7 @@ public class BillService {
 		EgBill egBill = new EgBill(billInfo);
 		List<EgBillDetails> billDetails = new ArrayList<EgBillDetails>();
 		egBill.setEgDemand(demandId);
-		egBill.setModule(moduleRepository.fetchModuleByName(billInfo.getModuleName()).getId());
+		egBill.setModule(billInfo.getModuleName());
 		egBill.setEgBillType(billTypeRepository.findByName(billInfo.getBillType()));
 		egBill.setUserId(1l);
 		for (BillDetailInfo billDetailInfo : billInfo.getBillDetailInfos()) {

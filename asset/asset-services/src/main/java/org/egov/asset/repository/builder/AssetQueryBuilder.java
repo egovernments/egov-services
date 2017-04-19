@@ -91,7 +91,7 @@ public class AssetQueryBuilder {
 		if (searchAsset.getTenantId() != null) {
 			isAppendAndClause = true;
 			selectQuery.append(" ASSET.tenantId = ?");
-			preparedStatementValues.add(searchAsset.getTenantId().trim());
+			preparedStatementValues.add(searchAsset.getTenantId());
 		}
 
 		if (searchAsset.getId() != null) {

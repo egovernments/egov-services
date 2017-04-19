@@ -57,10 +57,13 @@ import org.egov.asset.service.AssetService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -80,6 +83,13 @@ public class AssetController {
 	
 	@Autowired
 	private ApplicationProperties applicationProperties;
+	
+	@InitBinder
+	public void initBinder ( WebDataBinder binder )
+	{
+	    StringTrimmerEditor stringtrimmer = new StringTrimmerEditor(true);  
+	    binder.registerCustomEditor(String.class, stringtrimmer);
+	}
 
 	@PostMapping("_search")
 	@ResponseBody

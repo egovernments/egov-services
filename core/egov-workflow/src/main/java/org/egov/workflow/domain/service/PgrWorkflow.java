@@ -29,6 +29,7 @@ public class PgrWorkflow implements Workflow {
 
     public static final String STATE_ID = "stateId";
     public static final String DEPARTMENT = "department";
+    public static final String IN_PROGRESS = "IN PROGRESS";
     private final ComplaintRouterService complaintRouterService;
     private final StateService stateService;
     private final EmployeeRepository employeeRepository;
@@ -193,6 +194,7 @@ public class PgrWorkflow implements Workflow {
             if(null == task.getAssignee()) {
                 state.setOwnerPosition(getAssignee(null, task.getComplaintTypeCode(), task.getCurrentAssignee()).getId());
                 state.setPreviousOwner(task.getCurrentAssignee());
+                state.setValue(IN_PROGRESS);
             }
             else
                 state.setOwnerPosition(Long.valueOf(task.getAssignee()));

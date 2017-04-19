@@ -15,11 +15,11 @@ import java.util.*;
 @Builder
 public class ServiceRequest {
 
-    public static final String VALUES_ASSIGNEE_ID = "assignment_id";
+    public static final String VALUES_ASSIGNEE_ID = "assigneeId";
     public static final String VALUES_STATE_ID = "stateId";
     public static final String STATE_DETAILS = "stateDetails";
     private static final String WORKFLOW_TYPE = "Complaint";
-    public static final String STATUS = "status";
+    public static final String STATUS = "complaintStatus";
     public static final String VALUES_APPROVAL_COMMENT = "approvalComments";
     private static final String CURRENT_ASSIGNEE = "currentAssignee";
     private static final String ESCALATION_STATUS = "IN PROGRESS";
@@ -110,8 +110,7 @@ public class ServiceRequest {
         getValues().put(VALUES_STATE_ID, stateId);
     }
 
-    public WorkflowRequest getWorkFlowRequestForEscalation(){
-        RequestInfo requestInfo = new RequestInfo();
+    public WorkflowRequest getWorkFlowRequestForEscalation(RequestInfo requestInfo){
         String complaintType = this.complaintTypeCode;
         String crn = this.getCrn();
         Map<String, Attribute> valuesToSet = getWorkFlowRequestValues(values, complaintType);

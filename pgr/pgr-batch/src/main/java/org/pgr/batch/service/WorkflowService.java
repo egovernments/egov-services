@@ -1,4 +1,5 @@
 package org.pgr.batch.service;
+import org.egov.common.contract.request.RequestInfo;
 import org.pgr.batch.repository.ComplaintRestRepository;
 import org.pgr.batch.repository.WorkflowRepository;
 import org.pgr.batch.repository.contract.ServiceRequest;
@@ -20,8 +21,8 @@ public class WorkflowService {
 		this.complaintRestRepository = complaintRestRepository;
 	}
 
-	public ServiceRequest enrichWorkflowForEscalation(ServiceRequest serviceRequest) {
-        WorkflowRequest escalationRequest = serviceRequest.getWorkFlowRequestForEscalation();
+	public ServiceRequest enrichWorkflowForEscalation(ServiceRequest serviceRequest, RequestInfo requestInfo) {
+        WorkflowRequest escalationRequest = serviceRequest.getWorkFlowRequestForEscalation(requestInfo);
         WorkflowResponse workflowResponse = workflowRepository.update(escalationRequest);
 
         if (workflowResponse != null)

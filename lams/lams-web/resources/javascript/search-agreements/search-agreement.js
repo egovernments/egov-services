@@ -226,7 +226,7 @@ class AgreementSearch extends React.Component {
     {
       if (agreements.length>0) {
         return agreements.map((item,index)=>
-        {
+        { var category_name = getValueByName("name",item.asset.assetCategory.id);
               return (<tr key={index}>
                 <td>{index+1}</td>
                                   <td>{item.agreementNumber} </td>
@@ -235,20 +235,14 @@ class AgreementSearch extends React.Component {
                                   <td>{item.asset.locationDetails.zone}</td>
 
 
-                                  <td>{item.asset.assetCategory.id?getValueByName("name",item.asset.assetCategory.id):"Null"}</td>
+                                  <td>{item.asset.assetCategory.id?category_name:"Null"}</td>
                                   <td>{item.asset.code}</td>
                                   <td>{item.tradelicenseNumber}</td>
                                   <td>{item.agreementDate}</td>
                                   <td>
                                       <div className="styled-select">
-                                          <select id="myOptions" onChange={(e)=>{
-                                            handleSelectChange(e.target.value, item.asset.id, item.agreementNumber, getValueByName("name",item.asset.assetCategory.id), item.acknowledgementNumber)
-                                          }}>
-                                              <option value="">Select Action</option>
-                                              <option value="view">View</option>
-                                              <option value="collTax">Collect Tax</option>
-                                            { /*<option value="renew">Renew</option> */}
-                                          </select>
+                                      getOption((category_name == "Land" || category_name == "shop"));
+
                                       </div>
                                   </td>
                   </tr>
@@ -262,6 +256,32 @@ class AgreementSearch extends React.Component {
           </tr>)
       }
 
+    }
+    const getOption=function(isShopOrLand) {
+        if (isShopOrLand) {
+          return(
+            <select id="myOptions" onChange={(e)=>{
+              handleSelectChange(e.target.value, item.asset.id, item.agreementNumber, getValueByName("name",item.asset.assetCategory.id), item.acknowledgementNumber)
+            }}>
+                <option value="">Select Action</option>
+                <option value="view">View</option>
+                <option value="renew">Renew</option>
+                <option value="collTax">Collect Tax</option>
+            </select>
+          )
+
+        } else {
+          return(
+            <select id="myOptions" onChange={(e)=>{
+              handleSelectChange(e.target.value, item.asset.id, item.agreementNumber, getValueByName("name",item.asset.assetCategory.id), item.acknowledgementNumber)
+            }}>
+                <option value="">Select Action</option>
+                <option value="view">View</option>
+                <option value="collTax">Collect Tax</option>
+            </select>
+          )
+
+        }
     }
     const disbaled=function(type) {
         if (type==="view") {

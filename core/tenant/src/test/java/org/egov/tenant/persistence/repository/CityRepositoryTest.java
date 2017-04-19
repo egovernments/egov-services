@@ -7,8 +7,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -26,11 +26,11 @@ public class CityRepositoryTest {
     private CityRepository cityRepository;
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Before
     public void setUp() throws Exception {
-        cityRepository = new CityRepository(jdbcTemplate);
+        cityRepository = new CityRepository(namedParameterJdbcTemplate);
     }
 
     @Test
@@ -48,7 +48,7 @@ public class CityRepositoryTest {
 
         cityRepository.save(city, "AP.KURNOOL");
 
-        List<Map<String, Object>> result = jdbcTemplate.query("SELECT * FROM city", new CityResultExtractor());
+        List<Map<String, Object>> result = namedParameterJdbcTemplate.query("SELECT * FROM city", new CityResultExtractor());
 
         Map<String, Object> row = result.get(0);
         assertThat(row.get(ID)).isEqualTo(1L);

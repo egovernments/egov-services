@@ -1656,7 +1656,9 @@ function commonAddAndUpdate(tableName, modalName, object) {
                     if (object == "assignments") {
                         employeeSubObject[object]["hod"] = [];
                         if (tempListBox.length > 0) {
-                            employeeSubObject[object]["hod"].push(tempListBox);
+                            tempListBox.map(function(val) {
+                              employeeSubObject[object]["hod"].push(val);
+                            })
                         }
                         employee[object].push(Object.assign({}, employeeSubObject[object]));
                         updateTable("#" + tableName, modalName, object);

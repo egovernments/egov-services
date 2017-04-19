@@ -9,6 +9,19 @@ import java.util.Date;
 @Getter
 @Builder
 public class Tenant {
+
+    public static String ID = "id",
+        CODE = "code",
+        DESCRIPTION = "description",
+        LOGO_ID = "logoid",
+        IMAGE_ID = "imageid",
+        DOMAIN_URL = "domainurl",
+        TYPE = "type",
+        CREATED_BY = "createdby",
+        CREATED_DATE = "createddate",
+        LAST_MODIFIED_BY = "lastmodifiedby",
+        LAST_MODIFIED_DATE = "lastmodifieddate";
+
     private Long id;
     private String code;
     private String description;
@@ -31,29 +44,5 @@ public class Tenant {
                 .domainUrl(domainUrl)
                 .type(type)
                 .build();
-    }
-
-    public enum Fields {
-        ID("id"),
-        CODE("code"),
-        DESCRIPTION("description"),
-        LOGO_ID("logoid"),
-        IMAGE_ID("imageid"),
-        DOMAIN_URL("domainurl"),
-        TYPE("type"),
-        CREATED_BY("createdby"),
-        CREATED_DATE("createddate"),
-        LAST_MODIFIED_BY("lastmodifiedby"),
-        LAST_MODIFIED_DATE("lastmodifieddate");
-
-        private String value;
-
-        Fields(String value) {
-            this.value = value;
-        }
-
-        public String getValue() {
-            return value;
-        }
     }
 }

@@ -1,128 +1,137 @@
 package org.egov.tenant.persistence.repository;
 
 import org.egov.tenant.domain.model.City;
+import org.egov.tenant.domain.model.Tenant;
 import org.egov.tenant.domain.model.TenantSearchCriteria;
 import org.egov.tenant.domain.model.TenantType;
-import org.egov.tenant.persistence.entity.Tenant;
-import org.egov.tenant.persistence.repository.builder.TenantQueryBuilder;
-import org.egov.tenant.persistence.rowmapper.TenantRowMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.junit4.SpringRunner;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
+import static org.egov.tenant.persistence.entity.Tenant.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(SpringRunner.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 public class TenantRepositoryTest {
+    private static final List<String> TENANT_CODES = asList("AP.KURNOOL", "AP.GUNTOOR");
+
+    @MockBean
+    private CityRepository cityRepository;
+
+    @Autowired
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     private TenantRepository tenantRepository;
 
-    @Mock
-    private JdbcTemplate jdbcTemplate;
-
-    @Mock
-    private TenantQueryBuilder tenantQueryBuilder;
-
-    @Mock
-    private CityRepository cityRepository;
-
     @Before
     public void setUp() throws Exception {
-        tenantRepository = new TenantRepository(jdbcTemplate, tenantQueryBuilder, cityRepository);
+        tenantRepository = new TenantRepository(cityRepository, namedParameterJdbcTemplate);
     }
 
     @Test
-    public void test_should_retrieve_tenant() {
-        List<Tenant> listOfEntities = getListOfEntities();
-        TenantSearchCriteria tenantSearchCriteria = mock(TenantSearchCriteria.class);
-        when(tenantQueryBuilder.getSearchQuery(tenantSearchCriteria)).thenReturn("query");
-        when(jdbcTemplate.query(eq("query"), any(TenantRowMapper.class))).thenReturn(listOfEntities);
+    @Sql(scripts = {"/sql/clearCity.sql", "/sql/clearTenant.sql", "/sql/insertTenantData.sql"})
+    public void test_should_retrieve_tenant() throws Exception {
+        TenantSearchCriteria tenantSearchCriteria = TenantSearchCriteria.builder()
+            .tenantCodes(TENANT_CODES)
+            .build();
 
-        City city = new City();
+        City guntoorCity = City.builder().id(1L).build();
+        City kurnoolCity = City.builder().id(2L).build();
 
-        when(cityRepository.find("AP.KURNOOL")).thenReturn(city);
-        when(cityRepository.find("AP.GUNTOOR")).thenReturn(city);
+        when(cityRepository.find("AP.KURNOOL")).thenReturn(kurnoolCity);
+        when(cityRepository.find("AP.GUNTOOR")).thenReturn(guntoorCity);
 
-        List<org.egov.tenant.domain.model.Tenant> result = tenantRepository.find(tenantSearchCriteria);
+        List<Tenant> tenants = tenantRepository.find(tenantSearchCriteria);
 
-        assertThat(result.get(0).getId()).isEqualTo(1);
-        assertThat(result.get(0).getCity()).isEqualTo(city);
-        assertThat(result.get(1).getId()).isEqualTo(2);
-        assertThat(result.get(1).getCity()).isEqualTo(city);
+        assertThat(tenants.size()).isEqualTo(2);
+        Tenant tenant = tenants.get(0);
+        assertThat(tenant.getId()).isEqualTo(1L);
+        assertThat(tenant.getCode()).isEqualTo("AP.KURNOOL");
+        assertThat(tenant.getDescription()).isEqualTo("description");
+        assertThat(tenant.getDomainUrl()).isEqualTo("http://egov.ap.gov.in/kurnool");
+        assertThat(tenant.getLogoId()).isEqualTo("d45d7118-2013-11e7-93ae-92361f002671");
+        assertThat(tenant.getImageId()).isEqualTo("8716872c-cd50-4fbb-a0d6-722e6bc9c143");
+        assertThat(tenant.getType()).isEqualTo(TenantType.CITY);
+        assertThat(tenant.getCity()).isEqualTo(kurnoolCity);
+        assertThat(tenants.get(1).getCode()).isEqualTo("AP.GUNTOOR");
+        assertThat(tenants.get(1).getCity()).isEqualTo(guntoorCity);
     }
 
     @Test
-    public void test_should_save_tenant() {
-        when(tenantQueryBuilder.getInsertQuery()).thenReturn("insert query");
-        ArrayList<Object> fields = new ArrayList<Object>() {{
-            add("AP.KURNOOL");
-            add("description");
-            add("domainUrl");
-            add("logoid");
-            add("imageid");
-            add(1L);
-            add(1L);
-        }};
-        when(jdbcTemplate.update(
-                eq("insert query"),
-                eq("AP.KURNOOL"),
-                eq("description"),
-                eq("domainUrl"),
-                eq("logoid"),
-                eq("imageid"),
-                eq("CITY"),
-                eq(1L),
-                any(Date.class),
-                eq(1L),
-                any(Date.class))
-        ).thenReturn(1);
+    @Sql(scripts = {"/sql/clearCity.sql", "/sql/clearTenant.sql"})
+    public void test_should_save_tenant() throws Exception {
+        City city = City.builder().id(1L).build();
 
-        City city = new City();
-
-        org.egov.tenant.domain.model.Tenant tenant = org.egov.tenant.domain.model.Tenant.builder()
-                .code("AP.KURNOOL")
-                .description("description")
-                .domainUrl("domainUrl")
-                .logoId("logoid")
-                .imageId("imageid")
-                .type(TenantType.CITY)
-                .city(city)
-                .build();
+        Tenant tenant = Tenant.builder()
+            .code("AP.KURNOOL")
+            .description("description")
+            .domainUrl("http://egov.ap.gov.in/kurnool")
+            .logoId("d45d7118-2013-11e7-93ae-92361f002671")
+            .imageId("8716872c-cd50-4fbb-a0d6-722e6bc9c143")
+            .type(TenantType.CITY)
+            .city(city)
+            .build();
 
         tenantRepository.save(tenant);
 
+        List<Map<String, Object>> result = namedParameterJdbcTemplate.query("SELECT * FROM tenant", new TenantResultExtractor());
+        Map<String, Object> row = result.get(0);
+        assertThat(row.get(ID)).isEqualTo(1L);
+        assertThat(row.get(CODE)).isEqualTo("AP.KURNOOL");
+        assertThat(row.get(DESCRIPTION)).isEqualTo("description");
+        assertThat(row.get(DOMAIN_URL)).isEqualTo("http://egov.ap.gov.in/kurnool");
+        assertThat(row.get(LOGO_ID)).isEqualTo("d45d7118-2013-11e7-93ae-92361f002671");
+        assertThat(row.get(IMAGE_ID)).isEqualTo("8716872c-cd50-4fbb-a0d6-722e6bc9c143");
+        assertThat(row.get(TYPE)).isEqualTo("CITY");
+        assertThat(row.get(CREATED_BY)).isEqualTo(1L);
+        assertThat(row.get(CREATED_DATE)).isNotNull();
+        assertThat(row.get(LAST_MODIFIED_BY)).isEqualTo(1L);
+        assertThat(row.get(LAST_MODIFIED_DATE)).isNotNull();
+
         verify(cityRepository).save(city, "AP.KURNOOL");
-        verify(jdbcTemplate).update(
-                eq("insert query"),
-                eq("AP.KURNOOL"),
-                eq("description"),
-                eq("domainUrl"),
-                eq("logoid"),
-                eq("imageid"),
-                eq("CITY"),
-                eq(1L),
-                any(Date.class),
-                eq(1L),
-                any(Date.class)
-        );
     }
 
-    private List<Tenant> getListOfEntities() {
-        return asList(
-                Tenant.builder().id(1L).code("AP.KURNOOL").build(),
-                Tenant.builder().id(2L).code("AP.GUNTOOR").build()
-        );
-    }
+    class TenantResultExtractor implements ResultSetExtractor<List<Map<String, Object>>> {
+        @Override
+        public List<Map<String, Object>> extractData(ResultSet resultSet) throws SQLException, DataAccessException {
+            List<Map<String, Object>> rows = new ArrayList<>();
+            while (resultSet.next()) {
+                Map<String, Object> row = new HashMap<String, Object>() {{
+                    put(ID, resultSet.getLong(ID));
+                    put(CODE, resultSet.getString(CODE));
+                    put(DESCRIPTION, resultSet.getString(DESCRIPTION));
+                    put(DOMAIN_URL, resultSet.getString(DOMAIN_URL));
+                    put(LOGO_ID, resultSet.getString(LOGO_ID));
+                    put(IMAGE_ID, resultSet.getString(IMAGE_ID));
+                    put(TYPE, resultSet.getString(TYPE));
+                    put(CREATED_BY, resultSet.getLong(CREATED_BY));
+                    put(CREATED_DATE, resultSet.getString(CREATED_DATE));
+                    put(LAST_MODIFIED_BY, resultSet.getLong(LAST_MODIFIED_BY));
+                    put(LAST_MODIFIED_DATE, resultSet.getString(LAST_MODIFIED_DATE));
+                }};
 
+                rows.add(row);
+            }
+            return rows;
+        }
+    }
 }

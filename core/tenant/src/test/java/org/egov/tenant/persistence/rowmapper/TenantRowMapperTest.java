@@ -20,13 +20,13 @@ public class TenantRowMapperTest {
 
     @Test
     public void test_should_map_result_set_to_model() throws Exception {
-        when(resultSet.getLong(Tenant.Fields.ID.getValue())).thenReturn(1L);
-        when(resultSet.getString(Tenant.Fields.CODE.getValue())).thenReturn("AP.KURNOOL");
-        when(resultSet.getString(Tenant.Fields.DESCRIPTION.getValue())).thenReturn("description");
-        when(resultSet.getString(Tenant.Fields.DOMAIN_URL.getValue())).thenReturn("domainurl");
-        when(resultSet.getString(Tenant.Fields.LOGO_ID.getValue())).thenReturn("logoid");
-        when(resultSet.getString(Tenant.Fields.IMAGE_ID.getValue())).thenReturn("imageid");
-        when(resultSet.getString(Tenant.Fields.TYPE.getValue())).thenReturn("CITY");
+        when(resultSet.getLong(Tenant.ID)).thenReturn(1L);
+        when(resultSet.getString(Tenant.CODE)).thenReturn("AP.KURNOOL");
+        when(resultSet.getString(Tenant.DESCRIPTION)).thenReturn("description");
+        when(resultSet.getString(Tenant.DOMAIN_URL)).thenReturn("domainurl");
+        when(resultSet.getString(Tenant.LOGO_ID)).thenReturn("logoid");
+        when(resultSet.getString(Tenant.IMAGE_ID)).thenReturn("imageid");
+        when(resultSet.getString(Tenant.TYPE)).thenReturn("CITY");
         TenantRowMapper tenantRowMapper = new TenantRowMapper();
 
         Tenant tenant = tenantRowMapper.mapRow(resultSet, 1);

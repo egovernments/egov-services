@@ -8,20 +8,21 @@ import org.springframework.jdbc.core.RowMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import static org.egov.tenant.persistence.entity.Tenant.*;
+
 public class TenantRowMapper implements RowMapper<Tenant> {
 
     @Override
     public Tenant mapRow(final ResultSet rs, final int rowNum) throws SQLException {
-        final Tenant tenant = Tenant.builder()
-                .id(rs.getLong(Tenant.Fields.ID.getValue()))
-                .code(rs.getString(Tenant.Fields.CODE.getValue()))
-                .description(rs.getString(Tenant.Fields.DESCRIPTION.getValue()))
-                .domainUrl(rs.getString(Tenant.Fields.DOMAIN_URL.getValue()))
-                .logoId(rs.getString(Tenant.Fields.LOGO_ID.getValue()))
-                .imageId(rs.getString(Tenant.Fields.IMAGE_ID.getValue()))
-                .type(TenantType.valueOf(rs.getString(Tenant.Fields.TYPE.getValue())))
-                .build();
 
-        return tenant;
+        return builder()
+            .id(rs.getLong(ID))
+            .code(rs.getString(CODE))
+            .description(rs.getString(DESCRIPTION))
+            .domainUrl(rs.getString(DOMAIN_URL))
+            .logoId(rs.getString(LOGO_ID))
+            .imageId(rs.getString(IMAGE_ID))
+            .type(TenantType.valueOf(rs.getString(TYPE)))
+            .build();
     }
 }

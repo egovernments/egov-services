@@ -1,6 +1,5 @@
 package org.egov.tenant.web.contract;
 
-import org.egov.tenant.domain.model.TenantType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -34,7 +33,7 @@ public class TenantTest {
                 .logoId("logoId")
                 .imageId("imageId")
                 .domainUrl("domainUrl")
-                .type(TenantType.CITY)
+                .type("CITY")
                 .city(expectedCityModel)
                 .build();
 

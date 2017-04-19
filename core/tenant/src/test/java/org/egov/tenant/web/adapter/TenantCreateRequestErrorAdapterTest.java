@@ -30,9 +30,7 @@ public class TenantCreateRequestErrorAdapterTest {
     @Before
     public void setUp() {
         errorAdapter = new TenantCreateRequestErrorAdapter();
-        when(tenant.isCityAbsent()).thenReturn(false);
         when(tenant.getCity()).thenReturn(city);
-        when(city.isNameAbsent()).thenReturn(false);
     }
 
     @Test
@@ -105,6 +103,21 @@ public class TenantCreateRequestErrorAdapterTest {
         assertThat(errorFields.get(0).getCode()).isEqualTo("core-tenant.TENANT_MISSING_TYPE");
         assertThat(errorFields.get(0).getField()).isEqualTo("type");
         assertThat(errorFields.get(0).getMessage()).isEqualTo("type is required");
+    }
+
+    @Test
+    public void test_should_set_error_when_type_is_invalid() {
+        when(tenant.isTypeAbsent()).thenReturn(false);
+        when(tenant.isTypeInvalid()).thenReturn(true);
+
+        final ErrorResponse errorResponse = errorAdapter.adapt(tenant);
+
+        final List<ErrorField> errorFields = errorResponse.getError().getFields();
+
+        assertThat(errorFields.size()).isEqualTo(1);
+        assertThat(errorFields.get(0).getCode()).isEqualTo("core-tenant.TENANT_INVALID_TYPE");
+        assertThat(errorFields.get(0).getField()).isEqualTo("type");
+        assertThat(errorFields.get(0).getMessage()).isEqualTo("type is invalid");
     }
 
     @Test

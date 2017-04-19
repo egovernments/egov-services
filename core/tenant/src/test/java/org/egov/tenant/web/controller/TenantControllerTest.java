@@ -71,7 +71,7 @@ public class TenantControllerTest {
                 .logoId("logoId")
                 .imageId("imageId")
                 .domainUrl("domainUrl")
-                .type(TenantType.CITY)
+                .type("CITY")
                 .city(city)
                 .build();
 
@@ -94,7 +94,7 @@ public class TenantControllerTest {
             .logoId("logoId")
             .imageId("imageId")
             .domainUrl("domainUrl")
-            .type(TenantType.CITY)
+            .type("CITY")
             .city(null)
             .build();
 
@@ -128,7 +128,7 @@ public class TenantControllerTest {
                         .logoId("logoId")
                         .imageId("imageId")
                         .domainUrl("domainUrl")
-                        .type(TenantType.CITY)
+                        .type("CITY")
                         .city(city)
                         .build(),
 
@@ -139,7 +139,7 @@ public class TenantControllerTest {
                         .logoId("logoId")
                         .imageId("imageId")
                         .domainUrl("domainUrl")
-                        .type(TenantType.CITY)
+                        .type("CITY")
                         .city(city)
                         .build()
         );

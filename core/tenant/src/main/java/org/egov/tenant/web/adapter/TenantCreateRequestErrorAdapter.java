@@ -29,8 +29,10 @@ public class TenantCreateRequestErrorAdapter implements ErrorAdapter<Tenant> {
     private static final String TENANT_MISSING_LOGO_ID_MESSAGE = "logoId is required";
 
     private static final String TENANT_MISSING_TYPE = "core-tenant.TENANT_MISSING_TYPE";
+    private static final String TENANT_INVALID_TYPE = "core-tenant.TENANT_INVALID_TYPE";
     private static final String TENANT_FIELD_TYPE = "type";
     private static final String TENANT_MISSING_TYPE_MESSAGE = "type is required";
+    private static final String TENANT_INVALID_TYPE_MESSAGE = "type is invalid";
 
     private static final String TENANT_MISSING_CITY = "core-tenant.TENANT_MISSING_CITY";
     private static final String TENANT_FIELD_CITY = "city";
@@ -64,6 +66,7 @@ public class TenantCreateRequestErrorAdapter implements ErrorAdapter<Tenant> {
         addImageIdMissingError(tenant, errorFields);
         addLogoIdMissingError(tenant, errorFields);
         addTypeMissingError(tenant, errorFields);
+        addTypeInvalidError(tenant, errorFields);
         addCityMissingError(tenant, errorFields);
         return errorFields;
     }
@@ -92,6 +95,15 @@ public class TenantCreateRequestErrorAdapter implements ErrorAdapter<Tenant> {
             errorFields.add(
                 ErrorField.builder()
                     .code(TENANT_MISSING_TYPE).field(TENANT_FIELD_TYPE).message(TENANT_MISSING_TYPE_MESSAGE).build()
+            );
+        }
+    }
+
+    private void addTypeInvalidError(Tenant tenant, List<ErrorField> errorFields) {
+        if (!tenant.isTypeAbsent() && tenant.isTypeInvalid()) {
+            errorFields.add(
+                ErrorField.builder()
+                    .code(TENANT_INVALID_TYPE).field(TENANT_FIELD_TYPE).message(TENANT_INVALID_TYPE_MESSAGE).build()
             );
         }
     }

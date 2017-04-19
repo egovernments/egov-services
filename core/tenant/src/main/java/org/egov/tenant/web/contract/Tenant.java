@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.egov.tenant.domain.model.TenantType;
 
 @Getter
 @Builder
@@ -42,7 +41,7 @@ public class Tenant {
                 .logoId(logoId)
                 .imageId(imageId)
                 .domainUrl(domainUrl)
-                .type(TenantType.valueOf(type))
+                .type(type)
                 .city(city)
                 .build();
     }

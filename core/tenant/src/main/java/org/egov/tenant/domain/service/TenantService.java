@@ -21,6 +21,7 @@ public class TenantService {
     }
 
     public Tenant createTenant(Tenant tenant) {
+        tenant.validate();
         return tenantRepository.save(tenant);
     }
 }

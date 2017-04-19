@@ -42,7 +42,7 @@ public class Tenant {
                 .imageId(imageId)
                 .logoId(logoId)
                 .domainUrl(domainUrl)
-                .type(type)
+                .type(type.toString())
                 .build();
     }
 }

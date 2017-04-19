@@ -32,7 +32,7 @@ public class TenantTest {
             .logoId("logoId")
             .imageId("imageId")
             .domainUrl("domainUrl")
-            .type(TenantType.CITY)
+            .type("CITY")
             .city(city)
             .build();
         assertThat(tenant.isCityAbsent()).isFalse();
@@ -47,7 +47,7 @@ public class TenantTest {
             .logoId("logoId")
             .imageId("imageId")
             .domainUrl("domainUrl")
-            .type(TenantType.CITY)
+            .type("CITY")
             .city(null)
             .build();
 
@@ -63,7 +63,7 @@ public class TenantTest {
             .logoId("logoId")
             .imageId("imageId")
             .domainUrl("domainUrl")
-            .type(TenantType.CITY)
+            .type("CITY")
             .city(city)
             .build();
 
@@ -79,7 +79,7 @@ public class TenantTest {
             .logoId("logoId")
             .imageId("imageId")
             .domainUrl("domainUrl")
-            .type(TenantType.CITY)
+            .type("CITY")
             .city(city)
             .build();
 
@@ -97,7 +97,7 @@ public class TenantTest {
             .logoId("logoId")
             .imageId("imageId")
             .domainUrl("domainUrl")
-            .type(TenantType.CITY)
+            .type("CITY")
             .city(city)
             .build();
 
@@ -113,7 +113,7 @@ public class TenantTest {
             .logoId(null)
             .imageId("imageId")
             .domainUrl("domainUrl")
-            .type(TenantType.CITY)
+            .type("CITY")
             .city(city)
             .build();
 
@@ -129,7 +129,7 @@ public class TenantTest {
             .logoId("")
             .imageId("imageId")
             .domainUrl("domainUrl")
-            .type(TenantType.CITY)
+            .type("CITY")
             .city(city)
             .build();
 
@@ -145,7 +145,7 @@ public class TenantTest {
             .logoId("logoid")
             .imageId(null)
             .domainUrl("domainUrl")
-            .type(TenantType.CITY)
+            .type("CITY")
             .city(city)
             .build();
 
@@ -161,7 +161,7 @@ public class TenantTest {
             .logoId("logoid")
             .imageId("")
             .domainUrl("domainUrl")
-            .type(TenantType.CITY)
+            .type("CITY")
             .city(city)
             .build();
 
@@ -182,6 +182,22 @@ public class TenantTest {
             .build();
 
         assertThat(tenant.isTypeAbsent()).isTrue();
+        tenant.validate();
+    }
+
+    @Test(expected = InvalidTenantDetailsException.class)
+    public void test_should_throw_exception_when_type_is_invalid() {
+        Tenant tenant = Tenant.builder()
+            .code("tenantcode")
+            .description("description")
+            .logoId("logoid")
+            .imageId("imageid")
+            .domainUrl("domainUrl")
+            .type("INVALID")
+            .city(city)
+            .build();
+
+        assertThat(tenant.isTypeInvalid()).isTrue();
         tenant.validate();
     }
 }

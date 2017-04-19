@@ -1,5 +1,6 @@
 package org.egov.tenant.domain.service;
 
+import org.egov.tenant.domain.exception.InvalidTenantDetailsException;
 import org.egov.tenant.domain.model.Tenant;
 import org.egov.tenant.domain.model.TenantSearchCriteria;
 import org.egov.tenant.persistence.repository.TenantRepository;
@@ -13,8 +14,7 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TenantServiceTest {
@@ -51,5 +51,14 @@ public class TenantServiceTest {
         Tenant result = tenantService.createTenant(tenant);
 
         assertThat(result).isEqualTo(tenant);
+    }
+
+    @Test(expected = InvalidTenantDetailsException.class)
+    public void test_should_throw_exception_when_tenant_is_invalid() {
+        Tenant tenant = Tenant.builder().build();
+
+        Tenant result = tenantService.createTenant(tenant);
+
+        verify(tenantRepository, never()).save(any(Tenant.class));
     }
 }

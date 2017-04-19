@@ -87,7 +87,7 @@ public class TenantRepositoryTest {
             .domainUrl("http://egov.ap.gov.in/kurnool")
             .logoId("d45d7118-2013-11e7-93ae-92361f002671")
             .imageId("8716872c-cd50-4fbb-a0d6-722e6bc9c143")
-            .type(TenantType.CITY)
+            .type("CITY")
             .city(city)
             .build();
 

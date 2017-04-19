@@ -18,9 +18,13 @@ public class Tenant {
     private String logoId;
     private String imageId;
     private String domainUrl;
-    private TenantType type;
+    private String type;
     @Setter
     private City city;
+
+    public TenantType getType() {
+        return TenantType.valueOf(type);
+    }
 
     public void validate() {
         if (
@@ -30,7 +34,8 @@ public class Tenant {
                 isCodeOfInvalidLength() ||
                 isLogoIdAbsent() ||
                 isImageIdAbsent() ||
-                isTypeAbsent()
+                isTypeAbsent() ||
+                isTypeInvalid()
             ) {
             throw new InvalidTenantDetailsException(this);
         }
@@ -58,5 +63,14 @@ public class Tenant {
 
     public boolean isTypeAbsent() {
         return isEmpty(type);
+    }
+
+    public boolean isTypeInvalid() {
+        try {
+            TenantType.valueOf(type);
+            return false;
+        } catch (IllegalArgumentException ex) {
+            return true;
+        }
     }
 }

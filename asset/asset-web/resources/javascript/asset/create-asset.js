@@ -457,7 +457,7 @@ class CreateAsset extends React.Component {
 							<label for={item.name}>{titleCase(item.name)}  {showStart(item.isMandatory)}</label>
 						</div>
 						<div className="col-sm-6">
-							<input id={item.name} name={item.name} type="text"
+							<input id={item.name} name={item.name} type="text" maxLength= "200"
 								defaultValue={item.values} onChange={(e)=>{handleChangeTwoLevel(e, "properties", item.name)}} required={item.isMandatory} disabled={readonly}/>
 						</div>
 					</div>
@@ -644,7 +644,7 @@ class CreateAsset extends React.Component {
                               <label for="description">Description</label>
                           </div>
                           <div className="col-sm-6">
-                              <textarea id="description" name="description" value= {description}
+                              <textarea id="description" name="description" value= {description} maxLength= "100"
                                 onChange={(e)=>{handleChange(e,"description")}} max="1024" disabled={readonly}></textarea>
                           </div>
                         </div>
@@ -658,7 +658,7 @@ class CreateAsset extends React.Component {
 												<label for="name">Asset Name <span>* </span></label>
 											</div>
 											<div className="col-sm-6">
-												<input id="name" name="name" value={name} type="text"
+												<input id="name" name="name" value={name} type="text" maxLength= "60"
 													onChange={(e)=>{handleChange(e, "name")}} required disabled={readonly}/>
 											</div>
 										</div>
@@ -781,7 +781,7 @@ class CreateAsset extends React.Component {
                               <label for="doorno"> Door Number  </label>
                           </div>
                           <div className="col-sm-6">
-                              <input type="text" name="doorNo" id= "doorNo" value= {locationDetails.doorNo}
+                              <input type="text" name="doorNo" id= "doorNo" value= {locationDetails.doorNo} maxLength= "60"
                                 onChange={(e)=>{handleChangeTwoLevel(e,"locationDetails","doorNo")}} disabled={readonly}/>
                           </div>
                         </div>

@@ -214,6 +214,16 @@ class CreateAsset extends React.Component {
           id: "Select",
           name: "Select",
           active: true
+        },
+        {
+          id: "Date",
+          name: "Date",
+          active: true
+        },
+        {
+          id: "Attach Document",
+          name: "Attach Document",
+          active: true
         }
       ]
     })

@@ -17,25 +17,6 @@ var requestInfo = {
 
 var tenantId="ap."+window.location.origin.split("-")[0].split("//")[1];
 
-
-$( document ).ajaxStart(function() {
-  $.blockUI({
-        message: "<span>Please wait...</span>",
-        css: {
-            border: 'none',
-            padding: '15px',
-            backgroundColor: '#000',
-            '-webkit-border-radius': '5px',
-            '-moz-border-radius': '5px',
-            opacity: .5,
-            color: '#fff'
-        } });
-});
-
-$( document ).ajaxStop(function() {
-  setTimeout($.unblockUI, 100);
-});
-
 $(document).ready(function() {
     $( document ).ajaxStart(function() {
         try {

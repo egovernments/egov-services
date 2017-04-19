@@ -59,6 +59,10 @@ public class SevaRequestErrorAdapter implements ErrorAdapter<Complaint> {
     private static final String MANDATORY_CRN_CODE = "pgr.0014";
     private static final String CRN_FIELD_NAME = "ServiceRequest.serviceRequestId";
     private static final String CRN_MANDATORY_MESSAGE = "Service request id is required";
+    
+	private static final String DESCRIPTION_LENGTH_CODE = "pgr.0015";
+	private static final String DESCRIPTION_LENGTH_FIELD = "ServiceRequest.description";
+	private static final String DESCRIPTION_LENGTH_MESSAGE = "Description must have minimum 10 characters";
 
     @Override
     public ErrorResponse adapt(Complaint model) {
@@ -86,6 +90,7 @@ public class SevaRequestErrorAdapter implements ErrorAdapter<Complaint> {
         addTenantIdValidationErrors(model, errorFields);
         addComplaintTypeCodeValidationErrors(model, errorFields);
         addDescriptionValidationErrors(model, errorFields);
+        addDescriptionLengthValidationErrors(model, errorFields);
         addCRNValidationErrors(model, errorFields);
         return errorFields;
     }
@@ -218,6 +223,18 @@ public class SevaRequestErrorAdapter implements ErrorAdapter<Complaint> {
                 .code(MANDATORY_LOCATION_ID_ERROR_CODE)
                 .message(LOCATION_ID_MANDATORY_MESSAGE)
                 .field(LOCATION_ID_FIELD_NAME)
+                .build();
+        errorFields.add(errorField);
+    }
+    
+    private void addDescriptionLengthValidationErrors(Complaint model, List<ErrorField> errorFields) {
+        if (!model.descriptionLength()) {
+            return;
+        }
+        final ErrorField errorField = ErrorField.builder()
+                .code(DESCRIPTION_LENGTH_CODE)
+                .message(DESCRIPTION_LENGTH_MESSAGE)
+                .field(DESCRIPTION_LENGTH_FIELD)
                 .build();
         errorFields.add(errorField);
     }

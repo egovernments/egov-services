@@ -26,7 +26,7 @@ public class SevaRequestErrorAdapterTest {
     private SevaRequestErrorAdapter errorAdapter;
 
     @Test
-    public void test_should_set_errors_when_location_details_are_not_present_for_a_create_request() {
+    public void testShouldSetErrorsWhenLocationDetailsAreNotPresentForCreateRequest() {
         when(complaint.isLocationAbsent()).thenReturn(true);
         when(complaint.isRawLocationAbsent()).thenReturn(true);
 
@@ -47,7 +47,7 @@ public class SevaRequestErrorAdapterTest {
     }
 
     @Test
-    public void test_should_set_error_when_location_id_is_not_present_for_an_update_request() {
+    public void testShouldSetErrorWhenLocationIdIsNotPresentForAnUpdateRequest() {
         when(complaint.isLocationAbsent()).thenReturn(true);
         when(complaint.isLocationIdAbsent()).thenReturn(true);
 
@@ -62,7 +62,7 @@ public class SevaRequestErrorAdapterTest {
     }
 
     @Test
-    public void test_should_set_error_when_first_name_is_not_present() {
+    public void testShouldSetErrorWhenFirstNameIsNotPresent() {
         when(complaint.isComplainantAbsent()).thenReturn(true);
         when(complaint.isComplainantFirstNameAbsent()).thenReturn(true);
 
@@ -77,7 +77,7 @@ public class SevaRequestErrorAdapterTest {
     }
 
     @Test
-    public void test_should_set_error_when_mobile_number_is_not_present() {
+    public void testShouldSetErrorWhenMobileNumberIsNotPresent() {
         when(complaint.isComplainantAbsent()).thenReturn(true);
         when(complaint.isComplainantPhoneAbsent()).thenReturn(true);
 
@@ -92,7 +92,7 @@ public class SevaRequestErrorAdapterTest {
     }
 
     @Test
-    public void test_should_set_error_when_receiving_mode_is_not_present() {
+    public void testShouldSetErrorWhenReceivingModeIsNotPresent() {
         when(complaint.isReceivingModeAbsent()).thenReturn(true);
 
         final ErrorResponse errorResponse = errorAdapter.adapt(complaint);
@@ -106,7 +106,7 @@ public class SevaRequestErrorAdapterTest {
     }
 
     @Test
-    public void test_should_set_error_when_receiving_center_is_not_present() {
+    public void testShouldSetErrorWhenReceivingCenterIsNotPresent() {
         when(complaint.isReceivingCenterAbsent()).thenReturn(true);
 
         final ErrorResponse errorResponse = errorAdapter.adapt(complaint);
@@ -120,7 +120,7 @@ public class SevaRequestErrorAdapterTest {
     }
 
     @Test
-    public void test_should_set_error_when_tenant_id_is_not_present() {
+    public void testShouldSetErrorWhenTenantIdIsNotPresent() {
         when(complaint.isTenantIdAbsent()).thenReturn(true);
 
         final ErrorResponse errorResponse = errorAdapter.adapt(complaint);
@@ -134,7 +134,7 @@ public class SevaRequestErrorAdapterTest {
     }
 
     @Test
-    public void test_should_set_error_when_compaint_type_code_is_not_present() {
+    public void testShouldSetErrorWhenCompaintTypeCodeIsNotPresent() {
         when(complaint.isComplaintTypeAbsent()).thenReturn(true);
 
         final ErrorResponse errorResponse = errorAdapter.adapt(complaint);
@@ -148,7 +148,7 @@ public class SevaRequestErrorAdapterTest {
     }
 
     @Test
-    public void test_should_set_error_when_description_is_not_present() {
+    public void testShouldSetErrorWhenDescriptionIsNotPresent() {
         when(complaint.isDescriptionAbsent()).thenReturn(true);
 
         final ErrorResponse errorResponse = errorAdapter.adapt(complaint);
@@ -162,7 +162,7 @@ public class SevaRequestErrorAdapterTest {
     }
 
     @Test
-    public void test_should_set_error_when_crn_is_not_present() {
+    public void testShouldSetErrorWhenCrnIsNotPresent() {
         when(complaint.isCrnAbsent()).thenReturn(true);
 
         final ErrorResponse errorResponse = errorAdapter.adapt(complaint);
@@ -173,6 +173,20 @@ public class SevaRequestErrorAdapterTest {
         assertEquals("pgr.0014", errorFields.get(0).getCode());
         assertEquals("ServiceRequest.serviceRequestId", errorFields.get(0).getField());
         assertEquals("Service request id is required", errorFields.get(0).getMessage());
+    }
+    
+    @Test
+    public void testShouldSetErrorWhenDescriptionIsLess() {
+        when(complaint.descriptionLength()).thenReturn(true);
+
+        final ErrorResponse errorResponse = errorAdapter.adapt(complaint);
+
+        final List<ErrorField> errorFields = errorResponse.getErrorFields();
+        assertNotNull(errorFields);
+        assertEquals(1, errorFields.size());
+        assertEquals("pgr.0015", errorFields.get(0).getCode());
+        assertEquals("ServiceRequest.description", errorFields.get(0).getField());
+        assertEquals("Description must have minimum 10 characters", errorFields.get(0).getMessage());
     }
 
 }

@@ -12,7 +12,7 @@ import static org.junit.Assert.assertTrue;
 public class ComplaintTest {
 
     @Test
-    public void test_should_not_fail_validation_when_citizen_creates_a_valid_complaint() {
+    public void testShouldNotFailValidationWhenCitizenCreatesValidComplaint() {
         final ComplaintLocation complaintLocation = ComplaintLocation.builder()
             .coordinates(new Coordinates(12.22d, 11.22d))
             .build();
@@ -34,7 +34,7 @@ public class ComplaintTest {
     }
 
     @Test
-    public void test_should_not_fail_validation_when_citizen_updates_a_complaint_with_all_valid_attributes() {
+    public void testShouldNotFailValidationWhenCitizenUpdatesComplaintWithAllValidAttributes() {
         final ComplaintLocation complaintLocation = ComplaintLocation.builder()
             .locationId("locationId")
             .build();
@@ -57,7 +57,7 @@ public class ComplaintTest {
     }
 
     @Test(expected = InvalidComplaintException.class)
-    public void test_should_fail_validation_when_location_id_is_not_provided_on_updating_a_complaint() {
+    public void testShouldFailValidationWhenLocationIdIsNotProvidedOnUpdatingComplaint() {
         final ComplaintLocation complaintLocation = ComplaintLocation.builder()
             .locationId(null)
             .build();
@@ -75,8 +75,7 @@ public class ComplaintTest {
     }
 
     @Test(expected = InvalidComplaintException.class)
-    public void
-    test_should_fail_validation_when_neither_cross_hierarchy_id_nor_coordinates_are_present_on_creating_a_complaint() {
+    public void testShouldFailValidationWhenNeitherCrossHierarchyIdNorCoordinatesArePresentOnCreatingComplaint() {
         Complaint complaint = getComplaintWithNoLocationData();
 
         assertTrue(complaint.isLocationAbsent());
@@ -85,7 +84,7 @@ public class ComplaintTest {
     }
 
     @Test(expected = InvalidComplaintException.class)
-    public void test_should_fail_validation_when_first_name_is_not_present_when_creating_an_anonymous_complaint() {
+    public void testShouldFailValidationWhenFirstNameIsNotPresentWhenCreatingAnAnonymousComplaint() {
         final ComplaintLocation complaintLocation = ComplaintLocation.builder()
             .coordinates(new Coordinates(1.1, 2.2))
             .build();
@@ -106,7 +105,7 @@ public class ComplaintTest {
     }
 
     @Test(expected = InvalidComplaintException.class)
-    public void test_should_fail_validation_when_first_name_is_not_present_when_employee_creates_a_complaint() {
+    public void testShouldFailValidationWhenFirstNameIsNotPresentWhenEmployeeCreatesComplaint() {
         final ComplaintLocation complaintLocation = ComplaintLocation.builder()
             .coordinates(new Coordinates(1.1, 2.2))
             .build();
@@ -127,7 +126,7 @@ public class ComplaintTest {
     }
 
     @Test(expected = InvalidComplaintException.class)
-    public void test_should_fail_validation_when_mobile_number_is_not_present_when_creating_an_anonymous_complaint() {
+    public void testShouldFailValidationWhenMobileNumberIsNotPresentWhenCreatingAnAnonymousComplaint() {
         final ComplaintLocation complaintLocation = ComplaintLocation.builder()
             .coordinates(new Coordinates(1.1, 2.2))
             .build();
@@ -148,7 +147,7 @@ public class ComplaintTest {
     }
 
     @Test(expected = InvalidComplaintException.class)
-    public void test_should_fail_validation_when_mobile_number_is_not_present_when_employee_creates_a_complaint() {
+    public void testShouldFailValidationWhenMobileNumberIsNotPresentWhenEmployeeCreatesComplaint() {
         final ComplaintLocation complaintLocation = ComplaintLocation.builder()
             .coordinates(new Coordinates(1.1, 2.2))
             .build();
@@ -170,8 +169,7 @@ public class ComplaintTest {
     }
 
     @Test
-    public void
-    test_should_not_fail_validation_when_mandatory_complainant_attributes_are_present_when_creating_an_anonymous_complaint() {
+    public void testShouldNotFailValidationWhenMandatoryComplainantAttributesArePresentWhenCreatingAnAnonymousComplaint() {
         final ComplaintLocation complaintLocation = ComplaintLocation.builder()
             .coordinates(new Coordinates(1.1, 2.2))
             .build();
@@ -194,8 +192,7 @@ public class ComplaintTest {
     }
 
     @Test
-    public void
-    test_should_not_fail_validation_when_mandatory_complainant_attributes_are_present_on_complaint_creation_by_employee() {
+    public void testShouldNotFailValidationWhenMandatoryComplainantAttributesArePresentOnComplaintCreationByEmployee() {
         final ComplaintLocation complaintLocation = ComplaintLocation.builder()
             .coordinates(new Coordinates(1.1, 2.2))
             .build();
@@ -218,7 +215,7 @@ public class ComplaintTest {
     }
 
     @Test(expected = InvalidComplaintException.class)
-    public void test_should_fail_validation_when_tenant_id_is_absent_when_creating_a_complaint() {
+    public void testShouldFailValidationWhenTenantIdIsAbsentWhenCreatingComplaint() {
         final ComplaintLocation complaintLocation = ComplaintLocation.builder()
             .coordinates(new Coordinates(1.1, 2.2))
             .build();
@@ -241,7 +238,7 @@ public class ComplaintTest {
     }
 
     @Test(expected = InvalidComplaintException.class)
-    public void test_should_fail_validation_when_description_is_absent_when_creating_a_complaint() {
+    public void testShouldFailValidationWhenDescriptionIsAbsentWhenCreatingComplaint() {
         final ComplaintLocation complaintLocation = ComplaintLocation.builder()
             .coordinates(new Coordinates(1.1, 2.2))
             .build();
@@ -262,9 +259,32 @@ public class ComplaintTest {
         assertTrue(complaint.isDescriptionAbsent());
         complaint.validate();
     }
+    
+    @Test(expected = InvalidComplaintException.class)
+    public void testShouldFailValidationWhenDescriptionLengthIsLessWhenCreatingComplaint() {
+        final ComplaintLocation complaintLocation = ComplaintLocation.builder()
+            .coordinates(new Coordinates(1.1, 2.2))
+            .build();
+        final Complainant complainant = Complainant.builder()
+            .mobile("mobile number")
+            .email("foo@bar.com")
+            .firstName("first name")
+            .build();
+        Complaint complaint = Complaint.builder()
+            .complainant(complainant)
+            .tenantId("tenantId")
+            .description("description")
+            .authenticatedUser(AuthenticatedUser.createAnonymousUser())
+            .complaintLocation(complaintLocation)
+            .complaintType(new ComplaintType(null, null))
+            .build();
+
+		assertFalse(complaint.descriptionLength());
+		complaint.validate();
+    }
 
     @Test(expected = InvalidComplaintException.class)
-    public void test_should_fail_validation_when_complaint_type_code_is_absent_when_creating_a_complaint() {
+    public void testShouldFailValidationWhenComplaintTypeCodeIsAbsentWhenCreatingComplaint() {
         final ComplaintLocation complaintLocation = ComplaintLocation.builder()
             .coordinates(new Coordinates(1.1, 2.2))
             .build();
@@ -287,7 +307,7 @@ public class ComplaintTest {
     }
 
     @Test(expected = InvalidComplaintException.class)
-    public void test_should_fail_validation_when_crn_is_absent_when_updating_a_complaint() {
+    public void testShouldFailValidationWhenCrnIsAbsentWhenUpdatingComplaint() {
         final ComplaintLocation complaintLocation = ComplaintLocation.builder()
             .coordinates(new Coordinates(1.1, 2.2))
             .build();
@@ -312,7 +332,7 @@ public class ComplaintTest {
     }
 
     @Test(expected = InvalidComplaintException.class)
-    public void test_should_fail_validation_when_receiving_mode_is_not_present_when_employee_creates_a_complaint() {
+    public void testShouldFailValidationWhenReceivingModeIsNotPresentWhenEmployeeCreatesComplaint() {
         final ComplaintLocation complaintLocation = ComplaintLocation.builder()
             .coordinates(new Coordinates(1.1, 2.2))
             .build();
@@ -337,8 +357,7 @@ public class ComplaintTest {
     }
 
     @Test(expected = InvalidComplaintException.class)
-    public void
-    test_should_fail_validation_when_receiving_center_is_not_present_when_employee_creates_a_complaint_with_manual_receiving_mode() {
+    public void testShouldFailValidationWhenReceivingCenterIsNotPresentWhenEmployeeCreatesComplaintWithManualReceivingMode() {
         final ComplaintLocation complaintLocation = ComplaintLocation.builder()
             .coordinates(new Coordinates(1.1, 2.2))
             .build();

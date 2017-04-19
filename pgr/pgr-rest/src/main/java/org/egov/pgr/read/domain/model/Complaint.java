@@ -74,7 +74,7 @@ public class Complaint {
 
     public void validate() {
         if (isLocationAbsent() || isComplainantAbsent() || isTenantIdAbsent() || isComplaintTypeAbsent()
-            || isDescriptionAbsent() || isCrnAbsent() || isReceivingCenterAbsent() || isReceivingModeAbsent()) {
+            || isDescriptionAbsent() || isCrnAbsent() || isReceivingCenterAbsent() || isReceivingModeAbsent() || descriptionLength()) {
             throw new InvalidComplaintException(this);
         }
     }
@@ -109,4 +109,7 @@ public class Complaint {
             && isEmpty(receivingCenter);
     }
 
+	public boolean descriptionLength() {
+		return description.length() < 10 || description.length() >500;
+	}
 }

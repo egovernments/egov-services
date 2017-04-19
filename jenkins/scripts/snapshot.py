@@ -14,7 +14,6 @@ def get_manifests():
     filter_manifests_cmd = "jq '.items[] | " \
                            "del(.spec.clusterIP," \
                            ".spec.sessionAffinity," \
-                           ".spec.type," \
                            ".status," \
                            ".metadata.creationTimestamp," \
                            ".metadata.resourceVersion," \

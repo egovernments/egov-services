@@ -48,7 +48,7 @@ public class AllotteeHelper {
 
 	private boolean addAndClauseIfRequired(boolean appendAndClauseFlag, StringBuilder queryString) {
 		if (appendAndClauseFlag) {
-			queryString.append(" &");
+			queryString.append("&");
 		}
 		return true;
 	}

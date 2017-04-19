@@ -221,8 +221,8 @@ class CreateAsset extends React.Component {
           active: true
         },
         {
-          id: "Attach Document",
-          name: "Attach Document",
+          id: "File",
+          name: "File",
           active: true
         }
       ]
@@ -573,7 +573,7 @@ class CreateAsset extends React.Component {
                           <form className="jurisdictionDetail" id="jurisdictionDetail">
                               <div className="modal-header">
                                   <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                  <h4 className="modal-title" id="myModalLabel">Add/Edit</h4>
+                                  <h4 className="modal-title" id="myModalLabel">Custom Fields</h4>
                               </div>
                               <div className="modal-body">
                             <div className="row">
@@ -583,7 +583,7 @@ class CreateAsset extends React.Component {
                                           <label htmlFor="">Name</label>
                                         </div>
                                         <div className="col-sm-6">
-                                        <input type="text" name="name" id="name" value={customField.name} onChange={(e)=>{
+                                        <input type="text" name="name" id="customField_name" value={customField.name} onChange={(e)=>{
                                           handleChangeTwoLevel(e,"customField","name")}}/>
                                         </div>
                                     </div>

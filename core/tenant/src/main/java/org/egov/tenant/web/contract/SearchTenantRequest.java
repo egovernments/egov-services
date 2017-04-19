@@ -8,7 +8,7 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class TenantSearchRequest {
+public class SearchTenantRequest {
 
     private RequestInfo requestInfo;
     private List<String> tenantCodes;

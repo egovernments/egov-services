@@ -19,19 +19,19 @@ public class TenantController {
     private TenantService tenantService;
 
     @PostMapping(value="_search")
-    public TenantResponse search(@RequestParam("code") List<String> code,
-                                 @RequestBody TenantSearchRequest tenantSearchRequest) {
+    public SearchTenantResponse search(@RequestParam("code") List<String> code,
+                                       @RequestBody SearchTenantRequest searchTenantRequest) {
         TenantSearchCriteria tenantSearchCriteria = new TenantSearchCriteria(code);
         List<Tenant> tenants =  tenantService.find(tenantSearchCriteria).stream()
                 .map(Tenant::new)
                 .collect(Collectors.toList());
 
-        return new TenantResponse(new ResponseInfo(), tenants);
+        return new SearchTenantResponse(new ResponseInfo(), tenants);
     }
 
     @PostMapping(value="_create")
-    public SingleTenantResponse createTenant(@RequestBody CreateTenantRequest createTenantRequest) {
+    public CreateTenantResponse createTenant(@RequestBody CreateTenantRequest createTenantRequest) {
         org.egov.tenant.domain.model.Tenant tenant = tenantService.createTenant(createTenantRequest.getTenant().toDomain());
-        return new SingleTenantResponse(new ResponseInfo(), new Tenant(tenant));
+        return new CreateTenantResponse(new ResponseInfo(), new Tenant(tenant));
     }
 }

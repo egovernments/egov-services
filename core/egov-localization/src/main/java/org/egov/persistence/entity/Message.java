@@ -31,4 +31,10 @@ public class Message {
 
     @Column(name = "tenant_id")
     private String tenantId;
+    
+    
+    
+    public org.egov.domain.model.Message toDomain() {
+        return new org.egov.domain.model.Message(code,message,tenantId,locale);
+    }
 }

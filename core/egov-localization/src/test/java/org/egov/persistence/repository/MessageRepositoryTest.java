@@ -1,58 +1,73 @@
 package org.egov.persistence.repository;
 
-
-import org.egov.TestConfiguration;
 import org.egov.persistence.entity.Message;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-@RunWith(SpringRunner.class)
-@DataJpaTest
-@Import(TestConfiguration.class)
+
+@RunWith(MockitoJUnitRunner.class)
 public class MessageRepositoryTest {
 
-    @Autowired
+
+    private static final String EN_IN = "en_IN";
+    private static final String TENANT_ID = "tenant_123";
+    private static final String MR_IN = "MR_IN";
+    @Mock
+    private MessageJpaRepository messageJpaRepository;
+    @InjectMocks
     private MessageRepository messageRepository;
 
     @Test
-    @Sql(scripts = {"/sql/clearMessages.sql", "/sql/createMessages.sql"})
-    public void shouldFetchMessagesForGivenTenantAndLocale() {
-        final List<Message> actualMessages = messageRepository
-                .findByTenantIdAndLocale("tenant1", "en_US");
-        assertEquals(2, actualMessages.size());
+    public void test_should_call_jpa_repository_toget_message_onthe_basis_of_tenantid_and_locale() {
+        List<Message> entityMessages = getEntityMessages();
+        when(messageJpaRepository.findByTenantIdAndLocale(TENANT_ID, EN_IN)).thenReturn(entityMessages);
+        List<org.egov.domain.model.Message> messages = messageRepository.findByTenantIdAndLocale(TENANT_ID, EN_IN);
+        List<org.egov.domain.model.Message>englishMessages= messages.stream().filter(message -> message.getLocale()
+          .equals(EN_IN)).collect(Collectors.toList());
+        assertThat(englishMessages.size()).isEqualTo(2);
+        List<org.egov.domain.model.Message>marathiMessages= messages.stream().filter(message -> message.getLocale()
+            .equals(MR_IN)).collect(Collectors.toList());
+        assertThat(marathiMessages.size()).isEqualTo(2);
+        assertThat(englishMessages.get(0).getCode()).isEqualTo("core.msg.entermobileno");
+        assertThat(englishMessages.get(1).getCode()).isEqualTo("core.msg.enterfullname");
+        assertThat(marathiMessages.get(0).getCode()).isEqualTo("core.msg.OTPvalidated");
+        assertThat(marathiMessages.get(1).getCode()).isEqualTo("core.lbl.imageupload");
     }
 
+
     @Test
-    @Sql(scripts = {"/sql/clearMessages.sql", "/sql/createMessages.sql"})
-    public void shouldSaveMessages() {
-        final String locale = "newLocale";
-        final String tenant = "newTenant";
-        final Message message1 = Message.builder()
-                .tenantId(tenant)
-                .code("code1")
-                .locale(locale)
-                .message("New message1")
-                .build();
-        final Message message2 = Message.builder()
-                .tenantId(tenant)
-                .code("code2")
-                .locale(locale)
-                .message("New message2")
-                .build();
-        final List<Message> actualMessages = messageRepository.save(Arrays.asList(message1, message2));
-        assertTrue("Id generated for message1", message1.getId() > 0);
-        assertTrue("Id generated for message2", message2.getId() > 0);
-        assertEquals(2, messageRepository.findByTenantIdAndLocale(tenant, locale).size());
+    public void test_should_call_message_jparepository_to_save_entity_messages()
+    {
+        List<Message> entityMessages=getEntityMessages();
+      List<org.egov.domain.model.Message> modelMessages =  messageRepository.saveAllEntities(entityMessages);
+       verify(messageJpaRepository).save(entityMessages);
+       assertThat( modelMessages.size()).isEqualTo(4);
     }
+
+    List<Message> getEntityMessages() {
+
+       Message message1=org.egov.persistence.entity.Message .builder().message("OTP यशस्वीपणे प्रमाणित")
+           .code("core.msg.OTPvalidated").locale(MR_IN).tenantId(TENANT_ID).build();
+       Message message2=org.egov.persistence.entity.Message.builder().message("प्रतिमा यशस्वीरित्या अपलोड")
+           .code("core.lbl.imageupload").locale(MR_IN).tenantId(TENANT_ID).build();
+       Message message3=org.egov.persistence.entity.Message.builder().message("EnterMobileNumber")
+           .code("core.msg.entermobileno").locale(EN_IN).tenantId(TENANT_ID).build();
+       Message message4=org.egov.persistence.entity.Message.builder().message("Enter fullname")
+           .code("core.msg.enterfullname").locale(EN_IN).tenantId(TENANT_ID).build();
+        return (Arrays.asList(message1, message2, message3,message4));
+
+    }
+
+
 }

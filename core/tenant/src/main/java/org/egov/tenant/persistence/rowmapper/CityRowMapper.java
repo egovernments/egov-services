@@ -6,24 +6,26 @@ import org.springframework.jdbc.core.RowMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import static org.egov.tenant.persistence.entity.City.*;
+
 public class CityRowMapper implements RowMapper<City> {
 
     @Override
     public City mapRow(ResultSet resultSet, int i) throws SQLException {
-        return City.builder()
-                .id(resultSet.getLong(City.Fields.ID.getValue()))
-                .name(resultSet.getString(City.Fields.NAME.getValue()))
-                .localName(resultSet.getString(City.Fields.LOCAL_NAME.getValue()))
-                .districtCode(resultSet.getString(City.Fields.DISTRICT_CODE.getValue()))
-                .districtName(resultSet.getString(City.Fields.DISTRICT_NAME.getValue()))
-                .latitude(resultSet.getDouble(City.Fields.LATITUDE.getValue()))
-                .longitude(resultSet.getDouble(City.Fields.LONGITUDE.getValue()))
-                .tenantCode(resultSet.getString(City.Fields.TENANT_CODE.getValue()))
-                .regionName(resultSet.getString(City.Fields.REGION_NAME.getValue()))
-                .createdBy(resultSet.getLong(City.Fields.CREATED_BY.getValue()))
-                .createdDate(resultSet.getTimestamp(City.Fields.CREATED_DATE.getValue()))
-                .lastModifiedBy(resultSet.getLong(City.Fields.LAST_MODIFIED_BY.getValue()))
-                .lastModifiedDate(resultSet.getTimestamp(City.Fields.LAST_MODIFIED_DATE.getValue()))
+        return builder()
+                .id(resultSet.getLong(ID))
+                .name(resultSet.getString(NAME))
+                .localName(resultSet.getString(LOCAL_NAME))
+                .districtCode(resultSet.getString(DISTRICT_CODE))
+                .districtName(resultSet.getString(DISTRICT_NAME))
+                .latitude(resultSet.getDouble(LATITUDE))
+                .longitude(resultSet.getDouble(LONGITUDE))
+                .tenantCode(resultSet.getString(TENANT_CODE))
+                .regionName(resultSet.getString(REGION_NAME))
+                .createdBy(resultSet.getLong(CREATED_BY))
+                .createdDate(resultSet.getTimestamp(CREATED_DATE))
+                .lastModifiedBy(resultSet.getLong(LAST_MODIFIED_BY))
+                .lastModifiedDate(resultSet.getTimestamp(LAST_MODIFIED_DATE))
                 .build();
     }
 }

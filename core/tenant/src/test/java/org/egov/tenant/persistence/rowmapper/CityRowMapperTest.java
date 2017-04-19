@@ -11,6 +11,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.egov.tenant.persistence.entity.City.*;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -23,21 +24,20 @@ public class CityRowMapperTest {
     public void test_should_map_result_set_to_entity() throws Exception {
         Date date = new Date();
         Timestamp timestamp = new Timestamp(date.getTime());
-        java.sql.Date sqlDate = new java.sql.Date(date.getTime());
 
-        when(resultSet.getLong(City.Fields.ID.getValue())).thenReturn(1L);
-        when(resultSet.getString(City.Fields.NAME.getValue())).thenReturn("Bengaluru");
-        when(resultSet.getString(City.Fields.LOCAL_NAME.getValue())).thenReturn("local name");
-        when(resultSet.getString(City.Fields.DISTRICT_CODE.getValue())).thenReturn("district code");
-        when(resultSet.getString(City.Fields.DISTRICT_NAME.getValue())).thenReturn("district name");
-        when(resultSet.getString(City.Fields.REGION_NAME.getValue())).thenReturn("region name");
-        when(resultSet.getDouble(City.Fields.LONGITUDE.getValue())).thenReturn(35.234);
-        when(resultSet.getDouble(City.Fields.LATITUDE.getValue())).thenReturn(75.234);
-        when(resultSet.getString(City.Fields.TENANT_CODE.getValue())).thenReturn("AP.GUNTOOR");
-        when(resultSet.getTimestamp(City.Fields.CREATED_DATE.getValue())).thenReturn(timestamp);
-        when(resultSet.getLong(City.Fields.CREATED_BY.getValue())).thenReturn(1L);
-        when(resultSet.getTimestamp(City.Fields.LAST_MODIFIED_DATE.getValue())).thenReturn(timestamp);
-        when(resultSet.getLong(City.Fields.LAST_MODIFIED_BY.getValue())).thenReturn(1L);
+        when(resultSet.getLong(ID)).thenReturn(1L);
+        when(resultSet.getString(NAME)).thenReturn("Bengaluru");
+        when(resultSet.getString(LOCAL_NAME)).thenReturn("local name");
+        when(resultSet.getString(DISTRICT_CODE)).thenReturn("district code");
+        when(resultSet.getString(DISTRICT_NAME)).thenReturn("district name");
+        when(resultSet.getString(REGION_NAME)).thenReturn("region name");
+        when(resultSet.getDouble(LONGITUDE)).thenReturn(35.234);
+        when(resultSet.getDouble(LATITUDE)).thenReturn(75.234);
+        when(resultSet.getString(TENANT_CODE)).thenReturn("AP.GUNTOOR");
+        when(resultSet.getTimestamp(CREATED_DATE)).thenReturn(timestamp);
+        when(resultSet.getLong(CREATED_BY)).thenReturn(1L);
+        when(resultSet.getTimestamp(LAST_MODIFIED_DATE)).thenReturn(timestamp);
+        when(resultSet.getLong(LAST_MODIFIED_BY)).thenReturn(1L);
 
         CityRowMapper cityRowMapper = new CityRowMapper();
 

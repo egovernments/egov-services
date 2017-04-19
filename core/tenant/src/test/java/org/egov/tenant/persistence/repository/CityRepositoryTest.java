@@ -1,116 +1,111 @@
 package org.egov.tenant.persistence.repository;
 
 import org.egov.tenant.domain.model.City;
-import org.egov.tenant.persistence.repository.builder.CityQueryBuilder;
-import org.egov.tenant.persistence.rowmapper.CityRowMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
+import static org.egov.tenant.persistence.entity.City.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(SpringRunner.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 public class CityRepositoryTest {
-
-    @Mock
-    private JdbcTemplate jdbcTemplate;
-
-    @Mock
-    private CityQueryBuilder cityQueryBuilder;
 
     private CityRepository cityRepository;
 
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
     @Before
     public void setUp() throws Exception {
-        cityRepository = new CityRepository(jdbcTemplate, cityQueryBuilder);
+        cityRepository = new CityRepository(jdbcTemplate);
     }
 
     @Test
-    public void test_should_save_city() {
-        when(cityQueryBuilder.getInsertQuery()).thenReturn("insert query");
-
-        List<Object> fields = new ArrayList<Object>() {{
-            add("name");
-            add("localname");
-            add("districtcode");
-            add("districtname");
-            add("regionname");
-            add(37.345);
-            add(75.232);
-            add("tenantCode");
-            add(1L);
-            add(1L);
-        }};
-
-        when(jdbcTemplate.update(
-                eq("insert query"),
-                eq("name"),
-                eq("localname"),
-                eq("districtcode"),
-                eq("districtname"),
-                eq("regionname"),
-                eq(37.345),
-                eq(75.232),
-                eq("tenantCode"),
-                eq(1L),
-                any(Date.class),
-                eq(1L),
-                any(Date.class))
-        ).thenReturn(1);
-
+    @Sql(scripts = {"/sql/clearCity.sql", "/sql/clearTenant.sql", "/sql/insertTenantData.sql"})
+    public void test_should_create_city() {
         City city = City.builder()
-                .name("name")
-                .localName("localname")
-                .districtCode("districtcode")
-                .districtName("districtname")
-                .regionName("regionname")
-                .longitude(37.345)
-                .latitude(75.232)
-                .build();
+            .name("Bengaluru")
+            .localName("local name")
+            .districtCode("AB")
+            .districtName("district")
+            .regionName("region name")
+            .longitude(35.345)
+            .latitude(75.234)
+            .build();
 
-        cityRepository.save(city, "tenantCode");
+        cityRepository.save(city, "AP.KURNOOL");
 
-        verify(jdbcTemplate).update(
-                eq("insert query"),
-                eq("name"),
-                eq("localname"),
-                eq("districtcode"),
-                eq("districtname"),
-                eq("regionname"),
-                eq(37.345),
-                eq(75.232),
-                eq("tenantCode"),
-                eq(1L),
-                any(Date.class),
-                eq(1L),
-                any(Date.class)
-        );
+        List<Map<String, Object>> result = jdbcTemplate.query("SELECT * FROM city", new CityResultExtractor());
+
+        Map<String, Object> row = result.get(0);
+        assertThat(row.get(ID)).isEqualTo(1L);
+        assertThat(row.get(NAME)).isEqualTo("Bengaluru");
+        assertThat(row.get(LOCAL_NAME)).isEqualTo("local name");
+        assertThat(row.get(DISTRICT_CODE)).isEqualTo("AB");
+        assertThat(row.get(DISTRICT_NAME)).isEqualTo("district");
+        assertThat(row.get(REGION_NAME)).isEqualTo("region name");
     }
 
     @Test
+    @Sql(scripts = {"/sql/clearCity.sql", "/sql/clearTenant.sql", "/sql/insertTenantData.sql", "/sql/insertCityData.sql"})
     public void test_should_retrieve_city() {
-        City cityModel = mock(City.class);
-        org.egov.tenant.persistence.entity.City cityEntity = mock(org.egov.tenant.persistence.entity.City.class);
-        when(cityEntity.toDomain()).thenReturn(cityModel);
+        City city = cityRepository.find("AP.KURNOOL");
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(1990, Calendar.JULY, 23, 0, 0, 0);
+        Date date = calendar.getTime();
 
-        when(cityQueryBuilder.getSelectQuery("tenantCode")).thenReturn("select query");
-        List<org.egov.tenant.persistence.entity.City> listOfEntity = Collections.singletonList(cityEntity);
-        when(jdbcTemplate.query(eq("select query"), any(CityRowMapper.class))).thenReturn(listOfEntity);
-
-        City result = cityRepository.find("tenantCode");
-
-        assertThat(result).isEqualTo(cityModel);
+        assertThat(city.getId()).isEqualTo(1L);
+        assertThat(city.getName()).isEqualTo("Bengaluru");
+        assertThat(city.getLocalName()).isEqualTo("localname");
+        assertThat(city.getDistrictCode()).isEqualTo("ABC");
+        assertThat(city.getDistrictName()).isEqualTo("Udupi");
+        assertThat(city.getRegionName()).isEqualTo("Region");
+        assertThat(city.getLongitude()).isEqualTo(34.567);
+        assertThat(city.getLatitude()).isEqualTo(74.566);
+        assertThat(city.getTenantCode()).isEqualTo("AP.KURNOOL");
+        assertThat(city.getCreatedBy()).isEqualTo(1L);
+        assertThat(city.getCreatedDate()).isInSameSecondAs(date);
+        assertThat(city.getLastModifiedBy()).isEqualTo(1L);
+        assertThat(city.getLastModifiedDate()).isInSameSecondAs(date);
     }
 
+    class CityResultExtractor implements ResultSetExtractor<List<Map<String, Object>>> {
+        @Override
+        public List<Map<String, Object>> extractData(ResultSet resultSet) throws SQLException, DataAccessException {
+            List<Map<String, Object>> rows = new ArrayList<>();
+            while (resultSet.next()) {
+                Map<String, Object> row = new HashMap<String, Object>() {{
+                    put(ID, resultSet.getLong(ID));
+                    put(NAME, resultSet.getString(NAME));
+                    put(LOCAL_NAME, resultSet.getString(LOCAL_NAME));
+                    put(DISTRICT_CODE, resultSet.getString(DISTRICT_CODE));
+                    put(DISTRICT_NAME, resultSet.getString(DISTRICT_NAME));
+                    put(REGION_NAME, resultSet.getString(REGION_NAME));
+                    put(LONGITUDE, resultSet.getDouble(LONGITUDE));
+                    put(LATITUDE, resultSet.getDouble(LATITUDE));
+                    put(TENANT_CODE, resultSet.getString(TENANT_CODE));
+                    put(CREATED_BY, resultSet.getLong(CREATED_BY));
+                    put(CREATED_DATE, resultSet.getString(CREATED_DATE));
+                    put(LAST_MODIFIED_BY, resultSet.getLong(LAST_MODIFIED_BY));
+                    put(LAST_MODIFIED_DATE, resultSet.getString(LAST_MODIFIED_DATE));
+                }};
+
+                rows.add(row);
+            }
+            return rows;
+        }
+    }
 }

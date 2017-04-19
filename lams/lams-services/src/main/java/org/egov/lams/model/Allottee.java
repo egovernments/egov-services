@@ -2,7 +2,9 @@ package org.egov.lams.model;
 
 import org.egov.lams.model.enums.Gender;
 import org.egov.lams.model.enums.UserType;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -68,6 +68,7 @@ public class AssetRowMapper implements RowMapper<Asset> {
 	public Asset mapRow(ResultSet rs, int rowNum) throws SQLException {
 		Asset asset = new Asset();
 		
+		try{
 		asset.setId((Long)rs.getObject("assetId"));
 		asset.setName(rs.getString("assetname"));
 		asset.setCode(rs.getString("assetcode"));
@@ -136,6 +137,11 @@ public class AssetRowMapper implements RowMapper<Asset> {
 		
 		asset.setAssetCategory(assetCategory);
 		
+		System.out.println("AssetRowMapper asset:: "+asset);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			
+		}
 		return asset;
 	}
 }

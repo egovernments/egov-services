@@ -17,8 +17,7 @@ CREATE TABLE eglams_rentincrementtype
   created_date timestamp without time zone,
   last_modified_by character varying(64),
   last_modified_date timestamp without time zone,
-  tenant_id character varying,
-  CONSTRAINT pk_eglams_rentincrementtype PRIMARY KEY (id,tenant_id)
+  CONSTRAINT pk_eglams_rentincrementtype PRIMARY KEY (id)
 );
 
 CREATE TABLE eglams_agreement
@@ -64,7 +63,7 @@ CREATE TABLE eglams_agreement
   goodwillamount numeric,
   closeDate time without time zone,
   timePeriod bigint,
-  CONSTRAINT pk_eglams_agreement PRIMARY KEY (id,tenant_id)
+  CONSTRAINT pk_eglams_agreement PRIMARY KEY (id)
 );
 
 CREATE TABLE eglams_demand
@@ -73,5 +72,5 @@ CREATE TABLE eglams_demand
   tenantid character varying NOT NULL,
   agreementid bigint NOT NULL,
   demandid character varying NOT NULL,
-  CONSTRAINT pk_eglams_demand PRIMARY KEY (id,tenantid)
+  CONSTRAINT pk_eglams_demand PRIMARY KEY (id)
 );

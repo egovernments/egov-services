@@ -11,8 +11,7 @@ try {
 
 	    deployer.takeSnapshot(group, source_env)
 
-        archiver.archiveArtifacts(["jenkins/scripts/kubernetes_manifests
-        .json"])
+        archiver.archiveArtifacts(["jenkins/scripts/kubernetes_manifests.json"])
 
         deployer.deploy(dest_env)
     }

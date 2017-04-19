@@ -76,7 +76,7 @@ CREATE TABLE if not exists eg_demand_reason
 
 alter table eg_demand_reason add column tenantid character varying(250);
 
-create sequence EG_DEMAND_REASON_DETAILS;
+create sequence SEQ_EG_DEMAND_REASON_DETAILS;
 CREATE TABLE eg_demand_reason_details
 (
   id bigint NOT NULL, -- Primary Key

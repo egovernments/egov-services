@@ -27,9 +27,9 @@ def get_manifests():
                            ".spec.template.metadata.creationTimestamp," \
                            ".spec.strategy," \
                            ".metadata.generation," \
-                           ".spec.template.spec.containers[]?.resources," \
-                           ".spec.template.spec.containers[]?." \
-                           "terminationMessagePath)'"
+                           ".[\"spec.template.spec.containers[]?.resources\"]," \
+                           ".[\"spec.template.spec.containers[]?." \
+                           "terminationMessagePath\"])'"
     get_full_manifests = Popen(shlex.split(get_manifests_cmd),stdout=PIPE)
     get_filtered_manifests = Popen(shlex.split(filter_manifests_cmd),
                                    stdin=get_full_manifests.stdout,

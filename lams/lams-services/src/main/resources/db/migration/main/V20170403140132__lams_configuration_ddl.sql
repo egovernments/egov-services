@@ -3,7 +3,7 @@ CREATE SEQUENCE seq_eglams_lamsConfiguration;
 
 CREATE TABLE eglams_lamsConfiguration (
 	id BIGINT NOT NULL,
-	keyName CHARACTER VARYING(250) NOT NULL,
+	keyName CHARACTER VARYING(50) NOT NULL,
 	description CHARACTER VARYING(250),
 	createdBy BIGINT NOT NULL,
 	createdDate DATE NOT NULL,

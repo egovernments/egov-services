@@ -1660,6 +1660,9 @@ label.error {
   outline: 0;
 }
 /*Custom form css overrided*/
+.btn {
+  margin-right: 5px;
+}
 .btn:hover,
 .btn:focus,
 .btn.focus {
@@ -1894,39 +1897,6 @@ label.error {
   background: #f7f7f7;
 }
 /*datatable overrided properties*/
-@media screen and (max-width: 768px) {
-  table.dataTable {
-    display: block;
-  }
-}
-@media screen and (max-width: 768px) {
-  table.dataTable thead {
-    display: none;
-  }
-  table.dataTable thead th {
-    position: absolute;
-    top: -9990px;
-    left: -9990px;
-    display: block;
-  }
-}
-table.dataTable thead tr > th:hover {
-  cursor: pointer;
-}
-table.dataTable tbody {
-  font-size: 13px;
-}
-@media screen and (max-width: 768px) {
-  table.dataTable tbody {
-    display: block;
-  }
-  table.dataTable tbody tr {
-    display: block;
-  }
-  table.dataTable tbody tr td {
-    display: block;
-  }
-}
 table.dataTable tbody tr:hover {
   background: #f7f7f7;
   cursor: pointer;

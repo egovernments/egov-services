@@ -1,5 +1,6 @@
 package org.egov.tenant.domain.service;
 
+import org.egov.tenant.domain.exception.DuplicateTenantCodeException;
 import org.egov.tenant.domain.exception.InvalidTenantDetailsException;
 import org.egov.tenant.domain.model.Tenant;
 import org.egov.tenant.domain.model.TenantSearchCriteria;
@@ -45,7 +46,8 @@ public class TenantServiceTest {
     @Test
     public void test_should_save_tenant() {
         Tenant tenant = mock(Tenant.class);
-
+        when(tenant.getCode()).thenReturn("code");
+        when(tenantRepository.isTenantPresent("code")).thenReturn(0L);
         when(tenantRepository.save(tenant)).thenReturn(tenant);
 
         Tenant result = tenantService.createTenant(tenant);
@@ -57,7 +59,18 @@ public class TenantServiceTest {
     public void test_should_throw_exception_when_tenant_is_invalid() {
         Tenant tenant = Tenant.builder().build();
 
-        Tenant result = tenantService.createTenant(tenant);
+        tenantService.createTenant(tenant);
+
+        verify(tenantRepository, never()).save(any(Tenant.class));
+    }
+
+    @Test(expected = DuplicateTenantCodeException.class)
+    public void test_should_throw_exception_when_duplicate_tenant_code_exists() {
+        Tenant tenant = mock(Tenant.class);
+        when(tenant.getCode()).thenReturn("code");
+        when(tenantRepository.isTenantPresent("code")).thenReturn(1L);
+
+        tenantService.createTenant(tenant);
 
         verify(tenantRepository, never()).save(any(Tenant.class));
     }

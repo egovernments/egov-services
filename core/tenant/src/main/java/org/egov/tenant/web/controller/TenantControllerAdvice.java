@@ -1,7 +1,9 @@
 package org.egov.tenant.web.controller;
 
 import org.egov.common.contract.response.ErrorResponse;
+import org.egov.tenant.domain.exception.DuplicateTenantCodeException;
 import org.egov.tenant.domain.exception.InvalidTenantDetailsException;
+import org.egov.tenant.web.adapter.DuplicateTenantCodeErrorAdapter;
 import org.egov.tenant.web.adapter.TenantCreateRequestErrorAdapter;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -17,5 +19,11 @@ public class TenantControllerAdvice {
     @ExceptionHandler(InvalidTenantDetailsException.class)
     public ErrorResponse handleInvalidTenantDetailsException(InvalidTenantDetailsException ex) {
         return new TenantCreateRequestErrorAdapter().adapt(ex.getTenant());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(DuplicateTenantCodeException.class)
+    public ErrorResponse handleDuplicateTenantCodeException(DuplicateTenantCodeException ex) {
+        return new DuplicateTenantCodeErrorAdapter().adapt(ex.getTenant());
     }
 }

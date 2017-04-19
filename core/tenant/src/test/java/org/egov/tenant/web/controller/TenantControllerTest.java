@@ -1,6 +1,7 @@
 package org.egov.tenant.web.controller;
 
 import org.egov.tenant.Resources;
+import org.egov.tenant.domain.exception.DuplicateTenantCodeException;
 import org.egov.tenant.domain.exception.InvalidTenantDetailsException;
 import org.egov.tenant.domain.model.City;
 import org.egov.tenant.domain.model.Tenant;
@@ -106,6 +107,29 @@ public class TenantControllerTest {
             .andExpect(status().isBadRequest())
             .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
             .andExpect(content().json(new Resources().getFileContents("tenantCreateErrorResponse.json")));
+    }
+
+    @Test
+    public void test_should_return_400_when_duplicate_tenant_code_exception() throws Exception {
+
+        Tenant tenant = Tenant.builder()
+            .code("AP.KURNOOL")
+            .description("description")
+            .logoId("logoId")
+            .imageId("imageId")
+            .domainUrl("domainUrl")
+            .type("CITY")
+            .city(null)
+            .build();
+
+        when(tenantService.createTenant(any(Tenant.class))).thenThrow(new DuplicateTenantCodeException(tenant));
+
+        mockMvc.perform(post("/v1/tenant/_create")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(new Resources().getFileContents("tenantCreateRequest.json")))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+            .andExpect(content().json(new Resources().getFileContents("duplicateTenantCodeErrorResponse.json")));
     }
 
     private List<Tenant> getListOfTenants() {

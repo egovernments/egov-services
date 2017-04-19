@@ -77,6 +77,22 @@ public class TenantRepositoryTest {
     }
 
     @Test
+    @Sql(scripts = {"/sql/clearCity.sql", "/sql/clearTenant.sql", "/sql/insertTenantData.sql"})
+    public void test_should_return_count_of_tenants_with_given_tenantCode_matching() throws Exception {
+
+        Long count = tenantRepository.isTenantPresent("AP.KURNOOL");
+        assertThat(count).isEqualTo(1L);
+    }
+
+    @Test
+    @Sql(scripts = {"/sql/clearCity.sql", "/sql/clearTenant.sql", "/sql/insertTenantData.sql"})
+    public void test_should_return_zero_when_tenant_does_not_exist_for_the_given_tenantCode() throws Exception {
+
+        Long count = tenantRepository.isTenantPresent("NON.EXISTENT");
+        assertThat(count).isEqualTo(0L);
+    }
+
+    @Test
     @Sql(scripts = {"/sql/clearCity.sql", "/sql/clearTenant.sql"})
     public void test_should_save_tenant() throws Exception {
         City city = City.builder().id(1L).build();

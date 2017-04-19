@@ -5,6 +5,7 @@ import org.egov.tenant.domain.model.TenantSearchCriteria;
 import org.egov.tenant.persistence.entity.Tenant;
 import org.egov.tenant.persistence.rowmapper.TenantRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,8 +20,11 @@ import static org.egov.tenant.persistence.entity.Tenant.*;
 @Repository
 public class TenantRepository {
     private static final String TENANT_BASE_QUERY = "SELECT distinct id, code, description, domainurl, logoid, imageid, type, createdby, createddate, lastmodifiedby, lastmodifieddate from tenant WHERE code in (:code) ORDER BY ID";
+
     private static final String INSERT_QUERY = "INSERT INTO tenant (id, code, description, domainurl, logoid, imageid, type, createdby, createddate, lastmodifiedby, lastmodifieddate) " +
         "VALUES (nextval('seq_tenant'), :code, :description, :domainurl, :logoid, :imageid, :type, :createdby, :createddate, :lastmodifiedby, :lastmodifieddate)";
+
+    private static final String COUNT_WITH_TENANT_CODE_QUERY = "SELECT COUNT(id) as count FROM tenant WHERE code = :code";
 
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private CityRepository cityRepository;
@@ -68,5 +72,16 @@ public class TenantRepository {
         namedParameterJdbcTemplate.update(INSERT_QUERY, parametersMap);
         cityRepository.save(tenant.getCity(), tenant.getCode());
         return tenant;
+    }
+
+    public Long isTenantPresent(String tenantCode) {
+
+        final Map<String, Object> parameterMap = new HashMap<String, Object>() {{
+            put(CODE, tenantCode);
+        }};
+
+        SqlRowSet sqlRowSet = namedParameterJdbcTemplate.queryForRowSet(COUNT_WITH_TENANT_CODE_QUERY, parameterMap);
+        sqlRowSet.next();
+        return sqlRowSet.getLong("count");
     }
 }

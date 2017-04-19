@@ -1,7 +1,7 @@
 INSERT INTO service (id, code, name, enabled, contextroot, parentmodule, displayname, ordernumber,tenantid) VALUES (nextval('seq_service'), 'Financials_MS', 'Financials_MS', false, '/egf-masters', NULL, 'Financials', 20,'default');
 INSERT INTO service (id, code, name, enabled, contextroot, parentmodule, displayname, ordernumber,tenantid) VALUES (nextval('seq_service'), 'Financials_Masters_MS', 'Financials_Masters_MS', false, '/egf-masters', (select id from service where name='Financials_MS'), 'Masters', 20,'default');
 --Account Detail key
-INSERT INTO service (id, code, name, enabled, contextroot, parentmodule, displayname, ordernumber,tenantid) VALUES (nextval('seq_service'), 'Account Detail key', 'Account Detail key', false, '/egf-masters', (select id from service where name='Financials_Masters_MS'), 'Account Detail key', 1);
+INSERT INTO service (id, code, name, enabled, contextroot, parentmodule, displayname, ordernumber,tenantid) VALUES (nextval('seq_service'), 'Account Detail key', 'Account Detail key', false, '/egf-masters', (select id from service where name='Financials_Masters_MS'), 'Account Detail key', 1,'default');
 
 insert into eg_action (ID,servicecode,NAME,URL,QUERYPARAMS,PARENTMODULE,ORDERNUMBER,DISPLAYNAME,ENABLED,CREATEDBY,CREATEDDATE,LASTMODIFIEDBY,LASTMODIFIEDDATE,tenantid) values (NEXTVAL('SEQ_EG_ACTION'),'createAccountDetailKey','createAccountDetailKey',
 '/accountdetailkeys/_create',null,(select id from service where name='Account Detail key'),1,'Create Account Detail Key',false,1,now(),1,now(),'default');

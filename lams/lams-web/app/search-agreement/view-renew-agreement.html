@@ -88,7 +88,6 @@
     <script src="resources/javascript/bootstrap-datetimepicker.js"></script>
     <script type="text/javascript" src="resources/javascript/global/jquery-validation/jquery.validate.min.js"></script>
     <script type="text/javascript" src="resources/javascript/global/jquery-validation/additional-methods.min.js"></script>
-    <script src="resources/javascript/jquery-blockui.js"></script>
     <script src="resources/javascript/common/common.js" charset="utf-8"></script>
 
 </head>
@@ -2398,20 +2397,79 @@
                                                 <div class="col-md-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="renew_order_no">Renewal Order No  </label>
+                                                            <label>Renewal Order Date </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input type="text" id="renew_order_no" value="390/10">
+                                                            <input type="text" class="datetimepicker"  id="renew_order_detail">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label>Renewal Order Date </label>
+                                                            <label for="renew_order_no">Renewal Order No  </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input type="date" id="renew_order_detail">
+                                                            <input type="text" id="renew_order_no" value="" maxlength="16">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label>Date Of Expiry </label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <input type="text" class="datetimepicker" id="renew_order_detail">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label>Renewal Period </label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <div class="styled-select">
+                                                                <select id="renew_rent_increment_method">
+                                                                  <option value="">Choose</option>
+                                                                  <option value="1">1 Year</option>
+                                                                  <option value="2">2 Years</option>
+                                                                  <option value="3">3 Years</option>
+                                                                  <option value="4">4 Years</option>
+                                                                  <option value="5">5 Years</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="renew_rent_increment_method">Method by increase in rent is calculated during renewal</label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <div class="styled-select">
+                                                                <select id="renew_rent_increment_method">
+                                                                  <option>Choose</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="renew_rent">Shop Rent (Rs)  </label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <input type="number" id="renew_rent" value="">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -2431,34 +2489,6 @@
                                                 <div class="col-md-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="renew_rent">Shop Rent (Rs)  </label>
-                                                        </div>
-                                                        <div class="col-sm-6">
-                                                            <input type="text" id="renew_rent" value="1045">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="row">
-                                                        <div class="col-sm-6 label-text">
-                                                            <label for="renew_rent_increment_method">Method by increase in rent is calculated during renewal</label>
-                                                        </div>
-                                                        <div class="col-sm-6">
-                                                            <div class="styled-select">
-                                                                <select id="renew_rent_increment_method">
-                                                              <option>Choose</option>
-                                                            </select>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-md-6">
-                                                    <div class="row">
-                                                        <div class="col-sm-6 label-text">
                                                             <label for="renew_file">Attach Document </label>
                                                         </div>
                                                         <div class="col-sm-6">
@@ -2468,18 +2498,15 @@
                                                         </div>
                                                     </div>
                                                 </div>
-
                                             </div>
-
                                             <div class="row">
-
                                                 <div class="col-md-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
                                                             <label for="renew_remarks">Remarks </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <textarea id="renew_remarks"></textarea>
+                                                            <textarea id="renew_remarks" maxlength="256"></textarea>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -2490,7 +2517,7 @@
                                                             <label for="renew_reason">Reason For Renewal </label>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <textarea id="renew_reason"></textarea>
+                                                            <textarea id="renew_reason" maxlength="36"></textarea>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -2570,10 +2597,10 @@
                                 <div class="text-center" id="footer-btn-grp">
                                     <button type="button" class="btn btn-submit" id="close">Close</button>
                                     <!-- <button type="button" class="btn btn-submit" id="printNotice">Print Notice</button> -->
-                                    <!-- <button type="button" class="btn btn-submit" id="viewDcb">View DCB</button>
+                                    <!-- <button type="button" class="btn btn-submit" id="viewDcb">View DCB</button> -->
                                     <button type="submit" class="btn btn-submit" id="renewBtn">
                                         Renew
-                                    </button> -->
+                                    </button>
                                 </div>
 
                                 </form>

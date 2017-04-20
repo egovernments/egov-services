@@ -8,7 +8,9 @@ function getValueByName(name, id) {
 
 var _type;
 $(document).ready(function() {
-
+    $('.datetimepicker').datetimepicker({
+        format: 'DD/MM/YYYY'
+    });
     $("#viewDcb").on("click", function() {
         //clear cookies and logout
         // $("#login").hide();
@@ -223,7 +225,7 @@ $(document).ready(function() {
     //remove renew part and related buttons from dom
     if (getUrlVars()["view"] == "new") {
         //removing renew section and renew button
-        $("#renew,#workFlowDetails").remove();
+        $("#renew,#workFlowDetails,#renewBtn").remove();
     } else if (getUrlVars()["view"] == "inbox") {
         $("#historyTable").show();
         $("#renew").remove();
@@ -271,6 +273,8 @@ $(document).ready(function() {
                 }
             });
         }
+    } else if(getUrlVars()["view"] == "renew") {
+
     } else {
         $("#viewDcb").remove();
     }

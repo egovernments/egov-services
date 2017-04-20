@@ -62,6 +62,7 @@ import org.egov.eis.repository.RegularisationRepository;
 import org.egov.eis.repository.ServiceHistoryRepository;
 import org.egov.eis.repository.TechnicalQualificationRepository;
 import org.egov.eis.service.exception.EmployeeIdNotFoundException;
+import org.egov.eis.service.exception.UserCreateException;
 import org.egov.eis.service.helper.EmployeeHelper;
 import org.egov.eis.service.helper.EmployeeUserMapper;
 import org.egov.eis.web.contract.EmployeeCriteria;
@@ -69,7 +70,6 @@ import org.egov.eis.web.contract.EmployeeRequest;
 import org.egov.eis.web.contract.RequestInfo;
 import org.egov.eis.web.contract.UserRequest;
 import org.egov.eis.web.contract.UserResponse;
-import org.egov.eis.web.errorhandler.ErrorHandler;
 import org.egov.eis.web.errorhandler.ErrorResponse;
 import org.egov.eis.web.errorhandler.UserErrorResponse;
 import org.slf4j.Logger;
@@ -162,9 +162,6 @@ public class EmployeeService {
 	private EmployeeProducer employeeProducer;
 
 	@Autowired
-	private ErrorHandler errorHandler;
-
-	@Autowired
 	PropertiesManager propertiesManager;
 
 	public List<EmployeeInfo> getEmployees(EmployeeCriteria employeeCriteria, RequestInfo requestInfo) {
@@ -213,7 +210,7 @@ public class EmployeeService {
 		return employee;
 	}
 
-	public ResponseEntity<?> createAsync(EmployeeRequest employeeRequest) {
+	public Employee createAsync(EmployeeRequest employeeRequest) throws JsonProcessingException {
 		UserRequest userRequest = employeeHelper.getUserRequest(employeeRequest);
 
 		ResponseEntity<?> responseEntity = null;
@@ -223,19 +220,14 @@ public class EmployeeService {
 		try {
 			responseEntity = userService.createUser(userRequest);
 
-		} catch (Exception e) {
-			LOGGER.debug("Error occurred while creating user", e);
-			return errorHandler.getResponseEntityForUnknownUserDBUpdationError(employeeRequest.getRequestInfo());
-		}
-
-		try {
 			if (responseEntity.getBody().getClass().equals(UserErrorResponse.class)
 					|| responseEntity.getBody().getClass().equals(ErrorResponse.class)) {
-				return responseEntity;
+				throw new UserCreateException(0L);
+				// return responseEntity;
 			}
 		} catch (Exception e) {
 			LOGGER.debug("Error occurred while creating user", e);
-			return errorHandler.getResponseEntityForUnknownUserDBUpdationError(employeeRequest.getRequestInfo());
+			throw new UserCreateException(0L);
 		}
 
 		UserResponse userResponse = (UserResponse) responseEntity.getBody();
@@ -245,31 +237,17 @@ public class EmployeeService {
 		employee.setId(user.getId());
 		employee.setUser(user);
 
-		try {
-			employeeHelper.populateDefaultDataForCreate(employeeRequest);
-		} catch (Exception e) {
-			LOGGER.debug("Error occurred while populating data in objects", e);
-			return errorHandler.getResponseEntityForUnexpectedErrors(employeeRequest.getRequestInfo());
-		}
+		employeeHelper.populateDefaultDataForCreate(employeeRequest);
 
 		String employeeRequestJson = null;
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			employeeRequestJson = mapper.writeValueAsString(employeeRequest);
-			LOGGER.info("employeeJson::" + employeeRequestJson);
-		} catch (JsonProcessingException e) {
-			LOGGER.error("Error while converting Employee to JSON", e);
-			e.printStackTrace();
-		}
+		ObjectMapper mapper = new ObjectMapper();
+		employeeRequestJson = mapper.writeValueAsString(employeeRequest);
+		LOGGER.info("employeeJson::" + employeeRequestJson);
 
-		try {
-			employeeProducer.sendMessage(propertiesManager.getSaveEmployeeTopic(),
-					propertiesManager.getEmployeeSaveKey(), employeeRequestJson);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
+		employeeProducer.sendMessage(propertiesManager.getSaveEmployeeTopic(),
+				propertiesManager.getEmployeeSaveKey(), employeeRequestJson);
 
-		return employeeHelper.getSuccessResponseForCreate(employee, employeeRequest.getRequestInfo());
+		return employee;
 	}
 
 	public void create(EmployeeRequest employeeRequest) {
@@ -305,7 +283,7 @@ public class EmployeeService {
 		}
 	}
 
-	public ResponseEntity<?> updateAsync(EmployeeRequest employeeRequest) {
+	public Employee updateAsync(EmployeeRequest employeeRequest) throws JsonProcessingException {
 
 		Employee employee = employeeRequest.getEmployee();
 		/*
@@ -330,30 +308,17 @@ public class EmployeeService {
 		 * User user = userResponse.getUser().get(0); employee.setUser(user);
 		 */
 
-		try {
-			employeeHelper.populateDefaultDataForUpdate(employeeRequest);
-		} catch (Exception e) {
-			LOGGER.debug("Error occurred while populating data in objects", e);
-			return errorHandler.getResponseEntityForUnexpectedErrors(employeeRequest.getRequestInfo());
-		}
+		employeeHelper.populateDefaultDataForUpdate(employeeRequest);
 
 		String employeeUpdateRequestJson = null;
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			employeeUpdateRequestJson = mapper.writeValueAsString(employeeRequest);
-			LOGGER.info("employeeJson update::" + employeeUpdateRequestJson);
-		} catch (JsonProcessingException e) {
-			LOGGER.error("Error while converting Employee to JSON during update", e);
-			e.printStackTrace();
-		}
 
-		try {
-			employeeProducer.sendMessage(propertiesManager.getUpdateEmployeeTopic(),
-					propertiesManager.getEmployeeSaveKey(), employeeUpdateRequestJson);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		return employeeHelper.getSuccessResponseForCreate(employee, employeeRequest.getRequestInfo());
+		ObjectMapper mapper = new ObjectMapper();
+		employeeUpdateRequestJson = mapper.writeValueAsString(employeeRequest);
+		LOGGER.info("employeeJson update::" + employeeUpdateRequestJson);
+
+		employeeProducer.sendMessage(propertiesManager.getUpdateEmployeeTopic(),
+				propertiesManager.getEmployeeSaveKey(), employeeUpdateRequestJson);
+		return employee;
 	}
 
 	public void update(EmployeeRequest employeeRequest) {

@@ -48,11 +48,14 @@ import org.egov.eis.model.Employee;
 import org.egov.eis.model.EmployeeInfo;
 import org.egov.eis.service.EmployeeService;
 import org.egov.eis.service.exception.EmployeeIdNotFoundException;
+import org.egov.eis.service.exception.UserCreateException;
+import org.egov.eis.service.exception.UserUpdateException;
 import org.egov.eis.service.helper.EmployeeHelper;
 import org.egov.eis.web.contract.EmployeeCriteria;
 import org.egov.eis.web.contract.EmployeeGetRequest;
 import org.egov.eis.web.contract.EmployeeInfoResponse;
 import org.egov.eis.web.contract.EmployeeRequest;
+import org.egov.eis.web.contract.EmployeeResponse;
 import org.egov.eis.web.contract.RequestInfo;
 import org.egov.eis.web.contract.RequestInfoWrapper;
 import org.egov.eis.web.contract.ResponseInfo;
@@ -169,6 +172,7 @@ public class EmployeeController {
 		try {
 			employee = employeeService.getEmployee(employeeGetRequest.getId(), employeeGetRequest.getTenantId(),
 					requestInfo);
+			System.out.println("employee=" + employee);
 		} catch (EmployeeIdNotFoundException idNotFoundException) {
 			LOGGER.error("Error while processing request " + employeeGetRequest.getId(), idNotFoundException);
 			return errorHandler.getResponseEntityForInvalidEmployeeId(modelAttributeBindingResult, requestInfo);
@@ -176,7 +180,7 @@ public class EmployeeController {
 			LOGGER.error("Error while processing request " + employeeGetRequest.getId(), exception);
 			return errorHandler.getResponseEntityForUnexpectedErrors(requestInfo);
 		}
-		return employeeHelper.getSuccessResponseForGet(employee, requestInfo);
+		return getSuccessResponseForGet(employee, requestInfo);
 	}
 
 	/**
@@ -196,7 +200,17 @@ public class EmployeeController {
 		if (errorResponseEntity != null)
 			return errorResponseEntity;
 
-		return employeeService.createAsync(employeeRequest);
+		Employee employee = null;
+		try {
+			employee = employeeService.createAsync(employeeRequest);
+		} catch (UserCreateException uce) {
+			LOGGER.error("Error while processing request ", uce);
+			return errorHandler.getResponseEntityForUnknownUserDBUpdationError(employeeRequest.getRequestInfo());
+		} catch (Exception exception) {
+			LOGGER.error("Error while processing request ", exception);
+			return errorHandler.getResponseEntityForUnexpectedErrors(employeeRequest.getRequestInfo());
+		}
+		return getSuccessResponseForCreate(employee, employeeRequest.getRequestInfo());
 	}
 
 	/**
@@ -215,8 +229,18 @@ public class EmployeeController {
 		ResponseEntity<?> errorResponseEntity = validateEmployeeRequest(employeeRequest, bindingResult, true);
 		if (errorResponseEntity != null)
 			return errorResponseEntity;
-
-		return employeeService.updateAsync(employeeRequest);
+		
+		Employee employee = null;
+		try {
+			employee = employeeService.updateAsync(employeeRequest);
+		} catch (UserUpdateException ude) {
+			LOGGER.error("Error while processing request ", ude);
+			return errorHandler.getResponseEntityForUnknownUserDBUpdationError(employeeRequest.getRequestInfo());
+		} catch (Exception exception) {
+			LOGGER.error("Error while processing request ", exception);
+			return errorHandler.getResponseEntityForUnexpectedErrors(employeeRequest.getRequestInfo());
+		}
+		return getSuccessResponseForUpdate(employee, employeeRequest.getRequestInfo());
 	}
 
 	/**
@@ -260,9 +284,37 @@ public class EmployeeController {
 	private ResponseEntity<?> getSuccessResponseForSearch(List<EmployeeInfo> employeesList, RequestInfo requestInfo) {
 		EmployeeInfoResponse employeeInfoResponse = new EmployeeInfoResponse();
 		employeeInfoResponse.setEmployees(employeesList);
+		System.out.println("employeesList=" + employeesList);
 		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 		responseInfo.setStatus(HttpStatus.OK.toString());
 		employeeInfoResponse.setResponseInfo(responseInfo);
 		return new ResponseEntity<EmployeeInfoResponse>(employeeInfoResponse, HttpStatus.OK);
+	}
+	
+	/**
+	 * Populate EmployeeResponse object & returns ResponseEntity of type
+	 * EmployeeResponse containing ResponseInfo & Employee objects
+	 * 
+	 * @param employee
+	 * @param requestInfo
+	 * @param headers
+	 * @return ResponseEntity<?>
+	 */
+	public ResponseEntity<?> getSuccessResponseForCreate(Employee employee, RequestInfo requestInfo) {
+		EmployeeResponse employeeResponse = new EmployeeResponse();
+		employeeResponse.setEmployee(employee);
+
+		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+		responseInfo.setStatus(HttpStatus.OK.toString());
+		employeeResponse.setResponseInfo(responseInfo);
+		return new ResponseEntity<EmployeeResponse>(employeeResponse, HttpStatus.OK);
+	}
+	
+	public ResponseEntity<?> getSuccessResponseForGet(Employee employee, RequestInfo requestInfo) {
+		return getSuccessResponseForCreate(employee, requestInfo);
+	}
+	
+	public ResponseEntity<?> getSuccessResponseForUpdate(Employee employee, RequestInfo requestInfo) {
+		return getSuccessResponseForCreate(employee, requestInfo);
 	}
 }

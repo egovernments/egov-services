@@ -133,7 +133,9 @@ public class Regularisation {
 		if (orderDate == null) {
 			if (other.orderDate != null)
 				return false;
-		} else if (!areDatesEqualWithoutTimePart(orderDate, other.orderDate))
+		} else if (other.orderDate == null)
+			return false;
+		else if (!areDatesEqualWithoutTimePart(orderDate, other.orderDate))
 			return false;
 		if (orderNo == null) {
 			if (other.orderNo != null)

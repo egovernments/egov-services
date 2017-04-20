@@ -360,41 +360,4 @@ public class EmployeeHelper {
 		}
 	}
 
-	/**
-	 * Populate EmployeeResponse object & returns ResponseEntity of type
-	 * EmployeeResponse containing ResponseInfo & Employee objects
-	 * 
-	 * @param employee
-	 * @param requestInfo
-	 * @param headers
-	 * @return ResponseEntity<?>
-	 */
-	public ResponseEntity<?> getSuccessResponseForCreate(Employee employee, RequestInfo requestInfo) {
-		EmployeeResponse employeeResponse = new EmployeeResponse();
-		employeeResponse.setEmployee(employee);
-
-		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
-		responseInfo.setStatus(HttpStatus.OK.toString());
-		employeeResponse.setResponseInfo(responseInfo);
-		return new ResponseEntity<EmployeeResponse>(employeeResponse, HttpStatus.OK);
-	}
-	
-	/**
-	 * Populate EmployeeResponse object & returns ResponseEntity of type
-	 * EmployeeResponse containing ResponseInfo & Employee objects
-	 * 
-	 * @param employee
-	 * @param requestInfo
-	 * @param headers
-	 * @return ResponseEntity<?>
-	 */
-	public ResponseEntity<?> getSuccessResponseForGet(Employee employee, RequestInfo requestInfo) {
-		EmployeeResponse employeeResponse = new EmployeeResponse();
-		employeeResponse.setEmployee(employee);
-
-		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
-		responseInfo.setStatus(HttpStatus.OK.toString());
-		employeeResponse.setResponseInfo(responseInfo);
-		return new ResponseEntity<EmployeeResponse>(employeeResponse, HttpStatus.OK);
-	}
 }

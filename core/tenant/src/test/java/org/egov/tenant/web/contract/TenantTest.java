@@ -55,4 +55,21 @@ public class TenantTest {
         assertThat(actualTenantModel).isEqualTo(expectedTenantModel);
 
     }
+
+    @Test
+    public void test_should_not_convert_city_if_null() throws Exception {
+        Tenant tenantContract = Tenant.builder()
+            .code("AP.KURNOOL")
+            .description("description")
+            .logoId("logoId")
+            .imageId("imageId")
+            .domainUrl("domainUrl")
+            .type("CITY")
+            .city(null)
+            .build();
+
+        org.egov.tenant.domain.model.Tenant actualTenantModel = tenantContract.toDomain();
+
+        assertThat(actualTenantModel.getCity()).isNull();
+    }
 }

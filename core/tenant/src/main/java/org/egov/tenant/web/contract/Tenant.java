@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
 @Getter
 @Builder
 @AllArgsConstructor
@@ -33,16 +35,22 @@ public class Tenant {
 
     @JsonIgnore
     public org.egov.tenant.domain.model.Tenant toDomain() {
-        org.egov.tenant.domain.model.City city = this.city.toDomain();
+        org.egov.tenant.domain.model.City city;
+
+        if (!isEmpty(this.city)) {
+            city = this.city.toDomain();
+        } else {
+            city = null;
+        }
 
         return org.egov.tenant.domain.model.Tenant.builder()
-                .code(code)
-                .description(description)
-                .logoId(logoId)
-                .imageId(imageId)
-                .domainUrl(domainUrl)
-                .type(type)
-                .city(city)
-                .build();
+            .code(code)
+            .description(description)
+            .logoId(logoId)
+            .imageId(imageId)
+            .domainUrl(domainUrl)
+            .type(type)
+            .city(city)
+            .build();
     }
 }

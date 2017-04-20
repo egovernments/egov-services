@@ -56,14 +56,13 @@ public class RegularisationServiceTest {
 		final List<Regularisation> insertedRegularisations = new ArrayList<>();
 		final List<Regularisation> updatedRegularisations = new ArrayList<>();
 		final List<Long> deletedRegularisationIds = new ArrayList<>();
-		final List<EmployeeDocument> deletedDocuments = new ArrayList<>();
-		// public void delete(List<Long> regularisationsIdsToDelete, Long employeeId, String tenantId) {
+		final List<Long> deletedDocumentsReferenceIds = new ArrayList<>();
+
 		when(regularisationRepository.findByEmployeeId(100L, "1"))
         .thenReturn(getRegularisationsInDBForEmployee());
 		doAnswer(new Answer<Void>() {
 		    public Void answer(InvocationOnMock invocation) {
 		      Object[] args = invocation.getArguments();
-		//      System.out.println("called with arguments: " + Arrays.toString(args));
 		      deletedRegularisationIds.addAll((List<Long>)args[0]);
 		      return null;
 		    }
@@ -71,7 +70,6 @@ public class RegularisationServiceTest {
 		doAnswer(new Answer<Void>() {
 		    public Void answer(InvocationOnMock invocation) {
 		      Object[] args = invocation.getArguments();
-		  //    System.out.println("called with arguments: " + Arrays.toString(args));
 		      insertedRegularisations.add((Regularisation)args[0]);
 		      return null;
 		    }
@@ -79,11 +77,17 @@ public class RegularisationServiceTest {
 		doAnswer(new Answer<Void>() {
 		    public Void answer(InvocationOnMock invocation) {
 		      Object[] args = invocation.getArguments();
-		//      System.out.println("called with arguments: " + Arrays.toString(args));
 		      updatedRegularisations.add((Regularisation)args[0]);
 		      return null;
 		    }
 		}).when(regularisationRepository).update(Matchers.any(Regularisation.class));
+		doAnswer(new Answer<Void>() {
+		    public Void answer(InvocationOnMock invocation) {
+		      Object[] args = invocation.getArguments();
+		      deletedDocumentsReferenceIds.addAll((List<Long>)args[2]);
+		      return null;
+		    }
+		}).when(employeeDocumentsRepository).deleteForReferenceIds(Matchers.anyLong(), Matchers.any(EntityType.class), Matchers.anyListOf(Long.class), Matchers.anyString());
 		
 		Employee employee = null;
 		try {
@@ -95,7 +99,6 @@ public class RegularisationServiceTest {
 		
 		regularisationService.update(employee);
 		
-		//List<EmployeeDocument> expectedDocuments = getExpectedEmployeeDocumentsForDBHavingNoDocuments();	
 		System.out.println("insertedRegularisations = " + insertedRegularisations);
 		System.out.println("updatedRegularisations = " + updatedRegularisations);
 		System.out.println("deletedRegularisationIds = " + deletedRegularisationIds);
@@ -103,14 +106,16 @@ public class RegularisationServiceTest {
 		List<Regularisation> expectedInsertedRegularisations = new ArrayList<>();
 		List<Regularisation> expectedUpdatedRegularisations = new ArrayList<>();
 		List<Long> expectedDeletedRegularisationIds = new ArrayList<>();
-		
+		List<Long> expectedDeletedDocumentsReferenceIds = new ArrayList<>();
+
 		expectedInsertedRegularisations.add(employee.getRegularisation().get(0));
 		expectedInsertedRegularisations.add(employee.getRegularisation().get(1));
 		
 		expectedUpdatedRegularisations.add(employee.getRegularisation().get(2));
 		
 		expectedDeletedRegularisationIds.add(105L);
-		
+		expectedDeletedDocumentsReferenceIds.add(105L);
+
 		assertTrue(expectedInsertedRegularisations.containsAll(insertedRegularisations));
 		assertEquals(expectedInsertedRegularisations.size(), insertedRegularisations.size());
 		
@@ -119,8 +124,10 @@ public class RegularisationServiceTest {
 		
 		assertTrue(expectedDeletedRegularisationIds.containsAll(deletedRegularisationIds));
 		assertEquals(expectedDeletedRegularisationIds.size(), deletedRegularisationIds.size());
-	//	assertTrue(deletedDocuments.isEmpty());
-		// TODO check documents are getting deleted too
+	
+		assertTrue(expectedDeletedDocumentsReferenceIds.containsAll(deletedDocumentsReferenceIds));
+		assertEquals(expectedDeletedDocumentsReferenceIds.size(), deletedDocumentsReferenceIds.size());
+			
 	}
 	
 	private List<Regularisation> getRegularisationsInDBForEmployee() {

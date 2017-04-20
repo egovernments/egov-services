@@ -1,267 +1,138 @@
-# Example YAML to get you started quickly.
-# Be aware that YAML has indentation based scoping.
-# Code completion support is available so start typing for available options.
-swagger: '2.0'
-
-# This is your document metadata
+swagger: "2.0"
 info:
-  version: "1.0.0"
-  title: Tenant Service APIs
-  description: All APIs available from Tenant service.
-  contact:
-    name: No Idea
+  description: |
+    This is a sample server Petstore server.
 
-# Describe your paths here
+  version: "1.0.0"
+  title: Tenant
+host: egov-micro-dev.egovernments.org
+basePath: /tenant/v1/
+
 paths:
-  # This is a path endpoint. Change it.
-  /tenant/v1/_search:
-    # This is a HTTP operation
+  /tenant/_search:
     post:
-      # Describe this verb here. Note: you can use markdown
-      summary: Get the list of tenants based on code.
-      description: |
-        Get the list of tenants based on the input parameters.
-      # This is array of GET operation parameters:
+      tags:
+        - tenant
+      summary: Retrieve tenant(s) using tenant code(s).
+      description: ""
+      operationId: searchTenant
+      consumes:
+        - application/json
+      produces:
+        - application/json
       parameters:
-        - name: requestInfo
-          in: body
-          description: Request info for getting tenants.
+        - in: query
+          name: code
+          description: Tenant codes to retrieve the tenants. (AP.KURNOOL, AP.GUNTOOR etc.,)
           required: true
-          schema:
-            $ref: '#/definitions/RequestInfo'
-        - name: code
-          in: query
-          required: false
-          description: The list of tenant codes.
           type: array
           items:
             type: string
-          format: int64
-        # Expected responses for this operation:
+          collectionFormat: multi
       responses:
-        # Response code
         200:
-          description: Successful response
-          # A schema describing your response object.
-          # Use JSON Schema format
+          description: Successful search.
           schema:
-            $ref: "#/definitions/TenantResponse"
-        '400':
-          description: Invalid input.
-          schema:
-            $ref: '#/definitions/ErrorRes'
-      tags:
-       - Action
+            $ref: '#/definitions/SearchTenantResponse'
 
-  /tenant/v1/_create:
-    # This is a HTTP operation
+  /tenant/_create:
     post:
-      # Describe this verb here. Note: you can use markdown
-      summary: Request object for creating Tenant.
-      description: |
-        Request object for creating Tenant.
+      tags:
+        - tenant
+      summary: Create new tenant.
+      description: ""
+      operationId: createTenant
+      consumes:
+        - application/json
+      produces:
+        - application/json
       parameters:
-        - name: tenantRequest
-          in: body
-          description: Request info for getting tenants.
-          required: true
+        - in: body
+          name: createTenantRequest
           schema:
             $ref: '#/definitions/CreateTenantRequest'
-      # Expected responses for this operation:
       responses:
-        # Response code
         200:
-          description: Successful response
-          # A schema describing your response object.
-          # Use JSON Schema format
+          description: Successful creation.
           schema:
-            $ref: "#/definitions/TenantResponse"
-        '400':
-          description: Invalid input.
-          schema:
-            $ref: '#/definitions/ErrorRes'
-      tags:
-       - Feature-Role
+            $ref: '#/definitions/CreateTenantResponse'
+
 
 definitions:
-
   Tenant:
-    type: object
+    type: "object"
     properties:
-      id:
-       type: integer
-       format: int64
-       description : Unique identifier of the Action.
-      name:
-        type: string
-        description: The Name of the Tenant.
-        minLength: 2
-        maxLength: 100
       code:
-        type: string
-        description: The Code of the Tenant.
-        minLength: 5
-        maxLength: 256
+        type: "string"
       description:
-        type: string
-        description: Detailed description about tenant.
-        minLength: 10
-        maxLength: 300
-      domainurl :
-        type : string
-        description : Domain URL for the tenant
-      localname :
-        type : string
-        description : Local name for tenant
-      active :
-        type : boolean
-        description : True if the tenant is required and False if the tenant is not required.
-      latitude:
-       type: number
-       format: double
-       description : Latitude for Tenant.
+        type: "string"
+      imageId:
+        type: "string"
+      logoId:
+        type: "string"
+      domainUrl:
+        type: "string"
+      type:
+        type: "string"
+        enum:
+        - "CITY"
+      city:
+        $ref: "#/definitions/City"
+
+  City:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      localName:
+        type: "string"
+      districtCode:
+        type: "string"
+      districtName:
+        type: "string"
+      regionName:
+        type: "string"
       longitude:
-       type: number
-       format: double
-       description : Longitude for Tenant.
-      logoid :
-       type : integer
-       format : int64
-       description : Logo id stored in filestore for Tenant
-      imageid :
-       type : number
-       format : int64
-       description : Background image id for Tenant stored in filestore
-      grade :
-       type : string
-       description : Grade for Tenant specified in city.
-      regionname :
-       type : string
-       description : Region name for Tenant specified in city.
-      recaptchapub :
-       type : string
-       description : Recapta to save Tenant details.
-      districtcode :
-       type : string
-       description : District code for Tenant specified in City.
-      districtname :
-       type : string
-       description : District name for Tenant specified in City.
-
-    required:
-      - name
-      - code
-
-  TenantResponse:
-    type: object
-    properties:
-      ResponseInfo:
-        $ref: '#/definitions/ResponseInfo'
-      Action:
-        type: array
-        items:
-         $ref: '#/definitions/Tenant'
-
-  CreateTenantRequest:
-    type: object
-    properties:
-      RequestInfo:
-        $ref: '#/definitions/RequestInfo'
-      tenantRequest:
-        $ref: '#/definitions/Tenant'
-      tenantId:
-        type: string
-        description: Unique Identifier of the tenant, Like AP, AP.Kurnool etc.
-    required:
-      - tenantRequest
-      - tenantId
-
-  RequestInfo:
-    type: object
-    properties:
-      apiId:
-        type: string
-        description: unique API ID
-      ver:
-        type: string
-        description: API version
-      ts:
-        type: string
-        description: >-
-          response timestamp YYYY-MM-DDThh:mm:ss+/-nn:nn (timezone defaulted to
-          +5.30)
-      action:
-        type: string
-        description: api action like GET/POST/PUT/DELETE in case of http calls
-      did:
-        type: string
-        description: device UUID from which API is called
-      key:
-        type: string
-        description: API key (dynamic)
-      msgId:
-        type: string
-        description: 'unique request message id, UUID, for handling API idempotency'
-      requesterId:
-        type: string
-        description: UserId of the user calling
-      authToken:
-        type: string
-        description: //session/jwt/saml token/oauth token
-    required:
-      - apiId
-      - ver
-      - ts
+        type: "number"
+      latitude:
+        type: "number"
 
   ResponseInfo:
-    type: object
+    type: "object"
     properties:
       apiId:
-        type: string
-        description: unique API ID
-      ver:
-        type: string
-        description: API version
-      ts:
-        type: string
-        description: >-
-          response timestamp YYYY-MM-DDThh:mm:ss+/-nn:nn (timezone defaulted to
-          +5.30)
-      resMsgId:
-        type: string
-        description: unique response message id (UUID)
-      msgId:
-        type: string
-        description: message id of the request
-      status:
-        type: string
-        description: 'status of request e.g. successful, failed etc'
-    required:
-      - apiId
-      - ver
-      - ts
-      - status
+        type: "string"
 
-  Error:
-    type: object
+  RequestInfo:
+    type: "object"
     properties:
-      code:
-        type: integer
-        format: int32
-      message:
-        type: string
-      description:
-        type: string
-      fields:
-        type: object
-    required:
-      - code
-      - message
+      apiId:
+        type: "string"
 
-  ErrorRes:
+  SearchTenantResponse:
+    type: "object"
     properties:
-      ResponseInfo:
-        $ref: '#/definitions/ResponseInfo'
-      Error:
-        $ref: '#/definitions/Error'
-    type: object
+      responseInfo:
+        $ref: "#/definitions/ResponseInfo"
+      tenant:
+        type: "array"
+        items:
+          $ref: "#/definitions/Tenant"
+
+  CreateTenantRequest:
+    type: "object"
+    properties:
+      RequestInfo:
+        $ref: "#/definitions/RequestInfo"
+      tenant:
+        $ref: "#/definitions/Tenant"
+
+  CreateTenantResponse:
+    type: "object"
+    properties:
+      responseInfo:
+        $ref: "#/definitions/ResponseInfo"
+      tenant:
+        $ref: "#/definitions/Tenant"
+
+

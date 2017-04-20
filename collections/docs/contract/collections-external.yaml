@@ -1,0 +1,364 @@
+swagger: "2.0"
+info:
+  version: 0.0.0
+  title: eGov Collection System External
+  description: Collection Management System serves as revenue collection platform for all the billing systems through cash, cheque, dd, swipe machine. It also provides facility to integrate with multiple payment gateways in order to enable online payments. This describes the contracts that are required from the billing system.
+
+host: phoenix-qa.egovernments.org
+schemes:
+  - https
+basePath: '/v1/[API endpoint]'
+
+paths: 
+  /demand/_update:
+    post:
+      summary: Update Demand.
+      description: This API updates demand with Receipt information. It also constructs the receipt amount bifurcation information that needs to be pushed to the elasticsearch index. 
+      parameters:
+        - name: request_info
+          in: body
+          description: Request to update the demand details with the receipt info.
+          required: true
+          schema:
+            $ref: '#/definitions/BillReceiptInfoReq'
+      tags:
+        - Receipt  
+      responses:
+        '200':
+          description: Demand Details updated sucessfully.
+          schema:
+            $ref: '#/definitions/ReceiptAmountInfoRes'
+        '400':
+          description: tenantId was not provided or General service error
+          schema:
+            $ref: '#/definitions/ErrorRes'
+  
+  /demand/_apportion:
+    post:
+      summary: Apportion Paid Amount.
+      description: This API is used to apportion the paid amount. 
+      parameters:
+        - name: request_info
+          in: body
+          description: Request to update the demand details with the receipt info.
+          required: true
+          schema:
+            $ref: '#/definitions/ApportionPaidAmountReq'
+      tags:
+        - Receipt  
+      responses:
+        '200':
+          description: Paid Amount Apportioned sucessfully.
+          schema:
+            $ref: '#/definitions/ApportionPaidAmountRes'
+        '400':
+          description: tenantId was not provided or General service error
+          schema:
+            $ref: '#/definitions/ErrorRes'
+            
+definitions:
+  ApportionPaidAmountReq:
+    type: object
+    properties:
+      billReferenceNumber:
+        type: string
+        description: Bill Reference Number
+      actualAmountPaid:
+        type: number
+        format: double
+        description: Actual Amount Paid
+      serviceCode:
+        type: string
+        description: Service Code
+      tenantId:
+        type: string
+        description: Unique id of tenant.
+        
+  ApportionPaidAmountRes:
+    type: object
+    properties:
+      billReferenceNumber:
+        type: string
+        description: Bill Reference Number
+      serviceCode:
+        type: string
+        description: Service Code
+      actualAmountPaid:
+        type: number
+        format: double
+        description: Actual Amount Paid
+      tenantId:
+        type: string
+        description: Unique id of tenant.
+      receiptDetails:
+        type: array
+        items: 
+          $ref: '#/definitions/ReceiptDetails'
+        description: List of ReceiptDetails object associated with this bill 
+        
+  ReceiptDetails:
+    type: object
+    properties:
+      receiptHeader:
+        type: integer
+        format: int64
+        description: Foreign Key of Receipt Header Object
+      accounthead:
+        type: integer
+        format: int64
+        description: ChartOfAccounts Account Head
+      cramountToBePaid:
+        type: number
+        format: double
+        description: Credit Amount to be Paid
+      cramount:
+        type: number
+        format: double
+        description: Credit Amount
+      orderNumber:
+        type: integer
+        format: int32
+        description: Order number of the receivables.
+      accountDescription:
+        type: string
+        description: Description of GlCode sent
+      function:
+        type: string
+        description: Function sent
+      isActualDemand:
+        type: boolean
+        description: True if ActualDemand else False.
+      financialYear:
+        type: integer
+        format: int32
+        description: Financial Year.
+      
+        
+    
+      
+  BillReceiptInfo:
+    type: object
+    properties:
+      billNumber: 
+        type: string
+        description: This is the Bill Number sent to Collection system in billInfoXML.
+      event: 
+        type: string
+        description: CREATED, CANCELLED, INSTRUMENT_BOUNCED
+      receiptNumber:
+        type: string
+        description: Receipt Number generated in Collection system.
+      receiptDate:
+        type: string
+        format: date
+        description: Receipt Date.
+      payeeName:
+        type: string
+        description: Consumer name sent in billInfoXML.
+      payeeAddress:
+        type: string
+        description: Consumer address sent in billInfoXML.
+      businessName:
+        type: string
+        description: Name of the billing service.
+      paidBy:
+        type: string
+        description: Name of the payee at the counter/online.
+      billDescription: 
+        type: string
+        description: Description sent in billInfoXML.
+      accountDetails:
+        type: array
+        items:
+         $ref: "#/definitions/ReceiptAccountInfo"
+      tenantId:
+        type: string
+        description: Unique id of tenant.
+        format: varchar
+    
+  ReceiptAccountInfo:
+    type: object
+    properties:
+      glCode: 
+        type: string
+        description: GLCode sent in billInfoXML.
+      accountDescrtion:
+        type: string
+        description: Description of GlCode sent in billInfoXML.
+      functionCode:
+        type: string
+        description: Function Code sent in billInfoXML.
+      debitAmount:
+        type: number
+        format: double
+        description: Discount/Rebate/Received Amount.
+      creditAmount:
+        type: number
+        format: double
+        description: Receivable Amount.
+      orderNumber:
+        type: integer
+        format: int32
+        description: Order number of the receivables.
+      purpose:
+        type: string
+        description: Purpose of account head i.e., ARREAR_AMOUNT, CURRENT_AMOUNT, ADVANCE_AMOUNT, ARREAR_LATEPAYMENT_CHARGES, CURRENT_LATEPAYMENT_CHARGES, CHEQUE_BOUNCE_PENALTY, REBATE, OTHERS
+        
+  ReceiptAmountInfo:
+    type: object
+    properties:
+      arrearsAmount: 
+        type: number
+        format: double
+        description: Arrears Amount.
+      penaltyAmount:
+        type: number
+        format: double
+        description: Penalty Amount in case of unauthorized construction, invalid usage etc.
+      currentInstallmentAmount:
+        type: number
+        format: double
+        description: Current Installment Amount.
+      advanceAmount:
+        type: number
+        format: double
+        description: Advance Amount.
+      latePaymentCharges:
+        type: number
+        format: double
+        description: To capture late payment charges levied in case of payment after due date.
+      arrearCess:
+        type: number
+        format: double
+        description: Arrear Cess.
+      currentCess:
+        type: number
+        format: double
+        description: Current Cess.
+      installmentFrom: 
+        type: string
+        description: Installment From.
+      installmentTo: 
+        type: string
+        description: Installment From.
+      reductionAmount:
+        type: number
+        format: double
+        description: Reduction Amount.
+      revenueWard:
+        type: string
+        description: Revenue Ward.
+      conflict:
+        type: integer
+        format: int32
+        description: Revenue Ward.
+      tenantId:
+        type: string
+        description: Unique id of tenant.
+        format: varchar
+        
+  BillReceiptInfoReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: '#/definitions/RequestInfo'
+      BillReceiptInfo:
+        type: array
+        items: 
+         $ref: '#/definitions/BillReceiptInfo'
+        
+  ReceiptAmountInfoRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: '#/definitions/ResponseInfo'
+      ReceiptAmountInfo:
+        $ref: '#/definitions/ReceiptAmountInfo'
+
+  RequestInfo:
+    type: object
+    properties:
+      apiId:
+        type: string
+        description: unique API ID
+      ver:
+        type: string
+        description: API version
+      ts:
+        type: string
+        description: >-
+          response timestamp YYYY-MM-DDThh:mm:ss+/-nn:nn (timezone defaulted to
+          +5.30)
+      action:
+        type: string
+        description: api action like GET/POST/PUT/DELETE in case of http calls
+      did:
+        type: string
+        description: device UUID from which API is called
+      key:
+        type: string
+        description: API key (dynamic)
+      msgId:
+        type: string
+        description: 'unique request message id, UUID, for handling API idempotency'
+      requesterId:
+        type: string
+        description: UserId of the user calling
+      authToken:
+        type: string
+        description: //session/jwt/saml token/oauth token
+    required:
+      - apiId
+      - ver
+      - ts   
+  ResponseInfo:
+    type: object
+    properties:
+      apiId:
+        type: string
+        description: unique API ID
+      ver:
+        type: string
+        description: API version
+      ts:
+        type: string
+        description: >-
+          response timestamp YYYY-MM-DDThh:mm:ss+/-nn:nn (timezone defaulted to
+          +5.30)
+      resMsgId:
+        type: string
+        description: unique response message id (UUID)
+      msgId:
+        type: string
+        description: message id of the request
+      status:
+        type: string
+        description: 'status of request e.g. successful, failed etc'
+    required:
+      - apiId
+      - ver
+      - ts
+      - status
+      
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+      description:
+        type: string
+      fields:
+        type: object
+    required:
+      - code
+      - message
+  ErrorRes:
+    properties:
+      ResponseInfo:
+        $ref: '#/definitions/ResponseInfo'
+      Error:
+        $ref: '#/definitions/Error'
+    type: object

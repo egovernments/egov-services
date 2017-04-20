@@ -1,0 +1,373 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: Water Charges Management-Master APIs
+  description: |
+    APIs available for Water Charges Management Usage Type Master definitions.
+    ### Notes
+    
+    * *All API's are POST. _create,_search,_update for post,get and put. RequestInfo will be part of body. For multiple records we can pass multiple value with comman seperated values*.
+    
+    * *All _search will be synchronous and all _create and _update will be asynchronous*.
+    
+    * *RequestInfo and ResponseInfo object should be reffered from Common*.
+    
+    * *In _search API, tenantId should be passed in query param. In _create/_update, tenantId should be passed in the model*.
+    
+    * *Readonly means that even if these fields are passed in the request, it will be ignored in create/update and will not be added/updated in the entities. The readonly fields might be passed to the _search API's to make use of fields for the search Query API. while calling _search API's even mandatory fields might not be available, it is mandatory only in the _create API's*.
+    
+    * *All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message*.
+    
+    * *Definition must start with Upper case followed by camel case*.
+    
+    * *Every model will have tenantId. Validate tenantId on create*.
+    
+    * *Parameter name must start with small case followed by camel case*.
+    
+  contact:
+    name: Rishi
+host: phoenix-qa.egovernments.org
+schemes:
+  - https
+basePath: '/v1/egov-watercharges-masters/[API endpoint]'
+
+paths:
+  /usageType/_search:
+  ######################################################
+  # Will be synchronous.
+  # tenantId should be passed in query param.
+  ######################################################
+    post:
+      summary: Get the list of usage types in the system or a particular usage type.
+      description: Return(s) `UsageType` for the given input params.
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Commmon request info to get usage type.
+          required: true
+          schema:
+            $ref: '#/definitions/RequestInfo'
+        - $ref: "#/parameters/tenantId"
+        - $ref: "#/parameters/sortUsageTypes"
+        - name: name
+          in: query
+          description: Name of the usage type.
+          required: false
+          type: string
+          format: varchar
+          minLength: 0
+          maxLength: 100
+          exclusiveMinimum: true
+          exclusiveMaximum: false 
+        - name: code
+          in: query
+          description: Unique code of the usage type.
+          required: false
+          type: string
+          minLength: 0
+          maxLength: 20
+          exclusiveMinimum: true
+          exclusiveMaximum: false 
+        - name: id
+          in: query
+          description: Unique Id of usage type
+          required: false
+          type: array
+          items: 
+            type: integer
+          format: int64
+          maxItems: 50
+        - name: active
+          in: query
+          description: True will be set in cases where only active usage types are needed and False will be set when inactive usage types are needed and no value will be set when all usage types are needed.
+          required: false
+          type: boolean
+          format: varchar
+          default: true
+          allowEmptyValue: true
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ####################################################
+        200:
+          description: Successful response
+          schema:
+            $ref: "#/definitions/UsageTypeRes"
+        400:
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+
+      tags: 
+       - Usage Type
+  /usageType/_create:
+  ######################################################
+  # Will be asynchronous.
+  # tenantId should be passed in the model.
+  # Validate tenantId before persisting.
+  ######################################################
+    post:
+      summary: Create a new Usage Type.
+      description: API to create new usage type.
+      parameters:
+        - name: usageType
+          in: body
+          description: Details for the new usage type.
+          required: true
+          schema:
+            $ref: '#/definitions/UsageTypeReq'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: Usage Type created sucessfully.
+          schema:
+            $ref: '#/definitions/UsageTypeRes'
+        400:
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+      tags:
+        - Usage Type      
+  
+  /usageType/{code}/_update:
+  ######################################################
+  # Will be asynchronous.
+  # tenantId should be passed in the model.
+  # Validate tenantId before persisting.
+  # Unique identifier of the model to be updated should be passed as path parameter. 
+  ######################################################
+   parameters:
+    - $ref: "#/parameters/usageTypeCode"
+   post:
+      summary: Update existing usage type data for the code passed.
+      description: To update an existing usage type master data.
+      parameters:
+        - name: usageType
+          in: body
+          description: Request header for the usage type with new set of values.
+          required: true
+          schema:
+            $ref: '#/definitions/UsageTypeReq'
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ####################################################
+        200:
+          description: Usage Type updated.
+          schema:
+            $ref: '#/definitions/UsageTypeRes'
+        400:
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+      tags:
+        - Usage Type
+        
+definitions:
+########################################################
+#RequestInfo and ResponseInfo object should be reffered from Common.
+#Definition must start with Upper case followed by camel case.
+#Every model will have tenantId
+########################################################
+  RequestInfo:
+    type: object
+    properties:
+      apiId:
+        type: string
+        description: unique API ID
+      ver:
+        type: string
+        description: API version
+      ts:
+        type: string
+        description: >-
+          response timestamp YYYY-MM-DDThh:mm:ss+/-nn:nn (timezone defaulted to
+          +5.30)
+      did:
+        type: string
+        description: device UUID from which API is called
+      key:
+        type: string
+        description: API key (dynamic)
+      msgId:
+        type: string
+        description: 'unique request message id, UUID, for handling API idempotency'
+      requesterId:
+        type: string
+        description: UserId of the user calling
+      authToken:
+        type: string
+        description: //session/jwt/saml token/oauth token
+    required:
+      - apiId
+      - ver
+      - ts
+  ResponseInfo:
+    type: object
+    properties:
+      apiId:
+        type: string
+        description: unique API ID
+      ver:
+        type: string
+        description: API version
+      ts:
+        type: string
+        description: >-
+          response timestamp YYYY-MM-DDThh:mm:ss+/-nn:nn (timezone defaulted to
+          +5.30)
+      resMsgId:
+        type: string
+        description: unique response message id (UUID)
+      msgId:
+        type: string
+        description: message id of the request
+      status:
+        type: string
+        description: 'status of request e.g. successful, failed etc'
+    required:
+      - apiId
+      - ver
+      - ts
+      - status
+      
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+      description:
+        type: string
+      fields:
+        type: object
+    required:
+      - code
+      - message
+  ErrorRes:
+    properties:
+      ResponseInfo:
+        $ref: '#/definitions/ResponseInfo'
+      Error:
+        $ref: '#/definitions/Error'
+    type: object
+
+  UsageType:
+    type: object
+    properties:
+      id:
+       type: integer
+       format: int64
+       description : Unique identifier of the usage type.
+      name:
+        type: string
+        description: Unique Usage name.
+        minLength: 3
+        maxLength: 100
+      code:
+        type: string
+        description: Unique code of the usage type. Based on the configration parameters, usage code can be provided from the front end OR can be generated by the system.
+        minLength: 3
+        maxLength: 20
+        readOnly: true
+      description:
+        type: string
+        description: Brief description of Usage Type .
+        maxLength: 250
+      active:
+        type: boolean
+        format: varchar
+        description: TRUE for active usage type and FALSE for inactive usage type.
+      createdBy:
+        type: integer
+        format: int64
+        description: Id of the user who created the record.
+      createdDate:
+        type: string
+        format: date
+        description: Date on which the master data was added into the system.
+      lastModifiedBy:
+        type: integer
+        format: int64
+        description: Id of the user who last modified the record.
+      lastModifiedDate:
+        type: string
+        format: date
+        description: Date on which the master data was last modified.  
+      tenantId:
+        type: string
+        readOnly: true
+        description: Unique Identifier of the tenant 
+    required:
+      - name
+      - code 
+      - active
+      - tenantId
+  UsageTypeRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: '#/definitions/ResponseInfo'
+      UsageType:
+        type: array
+        items: 
+         $ref: '#/definitions/UsageType' 
+  UsageTypeReq:
+    type: object
+    properties:
+      tenantId:
+        description: Unique id for for a tenant.
+        type: string
+      RequestInfo:
+        $ref: '#/definitions/RequestInfo'
+      UsageType:
+        $ref: '#/definitions/UsageType'   
+    required:
+      - tenantId
+      - RequestInfo
+      - UsageType    
+
+parameters:
+##########################################################
+#Parameter name must start with small case followed by camel case.
+##########################################################
+  tenantId:
+    name: tenantid
+    in: query
+    description: Unique id for for a tenant.
+    required: true
+    type: string
+    format: varchar
+  usageTypeCode:
+    name: code
+    in: path
+    required: true
+    description: The code of the usage type master.
+    type: string
+    minLength: 0
+    maxLength: 20
+    exclusiveMinimum: true
+    exclusiveMaximum: false
+  sortUsageTypes:
+    name: sort
+    in: query
+    description: Usage types results will be sorted by name ascending by default if this parameter is not provided.
+    type: array
+    uniqueItems: true
+    minItems: 1
+    maxItems: 2
+    collectionFormat: pipes
+    items:
+      type: string
+      pattern: '[-+](code|name)'
+    default:
+      - +name
+
+tags:
+  - name: Usage Type
+    description: APIs required to for Usage Type Master.

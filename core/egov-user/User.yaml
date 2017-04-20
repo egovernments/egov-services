@@ -150,7 +150,8 @@ paths:
           description: Invalid input.
           schema:
             $ref: '#/definitions/ErrorRes'
-  /user/{userId}/_updatenovalidate:   
+
+  /user/{userId}/_updatenovalidate:
     parameters:
       - $ref: "#/parameters/userId"
     post:
@@ -174,6 +175,30 @@ paths:
           description: Invalid input.
           schema:
             $ref: '#/definitions/ErrorRes'
+
+  /v1/user/_patch:
+      post:
+        summary: User profile update. All fields expect username and mobilenumber are allowed to be updated.
+        description: User profile update. All fields expect username and mobilenumber are allowed to be updated.
+        parameters:
+          - name: user
+            in: body
+            description: Request header for the user with new of values.
+            required: true
+            schema:
+              $ref: '#/definitions/UserReq'
+        tags:
+          - User
+        responses:
+          '200':
+            description: User updated.
+            schema:
+              $ref: '#/definitions/UserRes'
+          '400':
+            description: Invalid input.
+            schema:
+              $ref: '#/definitions/ErrorRes'
+
   /user/_login:
     post:
       summary: Login a user based on username and password auth and return oAuth tokens.

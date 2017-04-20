@@ -40,6 +40,7 @@
 
 package org.egov.workflow.persistence.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -72,6 +73,9 @@ public class WorkflowAction extends AbstractAuditable {
     @NotNull
     @Length(min = 1, max = 255)
     private String type;
+    
+    @Column(name = "tenantid")
+    private String tenantId;
 
     protected WorkflowAction() {
     }
@@ -115,4 +119,13 @@ public class WorkflowAction extends AbstractAuditable {
     protected void setType(final String type) {
         this.type = type;
     }
+    
+    
+    public String getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
+	}
 }

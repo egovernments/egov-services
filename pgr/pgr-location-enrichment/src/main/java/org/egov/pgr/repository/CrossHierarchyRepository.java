@@ -21,9 +21,9 @@ public class CrossHierarchyRepository {
         this.url = crossHierarchyServiceHost + crossHierarchyUrl;
     }
 
-    public CrossHierarchyResponse getCrossHierarchy(String crossHierarchyId) {
+    public CrossHierarchyResponse getCrossHierarchy(String crossHierarchyId,String tenantId) {
         final CrossHierarchyServiceResponse serviceResponse =
-                restTemplate.getForObject(this.url, CrossHierarchyServiceResponse.class, crossHierarchyId);
+                restTemplate.getForObject(this.url, CrossHierarchyServiceResponse.class, crossHierarchyId,tenantId);
         return serviceResponse.getCrossHierarchy();
     }
 

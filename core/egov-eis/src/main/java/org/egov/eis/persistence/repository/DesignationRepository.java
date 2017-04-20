@@ -49,7 +49,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-
 @Repository
 public interface DesignationRepository extends JpaRepository<Designation, Long>, DesignationCustomRepository {
 
@@ -66,7 +65,11 @@ public interface DesignationRepository extends JpaRepository<Designation, Long>,
 	@Query("select d from Designation d where upper(d.name) in :designationnames")
 	List<Designation> getDesignationsByNames(@Param("designationnames") List<String> designationNames);
 
-	@Query("select d from Designation d where upper(d.name) like upper(:name)")
-	List<Designation> getDesignationsByName(@Param("name") final String name);
+	@Query("select d from Designation d where tenantId=:tenantId and upper(d.name) like upper(:name)")
+	List<Designation> getDesignationsByName(@Param("name") final String name, @Param("tenantId") final String tenantId);
+	
+	List<Designation> findAllByTenantId(String tenantId);
+	
+	Designation findByIdAndTenantId(Long id,String tenantId);
 
 }

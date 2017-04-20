@@ -38,11 +38,23 @@ public class IndexerListenerTest {
     }
 
     @Test
-    public void test_should_index_complaint_instande() {
+    public void test_should_index_new_complaint_instance() {
         final ComplaintIndex complaintIndex = new ComplaintIndex();
         complaintIndex.setCrn(CRN);
         when(complaintAdapter.indexOnCreate(any(ServiceRequest.class))).thenReturn(complaintIndex);
         final HashMap<String, Object> sevaRequestMap = getSevaRequestMap();
+
+        indexerListener.listen(sevaRequestMap);
+
+        verify(elasticSearchRepository).index("complaint", CRN, complaintIndex);
+    }
+    
+    @Test
+    public void test_should_index_update_complaint() {
+        final ComplaintIndex complaintIndex = new ComplaintIndex();
+        complaintIndex.setCrn(CRN);
+        when(complaintAdapter.indexOnUpdate(any(ServiceRequest.class))).thenReturn(complaintIndex);
+        final HashMap<String, Object> sevaRequestMap = getSevaRequestMapForUpdate();
 
         indexerListener.listen(sevaRequestMap);
 
@@ -53,6 +65,16 @@ public class IndexerListenerTest {
         final HashMap<String, Object> sevaRequestMap = new HashMap<>();
         final HashMap<String, String> valuesMap = new HashMap<>();
         valuesMap.put("status", "REGISTERED");
+        final HashMap<String, Object> serviceRequest = new HashMap<>();
+        serviceRequest.put("values", valuesMap);
+        sevaRequestMap.put("ServiceRequest", serviceRequest);
+        return sevaRequestMap;
+    }
+    
+    private HashMap<String, Object> getSevaRequestMapForUpdate() {
+        final HashMap<String, Object> sevaRequestMap = new HashMap<>();
+        final HashMap<String, String> valuesMap = new HashMap<>();
+        valuesMap.put("status", "COMPLETED");
         final HashMap<String, Object> serviceRequest = new HashMap<>();
         serviceRequest.put("values", valuesMap);
         sevaRequestMap.put("ServiceRequest", serviceRequest);

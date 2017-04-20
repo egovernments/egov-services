@@ -22,81 +22,86 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class DesignationRestController {
 
-	@Autowired
-	private DesignationService designationService;
+    @Autowired
+    private DesignationService designationService;
 
-	@RequestMapping(value = "/designations", method = RequestMethod.GET)
-	@ResponseBody
-	public DesignationRes getDesignations(@RequestParam(value = "name", required = true) String name,
-			@RequestParam(value = "pageSize", required = false, defaultValue = "20") Integer pageSize,
-			@RequestParam(value = "pageNumber", required = false, defaultValue = "1") Integer pageNumber,
-			@RequestParam(value = "sort", required = false, defaultValue = "[-name]") List<String> sort)
-			throws Exception {
+    @RequestMapping(value = "/designations", method = RequestMethod.GET)
+    @ResponseBody
+    public DesignationRes getDesignations(@RequestParam(value = "tenantId", required = true) String tenantId,
+            @RequestParam(value = "name", required = true) String name,
+            @RequestParam(value = "pageSize", required = false, defaultValue = "20") Integer pageSize,
+            @RequestParam(value = "pageNumber", required = false, defaultValue = "1") Integer pageNumber,
+            @RequestParam(value = "sort", required = false, defaultValue = "[-name]") List<String> sort)
+            throws Exception {
 
-		DesignationRes response = new DesignationRes();
-		response.setResponseInfo(new ResponseInfo());
-		if (name != null && !name.isEmpty()) {
-			response.getDesignation()
-					.addAll(mapToContractDesignationList(designationService.getDesignationsByName(name)));
-		}
-		if (name == null || name.isEmpty()) {
-			response.getDesignation().addAll(mapToContractDesignationList(designationService.getAllDesignations()));
-		} else {
-			throw new Exception();
-		}
+        DesignationRes response = new DesignationRes();
+        if (tenantId != null && !tenantId.isEmpty()) {
+            response.setResponseInfo(new ResponseInfo());
+            if (name != null && !name.isEmpty()) {
+                response.setDesignation(
+                        mapToContractDesignationList(designationService.getDesignationsByName(name, tenantId)));
+            } else if (name == null || name.isEmpty()) {
+                response.setDesignation(mapToContractDesignationList(designationService.getAllDesignations(tenantId)));
+            } else {
+                throw new Exception();
+            }
+        }
+        return response;
+    }
 
-		return response;
-	}
+    @RequestMapping(value = "/designation", method = RequestMethod.GET)
+    @ResponseBody
+    public DesignationRes getDesignation(@RequestParam(value = "tenantId", required = true) String tenantId,
+            @RequestParam(value = "id") String id) throws Exception {
 
-	@RequestMapping(value = "/designation", method = RequestMethod.GET)
-	@ResponseBody
-	public DesignationRes getDesignation(@RequestParam(value = "tenantId", required = true) String tenantId,
-			@RequestParam(value = "id") String id) throws Exception {
+        DesignationRes response = new DesignationRes();
+        if (tenantId != null && !tenantId.isEmpty()) {
+            List<Designation> designationList = new ArrayList<>();
+            response.setResponseInfo(new ResponseInfo("", "", new Date().toString(), "", "", "Successful response"));
+            if (id != null && !id.isEmpty()) {
+                Designation designation = mapToContractDesignation(
+                        designationService.getDesignationById(Long.valueOf(id),tenantId));
+                designationList.add(designation);
+                response.setDesignation(designationList);
+            } else {
+                throw new Exception();
+            }
+        }
+        return response;
+    }
 
-		DesignationRes response = new DesignationRes();
-		List<Designation> designationList = new ArrayList<>();
-		response.setResponseInfo(new ResponseInfo("", "", new Date().toString(), "", "", "Successful response"));
-		if (id != null && !id.isEmpty()) {
-			Designation designation = mapToContractDesignation(designationService.getDesignationById(Long.valueOf(id)));
-			designationList.add(designation);
-			response.setDesignation(designationList);
-		} else {
-			throw new Exception();
-		}
-		return response;
-	}
+    @PostMapping(value = "/designationByDepartmentId")
+    @ResponseBody
+    public ResponseEntity<?> getDesignationByDepartmentId(
+            @RequestParam(value = "tenantId", required = true) String tenantId, @RequestParam(value = "id") String id) {
+        DesignationRes desigResponse = new DesignationRes();
+        if (tenantId != null && !tenantId.isEmpty() && id != null && !id.isEmpty()) {
+            ResponseInfo responseInfo = new ResponseInfo();
+            responseInfo.setStatus(HttpStatus.OK.toString());
+            desigResponse.setResponseInfo(responseInfo);
+            List<Designation> designations = getDesignationByDepartment(id, tenantId);
+            desigResponse.setDesignation(designations);
+            return new ResponseEntity<DesignationRes>(desigResponse, HttpStatus.OK);
+        } else
+            return new ResponseEntity<DesignationRes>(desigResponse, HttpStatus.BAD_REQUEST);
 
-	@PostMapping(value = "/designationByDepartmentId")
-	@ResponseBody
-	public ResponseEntity<?> getDesignationByDepartmentId(@RequestParam(value = "id") String id) {
-		DesignationRes desigResponse = new DesignationRes();
-		if (id != null && !id.isEmpty()) {
-			ResponseInfo responseInfo = new ResponseInfo();
-			responseInfo.setStatus(HttpStatus.OK.toString());
-			desigResponse.setResponseInfo(responseInfo);
-			List<Designation> designations = getDesignationByDepartment(id);
-			desigResponse.setDesignation(designations);
-			return new ResponseEntity<DesignationRes>(desigResponse, HttpStatus.OK);
-		} else
-			return new ResponseEntity<DesignationRes>(desigResponse, HttpStatus.BAD_REQUEST);
+    }
 
-	}
+    private List<Designation> getDesignationByDepartment(String departmentId, String tenantId) {
+        return mapToContractDesignationList(
+                designationService.getAllDesignationByDepartment(Long.valueOf(departmentId), new Date(), tenantId));
+    }
 
-	private List<Designation> getDesignationByDepartment(String departmentId) {
-		return mapToContractDesignationList(
-				designationService.getAllDesignationByDepartment(Long.valueOf(departmentId), new Date()));
-	}
+    private Designation mapToContractDesignation(org.egov.eis.persistence.entity.Designation designationEntity) {
+        Designation designation = new Designation();
+        if (designationEntity != null) {
+            designation = new Designation(designationEntity);
+        }
+        return designation;
+    }
 
-	private Designation mapToContractDesignation(org.egov.eis.persistence.entity.Designation designationEntity) {
-		Designation designation = new Designation();
-		if (designationEntity != null) {
-			designation = new Designation(designationEntity);
-		}
-		return designation;
-	}
-
-	private List<Designation> mapToContractDesignationList(
-			List<org.egov.eis.persistence.entity.Designation> designationEntity) {
-		return designationEntity.stream().map(Designation::new).collect(Collectors.toList());
-	}
+    private List<Designation> mapToContractDesignationList(
+            List<org.egov.eis.persistence.entity.Designation> designationEntity) {
+        return designationEntity.stream().map(Designation::new).collect(Collectors.toList());
+    }
 }

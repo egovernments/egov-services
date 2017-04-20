@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -15,8 +16,11 @@ public class ComplaintStatusController {
 	private ComplaintStatusService complaintStatusService;
 
 	@PostMapping("/_statuses")
-	public List<ComplaintStatus> getAllStatus(@RequestParam final String tenantId) {
-		return complaintStatusService.getAllComplaintStatus();
+	public List<ComplaintStatus> getAllStatus(@RequestParam(value = "tenantId", required = true) final String tenantId) {
+		if(tenantId!=null && !tenantId.isEmpty())
+		    return complaintStatusService.getAllComplaintStatusByTenantId(tenantId);
+		else
+		    return new ArrayList<ComplaintStatus>();
 	}
 
 }

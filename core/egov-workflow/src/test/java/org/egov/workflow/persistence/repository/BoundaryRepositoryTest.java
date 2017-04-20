@@ -40,7 +40,7 @@ public class BoundaryRepositoryTest {
                 .andRespond(withSuccess(new Resources().getFileContents("boundaryResponse.json"),
                         MediaType.APPLICATION_JSON_UTF8));
 
-        final BoundaryResponse boundaryResponse = boundaryRepository.fetchBoundaryById(1l);
+        final BoundaryResponse boundaryResponse = boundaryRepository.fetchBoundaryById(1l, "tenantId");
         server.verify();
         assertEquals(2, boundaryResponse.getId().intValue());
         assertEquals("Srinivas Nagar", boundaryResponse.getName());

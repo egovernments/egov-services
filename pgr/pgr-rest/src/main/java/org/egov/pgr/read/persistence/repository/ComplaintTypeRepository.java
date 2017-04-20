@@ -29,11 +29,11 @@ public class ComplaintTypeRepository {
         this.complaintTypeJpaRepository = complaintTypeJpaRepository;
     }
 
-    public List<ComplaintType> findActiveComplaintTypesByCategory(Long categoryId) {
-        return complaintTypeJpaRepository.findActiveComplaintTypes(categoryId);
+    public List<ComplaintType> findActiveComplaintTypesByCategoryAndTenantId(Long categoryId, String tenantId) {
+        return complaintTypeJpaRepository.findActiveComplaintTypes(categoryId, tenantId);
     }
 
-    public List<ComplaintType> getFrequentlyFiledComplaints(Integer count) {
+    public List<ComplaintType> getFrequentlyFiledComplaints(Integer count, String tenantId) {
 
         DateTime previousDate = new DateTime();
         final DateTime currentDate = new DateTime();
@@ -46,6 +46,7 @@ public class ComplaintTypeRepository {
                 .add(Projections.groupProperty("complaint.complaintType")));
         criteria.add(Restrictions.between("complaint.createdDate", previousDate.toDate(), currentDate.toDate()));
         criteria.add(Restrictions.eq("compType.active", Boolean.TRUE));
+        criteria.add(Restrictions.eq("complaint.tenantId", tenantId));
         criteria.setMaxResults(count).addOrder(Order.desc("count"));
         final List<Object> resultList = criteria.list();
         final List<ComplaintType> complaintTypeList = new ArrayList<ComplaintType>();
@@ -58,8 +59,8 @@ public class ComplaintTypeRepository {
 
     }
 
-    public ComplaintType getComplaintType(String complaintTypeCode) {
-        return complaintTypeJpaRepository.findByCode(complaintTypeCode);
+    public ComplaintType getComplaintType(String complaintTypeCode, String tenantId) {
+        return complaintTypeJpaRepository.findByCodeAndTenantId(complaintTypeCode, tenantId);
     }
     
     public List<ComplaintType> getAllComplaintTypes(){

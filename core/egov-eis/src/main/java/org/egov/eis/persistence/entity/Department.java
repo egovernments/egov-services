@@ -40,6 +40,7 @@
 
 package org.egov.eis.persistence.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -86,6 +87,9 @@ public class Department extends AbstractAuditable {
 	@Length(min = 1, max = 128)
 	@SafeHtml
 	private String code;
+	
+	@Column(name = "tenantid")
+    private String tenantId;
 
 	@Override
 	public Long getId() {

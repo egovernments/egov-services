@@ -40,7 +40,7 @@ public class BoundaryRepositoryTest {
                         withSuccess(new Resources().getFileContents("successBoundaryResponse.json"),
                                 MediaType.APPLICATION_JSON_UTF8));
 
-        final BoundaryResponse boundary = boundaryRepository.findBoundary("1.11", "2.22","ap.kurnool");
+        final BoundaryResponse boundary = boundaryRepository.findBoundary("1.11", "2.22","ap.public");
 
         server.verify();
         assertEquals(Long.valueOf(1), boundary.getId());

@@ -17,7 +17,8 @@ CREATE TABLE eg_wf_state_history (
     nextaction character varying(255),
     natureoftask varchar(100),
     INITIATOR_POS bigint,
-    PREVIOUS_OWNER bigint
+    PREVIOUS_OWNER bigint,
+    tenantid character varying(256) not null
 );
 CREATE SEQUENCE seq_eg_wf_state_history
     START WITH 1
@@ -48,7 +49,8 @@ CREATE TABLE eg_wf_states (
     version bigint,
     natureoftask varchar(100),
     INITIATOR_POS bigint,
-    PREVIOUS_OWNER bigint
+    PREVIOUS_OWNER bigint,
+    tenantid character varying(256) not null
 );
 CREATE SEQUENCE seq_eg_wf_states
     START WITH 1

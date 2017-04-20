@@ -14,6 +14,9 @@ public class DepartmentDesignation {
 	@JsonProperty("designation")
 	private Object designation = null;
 
+	@JsonProperty("tenantId")
+	private String tenantId = null;
+
 	public DepartmentDesignation id(Long id) {
 		this.id = id;
 		return this;
@@ -64,6 +67,7 @@ public class DepartmentDesignation {
 		DepartmentDesignation departmentDesignation = (DepartmentDesignation) o;
 		return Objects.equals(this.id, departmentDesignation.id)
 				&& Objects.equals(this.department, departmentDesignation.department)
+				&& Objects.equals(this.tenantId, departmentDesignation.tenantId)
 				&& Objects.equals(this.designation, departmentDesignation.designation);
 	}
 
@@ -80,6 +84,7 @@ public class DepartmentDesignation {
 		sb.append("    id: ").append(toIndentedString(id)).append("\n");
 		sb.append("    department: ").append(toIndentedString(department)).append("\n");
 		sb.append("    designation: ").append(toIndentedString(designation)).append("\n");
+		sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
 		sb.append("}");
 		return sb.toString();
 	}
@@ -89,5 +94,13 @@ public class DepartmentDesignation {
 			return "null";
 		}
 		return o.toString().replace("\n", "\n    ");
+	}
+
+	public String getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
 	}
 }

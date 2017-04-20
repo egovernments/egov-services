@@ -20,6 +20,9 @@ public class Community {
 	@JsonProperty("active")
 	private Boolean active = null;
 
+	@JsonProperty("tenantId")
+	private String tenantId = null;
+
 	public Community id(Long id) {
 		this.id = id;
 		return this;
@@ -97,12 +100,12 @@ public class Community {
 		return Objects.equals(this.id, community.id) && Objects.equals(this.name, community.name)
 				&& Objects.equals(this.religion, community.religion)
 				&& Objects.equals(this.description, community.description)
-				&& Objects.equals(this.active, community.active);
+				&& Objects.equals(this.tenantId, community.tenantId) && Objects.equals(this.active, community.active);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, name, religion, description, active);
+		return Objects.hash(id, name, religion, description, active, tenantId);
 	}
 
 	@Override
@@ -115,6 +118,7 @@ public class Community {
 		sb.append("    religion: ").append(toIndentedString(religion)).append("\n");
 		sb.append("    description: ").append(toIndentedString(description)).append("\n");
 		sb.append("    active: ").append(toIndentedString(active)).append("\n");
+		sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
 		sb.append("}");
 		return sb.toString();
 	}
@@ -124,5 +128,13 @@ public class Community {
 			return "null";
 		}
 		return o.toString().replace("\n", "\n    ");
+	}
+
+	public String getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
 	}
 }

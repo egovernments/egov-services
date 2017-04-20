@@ -20,12 +20,10 @@ public class ComplaintStatusMappingController {
 
     @PostMapping("/_getnextstatuses")
     public List<ComplaintStatus> getNextStatusesByCurrentStatusAndRole(@RequestParam final Long userId,
-                                                                       @RequestParam final String currentStatus,
-                                                                       @RequestParam final String tenantId) {
-        return complaintStatusMappingService
-                .getStatusByRoleAndCurrentStatus(userId, currentStatus, tenantId).stream()
-                .map(ComplaintStatus::new)
-                .collect(Collectors.toList());
+            @RequestParam final String currentStatus,
+            @RequestParam(value = "tenantId", required = true) final String tenantId) {
+        return complaintStatusMappingService.getStatusByRoleAndCurrentStatus(userId, currentStatus, tenantId).stream()
+                .map(ComplaintStatus::new).collect(Collectors.toList());
     }
 
 }

@@ -77,13 +77,14 @@ public class ComplaintController {
                                               @RequestParam(value = "location_id", required = false) Long locationId,
                                               @RequestParam(value = "child_location_id", required = false) Long
                                                       childLocationId,
+                                              @RequestParam(value = "tenantId", required = true) String tenantId,
                                               @RequestHeader HttpHeaders headers) {
 
         ComplaintSearchCriteria complaintSearchCriteria = ComplaintSearchCriteria.builder().assignmentId(assignmentId)
             .endDate(endDate).lastModifiedDatetime(lastModifiedDate).serviceCode(serviceCode)
             .serviceRequestId(serviceRequestId).startDate(startDate).escalationDate(escalationDate).status(status).userId(userId).name(name)
             .mobileNumber(mobileNumber).emailId(emailId).receivingMode(receivingMode).locationId(locationId)
-            .childLocationId(childLocationId).build();
+            .childLocationId(childLocationId).tenantId(tenantId).build();
         final List<Complaint> complaints = complaintService.findAll(complaintSearchCriteria);
         return createResponse(headers, complaints);
     }
@@ -91,14 +92,13 @@ public class ComplaintController {
     @PostMapping(value = "/updateLastAccessedTime")
     @ResponseBody
     public void updateLastAccessedTime(@RequestParam final String serviceRequestId,
-                                       @RequestBody RequestInfoBody requestInfo) {
-        complaintService.updateLastAccessedTime(serviceRequestId);
+                                       @RequestBody RequestInfoBody requestInfo, @RequestParam(value = "tenantId", required = true) final String tenantId) {
+        complaintService.updateLastAccessedTime(serviceRequestId,tenantId);
     }
 
     private ServiceResponse createResponse(@RequestHeader HttpHeaders headers, List<Complaint> complaints) {
         final List<ServiceRequest> serviceRequests = complaints.stream().map(ServiceRequest::new)
             .collect(Collectors.toList());
-
         ResponseInfo responseInfo = ResponseInfoFactory.createResponseInfoFromRequestHeaders(headers, true);
         return new ServiceResponse(responseInfo, serviceRequests);
     }

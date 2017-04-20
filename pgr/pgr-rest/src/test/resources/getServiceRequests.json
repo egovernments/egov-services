@@ -29,6 +29,7 @@
          "email":null,
          "device_id":null,
          "account_id":null,
+         "tenantId":"tenantId",
          "values":{
             "complaintStatus": "FORWARDED",
             "receivingMode": "MANUAL",

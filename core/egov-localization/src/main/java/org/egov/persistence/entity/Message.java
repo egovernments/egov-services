@@ -29,7 +29,7 @@ public class Message {
     @Column(name = "message")
     private String message;
 
-    @Column(name = "tenant_id")
+    @Column(name = "tenantid")
     private String tenantId;
     
     

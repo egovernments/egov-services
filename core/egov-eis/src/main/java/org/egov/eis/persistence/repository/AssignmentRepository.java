@@ -77,8 +77,8 @@ public interface AssignmentRepository extends JpaRepository<Assignment, Long> {
 	@Query(" from Assignment A where A.fromDate<=:givenDate and A.toDate>=:givenDate and A.primary=true and A.employee.id=:empId ")
 	Assignment getAssignmentByEmpAndDate(@Param("empId") Long empId, @Param("givenDate") Date givenDate);
 
-	@Query(" from Assignment A where A.fromDate<=current_date and A.toDate>=current_date and A.primary=true and A.employee.id=:empId")
-	Assignment getPrimaryAssignmentForEmployee(@Param("empId") Long empId);
+	@Query(" from Assignment A where A.fromDate<=current_date and A.toDate>=current_date and A.primary=true and A.employee.id=:empId and A.tenantId=:tenantId")
+	Assignment getPrimaryAssignmentForEmployee(@Param("empId") Long empId, @Param("tenantId") String tenantId);
 
 	@Query(" from Assignment A where A.position.id=:posId and A.fromDate<=current_date and A.toDate>=current_date order by A.fromDate")
 	List<Assignment> getAssignmentsForPosition(@Param("posId") Long posId);
@@ -90,17 +90,18 @@ public interface AssignmentRepository extends JpaRepository<Assignment, Long> {
 	Assignment getPrimaryAssignmentForGivenRange(@Param("empId") Long empId, @Param("fromDate") Date fromDate,
 			@Param("toDate") Date toDate);
 
-	@Query(" from Assignment A where A.designation.id=:designationId  and A.department.id=:departmentId and A.primary=true and A.fromDate<=:givenDate and A.toDate>=:givenDate ")
+	@Query(" from Assignment A where A.designation.id=:designationId  and A.department.id=:departmentId and A.primary=true and A.fromDate<=:givenDate and A.toDate>=:givenDate and A.tenantId=:tenantId ")
 	List<Assignment> getPrimaryAssignmentForDepartmentAndDesignation(@Param("departmentId") Long departmentId,
-			@Param("designationId") Long designationId, @Param("givenDate") Date givenDate);
+			@Param("designationId") Long designationId, @Param("givenDate") Date givenDate,
+			@Param("tenantId") String tenantId);
 
 	@Query(" from Assignment A where A.designation.id=:designationId  and A.department.id=:departmentId and A.fromDate<=:givenDate and A.toDate>=:givenDate order by A.primary desc")
 	List<Assignment> getAllAssignmentForDepartmentAndDesignation(@Param("departmentId") Long departmentId,
 			@Param("designationId") Long designationId, @Param("givenDate") Date givenDate);
 
-	@Query(" from Assignment A where A.department.id=:departmentId and A.primary=true and A.fromDate<=:givenDate and A.toDate>=:givenDate ")
+	@Query(" from Assignment A where A.department.id=:departmentId and A.primary=true and A.fromDate<=:givenDate and A.toDate>=:givenDate and A.tenantId=:tenantId ")
 	List<Assignment> getPrimaryAssignmentForDepartment(@Param("departmentId") Long departmentId,
-			@Param("givenDate") Date givenDate);
+			@Param("givenDate") Date givenDate, @Param("tenantId") String tenantId);
 
 	@Query(" from Assignment A where A.department.id=:departmentId and A.fromDate<=:givenDate and A.toDate>=:givenDate order by A.primary desc")
 	List<Assignment> getAllAssignmentForDepartment(@Param("departmentId") Long departmentId,
@@ -116,9 +117,9 @@ public interface AssignmentRepository extends JpaRepository<Assignment, Long> {
 	List<Assignment> getAllAssignmentForPositionNameLike(@Param("givenDate") Date givenDate,
 			@Param("posName") String posName);
 
-	@Query(" from Assignment A where A.designation.id=:designationId  and A.primary=true and A.fromDate<=:givenDate and A.toDate>=:givenDate ")
+	@Query(" from Assignment A where A.designation.id=:designationId  and A.primary=true and A.fromDate<=:givenDate and A.toDate>=:givenDate and A.tenantId=:tenantId ")
 	List<Assignment> getPrimaryAssignmentForDesignation(@Param("designationId") Long designationId,
-			@Param("givenDate") Date givenDate);
+			@Param("givenDate") Date givenDate, @Param("tenantId") String tenantId);
 
 	@Query(" from Assignment A where A.designation.id=:designationId and A.fromDate<=:givenDate and A.toDate>=:givenDate order by A.primary desc")
 	List<Assignment> getAllAssignmentForDesignation(@Param("designationId") Long designationId,
@@ -135,8 +136,8 @@ public interface AssignmentRepository extends JpaRepository<Assignment, Long> {
 	List<Assignment> findAllAssignmentsByDeptDesigAndGivenDate(@Param("deptId") Long deptId,
 			@Param("desigId") Long desigId, @Param("givenDate") Date givenDate);
 
-	@Query(" from Assignment A where A.department.id=:deptId and A.fromDate<=:givenDate and A.toDate>=:givenDate order by A.fromDate ")
-	List<Assignment> findAllByDepartmentAndDate(@Param("deptId") Long deptId, @Param("givenDate") Date givenDate);
+	@Query(" from Assignment A where A.department.id=:deptId and A.fromDate<=:givenDate and A.toDate>=:givenDate and A.tenantId=:tenantId order by A.fromDate ")
+	List<Assignment> findAllByDepartmentAndDate(@Param("deptId") Long deptId, @Param("givenDate") Date givenDate, @Param("tenantId") String tenantId);
 
 	@Query(" from Assignment A where A.employee.id=:empId and A.fromDate<=:givenDate and A.toDate>=:givenDate order by A.fromDate desc")
 	List<Assignment> findByEmployeeAndGivenDate(@Param("empId") Long empId, @Param("givenDate") Date givenDate);
@@ -208,7 +209,12 @@ public interface AssignmentRepository extends JpaRepository<Assignment, Long> {
 	List<Assignment> findByPositionAndEmployee(@Param("posId") Long posId, @Param("userId") Long userId,
 			@Param("givenDate") Date givenDate);
 
-	@Query(" from Assignment A where A.fromDate<=:asOnDate and A.toDate>=:asOnDate and A.employee.code =:code order by A.fromDate")
-	List<Assignment> getAllActiveAssignmentsByEmpCode(@Param("code") String code, @Param("asOnDate") Date asOnDate);
+	@Query(" from Assignment A where A.fromDate<=:asOnDate and A.toDate>=:asOnDate and A.employee.code =:code and A.tenantId =:tenantId order by A.fromDate")
+	List<Assignment> getAllActiveAssignmentsByEmpCode(@Param("code") String code, @Param("asOnDate") Date asOnDate,
+			@Param("tenantId") String tenantId);
+	
+	List<Assignment> findAllByTenantId(String tenantId);
+	
+	Assignment findByIdAndTenantId(Long id, String tenantId);
 
 }

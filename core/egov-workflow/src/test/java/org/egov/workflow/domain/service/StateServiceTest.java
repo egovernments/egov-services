@@ -31,9 +31,9 @@ public class StateServiceTest {
     public void testShouldReturnStateWhenStateIdIsSpecified() {
         final State expectedState = new State();
         expectedState.setId(1L);
-        when(stateRepository.findOne(1L)).thenReturn(expectedState);
+        when(stateRepository.findByIdAndTenantId(1L,"tenantId")).thenReturn(expectedState);
 
-        final State actualState = stateService.getStateById(1L);
+        final State actualState = stateService.getStateByIdAndTenantId(1L,"tenantId");
 
         assertEquals(1, actualState.getId().intValue());
         assertEquals(expectedState, actualState);

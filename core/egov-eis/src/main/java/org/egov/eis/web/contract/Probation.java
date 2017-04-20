@@ -25,6 +25,9 @@ public class Probation {
 	@JsonProperty("remarks")
 	private String remarks = null;
 
+	@JsonProperty("tenantId")
+	private String tenantId = null;
+
 	public Probation id(Long id) {
 		this.id = id;
 		return this;
@@ -103,6 +106,14 @@ public class Probation {
 		this.remarks = remarks;
 	}
 
+	public String getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
+	}
+
 	@Override
 	public boolean equals(java.lang.Object o) {
 		if (this == o) {
@@ -116,12 +127,12 @@ public class Probation {
 				&& Objects.equals(this.declaredOn, probation.declaredOn)
 				&& Objects.equals(this.orderNo, probation.orderNo)
 				&& Objects.equals(this.orderDate, probation.orderDate)
-				&& Objects.equals(this.remarks, probation.remarks);
+				&& Objects.equals(this.tenantId, probation.tenantId) && Objects.equals(this.remarks, probation.remarks);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, designation, declaredOn, orderNo, orderDate, remarks);
+		return Objects.hash(id, designation, declaredOn, orderNo, orderDate, remarks, tenantId);
 	}
 
 	@Override
@@ -135,6 +146,7 @@ public class Probation {
 		sb.append("    orderNo: ").append(toIndentedString(orderNo)).append("\n");
 		sb.append("    orderDate: ").append(toIndentedString(orderDate)).append("\n");
 		sb.append("    remarks: ").append(toIndentedString(remarks)).append("\n");
+		sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
 		sb.append("}");
 		return sb.toString();
 	}

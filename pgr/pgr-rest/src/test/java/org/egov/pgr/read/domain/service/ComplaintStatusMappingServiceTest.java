@@ -38,7 +38,7 @@ public class ComplaintStatusMappingServiceTest {
     @Test
     @Sql(scripts = {"/sql/clearComplaintStatusMapping.sql", "/sql/InsertComplaintStatusMapping.sql"})
     public void testShouldReturnComplaintStatusListByUserId() {
-        when(userRepository.findUserById(18L)).thenReturn(getUserResponse());
+        when(userRepository.findUserByIdAndTenantId(18L, "ap.public")).thenReturn(getUserResponse());
         List<org.egov.pgr.read.domain.model.ComplaintStatus> complaintStatuses = complaintStatusMappingService.getStatusByRoleAndCurrentStatus(18L,
             "REGISTERED", "ap.public");
         assertFalse(complaintStatuses.isEmpty());

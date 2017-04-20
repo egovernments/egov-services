@@ -31,6 +31,7 @@ public class DiskFileStoreRepositoryTest {
     private final String JURISDICTION_ID = "jurisdiction_id";
     private final String MODULE = "module_id";
     private final String TAG = "tag";
+    private final String TENANTID = "tenantId";
     private DiskFileStoreRepository diskFileStoreRepository;
 
     @Before
@@ -45,21 +46,21 @@ public class DiskFileStoreRepositoryTest {
         String fileStoreId2 = UUID.randomUUID().toString();
         String fileStoreId1 = UUID.randomUUID().toString();
         List<Artifact> listOfMockedArtifacts = Arrays.asList(
-                new Artifact(file1, new FileLocation(fileStoreId1, MODULE, JURISDICTION_ID, TAG)),
-                new Artifact(file2, new FileLocation(fileStoreId2, MODULE, JURISDICTION_ID, TAG))
+                new Artifact(file1, new FileLocation(fileStoreId1, MODULE, TAG,TENANTID)),
+                new Artifact(file2, new FileLocation(fileStoreId2, MODULE, TAG,TENANTID))
         );
 
         diskFileStoreRepository.write(listOfMockedArtifacts);
 
-        verify(fileRepository).write(file1, Paths.get(FILE_STORAGE_MOUNT_PATH, JURISDICTION_ID, MODULE, fileStoreId1));
-        verify(fileRepository).write(file2, Paths.get(FILE_STORAGE_MOUNT_PATH, JURISDICTION_ID, MODULE, fileStoreId2));
+        verify(fileRepository).write(file1, Paths.get(FILE_STORAGE_MOUNT_PATH, MODULE, fileStoreId1,TENANTID));
+        verify(fileRepository).write(file2, Paths.get(FILE_STORAGE_MOUNT_PATH, MODULE, fileStoreId2,TENANTID));
     }
 
     @Test
     public void shouldReturnResourceForGivenPath() {
-        FileLocation fileLocation = new FileLocation("fileStoreId", MODULE, JURISDICTION_ID, TAG);
+        FileLocation fileLocation = new FileLocation("fileStoreId", MODULE, TAG,TENANTID);
         Resource expectedResource = mock(Resource.class);
-        when(fileRepository.read(Paths.get(FILE_STORAGE_MOUNT_PATH, JURISDICTION_ID, MODULE, "fileStoreId")))
+        when(fileRepository.read(Paths.get(FILE_STORAGE_MOUNT_PATH, MODULE, "fileStoreId")))
                 .thenReturn(expectedResource);
 
         Resource actualResource = diskFileStoreRepository.read(fileLocation);

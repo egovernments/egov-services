@@ -42,8 +42,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class StorageControllerTest {
 
 	private static final String MODULE = "module";
-	private static final String JURISDICTION_ID = "jurisdictionId";
 	private static final String TAG = "tag";
+	private final String TENANTID = "tenantId";
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -61,38 +61,36 @@ public class StorageControllerTest {
 		MockMultipartFile mockPdfDocumentFile = new MockMultipartFile("file", "lease_agreement.pdf",
 				"application/pdf", "pdf content".getBytes());
 
-		when(storageService.save(Arrays.asList(mockJpegImageFile, mockPdfDocumentFile), JURISDICTION_ID, MODULE, TAG))
+		when(storageService.save(Arrays.asList(mockJpegImageFile, mockPdfDocumentFile), MODULE, TAG,TENANTID))
 				.thenReturn(Arrays.asList("fileStoreId1", "fileStoreId2"));
 
 		mockMvc.perform(
 				fileUpload("/v1/files")
 						.file(mockJpegImageFile)
 						.file(mockPdfDocumentFile)
-						.param("jurisdictionId", JURISDICTION_ID)
 						.param("module", MODULE)
 						.param("tag", TAG)
-		)
+						.param("tenantId",TENANTID))
 				.andExpect(status().isCreated())
 				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 				.andExpect(content().json(getStorageResponse()));
 
 		verify(storageService)
-				.save(Arrays.asList(mockJpegImageFile, mockPdfDocumentFile), JURISDICTION_ID, MODULE, TAG);
+				.save(Arrays.asList(mockJpegImageFile, mockPdfDocumentFile), MODULE, TAG,TENANTID);
 	}
 
 	@Test
 	public void test_should_return_bad_request_when_upload_request_has_no_files_present() throws Exception {
-		when(storageService.save(Collections.emptyList(), JURISDICTION_ID, MODULE, TAG))
-				.thenThrow(new EmptyFileUploadRequestException(JURISDICTION_ID, MODULE, TAG));
+		when(storageService.save(Collections.emptyList(), MODULE, TAG,TENANTID))
+				.thenThrow(new EmptyFileUploadRequestException(MODULE, TAG,TENANTID));
 
 		final String expectedErrorMessage = "No files present in upload request for " +
-				"jurisdiction: jurisdictionId, module: module, tag: tag";
+				"module: module, tag: tag, tenantId: tenantId";
 		mockMvc.perform(
 				fileUpload("/v1/files")
-						.param("jurisdictionId", JURISDICTION_ID)
 						.param("module", MODULE)
 						.param("tag", TAG)
-		)
+						.param("tenantId",TENANTID))
 				.andExpect(status().isBadRequest())
 				.andExpect(content().string(expectedErrorMessage));
 	}
@@ -103,11 +101,11 @@ public class StorageControllerTest {
 		Resource fileSystemResource = new FileSystemResource(FileUtils.toFile(url));
 
 		org.egov.filestore.domain.model.Resource resource =
-				new org.egov.filestore.domain.model.Resource("image/png", "image.png", fileSystemResource);
+				new org.egov.filestore.domain.model.Resource("image/png", "image.png", fileSystemResource,TENANTID);
 
-		when(storageService.retrieve("FileStoreId")).thenReturn(resource);
+		when(storageService.retrieve("FileStoreId",TENANTID)).thenReturn(resource);
 
-		mockMvc.perform(get("/v1/files/id").param("fileStoreId", "FileStoreId"))
+		mockMvc.perform(get("/v1/files/id").param("fileStoreId", "FileStoreId").param("tenantId", "tenantId"))
 				.andExpect(content().contentType(resource.getContentType()))
 				.andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"image.png\""))
 				.andExpect(content().bytes(getExpectedBytes(fileSystemResource)));
@@ -124,24 +122,24 @@ public class StorageControllerTest {
 
 		List<FileInfo> fileInfoList = asList(mock(FileInfo.class), mock(FileInfo.class));
 
-		when(storageService.retrieveByTag(TAG)).thenReturn(fileInfoList);
+		when(storageService.retrieveByTag(TAG,TENANTID)).thenReturn(fileInfoList);
 		when(responseFactory.getFilesByTagResponse(fileInfoList)).thenReturn(getFilesByTagResponse);
 
 		mockMvc.perform(
-				get("/v1/files/tag").param("tag", TAG)
+				get("/v1/files/tag").param("tag", TAG).param("tenantId", "tenantId")
 		)
 				.andExpect(status().isOk())
 				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 				.andExpect(content().json(getRetrieveByTagResponse()));
 
-		verify(storageService).retrieveByTag(TAG);
+		verify(storageService).retrieveByTag(TAG,TENANTID);
 	}
 
 	@Test
 	public void test404WhenFileIsNotFound() throws Exception {
-		when(storageService.retrieve("fileStoreId")).thenThrow(new ArtifactNotFoundException("fileStoreId"));
+		when(storageService.retrieve("fileStoreId",TENANTID)).thenThrow(new ArtifactNotFoundException("fileStoreId"));
 
-		mockMvc.perform(get("/v1/files/id").param("fileStoreId", "fileStoreId")).andExpect(status().isNotFound());
+		mockMvc.perform(get("/v1/files/id").param("fileStoreId", "fileStoreId").param("tenantId", "tenantId")).andExpect(status().isNotFound());
 	}
 
 	private byte[] getExpectedBytes(Resource fileSystemResource) throws IOException {

@@ -25,10 +25,9 @@ public class ComplaintWriteRepository {
     private ComplaintStatusJpaRepository complaintStatusRepository;
 
     public ComplaintWriteRepository(ComplaintJpaRepository complaintJpaRepository,
-                                    ReceivingModeRepository receivingModeRepository,
-                                    ReceivingCenterRepository receivingCenterRepository,
-                                    ComplaintTypeJpaRepository complaintTypeJpaRepository,
-                                    ComplaintStatusJpaRepository complaintStatusRepository) {
+            ReceivingModeRepository receivingModeRepository, ReceivingCenterRepository receivingCenterRepository,
+            ComplaintTypeJpaRepository complaintTypeJpaRepository,
+            ComplaintStatusJpaRepository complaintStatusRepository) {
         this.complaintJpaRepository = complaintJpaRepository;
         this.receivingModeRepository = receivingModeRepository;
         this.receivingCenterRepository = receivingCenterRepository;
@@ -86,13 +85,14 @@ public class ComplaintWriteRepository {
 
     private void setComplaintStatus(ComplaintRecord complaintRecord, Complaint complaint) {
         ComplaintStatus statusName = ComplaintStatus.valueOf(complaintRecord.getComplaintStatus());
-        org.egov.pgr.common.entity.ComplaintStatus complainStatus =
-            complaintStatusRepository.findByName(statusName.toString());
+        org.egov.pgr.common.entity.ComplaintStatus complainStatus = complaintStatusRepository
+                .findByName(statusName.toString());
         complaint.setStatus(complainStatus);
     }
 
     private void setComplaintType(ComplaintRecord complaintRecord, Complaint complaint) {
-        ComplaintType complaintType = complaintTypeJpaRepository.findByCode(complaintRecord.getComplaintTypeCode());
+        ComplaintType complaintType = complaintTypeJpaRepository
+                .findByCodeAndTenantId(complaintRecord.getComplaintTypeCode(), complaintRecord.getTenantId());
         complaint.setComplaintType(complaintType);
     }
 
@@ -106,7 +106,7 @@ public class ComplaintWriteRepository {
     private void setReceivingCenter(ComplaintRecord complaintRecord, Complaint complaint) {
         if (complaintRecord.getReceivingCenter() != null) {
             ReceivingCenter receivingCenterDB = receivingCenterRepository
-                .findById(complaintRecord.getReceivingCenter());
+                    .findByIdAndTenantId(complaintRecord.getReceivingCenter(),complaintRecord.getTenantId());
             complaint.setReceivingCenter(receivingCenterDB);
         }
     }
@@ -117,6 +117,7 @@ public class ComplaintWriteRepository {
         complaint.setLongitude(complaintRecord.getLongitude());
         complaint.setDetails(complaintRecord.getDescription());
         complaint.setLandmarkDetails(complaintRecord.getLandmarkDetails());
+        complaint.setTenantId(complaintRecord.getTenantId());
     }
 
     private void setAuditFields(ComplaintRecord complaintRecord, Complaint complaint) {
@@ -136,10 +137,11 @@ public class ComplaintWriteRepository {
         complaint.getComplainant().setMobile(complaintRecord.getComplainantMobileNumber());
         complaint.getComplainant().setEmail(complaintRecord.getComplainantEmail());
         complaint.getComplainant().setAddress(complaintRecord.getComplainantAddress());
+        complaint.getComplainant().setTenantId(complaintRecord.getTenantId());
     }
 
     private Complaint getComplaint(ComplaintRecord complaintRecord) {
-        final Complaint existingComplaint = complaintJpaRepository.findByCrn(complaintRecord.getCRN());
+        final Complaint existingComplaint = complaintJpaRepository.findByCrnAndTenantId(complaintRecord.getCRN(),complaintRecord.getTenantId());
         return existingComplaint == null ? new Complaint() : existingComplaint;
     }
 }

@@ -23,10 +23,10 @@ public class UserRepository {
 		this.userServiceUrl = userServiceUrl;
 	}
 
-	public UserResponse findUserById(Long userId) {
+	public UserResponse findUserByIdAndTenantId(Long userId,String tenantId) {
 		String url = String.format("%s%s", userHost, userServiceUrl);
 		UserRequest userRequest = UserRequest.builder().requestInfo(new RequestInfo())
-				.id(Collections.singletonList(userId)).build();
+				.id(Collections.singletonList(userId)).tenantId(tenantId).build();
 
 		return restTemplate.postForObject(url, userRequest, UserResponse.class);
 	}

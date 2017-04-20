@@ -17,6 +17,9 @@ public class Position {
 	@JsonProperty("isPostOutsourced")
 	private Boolean isPostOutsourced = null;
 
+	@JsonProperty("tenantId")
+	private String tenantId = null;
+
 	public Position id(Long id) {
 		this.id = id;
 		return this;
@@ -69,6 +72,14 @@ public class Position {
 		this.isPostOutsourced = isPostOutsourced;
 	}
 
+	public String getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
+	}
+
 	@Override
 	public boolean equals(java.lang.Object o) {
 		if (this == o) {
@@ -80,12 +91,13 @@ public class Position {
 		Position position = (Position) o;
 		return Objects.equals(this.id, position.id) && Objects.equals(this.name, position.name)
 				&& Objects.equals(this.deptdesig, position.deptdesig)
+				&& Objects.equals(this.tenantId, position.tenantId)
 				&& Objects.equals(this.isPostOutsourced, position.isPostOutsourced);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, name, deptdesig, isPostOutsourced);
+		return Objects.hash(id, name, deptdesig, isPostOutsourced, tenantId);
 	}
 
 	@Override
@@ -97,6 +109,7 @@ public class Position {
 		sb.append("    name: ").append(toIndentedString(name)).append("\n");
 		sb.append("    deptdesig: ").append(toIndentedString(deptdesig)).append("\n");
 		sb.append("    isPostOutsourced: ").append(toIndentedString(isPostOutsourced)).append("\n");
+		sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
 		sb.append("}");
 		return sb.toString();
 	}

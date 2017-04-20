@@ -36,10 +36,10 @@ public class PositionController {
 			@RequestParam(value = "isPrimary", required = false) Boolean isPrimary) throws Exception {
 
 		PositionRes response = new PositionRes();
-		response.setResponseInfo(new ResponseInfo());
-		if (code != null && !code.isEmpty() && asOnDate != null) {
-			response.getPosition()
-					.addAll(positionService.getAllPositionsByEmpCode(code, asOnDate.toDateTimeAtStartOfDay().toDate()));
+        response.setResponseInfo(new ResponseInfo());
+		if (tenantId != null && !tenantId.isEmpty() && code != null && !code.isEmpty() && asOnDate != null) {
+			response.getPosition().addAll(positionService.getAllPositionsByEmpCode(code,
+					asOnDate.toDateTimeAtStartOfDay().toDate(), tenantId));
 		} else {
 			throw new Exception();
 		}
@@ -53,28 +53,28 @@ public class PositionController {
 
 		PositionRes response = new PositionRes();
 		response.setResponseInfo(new ResponseInfo("", "", new Date().toString(), "", "", "Successful response"));
-		if (id != null && !id.isEmpty()) {
-			response.getPosition().add(positionService.getById(Long.valueOf(id)));
+		if (tenantId != null && !tenantId.isEmpty() && id != null && !id.isEmpty()) {
+			response.getPosition().add(positionService.getById(Long.valueOf(id), tenantId));
 		} else {
 			throw new Exception();
 		}
 
 		return response;
 	}
-	
-	@GetMapping(value="positions")
+
+	@GetMapping(value = "positions")
 	public ResponseEntity<?> search(@ModelAttribute PositionRequest positionRequest) {
 
 		PositionRes response = new PositionRes();
-		List<Position> positions = positionService.getPositions(positionRequest);
-		response.getPosition().addAll(positions);
-		ResponseInfo responseInfo = new ResponseInfo("","",new Date().toString(),"","","");
-		responseInfo.setStatus(HttpStatus.CREATED.toString());
-		response.setResponseInfo(responseInfo);
+		if (positionRequest.getPosition()!=null && positionRequest.getPosition().getTenantId() != null
+				&& !positionRequest.getPosition().getTenantId().isEmpty()) {
+			List<Position> positions = positionService.getPositions(positionRequest);
+			response.getPosition().addAll(positions);
+			ResponseInfo responseInfo = new ResponseInfo("", "", new Date().toString(), "", "", "");
+			responseInfo.setStatus(HttpStatus.CREATED.toString());
+			response.setResponseInfo(responseInfo);
+		}
 		return new ResponseEntity<PositionRes>(response, HttpStatus.OK);
 	}
-
-
-
 
 }

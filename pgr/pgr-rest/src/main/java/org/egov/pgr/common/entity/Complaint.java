@@ -93,6 +93,9 @@ public class Complaint extends AbstractAuditable {
 
     @Column(name = "lastaccessedtime")
     private Date lastAccessedTime;
+    
+	@Column(name = "tenantid")
+	private String tenantId;
 
     @Override
     public Long getId() {
@@ -114,12 +117,12 @@ public class Complaint extends AbstractAuditable {
     }
 
     public org.egov.pgr.read.domain.model.Complaint toDomain() {
-        final Coordinates coordinates = new Coordinates(latitude, longitude);
+        final Coordinates coordinates = new Coordinates(latitude, longitude, tenantId);
         final String locationId = getLocationId();
         final org.egov.pgr.read.domain.model.ComplaintType complaintType =
-                new org.egov.pgr.read.domain.model.ComplaintType(this.complaintType.getName(), this.complaintType.getCode());
+                new org.egov.pgr.read.domain.model.ComplaintType(this.complaintType.getName(), this.complaintType.getCode(), this.complaintType.getTenantId());
         return org.egov.pgr.read.domain.model.Complaint.builder()
-                .complaintLocation(new ComplaintLocation(coordinates, getCrossHierarchyId(), locationId))
+                .complaintLocation(new ComplaintLocation(coordinates, getCrossHierarchyId(), locationId, tenantId))
                 .complaintType(complaintType)
                 .authenticatedUser(AuthenticatedUser.createAnonymousUser())
                 .complainant(complainant.toDomain())
@@ -137,6 +140,7 @@ public class Complaint extends AbstractAuditable {
                 .receivingCenter(getReceivingCenterId())
                 .childLocation(getChildLocationId())
                 .assignee(getAssigneeId())
+                .tenantId(tenantId)
                 .state(getState())
                 .complaintStatus(getComplaintStatus())
                 .build();

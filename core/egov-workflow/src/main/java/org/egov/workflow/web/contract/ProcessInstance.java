@@ -54,10 +54,11 @@ public class ProcessInstance {
 
     @JsonProperty("senderName")
     private String senderName;
-
+    
     @JsonProperty("values")
     private Map<String, Attribute> values;
 
+    @JsonProperty("tenantId")
     private String tenantId;
 
     @JsonIgnore
@@ -73,7 +74,7 @@ public class ProcessInstance {
     public void setStateId(Long stateId){
         Value value = new Value("stateId", String.valueOf(stateId));
         List<Value> attributeValues = Collections.singletonList(value);
-        Attribute attribute = new Attribute(true, "stateId", "String", true, "This is the id of state",attributeValues);
+        Attribute attribute = new Attribute(true, "stateId", "String", true, "This is the id of state",attributeValues,"tenantId");
         values.put("stateId",attribute);
     }
 

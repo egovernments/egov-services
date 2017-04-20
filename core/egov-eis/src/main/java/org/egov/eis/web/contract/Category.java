@@ -16,6 +16,9 @@ public class Category {
 
 	@JsonProperty("active")
 	private String active = null;
+	
+	@JsonProperty("tenantId")
+	private String tenantId = null;
 
 	public Category id(Long id) {
 		this.id = id;
@@ -80,12 +83,13 @@ public class Category {
 		Category category = (Category) o;
 		return Objects.equals(this.id, category.id) && Objects.equals(this.name, category.name)
 				&& Objects.equals(this.description, category.description)
+				&& Objects.equals(this.tenantId, category.tenantId)
 				&& Objects.equals(this.active, category.active);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, name, description, active);
+		return Objects.hash(id, name, description, active, tenantId);
 	}
 
 	@Override
@@ -97,6 +101,7 @@ public class Category {
 		sb.append("    name: ").append(toIndentedString(name)).append("\n");
 		sb.append("    description: ").append(toIndentedString(description)).append("\n");
 		sb.append("    active: ").append(toIndentedString(active)).append("\n");
+		sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
 		sb.append("}");
 		return sb.toString();
 	}
@@ -106,5 +111,13 @@ public class Category {
 			return "null";
 		}
 		return o.toString().replace("\n", "\n    ");
+	}
+
+	public String getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
 	}
 }

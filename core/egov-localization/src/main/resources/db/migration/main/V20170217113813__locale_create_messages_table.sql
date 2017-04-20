@@ -3,6 +3,6 @@ CREATE TABLE message (
 	locale varchar(255) not null,
 	code varchar(255) not null,
 	message varchar(500) not null,
-	tenant_id varchar(500) not null,
-	CONSTRAINT unique_message_entry UNIQUE(locale, code, tenant_id)
+	tenantid character varying(256) not null,
+	constraint unique_message_entry unique (locale, code, tenantid)
 );

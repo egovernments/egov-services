@@ -2,6 +2,7 @@ package org.egov.eis.domain.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -39,9 +40,9 @@ public class AssignmentServiceTest {
 	public void testShouldReturnAssignmentWhenAssignmentIdIsSpecified() {
 		final Assignment expectedAssignment = new Assignment();
 		expectedAssignment.setId(1L);
-		when(assignmentRepository.findOne(1L)).thenReturn(expectedAssignment);
+		when(assignmentRepository.findByIdAndTenantId(1L,"tenantId")).thenReturn(expectedAssignment);
 
-		final Assignment actualAssignment = assignmentService.getAssignmentById(1L);
+		final Assignment actualAssignment = assignmentService.getAssignmentById(1L,"tenantId");
 
 		assertEquals(1, actualAssignment.getId().intValue());
 
@@ -49,21 +50,21 @@ public class AssignmentServiceTest {
 
 	@Test
 	public void testShouldReturnAllAssignmentsWhenIdIsNotSpecified() {
-		when(assignmentRepository.findAll()).thenReturn(Arrays.asList(new Assignment(), new Assignment()));
+		when(assignmentRepository.findAllByTenantId("tenantId")).thenReturn(Arrays.asList(new Assignment(), new Assignment()));
 
-		final List<Assignment> actualAssignments = assignmentService.getAll();
+		final List<Assignment> actualAssignments = assignmentService.getAll("tenantId");
 
 		assertEquals(2, actualAssignments.size());
 	}
 
 	@Test
-	public void test_should_return_assignment_for_employeeId(){
-		when(assignmentRepository.getPrimaryAssignmentForEmployee(18L))
+	public void test_should_return_assignment_for_employeeId() {
+		when(assignmentRepository.getPrimaryAssignmentForEmployee(18L, "ap.public"))
 				.thenReturn(Assignment.builder().id(2L).build());
 
-		final Assignment actualAssignment = assignmentService.getPrimaryAssignmentForEmployee(18L);
+		final Assignment actualAssignment = assignmentService.getPrimaryAssignmentForEmployee(18L, "ap.public");
 
-		assertEquals(2,actualAssignment.getId().longValue());
+		assertEquals(2, actualAssignment.getId().longValue());
 	}
 
 	@Test
@@ -73,24 +74,25 @@ public class AssignmentServiceTest {
 				.designation(designation).build();
 		// given both department and designation id
 		when(assignmentRepository.getPrimaryAssignmentForDepartmentAndDesignation(any(Long.class), any(Long.class),
-				any(Date.class))).thenReturn(Collections.singletonList(expectedAssignment));
+				any(Date.class), any(String.class))).thenReturn(Collections.singletonList(expectedAssignment));
 		actualAssignment = assignmentService.getPositionsByDepartmentAndDesignationForGivenRange(any(Long.class),
-				any(Long.class), any(Date.class));
+				any(Long.class), any(Date.class),  any(String.class));
 		assertEquals(1, actualAssignment.size());
 		// given only department id
-		when(assignmentRepository.getPrimaryAssignmentForDepartment(any(Long.class), any(Date.class)))
-				.thenReturn(Collections.singletonList(expectedAssignment));
+		when(assignmentRepository.getPrimaryAssignmentForDepartment(any(Long.class), any(Date.class),
+				any(String.class))).thenReturn(Collections.singletonList(expectedAssignment));
 		actualAssignment = assignmentService.getPositionsByDepartmentAndDesignationForGivenRange(any(Long.class), null,
-				any(Date.class));
+				any(Date.class), any(String.class));
 		assertEquals(1, actualAssignment.size());
 		// given only designation id
-		when(assignmentRepository.getPrimaryAssignmentForDesignation(any(Long.class), any(Date.class)))
-				.thenReturn(Collections.singletonList(expectedAssignment));
+		when(assignmentRepository.getPrimaryAssignmentForDesignation(any(Long.class), any(Date.class),
+				any(String.class))).thenReturn(Collections.singletonList(expectedAssignment));
 		actualAssignment = assignmentService.getPositionsByDepartmentAndDesignationForGivenRange(null, any(Long.class),
-				any(Date.class));
+				any(Date.class), any(String.class));
 		assertEquals(1, actualAssignment.size());
 		// when all params are null
-		actualAssignment = assignmentService.getPositionsByDepartmentAndDesignationForGivenRange(null, null, null);
+		actualAssignment = assignmentService.getPositionsByDepartmentAndDesignationForGivenRange(null, null, null,
+				null);
 		assertEquals(true, actualAssignment.isEmpty());
 	}
 

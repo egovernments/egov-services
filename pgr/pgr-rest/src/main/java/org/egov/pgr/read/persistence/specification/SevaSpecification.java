@@ -1,16 +1,29 @@
 package org.egov.pgr.read.persistence.specification;
 
-import org.egov.pgr.common.entity.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
+import org.egov.pgr.common.entity.AbstractAuditable_;
+import org.egov.pgr.common.entity.Complainant;
+import org.egov.pgr.common.entity.Complainant_;
+import org.egov.pgr.common.entity.Complaint;
+import org.egov.pgr.common.entity.ComplaintStatus;
+import org.egov.pgr.common.entity.ComplaintStatus_;
+import org.egov.pgr.common.entity.ComplaintType;
+import org.egov.pgr.common.entity.ComplaintType_;
+import org.egov.pgr.common.entity.Complaint_;
+import org.egov.pgr.common.entity.ReceivingMode;
+import org.egov.pgr.common.entity.ReceivingMode_;
 import org.egov.pgr.read.domain.model.ComplaintSearchCriteria;
 import org.joda.time.DateTime;
 import org.springframework.data.jpa.domain.Specification;
-
-import javax.persistence.criteria.*;
-
-import java.util.ArrayList;
-
-import java.util.Date;
-import java.util.List;
 
 public class SevaSpecification implements Specification<Complaint> {
     private ComplaintSearchCriteria criteria;
@@ -23,6 +36,7 @@ public class SevaSpecification implements Specification<Complaint> {
     public Predicate toPredicate(Root<Complaint> root, CriteriaQuery<?> criteriaQuery,
                                  CriteriaBuilder criteriaBuilder) {
         Path<String> crn = root.get(Complaint_.crn);
+        Path<String> tenantId = root.get(Complaint_.tenantId);
         Path<ComplaintType> complaintType = root.get(Complaint_.complaintType);
         Path<String> code = complaintType.get(ComplaintType_.code);
         Path<ComplaintStatus> complaintStatus = root.get(Complaint_.status);
@@ -42,6 +56,10 @@ public class SevaSpecification implements Specification<Complaint> {
         Path <Date> escalationDate=root.get(Complaint_.escalationDate);
 
         List<Predicate> predicates = new ArrayList<>();
+        if (criteria.getTenantId() != null && !criteria.getTenantId().isEmpty()) {
+            predicates.add(criteriaBuilder.equal(tenantId, criteria.getTenantId()));
+        }
+        
         if (criteria.getServiceRequestId() != null) {
             predicates.add(criteriaBuilder.equal(crn, criteria.getServiceRequestId()));
         }

@@ -104,6 +104,9 @@ public class WorkFlowMatrix extends AbstractPersistable<Long> implements Cloneab
 
     @Temporal(TemporalType.DATE)
     private Date toDate;
+    
+    @Column(name = "tenantid")
+    private String tenantId;
 
     public WorkFlowMatrix() {
 
@@ -276,5 +279,12 @@ public class WorkFlowMatrix extends AbstractPersistable<Long> implements Cloneab
     public void setToDate(final Date toDate) {
         this.toDate = toDate;
     }
+    
+    public String getTenantId() {
+		return tenantId;
+	}
 
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
+	}
 }

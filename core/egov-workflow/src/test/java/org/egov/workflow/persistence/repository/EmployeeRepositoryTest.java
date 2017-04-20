@@ -46,7 +46,7 @@ public class EmployeeRepositoryTest {
                 .andRespond(withSuccess(new Resources().getFileContents("employeeResponse.json"),
                         MediaType.APPLICATION_JSON_UTF8));
 
-        final EmployeeRes employeeRes = employeeRepository.getEmployeeForUserId(1l);
+        final EmployeeRes employeeRes = employeeRepository.getEmployeeForUserIdAndTenantId(1l,"tenantId");
         server.verify();
         assertEquals(1, employeeRes.getEmployees().size());
 
@@ -59,7 +59,7 @@ public class EmployeeRepositoryTest {
                 .andRespond(withSuccess(new Resources().getFileContents("employeeResponse.json"),
                         MediaType.APPLICATION_JSON_UTF8));
 
-        final EmployeeRes employeeRes = employeeRepository.getEmployeeForPosition(1l, new LocalDate());
+        final EmployeeRes employeeRes = employeeRepository.getEmployeeForPositionAndTenantId(1l, new LocalDate(),"tenantId");
         server.verify();
         assertEquals(1, employeeRes.getEmployees().size());
     }

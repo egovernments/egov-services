@@ -2,6 +2,7 @@ package org.egov.web.indexer.adaptor;
 
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
+import static org.mockito.Matchers.any;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,13 +57,31 @@ public class ComplaintAdapterTest {
 		ComplaintIndex complaintIndex = complaintAdapter.indexOnCreate(serviceRequest);
 		assertNotNull(complaintIndex);
 	}
-
+	
+	@Test
+    public void test_update_index() {
+        ServiceRequest serviceRequest = setUpServiceRequest();
+        serviceRequest.getValues().put("status", "COMPLETED");
+        ComplaintIndex complaintIndex = complaintAdapter.indexOnUpdate(serviceRequest);
+        assertNotNull(complaintIndex);
+        serviceRequest.getValues().put("status", "PROCESSING");
+        complaintIndex = complaintAdapter.indexOnUpdate(serviceRequest);
+        assertNotNull(complaintIndex);
+        serviceRequest.getValues().put("status", "REJECTED");
+        complaintIndex = complaintAdapter.indexOnUpdate(serviceRequest);
+        assertNotNull(complaintIndex);
+        serviceRequest.getValues().put("status", "REOPENED");
+        complaintIndex = complaintAdapter.indexOnUpdate(serviceRequest);
+        assertNotNull(complaintIndex);
+        
+    }
+	
 	private ServiceRequest setUpServiceRequest() {
 		ServiceRequest serviceRequest = ServiceRequest.builder().values(new HashMap<>()).build();
-		serviceRequest.setCreatedDate("2016-10-20");
-		serviceRequest.setEscalationDate(1491374461909L);
+		serviceRequest.setCreatedDate("20-10-2016 10:47:21");
+		serviceRequest.setEscalationDate("20-10-2016 10:47:21");
 		serviceRequest.setFirstName("abc");
-		serviceRequest.setLastName("xyz");
+		//serviceRequest.setLastName("xyz");
 		serviceRequest.setComplaintTypeCode("AOS");
 		Map<String, String> values = serviceRequest.getValues();
 		values.put("receivingMode", "");
@@ -77,8 +96,8 @@ public class ComplaintAdapterTest {
 		final Boundary expectedBoundary = getExpectedBoundary();
 		final City expectedCityContent = getExpectedCityContent();
 		final Employee expectedAssignment = getExpectedEmployee();
-		when(complaintTypeRepository.fetchComplaintTypeByCode("AOS")).thenReturn(expectedComplaintType);
-		when(boundaryRepository.fetchBoundaryById(Long.valueOf(values.get("locationId")))).thenReturn(expectedBoundary);
+		when(complaintTypeRepository.fetchComplaintTypeByCode("AOS","ap.public")).thenReturn(expectedComplaintType);
+		when(boundaryRepository.fetchBoundaryById(Long.valueOf(values.get("locationId")),"ap.public")).thenReturn(expectedBoundary);
 		when(cityRepository.fetchCityById(Long.valueOf(values.get("tenantId")))).thenReturn(expectedCityContent);
 		when(employeeRepository.fetchEmployeeByPositionId(Long.valueOf(values.get("assignment_id")), new LocalDate(),
 				values.get("tenantId"))).thenReturn(expectedAssignment);

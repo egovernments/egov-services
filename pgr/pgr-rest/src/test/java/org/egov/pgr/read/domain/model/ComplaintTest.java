@@ -14,8 +14,8 @@ public class ComplaintTest {
     @Test
     public void testShouldNotFailValidationWhenCitizenCreatesValidComplaint() {
         final ComplaintLocation complaintLocation = ComplaintLocation.builder()
-            .coordinates(new Coordinates(12.22d, 11.22d))
-            .build();
+                .coordinates(new Coordinates(12.22d, 11.22d, "tenantId"))
+                .build();
         final Complainant complainant = Complainant.builder()
             .userId("userId")
             .mobile("mobile number")
@@ -27,7 +27,7 @@ public class ComplaintTest {
             .complaintLocation(complaintLocation)
             .tenantId("tenantId")
             .description("description")
-            .complaintType(new ComplaintType(null, "complaintCode"))
+            .complaintType(new ComplaintType(null, "complaintCode", "tenantId"))
             .build();
 
         complaint.validate();
@@ -50,7 +50,7 @@ public class ComplaintTest {
             .tenantId("tenantId")
             .description("description")
             .crn("crn")
-            .complaintType(new ComplaintType(null, "complaintCode"))
+            .complaintType(new ComplaintType(null, "complaintCode", "tenantId"))
             .build();
 
         complaint.validate();
@@ -66,7 +66,7 @@ public class ComplaintTest {
             .authenticatedUser(getCitizen())
             .complaintLocation(complaintLocation)
             .modifyComplaint(true)
-            .complaintType(new ComplaintType(null, null))
+            .complaintType(new ComplaintType(null, null, "tenantId"))
             .build();
 
         assertTrue(complaint.isLocationAbsent());
@@ -86,7 +86,7 @@ public class ComplaintTest {
     @Test(expected = InvalidComplaintException.class)
     public void testShouldFailValidationWhenFirstNameIsNotPresentWhenCreatingAnAnonymousComplaint() {
         final ComplaintLocation complaintLocation = ComplaintLocation.builder()
-            .coordinates(new Coordinates(1.1, 2.2))
+            .coordinates(new Coordinates(1.1, 2.2, "tenantId"))
             .build();
         final Complainant complainant = Complainant.builder()
             .mobile("mobile number")
@@ -97,9 +97,8 @@ public class ComplaintTest {
             .complainant(complainant)
             .authenticatedUser(AuthenticatedUser.createAnonymousUser())
             .complaintLocation(complaintLocation)
-            .complaintType(new ComplaintType(null, null))
+            .complaintType(new ComplaintType(null, null, "tenantId"))
             .build();
-
         assertTrue(complaint.isComplainantAbsent());
         complaint.validate();
     }
@@ -107,7 +106,7 @@ public class ComplaintTest {
     @Test(expected = InvalidComplaintException.class)
     public void testShouldFailValidationWhenFirstNameIsNotPresentWhenEmployeeCreatesComplaint() {
         final ComplaintLocation complaintLocation = ComplaintLocation.builder()
-            .coordinates(new Coordinates(1.1, 2.2))
+            .coordinates(new Coordinates(1.1, 2.2, "tenantId"))
             .build();
         final Complainant complainant = Complainant.builder()
             .mobile("mobile number")
@@ -118,9 +117,8 @@ public class ComplaintTest {
             .complainant(complainant)
             .authenticatedUser(getEmployee())
             .complaintLocation(complaintLocation)
-            .complaintType(new ComplaintType(null, null))
+            .complaintType(new ComplaintType(null, null, "tenantId"))
             .build();
-
         assertTrue(complaint.isComplainantAbsent());
         complaint.validate();
     }
@@ -128,7 +126,7 @@ public class ComplaintTest {
     @Test(expected = InvalidComplaintException.class)
     public void testShouldFailValidationWhenMobileNumberIsNotPresentWhenCreatingAnAnonymousComplaint() {
         final ComplaintLocation complaintLocation = ComplaintLocation.builder()
-            .coordinates(new Coordinates(1.1, 2.2))
+            .coordinates(new Coordinates(1.1, 2.2, "tenantId"))
             .build();
         final Complainant complainant = Complainant.builder()
             .firstName("first name")
@@ -139,7 +137,7 @@ public class ComplaintTest {
             .complainant(complainant)
             .authenticatedUser(AuthenticatedUser.createAnonymousUser())
             .complaintLocation(complaintLocation)
-            .complaintType(new ComplaintType(null, null))
+            .complaintType(new ComplaintType(null, null, "tenantId"))
             .build();
 
         assertTrue(complaint.isComplainantAbsent());
@@ -149,7 +147,7 @@ public class ComplaintTest {
     @Test(expected = InvalidComplaintException.class)
     public void testShouldFailValidationWhenMobileNumberIsNotPresentWhenEmployeeCreatesComplaint() {
         final ComplaintLocation complaintLocation = ComplaintLocation.builder()
-            .coordinates(new Coordinates(1.1, 2.2))
+            .coordinates(new Coordinates(1.1, 2.2, "tenantId"))
             .build();
         final Complainant complainant = Complainant.builder()
             .firstName("first name")
@@ -157,11 +155,11 @@ public class ComplaintTest {
             .mobile(null)
             .build();
         Complaint complaint = Complaint.builder()
-            .complainant(complainant)
-            .authenticatedUser(getEmployee())
-            .complaintLocation(complaintLocation)
-            .complaintType(new ComplaintType(null, null))
-            .build();
+                .complainant(complainant)
+                .authenticatedUser(getEmployee())
+                .complaintLocation(complaintLocation)
+                .complaintType(new ComplaintType(null, null, "tenantId"))
+                .build();
 
         assertTrue(complaint.isComplainantAbsent());
         assertTrue(complaint.isComplainantPhoneAbsent());
@@ -171,21 +169,21 @@ public class ComplaintTest {
     @Test
     public void testShouldNotFailValidationWhenMandatoryComplainantAttributesArePresentWhenCreatingAnAnonymousComplaint() {
         final ComplaintLocation complaintLocation = ComplaintLocation.builder()
-            .coordinates(new Coordinates(1.1, 2.2))
-            .build();
+                .coordinates(new Coordinates(1.1, 2.2, "tenantId"))
+                .build();
         final Complainant complainant = Complainant.builder()
             .mobile("mobile number")
             .email("foo@bar.com")
             .firstName("first name")
             .build();
         Complaint complaint = Complaint.builder()
-            .complainant(complainant)
-            .authenticatedUser(AuthenticatedUser.createAnonymousUser())
-            .complaintLocation(complaintLocation)
-            .tenantId("tenantId")
-            .description("description")
-            .complaintType(new ComplaintType(null, "complaintCode"))
-            .build();
+                .complainant(complainant)
+                .authenticatedUser(AuthenticatedUser.createAnonymousUser())
+                .complaintLocation(complaintLocation)
+                .tenantId("tenantId")
+                .description("description")
+                .complaintType(new ComplaintType(null, "complaintCode", "tenantId"))
+                .build();
 
         assertFalse(complaint.isComplainantAbsent());
         complaint.validate();
@@ -194,22 +192,22 @@ public class ComplaintTest {
     @Test
     public void testShouldNotFailValidationWhenMandatoryComplainantAttributesArePresentOnComplaintCreationByEmployee() {
         final ComplaintLocation complaintLocation = ComplaintLocation.builder()
-            .coordinates(new Coordinates(1.1, 2.2))
-            .build();
+                .coordinates(new Coordinates(1.1, 2.2, "tenantId"))
+                .build();
         final Complainant complainant = Complainant.builder()
             .mobile("mobile number")
             .email("foo@bar.com")
             .firstName("first name")
             .build();
         Complaint complaint = Complaint.builder()
-            .complainant(complainant)
-            .authenticatedUser(getEmployee())
-            .complaintLocation(complaintLocation)
-            .tenantId("tenantId")
-            .description("description")
-            .receivingMode("receivingMode")
-            .complaintType(new ComplaintType(null, "complaintCode"))
-            .build();
+                .complainant(complainant)
+                .authenticatedUser(getEmployee())
+                .complaintLocation(complaintLocation)
+                .tenantId("tenantId")
+                .description("description")
+                .receivingMode("receivingMode")
+                .complaintType(new ComplaintType(null, "complaintCode", "tenantId"))
+                .build();
 
         complaint.validate();
     }
@@ -217,21 +215,21 @@ public class ComplaintTest {
     @Test(expected = InvalidComplaintException.class)
     public void testShouldFailValidationWhenTenantIdIsAbsentWhenCreatingComplaint() {
         final ComplaintLocation complaintLocation = ComplaintLocation.builder()
-            .coordinates(new Coordinates(1.1, 2.2))
-            .build();
+                .coordinates(new Coordinates(1.1, 2.2, "tenantId"))
+                .build();
         final Complainant complainant = Complainant.builder()
             .mobile("mobile number")
             .email("foo@bar.com")
             .firstName("first name")
             .build();
         Complaint complaint = Complaint.builder()
-            .complainant(complainant)
-            .tenantId(null)
-            .authenticatedUser(AuthenticatedUser.createAnonymousUser())
-            .complaintLocation(complaintLocation)
-            .description("description")
-            .complaintType(new ComplaintType(null, "complaintCode"))
-            .build();
+                .complainant(complainant)
+                .tenantId(null)
+                .authenticatedUser(AuthenticatedUser.createAnonymousUser())
+                .complaintLocation(complaintLocation)
+                .description("description")
+                .complaintType(new ComplaintType(null, "complaintCode", "tenantId"))
+                .build();
 
         assertTrue(complaint.isTenantIdAbsent());
         complaint.validate();
@@ -240,21 +238,21 @@ public class ComplaintTest {
     @Test(expected = InvalidComplaintException.class)
     public void testShouldFailValidationWhenDescriptionIsAbsentWhenCreatingComplaint() {
         final ComplaintLocation complaintLocation = ComplaintLocation.builder()
-            .coordinates(new Coordinates(1.1, 2.2))
-            .build();
+                .coordinates(new Coordinates(1.1, 2.2, "tenantId"))
+                .build();
         final Complainant complainant = Complainant.builder()
             .mobile("mobile number")
             .email("foo@bar.com")
             .firstName("first name")
             .build();
         Complaint complaint = Complaint.builder()
-            .complainant(complainant)
-            .tenantId("tenantId")
-            .description(null)
-            .authenticatedUser(AuthenticatedUser.createAnonymousUser())
-            .complaintLocation(complaintLocation)
-            .complaintType(new ComplaintType(null, null))
-            .build();
+                .complainant(complainant)
+                .tenantId("tenantId")
+                .description(null)
+                .authenticatedUser(AuthenticatedUser.createAnonymousUser())
+                .complaintLocation(complaintLocation)
+                .complaintType(new ComplaintType(null, null, "tenantId"))
+                .build();
 
         assertTrue(complaint.isDescriptionAbsent());
         complaint.validate();
@@ -263,7 +261,7 @@ public class ComplaintTest {
     @Test(expected = InvalidComplaintException.class)
     public void testShouldFailValidationWhenDescriptionLengthIsLessWhenCreatingComplaint() {
         final ComplaintLocation complaintLocation = ComplaintLocation.builder()
-            .coordinates(new Coordinates(1.1, 2.2))
+            .coordinates(new Coordinates(1.1, 2.2,"ap.public"))
             .build();
         final Complainant complainant = Complainant.builder()
             .mobile("mobile number")
@@ -276,7 +274,7 @@ public class ComplaintTest {
             .description("description")
             .authenticatedUser(AuthenticatedUser.createAnonymousUser())
             .complaintLocation(complaintLocation)
-            .complaintType(new ComplaintType(null, null))
+            .complaintType(new ComplaintType(null, null, null)) 
             .build();
 
 		assertFalse(complaint.descriptionLength());
@@ -286,21 +284,21 @@ public class ComplaintTest {
     @Test(expected = InvalidComplaintException.class)
     public void testShouldFailValidationWhenComplaintTypeCodeIsAbsentWhenCreatingComplaint() {
         final ComplaintLocation complaintLocation = ComplaintLocation.builder()
-            .coordinates(new Coordinates(1.1, 2.2))
-            .build();
+                .coordinates(new Coordinates(1.1, 2.2, "tenantId"))
+                .build();
         final Complainant complainant = Complainant.builder()
             .mobile("mobile number")
             .email("foo@bar.com")
             .firstName("first name")
             .build();
         Complaint complaint = Complaint.builder()
-            .complainant(complainant)
-            .tenantId("tenantId")
-            .description("description")
-            .complaintType(new ComplaintType("type", null))
-            .authenticatedUser(AuthenticatedUser.createAnonymousUser())
-            .complaintLocation(complaintLocation)
-            .build();
+                .complainant(complainant)
+                .tenantId("tenantId")
+                .description("description")
+                .complaintType(new ComplaintType("type", null, "tenantId"))
+                .authenticatedUser(AuthenticatedUser.createAnonymousUser())
+                .complaintLocation(complaintLocation)
+                .build();
 
         assertTrue(complaint.isComplaintTypeAbsent());
         complaint.validate();
@@ -309,23 +307,23 @@ public class ComplaintTest {
     @Test(expected = InvalidComplaintException.class)
     public void testShouldFailValidationWhenCrnIsAbsentWhenUpdatingComplaint() {
         final ComplaintLocation complaintLocation = ComplaintLocation.builder()
-            .coordinates(new Coordinates(1.1, 2.2))
-            .build();
+                .coordinates(new Coordinates(1.1, 2.2, "tenantId"))
+                .build();
         final Complainant complainant = Complainant.builder()
             .mobile("mobile number")
             .email("foo@bar.com")
             .firstName("first name")
             .build();
         Complaint complaint = Complaint.builder()
-            .complainant(complainant)
-            .tenantId("tenantId")
-            .description("description")
-            .complaintType(new ComplaintType("type", "complaintTypeCode"))
-            .crn(null)
-            .modifyComplaint(true)
-            .authenticatedUser(AuthenticatedUser.createAnonymousUser())
-            .complaintLocation(complaintLocation)
-            .build();
+                .complainant(complainant)
+                .tenantId("tenantId")
+                .description("description")
+                .complaintType(new ComplaintType("type", "complaintTypeCode", "tenantId"))
+                .crn(null)
+                .modifyComplaint(true)
+                .authenticatedUser(AuthenticatedUser.createAnonymousUser())
+                .complaintLocation(complaintLocation)
+                .build();
 
         assertTrue(complaint.isCrnAbsent());
         complaint.validate();
@@ -334,23 +332,23 @@ public class ComplaintTest {
     @Test(expected = InvalidComplaintException.class)
     public void testShouldFailValidationWhenReceivingModeIsNotPresentWhenEmployeeCreatesComplaint() {
         final ComplaintLocation complaintLocation = ComplaintLocation.builder()
-            .coordinates(new Coordinates(1.1, 2.2))
-            .build();
+                .coordinates(new Coordinates(1.1, 2.2, "tenantId"))
+                .build();
         final Complainant complainant = Complainant.builder()
             .mobile("mobile number")
             .email("foo@bar.com")
             .firstName("first name")
             .build();
         Complaint complaint = Complaint.builder()
-            .complainant(complainant)
-            .tenantId("tenantId")
-            .description("description")
-            .complaintType(new ComplaintType("type", "complaintTypeCode"))
-            .receivingCenter(null)
-            .receivingMode(null)
-            .authenticatedUser(getEmployee())
-            .complaintLocation(complaintLocation)
-            .build();
+                .complainant(complainant)
+                .tenantId("tenantId")
+                .description("description")
+                .complaintType(new ComplaintType("type", "complaintTypeCode", "tenantId"))
+                .receivingCenter(null)
+                .receivingMode(null)
+                .authenticatedUser(getEmployee())
+                .complaintLocation(complaintLocation)
+                .build();
 
         assertTrue(complaint.isReceivingModeAbsent());
         complaint.validate();
@@ -359,23 +357,23 @@ public class ComplaintTest {
     @Test(expected = InvalidComplaintException.class)
     public void testShouldFailValidationWhenReceivingCenterIsNotPresentWhenEmployeeCreatesComplaintWithManualReceivingMode() {
         final ComplaintLocation complaintLocation = ComplaintLocation.builder()
-            .coordinates(new Coordinates(1.1, 2.2))
-            .build();
+                .coordinates(new Coordinates(1.1, 2.2, "tenantId"))
+                .build();
         final Complainant complainant = Complainant.builder()
             .mobile("mobile number")
             .email("foo@bar.com")
             .firstName("first name")
             .build();
         Complaint complaint = Complaint.builder()
-            .complainant(complainant)
-            .tenantId("tenantId")
-            .description("description")
-            .complaintType(new ComplaintType("type", "complaintTypeCode"))
-            .receivingCenter(null)
-            .receivingMode("MANUAL")
-            .authenticatedUser(getEmployee())
-            .complaintLocation(complaintLocation)
-            .build();
+                .complainant(complainant)
+                .tenantId("tenantId")
+                .description("description")
+                .complaintType(new ComplaintType("type", "complaintTypeCode", "tenantId"))
+                .receivingCenter(null)
+                .receivingMode("MANUAL")
+                .authenticatedUser(getEmployee())
+                .complaintLocation(complaintLocation)
+                .build();
 
         assertTrue(complaint.isReceivingCenterAbsent());
         complaint.validate();
@@ -384,20 +382,20 @@ public class ComplaintTest {
 
     private Complaint getComplaintWithNoLocationData() {
         final ComplaintLocation complaintLocation = ComplaintLocation.builder()
-            .coordinates(new Coordinates(0d, 0d))
-            .build();
+                .coordinates(new Coordinates(0d, 0d, "tenantId"))
+                .build();
         return getComplaint(complaintLocation);
     }
 
     private Complaint getComplaint(ComplaintLocation complaintLocation) {
         return Complaint.builder()
-            .complainant(Complainant.builder().build())
-            .authenticatedUser(getCitizen())
-            .complaintLocation(complaintLocation)
-            .tenantId("tenantId")
-            .description("description")
-            .complaintType(new ComplaintType(null, "complaintTypeCode"))
-            .build();
+                .complainant(Complainant.builder().build())
+                .authenticatedUser(getCitizen())
+                .complaintLocation(complaintLocation)
+                .tenantId("tenantId")
+                .description("description")
+                .complaintType(new ComplaintType(null, "complaintTypeCode", "tenantId"))
+                .build();
     }
 
     private AuthenticatedUser getCitizen() {

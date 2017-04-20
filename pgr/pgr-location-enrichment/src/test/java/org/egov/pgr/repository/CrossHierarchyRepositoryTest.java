@@ -40,7 +40,7 @@ public class CrossHierarchyRepositoryTest {
                         withSuccess(new Resources().getFileContents("successHierarchyResponse.json"),
                                 MediaType.APPLICATION_JSON_UTF8));
 
-        final CrossHierarchyResponse response = crossHierarchyRepository.getCrossHierarchy("5");
+        final CrossHierarchyResponse response = crossHierarchyRepository.getCrossHierarchy("5","tenantId");
 
         server.verify();
         assertEquals("1", response.getLocationId());

@@ -18,4 +18,7 @@ public class UserRequest {
 
 	@JsonProperty("id")
 	private List<Long> id;
+	
+	@JsonProperty("tenantId")
+    private String tenantId;
 }

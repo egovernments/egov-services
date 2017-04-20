@@ -53,7 +53,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
-	public Employee findByCode(String code);
+	public Employee findByCodeAndTenantId(String code, String tenantId);
 
 	public List<Employee> findByEmployeeStatus(EmployeeStatus status);
 
@@ -69,15 +69,15 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
 	@Query(" select distinct EMP from Employee EMP inner join EMP.assignments ASSIGN "
 			+ " where ASSIGN.department.code=:deptCode and ASSIGN.designation.code=:desigCode and ASSIGN.fromDate<=current_date and ASSIGN.toDate>=current_date "
-			+ " and EMP.active=true order by EMP.code")
+			+ " and ASSIGN.tenantId=:tenantId and EMP.tenantId=:tenantId and EMP.active=true order by EMP.code")
 	List<Employee> findByDepartmentDesignation(@Param("deptCode") final String deptCode,
-			@Param("desigCode") final String desigCode);
+			@Param("desigCode") final String desigCode, @Param("tenantId") final String tenantId);
 
 	@Query(" select distinct EMP from Employee EMP inner join EMP.assignments ASSIGN "
 			+ " where ASSIGN.position.id=:positionId and ASSIGN.fromDate<=:asOnDate and ASSIGN.toDate>=:asOnDate "
-			+ " and EMP.active=true order by EMP.code")
+			+ " and ASSIGN.tenantId=:tenantId and EMP.tenantId=:tenantId and EMP.active=true order by EMP.code")
 	List<Employee> findByPositionAndAsOnDate(@Param("positionId") final Long positionId,
-			@Param("asOnDate") final Date asOnDate);
+			@Param("asOnDate") final Date asOnDate, @Param("tenantId") final String tenantId);
 
 	public List<Employee> findByNameLikeOrCodeLike(String name, String code);
 
@@ -89,8 +89,8 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 	@Query("from Employee  where  upper(code) like '%'||upper(:code)||'%'  and active=true order by id")
 	List<Employee> findActiveEmployeeByCodeLike(@Param("code") String code);
 
-	@Query("select distinct emp from Employee emp, IN (emp.roles) role where role.name = :roleName ")
-	Set<Employee> findEmployeesByRoleName(@Param("roleName") String roleName);
+	@Query("select distinct emp from Employee emp, IN (emp.roles) role where role.tenantId=:tenantId and emp.tenantId=:tenantId and role.name = :roleName ")
+	Set<Employee> findEmployeesByRoleName(@Param("roleName") String roleName, @Param("tenantId") final String tenantId);
 
-	public Employee findById(Long userId);
+	public Employee findByIdAndTenantId(Long userId,String tenantId);
 }

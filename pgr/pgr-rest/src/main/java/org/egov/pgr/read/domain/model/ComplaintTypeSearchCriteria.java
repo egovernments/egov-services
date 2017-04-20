@@ -21,6 +21,7 @@ public class ComplaintTypeSearchCriteria {
     private String complaintTypeSearch;
     private Integer count;
     private Long categoryId;
+    private String tenantId;
 
     public ComplaintTypeSearch getComplaintTypeSearch() {
         return ComplaintTypeSearch.valueOf(complaintTypeSearch.toUpperCase());

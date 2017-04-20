@@ -39,11 +39,17 @@
  */
 package org.egov.eis.persistence.repository;
 
+import java.util.List;
+
 import org.egov.eis.persistence.entity.Department;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface DepartmentRepository extends JpaRepository<Department, Long> {
-	Department findByCode(String code);
+	Department findByCodeAndTenantId(String code, String tenantId);
+	
+	Department findByIdAndTenantId(Long id, String tenantId);
+	
+	List<Department> findAllByTenantId(String tenantId);
 }

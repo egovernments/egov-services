@@ -100,20 +100,20 @@ public class ComplaintRouterService {
      * boundary level default then dont add complaint type default search result complaint is registered with complaint type CT1
      * and boundary B1 will give P1 CT1 and Boundary is not provided will give p6, if line 6 not added then it will give P8
      */
-    public PositionResponse getAssignee(final Long boundaryId, final String complaintTypeCode, final Long assigneeId) {
+    public PositionResponse getAssignee(final Long boundaryId, final String complaintTypeCode, final Long assigneeId, final String tenantId) {
         PositionResponse positionResponse = null;
         Employee employeeResponse = null;
         ComplaintRouter complaintRouter = null;
         List<PositionResponse> positions = null;
         List<PositionHierarchyResponse> positionHierarchies = null;
-        final List<BoundaryResponse> boundaries = new ArrayList<>();
+        final List<BoundaryResponse> boundaries = new ArrayList<>(); 
         if (assigneeId == null) {
             if (null != boundaryId) {
-                getParentBoundaries(boundaryId, boundaries);
+                getParentBoundaries(boundaryId, boundaries, tenantId);
                 if (StringUtils.isNotBlank(complaintTypeCode)) {
                     for (final BoundaryResponse bndry : boundaries) {
                         final ComplaintTypeResponse complaintType = complaintTypeRepository
-                                .fetchComplaintTypeByCode(complaintTypeCode);
+                                .fetchComplaintTypeByCode(complaintTypeCode,tenantId);
                         complaintRouter = complaintRouterRepository
                                 .findByComplaintTypeAndBoundary(complaintType.getId(), bndry.getId());
                         if (null != complaintRouter)
@@ -121,7 +121,7 @@ public class ComplaintRouterService {
                     }
                     if (null == complaintRouter) {
                         final ComplaintTypeResponse complaintType = complaintTypeRepository
-                                .fetchComplaintTypeByCode(complaintTypeCode);
+                                .fetchComplaintTypeByCode(complaintTypeCode,tenantId);
                         complaintRouter = complaintRouterRepository.findByOnlyComplaintType(complaintType.getId());
                     }
                     if (null == complaintRouter)
@@ -132,13 +132,13 @@ public class ComplaintRouterService {
                         }
                 }
             } else {
-                final ComplaintTypeResponse complaintType = complaintTypeRepository.fetchComplaintTypeByCode(complaintTypeCode);
+                final ComplaintTypeResponse complaintType = complaintTypeRepository.fetchComplaintTypeByCode(complaintTypeCode,tenantId);
                 complaintRouter = complaintRouterRepository.findByOnlyComplaintType(complaintType.getId());
                 if (null == complaintRouter)
                     complaintRouter = complaintRouterRepository.findCityAdminGrievanceOfficer("ADMINISTRATION");
             }
             if (complaintRouter != null)
-                positionResponse = positionRepository.getById(complaintRouter.getPosition());
+                positionResponse = positionRepository.getById(complaintRouter.getPosition(), tenantId);
             else
                 throw new ApplicationRuntimeException("PGR.001");
         } else
@@ -152,7 +152,7 @@ public class ComplaintRouterService {
                     if (employeeResponse != null)
                         positions = positionRepository.getByEmployeeCode(employeeResponse.getCode());
                     if (!positions.isEmpty())
-                        positionResponse = positionRepository.getById(positions.iterator().next().getId());
+                        positionResponse = positionRepository.getById(positions.iterator().next().getId(), tenantId);
                 } else
                     positionResponse = positionHierarchies.iterator().next().getToPosition();
             } catch (final EscalationException e) {
@@ -164,12 +164,12 @@ public class ComplaintRouterService {
         return positionResponse;
     }
 
-    public void getParentBoundaries(final Long bndryId, final List<BoundaryResponse> boundaryList) {
-        final BoundaryResponse bndry = boundaryRepository.fetchBoundaryById(bndryId);
+    public void getParentBoundaries(final Long bndryId, final List<BoundaryResponse> boundaryList, final String tenantId) {
+        final BoundaryResponse bndry = boundaryRepository.fetchBoundaryById(bndryId,tenantId);
         if (bndry != null) {
             boundaryList.add(bndry);
             if (bndry.getParent() != null)
-                getParentBoundaries(bndry.getParent().getId(), boundaryList);
+                getParentBoundaries(bndry.getParent().getId(), boundaryList, tenantId);
         }
     }
 }

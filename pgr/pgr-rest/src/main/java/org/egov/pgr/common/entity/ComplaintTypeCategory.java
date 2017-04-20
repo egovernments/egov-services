@@ -36,6 +36,9 @@ public class ComplaintTypeCategory extends AbstractPersistable<Long> {
     @Fetch(FetchMode.SUBSELECT)
     @JsonIgnore
     private List<ComplaintType> complaintTypes;
+    
+    @Column(name = "tenantid")
+    private String tenantId;
 
     @Override
     protected void setId(final Long id) {

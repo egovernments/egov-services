@@ -76,6 +76,17 @@ public class Position extends AbstractAuditable {
 	private DeptDesig deptDesig;
 
 	private boolean isPostOutsourced;
+	
+	@Column(name = "tenantid")
+    private String tenantId;
+
+	public String getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
+	}
 
 	@Override
 	public Long getId() {

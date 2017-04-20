@@ -17,7 +17,7 @@ public class EscalationHoursController {
     }
 
     @PostMapping("/_search")
-    public EscalationHoursResponse getEscalationDate(@RequestParam("tenantId") String tenantId,
+    public EscalationHoursResponse getEscalationDate(@RequestParam(value="tenantId",required=true) String tenantId,
                                                      @RequestParam("designationId") Long designationId,
                                                      @RequestParam("complaintTypeId") Long complaintTypeId,
                                                      @RequestBody EscalationHoursRequest escalationHoursRequest) {
@@ -27,6 +27,6 @@ public class EscalationHoursController {
             .complaintTypeId(complaintTypeId)
             .build();
         final int escalationHours = escalationService.getEscalationHours(searchCriteria);
-        return new EscalationHoursResponse(null, escalationHours);
+        return new EscalationHoursResponse(null, escalationHours,tenantId);
     }
 }

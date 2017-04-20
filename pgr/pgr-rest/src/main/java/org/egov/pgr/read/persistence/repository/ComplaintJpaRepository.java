@@ -16,13 +16,13 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ComplaintJpaRepository extends JpaRepository<Complaint, Long>, JpaSpecificationExecutor<Complaint> {
 
-	@Modifying 
-	@Query("update Complaint c set c.lastAccessedTime = :date where c.crn = :crn")
-	@Transactional
-    void updateLastAccessedTime(@Param("date") Date date,@Param("crn") String crn);
+    @Modifying
+    @Query("update Complaint c set c.lastAccessedTime = :date where c.crn = :crn and c.tenantId = :tenantId")
+    @Transactional
+    void updateLastAccessedTime(@Param("date") Date date, @Param("crn") String crn, @Param("tenantId") String tenantId);
 
-	@Query("from Complaint where createdBy=:userId and (lastAccessedTime is null or lastModifiedDate>=lastAccessedTime) order by lastModifiedDate desc")
-	List<Complaint> getAllModifiedComplaintsForCitizen(@Param("userId") Long userId);
+    @Query("from Complaint where createdBy=:userId and tenantId = :tenantId and (lastAccessedTime is null or lastModifiedDate>=lastAccessedTime) order by lastModifiedDate desc")
+    List<Complaint> getAllModifiedComplaintsForCitizen(@Param("userId") Long userId, @Param("tenantId") String tenantId);
 
-    Complaint findByCrn(String crn);
+    Complaint findByCrnAndTenantId(String crn, String TenantId);
 }

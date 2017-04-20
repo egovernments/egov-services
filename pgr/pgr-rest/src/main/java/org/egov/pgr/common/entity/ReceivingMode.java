@@ -29,6 +29,9 @@ public class ReceivingMode extends AbstractPersistable<Long> {
 
     @Column(name = "visible")
     private boolean visible;
+    
+    @Column(name = "tenantid")
+    private String tenantId;
 
     @Override
     public Long getId() {

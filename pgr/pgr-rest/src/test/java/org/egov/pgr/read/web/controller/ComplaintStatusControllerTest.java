@@ -41,8 +41,8 @@ public class ComplaintStatusControllerTest {
 
 		String tenantId = "ap.public";
 		List<ComplaintStatus> complaintStatuses = new ArrayList<>(
-				Collections.singletonList(ComplaintStatus.builder().name("REGISTERED").build()));
-		when(complaintStatusService.getAllComplaintStatus()).thenReturn(complaintStatuses);
+				Collections.singletonList(ComplaintStatus.builder().name("REGISTERED").tenantId(tenantId).build()));
+		when(complaintStatusService.getAllComplaintStatusByTenantId(tenantId)).thenReturn(complaintStatuses);
 		mockMvc.perform(post("/_statuses?tenantId=" + tenantId)).andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(getFileContents("complaintStatusResponse.json")));

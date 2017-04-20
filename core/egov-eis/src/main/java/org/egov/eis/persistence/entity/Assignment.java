@@ -135,6 +135,9 @@ public class Assignment extends AbstractAuditable {
 
 	@Transient
 	private List<HeadOfDepartments> hodList = new ArrayList<>(0);
+	
+	@Column(name = "tenantid")
+    private String tenantId;
 
 	@Override
 	public Long getId() {

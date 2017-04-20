@@ -70,8 +70,8 @@ public class StateService {
     }
    
 
-    public State getStateById(final Long id) {
-        return stateRepository.findOne(id);
+    public State getStateByIdAndTenantId(final Long id, final String tenantId) {
+        return stateRepository.findByIdAndTenantId(id,tenantId);
     }
     
     @Transactional

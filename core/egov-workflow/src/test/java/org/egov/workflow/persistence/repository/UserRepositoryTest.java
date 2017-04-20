@@ -37,15 +37,14 @@ public class UserRepositoryTest {
 
 		final RequestInfo requestInfo = RequestInfo.builder().apiId("org.egov.pgr").ver("1.0").msgId("654654")
 				.authToken("cdaaa28a-f88a-429e-a710-b401097a165c").build();
-
-		final User user = User.builder().id(67L).build();
+		final User user = User.builder().id(67l).tenantId("tenantId").build();
 
 		server.expect(once(), requestTo("http://host/pgr/_search")).andExpect(method(HttpMethod.POST))
 				.andExpect(content().string(new Resources().getFileContents("searchUserByIdRequest.json")))
 				.andRespond(withSuccess(new Resources().getFileContents("searchUserById.json"),
 						MediaType.APPLICATION_JSON_UTF8));
 
-		final UserResponse userResponse = userRepository.findUserById(67L);
+		final UserResponse userResponse = userRepository.findUserByIdAndTenantId(67L,"tenantId");
 		server.verify();
 		assertEquals(1, userResponse.getUser().size());
 

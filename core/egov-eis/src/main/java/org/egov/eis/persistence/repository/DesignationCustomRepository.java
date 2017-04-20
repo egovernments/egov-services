@@ -46,15 +46,17 @@ import org.egov.eis.persistence.entity.Designation;
 
 public interface DesignationCustomRepository {
 
-    /**
-     * Get all designations for a particular department as of given date. This API checks in all employee assignments
-     * who belongs to given department and are active as of given date and returns the distinct designations as result.
-     * If the given date is null it checks with the current date returns the result.
-     * 
-     * @param id
-     * @param givenDate
-     * @return
-     */
-    List<Designation> getAllDesignationsByDepartment(Long id, Date givenDate);
+	/**
+	 * Get all designations for a particular department as of given date. This
+	 * API checks in all employee assignments who belongs to given department
+	 * and are active as of given date and returns the distinct designations as
+	 * result. If the given date is null it checks with the current date returns
+	 * the result.
+	 * 
+	 * @param id
+	 * @param givenDate
+	 * @return
+	 */
+	List<Designation> getAllDesignationsByDepartment(Long id, Date givenDate, String tenantId);
 
 }

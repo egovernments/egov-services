@@ -71,7 +71,18 @@ public class ComplaintRouter extends AbstractAuditable {
 	@NotNull
 	@Column(name = "position")
 	private Long position;
+	
+    @Column(name = "tenantid")
+    private String tenantId;
 
+	public String getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
+	}
+	
 	public Long getId() {
 		return id;
 	}

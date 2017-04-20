@@ -39,6 +39,9 @@ public class User {
 
     @JsonProperty("permanentAddress")
     private String permanentAddress;
+    
+    @JsonProperty("tenantId")
+    private String tenantId;
 
     @JsonProperty("roles")
 	private Set<Role> roles = null;

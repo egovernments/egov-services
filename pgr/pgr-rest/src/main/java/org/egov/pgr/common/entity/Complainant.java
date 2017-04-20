@@ -33,6 +33,9 @@ public class Complainant extends AbstractPersistable<Long> {
     private Long userDetail;
 
     private String address;
+    
+    @Column(name = "tenantid")
+    private String tenantId;
 
     @Override
     public Long getId() {
@@ -50,6 +53,7 @@ public class Complainant extends AbstractPersistable<Long> {
             .mobile(mobile)
             .email(email)
             .address(address)
+            .tenantId(tenantId)
             .build();
     }
 

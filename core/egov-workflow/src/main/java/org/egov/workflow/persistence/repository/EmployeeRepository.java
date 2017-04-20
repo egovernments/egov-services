@@ -37,11 +37,11 @@ public class EmployeeRepository {
         return employeeRes.getEmployees();
     }
 
-    public EmployeeRes getEmployeeForPosition(final Long posId, final LocalDate asOnDate) {
+    public EmployeeRes getEmployeeForPositionAndTenantId(final Long posId, final LocalDate asOnDate, final String tenantId) {
         return restTemplate.getForObject(employeesByPositionIdurl, EmployeeRes.class, posId, asOnDate);
     }
 
-    public EmployeeRes getEmployeeForUserId(final Long userId) {
-        return restTemplate.getForObject(employeesByUserIdUrl, EmployeeRes.class, userId);
+    public EmployeeRes getEmployeeForUserIdAndTenantId(final Long userId,final String tenantId) {
+        return restTemplate.getForObject(employeesByUserIdUrl, EmployeeRes.class, userId, tenantId);
     }
 }

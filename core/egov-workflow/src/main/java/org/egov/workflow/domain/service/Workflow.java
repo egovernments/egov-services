@@ -25,5 +25,5 @@ public interface Workflow {
 
     // List<Object> getAssignee(String deptCode, String designationName);
 
-    Object getAssignee(Long locationId, String complaintTypeId, Long assigneeId);
+    Object getAssignee(Long locationId, String complaintTypeId, Long assigneeId, String tenantId);
 }

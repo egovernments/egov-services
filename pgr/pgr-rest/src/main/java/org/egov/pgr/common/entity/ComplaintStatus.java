@@ -24,6 +24,9 @@ public class ComplaintStatus extends AbstractPersistable<Long> {
 
     @NotNull
     private String name;
+    
+    @Column(name = "tenantid")
+    private String tenantId;
 
     @Override
     public Long getId() {

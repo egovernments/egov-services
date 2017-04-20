@@ -19,10 +19,12 @@ public class ComplaintTypeCategoryController {
     private ComplaintTypeCategoryService complaintTypeCategoryService;
 
     @GetMapping
-    public List<ComplaintTypeCategory> getAllCompaintTypeCategory(@RequestParam String tenantId) {
-        return complaintTypeCategoryService.getAll()
-                .stream()
-                .map(ComplaintTypeCategory::new)
-                .collect(Collectors.toList());
+    public List<ComplaintTypeCategory> getAllCompaintTypeCategory(
+            @RequestParam(value = "tenantId", required = true) final String tenantId) {
+        if (tenantId != null && !tenantId.isEmpty()) {
+            return complaintTypeCategoryService.getAll(tenantId).stream().map(ComplaintTypeCategory::new)
+                    .collect(Collectors.toList());
+        } else
+            return null;
     }
 }

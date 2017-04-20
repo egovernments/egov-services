@@ -32,29 +32,14 @@ public class ServiceRequest {
     @JsonProperty("description")
     private String details = null;
 
-    @JsonProperty("agency_responsible")
-    private String agencyResponsible = null;
-
-    @JsonProperty("service_notice")
-    private String serviceNotice = null;
-
     @JsonProperty("requested_datetime")
     private String createdDate = null;
 
-    @JsonProperty("updated_datetime")
-    private String lastModifiedDate = null;
-
     @JsonProperty("expected_datetime")
-    private Long escalationDate = null;
+    private String escalationDate = null;
 
     @JsonProperty("address")
     private String landmarkDetails = null;
-
-    @JsonProperty("address_id")
-    private String crossHierarchyId = null;
-
-    @JsonProperty("zipcode")
-    private Integer zipcode = null;
 
     @JsonProperty("lat")
     private Double lat = null;
@@ -62,14 +47,8 @@ public class ServiceRequest {
     @JsonProperty("lng")
     private Double lng = null;
 
-    @JsonProperty("media_urls")
-    private String mediaUrl = null;
-
     @JsonProperty("first_name")
     private String firstName = null;
-
-    @JsonProperty("last_name")
-    private String lastName = null;
 
     @JsonProperty("phone")
     private String phone = null;
@@ -77,15 +56,37 @@ public class ServiceRequest {
     @JsonProperty("email")
     private String email = null;
 
-    @JsonProperty("device_id")
-    private String deviceId = null;
-
-    @JsonProperty("account_id")
-    private String accountId = null;
-
     @JsonProperty("tenantId")
     private String tenantId;
 
     @JsonProperty("values")
     private Map<String, String> values = new HashMap<>();
+    
+   /* 
+    @JsonProperty("agency_responsible")
+    private String agencyResponsible = null;
+
+    @JsonProperty("service_notice")
+    private String serviceNotice = null;
+    
+    @JsonProperty("address_id")
+    private String crossHierarchyId = null;
+
+    @JsonProperty("zipcode")
+    private Integer zipcode = null;
+    
+    @JsonProperty("media_urls")
+    private String mediaUrl = null;
+    
+    @JsonProperty("device_id")
+    private String deviceId = null;
+
+    @JsonProperty("account_id")
+    private String accountId = null;
+    
+    @JsonProperty("last_name")
+    private String lastName = null;
+    
+    @JsonProperty("updated_datetime")
+    private String lastModifiedDate = null;*/
 }

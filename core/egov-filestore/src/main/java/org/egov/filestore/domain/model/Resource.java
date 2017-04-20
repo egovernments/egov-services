@@ -9,4 +9,5 @@ public class Resource {
     private String contentType;
     private String fileName;
     private org.springframework.core.io.Resource resource;
+    private String tenantId;
 }

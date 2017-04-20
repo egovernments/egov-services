@@ -35,4 +35,5 @@ public class ComplaintRecord {
     private Date escalationDate;
     private Long workflowStateId;
     private Long department;
+    private String tenantId;
 }

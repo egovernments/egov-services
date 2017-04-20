@@ -101,8 +101,19 @@ public class Employee extends User {
     @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("id DESC ")
     private final List<Jurisdiction> jurisdictions = new ArrayList<Jurisdiction>(0);
+    
+	@Column(name = "tenantid")
+    private String tenantId;
 
-    public Employee() {
+    public String getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
+	}
+
+	public Employee() {
         setType(UserType.EMPLOYEE);
     }
 

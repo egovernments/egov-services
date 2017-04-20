@@ -42,7 +42,7 @@ public class PositionRepositoryTest {
                 .andRespond(withSuccess(new Resources().getFileContents("positionResponse.json"),
                         MediaType.APPLICATION_JSON_UTF8));
 
-        PositionResponse positionResponse = positionRepository.getById(1l);
+        PositionResponse positionResponse = positionRepository.getById(1l,"tenantId");
         server.verify();
         assertEquals("position1", positionResponse.getName());
         assertEquals(1, positionResponse.getId().intValue());

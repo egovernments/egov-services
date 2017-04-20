@@ -38,6 +38,9 @@ public class ReceivingCenter extends AbstractPersistable<Long> {
 
     @Column(name = "orderno")
     private Long orderNo;
+    
+    @Column(name = "tenantid")
+    private String tenantId;
 
     @Override
     public Long getId() {

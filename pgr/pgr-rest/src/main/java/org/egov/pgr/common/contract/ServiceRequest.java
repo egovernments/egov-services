@@ -31,7 +31,8 @@ public class ServiceRequest {
     private static final String RECEIVING_MODE = "receivingMode";
     private static final String RECEIVING_CENTER = "receivingCenter";
     private static final String USER_ID = "userId";
-
+    
+    @JsonProperty("tenantId")
     private String tenantId;
 
     @JsonProperty("service_request_id")
@@ -128,6 +129,7 @@ public class ServiceRequest {
         phone = complaint.getComplainant().getMobile();
         email = complaint.getComplainant().getEmail();
         values = getAdditionalValues(complaint);
+        tenantId = complaint.getTenantId();
     }
 
     private Map<String, String> getAdditionalValues(Complaint complaint) {
@@ -163,7 +165,7 @@ public class ServiceRequest {
         return Complaint.builder()
                 .authenticatedUser(authenticatedUser)
                 .crn(crn)
-                .complaintType(new ComplaintType(complaintTypeName, complaintTypeCode))
+                .complaintType(new ComplaintType(complaintTypeName, complaintTypeCode, tenantId))
                 .address(address)
                 .mediaUrls(mediaUrls)
                 .complaintLocation(complaintLocation)
@@ -186,6 +188,7 @@ public class ServiceRequest {
                 .email(email)
                 .userId(complainantUserId)
                 .address(complainantAddress)
+                .tenantId(tenantId)
                 .build();
     }
 
@@ -194,11 +197,12 @@ public class ServiceRequest {
     }
 
     private ComplaintLocation getComplaintLocation() {
-        final Coordinates coordinates = new Coordinates(latitude, longitude);
+        final Coordinates coordinates = new Coordinates(latitude, longitude, tenantId);
         return ComplaintLocation.builder()
                 .coordinates(coordinates)
                 .crossHierarchyId(crossHierarchyId)
                 .locationId(getLocationId())
+                .tenantId(tenantId)
                 .build();
     }
 

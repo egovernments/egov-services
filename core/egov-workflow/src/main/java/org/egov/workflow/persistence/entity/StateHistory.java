@@ -113,6 +113,9 @@ public class StateHistory implements Serializable {
 
     @Column(name = "INITIATOR_POS")
     private Long initiatorPosition;
+    
+    @Column(name = "tenantid")
+    private String tenantId;
 
     @Column(name = "PREVIOUS_OWNER")
     private Long previousOwner;
@@ -274,6 +277,14 @@ public class StateHistory implements Serializable {
     public void setInitiatorPosition(Long initiatorPosition) {
         this.initiatorPosition = initiatorPosition;
     }
+    
+    public String getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
+	}
 
     public Long getPreviousOwner() {
         return previousOwner;

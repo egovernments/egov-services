@@ -27,9 +27,9 @@ public class DepartmentServiceTest {
 	public void testShouldReturnDepartmentWhenDepartmentCodeIsSpecified() {
 		final Department expectedDepartment = new Department();
 		expectedDepartment.setId(1L);
-		when(departmentRepository.findByCode("departmentCode")).thenReturn(expectedDepartment);
+		when(departmentRepository.findByCodeAndTenantId("departmentCode","tenantId")).thenReturn(expectedDepartment);
 
-		final List<Department> actualDepartments = departmentService.find("departmentCode", null);
+		final List<Department> actualDepartments = departmentService.find("departmentCode", null, "tenantId");
 
 		assertEquals(1, actualDepartments.size());
 		assertEquals(expectedDepartment, actualDepartments.get(0));
@@ -40,9 +40,9 @@ public class DepartmentServiceTest {
 	public void testShouldReturnDepartmentWhenDepartmentIdIsSpecified() {
 		final Department expectedDepartment = new Department();
 		expectedDepartment.setId(1L);
-		when(departmentRepository.findOne(1L)).thenReturn(expectedDepartment);
+		when(departmentRepository.findByIdAndTenantId(1L,"tenantId")).thenReturn(expectedDepartment);
 
-		final List<Department> actualDepartments = departmentService.find(null, 1L);
+		final List<Department> actualDepartments = departmentService.find(null, 1L, "tenantId");
 
 		assertEquals(1, actualDepartments.size());
 		assertEquals(expectedDepartment, actualDepartments.get(0));
@@ -51,9 +51,9 @@ public class DepartmentServiceTest {
 
 	@Test
 	public void testShouldReturnAllDepartmentsWhenDepartmentCodeAndIdIsNotSpecified() {
-		when(departmentRepository.findAll()).thenReturn(Arrays.asList(new Department(), new Department()));
+		when(departmentRepository.findAllByTenantId("tenantId")).thenReturn(Arrays.asList(new Department(), new Department()));
 
-		final List<Department> actualDepartments = departmentService.find(null, null);
+		final List<Department> actualDepartments = departmentService.find(null, null, "tenantId");
 
 		assertEquals(2, actualDepartments.size());
 	}

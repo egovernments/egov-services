@@ -29,8 +29,8 @@ public class ComplaintTypeCategoryService {
         return complaintTypeCategoryRepository.save(complaintTypeCategory);
     }
 
-    public List<ComplaintTypeCategory> getAll() {
-        return complaintTypeCategoryRepository.findAll(new Sort(Sort.Direction.ASC, "name"));
+    public List<ComplaintTypeCategory> getAll(final String tenantId) {
+        return complaintTypeCategoryRepository.findAllByTenantIdOrderByNameAsc(tenantId);
     }
 
     public ComplaintTypeCategory findByName(final String categoryName) {

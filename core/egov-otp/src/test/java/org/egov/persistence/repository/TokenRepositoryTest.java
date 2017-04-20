@@ -42,7 +42,7 @@ public class TokenRepositoryTest {
         expectedEntityToken.setNumber(TOKEN_NUMBER);
         expectedEntityToken.setTimeToLiveInSeconds(TIME_TO_LIVE_IN_SECONDS);
         expectedEntityToken.setIdentity(IDENTITY);
-        expectedEntityToken.setTenant(TENANT_ID);
+        expectedEntityToken.setTenantId(TENANT_ID);
         final TokenRequest tokenRequest = mock(TokenRequest.class);
         when(tokenRequest.getIdentity()).thenReturn(IDENTITY);
         when(tokenRequest.getTenantId()).thenReturn(TENANT_ID);
@@ -73,7 +73,7 @@ public class TokenRepositoryTest {
                 .persistence.entity.Token();
         token2.setTimeToLiveInSeconds(200L);
         token2.setCreatedDate(new Date());
-        when(tokenJpaRepository.findByNumberAndIdentityAndTenant(otpNumber, identity, tenant))
+        when(tokenJpaRepository.findByNumberAndIdentityAndTenantId(otpNumber, identity, tenant))
                 .thenReturn(Arrays.asList(token1, token2));
         final ValidateRequest validateRequest = new ValidateRequest(tenant, otpNumber, identity);
 
@@ -150,7 +150,7 @@ public class TokenRepositoryTest {
         @Override
         public boolean matches(Object o) {
             final org.egov.persistence.entity.Token actualToken = (org.egov.persistence.entity.Token) o;
-            return expectedToken.getTenant().equals(actualToken.getTenant())
+            return expectedToken.getTenantId().equals(actualToken.getTenantId())
                     && expectedToken.getIdentity().equals(actualToken.getIdentity())
                     && expectedToken.getNumber().equals(actualToken.getNumber())
                     && expectedToken.getTimeToLiveInSeconds().equals(actualToken.getTimeToLiveInSeconds());

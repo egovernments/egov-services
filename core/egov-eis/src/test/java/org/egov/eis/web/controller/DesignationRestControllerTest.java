@@ -36,19 +36,22 @@ public class DesignationRestControllerTest {
 	public void test_should_fetch_all_designations_for_given_department() throws Exception {
 		final Designation expectedDesignation = Designation.builder().id(1L).code("designationCode")
 				.name("designationName").build();
-		when(designationService.getAllDesignationByDepartment(any(Long.class), any(Date.class)))
+		when(designationService.getAllDesignationByDepartment(any(Long.class), any(Date.class), any(String.class)))
 				.thenReturn(Collections.singletonList(expectedDesignation));
 
-		mockMvc.perform(post("/designationByDepartmentId").param("id", "1").header("X-CORRELATION-ID", "someId"))
-				.andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+		mockMvc.perform(post("/designationByDepartmentId").param("id", "1").param("tenantId", "ap.public")
+				.header("X-CORRELATION-ID", "someId")).andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(getFileContents("designationResponse.json")));
 	}
 
 	@Test
 	public void test_should_return_bad_request_when_department_is_empty() throws Exception {
-		when(designationService.getAllDesignationByDepartment(any(Long.class), any(Date.class))).thenReturn(null);
-		mockMvc.perform(post("/designationByDepartmentId").param("id", "").header("X-CORRELATION-ID", "someId")
-				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().isBadRequest());
+		when(designationService.getAllDesignationByDepartment(any(Long.class), any(Date.class), any(String.class)))
+				.thenReturn(null);
+		mockMvc.perform(post("/designationByDepartmentId").param("id", "").param("tenantId", "ap.public")
+				.header("X-CORRELATION-ID", "someId").contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(status().isBadRequest());
 	}
 
 	private String getFileContents(String fileName) {

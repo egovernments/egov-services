@@ -26,6 +26,9 @@ public class User {
 	@JsonProperty("name")
 	private String name = null;
 
+	@JsonProperty("tenantId")
+	private String tenantId = null;
+
 	public enum GenderEnum {
 		MALE("MALE"),
 
@@ -520,7 +523,7 @@ public class User {
 				&& Objects.equals(this.type, user.type) && Objects.equals(this.signature, user.signature)
 				&& Objects.equals(this.accountLocked, user.accountLocked) && Objects.equals(this.roles, user.roles)
 				&& Objects.equals(this.fatherOrHusbandName, user.fatherOrHusbandName)
-				&& Objects.equals(this.bloodGroup, user.bloodGroup)
+				&& Objects.equals(this.bloodGroup, user.bloodGroup) && Objects.equals(this.tenantId, user.tenantId)
 				&& Objects.equals(this.identificationMark, user.identificationMark);
 	}
 
@@ -528,7 +531,7 @@ public class User {
 	public int hashCode() {
 		return Objects.hash(id, username, password, salutation, name, gender, mobileNumber, emailId, altContactNumber,
 				pan, aadhaarNumber, address, active, dob, pwdExpiryDate, locale, type, signature, accountLocked, roles,
-				fatherOrHusbandName, bloodGroup, identificationMark);
+				fatherOrHusbandName, bloodGroup, identificationMark, tenantId);
 	}
 
 	@Override
@@ -558,6 +561,7 @@ public class User {
 		sb.append("    roles: ").append(toIndentedString(roles)).append("\n");
 		sb.append("    fatherOrHusbandName: ").append(toIndentedString(fatherOrHusbandName)).append("\n");
 		sb.append("    bloodGroup: ").append(toIndentedString(bloodGroup)).append("\n");
+		sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
 		sb.append("    identificationMark: ").append(toIndentedString(identificationMark)).append("\n");
 		sb.append("}");
 		return sb.toString();
@@ -568,5 +572,13 @@ public class User {
 			return "null";
 		}
 		return o.toString().replace("\n", "\n    ");
+	}
+
+	public String getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
 	}
 }

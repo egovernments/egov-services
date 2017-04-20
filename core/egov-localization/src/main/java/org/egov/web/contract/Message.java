@@ -1,9 +1,11 @@
 package org.egov.web.contract;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import org.hibernate.validator.constraints.NotEmpty;
+
 @Builder
 @Getter
 @AllArgsConstructor
@@ -12,10 +14,12 @@ public class Message {
     private String code;
     @NotEmpty
     private String message;
+    @NotEmpty
+    private String tenantId;
 
-    public Message(org.egov.domain.model.Message modelMessage) {
-        this.code = modelMessage.getCode();
-        this.message = modelMessage.getMessage();
+    public Message(org.egov.persistence.entity.Message entityMessage) {
+        this.code = entityMessage.getCode();
+        this.message = entityMessage.getMessage();
+        this.tenantId = entityMessage.getTenantId();
     }
 }
-

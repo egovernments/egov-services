@@ -56,16 +56,17 @@ public class DepartmentService {
 		this.departmentRepository = departmentRepository;
 	}
 
-	private List<Department> getAllDepartments() {
-		return departmentRepository.findAll();
+	private List<Department> getAllDepartments(final String tenantId) {
+		return departmentRepository.findAllByTenantId(tenantId);
 	}
 
-	private Department getByDepartmentCode(final String departmentCode) {
-		return departmentRepository.findByCode(departmentCode);
+	private Department getByDepartmentCode(final String departmentCode, final String tenantId) {
+		return departmentRepository.findByCodeAndTenantId(departmentCode, tenantId);
 	}
 
-	public List<Department> find(String departmentCode, Long id) {
-		return StringUtils.isNotEmpty(departmentCode) ? Collections.singletonList(getByDepartmentCode(departmentCode))
-				: id != null ? Collections.singletonList(departmentRepository.findOne(id)) : getAllDepartments();
+	public List<Department> find(String departmentCode, Long id, String tenantId) {
+		return StringUtils.isNotEmpty(departmentCode)
+				? Collections.singletonList(getByDepartmentCode(departmentCode, tenantId))
+				: id != null ? Collections.singletonList(departmentRepository.findByIdAndTenantId(id,tenantId)) : getAllDepartments(tenantId);
 	}
 }

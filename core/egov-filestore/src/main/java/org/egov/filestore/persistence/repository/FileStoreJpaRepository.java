@@ -52,7 +52,7 @@ import java.util.List;
 @Repository
 public interface FileStoreJpaRepository extends JpaRepository<Artifact,Long>{
     @QueryHints({ @QueryHint(name = "org.hibernate.cacheable", value = "true") })
-    Artifact findByFileStoreId(String fileStoreId);
+    Artifact findByFileStoreIdAndTenantId(String fileStoreId,String tenantId);
 
-    List<Artifact>findByTag(String tag);
+    List<Artifact>findByTagAndTenantId(String tag,String tenantId);
 }

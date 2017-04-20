@@ -67,6 +67,9 @@ public class WorkflowTypes extends AbstractAuditable {
     private boolean enabled;
 
     private boolean grouped;
+    
+    @Column(name = "tenantid")
+    private String tenantId;
 
     public Long getId() {
         return id;
@@ -131,4 +134,12 @@ public class WorkflowTypes extends AbstractAuditable {
     public void setGrouped(final boolean grouped) {
         this.grouped = grouped;
     }
+
+    public String getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
+	}
 }

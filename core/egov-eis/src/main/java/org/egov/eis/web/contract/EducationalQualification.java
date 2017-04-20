@@ -19,6 +19,9 @@ public class EducationalQualification {
 
 	@JsonProperty("university")
 	private String university = null;
+	
+	@JsonProperty("tenantId")
+	private String tenantId = null;
 
 	public EducationalQualification id(Long id) {
 		this.id = id;
@@ -98,12 +101,13 @@ public class EducationalQualification {
 				&& Objects.equals(this.qualification, educationalQualification.qualification)
 				&& Objects.equals(this.majorSubject, educationalQualification.majorSubject)
 				&& Objects.equals(this.yearOfPassing, educationalQualification.yearOfPassing)
+				&& Objects.equals(this.tenantId, educationalQualification.tenantId)
 				&& Objects.equals(this.university, educationalQualification.university);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, qualification, majorSubject, yearOfPassing, university);
+		return Objects.hash(id, qualification, majorSubject, yearOfPassing, university,tenantId);
 	}
 
 	@Override
@@ -116,6 +120,7 @@ public class EducationalQualification {
 		sb.append("    majorSubject: ").append(toIndentedString(majorSubject)).append("\n");
 		sb.append("    yearOfPassing: ").append(toIndentedString(yearOfPassing)).append("\n");
 		sb.append("    university: ").append(toIndentedString(university)).append("\n");
+		sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
 		sb.append("}");
 		return sb.toString();
 	}
@@ -125,5 +130,13 @@ public class EducationalQualification {
 			return "null";
 		}
 		return o.toString().replace("\n", "\n    ");
+	}
+
+	public String getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
 	}
 }

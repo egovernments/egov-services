@@ -39,17 +39,18 @@ public class UserRepository {
         return restTemplate.postForObject(url, null, AuthenticatedUser.class);
     }
 
-    public User getUserByUserName(String userName) {
+    public User getUserByUserName(String userName,String tenantId) {
         UserRequest request = new UserRequest();
         request.setUserName(userName);
+        request.setTenantId(tenantId);
         String url = userHost + getUserByUserNameUrl;
         return restTemplate.postForObject(url, request, UserResponse.class).getUser().get(0);
     }
 
-    public GetUserByIdResponse findUserById(Long userId) {
+    public GetUserByIdResponse findUserByIdAndTenantId(Long userId, String tenantId) {
         String url = String.format("%s", userHost + getUserByUserNameUrl);
         GetUserByIdRequest userRequest = GetUserByIdRequest.builder().requestInfo(new RequestInfo())
-            .id(Collections.singletonList(userId)).build();
+            .id(Collections.singletonList(userId)).tenantId(tenantId).build();
         return restTemplate.postForObject(url, userRequest, GetUserByIdResponse.class);
     }
 }

@@ -17,13 +17,13 @@ public class BoundaryRepository {
         this.boundaryServiceHost = boundaryServiceHost;
     }
 
-    public Boundary fetchBoundaryById(Long id) {
-        String url = this.boundaryServiceHost + "v1/location/boundarys?boundary.id={id}";
-        return getBoundaryServiceResponse(url, id).getBoundaries().get(0);
+    public Boundary fetchBoundaryById(Long id, String tenantId) {
+        String url = this.boundaryServiceHost + "v1/location/boundarys?boundary.id={id}&boundary.tenantId={tenantId}";
+        return getBoundaryServiceResponse(url, id, tenantId).getBoundaries().get(0);
     }
 
-    private BoundaryResponse getBoundaryServiceResponse(final String url, Long id) {
-        return restTemplate.getForObject(url, BoundaryResponse.class, id);
+    private BoundaryResponse getBoundaryServiceResponse(final String url, Long id, String tenantId) {
+        return restTemplate.getForObject(url, BoundaryResponse.class, id, tenantId);
     }
 
 }

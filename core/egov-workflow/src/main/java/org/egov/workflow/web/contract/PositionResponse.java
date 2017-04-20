@@ -18,6 +18,9 @@ public class PositionResponse {
     private Long id;
 
     private String name;
+    
+    @JsonProperty("tenantId")
+    private String tenantId;
 
     @JsonProperty("responseInfo")
     private ResponseInfo responseInfo = null;

@@ -78,8 +78,8 @@ public class AssignmentService {
 	 * @param Id
 	 * @return Assignment object
 	 */
-	public Assignment getAssignmentById(final Long Id) {
-		return assignmentRepository.findOne(Id);
+	public Assignment getAssignmentById(final Long id,final String tenantId) {
+		return assignmentRepository.findByIdAndTenantId(id,tenantId);
 	}
 
 	/**
@@ -150,8 +150,8 @@ public class AssignmentService {
 	 * @param empId
 	 * @return Assignment object
 	 */
-	public Assignment getPrimaryAssignmentForEmployee(final Long empId) {
-		return assignmentRepository.getPrimaryAssignmentForEmployee(empId);
+	public Assignment getPrimaryAssignmentForEmployee(final Long empId, final String tenantId) {
+		return assignmentRepository.getPrimaryAssignmentForEmployee(empId, tenantId);
 	}
 
 	/**
@@ -207,15 +207,16 @@ public class AssignmentService {
 	 * @return List of assignment objects if present, else return empty list.
 	 */
 	public List<Assignment> getPositionsByDepartmentAndDesignationForGivenRange(final Long departmentId,
-			final Long designationId, final Date givenDate) {
+			final Long designationId, final Date givenDate, final String tenantId) {
 
 		if (departmentId != null && designationId != null)
 			return assignmentRepository.getPrimaryAssignmentForDepartmentAndDesignation(departmentId, designationId,
-					givenDate);
+					givenDate, tenantId);
 		else if (designationId != null && departmentId == null)
-			return assignmentRepository.getPrimaryAssignmentForDesignation(designationId, givenDate);
+			return assignmentRepository.getPrimaryAssignmentForDesignation(designationId, givenDate, tenantId);
 		else if (designationId == null && departmentId != null)
-			return assignmentRepository.getPrimaryAssignmentForDepartment(departmentId, givenDate);
+			return assignmentRepository.getPrimaryAssignmentForDepartment(departmentId, givenDate, tenantId);
+
 		return new ArrayList<Assignment>();
 
 	}
@@ -359,8 +360,9 @@ public class AssignmentService {
 	 * @param asonDate
 	 * @return List of assignment objects
 	 */
-	public List<Assignment> getAllActiveEmployeeAssignmentsByEmpCode(final String code, final Date asOnDate) {
-		return assignmentRepository.getAllActiveAssignmentsByEmpCode(code, asOnDate);
+	public List<Assignment> getAllActiveEmployeeAssignmentsByEmpCode(final String code, final Date asOnDate,
+			final String tenantId) {
+		return assignmentRepository.getAllActiveAssignmentsByEmpCode(code, asOnDate, tenantId);
 	}
 
 	public List<Assignment> getPositionsForUser(final PositionRequest positionRequest) {
@@ -370,8 +372,8 @@ public class AssignmentService {
 		return assignments;
 	}
 
-	public List<Assignment> getAll() {
-		return assignmentRepository.findAll();
+	public List<Assignment> getAll(final String tenantId) {
+		return assignmentRepository.findAllByTenantId(tenantId);
 	}
 
 }

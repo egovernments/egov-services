@@ -1,5 +1,7 @@
 package org.egov.eis.web.contract;
 
+import javax.persistence.Column;
+
 import org.joda.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -21,7 +23,7 @@ public class Assignment {
 
 	@JsonProperty("employee")
 	private String employee = null;
-	
+
 	@JsonProperty("position")
 	private String position = null;
 
@@ -55,13 +57,17 @@ public class Assignment {
 	@JsonProperty("govtOrderNumber")
 	private String govtOrderNumber = null;
 
+	@JsonProperty("tenantId")
+	private String tenantId = null;
+
 	public Assignment(org.egov.eis.persistence.entity.Assignment entityAssignment) {
 		id = entityAssignment.getId();
-		employee = entityAssignment.getEmployee()!=null ? entityAssignment.getEmployee().getName() : "" ;
+		employee = entityAssignment.getEmployee() != null ? entityAssignment.getEmployee().getName() : "";
 		department = entityAssignment.getDepartment() != null ? entityAssignment.getDepartment().getName() : "";
 		designation = entityAssignment.getDesignation() != null ? entityAssignment.getDesignation().getName() : "";
 		fund = entityAssignment.getFund() != null ? entityAssignment.getFund().toString() : "";
 		position = entityAssignment.getPosition() != null ? entityAssignment.getPosition().getId().toString() : "";
+		tenantId = entityAssignment.getTenantId() != null ? entityAssignment.getTenantId().toString() : "";
 	}
 
 }

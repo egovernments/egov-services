@@ -36,7 +36,7 @@ public class ComplaintStatusMappingService {
 	public List<org.egov.pgr.read.domain.model.ComplaintStatus> getStatusByRoleAndCurrentStatus(final Long userId, final String status,
 																								final String tenantId) {
 		Set<Role> roles;
-		GetUserByIdResponse userRoles = userRepository.findUserById(userId);
+		GetUserByIdResponse userRoles = userRepository.findUserByIdAndTenantId(userId,tenantId);
 		if (!userRoles.getUser().isEmpty()) {
 			roles = userRoles.getUser().get(0).getRoles();
 			final List<Long> roleId = roles.stream().map(Role::getId).collect(Collectors.toList());
@@ -45,6 +45,7 @@ public class ComplaintStatusMappingService {
 					.createAlias("complaintMapping.currentStatus", "complaintStatus");
 			criteria.add(Restrictions.eq("complaintStatus.name", status))
 					.add(Restrictions.in("complaintMapping.role", roleId.toArray()))
+					.add(Restrictions.eq("complaintMapping.tenantId", tenantId))
 					.addOrder(Order.asc("complaintMapping.orderNo"));
 			criteria.setProjection(Projections.property("complaintMapping.showStatus"));
 			criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);

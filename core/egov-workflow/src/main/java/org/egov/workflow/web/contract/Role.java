@@ -34,4 +34,7 @@ public class Role {
     @JsonProperty("lastModifiedDate")
     @JsonFormat(pattern = "MM/dd/yyyy")
     private Date lastModifiedDate;
+    
+    @JsonProperty("tenantId")
+    private String tenantId;
 }

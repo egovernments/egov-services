@@ -23,19 +23,19 @@ public class ComplaintService {
 	private UserRepository userRepository;
 	private SevaNumberGeneratorService sevaNumberGeneratorService;
 
-	@Autowired
-	public ComplaintService(ComplaintRepository complaintRepository,
-			SevaNumberGeneratorService sevaNumberGeneratorService, UserRepository userRepository,
-			ComplaintJpaRepository complaintJpaRepository) {
-		this.complaintRepository = complaintRepository;
-		this.sevaNumberGeneratorService = sevaNumberGeneratorService;
-		this.userRepository = userRepository;
-		this.complaintJpaRepository = complaintJpaRepository;
-	}
+    @Autowired
+    public ComplaintService(ComplaintRepository complaintRepository,
+            SevaNumberGeneratorService sevaNumberGeneratorService, UserRepository userRepository,
+            ComplaintJpaRepository complaintJpaRepository) {
+        this.complaintRepository = complaintRepository;
+        this.sevaNumberGeneratorService = sevaNumberGeneratorService;
+        this.userRepository = userRepository;
+        this.complaintJpaRepository = complaintJpaRepository;
+    }
 
-	public List<Complaint> findAll(ComplaintSearchCriteria complaintSearchCriteria) {
-		return complaintRepository.findAll(complaintSearchCriteria);
-	}
+    public List<Complaint> findAll(ComplaintSearchCriteria complaintSearchCriteria) {
+        return complaintRepository.findAll(complaintSearchCriteria);
+    }
 
 	public void save(Complaint complaint, SevaRequest sevaRequest) {
 		complaint.validate();
@@ -51,7 +51,7 @@ public class ComplaintService {
             return;
         }
 
-        final User anonymousUser = getAnonymousUser();
+        final User anonymousUser = getAnonymousUser(sevaRequest.getServiceRequest().getTenantId());
         sevaRequest.getRequestInfo()
 			.setUserInfo(org.egov.common.contract.request.User.builder()
 				.id(anonymousUser.getId())
@@ -59,8 +59,8 @@ public class ComplaintService {
 				.build());
     }
 
-    private User getAnonymousUser() {
-        return userRepository.getUserByUserName("anonymous");
+    private User getAnonymousUser(String tenantId) {
+        return userRepository.getUserByUserName("anonymous",tenantId); 
     }
 
     public void update(Complaint complaint, SevaRequest sevaRequest) {
@@ -70,15 +70,15 @@ public class ComplaintService {
 		complaintRepository.update(sevaRequest);
 	}
 
-	public void updateLastAccessedTime(String crn) {
-		complaintJpaRepository.updateLastAccessedTime(new Date(), crn);
-	}
+    public void updateLastAccessedTime(String crn, String tenantId) {
+        complaintJpaRepository.updateLastAccessedTime(new Date(), crn, tenantId);
+    }
 
-	public List<Complaint> getAllModifiedCitizenComplaints(Long userId) {
-		if (userId != null) {
-			return complaintRepository.getAllModifiedComplaintsForCitizen(userId);
-		}
-		return new ArrayList<>();
-	}
+    public List<Complaint> getAllModifiedCitizenComplaints(Long userId, String tenantId) {
+        if (userId != null) {
+            return complaintRepository.getAllModifiedComplaintsForCitizen(userId, tenantId);
+        }
+        return new ArrayList<>();
+    }
 
 }

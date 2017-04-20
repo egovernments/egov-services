@@ -42,6 +42,7 @@ package org.egov.eis.persistence.entity;
 
 import java.util.Objects;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -75,6 +76,9 @@ public class Role extends AbstractAuditable {
 	@Length(max = 150)
 	private String description;
 
+	@Column(name = "tenantId")
+	private String tenantId;
+
 	@Override
 	public Long getId() {
 		return id;
@@ -104,6 +108,14 @@ public class Role extends AbstractAuditable {
 	@Override
 	public String toString() {
 		return name;
+	}
+
+	public String getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
 	}
 
 	@Override

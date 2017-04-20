@@ -92,16 +92,15 @@ public class PgrWorkflowTest {
 		final Value complaintType = new Value(COMPLAINT_TYPE_CODE, "C001");
 		final Value boundary = new Value(BOUNDARY_ID, "1");
 		final List<Value> value1 = Collections.singletonList(complaintType);
-		final Attribute attributeComplaintType = new Attribute(false, "", "", true, "", value1);
+		final Attribute attributeComplaintType = new Attribute(false, "", "", true, "", value1,"tenantId");
 		final List<Value> value2 = Collections.singletonList(boundary);
-		final Attribute attributeBondary = new Attribute(false, "", "", true, "", value2);
-
+		final Attribute attributeBondary = new Attribute(false, "", "", true, "", value2,"tenantId");
 		valuesMap.put(COMPLAINT_TYPE_CODE, attributeComplaintType);
 		valuesMap.put(BOUNDARY_ID, attributeBondary);
 
 		final ProcessInstance processInstance = ProcessInstance.builder().requestInfo(requestInfo)
 				.senderName("narasappa").status("Registered").description("Complaint is registered")
-				.createdDate(new Date()).values(valuesMap).build();
+				.createdDate(new Date()).tenantId("tenantId").values(valuesMap).build();
 		return processInstance;
 
 	}
@@ -111,11 +110,11 @@ public class PgrWorkflowTest {
 		final State stateExpected = State.builder().ownerPosition(2L).build();
 		final ProcessInstance processInstance = getProcessInstance();
 		final PositionResponse position = getPosition();
-		when(complaintRouterService.getAssignee(1L, "C001", null)).thenReturn(position);
-		when(positionRepository.getById(2L)).thenReturn(position);
+		when(complaintRouterService.getAssignee(1L, "C001", null, "tenantId")).thenReturn(position);
+		when(positionRepository.getById(2L, "tenantId")).thenReturn(position);
 		when(stateService.create(new State())).thenReturn(stateExpected);
 
-		final ProcessInstance actualResponse = pgrWorkflow.start("ap.public", processInstance);
+		final ProcessInstance actualResponse = pgrWorkflow.start("tenantId", processInstance);
 
 		assertEquals(stateExpected.getOwnerPosition(), actualResponse.getAssignee());
 	}
@@ -123,23 +122,23 @@ public class PgrWorkflowTest {
 	@Test
 	public void testForEndWorkflow() throws Exception {
 		final State expectedState = new State();
-		expectedState.setId(119L);
-		expectedState.setComments("Workflow Terminated");
+        expectedState.setId(119L);
+        expectedState.setComments("Workflow Terminated");
 
-		final RequestInfo requestInfo = RequestInfo.builder().userInfo(getUserInfo()).build();
-		final Role role = Role.builder().name("citizen").id(1l).description("CITIZEN").build();
-		final User user = User.builder().id(67L).roles(Collections.singleton(role)).build();
-		final UserResponse expectedUserRequest = UserResponse.builder().responseInfo(new ResponseInfo())
-				.user(Collections.singletonList(user)).build();
-		final ProcessInstance expectedProcessInstance = ProcessInstance.builder().requestInfo(requestInfo)
-				.type("Complaint").description("Workflow Terminated").assignee(2L)
-				.values(new HashMap<String, Attribute>()).businessKey("765").build();
-		expectedProcessInstance.setStateId(119L);
+        final RequestInfo requestInfo = RequestInfo.builder().userInfo(getUserInfo()).build();
+        final Role role = Role.builder().name("citizen").id(1l).description("CITIZEN").build();
+        final User user = User.builder().id(67L).roles(Collections.singleton(role)).build();
+        final UserResponse expectedUserRequest = UserResponse.builder().responseInfo(new ResponseInfo())
+                .user(Collections.singletonList(user)).build();
+        final ProcessInstance expectedProcessInstance = ProcessInstance.builder().requestInfo(requestInfo)
+                .type("Complaint").description("Workflow Terminated").assignee(2L)
+                .values(new HashMap<String, Attribute>()).businessKey("765").build();
+        expectedProcessInstance.setStateId(119L);
 
-		when(stateService.getStateById(119L)).thenReturn(expectedState);
-		when(userRepository.findUserById(16L)).thenReturn(expectedUserRequest);
+        when(stateService.getStateByIdAndTenantId(119L,TENANT_ID)).thenReturn(expectedState);
+        when(userRepository.findUserByIdAndTenantId(16L,TENANT_ID)).thenReturn(expectedUserRequest);
 
-		workflow.end(TENANT_ID, expectedProcessInstance);
+        workflow.end(TENANT_ID, expectedProcessInstance);
 	}
 
 	@Test
@@ -147,14 +146,11 @@ public class PgrWorkflowTest {
 		final State state = prepareState();
 		final EmployeeRes employeeRes = getEmployee();
 		final UserResponse userResponse = getUserResponse();
-
-		when(stateService.getStateById(2l)).thenReturn(state);
-		when(employeeRepository.getEmployeeForUserId(1l)).thenReturn(employeeRes);
-		when(userRepository.findUserById(1L)).thenReturn(userResponse);
-		when(employeeRepository.getEmployeeForPosition(3l, new LocalDate())).thenReturn(employeeRes);
-
+		when(stateService.getStateByIdAndTenantId(2l,"tenantId")).thenReturn(state);
+		when(employeeRepository.getEmployeeForUserIdAndTenantId(1l,"tenantId")).thenReturn(employeeRes);
+		when(userRepository.findUserByIdAndTenantId(1L,"tenantId")).thenReturn(userResponse);
+		when(employeeRepository.getEmployeeForPositionAndTenantId(3l, new LocalDate(),"tenantId")).thenReturn(employeeRes);
 		final List<Task> actualHistory = pgrWorkflow.getHistoryDetail(TENANT_ID, "2");
-
 		assertEquals(3, actualHistory.size());
 	}
 
@@ -163,10 +159,10 @@ public class PgrWorkflowTest {
 		final State state = prepareStateForWorkflow();
 		final EmployeeRes employeeRes = getEmployee();
 		final UserResponse userResponse = getUserResponse();
-		when(stateService.getStateById(2l)).thenReturn(state);
-		when(employeeRepository.getEmployeeForUserId(1l)).thenReturn(employeeRes);
-		when(userRepository.findUserById(1L)).thenReturn(userResponse);
-		when(employeeRepository.getEmployeeForPosition(3l, new LocalDate())).thenReturn(employeeRes);
+		when(stateService.getStateByIdAndTenantId(2l,TENANT_ID)).thenReturn(state);
+		when(employeeRepository.getEmployeeForUserIdAndTenantId(1l,TENANT_ID)).thenReturn(employeeRes);
+		when(userRepository.findUserByIdAndTenantId(1L,TENANT_ID)).thenReturn(userResponse);
+		when(employeeRepository.getEmployeeForPositionAndTenantId(3l, new LocalDate(),TENANT_ID)).thenReturn(employeeRes);
 
 		final List<Task> actualHistory = pgrWorkflow.getHistoryDetail(TENANT_ID, "2");
 
@@ -179,7 +175,7 @@ public class PgrWorkflowTest {
 		State state = prepareState();
 
 		when(stateService.update(new State())).thenReturn(state);
-		when(stateService.getStateById(2l)).thenReturn(state);
+		when(stateService.getStateByIdAndTenantId(2l,TENANT_ID)).thenReturn(state);
 
 		Task actualResponse = pgrWorkflow.update("ap.public", task);
 
@@ -196,8 +192,8 @@ public class PgrWorkflowTest {
             .build();
 
         when(stateService.update(new State())).thenReturn(state);
-        when(stateService.getStateById(2l)).thenReturn(state);
-        when(complaintRouterService.getAssignee(null,"",4L)).thenReturn(expectedPositionResponse);
+        when(stateService.getStateByIdAndTenantId(2l, "ap.public")).thenReturn(state);
+        when(complaintRouterService.getAssignee(null,"",4L,"ap.public")).thenReturn(expectedPositionResponse);
 
         Task actualResponse = pgrWorkflow.update("ap.public", task);
 
@@ -275,11 +271,11 @@ public class PgrWorkflowTest {
 		final Value stateDetails = new Value(STATE_DETAILS, "1");
 		final Value comments = new Value("approvalComments", "1");
 		final List<Value> value1 = Collections.singletonList(stateId);
-		final Attribute attributeStateId = new Attribute(false, "", "", true, "", value1);
+		final Attribute attributeStateId = new Attribute(false, "", "", true, "", value1,"tenantId");
 		final List<Value> value2 = Collections.singletonList(stateDetails);
-		final Attribute attributeStateDetails = new Attribute(false, "", "", true, "", value2);
+		final Attribute attributeStateDetails = new Attribute(false, "", "", true, "", value2,"tenantId");
 		final List<Value> value3 = Collections.singletonList(comments);
-		final Attribute attributeComments = new Attribute(false, "", "", true, "", value3);
+		final Attribute attributeComments = new Attribute(false, "", "", true, "", value3,"tenantId");
 
 		valuesMap.put(STATE_ID, attributeStateId);
 		valuesMap.put(STATE_DETAILS, attributeStateDetails);
@@ -298,13 +294,13 @@ public class PgrWorkflowTest {
         final Value comments = new Value("Complaint escalated", "3");
         final Value currentAssignee = new Value("2", "4");
         final List<Value> value1 = Collections.singletonList(stateId);
-        final Attribute attributeStateId = new Attribute(false, "", "", true, "", value1);
+        final Attribute attributeStateId = new Attribute(false, "", "", true, "", value1,"ap.public");
         final List<Value> value2 = Collections.singletonList(stateDetails);
-        final Attribute attributeStateDetails = new Attribute(false, "", "", true, "", value2);
+        final Attribute attributeStateDetails = new Attribute(false, "", "", true, "", value2,"ap.public");
         final List<Value> value3 = Collections.singletonList(comments);
-        final Attribute attributeComments = new Attribute(false, "", "", true, "", value3);
+        final Attribute attributeComments = new Attribute(false, "", "", true, "", value3,"ap.public");
         final List<Value> value4 = Collections.singletonList(currentAssignee);
-        final Attribute attributeCurrentAssignee = new Attribute(false,"","",true,"",value4);
+        final Attribute attributeCurrentAssignee = new Attribute(false,"","",true,"",value4,"ap.public");
 
         valuesMap.put(STATE_ID, attributeStateId);
         valuesMap.put(STATE_DETAILS, attributeStateDetails);

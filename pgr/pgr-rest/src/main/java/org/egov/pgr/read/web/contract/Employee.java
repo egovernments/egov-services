@@ -29,4 +29,6 @@ public class Employee {
 	@JsonProperty("roles")
 	private Set<Role> roles = new HashSet<>();
 
+	@JsonProperty("tenantId")
+    private String tenantId;
 }

@@ -65,8 +65,19 @@ public class DeptDesig extends AbstractAuditable {
     private Department department;
     private Integer sanctionedPosts;
     private Integer outsourcedPosts;
+    
+	@Column(name = "tenantid")
+    private String tenantId;
 
-    public Long getId() {
+    public String getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
+	}
+
+	public Long getId() {
         return id;
     }
 

@@ -21,9 +21,8 @@ public class IndexerListener {
     private ObjectMapper objectMapper;
 
     @Autowired
-    public IndexerListener(ElasticSearchRepository elasticSearchRepository,
-                           ComplaintAdapter complaintAdapter,
-                           ObjectMapper objectMapper) {
+    public IndexerListener(ElasticSearchRepository elasticSearchRepository, ComplaintAdapter complaintAdapter,
+            ObjectMapper objectMapper) {
         this.elasticSearchRepository = elasticSearchRepository;
         this.complaintAdapter = complaintAdapter;
         this.objectMapper = objectMapper;
@@ -32,10 +31,14 @@ public class IndexerListener {
     @KafkaListener(topics = "${kafka.topics.egov.index.name}")
     public void listen(HashMap<String, Object> sevaRequestMap) {
         SevaRequest sevaRequest = objectMapper.convertValue(sevaRequestMap, SevaRequest.class);
-        if (sevaRequest.getServiceRequest() != null && !sevaRequest.getServiceRequest().getValues().isEmpty()
-            && sevaRequest.getServiceRequest().getValues().get("status").equalsIgnoreCase("REGISTERED")) {
-            ComplaintIndex complaintIndex = complaintAdapter.indexOnCreate(sevaRequest.getServiceRequest());
-            elasticSearchRepository.index(OBJECT_TYPE_COMPLAINT, complaintIndex.getCrn(), complaintIndex);
+        if (sevaRequest.getServiceRequest() != null && !sevaRequest.getServiceRequest().getValues().isEmpty()) {
+            if (sevaRequest.getServiceRequest().getValues().get("status").equalsIgnoreCase("REGISTERED")) {
+                ComplaintIndex complaintIndex = complaintAdapter.indexOnCreate(sevaRequest.getServiceRequest());
+                elasticSearchRepository.index(OBJECT_TYPE_COMPLAINT, complaintIndex.getCrn(), complaintIndex);
+            } else {
+                ComplaintIndex complaintIndex = complaintAdapter.indexOnUpdate(sevaRequest.getServiceRequest());
+                elasticSearchRepository.index(OBJECT_TYPE_COMPLAINT, complaintIndex.getCrn(), complaintIndex);
+            }
         }
 
     }

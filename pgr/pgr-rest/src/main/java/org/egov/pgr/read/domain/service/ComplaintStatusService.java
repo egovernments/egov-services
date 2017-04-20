@@ -17,8 +17,8 @@ public class ComplaintStatusService {
         this.complaintStatusRepository = complaintStatusRepository;
     }
 
-    public List<ComplaintStatus> getAllComplaintStatus() {
-        return complaintStatusRepository.findAll();
+    public List<ComplaintStatus> getAllComplaintStatusByTenantId(final String tenantId) {
+        return complaintStatusRepository.findAllByTenantId(tenantId);
     }
 
 }

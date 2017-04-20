@@ -37,10 +37,12 @@ public class DepartmentControllerTest {
 		department.setId(1L);
 		department.setCode("departmentCode");
 		department.setName("departmentName");
-		when(departmentService.find(departmentCode, null)).thenReturn(Collections.singletonList(department));
+		when(departmentService.find(departmentCode, null, "tenantId"))
+				.thenReturn(Collections.singletonList(department));
 
-		mockMvc.perform(get("/departments").header("X-CORRELATION-ID", "someId").param("code", departmentCode))
-				.andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+		mockMvc.perform(get("/departments").header("X-CORRELATION-ID", "someId").param("tenantId", "tenantId")
+				.param("code", departmentCode)).andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(getFileContents("departmentsResponse.json")));
 	}
 
@@ -50,10 +52,11 @@ public class DepartmentControllerTest {
 		department.setId(1L);
 		department.setCode("departmentCode");
 		department.setName("departmentName");
-		when(departmentService.find(null, 1L)).thenReturn(Collections.singletonList(department));
+		when(departmentService.find(null, 1L, "tenantId")).thenReturn(Collections.singletonList(department));
 
-		mockMvc.perform(get("/departments").header("X-CORRELATION-ID", "someId").param("id", "1"))
-				.andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+		mockMvc.perform(get("/departments").header("X-CORRELATION-ID", "someId").param("tenantId", "tenantId")
+				.param("id", "1")).andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(getFileContents("departmentsResponse.json")));
 	}
 
@@ -63,10 +66,10 @@ public class DepartmentControllerTest {
 		department.setId(1L);
 		department.setCode("departmentCode");
 		department.setName("departmentName");
-		when(departmentService.find(null, null)).thenReturn(Collections.singletonList(department));
+		when(departmentService.find(null, null, "ap.public")).thenReturn(Collections.singletonList(department));
 
-		mockMvc.perform(get("/departments").header("X-CORRELATION-ID", "someId")).andExpect(status().isOk())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+		mockMvc.perform(get("/departments").header("X-CORRELATION-ID", "someId").param("tenantId", "ap.public"))
+				.andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(getFileContents("departmentsResponse.json")));
 	}
 

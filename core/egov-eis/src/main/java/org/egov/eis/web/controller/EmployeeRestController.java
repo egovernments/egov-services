@@ -34,24 +34,25 @@ public class EmployeeRestController {
 			throws Exception {
 
 		EmployeeRes response = new EmployeeRes();
-		response.setResponseInfo(new ResponseInfo());
-		if (code != null && !code.isEmpty()) {
-			response.getEmployees().add(employeeService.getByCode(code));
-		} else if (positionId != null && !positionId.isEmpty() && asOnDate != null) {
-			response.getEmployees().addAll(employeeService.getByPositionAndAsOnDate(Long.parseLong(positionId),
-					new SimpleDateFormat("yyyy-mm-dd").parse(asOnDate)));
+        response.setResponseInfo(new ResponseInfo());
+		if (tenantId != null && !tenantId.isEmpty()) {
+			if (code != null && !code.isEmpty()) {
+				response.getEmployees().add(employeeService.getByCode(code,tenantId));
+			} else if (positionId != null && !positionId.isEmpty() && asOnDate != null) {
+				response.getEmployees().addAll(employeeService.getByPositionAndAsOnDate(Long.parseLong(positionId),
+						new SimpleDateFormat("yyyy-mm-dd").parse(asOnDate),tenantId));
+			} else if (assignmentDepartmentCode != null && !assignmentDepartmentCode.isEmpty()
+					&& assignmentDesignationCode != null && !assignmentDesignationCode.isEmpty()) {
+				response.getEmployees().addAll(employeeService.getByDepartmentDesignation(assignmentDepartmentCode,
+						assignmentDesignationCode,tenantId));
 
-		} else if (assignmentDepartmentCode != null && !assignmentDepartmentCode.isEmpty()
-				&& assignmentDesignationCode != null && !assignmentDesignationCode.isEmpty()) {
-			response.getEmployees().addAll(
-					employeeService.getByDepartmentDesignation(assignmentDepartmentCode, assignmentDesignationCode));
-
-		} else if (roleName != null && !roleName.isEmpty()) {
-			response.getEmployees().addAll(employeeService.getEmployeesByRoleName(roleName));
-		} else if (userId != null && userId > 0) {
-			response.getEmployees().add(employeeService.getEmployeeById(userId));
-		} else {
-			throw new Exception();
+			} else if (roleName != null && !roleName.isEmpty()) {
+				response.getEmployees().addAll(employeeService.getEmployeesByRoleName(roleName,tenantId));
+			} else if (userId != null && userId > 0) {
+				response.getEmployees().add(employeeService.getEmployeeById(userId,tenantId));
+			} else {
+				throw new Exception();
+			}
 		}
 
 		return response;

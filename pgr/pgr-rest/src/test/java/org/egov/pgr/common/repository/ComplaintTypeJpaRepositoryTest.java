@@ -27,7 +27,7 @@ public class ComplaintTypeJpaRepositoryTest {
     @Sql(scripts = {"/sql/clearComplaintType.sql", "/sql/InsertComplaintType.sql"})
     public void test_should_find_all_active_complaint_types_for_given_category() {
         final long categoryId = 4L;
-        final List<ComplaintType> complaintTypes = repository.findActiveComplaintTypes(categoryId);
+        final List<ComplaintType> complaintTypes = repository.findActiveComplaintTypes(categoryId, "tenantId");
 
         assertNotNull(complaintTypes);
         assertEquals(1, complaintTypes.size());

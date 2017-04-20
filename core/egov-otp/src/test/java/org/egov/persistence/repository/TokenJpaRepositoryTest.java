@@ -34,7 +34,7 @@ public class TokenJpaRepositoryTest {
         token.setCreatedBy(0L);
         token.setLastModifiedBy(1L);
         token.setLastModifiedDate(new Date());
-        token.setTenant("tenant");
+        token.setTenantId("tenant");
         token.setValidated("N");
 
         tokenJpaRepository.save(token);
@@ -47,14 +47,14 @@ public class TokenJpaRepositoryTest {
     @Sql(scripts = {"/sql/clearTokens.sql", "/sql/createTokens.sql"})
     public void test_should_retrieve_otp_for_given_token_number_and_identity() {
         final List<Token> actualTokens = tokenJpaRepository
-                .findByNumberAndIdentityAndTenant("token2", "identity2", "tenant2");
+                .findByNumberAndIdentityAndTenantId("token2", "identity2", "tenant2");
 
         assertNotNull(actualTokens);
         assertEquals(1, actualTokens.size());
         final Token firstToken = actualTokens.get(0);
         assertEquals("id2" , firstToken.getId());
         assertEquals("identity2" , firstToken.getIdentity());
-        assertEquals("tenant2" , firstToken.getTenant());
+        assertEquals("tenant2" , firstToken.getTenantId());
         assertEquals("token2" , firstToken.getNumber());
         assertEquals(Long.valueOf(200) , firstToken.getTimeToLiveInSeconds());
         assertEquals(Long.valueOf(124) , firstToken.getCreatedBy());

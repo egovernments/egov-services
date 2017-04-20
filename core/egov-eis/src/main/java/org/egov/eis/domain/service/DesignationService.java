@@ -54,57 +54,57 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class DesignationService {
 
-    @Autowired
-    private DesignationRepository designationRepository;
+	@Autowired
+	private DesignationRepository designationRepository;
 
-    @Transactional
-    public void createDesignation(final Designation designation) {
-        designationRepository.save(designation);
-    }
+	@Transactional
+	public void createDesignation(final Designation designation) {
+		designationRepository.save(designation);
+	}
 
-    @Transactional
-    public void updateDesignation(final Designation designation) {
-        designationRepository.save(designation);
-    }
+	@Transactional
+	public void updateDesignation(final Designation designation) {
+		designationRepository.save(designation);
+	}
 
-    @Transactional
-    public void deleteDesignation(final Designation designation) {
-        designationRepository.delete(designation);
-    }
+	@Transactional
+	public void deleteDesignation(final Designation designation) {
+		designationRepository.delete(designation);
+	}
 
-    public Designation getDesignationByName(final String desName) {
-        return designationRepository.findByNameUpperCase(desName.toUpperCase());
-    }
+	public Designation getDesignationByName(final String desName) {
+		return designationRepository.findByNameUpperCase(desName.toUpperCase());
+	}
 
-    public Designation getDesignationById(final Long desigId) {
-        return designationRepository.findOne(desigId);
-    }
+	public Designation getDesignationById(final Long desigId, final String tenantId) {
+		return designationRepository.findByIdAndTenantId(desigId, tenantId);
+	}
 
-    public List<Designation> getAllDesignations() {
-        return designationRepository.findAll();
-    }
+	public List<Designation> getAllDesignations(final String tenantId) {
+		return designationRepository.findAllByTenantId(tenantId);
+	}
 
-    public List<Designation> getAllDesignationsSortByNameAsc() {
-        return designationRepository.findAllByOrderByNameAsc();
-    }
+	public List<Designation> getAllDesignationsSortByNameAsc() {
+		return designationRepository.findAllByOrderByNameAsc();
+	}
 
-    public List<Designation> getAllDesignationsByNameLike(final String name) {
-        return designationRepository.findByNameContainingIgnoreCaseOrderByNameAsc(name);
-    }
+	public List<Designation> getAllDesignationsByNameLike(final String name) {
+		return designationRepository.findByNameContainingIgnoreCaseOrderByNameAsc(name);
+	}
 
-    public List<Designation> getAllDesignationByDepartment(final Long id, final Date givenDate) {
-        return designationRepository.getAllDesignationsByDepartment(id, givenDate);
-    }
+	public List<Designation> getAllDesignationByDepartment(final Long id, final Date givenDate, final String tenantId) {
+		return designationRepository.getAllDesignationsByDepartment(id, givenDate, tenantId);
+	}
 
-    public Set<Role> getRolesByDesignation(final String designationName) {
-        return designationRepository.getRolesByDesignation(designationName);
-    }
+	public Set<Role> getRolesByDesignation(final String designationName) {
+		return designationRepository.getRolesByDesignation(designationName);
+	}
 
-    public List<Designation> getDesignationsByNames(final List<String> names) {
-        return designationRepository.getDesignationsByNames(names);
-    }
+	public List<Designation> getDesignationsByNames(final List<String> names) {
+		return designationRepository.getDesignationsByNames(names);
+	}
 
-    public List<Designation> getDesignationsByName(final String name) {
-        return designationRepository.getDesignationsByName("%" + name + "%");
-    }
+	public List<Designation> getDesignationsByName(final String name, final String tenantId) {
+		return designationRepository.getDesignationsByName("%" + name + "%", tenantId);
+	}
 }

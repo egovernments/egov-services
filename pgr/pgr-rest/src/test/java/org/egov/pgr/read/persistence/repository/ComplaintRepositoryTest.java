@@ -84,9 +84,8 @@ public class ComplaintRepositoryTest {
         when(complaintEntityMock1.toDomain()).thenReturn(complaintModelMock1);
         when(complaintEntityMock2.toDomain()).thenReturn(complaintModelMock2);
 
-        when(complaintJpaRepository.findAll(Matchers.<Specification<Complaint>>any(), eq(sort))).thenReturn(
-                Arrays.asList(complaintEntityMock1, complaintEntityMock2)
-        );
+        when(complaintJpaRepository.findAll(Matchers.<Specification<Complaint>> any(), eq(sort)))
+                .thenReturn(Arrays.asList(complaintEntityMock1, complaintEntityMock2));
 
         List<org.egov.pgr.read.domain.model.Complaint> actual = complaintRepository.findAll(complaintSearchCriteria);
 
@@ -98,18 +97,19 @@ public class ComplaintRepositoryTest {
         Date lastAccessedTime = Calendar.getInstance().getTime();
         Complaint complaintEntityMock1 = mock(Complaint.class);
         Complaint complaintEntityMock2 = mock(Complaint.class);
-        org.egov.pgr.read.domain.model.Complaint complaintModelMock1 = mock(org.egov.pgr.read.domain.model.Complaint.class);
-        org.egov.pgr.read.domain.model.Complaint complaintModelMock2 = mock(org.egov.pgr.read.domain.model.Complaint.class);
+        org.egov.pgr.read.domain.model.Complaint complaintModelMock1 = mock(
+                org.egov.pgr.read.domain.model.Complaint.class);
+        org.egov.pgr.read.domain.model.Complaint complaintModelMock2 = mock(
+                org.egov.pgr.read.domain.model.Complaint.class);
 
         when(complaintEntityMock1.toDomain()).thenReturn(complaintModelMock1);
         when(complaintEntityMock2.toDomain()).thenReturn(complaintModelMock2);
 
-        when(complaintJpaRepository.getAllModifiedComplaintsForCitizen(1L)).thenReturn(
-               Arrays.asList(complaintEntityMock1, complaintEntityMock2)
-        );
+        when(complaintJpaRepository.getAllModifiedComplaintsForCitizen(1L, "tenantId"))
+                .thenReturn(Arrays.asList(complaintEntityMock1, complaintEntityMock2));
 
-        List<org.egov.pgr.read.domain.model.Complaint> actual =
-                complaintRepository.getAllModifiedComplaintsForCitizen(1L);
+        List<org.egov.pgr.read.domain.model.Complaint> actual = complaintRepository
+                .getAllModifiedComplaintsForCitizen(1L, "tenantId");
 
         assertThat(Arrays.asList(complaintModelMock1, complaintModelMock2)).isEqualTo(actual);
     }

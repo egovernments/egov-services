@@ -20,8 +20,9 @@ public class BoundaryRepository {
 
     }
 
-    public BoundaryResponse fetchBoundaryById(final Long id) {
-        final BoundaryServiceResponse boudaryServiceResponse = restTemplate.getForObject(url, BoundaryServiceResponse.class, id);
+    public BoundaryResponse fetchBoundaryById(final Long id, final String tenantId) {
+        final BoundaryServiceResponse boudaryServiceResponse = restTemplate.getForObject(url,
+                BoundaryServiceResponse.class, id, tenantId);
         return boudaryServiceResponse.getBoundary().get(0);
     }
 

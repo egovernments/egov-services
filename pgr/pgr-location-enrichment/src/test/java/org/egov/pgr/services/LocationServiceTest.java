@@ -49,7 +49,7 @@ public class LocationServiceTest {
 
         assertEquals(sevaRequest, actualSevaRequest);
         verify(boundaryRepository, never()).findBoundary(any(), any(),any());
-        verify(crossHierarchyRepository, never()).getCrossHierarchy(any());
+        verify(crossHierarchyRepository, never()).getCrossHierarchy(any(),any());
     }
 
     @Test
@@ -63,7 +63,7 @@ public class LocationServiceTest {
         final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
 
         final BoundaryResponse boundaryResponse = new BoundaryResponse(LOCATION_ID, BOUNDARY_NAME);
-        when(boundaryRepository.findBoundary("1.2", "4.5","ap.kurnool")).thenReturn(boundaryResponse);
+        when(boundaryRepository.findBoundary("1.2", "4.5","ap.public")).thenReturn(boundaryResponse);
         final SevaRequest actualSevaRequest = locationService.enrich(sevaRequest);
 
         assertEquals("5", actualSevaRequest.getLocationId());
@@ -81,7 +81,7 @@ public class LocationServiceTest {
         final BoundaryResponse childBoundaryResponse = new BoundaryResponse(2L, "child");
         final CrossHierarchyResponse hierarchyResponse =
                 new CrossHierarchyResponse(parentBoundaryResponse, childBoundaryResponse);
-        when(crossHierarchyRepository.getCrossHierarchy("crossHierarchyId")).thenReturn(hierarchyResponse);
+        when(crossHierarchyRepository.getCrossHierarchy("crossHierarchyId","ap.public")).thenReturn(hierarchyResponse);
 
         final SevaRequest actualSevaRequest = locationService.enrich(sevaRequest);
 

@@ -32,7 +32,7 @@ public class CreateMessagesRequest {
         return org.egov.persistence.entity.Message.builder()
                 .code(contractMessage.getCode())
                 .message(contractMessage.getMessage())
-                .tenantId(requestInfo.getTenantId())
+                .tenantId(contractMessage.getTenantId())
                 .locale(locale)
                 .build();
     }

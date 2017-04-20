@@ -1,6 +1,5 @@
 package org.egov.pgr.read.persistence.entity;
 
-
 import org.egov.pgr.common.entity.*;
 import org.egov.pgr.common.model.AuthenticatedUser;
 import org.egov.pgr.read.domain.model.ComplaintLocation;
@@ -24,41 +23,19 @@ public class ComplaintTest {
         final ComplaintType complaintType = new ComplaintType();
         complaintType.setName("complaintName");
         complaintType.setCode("complaintCode");
-        final ComplaintStatus complaintStatus = ComplaintStatus.builder()
-                .id(1L)
-                .name("FORWARDED")
-                .build();
-        final Complainant complainant = Complainant.builder()
-                .id(2L)
-                .name("firstName")
-                .mobile("mobileNumber")
-                .email("email@email.com")
-                .address("address")
-                .build();
+        complaintType.setTenantId("tenantId");
+        final ComplaintStatus complaintStatus = ComplaintStatus.builder().id(1L).name("FORWARDED").build();
+        final Complainant complainant = Complainant.builder().id(2L).name("firstName").mobile("mobileNumber")
+                .email("email@email.com").address("address").build();
         final LocalDateTime lastAccessedDateTime = LocalDateTime.of(2016, 1, 2, 3, 4, 5);
         final ReceivingCenter receivingCenter = ReceivingCenter.builder().id(4L).build();
         final ReceivingMode receivingMode = new ReceivingMode();
         receivingMode.setCode("EMAIL");
-        final Complaint entityComplaint = Complaint.builder()
-                .crn("crn")
-                .details("complaint description")
-                .complaintType(complaintType)
-                .receivingMode(receivingMode)
-                .status(complaintStatus)
-                .complainant(complainant)
-                .latitude(1.0)
-                .longitude(2.0)
-                .crossHierarchyId(4L)
-                .location(3L)
-                .department(3L)
-                .lastAccessedTime(toDate(lastAccessedDateTime))
-                .landmarkDetails("landMark")
-                .receivingMode(receivingMode)
-                .receivingCenter(receivingCenter)
-                .childLocation(5L)
-                .assignee(6L)
-                .stateId(7L)
-                .build();
+        final Complaint entityComplaint = Complaint.builder().crn("crn").details("complaint description")
+                .complaintType(complaintType).receivingMode(receivingMode).status(complaintStatus)
+                .complainant(complainant).latitude(1.0).longitude(2.0).crossHierarchyId(4L).location(3L).department(3L)
+                .lastAccessedTime(toDate(lastAccessedDateTime)).landmarkDetails("landMark").receivingMode(receivingMode)
+                .receivingCenter(receivingCenter).childLocation(5L).assignee(6L).stateId(7L).tenantId("tenantId").build();
         final LocalDateTime lastModifiedDateTime = LocalDateTime.of(2016, 2, 3, 3, 3, 3);
         final LocalDateTime createdDateTime = LocalDateTime.of(2016, 2, 1, 3, 3, 3);
         entityComplaint.setLastModifiedDate(toDate(lastModifiedDateTime));
@@ -71,7 +48,7 @@ public class ComplaintTest {
         assertNotNull(complaintLocation);
         assertEquals("3", complaintLocation.getLocationId());
         assertEquals("4", complaintLocation.getCrossHierarchyId());
-        assertEquals(new Coordinates(1.0, 2.0), complaintLocation.getCoordinates());
+        assertEquals(new Coordinates(1.0, 2.0, "tenantId"), complaintLocation.getCoordinates());
         assertEquals(toDate(lastAccessedDateTime), domainComplaint.getLastAccessedTime());
         assertEquals(toDate(lastModifiedDateTime), domainComplaint.getLastModifiedDate());
         assertEquals(toDate(createdDateTime), domainComplaint.getCreatedDate());
@@ -89,8 +66,8 @@ public class ComplaintTest {
         final AuthenticatedUser authenticatedUser = domainComplaint.getAuthenticatedUser();
         assertNotNull(authenticatedUser);
         assertTrue(authenticatedUser.isAnonymousUser());
-        final org.egov.pgr.read.domain.model.ComplaintType expectedComplaintType =
-                new org.egov.pgr.read.domain.model.ComplaintType("complaintName", "complaintCode");
+        final org.egov.pgr.read.domain.model.ComplaintType expectedComplaintType = new org.egov.pgr.read.domain.model.ComplaintType(
+                "complaintName", "complaintCode", "tenantId");
         assertEquals(expectedComplaintType, domainComplaint.getComplaintType());
         assertEquals("EMAIL", domainComplaint.getReceivingMode());
         assertEquals("4", domainComplaint.getReceivingCenter());

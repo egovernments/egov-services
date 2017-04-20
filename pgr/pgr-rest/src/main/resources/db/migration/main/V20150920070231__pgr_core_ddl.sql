@@ -3,7 +3,9 @@ CREATE TABLE egpgr_receiving_center (
     name character varying(100),
     iscrnrequired boolean DEFAULT false,
     orderno bigint DEFAULT 0,
-    version bigint DEFAULT 0
+    version bigint DEFAULT 0,
+    tenantid character varying(256) not null,
+    constraint uk_receivingcenter_name_tenant unique (name,tenantid)
 );
 
 CREATE SEQUENCE seq_egpgr_receiving_center

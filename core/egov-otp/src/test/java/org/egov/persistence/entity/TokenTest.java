@@ -31,7 +31,7 @@ public class TokenTest {
     public void test_should_create_domain_from_entity() {
         final Token entityToken = new Token();
         entityToken.setNumber("otpNumber");
-        entityToken.setTenant("tenant");
+        entityToken.setTenantId("tenant");
         entityToken.setId("uuid");
         entityToken.setTimeToLiveInSeconds(300L);
         entityToken.setIdentity("identity");
@@ -53,7 +53,7 @@ public class TokenTest {
     public void test_is_validated_should_return_false_when_validation_is_set_to_no() {
         final Token entityToken = new Token();
         entityToken.setNumber("otpNumber");
-        entityToken.setTenant("tenant");
+        entityToken.setTenantId("tenant");
         entityToken.setId("uuid");
         entityToken.setTimeToLiveInSeconds(300L);
         entityToken.setIdentity("identity");
@@ -70,7 +70,7 @@ public class TokenTest {
     public void test_is_validated_should_return_true_when_validation_is_set_to_yes() {
         final Token entityToken = new Token();
         entityToken.setNumber("otpNumber");
-        entityToken.setTenant("tenant");
+        entityToken.setTenantId("tenant");
         entityToken.setId("uuid");
         entityToken.setTimeToLiveInSeconds(300L);
         entityToken.setIdentity("identity");

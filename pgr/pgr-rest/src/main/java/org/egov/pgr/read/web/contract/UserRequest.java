@@ -19,4 +19,7 @@ public class UserRequest {
 
 	@JsonProperty("userName")
 	private String userName;
+	
+	@JsonProperty("tenantId")
+    private String tenantId;
 }

@@ -58,10 +58,10 @@ public class ReceivingCenterService {
 	}
 
 	public List<ReceivingCenter> getAllReceivingCenters(String tenantId) {
-		return receivingCenterRepository.findAll();
+		return receivingCenterRepository.findAllByTenantId(tenantId);
 	}
 
 	public ReceivingCenter getReceivingCenterById(String tenantId,Long id) {
-		return receivingCenterRepository.findById(id);
+		return receivingCenterRepository.findByIdAndTenantId(id,tenantId);
 	}
 }

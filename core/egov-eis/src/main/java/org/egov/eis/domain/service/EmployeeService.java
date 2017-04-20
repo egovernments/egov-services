@@ -71,26 +71,27 @@ public class EmployeeService {
 		return entityManager.unwrap(Session.class);
 	}
 
-	public Employee getByCode(String code) {
+	public Employee getByCode(String code, String tenantId) {
 
-		return employeeRepository.findByCode(code);
+		return employeeRepository.findByCodeAndTenantId(code, tenantId);
 	}
 
-	public List<Employee> getByPositionAndAsOnDate(final Long positionId, final Date asOnDate) {
+	public List<Employee> getByPositionAndAsOnDate(final Long positionId, final Date asOnDate, final String tenantId) {
 
-		return employeeRepository.findByPositionAndAsOnDate(positionId, asOnDate);
+		return employeeRepository.findByPositionAndAsOnDate(positionId, asOnDate, tenantId);
 	}
 
-	public List<Employee> getByDepartmentDesignation(final String deptCode, final String desigCode) {
+	public List<Employee> getByDepartmentDesignation(final String deptCode, final String desigCode,
+			final String tenantId) {
 
-		return employeeRepository.findByDepartmentDesignation(deptCode, desigCode);
+		return employeeRepository.findByDepartmentDesignation(deptCode, desigCode, tenantId);
 	}
 
-	public Set<Employee> getEmployeesByRoleName(final String roleName) {
-		return employeeRepository.findEmployeesByRoleName(roleName);
+	public Set<Employee> getEmployeesByRoleName(final String roleName, final String tenantId) {
+		return employeeRepository.findEmployeesByRoleName(roleName,tenantId);
 	}
-	
-	public Employee getEmployeeById(Long userId) {
-		return employeeRepository.findById(userId);
+
+	public Employee getEmployeeById(Long userId, final String tenantId) {
+		return employeeRepository.findByIdAndTenantId(userId,tenantId);
 	}
 }

@@ -53,6 +53,7 @@ public class WorkFlowControllerTest {
             .type("Complaint")
             .description("Grievance registered successfully")
             .senderName("harry")
+            .tenantId("tenantId")
             .build();
 
         when(workflow.start(eq(TENANT_ID), argThat(new ProcessInstanceMatcher(expectedProcessInstance))))
@@ -74,6 +75,7 @@ public class WorkFlowControllerTest {
             .type("Complaint")
             .description("Workflow Terminated")
             .senderName("garry")
+            .tenantId("tenantId")
             .build();
 
         when(workflow.end(eq(TENANT_ID), argThat(new processInstanceMatcherForCloseWorkflow(expectedProcessInstance))))

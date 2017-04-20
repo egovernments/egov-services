@@ -125,9 +125,6 @@ public class ComplaintIndex {
     @JsonProperty("complaintIsClosed")
     private String complaintIsClosed;
 
-    @JsonProperty("ifClosed")
-    private int ifClosed;
-
     @JsonProperty("durationRange")
     private String durationRange;
 
@@ -140,128 +137,8 @@ public class ComplaintIndex {
     @JsonProperty("complaintSLADays")
     private long complaintSLADays;
 
-    @JsonProperty("complaintAgeingFromDue")
-    private double complaintAgeingFromDue;
-
     @JsonProperty("isSLA")
     private String isSLA;
-
-    @JsonProperty("ifSLA")
-    private int ifSLA;
-
-    @JsonProperty("currentFunctionaryName")
-    private String currentFunctionaryName;
-
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = ES_DATE_FORMAT, timezone = DEFAULT_TIMEZONE)
-    @JsonProperty("currentFunctionaryAssigneddate")
-    private Date currentFunctionaryAssigneddate;
-
-    @JsonProperty("currentFunctionarySLADays")
-    private long currentFunctionarySLADays;
-
-    @JsonProperty("currentFunctionaryAgeingFromDue")
-    private double currentFunctionaryAgeingFromDue;
-
-    @JsonProperty("currentFunctionaryIsSLA")
-    private String currentFunctionaryIsSLA;
-
-    @JsonProperty("currentFunctionaryIfSLA")
-    private int currentFunctionaryIfSLA;
-
-    @JsonProperty("currentFunctionaryMobileNumber")
-    private String currentFunctionaryMobileNumber;
-
-    @JsonProperty("initialFunctionaryMobileNumber")
-    private String initialFunctionaryMobileNumber;
-
-    @JsonProperty("closedByFunctionaryName")
-    private String closedByFunctionaryName;
-
-    @JsonProperty("initialFunctionaryName")
-    private String initialFunctionaryName;
-
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = ES_DATE_FORMAT, timezone = DEFAULT_TIMEZONE)
-    @JsonProperty("initialFunctionaryAssigneddate")
-    private Date initialFunctionaryAssigneddate;
-
-    @JsonProperty("initialFunctionarySLADays")
-    private long initialFunctionarySLADays;
-
-    @JsonProperty("initialFunctionaryAgeingFromDue")
-    private double initialFunctionaryAgeingFromDue;
-
-    @JsonProperty("initialFunctionaryIsSLA")
-    private String initialFunctionaryIsSLA;
-
-    @JsonProperty("initialFunctionaryIfSLA")
-    private int initialFunctionaryIfSLA;
-
-    @JsonProperty("escalation1FunctionaryName")
-    private String escalation1FunctionaryName;
-
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = ES_DATE_FORMAT, timezone = DEFAULT_TIMEZONE)
-    @JsonProperty("escalation1FunctionaryAssigneddate")
-    private Date escalation1FunctionaryAssigneddate;
-
-    @JsonProperty("escalation1FunctionarySLADays")
-    private long escalation1FunctionarySLADays;
-
-    @JsonProperty("escalation1FunctionaryAgeingFromDue")
-    private double escalation1FunctionaryAgeingFromDue;
-
-    @JsonProperty("escalation1FunctionaryIsSLA")
-    private String escalation1FunctionaryIsSLA;
-
-    @JsonProperty("escalation1FunctionaryIfSLA")
-    private int escalation1FunctionaryIfSLA;
-
-    @JsonProperty("escalation2FunctionaryName")
-    private String escalation2FunctionaryName;
-
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = ES_DATE_FORMAT, timezone = DEFAULT_TIMEZONE)
-    @JsonProperty("escalation2FunctionaryAssigneddate")
-    private Date escalation2FunctionaryAssigneddate;
-
-    @JsonProperty("escalation2FunctionarySLADays")
-    private long escalation2FunctionarySLADays;
-
-    @JsonProperty("escalation2FunctionaryAgeingFromDue")
-    private double escalation2FunctionaryAgeingFromDue;
-
-    @JsonProperty("escalation2FunctionaryIsSLA")
-    private String escalation2FunctionaryIsSLA;
-
-    @JsonProperty("escalation2FunctionaryIfSLA")
-    private int escalation2FunctionaryIfSLA;
-
-    @JsonProperty("escalation3FunctionaryName")
-    private String escalation3FunctionaryName;
-
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = ES_DATE_FORMAT, timezone = DEFAULT_TIMEZONE)
-    @JsonProperty("escalation3FunctionaryAssigneddate")
-    private Date escalation3FunctionaryAssigneddate;
-
-    @JsonProperty("escalation3FunctionarySLADays")
-    private long escalation3FunctionarySLADays;
-
-    @JsonProperty("escalation3FunctionaryAgeingFromDue")
-    private double escalation3FunctionaryAgeingFromDue;
-
-    @JsonProperty("escalation3FunctionaryIsSLA")
-    private String escalation3FunctionaryIsSLA;
-
-    @JsonProperty("escalation3FunctionaryIfSLA")
-    private int escalation3FunctionaryIfSLA;
-
-    @JsonProperty("escalationLevel")
-    private int escalationLevel;
-
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = ES_DATE_FORMAT, timezone = DEFAULT_TIMEZONE)
-    @JsonProperty("complaintReOpenedDate")
-    private Date complaintReOpenedDate;
-
-    @JsonProperty("reasonForRejection")
-    private String reasonForRejection;
 
     @JsonProperty("registered")
     private int registered;

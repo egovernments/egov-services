@@ -40,11 +40,11 @@ public class AssignmentRestControllerTest {
 		final Assignment assignment = new Assignment();
 		assignment.setId(1L);
 		assignment.setFund(2L);
-		when(assignmentService.getAssignmentById(1L)).thenReturn(assignment);
+		when(assignmentService.getAssignmentById(1L,"ap.public")).thenReturn(assignment);
 
-		mockMvc.perform(get("/assignments").header("X-CORRELATION-ID", "someId")
-				.param("id", "1"))
-				.andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+		mockMvc.perform(get("/assignments").header("X-CORRELATION-ID", "someId").param("tenantId", "ap.public")
+				.param("id", "1")).andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(getFileContents("assignmentsResponse.json")));
 	}
 
@@ -53,11 +53,9 @@ public class AssignmentRestControllerTest {
 		final Assignment assignment = new Assignment();
 		assignment.setId(1L);
 		assignment.setFund(2L);
-		when(assignmentService.getAll()).thenReturn(Collections.singletonList(assignment));
-
-		mockMvc.perform(get("/assignments").header("X-CORRELATION-ID", "someId"))
-				.andExpect(status().isOk())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+		when(assignmentService.getAll("ap.public")).thenReturn(Collections.singletonList(assignment));
+		mockMvc.perform(get("/assignments").header("X-CORRELATION-ID", "someId").param("tenantId", "ap.public"))
+				.andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(getFileContents("assignmentsResponse.json")));
 	}
 
@@ -68,10 +66,10 @@ public class AssignmentRestControllerTest {
 		final Assignment assignment = Assignment.builder().id(5L).fund(1L).department(department)
 				.designation(designation).build();
 		when(assignmentService.getPositionsByDepartmentAndDesignationForGivenRange(any(Long.class), any(Long.class),
-				any(Date.class))).thenReturn(Collections.singletonList(assignment));
+				any(Date.class),any(String.class))).thenReturn(Collections.singletonList(assignment));
 
-		mockMvc.perform(post("/assignmentsByDeptOrDesignId").param("deptId", "1").param("desgnId", "2")
-				.header("X-CORRELATION-ID", "someId")).andExpect(status().isOk())
+		mockMvc.perform(post("/assignmentsByDeptOrDesignId").param("tenantId", "ap.public").param("deptId", "1")
+				.param("desgnId", "2").header("X-CORRELATION-ID", "someId")).andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(getFileContents("successAssignmentResponse.json")));
 	}
@@ -79,9 +77,10 @@ public class AssignmentRestControllerTest {
 	@Test
 	public void test_should_return_bad_request_when_dept_desg_is_empty() throws Exception {
 		when(assignmentService.getPositionsByDepartmentAndDesignationForGivenRange(any(Long.class), any(Long.class),
-				any(Date.class))).thenReturn(null);
+				any(Date.class),any(String.class))).thenReturn(null);
 		mockMvc.perform(post("/assignmentsByDeptOrDesignId").header("X-CORRELATION-ID", "someId")
-				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().isBadRequest());
+				.param("tenantId", "ap.public").contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(status().isBadRequest());
 	}
 
 	private String getFileContents(String fileName) {
@@ -93,17 +92,13 @@ public class AssignmentRestControllerTest {
 	}
 
 	@Test
-	public void test_should_return_assignment_when_employee_id_given() throws  Exception {
+	public void test_should_return_assignment_when_employee_id_given() throws Exception {
 		Department department = Department.builder().name("Electrical").build();
-		Assignment assignment = Assignment.builder()
-				.id(2L)
-				.department(department)
-				.build();
+		Assignment assignment = Assignment.builder().id(2L).department(department).build();
 
-		when(assignmentService.getPrimaryAssignmentForEmployee(any(Long.class)))
-				.thenReturn(assignment);
+		when(assignmentService.getPrimaryAssignmentForEmployee(any(Long.class),any(String.class))).thenReturn(assignment);
 
-		mockMvc.perform(post("/_assignmentByEmployeeId").param("employeeId","18")
+		mockMvc.perform(post("/_assignmentByEmployeeId").param("tenantId", "ap.public").param("employeeId", "18")
 				.header("X-CORRELATION-ID", "someId")).andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(getFileContents("assignmentByEmployeeIdResponse.json")));

@@ -1,16 +1,17 @@
 {
   "requestInfo": {
-    "tenantId": "tenant123"
   },
   "locale": "mr_IN",
   "messages": [
     {
       "code": "code1",
-      "message": "message1"
+      "message": "message1",
+      "tenantId": "tenant123"
     },
     {
       "code": "code2",
-      "message": "message2"
+      "message": "message2",
+      "tenantId": "tenant123"
     }
   ]
 }

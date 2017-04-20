@@ -19,52 +19,47 @@ import java.util.stream.Collectors;
 @Slf4j
 public class StorageService {
 
-	private static final String UPLOAD_MESSAGE = "Received upload request for " +
-			"jurisdiction: %s, module: %s, tag: %s with file count: %s";
+    private static final String UPLOAD_MESSAGE = "Received upload request for "
+            + "jurisdiction: %s, module: %s, tag: %s with file count: %s";
 
-	private ArtifactRepository artifactRepository;
+    private ArtifactRepository artifactRepository;
     private IdGeneratorService idGeneratorService;
 
     @Autowired
-    public StorageService(ArtifactRepository artifactRepository,
-                          IdGeneratorService idGeneratorService) {
+    public StorageService(ArtifactRepository artifactRepository, IdGeneratorService idGeneratorService) {
         this.artifactRepository = artifactRepository;
         this.idGeneratorService = idGeneratorService;
     }
 
-    public List<String> save(List<MultipartFile> filesToStore, String jurisdictionId, String module, String tag) {
-		validateFilesToUpload(filesToStore, jurisdictionId, module, tag);
-		log.info(UPLOAD_MESSAGE, jurisdictionId, module, tag, filesToStore.size());
-		List<Artifact> artifacts =
-                mapFilesToArtifacts(filesToStore, jurisdictionId, module, tag);
+    public List<String> save(List<MultipartFile> filesToStore, String module, String tag,
+            String tenantId) {
+        validateFilesToUpload(filesToStore, module, tag,tenantId);
+        log.info(UPLOAD_MESSAGE, module, tag, filesToStore.size());
+        List<Artifact> artifacts = mapFilesToArtifacts(filesToStore, module, tag, tenantId);
         return this.artifactRepository.save(artifacts);
     }
 
-	private void validateFilesToUpload(List<MultipartFile> filesToStore, String jurisdictionId, String module, String
-			tag) {
-		if (CollectionUtils.isEmpty(filesToStore)) {
-			throw new EmptyFileUploadRequestException(jurisdictionId, module, tag);
-		}
-	}
-
-	private List<Artifact> mapFilesToArtifacts(List<MultipartFile> files,
-                                               String jurisdictionId,
-                                               String module,
-                                               String tag) {
-        return files.stream()
-                .map(file -> {
-                    FileLocation fileLocation =
-                            new FileLocation(this.idGeneratorService.getId(), module, jurisdictionId, tag);
-                    return new Artifact(file, fileLocation);
-                })
-                .collect(Collectors.toList());
+    private void validateFilesToUpload(List<MultipartFile> filesToStore, String module,
+            String tag,String tenantId) {
+        if (CollectionUtils.isEmpty(filesToStore)) {
+            throw new EmptyFileUploadRequestException(module, tag,tenantId);
+        }
     }
 
-    public Resource retrieve(String fileStoreId) {
-        return artifactRepository.find(fileStoreId);
+    private List<Artifact> mapFilesToArtifacts(List<MultipartFile> files, String module,
+            String tag, String tenantId) {
+        return files.stream().map(file -> {
+            FileLocation fileLocation = new FileLocation(this.idGeneratorService.getId(), module, tag,
+                    tenantId);
+            return new Artifact(file, fileLocation);
+        }).collect(Collectors.toList());
     }
 
-    public List<FileInfo> retrieveByTag(String tag) {
-        return artifactRepository.findByTag(tag);
+    public Resource retrieve(String fileStoreId, String tenantId) {
+        return artifactRepository.find(fileStoreId, tenantId);
+    }
+
+    public List<FileInfo> retrieveByTag(String tag, String tenantId) {
+        return artifactRepository.findByTag(tag, tenantId);
     }
 }

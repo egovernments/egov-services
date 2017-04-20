@@ -10,7 +10,8 @@ import static org.springframework.util.StringUtils.isEmpty;
 public class ComplaintType {
     private String name;
     private String code;
-
+    private String tenantId;
+    
     public boolean isAbsent() {
         return isEmpty(code);
     }

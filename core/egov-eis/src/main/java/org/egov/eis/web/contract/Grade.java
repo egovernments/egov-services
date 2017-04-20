@@ -20,6 +20,9 @@ public class Grade {
 	@JsonProperty("active")
 	private String active = null;
 
+	@JsonProperty("tenantId")
+	private String tenantId = null;
+
 	public Grade id(Long id) {
 		this.id = id;
 		return this;
@@ -84,6 +87,14 @@ public class Grade {
 	public void setActive(String active) {
 		this.active = active;
 	}
+	
+	public String getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
+	}
 
 	@Override
 	public boolean equals(java.lang.Object o) {
@@ -96,12 +107,12 @@ public class Grade {
 		Grade grade = (Grade) o;
 		return Objects.equals(this.id, grade.id) && Objects.equals(this.name, grade.name)
 				&& Objects.equals(this.description, grade.description) && Objects.equals(this.orderno, grade.orderno)
-				&& Objects.equals(this.active, grade.active);
+				&& Objects.equals(this.tenantId, grade.tenantId) && Objects.equals(this.active, grade.active);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, name, description, orderno, active);
+		return Objects.hash(id, name, description, orderno, active, tenantId);
 	}
 
 	@Override
@@ -114,6 +125,7 @@ public class Grade {
 		sb.append("    description: ").append(toIndentedString(description)).append("\n");
 		sb.append("    orderno: ").append(toIndentedString(orderno)).append("\n");
 		sb.append("    active: ").append(toIndentedString(active)).append("\n");
+		sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
 		sb.append("}");
 		return sb.toString();
 	}

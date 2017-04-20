@@ -28,11 +28,11 @@ public class ComplaintTypeRepositoryTest {
 
 	@Test
 	public void test_should_fetch_complainttype_for_given_code() throws Exception {
-		server.expect(once(), requestTo("http://host/pgr/services/AOS?tenantId=")).andExpect(method(HttpMethod.GET))
+		server.expect(once(), requestTo("http://host/pgr/services/AOS?tenantId=ap.public")).andExpect(method(HttpMethod.GET))
 				.andRespond(withSuccess(new Resources().getFileContents("successComplaintTypeResponse.json"),
 						MediaType.APPLICATION_JSON_UTF8));
 
-		final ComplaintType complaintType = complaintTypeRepository.fetchComplaintTypeByCode("AOS");
+		final ComplaintType complaintType = complaintTypeRepository.fetchComplaintTypeByCode("AOS","ap.public");
 
 		server.verify();
 		assertEquals("10", complaintType.getSlaHours().toString());

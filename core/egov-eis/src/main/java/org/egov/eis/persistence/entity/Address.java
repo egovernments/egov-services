@@ -115,6 +115,9 @@ public abstract class Address extends AbstractPersistable<Long> {
 	@Enumerated(EnumType.STRING)
 	@Column(name = "type")
 	private AddressType type;
+	
+	@Column(name = "tenantId")
+	private String tenantId;
 
 	@Override
 	public Long getId() {
@@ -230,6 +233,14 @@ public abstract class Address extends AbstractPersistable<Long> {
 		this.user = user;
 	}
 
+	public String getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -289,6 +300,8 @@ public abstract class Address extends AbstractPersistable<Long> {
 			builder.append(StringUtils.trim(country)).append(", ");
 		if (StringUtils.isNotBlank(pinCode))
 			builder.append("PIN : ").append(pinCode);
+		if (StringUtils.isNotBlank(tenantId))
+			builder.append("tenantId : ").append(tenantId);
 		return builder.toString();
 	}
 }

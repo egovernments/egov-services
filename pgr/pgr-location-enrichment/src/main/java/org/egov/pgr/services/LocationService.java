@@ -26,10 +26,11 @@ public class LocationService {
         if (sevaRequest.isLocationCoordinatesPresent()) {
             BoundaryResponse response = boundaryRepository
                     .findBoundary(sevaRequest.getLatitude(), sevaRequest.getLongitude(),sevaRequest.gettenantId());
+
             sevaRequest.update(response);
         } else if (sevaRequest.isCrossHierarchyIdPresent()) {
             CrossHierarchyResponse response = crossHierarchyRepository
-                    .getCrossHierarchy(sevaRequest.getCrossHierarchyId());
+                    .getCrossHierarchy(sevaRequest.getCrossHierarchyId(),sevaRequest.gettenantId());
             sevaRequest.update(response);
         }
         return sevaRequest;

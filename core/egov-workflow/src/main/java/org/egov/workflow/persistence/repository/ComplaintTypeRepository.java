@@ -20,8 +20,8 @@ public class ComplaintTypeRepository {
 
     }
 
-    public ComplaintTypeResponse fetchComplaintTypeByCode(final String code) {
-        ComplaintTypeServiceResponse complaintTypeResponse = restTemplate.getForObject(url, ComplaintTypeServiceResponse.class, code, "ap.public");
+    public ComplaintTypeResponse fetchComplaintTypeByCode(final String code, final String tenantId) {
+        ComplaintTypeServiceResponse complaintTypeResponse = restTemplate.getForObject(url, ComplaintTypeServiceResponse.class, code, tenantId);
         return complaintTypeResponse.getComplaintType();
     }
 

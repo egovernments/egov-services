@@ -14,6 +14,7 @@ public class AuthenticatedUser {
     private Long id;
     private boolean anonymousUser;
     private UserType type;
+    private String tenantId;
 
     public static AuthenticatedUser createAnonymousUser() {
         return AuthenticatedUser.builder()

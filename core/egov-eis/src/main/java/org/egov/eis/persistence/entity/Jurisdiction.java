@@ -41,6 +41,7 @@ package org.egov.eis.persistence.entity;
 
 import static org.egov.eis.persistence.entity.Jurisdiction.SEQ_JURISDICTION;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -71,6 +72,17 @@ public class Jurisdiction extends AbstractAuditable {
 
 	@JoinColumn(name = "boundary")
 	private Long boundary;
+	
+	@Column(name = "tenantid")
+    private String tenantId;
+
+	public String getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
+	}
 
 	public Employee getEmployee() {
 		return employee;

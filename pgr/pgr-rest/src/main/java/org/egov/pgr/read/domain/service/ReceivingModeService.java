@@ -54,6 +54,6 @@ public class ReceivingModeService {
     private ReceivingModeRepository receivingModeRepository;
 
     public List<ReceivingMode> getAllReceivingModes(String tenantId) {
-        return receivingModeRepository.findAll();
+        return receivingModeRepository.findAllByTenantId(tenantId);
     }
 }

@@ -26,10 +26,14 @@ public class Designation {
 	@JsonProperty("description")
 	private String description = null;
 
+	@JsonProperty("tenantId")
+	private String tenantId = null;
+
 	public Designation(org.egov.eis.persistence.entity.Designation designationEntity) {
 		this.id = designationEntity.getId();
 		this.name = designationEntity.getName();
 		this.code = designationEntity.getCode();
 		this.description = designationEntity.getDescription();
+		this.tenantId = designationEntity.getTenantId();
 	}
 }

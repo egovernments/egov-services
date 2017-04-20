@@ -10,5 +10,7 @@ import org.egov.common.contract.request.RequestInfo;
 public class EscalationHoursRequest {
     @JsonProperty("RequestInfo")
     private RequestInfo requestInfo;
+    @JsonProperty("tenantId")
+    private String tenantId;
 }
 

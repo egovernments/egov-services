@@ -38,8 +38,8 @@ public class StorageServiceTest {
     private IdGeneratorService idGeneratorService;
 
     private final String MODULE = "pgr";
-    private final String JURISDICTION_ID = "mumbai";
     private final String TAG = "tag";
+    private final String TENANTID = "tenantId";
     private final String FILE_STORE_ID_1 = "FileStoreID1";
     private final String FILE_STORE_ID_2 = "FileStoreID2";
     private StorageService storageService;
@@ -56,7 +56,7 @@ public class StorageServiceTest {
 
         when(idGeneratorService.getId()).thenReturn(FILE_STORE_ID_1, FILE_STORE_ID_2);
 
-        storageService.save(listOfMultipartFiles, JURISDICTION_ID, MODULE, TAG);
+        storageService.save(listOfMultipartFiles, MODULE, TAG,TENANTID);
 
         verify(artifactRepository).save(argThat(new ArtifactMatcher(listOfArtifacts)));
     }
@@ -64,9 +64,9 @@ public class StorageServiceTest {
     @Test
     public void shouldRetrieveArtifact() throws Exception {
         Resource expectedResource = mock(Resource.class);
-        when(artifactRepository.find("fileStoreId")).thenReturn(expectedResource);
+        when(artifactRepository.find("fileStoreId",TENANTID)).thenReturn(expectedResource);
 
-        Resource actualResource = storageService.retrieve("fileStoreId");
+        Resource actualResource = storageService.retrieve("fileStoreId",TENANTID);
 
         assertEquals(expectedResource, actualResource);
     }
@@ -74,16 +74,16 @@ public class StorageServiceTest {
     @Test
     public void shouldRetrieveListOfUrlsGivenATag() throws Exception {
         List<FileInfo> listOfFileInfo = getListOfFileInfo();
-        when(artifactRepository.findByTag(TAG)).thenReturn(listOfFileInfo);
+        when(artifactRepository.findByTag(TAG,TENANTID)).thenReturn(listOfFileInfo);
 
-        List<FileInfo> actual = storageService.retrieveByTag(TAG);
+        List<FileInfo> actual = storageService.retrieveByTag(TAG,TENANTID);
 
         assertEquals(listOfFileInfo, actual);
     }
 
 	@Test(expected = EmptyFileUploadRequestException.class)
 	public void test_should_throw_exception_when_list_of_files_to_save_is_empty() {
-    	storageService.save(Collections.emptyList(), JURISDICTION_ID, MODULE, TAG);
+    	storageService.save(Collections.emptyList(), MODULE, TAG, TENANTID);
 	}
 
     private List<MultipartFile> getMockFileList() {
@@ -97,29 +97,29 @@ public class StorageServiceTest {
 
     private List<Artifact> getArtifactList(List<MultipartFile> multipartFiles) {
         Artifact artifact1 = new Artifact(multipartFiles.get(0),
-                new FileLocation(FILE_STORE_ID_1, MODULE, JURISDICTION_ID, TAG));
+                new FileLocation(FILE_STORE_ID_1, MODULE, TAG,TENANTID));
         Artifact artifact2 = new Artifact(multipartFiles.get(1),
-                new FileLocation(FILE_STORE_ID_2, MODULE, JURISDICTION_ID, TAG));
+                new FileLocation(FILE_STORE_ID_2, MODULE, TAG,TENANTID));
 
         return Arrays.asList(artifact1, artifact2);
     }
 
     private List<Artifact> getArtifactList2(List<MultipartFile> multipartFiles) {
         Artifact artifact1 = new Artifact(multipartFiles.get(0),
-                new FileLocation(FILE_STORE_ID_1, MODULE, JURISDICTION_ID, TAG));
+                new FileLocation(FILE_STORE_ID_1, MODULE, TAG,TENANTID));
         Artifact artifact2 = new Artifact(multipartFiles.get(1),
-                new FileLocation("", MODULE, JURISDICTION_ID, TAG));
+                new FileLocation("", MODULE, TAG,TENANTID));
 
         return Arrays.asList(artifact1, artifact2);
     }
 
     private List<FileInfo> getListOfFileInfo() {
-        FileLocation fileLocation1 = new FileLocation(FILE_STORE_ID_1, MODULE, JURISDICTION_ID, TAG);
-        FileLocation fileLocation2 = new FileLocation(FILE_STORE_ID_2, MODULE, JURISDICTION_ID, TAG);
+        FileLocation fileLocation1 = new FileLocation(FILE_STORE_ID_1, MODULE, TAG,TENANTID);
+        FileLocation fileLocation2 = new FileLocation(FILE_STORE_ID_2, MODULE, TAG,TENANTID);
 
         return asList(
-                new FileInfo("contentType", fileLocation1),
-                new FileInfo("contentType", fileLocation2)
+                new FileInfo("contentType", fileLocation1,TENANTID),
+                new FileInfo("contentType", fileLocation2,TENANTID)
         );
     }
 

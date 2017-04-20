@@ -28,6 +28,7 @@ public class ComplaintSearchCriteria {
 	private Long receivingMode;
 	private Long locationId;
 	private Long childLocationId;
+	private String tenantId;
 
 
 }

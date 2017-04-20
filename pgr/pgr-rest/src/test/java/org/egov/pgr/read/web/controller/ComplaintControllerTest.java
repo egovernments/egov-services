@@ -67,7 +67,7 @@ public class ComplaintControllerTest {
 
     public Complaint getComplaintWithNoTenantId() {
         final ComplaintLocation complaintLocation = ComplaintLocation.builder()
-            .coordinates(new Coordinates(11.22d, 12.22d)).build();
+            .coordinates(new Coordinates(11.22d, 12.22d, null)).build();
         final Complainant complainant = Complainant.builder()
             .userId("userId")
             .firstName("first name")
@@ -79,7 +79,7 @@ public class ComplaintControllerTest {
             .complaintLocation(complaintLocation)
             .tenantId(null)
             .description("description")
-            .complaintType(new ComplaintType(null, "complaintCode"))
+            .complaintType(new ComplaintType(null, "complaintCode", null))
             .build();
     }
 
@@ -109,7 +109,6 @@ public class ComplaintControllerTest {
         String name = "kumar";
         long id = 67;
         boolean anonymousUser = false;
-
         AuthenticatedUser user = AuthenticatedUser.builder()
             .mobileNumber(mobileNumber)
             .email(emailId)
@@ -117,13 +116,14 @@ public class ComplaintControllerTest {
             .id(id)
             .anonymousUser(anonymousUser)
             .type(UserType.CITIZEN)
+            .tenantId("tenantId")
             .build();
-        final Complainant domainComplainant = new Complainant("kumar", null, null, "mico layout", "user");
-        final ComplaintLocation complaintLocation = new ComplaintLocation(new Coordinates(0.0, 0.0), null, "34");
+        final Complainant domainComplainant = new Complainant("kumar", null, null, "mico layout", "user", "tenantId");
+        final ComplaintLocation complaintLocation = new ComplaintLocation(new Coordinates(0.0, 0.0, "tenantId"), null, "34", "tenantId");
         Complaint complaint = Complaint.builder()
             .authenticatedUser(user)
             .crn(crn)
-            .complaintType(new ComplaintType("abc", "complaintCode"))
+            .complaintType(new ComplaintType("abc", "complaintCode", "tenantId"))
             .address(address)
             .mediaUrls(mediaUrls)
             .complaintLocation(complaintLocation)
@@ -137,6 +137,7 @@ public class ComplaintControllerTest {
             .complaintStatus("FORWARDED")
             .childLocation("Gadu Veedhi")
             .department("3")
+            .tenantId("tenantId")
             .build();
         ComplaintSearchCriteria criteria = ComplaintSearchCriteria.builder()
             .assignmentId(10L)
@@ -153,6 +154,7 @@ public class ComplaintControllerTest {
             .locationId(4L)
             .childLocationId(5L)
             .receivingMode(5L)
+            .tenantId("tenantId")
             .build();
 
         List<Complaint> complaints = new ArrayList<>(Collections.singletonList(complaint));
@@ -165,7 +167,7 @@ public class ComplaintControllerTest {
         mockMvc.perform(
             get("/seva?jurisdiction_id=1&service_request_id=serid_123&service_code=serviceCode_123&status" +
                 "=REGISTERED,FORWARDED&assignment_id=10&user_id=10&name=kumar&email_id=abc@gmail" +
-                ".com&mobile_number=74742487428&receiving_mode=5&location_id=4&child_location_id=5")
+                ".com&mobile_number=74742487428&receiving_mode=5&location_id=4&child_location_id=5&tenantId=tenantId")
                 .accept(MediaType.parseMediaType("application/json;charset=UTF-8")).header("api_id", "api_id")
                 .header("ver", "ver").header("ts", "ts").header("action", "action").header("did", "did")
                 .header("msg_id", "msg_id").header("requester_id", "requester_id")
@@ -200,9 +202,10 @@ public class ComplaintControllerTest {
         mockMvc.perform(
             post("/seva/updateLastAccessedTime")
                 .param("serviceRequestId", "crn")
+                .param("tenantId", "tenantId")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(resources.getFileContents("updateLastAccessTimeRequest.json"))
         ).andExpect(status().isOk());
-        verify(complaintService).updateLastAccessedTime("crn");
+        verify(complaintService).updateLastAccessedTime("crn","tenantId");
     }
 }

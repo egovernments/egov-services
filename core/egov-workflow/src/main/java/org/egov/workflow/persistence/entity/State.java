@@ -99,6 +99,17 @@ public class State extends AbstractAuditable {
     private StateStatus status;
     @Column(name = "INITIATOR_POS")
     private Long initiatorPosition;
+    
+    @Column(name = "tenantid")
+    private String tenantId;
+
+	public String getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
+	}
 
     @Column(name = "PREVIOUS_OWNER")
     private Long previousOwner;

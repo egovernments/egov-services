@@ -164,6 +164,9 @@ public class User extends AbstractAuditable {
 	@Enumerated(EnumType.STRING)
 	@Column(name = "type")
 	private UserType type;
+	
+	@Column(name = "tenantId")
+	private String tenantId;
 
 	private byte[] signature;
 
@@ -372,5 +375,13 @@ public class User extends AbstractAuditable {
 
 	public void updateNextPwdExpiryDate(Integer passwordExpireInDays) {
 		this.setPwdExpiryDate(new DateTime().plusDays(passwordExpireInDays).toDate());
+	}
+
+	public String getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
 	}
 }

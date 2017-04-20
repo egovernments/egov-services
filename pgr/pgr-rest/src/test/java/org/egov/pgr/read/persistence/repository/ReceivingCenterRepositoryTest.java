@@ -34,7 +34,7 @@ public class ReceivingCenterRepositoryTest {
 	@Test
 	@Sql(scripts = { "/sql/clearReceivingCenter.sql", "/sql/InsertReceivingCenterData.sql" })
 	public void shouldFetchReceivingCenterById() {
-		final ReceivingCenter actualResult = receivingCenterRepository.findById(1L);
+		final ReceivingCenter actualResult = receivingCenterRepository.findByIdAndTenantId(1L, "ap.public");
 		assertEquals(Long.valueOf(1), actualResult.getId());
 		assertEquals("Complaint Cell", actualResult.getName());
 	}

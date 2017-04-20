@@ -17,6 +17,9 @@ public class Language {
 	@JsonProperty("active")
 	private Boolean active = true;
 
+	@JsonProperty("tenantId")
+	private String tenantId = null;
+
 	public Language id(Long id) {
 		this.id = id;
 		return this;
@@ -69,6 +72,14 @@ public class Language {
 		this.active = active;
 	}
 
+	public String getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
+	}
+
 	@Override
 	public boolean equals(java.lang.Object o) {
 		if (this == o) {
@@ -80,12 +91,12 @@ public class Language {
 		Language language = (Language) o;
 		return Objects.equals(this.id, language.id) && Objects.equals(this.name, language.name)
 				&& Objects.equals(this.description, language.description)
-				&& Objects.equals(this.active, language.active);
+				&& Objects.equals(this.tenantId, language.tenantId) && Objects.equals(this.active, language.active);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, name, description, active);
+		return Objects.hash(id, name, description, active, tenantId);
 	}
 
 	@Override
@@ -96,6 +107,7 @@ public class Language {
 		sb.append("    id: ").append(toIndentedString(id)).append("\n");
 		sb.append("    name: ").append(toIndentedString(name)).append("\n");
 		sb.append("    description: ").append(toIndentedString(description)).append("\n");
+		sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
 		sb.append("    active: ").append(toIndentedString(active)).append("\n");
 		sb.append("}");
 		return sb.toString();

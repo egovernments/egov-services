@@ -1,5 +1,6 @@
 package org.egov.eis.web.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.eis.domain.service.DepartmentService;
@@ -21,9 +22,13 @@ public class DepartmentController {
 	}
 
 	@GetMapping(value = "/departments")
-	public DepartmentResponse getDepartments(@RequestParam(value = "code", required = false) String departmentCode,
+	public DepartmentResponse getDepartments(@RequestParam(value = "tenantId", required = true) String tenantId,
+			@RequestParam(value = "code", required = false) String departmentCode,
 			@RequestParam(value = "id", required = false) Long id) {
-		final List<Department> allDepartments = departmentService.find(departmentCode, id);
+		List<Department> allDepartments = new ArrayList<>();
+		if (tenantId != null && !tenantId.isEmpty()) {
+			allDepartments = departmentService.find(departmentCode, id, tenantId);
+		}
 		return new DepartmentResponse(allDepartments);
 	}
 

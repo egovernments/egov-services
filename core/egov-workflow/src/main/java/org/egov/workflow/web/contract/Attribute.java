@@ -29,4 +29,7 @@ public class Attribute {
 
     @JsonProperty("values")
     private List<Value> values;
+    
+    @JsonProperty("tenantId")
+    private String tenantId;
 }

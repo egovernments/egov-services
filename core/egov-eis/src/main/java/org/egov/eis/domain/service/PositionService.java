@@ -67,18 +67,18 @@ public class PositionService {
 		this.positionRepository = positionRepository;
 	}
 
-	public Position getById(final Long Id) {
-		return positionRepository.findOne(Id);
+	public Position getById(final Long Id, final String tenantId) {
+		return positionRepository.findByIdAndTenantId(Id,tenantId);
 	}
 
-	public List<Position> getAllPositionsByEmpCode(final String code, final Date asOnDate) {
-		return positionRepository.getAllPositionsByEmpCode(code, asOnDate);
+	public List<Position> getAllPositionsByEmpCode(final String code, final Date asOnDate, final String tenantId) {
+		return positionRepository.getAllPositionsByEmpCode(code, asOnDate,tenantId);
 	}
 
 	public List<Position> getPositions(PositionRequest positionRequest) {
 		List<Position> positions = new ArrayList<Position>();
 		if (positionRequest.getPosition().getId() != null) {
-			positions.add(getById(positionRequest.getPosition().getId()));
+			positions.add(getById(positionRequest.getPosition().getId(),positionRequest.getPosition().getTenantId()));
 		}
 
 		return positions;

@@ -26,9 +26,9 @@ public class PositionRepository {
 
     }
 
-    public PositionResponse getById(final Long id) {
+    public PositionResponse getById(final Long id, final String tenantId) {
         final PositionServiceResponse positionServiceResponse = restTemplate.getForObject(positionsByIdUrl,
-                PositionServiceResponse.class, id);
+                PositionServiceResponse.class, id, tenantId);
         return positionServiceResponse.getPositions().get(0);
     }
 

@@ -2,7 +2,8 @@
   "Boundary": [
     {
       "id": 1,
-      "name": "Kurnool"
+      "name": "Kurnool",
+      "tenantId":"ap.public"
     }
   ]
 }

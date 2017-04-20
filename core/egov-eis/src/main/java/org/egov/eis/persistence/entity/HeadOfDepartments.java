@@ -41,6 +41,7 @@ package org.egov.eis.persistence.entity;
 
 import static org.egov.eis.persistence.entity.HeadOfDepartments.SEQ_HOD;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -68,6 +69,17 @@ public class HeadOfDepartments extends AbstractAuditable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "assignment")
 	private Assignment assignment;
+	
+	@Column(name = "tenantid")
+    private String tenantId;
+
+	public String getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
+	}
 
 	public Assignment getAssignment() {
 		return assignment;

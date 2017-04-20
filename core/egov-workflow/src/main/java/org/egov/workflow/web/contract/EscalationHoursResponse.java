@@ -11,4 +11,5 @@ public class EscalationHoursResponse {
     @JsonProperty("ResponseInfo")
     private ResponseInfo responseInfo;
     private int hours;
+    private String tenantId;
 }

@@ -2,7 +2,7 @@
   "errors": [
     {
       "code": "NotEmpty",
-      "field": "requestInfo.tenantId",
+      "field": "messages[1].tenantId",
       "message": "may not be empty"
     },
     {

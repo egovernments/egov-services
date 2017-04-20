@@ -53,5 +53,8 @@ public class Assignment {
 
     @JsonProperty("department")
     private Department department;
+    
+    @JsonProperty("tenantId")
+    private Department tenantId;
 
 }

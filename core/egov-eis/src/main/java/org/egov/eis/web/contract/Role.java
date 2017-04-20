@@ -14,6 +14,9 @@ public class Role {
 	@JsonProperty("description")
 	private String description = null;
 
+	@JsonProperty("tenantId")
+	private String tenantId = null;
+
 	public Role id(Long id) {
 		this.id = id;
 		return this;
@@ -53,6 +56,14 @@ public class Role {
 		this.description = description;
 	}
 
+	public String getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
+	}
+
 	@Override
 	public boolean equals(java.lang.Object o) {
 		if (this == o) {
@@ -63,12 +74,12 @@ public class Role {
 		}
 		Role role = (Role) o;
 		return Objects.equals(this.id, role.id) && Objects.equals(this.name, role.name)
-				&& Objects.equals(this.description, role.description);
+				&& Objects.equals(this.tenantId, role.tenantId) && Objects.equals(this.description, role.description);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, name, description);
+		return Objects.hash(id, name, description, tenantId);
 	}
 
 	@Override
@@ -79,6 +90,7 @@ public class Role {
 		sb.append("    id: ").append(toIndentedString(id)).append("\n");
 		sb.append("    name: ").append(toIndentedString(name)).append("\n");
 		sb.append("    description: ").append(toIndentedString(description)).append("\n");
+		sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
 		sb.append("}");
 		return sb.toString();
 	}

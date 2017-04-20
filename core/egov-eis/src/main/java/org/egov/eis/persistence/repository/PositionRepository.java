@@ -51,7 +51,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PositionRepository extends JpaRepository<Position, Long> {
 
-	@Query("select A.position from Assignment A where A.fromDate<=:asOnDate and A.toDate>=:asOnDate and A.employee.code =:code order by A.fromDate")
-	List<Position> getAllPositionsByEmpCode(@Param("code") String code, @Param("asOnDate") Date asOnDate);
-
+	@Query("select A.position from Assignment A where A.fromDate<=:asOnDate and A.toDate>=:asOnDate and A.employee.code =:code and A.tenantId =:tenantId order by A.fromDate")
+	List<Position> getAllPositionsByEmpCode(@Param("code") String code, @Param("asOnDate") Date asOnDate, @Param("tenantId") String tenantId);
+	
+	Position findByIdAndTenantId(Long id, String tenantId);
 }

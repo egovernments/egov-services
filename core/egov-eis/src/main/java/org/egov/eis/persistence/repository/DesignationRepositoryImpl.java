@@ -55,11 +55,11 @@ public class DesignationRepositoryImpl implements DesignationCustomRepository {
     private AssignmentRepository assignmentRepository;
 
     @Override
-    public List<Designation> getAllDesignationsByDepartment(final Long id, final Date givenDate) {
+    public List<Designation> getAllDesignationsByDepartment(final Long id, final Date givenDate, final String tenantId) {
 
         final Set<Designation> designations = new HashSet<Designation>();
         final Date userGivenDate = null == givenDate ? new Date() : givenDate;
-        final List<Assignment> assignments = assignmentRepository.findAllByDepartmentAndDate(id, userGivenDate);
+        final List<Assignment> assignments = assignmentRepository.findAllByDepartmentAndDate(id, userGivenDate, tenantId);
         for (final Assignment assign : assignments)
             designations.add(assign.getDesignation());
 

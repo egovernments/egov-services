@@ -9,7 +9,7 @@ public class ComplaintStatusTest {
 
     @Test
     public void test_should_map_from_entity_to_domain() {
-        ComplaintStatus complaintStatus = new ComplaintStatus(1L, "name");
+        ComplaintStatus complaintStatus = new ComplaintStatus(1L, "name", "tenantId");
 
         org.egov.pgr.read.domain.model.ComplaintStatus complaintStatusModel = complaintStatus.toDomain();
         

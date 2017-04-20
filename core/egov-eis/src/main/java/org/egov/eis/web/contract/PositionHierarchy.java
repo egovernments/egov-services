@@ -60,6 +60,9 @@ public class PositionHierarchy {
 
 	@JsonProperty("objectSubType")
 	private String objectSubType;
+	
+	@JsonProperty("tenantId")
+	private String tenantId = null;
 
 	public Position getFromPosition() {
 		return fromPosition;
@@ -99,6 +102,14 @@ public class PositionHierarchy {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
 	}
 
 }

@@ -58,5 +58,6 @@ public class Department {
     @JsonProperty("code")
     private String code;
 
-
+    @JsonProperty("tenantId")
+    private String tenantId;
 }

@@ -86,6 +86,17 @@ public class PositionHierarchy extends AbstractAuditable {
 
 	@Column(name = "object_sub_type")
 	private String objectSubType;
+	
+	@Column(name = "tenantid")
+    private String tenantId;
+
+	public String getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
+	}
 
 	public Position getFromPosition() {
 		return fromPosition;

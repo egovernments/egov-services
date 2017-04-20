@@ -7,5 +7,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public class File {
     private String fileStoreId;
+    private String tenantId;
 }
 

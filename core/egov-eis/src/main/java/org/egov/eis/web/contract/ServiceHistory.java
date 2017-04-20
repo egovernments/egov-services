@@ -19,6 +19,9 @@ public class ServiceHistory {
 	@JsonProperty("remarks")
 	private String remarks = null;
 
+	@JsonProperty("tenantId")
+	private String tenantId = null;
+
 	public ServiceHistory id(Long id) {
 		this.id = id;
 		return this;
@@ -71,6 +74,14 @@ public class ServiceHistory {
 		this.remarks = remarks;
 	}
 
+	public String getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
+	}
+
 	@Override
 	public boolean equals(java.lang.Object o) {
 		if (this == o) {
@@ -83,12 +94,13 @@ public class ServiceHistory {
 		return Objects.equals(this.id, serviceHistory.id)
 				&& Objects.equals(this.serviceInfo, serviceHistory.serviceInfo)
 				&& Objects.equals(this.serviceFrom, serviceHistory.serviceFrom)
+				&& Objects.equals(this.tenantId, serviceHistory.tenantId)
 				&& Objects.equals(this.remarks, serviceHistory.remarks);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, serviceInfo, serviceFrom, remarks);
+		return Objects.hash(id, serviceInfo, serviceFrom, remarks, tenantId);
 	}
 
 	@Override
@@ -100,6 +112,7 @@ public class ServiceHistory {
 		sb.append("    serviceInfo: ").append(toIndentedString(serviceInfo)).append("\n");
 		sb.append("    serviceFrom: ").append(toIndentedString(serviceFrom)).append("\n");
 		sb.append("    remarks: ").append(toIndentedString(remarks)).append("\n");
+		sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
 		sb.append("}");
 		return sb.toString();
 	}

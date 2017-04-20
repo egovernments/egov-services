@@ -18,13 +18,13 @@ public class ComplaintTypeRepository {
         this.complaintTypeServiceHostname = complaintTypeServiceHostname;
     }
 
-    public ComplaintType fetchComplaintTypeByCode(String code) {
-        String url = this.complaintTypeServiceHostname + "pgr/services/{serviceCode}?tenantId={tenatId}";
-        return getComplaintTypeServiceResponse(url, code).getComplaintType();
+    public ComplaintType fetchComplaintTypeByCode(String code, String tenantId) {
+        String url = this.complaintTypeServiceHostname + "pgr/services/{serviceCode}?tenantId={tenantId}";
+        return getComplaintTypeServiceResponse(url, code, tenantId).getComplaintType();
     }
 
-    private ComplaintTypeResponse getComplaintTypeServiceResponse(final String url, String code) {
-        return restTemplate.getForObject(url, ComplaintTypeResponse.class, code, "");
+    private ComplaintTypeResponse getComplaintTypeServiceResponse(final String url, String code, String tenantId) {
+        return restTemplate.getForObject(url, ComplaintTypeResponse.class, code, tenantId);
     }
 
 }

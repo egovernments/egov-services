@@ -84,5 +84,8 @@ public class GradeMaster implements GenericMaster {
 
 	@Column(name = "ORDER_NO")
 	public Integer orderNo;
+	
+	@Column(name = "tenantid")
+    private String tenantId;
 
 }

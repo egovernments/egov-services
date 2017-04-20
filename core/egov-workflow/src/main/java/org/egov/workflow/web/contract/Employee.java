@@ -27,4 +27,6 @@ public class Employee {
 	@JsonProperty("assignments")
 	private final List<Assignment> assignments = new ArrayList<Assignment>(0);
 
+	@JsonProperty("tenantId")
+	private String tenantId;
 }

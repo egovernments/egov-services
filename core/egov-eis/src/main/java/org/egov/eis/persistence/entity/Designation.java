@@ -44,6 +44,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -101,6 +102,9 @@ public class Designation extends AbstractAuditable {
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "egeis_desig_rolemapping", joinColumns = @JoinColumn(name = "designationid"), inverseJoinColumns = @JoinColumn(name = "roleid"))
 	private Set<Role> roles = new HashSet<>();
+	
+	@Column(name = "tenantid")
+    private String tenantId;
 
 	@Override
 	public Long getId() {

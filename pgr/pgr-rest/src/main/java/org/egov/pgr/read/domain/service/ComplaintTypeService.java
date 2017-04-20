@@ -11,15 +11,15 @@ import java.util.List;
 @Service
 public class ComplaintTypeService {
 
-	private final ComplaintTypeRepository complaintTypeRepository;
+    private final ComplaintTypeRepository complaintTypeRepository;
 
-	@Autowired
-	public ComplaintTypeService(final ComplaintTypeRepository complaintTypeRepository) {
-		this.complaintTypeRepository = complaintTypeRepository;
-	}
+    @Autowired
+    public ComplaintTypeService(final ComplaintTypeRepository complaintTypeRepository) {
+        this.complaintTypeRepository = complaintTypeRepository;
+    }
 
-	public ComplaintType getComplaintType(String complaintTypeCode) {
-        return complaintTypeRepository.getComplaintType(complaintTypeCode);
+    public ComplaintType getComplaintType(String complaintTypeCode, String tenantId) {
+        return complaintTypeRepository.getComplaintType(complaintTypeCode, tenantId);
     }
 
     public List<ComplaintType> findByCriteria(ComplaintTypeSearchCriteria searchCriteria) {
@@ -29,12 +29,13 @@ public class ComplaintTypeService {
 
     private List<ComplaintType> findComplaintTypesByCriteria(ComplaintTypeSearchCriteria searchCriteria) {
         if (searchCriteria.isCategorySearch()) {
-            return complaintTypeRepository.findActiveComplaintTypesByCategory(searchCriteria.getCategoryId());
+            return complaintTypeRepository.findActiveComplaintTypesByCategoryAndTenantId(searchCriteria.getCategoryId(),
+                    searchCriteria.getTenantId());
         } else if (searchCriteria.isFrequencySearch()) {
-            return complaintTypeRepository.getFrequentlyFiledComplaints(searchCriteria.getCount());
-        }
-        else if(searchCriteria.isReturnAll()){
-        	return complaintTypeRepository.getAllComplaintTypes();
+            return complaintTypeRepository.getFrequentlyFiledComplaints(searchCriteria.getCount(),
+                    searchCriteria.getTenantId());
+        } else if (searchCriteria.isReturnAll()) {
+            return complaintTypeRepository.getAllComplaintTypes();
         }
         return null;
     }

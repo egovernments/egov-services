@@ -44,24 +44,24 @@ public class ComplaintRouterServiceTest {
                 complaintTypeRepository, employeeRepository, positionHierarchyRepository);
         final ComplaintTypeResponse complaintType = getComplaintType();
         final ComplaintRouter router = getComplaintRouter();
-        when(complaintTypeRepository.fetchComplaintTypeByCode("C001")).thenReturn(complaintType);
+        when(complaintTypeRepository.fetchComplaintTypeByCode("C001","tenantId")).thenReturn(complaintType);
         when(complaintRouterRepository.findByComplaintTypeAndBoundary(complaintType.getId(), 1L)).thenReturn(router);
         when(complaintRouterRepository.findByOnlyComplaintType(1L)).thenReturn(router);
         when(complaintRouterRepository.findCityAdminGrievanceOfficer("ADMINISTRATION")).thenReturn(router);
         when(positionHierarchyRepository.getByObjectTypeObjectSubTypeAndFromPosition("Complaint", "C001", 2L))
                 .thenReturn(getPositionHierarchies());
         when(positionRepository.getByEmployeeCode("101010")).thenReturn(getPositions());
-        when(positionRepository.getById(10L)).thenReturn(getPositions().get(0));
+        when(positionRepository.getById(10L, "tenantId")).thenReturn(getPositions().get(0));
     }
 
     @Test
     public void test_should_return_assignee_for_complaint_from_router() {
-        when(boundaryRepository.fetchBoundaryById(1L)).thenReturn(getBoundary());
+        when(boundaryRepository.fetchBoundaryById(1L,"tenantId")).thenReturn(getBoundary());
         final PositionResponse expectedPosition = new PositionResponse();
         expectedPosition.setId(10L);
         expectedPosition.setName("Grievence_Officer_1");
-        when(positionRepository.getById(10L)).thenReturn(expectedPosition);
-        final PositionResponse actualPosition = complaintRouterService.getAssignee(1L, "C001", null);
+        when(positionRepository.getById(10L, "tenantId")).thenReturn(expectedPosition);
+        final PositionResponse actualPosition = complaintRouterService.getAssignee(1L, "C001", null, "tenantId");
         assertEquals(expectedPosition, actualPosition);
     }
 
@@ -70,8 +70,8 @@ public class ComplaintRouterServiceTest {
         final PositionResponse expectedPosition = new PositionResponse();
         expectedPosition.setId(3L);
         expectedPosition.setName("Grievence_Officer_1");
-        when(positionRepository.getById(3L)).thenReturn(expectedPosition);
-        final PositionResponse actualPosition = complaintRouterService.getAssignee(1L, "C001", 2L);
+        when(positionRepository.getById(3L, "tenantId")).thenReturn(expectedPosition);
+        final PositionResponse actualPosition = complaintRouterService.getAssignee(1L, "C001", 2L, "tenantId");
         assertEquals(expectedPosition, actualPosition);
     }
 
@@ -81,17 +81,17 @@ public class ComplaintRouterServiceTest {
         final PositionResponse expectedPosition = new PositionResponse();
         expectedPosition.setId(10L);
         expectedPosition.setName("Grievence_Officer_1");
-        final PositionResponse actualPosition = complaintRouterService.getAssignee(1L, "C001", 30L);
+        final PositionResponse actualPosition = complaintRouterService.getAssignee(1L, "C001", 30L, "tenantId");
         assertEquals(expectedPosition, actualPosition);
     }
 
     @Test
     public void test_should_return_assignee_only_with_complainttype_from_router() {
-        when(boundaryRepository.fetchBoundaryById(1L)).thenReturn(new BoundaryResponse());
+        when(boundaryRepository.fetchBoundaryById(1L, "tenantId")).thenReturn(new BoundaryResponse());
         final PositionResponse expectedPosition = new PositionResponse();
         expectedPosition.setId(10L);
         expectedPosition.setName("Grievence_Officer_1");
-        final PositionResponse actualPosition = complaintRouterService.getAssignee(10L, "C001", null);
+        final PositionResponse actualPosition = complaintRouterService.getAssignee(10L, "C001", null, "tenantId");
         assertEquals(expectedPosition, actualPosition);
     }
 
@@ -100,7 +100,7 @@ public class ComplaintRouterServiceTest {
         final PositionResponse expectedPosition = new PositionResponse();
         expectedPosition.setId(10L);
         expectedPosition.setName("Grievence_Officer_1");
-        final PositionResponse actualPosition = complaintRouterService.getAssignee(null, "C001", null);
+        final PositionResponse actualPosition = complaintRouterService.getAssignee(null, "C001", null, "tenantId");
         assertEquals(expectedPosition, actualPosition);
     }
 
@@ -110,7 +110,7 @@ public class ComplaintRouterServiceTest {
         final PositionResponse expectedPosition = new PositionResponse();
         expectedPosition.setId(10L);
         expectedPosition.setName("Grievence_Officer_1");
-        final PositionResponse actualPosition = complaintRouterService.getAssignee(null, "C001", null);
+        final PositionResponse actualPosition = complaintRouterService.getAssignee(null, "C001", null, "tenantId");
         assertEquals(expectedPosition, actualPosition);
     }
 
@@ -119,7 +119,7 @@ public class ComplaintRouterServiceTest {
         final BoundaryResponse boundary = new BoundaryResponse();
         boundary.setName("Srinivas Nagar");
         boundary.setId(10L);
-        when(boundaryRepository.fetchBoundaryById(10L)).thenReturn(boundary);
+        when(boundaryRepository.fetchBoundaryById(10L, "tenantId")).thenReturn(boundary);
         final ComplaintRouter complaintRouter = new ComplaintRouter();
         complaintRouter.setBoundary(10L);
         complaintRouter.setPosition(10L);
@@ -129,7 +129,7 @@ public class ComplaintRouterServiceTest {
         final PositionResponse expectedPosition = new PositionResponse();
         expectedPosition.setId(10L);
         expectedPosition.setName("Grievence_Officer_1");
-        final PositionResponse actualPosition = complaintRouterService.getAssignee(10L, "C001", null);
+        final PositionResponse actualPosition = complaintRouterService.getAssignee(10L, "C001", null, "tenantId");
         assertEquals(expectedPosition, actualPosition);
 
     }

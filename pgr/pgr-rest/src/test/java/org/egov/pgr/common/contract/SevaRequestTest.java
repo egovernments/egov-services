@@ -26,20 +26,13 @@ public class SevaRequestTest {
 
     private Complaint getComplaint() {
         final AuthenticatedUser user = getAuthenticatedUser();
-        final Coordinates coordinates = new Coordinates(0d, 0d);
-        final ComplaintLocation complaintLocation = ComplaintLocation.builder()
-                .coordinates(coordinates)
-                .crossHierarchyId("id")
-                .build();
+        final Coordinates coordinates = new Coordinates(0d, 0d, TENANT_ID);
+        final ComplaintLocation complaintLocation = ComplaintLocation.builder().coordinates(coordinates)
+                .crossHierarchyId("id").build();
 
-        return Complaint.builder()
-                .tenantId(TENANT_ID)
-                .authenticatedUser(user)
-                .complainant(Complainant.builder().build())
-                .crn(CRN)
-                .complaintLocation(complaintLocation)
-                .complaintType(new ComplaintType(null, null))
-                .build();
+        return Complaint.builder().tenantId(TENANT_ID).authenticatedUser(user)
+                .complainant(Complainant.builder().build()).crn(CRN).complaintLocation(complaintLocation)
+                .complaintType(new ComplaintType(null, null, TENANT_ID)).build();
     }
 
     private AuthenticatedUser getAuthenticatedUser() {

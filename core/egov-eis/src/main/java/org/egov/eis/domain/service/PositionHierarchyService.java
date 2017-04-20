@@ -82,15 +82,15 @@ public class PositionHierarchyService {
 	}
 
 	public PositionHierarchy getPosHirByPosAndObjectTypeAndObjectSubType(final Long posId, final String objectType,
-			final String objectSubType) {
+			final String objectSubType,final String tenantId) {
 		return positionHierarchyRepository.getPosHirByPosAndObjectTypeAndObjectSubType(posId, objectType,
-				objectSubType);
+				objectSubType,tenantId);
 	}
 
 	public PositionHierarchy getPosHirByFromAndToPosAndObjectTypeAndObjectSubType(final Long fromPosId,
-			final Long toPosId, final String objectType, final String objectSubType) {
+			final Long toPosId, final String objectType, final String objectSubType, final String tenantId) {
 		return positionHierarchyRepository.getPosHirByFromAndToPosAndObjectTypeAndObjectSubType(fromPosId, toPosId,
-				objectType, objectSubType);
+				objectType, objectSubType,tenantId);
 	}
 
 	public List<PositionHierarchy> getPosHirByToPosAndObjectTypeAndObjectSubType(final Long toPosId,
@@ -100,8 +100,8 @@ public class PositionHierarchyService {
 	}
 
 	public List<PositionHierarchy> getPosHirByObjectTypeAndObjectSubType(final String objectType,
-			final String objectSubType) {
-		return positionHierarchyRepository.getPosHirByObjectTypeAndObjectSubType(objectType, objectSubType);
+			final String objectSubType, final String tenantId) {
+		return positionHierarchyRepository.getPosHirByObjectTypeAndObjectSubType(objectType, objectSubType,tenantId);
 	}
 
 	public void deleteAllInBatch(final List<PositionHierarchy> existingPosHierarchy) {
@@ -115,8 +115,8 @@ public class PositionHierarchyService {
 				objectType);
 	}
 
-	public List<PositionHierarchy> getListOfPositionHeirarchyByObjectType(String objectType) {
-		return positionHierarchyRepository.getListOfPositionHeirarchyByObjectType(objectType);
+	public List<PositionHierarchy> getListOfPositionHeirarchyByObjectType(String objectType,String tenantId) {
+		return positionHierarchyRepository.getListOfPositionHeirarchyByObjectType(objectType,tenantId);
 	}
 
 	public List<PositionHierarchy> getListOfPositionHeirarchyByObjectSubType(final String objectSubType) {
@@ -124,18 +124,18 @@ public class PositionHierarchyService {
 	}
 
 	public List<PositionHierarchy> getListOfPositionHeirarchyByFromPositionAndObjectTypeAndSubType(Long fromPositionId,
-			String objectType, final String objectSubType) {
+			String objectType, final String objectSubType, final String tenantId) {
 
 		if (fromPositionId != 0 && objectType != null && objectSubType != null)
 			return positionHierarchyRepository.getListOfPositionHeirarchyByFromPositionAndObjectTypeAndSubType(
 					fromPositionId, objectType, objectSubType);
 		else if (fromPositionId == 0 && objectType != null && objectSubType != null)
-			return positionHierarchyRepository.getPosHirByObjectTypeAndObjectSubType(objectType, objectSubType);
+			return positionHierarchyRepository.getPosHirByObjectTypeAndObjectSubType(objectType, objectSubType,tenantId);
 		else if (fromPositionId != 0 && objectType != null && objectSubType == null)
 			return positionHierarchyRepository.getListOfPositionHeirarchyByFromPositionAndObjectType(fromPositionId,
 					objectType);
 		else if (fromPositionId == 0 && objectType != null && objectSubType == null)
-			return positionHierarchyRepository.getListOfPositionHeirarchyByObjectType(objectType);
+			return positionHierarchyRepository.getListOfPositionHeirarchyByObjectType(objectType,tenantId);
 		else
 			return Collections.emptyList();
 	}
@@ -161,7 +161,8 @@ public class PositionHierarchyService {
 				positionHierarchys.add(getPosHirByPosAndObjectTypeAndObjectSubType(
 						positionHierarchyRequest.getPositionHierarchy().getFromPosition().getId(),
 						positionHierarchyRequest.getPositionHierarchy().getObjectType().getType(),
-						positionHierarchyRequest.getPositionHierarchy().getObjectSubType()));
+						positionHierarchyRequest.getPositionHierarchy().getObjectSubType(),
+						positionHierarchyRequest.getPositionHierarchy().getTenantId()));
 			}
 		}
 

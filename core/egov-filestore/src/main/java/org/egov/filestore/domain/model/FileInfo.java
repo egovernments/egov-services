@@ -8,4 +8,5 @@ import lombok.Getter;
 public class FileInfo {
     private String contentType;
     private FileLocation fileLocation;
+    private String tenantId;
 }

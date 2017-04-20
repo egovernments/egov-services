@@ -29,9 +29,9 @@ public class DesignationServiceTest {
 
 		Date currentDate = new Date();
 		
-		when(designationRepository.getAllDesignationsByDepartment(1L, currentDate)).thenReturn(getExpectedDesignationDetails());
+		when(designationRepository.getAllDesignationsByDepartment(1L, currentDate, "tenantId")).thenReturn(getExpectedDesignationDetails());
 
-		List<Designation> designationList = designationService.getAllDesignationByDepartment(1L, currentDate);
+		List<Designation> designationList = designationService.getAllDesignationByDepartment(1L, currentDate, "tenantId");
 
 		assertEquals("Accounts Officer", designationList.get(0).getName());
 	}

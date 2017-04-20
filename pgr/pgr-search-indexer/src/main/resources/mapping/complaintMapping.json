@@ -66,9 +66,6 @@
                         "type": "string",
                         "index": "not_analyzed"
                     },
-                    "complaintAgeingFromDue": {
-                        "type": "double"
-                    },
                     "complaintAgeingdaysFromDue": {
                         "type": "long"
                     },
@@ -112,32 +109,7 @@
                         "type": "string",
                         "index": "not_analyzed"
                     },
-                    "currentFunctionaryAgeingFromDue": {
-                        "type": "double"
-                    },
-                    "currentFunctionaryAssigneddate": {
-                        "type": "date",
-                        "format": "date_optional_time"
-                    },
-                    "currentFunctionaryIfSLA": {
-                        "type": "integer"
-                    },
-                    "currentFunctionaryIsSLA": {
-                        "type": "string",
-                        "index": "not_analyzed"
-                    },
-                    "currentFunctionaryMobileNumber": {
-                        "type": "string",
-                        "index": "not_analyzed"
-                    },
-                    "currentFunctionaryName": {
-                        "type": "string",
-                        "index": "not_analyzed"
-                    },
-                    "currentFunctionarySLADays": {
-                        "type": "long"
-                    },
-                    "departmentCode": {
+                   "departmentCode": {
                         "type": "string",
                         "index": "not_analyzed"
                     },
@@ -157,69 +129,6 @@
                         "type": "string",
                         "index": "not_analyzed"
                     },
-                    "escalation1FunctionaryAgeingFromDue": {
-                        "type": "double"
-                    },
-                    "escalation1FunctionaryAssigneddate": {
-                        "type": "date",
-                        "format": "date_optional_time"
-                    },
-                    "escalation1FunctionaryIfSLA": {
-                        "type": "integer"
-                    },
-                    "escalation1FunctionaryIsSLA": {
-                        "type": "string",
-                        "index": "not_analyzed"
-                    },
-                    "escalation1FunctionaryName": {
-                        "type": "string",
-                        "index": "not_analyzed"
-                    },
-                    "escalation1FunctionarySLADays": {
-                        "type": "long"
-                    },
-                    "escalation2FunctionaryAgeingFromDue": {
-                        "type": "double"
-                    },
-                    "escalation2FunctionaryAssigneddate": {
-                        "type": "date",
-                        "format": "date_optional_time"
-                    },
-                    "escalation2FunctionaryIfSLA": {
-                        "type": "integer"
-                    },
-                    "escalation2FunctionaryIsSLA": {
-                        "type": "string",
-                        "index": "not_analyzed"
-                    },
-                    "escalation2FunctionaryName": {
-                        "type": "string",
-                        "index": "not_analyzed"
-                    },
-                    "escalation2FunctionarySLADays": {
-                        "type": "long"
-                    },
-                    "escalation3FunctionaryAgeingFromDue": {
-                        "type": "double"
-                    },
-                    "escalation3FunctionaryAssigneddate": {
-                        "type": "date",
-                        "format": "date_optional_time"
-                    },
-                    "escalation3FunctionaryIfSLA": {
-                        "type": "integer"
-                    },
-                    "escalation3FunctionaryIsSLA": {
-                        "type": "string",
-                        "index": "not_analyzed"
-                    },
-                    "escalation3FunctionaryName": {
-                        "type": "string",
-                        "index": "not_analyzed"
-                    },
-                    "escalation3FunctionarySLADays": {
-                        "type": "long"
-                    },
                     "escalationDate": {
                         "type": "date",
                         "format": "date_optional_time"
@@ -230,46 +139,8 @@
                     "id": {
                         "type": "string"
                     },
-                    "ifClosed": {
-                        "type": "integer"
-                    },
-                    "ifSLA": {
-                        "type": "integer"
-                    },
                     "inProcess": {
                         "type": "integer"
-                    },
-                    "initialFunctionaryAgeingFromDue": {
-                        "type": "double"
-                    },
-                    "initialFunctionaryAssigneddate": {
-                        "type": "date",
-                        "format": "date_optional_time"
-                    },
-                    "initialFunctionaryIfSLA": {
-                        "type": "integer"
-                    },
-                    "initialFunctionaryIsSLA": {
-                        "type": "string",
-                        "index": "not_analyzed"
-                    },
-                    "initialFunctionaryMobile": {
-                        "type": "string",
-                        "index": "not_analyzed"
-                    },
-                    "initialFunctionaryMobileNumber": {
-                        "type": "string",
-                        "index": "not_analyzed"
-                    },
-                    "initialFunctionaryName": {
-                        "type": "string",
-                        "index": "not_analyzed"
-                    },
-                    "initialFunctionarySLADas": {
-                        "type": "long"
-                    },
-                    "initialFunctionarySLADays": {
-                        "type": "long"
                     },
                     "isSLA": {
                         "type": "string",

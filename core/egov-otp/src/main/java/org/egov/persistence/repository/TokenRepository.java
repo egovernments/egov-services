@@ -39,7 +39,7 @@ public class TokenRepository {
     public Tokens find(ValidateRequest request) {
         final List<org.egov.persistence.entity.Token> entityTokens =
                 tokenJpaRepository
-                        .findByNumberAndIdentityAndTenant(request.getOtp(), request.getIdentity(), request.getTenantId());
+                        .findByNumberAndIdentityAndTenantId(request.getOtp(), request.getIdentity(), request.getTenantId());
         final List<Token> domainTokens = entityTokens.stream()
                 .map(org.egov.persistence.entity.Token::toDomain)
                 .collect(Collectors.toList());

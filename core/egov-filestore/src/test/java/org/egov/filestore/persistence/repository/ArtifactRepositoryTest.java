@@ -37,6 +37,7 @@ public class ArtifactRepositoryTest {
     private final String JURISDICTION_ID = "jurisdictionId";
     private final String MODULE = "module";
     private final String TAG = "tag";
+    private final String TENANTID = "tenantId";
     private final String FILE_STORE_ID_1 = "fileStoreId1";
     private final String FILE_STORE_ID_2 = "fileStoreId2";
 
@@ -67,7 +68,6 @@ public class ArtifactRepositoryTest {
 
         assertEquals("filename1.extension", listArgumentCaptor.getValue().get(0).getFileName());
         assertEquals("image/png", listArgumentCaptor.getValue().get(0).getContentType());
-        assertEquals(JURISDICTION_ID, listArgumentCaptor.getValue().get(0).getJurisdictionId());
         assertEquals(MODULE, listArgumentCaptor.getValue().get(0).getModule());
         assertEquals(TAG, listArgumentCaptor.getValue().get(0).getTag());
         assertEquals("filename2.extension", listArgumentCaptor.getValue().get(1).getFileName());
@@ -82,9 +82,9 @@ public class ArtifactRepositoryTest {
         artifact.setFileStoreId("fileStoreId");
         artifact.setContentType("contentType");
         artifact.setFileName("fileName");
-        when(fileStoreJpaRepository.findByFileStoreId("fileStoreId")).thenReturn(artifact);
+        when(fileStoreJpaRepository.findByFileStoreIdAndTenantId("fileStoreId",TENANTID)).thenReturn(artifact);
 
-        Resource actualResource = artifactRepository.find("fileStoreId");
+        Resource actualResource = artifactRepository.find("fileStoreId",TENANTID);
 
         assertEquals(actualResource.getContentType(), "contentType");
         assertEquals(actualResource.getFileName(), "fileName");
@@ -93,16 +93,16 @@ public class ArtifactRepositoryTest {
 
     @Test(expected = ArtifactNotFoundException.class)
     public void shouldRaiseExceptionWhenArtifactNotFound() throws Exception {
-        when(fileStoreJpaRepository.findByFileStoreId("fileStoreId")).thenReturn(null);
+        when(fileStoreJpaRepository.findByFileStoreIdAndTenantId("fileStoreId",TENANTID)).thenReturn(null);
 
-        artifactRepository.find("fileStoreId");
+        artifactRepository.find("fileStoreId",TENANTID);
     }
 
     @Test
     public void shouldRetrieveArtifactMetaDataForGivenTag() {
-        when(fileStoreJpaRepository.findByTag(TAG)).thenReturn(getListOfArtifactEntities());
+        when(fileStoreJpaRepository.findByTagAndTenantId(TAG,TENANTID)).thenReturn(getListOfArtifactEntities());
 
-        List<FileInfo> actual = artifactRepository.findByTag(TAG);
+        List<FileInfo> actual = artifactRepository.findByTag(TAG,TENANTID);
 
         assertEquals(actual.get(0).getContentType(), "contentType1");
         assertEquals(actual.get(0).getFileLocation().getFileStoreId(), FILE_STORE_ID_1);
@@ -110,7 +110,7 @@ public class ArtifactRepositoryTest {
         assertEquals(actual.get(1).getContentType(), "contentType2");
         assertEquals(actual.get(1).getFileLocation().getFileStoreId(), FILE_STORE_ID_2);
 
-        verify(fileStoreJpaRepository).findByTag(TAG);
+        verify(fileStoreJpaRepository).findByTagAndTenantId(TAG,TENANTID);
     }
 
     private List<org.egov.filestore.domain.model.Artifact> getListOfArtifacts() {
@@ -123,9 +123,9 @@ public class ArtifactRepositoryTest {
 
         return asList(
                 new org.egov.filestore.domain.model.Artifact(multipartFile1,
-                        new FileLocation(UUID.randomUUID().toString(), MODULE, JURISDICTION_ID, TAG)),
+                        new FileLocation(UUID.randomUUID().toString(), MODULE, TAG,TENANTID)),
                 new org.egov.filestore.domain.model.Artifact(multipartFile2,
-                        new FileLocation(UUID.randomUUID().toString(), MODULE, JURISDICTION_ID, TAG))
+                        new FileLocation(UUID.randomUUID().toString(), MODULE, TAG,TENANTID))
         );
     }
 
@@ -134,7 +134,6 @@ public class ArtifactRepositoryTest {
                 new Artifact() {{
                     setId(1L);
                     setFileStoreId(FILE_STORE_ID_1);
-                    setJurisdictionId(JURISDICTION_ID);
                     setModule(MODULE);
                     setTag(TAG);
                     setContentType("contentType1");
@@ -143,7 +142,6 @@ public class ArtifactRepositoryTest {
                 new Artifact() {{
                     setId(2L);
                     setFileStoreId(FILE_STORE_ID_2);
-                    setJurisdictionId(JURISDICTION_ID);
                     setModule(MODULE);
                     setTag(TAG);
                     setContentType("contentType2");

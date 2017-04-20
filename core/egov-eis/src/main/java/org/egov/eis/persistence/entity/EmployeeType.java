@@ -73,6 +73,17 @@ public class EmployeeType extends AbstractAuditable {
 	private Long id;
 	@JoinColumn(name = "chartofaccounts")
 	private Long chartOfAccounts;
+	
+	@Column(name = "tenantid")
+    private String tenantId;
+
+	public String getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
+	}
 
 	public Long getChartOfAccounts() {
 		return chartOfAccounts;

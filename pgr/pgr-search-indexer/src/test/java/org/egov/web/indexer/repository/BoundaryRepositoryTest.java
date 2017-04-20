@@ -29,12 +29,12 @@ public class BoundaryRepositoryTest {
 
 	@Test
 	public void test_should_fetch_boundary_for_given_id() throws Exception {
-		server.expect(once(), requestTo("http://host/v1/location/boundarys?boundary.id=1"))
+		server.expect(once(), requestTo("http://host/v1/location/boundarys?boundary.id=1&boundary.tenantId=ap.public"))
 				.andExpect(method(HttpMethod.GET))
 				.andRespond(withSuccess(new Resources().getFileContents("successBoundaryResponse.json"),
 						MediaType.APPLICATION_JSON_UTF8));
 
-		final Boundary boundary = boundaryRepository.fetchBoundaryById(1L);
+		final Boundary boundary = boundaryRepository.fetchBoundaryById(1L,"ap.public");
 
 		server.verify();
 		assertEquals(Long.valueOf(1), boundary.getId());

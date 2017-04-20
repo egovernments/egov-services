@@ -17,6 +17,9 @@ public class Religion {
 	@JsonProperty("active")
 	private Boolean active = null;
 
+	@JsonProperty("tenantId")
+	private String tenantId = null;
+
 	public Religion id(Long id) {
 		this.id = id;
 		return this;
@@ -69,6 +72,14 @@ public class Religion {
 		this.active = active;
 	}
 
+	public String getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
+	}
+
 	@Override
 	public boolean equals(java.lang.Object o) {
 		if (this == o) {
@@ -80,12 +91,12 @@ public class Religion {
 		Religion religion = (Religion) o;
 		return Objects.equals(this.id, religion.id) && Objects.equals(this.name, religion.name)
 				&& Objects.equals(this.description, religion.description)
-				&& Objects.equals(this.active, religion.active);
+				&& Objects.equals(this.tenantId, religion.tenantId) && Objects.equals(this.active, religion.active);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, name, description, active);
+		return Objects.hash(id, name, description, active, tenantId);
 	}
 
 	@Override
@@ -97,6 +108,7 @@ public class Religion {
 		sb.append("    name: ").append(toIndentedString(name)).append("\n");
 		sb.append("    description: ").append(toIndentedString(description)).append("\n");
 		sb.append("    active: ").append(toIndentedString(active)).append("\n");
+		sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
 		sb.append("}");
 		return sb.toString();
 	}

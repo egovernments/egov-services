@@ -38,7 +38,7 @@ public class PgrWorkflow implements Workflow {
 
     @Autowired
     public PgrWorkflow(final ComplaintRouterService complaintRouterService, final StateService stateService,
-                       final EmployeeRepository employeeRepository, final UserRepository userRepository) {
+            final EmployeeRepository employeeRepository, final UserRepository userRepository) {
         this.complaintRouterService = complaintRouterService;
         this.stateService = stateService;
         this.employeeRepository = employeeRepository;
@@ -57,11 +57,13 @@ public class PgrWorkflow implements Workflow {
         state.setOwnerPosition(resolveAssignee(processInstance));
         state.setExtraInfo(processInstance.getValueForKey("statusDetails"));
         state.setDateInfo(processInstance.getCreatedDate());
+        state.setTenantId(jurisdiction);
         setAuditableFields(state, Long.valueOf(processInstance.getRequestInfo().getUserInfo().getId()));
         stateService.create(state);
         final Value value = new Value(STATE_ID, String.valueOf(state.getId()));
         final List<Value> values = Collections.singletonList(value);
-        final Attribute attribute = new Attribute(true, STATE_ID, "String", true, "This is the id of state", values);
+        final Attribute attribute = new Attribute(true, STATE_ID, "String", true, "This is the id of state", values,
+                jurisdiction);
         processInstance.getValues().put(STATE_ID, attribute);
         processInstance.setAssignee(state.getOwnerPosition());
 
@@ -80,7 +82,7 @@ public class PgrWorkflow implements Workflow {
     @Override
     public ProcessInstance end(final String jurisdiction, final ProcessInstance processInstance) {
         final Long stateId = Long.valueOf(processInstance.getValueForKey(STATE_ID));
-        final State state = stateService.getStateById(stateId);
+        final State state = stateService.getStateByIdAndTenantId(stateId,jurisdiction);
         if (Objects.nonNull(state)) {
             state.addStateHistory(new StateHistory(state));
             state.setStatus(State.StateStatus.ENDED);
@@ -88,9 +90,10 @@ public class PgrWorkflow implements Workflow {
             state.setComments(processInstance.getComments());
             state.setSenderName(processInstance.getSenderName());
             state.setDateInfo(processInstance.getCreatedDate());
+            state.setTenantId(jurisdiction);
             // TODO OWNER POSITION condition to be checked
             UserResponse user = userRepository
-                .findUserById(Long.valueOf(processInstance.getRequestInfo().getUserInfo().getId()));
+                .findUserByIdAndTenantId(Long.valueOf(processInstance.getRequestInfo().getUserInfo().getId()),jurisdiction);
             if (user.isGrievanceOfficer()) {
                 state.setOwnerPosition(state.getOwnerPosition());
             }
@@ -107,40 +110,40 @@ public class PgrWorkflow implements Workflow {
         final Long boundaryId = Long.valueOf(processInstance.getValueForKey("boundaryId"));
         final Long firstTimeAssignee = null;
         final PositionResponse response = complaintRouterService.getAssignee(boundaryId, complaintTypeCode,
-            firstTimeAssignee);
+                firstTimeAssignee,processInstance.getTenantId());
         return response.getId();
     }
 
     @Override
-    public PositionResponse getAssignee(final Long boundaryId, final String complaintTypeCode, final Long assigneeId) {
-        return complaintRouterService.getAssignee(boundaryId, complaintTypeCode, assigneeId);
+    public PositionResponse getAssignee(final Long boundaryId, final String complaintTypeCode, final Long assigneeId,final String tenantId) {
+        return complaintRouterService.getAssignee(boundaryId, complaintTypeCode, assigneeId,tenantId);
     }
 
     @Override
     public List<Task> getHistoryDetail(final String tenantId, final String workflowId) {
         final List<Task> tasks = new ArrayList<Task>();
         Task t;
-        final State state = stateService.getStateById(Long.valueOf(workflowId));
+        final State state = stateService.getStateByIdAndTenantId(Long.valueOf(workflowId),tenantId);
         final Set<StateHistory> history = state.getHistory();
         for (final StateHistory stateHistory : history) {
             t = stateHistory.map();
             Employee user;
             User sender = null;
             if (stateHistory.getLastModifiedBy() > 0)
-                sender = userRepository.findUserById(stateHistory.getLastModifiedBy()).getUser().get(0);
+                sender = userRepository.findUserByIdAndTenantId(stateHistory.getLastModifiedBy(),tenantId).getUser().get(0);
             if (sender != null)
                 t.setSender(sender.getUserName() + "::" + sender.getName());
             else
                 t.setSender("");
             if (stateHistory.getOwnerUser() != null) {
 
-                user = employeeRepository.getEmployeeForUserId(state.getOwnerUser()).getEmployees().get(0);
+                user = employeeRepository.getEmployeeForUserIdAndTenantId(state.getOwnerUser(),tenantId).getEmployees().get(0);
                 t.setOwner(user.getUsername() + "::" + user.getName());
                 final Department dept = user.getAssignments().get(0).getDepartment();
                 t.getAttributes().put(DEPARTMENT, putDepartmentValues(dept.getName()));
             } else {
                 final Employee emp = employeeRepository
-                    .getEmployeeForPosition(stateHistory.getOwnerPosition(), new LocalDate()).getEmployees().get(0);
+                        .getEmployeeForPositionAndTenantId(stateHistory.getOwnerPosition(), new LocalDate(),tenantId).getEmployees().get(0);
                 t.setOwner(emp.getUsername() + "::" + emp.getName());
                 final Department dept = emp.getAssignments().get(0).getDepartment();
                 t.getAttributes().put(DEPARTMENT, putDepartmentValues(dept.getName()));
@@ -152,19 +155,19 @@ public class PgrWorkflow implements Workflow {
         Employee user;
         User sender = null;
         if (state.getLastModifiedBy() > 0)
-            sender = userRepository.findUserById(state.getLastModifiedBy()).getUser().get(0);
+            sender = userRepository.findUserByIdAndTenantId(state.getLastModifiedBy(),tenantId).getUser().get(0);
         if (sender != null)
             t.setSender(sender.getUserName() + "::" + sender.getName());
         else
             t.setSender("");
         if (state.getOwnerUser() != null) {
-            user = employeeRepository.getEmployeeForUserId(state.getOwnerUser()).getEmployees().get(0);
+            user = employeeRepository.getEmployeeForUserIdAndTenantId(state.getOwnerUser(),tenantId).getEmployees().get(0);
             t.setOwner(user.getUsername() + "::" + user.getName());
             final Department dept = user.getAssignments().get(0).getDepartment();
             t.getAttributes().put(DEPARTMENT, putDepartmentValues(dept.getName()));
         } else {
-            final Employee emp = employeeRepository.getEmployeeForPosition(state.getOwnerPosition(), new LocalDate())
-                .getEmployees().get(0);
+            final Employee emp = employeeRepository.getEmployeeForPositionAndTenantId(state.getOwnerPosition(), new LocalDate(),tenantId)
+                    .getEmployees().get(0);
             t.setOwner(emp.getUsername() + "::" + emp.getName());
             final Department dept = emp.getAssignments().get(0).getDepartment();
             t.getAttributes().put(DEPARTMENT, putDepartmentValues(dept.getName()));
@@ -184,7 +187,7 @@ public class PgrWorkflow implements Workflow {
     @Override
     public Task update(final String tenantId, final Task task) {
         final Long stateId = Long.valueOf(task.getValueForKey(STATE_ID));
-        final State state = stateService.getStateById(stateId);
+        final State state = stateService.getStateByIdAndTenantId(stateId,tenantId);
         if (Objects.nonNull(state)) {
             state.addStateHistory(new StateHistory(state));
             state.setValue(task.getStatus());
@@ -192,7 +195,7 @@ public class PgrWorkflow implements Workflow {
             state.setSenderName(task.getSender());
             //Logic to handle escalation
             if(null == task.getAssignee()) {
-                state.setOwnerPosition(getAssignee(null, task.getComplaintTypeCode(), task.getPreviousAssignee()).getId());
+                state.setOwnerPosition(getAssignee(null, task.getComplaintTypeCode(), task.getPreviousAssignee(),tenantId).getId());
                 state.setPreviousOwner(task.getPreviousAssignee());
                 state.setValue(IN_PROGRESS);
             }
@@ -200,6 +203,7 @@ public class PgrWorkflow implements Workflow {
                 state.setOwnerPosition(Long.valueOf(task.getAssignee()));
             state.setExtraInfo(task.getValueForKey(STATE_DETAILS));
             state.setDateInfo(task.getCreatedDate());
+            state.setTenantId(tenantId);
             setAuditableFields(state, Long.valueOf(task.getRequestInfo().getUserInfo().getId()));
             stateService.update(state);
             if (state.getId() != null) {

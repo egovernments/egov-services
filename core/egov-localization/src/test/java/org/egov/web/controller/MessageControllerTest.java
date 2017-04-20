@@ -105,13 +105,13 @@ public class MessageControllerTest {
         final Message message1 = Message.builder()
             .code("code1")
             .message("message1")
-            .tenantId("tenant_123")
+            .tenantId("tenant123")
             .locale(LOCALE)
             .build();
         final Message message2 = Message.builder()
             .code("code2")
             .message("message2")
-            .tenantId("tenant_1234")
+            .tenantId("tenant123")
             .locale(LOCALE)
             .build();
         return Arrays.asList(message1, message2);

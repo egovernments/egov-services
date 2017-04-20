@@ -41,7 +41,7 @@ public class ComplaintTypeRepositoryTest {
                 .andRespond(withSuccess(new Resources().getFileContents("complaintTypeResponse.json"),
                         MediaType.APPLICATION_JSON_UTF8));
 
-        final ComplaintTypeResponse complaintResponseExpected = complaintTypeRepository.fetchComplaintTypeByCode("C001");
+        final ComplaintTypeResponse complaintResponseExpected = complaintTypeRepository.fetchComplaintTypeByCode("C001","ap.public");
         server.verify();
         assertEquals(2, complaintResponseExpected.getId().intValue());
         assertEquals("C001", complaintResponseExpected.getServiceCode());

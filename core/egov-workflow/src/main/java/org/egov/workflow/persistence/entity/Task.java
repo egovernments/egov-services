@@ -74,7 +74,7 @@ public class Task {
     //private Position ownerPosition;
 
     private String natureOfTask;
-
+    
     @JsonProperty("values")
     private Map<String, Attribute> attributes = new HashMap<String, Attribute>();
 

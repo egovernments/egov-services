@@ -27,7 +27,7 @@ public class ReceivingModeServiceTest {
 	public void test_should_find_all_receiving_mode() {
 		List<ReceivingMode> expectedResult = new ArrayList<ReceivingMode>();
 		expectedResult.add(new ReceivingMode());
-		when(receivingModeRepository.findAll()).thenReturn(expectedResult);
+		when(receivingModeRepository.findAllByTenantId("ap.public")).thenReturn(expectedResult);
 
 		final List<ReceivingMode> receivingMode = receivingModeService.getAllReceivingModes("ap.public");
 

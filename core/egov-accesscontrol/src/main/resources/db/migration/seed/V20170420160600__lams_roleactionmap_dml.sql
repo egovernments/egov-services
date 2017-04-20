@@ -21,9 +21,6 @@ insert into eg_action(id, name, url, servicecode, queryparams, parentmodule, ord
 insert into eg_action(id, name, url, servicecode, queryparams, parentmodule, ordernumber, displayname, enabled, createdby, createddate, lastmodifiedby, lastmodifieddate, tenantId) values (nextval('SEQ_EG_ACTION'), 'Search Agreement Submit','/agreements/_search','LAMS-SERVICES','tenantId=',(select id from service where code='LAMS-SERVICES'), 1,'Search Agreement Submit',false,1,now(),1,now(),'default');
 insert into eg_action(id, name, url, servicecode, queryparams, parentmodule, ordernumber, displayname, enabled, createdby, createddate, lastmodifiedby, lastmodifieddate, tenantId) values (nextval('SEQ_EG_ACTION'), 'Inbox Agreement View','/app/search-agreement/view-renew-agreement.html','AGREEMENT','tenantId=',(select id from service where code='AGREEMENT'), 1,'Inbox Agreement View',false,1,now(),1,now(),'default');
 
---boundary
-insert into eg_action(id, name, url, servicecode, queryparams, parentmodule, ordernumber, displayname, enabled, createdby, createddate, lastmodifiedby, lastmodifieddate, tenantId) values (nextval('SEQ_EG_ACTION'), 'Get Boundaries by boundarytype and hierarchy Type','/getnatureofallotment','BNDRY','tenantId=',(select id from service where code='BNDRY'), 1,'Get Boundaries by boundarytype and hierarchy Type',false,1,now(),1,now(),'default');
-
 --LAMS Super User Mapping
 insert into eg_roleaction(roleCode,actionid,tenantid)values('SUPERUSER', (select id from eg_action where name = 'Create Agreement'),'default');
 insert into eg_roleaction(roleCode,actionid,tenantid)values('SUPERUSER', (select id from eg_action where name = 'Search Agreement'),'default');
@@ -62,8 +59,3 @@ insert into eg_roleaction(roleCode,actionid,tenantid)values('Property Approver',
 insert into eg_roleaction(roleCode,actionid,tenantid)values('ULB Operator', (select id from eg_action where name = 'Inbox Agreement View'),'default');
 insert into eg_roleaction(roleCode,actionid,tenantid)values('Property Verifier', (select id from eg_action where name = 'Inbox Agreement View'),'default');
 insert into eg_roleaction(roleCode,actionid,tenantid)values('Property Approver', (select id from eg_action where name = 'Inbox Agreement View'),'default');
-
---boundary mapping
-insert into eg_roleaction(roleCode,actionid,tenantid)values('SUPERUSER', (select id from eg_action where name = 'Get Boundaries by boundarytype and hierarchy Type'),'default');
-insert into eg_roleaction(roleCode,actionid,tenantid)values('ULB Operator', (select id from eg_action where name = 'Get Boundaries by boundarytype and hierarchy Type'),'default');
-insert into eg_roleaction(roleCode,actionid,tenantid)values('Property Verifier', (select id from eg_action where name = 'Get Boundaries by boundarytype and hierarchy Type'),'default');

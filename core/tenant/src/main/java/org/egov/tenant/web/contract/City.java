@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class City {
 
-    private Long id;
     private String name;
     private String localName;
     private String districtCode;
@@ -23,7 +22,6 @@ public class City {
     private String tenantCode;
 
     public City(org.egov.tenant.domain.model.City city) {
-        this.id = city.getId();
         this.name = city.getName();
         this.localName = city.getLocalName();
         this.districtCode = city.getDistrictCode();
@@ -37,7 +35,6 @@ public class City {
     @JsonIgnore
     public org.egov.tenant.domain.model.City toDomain() {
         return org.egov.tenant.domain.model.City.builder()
-                .id(id)
                 .name(name)
                 .localName(localName)
                 .districtCode(districtCode)

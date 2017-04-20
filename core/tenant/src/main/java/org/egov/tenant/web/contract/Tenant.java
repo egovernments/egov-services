@@ -13,7 +13,6 @@ import static org.springframework.util.ObjectUtils.isEmpty;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Tenant {
-    private Long id;
     private String code;
     private String description;
     private String logoId;
@@ -22,15 +21,14 @@ public class Tenant {
     private String type;
     private City city;
 
-    public Tenant(org.egov.tenant.domain.model.Tenant domain) {
-        this.id = domain.getId();
-        this.code = domain.getCode();
-        this.description = domain.getDescription();
-        this.logoId = domain.getLogoId();
-        this.imageId = domain.getImageId();
-        this.domainUrl = domain.getDomainUrl();
-        this.type = domain.getType().toString();
-        this.city = new City(domain.getCity());
+    public Tenant(org.egov.tenant.domain.model.Tenant tenant, City city) {
+        this.code = tenant.getCode();
+        this.description = tenant.getDescription();
+        this.logoId = tenant.getLogoId();
+        this.imageId = tenant.getImageId();
+        this.domainUrl = tenant.getDomainUrl();
+        this.type = tenant.getType().toString();
+        this.city = city;
     }
 
     @JsonIgnore

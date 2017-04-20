@@ -2,7 +2,6 @@
   "responseInfo": {},
   "tenant": [
     {
-      "id": 1,
       "code": "AP.KURNOOL",
       "description": "description",
       "logoId": "logoId",
@@ -10,7 +9,6 @@
       "domainUrl": "domainUrl",
       "type": "CITY",
       "city": {
-        "id": 1,
         "name": "name",
         "localName": "localname",
         "districtCode": "districtcode",
@@ -21,7 +19,6 @@
       }
     },
     {
-      "id": 2,
       "code": "AP.GUNTOOR",
       "description": "description",
       "logoId": "logoId",
@@ -29,7 +26,6 @@
       "domainUrl": "domainUrl",
       "type": "CITY",
       "city": {
-        "id": 1,
         "name": "name",
         "localName": "localname",
         "districtCode": "districtcode",

@@ -23,7 +23,7 @@ public class TenantController {
                                        @RequestBody SearchTenantRequest searchTenantRequest) {
         TenantSearchCriteria tenantSearchCriteria = new TenantSearchCriteria(code);
         List<Tenant> tenants =  tenantService.find(tenantSearchCriteria).stream()
-                .map(Tenant::new)
+                .map(tenant -> new Tenant(tenant, new City(tenant.getCity())))
                 .collect(Collectors.toList());
 
         return new SearchTenantResponse(new ResponseInfo(), tenants);
@@ -32,6 +32,6 @@ public class TenantController {
     @PostMapping(value="_create")
     public CreateTenantResponse createTenant(@RequestBody CreateTenantRequest createTenantRequest) {
         org.egov.tenant.domain.model.Tenant tenant = tenantService.createTenant(createTenantRequest.getTenant().toDomain());
-        return new CreateTenantResponse(new ResponseInfo(), new Tenant(tenant));
+        return new CreateTenantResponse(new ResponseInfo(), new Tenant(tenant, new City(tenant.getCity())));
     }
 }

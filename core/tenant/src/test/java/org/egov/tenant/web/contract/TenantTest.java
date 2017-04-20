@@ -6,6 +6,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -18,36 +19,36 @@ public class TenantTest {
     public void test_should_convert_contract_to_model() {
 
         org.egov.tenant.domain.model.City expectedCityModel = org.egov.tenant.domain.model.City.builder()
-                .name("Bengaluru")
-                .localName("localname")
-                .districtCode("districtcode")
-                .districtName("districtname")
-                .regionName("regionname")
-                .longitude(35.456)
-                .latitude(75.443)
-                .build();
+            .name("Bengaluru")
+            .localName("localname")
+            .districtCode("districtcode")
+            .districtName("districtname")
+            .regionName("regionname")
+            .longitude(35.456)
+            .latitude(75.443)
+            .build();
 
         org.egov.tenant.domain.model.Tenant expectedTenantModel = org.egov.tenant.domain.model.Tenant.builder()
-                .code("AP.KURNOOL")
-                .description("description")
-                .logoId("logoId")
-                .imageId("imageId")
-                .domainUrl("domainUrl")
-                .type("CITY")
-                .city(expectedCityModel)
-                .build();
+            .code("AP.KURNOOL")
+            .description("description")
+            .logoId("logoId")
+            .imageId("imageId")
+            .domainUrl("domainUrl")
+            .type("CITY")
+            .city(expectedCityModel)
+            .build();
 
         when(cityContract.toDomain()).thenReturn(expectedCityModel);
 
         Tenant tenantContract = Tenant.builder()
-                .code("AP.KURNOOL")
-                .description("description")
-                .logoId("logoId")
-                .imageId("imageId")
-                .domainUrl("domainUrl")
-                .type("CITY")
-                .city(cityContract)
-                .build();
+            .code("AP.KURNOOL")
+            .description("description")
+            .logoId("logoId")
+            .imageId("imageId")
+            .domainUrl("domainUrl")
+            .type("CITY")
+            .city(cityContract)
+            .build();
 
 
         org.egov.tenant.domain.model.Tenant actualTenantModel = tenantContract.toDomain();
@@ -57,7 +58,7 @@ public class TenantTest {
     }
 
     @Test
-    public void test_should_not_convert_city_if_null() throws Exception {
+    public void test_should_not_convert_city_if_null() {
         Tenant tenantContract = Tenant.builder()
             .code("AP.KURNOOL")
             .description("description")
@@ -71,5 +72,32 @@ public class TenantTest {
         org.egov.tenant.domain.model.Tenant actualTenantModel = tenantContract.toDomain();
 
         assertThat(actualTenantModel.getCity()).isNull();
+    }
+
+    @Test
+    public void test_should_convert_model_to_contract() {
+        org.egov.tenant.domain.model.City cityModel = mock(org.egov.tenant.domain.model.City.class);
+
+        org.egov.tenant.domain.model.Tenant tenantModel = org.egov.tenant.domain.model.Tenant.builder()
+            .code("AP.KURNOOL")
+            .description("description")
+            .logoId("logoId")
+            .imageId("imageId")
+            .domainUrl("domainUrl")
+            .type("CITY")
+            .city(cityModel)
+            .build();
+
+        City city = mock(City.class);
+
+        Tenant tenantContract = new Tenant(tenantModel, city);
+
+        assertThat(tenantContract.getCode()).isEqualTo("AP.KURNOOL");
+        assertThat(tenantContract.getDescription()).isEqualTo("description");
+        assertThat(tenantContract.getLogoId()).isEqualTo("logoId");
+        assertThat(tenantContract.getImageId()).isEqualTo("imageId");
+        assertThat(tenantContract.getDomainUrl()).isEqualTo("domainUrl");
+        assertThat(tenantContract.getType()).isEqualTo("CITY");
+        assertThat(tenantContract.getCity()).isEqualTo(city);
     }
 }

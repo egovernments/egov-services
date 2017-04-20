@@ -1,6 +1,6 @@
 var baseUrl = window.location.origin;
 
-var authToken = localStorage.getItem("auth-token");
+var authToken = "225538ff-3a66-437c-9b57-0d9f23a0b18d"//localStorage.getItem("auth-token");
 
 //request info from cookies
 var requestInfo = {
@@ -15,9 +15,10 @@ var requestInfo = {
     "authToken": authToken
 };
 
-var tenantId = "ap."+window.location.origin.split("-")[0].split("//")[1];
+var tenantId = "1"//"ap."+window.location.origin.split("-")[0].split("//")[1];
 
 function blockUI() {
+    $('body').css('overflow', 'hidden');
     $('body').append(
         `<div class="blockUI" style="z-index: 100000; border: none; margin: 0px; padding: 0px; width: 100%; height: 100%; top: 0px; left: 0px; background-color: rgb(0, 0, 0); opacity: 0.6; cursor: wait; position: fixed;"></div>
       <div class="blockUI" style="z-index: 100011; position: fixed; padding: 15px; margin: 0px; width: 30%; top: 40%; left: 35%; text-align: center; color: rgb(255, 255, 255); border: none; background-color: rgb(0, 0, 0); cursor: wait; border-radius: 5px; opacity: 0.5;"><span>Please wait...</span></div>`
@@ -25,7 +26,10 @@ function blockUI() {
 }
 
 function unblockUI() {
-    $('.blockUI').remove();
+    setTimeout(function(){ 
+      $('body').css('overflow', '');
+      $('.blockUI').remove(); 
+    }, 100);
 }
 
 $(document).ready(function() {

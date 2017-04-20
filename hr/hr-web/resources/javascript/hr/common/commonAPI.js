@@ -30,7 +30,7 @@ function blockUI() {
 }
 
 function unblockUI() {
-    $('.blockUI').remove();
+    setTimeout(function(){ $('.blockUI').remove(); }, 100);
 }
 
 $(document).ready(function() {

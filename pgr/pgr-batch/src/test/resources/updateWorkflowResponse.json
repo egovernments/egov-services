@@ -1,0 +1,95 @@
+{
+  "RequestInfo": {
+    "apiId": null,
+    "ver": null,
+    "ts": null,
+    "action": "update",
+    "did": null,
+    "key": null,
+    "msgId": null,
+    "authToken": null,
+    "correlationId": null,
+    "userInfo": {
+      "id": 2,
+      "userName": "system",
+      "name": "System",
+      "type": "SYSTEM",
+      "mobileNumber": "0000000000",
+      "emailId": "system@gmail.com",
+      "roles": null
+    }
+  },
+  "id": "52",
+  "type": "Complaint",
+  "description": null,
+  "created_Date": null,
+  "last_updated": null,
+  "owner": null,
+  "assignee": "2",
+  "module": null,
+  "state": null,
+  "status": "INPROGRESS",
+  "url": null,
+  "business_key": "Complaint",
+  "action": "update",
+  "sender_name": "system",
+  "comments": null,
+  "extraInfo": null,
+  "details": null,
+  "natureOfTask": null,
+  "values": {
+    "stateId": {
+      "variable": true,
+      "code": "stateId",
+      "datatype": "String",
+      "required": false,
+      "datatypeDescription": "",
+      "values": [
+        {
+          "key": "stateId",
+          "name": "52"
+        }
+      ]
+    },
+    "previousAssignee": {
+      "variable": true,
+      "code": "previousAssignee",
+      "datatype": "String",
+      "required": false,
+      "datatypeDescription": "",
+      "values": [
+        {
+          "key": "previousAssignee",
+          "name": "2"
+        }
+      ]
+    },
+    "stateDetails": {
+      "variable": true,
+      "code": "stateDetails",
+      "datatype": "String",
+      "required": false,
+      "datatypeDescription": "",
+      "values": [
+        {
+          "key": "stateDetails",
+          "name": ""
+        }
+      ]
+    },
+    "approvalComments": {
+      "variable": true,
+      "code": "approvalComments",
+      "datatype": "String",
+      "required": false,
+      "datatypeDescription": "",
+      "values": [
+        {
+          "key": "approvalComments",
+          "name": null
+        }
+      ]
+    }
+  },
+  "tenantId":"default"
+}

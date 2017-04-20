@@ -20,9 +20,10 @@ public class ServiceRequest {
     public static final String STATE_DETAILS = "stateDetails";
     private static final String WORKFLOW_TYPE = "Complaint";
     public static final String STATUS = "complaintStatus";
-    public static final String VALUES_APPROVAL_COMMENT = "approvalComments";
-    private static final String CURRENT_ASSIGNEE = "currentAssignee";
+    public static final String VALUES_APPROVAL_COMMENT_KEY = "approvalComments";
+    private static final String PREVIOUS_ASSIGNEE = "previousAssignee";
     private static final String ESCALATION_STATUS = "IN PROGRESS";
+    private static final String  VALUES_APPROVAL_COMMENT_VALUE= "Complaint is escalated";
 
     private String tenantId;
 
@@ -114,7 +115,7 @@ public class ServiceRequest {
         String complaintType = this.complaintTypeCode;
         String crn = this.getCrn();
         Map<String, Attribute> valuesToSet = getWorkFlowRequestValues(values, complaintType);
-        valuesToSet.put(CURRENT_ASSIGNEE, Attribute.asStringAttr(CURRENT_ASSIGNEE, values.get(VALUES_ASSIGNEE_ID)));
+        valuesToSet.put(PREVIOUS_ASSIGNEE, Attribute.asStringAttr(PREVIOUS_ASSIGNEE, values.get(VALUES_ASSIGNEE_ID)));
 
         WorkflowRequest.WorkflowRequestBuilder workflowRequestBuilder = WorkflowRequest.builder()
                 .assignee(null)
@@ -134,8 +135,7 @@ public class ServiceRequest {
         Map<String, Attribute> valuesToSet = new HashMap<>();
         valuesToSet.put(STATE_DETAILS, Attribute.asStringAttr(STATE_DETAILS, StringUtils.EMPTY));
         valuesToSet.put(VALUES_STATE_ID, Attribute.asStringAttr(VALUES_STATE_ID, getCurrentStateId(values)));
-        valuesToSet.put(VALUES_APPROVAL_COMMENT, Attribute.asStringAttr(VALUES_APPROVAL_COMMENT, values.get
-                (VALUES_APPROVAL_COMMENT)));
+        valuesToSet.put(VALUES_APPROVAL_COMMENT_KEY, Attribute.asStringAttr(VALUES_APPROVAL_COMMENT_KEY, VALUES_APPROVAL_COMMENT_VALUE));
         return valuesToSet;
     }
 

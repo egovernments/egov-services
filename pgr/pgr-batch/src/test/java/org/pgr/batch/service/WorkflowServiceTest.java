@@ -13,6 +13,7 @@ import org.pgr.batch.repository.contract.*;
 import java.util.*;
 
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -48,7 +49,7 @@ public class WorkflowServiceTest {
                 .values(getExpectedValues())
                 .build();
 
-        when(workflowRepository.update(escalationRequest)).thenReturn(expectedWorkflowResponse);
+        when(workflowRepository.update(any())).thenReturn(expectedWorkflowResponse);
 
         ServiceRequest request = workflowService.enrichWorkflowForEscalation(getServiceRequest(),getRequestInfo());
 

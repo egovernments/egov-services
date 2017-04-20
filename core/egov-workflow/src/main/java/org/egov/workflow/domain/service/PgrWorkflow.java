@@ -192,8 +192,8 @@ public class PgrWorkflow implements Workflow {
             state.setSenderName(task.getSender());
             //Logic to handle escalation
             if(null == task.getAssignee()) {
-                state.setOwnerPosition(getAssignee(null, task.getComplaintTypeCode(), task.getCurrentAssignee()).getId());
-                state.setPreviousOwner(task.getCurrentAssignee());
+                state.setOwnerPosition(getAssignee(null, task.getComplaintTypeCode(), task.getPreviousAssignee()).getId());
+                state.setPreviousOwner(task.getPreviousAssignee());
                 state.setValue(IN_PROGRESS);
             }
             else

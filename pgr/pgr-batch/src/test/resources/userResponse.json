@@ -1,0 +1,14 @@
+{
+ "responseInfo" : {
+  "api_id" : "",
+  "ver" : "",
+  "ts" : "",
+  "res_msg_id" : "",
+  "msg_id" : "",
+  "status" : "Successfull message"
+  },
+ "user" : [{
+    "id" : "1",
+    "userName": "system"
+  }]
+}

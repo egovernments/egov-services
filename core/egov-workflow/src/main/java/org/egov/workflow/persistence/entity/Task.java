@@ -94,8 +94,8 @@ public class Task {
     }
 
     @JsonIgnore
-    public Long getCurrentAssignee(){
-        return Long.valueOf(getValueForKey("currentAssignee"));
+    public Long getPreviousAssignee(){
+        return Long.valueOf(getValueForKey("previousAssignee"));
     }
 
 }

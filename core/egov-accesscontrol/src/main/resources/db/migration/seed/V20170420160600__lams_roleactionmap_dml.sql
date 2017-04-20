@@ -1,0 +1,62 @@
+--LAMS
+insert into eg_action(id, name, url, servicecode, queryparams, parentmodule, ordernumber, displayname, enabled, createdby, createddate, lastmodifiedby, lastmodifieddate, tenantId) values (nextval('SEQ_EG_ACTION'), 'Create Agreement','/lams-web/app/search-assets/search-asset.html','AGREEMENT','tenantId=',(select id from service where code='AGREEMENT'), 1,'Create Agreement',true,1,now(),1,now(),'default');
+insert into eg_action(id, name, url, servicecode, queryparams, parentmodule, ordernumber, displayname, enabled, createdby, createddate, lastmodifiedby, lastmodifieddate, tenantId) values (nextval('SEQ_EG_ACTION'), 'Search Agreement','/lams-web/app/search-agreement/search-agreement.html','AGREEMENT','tenantId=',(select id from service where code='AGREEMENT'), 1,'Search Agreement',true,1,now(),1,now(),'default');
+insert into eg_action(id, name, url, servicecode, queryparams, parentmodule, ordernumber, displayname, enabled, createdby, createddate, lastmodifiedby, lastmodifieddate, tenantId) values (nextval('SEQ_EG_ACTION'), 'Search Agreement Doc types','/lams-services/document/_search','AGREEMENT','tenantId=',(select id from service where code='AGREEMENT'), 1,'Search Agreement Doc types',false,1,now(),1,now(),'default');
+insert into eg_action(id, name, url, servicecode, queryparams, parentmodule, ordernumber, displayname, enabled, createdby, createddate, lastmodifiedby, lastmodifieddate, tenantId) values (nextval('SEQ_EG_ACTION'), 'Search LAMS Configurations','/lams-services/lamsconfigurations/_search','AGREEMENT','tenantId=',(select id from service where code='AGREEMENT'), 1,'Search LAMS Configurations',false,1,now(),1,now(),'default');
+insert into eg_action(id, name, url, servicecode, queryparams, parentmodule, ordernumber, displayname, enabled, createdby, createddate, lastmodifiedby, lastmodifieddate, tenantId) values (nextval('SEQ_EG_ACTION'), 'Get Agreement Status','/lams-services/getstatus','AGREEMENT','tenantId=',(select id from service where code='AGREEMENT'), 1,'Get Agreement Status',false,1,now(),1,now(),'default');
+insert into eg_action(id, name, url, servicecode, queryparams, parentmodule, ordernumber, displayname, enabled, createdby, createddate, lastmodifiedby, lastmodifieddate, tenantId) values (nextval('SEQ_EG_ACTION'), 'Get Agreement Payment Cycle','/lams-services/getpaymentcycle','AGREEMENT','tenantId=',(select id from service where code='AGREEMENT'), 1,'Get Agreement Payment Cycle',false,1,now(),1,now(),'default');
+insert into eg_action(id, name, url, servicecode, queryparams, parentmodule, ordernumber, displayname, enabled, createdby, createddate, lastmodifiedby, lastmodifieddate, tenantId) values (nextval('SEQ_EG_ACTION'), 'Get Agreement Natureofallottment','/lams-services/getnatureofallotment','AGREEMENT','tenantId=',(select id from service where code='AGREEMENT'), 1,'Get Agreement Natureofallottment',false,1,now(),1,now(),'default');
+insert into eg_action(id, name, url, servicecode, queryparams, parentmodule, ordernumber, displayname, enabled, createdby, createddate, lastmodifiedby, lastmodifieddate, tenantId) values (nextval('SEQ_EG_ACTION'), 'Get Agreement rentincrements','/lams-services/getrentincrements','AGREEMENT','tenantId=',(select id from service where code='AGREEMENT'), 1,'Get Agreement rentincrements',false,1,now(),1,now(),'default');
+insert into eg_action(id, name, url, servicecode, queryparams, parentmodule, ordernumber, displayname, enabled, createdby, createddate, lastmodifiedby, lastmodifieddate, tenantId) values (nextval('SEQ_EG_ACTION'), 'Agreement Payment Create','/lams-services/payment/_create','AGREEMENT','tenantId=',(select id from service where code='AGREEMENT'), 1,'Agreement Payment Create',false,1,now(),1,now(),'default');
+insert into eg_action(id, name, url, servicecode, queryparams, parentmodule, ordernumber, displayname, enabled, createdby, createddate, lastmodifiedby, lastmodifieddate, tenantId) values (nextval('SEQ_EG_ACTION'), 'Agreement Coll back update','/lams-services/payment/_update','AGREEMENT','tenantId=',(select id from service where code='AGREEMENT'), 1,'Agreement Coll back update',false,1,now(),1,now(),'default');
+insert into eg_action(id, name, url, servicecode, queryparams, parentmodule, ordernumber, displayname, enabled, createdby, createddate, lastmodifiedby, lastmodifieddate, tenantId) values (nextval('SEQ_EG_ACTION'), 'Update Agreement','/lams-services/agreements/_update','AGREEMENT','tenantId=',(select id from service where code='AGREEMENT'), 1,'Update Agreement',false,1,now(),1,now(),'default');
+insert into eg_action(id, name, url, servicecode, queryparams, parentmodule, ordernumber, displayname, enabled, createdby, createddate, lastmodifiedby, lastmodifieddate, tenantId) values (nextval('SEQ_EG_ACTION'), 'Create Agreement Submit','/lams-services/agreements/_create','AGREEMENT','tenantId=',(select id from service where code='AGREEMENT'), 1,'Create Agreement Submit',false,1,now(),1,now(),'default');
+insert into eg_action(id, name, url, servicecode, queryparams, parentmodule, ordernumber, displayname, enabled, createdby, createddate, lastmodifiedby, lastmodifieddate, tenantId) values (nextval('SEQ_EG_ACTION'), 'Search Agreement Submit','/lams-services/agreements/_search','AGREEMENT','tenantId=',(select id from service where code='AGREEMENT'), 1,'Search Agreement Submit',false,1,now(),1,now(),'default');
+insert into eg_action(id, name, url, servicecode, queryparams, parentmodule, ordernumber, displayname, enabled, createdby, createddate, lastmodifiedby, lastmodifieddate, tenantId) values (nextval('SEQ_EG_ACTION'), 'Inbox Agreement View','/lams-web/app/search-agreement/view-renew-agreement.html','AGREEMENT','tenantId=',(select id from service where code='AGREEMENT'), 1,'Inbox Agreement View',false,1,now(),1,now(),'default');
+
+--boundary
+insert into eg_action(id, name, url, servicecode, queryparams, parentmodule, ordernumber, displayname, enabled, createdby, createddate, lastmodifiedby, lastmodifieddate, tenantId) values (nextval('SEQ_EG_ACTION'), 'Get Boundaries by boundarytype and hierarchy Type','/lams-services/getnatureofallotment','BNDRY','tenantId=',(select id from service where code='BNDRY'), 1,'Get Boundaries by boundarytype and hierarchy Type',false,1,now(),1,now(),'default');
+
+--LAMS Super User Mapping
+insert into eg_roleaction(roleCode,actionid,tenantid)values('SUPERUSER', (select id from eg_action where name = 'Create Agreement'),'default');
+insert into eg_roleaction(roleCode,actionid,tenantid)values('SUPERUSER', (select id from eg_action where name = 'Search Agreement'),'default');
+insert into eg_roleaction(roleCode,actionid,tenantid)values('SUPERUSER', (select id from eg_action where name = 'Search Agreement Doc types'),'default');
+insert into eg_roleaction(roleCode,actionid,tenantid)values('SUPERUSER', (select id from eg_action where name = 'Search LAMS Configurations'),'default');
+insert into eg_roleaction(roleCode,actionid,tenantid)values('SUPERUSER', (select id from eg_action where name = 'Get Agreement Status'),'default');
+insert into eg_roleaction(roleCode,actionid,tenantid)values('SUPERUSER', (select id from eg_action where name = 'Get Agreement Payment Cycle'),'default');
+insert into eg_roleaction(roleCode,actionid,tenantid)values('SUPERUSER', (select id from eg_action where name = 'Get Agreement Natureofallottment'),'default');
+insert into eg_roleaction(roleCode,actionid,tenantid)values('SUPERUSER', (select id from eg_action where name = 'Get Agreement rentincrements'),'default');
+insert into eg_roleaction(roleCode,actionid,tenantid)values('SUPERUSER', (select id from eg_action where name = 'Agreement Payment Create'),'default');
+insert into eg_roleaction(roleCode,actionid,tenantid)values('SUPERUSER', (select id from eg_action where name = 'Agreement Coll back update'),'default');
+insert into eg_roleaction(roleCode,actionid,tenantid)values('SUPERUSER', (select id from eg_action where name = 'Update Agreement'),'default');
+insert into eg_roleaction(roleCode,actionid,tenantid)values('SUPERUSER', (select id from eg_action where name = 'Create Agreement Submit'),'default');
+insert into eg_roleaction(roleCode,actionid,tenantid)values('SUPERUSER', (select id from eg_action where name = 'Search Agreement Submit'),'default');
+insert into eg_roleaction(roleCode,actionid,tenantid)values('SUPERUSER', (select id from eg_action where name = 'Inbox Agreement View'),'default');
+
+insert into eg_roleaction(roleCode,actionid,tenantid)values('ULB Operator', (select id from eg_action where name = 'Create Agreement'),'default');
+insert into eg_roleaction(roleCode,actionid,tenantid)values('ULB Operator', (select id from eg_action where name = 'Search Agreement'),'default');
+insert into eg_roleaction(roleCode,actionid,tenantid)values('Property Verifier', (select id from eg_action where name = 'Search Agreement'),'default');
+insert into eg_roleaction(roleCode,actionid,tenantid)values('Property Approver', (select id from eg_action where name = 'Search Agreement'),'default');
+insert into eg_roleaction(roleCode,actionid,tenantid)values('ULB Operator', (select id from eg_action where name = 'Search Agreement Doc types'),'default');
+insert into eg_roleaction(roleCode,actionid,tenantid)values('ULB Operator', (select id from eg_action where name = 'Search LAMS Configurations'),'default');
+insert into eg_roleaction(roleCode,actionid,tenantid)values('ULB Operator', (select id from eg_action where name = 'Get Agreement Status'),'default');
+insert into eg_roleaction(roleCode,actionid,tenantid)values('ULB Operator', (select id from eg_action where name = 'Get Agreement Payment Cycle'),'default');
+insert into eg_roleaction(roleCode,actionid,tenantid)values('ULB Operator', (select id from eg_action where name = 'Get Agreement Natureofallottment'),'default');
+insert into eg_roleaction(roleCode,actionid,tenantid)values('ULB Operator', (select id from eg_action where name = 'Get Agreement rentincrements'),'default');
+insert into eg_roleaction(roleCode,actionid,tenantid)values('ULB Operator', (select id from eg_action where name = 'Agreement Payment Create'),'default');
+insert into eg_roleaction(roleCode,actionid,tenantid)values('ULB Operator', (select id from eg_action where name = 'Agreement Coll back update'),'default');
+insert into eg_roleaction(roleCode,actionid,tenantid)values('ULB Operator', (select id from eg_action where name = 'Update Agreement'),'default');
+insert into eg_roleaction(roleCode,actionid,tenantid)values('Property Verifier', (select id from eg_action where name = 'Update Agreement'),'default');
+insert into eg_roleaction(roleCode,actionid,tenantid)values('Property Approver', (select id from eg_action where name = 'Update Agreement'),'default');
+insert into eg_roleaction(roleCode,actionid,tenantid)values('ULB Operator', (select id from eg_action where name = 'Create Agreement Submit'),'default');
+insert into eg_roleaction(roleCode,actionid,tenantid)values('ULB Operator', (select id from eg_action where name = 'Search Agreement Submit'),'default');
+insert into eg_roleaction(roleCode,actionid,tenantid)values('Property Verifier', (select id from eg_action where name = 'Search Agreement Submit'),'default');
+insert into eg_roleaction(roleCode,actionid,tenantid)values('Property Approver', (select id from eg_action where name = 'Search Agreement Submit'),'default');
+insert into eg_roleaction(roleCode,actionid,tenantid)values('ULB Operator', (select id from eg_action where name = 'Inbox Agreement View'),'default');
+insert into eg_roleaction(roleCode,actionid,tenantid)values('Property Verifier', (select id from eg_action where name = 'Inbox Agreement View'),'default');
+insert into eg_roleaction(roleCode,actionid,tenantid)values('Property Approver', (select id from eg_action where name = 'Inbox Agreement View'),'default');
+
+--boundary mapping
+insert into eg_roleaction(roleCode,actionid,tenantid)values('SUPERUSER', (select id from eg_action where name = 'Get Boundaries by boundarytype and hierarchy Type'),'default');
+insert into eg_roleaction(roleCode,actionid,tenantid)values('ULB Operator', (select id from eg_action where name = 'Get Boundaries by boundarytype and hierarchy Type'),'default');
+insert into eg_roleaction(roleCode,actionid,tenantid)values('Property Verifier', (select id from eg_action where name = 'Get Boundaries by boundarytype and hierarchy Type'),'default');

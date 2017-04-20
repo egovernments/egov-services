@@ -1,0 +1,3 @@
+insert into service (id, code, name, enabled, contextroot, displayname, ordernumber, parentmodule, tenantId) VALUES (nextval('SEQ_SERVICE'),'LAMS', 'Leases And Agreements', true, 'lams', 'Leases & Agreements', 21, NULL, 'default');
+insert into service (id, code, name, enabled, contextroot, displayname, ordernumber, parentmodule, tenantId) VALUES (NEXTVAL('SEQ_SERVICE'),'AGREEMENT','Agreement',true,'lams', 'Agreement', 1, (select id from service where code = 'LAMS'), 'default');
+insert into service (id,code,name,enabled,contextroot,displayname,ordernumber,parentmodule,tenantId) VALUES (NEXTVAL('SEQ_SERVICE'),'LAMS-REPORTS','LAMS-Reports',true,'lams', 'LAMS-Reports', 2, (select id from service where code = 'LAMS'), 'default');

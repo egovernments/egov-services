@@ -1,0 +1,22 @@
+INSERT INTO service (id,code,name,enabled,contextroot,displayname,ordernumber,parentmodule,tenantId) VALUES (nextval('SEQ_SERVICE'),'Leave Type', 'Leave Type', true, 'eis', 'Leave Type', 13, (select id from service where name='EIS'), 'default');
+
+insert into eg_action(id, name,url,servicecode,queryparams,parentmodule,ordernumber,displayname,enabled,createdby,createddate,lastmodifiedby,lastmodifieddate,tenantId)values(nextval('SEQ_EG_ACTION'),'Create Leave Type','/hr-web/app/hr/leavemaster/leave-type.html','EIS','tenantId=',(select id from service where name='Leave Type' and contextroot='eis'),1,'Create',true,1,now(),1,now(),'default');
+insert into eg_action(id, name,url,servicecode,queryparams,parentmodule,ordernumber,displayname,enabled,createdby,createddate,lastmodifiedby,lastmodifieddate,tenantId)values(nextval('SEQ_EG_ACTION'),'Create LeaveType','/hr-leave/leavetypes/_create','EIS','tenantId=',(select id from service where name='Leave Type' and contextroot='eis'),2,'Create Leave Type',false,1,now(),1,now(),'default');
+insert into eg_action(id, name,url,servicecode,queryparams,parentmodule,ordernumber,displayname,enabled,createdby,createddate,lastmodifiedby,lastmodifieddate,tenantId)values(nextval('SEQ_EG_ACTION'),'Update Leave Type','/hr-web/app/hr/common/show-leave-type.html','EIS','type=update&tenantId=',(select id from service where name='Leave Type' and contextroot='eis'),3,'Update',true,1,now(),1,now(),'default');
+insert into eg_action(id, name,url,servicecode,queryparams,parentmodule,ordernumber,displayname,enabled,createdby,createddate,lastmodifiedby,lastmodifieddate,tenantId)values(nextval('SEQ_EG_ACTION'),'Leave Type Update','/hr-leave/leavetypes/{id}/_update','EIS','tenantId=',(select id from service where name='Leave Type' and contextroot='eis'),4,'Leave Type Update',false,1,now(),1,now(),'default');
+insert into eg_action(id, name,url,servicecode,queryparams,parentmodule,ordernumber,displayname,enabled,createdby,createddate,lastmodifiedby,lastmodifieddate,tenantId)values(nextval('SEQ_EG_ACTION'),'View Leave Type','/hr-web/app/hr/common/show-leave-type.html','EIS','type=view&tenantId=',(select id from service where name='Leave Type' and contextroot='eis'),5,'View',true,1,now(),1,now(),'default');
+insert into eg_action(id, name,url,servicecode,queryparams,parentmodule,ordernumber,displayname,enabled,createdby,createddate,lastmodifiedby,lastmodifieddate,tenantId)values(nextval('SEQ_EG_ACTION'),'Search Leave Type','/hr-leave/leavetypes/_search','EIS','tenantId=',(select id from service where name='Leave Type' and contextroot='eis'),6,'Search Leave Type',false,1,now(),1,now(),'default');
+
+insert into eg_roleaction(roleCode,actionid,tenantid)values('SUPERUSER', (select id from eg_action where name = 'Create Leave Type'),'default');
+insert into eg_roleaction(roleCode,actionid,tenantid)values('SUPERUSER', (select id from eg_action where name = 'Create LeaveType'),'default');
+insert into eg_roleaction(roleCode,actionid,tenantid)values('SUPERUSER', (select id from eg_action where name = 'Update Leave Type'),'default');
+insert into eg_roleaction(roleCode,actionid,tenantid)values('SUPERUSER', (select id from eg_action where name = 'Leave Type Update'),'default');
+insert into eg_roleaction(roleCode,actionid,tenantid)values('SUPERUSER', (select id from eg_action where name = 'View Leave Type'),'default');
+insert into eg_roleaction(roleCode,actionid,tenantid)values('SUPERUSER', (select id from eg_action where name = 'Search Leave Type'),'default');
+
+insert into eg_roleaction(roleCode,actionid,tenantid)values('EMPLOYEE ADMIN', (select id from eg_action where name = 'Create Leave Type'),'default');
+insert into eg_roleaction(roleCode,actionid,tenantid)values('EMPLOYEE ADMIN', (select id from eg_action where name = 'Create LeaveType'),'default');
+insert into eg_roleaction(roleCode,actionid,tenantid)values('EMPLOYEE ADMIN', (select id from eg_action where name = 'Update Leave Type'),'default');
+insert into eg_roleaction(roleCode,actionid,tenantid)values('EMPLOYEE ADMIN', (select id from eg_action where name = 'Leave Type Update'),'default');
+insert into eg_roleaction(roleCode,actionid,tenantid)values('EMPLOYEE ADMIN', (select id from eg_action where name = 'View Leave Type'),'default');
+insert into eg_roleaction(roleCode,actionid,tenantid)values('EMPLOYEE ADMIN', (select id from eg_action where name = 'Search Leave Type'),'default');

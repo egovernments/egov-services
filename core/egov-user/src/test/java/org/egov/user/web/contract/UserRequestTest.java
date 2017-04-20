@@ -63,7 +63,8 @@ public class UserRequestTest {
     public void test_contract_to_domain_conversion() {
         UserRequest userRequest = buildUserRequest();
 
-        User userForCreate = userRequest.toDomain();
+		final long loggedInUserId = 345L;
+		User userForCreate = userRequest.toDomain(loggedInUserId);
 
         Calendar c = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
         c.set(2017, 1, 1, 1, 1, 1);
@@ -77,6 +78,7 @@ public class UserRequestTest {
         assertEquals("0987654321", userForCreate.getAltContactNumber());
         assertEquals("KR12345J", userForCreate.getPan());
         assertEquals("qwerty-1234567", userForCreate.getAadhaarNumber());
+        assertEquals(Long.valueOf(loggedInUserId), userForCreate.getLoggedInUserId());
         assertTrue(userForCreate.getActive());
         assertEquals(expectedDate, userForCreate.getDob().toString());
         assertEquals(expectedDate, userForCreate.getPwdExpiryDate().toString());

@@ -29,6 +29,7 @@ import java.util.*;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -60,6 +61,20 @@ public class UserControllerTest {
 				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(getFileContents("userSearchResponse.json")));
 	}
+
+	@Test
+	@WithMockUser
+	public void test_should_partially_update_user() throws Exception {
+		when(userService.partialUpdate(any())).thenReturn(org.egov.user.domain.model.User.builder().build());
+
+		mockMvc.perform(post("/v1/user/_patch")
+				.contentType(MediaType.APPLICATION_JSON_UTF8)
+				.content(getFileContents("patchUserRequest.json")))
+				.andExpect(status().isOk())
+				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(content().json(getFileContents("patchUserResponse.json")));
+	}
+
 
 	@Test
 	@WithMockUser
@@ -203,11 +218,17 @@ public class UserControllerTest {
 	}
 
 	public User getUser() {
-		User user = User.builder().id(18L).userName("narasappa").name("narasappa")
-				.mobileNumber("123456789").emailId("abc@gmail.com").locale("en_IN").type("EMPLOYEE").active(Boolean
-						.TRUE)
-				.roles(getRoles()).build();
-		return user;
+		return User.builder()
+				.id(18L)
+				.userName("narasappa")
+				.name("narasappa")
+				.mobileNumber("123456789")
+				.emailId("abc@gmail.com")
+				.locale("en_IN")
+				.type("EMPLOYEE")
+				.active(Boolean.TRUE)
+				.roles(getRoles())
+				.build();
 	}
 
 	public List<Role> getRoles() {
@@ -223,7 +244,6 @@ public class UserControllerTest {
 	}
 
 	public UserDetail getCustomUserDetails() {
-
 		SecureUser secureUser = new SecureUser(getUser());
 		List<Action> actions = new ArrayList<Action>();
 		Action action = Action.builder()
@@ -238,7 +258,6 @@ public class UserControllerTest {
 		actions.add(action);
 
 		return new UserDetail(secureUser, actions);
-
 	}
 
 

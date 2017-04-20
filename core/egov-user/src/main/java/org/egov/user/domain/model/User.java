@@ -51,6 +51,7 @@ public class User {
 	private String otpReference;
 	private Long createdBy;
 	private Long lastModifiedBy;
+	private Long loggedInUserId;
 
 	public void validate() {
 		if (isUsernameAbsent()
@@ -95,5 +96,18 @@ public class User {
 
 	public boolean isRolesAbsent() {
 		return CollectionUtils.isEmpty(roles) || roles.stream().anyMatch(r -> isEmpty(r.getCode()));
+	}
+
+	public boolean isIdAbsent() {
+		return id == null;
+	}
+
+	public void nullifySensitiveFields() {
+		username = null;
+		mobileNumber = null;
+	}
+
+	public boolean isLoggedInUserDifferentFromUpdatedUser() {
+		return !id.equals(loggedInUserId);
 	}
 }

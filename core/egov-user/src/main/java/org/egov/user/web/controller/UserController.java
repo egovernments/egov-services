@@ -58,6 +58,13 @@ public class UserController {
 		return updateUser(id, createUserRequest);
 	}
 
+	@PostMapping("v1/user/_patch")
+	public UserDetailResponse patch(@RequestBody final CreateUserRequest createUserRequest) {
+		User user = createUserRequest.toDomain();
+		final User updatedUser = userService.partialUpdate(user);
+		return createResponse(updatedUser);
+	}
+
 	private UserDetailResponse createUser(@RequestBody CreateUserRequest createUserRequest, boolean validateUser) {
 		User user = createUserRequest.toDomain();
 		final User newUser = userService.save(user, validateUser);

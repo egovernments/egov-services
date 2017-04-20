@@ -166,7 +166,7 @@ public class UserRequest {
 	}
 
 	@JsonIgnore
-	public User toDomain() {
+	public User toDomain(Long loggedInUserId) {
 		return User.builder()
 				.id(this.id)
 				.name(this.name)
@@ -194,6 +194,7 @@ public class UserRequest {
 				.tenantId(this.tenantId)
 				.password(this.password)
 				.roles(toDomainRoles())
+				.loggedInUserId(loggedInUserId)
 				.build();
 	}
 

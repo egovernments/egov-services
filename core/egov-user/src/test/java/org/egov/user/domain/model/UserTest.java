@@ -136,7 +136,25 @@ public class UserTest {
 	}
 
 	@Test
-	public void testUserWithAllMandatoryValuesProvidedIsValid() throws Exception {
+	public void test_should_return_true_when_user_id_is_not_present() {
+		User user = User.builder()
+				.id(null)
+				.build();
+
+		assertTrue(user.isIdAbsent());
+	}
+
+	@Test
+	public void test_should_return_false_when_user_id_is_present() {
+		User user = User.builder()
+				.id(123L)
+				.build();
+
+		assertFalse(user.isIdAbsent());
+	}
+
+	@Test
+	public void testUserWithAllMandatoryValuesProvidedIsValid() {
 		final Role role1 = Role.builder().code("roleCode1").build();
 		User user = User.builder()
 				.username("foolan_devi")
@@ -150,6 +168,7 @@ public class UserTest {
 				.build();
 
 		user.validate();
+
 		assertFalse(user.isTypeAbsent());
 		assertFalse(user.isGenderAbsent());
 		assertFalse(user.isActiveIndicatorAbsent());
@@ -158,6 +177,39 @@ public class UserTest {
 		assertFalse(user.isUsernameAbsent());
 		assertFalse(user.isTenantIdAbsent());
 		assertFalse(user.isRolesAbsent());
+	}
+
+	@Test
+	public void test_should_return_false_when_logged_in_user_is_same_as_user_being_updated() {
+		User user = User.builder()
+				.id(1L)
+				.loggedInUserId(1L)
+				.build();
+
+		assertFalse(user.isLoggedInUserDifferentFromUpdatedUser());
+	}
+
+	@Test
+	public void test_should_return_true_when_logged_in_user_is_different_from_user_being_updated() {
+		User user = User.builder()
+				.id(1L)
+				.loggedInUserId(2L)
+				.build();
+
+		assertTrue(user.isLoggedInUserDifferentFromUpdatedUser());
+	}
+
+	@Test
+	public void test_should_nullify_fields() {
+		User user = User.builder()
+				.username("userName")
+				.mobileNumber("mobileNumber")
+				.build();
+
+		user.nullifySensitiveFields();
+
+		assertNull(user.getUsername());
+		assertNull(user.getMobileNumber());
 	}
 
 }

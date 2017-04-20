@@ -12,10 +12,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.egov.user.domain.exception.DuplicateUserNameException;
-import org.egov.user.domain.exception.InvalidUserException;
-import org.egov.user.domain.exception.OtpValidationPendingException;
-import org.egov.user.domain.exception.UserNotFoundException;
+import org.egov.user.domain.exception.*;
 import org.egov.user.domain.model.Role;
 import org.egov.user.domain.model.User;
 import org.egov.user.domain.model.UserSearch;
@@ -151,6 +148,43 @@ public class UserServiceTest {
 		when(userRepository.getUserById(any(Long.class))).thenReturn(null);
 
 		userService.updateWithoutOtpValidation(1L, domainUser);
+	}
+
+	@Test(expected = UserIdMandatoryException.class)
+	public void test_should_throw_exception_on_partial_update_when_id_is_not_present() {
+		final User user = User.builder()
+				.id(null)
+				.build();
+
+		userService.partialUpdate(user);
+	}
+
+	@Test
+	public void test_should_nullify_fields_that_are_not_allowed_to_be_updated() {
+		final User user = mock(User.class);
+
+		userService.partialUpdate(user);
+
+		verify(user).nullifySensitiveFields();
+	}
+
+	@Test
+	public void test_should_partially_update_user() {
+		final User user = mock(User.class);
+		final long userId = 123L;
+		when(user.getId()).thenReturn(userId);
+
+		userService.partialUpdate(user);
+
+		verify(userRepository).update(userId, user);
+	}
+
+	@Test(expected = UserProfileUpdateDeniedException.class)
+	public void test_should_throw_exception_when_logged_in_user_is_different_from_user_being_updated() {
+		final User user = mock(User.class);
+		when(user.isLoggedInUserDifferentFromUpdatedUser()).thenReturn(true);
+
+		userService.partialUpdate(user);
 	}
 
 	private org.egov.user.domain.model.User validDomainUser() {

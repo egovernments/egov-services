@@ -73,4 +73,4 @@ CREATE TABLE eglams_demand
   agreementid bigint NOT NULL,
   demandid character varying NOT NULL,
   CONSTRAINT pk_eglams_demand PRIMARY KEY (id)
-);
+)

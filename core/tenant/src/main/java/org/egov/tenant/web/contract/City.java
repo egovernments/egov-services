@@ -19,7 +19,6 @@ public class City {
     private String regionName;
     private Double longitude;
     private Double latitude;
-    private String tenantCode;
 
     public City(org.egov.tenant.domain.model.City city) {
         this.name = city.getName();
@@ -29,7 +28,6 @@ public class City {
         this.regionName = city.getRegionName();
         this.longitude = city.getLongitude();
         this.latitude = city.getLatitude();
-        this.tenantCode = city.getTenantCode();
     }
 
     @JsonIgnore
@@ -42,7 +40,6 @@ public class City {
                 .regionName(regionName)
                 .longitude(longitude)
                 .latitude(latitude)
-                .tenantCode(tenantCode)
                 .build();
     }
 }

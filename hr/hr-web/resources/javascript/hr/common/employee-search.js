@@ -12,8 +12,7 @@ class EmployeeSearch extends React.Component {
     this.search=this.search.bind(this);
   }
 
-  search(e)
-  {
+  search(e) {
     let {
     code,
     departmentId,
@@ -22,52 +21,32 @@ class EmployeeSearch extends React.Component {
     asOnDate}=this.state.searchSet;
     e.preventDefault();
     //call api call
-    var employees=[];
-    // var queryParam=getUrlVars();
-    // console.log(queryParam["type"]);
-    // var endDate=(parseInt(queryParam["year"])==new Date().getFullYear()&&parseInt(queryParam["month"])==new Date().getMonth())?new Date():new Date(parseInt(queryParam["year"]), parseInt(queryParam["month"])+1, 0);
-    // var now = new Date();
-    // var startDate=new Date(typeof(queryParam["year"])==="undefined"?now.getFullYear():parseInt(queryParam["year"]), typeof(queryParam["month"])==="undefined"?now.getMonth():parseInt(queryParam["month"]), 1);
-    // console.log(typeof(queryParam["month"])==="undefined"?now.getMonth():parseInt(queryParam["month"]));
-    // var now = new Date();
-    // var startDate=new Date((typeof(queryParam["year"])==="undefined")?now.getFullYear():parseInt(queryParam["year"]), (typeof(queryParam["month"])==="undefined")?now.getMonth():parseInt(queryParam["month"]), 1);
-    // console.log(startDate);
-    // var currentDate=new Date(queryParam["year"],queryParam["month"],1);
-    //console.log(commonApiPost("hr-employee","employees","_search",{tenantId},this.state.searchSet).responseJSON["Employee"]);
-   //employees=commonApiPost("hr-employee","employees","_search",{tenantId,code,"assignment.isPrimary":true,asOnDate:(currentDate.getDate().toString().length==2?currentDate.getDate():"0"+currentDate.getDate())+"/"+(currentDate.getMonth().toString().length==2?(currentDate.getMonth()+1):"0"+(currentDate.getMonth()+1))+"/"+currentDate.getFullYear()}this.state.searchSet).responseJSON["Employee"] || [];
-   employees=commonApiPost("hr-employee","employees","_search",{tenantId,code,asOnDate,departmentId,designationId},this.state.searchSet).responseJSON["Employee"] || [];
-   this.setState({
+    var employees = [];
+    try {
+      employees = commonApiPost("hr-employee","employees","_search", {tenantId,code,asOnDate,departmentId,designationId},this.state.searchSet).responseJSON["Employee"] || [];
+    } catch (e) {
+      employees = [];
+      console.log(e);
+    }
+
+    this.setState({
       isSearchClicked:true,
       employees
     })
 
-    // $('#employeeTable').DataTable().draw();
-    // console.log($('#employeeTable').length);
-
   }
 
 
-  componentWillMount()
-  {
-
-
+  componentWillMount() {
     this.setState({
-      // departmentList:assignments_department;
-      // designationList:assignments_designation;
-
-      departmentList:getCommonMaster("egov-common-masters","departments","Department").responseJSON["Department"] || [],
-      designationList:getCommonMaster("hr-masters","designations","Designation").responseJSON["Designation"] || []
-
-  })
+      departmentList: Object.assign([], assignments_department),
+      designationList: Object.assign([], assignments_designation)
+    })
   }
 
   componentDidUpdate(prevProps, prevState)
   {
       if (prevState.employees.length!=this.state.employees.length) {
-          // $('#employeeTable').DataTable().draw();
-          // alert(prevState.employees.length);
-          // alert(this.state.employees.length);
-          // alert('updated');
           $('#employeeTable').DataTable({
             dom: 'Bfrtip',
             buttons: [
@@ -80,14 +59,13 @@ class EmployeeSearch extends React.Component {
   componentDidMount() {
     var type = getUrlVars()["type"], _this = this;
     var id = getUrlVars()["id"];
-    $('#asOnDate').datetimepicker({
+    $('#asOnDate').datepicker({
         format: 'DD/MM/YYYY',
         // maxDate: new Date(),
         defaultDate: ""
     });
     $('#asOnDate').val("");
     $('#asOnDate').on("dp.change", function(e) {
-      console.log($("#asOnDate").val());
           _this.setState({
                 searchSet: {
                     ..._this.state.searchSet,
@@ -97,9 +75,7 @@ class EmployeeSearch extends React.Component {
       });
     }
 
-  handleChange(e,name)
-  {
-
+  handleChange(e,name) {
       this.setState({
           searchSet:{
               ...this.state.searchSet,
@@ -109,23 +85,10 @@ class EmployeeSearch extends React.Component {
 
   }
 
-
   close(){
       // widow.close();
       open(location, '_self').close();
   }
-
-  // updateTable()
-  // {
-  //   $('#employeeTable').DataTable({
-  //     dom: 'Bfrtip',
-  //     buttons: [
-  //              'copy', 'csv', 'excel', 'pdf', 'print'
-  //      ],
-  //      ordering: false
-  //   });
-  //
-  // }
 
   render() {
     console.log(this.state.searchSet);
@@ -136,8 +99,7 @@ class EmployeeSearch extends React.Component {
     departmentId,
     designationId,
     asOnDate,name,mobileNumber,pan,aadhaarNumber}=this.state.searchSet;
-    const renderOption=function(list,listName="")
-    {
+    const renderOption = function(list,listName="") {
         if(list)
         {
             if (listName==="year") {
@@ -158,8 +120,7 @@ class EmployeeSearch extends React.Component {
             }
         }
     }
-    const showTable=function()
-    {
+    const showTable = function() {
       if(isSearchClicked)
       {
           return (
@@ -186,33 +147,20 @@ class EmployeeSearch extends React.Component {
             </table>
 
           )
-
-          // updateTable();
-          // $('#employeeTable').DataTable({
-          //   dom: 'Bfrtip',
-          //   buttons: [
-          //            'copy', 'csv', 'excel', 'pdf', 'print'
-          //    ],
-          //    ordering: false
-          // });
-            // alert("hai");
       }
-
     }
 
 
     const renderAction=function(type,id){
       if (type==="update") {
-
               return (
                       <a href={`app/hr/employee/create.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-pencil"></span></a>
               );
-
-    }else {
+      } else {
             return (
                     <a href={`app/hr/employee/create.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-modal-window"></span></a>
             );
-        }
+      }
 }
 
 const getTodaysDate = function() {
@@ -227,8 +175,7 @@ const getTodaysDate = function() {
     }
 
   //  <td data-label="designation">{getNameById(assignments_designation,item.assignments[0].designation)}</td>
-    const renderBody=function()
-    {
+    const renderBody = function() {
       if(employees.length>0)
       {
       return employees.map((item,index)=>

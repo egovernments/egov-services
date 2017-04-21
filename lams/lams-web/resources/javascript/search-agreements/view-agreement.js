@@ -196,7 +196,7 @@ $(document).ready(function() {
     $("input[type=file]").on("change", function(evt) {
         // console.log(this.value);
         // renewAgreement[this.id] = this.value;
-        var file = evt.currentTarget.files[0];
+        renewAgreement[this.id] = evt.currentTarget.files;
 
         //call post api update and update that url in pur agrement object
     });
@@ -204,7 +204,6 @@ $(document).ready(function() {
     var validation_rules = {};
     var final_validatin_rules = {};
     var commom_fields_rules = {
-
         renew_order_no: {
             required: true
         },
@@ -218,6 +217,15 @@ $(document).ready(function() {
             required: true
         },
         renew_rent_increment_method: {
+            required: true
+        },
+        date_of_expiry: {
+            required: true
+        },
+        renew_order_date: {
+            required: true
+        },
+        renew_period: {
             required: true
         }
     };
@@ -274,7 +282,7 @@ $(document).ready(function() {
             });
         }
     } else if(getUrlVars()["view"] == "renew") {
-
+        $(`label[for=renew_rent]`).text(getUrlVars()["type"] == "shop" ? "Shop Rent (Rs)" : "Land Rent (Rs)");
     } else {
         $("#viewDcb").remove();
     }
@@ -432,8 +440,4 @@ $(document).ready(function() {
 
         }
     })
-
-
-
-
 });

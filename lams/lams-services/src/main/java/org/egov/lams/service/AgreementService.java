@@ -131,13 +131,11 @@ public class AgreementService {
 		
 		ObjectMapper mapper = new ObjectMapper();
 		String agreementValue = null;
-		
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(agreement.getCommencementDate());
 		calendar.add(Calendar.YEAR,agreement.getTimePeriod().intValue());
 		Date closeDate = calendar.getTime();
 		agreement.setCloseDate(closeDate);
-		
 		logger.info("The closeDate calculated is " + closeDate + "from commencementDate of "
 				+ agreement.getCommencementDate() + "by adding with no of years " + agreement.getTimePeriod());	
 		

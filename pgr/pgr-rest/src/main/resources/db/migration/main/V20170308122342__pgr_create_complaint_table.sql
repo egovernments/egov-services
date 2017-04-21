@@ -70,7 +70,7 @@ CREATE TABLE egpgr_complaint
   receivingcenter bigint,
   lat double precision,
   lng double precision,
-  status bigint,
+  status character varying(25),
   state_id bigint,
   escalation_date timestamp,
   version bigint,

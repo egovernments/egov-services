@@ -58,7 +58,7 @@ public class LocationServiceTest {
         final HashMap<Object, Object> serviceRequestMap = new HashMap<>();
         serviceRequestMap.put("lat", 1.2d);
         serviceRequestMap.put("lng", 4.5d);
-        serviceRequestMap.put("tenantId","ap.kurnool");
+        serviceRequestMap.put("tenantId","ap.public");
         sevaRequestMap.put("ServiceRequest", serviceRequestMap);
         final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
 
@@ -75,6 +75,7 @@ public class LocationServiceTest {
         final HashMap<String, Object> sevaRequestMap = new HashMap<>();
         final HashMap<Object, Object> serviceRequestMap = new HashMap<>();
         serviceRequestMap.put("address_id", "crossHierarchyId");
+        serviceRequestMap.put("tenantId", "ap.public");
         sevaRequestMap.put("ServiceRequest", serviceRequestMap);
         final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
         final BoundaryResponse parentBoundaryResponse = new BoundaryResponse(1L, "parent");

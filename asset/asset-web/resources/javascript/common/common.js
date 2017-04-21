@@ -6,7 +6,7 @@ var authToken = localStorage.getItem("auth-token");
 var requestInfo = {
     "apiId": "org.egov.pgr",
     "ver": "1.0",
-    "ts": "2015-04-12",
+    "ts": "01-04-2017 01:01:01",
     "action": "asd",
     "did": "4354648646",
     "key": "xyz",

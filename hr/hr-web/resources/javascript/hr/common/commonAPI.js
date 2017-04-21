@@ -13,7 +13,7 @@ var date = now.getDate();
 var requestInfo = {
     "apiId": "eis",
     "ver": "1.0",
-    "ts": "2015-04-12",
+    "ts": "01-04-2017 01:01:01",
     "action": "asd",
     "did": "4354648646",
     "key": "xyz",
@@ -31,9 +31,9 @@ function blockUI() {
 }
 
 function unblockUI() {
-    setTimeout(function(){ 
+    setTimeout(function(){
       $('body').css('overflow', '');
-      $('.blockUI').remove(); 
+      $('.blockUI').remove();
     }, 100);
 }
 
@@ -205,6 +205,8 @@ function getUrlVars() {
     }
     return vars;
 }
+
+
 
 function getCommonMasterById(mainRoute, resource, returnObject, id) {
     blockUI();

@@ -42,6 +42,8 @@ package org.egov.eis.repository.rowmapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import org.egov.eis.model.ObjectType;
 import org.springframework.jdbc.core.RowMapper;
@@ -51,12 +53,20 @@ import org.springframework.stereotype.Component;
 public class ObjectTypeRowMapper implements RowMapper<ObjectType> {
 
 	public ObjectType mapRow(ResultSet rs, int rowNum) throws SQLException {
+		final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
 		ObjectType objectType = new ObjectType();
 		objectType.setId(rs.getLong("id"));
 		objectType.setType(rs.getString("type"));
 		objectType.setDescription(rs.getString("description"));
-		objectType.setLastModifiedDate(rs.getDate("lastModifiedDate"));
 		objectType.setTenantId(rs.getString("tenantId"));
+		try {
+			objectType.setLastModifiedDate(sdf.parse(sdf.format(rs.getDate("lastModifiedDate"))));
+		} catch (ParseException e) {
+			e.printStackTrace();
+			throw new SQLException("Parse exception while parsing date");
+		}
+
 		return objectType;
 	}
 }

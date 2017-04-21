@@ -42,6 +42,8 @@ package org.egov.eis.repository.rowmapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import org.egov.eis.model.DepartmentDesignation;
 import org.egov.eis.model.Designation;
@@ -56,6 +58,8 @@ public class PositionHierarchyRowMapper implements RowMapper<PositionHierarchy> 
 
 	@Override
 	public PositionHierarchy mapRow(ResultSet rs, int rowNum) throws SQLException {
+		final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
 		PositionHierarchy positionHierarchy = new PositionHierarchy();
 		positionHierarchy.setId(rs.getLong("ph_id"));
 
@@ -109,8 +113,13 @@ public class PositionHierarchyRowMapper implements RowMapper<PositionHierarchy> 
 		objectType.setId(rs.getLong("ot_id"));
 		objectType.setType(rs.getString("ot_type"));
 		objectType.setDescription(rs.getString("ot_description"));
-		objectType.setLastModifiedDate(rs.getDate("ot_lastModifiedDate"));
 		objectType.setTenantId(rs.getString("ph_tenantId"));
+		try {
+			objectType.setLastModifiedDate(sdf.parse(sdf.format(rs.getDate("ot_lastModifiedDate"))));
+		} catch (ParseException e) {
+			e.printStackTrace();
+			throw new SQLException("Parse exception while parsing date");
+		}
 
 		positionHierarchy.setFromPosition(fromPosition);
 		positionHierarchy.setToPosition(toPosition);

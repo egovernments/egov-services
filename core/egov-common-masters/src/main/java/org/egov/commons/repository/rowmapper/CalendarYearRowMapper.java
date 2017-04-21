@@ -65,10 +65,12 @@ public class CalendarYearRowMapper implements RowMapper<CalendarYear> {
 			calendarYear.setEndDate(sdf.parse(sdf.format(rs.getDate("endDate"))));
 		} catch (ParseException e) {
 			e.printStackTrace();
+			throw new SQLException("Parse exception while parsing date");
 		}
-
+		
 		calendarYear.setActive((Boolean) rs.getObject("active"));
 		calendarYear.setTenantId(rs.getString("tenantId"));
 		return calendarYear;
 	}
+
 }

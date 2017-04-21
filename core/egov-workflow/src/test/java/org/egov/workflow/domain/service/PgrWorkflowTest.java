@@ -300,12 +300,12 @@ public class PgrWorkflowTest {
         final List<Value> value3 = Collections.singletonList(comments);
         final Attribute attributeComments = new Attribute(false, "", "", true, "", value3,"ap.public");
         final List<Value> value4 = Collections.singletonList(currentAssignee);
-        final Attribute attributeCurrentAssignee = new Attribute(false,"","",true,"",value4,"ap.public");
+        final Attribute attributePreviousAssignee = new Attribute(false,"","",true,"",value4,"ap.public");
 
         valuesMap.put(STATE_ID, attributeStateId);
         valuesMap.put(STATE_DETAILS, attributeStateDetails);
         valuesMap.put("approvalComments", attributeComments);
-        valuesMap.put("currentAssignee",attributeCurrentAssignee);
+        valuesMap.put("previousAssignee",attributePreviousAssignee);
 
         Task task = Task.builder().attributes(valuesMap).assignee(null).id("2").sender("narasappa").status("PROCESSING")
             .requestInfo(requestInfo).createdDate(new Date()).build();

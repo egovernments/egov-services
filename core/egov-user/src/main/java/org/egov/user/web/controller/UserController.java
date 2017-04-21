@@ -30,6 +30,13 @@ public class UserController {
 		return createUser(createUserRequest, true);
 	}
 
+	@PostMapping("/citizen/_create")
+	public UserDetailResponse createCitizen(@RequestBody CreateUserRequest createUserRequest) {
+		User user = createUserRequest.toDomain();
+		final User newUser = userService.createCitizen(user);
+		return createResponse(newUser);
+	}
+
 	@PostMapping("/users/_createnovalidate")
 	public UserDetailResponse createUserWithoutValidation(@RequestBody CreateUserRequest createUserRequest) {
 		return createUser(createUserRequest, false);
@@ -58,7 +65,7 @@ public class UserController {
 		return updateUser(id, createUserRequest);
 	}
 
-	@PostMapping("v1/user/_patch")
+	@PostMapping("/user/_patch")
 	public UserDetailResponse patch(@RequestBody final CreateUserRequest createUserRequest) {
 		User user = createUserRequest.toDomain();
 		final User updatedUser = userService.partialUpdate(user);

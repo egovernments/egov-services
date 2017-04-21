@@ -83,6 +83,30 @@ public class UserServiceTest {
 		assertEquals(expectedEntityUser, returnedUser);
 	}
 
+	@Test
+	public void test_should_create_a_valid_citizen() {
+		org.egov.user.domain.model.User domainUser = mock(User.class);
+		when(otpRepository.isOtpValidationComplete(domainUser)).thenReturn(true);
+		final User expectedEntityUser = User.builder().build();
+		when(userRepository.save(domainUser)).thenReturn(expectedEntityUser);
+
+		User returnedUser = userService.createCitizen(domainUser);
+
+		assertEquals(expectedEntityUser, returnedUser);
+	}
+
+	@Test
+	public void test_should_set_role_to_citizen_when_creating_a_citizen() {
+		org.egov.user.domain.model.User domainUser = mock(User.class);
+		when(otpRepository.isOtpValidationComplete(domainUser)).thenReturn(true);
+		final User expectedEntityUser = User.builder().build();
+		when(userRepository.save(domainUser)).thenReturn(expectedEntityUser);
+
+		userService.createCitizen(domainUser);
+
+		verify(domainUser).setRoleToCitizen();
+	}
+
 	@Test(expected = DuplicateUserNameException.class)
 	public void test_should_raise_exception_when_duplicate_user_name_exists() throws Exception {
 		org.egov.user.domain.model.User domainUser = validDomainUser();

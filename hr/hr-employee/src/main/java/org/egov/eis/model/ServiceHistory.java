@@ -40,7 +40,7 @@
 
 package org.egov.eis.model;
 
-import static org.gov.eis.utils.DateUtils.areDatesEqualWithoutTimePart;
+import static org.egov.eis.utils.DateUtils.areDatesEqualWithoutTimePart;
 
 import java.util.ArrayList;
 import java.util.Date;

@@ -105,9 +105,18 @@ public class User {
 	public void nullifySensitiveFields() {
 		username = null;
 		mobileNumber = null;
+		password = null;
+		pwdExpiryDate = null;
+		roles = null;
 	}
 
 	public boolean isLoggedInUserDifferentFromUpdatedUser() {
 		return !id.equals(loggedInUserId);
+	}
+
+	public User setRoleToCitizen() {
+		type = UserType.CITIZEN;
+		roles = Collections.singletonList(Role.getCitizenRole());
+		return this;
 	}
 }

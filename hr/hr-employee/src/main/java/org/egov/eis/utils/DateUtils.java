@@ -1,4 +1,4 @@
-package org.gov.eis.utils;
+package org.egov.eis.utils;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;

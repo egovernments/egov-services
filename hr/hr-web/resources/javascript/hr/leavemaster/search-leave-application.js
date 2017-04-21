@@ -6,10 +6,7 @@ class SearchLeaveApplication extends React.Component {
     name:"",
     code:"",
     departmentId:"",
-    designationId:"",
-    employeeTypeCode:"",
-    functionaryCode:"",
-    employeeStatusCode:""},isSearchClicked:false,employeeType:[],assignments_department:[],assignments_designation:[],employeeStatus:[],assignments_functionary:[]}
+    designationId:""},isSearchClicked:false,assignments_department:[],assignments_designation:[]}
     this.handleChange=this.handleChange.bind(this);
     this.search=this.search.bind(this);
 
@@ -40,10 +37,7 @@ class SearchLeaveApplication extends React.Component {
       name:"",
       code:"",
       departmentId:"",
-      designation:"",
-      employeeTypeCode:"",
-      functionaryCode:"",
-      employeeStatusCode:""}
+      designationId:""}
     })
   }
 
@@ -53,10 +47,7 @@ class SearchLeaveApplication extends React.Component {
 
     this.setState({
       assignments_department,
-      assignments_designation,
-      employeeType,
-      employeeStatus,
-      assignments_functionary
+      assignments_designation
   })
   }
 
@@ -103,10 +94,7 @@ class SearchLeaveApplication extends React.Component {
     let {name,
     code,
     departmentId,
-    designationId,
-    employeeTypeCode,
-    functionaryCode,
-    employeeStatusCode}=this.state.searchSet;
+    designationId}=this.state.searchSet;
     const renderOption=function(list)
     {
         if(list)
@@ -192,7 +180,7 @@ class SearchLeaveApplication extends React.Component {
                           <div className="styled-select">
                             <select id="designationId" name="designationId" value={designationId} onChange={(e)=>{
                                 handleChange(e,"designationId")}}>
-                            <option>Select Designation</option>
+                            <option value= "">Select Designation</option>
                             {renderOption(this.state.assignments_designation)}
                            </select>
                         </div>
@@ -208,7 +196,7 @@ class SearchLeaveApplication extends React.Component {
                           <div className="styled-select">
                               <select id="departmentId" name="departmentId" value={departmentId}
                               onChange={(e)=>{ handleChange(e,"departmentId")}}>
-                                <option>Select Department</option>
+                                <option  value= "">Select Department</option>
                                 {renderOption(this.state.assignments_department)}
                              </select>
                           </div>
@@ -243,7 +231,7 @@ class SearchLeaveApplication extends React.Component {
                     </div>
             </div>
 
-                <div className="row">
+                {/*<div className="row">
                       <div className="col-sm-6">
                           <div className="row">
                               <div className="col-sm-6 label-text">
@@ -297,7 +285,7 @@ class SearchLeaveApplication extends React.Component {
                           </div>
                       </div>
                     </div>
-                </div>
+                </div>*/}
 
 
             <div className="text-center">

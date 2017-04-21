@@ -16,8 +16,7 @@ class WithoutAssignment extends React.Component {
     this.closeWindow = this.closeWindow.bind(this);
   }
 
-  handleChange(e, name)
-  {
+  handleChange(e, name) {
       this.setState({
           ...this.state,
           searchSet:{
@@ -27,17 +26,23 @@ class WithoutAssignment extends React.Component {
       })
   }
 
-  searchEmployee (e)
-  {
+  searchEmployee (e) {
     e.preventDefault();
+    var result;
+    try {
+        result = commonApiPost("hr-employee", "employees", "_search", {...this.state.searchSet, tenantId}).responseJSON["Employee"] || [];
+    } catch (e) {
+        result = [];
+        console.log(e);
+    }
     this.setState({
         ...this.state,
         isSearchClicked: true,
-        result: commonApiPost("hr-employee", "employees", "_search", {...this.state.searchSet, tenantId}).responseJSON["Employee"]
+        result: result
     })
   }
 
-  closeWindow(){
+  closeWindow() {
       open(location, '_self').close();
   }
 

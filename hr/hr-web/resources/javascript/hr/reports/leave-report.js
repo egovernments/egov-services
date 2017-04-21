@@ -34,14 +34,13 @@ class LeaveReport extends React.Component {
   componentWillMount() {
      this.setState({
          ...this.state,
-         departments: commonApiPost("egov-common-masters", "departments", "_search", {tenantId}).responseJSON["Department"] || [],
-         designations: commonApiPost("hr-masters", "designations", "_search", {tenantId}).responseJSON["Designation"] || [],
-         employeeTypes: commonApiPost("hr-masters", "employeetypes", "_search", {tenantId}).responseJSON["EmployeeType"] || []
+         departments: Object.assign([], assignments_department),
+         designations: Object.assign([], assignments_designation),
+         employeeTypes: Object.assign([], employeeType)
      });
   }
 
-  componentDidUpdate(prevProps, prevState)
-  {
+  componentDidUpdate(prevProps, prevState) {
       if (prevState.result.length!=this.state.result.length) {
           $('#employeeTable').DataTable({
             dom: 'Bfrtip',
@@ -57,14 +56,19 @@ class LeaveReport extends React.Component {
       open(location, '_self').close();
   }
 
-  searchEmployee (e)
-  {
-     console.log(commonApiPost("hr-employee", "employees", "_search", {...this.state.searchSet, tenantId}).responseJSON["Employee"]);
+  searchEmployee (e) {
     e.preventDefault();
+    var result;
+    try {
+        result = commonApiPost("hr-employee", "employees", "_search", {...this.state.searchSet, tenantId}).responseJSON["Employee"] || [];
+    } catch (e) {
+        result = [];
+        console.log(e);
+    }
     this.setState({
         ...this.state,
         isSearchClicked: true,
-        result: commonApiPost("hr-employee", "employees", "_search", {...this.state.searchSet, tenantId}).responseJSON["Employee"]
+        result: result    
     })
   }
 

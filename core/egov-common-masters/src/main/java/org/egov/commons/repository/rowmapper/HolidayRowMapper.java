@@ -74,6 +74,7 @@ public class HolidayRowMapper implements RowMapper<Holiday> {
 			holiday.setApplicableOn(sdf.parse(sdf.format(rs.getDate("h_applicableOn"))));
 		} catch (ParseException e) {
 			e.printStackTrace();
+			throw new SQLException("Parse exception while parsing date");
 		}
 
 		holiday.setCalendarYear(calendarYear);

@@ -31,7 +31,8 @@ class ViewApply extends React.Component {
 
 
   componentDidMount() {
-    var leaveApp = getCommonMaster("hr-leave","leaveapplications","LeaveApplication").responseJSON["LeaveApplication"];
+    var employee = getUrlVars()["id"];
+    var leaveApp = getCommonMasterById("hr-leave","leaveapplications","LeaveApplication",employee).responseJSON["LeaveApplication"][0];
     var empIds = [];
     for(var i=0; i<leaveApp.length; i++) {
       if(empIds.indexOf(leaveApp[i].employee) == -1)
@@ -83,15 +84,6 @@ class ViewApply extends React.Component {
     let {list}=this.state;
     let {employee,name,code,leaveType,fromDate,toDate,availableDays,leaveDays,reason}=this.state.leaveSet;
 
-    const renderAction=function(type,id){
-      if (type==="view") {
-
-              return (
-                      <a href={`app/hr/leavemaster/apply-leave.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-modal-window"></span></a>
-              );
-
-    }
-}
 
 
     const renderBody=function()
@@ -105,9 +97,9 @@ class ViewApply extends React.Component {
                     <td data-label="toDate">{item.toDate}</td>
                     <td data-label="availableDays">{item.availableDays}</td>
                     <td data-label="leaveDays">{item.leaveDays}</td>
-                    <td data-label="reason">{item.reason}</td>
+                    <td data-label="status">{item.status}</td>
                     <td data-label="action">
-                    {renderAction(getUrlVars()["type"],item.id)}
+                    {  <a href={`app/hr/leavemaster/apply-leave.html?id=${item.id}&type=view`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-modal-window"></span></a>}
                     </td>
                 </tr>
             );
@@ -121,11 +113,11 @@ class ViewApply extends React.Component {
                 <tr>
                     <th>Sl No.</th>
                     <th>Name</th>
-                    <th>fromDate</th>
-                    <th>toDate</th>
-                    <th>availableDays</th>
-                    <th>leaveDays</th>
-                    <th>reason</th>
+                    <th>From Date</th>
+                    <th>To Date</th>
+                    <th>Available Days</th>
+                    <th>Leave Days</th>
+                    <th>Status</th>
                     <th>Action</th>
                 </tr>
             </thead>

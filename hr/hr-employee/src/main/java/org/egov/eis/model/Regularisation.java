@@ -40,7 +40,7 @@
 
 package org.egov.eis.model;
 
-import static org.gov.eis.utils.DateUtils.areDatesEqualWithoutTimePart;
+import static org.egov.eis.utils.DateUtils.areDatesEqualWithoutTimePart;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -133,7 +133,9 @@ public class Regularisation {
 		if (orderDate == null) {
 			if (other.orderDate != null)
 				return false;
-		} else if (!areDatesEqualWithoutTimePart(orderDate, other.orderDate))
+		} else if (other.orderDate == null)
+			return false;
+		else if (!areDatesEqualWithoutTimePart(orderDate, other.orderDate))
 			return false;
 		if (orderNo == null) {
 			if (other.orderNo != null)

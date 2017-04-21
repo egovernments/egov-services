@@ -7,6 +7,8 @@ import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -200,16 +202,40 @@ public class UserTest {
 	}
 
 	@Test
+	public void test_should_override_to_citizen_role() {
+		User user = User.builder()
+				.id(1L)
+				.type(UserType.CITIZEN)
+				.roles(Collections.singletonList(Role.builder().code("ADMIN").build()))
+				.build();
+
+		user.setRoleToCitizen();
+
+		assertEquals(UserType.CITIZEN, user.getType());
+		final List<Role> roles = user.getRoles();
+		assertEquals(1, roles.size());
+		assertEquals("CITIZEN", roles.get(0).getCode());
+	}
+
+	@Test
 	public void test_should_nullify_fields() {
+		Role role1 = Role.builder().code("roleCode1").build();
+		Role role2 = Role.builder().code("roleCode2").build();
 		User user = User.builder()
 				.username("userName")
 				.mobileNumber("mobileNumber")
+				.password("password")
+				.pwdExpiryDate(new Date())
+				.roles(Arrays.asList(role1, role2))
 				.build();
 
 		user.nullifySensitiveFields();
 
 		assertNull(user.getUsername());
 		assertNull(user.getMobileNumber());
+		assertNull(user.getPassword());
+		assertNull(user.getPwdExpiryDate());
+		assertNull(user.getRoles());
 	}
 
 }

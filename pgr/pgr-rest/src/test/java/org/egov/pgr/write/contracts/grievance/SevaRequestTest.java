@@ -97,6 +97,7 @@ public class SevaRequestTest {
         assertEquals(Long.valueOf(7), complaintRecord.getLocation());
         assertEquals(Long.valueOf(8), complaintRecord.getChildLocation());
         assertEquals(Long.valueOf(9), complaintRecord.getWorkflowStateId());
+        assertEquals("ap.public", complaintRecord.getTenantId());
     }
 
     @Test

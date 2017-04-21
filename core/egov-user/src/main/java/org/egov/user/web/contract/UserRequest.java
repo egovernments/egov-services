@@ -89,7 +89,7 @@ public class UserRequest {
 		this.lastModifiedBy = user.getLastModifiedBy();
 		this.lastModifiedDate = user.getLastModifiedDate();
 		this.tenantId = user.getTenantId();
-		this.roles = convertRoleEntitiesToContract(user.getRoles());
+		this.roles = convertdomainRoleToContract(user.getRoles());
 
 		if (isGuardianRelationFatherOrHusband(user.getGuardianRelation())) {
 			this.fatherOrHusbandName = user.getGuardian();
@@ -154,7 +154,7 @@ public class UserRequest {
 		return formatter.toString();
 	}
 
-	private List<RoleRequest> convertRoleEntitiesToContract(List<Role> domainRoles) {
+	private List<RoleRequest> convertdomainRoleToContract(List<Role> domainRoles) {
 		if (domainRoles == null) return new ArrayList<>();
 		return domainRoles.stream().map(RoleRequest::new).collect(Collectors.toList());
 	}

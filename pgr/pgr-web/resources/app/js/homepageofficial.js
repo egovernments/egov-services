@@ -38,6 +38,9 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 var tableContainer, positionId, dt_date, dt_sender, dt_now, dt_status, dt_comments;
+var RequestInfo = new $.RequestInfo(localStorage.getItem("auth"));
+var requestInfo = {};
+requestInfo['RequestInfo'] = RequestInfo.requestInfo;
 $(document).ready(function()
 {	
 	$('#new-pass').popover({ trigger: "focus",placement: "bottom"});
@@ -421,7 +424,6 @@ function clearnow(){
 //common ajax functions for worklist, drafts and notifications 
 function worklist(){
 	//console.log(positionId)
-	var headers = new $.headers();
 	tableContainer1 = $("#official_inbox"); 
 	tableContainer = tableContainer1.DataTable({
 		"sDom": "<'row'<'col-xs-12 hidden col-right'f>r>t<'row buttons-margin'<'col-md-5 col-xs-12'i><'col-md-3 col-xs-6'l><'col-md-4 col-xs-6 text-right'p>>",
@@ -430,8 +432,13 @@ function worklist(){
 		"autoWidth": false,
         "aaSorting": [],
 		"ajax": {
-			url : "/pgr/seva?jurisdiction_id=6&assignment_id="+positionId,
-			headers : headers.header,
+			url : "/pgr/seva/_search?tenantId=ap.public&assignment_id="+positionId,
+			type: 'POST',
+			contentType: "application/json",
+            processData : true,
+            data: function ( requestInfo ) {
+		      return JSON.stringify( requestInfo );
+		    },
 			dataSrc : "service_requests"
 		},
 		"columns": [
@@ -611,15 +618,12 @@ function inboxloadmethod(){
 }
 
 function getPosition(){
-	var RI = new $.RequestInfo(localStorage.getItem('auth'));
-	var obj = {};
-	obj['RequestInfo'] = RI.requestInfo;
 	$.ajax({
 		url : '/eis/_assignmentByEmployeeId?employeeId='+localStorage.getItem('id'),
 		type : 'POST',
 		processData : false,
 		contentType: "application/json",
-		data : JSON.stringify(obj),
+		data : JSON.stringify( requestInfo ),
 		async : false,
 		success : function(response){
 			positionId = response.Assignment[0].position;

@@ -1897,6 +1897,9 @@ label.error {
   background: #f7f7f7;
 }
 /*datatable overrided properties*/
+table.dataTable thead tr > th:hover {
+  cursor: pointer;
+}
 table.dataTable tbody tr:hover {
   background: #f7f7f7;
   cursor: pointer;

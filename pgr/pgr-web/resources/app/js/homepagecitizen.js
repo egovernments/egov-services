@@ -37,17 +37,18 @@
  *
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-
+var RequestInfo = new $.RequestInfo(localStorage.getItem("auth"));
+var requestInfo = {};
+requestInfo['RequestInfo'] = RequestInfo.requestInfo;
 $(document).ready(function()
 {	
-
 	preventBack();
 
 	var obj = {};
-	var RI = new $.RequestInfo(localStorage.getItem('auth'));
+	
 	var userArray = [localStorage.getItem('id')]
 
-	obj['RequestInfo'] = RI.requestInfo;
+	obj['RequestInfo'] = RequestInfo.requestInfo;
 	obj['id'] = userArray;
 
 	$.ajax({
@@ -131,10 +132,13 @@ $(document).ready(function()
 });
 
 function loadComplaints(){
-	var headers = new $.headers();
 	$.ajax({
-		url : "/pgr/seva?jurisdiction_id=6&user_id="+localStorage.getItem("id"),
-		headers : headers.header,
+		url : "/pgr/seva/_search?tenantId=ap.public&user_id="+localStorage.getItem("id"),
+		type : 'POST',
+		dataType: 'json',
+		processData : false,
+		contentType: "application/json",
+		data : JSON.stringify(requestInfo),
 		beforeSend : function(){
 			showLoader();
 		},

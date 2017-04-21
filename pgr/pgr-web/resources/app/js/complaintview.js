@@ -107,10 +107,13 @@ $(document).ready(function()
 });
 
 function getComplaint(){
-	var headers = new $.headers();
 	$.ajax({
-		url: "/pgr/seva?jurisdiction_id=2&service_request_id="+srn,
-		headers : headers.header,
+		url: "/pgr/seva/_search?tenantId=ap.public&service_request_id="+srn,
+		type : 'POST',
+		dataType: 'json',
+		processData : false,
+		contentType: "application/json",
+		data : JSON.stringify(requestInfo),
 		beforeSend : function(){
 			showLoader();
 		},

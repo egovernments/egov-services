@@ -432,35 +432,6 @@ var RI = function(auth){
 
 $.RequestInfo = RI;
 
-var headers = function(){
-	this.api_id = 'org.egov.pgr';
-    this.ver = '1.0';
-    var dat = new Date().toLocaleDateString();
-	var time = new Date().toLocaleTimeString();
-	var date = dat.split("/").join("-");
-    this.ts = date+' '+time;
-    this.action = 'GET';
-    this.did = '4354648646';
-    this.msg_id = '654654';
-    this.requester_id = '61';
-    this.auth_token = null;
-
-    var header={};
-
-    header['api_id']=this.api_id;
-    header['ver']=this.ver;
-    header['ts']=this.ts;
-    header['action']=this.action;
-    header['did']=this.did;
-    header['msg_id']=this.msg_id;
-    header['requester_id']=this.requester_id;
-    header['auth_token']=this.auth_token;
-
-    this.header = header;
-}
-
-$.headers = headers;
-
 var loadDropDown = function(){
 
 }

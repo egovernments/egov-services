@@ -86,7 +86,7 @@ requestInfo['RequestInfo'] = RequestInfo.requestInfo;
 	$("#when_date").change(function () {
         populatedate($('#when_date').val());
 	});
-    
+
     $('#searchComplaints').click(function () {
 
     	var formData = $("form :input")
@@ -99,13 +99,17 @@ requestInfo['RequestInfo'] = RequestInfo.requestInfo;
 	    	return;
 	    }
 
-	    var searchURL = '/pgr/seva?jurisdiction_id=2&'+formData;
-    	var headers = new $.headers();
+	    var searchURL = '/pgr/seva/_search?tenantId=ap.public&'+formData;
 
     	tableContainer = $("#complaintSearchResults").DataTable( {
     		"ajax": {
 	            "url": searchURL,
-	            headers : headers.header,
+	            type: 'POST',
+	            contentType: "application/json",
+	            processData : true,
+	            data: function ( requestInfo ) {
+			      return JSON.stringify( requestInfo );
+			    },
 	            "dataSrc": "service_requests",
 	            beforeSend : function(){
 					showLoader();
@@ -308,7 +312,7 @@ function loadWard(){
 		dataType: 'json',
 		processData : false,
 		contentType: "application/json",
-		data : JSON.stringify(requestInfo),
+		data : JSON.stringify(requestInfo)
 	}).done(function(data) {
 		loadDD.load({
 			element:$('#ct-location'),
@@ -319,3 +323,20 @@ function loadWard(){
 		});
 	});
 }
+
+/*function get(){
+	$.ajax({
+		"url": "/pgr/seva/_search?tenantId=ap&service_request_id=00073-2017-RN",
+        type: 'POST',
+        dataType: 'json',
+		processData : false,
+        contentType: "application/json",
+        data : JSON.stringify(requestInfo),
+        success: function(data){
+        	console.log(data)
+        },
+        error : function(){
+        	console.log('failed')
+        }
+	})
+}*/

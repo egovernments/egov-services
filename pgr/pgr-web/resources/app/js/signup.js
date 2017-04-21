@@ -149,7 +149,7 @@ $(document).ready(function(){
 					reqObj['User'] = data;
 
 					$.ajax({
-						url : "/user/users/_create",
+						url : "/user/citizen/_create",
 						type : 'POST',
 						processData : false,
 						data : JSON.stringify(reqObj),

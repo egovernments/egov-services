@@ -40,7 +40,11 @@
 
 package org.egov.demand.web.contract;
 
+import java.util.Date;
+
 import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -64,7 +68,8 @@ public class RequestInfo {
 	private String ver;
 
 	@NotNull
-	private String ts;
+	@JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "IST")
+	private Date ts;
 
 	private String action;
 

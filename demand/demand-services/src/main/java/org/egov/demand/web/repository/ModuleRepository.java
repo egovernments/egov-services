@@ -37,7 +37,7 @@ public class ModuleRepository {
 		org.egov.demand.web.contract.RequestInfo requestInfo = new org.egov.demand.web.contract.RequestInfo();
 		requestInfo.setApiId("org.egov.commons.module.search");
 		requestInfo.setVer("1.0");
-		requestInfo.setTs(new Date().toString());
+		requestInfo.setTs(new Date());
 		requestInfoWrapper.setRequestInfo(requestInfo);
 		ModuleResponse moduleResponse = restTemplate.postForObject(url, requestInfoWrapper, ModuleResponse.class);
 		logger.info("the response from module api call ModuleResponse :::  "+ moduleResponse);

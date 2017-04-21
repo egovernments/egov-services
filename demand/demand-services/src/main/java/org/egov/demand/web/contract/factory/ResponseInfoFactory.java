@@ -51,7 +51,7 @@ public class ResponseInfoFactory {
 	public ResponseInfo createResponseInfoFromRequestInfo(@RequestBody RequestInfo requestInfo, Boolean success) {
         String apiId = requestInfo.getApiId();
         String ver = requestInfo.getVer();
-        String ts = requestInfo.getTs();
+        String ts = requestInfo.getTs().toString();
         String resMsgId = "placeholder"; // FIXME : Hard-coded
         String msgId = requestInfo.getMsgId();
         String responseStatus = success ? "successful" : "failed";

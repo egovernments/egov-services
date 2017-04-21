@@ -48,6 +48,7 @@ public class SevaRequest {
             .escalationDate(this.getServiceRequest().getEscalationDate())
             .workflowStateId(getStateId())
             .department(getDepartment())
+            .tenantId(this.getServiceRequest().getTenantId())
             .build();
     }
 

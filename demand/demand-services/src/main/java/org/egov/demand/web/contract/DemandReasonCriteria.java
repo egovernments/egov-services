@@ -13,6 +13,7 @@ public class DemandReasonCriteria {
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date toDate;
 	private String installmentType;
+	private String tenantId;
 
 	public String getModuleName() {
 		return moduleName;
@@ -36,6 +37,14 @@ public class DemandReasonCriteria {
 
 	public void setTaxPeriod(String taxPeriod) {
 		this.taxPeriod = taxPeriod;
+	}
+
+	public String getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
 	}
 
 }

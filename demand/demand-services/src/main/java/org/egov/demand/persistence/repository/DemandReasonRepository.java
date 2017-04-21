@@ -16,8 +16,8 @@ public interface DemandReasonRepository
 	EgDemandReason findByCodeInstModule(@Param("demandReasonCode") String demandReasonCode,
 			@Param("instDescription") String instDescription, @Param("moduleName") String moduleName);
 
-	@Query(" from EgDemandReason dr where dr.egInstallmentMaster.module=:moduleName")
-	List<EgDemandReason> search(@Param("moduleName") String moduleName);
+	@Query(" from EgDemandReason dr where dr.egInstallmentMaster.module=:moduleName and tenantId=:tenantId")
+	List<EgDemandReason> search(@Param("moduleName") String moduleName, @Param("tenantId") String tenantId);
 
 	@Transactional
 	EgDemandReason save(EgDemandReason demandReason);

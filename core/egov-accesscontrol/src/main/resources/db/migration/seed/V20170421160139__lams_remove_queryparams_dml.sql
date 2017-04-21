@@ -1,0 +1,1 @@
+update eg_action set queryparams='' where parentmodule in (select id::text from service where code in ('AGREEMENT','LAMS-REPORTS','LAMS-SERVICES'));

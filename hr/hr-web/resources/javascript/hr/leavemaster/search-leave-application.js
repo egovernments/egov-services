@@ -168,6 +168,7 @@ class SearchLeaveApplication extends React.Component {
   }
     return (
       <div>
+        <h3>Search employee to {getUrlVars()["type"]} a leave application</h3>
           <form onSubmit={(e)=>{search(e)}}>
           <fieldset>
           <div className="row">

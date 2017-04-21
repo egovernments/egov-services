@@ -42,6 +42,8 @@ package org.egov.eis.repository.rowmapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import org.egov.eis.model.LeaveOpeningBalance;
 import org.egov.eis.model.LeaveType;
@@ -53,6 +55,8 @@ public class LeaveOpeningBalanceRowMapper implements RowMapper<LeaveOpeningBalan
 
 	@Override
 	public LeaveOpeningBalance mapRow(ResultSet rs, int rowNum) throws SQLException {
+		final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
 		LeaveOpeningBalance leaveOpeningBalance = new LeaveOpeningBalance();
 		leaveOpeningBalance.setId(rs.getLong("lob_id"));
 		leaveOpeningBalance.setEmployee((Long) rs.getObject("lob_employeeId"));
@@ -68,19 +72,25 @@ public class LeaveOpeningBalanceRowMapper implements RowMapper<LeaveOpeningBalan
 		leaveType.setEncashable((Boolean) rs.getObject("lt_encashable"));
 		leaveType.setActive((Boolean) rs.getObject("lt_active"));
 		leaveType.setCreatedBy((Long) rs.getObject("lt_createdBy"));
-		leaveType.setCreatedDate(rs.getDate("lt_createdDate"));
 		leaveType.setLastModifiedBy((Long) rs.getObject("lt_lastModifiedBy"));
-		leaveType.setLastModifiedDate(rs.getDate("lt_lastModifiedDate"));
 		leaveType.setTenantId(rs.getString("lob_tenantId"));
+		try {
+			leaveType.setCreatedDate(sdf.parse(sdf.format(rs.getDate("lt_createdDate"))));
+			leaveType.setLastModifiedDate(sdf.parse(sdf.format(rs.getDate("lt_lastModifiedDate"))));
+			leaveOpeningBalance.setCreatedDate(sdf.parse(sdf.format(rs.getDate("lob_createdDate"))));
+			leaveOpeningBalance.setLastModifiedDate(sdf.parse(sdf.format(rs.getDate("lob_lastModifiedDate"))));
+		} catch (ParseException e) {
+			e.printStackTrace();
+			throw new SQLException("Parse exception while parsing date");
+		}
 
 		leaveOpeningBalance.setLeaveType(leaveType);
 
 		leaveOpeningBalance.setNoOfDays(Float.valueOf(rs.getObject("lob_noOfDays").toString()));
 		leaveOpeningBalance.setCreatedBy((Long) rs.getObject("lob_createdBy"));
-		leaveOpeningBalance.setCreatedDate(rs.getDate("lob_createdDate"));
 		leaveOpeningBalance.setLastModifiedBy((Long) rs.getObject("lob_lastModifiedBy"));
-		leaveOpeningBalance.setLastModifiedDate(rs.getDate("lob_lastModifiedDate"));
 		leaveOpeningBalance.setTenantId(rs.getString("lob_tenantId"));
+
 		return leaveOpeningBalance;
 	}
 }

@@ -42,6 +42,8 @@ package org.egov.eis.repository.rowmapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import org.egov.eis.model.LeaveAllotment;
 import org.egov.eis.model.LeaveType;
@@ -53,6 +55,8 @@ public class LeaveAllotmentRowMapper implements RowMapper<LeaveAllotment> {
 
 	@Override
 	public LeaveAllotment mapRow(ResultSet rs, int rowNum) throws SQLException {
+		final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
 		LeaveAllotment leaveAllotment = new LeaveAllotment();
 		leaveAllotment.setId(rs.getLong("la_id"));
 		leaveAllotment.setDesignation((Long) rs.getObject("la_designationId"));
@@ -67,19 +71,25 @@ public class LeaveAllotmentRowMapper implements RowMapper<LeaveAllotment> {
 		leaveType.setEncashable((Boolean) rs.getObject("lt_encashable"));
 		leaveType.setActive((Boolean) rs.getObject("lt_active"));
 		leaveType.setCreatedBy((Long) rs.getObject("lt_createdBy"));
-		leaveType.setCreatedDate(rs.getDate("lt_createdDate"));
 		leaveType.setLastModifiedBy((Long) rs.getObject("lt_lastModifiedBy"));
-		leaveType.setLastModifiedDate(rs.getDate("lt_lastModifiedDate"));
 		leaveType.setTenantId(rs.getString("la_tenantId"));
+		try {
+			leaveType.setCreatedDate(sdf.parse(sdf.format(rs.getDate("lt_createdDate"))));
+			leaveType.setLastModifiedDate(sdf.parse(sdf.format(rs.getDate("lt_lastModifiedDate"))));
+			leaveAllotment.setCreatedDate(sdf.parse(sdf.format(rs.getDate("la_createdDate"))));
+			leaveAllotment.setLastModifiedDate(sdf.parse(sdf.format(rs.getDate("la_lastModifiedDate"))));
+		} catch (ParseException e) {
+			e.printStackTrace();
+			throw new SQLException("Parse exception while parsing date");
+		}
 
 		leaveAllotment.setLeaveType(leaveType);
 
 		leaveAllotment.setNoOfDays(Float.valueOf(rs.getObject("la_noOfDays").toString()));
 		leaveAllotment.setCreatedBy((Long) rs.getObject("la_createdBy"));
-		leaveAllotment.setCreatedDate(rs.getDate("la_createdDate"));
 		leaveAllotment.setLastModifiedBy((Long) rs.getObject("la_lastModifiedBy"));
-		leaveAllotment.setLastModifiedDate(rs.getDate("la_lastModifiedDate"));
 		leaveAllotment.setTenantId(rs.getString("la_tenantId"));
+
 		return leaveAllotment;
 	}
 }

@@ -42,6 +42,8 @@ package org.egov.eis.repository.rowmapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import org.egov.eis.model.LeaveApplication;
 import org.egov.eis.model.LeaveType;
@@ -54,6 +56,8 @@ public class LeaveApplicationRowMapper implements RowMapper<LeaveApplication> {
 
     @Override
     public LeaveApplication mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+		final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
         final LeaveApplication leaveApplication = new LeaveApplication();
         leaveApplication.setId(rs.getLong("la_id"));
         leaveApplication.setApplicationNumber(rs.getString("la_applicationNumber"));
@@ -69,15 +73,23 @@ public class LeaveApplicationRowMapper implements RowMapper<LeaveApplication> {
         leaveType.setEncashable((Boolean) rs.getObject("lt_encashable"));
         leaveType.setActive((Boolean) rs.getObject("lt_active"));
         leaveType.setCreatedBy((Long) rs.getObject("lt_createdBy"));
-        leaveType.setCreatedDate(rs.getDate("lt_createdDate"));
         leaveType.setLastModifiedBy((Long) rs.getObject("lt_lastModifiedBy"));
-        leaveType.setLastModifiedDate(rs.getDate("lt_lastModifiedDate"));
         leaveType.setTenantId(rs.getString("la_tenantId"));
+		try {
+	        leaveType.setCreatedDate(sdf.parse(sdf.format(rs.getDate("lt_createdDate"))));
+	        leaveType.setLastModifiedDate(sdf.parse(sdf.format(rs.getDate("lt_lastModifiedDate"))));
+	        leaveApplication.setFromDate(sdf.parse(sdf.format(rs.getDate("la_fromDate"))));
+	        leaveApplication.setToDate(sdf.parse(sdf.format(rs.getDate("la_toDate"))));
+	        leaveApplication.setCompensatoryForDate(sdf.parse(sdf.format(rs.getDate("la_compensatoryForDate"))));
+	        leaveApplication.setCreatedDate(sdf.parse(sdf.format(rs.getDate("la_createdDate"))));
+	        leaveApplication.setLastModifiedDate(sdf.parse(sdf.format(rs.getDate("la_lastModifiedDate"))));
+		} catch (ParseException e) {
+			e.printStackTrace();
+			throw new SQLException("Parse exception while parsing Date");
+		}
 
         leaveApplication.setLeaveType(leaveType);
-        leaveApplication.setFromDate(rs.getDate("la_fromDate"));
-        leaveApplication.setToDate(rs.getDate("la_toDate"));
-        leaveApplication.setCompensatoryForDate(rs.getDate("la_compensatoryForDate"));
+
         leaveApplication.setLeaveDays((Double) rs.getObject("la_leaveDays"));
         leaveApplication.setAvailableDays((Double) rs.getObject("la_availableDays"));
         leaveApplication.setHalfdays((Integer) rs.getObject("la_halfdays"));
@@ -86,10 +98,9 @@ public class LeaveApplicationRowMapper implements RowMapper<LeaveApplication> {
         leaveApplication.setStatus(LeaveStatus.fromValue(rs.getString("la_status")));
         leaveApplication.setStateId(rs.getLong("la_stateId"));
         leaveApplication.setCreatedBy((Long) rs.getObject("la_createdBy"));
-        leaveApplication.setCreatedDate(rs.getDate("la_createdDate"));
         leaveApplication.setLastModifiedBy((Long) rs.getObject("la_lastModifiedBy"));
-        leaveApplication.setLastModifiedDate(rs.getDate("la_lastModifiedDate"));
         leaveApplication.setTenantId(rs.getString("la_tenantId"));
+
         return leaveApplication;
     }
 }

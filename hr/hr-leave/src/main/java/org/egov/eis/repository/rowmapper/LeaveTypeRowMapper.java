@@ -42,6 +42,8 @@ package org.egov.eis.repository.rowmapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import org.egov.eis.model.LeaveType;
 import org.springframework.jdbc.core.RowMapper;
@@ -52,6 +54,8 @@ public class LeaveTypeRowMapper implements RowMapper<LeaveType> {
 
 	@Override
 	public LeaveType mapRow(ResultSet rs, int rowNum) throws SQLException {
+		final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
 		LeaveType leaveType = new LeaveType();
 		leaveType.setId(rs.getLong("id"));
 		leaveType.setName(rs.getString("name"));
@@ -62,10 +66,16 @@ public class LeaveTypeRowMapper implements RowMapper<LeaveType> {
 		leaveType.setEncashable((Boolean) rs.getObject("encashable"));
 		leaveType.setActive((Boolean) rs.getObject("active"));
 		leaveType.setCreatedBy((Long) rs.getObject("createdBy"));
-		leaveType.setCreatedDate(rs.getDate("createdDate"));
 		leaveType.setLastModifiedBy((Long) rs.getObject("lastModifiedBy"));
-		leaveType.setLastModifiedDate(rs.getDate("lastModifiedDate"));
 		leaveType.setTenantId(rs.getString("tenantId"));
+		try {
+			leaveType.setCreatedDate(sdf.parse(sdf.format(rs.getDate("createdDate"))));
+			leaveType.setLastModifiedDate(sdf.parse(sdf.format(rs.getDate("lastModifiedDate"))));
+		} catch (ParseException e) {
+			e.printStackTrace();
+			throw new SQLException("Parse exception while parsing date");
+		}
+
 		return leaveType;
 	}
 }

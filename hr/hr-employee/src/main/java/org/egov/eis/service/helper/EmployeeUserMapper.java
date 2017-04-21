@@ -55,26 +55,28 @@ public class EmployeeUserMapper {
 		Map<Long, User> userInfoMap = new HashMap<Long, User>();
 
 		System.err.println("userInfoList inside EmployeeUserMapper: " + userInfoList);
-		for (User userInfo : userInfoList) {
-			userInfoMap.put(userInfo.getId(), userInfo);
-		}
 
-		for (EmployeeInfo employeeInfo : employeeInfoList) {
-			if (userInfoMap.containsKey(employeeInfo.getId())) {
-				User userInfo = userInfoMap.get(employeeInfo.getId());
-
-				employeeInfo.setSalutation(userInfo.getSalutation());
-				employeeInfo.setName(userInfo.getName());
-				employeeInfo.setUserName(userInfo.getUserName());
-				employeeInfo.setGender(userInfo.getGender());
-				employeeInfo.setMobileNumber(userInfo.getMobileNumber());
-				employeeInfo.setEmailId(userInfo.getEmailId());
-				employeeInfo.setPan(userInfo.getPan());
-				employeeInfo.setAadhaarNumber(userInfo.getAadhaarNumber());
-				employeeInfo.setType(userInfo.getType());
-				employeeInfo.setActive(userInfo.getActive());
+		if (userInfoList != null)
+			for (User userInfo : userInfoList) {
+				userInfoMap.put(userInfo.getId(), userInfo);
 			}
-		}
+		if (employeeInfoList != null)
+			for (EmployeeInfo employeeInfo : employeeInfoList) {
+				if (userInfoMap.containsKey(employeeInfo.getId())) {
+					User userInfo = userInfoMap.get(employeeInfo.getId());
+
+					employeeInfo.setSalutation(userInfo.getSalutation());
+					employeeInfo.setName(userInfo.getName());
+					employeeInfo.setUserName(userInfo.getUserName());
+					employeeInfo.setGender(userInfo.getGender());
+					employeeInfo.setMobileNumber(userInfo.getMobileNumber());
+					employeeInfo.setEmailId(userInfo.getEmailId());
+					employeeInfo.setPan(userInfo.getPan());
+					employeeInfo.setAadhaarNumber(userInfo.getAadhaarNumber());
+					employeeInfo.setType(userInfo.getType());
+					employeeInfo.setActive(userInfo.getActive());
+				}
+			}
 		return employeeInfoList;
 	}
 }

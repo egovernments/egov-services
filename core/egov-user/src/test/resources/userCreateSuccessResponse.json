@@ -1,0 +1,10 @@
+{
+  "responseInfo": {
+  },
+  "user": [
+    {
+      "name": "foo",
+      "userName": "userName"
+    }
+  ]
+}

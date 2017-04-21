@@ -7,9 +7,7 @@ import org.egov.user.domain.model.UserDetail;
 import org.egov.user.persistence.repository.ActionRestRepository;
 import org.egov.user.web.contract.auth.Role;
 import org.egov.user.web.contract.auth.User;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -18,6 +16,7 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -80,17 +79,14 @@ public class TokenServiceTest {
 	}
 
 	private List<Role> getRoles() {
-		List<Role> roles = new ArrayList<Role>();
-		org.egov.user.domain.model.Role roleModel = new org.egov.user.domain.model.Role();
-		roleModel.setId(15L);
-		roleModel.setName("Employee");
-		roleModel.setCode("Employee");
-		roleModel.setTenantId("ap.public");
-		Role role = new Role(roleModel);
+		org.egov.user.domain.model.Role roleModel = org.egov.user.domain.model.Role.builder()
+				.id(15L)
+				.name("Employee")
+				.code("Employee")
+				.tenantId("ap.public")
+				.build();
 
-		roles.add(role);
-
-		return roles;
+		return Collections.singletonList(new Role(roleModel));
 	}
 
 	private List<Action> getActions() {

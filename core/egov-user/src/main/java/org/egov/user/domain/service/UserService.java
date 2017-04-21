@@ -36,6 +36,14 @@ public class UserService {
         return persistNewUser(user);
     }
 
+	public User createCitizen(User user) {
+		user.setRoleToCitizen();
+    	user.validate();
+		validateOtp(user, true);
+		validateDuplicateUserName(user);
+		return persistNewUser(user);
+	}
+
     public List<org.egov.user.domain.model.User> searchUsers(UserSearch userSearch) {
         return userRepository.findAll(userSearch);
     }

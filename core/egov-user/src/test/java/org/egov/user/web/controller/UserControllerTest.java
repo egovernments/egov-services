@@ -31,6 +31,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.argThat;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -67,7 +68,7 @@ public class UserControllerTest {
 	public void test_should_partially_update_user() throws Exception {
 		when(userService.partialUpdate(any())).thenReturn(org.egov.user.domain.model.User.builder().build());
 
-		mockMvc.perform(post("/v1/user/_patch")
+		mockMvc.perform(post("/user/_patch")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
 				.content(getFileContents("patchUserRequest.json")))
 				.andExpect(status().isOk())
@@ -75,6 +76,39 @@ public class UserControllerTest {
 				.andExpect(content().json(getFileContents("patchUserResponse.json")));
 	}
 
+	@Test
+	@WithMockUser
+	public void test_should_create_citizen() throws Exception {
+		final org.egov.user.domain.model.User user = org.egov.user.domain.model.User.builder()
+				.username("userName")
+				.name("foo")
+				.build();
+		when(userService.createCitizen(any())).thenReturn(user);
+
+		mockMvc.perform(post("/citizen/_create")
+				.contentType(MediaType.APPLICATION_JSON_UTF8)
+				.content(getFileContents("userCreateRequest.json")))
+				.andExpect(status().isOk())
+				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(content().json(getFileContents("userCreateSuccessResponse.json")));
+	}
+
+	@Test
+	@WithMockUser
+	public void test_should_create_user() throws Exception {
+		final org.egov.user.domain.model.User user = org.egov.user.domain.model.User.builder()
+				.username("userName")
+				.name("foo")
+				.build();
+		when(userService.save(any(), eq(true))).thenReturn(user);
+
+		mockMvc.perform(post("/users/_create")
+				.contentType(MediaType.APPLICATION_JSON_UTF8)
+				.content(getFileContents("userCreateRequest.json")))
+				.andExpect(status().isOk())
+				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(content().json(getFileContents("userCreateSuccessResponse.json")));
+	}
 
 	@Test
 	@WithMockUser
@@ -84,8 +118,9 @@ public class UserControllerTest {
 		when(oAuth2Authentication.getPrincipal()).thenReturn(secureUser);
 		when(tokenService.getUser("c80e0ade-f48d-4077-b0d2-4e58526a6bfd"))
 				.thenReturn(getCustomUserDetails());
-		mockMvc.perform(post("/_details?access_token=c80e0ade-f48d-4077-b0d2-4e58526a6bfd")
-		).andExpect(status().isOk())
+
+		mockMvc.perform(post("/_details?access_token=c80e0ade-f48d-4077-b0d2-4e58526a6bfd"))
+				.andExpect(status().isOk())
 				.andExpect(content().json(getFileContents("userDetailsResponse.json")));
 	}
 
@@ -217,7 +252,7 @@ public class UserControllerTest {
 		}
 	}
 
-	public User getUser() {
+	private User getUser() {
 		return User.builder()
 				.id(18L)
 				.userName("narasappa")
@@ -231,11 +266,12 @@ public class UserControllerTest {
 				.build();
 	}
 
-	public List<Role> getRoles() {
+	private List<Role> getRoles() {
 		List<Role> roles = new ArrayList<Role>();
-		org.egov.user.domain.model.Role roleModel = new org.egov.user.domain.model.Role();
-		roleModel.setId(15L);
-		roleModel.setName("Employee");
+		org.egov.user.domain.model.Role roleModel = org.egov.user.domain.model.Role.builder()
+				.id(15L)
+				.name("Employee")
+				.build();
 
 		Role role = new Role(roleModel);
 		roles.add(role);
@@ -243,7 +279,7 @@ public class UserControllerTest {
 		return roles;
 	}
 
-	public UserDetail getCustomUserDetails() {
+	private UserDetail getCustomUserDetails() {
 		SecureUser secureUser = new SecureUser(getUser());
 		List<Action> actions = new ArrayList<Action>();
 		Action action = Action.builder()

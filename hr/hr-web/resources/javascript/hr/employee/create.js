@@ -1288,7 +1288,7 @@ $("select").on("change", function() {
         }
     }
     if (this.id == "jurisdictions.jurisdictionsType") {
-        commonObject["jurisdictions_boundary"] = commonApiPost("v1/location", "boundarys", "getByBoundaryType", {
+        commonObject["jurisdictions_boundary"] = commonApiPost("egov-location", "boundarys", "getByBoundaryType", {
             boundaryTypeId: this.value,
             tenantId
         }).responseJSON["Boundary"] || [];

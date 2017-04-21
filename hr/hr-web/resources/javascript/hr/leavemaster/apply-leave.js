@@ -134,17 +134,23 @@ class ApplyLeave extends React.Component {
             })
 
             });
-            var obj = getCommonMasterById("hr-employee","employees","Employee",id).responseJSON["Employee"][0]
-              _this.setState({
-                leaveSet:{
-                    ..._this.state.leaveSet,
-                    name:obj.name,
-                    code:obj.code,
-                    employee:obj.id
+            if (!id) {
+                var obj = commonApiPost("hr-employee","employees","_loggedinemployee",{tenantId}).responseJSON["Employee"]
+            } else {
+              var obj = getCommonMasterById("hr-employee","employees","Employee",id).responseJSON["Employee"][0]
 
-                  }
+            }
+            _this.setState({
+              leaveSet:{
+                  ..._this.state.leaveSet,
+                  name:obj.name,
+                  code:obj.code,
+                  employee:obj.id
 
-              })
+                }
+
+            })
+
 
       }
 
@@ -317,9 +323,9 @@ addOrUpdate(e,mode)
 
 
     const showActionButton=function() {
-      if((!mode) ||mode==="update")
+      if((!mode) ||mode==="create")
       {
-        return (<button type="submit" className="btn btn-submit">{mode?"Update":"Approve"}</button>);
+        return (<button type="submit" className="btn btn-submit">{mode?"Approve":"Apply"}</button>);
       }
     };
 

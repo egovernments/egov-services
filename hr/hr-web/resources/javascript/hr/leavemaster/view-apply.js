@@ -32,7 +32,7 @@ class ViewApply extends React.Component {
 
   componentDidMount() {
     var employee = getUrlVars()["id"];
-    var leaveApp = getCommonMasterById("hr-leave","leaveapplications","LeaveApplication",employee).responseJSON["LeaveApplication"][0];
+    var leaveApp = commonApiPost("hr-leave","leaveapplications","_search",{employee,tenantId}).responseJSON["LeaveApplication"][0];
     var empIds = [];
     for(var i=0; i<leaveApp.length; i++) {
       if(empIds.indexOf(leaveApp[i].employee) == -1)

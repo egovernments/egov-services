@@ -1,17 +1,5 @@
 package org.egov.user.domain.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
 import org.egov.user.domain.exception.*;
 import org.egov.user.domain.model.Role;
 import org.egov.user.domain.model.User;
@@ -25,6 +13,15 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UserServiceTest {
@@ -78,7 +75,7 @@ public class UserServiceTest {
 		final User expectedEntityUser = User.builder().build();
 		when(userRepository.save(domainUser)).thenReturn(expectedEntityUser);
 
-		User returnedUser = userService.save(domainUser, Boolean.TRUE);
+		User returnedUser = userService.save(domainUser);
 
 		assertEquals(expectedEntityUser, returnedUser);
 	}
@@ -113,15 +110,16 @@ public class UserServiceTest {
 		when(otpRepository.isOtpValidationComplete(domainUser)).thenReturn(true);
 		when(userRepository.isUserPresent("supandi_rocks", "tenantId")).thenReturn(true);
 
-		userService.save(domainUser, true);
+		userService.save(domainUser);
 	}
 
 	@Test(expected = OtpValidationPendingException.class)
 	public void test_exception_is_raised_when_otp_validation_fails() throws Exception {
 		org.egov.user.domain.model.User domainUser = validDomainUserWithRole();
+		domainUser.setOtpValidationMandatory(true);
 		when(otpRepository.isOtpValidationComplete(domainUser)).thenReturn(false);
 
-		userService.save(domainUser, true);
+		userService.save(domainUser);
 	}
 
 	@Test
@@ -129,7 +127,7 @@ public class UserServiceTest {
 		org.egov.user.domain.model.User domainUser = validDomainUserWithRole();
 		when(otpRepository.isOtpValidationComplete(domainUser)).thenReturn(false);
 
-		userService.save(domainUser, false);
+		userService.save(domainUser);
 
 		verify(otpRepository, never()).isOtpValidationComplete(domainUser);
 	}
@@ -138,7 +136,7 @@ public class UserServiceTest {
 	public void test_should_raise_exception_when_user_is_invalid() throws Exception {
 		org.egov.user.domain.model.User domainUser = org.egov.user.domain.model.User.builder().build();
 
-		userService.save(domainUser, true);
+		userService.save(domainUser);
 		verify(userRepository, never()).save(any(org.egov.user.domain.model.User.class));
 	}
 
@@ -228,6 +226,7 @@ public class UserServiceTest {
 				.active(Boolean.TRUE)
 				.mobileNumber("9988776655")
 				.tenantId("tenantId")
+				.otpReference("12312")
 				.roles(Collections.singletonList(Role.builder().code("roleCode1").build()))
 				.accountLocked(false);
 	}

@@ -29,7 +29,6 @@ import java.io.IOException;
 import java.util.*;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -55,7 +54,7 @@ public class UserRequestControllerTest {
     @Test
     @WithMockUser
     public void testShouldRegisterACitizen() throws Exception {
-        when(userService.save(any(org.egov.user.domain.model.User.class), eq(Boolean.TRUE))).thenReturn(buildUser());
+        when(userService.save(any(org.egov.user.domain.model.User.class))).thenReturn(buildUser());
 
         String fileContents = getFileContents("createValidatedCitizenSuccessRequest.json");
         mockMvc.perform(post("/users/_create/")
@@ -71,7 +70,7 @@ public class UserRequestControllerTest {
     @WithMockUser
     public void testShouldThrowErrorWhileRegisteringWithInvalidCitizen() throws Exception {
         InvalidUserException exception = new InvalidUserException(org.egov.user.domain.model.User.builder().build());
-        when(userService.save(any(org.egov.user.domain.model.User.class), eq(Boolean.TRUE))).thenThrow(exception);
+        when(userService.save(any(org.egov.user.domain.model.User.class))).thenThrow(exception);
 
         String fileContents = getFileContents("createCitizenUnsuccessfulRequest.json");
         mockMvc.perform(post("/users/_create/")
@@ -88,7 +87,7 @@ public class UserRequestControllerTest {
     public void testShouldThrowErrorWhileRegisteringWithPendingOtpValidation() throws Exception {
         OtpValidationPendingException exception = new OtpValidationPendingException(org.egov.user.domain.model.User
                 .builder().build());
-        when(userService.save(any(org.egov.user.domain.model.User.class), eq(Boolean.TRUE))).thenThrow(exception);
+        when(userService.save(any(org.egov.user.domain.model.User.class))).thenThrow(exception);
 
         String fileContents = getFileContents("createValidatedCitizenSuccessRequest.json");
         mockMvc.perform(post("/users/_create/")

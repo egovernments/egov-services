@@ -29,9 +29,9 @@ public class UserService {
         return userRepository.findByEmailId(emailId);
     }
 
-    public User save(User user, boolean ensureOtpValidation) {
+    public User save(User user) {
         user.validate();
-        validateOtp(user, ensureOtpValidation);
+        validateOtp(user);
         validateDuplicateUserName(user);
         return persistNewUser(user);
     }
@@ -39,7 +39,7 @@ public class UserService {
 	public User createCitizen(User user) {
 		user.setRoleToCitizen();
     	user.validate();
-		validateOtp(user, true);
+		validateOtp(user);
 		validateDuplicateUserName(user);
 		return persistNewUser(user);
 	}
@@ -88,8 +88,8 @@ public class UserService {
 		return userRepository.save(user);
 	}
 
-	private void validateOtp(User user, boolean ensureOtpValidation) {
-		if (ensureOtpValidation && !otpRepository.isOtpValidationComplete(user))
+	private void validateOtp(User user) {
+		if (user.isOtpValidationMandatory() && !otpRepository.isOtpValidationComplete(user))
 			throw new OtpValidationPendingException(user);
 	}
 

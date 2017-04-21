@@ -56,4 +56,27 @@ public class UserRequestErrorAdapterTest {
 		assertEquals("Tenant is required", errorFields.get(0).getMessage());
 	}
 
+	@Test
+	public void test_should_set_error_when_otp_reference_is_missing() {
+		when(user.isOtpReferenceAbsent()).thenReturn(true);
+
+		final ErrorResponse errorResponse = errorAdapter.adapt(user);
+
+		assertNotNull(errorResponse);
+		final List<ErrorField> errorFields = errorResponse.getError().getFields();
+		assertEquals(1, errorFields.size());
+		assertEquals("core-user.OTP_REFERENCE_MANDATORY", errorFields.get(0).getCode());
+		assertEquals("user.OtpReference", errorFields.get(0).getField());
+		assertEquals("OTP Reference is required", errorFields.get(0).getMessage());
+	}
+
+	@Test
+	public void test_should_not_set_errors_when_model_is_valid() {
+		final ErrorResponse errorResponse = errorAdapter.adapt(user);
+
+		assertNotNull(errorResponse);
+		final List<ErrorField> errorFields = errorResponse.getError().getFields();
+		assertEquals(0, errorFields.size());
+	}
+
 }

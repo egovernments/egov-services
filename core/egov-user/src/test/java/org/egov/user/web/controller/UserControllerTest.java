@@ -29,9 +29,7 @@ import java.util.*;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.argThat;
-import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -100,7 +98,7 @@ public class UserControllerTest {
 				.username("userName")
 				.name("foo")
 				.build();
-		when(userService.save(any(), eq(true))).thenReturn(user);
+		when(userService.save(any())).thenReturn(user);
 
 		mockMvc.perform(post("/users/_create")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)

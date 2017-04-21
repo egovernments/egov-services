@@ -3,6 +3,7 @@ package org.egov.user.domain.model;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import org.egov.user.domain.exception.InvalidUserException;
 import org.egov.user.domain.model.enums.BloodGroup;
 import org.egov.user.domain.model.enums.Gender;
@@ -52,6 +53,8 @@ public class User {
 	private Long createdBy;
 	private Long lastModifiedBy;
 	private Long loggedInUserId;
+	@Setter
+	private boolean otpValidationMandatory;
 
 	public void validate() {
 		if (isUsernameAbsent()
@@ -61,9 +64,14 @@ public class User {
 				|| isActiveIndicatorAbsent()
 				|| isTypeAbsent()
 				|| isRolesAbsent()
+				|| isOtpReferenceAbsent()
 				|| isTenantIdAbsent()) {
 			throw new InvalidUserException(this);
 		}
+	}
+
+	public boolean isOtpReferenceAbsent() {
+		return otpValidationMandatory && isEmpty(otpReference);
 	}
 
 	public boolean isTypeAbsent() {

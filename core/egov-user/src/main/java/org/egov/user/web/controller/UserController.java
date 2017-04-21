@@ -33,6 +33,7 @@ public class UserController {
 	@PostMapping("/citizen/_create")
 	public UserDetailResponse createCitizen(@RequestBody CreateUserRequest createUserRequest) {
 		User user = createUserRequest.toDomain();
+		user.setOtpValidationMandatory(true);
 		final User newUser = userService.createCitizen(user);
 		return createResponse(newUser);
 	}
@@ -74,7 +75,8 @@ public class UserController {
 
 	private UserDetailResponse createUser(@RequestBody CreateUserRequest createUserRequest, boolean validateUser) {
 		User user = createUserRequest.toDomain();
-		final User newUser = userService.save(user, validateUser);
+		user.setOtpValidationMandatory(validateUser);
+		final User newUser = userService.save(user);
 		return createResponse(newUser);
 	}
 

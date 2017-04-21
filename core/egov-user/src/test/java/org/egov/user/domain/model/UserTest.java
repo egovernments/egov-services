@@ -155,6 +155,45 @@ public class UserTest {
 		assertFalse(user.isIdAbsent());
 	}
 
+	@Test(expected = InvalidUserException.class)
+	public void test_should_throw_validation_exception_when_otp_reference_is_not_present_and_mandatory_flag_is_enabled() {
+		User user = User.builder()
+				.otpReference(null)
+				.otpValidationMandatory(true)
+				.build();
+
+		user.validate();
+	}
+
+	@Test
+	public void test_should_return_true_when_otp_reference_is_not_present_and_mandatory_flag_is_enabled() {
+		User user = User.builder()
+				.otpReference(null)
+				.otpValidationMandatory(true)
+				.build();
+
+		assertTrue(user.isOtpReferenceAbsent());
+	}
+
+	@Test
+	public void test_should_return_false_when_otp_reference_is_not_present_and_mandatory_flag_is_false() {
+		User user = User.builder()
+				.otpReference(null)
+				.otpValidationMandatory(false)
+				.build();
+
+		assertFalse(user.isOtpReferenceAbsent());
+	}
+
+	@Test
+	public void test_should_return_false_when_otp_reference_is_present() {
+		User user = User.builder()
+				.otpReference("otpReference")
+				.build();
+
+		assertFalse(user.isOtpReferenceAbsent());
+	}
+
 	@Test
 	public void testUserWithAllMandatoryValuesProvidedIsValid() {
 		final Role role1 = Role.builder().code("roleCode1").build();

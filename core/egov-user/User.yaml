@@ -17,7 +17,7 @@ paths:
   /users/_search:
     # This is a HTTP operation
     post:
-      # Describe this verb here. Note: you can use markdown 
+      # Describe this verb here. Note: you can use markdown
       summary: Get the list of users defined in the system.
       description: |
         Get the user list based on the input parameters.
@@ -55,7 +55,7 @@ paths:
           description: List of Unique Id of User
           required: false
           type: array
-          items: 
+          items:
             type: integer
           format: int64
         - name: userType
@@ -66,7 +66,7 @@ paths:
           minLength: 0
           maxLength: 64
           exclusiveMinimum: true
-          exclusiveMaximum: false  
+          exclusiveMaximum: false
       # Expected responses for this operation:
       responses:
         # Response code
@@ -80,9 +80,9 @@ paths:
           description: Invalid input.
           schema:
             $ref: '#/definitions/ErrorRes'
-      tags: 
+      tags:
        - User
-  /users/_create:       
+  /users/_create:
     post:
       summary: Create a new User.
       description: To create a new User in the system.
@@ -104,7 +104,29 @@ paths:
           description: Invalid input.
           schema:
             $ref: '#/definitions/ErrorRes'
-  /users/_createnovalidate:       
+  /citizen/_create:
+    post:
+      summary: Create a new citizen.
+      description: To create a new citizen in the system.
+      parameters:
+        - name: user
+          in: body
+          description: Details for the new user .
+          required: true
+          schema:
+            $ref: '#/definitions/UserReq'
+      tags:
+        - User
+      responses:
+        '201':
+          description: Citizen created sucessfully.
+          schema:
+            $ref: '#/definitions/UserRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/ErrorRes'
+  /users/_createnovalidate:
     post:
       summary: Create a new User without OTP validation in password.
       description: To create a new User in the system without OTP validation.
@@ -125,8 +147,8 @@ paths:
         '400':
           description: Invalid input.
           schema:
-            $ref: '#/definitions/ErrorRes'          
-  /user/{userId}/_update:   
+            $ref: '#/definitions/ErrorRes'
+  /user/{userId}/_update:
     parameters:
       - $ref: "#/parameters/userId"
     post:
@@ -650,7 +672,7 @@ definitions:
       - apiId
       - ver
       - ts
-      
+
   ResponseInfo:
     type: object
     properties:
@@ -679,7 +701,7 @@ definitions:
       - ver
       - ts
       - status
-      
+
   Error:
     type: object
     properties:
@@ -695,7 +717,7 @@ definitions:
     required:
       - code
       - message
-      
+
   ErrorRes:
     properties:
       ResponseInfo:
@@ -703,19 +725,19 @@ definitions:
       Error:
         $ref: '#/definitions/Error'
     type: object
-    
+
   LoginResponse:
     type: object
     properties:
       accessToken:
         type: string
-      tokenType: 
+      tokenType:
         type: string
       refreshToken:
         type: string
-      expiresIn: 
+      expiresIn:
         type: string
-      scope: 
+      scope:
         type: string
       ResponseInfo:
         $ref: '#/definitions/ResponseInfo'
@@ -727,7 +749,7 @@ definitions:
       - refreshToken
       - expiresIn
       - scope
-      
+
 parameters:
   userId:
     name: userId
@@ -736,7 +758,7 @@ parameters:
     description: The unique user Id with which the user login.
     type: string
     format: int64
-    
+
   pageSize:
     name: pageSize
     in: query
@@ -748,7 +770,7 @@ parameters:
     exclusiveMaximum: false
     multipleOf: 10
     default: 20
-    
+
   pageNumber:
     name: pageNumber
     in: query

@@ -1,5 +1,9 @@
 package org.egov.lams.web.contract;
 
+import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +19,8 @@ public class RequestInfo {
 
 	private String apiId;	
 	private String ver;	
-	private String ts;	
+	@JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "IST")
+	private Date ts;	
 	private String action;	
 	private String did;	
 	private String key;	

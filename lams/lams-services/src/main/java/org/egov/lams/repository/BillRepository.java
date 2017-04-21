@@ -1,5 +1,6 @@
 package org.egov.lams.repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -52,7 +53,7 @@ public class BillRepository {
 			requestInfo = new RequestInfo();
 			requestInfo.setApiId("apiid");
 			requestInfo.setVer("ver");
-			requestInfo.setTs("ts");
+			requestInfo.setTs(new Date());
 		}
 
 		try {

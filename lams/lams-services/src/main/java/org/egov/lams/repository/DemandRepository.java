@@ -2,6 +2,7 @@ package org.egov.lams.repository;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -105,7 +106,7 @@ public class DemandRepository {
 			requestInfo = new RequestInfo();
 			requestInfo.setApiId("apiid");
 			requestInfo.setVer("ver");
-			requestInfo.setTs("ts");
+			requestInfo.setTs(new Date());
 		}
 
 		DemandResponse demandResponse = null;

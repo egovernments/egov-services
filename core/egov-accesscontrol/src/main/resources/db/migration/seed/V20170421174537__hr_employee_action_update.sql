@@ -1,0 +1,50 @@
+
+
+update eg_action set url='/app/hr/employee/create.html',queryparams=null where name='CreateEmployee';
+update eg_action set url='/employees/_create',queryparams=null,parentmodule=(select id from service where name='HR Employee') where name='CreateEmployees';
+update eg_action set url='/app/hr/common/employee-search.html',queryparams='type=update' where name='UpdateEmployee';
+update eg_action set url='/employees/_update',queryparams=null,parentmodule=(select id from service where name='HR Employee') where name='EmployeeUpdate';
+update eg_action set url='/app/hr/common/employee-search.html',queryparams='type=view' where name='ViewEmployee';
+update eg_action set url='/employees/_search',queryparams=null,parentmodule=(select id from service where name='HR Employee') where name='SearchEmployee';
+update eg_action set url='/app/hr/master/grade-master.html',queryparams=null where name='CreateGrade';
+update eg_action set url='/app/hr/common/show-grade.html',queryparams='type=update' where name='UpdateGrade';
+update eg_action set url='/app/hr/common/show-grade.html',queryparams='type=view' where name='ViewGrade';
+update eg_action set url='/grades/_search',queryparams=null,parentmodule=(select id from service where name='HR Masters') where name='SearchGrade';
+update eg_action set url='/app/hr/master/category.html',queryparams=null where name='CreateCategory';
+update eg_action set url='/app/hr/common/show-category.html',queryparams='type=update' where name='UpdateCategory';
+update eg_action set url='/app/hr/common/show-category.html',queryparams='type=view' where name='ViewCategory';
+update eg_action set url='/categories/_search',queryparams=null,parentmodule=(select id from service where name='EGOV Common Masters') where name='SearchCategory';
+update eg_action set url='/app/hr/master/community.html',queryparams=null where name='CreateCommunity';
+update eg_action set url='/app/hr/common/show-community.html',queryparams='type=update' where name='UpdateCommunity';
+update eg_action set url='/app/hr/common/show-community.html',queryparams='type=view' where name='ViewCommunity';
+update eg_action set url='/communities/_search',queryparams=null,parentmodule=(select id from service where name='EGOV Common Masters') where name='SearchCategory';
+update eg_action set url='/app/hr/master/designation.html',queryparams=null where name='CreateDesignation';
+update eg_action set url='/app/hr/master/designation.html',queryparams='type=update' where name='UpdateDesignation';
+update eg_action set url='/app/hr/master/designation.html',queryparams='type=view' where name='ViewDesignation';
+update eg_action set url='/designations/_search',queryparams=null,parentmodule=(select id from service where name='HR Masters') where name='SearchCategory';
+update eg_action set url='/app/hr/master/position.html',queryparams=null where name='CreatePosition';
+update eg_action set url='/app/hr/common/show-position.html',queryparams='type=update' where name='UpdatePosition';
+update eg_action set url='/app/hr/common/show-position.html',queryparams='type=view' where name='ViewPosition';
+update eg_action set url='/positions/_search',queryparams=null,parentmodule=(select id from service where name='HR Masters') where name='PositionSearch';
+update eg_action set url='/app/hr/master/calendar-setup.html',queryparams=null where name='CreateCalendar';
+update eg_action set url='/app/hr/common/show-calender.html',queryparams='type=update' where name='UpdateCalendar';
+update eg_action set url='/app/hr/common/show-calender.html',queryparams='type=view' where name='ViewCalendar';
+update eg_action set url='/calendaryears/_search',queryparams=null,parentmodule=(select id from service where name='EGOV Common Masters') where name='CalendarSearch';
+update eg_action set url='/app/hr/master/calendar-holidays-setup.html',queryparams=null where name='CreateCalendarHolidays';
+update eg_action set url='/holidays/_create',queryparams=null,parentmodule=(select id from service where name='EGOV Common Masters') where name='CreateHoliday';
+update eg_action set url='/app/hr/common/show-calender-holiday.html',queryparams='type=update' where name='UpdateCalendarHolidays';
+update eg_action set url='/holidays/{id}/_update',queryparams=null,parentmodule=(select id from service where name='EGOV Common Masters') where name='UpdateHoliday';
+update eg_action set url='/app/hr/common/show-calender-holiday.html',queryparams='type=view' where name='ViewCalendarHoliday';
+update eg_action set url='/holidays/_search',queryparams=null,parentmodule=(select id from service where name='EGOV Common Masters') where name='CalendarHolidaysSearch';
+update eg_action set url='/employeetypes/_search',queryparams=null,parentmodule=(select id from service where name='HR Masters') where name='EmployeeTypes';
+update eg_action set url='/hrstatuses/_search',queryparams=null,parentmodule=(select id from service where name='HR Masters') where name='EmployeeStatus';
+update eg_action set url='/groups/_search',queryparams=null,parentmodule=(select id from service where name='HR Masters') where name='EmployeeGroup';
+update eg_action set url='/languages/_search',queryparams=null,parentmodule=(select id from service where name='EGOV Common Masters') where name='CommonLanguages';
+update eg_action set url='/religions/_search',queryparams=null,parentmodule=(select id from service where name='EGOV Common Masters') where name='CommonReligions';
+update eg_action set url='/recruitmentmodes/_search',queryparams=null,parentmodule=(select id from service where name='HR Masters') where name='RecruitmentModes';
+update eg_action set url='/recruitmenttypes/_search',queryparams=null,parentmodule=(select id from service where name='HR Masters') where name='RecruitmentTypes';
+update eg_action set url='/recruitmentquotas/_search',queryparams=null,parentmodule=(select id from service where name='HR Masters') where name='RecruitmentQuotas';
+update eg_action set url='/departments/_search',queryparams=null,parentmodule=(select id from service where name='EGOV Common Masters') where name='CommonDepartmentsSearch';
+update eg_action set url='/vacantpositions/_search',queryparams=null,parentmodule=(select id from service where name='HR Masters') where name='CommonDepartmentsSearch';
+
+

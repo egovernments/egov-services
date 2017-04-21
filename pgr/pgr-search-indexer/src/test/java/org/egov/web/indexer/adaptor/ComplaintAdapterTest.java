@@ -2,9 +2,10 @@ package org.egov.web.indexer.adaptor;
 
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
-import static org.mockito.Matchers.any;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +13,6 @@ import java.util.Map;
 import org.egov.web.indexer.config.IndexerProperties;
 import org.egov.web.indexer.contract.Assignment;
 import org.egov.web.indexer.contract.Boundary;
-import org.egov.web.indexer.contract.City;
 import org.egov.web.indexer.contract.ComplaintType;
 import org.egov.web.indexer.contract.Department;
 import org.egov.web.indexer.contract.Designation;
@@ -32,6 +32,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ComplaintAdapterTest {
+    
+
+    public static final SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:MM:ss");
 
 	@Mock
 	private IndexerProperties propertiesManager;
@@ -50,6 +53,10 @@ public class ComplaintAdapterTest {
 
 	@InjectMocks
 	private ComplaintAdapter complaintAdapter;
+	
+     public static String toDefaultDateTimeFormat(final Date date) {
+         return sdf.format(date);
+     }
 
 	@Test
 	public void test_create_index() {
@@ -68,6 +75,7 @@ public class ComplaintAdapterTest {
         complaintIndex = complaintAdapter.indexOnUpdate(serviceRequest);
         assertNotNull(complaintIndex);
         serviceRequest.getValues().put("status", "REJECTED");
+        serviceRequest.setCreatedDate(toDefaultDateTimeFormat(new Date()));
         complaintIndex = complaintAdapter.indexOnUpdate(serviceRequest);
         assertNotNull(complaintIndex);
         serviceRequest.getValues().put("status", "REOPENED");
@@ -81,7 +89,9 @@ public class ComplaintAdapterTest {
 		serviceRequest.setCreatedDate("20-10-2016 10:47:21");
 		serviceRequest.setEscalationDate("20-10-2016 10:47:21");
 		serviceRequest.setFirstName("abc");
-		//serviceRequest.setLastName("xyz");
+		serviceRequest.setTenantId("ap.public");
+		serviceRequest.setLat(0.0);
+		serviceRequest.setLng(0.0);
 		serviceRequest.setComplaintTypeCode("AOS");
 		Map<String, String> values = serviceRequest.getValues();
 		values.put("receivingMode", "");
@@ -90,17 +100,17 @@ public class ComplaintAdapterTest {
 		values.put("escalationHours", "0");
 		values.put("locationId", "1");
 		values.put("child_location_id", "2");
-		values.put("tenantId", "1");
 		values.put("assignment_id", "1");
 		final ComplaintType expectedComplaintType = getComplaintType();
 		final Boundary expectedBoundary = getExpectedBoundary();
-		final City expectedCityContent = getExpectedCityContent();
+		//final City expectedCityContent = getExpectedCityContent();
 		final Employee expectedAssignment = getExpectedEmployee();
 		when(complaintTypeRepository.fetchComplaintTypeByCode("AOS","ap.public")).thenReturn(expectedComplaintType);
 		when(boundaryRepository.fetchBoundaryById(Long.valueOf(values.get("locationId")),"ap.public")).thenReturn(expectedBoundary);
-		when(cityRepository.fetchCityById(Long.valueOf(values.get("tenantId")))).thenReturn(expectedCityContent);
+		when(boundaryRepository.fetchBoundaryById(Long.valueOf(values.get("child_location_id")),"ap.public")).thenReturn(expectedBoundary);
+		//when(cityRepository.fetchCityById(Long.valueOf(values.get("tenantId")))).thenReturn(expectedCityContent);
 		when(employeeRepository.fetchEmployeeByPositionId(Long.valueOf(values.get("assignment_id")), new LocalDate(),
-				values.get("tenantId"))).thenReturn(expectedAssignment);
+				serviceRequest.getTenantId())).thenReturn(expectedAssignment);
 		return serviceRequest;
 	}
 
@@ -119,7 +129,7 @@ public class ComplaintAdapterTest {
 		return boundary;
 	}
 
-	private City getExpectedCityContent() {
+	/*private City getExpectedCityContent() {
 		City city = new City();
 		city.setName("Kurnool");
 		city.setCode("KC");
@@ -129,7 +139,7 @@ public class ComplaintAdapterTest {
 		city.setDomainURL("http://localhost");
 		city.setRegionName("Kurnool Region");
 		return city;
-	}
+	}*/
 
 	private Employee getExpectedEmployee() {
 		Employee employee = new Employee();

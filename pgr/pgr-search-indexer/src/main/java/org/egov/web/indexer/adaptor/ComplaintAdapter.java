@@ -7,14 +7,12 @@ import java.util.Map;
 import java.util.Objects;
 
 import org.apache.commons.lang.time.DateUtils;
-import org.egov.web.indexer.config.IndexerProperties;
 import org.egov.web.indexer.contract.Assignment;
 import org.egov.web.indexer.contract.Boundary;
 import org.egov.web.indexer.contract.ComplaintType;
 import org.egov.web.indexer.contract.Employee;
 import org.egov.web.indexer.contract.ServiceRequest;
 import org.egov.web.indexer.repository.BoundaryRepository;
-import org.egov.web.indexer.repository.CityRepository;
 import org.egov.web.indexer.repository.ComplaintTypeRepository;
 import org.egov.web.indexer.repository.EmployeeRepository;
 import org.egov.web.indexer.repository.contract.ComplaintIndex;
@@ -34,20 +32,19 @@ public class ComplaintAdapter {
     private static final String REGISTERED = "REGISTERED";
     private static final String REOPENED = "REOPENED";
 
-    private IndexerProperties propertiesManager;
+    // private IndexerProperties propertiesManager;
     private BoundaryRepository boundaryRepository;
     private ComplaintTypeRepository complaintTypeRepository;
     private EmployeeRepository employeeRepository;
-    private CityRepository cityRepository;
+    // private CityRepository cityRepository;
 
-    public ComplaintAdapter(IndexerProperties propertiesManager, BoundaryRepository boundaryRepository,
-            ComplaintTypeRepository complaintTypeRepository, EmployeeRepository employeeRepository,
-            CityRepository cityRepository) {
-        this.propertiesManager = propertiesManager;
+    public ComplaintAdapter(BoundaryRepository boundaryRepository, ComplaintTypeRepository complaintTypeRepository,
+            EmployeeRepository employeeRepository) {
+        // this.propertiesManager = propertiesManager;
         this.boundaryRepository = boundaryRepository;
         this.complaintTypeRepository = complaintTypeRepository;
         this.employeeRepository = employeeRepository;
-        this.cityRepository = cityRepository;
+        // this.cityRepository = cityRepository;
     }
 
     public ComplaintIndex indexOnCreate(ServiceRequest serviceRequest) {

@@ -40,6 +40,7 @@
 
 package org.egov.eis.web.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -143,6 +144,44 @@ public class EmployeeController {
 
 		return getSuccessResponseForSearch(employeesList, requestInfo);
 	}
+	
+	/**
+         * Maps Post Requests for _loggedinemployee & returns ResponseEntity of either
+         * EmployeeResponse type or ErrorResponse type
+         * 
+         * @param BindingResult
+         * @param RequestInfoWrapper
+         * @param BindingResult
+         * @return ResponseEntity<?>
+         */
+        @PostMapping("_loggedinemployee")
+        @ResponseBody
+        public ResponseEntity<?> loggedInEmployee(
+                        BindingResult modelAttributeBindingResult, @RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
+                        BindingResult requestBodyBindingResult) {
+                RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+                List<Long> ids = new ArrayList<>();
+                ids.add(requestInfo.getUserInfo().getId());
+                EmployeeCriteria employeeCriteria = new EmployeeCriteria();
+                employeeCriteria.setId(ids);
+
+                ResponseEntity<?> errorResponseEntity = requestValidator.validateSearchRequest(requestInfo,
+                                modelAttributeBindingResult, requestBodyBindingResult);
+
+                if (errorResponseEntity != null)
+                        return errorResponseEntity;
+
+                // Call service
+                List<EmployeeInfo> employeesList = null;
+                try {
+                        employeesList = employeeService.getEmployees(employeeCriteria, requestInfo);
+                } catch (Exception exception) {
+                        LOGGER.error("Error while processing request " + employeeCriteria, exception);
+                        return errorHandler.getResponseEntityForUnexpectedErrors(requestInfo);
+                }
+
+                return getSuccessResponseForSearch(employeesList, requestInfo);
+        }
 
 	/**
 	 * Maps Post Requests for _search & returns ResponseEntity of either

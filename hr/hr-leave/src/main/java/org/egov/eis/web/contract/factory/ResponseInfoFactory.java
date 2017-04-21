@@ -50,7 +50,7 @@ public class ResponseInfoFactory {
 	public ResponseInfo createResponseInfoFromRequestInfo(RequestInfo requestInfo, Boolean success) {
 		String apiId = requestInfo != null ? requestInfo.getApiId() : "";
 		String ver = requestInfo != null ? requestInfo.getVer() : "";
-		String ts = requestInfo != null ? requestInfo.getTs() : "";
+		String ts = requestInfo != null ? requestInfo.getTs().toString() : "";
 		String resMsgId = "uief87324"; // FIXME : Hard-coded
 		String msgId = requestInfo != null ? requestInfo.getMsgId() : "";
 		String responseStatus = success ? "successful" : "failed";

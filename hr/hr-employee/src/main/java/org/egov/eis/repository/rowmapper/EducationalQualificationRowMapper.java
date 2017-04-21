@@ -42,6 +42,8 @@ package org.egov.eis.repository.rowmapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import org.egov.eis.model.EducationalQualification;
 import org.springframework.dao.DataAccessException;
@@ -53,6 +55,8 @@ public class EducationalQualificationRowMapper implements RowMapper<EducationalQ
 
 	@Override
 	public EducationalQualification mapRow(ResultSet rs, int rowNum) throws SQLException, DataAccessException {
+		final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
 		EducationalQualification educationalQualification = new EducationalQualification();
 		
 		educationalQualification.setId(rs.getLong("id"));
@@ -61,10 +65,15 @@ public class EducationalQualificationRowMapper implements RowMapper<EducationalQ
 		educationalQualification.setYearOfPassing(rs.getInt("yearofpassing"));
 		educationalQualification.setUniversity(rs.getString("university"));
 		educationalQualification.setCreatedBy(rs.getLong("createdby"));
-		educationalQualification.setCreatedDate(rs.getDate("createddate"));
 		educationalQualification.setLastModifiedBy(rs.getLong("lastmodifiedby"));
-		educationalQualification.setLastModifiedDate(rs.getDate("lastmodifieddate"));
 		educationalQualification.setTenantId(rs.getString("tenantid"));
+		try {
+			educationalQualification.setCreatedDate(sdf.parse(sdf.format(rs.getDate("createddate"))));
+			educationalQualification.setLastModifiedDate(sdf.parse(sdf.format(rs.getDate("lastmodifieddate"))));
+		} catch (ParseException e) {
+			e.printStackTrace();
+			throw new SQLException("Parse exception while parsing date");
+		}
 		
 		return educationalQualification;
 	}

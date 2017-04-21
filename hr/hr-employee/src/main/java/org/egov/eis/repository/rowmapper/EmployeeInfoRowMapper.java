@@ -42,6 +42,8 @@ package org.egov.eis.repository.rowmapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -78,6 +80,8 @@ public class EmployeeInfoRowMapper implements ResultSetExtractor<List<EmployeeIn
 	 * @throws SQLException
 	 */
 	private Map<Long, EmpInfo> getEmpInfoMap(ResultSet rs) throws SQLException {
+		final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
 		Map<Long, EmpInfo> empInfoMap = new LinkedHashMap<>();
 
 		while (rs.next()) {
@@ -115,14 +119,19 @@ public class EmployeeInfoRowMapper implements ResultSetExtractor<List<EmployeeIn
 				assignmentInfo.setDesignation((Long) rs.getObject("a_designationId"));
 				assignmentInfo.setDepartment((Long) rs.getObject("a_departmentId"));
 				assignmentInfo.setIsPrimary((Boolean) rs.getObject("a_isPrimary"));
-				assignmentInfo.setFromDate(rs.getDate("a_fromDate"));
-				assignmentInfo.setToDate(rs.getDate("a_toDate"));
 				assignmentInfo.setGrade((Long) rs.getObject("a_gradeId"));
 				assignmentInfo.setGovtOrderNumber(rs.getString("a_govtOrderNumber"));
 				assignmentInfo.setCreatedBy((Long) rs.getObject("a_createdBy"));
-				assignmentInfo.setCreatedDate(rs.getDate("a_createdDate"));
 				assignmentInfo.setLastModifiedBy((Long) rs.getObject("a_lastModifiedBy"));
-				assignmentInfo.setLastModifiedDate(rs.getDate("a_lastModifiedDate"));
+				try {
+					assignmentInfo.setFromDate(sdf.parse(sdf.format(rs.getDate("a_fromDate"))));
+					assignmentInfo.setToDate(sdf.parse(sdf.format(rs.getDate("a_toDate"))));
+					assignmentInfo.setCreatedDate(sdf.parse(sdf.format(rs.getDate("a_createdDate"))));
+					assignmentInfo.setLastModifiedDate(sdf.parse(sdf.format(rs.getDate("a_lastModifiedDate"))));
+				} catch (ParseException e) {
+					e.printStackTrace();
+					throw new SQLException("Parse exception while parsing date");
+				}
 
 				assignmentInfoMap.put(assignmentId, assignmentInfo);
 			}

@@ -42,6 +42,8 @@ package org.egov.eis.repository.rowmapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -58,6 +60,8 @@ public class AssignmentRowMapper implements ResultSetExtractor<List<Assignment>>
 
 	@Override
 	public List<Assignment> extractData(ResultSet rs) throws SQLException, DataAccessException {
+		final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
 		Map<String, Assignment> assignmentMap = new HashMap<String, Assignment>();
 
 		while (rs.next()) {
@@ -75,15 +79,20 @@ public class AssignmentRowMapper implements ResultSetExtractor<List<Assignment>>
 				assignment.setDesignation((Long) rs.getObject("a_designationId"));
 				assignment.setDepartment((Long) rs.getObject("a_departmentId"));
 				assignment.setIsPrimary((Boolean) rs.getObject("a_isPrimary"));
-				assignment.setFromDate(rs.getDate("a_fromDate"));
-				assignment.setToDate(rs.getDate("a_toDate"));
 				assignment.setGrade((Long) rs.getObject("a_gradeId"));
 				assignment.setGovtOrderNumber(rs.getString("a_govtOrderNumber"));
 				assignment.setCreatedBy((Long) rs.getObject("a_createdBy"));
-				assignment.setCreatedDate(rs.getDate("a_createdDate"));
 				assignment.setLastModifiedBy((Long) rs.getObject("a_lastModifiedBy"));
-				assignment.setLastModifiedDate(rs.getDate("a_lastModifiedDate"));
 				assignment.setTenantId(rs.getString("a_tenantId"));
+				try {
+					assignment.setFromDate(sdf.parse(sdf.format(rs.getDate("a_fromDate"))));
+					assignment.setToDate(sdf.parse(sdf.format(rs.getDate("a_toDate"))));
+					assignment.setCreatedDate(sdf.parse(sdf.format(rs.getDate("a_createdDate"))));
+					assignment.setLastModifiedDate(sdf.parse(sdf.format(rs.getDate("a_lastModifiedDate"))));
+				} catch (ParseException e) {
+					e.printStackTrace();
+					throw new SQLException("Parse exception while parsing date");
+				}
 
 				assignmentMap.put(assignmentId, assignment);
 			}

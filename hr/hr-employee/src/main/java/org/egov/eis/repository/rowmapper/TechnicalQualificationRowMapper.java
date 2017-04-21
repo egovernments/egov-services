@@ -42,6 +42,8 @@ package org.egov.eis.repository.rowmapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import org.egov.eis.model.TechnicalQualification;
 import org.springframework.dao.DataAccessException;
@@ -53,6 +55,8 @@ public class TechnicalQualificationRowMapper implements RowMapper<TechnicalQuali
 
 	@Override
 	public TechnicalQualification mapRow(ResultSet rs, int rowNum) throws SQLException, DataAccessException {
+		final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
 		TechnicalQualification technicalQualification = new TechnicalQualification();
 		technicalQualification.setId(rs.getLong("id"));
 		technicalQualification.setSkill(rs.getString("skill"));
@@ -60,10 +64,15 @@ public class TechnicalQualificationRowMapper implements RowMapper<TechnicalQuali
 		technicalQualification.setYearOfPassing(rs.getInt("yearofpassing"));
 		technicalQualification.setRemarks(rs.getString("remarks"));
 		technicalQualification.setCreatedBy(rs.getLong("createdby"));
-		technicalQualification.setCreatedDate(rs.getDate("createddate"));
 		technicalQualification.setLastModifiedBy(rs.getLong("lastmodifiedby"));
-		technicalQualification.setLastModifiedDate(rs.getDate("lastmodifieddate"));
 		technicalQualification.setTenantId(rs.getString("tenantid"));
+		try {
+			technicalQualification.setCreatedDate(sdf.parse(sdf.format(rs.getDate("createddate"))));
+			technicalQualification.setLastModifiedDate(sdf.parse(sdf.format(rs.getDate("lastmodifieddate"))));
+		} catch (ParseException e) {
+			e.printStackTrace();
+			throw new SQLException("Parse exception while parsing date");
+		}
 		
 		return technicalQualification;
 	}

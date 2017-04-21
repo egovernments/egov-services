@@ -42,6 +42,8 @@ package org.egov.eis.repository.rowmapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import org.egov.eis.model.Assignment;
 import org.springframework.dao.DataAccessException;
@@ -53,6 +55,8 @@ public class AssignmentTableRowMapper implements RowMapper<Assignment> {
 
 	@Override
 	public Assignment mapRow(ResultSet rs, int rowNum) throws SQLException, DataAccessException {
+		final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
 		Assignment assignment = new Assignment();
 		assignment.setId(rs.getLong("id"));
 		assignment.setPosition(rs.getLong("positionId"));
@@ -62,15 +66,20 @@ public class AssignmentTableRowMapper implements RowMapper<Assignment> {
 		assignment.setDepartment(rs.getLong("departmentId"));
 		assignment.setDesignation(rs.getLong("designationId"));
 		assignment.setIsPrimary(rs.getBoolean("isPrimary"));
-		assignment.setFromDate(rs.getDate("fromDate"));
-		assignment.setToDate(rs.getDate("toDate"));
 		assignment.setGrade((rs.getLong("gradeId") == 0L ? null : rs.getLong("functionId")));
 		assignment.setGovtOrderNumber(rs.getString("govtOrderNumber"));
 		assignment.setCreatedBy(rs.getLong("createdBy"));
-		assignment.setCreatedDate(rs.getDate("createdDate"));
 		assignment.setLastModifiedBy(rs.getLong("lastModifiedBy"));
-		assignment.setLastModifiedDate(rs.getDate("lastModifiedDate"));
 		assignment.setTenantId(rs.getString("tenantId"));
+		try {
+			assignment.setFromDate(sdf.parse(sdf.format(rs.getDate("a_fromDate"))));
+			assignment.setToDate(sdf.parse(sdf.format(rs.getDate("a_toDate"))));
+			assignment.setCreatedDate(sdf.parse(sdf.format(rs.getDate("a_createdDate"))));
+			assignment.setLastModifiedDate(sdf.parse(sdf.format(rs.getDate("a_lastModifiedDate"))));
+		} catch (ParseException e) {
+			e.printStackTrace();
+			throw new SQLException("Parse exception while parsing date");
+		}
 		
 		return assignment;
 	}

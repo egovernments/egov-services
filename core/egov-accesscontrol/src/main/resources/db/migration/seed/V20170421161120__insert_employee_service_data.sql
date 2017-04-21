@@ -1,0 +1,5 @@
+INSERT INTO service (id,code,name,enabled,contextroot,displayname,ordernumber,parentmodule,tenantId) VALUES (nextval('SEQ_SERVICE'),'HR EMPLOYEE', 'HR Employee', false, 'hr-employee', null, 1, null, 'default');
+INSERT INTO service (id,code,name,enabled,contextroot,displayname,ordernumber,parentmodule,tenantId) VALUES (nextval('SEQ_SERVICE'),'HR MASTERS', 'HR Masters', false, 'hr-masters', null, 2, null, 'default');
+INSERT INTO service (id,code,name,enabled,contextroot,displayname,ordernumber,parentmodule,tenantId) VALUES (nextval('SEQ_SERVICE'),'EGOV COMMON MASTERS', 'EGOV Common Masters', false, 'egov-common-masters', null, 3, null, 'default');
+INSERT INTO service (id,code,name,enabled,contextroot,displayname,ordernumber,parentmodule,tenantId) VALUES (nextval('SEQ_SERVICE'),'HR ATTENDANCE', 'HR Attendance', false, 'hr-attendance', null, 4, null, 'default');
+INSERT INTO service (id,code,name,enabled,contextroot,displayname,ordernumber,parentmodule,tenantId) VALUES (nextval('SEQ_SERVICE'),'HR LEAVE', 'HR Leave', false, 'hr-leave', null, 5, null, 'default');

@@ -42,10 +42,10 @@ public class AssignmentServiceTest {
 
 	@Mock
 	private EmployeeDocumentsRepository employeeDocumentsRepository;
-	
+
 	@InjectMocks
 	private AssignmentService assignmentService;
-	
+
 	@Before
 	public void setUp() throws Exception {
 	}
@@ -53,124 +53,124 @@ public class AssignmentServiceTest {
 	@After
 	public void tearDown() throws Exception {
 	}
-	
+
 	@Test
 	public void testUpdate() {
-	final List<Assignment> insertedAssignments = new ArrayList<>();
-	final List<Assignment> updatedAssignments = new ArrayList<>();
-	final List<Long> deletedAssignmentIds = new ArrayList<>();
-	
-	final List<Assignment> insertedHodDepartmentAlongWithAssignment = new ArrayList<>();
-	final List<Long> insertedHodDepartmentIdsDuringUpdate = new ArrayList<>();
-	final List<Long> deletedHodDepartmentIds = new ArrayList<>();
-	
-	final List<Long> deletedDocumentsReferenceIds = new ArrayList<>();
+		final List<Assignment> insertedAssignments = new ArrayList<>();
+		final List<Assignment> updatedAssignments = new ArrayList<>();
+		final List<Long> deletedAssignmentIds = new ArrayList<>();
 
-	when(assignmentRepository.findByEmployeeId(100L, "1"))
-    .thenReturn(getAssignmentsInDBForEmployee());
-	doAnswer(new Answer<Void>() {
-	    public Void answer(InvocationOnMock invocation) {
-	      Object[] args = invocation.getArguments();
-	      deletedAssignmentIds.addAll((List<Long>)args[0]);
-	      return null;
-	    }
-	}).when(assignmentRepository).delete(Matchers.anyListOf(Long.class), Matchers.anyLong(), Matchers.anyString());
-	doAnswer(new Answer<Void>() {
-	    public Void answer(InvocationOnMock invocation) {
-	      Object[] args = invocation.getArguments();
-	      insertedAssignments.add((Assignment)args[0]);
-	      return null;
-	    }
-	}).when(assignmentRepository).insert(Matchers.any(Assignment.class), Matchers.anyLong());
-	doAnswer(new Answer<Void>() {
-	    public Void answer(InvocationOnMock invocation) {
-	      Object[] args = invocation.getArguments();
-	      updatedAssignments.add((Assignment)args[0]);
-	      return null;
-	    }
-	}).when(assignmentRepository).update(Matchers.any(Assignment.class));
-	
-	when(hodDepartmentRepository.findByAssignmentId(10L, "1"))
-	.thenReturn(getHodsInDbForAssignment());
-	doAnswer(new Answer<Void>() {
-	    public Void answer(InvocationOnMock invocation) {
-	      Object[] args = invocation.getArguments();
-	      deletedHodDepartmentIds.addAll((List<Long>)args[0]);
-	      return null;
-	    }
-	}).when(hodDepartmentRepository).delete(Matchers.anyListOf(Long.class), Matchers.anyString());
-	doAnswer(new Answer<Void>() {
-	    public Void answer(InvocationOnMock invocation) {
-	      Object[] args = invocation.getArguments();
-	      insertedHodDepartmentIdsDuringUpdate.add((Long)args[0]);
-	      return null;
-	    }
-	}).when(hodDepartmentRepository).insert(Matchers.anyLong(), Matchers.anyLong(), Matchers.anyString());
-	doAnswer(new Answer<Void>() {
-	    public Void answer(InvocationOnMock invocation) {
-	      Object[] args = invocation.getArguments();
-	      insertedHodDepartmentAlongWithAssignment.add((Assignment)args[0]);
-	      return null;
-	    }
-	}).when(hodDepartmentRepository).save(Matchers.any(Assignment.class), Matchers.anyString());
-	doAnswer(new Answer<Void>() {
-	    public Void answer(InvocationOnMock invocation) {
-	      Object[] args = invocation.getArguments();
-	      deletedDocumentsReferenceIds.addAll((List<Long>)args[2]);
-	      return null;
-	    }
-	}).when(employeeDocumentsRepository).deleteForReferenceIds(Matchers.anyLong(), Matchers.any(EntityType.class), Matchers.anyListOf(Long.class), Matchers.anyString());
-	
-	Employee employee = null;
-	try {
-		employee = getEmployee("org/egov/eis/service/AssignmentService.employees1.json");
-	} catch(Exception e) {
-		e.printStackTrace();
-		fail();
-	}
-	
-	assignmentService.update(employee);
-	
-	List<Assignment> expectedInsertedAssignments = new ArrayList<>();
-	List<Assignment> expectedUpdatedAssignments = new ArrayList<>();
-	List<Long> expectedDeletedAssignmentIds = new ArrayList<>();
-	
-	List<Assignment> expectedInsertedHodAlongWithAssignment = new ArrayList<>();
-	List<Long >expectedInsertedHodDepartmentIdsDuringUpdate = new ArrayList<>();
-	List<Long> expectedDeletedHodDepartmentIds = new ArrayList<>();
-	List<Long> expectedDeletedDocumentsReferenceIds = new ArrayList<>();
+		final List<Assignment> insertedHodDepartmentAlongWithAssignment = new ArrayList<>();
+		final List<Long> insertedHodDepartmentIdsDuringUpdate = new ArrayList<>();
+		final List<Long> deletedHodDepartmentIds = new ArrayList<>();
 
-	expectedInsertedAssignments.add(employee.getAssignments().get(2));
-	expectedInsertedHodAlongWithAssignment.add(employee.getAssignments().get(2));
-	expectedInsertedHodDepartmentIdsDuringUpdate.add(employee.getAssignments().get(0).getHod().get(0).getDepartment());
-	
-	expectedUpdatedAssignments.add(employee.getAssignments().get(0));
-	expectedUpdatedAssignments.add(employee.getAssignments().get(1));
-	
-	expectedDeletedAssignmentIds.add(10L);
-	expectedDeletedHodDepartmentIds.add(10L);
-	expectedDeletedDocumentsReferenceIds.add(10L);
-	
-	assertTrue(expectedInsertedAssignments.containsAll(insertedAssignments));
-	assertEquals(expectedInsertedAssignments.size(), insertedAssignments.size());
-	
-	assertTrue(expectedUpdatedAssignments.containsAll(updatedAssignments));
-	assertEquals(expectedUpdatedAssignments.size(), updatedAssignments.size());
-	
-	assertTrue(expectedDeletedAssignmentIds.containsAll(deletedAssignmentIds));
-	assertEquals(expectedDeletedAssignmentIds.size(), deletedAssignmentIds.size());
-	
-	assertTrue(expectedInsertedHodAlongWithAssignment.containsAll(insertedHodDepartmentAlongWithAssignment));
-	assertEquals(expectedInsertedHodAlongWithAssignment.size(), insertedHodDepartmentAlongWithAssignment.size());
-	
-	assertTrue(expectedInsertedHodDepartmentIdsDuringUpdate.containsAll(insertedHodDepartmentIdsDuringUpdate));
-	assertEquals(expectedInsertedHodDepartmentIdsDuringUpdate.size(), insertedHodDepartmentIdsDuringUpdate.size());
-	
-	assertTrue(expectedDeletedHodDepartmentIds.containsAll(deletedHodDepartmentIds));
-	assertEquals(expectedDeletedHodDepartmentIds.size(), deletedHodDepartmentIds.size());
-	
-	assertTrue(expectedDeletedDocumentsReferenceIds.containsAll(deletedDocumentsReferenceIds));
-	assertEquals(expectedDeletedDocumentsReferenceIds.size(), deletedDocumentsReferenceIds.size());
+		final List<Long> deletedDocumentsReferenceIds = new ArrayList<>();
+
+		when(assignmentRepository.findByEmployeeId(100L, "1")).thenReturn(getAssignmentsInDBForEmployee());
+		doAnswer(new Answer<Void>() {
+			public Void answer(InvocationOnMock invocation) {
+				Object[] args = invocation.getArguments();
+				deletedAssignmentIds.addAll((List<Long>) args[0]);
+				return null;
+			}
+		}).when(assignmentRepository).delete(Matchers.anyListOf(Long.class), Matchers.anyLong(), Matchers.anyString());
+		doAnswer(new Answer<Void>() {
+			public Void answer(InvocationOnMock invocation) {
+				Object[] args = invocation.getArguments();
+				insertedAssignments.add((Assignment) args[0]);
+				return null;
+			}
+		}).when(assignmentRepository).insert(Matchers.any(Assignment.class), Matchers.anyLong());
+		doAnswer(new Answer<Void>() {
+			public Void answer(InvocationOnMock invocation) {
+				Object[] args = invocation.getArguments();
+				updatedAssignments.add((Assignment) args[0]);
+				return null;
+			}
+		}).when(assignmentRepository).update(Matchers.any(Assignment.class));
+
+		when(hodDepartmentRepository.findByAssignmentId(10L, "1")).thenReturn(getHodsInDbForAssignment());
+		doAnswer(new Answer<Void>() {
+			public Void answer(InvocationOnMock invocation) {
+				Object[] args = invocation.getArguments();
+				deletedHodDepartmentIds.addAll((List<Long>) args[0]);
+				return null;
+			}
+		}).when(hodDepartmentRepository).delete(Matchers.anyListOf(Long.class), Matchers.anyString());
+		doAnswer(new Answer<Void>() {
+			public Void answer(InvocationOnMock invocation) {
+				Object[] args = invocation.getArguments();
+				insertedHodDepartmentIdsDuringUpdate.add((Long) args[0]);
+				return null;
+			}
+		}).when(hodDepartmentRepository).insert(Matchers.anyLong(), Matchers.anyLong(), Matchers.anyString());
+		doAnswer(new Answer<Void>() {
+			public Void answer(InvocationOnMock invocation) {
+				Object[] args = invocation.getArguments();
+				insertedHodDepartmentAlongWithAssignment.add((Assignment) args[0]);
+				return null;
+			}
+		}).when(hodDepartmentRepository).save(Matchers.any(Assignment.class), Matchers.anyString());
+		doAnswer(new Answer<Void>() {
+			public Void answer(InvocationOnMock invocation) {
+				Object[] args = invocation.getArguments();
+				deletedDocumentsReferenceIds.addAll((List<Long>) args[2]);
+				return null;
+			}
+		}).when(employeeDocumentsRepository).deleteForReferenceIds(Matchers.anyLong(), Matchers.any(EntityType.class),
+				Matchers.anyListOf(Long.class), Matchers.anyString());
+
+		Employee employee = null;
+		try {
+			employee = getEmployee("org/egov/eis/service/AssignmentService.employees1.json");
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail();
+		}
+
+		assignmentService.update(employee);
+
+		List<Assignment> expectedInsertedAssignments = new ArrayList<>();
+		List<Assignment> expectedUpdatedAssignments = new ArrayList<>();
+		List<Long> expectedDeletedAssignmentIds = new ArrayList<>();
+
+		List<Assignment> expectedInsertedHodAlongWithAssignment = new ArrayList<>();
+		List<Long> expectedInsertedHodDepartmentIdsDuringUpdate = new ArrayList<>();
+		List<Long> expectedDeletedHodDepartmentIds = new ArrayList<>();
+		List<Long> expectedDeletedDocumentsReferenceIds = new ArrayList<>();
+
+		expectedInsertedAssignments.add(employee.getAssignments().get(2));
+		expectedInsertedHodAlongWithAssignment.add(employee.getAssignments().get(2));
+		expectedInsertedHodDepartmentIdsDuringUpdate
+				.add(employee.getAssignments().get(0).getHod().get(0).getDepartment());
+
+		expectedUpdatedAssignments.add(employee.getAssignments().get(0));
+		expectedUpdatedAssignments.add(employee.getAssignments().get(1));
+
+		expectedDeletedAssignmentIds.add(10L);
+		expectedDeletedHodDepartmentIds.add(10L);
+		expectedDeletedDocumentsReferenceIds.add(10L);
+
+		assertTrue(expectedInsertedAssignments.containsAll(insertedAssignments));
+		assertEquals(expectedInsertedAssignments.size(), insertedAssignments.size());
+
+		assertTrue(expectedUpdatedAssignments.containsAll(updatedAssignments));
+		assertEquals(expectedUpdatedAssignments.size(), updatedAssignments.size());
+
+		assertTrue(expectedDeletedAssignmentIds.containsAll(deletedAssignmentIds));
+		assertEquals(expectedDeletedAssignmentIds.size(), deletedAssignmentIds.size());
+
+		assertTrue(expectedInsertedHodAlongWithAssignment.containsAll(insertedHodDepartmentAlongWithAssignment));
+		assertEquals(expectedInsertedHodAlongWithAssignment.size(), insertedHodDepartmentAlongWithAssignment.size());
+
+		assertTrue(expectedInsertedHodDepartmentIdsDuringUpdate.containsAll(insertedHodDepartmentIdsDuringUpdate));
+		assertEquals(expectedInsertedHodDepartmentIdsDuringUpdate.size(), insertedHodDepartmentIdsDuringUpdate.size());
+
+		assertTrue(expectedDeletedHodDepartmentIds.containsAll(deletedHodDepartmentIds));
+		assertEquals(expectedDeletedHodDepartmentIds.size(), deletedHodDepartmentIds.size());
+
+		assertTrue(expectedDeletedDocumentsReferenceIds.containsAll(deletedDocumentsReferenceIds));
+		assertEquals(expectedDeletedDocumentsReferenceIds.size(), deletedDocumentsReferenceIds.size());
 	}
 
 	private List<Long> getHodsInDbForAssignment() {
@@ -186,9 +186,12 @@ public class AssignmentServiceTest {
 
 	private List<Assignment> getAssignmentsInDBForEmployee() {
 		List<Assignment> assignments = new ArrayList<>();
-		assignments.add(Assignment.builder().id(10L).position(5L).department(5L).designation(5L).isPrimary(false).fromDate(new Date()).toDate(new Date()).build());
-		assignments.add(Assignment.builder().id(5L).position(5L).department(5L).designation(5L).isPrimary(false).fromDate(new Date()).toDate(new Date()).build());
-		assignments.add(Assignment.builder().id(6L).position(6L).department(6L).designation(6L).isPrimary(false).fromDate(new Date()).toDate(new Date()).build());
+		assignments.add(Assignment.builder().id(10L).position(5L).department(5L).designation(5L).isPrimary(false)
+				.fromDate(new Date()).toDate(new Date()).build());
+		assignments.add(Assignment.builder().id(5L).position(5L).department(5L).designation(5L).isPrimary(false)
+				.fromDate(new Date()).toDate(new Date()).build());
+		assignments.add(Assignment.builder().id(6L).position(6L).department(6L).designation(6L).isPrimary(false)
+				.fromDate(new Date()).toDate(new Date()).build());
 		return assignments;
 	}
 }

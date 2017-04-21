@@ -4,7 +4,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.egov.filestore.domain.service.StorageService;
 import org.egov.filestore.web.contract.File;

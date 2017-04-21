@@ -82,11 +82,13 @@ public class ArtifactRepositoryTest {
         artifact.setFileStoreId("fileStoreId");
         artifact.setContentType("contentType");
         artifact.setFileName("fileName");
+        artifact.setTenantId(TENANTID);
         when(fileStoreJpaRepository.findByFileStoreIdAndTenantId("fileStoreId",TENANTID)).thenReturn(artifact);
 
         Resource actualResource = artifactRepository.find("fileStoreId",TENANTID);
 
         assertEquals(actualResource.getContentType(), "contentType");
+        assertEquals(actualResource.getTenantId(), TENANTID);
         assertEquals(actualResource.getFileName(), "fileName");
         assertEquals(actualResource.getResource(), mockedResource);
     }
@@ -105,9 +107,11 @@ public class ArtifactRepositoryTest {
         List<FileInfo> actual = artifactRepository.findByTag(TAG,TENANTID);
 
         assertEquals(actual.get(0).getContentType(), "contentType1");
+        assertEquals(actual.get(0).getTenantId(), TENANTID);
         assertEquals(actual.get(0).getFileLocation().getFileStoreId(), FILE_STORE_ID_1);
 
         assertEquals(actual.get(1).getContentType(), "contentType2");
+        assertEquals(actual.get(1).getTenantId(), TENANTID);
         assertEquals(actual.get(1).getFileLocation().getFileStoreId(), FILE_STORE_ID_2);
 
         verify(fileStoreJpaRepository).findByTagAndTenantId(TAG,TENANTID);
@@ -137,6 +141,7 @@ public class ArtifactRepositoryTest {
                     setModule(MODULE);
                     setTag(TAG);
                     setContentType("contentType1");
+                    setTenantId(TENANTID);
                 }},
 
                 new Artifact() {{
@@ -145,6 +150,7 @@ public class ArtifactRepositoryTest {
                     setModule(MODULE);
                     setTag(TAG);
                     setContentType("contentType2");
+                    setTenantId(TENANTID);
                 }}
         );
     }

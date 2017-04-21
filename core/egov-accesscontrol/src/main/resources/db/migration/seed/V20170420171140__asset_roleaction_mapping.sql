@@ -1,4 +1,4 @@
-delete from eg_roleaction where actionid in (Select id from eg_action where servicecode in ('Asset Management','Asset Service');
+delete from eg_roleaction where actionid in (Select id from eg_action where servicecode in ('Asset Management','Asset Service'));
 delete from eg_action where servicecode in ('Asset Management','Asset Service');
 delete from service where contextroot in ('asset-web','asset-services');
 

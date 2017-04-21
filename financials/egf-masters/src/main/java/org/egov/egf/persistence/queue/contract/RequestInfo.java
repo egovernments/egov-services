@@ -41,6 +41,8 @@ package org.egov.egf.persistence.queue.contract;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -67,7 +69,7 @@ public class RequestInfo {
 	private String apiId = null;
 
 	private String ver = null;
-
+	@JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "IST")
 	private Date ts = null;
 
 	private String key = null;

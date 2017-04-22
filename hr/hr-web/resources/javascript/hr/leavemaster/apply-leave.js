@@ -34,6 +34,7 @@ class ApplyLeave extends React.Component {
   componentDidMount(){
     var type = getUrlVars()["type"], _this = this;
     var id = getUrlVars()["id"];
+    var asOnDate = _this.state.leaveSet.toDate;
 
     if(getUrlVars()["type"]==="view")
     {
@@ -146,40 +147,40 @@ class ApplyLeave extends React.Component {
             if (!id) {
 
                 var obj = commonApiPost("hr-employee","employees","_loggedinemployee",{tenantId}).responseJSON["Employee"];
-                var type;
-                if(type==="department"){
-                  var departmentId=this.getPrimaryAssigmentDep(obj,"department");
-                  //call hod api with departmentId and asOnDate
-                  var obj2 =commonApiPost("hod","employees","_search",{asOnDate,departmentId}).responseJSON["Employee"];
-                  var assignee=obj.department;
-                }
-                else{
-                  var departmentId=this.getPrimaryAssigmentDep(obj,"position");
-                  //call hod api with departmentId and asOnDate
-                  var obj2 =commonApiPost("hod","employees","_search",{asOnDate,departmentId}).responseJSON["Employee"];
-                  var assignee=obj.department;
-
-                }
+                // var type;
+                //
+                //   var departmentId=this.getPrimaryAssigmentDep(obj,"department");
+                //   //call hod api with departmentId and asOnDate
+                //   var res = commonApiPost("hod","employees","_search",{asOnDate,departmentId})
+                //     if(res && res.responseJSON && res.responseJSON["Employee"]){
+                //       employee = res.responseJSON["Employee"]
+                //     }
+                //     else{
+                //       employee={};
+                //     }
+                //
+                //
+                //
+                //   console.log(obj2);
+                //   var assignee=obj2.department;
+                //
+                // else{
+                //   var departmentId=this.getPrimaryAssigmentDep(obj,"position");
+                //   //call hod api with departmentId and asOnDate
+                //   var obj2 =commonApiPost("hod","employees","_search",{asOnDate,departmentId}).responseJSON["Employee"];
+                //   var assignee=obj.department;
+                //
+                // }
 
 
 
             } else {
               var obj = getCommonMasterById("hr-employee","employees","Employee",id).responseJSON["Employee"][0]
-              var type;
-              if(type==="department"){
-                var departmentId=this.getPrimaryAssigmentDep(obj,"department");
-                //call hod api with departmentId and asOnDate
-                var obj2 =commonApiPost("hod","employees","_search",{asOnDate,departmentId}).responseJSON["Employee"];
-                var assignee=obj.department;
-              }
-              else{
-                var departmentId=this.getPrimaryAssigmentDep(obj,"position");
-                //call hod api with departmentId and asOnDate
-                var obj2 =commonApiPost("hod","employees","_search",{asOnDate,departmentId}).responseJSON["Employee"];
-                var assignee=obj.department;
-
-              }
-
+              // var departmentId=this.getPrimaryAssigmentDep(obj,"department");
+              // //call hod api with departmentId and asOnDate
+              // var obj2 =commonApiPost("hod","employees","_search",{asOnDate,departmentId}).responseJSON["Employee"];
+              // console.log(obj2);
+              // var assignee=obj2.department;
             }
             _this.setState({
               leaveSet:{
@@ -196,16 +197,16 @@ class ApplyLeave extends React.Component {
       }
 
     }
-
-    getPrimaryAssigmentDep(obj,type)
-    {
-      for (var i = 0; i < obj.assignments.length; i++) {
-        if(obj.assignments[i].primary)
-        {
-          return departmentId=obj.assignments[i][type];
-        }
-      }
-    }
+    //
+    // getPrimaryAssigmentDep(obj,type)
+    // {
+    //   for (var i = 0; i < obj.assignments.length; i++) {
+    //     if(obj.assignments[i].primary)
+    //     {
+    //       return obj.assignments[i][type];
+    //     }
+    //   }
+    // }
 
   componentWillMount()
   {

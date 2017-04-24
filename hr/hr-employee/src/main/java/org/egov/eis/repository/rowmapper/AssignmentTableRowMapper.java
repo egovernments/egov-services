@@ -40,10 +40,13 @@
 
 package org.egov.eis.repository.rowmapper;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.egov.eis.model.Assignment;
 import org.springframework.dao.DataAccessException;
@@ -72,15 +75,20 @@ public class AssignmentTableRowMapper implements RowMapper<Assignment> {
 		assignment.setLastModifiedBy(rs.getLong("lastModifiedBy"));
 		assignment.setTenantId(rs.getString("tenantId"));
 		try {
-			assignment.setFromDate(sdf.parse(sdf.format(rs.getDate("fromDate"))));
-			assignment.setToDate(sdf.parse(sdf.format(rs.getDate("toDate"))));
-			assignment.setCreatedDate(sdf.parse(sdf.format(rs.getDate("createdDate"))));
-			assignment.setLastModifiedDate(sdf.parse(sdf.format(rs.getDate("lastModifiedDate"))));
+			Date date = isEmpty(rs.getDate("fromDate")) ? null : sdf.parse(sdf.format(rs.getDate("fromDate")));
+			assignment.setFromDate(date);
+			date = isEmpty(rs.getDate("toDate")) ? null : sdf.parse(sdf.format(rs.getDate("toDate")));
+			assignment.setToDate(date);
+			date = isEmpty(rs.getDate("createdDate")) ? null : sdf.parse(sdf.format(rs.getDate("createdDate")));
+			assignment.setCreatedDate(date);
+			date = isEmpty(rs.getDate("lastModifiedDate")) ? null
+					: sdf.parse(sdf.format(rs.getDate("lastModifiedDate")));
+			assignment.setLastModifiedDate(date);
 		} catch (ParseException e) {
 			e.printStackTrace();
 			throw new SQLException("Parse exception while parsing date");
 		}
-		
+
 		return assignment;
 	}
 }

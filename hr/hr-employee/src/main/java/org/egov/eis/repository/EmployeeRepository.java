@@ -89,8 +89,9 @@ public class EmployeeRepository {
 
 	public static final String SELECT_BY_EMPLOYEEID_QUERY = "SELECT"
 			+ " id, code, dateofappointment, dateofjoining, dateofretirement, employeestatus, recruitmentmodeid,"
-			+ " recruitmenttypeid, recruitmentquotaid, retirementage, dateofresignation, dateoftermination, employeetypeid, mothertongueid, religionid,"
-			+ " communityid, categoryid, physicallydisabled, medicalReportproduced, passportno, gpfno, bankid, bankbranchid, bankaccount, groupid, placeofbirth, tenantid"
+			+ " recruitmenttypeid, recruitmentquotaid, retirementage, dateofresignation, dateoftermination, employeetypeid,"
+			+ " mothertongueid, religionid, communityid, categoryid, physicallydisabled, medicalReportproduced,"
+			+ " passportno, gpfno, bankid, bankbranchid, bankaccount, groupid, placeofbirth, tenantid"
 			+ " FROM egeis_employee" + " WHERE id = ? AND tenantId = ? ";
 	
 		public static final String DUPLICATE_EXISTS_QUERY = "SELECT exists(SELECT id FROM $table WHERE $column = ?"

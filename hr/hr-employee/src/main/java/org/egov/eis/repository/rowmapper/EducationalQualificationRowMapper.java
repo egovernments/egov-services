@@ -40,10 +40,13 @@
 
 package org.egov.eis.repository.rowmapper;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.egov.eis.model.EducationalQualification;
 import org.springframework.dao.DataAccessException;
@@ -58,7 +61,7 @@ public class EducationalQualificationRowMapper implements RowMapper<EducationalQ
 		final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
 		EducationalQualification educationalQualification = new EducationalQualification();
-		
+
 		educationalQualification.setId(rs.getLong("id"));
 		educationalQualification.setQualification(rs.getString("qualification"));
 		educationalQualification.setMajorSubject(rs.getString("majorsubject"));
@@ -68,13 +71,16 @@ public class EducationalQualificationRowMapper implements RowMapper<EducationalQ
 		educationalQualification.setLastModifiedBy(rs.getLong("lastmodifiedby"));
 		educationalQualification.setTenantId(rs.getString("tenantid"));
 		try {
-			educationalQualification.setCreatedDate(sdf.parse(sdf.format(rs.getDate("createddate"))));
-			educationalQualification.setLastModifiedDate(sdf.parse(sdf.format(rs.getDate("lastmodifieddate"))));
+			Date date = isEmpty(rs.getDate("createdDate")) ? null : sdf.parse(sdf.format(rs.getDate("createdDate")));
+			educationalQualification.setCreatedDate(date);
+			date = isEmpty(rs.getDate("lastmodifieddate")) ? null
+					: sdf.parse(sdf.format(rs.getDate("lastmodifieddate")));
+			educationalQualification.setLastModifiedDate(date);
 		} catch (ParseException e) {
 			e.printStackTrace();
 			throw new SQLException("Parse exception while parsing date");
 		}
-		
+
 		return educationalQualification;
 	}
 }

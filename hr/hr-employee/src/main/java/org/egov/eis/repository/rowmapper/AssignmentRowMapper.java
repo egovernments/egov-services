@@ -40,11 +40,14 @@
 
 package org.egov.eis.repository.rowmapper;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -85,10 +88,17 @@ public class AssignmentRowMapper implements ResultSetExtractor<List<Assignment>>
 				assignment.setLastModifiedBy((Long) rs.getObject("a_lastModifiedBy"));
 				assignment.setTenantId(rs.getString("a_tenantId"));
 				try {
-					assignment.setFromDate(sdf.parse(sdf.format(rs.getDate("a_fromDate"))));
-					assignment.setToDate(sdf.parse(sdf.format(rs.getDate("a_toDate"))));
-					assignment.setCreatedDate(sdf.parse(sdf.format(rs.getDate("a_createdDate"))));
-					assignment.setLastModifiedDate(sdf.parse(sdf.format(rs.getDate("a_lastModifiedDate"))));
+					Date date = isEmpty(rs.getDate("a_fromDate")) ? null
+							: sdf.parse(sdf.format(rs.getDate("a_fromDate")));
+					assignment.setFromDate(date);
+					date = isEmpty(rs.getDate("a_toDate")) ? null : sdf.parse(sdf.format(rs.getDate("a_toDate")));
+					assignment.setToDate(date);
+					date = isEmpty(rs.getDate("a_createdDate")) ? null
+							: sdf.parse(sdf.format(rs.getDate("a_createdDate")));
+					assignment.setCreatedDate(date);
+					date = isEmpty(rs.getDate("a_lastModifiedDate")) ? null
+							: sdf.parse(sdf.format(rs.getDate("a_lastModifiedDate")));
+					assignment.setLastModifiedDate(date);
 				} catch (ParseException e) {
 					e.printStackTrace();
 					throw new SQLException("Parse exception while parsing date");

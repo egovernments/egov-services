@@ -87,8 +87,6 @@ CREATE TABLE egpgr_complaint
       REFERENCES egpgr_complainant (id),
   CONSTRAINT fk_complaint_complainttype FOREIGN KEY (complainttype)
       REFERENCES  egpgr_complainttype (id) ,
-  CONSTRAINT fk_complaint_status FOREIGN KEY (status)
-      REFERENCES egpgr_complaintstatus (id) ,
   CONSTRAINT uk_complaint_crn UNIQUE (crn),
  constraint uk_complaint_crn_tenant unique (crn,tenantid)
 

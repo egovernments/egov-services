@@ -24,7 +24,7 @@ public class ComplaintTest {
         complaintType.setName("complaintName");
         complaintType.setCode("complaintCode");
         complaintType.setTenantId("tenantId");
-        final ComplaintStatus complaintStatus = ComplaintStatus.builder().id(1L).name("FORWARDED").build();
+
         final Complainant complainant = Complainant.builder().id(2L).name("firstName").mobile("mobileNumber")
                 .email("email@email.com").address("address").build();
         final LocalDateTime lastAccessedDateTime = LocalDateTime.of(2016, 1, 2, 3, 4, 5);
@@ -32,7 +32,7 @@ public class ComplaintTest {
         final ReceivingMode receivingMode = new ReceivingMode();
         receivingMode.setCode("EMAIL");
         final Complaint entityComplaint = Complaint.builder().crn("crn").details("complaint description")
-                .complaintType(complaintType).receivingMode(receivingMode).status(complaintStatus)
+                .complaintType(complaintType).receivingMode(receivingMode).status("FORWARDED")
                 .complainant(complainant).latitude(1.0).longitude(2.0).crossHierarchyId(4L).location(3L).department(3L)
                 .lastAccessedTime(toDate(lastAccessedDateTime)).landmarkDetails("landMark").receivingMode(receivingMode)
                 .receivingCenter(receivingCenter).childLocation(5L).assignee(6L).stateId(7L).tenantId("tenantId").build();

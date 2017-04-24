@@ -198,6 +198,9 @@
                                         <exclude>org.egov.pgr.read.persistence.repository.ComplaintTypeRepository
                                         </exclude>
                                         <exclude>org.egov.pgr.common.repository.UserRepository</exclude>
+                                        <exclude>org.egov.pgr.common.model.Role</exclude>
+                                        <exclude>org.egov.pgr.common.model.Role.RoleBuilder</exclude>
+                                        <exclude>org.egov.pgr.write.consumer.HashMapDeserializer</exclude>
                                     </excludes>
                                     <limits>
                                         <limit>

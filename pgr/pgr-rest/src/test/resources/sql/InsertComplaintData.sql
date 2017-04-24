@@ -9,7 +9,7 @@ lastmodifiedby,slahours,hasfinancialimpact,attributes,category,metadata,type,key
 INSERT into egpgr_complaint(id,crn,complaintType,complainant,assignee,location,childlocation,
 status,details,landmarkDetails,receivingMode,receivingCenter,lng,lat,escalation_date,department,
 citizenFeedback,latlngAddress,crossHierarchyId,state_id,createdby,createddate,lastmodifiedby,lastmodifieddate,tenantid)VALUES(1,'0005-2017-AB',78,1,1,1,4,
-1,'This is a huge problem','Near Temple',5,5,0,0,'2016-12-22T00:00:00.000',18,5,null,2,5,2,'2016-12-20 00:00:00',2,'2016-12-21 00:00:00','ap.public');
+'REGISTERED','This is a huge problem','Near Temple',5,5,0,0,'2016-12-22T00:00:00.000',18,5,null,2,5,2,'2016-12-20 00:00:00',2,'2016-12-21 00:00:00','ap.public');
 
 
 INSERT into egpgr_complainant (id,email,mobile,name,userdetail,address,version,tenantid)values(2,'ram@gmail.com','7475844747','Ram',3,'Near School',0,'ap.public');
@@ -23,7 +23,7 @@ lastmodifiedby,slahours,hasfinancialimpact,attributes,category,metadata,type,key
 INSERT into egpgr_complaint(id,crn,complaintType,complainant,assignee,location,childlocation,
 status,details,landmarkDetails,receivingMode,receivingCenter,lng,lat,escalation_date,department,
 citizenFeedback,latlngAddress,crossHierarchyId,state_id,createdby,createddate,lastmodifiedby,lastmodifieddate,tenantid)VALUES(2,'0007-2016-XZ',79,2,2,2,null,
-2,'This is a huge problem','Near Temple',2,9,0,0,'2017-12-22T00:00:00.000',19,5,null,2,5,2,'2016-12-20 00:00:00',2,'2016-12-21 00:00:00','ap.public');
+'FORWARDED','This is a huge problem','Near Temple',2,9,0,0,'2017-12-22T00:00:00.000',19,5,null,2,5,2,'2016-12-20 00:00:00',2,'2016-12-21 00:00:00','ap.public');
 
 
  INSERT into egpgr_complainant (id,email,mobile,name,userdetail,address,version,tenantid)values(3,'shyam@gmail.com','8923618856','Shyam',4,'Near School',0,'ap.public');
@@ -37,5 +37,5 @@ lastmodifiedby,slahours,hasfinancialimpact,attributes,category,metadata,type,key
 INSERT into egpgr_complaint(id,crn,complaintType,complainant,assignee,location,childlocation,
 status,details,landmarkDetails,receivingMode,receivingCenter,lng,lat,escalation_date,department,
 citizenFeedback,latlngAddress,crossHierarchyId,state_id,createdby,createddate,lastmodifiedby,lastmodifieddate,tenantid)VALUES(3,'0009-2016-MN',80,3,1,1,4,
-2,'This is a huge problem','Near Temple',5,9,0,0,'2016-12-02T00:00:00.000',19,5,null,2,5,2,'2015-12-30 00:00:00',2,'2016-12-21 00:00:00','ap.public');
+'REGISTERED','This is a huge problem','Near Temple',5,9,0,0,'2016-12-02T00:00:00.000',19,5,null,2,5,2,'2015-12-30 00:00:00',2,'2016-12-21 00:00:00','ap.public');
 

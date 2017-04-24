@@ -1,29 +1,14 @@
 package org.egov.pgr.read.persistence.specification;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-
-import org.egov.pgr.common.entity.AbstractAuditable_;
-import org.egov.pgr.common.entity.Complainant;
-import org.egov.pgr.common.entity.Complainant_;
-import org.egov.pgr.common.entity.Complaint;
-import org.egov.pgr.common.entity.ComplaintStatus;
-import org.egov.pgr.common.entity.ComplaintStatus_;
-import org.egov.pgr.common.entity.ComplaintType;
-import org.egov.pgr.common.entity.ComplaintType_;
-import org.egov.pgr.common.entity.Complaint_;
-import org.egov.pgr.common.entity.ReceivingMode;
-import org.egov.pgr.common.entity.ReceivingMode_;
+import org.egov.pgr.common.entity.*;
 import org.egov.pgr.read.domain.model.ComplaintSearchCriteria;
 import org.joda.time.DateTime;
 import org.springframework.data.jpa.domain.Specification;
+
+import javax.persistence.criteria.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class SevaSpecification implements Specification<Complaint> {
     private ComplaintSearchCriteria criteria;
@@ -39,8 +24,7 @@ public class SevaSpecification implements Specification<Complaint> {
         Path<String> tenantId = root.get(Complaint_.tenantId);
         Path<ComplaintType> complaintType = root.get(Complaint_.complaintType);
         Path<String> code = complaintType.get(ComplaintType_.code);
-        Path<ComplaintStatus> complaintStatus = root.get(Complaint_.status);
-        Path<String> status = complaintStatus.get(ComplaintStatus_.name);
+        Path<String> status = root.get(Complaint_.status);
         Path<Date> createdDate = root.get(AbstractAuditable_.createdDate);
         Path<Date> lastModifiedDate = root.get(AbstractAuditable_.lastModifiedDate);
         Path<Long> assignmentId = root.get(Complaint_.assignee);

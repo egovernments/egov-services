@@ -4,8 +4,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.egov.pgr.common.entity.Complaint;
 import org.egov.pgr.common.entity.ComplaintType;
 import org.egov.pgr.common.entity.ReceivingCenter;
-import org.egov.pgr.common.entity.enums.ComplaintStatus;
-import org.egov.pgr.common.repository.ComplaintStatusJpaRepository;
 import org.egov.pgr.common.repository.ComplaintTypeJpaRepository;
 import org.egov.pgr.common.repository.ReceivingCenterRepository;
 import org.egov.pgr.common.repository.ReceivingModeRepository;
@@ -22,17 +20,15 @@ public class ComplaintWriteRepository {
     private ReceivingModeRepository receivingModeRepository;
     private ReceivingCenterRepository receivingCenterRepository;
     private ComplaintTypeJpaRepository complaintTypeJpaRepository;
-    private ComplaintStatusJpaRepository complaintStatusRepository;
+
 
     public ComplaintWriteRepository(ComplaintJpaRepository complaintJpaRepository,
-            ReceivingModeRepository receivingModeRepository, ReceivingCenterRepository receivingCenterRepository,
-            ComplaintTypeJpaRepository complaintTypeJpaRepository,
-            ComplaintStatusJpaRepository complaintStatusRepository) {
+            ReceivingModeRepository receivingModeRepository, ReceivingCenterRepository receivingCenterRepository) {
         this.complaintJpaRepository = complaintJpaRepository;
         this.receivingModeRepository = receivingModeRepository;
         this.receivingCenterRepository = receivingCenterRepository;
         this.complaintTypeJpaRepository = complaintTypeJpaRepository;
-        this.complaintStatusRepository = complaintStatusRepository;
+
     }
 
     public void updateOrInsert(ComplaintRecord complaintRecord) {
@@ -84,10 +80,7 @@ public class ComplaintWriteRepository {
     }
 
     private void setComplaintStatus(ComplaintRecord complaintRecord, Complaint complaint) {
-        ComplaintStatus statusName = ComplaintStatus.valueOf(complaintRecord.getComplaintStatus());
-        org.egov.pgr.common.entity.ComplaintStatus complainStatus = complaintStatusRepository
-                .findByName(statusName.toString());
-        complaint.setStatus(complainStatus);
+     complaint.setStatus(complaintRecord.getComplaintStatus());
     }
 
     private void setComplaintType(ComplaintRecord complaintRecord, Complaint complaint) {

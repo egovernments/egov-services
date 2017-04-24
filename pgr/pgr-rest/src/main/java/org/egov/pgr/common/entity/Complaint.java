@@ -46,9 +46,9 @@ public class Complaint extends AbstractAuditable {
     @Column(name = "childlocation")
     private Long childLocation;
 
-    @ManyToOne
-    @JoinColumn(name = "status")
-    private ComplaintStatus status;
+
+    @Column(name = "status")
+    private String status;
 
     private String details;
 
@@ -109,7 +109,7 @@ public class Complaint extends AbstractAuditable {
 
     public boolean isCompleted() {
         return org.egov.pgr.common.entity.enums.ComplaintStatus
-                .valueOf(getStatus().getName()) == org.egov.pgr.common.entity.enums.ComplaintStatus.COMPLETED;
+                .valueOf(getStatus()) == org.egov.pgr.common.entity.enums.ComplaintStatus.COMPLETED;
     }
 
     public String getCrossHierarchyId() {
@@ -175,7 +175,7 @@ public class Complaint extends AbstractAuditable {
     }
     
     private String getComplaintStatus(){
-    	return  status.getName()!=null ? status.getName():null ;
+    	return  status!=null ? status:null ;
     }
 
 }

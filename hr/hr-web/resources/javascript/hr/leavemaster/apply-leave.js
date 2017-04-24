@@ -32,7 +32,7 @@ class ApplyLeave extends React.Component {
   }
 
   componentDidMount(){
-    var type = getUrlVars()["type"], _this = this, assignee;
+    var type = getUrlVars()["type"], _this = this;
     var id = getUrlVars()["id"];
     var asOnDate = _this.state.leaveSet.toDate;
 
@@ -165,46 +165,28 @@ class ApplyLeave extends React.Component {
             });
 
             if (!id) {
-                var employee;
-                var obj = commonApiPost("hr-employee","employees","_loggedinemployee",{tenantId}).responseJSON["Employee"][0];
-                  var departmentId=this.getPrimaryAssigmentDep(obj,"department");
-                  //call hod api with departmentId and asOnDate
-                  var res = commonApiPost("hod","employees","_search",{asOnDate,departmentId})
-                    if(res && res.responseJSON && res.responseJSON["Employee"]){
-                      employee = res.responseJSON["Employee"][0]
-                    }
-                    else{
-                      employee={};
-                    }
-                    assignee = employee.assignments && employee.assignments[0] ? employee.assignments[0].id : "";
 
+             var obj = commonApiPost("hr-employee","employees","_loggedinemployee",{tenantId}).responseJSON["Employee"][0];
             } else {
               var obj = getCommonMasterById("hr-employee","employees","Employee",id).responseJSON["Employee"][0];
-              var departmentId=this.getPrimaryAssigmentDep(obj,"department");
-                //call hod api with departmentId and asOnDate
-                var res = commonApiPost("hod","employees","_search",{asOnDate,departmentId})
-                  if(res && res.responseJSON && res.responseJSON["Employee"]){
-                    employee = res.responseJSON["Employee"][0]
-                  }
-                  else{
-                    employee={};
-                  }
-                    assignee = employee.assignments && employee.assignments[0] ? employee.assignments[0].id : "";
             }
+
             _this.setState({
               leaveSet:{
                   ..._this.state.leaveSet,
                   name:obj.name,
                   code:obj.code,
                   employee:obj.id,
-                  workflowDetails:{
-                    ..._this.state.leaveSet.workflowDetails,
-                    assignee: assignee || ""
-                  }
+                  // workflowDetails:{
+                  //   ..._this.state.leaveSet.workflowDetails,
+                  //   assignee: assignee || ""
+                  // }
 
-                }
+                },
+               departmentId:this.getPrimaryAssigmentDep(obj,"department")
 
             })
+
 
 
       }
@@ -213,8 +195,9 @@ class ApplyLeave extends React.Component {
 
     getPrimaryAssigmentDep(obj,type)
     {
+
       for (var i = 0; i < obj.assignments.length; i++) {
-        if(obj.assignments[i].primary)
+        if(obj.assignments[i].isPrimary)
         {
           return obj.assignments[i][type];
         }
@@ -287,10 +270,20 @@ addOrUpdate(e,mode)
 {
 
         e.preventDefault();
-
+        var employee;
+        var asOnDate = this.state.leaveSet.toDate;
+        var departmentId = this.state.departmentId;
         var tempInfo=Object.assign({},this.state.leaveSet) , type = getUrlVars()["type"];
         delete  tempInfo.name;
         delete tempInfo.code;
+        var res = commonApiPost("hr-employee","hod/employees","_search",{tenantId,asOnDate,departmentId})
+          if(res && res.responseJSON && res.responseJSON["Employee"] && res.responseJSON["Employee"][0]){
+            employee = res.responseJSON["Employee"][0]
+          }
+          else{
+            employee={};
+          }
+          tempInfo.workflowDetails.assignee = employee.assignments && employee.assignments[0] ? employee.assignments[0].id : "";
         var body={
             "RequestInfo":requestInfo,
             "LeaveApplication":tempInfo

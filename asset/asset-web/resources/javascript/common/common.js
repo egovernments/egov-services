@@ -73,47 +73,47 @@ try { departments = !localStorage.getItem("assignments_department") || localStor
     console.log(e);
     departments = [];
 }
-try { locality = !localStorage.getItem("locality") || localStorage.getItem("locality") == "undefined" ? (localStorage.setItem("locality", JSON.stringify(commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "LOCALITY", hierarchyTypeName: "LOCATION" }).responseJSON["Boundary"] || [])), JSON.parse(localStorage.getItem("locality"))) : JSON.parse(localStorage.getItem("locality")); } catch (e) {
+try { locality = !localStorage.getItem("locality") || localStorage.getItem("locality") == "undefined" ? (localStorage.setItem("locality", JSON.stringify(commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "LOCALITY", hierarchyTypeName: "LOCATION" ,tenantId}).responseJSON["Boundary"] || [])), JSON.parse(localStorage.getItem("locality"))) : JSON.parse(localStorage.getItem("locality")); } catch (e) {
     console.log(e);
     locality = [];
 }
-try { electionwards = !localStorage.getItem("ward") || localStorage.getItem("ward") == "undefined" ? (localStorage.setItem("ward", JSON.stringify(commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "WARD", hierarchyTypeName: "ADMINISTRATION" }).responseJSON["Boundary"] || [])), JSON.parse(localStorage.getItem("ward"))) : JSON.parse(localStorage.getItem("ward")); } catch (e) {
+try { electionwards = !localStorage.getItem("ward") || localStorage.getItem("ward") == "undefined" ? (localStorage.setItem("ward", JSON.stringify(commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "WARD", hierarchyTypeName: "ADMINISTRATION" ,tenantId}).responseJSON["Boundary"] || [])), JSON.parse(localStorage.getItem("ward"))) : JSON.parse(localStorage.getItem("ward")); } catch (e) {
     console.log(e);
     electionwards = [];
 }
-try { street = !localStorage.getItem("street") || localStorage.getItem("street") == "undefined" ? (localStorage.setItem("street", JSON.stringify(commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "STREET", hierarchyTypeName: "LOCATION" }).responseJSON["Boundary"] || [])), JSON.parse(localStorage.getItem("street"))) : JSON.parse(localStorage.getItem("street")); } catch (e) {
+try { street = !localStorage.getItem("street") || localStorage.getItem("street") == "undefined" ? (localStorage.setItem("street", JSON.stringify(commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "STREET", hierarchyTypeName: "LOCATION" ,tenantId}).responseJSON["Boundary"] || [])), JSON.parse(localStorage.getItem("street"))) : JSON.parse(localStorage.getItem("street")); } catch (e) {
     console.log(e);
     street = [];
 }
-try { revenueWards = !localStorage.getItem("revenueWard") || localStorage.getItem("revenueWard") == "undefined" ? (localStorage.setItem("revenueWard", JSON.stringify(commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "WARD", hierarchyTypeName: "REVENUE" }).responseJSON["Boundary"] || [])), JSON.parse(localStorage.getItem("revenueWard"))) : JSON.parse(localStorage.getItem("revenueWard")); } catch (e) {
+try { revenueWards = !localStorage.getItem("revenueWard") || localStorage.getItem("revenueWard") == "undefined" ? (localStorage.setItem("revenueWard", JSON.stringify(commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "WARD", hierarchyTypeName: "REVENUE" ,tenantId}).responseJSON["Boundary"] || [])), JSON.parse(localStorage.getItem("revenueWard"))) : JSON.parse(localStorage.getItem("revenueWard")); } catch (e) {
     console.log(e);
     revenueWard = [];
 }
-try { revenueZone = !localStorage.getItem("revenueZone") || localStorage.getItem("revenueZone") == "undefined" ? (localStorage.setItem("revenueZone", JSON.stringify(commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "ZONE", hierarchyTypeName: "REVENUE" }).responseJSON["Boundary"] || [])), JSON.parse(localStorage.getItem("revenueZone"))) : JSON.parse(localStorage.getItem("revenueZone")); } catch (e) {
+try { revenueZone = !localStorage.getItem("revenueZone") || localStorage.getItem("revenueZone") == "undefined" ? (localStorage.setItem("revenueZone", JSON.stringify(commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "ZONE", hierarchyTypeName: "REVENUE" ,tenantId}).responseJSON["Boundary"] || [])), JSON.parse(localStorage.getItem("revenueZone"))) : JSON.parse(localStorage.getItem("revenueZone")); } catch (e) {
     console.log(e);
     revenueZone = [];
 }
-try { revenueBlock = !localStorage.getItem("revenueBlock") || localStorage.getItem("revenueBlock") == "undefined" ? (localStorage.setItem("revenueBlock", JSON.stringify(commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "BLOCK", hierarchyTypeName: "REVENUE" }).responseJSON["Boundary"] || [])), JSON.parse(localStorage.getItem("revenueBlock"))) : JSON.parse(localStorage.getItem("revenueBlock")); } catch (e) {
+try { revenueBlock = !localStorage.getItem("revenueBlock") || localStorage.getItem("revenueBlock") == "undefined" ? (localStorage.setItem("revenueBlock", JSON.stringify(commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "BLOCK", hierarchyTypeName: "REVENUE" ,tenantId}).responseJSON["Boundary"] || [])), JSON.parse(localStorage.getItem("revenueBlock"))) : JSON.parse(localStorage.getItem("revenueBlock")); } catch (e) {
     console.log(e);
     revenueBlock = [];
 }
-try { assignments_unitOfMeasurement = !localStorage.getItem("assignments_unitOfMeasurement") || localStorage.getItem("assignments_unitOfMeasurement") == "undefined" ? (localStorage.setItem("assignments_unitOfMeasurement", JSON.stringify(commonApiPost("egov-common-masters", "uom", "_search", {}).responseJSON["uoms"] || [])), JSON.parse(localStorage.getItem("assignments_unitOfMeasurement"))) : JSON.parse(localStorage.getItem("assignments_unitOfMeasurement")); } catch (e) {
+try { assignments_unitOfMeasurement = !localStorage.getItem("assignments_unitOfMeasurement") || localStorage.getItem("assignments_unitOfMeasurement") == "undefined" ? (localStorage.setItem("assignments_unitOfMeasurement", JSON.stringify(commonApiPost("egov-common-masters", "uom", "_search", {tenantId}).responseJSON["uoms"] || [])), JSON.parse(localStorage.getItem("assignments_unitOfMeasurement"))) : JSON.parse(localStorage.getItem("assignments_unitOfMeasurement")); } catch (e) {
     console.log(e);
     assignments_unitOfMeasurement = [];
 }
-try { asset_category_type = !localStorage.getItem("asset_category_type") || localStorage.getItem("asset_category_type") == "undefined" ? (localStorage.setItem("asset_category_type", JSON.stringify(commonApiGet("asset-services", "", "GET_ASSET_CATEGORY_TYPE", {}).responseJSON || {})), JSON.parse(localStorage.getItem("asset_category_type"))) : JSON.parse(localStorage.getItem("asset_category_type")); } catch (e) {
+try { asset_category_type = !localStorage.getItem("asset_category_type") || localStorage.getItem("asset_category_type") == "undefined" ? (localStorage.setItem("asset_category_type", JSON.stringify(commonApiGet("asset-services", "", "GET_ASSET_CATEGORY_TYPE", {tenantId}).responseJSON || {})), JSON.parse(localStorage.getItem("asset_category_type"))) : JSON.parse(localStorage.getItem("asset_category_type")); } catch (e) {
     console.log(e);
     asset_category_type = {};
 }
-try { statusList = !localStorage.getItem("statusList") || localStorage.getItem("statusList") == "undefined" ? (localStorage.setItem("statusList", JSON.stringify(commonApiGet("asset-services", "", "GET_STATUS", {}).responseJSON || {})), JSON.parse(localStorage.getItem("statusList"))) : JSON.parse(localStorage.getItem("statusList")); } catch (e) {
+try { statusList = !localStorage.getItem("statusList") || localStorage.getItem("statusList") == "undefined" ? (localStorage.setItem("statusList", JSON.stringify(commonApiGet("asset-services", "", "GET_STATUS", {tenantId}).responseJSON || {})), JSON.parse(localStorage.getItem("statusList"))) : JSON.parse(localStorage.getItem("statusList")); } catch (e) {
     console.log(e);
     statusList = {};
 }
-try { acquisitionList = !localStorage.getItem("acquisitionList") || localStorage.getItem("acquisitionList") == "undefined" ? (localStorage.setItem("acquisitionList", JSON.stringify(commonApiGet("asset-services", "", "GET_MODE_OF_ACQUISITION", {}).responseJSON || [])), JSON.parse(localStorage.getItem("acquisitionList"))) : JSON.parse(localStorage.getItem("acquisitionList")); } catch (e) {
+try { acquisitionList = !localStorage.getItem("acquisitionList") || localStorage.getItem("acquisitionList") == "undefined" ? (localStorage.setItem("acquisitionList", JSON.stringify(commonApiGet("asset-services", "", "GET_MODE_OF_ACQUISITION", {tenantId}).responseJSON || [])), JSON.parse(localStorage.getItem("acquisitionList"))) : JSON.parse(localStorage.getItem("acquisitionList")); } catch (e) {
     console.log(e);
     acquisitionList = [];
 }
-try { depreciationMethod = !localStorage.getItem("depreciationMethod") || localStorage.getItem("depreciationMethod") == "undefined" ? (localStorage.setItem("depreciationMethod", JSON.stringify(commonApiGet("asset-services", "", "GET_DEPRECIATION_METHOD", {}).responseJSON || {})), JSON.parse(localStorage.getItem("depreciationMethod"))) : JSON.parse(localStorage.getItem("depreciationMethod")); } catch (e) {
+try { depreciationMethod = !localStorage.getItem("depreciationMethod") || localStorage.getItem("depreciationMethod") == "undefined" ? (localStorage.setItem("depreciationMethod", JSON.stringify(commonApiGet("asset-services", "", "GET_DEPRECIATION_METHOD", {tenantId}).responseJSON || {})), JSON.parse(localStorage.getItem("depreciationMethod"))) : JSON.parse(localStorage.getItem("depreciationMethod")); } catch (e) {
     console.log(e);
     depreciationMethod = {};
 }

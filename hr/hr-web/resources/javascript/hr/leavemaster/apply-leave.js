@@ -32,7 +32,7 @@ class ApplyLeave extends React.Component {
   }
 
   componentDidMount(){
-    var type = getUrlVars()["type"], _this = this;
+    var type = getUrlVars()["type"], _this = this, assignee;
     var id = getUrlVars()["id"];
     var asOnDate = _this.state.leaveSet.toDate;
 
@@ -145,49 +145,42 @@ class ApplyLeave extends React.Component {
 
             });
             if (!id) {
-
-                var obj = commonApiPost("hr-employee","employees","_loggedinemployee",{tenantId}).responseJSON["Employee"];
-                // var type;
-                //
-                //   var departmentId=this.getPrimaryAssigmentDep(obj,"department");
-                //   //call hod api with departmentId and asOnDate
-                //   var res = commonApiPost("hod","employees","_search",{asOnDate,departmentId})
-                //     if(res && res.responseJSON && res.responseJSON["Employee"]){
-                //       employee = res.responseJSON["Employee"]
-                //     }
-                //     else{
-                //       employee={};
-                //     }
-                //
-                //
-                //
-                //   console.log(obj2);
-                //   var assignee=obj2.department;
-                //
-                // else{
-                //   var departmentId=this.getPrimaryAssigmentDep(obj,"position");
-                //   //call hod api with departmentId and asOnDate
-                //   var obj2 =commonApiPost("hod","employees","_search",{asOnDate,departmentId}).responseJSON["Employee"];
-                //   var assignee=obj.department;
-                //
-                // }
-
-
+                var employee;
+                var obj = commonApiPost("hr-employee","employees","_loggedinemployee",{tenantId}).responseJSON["Employee"][0];
+                  var departmentId=this.getPrimaryAssigmentDep(obj,"department");
+                  //call hod api with departmentId and asOnDate
+                  var res = commonApiPost("hod","employees","_search",{asOnDate,departmentId})
+                    if(res && res.responseJSON && res.responseJSON["Employee"]){
+                      employee = res.responseJSON["Employee"][0]
+                    }
+                    else{
+                      employee={};
+                    }
+                    assignee = employee.assignments[0].id
 
             } else {
-              var obj = getCommonMasterById("hr-employee","employees","Employee",id).responseJSON["Employee"][0]
-              // var departmentId=this.getPrimaryAssigmentDep(obj,"department");
-              // //call hod api with departmentId and asOnDate
-              // var obj2 =commonApiPost("hod","employees","_search",{asOnDate,departmentId}).responseJSON["Employee"];
-              // console.log(obj2);
-              // var assignee=obj2.department;
+              var obj = getCommonMasterById("hr-employee","employees","Employee",id).responseJSON["Employee"][0];
+              var departmentId=this.getPrimaryAssigmentDep(obj,"department");
+                //call hod api with departmentId and asOnDate
+                var res = commonApiPost("hod","employees","_search",{asOnDate,departmentId})
+                  if(res && res.responseJSON && res.responseJSON["Employee"]){
+                    employee = res.responseJSON["Employee"][0]
+                  }
+                  else{
+                    employee={};
+                  }
+                  assignee = employee.assignments[0].id
             }
             _this.setState({
               leaveSet:{
                   ..._this.state.leaveSet,
                   name:obj.name,
                   code:obj.code,
-                  employee:obj.id
+                  employee:obj.id,
+                  workflowDetails:{
+                    ..._this.state.leaveSet.workflowDetails,
+                    assignee: assignee || ""
+                  }
 
                 }
 
@@ -197,16 +190,16 @@ class ApplyLeave extends React.Component {
       }
 
     }
-    //
-    // getPrimaryAssigmentDep(obj,type)
-    // {
-    //   for (var i = 0; i < obj.assignments.length; i++) {
-    //     if(obj.assignments[i].primary)
-    //     {
-    //       return obj.assignments[i][type];
-    //     }
-    //   }
-    // }
+
+    getPrimaryAssigmentDep(obj,type)
+    {
+      for (var i = 0; i < obj.assignments.length; i++) {
+        if(obj.assignments[i].primary)
+        {
+          return obj.assignments[i][type];
+        }
+      }
+    }
 
   componentWillMount()
   {
@@ -218,29 +211,27 @@ class ApplyLeave extends React.Component {
   handleChangeThreeLevel(e,pName,name)
   {
     var _this=this;
-    if(pName=="leaveType"){
-      var leaveType=e.target.value;
-
+    if(pName=="leaveType"&&_this.state.leaveSet.toDate){
       try{
-      var employeeid =getUrlVars()["id"];
       var asOnDate = _this.state.leaveSet.toDate;
-      var object =  commonApiPost("hr-leave","eligibleleaves","_search",{leaveType,tenantId,asOnDate,employeeid}).responseJSON["EligibleLeave"][0];
-      console.log(object);
-        this.setState({
-          leaveSet:{
-            ...this.state.leaveSet,
-            availableDays: object.noOfDays,
-            [pName]:{
-                ...this.state.leaveSet[pName],
-                [name]:e.target.value
-            }
+      var employeeid =getUrlVars()["id"];
+        var object =  commonApiPost("hr-leave","eligibleleaves","_search",{leaveType,tenantId,asOnDate,employeeid}).responseJSON["EligibleLeave"][0];
+          this.setState({
+            leaveSet:{
+              ...this.state.leaveSet,
+              availableDays: object.noOfDays,
+              [pName]:{
+                  ...this.state.leaveSet[pName],
+                  [name]:e.target.value
+              }
 
-          }
-        })
-      }
-      catch (e){
-        console.log(e);
-      }
+            }
+          })
+        }
+        catch (e){
+          console.log(e);
+        }
+
 
     } else {
       this.setState({
@@ -255,16 +246,26 @@ class ApplyLeave extends React.Component {
     }
   }
 
-  handleChange(e,name)
-  {
+  handleChange(e,name){
+  if (_this.state.leaveSet.toDate && _this.state.leaveSet.leaveType.id) {
+      var object =  commonApiPost("hr-leave","eligibleleaves","_search",{leaveType,tenantId,asOnDate,employeeid}).responseJSON["EligibleLeave"][0];
       this.setState({
           leaveSet:{
               ...this.state.leaveSet,
+              availableDays: object.noOfDays,
               [name]:e.target.value
           }
       })
 
+  } else {
+    this.setState({
+        leaveSet:{
+            ...this.state.leaveSet,
+            [name]:e.target.value
+        }
+    })
   }
+}
 
 
   close(){
@@ -313,7 +314,14 @@ addOrUpdate(e,mode)
                                  "leaveDays":"",
                                  "status": "",
                                  "stateId": "",
-                                 "tenantId" : tenantId
+                                 "tenantId" : tenantId,
+                                 "workflowDetails": {
+                                  "department": "",
+                                  "designation": "",
+                                  "assignee": "",
+                                  "action": "",
+                                  "status": ""
+                                }
                                },leaveList:[]
                             })
 
@@ -352,7 +360,14 @@ addOrUpdate(e,mode)
                                  "reason": "",
                                  "status": "",
                                  "stateId": "",
-                                 "tenantId" : tenantId
+                                 "tenantId" : tenantId,
+                                 "workflowDetails": {
+                                  "department": "",
+                                  "designation": "",
+                                  "assignee": "",
+                                  "action": "",
+                                  "status": ""
+                                }
                                },leaveList:[]
                             })
 

@@ -7,7 +7,7 @@ class EmployeeSearch extends React.Component {
     designationId:"",
     employeeType:"",
     asOnDate:"",
-  name:"",mobileNumber:"",pan:"",aadhaarNumber:""},isSearchClicked:false,employeeTypeList:[],departmentList:[],designationList:[]}
+    name:"",mobileNumber:"",pan:"",aadhaarNumber:""},isSearchClicked:false,employeeTypeList:[],departmentList:[],designationList:[]}
     this.handleChange=this.handleChange.bind(this);
     this.search=this.search.bind(this);
   }
@@ -186,7 +186,7 @@ const getTodaysDate = function() {
 
                     <td data-label="designation">{getNameById(assignments_designation,item.assignments[0].designation)}</td>
                     <td data-label="department">{getNameById(assignments_department,item.assignments[0].department)}</td>
-                    <td data-label="position">{item.assignments[0].position}</td>
+                    <td data-label="position">{getNameById(assignments_position,item.assignments[0].position)}</td>
                     <td data-label="range">{item.assignments[0].fromDate}-{item.assignments[0].toDate}</td>
                     <td data-label="action">
                     {renderAction(getUrlVars()["type"],item.id)}
@@ -229,7 +229,7 @@ const getTodaysDate = function() {
                         <select id="department" name="departmentId" value={departmentId} onChange={(e)=>{
                             handleChange(e,"departmentId")
                         }}>
-                          <option>Select department</option>
+                          <option value="">Select department</option>
                           {renderOption(this.state.departmentList)}
                        </select>
                     </div>
@@ -246,7 +246,7 @@ const getTodaysDate = function() {
                           <select id="designation" name="designationId" value={designationId} onChange={(e)=>{
                               handleChange(e,"designationId")
                           }}>
-                          <option>Select Designation</option>
+                          <option value="">Select Designation</option>
                           {renderOption(this.state.designationList)}
                          </select>
                       </div>

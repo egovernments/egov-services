@@ -1,7 +1,6 @@
 var baseUrl = window.location.origin;
 
 
-var tenantId="ap.kurnool";
 
 
 var authToken=localStorage.getItem("auth-token");
@@ -18,6 +17,8 @@ var requestInfo = {
     "requesterId":"61",
     "authToken":authToken
 };
+
+var tenantId = "ap." + window.location.origin.split("-")[0].split("//")[1];
 
 
 // var response=$.ajax({

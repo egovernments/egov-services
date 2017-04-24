@@ -40,10 +40,13 @@
 
 package org.egov.eis.repository.rowmapper;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.egov.eis.model.DepartmentDesignation;
 import org.egov.eis.model.Designation;
@@ -115,7 +118,9 @@ public class PositionHierarchyRowMapper implements RowMapper<PositionHierarchy> 
 		objectType.setDescription(rs.getString("ot_description"));
 		objectType.setTenantId(rs.getString("ph_tenantId"));
 		try {
-			objectType.setLastModifiedDate(sdf.parse(sdf.format(rs.getDate("ot_lastModifiedDate"))));
+			Date date = isEmpty(rs.getDate("ot_lastModifiedDate")) ? null
+					: sdf.parse(sdf.format(rs.getDate("ot_lastModifiedDate")));
+			objectType.setLastModifiedDate(date);
 		} catch (ParseException e) {
 			e.printStackTrace();
 			throw new SQLException("Parse exception while parsing date");

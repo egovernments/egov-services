@@ -17,30 +17,30 @@ import org.springframework.web.client.RestTemplate;
 
 public class ComplaintRestRepositoryTest {
 
-	private static final String HOST = "http://host";
-	private static final String COMPLAINT_BY_CRN = "/pgr/seva?jurisdiction_id={tenantId}&service_request_id="
-			+ "00015-2016-AP";
+    private static final String HOST = "http://host";
+    private static final String COMPLAINT_BY_CRN = "/pgr/seva/_search?tenantId={tenantId}&service_request_id="
+        + "00015-2016-AP";
 
-	private ComplaintRestRepository complaintRestRepositoryRepository;
-	private MockRestServiceServer server;
+    private ComplaintRestRepository complaintRestRepositoryRepository;
+    private MockRestServiceServer server;
 
-	@Before
-	public void before() {
-		final RestTemplate restTemplate = new RestTemplate();
-		complaintRestRepositoryRepository = new ComplaintRestRepository(restTemplate, HOST, COMPLAINT_BY_CRN);
-		server = MockRestServiceServer.bindTo(restTemplate).build();
-	}
+    @Before
+    public void before() {
+        final RestTemplate restTemplate = new RestTemplate();
+        complaintRestRepositoryRepository = new ComplaintRestRepository(restTemplate, HOST, COMPLAINT_BY_CRN);
+        server = MockRestServiceServer.bindTo(restTemplate).build();
+    }
 
-	@Test
-	public void testShouldGetComplaintByCrnNo() {
-		server.expect(once(),
-				requestTo("http://host/pgr/seva?jurisdiction_id=" + 1L + "&service_request_id=" + "00015-2016-AP"))
-				.andExpect(method(HttpMethod.GET))
-				.andRespond(withSuccess(new Resources().getFileContents("complaintSearchResponse.json"),
-						MediaType.APPLICATION_JSON_UTF8));
-		final ServiceRequest sevaRequest = complaintRestRepositoryRepository.getComplaintByCrn(1L, "00015-2016-AP");
-		server.verify();
-		assertTrue(sevaRequest != null);
-	}
+    @Test
+    public void testShouldGetComplaintByCrnNo() {
+        server.expect(once(),
+            requestTo("http://host/pgr/seva/_search?tenantId=ap.public&service_request_id=" + "00015-2016-AP"))
+            .andExpect(method(HttpMethod.POST))
+            .andRespond(withSuccess(new Resources().getFileContents("complaintSearchResponse.json"),
+                MediaType.APPLICATION_JSON_UTF8));
+        final ServiceRequest sevaRequest = complaintRestRepositoryRepository.getComplaintByCrn("ap.public", "00015-2016-AP");
+        server.verify();
+        assertTrue(sevaRequest != null);
+    }
 
 }

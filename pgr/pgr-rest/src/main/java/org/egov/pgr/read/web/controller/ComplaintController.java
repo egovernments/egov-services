@@ -9,10 +9,8 @@ import org.egov.pgr.read.domain.service.ComplaintService;
 import org.egov.pgr.read.web.contract.RequestInfoBody;
 import org.egov.pgr.read.web.contract.ResponseInfo;
 import org.egov.pgr.read.web.contract.ServiceResponse;
-import org.egov.pgr.read.web.contract.factory.ResponseInfoFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,35 +48,34 @@ public class ComplaintController {
         return new ServiceResponse(responseInfo, Collections.singletonList(new ServiceRequest(complaint)));
     }
 
-    @GetMapping(headers = {"api_id", "ver", "ts", "action", "did", "msg_id", "requester_id", "auth_token"})
-    public ServiceResponse getServiceRequests(@RequestParam("jurisdiction_id") Long jurisdictionId,
+    @PostMapping(value = "/_search")
+    public ServiceResponse getServiceRequests(@RequestParam("tenantId") String tenantId,
                                               @RequestParam(value = "service_request_id", required = false) String
                                                   serviceRequestId,
                                               @RequestParam(value = "service_code", required = false) String
-                                                      serviceCode,
+                                                  serviceCode,
                                               @RequestParam(value = "start_date", required = false) @DateTimeFormat
                                                   (pattern = "dd-MM-yyyy") Date startDate,
                                               @RequestParam(value = "end_date", required = false) @DateTimeFormat
                                                   (pattern = "dd-MM-yyyy") Date endDate,
-                                              @RequestParam(value="escalation_date",required=false)@DateTimeFormat 
-                                                  (pattern="dd-MM-yyyy HH:mm:ss")Date escalationDate,
-                                              @RequestParam(value = "status", required = false)List <String> status,
+                                              @RequestParam(value = "escalation_date", required = false) @DateTimeFormat
+                                                  (pattern = "dd-MM-yyyy HH:mm:ss") Date escalationDate,
+                                              @RequestParam(value = "status", required = false) List<String> status,
                                               @RequestParam(value = "last_modified_datetime", required = false)
-                                                  @DateTimeFormat(pattern = "dd-MM-yyyy") Date lastModifiedDate,
+                                              @DateTimeFormat(pattern = "dd-MM-yyyy") Date lastModifiedDate,
                                               @RequestParam(value = "assignment_id", required = false) Long
-                                                      assignmentId,
+                                                  assignmentId,
                                               @RequestParam(value = "user_id", required = false) Long userId,
                                               @RequestParam(value = "name", required = false) String name,
                                               @RequestParam(value = "mobile_number", required = false) String
-                                                      mobileNumber,
+                                                  mobileNumber,
                                               @RequestParam(value = "email_id", required = false) String emailId,
                                               @RequestParam(value = "receiving_mode", required = false) Long
-                                                      receivingMode,
+                                                  receivingMode,
                                               @RequestParam(value = "location_id", required = false) Long locationId,
                                               @RequestParam(value = "child_location_id", required = false) Long
-                                                      childLocationId,
-                                              @RequestParam(value = "tenantId", required = true) String tenantId,
-                                              @RequestHeader HttpHeaders headers) {
+                                                  childLocationId,
+                                              @RequestBody RequestInfoBody requestInfoBody) {
 
         ComplaintSearchCriteria complaintSearchCriteria = ComplaintSearchCriteria.builder().assignmentId(assignmentId)
             .endDate(endDate).lastModifiedDatetime(lastModifiedDate).serviceCode(serviceCode)
@@ -86,7 +83,7 @@ public class ComplaintController {
             .mobileNumber(mobileNumber).emailId(emailId).receivingMode(receivingMode).locationId(locationId)
             .childLocationId(childLocationId).tenantId(tenantId).build();
         final List<Complaint> complaints = complaintService.findAll(complaintSearchCriteria);
-        return createResponse(headers, complaints);
+        return createResponse(complaints);
     }
 
     @PostMapping(value = "/updateLastAccessedTime")
@@ -96,11 +93,10 @@ public class ComplaintController {
         complaintService.updateLastAccessedTime(serviceRequestId,tenantId);
     }
 
-    private ServiceResponse createResponse(@RequestHeader HttpHeaders headers, List<Complaint> complaints) {
+    private ServiceResponse createResponse(List<Complaint> complaints) {
         final List<ServiceRequest> serviceRequests = complaints.stream().map(ServiceRequest::new)
             .collect(Collectors.toList());
-        ResponseInfo responseInfo = ResponseInfoFactory.createResponseInfoFromRequestHeaders(headers, true);
-        return new ServiceResponse(responseInfo, serviceRequests);
+        return new ServiceResponse(null, serviceRequests);
     }
 
     private ResponseInfo getResponseInfo(SevaRequest request) {

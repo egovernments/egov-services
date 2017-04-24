@@ -24,34 +24,34 @@ public class WorkflowService {
 		this.complaintRestRepository = complaintRestRepository;
 	}
 
-	public SevaRequest enrichWorkflow(SevaRequest sevaRequest) {
-		WorkflowRequest request = sevaRequest.getWorkFlowRequest();
-		WorkflowResponse workflowResponse = null;
-		if (request.isCreate() && sevaRequest.isCreate()) {
-			workflowResponse = workflowRepository.create(request);
-		} else if (request.isClosed()) {
-			workflowResponse = workflowRepository.close(request);
-		} else {
-			ServiceRequest responseFromDB = complaintRestRepository.getComplaintByCrn(1L, request.getCrn());
-			Map<String, String> values = responseFromDB.getValues();
-			String locationId = values.get("locationId");
-			String departmentId = values.get("departmentId");
-			String assigneeId = values.get("assigneeId");
-			String status = values.get("complaintStatus");
-			boolean isUpdate = false;
-			if (!responseFromDB.getComplaintTypeCode().equals(request.getValueForKey("complaintTypeCode"))
-					|| !locationId.equals(request.getValueForKey("boundaryId"))
-					|| !assigneeId.equals(request.getAssignee().toString())) {
-				isUpdate = true;
-			} else if (!departmentId.equals(request.getValueForKey("departmentId"))
-					|| (!status.equals(request.getStatus())
-							|| !responseFromDB.getDescription().equals(request.getValueForKey("approvalComments")))
-							&& !isUpdate) {
-				isUpdate = true;
-			}
-			if (isUpdate) {
-				workflowResponse = workflowRepository.update(request);
-			}
+    public SevaRequest enrichWorkflow(SevaRequest sevaRequest) {
+        WorkflowRequest request = sevaRequest.getWorkFlowRequest();
+        WorkflowResponse workflowResponse = null;
+        if (request.isCreate() && sevaRequest.isCreate()) {
+            workflowResponse = workflowRepository.create(request);
+        } else if (request.isClosed()) {
+            workflowResponse = workflowRepository.close(request);
+        } else {
+            ServiceRequest responseFromDB = complaintRestRepository.getComplaintByCrn(request.getTenantId(), request.getCrn());
+            Map<String, String> values = responseFromDB.getValues();
+            String locationId = values.get("locationId");
+            String departmentId = values.get("departmentId");
+            String assigneeId = values.get("assigneeId");
+            String status = values.get("complaintStatus");
+            boolean isUpdate = false;
+            if (!responseFromDB.getComplaintTypeCode().equals(request.getValueForKey("complaintTypeCode"))
+                || !locationId.equals(request.getValueForKey("boundaryId"))
+                || !assigneeId.equals(request.getAssignee().toString())) {
+                isUpdate = true;
+            } else if (!departmentId.equals(request.getValueForKey("departmentId"))
+                || (!status.equals(request.getStatus())
+                || !responseFromDB.getDescription().equals(request.getValueForKey("approvalComments")))
+                && !isUpdate) {
+                isUpdate = true;
+            }
+            if (isUpdate) {
+                workflowResponse = workflowRepository.update(request);
+            }
 
 		}
 		if (workflowResponse != null)

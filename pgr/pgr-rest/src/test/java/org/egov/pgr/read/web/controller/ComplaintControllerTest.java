@@ -165,36 +165,24 @@ public class ComplaintControllerTest {
             location, childLocation);
 
         mockMvc.perform(
-            get("/seva?jurisdiction_id=1&service_request_id=serid_123&service_code=serviceCode_123&status" +
+            post("/seva/_search?tenantId=tenantId&service_request_id=serid_123&service_code=serviceCode_123&status" +
                 "=REGISTERED,FORWARDED&assignment_id=10&user_id=10&name=kumar&email_id=abc@gmail" +
-                ".com&mobile_number=74742487428&receiving_mode=5&location_id=4&child_location_id=5&tenantId=tenantId")
-                .accept(MediaType.parseMediaType("application/json;charset=UTF-8")).header("api_id", "api_id")
-                .header("ver", "ver").header("ts", "ts").header("action", "action").header("did", "did")
-                .header("msg_id", "msg_id").header("requester_id", "requester_id")
-                .header("auth_token", "auth_token"))
+                ".com&mobile_number=74742487428&receiving_mode=5&location_id=4&child_location_id=5")
+                .content(resources.getFileContents("requestinfobody.json"))
+                .contentType(MediaType.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk()).andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
             .andExpect(content().json(expectedContent));
     }
 
     @Test
-    public void testGetServiceRequestsFailsWithoutJurisdictionId() throws Exception {
-        mockMvc.perform(get("/seva").accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
-            .header("api_id", "api_id").header("ver", "ver").header("ts", "ts").header("action", "action")
-            .header("did", "did").header("msg_id", "msg_id").header("requester_id", "requester_id")
-            .header("auth_token", "auth_token")).andExpect(status().isBadRequest())
+    public void testGetServiceRequestsFailsWithoutTenantId() throws Exception {
+        mockMvc.perform( post("/seva/_search?service_request_id=serid_123&service_code=serviceCode_123&status" +
+            "=REGISTERED,FORWARDED&assignment_id=10&user_id=10&name=kumar&email_id=abc@gmail" +
+            ".com&mobile_number=74742487428&receiving_mode=5&location_id=4&child_location_id=5")
+            .content(resources.getFileContents("requestinfobody.json"))
+            .contentType(MediaType.APPLICATION_JSON_UTF8))
+            .andExpect(status().isBadRequest())
             .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
-    }
-
-    @Test
-    public void testGetServiceRequestsFailsWithoutRequiredHeaders() throws Exception {
-        mockMvc.perform(
-            get("/seva")
-                .param("jurisdiction_id", "1")
-                .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
-                .header("ts", "ts").header("action", "action")
-                .header("did", "did").header("msg_id", "msg_id")
-                .header("auth_token", "auth_token"))
-            .andExpect(status().isNotFound());
     }
 
     @Test

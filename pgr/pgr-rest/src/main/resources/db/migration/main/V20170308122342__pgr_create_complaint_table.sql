@@ -12,6 +12,13 @@ CREATE TABLE egpgr_complainant
   constraint uk_complainant_id_tenant unique (id,tenantid)
 );
 
+CREATE SEQUENCE seq_egpgr_complainant
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
 CREATE TABLE egpgr_complainttype_category
 (
   id numeric NOT NULL,
@@ -22,8 +29,9 @@ CREATE TABLE egpgr_complainttype_category
   CONSTRAINT egpgr_complainttype_category_pkey PRIMARY KEY (id),
   CONSTRAINT egpgr_complainttype_category_name_key UNIQUE (name),
   constraint unique_complainttypecategory_name_tenant unique (name, tenantid)
-);  
+);
 
+CREATE SEQUENCE seq_egpgr_complainttype_category;
 
 CREATE TABLE egpgr_complainttype
 (
@@ -36,21 +44,27 @@ CREATE TABLE egpgr_complainttype
   description character varying(100),
   createddate timestamp ,
   lastmodifieddate timestamp ,
-  createdby bigint,
+  createdby bigint NOT NULL,
   lastmodifiedby bigint,
   slahours integer NOT NULL,
   hasfinancialimpact boolean,
   category numeric NOT NULL DEFAULT 0,
-  attributes character varying (100),
   metadata boolean DEFAULT true,
   tenantid character varying(256) not null,
   type character varying(50) DEFAULT 'realtime',
-  keywords character varying(100) DEFAULT '',
+  keywords character varying(100),
   CONSTRAINT pk_pgr_complainttype_id PRIMARY KEY (id),
   CONSTRAINT uk_complainttype_code UNIQUE (code),
   CONSTRAINT uk_pgr_complainttype_name UNIQUE (name),
   constraint unique_complainttype_code_tenant unique (code, tenantid)
 );
+
+CREATE SEQUENCE seq_egpgr_complainttype
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
 
 CREATE TABLE egpgr_complaint
 (
@@ -88,7 +102,7 @@ CREATE TABLE egpgr_complaint
   CONSTRAINT fk_complaint_complainttype FOREIGN KEY (complainttype)
       REFERENCES  egpgr_complainttype (id) ,
   CONSTRAINT uk_complaint_crn UNIQUE (crn),
- constraint uk_complaint_crn_tenant unique (crn,tenantid)
+ CONSTRAINT uk_complaint_crn_tenant unique (crn,tenantid)
 
 );
 

@@ -25,6 +25,9 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 	@Value("${spring.redis.host}")
 	private String host;
 
+	@Value("${access.token.validity.in.minutes}")
+	private int accessTokenValidityInMinutes;
+
 	@Autowired
 	private AuthenticationManager authenticationManager;
 
@@ -36,9 +39,11 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
+		final int accessTokenValidityInSeconds = accessTokenValidityInMinutes * 60;
 		clients.inMemory().withClient("egov-user-client").secret("egov-user-secret")
 				.authorizedGrantTypes("authorization_code", "refresh_token", "password")
-				.authorities("ROLE_APP", "ROLE_CITIZEN", "ROLE_ADMIN", "ROLE_EMPLOYEE").scopes("read", "write");
+				.authorities("ROLE_APP", "ROLE_CITIZEN", "ROLE_ADMIN", "ROLE_EMPLOYEE").scopes("read", "write")
+		.accessTokenValiditySeconds(accessTokenValidityInSeconds);
 	}
 
 	@Override

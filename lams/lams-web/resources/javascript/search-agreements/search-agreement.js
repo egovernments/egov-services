@@ -112,9 +112,11 @@ class AgreementSearch extends React.Component {
   }
 
   handleSelectChange(type, id, number, assetCategory, acknowledgementNumber) {
-    if (type === "renew") {
+    switch (type) {
+      case "renew":
         window.open("app/search-agreement/view-renew-agreement.html?view=renew&type=" + assetCategory + (number ? "&agreementNumber=" + number : "&acknowledgementNumber=" + acknowledgementNumber) + "&assetId=" + id, "fs", "fullscreen=yes")
-    } else if(type == "collTax") {
+        break;
+      case "collTax":
         $.ajax({
           url: "/lams-services/payment/_create?tenantId=" + tenantId + "&" + (number ? "agreementNumber=" + number : "acknowledgementNumber=" + acknowledgementNumber),
           type: 'POST',
@@ -138,10 +140,13 @@ class AgreementSearch extends React.Component {
               console.log(data);
           }
         });
-    } else if(type=== "view"){
+        break;
+      case "view":
         window.open("app/search-agreement/view-renew-agreement.html?view=new&type="+assetCategory+"&agreementNumber="+number+"&assetId="+id, "fs", "fullscreen=yes");
-    } else if(type === "cancel") {
+        break;
+      case "cancel":
         window.open("app/search-agreement/view-renew-agreement.html?view=cancel&type=" + assetCategory + (number ? "&agreementNumber=" + number : "&acknowledgementNumber=" + acknowledgementNumber) + "&assetId=" + id, "fs", "fullscreen=yes");
+        break;
     }
 }
 

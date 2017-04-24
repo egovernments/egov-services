@@ -53,6 +53,10 @@ import javax.validation.constraints.NotNull;
 import org.egov.egf.persistence.entity.enums.BudgetAccountType;
 import org.egov.egf.persistence.entity.enums.BudgetingType;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

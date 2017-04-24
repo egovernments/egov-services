@@ -19,7 +19,6 @@ public class NoticeCriteria {
 	private String tenantId;
 	private String noticeNo;
 	private String agreementNumber;
-	private String noticeNumber;
 	private String ackNumber;
 	private Long assetCategory;
 	private Long offset;

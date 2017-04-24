@@ -72,10 +72,10 @@ public class AssignmentTableRowMapper implements RowMapper<Assignment> {
 		assignment.setLastModifiedBy(rs.getLong("lastModifiedBy"));
 		assignment.setTenantId(rs.getString("tenantId"));
 		try {
-			assignment.setFromDate(sdf.parse(sdf.format(rs.getDate("a_fromDate"))));
-			assignment.setToDate(sdf.parse(sdf.format(rs.getDate("a_toDate"))));
-			assignment.setCreatedDate(sdf.parse(sdf.format(rs.getDate("a_createdDate"))));
-			assignment.setLastModifiedDate(sdf.parse(sdf.format(rs.getDate("a_lastModifiedDate"))));
+			assignment.setFromDate(sdf.parse(sdf.format(rs.getDate("fromDate"))));
+			assignment.setToDate(sdf.parse(sdf.format(rs.getDate("toDate"))));
+			assignment.setCreatedDate(sdf.parse(sdf.format(rs.getDate("createdDate"))));
+			assignment.setLastModifiedDate(sdf.parse(sdf.format(rs.getDate("lastModifiedDate"))));
 		} catch (ParseException e) {
 			e.printStackTrace();
 			throw new SQLException("Parse exception while parsing date");

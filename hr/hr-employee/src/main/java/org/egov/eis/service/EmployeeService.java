@@ -63,6 +63,7 @@ import org.egov.eis.repository.ServiceHistoryRepository;
 import org.egov.eis.repository.TechnicalQualificationRepository;
 import org.egov.eis.service.exception.EmployeeIdNotFoundException;
 import org.egov.eis.service.exception.UserCreateException;
+import org.egov.eis.service.exception.UserUpdateException;
 import org.egov.eis.service.helper.EmployeeHelper;
 import org.egov.eis.service.helper.EmployeeUserMapper;
 import org.egov.eis.web.contract.EmployeeCriteria;
@@ -77,6 +78,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -86,6 +89,9 @@ public class EmployeeService {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(EmployeeService.class);
 
+	@Autowired
+	private PlatformTransactionManager transactionManager;
+	
 	@Autowired
 	private AssignmentService assignmentService;
 
@@ -250,6 +256,7 @@ public class EmployeeService {
 		return employee;
 	}
 
+	@Transactional
 	public void create(EmployeeRequest employeeRequest) {
 		Employee employee = employeeRequest.getEmployee();
 		employeeRepository.save(employee);
@@ -286,27 +293,25 @@ public class EmployeeService {
 	public Employee updateAsync(EmployeeRequest employeeRequest) throws JsonProcessingException {
 
 		Employee employee = employeeRequest.getEmployee();
-		/*
-		 * UserRequest userRequest =
-		 * employeeHelper.getUserRequest(employeeRequest);
-		 * 
-		 * ResponseEntity<?> responseEntity = null;
-		 * 
-		 * try { responseEntity =
-		 * userService.updateUser(userRequest.getUser().getId(), userRequest); }
-		 * catch (Exception e) {
-		 * LOGGER.debug("Error occurred while updating user", e); return
-		 * errorHandler.getResponseEntityForUnknownUserDBUpdationError(
-		 * employeeRequest.getRequestInfo()); }
-		 * 
-		 * if
-		 * (responseEntity.getBody().getClass().equals(UserErrorResponse.class)
-		 * || responseEntity.getBody().getClass().equals(ErrorResponse.class)) {
-		 * return responseEntity; }
-		 * 
-		 * UserResponse userResponse = (UserResponse) responseEntity.getBody();
-		 * User user = userResponse.getUser().get(0); employee.setUser(user);
-		 */
+
+		UserRequest userRequest = employeeHelper.getUserRequest(employeeRequest);
+
+		ResponseEntity<?> responseEntity = null;
+
+		try {
+			responseEntity = userService.updateUser(userRequest.getUser().getId(), userRequest);
+		} catch (Exception e) {
+			LOGGER.debug("Error occurred while updating user", e);
+			throw new UserUpdateException(employee.getId());
+		}
+
+		if (responseEntity.getBody().getClass().equals(UserErrorResponse.class)
+				|| responseEntity.getBody().getClass().equals(ErrorResponse.class))
+			throw new UserUpdateException(employee.getId());
+
+		UserResponse userResponse = (UserResponse) responseEntity.getBody();
+		User user = userResponse.getUser().get(0);
+		employee.setUser(user);
 
 		employeeHelper.populateDefaultDataForUpdate(employeeRequest);
 
@@ -316,11 +321,12 @@ public class EmployeeService {
 		employeeUpdateRequestJson = mapper.writeValueAsString(employeeRequest);
 		LOGGER.info("employeeJson update::" + employeeUpdateRequestJson);
 
-		employeeProducer.sendMessage(propertiesManager.getUpdateEmployeeTopic(),
-				propertiesManager.getEmployeeSaveKey(), employeeUpdateRequestJson);
+		employeeProducer.sendMessage(propertiesManager.getUpdateEmployeeTopic(), propertiesManager.getEmployeeSaveKey(),
+				employeeUpdateRequestJson);
 		return employee;
 	}
 
+	@Transactional
 	public void update(EmployeeRequest employeeRequest) {
 		Employee employee = employeeRequest.getEmployee();
 		employeeRepository.update(employee);

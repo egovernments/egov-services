@@ -458,4 +458,11 @@ $(document).ready(function() {
 
         }
     })
+    
+    $("#cancelAgreementForm").validate({
+        rules: final_validatin_rules,
+        submitHandler: function(form) {
+
+        }
+    })
 });

@@ -136,14 +136,34 @@ class ApplyLeave extends React.Component {
                        if (endDay == 6 && startDay != 0)
                            days = days - 1;
                    }
-            _this.setState({
-              leaveSet:{
-                  ..._this.state.leaveSet,
-                  leaveDays:days
-                }
-            })
+                   if (_this.state.leaveSet.toDate && _this.state.leaveSet.leaveType.id) {
+                     try{
+                        var leaveType = _this.state.leaveSet.leaveType.id;
+                        var asOnDate = _this.state.leaveSet.toDate;
+                        var employeeid =getUrlVars()["id"];
+                        var object =  commonApiPost("hr-leave","eligibleleaves","_search",{leaveType,tenantId,asOnDate,employeeid}).responseJSON["EligibleLeave"][0];
+                         _this.setState({
+                             leaveSet:{
+                                 ..._this.state.leaveSet,
+                                 availableDays: object.noOfDays,
+                                 leaveDays:days
+                             }
+                         })
 
+                         }
+                         catch (e){
+                           console.log(e);
+                         }
+                    } else{
+                      _this.setState({
+                        leaveSet:{
+                            ..._this.state.leaveSet,
+                            leaveDays:days
+                          }
+                      })
+                  }
             });
+
             if (!id) {
                 var employee;
                 var obj = commonApiPost("hr-employee","employees","_loggedinemployee",{tenantId}).responseJSON["Employee"][0];
@@ -156,7 +176,7 @@ class ApplyLeave extends React.Component {
                     else{
                       employee={};
                     }
-                    assignee = employee.assignments[0].id
+                    assignee = employee.assignments && employee.assignments[0] ? employee.assignments[0].id : "";
 
             } else {
               var obj = getCommonMasterById("hr-employee","employees","Employee",id).responseJSON["Employee"][0];
@@ -169,7 +189,7 @@ class ApplyLeave extends React.Component {
                   else{
                     employee={};
                   }
-                  assignee = employee.assignments[0].id
+                    assignee = employee.assignments && employee.assignments[0] ? employee.assignments[0].id : "";
             }
             _this.setState({
               leaveSet:{
@@ -208,11 +228,12 @@ class ApplyLeave extends React.Component {
     })
   }
 
-  handleChangeThreeLevel(e,pName,name)
-  {
+  handleChangeThreeLevel(e,pName,name) {
     var _this=this;
     if(pName=="leaveType"&&_this.state.leaveSet.toDate){
+
       try{
+      var leaveType = e.target.value;
       var asOnDate = _this.state.leaveSet.toDate;
       var employeeid =getUrlVars()["id"];
         var object =  commonApiPost("hr-leave","eligibleleaves","_search",{leaveType,tenantId,asOnDate,employeeid}).responseJSON["EligibleLeave"][0];
@@ -246,25 +267,14 @@ class ApplyLeave extends React.Component {
     }
   }
 
-  handleChange(e,name){
-  if (_this.state.leaveSet.toDate && _this.state.leaveSet.leaveType.id) {
-      var object =  commonApiPost("hr-leave","eligibleleaves","_search",{leaveType,tenantId,asOnDate,employeeid}).responseJSON["EligibleLeave"][0];
-      this.setState({
-          leaveSet:{
-              ...this.state.leaveSet,
-              availableDays: object.noOfDays,
-              [name]:e.target.value
-          }
-      })
-
-  } else {
+  handleChange(e,name) {
     this.setState({
         leaveSet:{
             ...this.state.leaveSet,
             [name]:e.target.value
         }
     })
-  }
+
 }
 
 
@@ -486,7 +496,7 @@ addOrUpdate(e,mode)
                             <select id="leaveType" name="leaveType" value={leaveType.id} required="true" onChange={(e)=>{
                                 handleChangeThreeLevel(e,"leaveType","id")
                             }}>
-                            <option value=""> select Leave Type</option>
+                            <option value=""> Select Leave Type</option>
                             {renderOption(this.state.leaveList)}
                            </select>
 

@@ -113,12 +113,12 @@ class SearchLeaveApplication extends React.Component {
       if (type==="create") {
 
               return (
-                      <a href={`app/hr/leavemaster/apply-leave.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-pencil"></span></a>
+                      <a href={`app/hr/leavemaster/apply-leave.html?id=${id}&type=${type}`}>Apply Leave</a>
               );
 
     }else {
             return (
-                    <a href={`app/hr/leavemaster/view-apply.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-modal-window"></span></a>
+                    <a href={`app/hr/leavemaster/view-apply.html?id=${id}&type=${type}`}>View</a>
             );
         }
 }

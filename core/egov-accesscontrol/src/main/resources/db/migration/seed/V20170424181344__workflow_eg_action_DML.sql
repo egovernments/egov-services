@@ -15,7 +15,7 @@ insert into eg_action (ID,servicecode,NAME,URL,QUERYPARAMS,PARENTMODULE,ORDERNUM
 
 
 insert into eg_roleaction  (rolecode,actionid,tenantid)
-values('SUPERUSER',(Select id from eg_action where url='/designations/_search'),'default');
+values('SUPERUSER',(Select id from eg_action where url='/designations/_search' and name='loaddesignations'),'default');
 
 insert into eg_roleaction  (rolecode,actionid,tenantid)
 values('SUPERUSER',(Select id from eg_action where url='/process/_search'),'default');

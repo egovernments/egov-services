@@ -14,7 +14,7 @@ INSERT INTO service (id,code,name,enabled,contextroot,displayname,ordernumber,pa
 
 INSERT INTO service (id,code,name,enabled,contextroot,displayname,ordernumber,parentmodule,tenantId) VALUES (nextval('SEQ_SERVICE'),'Asset', 'Asset', true, 'asset-web', 'Asset', 2, (select id from service where name='Asset Masters' and tenantId='default'), 'default');
 
-INSERT INTO service (id,code,name,enabled,contextroot,displayname,ordernumber,parentmodule,tenantId) VALUES (nextval('SEQ_SERVICE'),'Asset Service', 'Asset Service', true, 'asset-services', 'Asset Service', 1, null, 'default');
+INSERT INTO service (id,code,name,enabled,contextroot,displayname,ordernumber,parentmodule,tenantId) VALUES (nextval('SEQ_SERVICE'),'Asset Service', 'Asset Service', false, 'asset-services', 'Asset Service', 1, null, 'default');
 
 
 
@@ -27,14 +27,14 @@ insert into eg_action(id,name,url,servicecode,queryparams,parentmodule,ordernumb
 insert into eg_action(id,name,url,servicecode,queryparams,parentmodule,ordernumber,displayname,enabled,createdby,createddate,lastmodifiedby,lastmodifieddate,tenantId)values(nextval('SEQ_EG_ACTION'),'ViewAsset','/app/asset/search-asset.html','Asset Management',null,(select id from service where name='Asset' and tenantId='default'),2,'View Asset',true,1,now(),1,now(),'default');
 
 
-insert into eg_action(id,name,url,servicecode,queryparams,parentmodule,ordernumber,displayname,enabled,createdby,createddate,lastmodifiedby,lastmodifieddate,tenantId)values(nextval('SEQ_EG_ACTION'),'ModifyAsset','/app/asset/search-asset.html','Asset Management',null,(select id from service where name='Asset' and tenantId='default'),3,'Modify Asset',true,1,now(),1,now(),'default');
+insert into eg_action(id,name,url,servicecode,queryparams,parentmodule,ordernumber,displayname,enabled,createdby,createddate,lastmodifiedby,lastmodifieddate,tenantId)values(nextval('SEQ_EG_ACTION'),'ModifyAsset','/app/asset/modify-asset.html','Asset Management',null,(select id from service where name='Asset' and tenantId='default'),3,'Modify Asset',true,1,now(),1,now(),'default');
 
 insert into eg_action(id,name,url,servicecode,queryparams,parentmodule,ordernumber,displayname,enabled,createdby,createddate,lastmodifiedby,lastmodifieddate,tenantId)values(nextval('SEQ_EG_ACTION'),'CreateAssetCategory','/app/asset/create-asset-category.html','Asset Management',null,(select id from service where name='Asset Category' and tenantId='default'),1,'Create Asset Category',true,1,now(),1,now(),'default');
 
 insert into eg_action(id,name,url,servicecode,queryparams,parentmodule,ordernumber,displayname,enabled,createdby,createddate,lastmodifiedby,lastmodifieddate,tenantId)values(nextval('SEQ_EG_ACTION'),'ViewAssetCategory','/app/asset/search-asset-category.html','Asset Management',null,(select id from service where name='Asset Category' and tenantId='default'),2,'View Asset Category',true,1,now(),1,now(),'default');
 
 
-insert into eg_action(id,name,url,servicecode,queryparams,parentmodule,ordernumber,displayname,enabled,createdby,createddate,lastmodifiedby,lastmodifieddate,tenantId)values(nextval('SEQ_EG_ACTION'),'ModifyAssetCategory','/app/asset/create-asset.html','Asset Management',null,(select id from service where name='Asset Category' and tenantId='default'),3,'Modify Asset Category',true,1,now(),1,now(),'default');
+insert into eg_action(id,name,url,servicecode,queryparams,parentmodule,ordernumber,displayname,enabled,createdby,createddate,lastmodifiedby,lastmodifieddate,tenantId)values(nextval('SEQ_EG_ACTION'),'ModifyAssetCategory','/app/asset/modify-asset-category.html','Asset Management',null,(select id from service where name='Asset Category' and tenantId='default'),3,'Modify Asset Category',true,1,now(),1,now(),'default');
 
 --service url
 
@@ -51,14 +51,14 @@ insert into eg_action(id,name,url,servicecode,queryparams,parentmodule,ordernumb
 insert into eg_action(id,name,url,servicecode,queryparams,parentmodule,ordernumber,displayname,enabled,createdby,createddate,lastmodifiedby,lastmodifieddate,tenantId)values(nextval('SEQ_EG_ACTION'),'ViewAssetCategoryService','/assetCategories/_search','Asset Service',null,(select id from service where name='Asset Service' and tenantId='default'),1,'View Asset Category Service',false,1,now(),1,now(),'default');
 
 
-insert into eg_action(id,name,url,servicecode,queryparams,parentmodule,ordernumber,displayname,enabled,createdby,createddate,lastmodifiedby,lastmodifieddate,tenantId)values(nextval('SEQ_EG_ACTION'),'ModeOfAcquisitionService','/GET_MODE_OF_ACQUISITION','Asset Service',null,(select id from service where name='Asset Service' and contextroot='asset' and tenantId='default'),1,'Get Mode Of Acquisition',false,1,now(),1,now(),'default');
+insert into eg_action(id,name,url,servicecode,queryparams,parentmodule,ordernumber,displayname,enabled,createdby,createddate,lastmodifiedby,lastmodifieddate,tenantId)values(nextval('SEQ_EG_ACTION'),'ModeOfAcquisitionService','/GET_MODE_OF_ACQUISITION','Asset Service',null,(select id from service where name='Asset Service' and tenantId='default'),1,'Get Mode Of Acquisition',false,1,now(),1,now(),'default');
 
 
-insert into eg_action(id,name,url,servicecode,queryparams,parentmodule,ordernumber,displayname,enabled,createdby,createddate,lastmodifiedby,lastmodifieddate,tenantId)values(nextval('SEQ_EG_ACTION'),'DepreciationMethodService','/asset-services/GET_DEPRECIATION_METHOD','Asset Service',null,(select id from service where name='Asset Service' and tenantId='default'),1,'Get Depreciation Method Service',false,1,now(),1,now(),'default');
+insert into eg_action(id,name,url,servicecode,queryparams,parentmodule,ordernumber,displayname,enabled,createdby,createddate,lastmodifiedby,lastmodifieddate,tenantId)values(nextval('SEQ_EG_ACTION'),'DepreciationMethodService','/GET_DEPRECIATION_METHOD','Asset Service',null,(select id from service where name='Asset Service' and tenantId='default'),1,'Get Depreciation Method Service',false,1,now(),1,now(),'default');
 
-insert into eg_action(id,name,url,servicecode,queryparams,parentmodule,ordernumber,displayname,enabled,createdby,createddate,lastmodifiedby,lastmodifieddate,tenantId)values(nextval('SEQ_EG_ACTION'),'Status','/GET_STATUS','Asset Management',null,(select id from service where name='Asset Management' and tenantId='default'),1,'Get Status',false,1,now(),1,now(),'default');
+insert into eg_action(id,name,url,servicecode,queryparams,parentmodule,ordernumber,displayname,enabled,createdby,createddate,lastmodifiedby,lastmodifieddate,tenantId)values(nextval('SEQ_EG_ACTION'),'AssetStatusService','/GET_STATUS','Asset Service',null,(select id from service where name='Asset Service' and tenantId='default'),1,'Get Status',false,1,now(),1,now(),'default');
 
-insert into eg_action(id,name,url,servicecode,queryparams,parentmodule,ordernumber,displayname,enabled,createdby,createddate,lastmodifiedby,lastmodifieddate,tenantId)values(nextval('SEQ_EG_ACTION'),'Asset Category Type','/GET_ASSET_CATEGORY_TYPE','Asset Service',null,(select id from service where name='Asset Service' and tenantId='default'),1,'Get Asset Category Type',false,1,now(),1,now(),'default');
+insert into eg_action(id,name,url,servicecode,queryparams,parentmodule,ordernumber,displayname,enabled,createdby,createddate,lastmodifiedby,lastmodifieddate,tenantId)values(nextval('SEQ_EG_ACTION'),'AssetCategoryTypeService','/GET_ASSET_CATEGORY_TYPE','Asset Service',null,(select id from service where name='Asset Service' and tenantId='default'),1,'Get Asset Category Type',false,1,now(),1,now(),'default');
 
 
 -------Roleaction mappings
@@ -81,6 +81,18 @@ insert into eg_roleaction(roleCode,actionid,tenantid)values('SUPERUSER', (select
 
 insert into eg_roleaction(roleCode,actionid,tenantid)values('SUPERUSER', (select id from eg_action where name = 'ModifyAssetCategory' and tenantId='default' ),'default');
 
+insert into eg_roleaction(roleCode,actionid,tenantid)values('SUPERUSER', (select id from eg_action where name = 'CreateAssetCategory' and tenantId='default' ),'default');
+
+insert into eg_roleaction(roleCode,actionid,tenantid)values('SUPERUSER', (select id from eg_action where name = 'ViewAssetCategory' and tenantId='default' ),'default');
+
+insert into eg_roleaction(roleCode,actionid,tenantid)values('SUPERUSER', (select id from eg_action where name = 'ModeOfAcquisitionService'and tenantId='default' ),'default');
+
+insert into eg_roleaction(roleCode,actionid,tenantid)values('SUPERUSER', (select id from eg_action where name = 'DepreciationMethodService'and tenantId='default' ),'default');
+
+insert into eg_roleaction(roleCode,actionid,tenantid)values('SUPERUSER', (select id from eg_action where name = 'AssetStatusService'and tenantId='default' ),'default');
+
+insert into eg_roleaction(roleCode,actionid,tenantid)values('SUPERUSER', (select id from eg_action where name = 'AssetCategoryTypeService'and tenantId='default' ),'default');
+
 insert into eg_roleaction(roleCode,actionid,tenantid)values('Asset Administrator', (select id from eg_action where name = 'CreateAsset' and tenantId='default' ),'default');
 
 insert into eg_roleaction(roleCode,actionid,tenantid)values('Asset Administrator', (select id from eg_action where name = 'ViewAsset' and tenantId='default' ),'default');
@@ -98,6 +110,20 @@ insert into eg_roleaction(roleCode,actionid,tenantid)values('Asset Administrator
 insert into eg_roleaction(roleCode,actionid,tenantid)values('Asset Administrator', (select id from eg_action where name = 'ViewAssetCategoryService' and tenantId='default' ),'default');
 
 insert into eg_roleaction(roleCode,actionid,tenantid)values('Asset Administrator', (select id from eg_action where name = 'ModifyAssetCategory' and tenantId='default' ),'default');
+
+
+insert into eg_roleaction(roleCode,actionid,tenantid)values('Asset Administrator', (select id from eg_action where name = 'CreateAssetCategory' 
+and tenantId='default' ),'default');
+
+insert into eg_roleaction(roleCode,actionid,tenantid)values('Asset Administrator', (select id from eg_action where name = 'ViewAssetCategory' and tenantId='default' ),'default');
+
+insert into eg_roleaction(roleCode,actionid,tenantid)values('Asset Administrator', (select id from eg_action where name = 'ModeOfAcquisitionService' and tenantId='default' ),'default');
+
+insert into eg_roleaction(roleCode,actionid,tenantid)values('Asset Administrator', (select id from eg_action where name = 'DepreciationMethodService' and tenantId='default' ),'default');
+
+insert into eg_roleaction(roleCode,actionid,tenantid)values('Asset Administrator', (select id from eg_action where name = 'AssetStatusService' and tenantId='default' ),'default');
+
+insert into eg_roleaction(roleCode,actionid,tenantid)values('Asset Administrator', (select id from eg_action where name = 'AssetCategoryTypeService' and tenantId='default' ),'default');
 
 
 

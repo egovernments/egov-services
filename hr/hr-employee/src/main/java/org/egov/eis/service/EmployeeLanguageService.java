@@ -25,12 +25,12 @@ public class EmployeeLanguageService {
 			if (needsInsert(language, languagesFromDb))
 				employeeLanguageRepository.insert(language, employee.getId(), employee.getTenantId());
 		});
-		deleteJLanguagesInDbThatAreNotInInput(employee.getLanguagesKnown(), languagesFromDb, employee.getId(),
+		deleteLanguagesInDbThatAreNotInInput(employee.getLanguagesKnown(), languagesFromDb, employee.getId(),
 				employee.getTenantId());
 
 	}
 
-	private void deleteJLanguagesInDbThatAreNotInInput(List<Long> languages, List<Long> languagesFromDb,
+	private void deleteLanguagesInDbThatAreNotInInput(List<Long> languages, List<Long> languagesFromDb,
 			Long employeeId, String tenantId) {
 		List<Long> languagesIdsToDelete = getListOfLanguagesIdsToDelete(languages, languagesFromDb);
 		if (!languagesIdsToDelete.isEmpty())

@@ -159,7 +159,7 @@ public abstract class EmployeeCommonValidator {
 			return;
 		}
 		List<String> inputDocumentUrls = inputDocuments.stream().map(d -> d.getDocument()).collect(Collectors.toList());
-		List<EmployeeDocument> employeeDocumentsFromDb = employeeDocumentsRepository.findByTenantID(inputDocumentUrls,
+		List<EmployeeDocument> employeeDocumentsFromDb = employeeDocumentsRepository.findByDocuments(inputDocumentUrls,
 				employee.getTenantId());
 		populateDocumentErrors(inputDocuments, employeeDocumentsFromDb, employee, errors);
 	}

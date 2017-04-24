@@ -6,11 +6,6 @@
     "description": null,
     "fields": [
       {
-        "code": "core-user.001",
-        "message": "Gender is required",
-        "field": "User.gender"
-      },
-      {
         "code": "core-user.002",
         "message": "Type is required",
         "field": "User.type"

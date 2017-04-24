@@ -57,20 +57,6 @@ public class UserTest {
 	}
 
 	@Test(expected = InvalidUserException.class)
-	public void testUserWithEmptyGenderIsInvalid() throws Exception {
-		User user = User.builder()
-				.username("foolan_devi")
-				.name("foolan")
-				.mobileNumber("9988776655")
-				.active(Boolean.TRUE)
-				.type(UserType.CITIZEN)
-				.build();
-
-		assertTrue(user.isGenderAbsent());
-		user.validate();
-	}
-
-	@Test(expected = InvalidUserException.class)
 	public void testUserWithEmptyTypeIsInvalid() throws Exception {
 		User user = User.builder()
 				.username("foolan_devi")
@@ -211,7 +197,6 @@ public class UserTest {
 		user.validate();
 
 		assertFalse(user.isTypeAbsent());
-		assertFalse(user.isGenderAbsent());
 		assertFalse(user.isActiveIndicatorAbsent());
 		assertFalse(user.isNameAbsent());
 		assertFalse(user.isMobileNumberAbsent());

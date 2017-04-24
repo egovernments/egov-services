@@ -13,10 +13,6 @@ public class UserRequestErrorAdapter implements ErrorAdapter<User> {
 
 	private static final String INVALID_USER_OBJECT = "Invalid user object";
 
-	private static final String USER_GENDER = "User.gender";
-	private static final String GENDER_MISSING_CODE = "core-user.001";
-	private static final String GENDER_MISSING_ERROR = "Gender is required";
-
 	private static final String TYPE_MISSING_CODE = "core-user.002";
 	private static final String USER_TYPE = "User.type";
 	private static final String TYPE_MISSING_ERROR = "Type is required";
@@ -61,7 +57,6 @@ public class UserRequestErrorAdapter implements ErrorAdapter<User> {
 
 	private List<ErrorField> getErrorFields(User user) {
 		List<ErrorField> errorFields = new ArrayList<>();
-		addGenderMissingError(user, errorFields);
 		addTypeMissingError(user, errorFields);
 		addMobileNumberMissingError(user, errorFields);
 		addUsernameMissingError(user, errorFields);
@@ -114,13 +109,6 @@ public class UserRequestErrorAdapter implements ErrorAdapter<User> {
 		if (user.isTypeAbsent()) {
 			errorFields.add(ErrorField.builder()
 					.code(TYPE_MISSING_CODE).field(USER_TYPE).message(TYPE_MISSING_ERROR).build());
-		}
-	}
-
-	private void addGenderMissingError(User user, List<ErrorField> errorFields) {
-		if (user.isGenderAbsent()) {
-			errorFields.add(ErrorField.builder()
-					.code(GENDER_MISSING_CODE).field(USER_GENDER).message(GENDER_MISSING_ERROR).build());
 		}
 	}
 

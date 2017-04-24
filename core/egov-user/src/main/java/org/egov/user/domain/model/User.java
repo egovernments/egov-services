@@ -59,7 +59,6 @@ public class User {
 	public void validate() {
 		if (isUsernameAbsent()
 				|| isNameAbsent()
-				|| isGenderAbsent()
 				|| isMobileNumberAbsent()
 				|| isActiveIndicatorAbsent()
 				|| isTypeAbsent()
@@ -80,10 +79,6 @@ public class User {
 
 	public boolean isActiveIndicatorAbsent() {
 		return isEmpty(active);
-	}
-
-	public boolean isGenderAbsent() {
-		return isEmpty(gender);
 	}
 
 	public boolean isMobileNumberAbsent() {

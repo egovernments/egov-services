@@ -40,10 +40,13 @@
 
 package org.egov.commons.repository.rowmapper;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.egov.commons.model.CalendarYear;
 import org.egov.commons.model.Holiday;
@@ -69,9 +72,12 @@ public class HolidayRowMapper implements RowMapper<Holiday> {
 		calendarYear.setTenantId(rs.getString("cy_tenantId"));
 
 		try {
-			calendarYear.setStartDate(sdf.parse(sdf.format(rs.getDate("cy_startDate"))));
-			calendarYear.setEndDate(sdf.parse(sdf.format(rs.getDate("cy_endDate"))));
-			holiday.setApplicableOn(sdf.parse(sdf.format(rs.getDate("h_applicableOn"))));
+			Date date = isEmpty(rs.getDate("cy_startDate")) ? null : sdf.parse(sdf.format(rs.getDate("cy_startDate")));
+			calendarYear.setStartDate(date);
+			date = isEmpty(rs.getDate("cy_endDate")) ? null : sdf.parse(sdf.format(rs.getDate("cy_endDate")));
+			calendarYear.setEndDate(date);
+			date = isEmpty(rs.getDate("h_applicableOn")) ? null : sdf.parse(sdf.format(rs.getDate("h_applicableOn")));
+			holiday.setApplicableOn(date);
 		} catch (ParseException e) {
 			e.printStackTrace();
 			throw new SQLException("Parse exception while parsing date");

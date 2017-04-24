@@ -140,6 +140,8 @@ class AgreementSearch extends React.Component {
         });
     } else if(type=== "view"){
         window.open("app/search-agreement/view-renew-agreement.html?view=new&type="+assetCategory+"&agreementNumber="+number+"&assetId="+id, "fs", "fullscreen=yes");
+    } else if(type === "cancel") {
+        window.open("app/search-agreement/view-renew-agreement.html?view=cancel&type=" + assetCategory + (number ? "&agreementNumber=" + number : "&acknowledgementNumber=" + acknowledgementNumber) + "&assetId=" + id, "fs", "fullscreen=yes");
     }
 }
 
@@ -267,6 +269,7 @@ class AgreementSearch extends React.Component {
                 <option value="view">View</option>
                 <option value="renew">Renew</option>
                 <option value="collTax">Collect Tax</option>
+                <option value="cancel">Cancel Agreement</option>
             </select>
           )
 
@@ -278,6 +281,7 @@ class AgreementSearch extends React.Component {
                 <option value="">Select Action</option>
                 <option value="view">View</option>
                 <option value="collTax">Collect Tax</option>
+                <option value="cancel">Cancel Agreement</option>
             </select>
           )
 

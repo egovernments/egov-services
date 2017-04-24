@@ -29,39 +29,39 @@ $(document).ready(function() {
     // })
 
     function printNotice(noticeData) {
-      var doc = new jsPDF();
-      doc.setFontType("bold");
-      doc.text(15, 20, tenantId.split(".")[1]+' Municipal Corporation');
-      doc.text(15, 30, tenantId.split(".")[1]+' District');
-      doc.text(15, 40, 'Asset Category Lease/Agreement Notice');
-      doc.setLineWidth(0.5);
-      doc.line(15, 42, 195, 42);
-      doc.text(15, 47, 'Lease details:');
-      doc.text(110, 47, 'Agreement No:'+noticeData.agreementNumber);
-      doc.text(15, 57, 'Lease Name:	'+noticeData.allotteeName);
-      doc.text(110, 57, 'Asset No:'+noticeData.assetNo);
-      doc.text(15, 67, noticeData.allotteeMobileNumber+","+noticeData.doorNo +","+ noticeData.allotteeAddress+","+tenantId.split(".")[1] +".");
+        var doc = new jsPDF();
+        doc.setFontType("bold");
+        doc.text(15, 20, tenantId.split(".")[1] + ' Municipal Corporation');
+        doc.text(15, 30, tenantId.split(".")[1] + ' District');
+        doc.text(15, 40, 'Asset Category Lease/Agreement Notice');
+        doc.setLineWidth(0.5);
+        doc.line(15, 42, 195, 42);
+        doc.text(15, 47, 'Lease details:');
+        doc.text(110, 47, 'Agreement No:' + noticeData.agreementNumber);
+        doc.text(15, 57, 'Lease Name:   ' + noticeData.allotteeName);
+        doc.text(110, 57, 'Asset No:' + noticeData.assetNo);
+        doc.text(15, 67, noticeData.allotteeMobileNumber + "," + noticeData.doorNo + "," + noticeData.allotteeAddress + "," + tenantId.split(".")[1] + ".");
 
-      doc.setFontType("normal");
-      doc.text(15, 77, doc.splitTextToSize('1.The period of lease shall be __'+noticeData.agreementPeriod *12+'____ months commencing from _____'+noticeData.commencementDate+'_____(dd-mm-yyyy) to ____'+noticeData.expiryDate+'__________(dd-mm-yyyy).', (210 - 15 - 15)));
-      doc.text(15, 93, doc.splitTextToSize('2.The property leased is shop No___'+noticeData.assetNo+'_____and shall be leased for a sum of Rs. ____'+noticeData.rent+'____/-DDD (Rupees _____'+noticeData.rentInWord+'______ only) per month exclusive of the payment of electricity and other charges.', (210 - 15 - 15)));
-      doc.text(15, 123, doc.splitTextToSize('3.The lessee has paid a sum of Rs. ____'+noticeData.securityDeposit+'____/- (Rupees ____'+noticeData.securityDepositInWord+'____ only) as security deposit for the tenancy and the said sum is repayable or adjusted only at the end of the tenancy on the lease delivery vacant possession of the shop let out, subject to deductions, if any, lawfully and legally payable by the lessee under the terms of this lease deed and in law.', (210 - 15 - 15)));
-      doc.text(15, 163, doc.splitTextToSize('4.The rent for every month shall be payable on or before __'+noticeData.rentPayableDate+'___ of the succeeding month.', (210 - 15 - 15)));
-      doc.text(15, 178, doc.splitTextToSize('5.The lessee shall pay electricity charges to the Electricity Board every month without fail.', (210 - 15 - 15)));
-      doc.text(15, 193, doc.splitTextToSize('6.The lessor or his agent shall have a right to inspect the shop at any hour during the day time.', (210 - 15 - 15)));
-      doc.text(15, 208, doc.splitTextToSize('7.The Lessee shall use the shop let out duly for the business of General Merchandise and not use the same for any other purpose.  (The lessee shall not enter into partnership) and conduct the business in the premises in the name of the firm.  The lessee can only use the premises for his own business.', (210 - 15 - 15)));
-      doc.addPage()
-      doc.text(15, 20, doc.splitTextToSize('8.The lessee shall not have any right to assign, sub-let, re-let, under-let or transfer the tenancy or any portion thereof.', (210 - 15 - 15)));
-      doc.text(15, 35, doc.splitTextToSize('9.The lessee shall not carry out any addition or alteration to the shop without the previous consent and approval in writing of the lessor.', (210 - 15 - 15)));
-      doc.text(15, 50, doc.splitTextToSize('10. The lessee on the expiry of the lease period of __'+noticeData.expiryDate+'___ months shall hand over vacant possession of the ceased shop peacefully or the lease agreement can be renewed for a further period on mutually agreed terms.', (210 - 15 - 15)));
+        doc.setFontType("normal");
+        doc.text(15, 77, doc.splitTextToSize('1.The period of lease shall be __' + noticeData.agreementPeriod * 12 + '____ months commencing from _____' + noticeData.commencementDate + '_____(dd-mm-yyyy) to ____' + noticeData.expiryDate + '__________(dd-mm-yyyy).', (210 - 15 - 15)));
+        doc.text(15, 93, doc.splitTextToSize('2.The property leased is shop No___' + noticeData.assetNo + '_____and shall be leased for a sum of Rs. ____' + noticeData.rent + '____/-DDD (Rupees _____' + noticeData.rentInWord + '______ only) per month exclusive of the payment of electricity and other charges.', (210 - 15 - 15)));
+        doc.text(15, 123, doc.splitTextToSize('3.The lessee has paid a sum of Rs. ____' + noticeData.securityDeposit + '____/- (Rupees ____' + noticeData.securityDepositInWord + '____ only) as security deposit for the tenancy and the said sum is repayable or adjusted only at the end of the tenancy on the lease delivery vacant possession of the shop let out, subject to deductions, if any, lawfully and legally payable by the lessee under the terms of this lease deed and in law.', (210 - 15 - 15)));
+        doc.text(15, 163, doc.splitTextToSize('4.The rent for every month shall be payable on or before __' + noticeData.rentPayableDate + '___ of the succeeding month.', (210 - 15 - 15)));
+        doc.text(15, 178, doc.splitTextToSize('5.The lessee shall pay electricity charges to the Electricity Board every month without fail.', (210 - 15 - 15)));
+        doc.text(15, 193, doc.splitTextToSize('6.The lessor or his agent shall have a right to inspect the shop at any hour during the day time.', (210 - 15 - 15)));
+        doc.text(15, 208, doc.splitTextToSize('7.The Lessee shall use the shop let out duly for the business of General Merchandise and not use the same for any other purpose.  (The lessee shall not enter into partnership) and conduct the business in the premises in the name of the firm.  The lessee can only use the premises for his own business.', (210 - 15 - 15)));
+        doc.addPage()
+        doc.text(15, 20, doc.splitTextToSize('8.The lessee shall not have any right to assign, sub-let, re-let, under-let or transfer the tenancy or any portion thereof.', (210 - 15 - 15)));
+        doc.text(15, 35, doc.splitTextToSize('9.The lessee shall not carry out any addition or alteration to the shop without the previous consent and approval in writing of the lessor.', (210 - 15 - 15)));
+        doc.text(15, 50, doc.splitTextToSize('10. The lessee on the expiry of the lease period of __' + noticeData.expiryDate + '___ months shall hand over vacant possession of the ceased shop peacefully or the lease agreement can be renewed for a further period on mutually agreed terms.', (210 - 15 - 15)));
 
-      doc.text(15, 90, noticeData.commissionerName);
-      doc.text(160, 90, 'LESSEE');
-      doc.text(15, 100, 'Signature: 	');
-      doc.text(160, 100, 'Signature: 	');
-      doc.text(15, 110, tenantId.split(".")[1]);
+        doc.text(15, 90, noticeData.commissionerName);
+        doc.text(160, 90, 'LESSEE');
+        doc.text(15, 100, 'Signature:   ');
+        doc.text(160, 100, 'Signature:  ');
+        doc.text(15, 110, tenantId.split(".")[1]);
 
-      doc.save('Notice.pdf');
+        doc.save('Notice.pdf');
     }
 
     // function wordWrap(doc, paragraph, lMargin, rMargin, pdfInMM) {
@@ -74,7 +74,7 @@ $(document).ready(function() {
                 agreementNumber: getUrlVars()["agreementNumber"],
                 tenantId
             }).responseJSON["Agreements"][0] || {};
-        } else if(getUrlVars()["acknowledgementNumber"]) {
+        } else if (getUrlVars()["acknowledgementNumber"]) {
             var agreementDetail = commonApiPost("lams-services", "agreements", "_search", {
                 acknowledgementNumber: getUrlVars()["acknowledgementNumber"],
                 tenantId
@@ -203,41 +203,57 @@ $(document).ready(function() {
 
     var validation_rules = {};
     var final_validatin_rules = {};
-    var commom_fields_rules = {
-        renew_order_no: {
-            required: true
-        },
-        renew_advance_payment: {
-            required: true
-        },
-        renew_rent: {
-            required: true
-        },
-        renew_reason: {
-            required: true
-        },
-        renew_rent_increment_method: {
-            required: true
-        },
-        date_of_expiry: {
-            required: true
-        },
-        renew_order_date: {
-            required: true
-        },
-        renew_period: {
-            required: true
-        }
-    };
+
+    if (getUrlVars()["view"] == "cancel") {
+        var commom_fields_rules = {
+            cancel_reason: {
+                required: true
+            },
+            cancel_termination_date: {
+                required: true
+            },
+            cancel_order_no: {
+                required: true
+            },
+            cancel_order_date: {
+                required: true
+            }
+        };
+    } else {
+        var commom_fields_rules = {
+            renew_order_no: {
+                required: true
+            },
+            renew_advance_payment: {
+                required: true
+            },
+            renew_rent: {
+                required: true
+            },
+            renew_reason: {
+                required: true
+            },
+            renew_rent_increment_method: {
+                required: true
+            },
+            date_of_expiry: {
+                required: true
+            },
+            renew_order_date: {
+                required: true
+            },
+            renew_period: {
+                required: true
+            }
+        };
+    }
 
     //remove renew part and related buttons from dom
     if (getUrlVars()["view"] == "new") {
         //removing renew section and renew button
-        $("#renew,#workFlowDetails,#renewBtn").remove();
+        $("#renew,#workFlowDetails,#renewBtn,#cancel").remove();
     } else if (getUrlVars()["view"] == "inbox") {
-        $("#historyTable").show();
-        $("#renew").remove();
-        $("#renewBtn").remove();
+        $("#historyTable,#renew,#renewBtn,#cancel").show();
         //Fetch workFlow
         var workflow = commonApiPost("egov-common-workflows", "history", "", {
             tenantId: tenantId,
@@ -264,7 +280,7 @@ $(document).ready(function() {
 
         if (process && process.attributes && process.attributes.validActions && process.attributes.validActions.values && process.attributes.validActions.values.length) {
             for (var i = 0; i < process.attributes.validActions.values.length; i++) {
-                if(process.attributes.validActions.values[i].key)
+                if (process.attributes.validActions.values[i].key)
                     $("#footer-btn-grp").append($(`<button data-action=${process.attributes.validActions.values[i].key} id=${process.attributes.validActions.values[i].key} type="button" class="btn btn-submit">${process.attributes.validActions.values[i].name}<button/>`));
                 if (process.attributes.validActions.values[i].key.toLowerCase() == "approve" || process.attributes.validActions.values[i].key.toLowerCase() == "print notice") {
                     $("#workFlowDetails").remove();
@@ -281,10 +297,13 @@ $(document).ready(function() {
                 }
             });
         }
-    } else if(getUrlVars()["view"] == "renew") {
+    } else if (getUrlVars()["view"] == "renew") {
+        $("#cancel").remove();
         $(`label[for=renew_rent]`).text(getUrlVars()["type"] == "shop" ? "Shop Rent (Rs)" : "Land Rent (Rs)");
+    } else if (getUrlVars()["view"] == "cancel") {
+        $("#renew,#workFlowDetails,#renewBtn").remove();
     } else {
-        $("#viewDcb").remove();
+        $("#viewDcb.#cancel").remove();
     }
 
     for (var variable in department) {
@@ -375,7 +394,7 @@ $(document).ready(function() {
         e.preventDefault();
         if (!e.target.id) return;
         var data = $("#" + e.target.id).data();
-        if (data.action && data.action!="Print Notice") {
+        if (data.action && data.action != "Print Notice") {
             var _agrmntDet = Object.assign({}, agreementDetail);
             _agrmntDet.workflowDetails = {
                 "businessKey": process.businessKey,
@@ -404,32 +423,31 @@ $(document).ready(function() {
             } else {
                 showError(response["statusText"]);
             }
-        }
-        else {
-          var response = $.ajax({
-              url: baseUrl + `/lams-services/agreement/notice/_create?tenantId=` + tenantId,
-              type: 'POST',
-              dataType: 'json',
-              data: JSON.stringify({
-                  RequestInfo: requestInfo,
-                  Notice: {
-                    tenantId,
-                    agreementNumber:_agrmntDet.agreementNumber
-                  }
-              }),
-              async: false,
-              headers: {
-                  'auth-token': authToken
-              },
-              contentType: 'application/json'
-          });
+        } else {
+            var response = $.ajax({
+                url: baseUrl + `/lams-services/agreement/notice/_create?tenantId=` + tenantId,
+                type: 'POST',
+                dataType: 'json',
+                data: JSON.stringify({
+                    RequestInfo: requestInfo,
+                    Notice: {
+                        tenantId,
+                        agreementNumber: _agrmntDet.agreementNumber
+                    }
+                }),
+                async: false,
+                headers: {
+                    'auth-token': authToken
+                },
+                contentType: 'application/json'
+            });
 
-          if (response["status"] === 201) {
-              printNotice(response["responseJSON"].Notices[0]);
-              // window.location.href = "app/search-assets/create-agreement-ack.html?name=" + getNameById(employees, agreement["approverName"]) + "&ackNo=" + responseJSON["Agreements"][0]["acknowledgementNumber"];
-          } else {
-              console.log("Handle error.");
-          }
+            if (response["status"] === 201) {
+                printNotice(response["responseJSON"].Notices[0]);
+                // window.location.href = "app/search-assets/create-agreement-ack.html?name=" + getNameById(employees, agreement["approverName"]) + "&ackNo=" + responseJSON["Agreements"][0]["acknowledgementNumber"];
+            } else {
+                console.log("Handle error.");
+            }
         }
     });
 

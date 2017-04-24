@@ -81,7 +81,6 @@ public class EmployeeControllerTest {
 		List<EmployeeInfo> expectedEmployeesList = getExpectedEmployeesForSearch();
 		ResponseInfo expectedResponseInfo = new ResponseInfo("emp", "1.0", "2017-01-18T07:18:23.130Z", "uief87324", "20170310130900", "200");
 		when(employeeService.getEmployees(any(EmployeeCriteria.class), any(RequestInfo.class)))
-				//.getActiveChildBoundariesByBoundaryIdAndTenantId(any(Long.class), any(String.class)))
         .thenReturn(expectedEmployeesList);
 		when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), any(Boolean.class)))
 		.thenReturn(expectedResponseInfo);

@@ -156,8 +156,8 @@ public class EmployeeController {
          */
         @PostMapping("_loggedinemployee")
         @ResponseBody
-        public ResponseEntity<?> loggedInEmployee(
-                        BindingResult modelAttributeBindingResult, @RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
+        public ResponseEntity<?> loggedInEmployee(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
+                        BindingResult modelAttributeBindingResult,
                         BindingResult requestBodyBindingResult) {
                 RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
                 List<Long> ids = new ArrayList<>();

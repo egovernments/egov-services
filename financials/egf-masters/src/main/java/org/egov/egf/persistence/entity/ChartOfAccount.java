@@ -123,7 +123,6 @@ public class ChartOfAccount extends AbstractAuditable {
 	@Transient
 	private Boolean isSubLedger;
 
-	@JsonProperty(access = Access.WRITE_ONLY)
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "chartOfAccount", targetEntity = ChartOfAccountDetail.class)
 	private Set<ChartOfAccountDetail> chartOfAccountDetails = new HashSet<ChartOfAccountDetail>();
 

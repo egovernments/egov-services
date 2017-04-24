@@ -31,7 +31,7 @@ public class AccountDetailTypeSpecification implements Specification<AccountDeta
         Path<String> tableName = root.get(AccountDetailType_.tableName);
         Path<Boolean> active = root.get(AccountDetailType_.active);
         Path<String> fullyQualifiedName = root.get(AccountDetailType_.fullyQualifiedName);
-        Path<String> tenantId = root.get(AccountDetailKey_.tenantId);
+        Path<String> tenantId = root.get(AccountDetailType_.tenantId);
         final List<Predicate> predicates = new ArrayList<>();
         if (criteria != null) {
             if (criteria.getId() != null) {

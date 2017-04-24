@@ -40,10 +40,13 @@
 
 package org.egov.eis.repository.rowmapper;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.egov.eis.model.LeaveType;
 import org.springframework.jdbc.core.RowMapper;
@@ -69,8 +72,10 @@ public class LeaveTypeRowMapper implements RowMapper<LeaveType> {
 		leaveType.setLastModifiedBy((Long) rs.getObject("lastModifiedBy"));
 		leaveType.setTenantId(rs.getString("tenantId"));
 		try {
-			leaveType.setCreatedDate(sdf.parse(sdf.format(rs.getDate("createdDate"))));
-			leaveType.setLastModifiedDate(sdf.parse(sdf.format(rs.getDate("lastModifiedDate"))));
+			Date date = isEmpty(rs.getDate("createdDate")) ? null : sdf.parse(sdf.format(rs.getDate("createdDate")));
+			leaveType.setCreatedDate(date);
+			date = isEmpty(rs.getDate("lastModifiedDate")) ? null : sdf.parse(sdf.format(rs.getDate("lastModifiedDate")));
+			leaveType.setLastModifiedDate(date);
 		} catch (ParseException e) {
 			e.printStackTrace();
 			throw new SQLException("Parse exception while parsing date");

@@ -40,10 +40,13 @@
 
 package org.egov.eis.repository.rowmapper;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.egov.eis.model.LeaveApplication;
 import org.egov.eis.model.LeaveType;
@@ -54,53 +57,64 @@ import org.springframework.stereotype.Component;
 @Component
 public class LeaveApplicationRowMapper implements RowMapper<LeaveApplication> {
 
-    @Override
-    public LeaveApplication mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+	@Override
+	public LeaveApplication mapRow(final ResultSet rs, final int rowNum) throws SQLException {
 		final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
-        final LeaveApplication leaveApplication = new LeaveApplication();
-        leaveApplication.setId(rs.getLong("la_id"));
-        leaveApplication.setApplicationNumber(rs.getString("la_applicationNumber"));
-        leaveApplication.setEmployee((Long) rs.getObject("la_employeeId"));
+		final LeaveApplication leaveApplication = new LeaveApplication();
+		leaveApplication.setId(rs.getLong("la_id"));
+		leaveApplication.setApplicationNumber(rs.getString("la_applicationNumber"));
+		leaveApplication.setEmployee((Long) rs.getObject("la_employeeId"));
 
-        final LeaveType leaveType = new LeaveType();
-        leaveType.setId(rs.getLong("lt_id"));
-        leaveType.setName(rs.getString("lt_name"));
-        leaveType.setDescription(rs.getString("lt_description"));
-        leaveType.setHalfdayAllowed((Boolean) rs.getObject("lt_halfdayAllowed"));
-        leaveType.setPayEligible((Boolean) rs.getObject("lt_payEligible"));
-        leaveType.setAccumulative((Boolean) rs.getObject("lt_accumulative"));
-        leaveType.setEncashable((Boolean) rs.getObject("lt_encashable"));
-        leaveType.setActive((Boolean) rs.getObject("lt_active"));
-        leaveType.setCreatedBy((Long) rs.getObject("lt_createdBy"));
-        leaveType.setLastModifiedBy((Long) rs.getObject("lt_lastModifiedBy"));
-        leaveType.setTenantId(rs.getString("la_tenantId"));
+		final LeaveType leaveType = new LeaveType();
+		leaveType.setId(rs.getLong("lt_id"));
+		leaveType.setName(rs.getString("lt_name"));
+		leaveType.setDescription(rs.getString("lt_description"));
+		leaveType.setHalfdayAllowed((Boolean) rs.getObject("lt_halfdayAllowed"));
+		leaveType.setPayEligible((Boolean) rs.getObject("lt_payEligible"));
+		leaveType.setAccumulative((Boolean) rs.getObject("lt_accumulative"));
+		leaveType.setEncashable((Boolean) rs.getObject("lt_encashable"));
+		leaveType.setActive((Boolean) rs.getObject("lt_active"));
+		leaveType.setCreatedBy((Long) rs.getObject("lt_createdBy"));
+		leaveType.setLastModifiedBy((Long) rs.getObject("lt_lastModifiedBy"));
+		leaveType.setTenantId(rs.getString("la_tenantId"));
 		try {
-	        leaveType.setCreatedDate(sdf.parse(sdf.format(rs.getDate("lt_createdDate"))));
-	        leaveType.setLastModifiedDate(sdf.parse(sdf.format(rs.getDate("lt_lastModifiedDate"))));
-	        leaveApplication.setFromDate(sdf.parse(sdf.format(rs.getDate("la_fromDate"))));
-	        leaveApplication.setToDate(sdf.parse(sdf.format(rs.getDate("la_toDate"))));
-	        leaveApplication.setCompensatoryForDate(sdf.parse(sdf.format(rs.getDate("la_compensatoryForDate"))));
-	        leaveApplication.setCreatedDate(sdf.parse(sdf.format(rs.getDate("la_createdDate"))));
-	        leaveApplication.setLastModifiedDate(sdf.parse(sdf.format(rs.getDate("la_lastModifiedDate"))));
+			Date date = isEmpty(rs.getDate("lt_createdDate")) ? null
+					: sdf.parse(sdf.format(rs.getDate("lt_createdDate")));
+			leaveType.setCreatedDate(date);
+			date = isEmpty(rs.getDate("lt_lastModifiedDate")) ? null
+					: sdf.parse(sdf.format(rs.getDate("lt_lastModifiedDate")));
+			leaveType.setLastModifiedDate(date);
+			date = isEmpty(rs.getDate("la_fromDate")) ? null : sdf.parse(sdf.format(rs.getDate("la_fromDate")));
+			leaveApplication.setFromDate(date);
+			date = isEmpty(rs.getDate("la_toDate")) ? null : sdf.parse(sdf.format(rs.getDate("la_toDate")));
+			leaveApplication.setToDate(date);
+			date = isEmpty(rs.getDate("la_compensatoryForDate")) ? null
+					: sdf.parse(sdf.format(rs.getDate("la_compensatoryForDate")));
+			leaveApplication.setCompensatoryForDate(date);
+			date = isEmpty(rs.getDate("la_createdDate")) ? null : sdf.parse(sdf.format(rs.getDate("la_createdDate")));
+			leaveApplication.setCreatedDate(date);
+			date = isEmpty(rs.getDate("la_lastModifiedDate")) ? null
+					: sdf.parse(sdf.format(rs.getDate("la_lastModifiedDate")));
+			leaveApplication.setLastModifiedDate(date);
 		} catch (ParseException e) {
 			e.printStackTrace();
 			throw new SQLException("Parse exception while parsing Date");
 		}
 
-        leaveApplication.setLeaveType(leaveType);
+		leaveApplication.setLeaveType(leaveType);
 
-        leaveApplication.setLeaveDays((Double) rs.getObject("la_leaveDays"));
-        leaveApplication.setAvailableDays((Double) rs.getObject("la_availableDays"));
-        leaveApplication.setHalfdays((Integer) rs.getObject("la_halfdays"));
-        leaveApplication.setFirstHalfleave((Boolean) rs.getObject("la_firstHalfleave"));
-        leaveApplication.setReason(rs.getString("la_reason"));
-        leaveApplication.setStatus(LeaveStatus.fromValue(rs.getString("la_status")));
-        leaveApplication.setStateId(rs.getLong("la_stateId"));
-        leaveApplication.setCreatedBy((Long) rs.getObject("la_createdBy"));
-        leaveApplication.setLastModifiedBy((Long) rs.getObject("la_lastModifiedBy"));
-        leaveApplication.setTenantId(rs.getString("la_tenantId"));
+		leaveApplication.setLeaveDays((Double) rs.getObject("la_leaveDays"));
+		leaveApplication.setAvailableDays((Double) rs.getObject("la_availableDays"));
+		leaveApplication.setHalfdays((Integer) rs.getObject("la_halfdays"));
+		leaveApplication.setFirstHalfleave((Boolean) rs.getObject("la_firstHalfleave"));
+		leaveApplication.setReason(rs.getString("la_reason"));
+		leaveApplication.setStatus(LeaveStatus.fromValue(rs.getString("la_status")));
+		leaveApplication.setStateId(rs.getLong("la_stateId"));
+		leaveApplication.setCreatedBy((Long) rs.getObject("la_createdBy"));
+		leaveApplication.setLastModifiedBy((Long) rs.getObject("la_lastModifiedBy"));
+		leaveApplication.setTenantId(rs.getString("la_tenantId"));
 
-        return leaveApplication;
-    }
+		return leaveApplication;
+	}
 }

@@ -40,10 +40,13 @@
 
 package org.egov.eis.repository.rowmapper;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.egov.eis.model.LeaveAllotment;
 import org.egov.eis.model.LeaveType;
@@ -74,10 +77,17 @@ public class LeaveAllotmentRowMapper implements RowMapper<LeaveAllotment> {
 		leaveType.setLastModifiedBy((Long) rs.getObject("lt_lastModifiedBy"));
 		leaveType.setTenantId(rs.getString("la_tenantId"));
 		try {
-			leaveType.setCreatedDate(sdf.parse(sdf.format(rs.getDate("lt_createdDate"))));
-			leaveType.setLastModifiedDate(sdf.parse(sdf.format(rs.getDate("lt_lastModifiedDate"))));
-			leaveAllotment.setCreatedDate(sdf.parse(sdf.format(rs.getDate("la_createdDate"))));
-			leaveAllotment.setLastModifiedDate(sdf.parse(sdf.format(rs.getDate("la_lastModifiedDate"))));
+			Date date = isEmpty(rs.getDate("lt_createdDate")) ? null
+					: sdf.parse(sdf.format(rs.getDate("lt_createdDate")));
+			leaveType.setCreatedDate(date);
+			date = isEmpty(rs.getDate("lt_lastModifiedDate")) ? null
+					: sdf.parse(sdf.format(rs.getDate("lt_lastModifiedDate")));
+			leaveType.setLastModifiedDate(date);
+			date = isEmpty(rs.getDate("la_createdDate")) ? null : sdf.parse(sdf.format(rs.getDate("la_createdDate")));
+			leaveAllotment.setCreatedDate(date);
+			date = isEmpty(rs.getDate("la_lastModifiedDate")) ? null
+					: sdf.parse(sdf.format(rs.getDate("la_lastModifiedDate")));
+			leaveAllotment.setLastModifiedDate(date);
 		} catch (ParseException e) {
 			e.printStackTrace();
 			throw new SQLException("Parse exception while parsing date");

@@ -3,7 +3,7 @@ class FloorType extends React.Component {
     super(props);
     this.state={list:[],searchSet:{
     name:"",
-        tenantId},isSearchClicked:false}
+        },isSearchClicked:false,FloorType:[]}
     this.handleChange=this.handleChange.bind(this);
     this.search=this.search.bind(this);
   }
@@ -36,7 +36,7 @@ class FloorType extends React.Component {
 
       this.setState({
 
-        name: [{
+        FloorType: [{
                 id: "cement",
                 name: "Cement",
 
@@ -117,10 +117,10 @@ class FloorType extends React.Component {
                         <div className="col-sm-8">
                             <div className="styled-select">
                                 <select id="name" name="name" value={name}
-                  onChange={(e)=>{  handleChange(e,"name")}} required>
+                  onChange={(e)=>{  handleChange(e,"name")}} >
 
                                   <option value="">Choose name</option>
-                                  {renderOption(this.state.name)}
+                                  {renderOption(this.state.FloorType)}
 
                                 </select>
                             </div>
@@ -133,7 +133,7 @@ class FloorType extends React.Component {
 
 
                     <div className="text-center">
-                    <button type="submit" className="btn btn-submit">Create</button>
+                    <button type="submit" className="btn btn-submit" onClick={(e)=>{window.location.href='app/create/create-floor-type.html'}}>Create</button>
                     &nbsp;
                     <button type="submit" className="btn btn-submit">Update</button>
                     &nbsp;
@@ -143,7 +143,7 @@ class FloorType extends React.Component {
                     </div>
                     </form>
 
-            
+
           </div>
           );
       }

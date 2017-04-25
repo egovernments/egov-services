@@ -263,6 +263,7 @@ var employee = {
     user: {
         roles:[{
           name:"EMPLOYEE",
+          code: "EMPLOYEE",
           tenantId
         }],
         userName: "",

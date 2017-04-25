@@ -65,32 +65,6 @@ class FloorType extends React.Component {
 
 }
 
-  // componentDidUpdate(prevProps, prevState)
-  // {
-  //     if (prevState.list.length!=this.state.list.length) {
-  //         // $('#agreementTable').DataTable().draw();
-  //         // alert(prevState.list.length);
-  //         // alert(this.state.list.length);
-  //         // alert('updated');
-  //         $('#agreementTable').DataTable({
-  //           dom: 'Bfrtip',
-  //           buttons: [
-  //                    'copy', 'csv', 'excel', 'pdf', 'print'
-  //            ],
-  //            ordering: false,
-  //            bDestroy: true
-  //         });
-  //     }
-      // else {
-      //   $('#agreementTable').DataTable({
-      //     dom: 'Bfrtip',
-      //     buttons: [
-      //              'copy', 'csv', 'excel', 'pdf', 'print'
-      //      ],
-      //      ordering: false
-      //   });
-      // }
-  // }
 
   handleChange(e,name)
   {
@@ -102,17 +76,6 @@ class FloorType extends React.Component {
           }
       })
 
-  }
-
-  handleSelectChange(type,id,category)
-  {
-    console.log(type);
-    console.log(category);
-    if (type === "create") {
-                  window.open("app/agreements/new.html?type="+category+"&assetId="+id, "fs", "fullscreen=yes")
-             }
-
-    // window.open("app/agreements/new.html?type="+category+"&assetId="+id, "fs", "fullscreen=yes")
   }
 
 
@@ -140,82 +103,7 @@ class FloorType extends React.Component {
             })
         }
     }
-    const showTable=function()
-    {
-      if(isSearchClicked)
-      {
-          return (
-            <table id="agreementTable" className="table table-bordered">
-                <thead>
-                <tr>
-                    <th>Sl No </th>
-                    <th>Asset Category </th>
-                    <th>Asset Name </th>
-                    <th>Asset Code </th>
-                    <th>Election Ward No </th>
-                    <th>Action </th>
-                  </tr>
-                </thead>
 
-                <tbody id="agreementSearchResultTableBody">
-                    {
-                        renderBody()
-                    }
-                </tbody>
-            </table>
-
-          )
-
-
-      }
-
-    }
-    const renderBody=function()
-    {
-      if(list.length>0)
-      {
-        return list.map((item,index)=>
-        {
-              return (<tr key={index}>
-                <td>{index+1}</td>
-                                  <td>{item.assetCategory.name}</td>
-                                  <td>{item.name}</td>
-                                  <td>{item.code}</td>
-                                  <td>{item.locationDetails.electionWard}</td>
-                                  <td>
-                                      <div className="styled-select">
-                                          <select id="myOptions" onChange={(e)=>{
-                                            handleSelectChange(e.target.value,item.id,item.assetCategory.name)
-                                          }}>
-                                              <option value="">Select Action</option>
-                                              <option value="create">Create</option>
-
-                                          </select>
-                                      </div>
-                                  </td>
-
-                  </tr>
-              );
-
-        })
-      }
-      else {
-          return (
-              <tr>
-                  <td colSpan="6">No records</td>
-              </tr>
-          )
-      }
-
-
-    }
-    const disbaled=function(type) {
-        if (type==="view") {
-              return "ture";
-        } else {
-            return "false";
-        }
-    }
 
     return (
     <div>
@@ -243,19 +131,19 @@ class FloorType extends React.Component {
 
 
 
-                                      <br/>
+
                     <div className="text-center">
+                    <button type="submit" className="btn btn-submit">Create</button>
+                    &nbsp;
+                    <button type="submit" className="btn btn-submit">Update</button>
+                    &nbsp;
                         <button type="submit" className="btn btn-submit">View</button>
                         &nbsp;
                         <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>
                     </div>
                     </form>
 
-            <div className="table-cont" id="table">
-                {showTable()}
-
-            </div>
-
+            
           </div>
           );
       }

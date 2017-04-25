@@ -179,7 +179,7 @@ public class UserService {
 	}
 
 	private String getUserUpdatePath(long id) {
-		String path = MessageFormat.format(propertiesManager.getUsersServiceUsersUpdatePath(), id);
+		String path = MessageFormat.format(propertiesManager.getUsersServiceUsersUpdatePath(), Long.toString(id));
 		return path;
 	}
 }

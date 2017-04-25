@@ -61,12 +61,12 @@ public class RegularisationTableRowMapper implements RowMapper<Regularisation> {
 		final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
 		Regularisation regularisation = new Regularisation();
-		regularisation.setId(rs.getLong("id"));
-		regularisation.setDesignation(rs.getLong("designationid"));
+		regularisation.setId((Long) rs.getObject("id"));
+		regularisation.setDesignation((Long) rs.getObject("designationid"));
 		regularisation.setOrderNo(rs.getString("orderno"));
 		regularisation.setRemarks(rs.getString("remarks"));
-		regularisation.setCreatedBy(rs.getLong("createdby"));
-		regularisation.setLastModifiedBy(rs.getLong("lastmodifiedby"));
+		regularisation.setCreatedBy((Long) rs.getObject("createdby"));
+		regularisation.setLastModifiedBy((Long) rs.getObject("lastmodifiedby"));
 		regularisation.setTenantId(rs.getString("tenantid"));
 		try {
 			Date date = isEmpty(rs.getDate("orderdate")) ? null : sdf.parse(sdf.format(rs.getDate("orderdate")));

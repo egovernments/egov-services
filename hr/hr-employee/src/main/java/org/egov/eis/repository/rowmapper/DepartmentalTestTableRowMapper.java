@@ -61,12 +61,12 @@ public class DepartmentalTestTableRowMapper implements RowMapper<DepartmentalTes
 		final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
 		DepartmentalTest test = new DepartmentalTest();
-		test.setId(rs.getLong("id"));
+		test.setId((Long) rs.getObject("id"));
 		test.setTest(rs.getString("test"));
-		test.setYearOfPassing(rs.getInt("yearOfPassing"));
+		test.setYearOfPassing((Integer) rs.getObject("yearOfPassing"));
 		test.setRemarks(rs.getString("remarks"));
-		test.setCreatedBy(rs.getLong("createdBy"));
-		test.setLastModifiedBy(rs.getLong("lastModifiedBy"));
+		test.setCreatedBy((Long) rs.getObject("createdBy"));
+		test.setLastModifiedBy((Long) rs.getObject("lastModifiedBy"));
 		test.setTenantId(rs.getString("tenantId"));
 		try {
 			Date date = isEmpty(rs.getDate("createdDate")) ? null : sdf.parse(sdf.format(rs.getDate("createdDate")));

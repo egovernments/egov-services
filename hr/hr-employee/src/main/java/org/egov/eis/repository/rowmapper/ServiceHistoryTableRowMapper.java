@@ -61,12 +61,12 @@ public class ServiceHistoryTableRowMapper implements RowMapper<ServiceHistory> {
 		final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
 		ServiceHistory serviceHistory = new ServiceHistory();
-		serviceHistory.setId(rs.getLong("id"));
+		serviceHistory.setId((Long) rs.getObject("id"));
 		serviceHistory.setServiceInfo(rs.getString("serviceinfo"));
 		serviceHistory.setRemarks(rs.getString("remarks"));
 		serviceHistory.setOrderNo(rs.getString("orderno"));
-		serviceHistory.setCreatedBy(rs.getLong("createdby"));
-		serviceHistory.setLastModifiedBy(rs.getLong("lastmodifiedby"));
+		serviceHistory.setCreatedBy((Long) rs.getObject("createdby"));
+		serviceHistory.setLastModifiedBy((Long) rs.getObject("lastmodifiedby"));
 		serviceHistory.setTenantId(rs.getString("tenantid"));
 		try {
 			Date date = isEmpty(rs.getDate("servicefrom")) ? null : sdf.parse(sdf.format(rs.getDate("servicefrom")));

@@ -61,13 +61,13 @@ public class TechnicalQualificationRowMapper implements RowMapper<TechnicalQuali
 		final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
 		TechnicalQualification technicalQualification = new TechnicalQualification();
-		technicalQualification.setId(rs.getLong("id"));
+		technicalQualification.setId((Long) rs.getObject("id"));
 		technicalQualification.setSkill(rs.getString("skill"));
 		technicalQualification.setGrade(rs.getString("grade"));
-		technicalQualification.setYearOfPassing(rs.getInt("yearofpassing"));
+		technicalQualification.setYearOfPassing((Integer) rs.getObject("yearofpassing"));
 		technicalQualification.setRemarks(rs.getString("remarks"));
-		technicalQualification.setCreatedBy(rs.getLong("createdby"));
-		technicalQualification.setLastModifiedBy(rs.getLong("lastmodifiedby"));
+		technicalQualification.setCreatedBy((Long) rs.getObject("createdby"));
+		technicalQualification.setLastModifiedBy((Long) rs.getObject("lastmodifiedby"));
 		technicalQualification.setTenantId(rs.getString("tenantid"));
 		try {
 			Date date = isEmpty(rs.getDate("createdDate")) ? null : sdf.parse(sdf.format(rs.getDate("createdDate")));

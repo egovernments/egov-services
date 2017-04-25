@@ -52,7 +52,7 @@ public class AssignmentHodRowMapper implements RowMapper<Long> {
 
 	@Override
 	public Long mapRow(ResultSet rs, int rowNum) throws SQLException, DataAccessException {
-		return rs.getLong("departmentid");
+		return (Long) rs.getObject("departmentid");
 	}
 	
 }

@@ -56,10 +56,10 @@ public class EmployeeDocumentsTableRowMapper implements RowMapper<EmployeeDocume
 
 		EmployeeDocument employeeDocument = new EmployeeDocument();
 
-		employeeDocument.setId(rs.getLong("id"));
+		employeeDocument.setId((Long) rs.getObject("id"));
 		employeeDocument.setDocument(rs.getString("document"));
 		employeeDocument.setReferenceType(rs.getString("referencetype"));
-		employeeDocument.setReferenceId(rs.getLong("referenceid"));
+		employeeDocument.setReferenceId((Long) rs.getObject("referenceid"));
 		employeeDocument.setTenantId(rs.getString("tenantid"));
 
 		return employeeDocument;

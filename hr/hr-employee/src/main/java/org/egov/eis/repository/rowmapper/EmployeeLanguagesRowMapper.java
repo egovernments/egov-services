@@ -52,6 +52,6 @@ public class EmployeeLanguagesRowMapper implements RowMapper<Long> {
 
 	@Override
 	public Long mapRow(ResultSet rs, int rowNum) throws SQLException, DataAccessException {
-		return rs.getLong("languageid");
+		return (Long) rs.getObject("languageid");
 	}
 }

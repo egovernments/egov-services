@@ -87,14 +87,14 @@ public class EmployeeInfoRowMapper implements ResultSetExtractor<List<EmployeeIn
 		Map<Long, EmpInfo> empInfoMap = new LinkedHashMap<>();
 
 		while (rs.next()) {
-			Long employeeId = rs.getLong("e_id");
+			Long employeeId = (Long) rs.getObject("e_id");
 
 			EmpInfo empInfo = empInfoMap.get(employeeId);
 
 			// populate empInfo fields from result set
 			if (empInfo == null) {
 				empInfo = new EmpInfo();
-				empInfo.setId(rs.getLong("e_id"));
+				empInfo.setId((Long) rs.getObject("e_id"));
 				empInfo.setCode(rs.getString("e_code"));
 				empInfo.setEmployeeStatus(rs.getString("e_employeeStatus"));
 				empInfo.setEmployeeType((Long) rs.getObject("e_employeeTypeId"));
@@ -107,13 +107,13 @@ public class EmployeeInfoRowMapper implements ResultSetExtractor<List<EmployeeIn
 
 			Map<Long, AssignmentInfo> assignmentInfoMap = empInfo.getAssignments();
 
-			Long assignmentId = rs.getLong("a_id");
+			Long assignmentId = (Long) rs.getObject("a_id");
 			AssignmentInfo assignmentInfo = assignmentInfoMap.get(assignmentId);
 
 			// populate assignmentInfo fields from result set
 			if (assignmentInfo == null) {
 				assignmentInfo = new AssignmentInfo();
-				assignmentInfo.setId(rs.getLong("a_id"));
+				assignmentInfo.setId((Long) rs.getObject("a_id"));
 				assignmentInfo.setPosition((Long) rs.getObject("a_positionId"));
 				assignmentInfo.setFund((Long) rs.getObject("a_fundId"));
 				assignmentInfo.setFunctionary((Long) rs.getObject("a_functionaryId"));
@@ -146,13 +146,13 @@ public class EmployeeInfoRowMapper implements ResultSetExtractor<List<EmployeeIn
 			}
 
 			Map<Long, HODDepartment> hodDeptMap = assignmentInfo.getHodDeptMap();
-			Long hodId = rs.getLong("hod_id");
+			Long hodId = (Long) rs.getObject("hod_id");
 
-			if (rs.getLong("hod_id") != 0) {
+			if ((Long) rs.getObject("hod_id") != 0) {
 				HODDepartment hodDepartment = hodDeptMap.get(hodId);
 				if (hodDepartment == null) {
 					hodDepartment = new HODDepartment();
-					hodDepartment.setId(rs.getLong("hod_id"));
+					hodDepartment.setId((Long) rs.getObject("hod_id"));
 					hodDepartment.setDepartment((Long) rs.getObject("hod_departmentId"));
 					hodDeptMap.put(hodId, hodDepartment);
 				}

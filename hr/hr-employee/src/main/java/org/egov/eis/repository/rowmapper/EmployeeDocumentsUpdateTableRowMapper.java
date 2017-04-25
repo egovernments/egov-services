@@ -57,9 +57,9 @@ public class EmployeeDocumentsUpdateTableRowMapper implements RowMapper<Employee
 		EmployeeDocument employeeDocument = new EmployeeDocument();
 
 		employeeDocument.setDocument(rs.getString("document"));
-		employeeDocument.setEmployeeId(rs.getLong("employeeId"));
+		employeeDocument.setEmployeeId((Long) rs.getObject("employeeId"));
 		employeeDocument.setReferenceType(rs.getString("referencetype"));
-		employeeDocument.setReferenceId(rs.getLong("referenceId"));
+		employeeDocument.setReferenceId((Long) rs.getObject("referenceId"));
 
 		return employeeDocument;
 

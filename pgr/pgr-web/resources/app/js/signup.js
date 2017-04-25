@@ -141,7 +141,6 @@ $(document).ready(function(){
 					var $form = $("form");
 					var data = getFormData($form);
 					data['userName'] = $('#mobileNumber').val();
-					data['gender'] = 'MALE';
 					data['active'] = true;
 					data['type'] = 'CITIZEN';
 					data['otpReference'] =  response.otp.UUID;

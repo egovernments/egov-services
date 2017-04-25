@@ -131,7 +131,7 @@ $(document).ready(function()
 				e.preventDefault();
 			}
 			$.ajax({
-				url : '/user/_login?jurisdiction_id=ap.public',
+				url : '/user/oauth/token?jurisdiction_id=ap.public',
 				type: 'POST',
 				beforeSend : function(){
 					obj.attr("disabled", "disabled");
@@ -152,9 +152,9 @@ $(document).ready(function()
 					localStorage.setItem("type", response.UserRequest.type);
 					localStorage.setItem("id", response.UserRequest.id);
 					if(localStorage.getItem("type") == 'CITIZEN')
-						window.open("templates/homepagecitizen.html","_self")
+						window.open("templates/homepagecitizen.html","_self");
 					else if(localStorage.getItem("type") == 'EMPLOYEE')
-						window.open("templates/homepage.html","_self")
+						window.open("templates/homepage.html","_self");
 				},
 				error : function(){
 					$('.invalidUser').show();

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html><head>
+	    <meta charset="utf-8">
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	    <meta name="description" content="eGov System">
+	    <meta name="author" content="eGovernments Foundation">
+	    <meta http-equiv="cache-control" content="max-age=0" />
+		<meta http-equiv="cache-control" content="no-cache" />
+		<meta http-equiv="expires" content="0" />
+		<meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
+		<meta http-equiv="pragma" content="no-cache" />
+	
+	    <title>eGov Urban Portal</title>
+		<link rel="icon" href="../resources/global/images/favicon.png" sizes="32x32">
+	    <link rel="stylesheet" href="../resources/global/css/bootstrap/bootstrap.css">
+	    <link rel="stylesheet" href="../resources/global/css/font-icons/font-awesome/css/font-awesome.min.css">
+		<link rel="stylesheet" href="../resources/global/css/bootstrap/typeahead.css">
+		<link rel="stylesheet" href="../resources/global/css/bootstrap/bootstrap-datepicker.css">
+		<link rel="stylesheet" href="../resources/global/css/egov/custom.css">
+		
+		<script src="../resources/global/js/jquery/jquery.js"></script>
+		<script src="../resources/global/js/bootstrap/bootstrap.js"></script>
+		<script src="../resources/global/js/bootstrap/bootbox.min.js"></script>
+		<script src="../resources/global/js/bootstrap/typeahead.bundle.js"></script>
+		<script src="../resources/global/js/jquery/plugins/jquery.inputmask.bundle.min.js"></script>
+		<script src="../resources/global/js/bootstrap/bootstrap-datepicker.js"></script>
+		<script src="../resources/global/js/jquery/plugins/jquery.validate.min.js"></script>
+		<script src="../resources/global/js/egov/custom.js"></script>
+		<script src="../resources/app/js/edit_profile.js"></script>
+	    
+		
+		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+			<script src="../resources/global/js/ie8/html5shiv.min.js"></script>
+			<script src="../resources/global/js/ie8/respond.min.js"></script>
+		<![endif]-->
+	
+	</head>
+    <body class="page-body" oncontextmenu="return false;" cz-shortcut-listen="true">
+        <div class="page-container">
+
+			<header class="navbar navbar-fixed-top" data-include="header" data-header-title="Edit Profile">
+			</header>
+
+            <div class="main-content">
+				<div class="row">
+					<div class="col-md-12">
+						
+						<div class="panel panel-primary" data-collapsed="0">
+							<div class="panel-heading">
+								<div class="panel-title">
+									Account Details
+								</div>
+							</div>
+							<div class="panel-body custom-form">
+								<form id="user" class="form-horizontal form-groups-bordered" role="form" method="post">
+									<div class="form-group">
+										<label for="field-1" class="col-sm-3 control-label">Full Name<span class="mandatory set-mandatory"></span></label>
+										<div class="col-sm-2 col-md-1 add-margin">
+											<select id="salutation" name="salutation" class="form-control" required="required">
+												<option value=""></option>
+												<option value="MR.">Mr</option>
+												<option value="Mrs">Mrs</option>
+												<option value="Miss">Miss</option>
+											</select>
+										</div>
+										<div class="col-sm-4 col-md-5 add-margin">
+											<input id="name" name="name" class="form-control" placeholder="Name" required="required" type="text" maxlength="100">
+										</div>
+									</div>
+									
+									<div class="form-group">
+										
+										<label for="field-1" class="col-sm-3 control-label">Gender<span class="mandatory set-mandatory"></span></label>
+										<div class="col-sm-6 col-xs-12 add-margin dynamic-span capitalize">
+											<span><input id="gender2" name="gender" required="required" type="radio" value="MALE"><label for="gender2">MALE</label></span>
+											<span><input id="gender1" name="gender" required="required" type="radio" value="FEMALE"><label for="gender1">FEMALE</label></span>
+											<span><input id="gender3" name="gender" required="required" type="radio" value="OTHERS"><label for="gender3">OTHERS</label></span>
+										</div>
+									</div>
+									<div class="form-group">
+									<label id="gender-error" class="error custom col-sm-offset-3 col-sm-6 col-xs-12 display-hide" for="gender">Required</label>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label">Mobile<span class="mandatory set-mandatory"></span></label>
+										<div class="col-sm-2 add-margin">
+											<div class="input-group">
+												<span class="input-group-addon">+91</span>
+				                                <input id="mobileNumber" name="mobileNumber" data-extra class="form-control" data-inputmask="'mask': '9999999999'" placeholder="Mobile Number" required="required" disabled="disabled" type="text" value="" maxlength="10">
+											</div>
+											
+										</div>
+										
+										<label for="field-1" class="col-sm-1 control-label">
+											Email
+										</label>
+										
+										<div class="col-sm-3">
+											<input id="emailId" name="emailId" class="form-control" placeholder="abc@xyz.com" type="text" value="" maxlength="50">
+											
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<label for="field-1" class="col-sm-3 control-label">Alternate Contact No.</label>
+										
+										<div class="col-sm-2 add-margin">
+											<input id="altContactNumber" name="altContactNumber" class="form-control" data-inputmask="'mask': '9999999999'" placeholder="8080808080" type="text" value="" maxlength="10">
+										</div>
+										
+										<label for="field-1" class="col-sm-1 control-label">
+											DOB
+										</label>
+										
+										<div class="col-sm-3 add-margin">
+											<input id="dob" name="dob" class="form-control datepicker" data-inputmask="'mask': 'd/m/y'" placeholder="24/01/1992" type="text" value="">
+										</div>
+									</div>
+									
+									<div class="form-group">
+										
+										<label for="field-1" class="col-sm-3 control-label">
+											Aadhaar Number
+										</label>
+										
+										<div class="col-sm-2 add-margin">
+											<input id="aadhaarNumber" name="aadhaarNumber" class="form-control" placeholder="123456789012" type="text" value="" maxlength="12">
+											
+										</div>
+										
+										<label for="field-1" class="col-sm-1 control-label">PAN</label>
+										
+										<div class="col-sm-3 add-margin">
+											<input id="pan" name="pan" class="form-control" placeholder="AHWPU1117T" type="text" value="" maxlength="10">
+											
+										</div>
+										
+									</div>
+									
+									<div class="form-group">
+										<label for="field-1" class="col-sm-3 control-label">Preferred Language</label>
+										<div class="col-sm-6 add-margin">
+											<select id="locale" name="locale" class="form-control">
+												<option value=""></option>
+												<option value="en_IN" selected="selected">English</option>
+											</select>
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<div class="text-center">
+											<button type="button" class="btn btn-primary" id="userUpdate">Save Changes</button>
+											<a href="javascript:void(0)" class="btn btn-default" onclick="self.close()">Close</a>
+										</div>
+									</div>
+									
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+            </div>
+				
+			<footer class="main" data-include="footer">
+			</footer>
+
+        </div>
+
+</body></html>

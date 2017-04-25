@@ -14,9 +14,9 @@ public interface InstallmentRepository
 
 	Installment findByDescriptionAndModuleAndTenantId(String description, String moduleName, String tenantId);
 
-	List<Installment> findByFromDateAndToDateAndModule(Date fromDate, Date toDate, String moduleName);
+	List<Installment> findByFromDateAndToDateAndModuleAndTenantId(Date fromDate, Date toDate, String moduleName, String tenantId);
 	
-	List<Installment> findByFromDateAndToDateAndInstallmentTypeAndModule(Date fromDate, Date toDate, String installmentType, String moduleName);
+	List<Installment> findByFromDateAndToDateAndInstallmentTypeAndModuleAndTenantId(Date fromDate, Date toDate, String installmentType, String moduleName, String tenantId);
 
 	@Transactional
 	Installment save(Installment installment);

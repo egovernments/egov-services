@@ -11,6 +11,7 @@ public class InstallmentSearchCriteria {
 	private String description = null;
 	private String installmentType = null;
 	private String financialYear = null;
+	private String tenantId;
 
 	public Date getFromDate() {
 		return fromDate;
@@ -74,6 +75,14 @@ public class InstallmentSearchCriteria {
 
 	public void setFinancialYear(String financialYear) {
 		this.financialYear = financialYear;
+	}
+
+	public String getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
 	}
 
 }

@@ -10,7 +10,6 @@ import org.egov.demand.persistence.repository.BillRepository;
 import org.egov.demand.persistence.repository.BillTypeRepository;
 import org.egov.demand.web.contract.BillDetailInfo;
 import org.egov.demand.web.contract.BillInfo;
-import org.egov.demand.web.repository.ModuleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,17 +19,16 @@ public class BillService {
 	@Autowired
 	private BillRepository billRepository;
 	@Autowired
-	private ModuleRepository moduleRepository;
-	@Autowired
 	private BillTypeRepository billTypeRepository;
 
-	public EgBill createBill(Long demandId, BillInfo billInfo) {
+	public EgBill createBill(Long demandId, BillInfo billInfo,String tenantId) {
 		EgBill egBill = new EgBill(billInfo);
 		List<EgBillDetails> billDetails = new ArrayList<EgBillDetails>();
 		egBill.setEgDemand(demandId);
 		egBill.setModule(billInfo.getModuleName());
 		egBill.setEgBillType(billTypeRepository.findByName(billInfo.getBillType()));
 		egBill.setUserId(1l);
+		egBill.setTenantId(tenantId);
 		for (BillDetailInfo billDetailInfo : billInfo.getBillDetailInfos()) {
 			EgBillDetails egBillDetail = new EgBillDetails(billDetailInfo);
 			egBillDetail.setEgBill(egBill);

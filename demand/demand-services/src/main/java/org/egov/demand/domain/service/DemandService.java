@@ -51,7 +51,7 @@ public class DemandService {
 			if (demandDetail.getTaxAmount() != null && demandDetail.getTaxReason() != null
 					&& !demandDetail.getTaxPeriod().isEmpty()) {
 				demandReason = demandReasonService.findByCodeInstModule(demandDetail.getTaxReason(),
-						demandDetail.getTaxPeriod(), demand.getModuleName());
+						demandDetail.getTaxPeriod(), demand.getModuleName(), demand.getTenantId());
 				if (demandReason != null) {
 					egDemandDetails = EgDemandDetails.fromReasonAndAmounts(demandDetail.getTaxAmount(), demandReason,
 							BigDecimal.ZERO);

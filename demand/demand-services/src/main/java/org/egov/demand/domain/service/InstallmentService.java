@@ -6,7 +6,6 @@ import java.util.List;
 import org.egov.demand.persistence.entity.Installment;
 import org.egov.demand.persistence.repository.InstallmentRepository;
 import org.egov.demand.web.contract.InstallmentSearchCriteria;
-import org.egov.demand.web.repository.ModuleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,23 +14,27 @@ public class InstallmentService {
 	@Autowired
 	private InstallmentRepository installmentRepository;
 
-	public Installment findByDescriptionAndModuleAndTenantId(String instDescription, String moduleName, String tenantId) {
+	public Installment findByDescriptionAndModuleAndTenantId(String instDescription, String moduleName,
+			String tenantId) {
 		return installmentRepository.findByDescriptionAndModuleAndTenantId(instDescription, moduleName, tenantId);
 	}
 
-	public List<Installment> findByFromDateAndToDateAndModule(Date fromDate, Date toDate, String moduleName) {
-		return installmentRepository.findByFromDateAndToDateAndModule(fromDate, toDate, moduleName);
+	public List<Installment> findByFromDateAndToDateAndModuleAndTenantId(Date fromDate, Date toDate, String moduleName,
+			String tenantId) {
+		return installmentRepository.findByFromDateAndToDateAndModuleAndTenantId(fromDate, toDate, moduleName,
+				tenantId);
 	}
 
 	public List<Installment> findByFromDateAndToDateAndInstallmentTypeAndModule(Date fromDate, Date toDate,
-			String installmentType, String moduleName) {
-		return installmentRepository.findByFromDateAndToDateAndInstallmentTypeAndModule(fromDate, toDate,
-				installmentType, moduleName);
+			String installmentType, String moduleName, String tenantId) {
+		return installmentRepository.findByFromDateAndToDateAndInstallmentTypeAndModuleAndTenantId(fromDate, toDate,
+				installmentType, moduleName, tenantId);
 	}
 
 	public List<Installment> search(InstallmentSearchCriteria installmentSearchCriteria) {
-		return installmentRepository.findByFromDateAndToDateAndInstallmentTypeAndModule(
+		return installmentRepository.findByFromDateAndToDateAndInstallmentTypeAndModuleAndTenantId(
 				installmentSearchCriteria.getFromDate(), installmentSearchCriteria.getToDate(),
-				installmentSearchCriteria.getInstallmentType(), installmentSearchCriteria.getModule());
+				installmentSearchCriteria.getInstallmentType(), installmentSearchCriteria.getModule(),
+				installmentSearchCriteria.getTenantId());
 	}
 }

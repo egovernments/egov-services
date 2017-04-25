@@ -67,7 +67,7 @@ public class Function {
 
 	private Boolean isParent;
 
-	private Long parentId;
+	private Function parentId;
 
 	private String tenantId;
 

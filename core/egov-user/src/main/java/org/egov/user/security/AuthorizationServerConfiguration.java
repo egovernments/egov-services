@@ -1,6 +1,7 @@
 package org.egov.user.security;
 
 import org.egov.user.security.oauth2.custom.CustomTokenEnhancer;
+import org.egov.user.security.oauth2.custom.CustomUserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -28,6 +29,9 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 	@Value("${access.token.validity.in.minutes}")
 	private int accessTokenValidityInMinutes;
 
+	@Value("${refresh.token.validity.in.minutes}")
+	private int refreshTokenValidityInMinutes;
+
 	@Autowired
 	private AuthenticationManager authenticationManager;
 
@@ -37,20 +41,30 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 	@Autowired
 	private TokenStore tokenStore;
 
+	@Autowired
+	private CustomUserDetailService userDetailService;
+
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
 		final int accessTokenValidityInSeconds = accessTokenValidityInMinutes * 60;
-		clients.inMemory().withClient("egov-user-client").secret("egov-user-secret")
+		final int refreshTokenValidityInSeconds = refreshTokenValidityInMinutes * 60;
+		clients.inMemory()
+				.withClient("egov-user-client")
+				.secret("egov-user-secret")
 				.authorizedGrantTypes("authorization_code", "refresh_token", "password")
-				.authorities("ROLE_APP", "ROLE_CITIZEN", "ROLE_ADMIN", "ROLE_EMPLOYEE").scopes("read", "write")
-		.accessTokenValiditySeconds(accessTokenValidityInSeconds);
+				.authorities("ROLE_APP", "ROLE_CITIZEN", "ROLE_ADMIN", "ROLE_EMPLOYEE")
+				.scopes("read", "write")
+				.refreshTokenValiditySeconds(refreshTokenValidityInSeconds)
+				.accessTokenValiditySeconds(accessTokenValidityInSeconds);
 	}
 
 	@Override
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-		endpoints.tokenStore(tokenStore).authenticationManager(authenticationManager)
+		endpoints.tokenStore(tokenStore)
+				.authenticationManager(authenticationManager)
 				.pathMapping("/oauth/token", "/_login")
-				.tokenEnhancer(customTokenEnhancer);
+				.tokenEnhancer(customTokenEnhancer)
+				.userDetailsService(userDetailService);
 	}
 
 	@Override

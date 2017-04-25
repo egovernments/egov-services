@@ -38,9 +38,9 @@ public class FinancialsService {
 		URI url = null;
 		BankResponse bankResponse = null;
 		try {
-			url = new URI(propertiesManager.getFinancialsEgfMastersServiceHost()
-					+ propertiesManager.getFinancialsEgfMastersServiceBasepath()
-					+ propertiesManager.getFinancialsEgfMastersServiceBankSearchPath() + "?id=" + id + "&tenantId="
+			url = new URI(propertiesManager.getEgfMastersServiceHost()
+					+ propertiesManager.getEgfMastersServiceBasepath()
+					+ propertiesManager.getEgfMastersServiceBankSearchPath() + "?id=" + id + "&tenantId="
 					+ tenantId);
 			LOGGER.debug(url.toString());
 			bankResponse = restTemplate.postForObject(url, getRequestInfoAsHttpEntity(requestInfoWrapper),
@@ -57,9 +57,9 @@ public class FinancialsService {
 		URI url = null;
 		BankBranchResponse bankBranchResponse = null;
 		try {
-			url = new URI(propertiesManager.getFinancialsEgfMastersServiceHost()
-					+ propertiesManager.getFinancialsEgfMastersServiceBasepath()
-					+ propertiesManager.getFinancialsEgfMastersServiceBankBranchSearchPath() + "?id=" + id
+			url = new URI(propertiesManager.getEgfMastersServiceHost()
+					+ propertiesManager.getEgfMastersServiceBasepath()
+					+ propertiesManager.getEgfMastersServiceBankBranchSearchPath() + "?id=" + id
 					+ "&tenantId=" + tenantId);
 			LOGGER.debug(url.toString());
 			bankBranchResponse = restTemplate.postForObject(url, getRequestInfoAsHttpEntity(requestInfoWrapper),
@@ -76,9 +76,9 @@ public class FinancialsService {
 		URI url = null;
 		FundResponse fundResponse = null;
 		try {
-			url = new URI(propertiesManager.getFinancialsEgfMastersServiceHost()
-					+ propertiesManager.getFinancialsEgfMastersServiceBasepath()
-					+ propertiesManager.getFinancialsEgfMastersServiceFundSearchPath() + "?id=" + id + "&tenantId="
+			url = new URI(propertiesManager.getEgfMastersServiceHost()
+					+ propertiesManager.getEgfMastersServiceBasepath()
+					+ propertiesManager.getEgfMastersServiceFundSearchPath() + "?id=" + id + "&tenantId="
 					+ tenantId);
 			LOGGER.debug(url.toString());
 			fundResponse = restTemplate.postForObject(url, getRequestInfoAsHttpEntity(requestInfoWrapper),
@@ -95,9 +95,9 @@ public class FinancialsService {
 		URI url = null;
 		FunctionResponse functionResponse = null;
 		try {
-			url = new URI(propertiesManager.getFinancialsEgfMastersServiceHost()
-					+ propertiesManager.getFinancialsEgfMastersServiceBasepath()
-					+ propertiesManager.getFinancialsEgfMastersServiceFunctionSearchPath() + "?id=" + id + "&tenantId="
+			url = new URI(propertiesManager.getEgfMastersServiceHost()
+					+ propertiesManager.getEgfMastersServiceBasepath()
+					+ propertiesManager.getEgfMastersServiceFunctionSearchPath() + "?id=" + id + "&tenantId="
 					+ tenantId);
 			LOGGER.debug(url.toString());
 			functionResponse = restTemplate.postForObject(url, getRequestInfoAsHttpEntity(requestInfoWrapper),
@@ -114,9 +114,9 @@ public class FinancialsService {
 		URI url = null;
 		FunctionaryResponse functionaryResponse = null;
 		try {
-			url = new URI(propertiesManager.getFinancialsEgfMastersServiceHost()
-					+ propertiesManager.getFinancialsEgfMastersServiceBasepath()
-					+ propertiesManager.getFinancialsEgfMastersServiceFunctionarySearchPath() + "?id=" + id
+			url = new URI(propertiesManager.getEgfMastersServiceHost()
+					+ propertiesManager.getEgfMastersServiceBasepath()
+					+ propertiesManager.getEgfMastersServiceFunctionarySearchPath() + "?id=" + id
 					+ "&tenantId=" + tenantId);
 			LOGGER.debug(url.toString());
 			functionaryResponse = restTemplate.postForObject(url, getRequestInfoAsHttpEntity(requestInfoWrapper),

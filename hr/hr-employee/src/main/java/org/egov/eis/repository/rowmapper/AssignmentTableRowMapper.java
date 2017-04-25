@@ -63,13 +63,13 @@ public class AssignmentTableRowMapper implements RowMapper<Assignment> {
 		Assignment assignment = new Assignment();
 		assignment.setId((Long) rs.getObject("id"));
 		assignment.setPosition((Long) rs.getObject("positionId"));
-		assignment.setFund(((Long) rs.getObject("fundId") == 0L ? null : (Long) rs.getObject("fundId")));
-		assignment.setFunctionary(((Long) rs.getObject("functionaryId") == 0L ? null : (Long) rs.getObject("functionaryId")));
-		assignment.setFunction(((Long) rs.getObject("functionId") == 0L ? null : (Long) rs.getObject("functionId")));
+		assignment.setFund((Long) rs.getObject("fundId"));
+		assignment.setFunctionary((Long) rs.getObject("functionaryId"));
+		assignment.setFunction((Long) rs.getObject("functionId"));
 		assignment.setDepartment((Long) rs.getObject("departmentId"));
 		assignment.setDesignation((Long) rs.getObject("designationId"));
 		assignment.setIsPrimary((Boolean) rs.getObject("isPrimary"));
-		assignment.setGrade(((Long) rs.getObject("gradeId") == 0L ? null : (Long) rs.getObject("functionId")));
+		assignment.setGrade((Long) rs.getObject("gradeId"));
 		assignment.setGovtOrderNumber(rs.getString("govtOrderNumber"));
 		assignment.setCreatedBy((Long) rs.getObject("createdBy"));
 		assignment.setLastModifiedBy((Long) rs.getObject("lastModifiedBy"));

@@ -33,8 +33,8 @@ public class DemandService {
 		Set<EgDemandDetails> demandDetailsList = new HashSet<EgDemandDetails>();
 		EgDemandReason demandReason;
 		if (!demand.getModuleName().isEmpty() && !demand.getInstallment().isEmpty()) {
-			demandInstallment = installmentService.findByDescriptionAndModule(demand.getInstallment(),
-					demand.getModuleName());
+			demandInstallment = installmentService.findByDescriptionAndModuleAndTenantId(demand.getInstallment(),
+					demand.getModuleName(), demand.getTenantId());
 		}
 		if (demandInstallment == null) {
 			throw new Exception("Not a valid module or installment description");

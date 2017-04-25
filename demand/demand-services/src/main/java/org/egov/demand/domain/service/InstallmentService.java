@@ -15,8 +15,8 @@ public class InstallmentService {
 	@Autowired
 	private InstallmentRepository installmentRepository;
 
-	public Installment findByDescriptionAndModule(String instDescription, String moduleName) {
-		return installmentRepository.findByDescriptionAndModule(instDescription, moduleName);
+	public Installment findByDescriptionAndModuleAndTenantId(String instDescription, String moduleName, String tenantId) {
+		return installmentRepository.findByDescriptionAndModuleAndTenantId(instDescription, moduleName, tenantId);
 	}
 
 	public List<Installment> findByFromDateAndToDateAndModule(Date fromDate, Date toDate, String moduleName) {

@@ -1,8 +1,8 @@
 var baseUrl = window.location.origin;
 
 
-
-var tenantId = "ap." + window.location.origin.split("-")[0].split("//")[1];
+// tenantId="ap.kurnool";
+ var tenantId = "ap." + window.location.origin.split("-")[0].split("//")[1];
 var authToken = localStorage.getItem("auth-token");
 var now = new Date();
 var year = now.getFullYear();
@@ -135,7 +135,7 @@ try {
 
 }
 
-function getCommonMaster(mainRoute, resource, returnObject, pageSize) {
+function getCommonMaster(mainRoute, resource, returnObject, pageSize=500) {
     blockUI();
     var res = $.ajax({
         url: baseUrl + "/" + mainRoute + "/" + resource + "/_search?tenantId=" + tenantId + "&" + "pageSize=" + (pageSize || 500),

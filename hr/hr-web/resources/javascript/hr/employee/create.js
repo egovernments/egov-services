@@ -61,7 +61,7 @@ for (var i = 2000; i <= new Date().getFullYear(); i++) {
 var hrConfigurations = commonApiPost("hr-masters", "hrconfigurations", "_search", {
     tenantId
 }).responseJSON || [];
-if (hrConfigurations["HRConfiguration"]["Autogenerate_employeecode"] == "N") {
+if (hrConfigurations["HRConfiguration"]["Autogenerate_employeecode"] == "N" || typeof(hrConfigurations["HRConfiguration"]["Autogenerate_employeecode"])=="undefined") {
     $("#code").prop("disabled", false);
 } else {
     $("#code").prop("disabled", true);
@@ -263,7 +263,6 @@ var employee = {
     user: {
         roles:[{
           name:"EMPLOYEE",
-          code: "EMPLOYEE",
           tenantId
         }],
         userName: "",
@@ -1856,6 +1855,47 @@ function isHavingPrimary() {
     return false;
 }
 
+try {
+
+    if (getUrlVars()["id"]) {
+        var currentEmployee = commonApiPost("hr-employee", "employees/"+getUrlVars()["id"], "_search", {
+            tenantId
+        }).responseJSON["Employee"] || {};
+    }
+
+    printValue("", currentEmployee);
+    // printValue("", assetDetails, true);
+} catch (e) {
+    console.log(e);
+}
+
+
+function printValue(object = "", values,isAsset=false) {
+    if (object != "") {
+
+    } else {
+        for (var key in values) {
+            if (typeof values[key] === "object") {
+                for (ckey in values[key]) {
+                    if (values[key][ckey]) {
+                        //Get description
+
+                            $("[name='" + (isAsset ? "asset." : "") + key + "." + ckey + "']").text(values[key][ckey] ? values[key][ckey] : "NA");
+                    }
+                }
+            } else if (values[key]) {
+                $("[name='" + (isAsset ? "asset." : "") + key + "']").text(values[key]);
+            } else {
+                // $("[name='" + (isAsset ? "asset." : "") + key + "']").text("NA");
+            }
+
+            if (key.search('date') > 0) {
+                var d = new Date(values[key]);
+                $(`#${key}`).val(`${d.getDate()}-${d.getMonth()+1}-${d.getFullYear()}`);
+            }
+        }
+    }
+}
 
 // Adding Jquery validation dynamically
 $("#createEmployeeForm").validate({
@@ -2238,3 +2278,49 @@ function getPositions(_this) {
         }
     }
 }
+
+
+if(getUrlVars()["type"]=="update")
+{
+  try {
+
+      if (getUrlVars()["id"]) {
+          var currentEmployee = commonApiPost("hr-employee", "employees/"+getUrlVars()["id"], "_search", {
+              tenantId
+          }).responseJSON["Employee"] || {};
+      }
+
+      printValue("", currentEmployee);
+      // printValue("", assetDetails, true);
+  } catch (e) {
+      console.log(e);
+  }
+}
+
+
+  function printValue(object = "", values) {
+      if (object != "") {
+
+      } else {
+          for (var key in values) {
+              if (typeof values[key] === "object") {
+                  for (ckey in values[key]) {
+                      if (values[key][ckey]) {
+                          //Get description
+
+                              $("[name='" + key + "." + ckey + "']").val(values[key][ckey]);
+                      }
+                  }
+              } else if (values[key]) {
+                  $("[name='" +  key + "']").val(values[key]);
+              } else {
+                  // $("[name='" + (isAsset ? "asset." : "") + key + "']").text("NA");
+              }
+
+              if (key.search('date') > 0) {
+                  var d = new Date(values[key]);
+                  $(`#${key}`).val(`${d.getDate()}-${d.getMonth()+1}-${d.getFullYear()}`);
+              }
+          }
+      }
+  }

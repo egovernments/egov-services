@@ -27,6 +27,7 @@ public class DemandService {
 	private InstallmentService installmentService;
 
 	public EgDemand createDemand(Demand demand) throws Exception {
+		LOGGER.info("createDemand - demand - "+demand);
 		EgDemand egDemand = new EgDemand();
 		Installment demandInstallment = null;
 		EgDemandDetails egDemandDetails = null;
@@ -39,11 +40,13 @@ public class DemandService {
 		if (demandInstallment == null) {
 			throw new Exception("Not a valid module or installment description");
 		}
+		LOGGER.info("createDemand - demandInstallment - "+demandInstallment);
 		egDemand.setEgInstallmentMaster(demandInstallment);
 		egDemand.setIsHistory("N");
 		egDemand.setCreateDate(new Date());
 		egDemand.setModifiedDate(new Date());
 		egDemand.setTenantId(demand.getTenantId());
+		LOGGER.info("createDemand - egDemand 1- "+egDemand);
 		for (DemandDetails demandDetail : demand.getDemandDetails()) {
 			if (demandDetail.getTaxAmount() != null && demandDetail.getTaxReason() != null
 					&& !demandDetail.getTaxPeriod().isEmpty()) {
@@ -60,7 +63,9 @@ public class DemandService {
 			}
 		}
 		egDemand.setEgDemandDetails(demandDetailsList);
+		LOGGER.info("createDemand - egDemand 2- "+egDemand);
 		demandRepository.save(egDemand);
+		LOGGER.info("createDemand - egDemand 3- "+egDemand);
 		return egDemand;
 	}
 

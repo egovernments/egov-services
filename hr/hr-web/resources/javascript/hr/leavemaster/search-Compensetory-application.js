@@ -6,7 +6,7 @@ class SearchLeaveApplication extends React.Component {
     name:"",
     code:"",
     departmentId:"",
-    designationId:""},isSearchClicked:false,assignments_department:[],assignments_designation:[]}
+    designationId:"",employeeTypeId:""},isSearchClicked:false,assignments_department:[],assignments_designation:[],employeeType:[]}
     this.handleChange=this.handleChange.bind(this);
     this.search=this.search.bind(this);
     this.handleBlur=this.handleBlur.bind(this);
@@ -23,7 +23,8 @@ class SearchLeaveApplication extends React.Component {
     name,
     code,
     departmentId,
-    designationId}=this.state.searchSet;
+    designationId,
+    employeeTypeId}=this.state.searchSet;
     e.preventDefault();
     //call api call
     var employees=[];
@@ -35,7 +36,8 @@ class SearchLeaveApplication extends React.Component {
       name:"",
       code:"",
       departmentId:"",
-      designationId:""}
+      designationId:"",
+      employeeType:""}
     })
   }
 
@@ -45,7 +47,8 @@ class SearchLeaveApplication extends React.Component {
 
     this.setState({
       assignments_department,
-      assignments_designation
+      assignments_designation,
+      employeeType
   })
   }
 
@@ -114,7 +117,7 @@ class SearchLeaveApplication extends React.Component {
     let {name,
     code,
     departmentId,
-    designationId}=this.state.searchSet;
+    designationId,employeeTypeId}=this.state.searchSet;
     const renderOption=function(list)
     {
         if(list)
@@ -133,12 +136,12 @@ class SearchLeaveApplication extends React.Component {
       if (type==="create") {
 
               return (
-                      <a href={`app/hr/leavemaster/apply-leave.html?id=${id}&type=${type}`}>Apply Leave</a>
+                      <a href={`app/hr/leavemaster/compensetory-leave.html?id=${id}&type=${type}`}>Apply Compensetory Leave</a>
               );
 
     }else {
             return (
-                    <a href={`app/hr/leavemaster/view-apply.html?id=${id}&type=${type}`}>View</a>
+                    <a href={`app/hr/leavemaster/view-compensetory.html?id=${id}&type=${type}`}>View</a>
             );
         }
 }
@@ -205,7 +208,7 @@ class SearchLeaveApplication extends React.Component {
   }
     return (
       <div>
-        <h3>Search employee to {getUrlVars()["type"]} a leave application</h3>
+        <h3>Search employee to {getUrlVars()["type"]} a Compensetory application</h3>
           <form onSubmit={(e)=>{search(e)}}>
           <fieldset>
           <div className="row">
@@ -314,8 +317,8 @@ class SearchLeaveApplication extends React.Component {
                           </div>
                           <div className="col-sm-6">
                             <div className="styled-select">
-                              <select id="employeeTypeCode" name="employeeTypeCode" value={employeeTypeCode} onChange={(e)=>{
-                                  handleChange(e,"employeeTypeCode")}}>
+                              <select id="employeeTypeId" name="employeeTypeId" value={employeeTypeId} onChange={(e)=>{
+                                  handleChange(e,"employeeTypeId")}}>
                               <option>Select Type</option>
                               {renderOption(this.state.employeeType)}
                              </select>

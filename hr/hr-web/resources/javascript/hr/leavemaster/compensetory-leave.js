@@ -43,7 +43,7 @@ class CompensetoryLeave extends React.Component {
   }
 
   componentDidMount(){
-    var type = getUrlVars()["type"], _this = this;
+    var type = getUrlVars()["type"], _this = this, id = getUrlVars()["id"];
     $('#compensatoryForDate').datepicker({
         format: 'dd/mm/yyyy',
         autclose:true
@@ -58,7 +58,28 @@ class CompensetoryLeave extends React.Component {
             }
       })
       });
-  }
+      if (!id) {
+
+       var obj = commonApiPost("hr-employee","employees","_loggedinemployee",{tenantId}).responseJSON["Employee"][0];
+      } else {
+        var obj = getCommonMasterById("hr-employee","employees","Employee",id).responseJSON["Employee"][0];
+      }
+
+      _this.setState({
+        compensetorySet:{
+            ..._this.state.compensetorySet,
+            name:obj.name,
+            code:obj.code,
+            employee:obj.id,
+            // workflowDetails:{
+            //   ..._this.state.leaveSet.workflowDetails,
+            //   assignee: assignee || ""
+            // }
+
+          }
+      })
+    }
+
 
 
 
@@ -69,13 +90,14 @@ class CompensetoryLeave extends React.Component {
       let mode=getUrlVars()["type"];
 
       const showActionButton=function() {
-        if((!mode) ||mode==="update")
+        if((!mode) ||mode==="create")
         {
-          return (<button type="submit" className="btn btn-submit">{mode?"Update":"Add"}</button>);
+          return (<button type="submit" className="btn btn-submit">{mode?"Apply":"forward"}</button>);
         }
       };
     return (
       <div>
+          <h3>{mode} Compensetory Leave</h3>
             <form onSubmit={(e)=>{this.Add(e)}}>
           <fieldset>
               <div className="row">

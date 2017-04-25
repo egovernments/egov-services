@@ -10,11 +10,13 @@ class EmployeeSearch extends React.Component {
     name:"",mobileNumber:"",pan:"",aadhaarNumber:""},isSearchClicked:false,employeeTypeList:[],departmentList:[],designationList:[]}
     this.handleChange=this.handleChange.bind(this);
     this.search=this.search.bind(this);
+    this.handleBlur=this.handleBlur.bind(this);
   }
 
   search(e) {
     let {
     code,
+    name,
     departmentId,
     designationId,
     employeeType,
@@ -23,7 +25,7 @@ class EmployeeSearch extends React.Component {
     //call api call
     var employees = [];
     try {
-      employees = commonApiPost("hr-employee","employees","_search", {tenantId,code,asOnDate,departmentId,designationId},this.state.searchSet).responseJSON["Employee"] || [];
+      employees = commonApiPost("hr-employee","employees","_search", {tenantId,code,departmentId,designationId,name,pageSize:500},this.state.searchSet).responseJSON["Employee"] || [];
     } catch (e) {
       employees = [];
       console.log(e);
@@ -35,6 +37,27 @@ class EmployeeSearch extends React.Component {
     })
 
   }
+  handleBlur(e) {
+    var _this=this;
+
+    if(e.target.value) {
+      try{
+        var code = e.target.value;
+       //Make get employee call
+       var obj = commonApiPost("hr-employee","employees","_search",{code,tenantId}).responseJSON["Employee"][0];
+       _this.setState({
+         searchSet:{
+             ..._this.state.searchSet,
+             name:obj.name
+           }
+     })
+  }
+      catch (e){
+        console.log(e);
+      }
+  }
+}
+
 
 
   componentWillMount() {
@@ -92,7 +115,7 @@ class EmployeeSearch extends React.Component {
 
   render() {
     console.log(this.state.searchSet);
-    let {handleChange,search,updateTable}=this;
+    let {handleChange,search,handleBlur}=this;
     let {isSearchClicked,employees}=this.state;
     let {
     code,
@@ -258,78 +281,78 @@ const getTodaysDate = function() {
             <div className="col-sm-6">
                 <div className="row">
                     <div className="col-sm-6 label-text">
-                      <label for="">Employee Code/Name  </label>
+                      <label for="">Employee Code  </label>
                     </div>
                     <div className="col-sm-6">
                         <input type="text" name="code" id="code" onChange={(e)=>{
                             handleChange(e,"code")
-                        }} maxLength="100"/>
+                        }} onBlur={(e)=>{handleBlur(e)}}/>
                     </div>
                 </div>
               </div>
-              <div className="col-sm-6">
-                        <div className="row">
-                          <div className="col-sm-6 label-text">
-                              <label for="description">As On Date</label>
-                          </div>
-                          <div className="col-sm-6">
-                              <input type="text" id="asOnDate" name="asOnDate" value= {asOnDate}
-                                onChange={(e)=>{handleChange(e,"asOnDate")}} />
-                          </div>
-                        </div>
-                    </div>
+              {<div className="col-sm-6">
+                  <div className="row">
+                      <div className="col-sm-6 label-text">
+                        <label for=""> Employee Name  </label>
+                      </div>
+                      <div className="col-sm-6">
+                          <input type="text" name="name" id="name" value= {name} onChange={(e)=>{
+                              handleChange(e,"name")
+                          }} disabled/>
+                      </div>
+                  </div>
+                </div>}
           </div>
-          <div className="row">
+        {/*<div className="row">
             <div className="col-sm-6">
-                <div className="row">
-                    <div className="col-sm-6 label-text">
-                      <label for="">Name  </label>
-                    </div>
-                    <div className="col-sm-6">
-                        <input type="text" name="name" id="name" onChange={(e)=>{
-                            handleChange(e,"name")
-                        }} />
-                    </div>
-                </div>
-              </div>
-              <div className="col-sm-6">
-                        <div className="row">
-                          <div className="col-sm-6 label-text">
-                              <label for="description">Mobile Number</label>
-                          </div>
-                          <div className="col-sm-6">
-                              <input type="number" id="mobileNumber" name="mobileNumber" value= {mobileNumber}
-                                onChange={(e)=>{handleChange(e,"mobileNumber")}}/>
-                          </div>
+                      <div className="row">
+                        <div className="col-sm-6 label-text">
+                            <label for="description">As On Date</label>
                         </div>
-                    </div>
+                        <div className="col-sm-6">
+                            <input type="text" id="asOnDate" name="asOnDate" value= {asOnDate}
+                              onChange={(e)=>{handleChange(e,"asOnDate")}} />
+                        </div>
+                      </div>
+                  </div>
+            <div className="col-sm-6">
+                      <div className="row">
+                        <div className="col-sm-6 label-text">
+                            <label for="description">Mobile Number</label>
+                        </div>
+                        <div className="col-sm-6">
+                            <input type="number" id="mobileNumber" name="mobileNumber" value= {mobileNumber}
+                              onChange={(e)=>{handleChange(e,"mobileNumber")}}/>
+                        </div>
+                      </div>
+                  </div>
+        </div>
+    <div>
+        <div className="col-sm-6">
+            <div className="row">
+                <div className="col-sm-6 label-text">
+                  <label for="">Pan  </label>
+                </div>
+                <div className="col-sm-6">
+                    <input type="text" name="pan" id="pan" onChange={(e)=>{
+                        handleChange(e,"pan")
+                    }} />
+                </div>
+            </div>
           </div>
-      <div>
           <div className="col-sm-6">
               <div className="row">
                   <div className="col-sm-6 label-text">
-                    <label for="">Pan  </label>
+                    <label for="">Aadhar Code  </label>
                   </div>
                   <div className="col-sm-6">
-                      <input type="text" name="pan" id="pan" onChange={(e)=>{
-                          handleChange(e,"pan")
+                      <input type="text" name="aadhaarNumber" id="aadhaarNumber" onChange={(e)=>{
+                          handleChange(e,"aadhaarNumber")
                       }} />
                   </div>
               </div>
             </div>
-            <div className="col-sm-6">
-                <div className="row">
-                    <div className="col-sm-6 label-text">
-                      <label for="">Aadhar Code  </label>
-                    </div>
-                    <div className="col-sm-6">
-                        <input type="text" name="aadhaarNumber" id="aadhaarNumber" onChange={(e)=>{
-                            handleChange(e,"aadhaarNumber")
-                        }} />
-                    </div>
-                </div>
-              </div>
-          </div>
+        </div>*/}
             <div className="text-center">
               <button type="submit"  className="btn btn-submit">Search</button>&nbsp;&nbsp;
                 <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>

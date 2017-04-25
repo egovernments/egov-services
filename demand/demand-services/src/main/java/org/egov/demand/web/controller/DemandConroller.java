@@ -129,10 +129,7 @@ public class DemandConroller {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		System.out.println("DemandConroller.create - egDemand - "+egDemand);
-		System.out.println("DemandConroller.create 1- demandRequest.getDemand().get(0) - "+demandRequest.getDemand().get(0));
 		demandRequest.getDemand().get(0).setId(egDemand.getId());
-		System.out.println("DemandConroller.create 2- demandRequest.getDemand().get(0) - "+demandRequest.getDemand().get(0));
 		return getSuccessResponse(demandRequest.getDemand().get(0), demandRequest.getRequestInfo());
 	}
 	

@@ -187,7 +187,7 @@ public class PaymentService {
 			Map<String, String> purposeMap = billRepository.getPurpose();
 			for (DemandDetails demandDetail : demand.getDemandDetails()) {
 				orderNo++;
-				totalAmount = totalAmount.add(demandDetail.getTaxAmount());
+				totalAmount = totalAmount.add(demandDetail.getTaxAmount().subtract(demandDetail.getCollectionAmount()));
 				billDetailInfos.addAll(getBilldetails(demandDetail, functionCode, orderNo, requestInfo, purposeMap));
 			}
 			billInfo.setTotalAmount(totalAmount.doubleValue());
@@ -216,7 +216,7 @@ public class PaymentService {
 			BillDetailInfo billdetail = new BillDetailInfo();
 			// TODO: Fix me: As per the rules for the order no.
 			billdetail.setOrderNo(orderNo);
-			billdetail.setCreditAmount(demandDetail.getTaxAmount());
+			billdetail.setCreditAmount(demandDetail.getTaxAmount().subtract(demandDetail.getCollectionAmount()));
 			billdetail.setDebitAmount(BigDecimal.ZERO);
 			LOGGER.info("getGlCode before>>>>>>>" + demandDetail.getGlCode());
 			billdetail.setGlCode(getGlcodeById(demandDetail.getGlCode(), requestInfo));

@@ -900,7 +900,12 @@ function fillValueToObject(currentState) {
   }*/
 
   getDesignations(null, function(designations) {
-      for (var variable in designations) {
+      for (let variable in designations) {
+        if(!designations[variable]["id"]) {
+            var _res = commonApiPost("hr-masters", "designations", "_search", {tenantId, name: designations[variable]["name"]});
+            designations[variable]["id"] = _res && _res.responseJSON && _res.responseJSON["Designation"] && _res.responseJSON["Designation"][0] ? _res.responseJSON["Designation"][0].id : "";
+        }
+
         $(`#approverDesignation`).append(`<option value='${designations[variable]["id"]}'>${designations[variable]["name"]}</option>`);
       }
   });

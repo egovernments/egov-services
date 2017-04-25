@@ -13,15 +13,15 @@ public class NoticeQueryBuilder {
 	
 	public static final Logger logger = LoggerFactory.getLogger(NoticeQueryBuilder.class);
 	
-	public final String INSERT_NOTICE_QUERY = "INSERT INTO eglams_notice"
+	public final static String INSERT_NOTICE_QUERY = "INSERT INTO eglams_notice"
 			+ " (id, noticeno, noticedate, agreementno, assetcategory, acknowledgementnumber, assetno, allotteename,"
 			+ " allotteeaddress, allotteemobilenumber, agreementperiod, commencementdate, templateversion, expirydate, rent,"
 			+ " securitydeposit, commissionername, zone, ward, street, electionward, locality, block, createdby,"
 			+ " createddate, lastmodifiedby ,lastmodifieddate, tenantId, rentInWord)" + " VALUES (nextval('seq_eglams_notice'),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	
-	public final String SEQ_NOTICE_NO = "SELECT nextval('seq_eglams_noticeno')";
+	public final static  String SEQ_NOTICE_NO = "SELECT nextval('seq_eglams_noticeno')";
 	
-	public final String SEQ_NOTICE_ID = "SELECT nextval('seq_eglams_notice')";
+	public final static  String SEQ_NOTICE_ID = "SELECT nextval('seq_eglams_notice')";
 	
 
 	@SuppressWarnings("unchecked")
@@ -31,8 +31,7 @@ public class NoticeQueryBuilder {
 
 		if (!(noticeCriteria.getId() == null && noticeCriteria.getAgreementNumber() == null
 				&& (noticeCriteria.getAckNumber() == null && noticeCriteria.getAssetCategory() == null)
-				&& noticeCriteria.getNoticeNo() == null && noticeCriteria.getNoticeNumber() == null
-				&& noticeCriteria.getTenantId() == null))
+				&& noticeCriteria.getNoticeNo() == null &&  noticeCriteria.getTenantId() == null))
 		{
 			selectQuery.append(" WHERE");
 			boolean isAppendAndClause = false;
@@ -47,27 +46,23 @@ public class NoticeQueryBuilder {
 				selectQuery.append(" notice.AgreementNumber=?");
 				preparedStatementValues.add(noticeCriteria.getAgreementNumber());
 			}
-			if (noticeCriteria != null) {
+			if (noticeCriteria.getAckNumber() != null) {
 				isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 				selectQuery.append(" notice.AckNumber=?");
 				preparedStatementValues.add(noticeCriteria.getAckNumber());
 			}
-			if (noticeCriteria != null) {
+			if (noticeCriteria.getAssetCategory() != null) {
 				isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 				selectQuery.append(" notice.AssetCategory=?");
 				preparedStatementValues.add(noticeCriteria.getAssetCategory());
 			}
-			if (noticeCriteria != null) {
+			if (noticeCriteria.getNoticeNo() != null) {
 				isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 				selectQuery.append(" notice.NoticeNo=?");
 				preparedStatementValues.add(noticeCriteria.getNoticeNo());
 			}
-			if (noticeCriteria != null) {
-				isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-				selectQuery.append(" notice.NoticeNumber=?");
-				preparedStatementValues.add(noticeCriteria.getNoticeNumber());
-			}
-			if (noticeCriteria != null) {
+			
+			if (noticeCriteria.getTenantId() != null) {
 				isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 				selectQuery.append(" notice.TenantId=?");
 				preparedStatementValues.add(noticeCriteria.getTenantId());

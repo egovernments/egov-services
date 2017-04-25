@@ -113,6 +113,6 @@ public class LeaveApplication {
     @Size(max = 256)
     private String tenantId;
 
-    private WorkFlowDetails workFlowDetails;
+    private WorkFlowDetails workflowDetails;
 
 }

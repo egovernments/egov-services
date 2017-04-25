@@ -43,8 +43,6 @@ package org.egov.eis.repository;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -77,21 +75,10 @@ public class LeaveTypeRepository {
 	private LeaveTypeQueryBuilder leaveTypeQueryBuilder;
 
 	public List<LeaveType> findForCriteria(LeaveTypeGetRequest leaveTypeGetRequest) {
-		final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-
 		List<Object> preparedStatementValues = new ArrayList<Object>();
 		String queryStr = leaveTypeQueryBuilder.getQuery(leaveTypeGetRequest, preparedStatementValues);
 		List<LeaveType> leaveTypes = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
 				leaveTypeRowMapper);
-		for (LeaveType leaveType : leaveTypes) {
-			try {
-				leaveType.setCreatedDate(sdf.parse(sdf.format(leaveType.getCreatedDate())));
-				leaveType.setLastModifiedDate(sdf.parse(sdf.format(leaveType.getLastModifiedDate())));
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
 		return leaveTypes;
 	}
 

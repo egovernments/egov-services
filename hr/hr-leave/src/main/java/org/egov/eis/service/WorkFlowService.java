@@ -50,6 +50,8 @@ import org.egov.eis.web.contract.ProcessInstanceResponse;
 import org.egov.eis.web.contract.Task;
 import org.egov.eis.web.contract.TaskRequest;
 import org.egov.eis.web.contract.TaskResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -58,6 +60,8 @@ import org.springframework.web.client.RestTemplate;
 
 @Service
 public class WorkFlowService {
+    public static final Logger LOGGER = LoggerFactory.getLogger(WorkFlowService.class);
+    
     @Autowired
     private WorkFlowSearchURLHelper workFlowSearchURLHelper;
     
@@ -71,6 +75,7 @@ public class WorkFlowService {
         processInstance.setType(propertiesManager.getWorkflowServiceBusinessKey());
         processInstance.setComments("starting workflow from Leave Application consumer");
         Position assignee = new Position();
+        LOGGER.info("leaveApplicationRequest::" + leaveApplicationRequest);
         assignee.setId(leaveApplicationRequest.getLeaveApplication().getWorkFlowDetails().getAssignee());
         processInstance.setAssignee(assignee);
         processInstanceRequest.setRequestInfo(leaveApplicationRequest.getRequestInfo());

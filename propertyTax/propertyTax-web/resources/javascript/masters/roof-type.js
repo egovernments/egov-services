@@ -2,8 +2,7 @@ class RoofType extends React.Component {
   constructor(props) {
     super(props);
     this.state={list:[],searchSet:{
-    name:"",
-        tenantId},isSearchClicked:false}
+    name:""},isSearchClicked:false}
     this.handleChange=this.handleChange.bind(this);
     this.search=this.search.bind(this);
   }
@@ -65,7 +64,7 @@ class RoofType extends React.Component {
 
 }
 
-  
+
   handleChange(e,name)
   {
 

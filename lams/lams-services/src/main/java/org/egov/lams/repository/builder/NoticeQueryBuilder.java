@@ -13,7 +13,7 @@ public class NoticeQueryBuilder {
 	
 	public static final Logger logger = LoggerFactory.getLogger(NoticeQueryBuilder.class);
 	
-	public final static String INSERT_NOTICE_QUERY = "INSERT INTO eglams_notice"
+	public static final  String INSERT_NOTICE_QUERY = "INSERT INTO eglams_notice"
 			+ " (id, noticeno, noticedate, agreementno, assetcategory, acknowledgementnumber, assetno, allotteename,"
 			+ " allotteeaddress, allotteemobilenumber, agreementperiod, commencementdate, templateversion, expirydate, rent,"
 			+ " securitydeposit, commissionername, zone, ward, street, electionward, locality, block, createdby,"

@@ -16,9 +16,6 @@ public class NoticeRepository {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 	
-	@Autowired
-	private NoticeQueryBuilder noticeQueryBuilder;
-	
 	public Notice createNotice(NoticeRequest noticeRequest) {
 		
 		RequestInfo requestInfo = noticeRequest.getRequestInfo();
@@ -34,7 +31,7 @@ public class NoticeRepository {
 				notice.getTenantId()};
 		
 		try{
-			jdbcTemplate.update(noticeQueryBuilder.INSERT_NOTICE_QUERY, obj);
+			jdbcTemplate.update(NoticeQueryBuilder.INSERT_NOTICE_QUERY, obj);
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}
@@ -46,7 +43,7 @@ public class NoticeRepository {
 	
 	private String getNoticeNo() {
 		
-		Integer result = jdbcTemplate.queryForObject(noticeQueryBuilder.SEQ_NOTICE_NO,Integer.class);
+		Integer result = jdbcTemplate.queryForObject(NoticeQueryBuilder.SEQ_NOTICE_NO,Integer.class);
 		StringBuilder noticeNo=null;
 		
 		try{

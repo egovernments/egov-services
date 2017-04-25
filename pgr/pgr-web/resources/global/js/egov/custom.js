@@ -167,9 +167,18 @@ $(document).ready(function()
 		});
 	});
 
-	$('[data-include=header]').append('<nav class="navbar navbar-default navbar-custom navbar-fixed-top"> <div class="container-fluid"> <div class="navbar-header col-md-10 col-xs-10"> <a class="navbar-brand" href="javascript:void(0);"> <img src="../resources/global/images/logo@2x.png" height="60"> <div> <span class="title2" data-translate='+$('header').data('header-title')+'></span> </div> </a> </div> <div class="nav-right-menu col-md-2 col-xs-2"> <ul class="hr-menu text-right"> <li class="ico-menu"> <a href="http://www.egovernments.org" data-strwindname = "egovsite" class="open-popup"> <img src="../resources/global/images/egov_logo_tr_h.png" title="Powered by eGovernments" height="37" alt=""> </a> </li> </ul> </div> </div> </nav>');
+	$(document).on('click','.open-popup', function(){
+		openPopUp($(this).data('href'),$(this).data('name'));
+	});
 
+	//Header
+	$('[data-include=header]').append('<nav class="navbar navbar-default navbar-custom navbar-fixed-top"> <div class="container-fluid"> <div class="navbar-header col-md-8 col-xs-8"> <a class="navbar-brand" href="javascript:void(0);"> <img src="../resources/global/images/logo@2x.png" height="60"> <div> <span class="title2" data-translate="'+$('header').data('header-title')+'"></span> </div> </a> </div> <div class="nav-right-menu col-md-4 col-xs-4"> <ul class="hr-menu text-right"> <li class="ico-menu"> <a href="http://www.egovernments.org" data-strwindname = "egovsite" class="open-popup"> <img src="../resources/global/images/egov_logo_tr_h.png" title="Powered by eGovernments" height="37" alt=""> </a> </li> </ul> </div> </div> </nav>');
+
+	//footer
 	$('[data-include=footer]').append('<a href="http://eGovernments.org" target="_blank"><span data-translate="core.lbl.page.footer"></span></a>')
+
+	//Loader
+	$('body').append('<div class="modal fade loader-class" data-backdrop="static"> <div class="modal-dialog"> <div class="modal-body"> <div class="row spinner-margin text-center"> <div class="col-md-12 "> <div class="spinner"> <div class="rect1"></div> <div class="rect2"></div> <div class="rect3"></div> <div class="rect4"></div> <div class="rect5"></div> </div> </div> <div class="col-md-12 spinner-text" data-translate="core.alert.pleasewait"></div> </div> </div> </div> </div>');
 
 	translate();
 
@@ -198,6 +207,7 @@ function translate(keyname){
 					}
 					else{
 						if(langresult[0]) $(this).html(Object.values(langresult[0])[1]);
+						else $(this).html(translate);
 					}
 				}
 				if(content){
@@ -205,12 +215,14 @@ function translate(keyname){
 					  return obj.code == content;
 					});
 					if(langresult[0]) $(this).attr('data-content',Object.values(langresult[0])[1]);
+					else $(this).html(content);
 				}
 				if(title){
 					var langresult = JSON.parse(localStorage.getItem("lang_response")).filter(function( obj ) {
 					  return obj.code == title;
 					});
 					if(langresult[0]) $(this).attr('data-original-title',Object.values(langresult[0])[1]);
+					else $(this).html(title);
 				}
 			});
 		}

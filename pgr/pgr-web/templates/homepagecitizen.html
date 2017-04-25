@@ -20,8 +20,8 @@
 		<script src="../resources/global/js/bootstrap/bootbox.min.js"></script>
 		<script src="../resources/global/js/jquery/plugins/jquery.validate.min.js"></script>
 		<script	src="../resources/global/js/handlebars/handlebars-v4.0.5.js"></script>
-        <script src="../resources/global/js/egov/custom.js?rnd=2.1.0-SNAPSHOT_2695"></script>
-        <script src="../resources/app/js/homepagecitizen.js?rnd=2.1.0-SNAPSHOT_2695"></script>
+        <script src="../resources/global/js/egov/custom.js"></script>
+        <script src="../resources/app/js/homepagecitizen.js"></script>
 
 		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 		<!--[if lt IE 9]>
@@ -76,8 +76,8 @@
 										<i class="fa fa-user"></i> <span class="profile-text"></span>
 									</a>
 									<ul class="right-arrow dropdown-menu" role="menu">
-										<!-- <li><a href="../home/profile/edit" data-open-popup=""><i class="fa fa-user"></i>Edit Profile</a></li>
-										<li><a href="javascript:void(0);" onclick="jQuery('.change-password').modal('show', {backdrop: 'static'});"><i class="fa fa-key"></i>Change Password</a></li> -->
+										<li><a href="javascript:void(0)" data-href="edit_profile.html" data-name="profile" class="open-popup"><i class="fa fa-user"></i>Edit Profile</a></li>
+										<!-- <li><a href="javascript:void(0);" onclick="jQuery('.change-password').modal('show', {backdrop: 'static'});"><i class="fa fa-key"></i>Change Password</a></li> -->
 										<li><a href="javascript:void(0)" class="signout"><i class="fa fa-sign-out"></i><span data-translate="core.lbl.signout"></span></a></li>
 									</ul>
 								</li>
@@ -289,14 +289,14 @@
 							<div class="msg">
 								<header>
 									<div class="row">
-										<i class="fa fa-edit col-sm-1 col-xs-2 unread-msg"></i><a href="create-complaint.html" target="_blank" class="col-sm-11 col-xs-10" data-translate="pgr.lbl.register.grievance"></a>
+										<i class="fa fa-edit col-sm-1 col-xs-2 unread-msg"></i><a href="javascript:void(0)" data-href="create-complaint.html" data-name="registergrievance" class="col-sm-11 col-xs-10 open-popup" data-translate="pgr.lbl.register.grievance"></a>
 									</div>
 								</header>
 							</div>
 							<div class="msg">
 								<header>
 									<div class="row">
-										<i class="fa fa-desktop col-sm-1 col-xs-2 unread-msg"></i><a href="search-complaint.html" target="_blank" class="col-sm-11 col-xs-10" data-translate="pgr.lbl.view.grievance"></a>
+										<i class="fa fa-desktop col-sm-1 col-xs-2 unread-msg"></i><a href="javascript:void(0)" data-href="search-complaint.html" data-name="searchgrievance" class="col-sm-11 col-xs-10 open-popup" data-translate="pgr.lbl.view.grievance"></a>
 									</div>
 								</header>
 							</div>
@@ -597,26 +597,5 @@
         				</div>
         			</div>
         		</div> -->
-        
-        <div class="modal fade loader-class" data-backdrop="static">
-			<div class="modal-dialog">
-					<div class="modal-body">
-						<div class="row spinner-margin text-center">
-							<div class="col-md-12 ">
-								<div class="spinner">
-									<div class="rect1"></div>
-									<div class="rect2"></div>
-									<div class="rect3"></div>
-									<div class="rect4"></div>
-									<div class="rect5"></div>
-								</div>
-							</div>
-							
-							<div class="col-md-12 spinner-text" data-translate="core.alert.pleasewait">
-							</div>
-						</div>
-					</div>
-			</div>
-		</div>
     
 </body></html>

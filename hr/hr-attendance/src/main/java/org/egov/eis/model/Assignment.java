@@ -44,7 +44,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -66,8 +71,7 @@ public class Assignment {
     @NotNull
     private Long id;
 
-    private Long employee;
-
+    @NotNull
     private Long position;
 
     private Long fund;
@@ -79,34 +83,42 @@ public class Assignment {
     @NotNull
     private Long department;
 
+    @NotNull
     private Long designation;
 
+    @Valid
     private List<HODDepartment> hod = new ArrayList<HODDepartment>();
 
     @NotNull
     private Boolean isPrimary;
 
     @NotNull
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private Date fromDate;
 
     @NotNull
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private Date toDate;
 
     private Long grade;
 
     private String govtOrderNumber;
 
-    @NotNull
+    private List<String> documents = new ArrayList<String>();
+
     private Long createdBy;
 
-    @NotNull
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private Date createdDate;
 
     private Long lastModifiedBy;
 
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private Date lastModifiedDate;
 
-    @NotNull
     private String tenantId;
-
 }

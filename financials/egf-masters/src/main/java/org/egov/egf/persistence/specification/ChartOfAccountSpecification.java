@@ -30,6 +30,8 @@ public class ChartOfAccountSpecification implements Specification<ChartOfAccount
         Path<AccountCodePurpose> accountCodePurpose = root.get(ChartOfAccount_.accountCodePurpose);
         Path<String> desciption = root.get(ChartOfAccount_.description);
         Path<Boolean> isActiveForPosting = root.get(ChartOfAccount_.isActiveForPosting);
+        Path<String> tenantId = root.get(ChartOfAccount_.tenantId);
+
         /*
          * Path<ChartOfAccount> parentId = root.get(ChartOfAccount_.parentId);
          */
@@ -54,7 +56,6 @@ public class ChartOfAccountSpecification implements Specification<ChartOfAccount
                 predicates.add(criteriaBuilder.equal(name, criteria.getName()));
             }
 
-            
             if (criteria.getAccountCodePurpose() != null) {
                 predicates.add(criteriaBuilder.equal(accountCodePurpose,
                         criteria.getAccountCodePurpose().getId()));
@@ -90,6 +91,10 @@ public class ChartOfAccountSpecification implements Specification<ChartOfAccount
 
             if (criteria.getMajorCode() != null) {
                 predicates.add(criteriaBuilder.equal(majorCode, criteria.getMajorCode()));
+            }
+
+            if (criteria.getTenantId() != null) {
+                predicates.add(criteriaBuilder.equal(tenantId, criteria.getTenantId()));
             }
 
             /*

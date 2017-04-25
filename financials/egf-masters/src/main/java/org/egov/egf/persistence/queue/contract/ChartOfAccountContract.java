@@ -48,6 +48,8 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import lombok.AllArgsConstructor;
@@ -100,6 +102,7 @@ public class ChartOfAccountContract extends AuditableContract {
     @Transient
     private Boolean isSubLedger;
 
+    @JsonProperty(access = Access.WRITE_ONLY)
     private Set<ChartOfAccountDetailContract> chartOfAccountDetails = new HashSet<ChartOfAccountDetailContract>();
 
     public ChartOfAccountContract(final String id) {
@@ -107,11 +110,11 @@ public class ChartOfAccountContract extends AuditableContract {
         this.id = Long.valueOf(id);
     }
 
-    public Boolean getIsSubledger() {
-        if (!chartOfAccountDetails.isEmpty())
-            return true;
-        else
-            return false;
-
-    }
+//    public Boolean getIsSubledger() {
+//        if (!chartOfAccountDetails.isEmpty())
+//            return true;
+//        else
+//            return false;
+//
+//    }
 }

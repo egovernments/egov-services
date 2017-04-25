@@ -53,7 +53,7 @@ public class ComplaintType extends AbstractAuditable {
 
 	private String keywords;
 
-	private String attributes;
+//	private String attributes;
 	
 	@Column(name = "tenantid")
 	private String tenantId;

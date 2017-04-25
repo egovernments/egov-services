@@ -79,7 +79,7 @@ public class EmployeeDocumentsRepository {
 			+ " WHERE employeeId = ? AND tenantId = ? ";
 	
 	// select document, referencetype, employeeid for given set of document urls
-	public static final String SELECT_BY_TENANTID_QUERY = "SELECT"
+	public static final String SELECT_BY_DOCUMENTS_QUERY = "SELECT"
 			+ " document, employeeId, referenceType, referenceId FROM egeis_employeeDocuments"
 			+ " WHERE document IN (:document) AND tenantId = :tenantId";
 	
@@ -150,14 +150,14 @@ public class EmployeeDocumentsRepository {
 		}
 	}
 	
-	public List<EmployeeDocument> findByTenantID(List<String> inputDocuments, String tenantId) {
+	public List<EmployeeDocument> findByDocuments(List<String> inputDocuments, String tenantId) {
 		
 		Map<String, Object> namedParameters = new HashMap<>();
 		namedParameters.put("document", inputDocuments);
 		namedParameters.put("tenantId", tenantId);
 		
 		try {
-			return namedParameterJdbcTemplate.query(SELECT_BY_TENANTID_QUERY, namedParameters, employeeDocumentsUpdateTableRowMapper);
+			return namedParameterJdbcTemplate.query(SELECT_BY_DOCUMENTS_QUERY, namedParameters, employeeDocumentsUpdateTableRowMapper);
 		} catch (EmptyResultDataAccessException e) {
 			return null;
 		}

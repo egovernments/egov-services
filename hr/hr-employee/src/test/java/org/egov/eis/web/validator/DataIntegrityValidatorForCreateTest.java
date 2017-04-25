@@ -82,7 +82,7 @@ public class DataIntegrityValidatorForCreateTest {
 		EmployeeDocument ed1 = EmployeeDocument.builder().id(100L).document("three")
 				.referenceType(EntityType.EMPLOYEE_HEADER.getValue()).build();
 		documentsFromDb.add(ed1);
-		when(employeeDocumentsRepository.findByTenantID(any(), anyString()))
+		when(employeeDocumentsRepository.findByDocuments(any(), anyString()))
 		.thenReturn(documentsFromDb);
 		
 		// documentsin db has duplicates and hance last argument is false
@@ -95,7 +95,7 @@ public class DataIntegrityValidatorForCreateTest {
 		EmployeeDocument ed1 = EmployeeDocument.builder().id(100L).document("three")
 				.referenceType(EntityType.EDUCATION.getValue()).build();
 		documentsFromDb.add(ed1);
-		when(employeeDocumentsRepository.findByTenantID(any(), anyString()))
+		when(employeeDocumentsRepository.findByDocuments(any(), anyString()))
 		.thenReturn(documentsFromDb);
 		
 		// documentsin db has duplicates and hance last argument is false

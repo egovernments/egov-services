@@ -31,114 +31,115 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/chartofaccounts")  
+@RequestMapping("/chartofaccounts")
 public class ChartOfAccountController {
-	@Autowired
-	private ChartOfAccountService  chartOfAccountService;
+    @Autowired
+    private ChartOfAccountService chartOfAccountService;
 
-	@PostMapping("/_create")
-	@ResponseStatus(HttpStatus.CREATED)
-	public  ChartOfAccountContractResponse create(@RequestBody @Valid ChartOfAccountContractRequest chartOfAccountContractRequest, BindingResult errors) {
-		ModelMapper modelMapper=new ModelMapper();
-		chartOfAccountService.validate(chartOfAccountContractRequest,"create",errors);
-		if (errors.hasErrors()) {
-		  throw	new CustomBindException(errors);
-		}
-		chartOfAccountService.fetchRelatedContracts(chartOfAccountContractRequest);
-		ChartOfAccountContractResponse chartOfAccountContractResponse = new ChartOfAccountContractResponse();
-		chartOfAccountContractResponse.setChartOfAccounts(new ArrayList<ChartOfAccountContract>());
-		for(ChartOfAccountContract chartOfAccountContract:chartOfAccountContractRequest.getChartOfAccounts())
-		{
-		
-		ChartOfAccount	chartOfAccountEntity=	modelMapper.map(chartOfAccountContract, ChartOfAccount.class);
-		chartOfAccountEntity = chartOfAccountService.create(chartOfAccountEntity);
-		ChartOfAccountContract resp=modelMapper.map(chartOfAccountEntity, ChartOfAccountContract.class);
-		chartOfAccountContract.setId(chartOfAccountEntity.getId());
-		chartOfAccountContractResponse.getChartOfAccounts().add(resp);
-		}
+    @PostMapping("/_create")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ChartOfAccountContractResponse create(@RequestBody @Valid ChartOfAccountContractRequest chartOfAccountContractRequest,
+            BindingResult errors) {
+        ModelMapper modelMapper = new ModelMapper();
+        chartOfAccountService.validate(chartOfAccountContractRequest, "create", errors);
+        if (errors.hasErrors()) {
+            throw new CustomBindException(errors);
+        }
+        chartOfAccountService.fetchRelatedContracts(chartOfAccountContractRequest);
+        ChartOfAccountContractResponse chartOfAccountContractResponse = new ChartOfAccountContractResponse();
+        chartOfAccountContractResponse.setChartOfAccounts(new ArrayList<ChartOfAccountContract>());
+        for (ChartOfAccountContract chartOfAccountContract : chartOfAccountContractRequest.getChartOfAccounts()) {
 
-		chartOfAccountContractResponse.setResponseInfo(getResponseInfo(chartOfAccountContractRequest.getRequestInfo()));
-		 
-		return chartOfAccountContractResponse;
-	}
+            ChartOfAccount chartOfAccountEntity = modelMapper.map(chartOfAccountContract, ChartOfAccount.class);
+            chartOfAccountEntity = chartOfAccountService.create(chartOfAccountEntity);
+            ChartOfAccountContract resp = modelMapper.map(chartOfAccountEntity, ChartOfAccountContract.class);
+            chartOfAccountContract.setId(chartOfAccountEntity.getId());
+            chartOfAccountContractResponse.getChartOfAccounts().add(resp);
+        }
 
-	@PostMapping(value = "/{uniqueId}/_update")
-	@ResponseStatus(HttpStatus.OK)
-	public ChartOfAccountContractResponse update(@RequestBody @Valid ChartOfAccountContractRequest chartOfAccountContractRequest, BindingResult errors,
-			@PathVariable Long uniqueId) {
-		
-		chartOfAccountService.validate(chartOfAccountContractRequest,"update",errors);
-		
-		if (errors.hasErrors()) {
-			  throw	new CustomBindException(errors);
-			}
-		chartOfAccountService.fetchRelatedContracts(chartOfAccountContractRequest);
-		ChartOfAccount chartOfAccountFromDb = chartOfAccountService.findOne(uniqueId);
-		
-		ChartOfAccountContract chartOfAccount = chartOfAccountContractRequest.getChartOfAccount();
-		//ignoring internally passed id if the put has id in url
-	        chartOfAccount.setId(uniqueId);
-		ModelMapper model=new ModelMapper();
-	 	model.map(chartOfAccount, chartOfAccountFromDb);
-		chartOfAccountFromDb = chartOfAccountService.update(chartOfAccountFromDb);
-		ChartOfAccountContractResponse chartOfAccountContractResponse = new ChartOfAccountContractResponse();
-		chartOfAccountContractResponse.setChartOfAccount(chartOfAccount);  
-		chartOfAccountContractResponse.setResponseInfo(getResponseInfo(chartOfAccountContractRequest.getRequestInfo()));
-		chartOfAccountContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
-		return chartOfAccountContractResponse;
-	}
-	
-	@GetMapping(value = "/{uniqueId}")
-	@ResponseStatus(HttpStatus.OK)
-	public ChartOfAccountContractResponse view(@ModelAttribute ChartOfAccountContractRequest chartOfAccountContractRequest, BindingResult errors,
-			@PathVariable Long uniqueId) {
-		chartOfAccountService.validate(chartOfAccountContractRequest,"view",errors);
-		if (errors.hasErrors()) {
-			  throw	new CustomBindException(errors);
-			}
-		chartOfAccountService.fetchRelatedContracts(chartOfAccountContractRequest);
-		RequestInfo requestInfo = chartOfAccountContractRequest.getRequestInfo();
-		ChartOfAccount chartOfAccountFromDb = chartOfAccountService.findOne(uniqueId);
-		ChartOfAccountContract chartOfAccount = chartOfAccountContractRequest.getChartOfAccount();
-		
-		ModelMapper model=new ModelMapper();
-	 	model.map(chartOfAccountFromDb,chartOfAccount );
-		
-		ChartOfAccountContractResponse chartOfAccountContractResponse = new ChartOfAccountContractResponse();
-		chartOfAccountContractResponse.setChartOfAccount(chartOfAccount);  
-		chartOfAccountContractResponse.setResponseInfo(getResponseInfo(chartOfAccountContractRequest.getRequestInfo()));
-		chartOfAccountContractResponse.getResponseInfo().setStatus(HttpStatus.CREATED.toString());
-		return chartOfAccountContractResponse ;
-	}
-	
-	@PutMapping
-	@ResponseStatus(HttpStatus.OK)
-	public ChartOfAccountContractResponse updateAll(@RequestBody @Valid ChartOfAccountContractRequest chartOfAccountContractRequest, BindingResult errors) {
-		chartOfAccountService.validate(chartOfAccountContractRequest,"updateAll",errors);
-		if (errors.hasErrors()) {
-			  throw	new CustomBindException(errors);
-			}
-		chartOfAccountService.fetchRelatedContracts(chartOfAccountContractRequest);		
- 
-		ChartOfAccountContractResponse chartOfAccountContractResponse =new  ChartOfAccountContractResponse();
-		chartOfAccountContractResponse.setChartOfAccounts(new ArrayList<ChartOfAccountContract>());
-		for(ChartOfAccountContract chartOfAccountContract:chartOfAccountContractRequest.getChartOfAccounts())
-		{
-		ChartOfAccount chartOfAccountFromDb = chartOfAccountService.findOne(chartOfAccountContract.getId());
-		
-		ModelMapper model=new ModelMapper();
-	 	model.map(chartOfAccountContract, chartOfAccountFromDb);
-		chartOfAccountFromDb = chartOfAccountService.update(chartOfAccountFromDb);
-		model.map(chartOfAccountFromDb,chartOfAccountContract);
-		chartOfAccountContractResponse.getChartOfAccounts().add(chartOfAccountContract);  
-		}
+        chartOfAccountContractResponse.setResponseInfo(getResponseInfo(chartOfAccountContractRequest.getRequestInfo()));
 
-		chartOfAccountContractResponse.setResponseInfo(getResponseInfo(chartOfAccountContractRequest.getRequestInfo()));
-		chartOfAccountContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
-		
-		return chartOfAccountContractResponse;
-	}
-	
+        return chartOfAccountContractResponse;
+    }
+
+    @PostMapping(value = "/{uniqueId}/_update")
+    @ResponseStatus(HttpStatus.OK)
+    public ChartOfAccountContractResponse update(@RequestBody @Valid ChartOfAccountContractRequest chartOfAccountContractRequest,
+            BindingResult errors,
+            @PathVariable Long uniqueId) {
+
+        chartOfAccountService.validate(chartOfAccountContractRequest, "update", errors);
+
+        if (errors.hasErrors()) {
+            throw new CustomBindException(errors);
+        }
+        chartOfAccountService.fetchRelatedContracts(chartOfAccountContractRequest);
+        ChartOfAccount chartOfAccountFromDb = chartOfAccountService.findOne(uniqueId);
+
+        ChartOfAccountContract chartOfAccount = chartOfAccountContractRequest.getChartOfAccount();
+        // ignoring internally passed id if the put has id in url
+        chartOfAccount.setId(uniqueId);
+        ModelMapper model = new ModelMapper();
+        model.map(chartOfAccount, chartOfAccountFromDb);
+        chartOfAccountFromDb = chartOfAccountService.update(chartOfAccountFromDb);
+        ChartOfAccountContractResponse chartOfAccountContractResponse = new ChartOfAccountContractResponse();
+        chartOfAccountContractResponse.setChartOfAccount(chartOfAccount);
+        chartOfAccountContractResponse.setResponseInfo(getResponseInfo(chartOfAccountContractRequest.getRequestInfo()));
+        chartOfAccountContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
+        return chartOfAccountContractResponse;
+    }
+
+    @GetMapping(value = "/{uniqueId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ChartOfAccountContractResponse view(@ModelAttribute ChartOfAccountContractRequest chartOfAccountContractRequest,
+            BindingResult errors,
+            @PathVariable Long uniqueId) {
+        chartOfAccountService.validate(chartOfAccountContractRequest, "view", errors);
+        if (errors.hasErrors()) {
+            throw new CustomBindException(errors);
+        }
+        chartOfAccountService.fetchRelatedContracts(chartOfAccountContractRequest);
+        RequestInfo requestInfo = chartOfAccountContractRequest.getRequestInfo();
+        ChartOfAccount chartOfAccountFromDb = chartOfAccountService.findOne(uniqueId);
+        ChartOfAccountContract chartOfAccount = chartOfAccountContractRequest.getChartOfAccount();
+
+        ModelMapper model = new ModelMapper();
+        model.map(chartOfAccountFromDb, chartOfAccount);
+
+        ChartOfAccountContractResponse chartOfAccountContractResponse = new ChartOfAccountContractResponse();
+        chartOfAccountContractResponse.setChartOfAccount(chartOfAccount);
+        chartOfAccountContractResponse.setResponseInfo(getResponseInfo(chartOfAccountContractRequest.getRequestInfo()));
+        chartOfAccountContractResponse.getResponseInfo().setStatus(HttpStatus.CREATED.toString());
+        return chartOfAccountContractResponse;
+    }
+
+    @PutMapping
+    @ResponseStatus(HttpStatus.OK)
+    public ChartOfAccountContractResponse updateAll(
+            @RequestBody @Valid ChartOfAccountContractRequest chartOfAccountContractRequest, BindingResult errors) {
+        chartOfAccountService.validate(chartOfAccountContractRequest, "updateAll", errors);
+        if (errors.hasErrors()) {
+            throw new CustomBindException(errors);
+        }
+        chartOfAccountService.fetchRelatedContracts(chartOfAccountContractRequest);
+
+        ChartOfAccountContractResponse chartOfAccountContractResponse = new ChartOfAccountContractResponse();
+        chartOfAccountContractResponse.setChartOfAccounts(new ArrayList<ChartOfAccountContract>());
+        for (ChartOfAccountContract chartOfAccountContract : chartOfAccountContractRequest.getChartOfAccounts()) {
+            ChartOfAccount chartOfAccountFromDb = chartOfAccountService.findOne(chartOfAccountContract.getId());
+
+            ModelMapper model = new ModelMapper();
+            model.map(chartOfAccountContract, chartOfAccountFromDb);
+            chartOfAccountFromDb = chartOfAccountService.update(chartOfAccountFromDb);
+            model.map(chartOfAccountFromDb, chartOfAccountContract);
+            chartOfAccountContractResponse.getChartOfAccounts().add(chartOfAccountContract);
+        }
+
+        chartOfAccountContractResponse.setResponseInfo(getResponseInfo(chartOfAccountContractRequest.getRequestInfo()));
+        chartOfAccountContractResponse.getResponseInfo().setStatus(HttpStatus.OK.toString());
+
+        return chartOfAccountContractResponse;
+    }
 
     @PostMapping("/_search")
     @ResponseBody
@@ -152,7 +153,8 @@ public class ChartOfAccountController {
         if (errors.hasErrors()) {
             throw new CustomBindException(errors);
         }
-//        chartOfAccountService.fetchRelatedContracts(chartOfAccountContractRequest);
+        String tenantId = requestInfo.getTenantId();
+        // chartOfAccountService.fetchRelatedContracts(chartOfAccountContractRequest);
         ChartOfAccountContractResponse chartOfAccountContractResponse = new ChartOfAccountContractResponse();
         chartOfAccountContractResponse.setChartOfAccounts(new ArrayList<ChartOfAccountContract>());
         chartOfAccountContractResponse.setPage(new Pagination());
@@ -163,6 +165,11 @@ public class ChartOfAccountController {
         ChartOfAccountContract chartOfAccountContract = null;
         for (ChartOfAccount b : allChartOfAccounts) {
             chartOfAccountContract = new ChartOfAccountContract();
+            if (b.getParentId() != null) {
+                if (!b.getParentId().getTenantId().equalsIgnoreCase(tenantId)) {
+                    continue;
+                }
+            }
             model.map(b, chartOfAccountContract);
             chartOfAccountContractResponse.getChartOfAccounts().add(chartOfAccountContract);
         }
@@ -172,10 +179,9 @@ public class ChartOfAccountController {
         return chartOfAccountContractResponse;
     }
 
-	
-	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
+    private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
         new ResponseInfo();
-		return ResponseInfo.builder()
+        return ResponseInfo.builder()
                 .apiId(requestInfo.getApiId())
                 .ver(requestInfo.getVer())
                 .ts(new Date())

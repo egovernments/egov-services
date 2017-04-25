@@ -36,7 +36,7 @@ public class BoundaryServiceTest {
 
     @Test
     public void TestShouldFetchBoundariesForBoundarytypeAndTenantId() {
-        when(boundaryRepository.findBoundariesByBoundaryType_IdAndTenantId(7L, "tenantId"))
+        when(boundaryRepository.findBoundariesByBoundaryType_IdAndBoundaryType_TenantIdAndTenantId(7L, "tenantId","tenantId"))
                 .thenReturn(getExpectedBoundaryDetails());
 
         List<Boundary> boundaryList = boundaryService.getAllBoundariesByBoundaryTypeIdAndTenantId(7L, "tenantId");

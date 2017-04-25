@@ -3,8 +3,8 @@
  INSERT into egpgr_complainttype_category (id,name,description,version,tenantid) values(8,'Town_Planning','Town_Planning',0,'ap.public');
 
  INSERT into egpgr_complainttype (id,name,department,version,code,isactive,description,createddate,lastmodifieddate,createdby,
-lastmodifiedby,slahours,hasfinancialimpact,attributes,category,metadata,type,keywords,tenantid)values(78,'Absenteesim of door_to_door garbage collector'
-,18,0,'AODTDGCC','t','garbage collector absent','2010-01-01 00:00:00','2015-01-01 00:00:00',1,1,24,'f',null,8,'t','realtime',null,'ap.public');
+lastmodifiedby,slahours,hasfinancialimpact,category,metadata,type,keywords,tenantid)values(78,'Absenteesim of door_to_door garbage collector'
+,18,0,'AODTDGCC','t','garbage collector absent','2010-01-01 00:00:00','2015-01-01 00:00:00',1,1,24,'f',8,'t','realtime',null,'ap.public');
  
 INSERT into egpgr_complaint(id,crn,complaintType,complainant,assignee,location,childlocation,
 status,details,landmarkDetails,receivingMode,receivingCenter,lng,lat,escalation_date,department,
@@ -17,8 +17,8 @@ INSERT into egpgr_complainant (id,email,mobile,name,userdetail,address,version,t
 INSERT into egpgr_complainttype_category (id,name,description,version,tenantid) values(9,'Admin','Administration',0,'ap.public');
 
 INSERT into egpgr_complainttype (id,name,department,version,code,isactive,description,createddate,lastmodifieddate,createdby,
-lastmodifiedby,slahours,hasfinancialimpact,attributes,category,metadata,type,keywords,tenantid)values(79,'Broken_Bin'
-,19,0,'BB','t','bins are broken','2011-01-01 00:00:00','2016-01-01 00:00:00',1,1,28,'f',null,9,'t','realtime',null,'ap.public');
+lastmodifiedby,slahours,hasfinancialimpact,category,metadata,type,keywords,tenantid)values(79,'Broken_Bin'
+,19,0,'BB','t','bins are broken','2011-01-01 00:00:00','2016-01-01 00:00:00',1,1,28,'f',9,'t','realtime',null,'ap.public');
 
 INSERT into egpgr_complaint(id,crn,complaintType,complainant,assignee,location,childlocation,
 status,details,landmarkDetails,receivingMode,receivingCenter,lng,lat,escalation_date,department,
@@ -31,8 +31,8 @@ citizenFeedback,latlngAddress,crossHierarchyId,state_id,createdby,createddate,la
  INSERT into egpgr_complainttype_category (id,name,description,version,tenantid) values(10,'Default','Default',0,'ap.public');
 
  INSERT into egpgr_complainttype (id,name,department,version,code,isactive,description,createddate,lastmodifieddate,createdby,
-lastmodifiedby,slahours,hasfinancialimpact,attributes,category,metadata,type,keywords,tenantid)values(80,'Absenteesim_of_sweepers'
-,20,0,'AOSS','t','sweepers not present','2010-01-01 00:00:00','2014-01-01 00:00:00',1,1,20,'f',null,10,'t','realtime',null,'ap.public');
+lastmodifiedby,slahours,hasfinancialimpact,category,metadata,type,keywords,tenantid)values(80,'Absenteesim_of_sweepers'
+,20,0,'AOSS','t','sweepers not present','2010-01-01 00:00:00','2014-01-01 00:00:00',1,1,20,'f',10,'t','realtime',null,'ap.public');
 
 INSERT into egpgr_complaint(id,crn,complaintType,complainant,assignee,location,childlocation,
 status,details,landmarkDetails,receivingMode,receivingCenter,lng,lat,escalation_date,department,

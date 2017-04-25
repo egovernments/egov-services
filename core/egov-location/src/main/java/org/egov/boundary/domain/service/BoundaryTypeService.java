@@ -105,7 +105,7 @@ public class BoundaryTypeService {
 
 	public List<BoundaryType> getAllBoundarTypesByHierarchyTypeIdAndTenantName(final String hierarchyTypeName,
 			final String tenantId) {
-		return boundaryTypeRepository.findByHierarchyTypeIdAndTenantName(hierarchyTypeName, tenantId);
+		return boundaryTypeRepository.findByHierarchyTypeIdAndTenantName(hierarchyTypeName, tenantId,tenantId);
 	}
 
 	public BoundaryType getBoundaryTypeByParent(final Long parentId) {

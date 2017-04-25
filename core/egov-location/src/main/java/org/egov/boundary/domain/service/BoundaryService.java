@@ -120,12 +120,12 @@ public class BoundaryService {
 	}
 
 	public List<Boundary> getAllBoundariesByBoundaryTypeIdAndTenantId(final Long boundaryTypeId,final String tenantId) {
-		return boundaryRepository.findBoundariesByBoundaryType_IdAndTenantId(boundaryTypeId,tenantId);
+		return boundaryRepository.findBoundariesByBoundaryType_IdAndBoundaryType_TenantIdAndTenantId(boundaryTypeId,tenantId,tenantId);
 	}
 
 	public List<Boundary> getPageOfBoundaries(final Long boundaryTypeId,final String tenantId) {
 
-		return boundaryRepository.findBoundariesByBoundaryType_IdAndTenantId(boundaryTypeId,tenantId);
+		return boundaryRepository.findBoundariesByBoundaryType_IdAndBoundaryType_TenantIdAndTenantId(boundaryTypeId,tenantId,tenantId);
 	}
 
 	public Boundary getBoundaryByTypeAndNo(final BoundaryType boundaryType, final Long boundaryNum) {

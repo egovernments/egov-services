@@ -218,7 +218,7 @@ class ApplyLeave extends React.Component {
       try{
       var leaveType = e.target.value;
       var asOnDate = _this.state.leaveSet.toDate;
-      var employeeid =getUrlVars()["id"];
+      var employeeid = getUrlVars()["id"] || _this.state.leaveSet.employee;
         var object =  commonApiPost("hr-leave","eligibleleaves","_search",{leaveType,tenantId,asOnDate,employeeid}).responseJSON["EligibleLeave"][0];
           this.setState({
             leaveSet:{

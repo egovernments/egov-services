@@ -112,7 +112,7 @@ public class AssignmentRowMapper implements ResultSetExtractor<List<Assignment>>
 				hodDepartmentsList = new ArrayList<HODDepartment>();
 				assignment.setHod(hodDepartmentsList);
 			}
-			if ((Long) rs.getObject("hod_id") != 0) {
+			if ((Long) rs.getObject("hod_id") != null) {
 				HODDepartment hodDepartment = new HODDepartment();
 				hodDepartment.setId((Long) rs.getObject("hod_id"));
 				hodDepartment.setDepartment((Long) rs.getObject("hod_departmentId"));

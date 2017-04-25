@@ -148,7 +148,7 @@ public class EmployeeInfoRowMapper implements ResultSetExtractor<List<EmployeeIn
 			Map<Long, HODDepartment> hodDeptMap = assignmentInfo.getHodDeptMap();
 			Long hodId = (Long) rs.getObject("hod_id");
 
-			if ((Long) rs.getObject("hod_id") != 0) {
+			if ((Long) rs.getObject("hod_id") != null) {
 				HODDepartment hodDepartment = hodDeptMap.get(hodId);
 				if (hodDepartment == null) {
 					hodDepartment = new HODDepartment();
@@ -161,7 +161,7 @@ public class EmployeeInfoRowMapper implements ResultSetExtractor<List<EmployeeIn
 			List<Long> jurisdictionIds = empInfo.getJurisdictionIds();
 			Long jurisdictionId = (Long) rs.getObject("ej_jurisdictionId");
 
-			if (jurisdictionId != null && jurisdictionId != 0 && jurisdictionIds != null && jurisdictionIds.size() > 0
+			if (jurisdictionId != null && jurisdictionIds != null && jurisdictionIds.size() > 0
 					&& !jurisdictionIds.contains(jurisdictionId))
 				jurisdictionIds.add(jurisdictionId);
 

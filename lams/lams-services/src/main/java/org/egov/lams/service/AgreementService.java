@@ -184,7 +184,7 @@ public class AgreementService {
 		PositionResponse positionResponse = null;
 		String positionUrl = propertiesManager.getEmployeeServiceHostName() + propertiesManager
 				.getEmployeeServiceSearchPath().replace(propertiesManager.getEmployeeServiceSearchPathVariable(),
-						requestInfo.getUserInfo().getId().toString())+"?tenantID="+tenantId;
+						requestInfo.getUserInfo().getId().toString())+"?tenantId="+tenantId;
 		
 		logger.info("the request url to position get call :: " + positionUrl);
 

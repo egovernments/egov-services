@@ -1566,8 +1566,7 @@ function updateTable(tableName, modalName, object) {
         $(tableName).append(`<td data-label=${key}>
                                 ${employee[object][i][key].length>0?"Yes":"No"}
                           </td>`)
-      } else if(key!="id" && key!="createdBy" && key!="createdDate" && key!="lastModifiedBy" && key!="lastModifiedDate" && key!="tenantId")
-      {
+      } else if (key != "id" && key != "createdBy" && key != "createdDate" && key != "lastModifiedBy" && key != "lastModifiedDate" && key != "tenantId") {
         if (key == "documents") {
           // var name="";
           // for (var i = 0; i < employee[object][i][key].length; i++) {
@@ -1592,8 +1591,7 @@ function updateTable(tableName, modalName, object) {
                       <button type="button" onclick="markEditIndex(${i},'${modalName}','${object}')" class="btn btn-default btn-action"><span class="glyphicon glyphicon-pencil"></span></button>
                       <button type="button" onclick="commonDeleteFunction('${tableName}','${modalName}','${object}',${i})" class="btn btn-default btn-action"><span class="glyphicon glyphicon-trash"></span></button>
                     </td>`);
-    }
-    else {
+    } else {
       $(tableName).append(`<td data-label="Action">
                       NA
                     </td>`);
@@ -1886,7 +1884,7 @@ $("#createEmployeeForm").validate({
           //Handle error
         } else {
           var response = $.ajax({
-            url: baseUrl + "/hr-employee/employees/"+((getUrlVars()["type"]=="update")?"_update":"_create")+"?tenantId=" + tenantId,
+            url: baseUrl + "/hr-employee/employees/" + ((getUrlVars()["type"] == "update") ? "_update" : "_create") + "?tenantId=" + tenantId,
             type: 'POST',
             dataType: 'json',
             data: JSON.stringify({
@@ -1901,7 +1899,7 @@ $("#createEmployeeForm").validate({
           });
 
           if (response["status"] === 200) {
-            showSuccess("Employee" +getUrlVars()["type"]=="update"?"update":"add"+"ed successfully.");
+            showSuccess("Employee" + getUrlVars()["type"] == "update" ? "update" : "add" + "ed successfully.");
             window.location.href = "app/hr/common/employee-search.html";
           } else {
             alert(response["statusText"]);

@@ -58,5 +58,6 @@ public class BillInfo {
 	private String emailId = null;
 	private String consumerType = null;
 	private Double totalAmount = null;
+	private String tenantId = null;
 	private List<BillDetailInfo> billDetailInfos = new ArrayList<BillDetailInfo>();
 }

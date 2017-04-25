@@ -21,14 +21,14 @@ public class BillService {
 	@Autowired
 	private BillTypeRepository billTypeRepository;
 
-	public EgBill createBill(Long demandId, BillInfo billInfo,String tenantId) {
+	public EgBill createBill(Long demandId, BillInfo billInfo) {
 		EgBill egBill = new EgBill(billInfo);
 		List<EgBillDetails> billDetails = new ArrayList<EgBillDetails>();
 		egBill.setEgDemand(demandId);
 		egBill.setModule(billInfo.getModuleName());
 		egBill.setEgBillType(billTypeRepository.findByName(billInfo.getBillType()));
 		egBill.setUserId(1l);
-		egBill.setTenantId(tenantId);
+		egBill.setTenantId(billInfo.getTenantId());
 		for (BillDetailInfo billDetailInfo : billInfo.getBillDetailInfos()) {
 			EgBillDetails egBillDetail = new EgBillDetails(billDetailInfo);
 			egBillDetail.setEgBill(egBill);

@@ -40,25 +40,25 @@ public class AgreementService {
 
 	@Autowired
 	private AgreementRepository agreementRepository;
-	
+
 	@Autowired
 	private RestTemplate restTemplate;
-	
+
 	@Autowired
 	private LamsConfigurationService lamsConfigurationService;
-	
+
 	@Autowired
 	private AgreementProducer agreementProducer;
-	
+
 	@Autowired
 	private DemandRepository demandRepository;
-	
+
 	@Autowired
 	private AcknowledgementNumberService acknowledgementNumberService;
-	
+
 	@Autowired
 	private AgreementNumberService agreementNumberService;
-	
+
 	@Autowired
 	private PropertiesManager propertiesManager;
 
@@ -73,7 +73,7 @@ public class AgreementService {
 				&& (agreementCriteria.getFromDate() == null && agreementCriteria.getToDate() == null)
 				&& agreementCriteria.getTenderNumber() == null && agreementCriteria.getTinNumber() == null
 				&& agreementCriteria.getTradelicenseNumber() == null && agreementCriteria.getAsset() == null
-				&& agreementCriteria.getAllottee() == null  && agreementCriteria.getTenantId() == null;
+				&& agreementCriteria.getAllottee() == null && agreementCriteria.getTenantId() == null;
 
 		boolean isAllotteeNull = agreementCriteria.getAllotteeName() == null
 				&& agreementCriteria.getMobileNumber() == null;
@@ -86,7 +86,7 @@ public class AgreementService {
 		if (!isAgreementNull && !isAssetNull && !isAllotteeNull) {
 			logger.info("agreementRepository.findByAllotee");
 			return agreementRepository.findByAllotee(agreementCriteria);
-			
+
 		} else if (!isAgreementNull && isAssetNull && !isAllotteeNull) {
 			logger.info("agreementRepository.findByAllotee");
 			return agreementRepository.findByAgreementAndAllotee(agreementCriteria);
@@ -114,57 +114,58 @@ public class AgreementService {
 			return agreementRepository.findByAgreement(agreementCriteria);
 		}
 	}
-	
+
 	/*
 	 * This method is used to create new agreement
 	 * 
 	 * @return Agreement, return the agreement details with current status
 	 * 
-	 * @param agreement, hold agreement details 
+	 * @param agreement, hold agreement details
 	 * 
-	 * */
-	
-	public Agreement createAgreement(AgreementRequest agreementRequest){
-		
+	 */
+
+	public Agreement createAgreement(AgreementRequest agreementRequest) {
+
 		Agreement agreement = agreementRequest.getAgreement();
-		logger.info("createAgreement service::"+agreement);
-		
+		logger.info("createAgreement service::" + agreement);
+
 		ObjectMapper mapper = new ObjectMapper();
 		String agreementValue = null;
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(agreement.getCommencementDate());
-		calendar.add(Calendar.YEAR,agreement.getTimePeriod().intValue());
+		calendar.add(Calendar.YEAR, agreement.getTimePeriod().intValue());
 		Date closeDate = calendar.getTime();
 		agreement.setCloseDate(closeDate);
 		logger.info("The closeDate calculated is " + closeDate + "from commencementDate of "
-				+ agreement.getCommencementDate() + "by adding with no of years " + agreement.getTimePeriod());	
-		
+				+ agreement.getCommencementDate() + "by adding with no of years " + agreement.getTimePeriod());
+
 		agreement.setStatus(Status.WORKFLOW);
 		getPositions(agreementRequest);
-		//FIXME get confirmed with ramki and ghanshyam2  please uncomment the getpositions
+		// FIXME get confirmed with ramki and ghanshyam
+
 		List<DemandReason> demandReasons = demandRepository.getDemandReason(agreementRequest);
-		if(demandReasons.isEmpty())
+		if (demandReasons.isEmpty())
 			throw new RuntimeException("No demand reason found for given criteria");
-		
+
 		List<Demand> demands = demandRepository.getDemandList(agreementRequest, demandReasons);
-		DemandResponse demandResponse = demandRepository.createDemand(demands,agreementRequest.getRequestInfo());
+		DemandResponse demandResponse = demandRepository.createDemand(demands, agreementRequest.getRequestInfo());
 		List<String> demandIdList = demandResponse.getDemands().stream().map(demand -> demand.getId())
 				.collect(Collectors.toList());
 		agreement.setDemands(demandIdList);
 		agreement.setAcknowledgementNumber(acknowledgementNumberService.generateAcknowledgeNumber());
 		logger.info(agreement.getAcknowledgementNumber());
 		try {
-				agreementValue = mapper.writeValueAsString(agreementRequest);
-				logger.info("agreementValue::"+agreementValue);
+			agreementValue = mapper.writeValueAsString(agreementRequest);
+			logger.info("agreementValue::" + agreementValue);
 		} catch (JsonProcessingException JsonProcessingException) {
-				logger.info("AgreementService : "+JsonProcessingException.getMessage(),JsonProcessingException);
-				throw new RuntimeException(JsonProcessingException.getMessage());
+			logger.info("AgreementService : " + JsonProcessingException.getMessage(), JsonProcessingException);
+			throw new RuntimeException(JsonProcessingException.getMessage());
 		}
 		try {
-				agreementProducer.sendMessage(propertiesManager.getStartWorkflowTopic(), "save-agreement", agreementValue);
-		}catch(Exception exception){
-			logger.info("AgreementService : "+exception.getMessage(),exception);
-				throw exception;
+			agreementProducer.sendMessage(propertiesManager.getStartWorkflowTopic(), "save-agreement", agreementValue);
+		} catch (Exception exception) {
+			logger.info("AgreementService : " + exception.getMessage(), exception);
+			throw exception;
 		}
 		return agreement;
 	}
@@ -174,7 +175,6 @@ public class AgreementService {
 		RequestInfo requestInfo = agreementRequest.getRequestInfo();
 		Agreement agreement = agreementRequest.getAgreement();
 		WorkFlowDetails workFlowDetails = agreement.getWorkflowDetails();
-		agreement.setWorkflowDetails(workFlowDetails);
 
 		PositionGetRequest positionGetRequest = new PositionGetRequest();
 
@@ -182,8 +182,9 @@ public class AgreementService {
 		String positionUrl = propertiesManager.getEmployeeServiceHostName() + propertiesManager
 				.getEmployeeServiceSearchPath().replace(propertiesManager.getEmployeeServiceSearchPathVariable(),
 						requestInfo.getUserInfo().getId().toString());
-		
+
 		logger.info("the request object to position get call :: " + positionGetRequest);
+		logger.info("the request url to position get call :: " + positionUrl);
 
 		// FIXME move the resttemplate to positionrepository later
 		try {
@@ -197,6 +198,8 @@ public class AgreementService {
 		logger.info("the response form position get call :: " + positionResponse);
 
 		List<Position> positionList = positionResponse.getPosition();
+		if (positionList == null || positionList.isEmpty())
+			throw new RuntimeException("the respective user has no positions");
 		Map<String, Long> positionMap = new HashMap<>();
 
 		for (Position position : positionList) {
@@ -209,11 +212,12 @@ public class AgreementService {
 		lamsConfigurationGetRequest.setName(keyName);
 		List<String> assistantDesignations = lamsConfigurationService.getLamsConfigurations(lamsConfigurationGetRequest)
 				.get(keyName);
-		
+
 		for (String desginationName : assistantDesignations) {
-			if(positionMap.containsKey(desginationName)){
+			if (positionMap.containsKey(desginationName)) {
 				workFlowDetails.setInitiatorPosition(positionMap.get(desginationName));
-				logger.info(" the initiator name  :: "+desginationName+"the value for key" + workFlowDetails.getInitiatorPosition());
+				logger.info(" the initiator name  :: " + desginationName + "the value for key"
+						+ workFlowDetails.getInitiatorPosition());
 			}
 		}
 
@@ -227,7 +231,7 @@ public class AgreementService {
 	 * @return
 	 */
 	public Agreement updateAgreement(AgreementRequest agreementRequest) {
-		
+
 		Agreement agreement = agreementRequest.getAgreement();
 		WorkFlowDetails workFlowDetails = agreement.getWorkflowDetails();
 		logger.info("updateAgreement service::" + workFlowDetails);
@@ -235,8 +239,8 @@ public class AgreementService {
 		String agreementValue = null;
 
 		if (workFlowDetails != null) {
-			//FIXME approve and reject should come from 
-			logger.info("the workflow details status :: "+ workFlowDetails.getAction());
+			// FIXME approve and reject should come from
+			logger.info("the workflow details status :: " + workFlowDetails.getAction());
 			if ("Approve".equalsIgnoreCase(workFlowDetails.getAction())) {
 				agreement.setAgreementNumber(agreementNumberService.generateAgrementNumber());
 				logger.info("createAgreement service Agreement_No::" + agreement.getAgreementNumber());
@@ -248,7 +252,7 @@ public class AgreementService {
 				logger.info("createAgreement service Agreement_No::" + agreement.getStatus());
 			}
 		}
-		// TODO  FIXME put agreement number generator here and change
+		// TODO FIXME put agreement number generator here and change
 		try {
 			agreementValue = mapper.writeValueAsString(agreementRequest);
 			logger.info("agreementValue::" + agreementValue);

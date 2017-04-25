@@ -63,7 +63,6 @@ public class RegularisationTableRowMapper implements RowMapper<Regularisation> {
 		Regularisation regularisation = new Regularisation();
 		regularisation.setId(rs.getLong("id"));
 		regularisation.setDesignation(rs.getLong("designationid"));
-		regularisation.setDeclaredOn(rs.getDate("declaredon"));
 		regularisation.setOrderNo(rs.getString("orderno"));
 		regularisation.setRemarks(rs.getString("remarks"));
 		regularisation.setCreatedBy(rs.getLong("createdby"));
@@ -72,6 +71,8 @@ public class RegularisationTableRowMapper implements RowMapper<Regularisation> {
 		try {
 			Date date = isEmpty(rs.getDate("orderdate")) ? null : sdf.parse(sdf.format(rs.getDate("orderdate")));
 			regularisation.setOrderDate(date);
+			date = isEmpty(rs.getDate("declaredon")) ? null : sdf.parse(sdf.format(rs.getDate("declaredon")));
+			regularisation.setDeclaredOn(date);
 			date = isEmpty(rs.getDate("createdDate")) ? null : sdf.parse(sdf.format(rs.getDate("createdDate")));
 			regularisation.setCreatedDate(date);
 			date = isEmpty(rs.getDate("lastmodifieddate")) ? null

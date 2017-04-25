@@ -25,6 +25,7 @@ import org.egov.lams.web.contract.Position;
 import org.egov.lams.web.contract.PositionGetRequest;
 import org.egov.lams.web.contract.PositionResponse;
 import org.egov.lams.web.contract.RequestInfo;
+import org.egov.lams.web.contract.RequestInfoWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -175,20 +176,21 @@ public class AgreementService {
 		RequestInfo requestInfo = agreementRequest.getRequestInfo();
 		Agreement agreement = agreementRequest.getAgreement();
 		WorkFlowDetails workFlowDetails = agreement.getWorkflowDetails();
-
-		PositionGetRequest positionGetRequest = new PositionGetRequest();
+		
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(agreementRequest.getRequestInfo());
+		String tenantId = requestInfoWrapper.getRequestInfo().getUserInfo().getTenantId();
 
 		PositionResponse positionResponse = null;
 		String positionUrl = propertiesManager.getEmployeeServiceHostName() + propertiesManager
 				.getEmployeeServiceSearchPath().replace(propertiesManager.getEmployeeServiceSearchPathVariable(),
-						requestInfo.getUserInfo().getId().toString());
-
-		logger.info("the request object to position get call :: " + positionGetRequest);
+						requestInfo.getUserInfo().getId().toString())+"?tenantID="+tenantId;
+		
 		logger.info("the request url to position get call :: " + positionUrl);
 
 		// FIXME move the resttemplate to positionrepository later
 		try {
-			positionResponse = restTemplate.postForObject(positionUrl, positionGetRequest, PositionResponse.class);
+			positionResponse = restTemplate.postForObject(positionUrl, requestInfoWrapper, PositionResponse.class);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.info("the exception from poisition search :: " + e);

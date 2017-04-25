@@ -119,9 +119,9 @@ class AssetSearch extends React.Component {
     {
         if(list)
         {
-            return list.map((item)=>
+            return list.map((item, ind)=>
             {
-                return (<option key={item.id} value={item.id}>
+                return (<option key={ind} value={item.id}>
                         {item.name}
                   </option>)
             })

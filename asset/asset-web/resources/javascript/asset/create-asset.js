@@ -34,10 +34,10 @@ const makeAjaxUpload = function(file, cb) {
 const uploadFiles = function(body, cb) {
     if(body.Asset.properties && Object.keys(body.Asset.properties).length) {
         var counter1 = Object.keys(body.Asset.properties).length;
+        var breakout = 0;
         for(var key in body.Asset.properties) {
             if(body.Asset.properties[key].constructor == FileList) {
                 var counter = body.Asset.properties[key].length;
-                var breakout = 0;
                 for(let j=0; j<body.Asset.properties[key].length; j++) {
                     makeAjaxUpload(body.Asset.properties[key][j], function(err, res) {
                         if (breakout == 1)
@@ -192,7 +192,6 @@ class CreateAsset extends React.Component {
                     'auth-token' :authToken
                 }
             });
-
             if (response["status"] === 201 || response["status"] == 200 || response["status"] == 204) {
                 window.location.href=`app/asset/create-asset-ack.html?name=${tempInfo.name}&type=`;
             } else {

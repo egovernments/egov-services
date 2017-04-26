@@ -104,7 +104,8 @@ public class WorkflowMatrixImpl implements Workflow {
 		state.setNextAction(wfMatrix.getNextAction());
 		state.setType(processInstance.getBusinessKey());
 
-		final WorkflowTypes type = workflowTypeService.getWorkflowTypeByType(state.getType());
+		final WorkflowTypes type = workflowTypeService.getWorkflowTypeByTypeAndTenantId(state.getType(),
+				processInstanceRequest.getRequestInfo().getTenantId());
 		state.setMyLinkId(type.getLink());
 
 		state.setNatureOfTask(type.getDisplayName());
@@ -182,15 +183,18 @@ public class WorkflowMatrixImpl implements Workflow {
 				p.setId(ownerId);
 				task.setAssignee(p);
 			}
-			//below logic required to show the messages only....
-/*
-			final Attribute approverDesignationName = new Attribute();
-			approverDesignationName.setCode(owner.getDeptdesig().getDesignation().getName());
-			task.getAttributes().put("approverDesignationName", approverDesignationName);
-
-			final Attribute approverName = new Attribute();
-			approverName.setCode(getApproverName(owner));
-			task.getAttributes().put("approverName", approverName);*/
+			// below logic required to show the messages only....
+			/*
+			 * final Attribute approverDesignationName = new Attribute();
+			 * approverDesignationName.setCode(owner.getDeptdesig().
+			 * getDesignation().getName());
+			 * task.getAttributes().put("approverDesignationName",
+			 * approverDesignationName);
+			 * 
+			 * final Attribute approverName = new Attribute();
+			 * approverName.setCode(getApproverName(owner));
+			 * task.getAttributes().put("approverName", approverName);
+			 */
 			nextState = "Rejected";
 		}
 		if (task.getAction().equalsIgnoreCase(WorkflowConstants.ACTION_CANCEL)) {
@@ -325,8 +329,7 @@ public class WorkflowMatrixImpl implements Workflow {
 		final List<Task> tasks = new ArrayList<Task>();
 		final Long userId = taskRequest.getRequestInfo().getUserInfo().getId();
 		final List<String> types = workflowTypeService.getEnabledWorkflowType(false);
-		final List<Long> ownerIds = positionRepository
-				.getByEmployeeId(userId.toString(),taskRequest.getRequestInfo())
+		final List<Long> ownerIds = positionRepository.getByEmployeeId(userId.toString(), taskRequest.getRequestInfo())
 				.parallelStream().map(position -> position.getId()).collect(Collectors.toList());
 		List<State> states = new ArrayList<State>();
 		if (!types.isEmpty())

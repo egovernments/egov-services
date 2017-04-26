@@ -262,6 +262,7 @@ var employee = {
   test: [],
   user: {
     roles: [{
+      code: "EMPLOYEE",
       name: "EMPLOYEE",
       tenantId
     }],

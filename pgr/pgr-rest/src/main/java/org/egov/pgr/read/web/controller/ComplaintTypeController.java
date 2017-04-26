@@ -34,7 +34,8 @@ public class ComplaintTypeController {
 
     @PostMapping("/{serviceCode}")
     public ComplaintTypeResponse getComplaintTypes(@PathVariable(name = "serviceCode") String complaintTypeCode,
-                                                   @RequestParam(value = "tenantId", defaultValue = "default") String tenantId) {
+                                                   @RequestParam(value = "tenantId", defaultValue = "default") String tenantId,
+                                                   @RequestBody RequestInfoBody requestInfo) {
         org.egov.pgr.common.entity.ComplaintType complaintType = complaintTypeService
             .getComplaintType(complaintTypeCode, tenantId);
         return new ComplaintTypeResponse(null, getComplaintType(complaintType));

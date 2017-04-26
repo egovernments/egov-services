@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import Header from '../global/Header';
 import Footer from '../global/Footer';
 import {getUrlParameter} from '../global/Custom.js'
+var serialize = require('form-serialize');
 
 class App extends React.Component {
   render(){
@@ -22,29 +23,29 @@ class Content extends React.Component{
 		super(props);
 
 		this.state = {
-      active: true
+      active: true,
+      pipeSizeInches : 0
     }
 
+    this.calculatePipeSI = this.calculatePipeSI.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
 
 	}
 
-	handleChange(event){
+  calculatePipeSI(e){
+    let PSI = ((e.target.value)/25.4).toFixed(2);
+    this.setState({pipeSizeInches:PSI})
+  }
 
-    const target = event.target;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
-    const name = target.name;
-
-    console.log(name, value);
-
-    this.setState({[name]: value});
-
-    console.log(JSON.stringify(this.state));
+	handleChange(e){
+    this.setState({active:!this.state.active});
 	}
 
 	handleSubmit(e){
-		console.log(this.state);
+    var form = document.querySelector('form');
+    var obj = serialize(form, { hash: true, disabled:true, empty:true });
+		console.log(obj);
 		//ajax submit
 		e.preventDefault();
 	}
@@ -64,20 +65,20 @@ class Content extends React.Component{
                 <div className="form-group">
                   <label className="col-sm-2 control-label text-right">Code<span className="mandatory"></span></label>
                   <div className="col-sm-3 add-margin">
-                    <input id="code" name="code" onChange={this.handleChange} className="form-control" required="required" type="text" maxLength="25"/>
+                    <input id="code" name="code" className="form-control" required="required" type="text" maxLength="25"/>
                   </div>
                 </div>
                 <div className="form-group">
                   <label className="col-sm-2 control-label text-right">H.S.C Pipe Size (mm)<span className="mandatory"></span></label>
                   <div className="col-sm-3 add-margin">
-                    <input id="name" name="name" onChange={this.handleChange} className="form-control" required="required" type="text" maxLength="50"/>
+                    <input id="sizeInMilimeter" name="sizeInMilimeter" onChange={this.calculatePipeSI} className="form-control" required="required" type="text" maxLength="50"/>
                   </div>
                   <label className="col-sm-3 control-label text-right">H.S.C Pipe Size (Inches)<span className="mandatory"></span></label>
                   <div className="col-sm-3 add-margin">
-                    <input id="name" name="name" onChange={this.handleChange} disabled className="form-control" required="required" type="text" maxLength="50"/>
+                    <input id="sizeInInch" name="sizeInInch" value={this.state.pipeSizeInches} disabled className="form-control" required="required" type="text" maxLength="50"/>
                   </div>
                 </div>
-                <Update handle={this.handleChange} value={this.state.active}/>
+                <Update change={this.handleChange} value={this.state.active}/>
               </div>
             </div>
             <div className="form-group text-center">
@@ -99,7 +100,7 @@ class Update extends React.Component{
 			<div className="form-group">
 				<label className="col-sm-2 control-label text-right">Active</label>
 				<div className="col-sm-3 add-margin">
-					<input id="activeid" name="active" type="checkbox" onChange={this.props.handle} checked={this.props.value} />
+					<input id="activeid" name="active" type="checkbox" defaultValue={this.props.value} onChange={this.props.change} checked={this.props.value} />
 				</div>
 			</div>
 		) : null;

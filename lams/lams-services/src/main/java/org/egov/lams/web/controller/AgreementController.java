@@ -9,6 +9,7 @@ import org.egov.lams.web.contract.AgreementRequest;
 import org.egov.lams.web.contract.AgreementResponse;
 import org.egov.lams.web.contract.RequestInfo;
 import org.egov.lams.web.contract.RequestInfoWrapper;
+import org.egov.lams.web.contract.ResponseInfo;
 import org.egov.lams.exception.LamsException;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.AgreementCriteria;
@@ -74,8 +75,8 @@ public class AgreementController {
 	private ResponseEntity<?> getSuccessResponse(List<Agreement> agreements, RequestInfo requestInfo) {
 		AgreementResponse agreementResponse = new AgreementResponse();
 		agreementResponse.setAgreement(agreements);
-		agreementResponse.setResposneInfo(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true));
-		System.err.println("before returning from getsucces resposne");
+		agreementResponse.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true));
+		System.err.println("before returning from getsucces resposne ::"+agreementResponse );
 		return new ResponseEntity<>(agreementResponse, HttpStatus.OK);
 	}
 
@@ -88,14 +89,15 @@ public class AgreementController {
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}
 		LOGGER.info("agreementRequest::" + agreementRequest);
-		//agreementValidator.validateAgreement(agreementRequest);
+		agreementValidator.validateAgreement(agreementRequest);
 		
 		Agreement agreement = agreementService.createAgreement(agreementRequest);
 		List<Agreement> agreements = new ArrayList<>();
 		agreements.add(agreement);
 		AgreementResponse agreementResponse = new AgreementResponse();
 		agreementResponse.setAgreement(agreements);
-
+		agreementResponse.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(agreementRequest.getRequestInfo(), true));
+		LOGGER.info(agreementResponse.toString());
 		return new ResponseEntity<>(agreementResponse, HttpStatus.CREATED);
 	}
 	
@@ -120,7 +122,8 @@ public class AgreementController {
 		agreements.add(agreement);
 		AgreementResponse agreementResponse = new AgreementResponse();
 		agreementResponse.setAgreement(agreements);
-
+		agreementResponse.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(agreementRequest.getRequestInfo(),true));
+		LOGGER.info(agreementResponse.toString());
 		return new ResponseEntity<>(agreementResponse, HttpStatus.CREATED);
 	}
 

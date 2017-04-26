@@ -11,6 +11,8 @@ import org.egov.lams.model.enums.UserType;
 import org.egov.lams.web.contract.AllotteeResponse;
 import org.egov.lams.web.contract.CreateUserRequest;
 import org.egov.lams.web.contract.RequestInfo;
+import org.egov.lams.web.contract.Role;
+import org.egov.lams.web.contract.UserRequest;
 import org.egov.lams.web.contract.UserSearchRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,14 +73,24 @@ public class AllotteeService {
 
 		String url = propertiesManager.getAllotteeServiceHostName() + propertiesManager.getAllotteeServiceBasePAth()
 				+ propertiesManager.getAllotteeServiceCreatePAth();
-		allottee.setUserName(allottee.getName() + allottee.getMobileNumber());
-		allottee.setPassword(allottee.getMobileNumber().toString());
-		allottee.setGender(Gender.FEMALE);
-		allottee.setType(UserType.CITIZEN);
-		allottee.setActive(true); // FIXME set user name and password using any
-									// gen service
-		CreateUserRequest createUserRequest = new CreateUserRequest(requestInfo, allottee);
-		logger.info("url for allottee api post call : " + url + "  the user request obj is : " + createUserRequest);
+		
+		Role role = new Role();
+		role.setCode("CITIZEN");
+		role.setName("CITIZEN");
+		role.setTenantId(allottee.getTenantId());
+		List<Role> roles = new ArrayList<>();
+		roles.add(role);
+				
+		UserRequest userRequest = UserRequest.buildUserRequestFromAllotte(allottee);
+		userRequest.setRoles(roles);
+		userRequest.setUserName(allottee.getName() + allottee.getMobileNumber());
+		userRequest.setPassword(allottee.getMobileNumber().toString());
+		userRequest.setGender(Gender.FEMALE);
+		userRequest.setType(UserType.CITIZEN);
+		userRequest.setActive(true); 
+		// FIXME set user name and password using any gen service
+		CreateUserRequest createUserRequest = new CreateUserRequest(requestInfo, userRequest);
+		logger.info("url for allottee api post call : " + url + " : the user request obj is : " + createUserRequest);
 		AllotteeResponse allotteeResponse = callAllotteSearch(url, createUserRequest);
 		allottee.setId(allotteeResponse.getAllottee().get(0).getId());
 		logger.info("the id from alottee ::: " + allotteeResponse.getAllottee().get(0).getId());

@@ -14,8 +14,12 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class Role {
-
     @JsonProperty("name")
     private String name;
-
+    
+    @JsonProperty("code")
+    private String code;
+    
+    @JsonProperty("tenantId")
+    private String tenantId;
 }

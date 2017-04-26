@@ -71,6 +71,7 @@ public class WorkFlowService {
     public ProcessInstance start(final LeaveApplicationSingleRequest leaveApplicationRequest) {
         final ProcessInstanceRequest processInstanceRequest = new ProcessInstanceRequest();
         ProcessInstance processInstance = new ProcessInstance();
+        LOGGER.info("propertiesManager::" + propertiesManager);
         processInstance.setBusinessKey(propertiesManager.getWorkflowServiceBusinessKey());
         processInstance.setType(propertiesManager.getWorkflowServiceBusinessKey());
         processInstance.setComments("starting workflow from Leave Application consumer");

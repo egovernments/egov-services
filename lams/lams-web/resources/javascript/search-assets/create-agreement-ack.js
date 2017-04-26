@@ -8,8 +8,8 @@ class CreateAgreement extends React.Component {
                 <form>
                     <h3> Acknowledgement of Agreement </h3>
                     <h4> <center><font color="ass"> Acknowledgement  Created </font> </center></h4>
-                    <h3> <center><font color="ass"><strong> {getUrlVars()["ackNo"]}</strong>  </font> </center></h3>
-                    <h3><center> <font color="ass"> Successfully Forward to {getUrlVars()["name"]} </font></center></h3>
+                    <h3> <center><font color="ass"><strong> {decodeURIComponent(getUrlVars()["ackNo"])}</strong>  </font> </center></h3>
+                    <h3><center> <font color="ass"> Successfully Forward to {decodeURIComponent(getUrlVars()["name"])} </font></center></h3>
 
 
                     <div className="text-center">
@@ -18,18 +18,7 @@ class CreateAgreement extends React.Component {
                     </div>
                   </form>
               </div>
-
               </div>
-
-
-
-
-
-
-
-
-
-
     );
   }
 }

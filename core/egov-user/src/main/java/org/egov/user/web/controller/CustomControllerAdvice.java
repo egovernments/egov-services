@@ -45,8 +45,8 @@ public class CustomControllerAdvice {
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(UserNotFoundException.class)
-	public ErrorResponse handleUserNotFoundException(UserNotFoundException ex) {
-		return new UserNotFoundErrorHandler().adapt(ex.getUser());
+	public ErrorResponse handleUserNotFoundException() {
+		return new UserNotFoundErrorHandler().adapt(null);
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -64,6 +64,18 @@ public class CustomControllerAdvice {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(UserDetailsException.class)
 	public ErrorResponse userDetailsException() {
-		return new UserDetailsErrorHandler().adapt();
+		return new UserDetailsErrorHandler().adapt(null);
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(PasswordMismatchException.class)
+	public ErrorResponse handlePasswordMismatchException() {
+		return new PasswordMissMatchErrorHandler().adapt(null);
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(InvalidUpdatePasswordRequestException.class)
+	public ErrorResponse handleInvalidUpdatePasswordRequestException(InvalidUpdatePasswordRequestException ex) {
+		return new InvalidUpdatePasswordRequestErrorHandler().adapt(ex.getRequest());
 	}
 }

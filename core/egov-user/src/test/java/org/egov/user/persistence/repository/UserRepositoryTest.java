@@ -255,9 +255,10 @@ public class UserRepositoryTest {
 		final List<org.egov.user.domain.model.Role> roles = new ArrayList<>();
 		org.egov.user.domain.model.User domainUser = org.egov.user.domain.model.User.builder()
 				.roles(roles)
+				.id(1L)
 				.build();
 
-		User actualUser = userRepository.update(1L, domainUser);
+		User actualUser = userRepository.update(domainUser);
 
 		assertEquals(expectedUser, actualUser);
 	}
@@ -279,19 +280,23 @@ public class UserRepositoryTest {
 		when(entityUser.getRoles()).thenReturn(roleSet);
 		org.egov.user.domain.model.User domainUser = org.egov.user.domain.model.User.builder()
 				.roles(roles)
+				.id(1L)
 				.tenantId("tenantId")
 				.build();
 		when(roleRepository.findByTenantIdAndCodeIgnoreCase("tenantId", "roleCode1")).thenReturn(null);
 
-		userRepository.update(1L, domainUser);
+		userRepository.update(domainUser);
 	}
 
 	@Test
 	public void test_should_return_user() {
 		org.egov.user.persistence.entity.User entityUser = mock(org.egov.user.persistence.entity.User.class);
-		when(userJpaRepository.findOne(any(Long.class))).thenReturn(entityUser);
-		org.egov.user.persistence.entity.User actualUser = userRepository.getUserById(any(Long.class));
+		final User expectedUser = mock(User.class);
+		when(entityUser.toDomain()).thenReturn(expectedUser);
+		when(userJpaRepository.findOne(123L)).thenReturn(entityUser);
 
-		assertEquals(entityUser, actualUser);
+		User actualUser = userRepository.getUserById(123L);
+
+		assertEquals(expectedUser, actualUser);
 	}
 }

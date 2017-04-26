@@ -1,5 +1,6 @@
 package org.egov.user.persistence.repository;
 
+import org.egov.user.Resources;
 import org.egov.user.domain.model.Action;
 import org.junit.Before;
 import org.junit.Test;

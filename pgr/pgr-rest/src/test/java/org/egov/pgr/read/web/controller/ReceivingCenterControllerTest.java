@@ -1,14 +1,17 @@
 package org.egov.pgr.read.web.controller;
 
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Arrays;
+
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
@@ -24,6 +27,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.util.ResourceUtils;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(ReceivingCenterController.class)
@@ -39,20 +43,35 @@ public class ReceivingCenterControllerTest {
     @Test
     public void testGetReceivingCenters() throws Exception {
         String tenantId = "ap.public";
-        List<ReceivingCenter> recievingCenters = new ArrayList<>(Collections.singletonList(new ReceivingCenter()));
+        List<ReceivingCenter> recievingCenters =getReceivingCenters();
+        String expectedContent = readResource("getServiceRequests.json");
         when(mockReceivingCenterService.getAllReceivingCenters(tenantId)).thenReturn(recievingCenters);
-
-        mockMvc.perform(get("/receivingcenter?tenantId=" + tenantId)
-            .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))).andExpect(status().isOk());
+        mockMvc.perform(post("/receivingcenter/_getallreceivingcenters?tenantId=" + tenantId))
+            .andExpect(status().isOk())
+            .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+    		.andExpect(content().json(expectedContent));
     }
 
-    @Test
+    private String readResource(String string) throws Exception {
+    	 File file = ResourceUtils.getFile(this.getClass().getResource("/getReceivingCenters.json"));
+	        return new String(Files.readAllBytes(Paths.get(file.getAbsolutePath())));
+		
+	}
+
+	private List<ReceivingCenter> getReceivingCenters() {
+		ReceivingCenter receivingCenter1=ReceivingCenter.builder().id(2L).name("Mayor/Chairperson Office").orderNo(2L).crnRequired(true).tenantId("ap.public").build();
+		ReceivingCenter receivingCenter2=ReceivingCenter.builder().id(3L).name("Zonal Office").orderNo(7L).crnRequired(true).tenantId("ap.public").build();
+			
+		return Arrays.asList(receivingCenter1,receivingCenter2);
+	}
+
+	@Test
     public void testGetReceivingCenterById() throws Exception {
         ReceivingCenter receivingCenter = ReceivingCenter.builder()
             .id(1L)
             .name("Complaint Cell")
             .crnRequired(true)
-            .orderNo(8L).build();
+            .orderNo(8L).tenantId("ap.public").build();
         when(mockReceivingCenterService.getReceivingCenterById("ap.public", 1L)).thenReturn(receivingCenter);
 
         mockMvc.perform(post("/receivingcenter/_getreceivingcenterbyid?tenantId=ap.public&id=" + 1L))

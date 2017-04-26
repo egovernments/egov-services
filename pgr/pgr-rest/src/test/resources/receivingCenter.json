@@ -1,6 +1,12 @@
 {
-  "id": 1,
-  "name": "Complaint Cell",
-  "orderNo": 8,
-  "crnRequired": true
+  "responseInfo": null,
+  "receivingCenters": [
+    {
+      "id": 1,
+      "name": "Complaint Cell",
+      "crnRequired": true,
+      "orderNo": 8,
+      "tenantId": "ap.public"
+    }
+  ]
 }

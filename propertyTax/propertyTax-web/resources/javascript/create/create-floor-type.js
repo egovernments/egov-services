@@ -12,6 +12,27 @@ class CreateFloorType extends React.Component {
       // widow.close();
       open(location, '_self').close();
   }
+  componentDidMount(){
+        var type=getUrlVars()["type"];
+        var id=getUrlVars()["id"];
+
+        if(getUrlVars()["type"]==="view")
+        {
+          for (var variable in this.state.gradeSet)
+            document.getElementById(variable).disabled = true;
+          }
+
+
+        if(type==="view"||type==="update")
+        {
+            this.setState({
+              // gradeSet:getCommonMasterById("hr-masters","grades","Grade",id).responseJSON["Grade"][0]
+            })
+        }
+
+
+
+      }
 
 
 
@@ -19,12 +40,24 @@ class CreateFloorType extends React.Component {
     let {handleChange}=this;
     let {list}=this.state;
     let {name}=this.state.searchSet;
+    let mode=getUrlVars()["type"];
+
+    const showActionButton=function() {
+      if(mode==="create")
+        return (<button type="submit" className="btn btn-submit">Add</button>);
+
+     else if(mode==="update")
+          return (<button type="submit" className="btn btn-submit">Update</button>);
+
+
+    }
+
 
 
 
     return (
     <div>
-         
+
           <form>
             <div className="row">
                 <div className="col-sm-6">
@@ -45,8 +78,7 @@ class CreateFloorType extends React.Component {
 
 
                     <div className="text-center">
-                    <button type="submit" className="btn btn-submit">Add</button>
-                    &nbsp;
+                    {showActionButton()} &nbsp;&nbsp;
                     <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>
                     </div>
                     </form>
@@ -63,3 +95,6 @@ ReactDOM.render(
   <CreateFloorType />,
   document.getElementById('root')
 );
+//
+// <button type="submit" className="btn btn-submit">Add</button>
+// &nbsp;

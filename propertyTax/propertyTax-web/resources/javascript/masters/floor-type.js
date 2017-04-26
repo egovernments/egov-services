@@ -133,11 +133,11 @@ class FloorType extends React.Component {
 
 
                     <div className="text-center">
-                    <button type="submit" className="btn btn-submit" onClick={(e)=>{window.location.href='app/create/create-floor-type.html'}}>Create</button>
+                    <button type="submit" className="btn btn-submit" onClick={(e)=>{window.location.href='app/create/create-floor-type.html?type=create'}}>Create</button>
                     &nbsp;
-                    <button type="submit" className="btn btn-submit">Update</button>
+                    <button type="submit" className="btn btn-submit" onClick={(e)=>{window.location.href='app/create/create-floor-type.html?type=update'}}>Update</button>
                     &nbsp;
-                        <button type="submit" className="btn btn-submit">View</button>
+                        <button type="submit" className="btn btn-submit" onClick={(e)=>{window.location.href='app/create/create-floor-type.html?type=view'}}>View</button>
                         &nbsp;
                         <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>
                     </div>

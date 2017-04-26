@@ -63,7 +63,7 @@ var hrConfigurations = commonApiPost("hr-masters", "hrconfigurations", "_search"
 }).responseJSON || [];
 if (hrConfigurations["HRConfiguration"]["Autogenerate_employeecode"] == "N" || typeof(hrConfigurations["HRConfiguration"]["Autogenerate_employeecode"]) == "undefined") {
   $("#code").prop("disabled", false);
-} else {
+  } else {
   $("#code").prop("disabled", true);
 }
 
@@ -1588,7 +1588,7 @@ function updateTable(tableName, modalName, object) {
                                   ${assignments_position.length>0?assignments_position[0]["name"]:""}
                             </td>`)
       }
-       else if (key != "id" && key != "createdBy" && key != "createdDate" && key != "lastModifiedBy" && key != "lastModifiedDate" && key != "tenantId") {
+       else if ((key != "id"|| object=="serviceHistory") && key != "createdBy" && key != "createdDate" && key != "lastModifiedBy" && key != "lastModifiedDate" && key != "tenantId") {
         if (key == "documents") {
           // var name="";
           // for (var i = 0; i < employee[object][i][key].length; i++) {
@@ -1648,6 +1648,9 @@ function markEditIndex(index = -1, modalName = "", object = "") {
         // } else {
         //     $(`#${object}\\.${key}`).val(employeeSubObject[object][key]);
         // }
+        if (key=="position") {
+            getPositions({id:"assignments.department"});
+        }
 
         if (key == "isPrimary") {
           if (employeeSubObject[object][key] == "true") {
@@ -2206,7 +2209,7 @@ function checkIfNoDup(employee, objectType, subObject) {
     return true;
   else if (objectType == "jurisdictions") {
     for (let i = 0; i < employee[objectType].length; i++) {
-      if (employee[objectType][i].jurisdictionsType == subObject.jurisdictionsType || employee[objectType][i].boundary == subObject.boundary)
+      if (employee[objectType][i].jurisdictionsType == subObject.jurisdictionsType && employee[objectType][i].boundary == subObject.boundary)
         return false;
     }
   }

@@ -251,8 +251,7 @@ class AgreementSearch extends React.Component {
                                   <td>{item.agreementDate}</td>
                                   <td>
                                       <div className="styled-select">
-                                      getOption((category_name == "Land" || category_name == "shop"));
-
+                                        getOption((category_name == "Land" || category_name == "shop"), item);
                                       </div>
                                   </td>
                   </tr>
@@ -267,7 +266,19 @@ class AgreementSearch extends React.Component {
       }
 
     }
-    const getOption=function(isShopOrLand) {
+
+    const showCancelNEvict = function(status) {
+      if(status == "APPROVED") {
+        return (
+          <option value="cancel">Cancel Agreement</option>
+          <option value="eviction">Evict Agreement</option>
+        )
+      }  else {
+        return;
+      } 
+    }
+
+    const getOption = function(isShopOrLand, item) {
         if (isShopOrLand) {
           return(
             <select id="myOptions" onChange={(e)=>{
@@ -277,8 +288,7 @@ class AgreementSearch extends React.Component {
                 <option value="view">View</option>
                 <option value="renew">Renew</option>
                 <option value="collTax">Collect Tax</option>
-                <option value="cancel">Cancel Agreement</option>
-                <option value="eviction">Evict Agreement</option>
+                {showCancelNEvict(item.status)}
             </select>
           )
 
@@ -290,8 +300,7 @@ class AgreementSearch extends React.Component {
                 <option value="">Select Action</option>
                 <option value="view">View</option>
                 <option value="collTax">Collect Tax</option>
-                <option value="cancel">Cancel Agreement</option>
-                <option value="eviction">Evict Agreement</option>
+                {showCancelNEvict(item.status)}
             </select>
           )
 

@@ -66,6 +66,10 @@ public class WorkflowTypesService {
 	    public WorkflowTypes getWorkflowTypeByType(String type) {
 	        return workflowTypesRepository.findByType(type);
 	    }
+	    
+	    public WorkflowTypes getWorkflowTypeByTypeAndTenantId(String type,String tenantId) {
+	        return workflowTypesRepository.findByTypeAndTenantId(type, tenantId);
+	    }
 
 	    public List<WorkflowTypes> getAllWorkflowTypes() {
 	        return workflowTypesRepository.findAll(new Sort(Sort.Direction.ASC, "type"));

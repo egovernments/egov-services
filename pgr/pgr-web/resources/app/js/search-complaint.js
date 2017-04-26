@@ -274,11 +274,16 @@ function loadReceivingMode(){
 
 function complaintType(){
 	$.ajax({
-		url: "/pgr/services?type=all&tenantId=ap.public"
+		url: "/pgr/services?type=all&tenantId=ap.public",
+		type : 'POST',
+		data : JSON.stringify(requestInfo),
+		dataType: 'json',
+		processData : false,
+		contentType: "application/json"
 	}).done(function(data) {
 		loadDD.load({
 			element:$('#complaintType'),
-			data:data,
+			data:data.ComplaintType,
 			placeholder : 'Select Complaint Type',
 			keyValue:'serviceCode',
 			keyDisplayName:'serviceName'
@@ -323,20 +328,3 @@ function loadWard(){
 		});
 	});
 }
-
-/*function get(){
-	$.ajax({
-		"url": "/pgr/seva/_search?tenantId=ap&service_request_id=00073-2017-RN",
-        type: 'POST',
-        dataType: 'json',
-		processData : false,
-        contentType: "application/json",
-        data : JSON.stringify(requestInfo),
-        success: function(data){
-        	console.log(data)
-        },
-        error : function(){
-        	console.log('failed')
-        }
-	})
-}*/

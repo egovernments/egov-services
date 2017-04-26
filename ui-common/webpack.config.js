@@ -12,8 +12,8 @@ module.exports = [{
   entry: {
     index : "./index.js",
     create_usagetype : './components/usage_master/create_usagetype.js',
-    create_category : './components/usage_master/create_category.js',
-    create_pipesize : './components/usage_master/create_pipesize.js'
+    create_category : './components/category_master/create_category.js',
+    create_pipesize : './components/pipesize_master/create_pipesize.js'
   },
 
   output: {
@@ -95,13 +95,13 @@ module.exports = [{
 
     new HtmlWebpackPlugin({
         filename: 'create_category.html',
-        template: path.resolve(__dirname, "app", "./containers/usage_master/create_category.html"),
+        template: path.resolve(__dirname, "app", "./containers/category_master/create_category.html"),
         chunks : ['create_category']
     }),
 
     new HtmlWebpackPlugin({
         filename: 'create_pipesize.html',
-        template: path.resolve(__dirname, "app", "./containers/usage_master/create_pipesize.html"),
+        template: path.resolve(__dirname, "app", "./containers/pipesize_master/create_pipesize.html"),
         chunks : ['create_pipesize']
     }),
 

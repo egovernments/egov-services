@@ -40,6 +40,8 @@
 var type = localStorage.getItem("type");
 var loadDD = new $.loadDD();
 var RequestInfo = new $.RequestInfo(localStorage.getItem("auth"));
+var requestInfo = {};
+requestInfo['RequestInfo'] = RequestInfo.requestInfo;
 $(document).ready(function()
 {
 	/*Productization - Aslam*/
@@ -73,11 +75,16 @@ $(document).ready(function()
 		if ($(this).val()) {
 			$.ajax({
 				url: "/pgr/services?type=category&categoryId="+$(this).val()+"&tenantId=ap.public",
+				type : 'POST',
+				data : JSON.stringify(requestInfo),
+				dataType: 'json',
+				processData : false,
+				contentType: "application/json",
 				async :false,
 			}).done(function(data) {
 				loadDD.load({
 					element:$('#complaintType'),
-					data:data,
+					data:data.ComplaintType,
 					keyValue:'serviceCode',
 					keyDisplayName:'serviceName'
 				});
@@ -308,7 +315,7 @@ $(document).ready(function()
 				//console.log(JSON.stringify(request));
 
 				$.ajax({
-					url: "/pgr/seva?jurisdiction_id=ap.public",
+					url: "/pgr/seva/_create?jurisdiction_id=ap.public",
 					type : 'POST',
 					dataType: 'json',
 					processData : false,
@@ -415,14 +422,14 @@ function doCheckUser(){
 	if(userId){
 		var userArray = [];
 		userArray.push(userId);
-		var requestInfo = {};
-		requestInfo['RequestInfo'] = RequestInfo.requestInfo;
-		requestInfo['id'] = userArray;
+		var userRequestInfo = {};
+		userRequestInfo['RequestInfo'] = RequestInfo.requestInfo;
+		userRequestInfo['id'] = userArray;
 		$.ajax({
 			url : '/user/_search',
 			type: 'POST',
 			contentType: "application/json",
-			data : JSON.stringify(requestInfo),
+			data : JSON.stringify(userRequestInfo),
 			success : function(userResponse){
 				userName = userResponse.user[0].name;
 				userMobile = userResponse.user[0].mobileNumber;
@@ -509,10 +516,15 @@ function loadReceivingCenter(){
 function complaintCategory(){
 	$.ajax({
 		url: "/pgr/complaintTypeCategories?tenantId=ap.public",
+		type : 'POST',
+		data : JSON.stringify(requestInfo),
+		dataType: 'json',
+		processData : false,
+		contentType: "application/json",
 		success : function(data){
 			loadDD.load({
 				element:$('#complaintTypeCategory'),
-				data:data,
+				data:data.ComplaintTypeCategory,
 				keyValue:'id',
 				keyDisplayName:'name'
 			});
@@ -526,10 +538,15 @@ function complaintCategory(){
 function topComplaintTypes(){
 	$.ajax({
 		url: "/pgr/services?type=frequency&count=5&tenantId=ap.public",
+		type : 'POST',
+		data : JSON.stringify(requestInfo),
+		dataType: 'json',
+		processData : false,
+		contentType: "application/json",
 		success : function(data){
-			if(data.length > 0){
+			if(data.ComplaintType.length > 0){
 				$('#topcomplaint').html('');
-				$.each(data,function(i,obj){
+				$.each(data.ComplaintType,function(i,obj){
 					$('#topcomplaint').append('<a href="javascript:void(0)" data-type="'+obj.serviceCode+'" data-category="'+obj.groupId+'" class="btn btn-secondary btn-xs tag-element freq-ct" data-toggle="popover" title="Click to select the Grievance category and type">'+obj.serviceName+'</a>')
 				});
 			}else{

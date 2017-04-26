@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class LamsMasterController {
 
 	@Autowired
-	RentIncrementService getRentIncrementService;
+	RentIncrementService RentIncrementService;
 
 	@RequestMapping(value = "/getstatus")
 	public Map<String, Status> getSatusEnum() {
@@ -29,7 +29,7 @@ public class LamsMasterController {
 	}
 
 	@RequestMapping(value = "/getpaymentcycle")
-	public Map<String, PaymentCycle> getPayementCycleEnum() {
+	public Map<String, PaymentCycle> getPaymentCycleEnum() {
 		Map<String, PaymentCycle> payementCycle = new HashMap<>();
 		for (PaymentCycle key : PaymentCycle.values()) {
 			payementCycle.put(key.name(),key);
@@ -48,6 +48,6 @@ public class LamsMasterController {
 
 	@RequestMapping(value = "/getrentincrements")
 	public List<RentIncrementType> rentIncrementService() {
-		return getRentIncrementService.getRentIncrements();
+		return RentIncrementService.getRentIncrements();
 	}
 }

@@ -2,7 +2,6 @@ package org.egov.lams.repository.builder;
 
 import java.util.List;
 import java.util.Set;
-
 import org.egov.lams.model.NoticeCriteria;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,7 +81,7 @@ public class NoticeQueryBuilder {
 			preparedStatementValues.add(noticeCriteria.getOffset());
 		else
 			preparedStatementValues.add(0);
-		System.err.println(selectQuery.toString());
+		logger.info("the select query in notice querybuilder ::"+selectQuery.toString());
 		return selectQuery.toString();
 	}
 

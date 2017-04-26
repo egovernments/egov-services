@@ -1,8 +1,11 @@
 package org.egov.lams.repository;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.egov.lams.model.Notice;
+import org.egov.lams.model.NoticeCriteria;
 import org.egov.lams.repository.builder.NoticeQueryBuilder;
 import org.egov.lams.web.contract.NoticeRequest;
 import org.egov.lams.web.contract.RequestInfo;
@@ -54,5 +57,12 @@ public class NoticeRepository {
 		
 		return noticeNo.toString();
 	}	
+	
+	public List<Notice> getNotices(NoticeCriteria noticeCriteria){
+		
+		List<Notice> notices = null;
+		
+		return notices;
+	}
 
 }

@@ -1554,19 +1554,41 @@ function updateTable(tableName, modalName, object) {
   for (var i = 0; i < employee[object].length; i++) {
     $(tableName).append(`<tr>`);
     for (var key in employee[object][i]) {
-      if (key === "department" || key === "designation" || key === "position" || key === "fund" || key === "function" || key === "functionary" || (object == "assignments" && key === "grade") || key === "mainDepartments" || key === "jurisdictionsType") {
+      if (key === "department" || key === "designation" ||  key === "fund" || key === "function" || key === "functionary" || (object == "assignments" && key === "grade") || key === "mainDepartments" || key === "jurisdictionsType") {
         $(tableName).append(`<td data-label=${key}>
                                   ${getNameById(key,employee[object][i][key],"")}
                             </td>`)
       } else if (key === "boundary") {
+        try {
+          bnd = commonApiGet("egov-location", "boundarys", "", {
+            "Boundary.id":employee[object][i][key],
+            "Boundary.tenantId":tenantId
+          }).responseJSON["Boundary"] || [];
+        } catch (e) {
+          console.log(e);
+          bnd = [];
+        }
         $(tableName).append(`<td data-label=${key}>
-                                ${getNameById(key,employee[object][i][key],employee[object][i]["jurisdictionsType"])}
-                          </td>`)
+
+                                  ${bnd.length>0?bnd[0]["name"]:""}
+                            </td>`)
       } else if (key == "hod") {
         $(tableName).append(`<td data-label=${key}>
                                 ${employee[object][i][key].length>0?"Yes":"No"}
                           </td>`)
-      } else if (key != "id" && key != "createdBy" && key != "createdDate" && key != "lastModifiedBy" && key != "lastModifiedDate" && key != "tenantId") {
+      } else if (key === "position") {
+        try {
+          assignments_position = commonApiPost("hr-masters", "positions", "_search",{tenantId,id:employee[object][i][key]}).responseJSON["Position"] || [];
+        } catch (e) {
+          console.log(e);
+          assignments_position = [];
+        }
+        $(tableName).append(`<td data-label=${key}>
+
+                                  ${assignments_position.length>0?assignments_position[0]["name"]:""}
+                            </td>`)
+      }
+       else if (key != "id" && key != "createdBy" && key != "createdDate" && key != "lastModifiedBy" && key != "lastModifiedDate" && key != "tenantId") {
         if (key == "documents") {
           // var name="";
           // for (var i = 0; i < employee[object][i][key].length; i++) {

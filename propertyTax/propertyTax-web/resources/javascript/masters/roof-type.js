@@ -133,7 +133,7 @@ class RoofType extends React.Component {
 
 
                     <div className="text-center">
-                    <button type="submit" className="btn btn-submit">Create</button>
+                    <button type="submit" className="btn btn-submit" onClick={(e)=>{window.location.href='app/create/create-roof-type.html'}}>Create</button>
                     &nbsp;
                     <button type="submit" className="btn btn-submit">Update</button>
                     &nbsp;

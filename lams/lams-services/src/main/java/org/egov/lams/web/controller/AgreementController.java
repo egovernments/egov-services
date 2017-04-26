@@ -75,7 +75,7 @@ public class AgreementController {
 	private ResponseEntity<?> getSuccessResponse(List<Agreement> agreements, RequestInfo requestInfo) {
 		AgreementResponse agreementResponse = new AgreementResponse();
 		agreementResponse.setAgreement(agreements);
-		agreementResponse.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true));
+		agreementResponse.setResposneInfo(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true));
 		System.err.println("before returning from getsucces resposne ::"+agreementResponse );
 		return new ResponseEntity<>(agreementResponse, HttpStatus.OK);
 	}
@@ -96,7 +96,7 @@ public class AgreementController {
 		agreements.add(agreement);
 		AgreementResponse agreementResponse = new AgreementResponse();
 		agreementResponse.setAgreement(agreements);
-		agreementResponse.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(agreementRequest.getRequestInfo(), true));
+		agreementResponse.setResposneInfo(responseInfoFactory.createResponseInfoFromRequestInfo(agreementRequest.getRequestInfo(), true));
 		LOGGER.info(agreementResponse.toString());
 		return new ResponseEntity<>(agreementResponse, HttpStatus.CREATED);
 	}
@@ -122,7 +122,7 @@ public class AgreementController {
 		agreements.add(agreement);
 		AgreementResponse agreementResponse = new AgreementResponse();
 		agreementResponse.setAgreement(agreements);
-		agreementResponse.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(agreementRequest.getRequestInfo(),true));
+		agreementResponse.setResposneInfo(responseInfoFactory.createResponseInfoFromRequestInfo(agreementRequest.getRequestInfo(),true));
 		LOGGER.info(agreementResponse.toString());
 		return new ResponseEntity<>(agreementResponse, HttpStatus.CREATED);
 	}

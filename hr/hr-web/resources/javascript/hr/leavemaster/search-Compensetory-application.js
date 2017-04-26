@@ -155,10 +155,11 @@ class SearchLeaveApplication extends React.Component {
             <table id="employeeTable" className="table table-bordered">
                 <thead>
                     <tr>
-                        <th>Employee Code</th>
+                        <th>Sl No</th>
+                        <th>Worked Date</th>
                         <th>Employee Name</th>
-                        <th>Employee Designation</th>
-                        <th>Employee Department</th>
+                        <th>Employee Code</th>
+                        <th>Status</th>
                         <th>master</th>
 
                     </tr>
@@ -185,11 +186,11 @@ class SearchLeaveApplication extends React.Component {
       return employees.map((item,index,id)=>
       {
             return (<tr key={index}>
-
-                    <td data-label="code">{item.code}</td>
+                    <td>{index+1}</td>
+                    <td data-label="workedDate">{item.workedDate}</td>
                     <td data-label="name">{item.name}</td>
-                    <td data-label="designation">{getNameById(assignments_designation,item.assignments[0].designation)}</td>
-                    <td data-label="department">{getNameById(assignments_department,item.assignments[0].department)}</td>
+                    <td data-label="code">{item.code}</td>
+                    <td data-label="status">{item.status}</td>
                     <td data-label="action">
                     {renderAction(getUrlVars()["type"],item.id)}
                     </td>

@@ -2,20 +2,35 @@ class RoofType extends React.Component {
   constructor(props) {
     super(props);
     this.state={list:[],searchSet:{
-    name:""},isSearchClicked:false}
+    name:""},isSearchClicked:false,roofTypeList:[], type:""}
     this.handleChange=this.handleChange.bind(this);
     this.search=this.search.bind(this);
+    this.updateType=this.updateType.bind(this);
   }
 
   search(e)
   {
     e.preventDefault();
+    // var type = getUrlVars()["id"];
+
+    console.log(e);
+    console.log(this.state.type);
+      if(this.state.type==="Update")
+
+        return (  window.location.href='app/create/create-roof-type.html?type=Update')
+        //console.log(type);
+      //
+      //
+      else
+
+
+        return (  window.location.href='app/create/create-roof-type.html?type=View')
+
+
+
     //call api call
     //  var list=commonApiPost("asset-services","assets","_search",this.state.searchSet).responseJSON["Assets"] ||[];
-      this.setState({
-      isSearchClicked:true,
-      list
-    })
+
 
     // $('#agreementTable').DataTable().draw();
     // console.log($('#agreementTable').length);
@@ -28,14 +43,19 @@ class RoofType extends React.Component {
 
   }
 
-
+  updateType(e, type){
+    // console.log("hi");
+    this.setState({
+      type
+    })
+  }
 
   componentDidMount()
   {
 
       this.setState({
 
-        name: [{
+        roofTypeList: [{
                 id: "AC Sheet",
                 name: "AC SHEET",
 
@@ -87,15 +107,15 @@ class RoofType extends React.Component {
 
 
   render() {
-    let {handleChange,search,updateTable,handleSelectChange}=this;
-    let {isSearchClicked,list}=this.state;
+    let {handleChange,search,updateType}=this;
+    let {isSearchClicked,list,roofTypeList}=this.state;
     let {name}=this.state.searchSet;
 
-    const renderOption=function(list)
+    const renderOption=function(roofTypeList)
     {
-        if(list)
+        if(roofTypeList)
         {
-            return list.map((item)=>
+            return roofTypeList.map((item)=>
             {
                 return (<option key={item.id} value={item.id}>
                         {item.name}
@@ -107,7 +127,7 @@ class RoofType extends React.Component {
 
     return (
     <div>
-            <form onSubmit={(e)=>{search(e)}}>
+            <form  onSubmit={(e)=>{search(e)}}>
             <div className="row">
                 <div className="col-sm-9">
                     <div className="row">
@@ -120,7 +140,7 @@ class RoofType extends React.Component {
                   onChange={(e)=>{  handleChange(e,"name")}} required>
 
                                   <option value="">Choose name</option>
-                                  {renderOption(this.state.name)}
+                                  {renderOption(this.state.roofTypeList)}
 
                                 </select>
                             </div>
@@ -133,12 +153,12 @@ class RoofType extends React.Component {
 
 
                     <div className="text-center">
-                    <button type="submit" className="btn btn-submit" onClick={(e)=>{window.location.href='app/create/create-roof-type.html'}}>Create</button>
+                    <button type="button" className="btn btn-danger" onClick={(e)=>{window.location.href='app/create/create-roof-type.html?type=Create'}}>Create</button>
                     &nbsp;
-                    <button type="submit" className="btn btn-submit">Update</button>
+                    <button type="submit" className="btn btn-submit" id="Update" value="Update" onClick={(e)=>{  updateType(e,"Update")}}>Update</button>
                     &nbsp;
 
-                        <button type="submit" className="btn btn-submit">View</button>
+                        <button type="submit" className="btn btn-submit" value="View" onClick={(e)=>{  updateType(e,"View")}} >View</button>
                         &nbsp;
                         <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>
                     </div>

@@ -78,7 +78,13 @@ class CreateFloorType extends React.Component {
 
 
     }
-
+    const disbaled=function(mode) {
+    if (mode==="view") {
+          return "ture";
+    } else {
+        return "false";
+    }
+    }
 
 
 

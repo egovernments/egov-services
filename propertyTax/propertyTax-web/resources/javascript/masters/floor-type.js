@@ -117,7 +117,7 @@ class FloorType extends React.Component {
                         <div className="col-sm-8">
                             <div className="styled-select">
                                 <select id="name" name="name" value={name}
-                  onChange={(e)=>{  handleChange(e,"name")}} >
+                  onChange={(e)=>{  handleChange(e,"name")}} required>
 
                                   <option value="">Choose name</option>
                                   {renderOption(this.state.floorTypeList)}
@@ -133,9 +133,9 @@ class FloorType extends React.Component {
 
 
                     <div className="text-center">
-                    <button type="submit" className="btn btn-submit" onClick={(e)=>{window.location.href='app/create/create-floor-type.html?type=Create'}}>Create</button>
+                    <button type="button" className="btn btn-submit" onClick={(e)=>{window.location.href='app/create/create-floor-type.html?type=Create'}}>Create</button>
                     &nbsp;
-                    <button type="submit" className="btn btn-submit" onClick={(e)=>{window.location.href='app/create/create-floor-type.html?type=Update'}}>Update</button>
+                    <button type="submit" className="btn btn-submit"  onClick={(e)=>{window.location.href='app/create/create-floor-type.html?type=Update'}}>Update</button>
                     &nbsp;
                         <button type="submit" className="btn btn-submit" onClick={(e)=>{window.location.href='app/create/create-floor-type.html?type=View'}}>View</button>
                         &nbsp;

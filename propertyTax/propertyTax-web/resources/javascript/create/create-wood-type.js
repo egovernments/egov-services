@@ -4,8 +4,21 @@ class CreateWoodType extends React.Component {
     this.state={list:[],searchSet:{
     name:""}
       }
-    // this.handleChange=this.handleChange.bind(this);
+    this.handleChange=this.handleChange.bind(this);
+    this.addOrUpdate=this.addOrUpdate.bind(this);
+
   }
+
+  handleChange(e,name)
+      {
+        console.log(name);
+          this.setState({
+              searchSet:{
+                  ...this.state.searchSet,
+                  [name]:e.target.value
+              }
+          })
+      }
 
 
   close(){
@@ -34,10 +47,25 @@ class CreateWoodType extends React.Component {
 
 
       }
+      addOrUpdate(e,mode){
+        e.preventDefault();
+         console.log(this.state.searchSet);
+        // console.log(mode);
+        if (mode==="update") {
+            console.log("update");
+        } else {
+
+          this.setState({searchSet:{
+            name:"",
+
+          } })
+        }
+      }
+
 
 
   render() {
-    let {handleChange}=this;
+    let {handleChange,addOrUpdate}=this;
     let {list}=this.state;
     let {name}=this.state.searchSet;
     let mode=getUrlVars()["type"];
@@ -57,7 +85,7 @@ class CreateWoodType extends React.Component {
     return (
     <div>
         <h3> {mode} Wood Type </h3>
-          <form>
+          <form onSubmit={(e)=>{addOrUpdate(e,mode)}}>
             <div className="row">
                 <div className="col-sm-6">
                     <div className="row">
@@ -66,7 +94,8 @@ class CreateWoodType extends React.Component {
                         </div>
                         <div className="col-sm-6">
                             <div className="row">
-                              <input type="text" name="name" id="name" />
+                              <input type="text" name="name" id="name" value={name}
+                onChange={(e)=>{  handleChange(e,"name")}}  />
                             </div>
                         </div>
                     </div>

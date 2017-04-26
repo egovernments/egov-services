@@ -159,7 +159,7 @@ class WallType extends React.Component {
 
                                       <br/>
                     <div className="text-center">
-                    <button type="submit" className="btn btn-warning" onClick={(e)=>{window.location.href='app/create/create-wall-type.html?type=Create'}}>Create</button>
+                    <button type="button" className="btn btn-submit" onClick={(e)=>{window.location.href='app/create/create-wall-type.html?type=Create'}}>Create</button>
                     &nbsp;
                     <button type="submit" className="btn btn-submit" onClick={(e)=>{window.location.href='app/create/create-wall-type.html?type=Update'}}>Update</button>
                     &nbsp;

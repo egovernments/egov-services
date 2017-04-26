@@ -1,6 +1,7 @@
 package org.egov.pgr.read.web.controller;
 
 import org.egov.pgr.TestConfiguration;
+
 import org.egov.pgr.read.domain.service.ReceivingModeService;
 import org.egov.pgr.common.entity.ReceivingMode;
 import org.junit.Test;
@@ -12,15 +13,18 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
 
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -38,15 +42,29 @@ public class ReceivingModeControllerTest {
 	private ReceivingModeService mockReceivingModeService;
 
 	@Test
-	public void testGetReceivingCenters() throws Exception {
+	public void testGetReceivingModes() throws Exception {
         String tenantId = "ap.public";
-		List<ReceivingMode> recievingModes = new ArrayList<>(Collections.singletonList(new ReceivingMode()));
+		List<ReceivingMode> recievingModes =getReceivingModes();
 		when(mockReceivingModeService.getAllReceivingModes(tenantId)).thenReturn(recievingModes);
+		  String expectedContent = readResource("getServiceRequests.json");
+		mockMvc.perform(
+				post("/receivingmode?tenantId=" + tenantId))
+		.andExpect(status().isOk()).andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+		.andExpect(content().json(expectedContent));
 
-		mockMvc.perform(get("/receivingmode")
-				.accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
-                .param("tenantId", "ap.public")
-        ).andExpect(status().isOk());
+	}
+
+	private String readResource(String string) throws Exception{
+	      File file = ResourceUtils.getFile(this.getClass().getResource("/getReceivingModes.json"));
+	        return new String(Files.readAllBytes(Paths.get(file.getAbsolutePath())));
+		
+	}
+
+	private List<ReceivingMode> getReceivingModes() {
+		
+		ReceivingMode receivingMode1=ReceivingMode.builder().id(1L).name("Website").code("WEBSITE").tenantId("ap.public").build();
+		ReceivingMode receivingMode2=ReceivingMode.builder().id(2L).name("SMS").tenantId("ap.public").code("SMS").build();
+		return Arrays.asList(receivingMode1,receivingMode2);
 	}
 
 }

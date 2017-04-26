@@ -38,28 +38,26 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.lams.web.contract.factory;
+package org.egov.lams.web.contract;
 
-import org.egov.lams.web.contract.RequestInfo;
-import org.egov.lams.web.contract.ResponseInfo;
-import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestBody;
 
-@Component
-public class ResponseInfoFactory {
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-	public ResponseInfo createResponseInfoFromRequestInfo(RequestInfo requestInfo, Boolean success) {
-		
-		String apiId = requestInfo.getApiId();
-		String ver = requestInfo.getVer();
-		String ts = null;
-		if (requestInfo.getTs() != null)
-			ts = requestInfo.getTs().toString();
-		String resMsgId = "uief87324"; // FIXME : Hard-coded
-		String msgId = requestInfo.getMsgId();
-		String responseStatus = success ? "successful" : "failed";
-		System.err.println("before returning from response info factory");
-        return new ResponseInfo(apiId, ver, ts, resMsgId, msgId, responseStatus);
-    }
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@EqualsAndHashCode
+public class UserErrorResponse {
+
+	private ResponseInfo responseInfo;
+
+	private Error error;
 
 }

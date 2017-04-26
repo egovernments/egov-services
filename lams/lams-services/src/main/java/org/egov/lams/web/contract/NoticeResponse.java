@@ -22,12 +22,10 @@ import lombok.ToString;
 @ToString
 public class NoticeResponse   {
 	
-  @JsonProperty("ResposneInfo")
-  private ResponseInfo resposneInfo = null;
+  @JsonProperty("ResponseInfo")
+  private ResponseInfo responseInfo = null;
 
   @JsonProperty("Notices")
-  private List<Notice> notices = new ArrayList<Notice>();
-
-
+  private List<Notice> notices = new ArrayList<>();
 }
 

@@ -23,7 +23,7 @@
         "lng": 77.6699807,
         "media_url": null,
         "first_name": "Bake",
-        "last_name": "Jake",
+        "last_name": null,
         "phone": "9999999990",
         "email": "jake@maildrop.cc",
         "approval_position": null,
@@ -33,7 +33,7 @@
             "child_location_id": "60",
             "receivingMode": "MANUAL",
             "receivingCenter": "5",
-            "assignee_id": "2",
+            "assignee_id": "3",
             "status": "REGISTERED"
         }
     }

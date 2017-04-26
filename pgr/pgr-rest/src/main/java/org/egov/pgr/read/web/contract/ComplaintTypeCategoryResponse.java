@@ -8,11 +8,11 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class ComplaintTypeResponse {
+public class ComplaintTypeCategoryResponse {
 	@JsonProperty("ResponseInfo")
     private ResponseInfo responseInfo;
 
-    @JsonProperty("ComplaintType")
-    private  List<ComplaintType> complaintTypes;
+    @JsonProperty("ComplaintTypeCategory")
+    private  List<ComplaintTypeCategory> complaintTypeCategories;
 
 }

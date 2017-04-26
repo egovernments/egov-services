@@ -1,0 +1,15 @@
+{
+    "ResponseInfo": null,
+    "ComplaintType": [
+        {
+            "serviceName": "Broken Bin",
+            "serviceCode": "BRKNB",
+            "tenantId": "ap.public"
+        },
+        {
+            "serviceName": "Building plan sanction",
+            "serviceCode": "BPS",
+            "tenantId": "ap.public"
+        }
+    ]
+}

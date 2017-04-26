@@ -2,11 +2,10 @@ package org.egov.pgr.read.web.controller;
 
 import org.egov.pgr.read.domain.service.ComplaintTypeCategoryService;
 import org.egov.pgr.read.web.contract.ComplaintTypeCategory;
+import org.egov.pgr.read.web.contract.ComplaintTypeCategoryResponse;
+import org.egov.pgr.read.web.contract.RequestInfoBody;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,13 +17,12 @@ public class ComplaintTypeCategoryController {
     @Autowired
     private ComplaintTypeCategoryService complaintTypeCategoryService;
 
-    @GetMapping
-    public List<ComplaintTypeCategory> getAllCompaintTypeCategory(
-            @RequestParam(value = "tenantId", required = true) final String tenantId) {
-        if (tenantId != null && !tenantId.isEmpty()) {
-            return complaintTypeCategoryService.getAll(tenantId).stream().map(ComplaintTypeCategory::new)
-                    .collect(Collectors.toList());
-        } else
-            return null;
+    @PostMapping
+    public ComplaintTypeCategoryResponse getAllCompaintTypeCategory(
+        @RequestParam(value = "tenantId", defaultValue = "default") final String tenantId,
+        @RequestBody RequestInfoBody requestInfo) {
+        List<ComplaintTypeCategory> complaintTypeCategoryList = complaintTypeCategoryService.getAll(tenantId).stream().map(ComplaintTypeCategory::new)
+            .collect(Collectors.toList());
+        return new ComplaintTypeCategoryResponse(null, complaintTypeCategoryList);
     }
 }

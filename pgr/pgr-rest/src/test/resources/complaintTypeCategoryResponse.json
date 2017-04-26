@@ -1,0 +1,10 @@
+{
+    "ResponseInfo": null,
+    "ComplaintTypeCategory": [
+        {
+            "name": "Administration",
+            "description": "Administration",
+            "tenantId": "ap.public"
+        }
+    ]
+}

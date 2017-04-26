@@ -30,7 +30,7 @@ public class ComplaintController {
         this.complaintService = complaintService;
     }
 
-    @PostMapping
+    @PostMapping(value = "/_create")
     @ResponseStatus(HttpStatus.CREATED)
     public ServiceResponse createServiceRequest(@RequestBody SevaRequest request) {
         final Complaint complaint = request.toDomainForCreateRequest();
@@ -39,7 +39,7 @@ public class ComplaintController {
         return new ServiceResponse(responseInfo, Collections.singletonList(request.getServiceRequest()));
     }
 
-    @PutMapping
+    @PostMapping(value = "/_update")
     @ResponseStatus(HttpStatus.OK)
     public ServiceResponse updateServiceRequest(@RequestBody SevaRequest request) {
         final Complaint complaint = request.toDomainForUpdateRequest();

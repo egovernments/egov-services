@@ -1,8 +1,10 @@
 package org.egov.pgr.read.web.controller;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.pgr.Resources;
 import org.egov.pgr.TestConfiguration;
 import org.egov.pgr.TestResourceReader;
+import org.egov.pgr.common.contract.ServiceRequest;
 import org.egov.pgr.common.contract.SevaRequest;
 import org.egov.pgr.common.model.AuthenticatedUser;
 import org.egov.pgr.common.model.Complainant;
@@ -11,6 +13,7 @@ import org.egov.pgr.common.repository.UserRepository;
 import org.egov.pgr.read.domain.exception.InvalidComplaintException;
 import org.egov.pgr.read.domain.model.*;
 import org.egov.pgr.read.domain.service.ComplaintService;
+import org.egov.pgr.read.domain.service.SevaNumberGeneratorService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,16 +24,14 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -57,12 +58,36 @@ public class ComplaintControllerTest {
         doThrow(new InvalidComplaintException(invalidComplaint)).when(complaintService).save(any(Complaint.class),
             any(SevaRequest.class));
 
-        mockMvc.perform(post("/seva")
+        mockMvc.perform(post("/seva/_create")
             .param("foo", "b1", "b2")
             .contentType(MediaType.APPLICATION_JSON_UTF8)
             .content(resources.getFileContents("createComplaintRequest.json")))
             .andExpect(status().isBadRequest())
             .andExpect(content().json(resources.getFileContents("createComplaintErrorResponse.json")));
+    }
+
+    @Test
+    public void test_for_creating_a_complaint()
+        throws Exception {
+        when(userRepository.getUser("authToken")).thenReturn(getCitizen());
+
+        mockMvc.perform(post("/seva/_create")
+            .contentType(MediaType.APPLICATION_JSON_UTF8)
+            .content(resources.getFileContents("createComplaintRequest.json")))
+            .andExpect(status().isCreated())
+            .andExpect(content().json(resources.getFileContents("createComplaintResponse.json")));
+    }
+
+    @Test
+    public void test_for_updating_a_complaint()
+        throws Exception {
+        when(userRepository.getUser("authToken")).thenReturn(getCitizen());
+
+        mockMvc.perform(post("/seva/_update")
+            .contentType(MediaType.APPLICATION_JSON_UTF8)
+            .content(resources.getFileContents("updateComplaintRequest.json")))
+            .andExpect(status().isOk())
+            .andExpect(content().json(resources.getFileContents("updateComplaintResponse.json")));
     }
 
     public Complaint getComplaintWithNoTenantId() {

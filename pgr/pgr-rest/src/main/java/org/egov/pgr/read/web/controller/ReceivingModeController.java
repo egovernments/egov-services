@@ -26,7 +26,7 @@ public class ReceivingModeController {
 		List<org.egov.pgr.read.web.contract.ReceivingMode> receivingMode = receivingModes.stream()
 				.map(org.egov.pgr.read.web.contract.ReceivingMode::new).collect(Collectors.toList());
 
-		return new org.egov.pgr.read.web.contract.ReceivingModeResponse(null,receivingMode);
+		return new ReceivingModeResponse(null,receivingMode);
 
 	}
 }

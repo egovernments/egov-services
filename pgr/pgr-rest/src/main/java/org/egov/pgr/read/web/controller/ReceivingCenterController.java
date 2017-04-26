@@ -28,7 +28,7 @@ public class ReceivingCenterController {
         List<org.egov.pgr.read.web.contract.ReceivingCenter> receivingCenter = receivingCenters.stream()
 				.map(org.egov.pgr.read.web.contract.ReceivingCenter::new).collect(Collectors.toList());
 
-		return new org.egov.pgr.read.web.contract.ReceivingCenterResponse(null,receivingCenter);
+		return new ReceivingCenterResponse(null,receivingCenter);
 
     }
 
@@ -39,7 +39,7 @@ public class ReceivingCenterController {
       
     	ReceivingCenter receivingCenter=receivingCenterService.getReceivingCenterById(tenantId, id);
      org.egov.pgr.read.web.contract.ReceivingCenter receiveCenter = new org.egov.pgr.read.web.contract.ReceivingCenter(receivingCenter);
-		return new org.egov.pgr.read.web.contract.ReceivingCenterResponse(null,Collections.singletonList(receiveCenter));
+		return new ReceivingCenterResponse(null,Collections.singletonList(receiveCenter));
 
     }
 

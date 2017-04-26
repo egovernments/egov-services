@@ -14,5 +14,5 @@
   "roleCodes": [
     "EMPLOYEE"
   ],
-  "tenantId": "ap.public"
+  "tenantId": "default"
 }

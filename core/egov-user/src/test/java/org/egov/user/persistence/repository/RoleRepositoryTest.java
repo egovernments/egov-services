@@ -24,6 +24,7 @@ public class RoleRepositoryTest {
 
     @Test
     @Sql(scripts = {
+            "/sql/clearUserRoles.sql",
             "/sql/clearRoles.sql",
             "/sql/createRoles.sql"
     })
@@ -37,6 +38,7 @@ public class RoleRepositoryTest {
 
     @Test
     @Sql(scripts = {
+            "/sql/clearUserRoles.sql",
             "/sql/clearRoles.sql",
             "/sql/createRoles.sql"
     })

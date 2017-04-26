@@ -95,7 +95,7 @@ public class UserTest {
 				.active(Boolean.TRUE)
 				.gender(Gender.FEMALE)
 				.type(UserType.CITIZEN)
-				.tenantId("ap.public")
+				.tenantId("default")
 				.roles(null)
 				.build();
 
@@ -115,7 +115,7 @@ public class UserTest {
 				.active(Boolean.TRUE)
 				.gender(Gender.FEMALE)
 				.type(UserType.CITIZEN)
-				.tenantId("ap.public")
+				.tenantId("default")
 				.roles(Arrays.asList(role1, role2))
 				.build();
 
@@ -190,7 +190,7 @@ public class UserTest {
 				.active(Boolean.TRUE)
 				.gender(Gender.FEMALE)
 				.type(UserType.CITIZEN)
-				.tenantId("ap.public")
+				.tenantId("default")
 				.roles(Collections.singletonList(role1))
 				.build();
 

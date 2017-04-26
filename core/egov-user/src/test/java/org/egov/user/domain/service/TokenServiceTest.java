@@ -44,7 +44,7 @@ public class TokenServiceTest {
 		SecureUser secureUser = new SecureUser(getUser());
 		when(oAuth2Authentication.getPrincipal()).thenReturn(secureUser);
 		final List<Action> expectedActions = getActions();
-		when(actionRestRepository.getActionByRoleCodes(getRoleCodes(), "ap.public")).thenReturn(expectedActions);
+		when(actionRestRepository.getActionByRoleCodes(getRoleCodes(), "default")).thenReturn(expectedActions);
 		UserDetail actualUserDetails = tokenService.getUser(accessToken);
 
 		assertEquals(secureUser, actualUserDetails.getSecureUser());
@@ -74,7 +74,7 @@ public class TokenServiceTest {
 				.type("EMPLOYEE")
 				.active(Boolean.TRUE)
 				.roles(getRoles())
-				.tenantId("ap.public")
+				.tenantId("default")
 				.build();
 	}
 
@@ -83,7 +83,7 @@ public class TokenServiceTest {
 				.id(15L)
 				.name("Employee")
 				.code("Employee")
-				.tenantId("ap.public")
+				.tenantId("default")
 				.build();
 
 		return Collections.singletonList(new Role(roleModel));

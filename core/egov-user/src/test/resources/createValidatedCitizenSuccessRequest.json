@@ -40,7 +40,7 @@
     "identificationMark": "Head is missing on the body",
     "photo": null,
     "otpReference": "88a9ea58-2342-4a4d-bbec-3211b5140722",
-    "tenantId": "ap.public",
+    "tenantId": "default",
     "roles": []
   }
 }

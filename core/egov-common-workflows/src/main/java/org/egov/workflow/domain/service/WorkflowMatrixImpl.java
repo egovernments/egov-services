@@ -70,7 +70,7 @@ public class WorkflowMatrixImpl implements Workflow {
 		LOG.debug(processInstanceRequest.toString());
 		ProcessInstance processInstance = processInstanceRequest.getProcessInstance();
 		final WorkFlowMatrix wfMatrix = workflowService.getWfMatrix(processInstance.getBusinessKey(), null, null, null,
-				null, null);
+				null, null,processInstance.getTenantId());
 		Position owner = processInstance.getAssignee();
 		if (processInstance.getAssignee() != null)
 			owner = positionRepository.getById(Long.valueOf(processInstance.getAssignee().getId()),
@@ -167,7 +167,7 @@ public class WorkflowMatrixImpl implements Workflow {
 		if (task.getAttributes() != null && task.getAttributes().get("department") != null)
 			dept = task.getAttributes().get("department").getCode();
 		final WorkFlowMatrix wfMatrix = workflowService.getWfMatrix(task.getBusinessKey(), dept, null, null,
-				task.getStatus(), null);
+				task.getStatus(), null,task.getTenantId());
 
 		String nextState = wfMatrix.getNextState();
 		final State state = stateService.findOne(Long.valueOf(task.getId()));
@@ -242,11 +242,11 @@ public class WorkflowMatrixImpl implements Workflow {
 		if (null != workflowBean && null != workflowBean.getWorkflowId())
 			wfMatrix = workflowService.getWfMatrix(workflowBean.getBusinessKey(), workflowBean.getWorkflowDepartment(),
 					workflowBean.getAmountRule(), workflowBean.getAdditionalRule(), workflowBean.getCurrentState(),
-					workflowBean.getPendingActions(), workflowBean.getCreatedDate());
+					workflowBean.getPendingActions(), workflowBean.getCreatedDate(),workflowBean.getTenantId());
 		else
 			wfMatrix = workflowService.getWfMatrix(workflowBean.getBusinessKey(), workflowBean.getWorkflowDepartment(),
 					workflowBean.getAmountRule(), workflowBean.getAdditionalRule(), State.DEFAULT_STATE_VALUE_CREATED,
-					workflowBean.getPendingActions(), workflowBean.getCreatedDate());
+					workflowBean.getPendingActions(), workflowBean.getCreatedDate(),workflowBean.getTenantId());
 		return wfMatrix == null ? "" : wfMatrix.getNextAction();
 	}
 

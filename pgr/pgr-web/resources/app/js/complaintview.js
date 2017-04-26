@@ -266,8 +266,8 @@ function complaintUpdate(obj){
 		req_obj.ServiceRequest.values['assignment_id'] = $("#approvalPosition").val();
 
 	$.ajax({
-		url: "/pgr/seva?jurisdiction_id=ap.public",
-		type : 'PUT',
+		url: "/pgr/seva/_update?jurisdiction_id=ap.public",
+		type : 'POST',
 		dataType: 'json',
 		processData : false,
 		contentType: "application/json",
@@ -330,11 +330,16 @@ function complaintUpdate(obj){
 
 function complaintType(loadDD, serviceName){
 	$.ajax({
-		url: "/pgr/services?type=all&tenantId=ap.public"
+		url: "/pgr/services?type=all&tenantId=ap.public",
+		type : 'POST',
+		data : JSON.stringify(requestInfo),
+		dataType: 'json',
+		processData : false,
+		contentType: "application/json"
 	}).done(function(data) {
 		loadDD.load({
 			element:$('#complaintType'),
-			data:data,
+			data:data.ComplaintType,
 			keyValue:'serviceCode',
 			keyDisplayName:'serviceName'
 		});

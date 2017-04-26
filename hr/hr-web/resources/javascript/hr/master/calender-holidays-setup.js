@@ -218,8 +218,8 @@ componentWillMount(){
                   <div className="col-sm-6">
                     <div className="styled-select">
                     <select id="name" name="name"  value= {calendarYear.name}
-                        onChange={(e)=>{handleChangeThreeLevel(e,"calendarYear","name")  }}>
-                    <option>Select Year</option>
+                      onChange={(e)=>{handleChangeThreeLevel(e,"calendarYear","name")}} required>
+                    <option value="">Select Year</option>
                     {renderOption(this.state.year)}
                    </select>
                     </div>

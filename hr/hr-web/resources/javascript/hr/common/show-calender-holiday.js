@@ -158,7 +158,7 @@ const showTable=function()
                     <div className="styled-select">
                     <select id="calendarYear" name="calendarYear" required="true" value={calendarYear}
                     onChange={(e)=>{handleChange(e,"calendarYear")}}>
-                    <option>Select Year</option>
+                    <option value= "">Select Year</option>
                     {renderOption(this.state.year)}
                    </select>
                     </div>

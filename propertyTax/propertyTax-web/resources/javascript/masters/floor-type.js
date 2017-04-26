@@ -3,7 +3,7 @@ class FloorType extends React.Component {
     super(props);
     this.state={list:[],searchSet:{
     name:"",
-        },isSearchClicked:false,FloorType:[]}
+  },isSearchClicked:false,floorTypeList:[]}
     this.handleChange=this.handleChange.bind(this);
     this.search=this.search.bind(this);
   }
@@ -36,7 +36,7 @@ class FloorType extends React.Component {
 
       this.setState({
 
-        FloorType: [{
+        floorTypeList: [{
                 id: "cement",
                 name: "Cement",
 
@@ -120,7 +120,7 @@ class FloorType extends React.Component {
                   onChange={(e)=>{  handleChange(e,"name")}} >
 
                                   <option value="">Choose name</option>
-                                  {renderOption(this.state.FloorType)}
+                                  {renderOption(this.state.floorTypeList)}
 
                                 </select>
                             </div>
@@ -133,11 +133,11 @@ class FloorType extends React.Component {
 
 
                     <div className="text-center">
-                    <button type="submit" className="btn btn-submit" onClick={(e)=>{window.location.href='app/create/create-floor-type.html?type=create'}}>Create</button>
+                    <button type="submit" className="btn btn-submit" onClick={(e)=>{window.location.href='app/create/create-floor-type.html?type=Create'}}>Create</button>
                     &nbsp;
-                    <button type="submit" className="btn btn-submit" onClick={(e)=>{window.location.href='app/create/create-floor-type.html?type=update'}}>Update</button>
+                    <button type="submit" className="btn btn-submit" onClick={(e)=>{window.location.href='app/create/create-floor-type.html?type=Update'}}>Update</button>
                     &nbsp;
-                        <button type="submit" className="btn btn-submit" onClick={(e)=>{window.location.href='app/create/create-floor-type.html?type=view'}}>View</button>
+                        <button type="submit" className="btn btn-submit" onClick={(e)=>{window.location.href='app/create/create-floor-type.html?type=View'}}>View</button>
                         &nbsp;
                         <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>
                     </div>

@@ -4,9 +4,21 @@ class CreateFloorType extends React.Component {
     this.state={list:[],searchSet:{
     name:""}
       }
-    // this.handleChange=this.handleChange.bind(this);
+     this.handleChange=this.handleChange.bind(this);
+     this.addOrUpdate=this.addOrUpdate.bind(this);
+
   }
 
+  handleChange(e,name)
+      {
+        console.log(name);
+          this.setState({
+              searchSet:{
+                  ...this.state.searchSet,
+                  [name]:e.target.value
+              }
+          })
+      }
 
   close(){
       // widow.close();
@@ -18,7 +30,7 @@ class CreateFloorType extends React.Component {
 
         if(getUrlVars()["type"]==="view")
         {
-          for (var variable in this.state.gradeSet)
+          for (var variable in this.state.searchSet)
             document.getElementById(variable).disabled = true;
           }
 
@@ -26,27 +38,42 @@ class CreateFloorType extends React.Component {
         if(type==="view"||type==="update")
         {
             this.setState({
-              // gradeSet:getCommonMasterById("hr-masters","grades","Grade",id).responseJSON["Grade"][0]
+              // searchSet:getCommonMasterById("hr-masters","grades","Grade",id).responseJSON["Grade"][0]
             })
         }
 
 
 
       }
+      addOrUpdate(e,mode){
+        e.preventDefault();
+         console.log(this.state.searchSet);
+        // console.log(mode);
+        if (mode==="update") {
+            console.log("update");
+        } else {
+
+          this.setState({searchSet:{
+            name:"",
+
+          } })
+        }
+      }
+
 
 
 
   render() {
-    let {handleChange}=this;
+    let {handleChange,addOrUpdate}=this;
     let {list}=this.state;
     let {name}=this.state.searchSet;
     let mode=getUrlVars()["type"];
 
     const showActionButton=function() {
-      if(mode==="create")
+      if(mode==="Create")
         return (<button type="submit" className="btn btn-submit">Add</button>);
 
-     else if(mode==="update")
+     else if(mode==="Update")
           return (<button type="submit" className="btn btn-submit">Update</button>);
 
 
@@ -57,8 +84,9 @@ class CreateFloorType extends React.Component {
 
     return (
     <div>
+    <h3>{mode} Floor Type </h3>
+    <form onSubmit={(e)=>{addOrUpdate(e,mode)}}>
 
-          <form>
             <div className="row">
                 <div className="col-sm-6">
                     <div className="row">
@@ -67,7 +95,8 @@ class CreateFloorType extends React.Component {
                         </div>
                         <div className="col-sm-6">
                             <div className="row">
-                              <input type="text" name="name" id="name" />
+                              <input type="text" name="name" id="name" value={name}
+                onChange={(e)=>{  handleChange(e,"name")}} />
                             </div>
                         </div>
                     </div>

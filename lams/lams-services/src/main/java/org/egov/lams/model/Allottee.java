@@ -31,4 +31,5 @@ public class Allottee {
 	private boolean active;
 	private UserType type;
 	private Gender gender;
+	private String tenantId; 
 }

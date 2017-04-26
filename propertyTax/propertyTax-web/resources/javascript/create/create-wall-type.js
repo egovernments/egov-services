@@ -29,14 +29,14 @@ class CreateWallType extends React.Component {
         var type=getUrlVars()["type"];
         var id=getUrlVars()["id"];
 
-        if(getUrlVars()["type"]==="view")
+        if(getUrlVars()["type"]==="View")
         {
-          for (var variable in this.state.gradeSet)
-            document.getElementById(variable).disabled = true;
+           $("input").prop("disabled", true);
+
           }
 
 
-        if(type==="view"||type==="update")
+        if(type==="View"||type==="Update")
         {
             this.setState({
               // gradeSet:getCommonMasterById("hr-masters","grades","Grade",id).responseJSON["Grade"][0]

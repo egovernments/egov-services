@@ -32,8 +32,8 @@ class CreateWoodType extends React.Component {
 
         if(getUrlVars()["type"]==="View")
         {
-          for (var variable in this.state.gradeSet)
-            document.getElementById(variable).disabled = true;
+           $("input").prop("disabled", true);
+
           }
 
 
@@ -47,6 +47,7 @@ class CreateWoodType extends React.Component {
 
 
       }
+
       addOrUpdate(e,mode){
         e.preventDefault();
          console.log(this.state.searchSet);

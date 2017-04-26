@@ -2,24 +2,24 @@ class WallType extends React.Component {
   constructor(props) {
     super(props);
     this.state={list:[],searchSet:{
-    name:""},isSearchClicked:false}
+    name:""},isSearchClicked:false,type:""}
     this.handleChange=this.handleChange.bind(this);
     this.search=this.search.bind(this);
+    this.updateType=this.updateType.bind(this);
+
   }
 
   search(e)
   {
     e.preventDefault();
-    //call api call
-    //  var list=commonApiPost("asset-services","assets","_search",this.state.searchSet).responseJSON["Assets"] ||[];
-      this.setState({
-      isSearchClicked:true,
-      list
-    })
+    // var type = getUrlVars()["id"];
 
-    // $('#agreementTable').DataTable().draw();
-    // console.log($('#agreementTable').length);
+      if(this.state.type==="Update")
 
+        return (  window.location.href='app/create/create-wall-type.html?type=Update')
+
+      else
+      return (  window.location.href='app/create/create-wall-type.html?type=View')
     }
 
   componentWillMount()
@@ -61,35 +61,10 @@ class WallType extends React.Component {
 
 
   })
+  
 
 }
 
-  // componentDidUpdate(prevProps, prevState)
-  // {
-  //     if (prevState.list.length!=this.state.list.length) {
-  //         // $('#agreementTable').DataTable().draw();
-  //         // alert(prevState.list.length);
-  //         // alert(this.state.list.length);
-  //         // alert('updated');
-  //         $('#agreementTable').DataTable({
-  //           dom: 'Bfrtip',
-  //           buttons: [
-  //                    'copy', 'csv', 'excel', 'pdf', 'print'
-  //            ],
-  //            ordering: false,
-  //            bDestroy: true
-  //         });
-  //     }
-      // else {
-      //   $('#agreementTable').DataTable({
-      //     dom: 'Bfrtip',
-      //     buttons: [
-      //              'copy', 'csv', 'excel', 'pdf', 'print'
-      //      ],
-      //      ordering: false
-      //   });
-      // }
-  // }
 
   handleChange(e,name)
   {
@@ -102,6 +77,13 @@ class WallType extends React.Component {
       })
 
   }
+  updateType(e, type){
+    // console.log("hi");
+    this.setState({
+      type
+    })
+  }
+
 
 
 
@@ -113,7 +95,7 @@ class WallType extends React.Component {
 
 
   render() {
-    let {handleChange,search,updateTable,handleSelectChange}=this;
+    let {handleChange,search,updateType}=this;
     let {isSearchClicked,list}=this.state;
     let {name}=this.state.searchSet;
 
@@ -158,17 +140,17 @@ class WallType extends React.Component {
 
 
                                       <br/>
-                    <div className="text-center">
-                    <button type="button" className="btn btn-submit" onClick={(e)=>{window.location.href='app/create/create-wall-type.html?type=Create'}}>Create</button>
-                    &nbsp;
-                    <button type="submit" className="btn btn-submit" onClick={(e)=>{window.location.href='app/create/create-wall-type.html?type=Update'}}>Update</button>
-                    &nbsp;
+                                      <div className="text-center">
+                                      <button type="button" className="btn btn-danger" onClick={(e)=>{window.location.href='app/create/create-wall-type.html?type=Create'}}>Create</button>
+                                      &nbsp;
+                                      <button type="submit" className="btn btn-submit" id="Update" value="Update" onClick={(e)=>{  updateType(e,"Update")}}>Update</button>
+                                      &nbsp;
 
-                        <button type="submit" className="btn btn-submit" onClick={(e)=>{window.location.href='app/create/create-wall-type.html?type=View'}}>View</button>
-                        &nbsp;
-                        <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>
-                    </div>
-                    </form>
+                                          <button type="submit" className="btn btn-submit" value="View" onClick={(e)=>{  updateType(e,"View")}} >View</button>
+                                          &nbsp;
+                                          <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>
+                                      </div>
+                                      </form>
 
 
           </div>

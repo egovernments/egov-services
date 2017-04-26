@@ -28,23 +28,25 @@ class CreateFloorType extends React.Component {
         var type=getUrlVars()["type"];
         var id=getUrlVars()["id"];
 
-        if(getUrlVars()["type"]==="view")
+        if(getUrlVars()["type"]==="View")
         {
-          for (var variable in this.state.searchSet)
-            document.getElementById(variable).disabled = true;
+           $("input").prop("disabled", true);
+
           }
 
 
-        if(type==="view"||type==="update")
+        if(type==="View"||type==="Update")
         {
             this.setState({
-              // searchSet:getCommonMasterById("hr-masters","grades","Grade",id).responseJSON["Grade"][0]
+              // gradeSet:getCommonMasterById("hr-masters","grades","Grade",id).responseJSON["Grade"][0]
             })
         }
 
 
 
       }
+
+      
       addOrUpdate(e,mode){
         e.preventDefault();
          console.log(this.state.searchSet);
@@ -78,13 +80,7 @@ class CreateFloorType extends React.Component {
 
 
     }
-    const disbaled=function(mode) {
-    if (mode==="view") {
-          return "ture";
-    } else {
-        return "false";
-    }
-    }
+
 
 
 

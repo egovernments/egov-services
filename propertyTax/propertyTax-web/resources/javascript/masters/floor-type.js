@@ -19,14 +19,14 @@ class FloorType extends React.Component {
     console.log(this.state.type);
       if(this.state.type==="Update")
 
-        return (  window.location.href='app/create/create-roof-type.html?type=Update')
+        return (  window.location.href='app/create/create-floor-type.html?type=Update')
         //console.log(type);
       //
       //
       else
 
 
-        return (  window.location.href='app/create/create-roof-type.html?type=View')
+        return (  window.location.href='app/create/create-floor-type.html?type=View')
 
 
 

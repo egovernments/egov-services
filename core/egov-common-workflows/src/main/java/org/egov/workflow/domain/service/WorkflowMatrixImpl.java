@@ -105,7 +105,7 @@ public class WorkflowMatrixImpl implements Workflow {
 		state.setType(processInstance.getBusinessKey());
 
 		final WorkflowTypes type = workflowTypeService.getWorkflowTypeByTypeAndTenantId(state.getType(),
-				processInstanceRequest.getRequestInfo().getTenantId());
+				processInstance.getTenantId());
 		state.setMyLinkId(type.getLink());
 
 		state.setNatureOfTask(type.getDisplayName());

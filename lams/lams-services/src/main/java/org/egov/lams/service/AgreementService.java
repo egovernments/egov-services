@@ -187,6 +187,7 @@ public class AgreementService {
 						requestInfo.getUserInfo().getId().toString())+"?tenantId="+tenantId;
 		
 		logger.info("the request url to position get call :: " + positionUrl);
+		logger.info("the request body to position get call :: " + requestInfoWrapper);
 
 		// FIXME move the resttemplate to positionrepository later
 		try {

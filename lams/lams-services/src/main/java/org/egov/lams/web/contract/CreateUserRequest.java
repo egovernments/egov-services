@@ -1,9 +1,6 @@
 package org.egov.lams.web.contract;
 
-import org.egov.lams.model.Allottee;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
@@ -17,5 +14,5 @@ public class CreateUserRequest {
     private RequestInfo requestInfo;
 	
 	@JsonProperty("User")
-    private Allottee user;
+    private UserRequest user;
 }

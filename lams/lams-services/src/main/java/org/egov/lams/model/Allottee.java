@@ -1,7 +1,10 @@
 package org.egov.lams.model;
 
+import java.util.List;
+
 import org.egov.lams.model.enums.Gender;
 import org.egov.lams.model.enums.UserType;
+import org.egov.lams.web.contract.Role;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -28,7 +31,10 @@ public class Allottee {
 	private String emailId;
 	private String userName;
 	private String password;
-	private boolean active;
+	private Boolean active;
 	private UserType type;
 	private Gender gender;
+	private String tenantId; 
+	@JsonProperty("roles")
+    private List<Role> roles;
 }

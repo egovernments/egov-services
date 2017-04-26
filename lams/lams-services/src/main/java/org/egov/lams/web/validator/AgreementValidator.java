@@ -86,8 +86,10 @@ public class AgreementValidator {
 		Allottee allottee = agreementRequest.getAgreement().getAllottee();
 		RequestInfo requestInfo = agreementRequest.getRequestInfo();
 		AllotteeResponse allotteeResponse = allotteeService.isAllotteeExist(allottee, requestInfo);
-		if (allotteeResponse.getAllottee() == null || allotteeResponse.getAllottee().size() == 0)
+		if (allotteeResponse.getAllottee() == null || allotteeResponse.getAllottee().size() == 0){
+			allottee.setTenantId(agreementRequest.getAgreement().getTenantId());
 			allotteeService.createAllottee(allottee, requestInfo);
+		}
 		else 
 			allottee.setId(allotteeResponse.getAllottee().get(0).getId());
 	}

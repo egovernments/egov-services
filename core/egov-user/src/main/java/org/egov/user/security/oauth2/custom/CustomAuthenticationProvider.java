@@ -64,7 +64,6 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
      * TO-Do:Need to remove this and provide authentication for web, based on
      * authentication_code.
      */
-    private final String WEB_CHEAT_PASSWORD = "Pgr-weB-pa$$word";
 
     @Autowired
     private UserService userService;
@@ -86,7 +85,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
         BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
 
-        if (WEB_CHEAT_PASSWORD.equals(password) || bcrypt.matches(password, user.getPassword())) {
+        if (bcrypt.matches(password, user.getPassword())) {
 
             if (!user.getActive()) {
                 throw new OAuth2Exception("Please activate your account");

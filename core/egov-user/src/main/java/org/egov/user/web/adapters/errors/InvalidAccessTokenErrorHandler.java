@@ -10,11 +10,10 @@ import java.util.Collections;
 import java.util.List;
 
 @Getter
-public class InvalidAccessTokenErrorHandler extends RuntimeException {
+public class InvalidAccessTokenErrorHandler {
 
     private static final String ACCESS_TOKEN_NOT_FOUND_CODE = "ACCESS_TOKEN_NOT_FOUND";
     private static final String ACCESS_TOKEN_NOT_FOUND = "Access Token Not Found";
-	private static final long serialVersionUID = 5109697392467127112L;
 
 	public ErrorResponse adapt() {
         final Error error = getError();

@@ -2,6 +2,7 @@ package org.egov.user.domain.service;
 
 import org.egov.user.domain.exception.*;
 import org.egov.user.domain.model.Role;
+import org.egov.user.domain.model.UpdatePassword;
 import org.egov.user.domain.model.User;
 import org.egov.user.domain.model.UserSearch;
 import org.egov.user.domain.model.enums.Gender;
@@ -13,6 +14,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -31,6 +33,9 @@ public class UserServiceTest {
 
 	@Mock
 	private OtpRepository otpRepository;
+	
+	@Mock
+	private PasswordEncoder passwordEncoder;
 
 	@InjectMocks
 	private UserService userService;
@@ -143,16 +148,16 @@ public class UserServiceTest {
 	@Test
 	public void test_should_update_a_valid_user() throws Exception {
 		User domainUser = validDomainUser();
-		org.egov.user.persistence.entity.User user = new org.egov.user.persistence.entity.User();
-		final User expectedEntityUser = User.builder().build();
-		when(userRepository.update(any(Long.class), any(org.egov.user.domain.model.User.class)))
-				.thenReturn(expectedEntityUser);
+		User user = User.builder().build();
+		final User expectedUser = User.builder().build();
+		when(userRepository.update(any(org.egov.user.domain.model.User.class)))
+				.thenReturn(expectedUser);
 		when(userRepository.getUserById(any(Long.class))).thenReturn(user);
 		when(userRepository.isUserPresent(any(String.class), any(Long.class), any(String.class))).thenReturn(false);
 
 		User returnedUser = userService.updateWithoutOtpValidation(1L, domainUser);
 
-		assertEquals(expectedEntityUser, returnedUser);
+		assertEquals(expectedUser, returnedUser);
 	}
 
 	@Test(expected = DuplicateUserNameException.class)
@@ -198,7 +203,7 @@ public class UserServiceTest {
 
 		userService.partialUpdate(user);
 
-		verify(userRepository).update(userId, user);
+		verify(userRepository).update(user);
 	}
 
 	@Test(expected = UserProfileUpdateDeniedException.class)
@@ -207,6 +212,54 @@ public class UserServiceTest {
 		when(user.isLoggedInUserDifferentFromUpdatedUser()).thenReturn(true);
 
 		userService.partialUpdate(user);
+	}
+
+	@Test
+	public void test_should_validate_update_password_request() {
+		final UpdatePassword updatePasswordRequest = mock(UpdatePassword.class);
+		when(userRepository.getUserById(any())).thenReturn(mock(User.class));
+		when(passwordEncoder.matches(anyString(), anyString())).thenReturn(true);
+		
+		userService.updatePasswordForLoggedInUser(updatePasswordRequest);
+
+		verify(updatePasswordRequest).validate();
+	}
+
+	@Test(expected = UserNotFoundException.class)
+	public void test_should_throw_exception_when_attempting_to_update_password_for_a_user_that_does_not_exist() {
+		final UpdatePassword updatePasswordRequest = mock(UpdatePassword.class);
+		when(updatePasswordRequest.getUserId()).thenReturn(123L);
+		when(userRepository.getUserById(123L)).thenReturn(null);
+
+		userService.updatePasswordForLoggedInUser(updatePasswordRequest);
+	}
+
+	@Test(expected = PasswordMismatchException.class)
+	public void test_should_throw_exception_when_existing_password_does_not_match_on_attempting_to_update_user() {
+		final UpdatePassword updatePasswordRequest = mock(UpdatePassword.class);
+		when(updatePasswordRequest.getExistingPassword()).thenReturn("wrongPassword");
+		final User user = mock(User.class);
+		when(user.getPassword()).thenReturn("existingPasswordEncoded");
+		when(user.getPassword()).thenReturn("existingPasswordEncoded");
+		when(passwordEncoder.matches("wrongPassword", "existingPasswordEncoded")).thenReturn(false);
+		when(userRepository.getUserById(any())).thenReturn(user);
+
+		userService.updatePasswordForLoggedInUser(updatePasswordRequest);
+	}
+
+	@Test
+	public void test_should_update_password_for_logged_in_user() {
+		final UpdatePassword updatePasswordRequest = mock(UpdatePassword.class);
+		when(updatePasswordRequest.getExistingPassword()).thenReturn("existingPassword");
+		final User domainUser = mock(User.class);
+		when(domainUser.getPassword()).thenReturn("existingPasswordEncoded");
+		when(passwordEncoder.matches("existingPassword", "existingPasswordEncoded")).thenReturn(true);
+		when(userRepository.getUserById(any())).thenReturn(domainUser);
+
+		userService.updatePasswordForLoggedInUser(updatePasswordRequest);
+
+		verify(domainUser).update(updatePasswordRequest);
+		verify(userRepository).update(domainUser);
 	}
 
 	private org.egov.user.domain.model.User validDomainUser() {

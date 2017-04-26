@@ -10,9 +10,7 @@ def build(path, ci_image){
 
 def defaultMavenBuild(path, ci_image){
     stage("Build"){
-        docker.image("${ci_image}").inside {
-            sh "cd ${path}; mvn clean verify package";
-        }
+        sh "./build.sh ${path}"
     }
 }
 

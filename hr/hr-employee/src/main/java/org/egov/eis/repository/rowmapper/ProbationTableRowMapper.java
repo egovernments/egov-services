@@ -62,12 +62,12 @@ public class ProbationTableRowMapper implements RowMapper<Probation> {
 
 		Probation probation = new Probation();
 
-		probation.setId(rs.getLong("id"));
-		probation.setDesignation(rs.getLong("designationid"));
+		probation.setId((Long) rs.getObject("id"));
+		probation.setDesignation((Long) rs.getObject("designationid"));
 		probation.setOrderNo(rs.getString("orderno"));
 		probation.setRemarks(rs.getString("remarks"));
-		probation.setCreatedBy(rs.getLong("createdby"));
-		probation.setLastModifiedBy(rs.getLong("lastmodifiedby"));
+		probation.setCreatedBy((Long) rs.getObject("createdby"));
+		probation.setLastModifiedBy((Long) rs.getObject("lastmodifiedby"));
 		probation.setTenantId(rs.getString("tenantid"));
 		try {
 			Date date = isEmpty(rs.getDate("declaredon")) ? null : sdf.parse(sdf.format(rs.getDate("declaredon")));

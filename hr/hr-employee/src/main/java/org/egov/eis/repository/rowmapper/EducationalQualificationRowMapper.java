@@ -62,13 +62,13 @@ public class EducationalQualificationRowMapper implements RowMapper<EducationalQ
 
 		EducationalQualification educationalQualification = new EducationalQualification();
 
-		educationalQualification.setId(rs.getLong("id"));
+		educationalQualification.setId((Long) rs.getObject("id"));
 		educationalQualification.setQualification(rs.getString("qualification"));
 		educationalQualification.setMajorSubject(rs.getString("majorsubject"));
-		educationalQualification.setYearOfPassing(rs.getInt("yearofpassing"));
+		educationalQualification.setYearOfPassing((Integer) rs.getObject("yearofpassing"));
 		educationalQualification.setUniversity(rs.getString("university"));
-		educationalQualification.setCreatedBy(rs.getLong("createdby"));
-		educationalQualification.setLastModifiedBy(rs.getLong("lastmodifiedby"));
+		educationalQualification.setCreatedBy((Long) rs.getObject("createdby"));
+		educationalQualification.setLastModifiedBy((Long) rs.getObject("lastmodifiedby"));
 		educationalQualification.setTenantId(rs.getString("tenantid"));
 		try {
 			Date date = isEmpty(rs.getDate("createdDate")) ? null : sdf.parse(sdf.format(rs.getDate("createdDate")));

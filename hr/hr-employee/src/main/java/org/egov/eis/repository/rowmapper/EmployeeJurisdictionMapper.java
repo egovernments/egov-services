@@ -12,6 +12,6 @@ public class EmployeeJurisdictionMapper implements RowMapper<Long> {
 
 	@Override
 	public Long mapRow(ResultSet rs, int rowNum) throws SQLException, DataAccessException {
-		return rs.getLong("jurisdictionid");
+		return (Long) rs.getObject("jurisdictionid");
 	}
 }

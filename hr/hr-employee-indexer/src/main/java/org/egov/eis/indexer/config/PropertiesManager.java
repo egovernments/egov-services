@@ -83,26 +83,26 @@ public class PropertiesManager {
 	@Value("${egov.location.service.boundarytype.search.path}")
 	private String egovLocationServiceBoundaryTypeSearchPath;
 
-	@Value("${financials.egf.masters.service.host}")
-	private String financialsEgfMastersServiceHost;
+	@Value("${egf.masters.service.host}")
+	private String egfMastersServiceHost;
 
-	@Value("${financials.egf.masters.service.basepath}")
-	private String financialsEgfMastersServiceBasepath;
+	@Value("${egf.masters.service.basepath}")
+	private String egfMastersServiceBasepath;
 
-	@Value("${financials.egf.masters.service.bank.search.path}")
-	private String financialsEgfMastersServiceBankSearchPath;
+	@Value("${egf.masters.service.bank.search.path}")
+	private String egfMastersServiceBankSearchPath;
 
-	@Value("${financials.egf.masters.service.bankbranch.search.path}")
-	private String financialsEgfMastersServiceBankBranchSearchPath;
+	@Value("${egf.masters.service.bankbranch.search.path}")
+	private String egfMastersServiceBankBranchSearchPath;
 
-	@Value("${financials.egf.masters.service.fund.search.path}")
-	private String financialsEgfMastersServiceFundSearchPath;
+	@Value("${egf.masters.service.fund.search.path}")
+	private String egfMastersServiceFundSearchPath;
 
-	@Value("${financials.egf.masters.service.function.search.path}")
-	private String financialsEgfMastersServiceFunctionSearchPath;
+	@Value("${egf.masters.service.function.search.path}")
+	private String egfMastersServiceFunctionSearchPath;
 
-	@Value("${financials.egf.masters.service.functionary.search.path}")
-	private String financialsEgfMastersServiceFunctionarySearchPath;
+	@Value("${egf.masters.service.functionary.search.path}")
+	private String egfMastersServiceFunctionarySearchPath;
 
 	@Value("${kafka.topics.employee.esindex.savedb.name}")
 	private String saveEmployeeIndexerTopic;

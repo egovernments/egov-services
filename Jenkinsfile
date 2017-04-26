@@ -16,7 +16,6 @@ try {
         archiver = load("jenkins/archiver.groovy")
         image_builder = load("jenkins/image_builder.groovy")
         notifier = load("jenkins/notifier.groovy")
-//      deployer = load("jenkins/deployer.groovy")
 
         code_builder.build(path, ci_image)
 
@@ -28,10 +27,6 @@ try {
 
         image_builder.clean(service_name, commit_id)
     }
-
-//    stage("Deploy to QA") {
-//        deployer.deploy(service_name, commit_id)
-//    }
 } catch (e) {
     node{
         notifier.notifyBuild("FAILED")

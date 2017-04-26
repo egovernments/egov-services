@@ -50,6 +50,8 @@ import org.egov.eis.web.contract.ProcessInstanceResponse;
 import org.egov.eis.web.contract.Task;
 import org.egov.eis.web.contract.TaskRequest;
 import org.egov.eis.web.contract.TaskResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -58,6 +60,8 @@ import org.springframework.web.client.RestTemplate;
 
 @Service
 public class WorkFlowService {
+    public static final Logger LOGGER = LoggerFactory.getLogger(WorkFlowService.class);
+    
     @Autowired
     private WorkFlowSearchURLHelper workFlowSearchURLHelper;
     
@@ -71,7 +75,8 @@ public class WorkFlowService {
         processInstance.setType(propertiesManager.getWorkflowServiceBusinessKey());
         processInstance.setComments("starting workflow from Leave Application consumer");
         Position assignee = new Position();
-        assignee.setId(leaveApplicationRequest.getLeaveApplication().getWorkFlowDetails().getAssignee());
+        LOGGER.info("leaveApplicationRequest::" + leaveApplicationRequest);
+        assignee.setId(leaveApplicationRequest.getLeaveApplication().getWorkflowDetails().getAssignee());
         processInstance.setAssignee(assignee);
         processInstanceRequest.setRequestInfo(leaveApplicationRequest.getRequestInfo());
         processInstanceRequest.setProcessInstance(processInstance);
@@ -94,10 +99,10 @@ public class WorkFlowService {
         task.setBusinessKey(propertiesManager.getWorkflowServiceBusinessKey());
         task.setType(propertiesManager.getWorkflowServiceBusinessKey());
         task.setComments("updating workflow from Leave Application consumer");
-        task.setAction(leaveApplicationRequest.getLeaveApplication().getWorkFlowDetails().getAction());
-        task.setStatus(leaveApplicationRequest.getLeaveApplication().getWorkFlowDetails().getAction());
+        task.setAction(leaveApplicationRequest.getLeaveApplication().getWorkflowDetails().getAction());
+        task.setStatus(leaveApplicationRequest.getLeaveApplication().getWorkflowDetails().getAction());
         Position assignee = new Position();
-        assignee.setId(leaveApplicationRequest.getLeaveApplication().getWorkFlowDetails().getAssignee());
+        assignee.setId(leaveApplicationRequest.getLeaveApplication().getWorkflowDetails().getAssignee());
         task.setAssignee(assignee);
         taskRequest.setRequestInfo(leaveApplicationRequest.getRequestInfo());
         taskRequest.setTask(task);

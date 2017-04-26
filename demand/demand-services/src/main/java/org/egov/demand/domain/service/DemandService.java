@@ -27,14 +27,15 @@ public class DemandService {
 	private InstallmentService installmentService;
 
 	public EgDemand createDemand(Demand demand) throws Exception {
+		LOGGER.info("createDemand - demand - "+demand);
 		EgDemand egDemand = new EgDemand();
 		Installment demandInstallment = null;
 		EgDemandDetails egDemandDetails = null;
 		Set<EgDemandDetails> demandDetailsList = new HashSet<EgDemandDetails>();
 		EgDemandReason demandReason;
 		if (!demand.getModuleName().isEmpty() && !demand.getInstallment().isEmpty()) {
-			demandInstallment = installmentService.findByDescriptionAndModule(demand.getInstallment(),
-					demand.getModuleName());
+			demandInstallment = installmentService.findByDescriptionAndModuleAndTenantId(demand.getInstallment(),
+					demand.getModuleName(), demand.getTenantId());
 		}
 		if (demandInstallment == null) {
 			throw new Exception("Not a valid module or installment description");
@@ -48,7 +49,7 @@ public class DemandService {
 			if (demandDetail.getTaxAmount() != null && demandDetail.getTaxReason() != null
 					&& !demandDetail.getTaxPeriod().isEmpty()) {
 				demandReason = demandReasonService.findByCodeInstModule(demandDetail.getTaxReason(),
-						demandDetail.getTaxPeriod(), demand.getModuleName());
+						demandDetail.getTaxPeriod(), demand.getModuleName(), demand.getTenantId());
 				if (demandReason != null) {
 					egDemandDetails = EgDemandDetails.fromReasonAndAmounts(demandDetail.getTaxAmount(), demandReason,
 							BigDecimal.ZERO);
@@ -61,6 +62,7 @@ public class DemandService {
 		}
 		egDemand.setEgDemandDetails(demandDetailsList);
 		demandRepository.save(egDemand);
+		LOGGER.info("createDemand - egDemand - "+egDemand);
 		return egDemand;
 	}
 

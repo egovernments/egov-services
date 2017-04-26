@@ -214,12 +214,7 @@ $(document).ready(function () {
 		}); 
 	});
 	
-	$("a.open-popup").click(function(e) {
-		// to open in good size for user
-		//var width = window.innerWidth /0.66 ; 
-		// define the height in 
-		//var height = width * window.innerWidth / window.innerHeight; 
-		// Ratio the hight to the width as the user screen ratio
+	/*$("a.open-popup").click(function(e) {
 		var windowObjectReference = window.open(this.href, ''+$(this).attr('data-strwindname')+'', 'width=900, height=700, top=300, left=260,scrollbars=yes'); 
 		openedWindows.push(windowObjectReference);
 		windowObjectReference.focus();
@@ -231,6 +226,6 @@ $(document).ready(function () {
 		openedWindows.push(windowObjectReference);
 		windowObjectReference.focus();
 		return false;
-	});
+	});*/
 	
 });	

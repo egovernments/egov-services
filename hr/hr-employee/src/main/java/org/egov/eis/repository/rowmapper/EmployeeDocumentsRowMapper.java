@@ -53,7 +53,7 @@ public class EmployeeDocumentsRowMapper implements RowMapper<EmployeeDocument> {
 	@Override
 	public EmployeeDocument mapRow(ResultSet rs, int rowNum) throws SQLException {
 		EmployeeDocument employeeDocument = new EmployeeDocument();
-		employeeDocument.setEmployeeId(rs.getLong("employeeId"));
+		employeeDocument.setEmployeeId((Long) rs.getObject("employeeId"));
 		employeeDocument.setDocument(rs.getString("document"));
 		return employeeDocument;
 	}

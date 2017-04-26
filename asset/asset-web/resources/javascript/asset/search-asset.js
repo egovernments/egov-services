@@ -136,17 +136,19 @@ class SearchAsset extends React.Component {
     }
 
     const renderAction=function(type,id){
-      if (type==="update") {
-
-              return (
-                      <a href={`app/asset/create-asset.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-pencil"></span></a>
-              );
-
-    }else {
-            return (
-                    <a href={`app/asset/create-asset.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-modal-window"></span></a>
-            );
-        }
+      if (type === "update") {
+        return (
+          <a href={`app/asset/create-asset.html?id=${id}&type=update`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-pencil"></span></a>
+        );
+      } else if(type) {
+        return (
+          <a href={`app/asset/create-asset.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-modal-window"></span></a>
+        );
+      } else {
+        return (
+              <a href={`app/asset/create-asset.html?id=${id}&type=view`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-modal-window"></span></a>
+        );
+      }
 }
 
 

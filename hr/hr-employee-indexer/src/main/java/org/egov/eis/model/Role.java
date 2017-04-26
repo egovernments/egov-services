@@ -71,6 +71,10 @@ public class Role {
 	@NotNull
 	@Size(min=2, max=100)
     private String name;
+	
+	@NotNull
+	@Size(min=2, max=100)
+    private String code;
 
 	@Size(max=256)
     private String description;

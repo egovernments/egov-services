@@ -13,8 +13,8 @@ public class DemandReasonService {
 	@Autowired
 	private DemandReasonRepository demandReasonRepository;
 
-	public EgDemandReason findByCodeInstModule(String demandReasonCode, String instDescription, String moduleName) {
-		return demandReasonRepository.findByCodeInstModule(demandReasonCode, instDescription, moduleName);
+	public EgDemandReason findByCodeInstModule(String demandReasonCode, String instDescription, String moduleName, String tenantId) {
+		return demandReasonRepository.findByCodeInstModule(demandReasonCode, instDescription, moduleName, tenantId);
 	}
 
 	public List<EgDemandReason> search(DemandReasonCriteria demandReasonCriteria) {

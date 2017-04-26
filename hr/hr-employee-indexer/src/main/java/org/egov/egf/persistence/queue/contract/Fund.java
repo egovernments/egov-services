@@ -61,11 +61,11 @@ public class Fund {
 
 	private String code;
 
-	private String identifier;
+	private Character identifier;
 
-	private Integer level;
+	private Long level;
 
-	private Long parentId;
+	private Fund parentId;
 
 	private Boolean isParent;
 

@@ -61,18 +61,18 @@ public class AssignmentTableRowMapper implements RowMapper<Assignment> {
 		final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
 		Assignment assignment = new Assignment();
-		assignment.setId(rs.getLong("id"));
-		assignment.setPosition(rs.getLong("positionId"));
-		assignment.setFund((rs.getLong("fundId") == 0L ? null : rs.getLong("fundId")));
-		assignment.setFunctionary((rs.getLong("functionaryId") == 0L ? null : rs.getLong("functionaryId")));
-		assignment.setFunction((rs.getLong("functionId") == 0L ? null : rs.getLong("functionId")));
-		assignment.setDepartment(rs.getLong("departmentId"));
-		assignment.setDesignation(rs.getLong("designationId"));
-		assignment.setIsPrimary(rs.getBoolean("isPrimary"));
-		assignment.setGrade((rs.getLong("gradeId") == 0L ? null : rs.getLong("functionId")));
+		assignment.setId((Long) rs.getObject("id"));
+		assignment.setPosition((Long) rs.getObject("positionId"));
+		assignment.setFund((Long) rs.getObject("fundId"));
+		assignment.setFunctionary((Long) rs.getObject("functionaryId"));
+		assignment.setFunction((Long) rs.getObject("functionId"));
+		assignment.setDepartment((Long) rs.getObject("departmentId"));
+		assignment.setDesignation((Long) rs.getObject("designationId"));
+		assignment.setIsPrimary((Boolean) rs.getObject("isPrimary"));
+		assignment.setGrade((Long) rs.getObject("gradeId"));
 		assignment.setGovtOrderNumber(rs.getString("govtOrderNumber"));
-		assignment.setCreatedBy(rs.getLong("createdBy"));
-		assignment.setLastModifiedBy(rs.getLong("lastModifiedBy"));
+		assignment.setCreatedBy((Long) rs.getObject("createdBy"));
+		assignment.setLastModifiedBy((Long) rs.getObject("lastModifiedBy"));
 		assignment.setTenantId(rs.getString("tenantId"));
 		try {
 			Date date = isEmpty(rs.getDate("fromDate")) ? null : sdf.parse(sdf.format(rs.getDate("fromDate")));

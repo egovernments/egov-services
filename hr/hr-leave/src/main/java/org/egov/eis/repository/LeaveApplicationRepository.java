@@ -121,7 +121,7 @@ public class LeaveApplicationRepository {
     }
 
     private void leaveApplicationStatusChange(final LeaveApplication leaveApplication) {
-        final String workFlowAction = leaveApplication.getWorkFlowDetails().getAction();
+        final String workFlowAction = leaveApplication.getWorkflowDetails().getAction();
         if ("Approve".equalsIgnoreCase(workFlowAction))
             leaveApplication.setStatus(LeaveStatus.APPROVED);
         else if ("Reject".equalsIgnoreCase(workFlowAction))

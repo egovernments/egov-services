@@ -120,7 +120,7 @@ public class DemandConroller {
 	public ResponseEntity<?> create(@RequestBody @Valid DemandRequest demandRequest, BindingResult bindingResult) {
 		EgDemand egDemand = null;
 		
-		System.err.println(demandRequest.getDemand().get(0));
+		System.out.println("DemandConroller.create - demandRequest - "+demandRequest);
 		if (bindingResult.hasErrors()) {
 			return errHandler.getErrorResponseEntityForBindingErrors(bindingResult, demandRequest.getRequestInfo());
 		}

@@ -147,6 +147,9 @@ class AgreementSearch extends React.Component {
       case "cancel":
         window.open("app/search-agreement/view-renew-agreement.html?view=cancel&type=" + assetCategory + (number ? "&agreementNumber=" + number : "&acknowledgementNumber=" + acknowledgementNumber) + "&assetId=" + id, "fs", "fullscreen=yes");
         break;
+      case "eviction":
+        window.open("app/search-agreement/view-renew-agreement.html?view=eviction&type=" + assetCategory + (number ? "&agreementNumber=" + number : "&acknowledgementNumber=" + acknowledgementNumber) + "&assetId=" + id, "fs", "fullscreen=yes");
+        break;
     }
 }
 
@@ -275,6 +278,7 @@ class AgreementSearch extends React.Component {
                 <option value="renew">Renew</option>
                 <option value="collTax">Collect Tax</option>
                 <option value="cancel">Cancel Agreement</option>
+                <option value="eviction">Evict Agreement</option>
             </select>
           )
 
@@ -287,6 +291,7 @@ class AgreementSearch extends React.Component {
                 <option value="view">View</option>
                 <option value="collTax">Collect Tax</option>
                 <option value="cancel">Cancel Agreement</option>
+                <option value="eviction">Evict Agreement</option>
             </select>
           )
 

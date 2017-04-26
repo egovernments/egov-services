@@ -52,6 +52,6 @@ public class PositionIdsRowMapper implements RowMapper<Long> {
 
 	@Override
 	public Long mapRow(ResultSet rs, int rowNum) throws SQLException, DataAccessException {
-		return rs.getLong("positionId");
+		return (Long) rs.getObject("positionId");
 	}
 }

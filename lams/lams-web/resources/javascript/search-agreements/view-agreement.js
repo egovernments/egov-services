@@ -219,6 +219,18 @@ $(document).ready(function() {
                 required: true
             }
         };
+    } else if(getUrlVars()["view"] == "eviction") {
+        var commom_fields_rules = {
+            evict_reason: {
+                required: true
+            },
+            evict_proceed_date: {
+                required: true
+            },
+            evict_proceed_no: {
+                required: true
+            }
+        };
     } else {
         var commom_fields_rules = {
             renew_order_no: {
@@ -251,9 +263,10 @@ $(document).ready(function() {
     //remove renew part and related buttons from dom
     if (getUrlVars()["view"] == "new") {
         //removing renew section and renew button
-        $("#renew,#workFlowDetails,#renewBtn,#cancel").remove();
+        $("#renew,#workFlowDetails,#renewBtn,#cancel,#evict").remove();
     } else if (getUrlVars()["view"] == "inbox") {
-        $("#historyTable,#renew,#renewBtn,#cancel").show();
+        $("#historyTable,#renew,#renewBtn").show();
+        $("#cancel,#evict").remove();
         //Fetch workFlow
         var workflow = commonApiPost("egov-common-workflows", "history", "", {
             tenantId: tenantId,
@@ -298,12 +311,21 @@ $(document).ready(function() {
             });
         }
     } else if (getUrlVars()["view"] == "renew") {
-        $("#cancel").remove();
+        $("#cancel,#evict").remove();
         $(`label[for=renew_rent]`).text(getUrlVars()["type"] == "shop" ? "Shop Rent (Rs)" : "Land Rent (Rs)");
-    } else if (getUrlVars()["view"] == "cancel") {
-        $("#renew,#workFlowDetails,#renewBtn").remove();
+    } else if (["cancel", "eviction"].indexOf(getUrlVars()["view"]) > -1) {
+        $("#renew").remove();
+        $("#renewBtn").text("Submit");
+        $(".hide-sec").hide();
+        $("#viewDetBtn").show();
+        $("#minDetSec").show();
+        if(getUrlVars()["view"] == "cancel") {
+            $("#evict").remove();
+        } else {
+            $("#cancel").remove();
+        }
     } else {
-        $("#viewDcb.#cancel").remove();
+        $("#viewDcb.#cancel,#evict").remove();
     }
 
     for (var variable in department) {
@@ -317,68 +339,68 @@ $(document).ready(function() {
     if (_type == "land") {
 
         // remove all other Asset Details block from DOM except land asset related fields
-        $("#shopAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
+        $(".shopAssetDetailsBlock, .marketAssetDetailsBlock, .kalyanamandapamAssetDetailsBlock, .parkingSpaceAssetDetailsBlock, .slaughterHousesAssetDetailsBlock, .usfructsAssetDetailsBlock, .communityAssetDetailsBlock, .fishTankAssetDetailsBlock, .parkAssetDetailsBlock").remove();
         //remove agreement template two and three from screen
-        $("#agreementDetailsBlockTemplateTwo,#agreementDetailsBlockTemplateThree").remove();
+        $(".agreementDetailsBlockTemplateTwo,.agreementDetailsBlockTemplateThree").remove();
 
     } else if (_type == "shop") {
 
         // remove all other Asset Details block from DOM except shop asset related fields
-        $("#landAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
+        $(".landAssetDetailsBlock, .marketAssetDetailsBlock, .kalyanamandapamAssetDetailsBlock, .parkingSpaceAssetDetailsBlock, .slaughterHousesAssetDetailsBlock, .usfructsAssetDetailsBlock, .communityAssetDetailsBlock, .fishTankAssetDetailsBlock, .parkAssetDetailsBlock").remove();
         //remove agreement template two and three from screen
-        $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateThree").remove();
+        $(".agreementDetailsBlockTemplateOne,.agreementDetailsBlockTemplateThree").remove();
 
     } else if (_type == "market") {
 
         // remove all other Asset Details block from DOM except shop asset related fields
-        $("#rendCalculatedMethod,#shopAssetDetailsBlock, #landAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
+        $(".rendCalculatedMethod,.shopAssetDetailsBlock, .landAssetDetailsBlock, .kalyanamandapamAssetDetailsBlock, .parkingSpaceAssetDetailsBlock, .slaughterHousesAssetDetailsBlock, .usfructsAssetDetailsBlock, .communityAssetDetailsBlock, .fishTankAssetDetailsBlock, .parkAssetDetailsBlock").remove();
         //remove agreement template two and three from screen
-        $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo").remove();
+        $(".agreementDetailsBlockTemplateOne,.agreementDetailsBlockTemplateTwo").remove();
     } else if (_type == "kalyanamandapam") {
 
         // remove all other Asset Details block from DOM except shop asset related fields
-        $("#rendCalculatedMethod,#shopAssetDetailsBlock, #landAssetDetailsBlock, #marketAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
+        $(".rendCalculatedMethod,.shopAssetDetailsBlock, .landAssetDetailsBlock, .marketAssetDetailsBlock, .parkingSpaceAssetDetailsBlock, .slaughterHousesAssetDetailsBlock, .usfructsAssetDetailsBlock, .communityAssetDetailsBlock, .fishTankAssetDetailsBlock, .parkAssetDetailsBlock").remove();
         //remove agreement template two and three from screen
-        $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo").remove();
+        $(".agreementDetailsBlockTemplateOne,.agreementDetailsBlockTemplateTwo").remove();
     } else if (_type == "parking_space") {
 
         // remove all other Asset Details block from DOM except shop asset related fields
-        $("#rendCalculatedMethod,#shopAssetDetailsBlock, #landAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
+        $(".rendCalculatedMethod,.shopAssetDetailsBlock, .landAssetDetailsBlock, .marketAssetDetailsBlock, .kalyanamandapamAssetDetailsBlock, .slaughterHousesAssetDetailsBlock, .usfructsAssetDetailsBlock, .communityAssetDetailsBlock, .fishTankAssetDetailsBlock, .parkAssetDetailsBlock").remove();
         //remove agreement template two and three from screen
-        $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo").remove();
+        $(".agreementDetailsBlockTemplateOne,.agreementDetailsBlockTemplateTwo").remove();
 
     } else if (_type == "slaughter_house") {
 
         // remove all other Asset Details block from DOM except shop asset related fields
-        $("#rendCalculatedMethod,#shopAssetDetailsBlock, #landAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
+        $(".rendCalculatedMethod,.shopAssetDetailsBlock, .landAssetDetailsBlock, .marketAssetDetailsBlock, .kalyanamandapamAssetDetailsBlock, .parkingSpaceAssetDetailsBlock, .usfructsAssetDetailsBlock, .communityAssetDetailsBlock, .fishTankAssetDetailsBlock, .parkAssetDetailsBlock").remove();
         //remove agreement template two and three from screen
-        $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo").remove();
+        $(".agreementDetailsBlockTemplateOne,.agreementDetailsBlockTemplateTwo").remove();
 
     } else if (_type == "usfructs") {
 
 
         // remove all other Asset Details block from DOM except shop asset related fields
-        $("#rendCalculatedMethod,#shopAssetDetailsBlock, #landAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
+        $(".rendCalculatedMethod,.shopAssetDetailsBlock, .landAssetDetailsBlock, .marketAssetDetailsBlock, .kalyanamandapamAssetDetailsBlock, .parkingSpaceAssetDetailsBlock, .slaughterHousesAssetDetailsBlock, .communityAssetDetailsBlock, .fishTankAssetDetailsBlock, .parkAssetDetailsBlock").remove();
         //remove agreement template two and three from screen
-        $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo").remove();
+        $(".agreementDetailsBlockTemplateOne,.agreementDetailsBlockTemplateTwo").remove();
     } else if (_type == "community") {
 
         // remove all other Asset Details block from DOM except shop asset related fields
-        $("#rendCalculatedMethod,#shopAssetDetailsBlock, #landAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
+        $(".rendCalculatedMethod,.shopAssetDetailsBlock, .landAssetDetailsBlock, .marketAssetDetailsBlock, .kalyanamandapamAssetDetailsBlock, .parkingSpaceAssetDetailsBlock, .slaughterHousesAssetDetailsBlock, .usfructsAssetDetailsBlock, .fishTankAssetDetailsBlock, .parkAssetDetailsBlock").remove();
         //remove agreement template two and three from screen
-        $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo").remove();
+        $(".agreementDetailsBlockTemplateOne,.agreementDetailsBlockTemplateTwo").remove();
     } else if (_type == "Fish Tank") {
 
         // remove all other Asset Details block from DOM except shop asset related fields
-        $("#rendCalculatedMethod,#shopAssetDetailsBlock, #landAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #parkAssetDetailsBlock").remove();
+        $(".rendCalculatedMethod,.shopAssetDetailsBlock, .landAssetDetailsBlock, .marketAssetDetailsBlock, .kalyanamandapamAssetDetailsBlock, .parkingSpaceAssetDetailsBlock, .slaughterHousesAssetDetailsBlock, .usfructsAssetDetailsBlock, .communityAssetDetailsBlock, .parkAssetDetailsBlock").remove();
         //remove agreement template two and three from screen
-        $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo").remove();
+        $(".agreementDetailsBlockTemplateOne,.agreementDetailsBlockTemplateTwo").remove();
     } else if (_type == "park") {
 
         // remove all other Asset Details block from DOM except shop asset related fields
-        $("#rendCalculatedMethod,#shopAssetDetailsBlock, #landAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock").remove();
+        $(".rendCalculatedMethod,.shopAssetDetailsBlock, .landAssetDetailsBlock, .marketAssetDetailsBlock, .kalyanamandapamAssetDetailsBlock, .parkingSpaceAssetDetailsBlock, .slaughterHousesAssetDetailsBlock, .usfructsAssetDetailsBlock, .communityAssetDetailsBlock, .fishTankAssetDetailsBlock").remove();
         //remove agreement template two and three from screen
-        $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo").remove();
+        $(".agreementDetailsBlockTemplateOne,.agreementDetailsBlockTemplateTwo").remove();
     }
     final_validatin_rules = Object.assign(validation_rules, commom_fields_rules);
     for (var key in final_validatin_rules) {
@@ -458,7 +480,7 @@ $(document).ready(function() {
 
         }
     })
-    
+
     $("#cancelAgreementForm").validate({
         rules: final_validatin_rules,
         submitHandler: function(form) {

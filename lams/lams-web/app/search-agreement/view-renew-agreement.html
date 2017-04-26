@@ -192,6 +192,7 @@
         <div class="home-container">
             <!-- <div id="menu" class="homepage" style="min-height: 242px; width: 250px; height: 242px; min-width: 250px;"></div> -->
             <div class="inline-main-content" style="width:100%">
+                <a id="viewDetBtn" class="btn btn-primary pull-right" style="margin-right: 13px; display:none" data-toggle="modal" data-target="#detailsModal">View Details</a>
                 <div class="row main-space" id="worklist">
                     <div class="col-xs-12">
                         <!-- Middle Section -->
@@ -199,8 +200,65 @@
                             <div class="body-cont-inner">
                                 <!-- ASSET DETAIL, BLOCK -->
                                 <div class="view-ui">
+                                    <div class="form-section" id="minDetSec" style="display: none;">
+                                        <h3>Details </h3>
+                                        <div class="form-section-inner">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="allottee.name">Name of the Allottee/Lessee </label>
+                                                        </div>
+                                                        <div class="col-sm-6 label-view-text">
+                                                            <label name="allottee.name">NA</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="allottee.address">Address of the Allottee/Lessee </label>
+                                                        </div>
+                                                        <div class="col-sm-6 label-view-text">
+                                                            <label name="allottee.address" id="allottee.address">NA </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="allottee.mobileNumber">Contact No </label>
+                                                        </div>
+                                                        <div class="col-sm-6 label-view-text">
+                                                            <label name="allottee.mobileNumber">NA</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="commencementDate">Date of Commencement </label>
+                                                        </div>
+                                                        <div class="col-sm-6 label-view-text">
+                                                            <label name="commencementDate">NA</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="rent">Shop Rent </label>
+                                                        </div>
+                                                        <div class="col-sm-6 label-view-text">
+                                                            <label type="number" name="rent">NA</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <!-- Asset Details for land -->
-                                    <div class="form-section" id="landAssetDetailsBlock">
+                                    <div class="form-section hide-sec landAssetDetailsBlock" id="landAssetDetailsBlock">
                                         <h3>Land Asset Details </h3>
                                         <div class="form-section-inner">
                                             <div class="row">
@@ -377,7 +435,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="form-section" id="shopAssetDetailsBlock">
+                                    <div class="form-section hide-sec shopAssetDetailsBlock" id="shopAssetDetailsBlock">
                                         <h3>Shop Asset Details </h3>
                                         <div class="form-section-inner">
                                             <div class="row">
@@ -546,7 +604,7 @@
                                     </div>
                                     <!-- /Asset Details for shoping complex -->
                                     <!-- Asset Details for market -->
-                                    <div class="form-section" id="marketAssetDetailsBlock">
+                                    <div class="form-section hide-sec marketAssetDetailsBlock" id="marketAssetDetailsBlock">
                                         <h3>Market Asset Details </h3>
                                         <div class="form-section-inner">
                                             <div class="row">
@@ -665,7 +723,7 @@
                                     </div>
                                     <!-- /Asset Details for market -->
                                     <!-- Asset Details for Kalyanamandapams -->
-                                    <div class="form-section" id="kalyanamandapamAssetDetailsBlock">
+                                    <div class="form-section hide-sec kalyanamandapamAssetDetailsBlock" id="kalyanamandapamAssetDetailsBlock">
                                         <h3>Kalyanamandapam Asset Details </h3>
                                         <div class="form-section-inner">
                                             <div class="row">
@@ -784,7 +842,7 @@
                                     </div>
                                     <!-- /Asset Details for Kalyanamandapams -->
                                     <!-- Asset Details for Parking Spaces -->
-                                    <div class="form-section" id="parkingSpaceAssetDetailsBlock">
+                                    <div class="form-section hide-sec parkingSpaceAssetDetailsBlock" id="parkingSpaceAssetDetailsBlock">
                                         <h3>Parking Spaces Asset Details </h3>
                                         <div class="form-section-inner">
                                             <div class="row">
@@ -903,7 +961,7 @@
                                     </div>
                                     <!-- /Asset Details for Parking Spaces -->
                                     <!-- Asset Details for Slaughter Houses -->
-                                    <div class="form-section" id="slaughterHousesAssetDetailsBlock">
+                                    <div class="form-section hide-sec slaughterHousesAssetDetailsBlock" id="slaughterHousesAssetDetailsBlock">
                                         <h3>Slaughter House Asset Details </h3>
                                         <div class="form-section-inner">
                                             <div class="row">
@@ -1022,7 +1080,7 @@
                                     </div>
                                     <!-- /Asset Details for Slaughter Houses -->
                                     <!-- Asset Details for Usfructs -->
-                                    <div class="form-section" id="usfructsAssetDetailsBlock">
+                                    <div class="form-section hide-sec usfructsAssetDetailsBlock" id="usfructsAssetDetailsBlock">
                                         <h3>Usfructs Asset Details </h3>
                                         <div class="form-section-inner">
                                             <div class="row">
@@ -1141,7 +1199,7 @@
                                     </div>
                                     <!-- /Asset Details for Usfructs -->
                                     <!-- Asset Details for Community -->
-                                    <div class="form-section" id="communityAssetDetailsBlock">
+                                    <div class="form-section hide-sec communityAssetDetailsBlock" id="communityAssetDetailsBlock">
                                         <h3>Community Asset Details </h3>
                                         <div class="form-section-inner">
                                             <div class="row">
@@ -1260,7 +1318,7 @@
                                     </div>
                                     <!-- /Asset Details for Community -->
                                     <!-- Asset Details for Fish Tank -->
-                                    <div class="form-section" id="fishTankAssetDetailsBlock">
+                                    <div class="form-section hide-sec fishTankAssetDetailsBlock" id="fishTankAssetDetailsBlock">
                                         <h3>Fish Tank Asset Details </h3>
                                         <div class="form-section-inner">
                                             <div class="row">
@@ -1379,7 +1437,7 @@
                                     </div>
                                     <!-- /Asset Details for Fish Tank -->
                                     <!-- Asset Details for Park -->
-                                    <div class="form-section" id="parkAssetDetailsBlock">
+                                    <div class="form-section hide-sec parkAssetDetailsBlock" id="parkAssetDetailsBlock">
                                         <h3>Park Asset Details </h3>
                                         <div class="form-section-inner">
                                             <div class="row">
@@ -1499,7 +1557,7 @@
                                     <!-- /Asset Details for Park -->
                                     <!-- /ASSET DETAIL, BLOCK -->
                                     <!-- Allottee Details -->
-                                    <div class="form-section" id="allotteeDetailsBlock">
+                                    <div class="form-section hide-sec" id="allotteeDetailsBlock">
                                         <h3>Allottee Details </h3>
                                         <div class="form-section-inner">
                                             <!-- Row 1 -->
@@ -1579,7 +1637,7 @@
                                     </div>
                                     <!-- /Allottee Details -->
                                     <!-- Argeement Details -->
-                                    <div class="form-section" id="agreementDetailsBlockTemplateOne">
+                                    <div class="form-section hide-sec agreementDetailsBlockTemplateOne" id="agreementDetailsBlockTemplateOne">
                                         <h3>Agreement Details </h3>
                                         <div class="form-section-inner">
                                             <!-- Row 1 -->
@@ -1724,7 +1782,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-6" id="rendCalculatedMethod">
+                                                <div class="col-sm-6 rendCalculatedMethod" id="rendCalculatedMethod">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
                                                             <label for="rentIncrementMethod">Method by increase in rent is calculated during renewal </label>
@@ -1758,7 +1816,7 @@
                                             <!-- /Row 15 -->
                                         </div>
                                     </div>
-                                    <div class="form-section" id="agreementDetailsBlockTemplateTwo">
+                                    <div class="form-section hide-sec agreementDetailsBlockTemplateTwo" id="agreementDetailsBlockTemplateTwo">
                                         <h3>Agreement Details </h3>
                                         <div class="form-section-inner">
                                             <!-- Row 1 -->
@@ -1990,7 +2048,7 @@
                                             <!-- /Row 15 -->
                                         </div>
                                     </div>
-                                    <div class="form-section" id="agreementDetailsBlockTemplateThree">
+                                    <div class="form-section hide-sec agreementDetailsBlockTemplateThree" id="agreementDetailsBlockTemplateThree">
                                         <h3>Agreement Details </h3>
                                         <div class="form-section-inner">
                                             <!-- Row 1 -->
@@ -2222,7 +2280,7 @@
                                         </div>
                                     </div>
                                     <!-- /Argeement Details -->
-                                    <div class="form-section" id="rentDetailsBlockTemplateOne">
+                                    <div class="form-section hide-sec" id="rentDetailsBlockTemplateOne">
                                         <h3>Rent Details </h3>
                                         <div class="form-section-inner">
                                             <div class="row">
@@ -2508,6 +2566,92 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <div class="col-md-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="cancel_docs">Documents </label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <input type="file" id="cancel_docs" multiple/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                </div>
+                                <div class="form-section" id="evict">
+                                    <form class="" id="evictAgreementForm">
+                                        <h3>Eviction Details </h3>
+                                        <div class="form-section-inner">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="evict_reason">Reason For Eviction </label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <div class="styled-select">
+                                                                <select id="evict_reason">
+                                                                    <option value="">Choose</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="evict_proceed_date">Proceeding Date </label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <input type="text" id="evict_proceed_date" class="datetimepicker" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="evict_proceed_no">Proceeding No </label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <input type="text" id="evict_proceed_no" maxlength="15" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="evict_counter_no">Counter Reference No </label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <input type="text" id="evict_counter_no" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="evict_remarks">Remarks </label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <input type="text" id="evict_remarks" maxlength="50" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="cancel_docs">Documents </label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <input type="file" id="cancel_docs" multiple/>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                 </div>
@@ -2581,7 +2725,7 @@
                                     <!-- <button type="button" class="btn btn-submit" id="printNotice">Print Notice</button> -->
                                     <!-- <button type="button" class="btn btn-submit" id="viewDcb">View DCB</button> -->
                                     <button type="submit" class="btn btn-submit" id="renewBtn">
-                                        Renew
+                                        Forward
                                     </button>
                                 </div>
                                 </form>
@@ -2589,6 +2733,1935 @@
                         </div>
                         <!-- /Middle Section -->
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="detailsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Details</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-section landAssetDetailsBlock">
+                        <h4 style="color:#f68f31">Land Asset Details </h4>
+                        <div class="form-section-inner">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.name">Asset Name</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.land_register_number">Land Register Number</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.particulars_of_land">Particulars of Land</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="resurvey_number">Resurvey Number</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.land_address">Land Address</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.town_survey_no">Town Survey No</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.usage_reference_number">Usage Reference Number</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.assetCategory.name">Asset Category</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.code">Asset Code</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.asset.asset_area">Asset Area</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.locality">Locality </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.street">Street </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.zone">Revenue Zone </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.revenueWard">Revenue Ward </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.block">Revenue Block </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.electionWard">Election Ward </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.asset.asset_asset_address">Asset Address</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-section shopAssetDetailsBlock">
+                        <h4 style="color:#f68f31">Shop Asset Details </h4>
+                        <div class="form-section-inner">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.name">Asset Name</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.shopping_complex_no">Shopping Complex No. </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.shopping_complex_shop_no">Shop No. </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.shopping_complex_floor_no">Floor No</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.shop_area">Shop Area</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.shop_area_uom">UOM </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.shopping_complex_address">Shopping Complex Address</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.assetCategory.name">Asset Category</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.code">Asset Code</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.locality">Locality </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.street">Street </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.zone">Revenue Zone </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.revenueWard">Revenue Ward </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.block">Revenue Block </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.electionWard">Election Ward </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.asset.asset_asset_address">Asset Address</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /Asset Details for shoping complex -->
+                    <!-- Asset Details for market -->
+                    <div class="form-section marketAssetDetailsBlock">
+                        <h4 style="color:#f68f31">Market Asset Details </h4>
+                        <div class="form-section-inner">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.name">Asset Name</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.assetCategory.name">Asset Category</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.code">Asset Code</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.asset_area">Asset Area</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.locality">Locality </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.street">Street </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.zone">Revenue Zone </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.revenueWard">Revenue Ward </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.block">Revenue Block </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.electionWard">Election Ward </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.asset.asset_asset_address">Asset Address</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /Asset Details for market -->
+                    <!-- Asset Details for Kalyanamandapams -->
+                    <div class="form-section kalyanamandapamAssetDetailsBlock">
+                        <h4 style="color:#f68f31">Kalyanamandapam Asset Details </h4>
+                        <div class="form-section-inner">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.name">Asset Name</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.assetCategory.name">Asset Category</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.code">Asset Code</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.asset_area">Asset Area</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.locality">Locality </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.street">Street </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.zone">Revenue Zone </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.revenueWard">Revenue Ward </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.block">Revenue Block </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.electionWard">Election Ward </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.asset.asset_asset_address">Asset Address</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /Asset Details for Kalyanamandapams -->
+                    <!-- Asset Details for Parking Spaces -->
+                    <div class="form-section parkAssetDetailsBlock">
+                        <h4 style="color:#f68f31">Parking Spaces Asset Details </h4>
+                        <div class="form-section-inner">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.name">Asset Name</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.assetCategory.name">Asset Category</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.code">Asset Code</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.asset.asset_area">Asset Area</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.locality">Locality </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.street">Street </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.zone">Revenue Zone </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.revenueWard">Revenue Ward </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.block">Revenue Block </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.electionWard">Election Ward </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.asset.asset_asset_address">Asset Address</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /Asset Details for Parking Spaces -->
+                    <!-- Asset Details for Slaughter Houses -->
+                    <div class="form-section slaughterHousesAssetDetailsBlock">
+                        <h4 style="color:#f68f31">Slaughter House Asset Details </h4>
+                        <div class="form-section-inner">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.name">Asset Name</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.assetCategory.name">Asset Category</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.code">Asset Code</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.asset_area">Asset Area</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.locality">Locality </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.street">Street </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.zone">Revenue Zone </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.revenueWard">Revenue Ward </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.block">Revenue Block </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.electionWard">Election Ward </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.asset_asset_address">Asset Address</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /Asset Details for Slaughter Houses -->
+                    <!-- Asset Details for Usfructs -->
+                    <div class="form-section usfructsAssetDetailsBlock">
+                        <h4 style="color:#f68f31">Usfructs Asset Details </h4>
+                        <div class="form-section-inner">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.name">Asset Name</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.assetCategory.name">Asset Category</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.code">Asset Code</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.asset_area">Asset Area</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.locality">Locality </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.street">Street </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.zone">Revenue Zone </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.revenueWard">Revenue Ward </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.block">Revenue Block </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.electionWard">Election Ward </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.asset_asset_address">Asset Address</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /Asset Details for Usfructs -->
+                    <!-- Asset Details for Community -->
+                    <div class="form-section communityAssetDetailsBlock">
+                        <h4 style="color:#f68f31">Community Asset Details </h4>
+                        <div class="form-section-inner">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.name">Asset Name</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.assetCategory.name">Asset Category</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.code">Asset Code</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.asset_area">Asset Area</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.locality">Locality </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.street">Street </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.zone">Revenue Zone </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.revenueWard">Revenue Ward </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.block">Revenue Block </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.electionWard">Election Ward </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.asset_asset_address">Asset Address</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /Asset Details for Community -->
+                    <!-- Asset Details for Fish Tank -->
+                    <div class="form-section fishTankAssetDetailsBlock">
+                        <h4 style="color:#f68f31">Fish Tank Asset Details </h4>
+                        <div class="form-section-inner">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.name">Asset Name</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.assetCategory.name">Asset Category</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.code">Asset Code</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.asset_area">Asset Area</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.locality">Locality </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.street">Street </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.zone">Revenue Zone </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.revenueWard">Revenue Ward </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.block">Revenue Block </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.electionWard">Election Ward </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.asset_asset_address">Asset Address</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /Asset Details for Fish Tank -->
+                    <!-- Asset Details for Park -->
+                    <div class="form-section parkAssetDetailsBlock">
+                        <h4 style="color:#f68f31">Park Asset Details </h4>
+                        <div class="form-section-inner">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.name">Asset Name</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.assetCategory.name">Asset Category</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.code">Asset Code</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.asset_area">Asset Area</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.locality">Locality </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.street">Street </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.zone">Revenue Zone </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.revenueWard">Revenue Ward </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.block">Revenue Block </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.locationDetails.electionWard">Election Ward </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="asset.asset_asset_address">Asset Address</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label style="font-weight: bold" for="asset.asset_asset_address">NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /Asset Details for Park -->
+                    <!-- /ASSET DETAIL, BLOCK -->
+                    <!-- Allottee Details -->
+                    <div class="form-section">
+                        <h4 style="color:#f68f31">Allottee Details </h4>
+                        <div class="form-section-inner">
+                            <!-- Row 1 -->
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="allottee.name">Name of the Allottee/Lessee </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label name="allottee.name">NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="allottee.mobileNumber">Contact No </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label name="allottee.mobileNumber">NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="allottee.aadhaarNumber">Aadhar No </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label name="allottee.aadhaarNumber">NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for=".allottee.pan">PAN </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label name="allottee.pan">NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="allottee.emailId">Email Id </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label name="allottee.emailId">NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="tin">TIN </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label name="tin">NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="allottee.address">Address of the Allottee/Lessee </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label name="allottee.address">NA </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /Allottee Details -->
+                    <!-- Argeement Details -->
+                    <div class="form-section agreementDetailsBlockTemplateOne">
+                        <h4 style="color:#f68f31">Agreement Details </h4>
+                        <div class="form-section-inner">
+                            <!-- Row 1 -->
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="tenderNumber">Tender/Auction No.</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label name="tenderNumber">NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="tenderDate">Tender/Auction Date </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label name="tenderDate">NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="natureOfAllotment">Nature of the allottment </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="caseNo">Case No </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label name="caseNo">NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="orderDetails">Order details </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label name="orderDetails">NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="registrationFee">Registration fee paid </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label name="registrationFee">NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="councilNumber">Council/standing committee Resolution Number </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label type="number" name="councilNumber">NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="councilDate">Council/standing committee Resolution date </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="securityDeposit">Security Deposit </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label type="number">NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="securityDepositDate">Security Deposit received date (DD/MM/YYYY) </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="commencementDate">Date of Commencement </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label name="commencementDate">NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="tradelicenseNumber">Trade license number </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label name="tradelicenseNumber">NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="rent">Shop Rent </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label type="number" name="rent">NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="rentIncrementMethod">Method by increase in rent is calculated during renewal </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label>Attach Document </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label id='fileName'>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="remarks">Remarks </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /Row 15 -->
+                        </div>
+                    </div>
+                    <div class="form-section agreementDetailsBlockTemplateTwo">
+                        <h4 style="color:#f68f31">Agreement Details </h4>
+                        <div class="form-section-inner">
+                            <!-- Row 1 -->
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="tenderNumber">Tender/Auction No.</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label name="tenderNumber">NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="tenderDate">Tender/Auction Date </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label name="tenderDate">NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="natureOfAllotment">Nature of the allottment </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="caseNo">Case No </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label name="caseNo" name="caseNo">NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="orderDetails">Order details </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label name="orderDetails">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="registrationFee">Registration fee paid </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label name="registrationFee">NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="councilNumber">Council/standing committee Resolution Number </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label type="number" name="councilNumber">NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="councilDate">Council/standing committee Resolution date </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="commencementDate">Date of Commencement </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label name="commencementDate">NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="rrReadingNo">RR Reading No. </label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label name="rrReadingNo">NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="tradelicenseNumber">Trade license number </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label name="tradelicenseNumber">NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="rent">Shop Rent </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label type="number" name="rent">NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="rentIncrementMethod">Method by increase in rent is calculated during renewal </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label>Attach Document </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="remarks">Remarks </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /Row 15 -->
+                        </div>
+                    </div>
+                    <div class="form-section agreementDetailsBlockTemplateThree">
+                        <h4 style="color:#f68f31">Agreement Details </h4>
+                        <div class="form-section-inner">
+                            <!-- Row 1 -->
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="tenderNumber">Tender/Auction No.</label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label name="tenderNumber">NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="tenderDate">Tender/Auction Date </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label name="tenderDate">NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="natureOfAllotment">Nature of the allottment </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="caseNo">Case No </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label name="caseNo" name="caseNo">NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="orderDetails">Order details </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label name="orderDetails">NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="registrationFee">Registration fee paid </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label name="registrationFee">NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="councilNumber">Council/standing committee Resolution Number </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label type="number" name="councilNumber">NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="councilDate">Council/standing committee Resolution date </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="commencementDate">Date of Commencement </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label name="commencementDate">NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="rrReadingNo">RR Reading No. </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label name="rrReadingNo">NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="tradelicenseNumber">Trade license number </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label name="tradelicenseNumber">NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="rent">Shop Rent </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label type="number" name="rent">NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="rentIncrementMethod">Method by increase in rent is calculated during renewal </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label>Attach Document </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="remarks">Remarks </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /Row 15 -->
+                        </div>
+                    </div>
+                    <!-- /Argeement Details -->
+                    <div class="form-section">
+                        <h4 style="color:#f68f31">Rent Details </h4>
+                        <div class="form-section-inner">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="bankGuaranteeAmount">Bank guarantee amount </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label name="bankGuaranteeAmount">NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="bankGuaranteeDate">Bank Guarantee date </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="solvencyCertificateNo">Solvency Certificate No </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label name="solvencyCertificateNo">NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 label-text">
+                                            <label style="font-weight: bold" for="solvencyCertificateDate">Solvency Certificate date </label>
+                                        </div>
+                                        <div class="col-sm-6 label-view-text">
+                                            <label>NA</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>

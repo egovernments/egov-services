@@ -37,12 +37,7 @@
       "roles": [
         {
           "id":12,
-          "name":"CITIZEN",
-          "description":"Citizen role",
-          "createdBy":0,
-          "createdDate":null,
-          "lastModifiedBy":0,
-          "lastModifiedDate":null
+          "name":"CITIZEN"
         }
       ]
     }

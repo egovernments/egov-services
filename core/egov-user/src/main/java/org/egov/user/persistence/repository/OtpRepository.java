@@ -1,9 +1,9 @@
 package org.egov.user.persistence.repository;
 
 import org.egov.user.domain.model.User;
-import org.egov.user.web.contract.Otp;
-import org.egov.user.web.contract.OtpRequest;
-import org.egov.user.web.contract.OtpResponse;
+import org.egov.user.persistence.dto.Otp;
+import org.egov.user.persistence.dto.OtpRequest;
+import org.egov.user.persistence.dto.OtpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;

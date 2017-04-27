@@ -73,8 +73,6 @@ public class UserRepository {
 		Specification<User> specification = userSearchSpecificationFactory.getSpecification(userSearch);
 		PageRequest pageRequest = createPageRequest(userSearch);
 		List<User> userEntities = userJpaRepository.findAll(specification, pageRequest).getContent();
-		LOGGER.debug("userEntities" + userEntities);
-		LOGGER.debug("userEntities-----" + userEntities.stream().map(User::toDomain).collect(Collectors.toList()));
 		return userEntities.stream().map(User::toDomain).collect(Collectors.toList());
 	}
 

@@ -63,7 +63,7 @@ var hrConfigurations = commonApiPost("hr-masters", "hrconfigurations", "_search"
 }).responseJSON || [];
 if (hrConfigurations["HRConfiguration"]["Autogenerate_employeecode"] == "N" || typeof(hrConfigurations["HRConfiguration"]["Autogenerate_employeecode"]) == "undefined") {
   $("#code").prop("disabled", false);
-  } else {
+} else {
   $("#code").prop("disabled", true);
 }
 
@@ -318,7 +318,6 @@ var employeeSubObject = {
     boundary: ""
   },
   serviceHistory: {
-    id: 1,
     serviceInfo: "",
     serviceFrom: "",
     remarks: "",
@@ -742,9 +741,7 @@ var jurisdictions = {
 };
 
 var serviceHistory = {
-  id: {
-    required: false
-  },
+
   serviceInfo: {
     required: true
   },
@@ -1463,7 +1460,7 @@ $('#serviceHistoryDetailModal').on('hidden.bs.modal', function(e) {
   $('.error-p').hide();
   editIndex = -1;
   employeeSubObject["serviceHistory"] = {
-    id: employee["serviceHistory"].length + 1,
+
     serviceInfo: "",
     serviceFrom: "",
     remarks: "",
@@ -1554,61 +1551,230 @@ function updateTable(tableName, modalName, object) {
   $(tableName).html(``);
   for (var i = 0; i < employee[object].length; i++) {
     $(tableName).append(`<tr>`);
-    for (var key in employee[object][i]) {
-      if (key === "department" || key === "designation" ||  key === "fund" || key === "function" || key === "functionary" || (object == "assignments" && key === "grade") || key === "mainDepartments" || key === "jurisdictionsType") {
-        $(tableName).append(`<td data-label=${key}>
-                                  ${getNameById(key,employee[object][i][key],"")}
-                            </td>`)
-      } else if (key === "boundary") {
-        try {
-          bnd = commonApiGet("egov-location", "boundarys", "", {
-            "Boundary.id":employee[object][i][key],
-            "Boundary.tenantId":tenantId
-          }).responseJSON["Boundary"] || [];
-        } catch (e) {
-          console.log(e);
-          bnd = [];
-        }
-        $(tableName).append(`<td data-label=${key}>
+    if (object == "assignments") {
+      $(tableName).append(`<td data-label=${"fromDate"}>
 
-                                  ${bnd.length>0?bnd[0]["name"]:""}
-                            </td>`)
-      } else if (key == "hod") {
-        $(tableName).append(`<td data-label=${key}>
-                                ${employee[object][i][key].length>0?"Yes":"No"}
+                                ${employee[object][i]["fromDate"]}
                           </td>`)
-      } else if (key === "position") {
-        try {
-          assignments_position = commonApiPost("hr-masters", "positions", "_search",{tenantId,id:employee[object][i][key]}).responseJSON["Position"] || [];
-        } catch (e) {
-          console.log(e);
-          assignments_position = [];
-        }
-        $(tableName).append(`<td data-label=${key}>
+      $(tableName).append(`<td data-label=${"toDate"}>
 
-                                  ${assignments_position.length>0?assignments_position[0]["name"]:""}
+                                ${employee[object][i]["toDate"]}
+                                              </td>`)
+      $(tableName).append(`<td data-label=${"department"}>
+                                ${getNameById("department",employee[object][i]["department"],"")}
+                          </td>`)
+      $(tableName).append(`<td data-label=${"designation"}>
+                                ${getNameById("designation",employee[object][i]["designation"],"")}
                             </td>`)
+      try {
+        assignments_position = commonApiPost("hr-masters", "positions", "_search", {
+          tenantId,
+          id: employee[object][i][key]
+        }).responseJSON["Position"] || [];
+      } catch (e) {
+        console.log(e);
+        assignments_position = [];
       }
-       else if ((key != "id"|| object=="serviceHistory") && key != "createdBy" && key != "createdDate" && key != "lastModifiedBy" && key != "lastModifiedDate" && key != "tenantId") {
-        if (key == "documents") {
-          // var name="";
-          // for (var i = 0; i < employee[object][i][key].length; i++) {
-          //   name=name +" "+ employee[object][i][key][i]["name"];
-          // }
-          $(tableName).append(`<td data-label=${key}>
+      $(tableName).append(`<td data-label=${"position"}>
 
-                                      ${employee[object][i][key]?employee[object][i][key].length:""}
-                                </td>`)
-        } else {
-          $(tableName).append(`<td data-label=${key}>
+                                                      ${assignments_position.length>0?assignments_position[0]["name"]:""}
+                            </td>`)
+      $(tableName).append(`<td data-label=${"isPrimary"}>
 
-                                    ${employee[object][i][key]}
+                                                      ${employee[object][i]["isPrimary"]}
+                                                </td>`)
+      $(tableName).append(`<td data-label=${"fund"}>
+                                                                          ${getNameById("fund",employee[object][i]["fund"],"")}
+                                                                    </td>`)
+      $(tableName).append(`<td data-label=${"function"}>
+                                                                                              ${getNameById("function",employee[object][i]["function"],"")}
+                                                                                        </td>`)
+      $(tableName).append(`<td data-label=${"functionary"}>
+                                                                                                                  ${getNameById("functionary",employee[object][i]["functionary"],"")}
+                                                                                                            </td>`)
+      $(tableName).append(`<td data-label=${"grade"}>
+                                                                                                                                      ${getNameById("grade",employee[object][i]["grade"],"")}
+                                                                                                                                </td>`)
+      $(tableName).append(`<td data-label=${"hod"}>
+                                                                                                                                                        ${employee[object][i]["hod"].length>0?"Yes":"No"}
+                                                                                                                                                  </td>`)
+
+      $(tableName).append(`<td data-label=${"govtOrderNumber"}>
+
+                                                                                                                                                                            ${employee[object][i]["govtOrderNumber"]}
+                                                                                                                                                                      </td>`)
+      $(tableName).append(`<td data-label=${"documents"}>
+
+                                                                                                                                                                                                  ${employee[object][i]["documents"]?employee[object][i]["documents"].length:""}
+                                                                                                                                                                                            </td>`)
+
+    } else if(object=="jurisdictions"){
+      $(tableName).append(`<td data-label=${"jurisdictionsType"}>
+          ${getNameById("jurisdictionsType",employee[object][i]["jurisdictionsType"],"")}
+      </td>`)
+
+      try {
+            bnd = commonApiGet("egov-location", "boundarys", "", {
+              "Boundary.id":employee[object][i]["boundary"],
+              "Boundary.tenantId":tenantId
+            }).responseJSON["Boundary"] || [];
+          } catch (e) {
+            console.log(e);
+            bnd = [];
+          }
+          $(tableName).append(`<td data-label=${"boundary"}>
+
+                                    ${bnd.length>0?bnd[0]["name"]:""}
                               </td>`)
-        }
+    } else if (object=="serviceHistory") {
+      $(tableName).append(`<td data-label=${"serviceInfo"}>
 
-      }
+                                ${employee[object][i]["serviceInfo"]}
+                          </td>`)
+      $(tableName).append(`<td data-label=${"serviceFrom"}>
 
+                                ${employee[object][i]["serviceFrom"]}
+                                              </td>`)
+      $(tableName).append(`<td data-label=${"remarks"}>
+
+                                                                        ${employee[object][i]["remarks"]}
+                                                                                      </td>`)
+                                                                                      $(tableName).append(`<td data-label=${"orderNo"}>
+
+                                                                                                                                                        ${employee[object][i]["orderNo"]}
+                                                                                                                                                                      </td>`)
+
+        $(tableName).append(`<td data-label=${"documents"}>
+
+                                                                                                                                                                                                  ${employee[object][i]["documents"]?employee[object][i]["documents"].length:""}
+                                                                                                                                                                                            </td>`)
+    } else if (object=="probation" ||object=="regularisation") {
+      $(tableName).append(`<td data-label=${"designation"}>
+          ${getNameById("designation",employee[object][i]["designation"],"")}
+      </td>`)
+      $(tableName).append(`<td data-label=${"declaredOn"}>
+
+                                ${employee[object][i]["declaredOn"]}
+                          </td>`)
+  $(tableName).append(`<td data-label=${"orderNo"}>
+                        ${employee[object][i]["orderNo"]}                                                               </td>`)
+      $(tableName).append(`<td data-label=${"orderDate"}>
+
+                                ${employee[object][i]["orderDate"]}
+                                              </td>`)
+      $(tableName).append(`<td data-label=${"remarks"}>
+
+                                                                        ${employee[object][i]["remarks"]}
+                                                                                      </td>`)
+        $(tableName).append(`<td data-label=${"documents"}>
+
+                                                                                                                                                                                                  ${employee[object][i]["documents"]?employee[object][i]["documents"].length:""}
+                                                                                                                                                                                            </td>`)
+    } else if (object=="education" ) {
+
+      $(tableName).append(`<td data-label=${"qualification"}>
+
+                                ${employee[object][i]["qualification"]}
+                          </td>`)
+  $(tableName).append(`<td data-label=${"majorSubject"}>
+                        ${employee[object][i]["majorSubject"]}                                                               </td>`)
+      $(tableName).append(`<td data-label=${"yearOfPassing"}>
+
+                                ${employee[object][i]["yearOfPassing"]}
+                                              </td>`)
+      $(tableName).append(`<td data-label=${"university"}>
+
+                                                                        ${employee[object][i]["university"]}
+                                                                                      </td>`)
+        $(tableName).append(`<td data-label=${"documents"}>
+
+                                                                                                                                                                                                  ${employee[object][i]["documents"]?employee[object][i]["documents"].length:""}
+                                                                                                                                                                                            </td>`)
+    } else if (object=="technical" ) {
+
+      $(tableName).append(`<td data-label=${"skill"}>
+
+                                ${employee[object][i]["skill"]}
+                          </td>`)
+  $(tableName).append(`<td data-label=${"grade"}>
+                        ${employee[object][i]["grade"]}                                                               </td>`)
+      $(tableName).append(`<td data-label=${"yearOfPassing"}>
+
+                                ${employee[object][i]["yearOfPassing"]}
+                                              </td>`)
+      $(tableName).append(`<td data-label=${"remarks"}>
+
+                                                                        ${employee[object][i]["remarks"]}
+                                                                                      </td>`)
+        $(tableName).append(`<td data-label=${"documents"}>
+
+                                                                                                                                                                                                  ${employee[object][i]["documents"]?employee[object][i]["documents"].length:""}
+                                                                                                                                                                                            </td>`)
+    } else if (object=="test" ) {
+
+      $(tableName).append(`<td data-label=${"test"}>
+
+                                ${employee[object][i]["test"]}
+                          </td>`)
+  $(tableName).append(`<td data-label=${"yearOfPassing"}>
+
+                                ${employee[object][i]["yearOfPassing"]}
+                                              </td>`)
+      $(tableName).append(`<td data-label=${"remarks"}>
+
+                                                                        ${employee[object][i]["remarks"]}
+                                                                                      </td>`)
+        $(tableName).append(`<td data-label=${"documents"}>
+
+                                                                                                                                                                                                  ${employee[object][i]["documents"]?employee[object][i]["documents"].length:""}
+                                                                                                                                                                                            </td>`)
     }
+
+
+
+    // for (var key in employee[object][i]) {
+    //   if (key === "department" || key === "designation" ||  key === "fund" || key === "function" || key === "functionary" || (object == "assignments" && key === "grade") || key === "mainDepartments" || key === "jurisdictionsType") {
+    //     $(tableName).append(`<td data-label=${key}>
+    //                               ${getNameById(key,employee[object][i][key],"")}
+    //                         </td>`)
+    //   } else if (key === "boundary") {
+    //
+    //   } else if (key == "hod") {
+    //     $(tableName).append(`<td data-label=${key}>
+    //                             ${employee[object][i][key].length>0?"Yes":"No"}
+    //                       </td>`)
+    //   } else if (key === "position") {
+    //     try {
+    //       assignments_position = commonApiPost("hr-masters", "positions", "_search",{tenantId,id:employee[object][i][key]}).responseJSON["Position"] || [];
+    //     } catch (e) {
+    //       console.log(e);
+    //       assignments_position = [];
+    //     }
+    //     $(tableName).append(`<td data-label=${key}>
+    //
+    //                               ${assignments_position.length>0?assignments_position[0]["name"]:""}
+    //                         </td>`)
+    //   }
+    //    else if ((key != "id"|| object=="serviceHistory") && key != "createdBy" && key != "createdDate" && key != "lastModifiedBy" && key != "lastModifiedDate" && key != "tenantId") {
+    //     if (key == "documents") {
+    //       // var name="";
+    //       // for (var i = 0; i < employee[object][i][key].length; i++) {
+    //       //   name=name +" "+ employee[object][i][key][i]["name"];
+    //       // }
+    //       $(tableName).append(`<td data-label=${key}>
+    //
+    //                                   ${employee[object][i][key]?employee[object][i][key].length:""}
+    //                             </td>`)
+    //     } else {
+    //       $(tableName).append(`<td data-label=${key}>
+    //
+    //                                 ${employee[object][i][key]}
+    //                           </td>`)
+    //     }
+    //
+    //   }
+    //
+    // }
     if (getUrlVars()["type"] != "view") {
       $(tableName).append(`<td data-label="Action">
                       <button type="button" onclick="markEditIndex(${i},'${modalName}','${object}')" class="btn btn-default btn-action"><span class="glyphicon glyphicon-pencil"></span></button>
@@ -1649,8 +1815,10 @@ function markEditIndex(index = -1, modalName = "", object = "") {
         // } else {
         //     $(`#${object}\\.${key}`).val(employeeSubObject[object][key]);
         // }
-        if (key=="position") {
-            getPositions({id:"assignments.department"});
+        if (key == "position") {
+          getPositions({
+            id: "assignments.department"
+          });
         }
 
         if (key == "isPrimary") {
@@ -2398,15 +2566,25 @@ function printValue(object = "", values) {
 
   } else {
     for (var key in values) {
-      if (typeof values[key] === "object") {
+      if (typeof values[key] === "object" && key == "user") {
         for (ckey in values[key]) {
           if (values[key][ckey]) {
             //Get description
+            if (ckey == "dob") {
+              $("[name='" + key + "." + ckey + "']").val(values[key][ckey].split("-")[2] + "-" + values[key][ckey].split("-")[1] + "-" + values[key][ckey].split("-")[0]);
 
-            $("[name='" + key + "." + ckey + "']").val(values[key][ckey]);
+            }
+            // else if (ckey="active" || ckey=="gender") {
+            //   document.getElementById(shirtColor).checked = true;
+            // }
+            else {
+              $("[name='" + key + "." + ckey + "']").val(values[key][ckey]);
+
+            }
           }
         }
       } else if (values[key]) {
+
         $("[name='" + key + "']").val(values[key]);
       } else {
         // $("[name='" + (isAsset ? "asset." : "") + key + "']").text("NA");

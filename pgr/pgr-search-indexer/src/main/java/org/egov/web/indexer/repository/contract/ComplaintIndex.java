@@ -104,17 +104,17 @@ public class ComplaintIndex {
     @JsonProperty("cityDistrictName")
     private String cityDistrictName;
 
-    @JsonProperty("cityGrade")
+  /*  @JsonProperty("cityGrade")
     private String cityGrade;
-
+*/
     @JsonProperty("cityRegionName")
     private String cityRegionName;
 
     @JsonProperty("cityName")
     private String cityName;
 
-    @JsonProperty("cityDomainUrl")
-    private String cityDomainUrl;
+/*    @JsonProperty("cityDomainUrl")
+    private String cityDomainUrl;*/
 
     @JsonProperty("complaintDuration")
     private double complaintDuration;

@@ -9,12 +9,14 @@ import java.util.Objects;
 import org.apache.commons.lang.time.DateUtils;
 import org.egov.web.indexer.contract.Assignment;
 import org.egov.web.indexer.contract.Boundary;
+import org.egov.web.indexer.contract.City;
 import org.egov.web.indexer.contract.ComplaintType;
 import org.egov.web.indexer.contract.Employee;
 import org.egov.web.indexer.contract.ServiceRequest;
 import org.egov.web.indexer.repository.BoundaryRepository;
 import org.egov.web.indexer.repository.ComplaintTypeRepository;
 import org.egov.web.indexer.repository.EmployeeRepository;
+import org.egov.web.indexer.repository.TenantRepository;
 import org.egov.web.indexer.repository.contract.ComplaintIndex;
 import org.egov.web.indexer.repository.contract.GeoPoint;
 import org.joda.time.LocalDate;
@@ -36,15 +38,15 @@ public class ComplaintAdapter {
     private BoundaryRepository boundaryRepository;
     private ComplaintTypeRepository complaintTypeRepository;
     private EmployeeRepository employeeRepository;
-    // private CityRepository cityRepository;
+    private TenantRepository tenantRepository;
 
-    public ComplaintAdapter(BoundaryRepository boundaryRepository, ComplaintTypeRepository complaintTypeRepository,
-            EmployeeRepository employeeRepository) {
+    public ComplaintAdapter(TenantRepository tenantRepository, BoundaryRepository boundaryRepository,
+            ComplaintTypeRepository complaintTypeRepository, EmployeeRepository employeeRepository) {
         // this.propertiesManager = propertiesManager;
         this.boundaryRepository = boundaryRepository;
         this.complaintTypeRepository = complaintTypeRepository;
         this.employeeRepository = employeeRepository;
-        // this.cityRepository = cityRepository;
+        this.tenantRepository = tenantRepository;
     }
 
     public ComplaintIndex indexOnCreate(ServiceRequest serviceRequest) {
@@ -187,6 +189,7 @@ public class ComplaintAdapter {
          * "complaint.source.citizen.website"));
          * InitializeCityDetails(complaintIndex, values.get("tenantId"));
          */
+        InitializeCityDetails(complaintIndex,serviceRequest.getTenantId());
         InitializeBoundaryDetails(complaintIndex, values.get("locationId"), values.get("child_location_id"),
                 serviceRequest.getTenantId());
         InitializeEmployeeDetails(complaintIndex, values.get("assignment_id"), serviceRequest.getTenantId());
@@ -227,18 +230,18 @@ public class ComplaintAdapter {
         }
     }
 
-    /*
-     * public void InitializeCityDetails(ComplaintIndex complaintIndex, String
-     * tenantId) { City city =
-     * cityRepository.fetchCityById(Long.valueOf(tenantId)); if (city != null) {
-     * complaintIndex.setCityCode(city.getCode());
-     * complaintIndex.setCityDistrictCode(city.getDistrictCode());
-     * complaintIndex.setCityDistrictName(city.getDistrictName());
-     * complaintIndex.setCityGrade(city.getGrade());
-     * complaintIndex.setCityDomainUrl(city.getDomainURL());
-     * complaintIndex.setCityName(city.getName());
-     * complaintIndex.setCityRegionName(city.getRegionName()); } }
-     */
+    public void InitializeCityDetails(ComplaintIndex complaintIndex, String tenant) {
+        City city = tenantRepository.fetchTenantByCode(tenant);
+        if (city != null) {
+            complaintIndex.setCityCode(city.getCode());
+            complaintIndex.setCityDistrictCode(city.getDistrictCode());
+            complaintIndex.setCityDistrictName(city.getDistrictName());
+            //complaintIndex.setCityGrade(city.getGrade());
+           // complaintIndex.setCityDomainUrl(city.getDomainURL());
+            complaintIndex.setCityName(city.getName());
+            complaintIndex.setCityRegionName(city.getRegionName());
+        }
+    }
 
     public void InitializeEmployeeDetails(ComplaintIndex complaintIndex, String assignmentId, String tenantId) {
         if (assignmentId != null && !assignmentId.isEmpty()) {

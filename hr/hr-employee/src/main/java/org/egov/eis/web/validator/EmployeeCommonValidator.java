@@ -71,8 +71,8 @@ public abstract class EmployeeCommonValidator {
 		List<Long> idsFromDB = employeeRepository.getListOfIds(entityType.getDbTable(), employeeId, tenantId);
 		idsMap.keySet().forEach((id) -> {
 			if (!idsFromDB.contains(id))
-				errors.rejectValue("employee." + entityType.getValue().toLowerCase() + "[" + idsMap.get(id) + "].id", "doesn't exist",
-						" " +entityType.getValue().toLowerCase() + " doesn't exist for this employee");
+				errors.rejectValue("employee." + entityType.getContractFieldName() + "[" + idsMap.get(id) + "].id",
+						"doesn't exist", entityType.getContractFieldName() + " doesn't exist for this employee");
 		});
 	}
 	

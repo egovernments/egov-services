@@ -120,6 +120,10 @@ public class ErrorHandler {
 					error.getFields().put(fieldError.getField(), errorDate);
 				} else if (fieldError.getField().contains("code") && fieldError.getRejectedValue() == null) {
 					error.getFields().put(fieldError.getField(), fieldError.getRejectedValue());
+				} else if (fieldError.getField().contains("permanentPincode")
+						&& (((String) fieldError.getRejectedValue()).length() > 6)) {
+					error.getFields().put(fieldError.getField(),
+							"permanentPincode : " + fieldError.getRejectedValue() + " contains more than 6 characters");
 				} else if (fieldError.getField().contains("retirementAge")
 						|| fieldError.getField().contains("dateOf")) {
 					error.getFields().put(fieldError.getField(),

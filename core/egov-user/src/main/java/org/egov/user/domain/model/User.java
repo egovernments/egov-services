@@ -122,4 +122,8 @@ public class User {
 		roles = Collections.singletonList(Role.getCitizenRole());
 		return this;
 	}
+
+	public void update(UpdatePassword updatePasswordRequest) {
+		password = updatePasswordRequest.getNewPassword();
+	}
 }

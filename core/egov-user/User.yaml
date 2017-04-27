@@ -11,10 +11,12 @@ info:
   contact:
     name: Elzan Mathew
 
+basePath: "/user"
+
 # Describe your paths here
 paths:
   # This is a path endpoint. Change it.
-  /users/_search:
+  /_search:
     # This is a HTTP operation
     post:
       # Describe this verb here. Note: you can use markdown
@@ -148,30 +150,6 @@ paths:
           description: Invalid input.
           schema:
             $ref: '#/definitions/ErrorRes'
-  /user/{userId}/_update:
-    parameters:
-      - $ref: "#/parameters/userId"
-    post:
-      summary: Update existing user master data for the User using the unique userId.
-      description: To update an existing User master data.
-      parameters:
-        - name: user
-          in: body
-          description: Request header for the user with new of values.
-          required: true
-          schema:
-            $ref: '#/definitions/UserReq'
-      tags:
-        - User
-      responses:
-        '200':
-          description: User updated.
-          schema:
-            $ref: '#/definitions/UserRes'
-        '400':
-          description: Invalid input.
-          schema:
-            $ref: '#/definitions/ErrorRes'
 
   /user/{userId}/_updatenovalidate:
     parameters:
@@ -198,7 +176,7 @@ paths:
           schema:
             $ref: '#/definitions/ErrorRes'
 
-  /v1/user/_patch:
+  /user/_patch:
       post:
         summary: User profile update. All fields expect username and mobilenumber are allowed to be updated.
         description: User profile update. All fields expect username and mobilenumber are allowed to be updated.
@@ -221,7 +199,30 @@ paths:
             schema:
               $ref: '#/definitions/ErrorRes'
 
-  /user/_login:
+  /password/_update:
+      post:
+        summary: Update password for logged in user.
+        description: Endpoint for logged in user to update password.
+        parameters:
+          - name: updatePasswordRequest
+            in: body
+            description: Update password request
+            required: true
+            schema:
+              $ref: '#/definitions/UpdatePasswordRequest'
+        tags:
+          - User
+        responses:
+          '200':
+            description: Password updated.
+            schema:
+              $ref: '#/definitions/UserRes'
+          '400':
+            description: Password update request invalid.
+            schema:
+              $ref: '#/definitions/ErrorRes'
+
+  /user/oauth/token:
     post:
       summary: Login a user based on username and password auth and return oAuth tokens.
       description: Login a user based on username and password auth and return oAuth tokens.
@@ -367,6 +368,27 @@ definitions:
       tenantId:
         type: string
         description: Unique Identifier of the tenant, Like AP, AP.Kurnool etc.
+
+  UpdatePasswordRequest:
+      type: object
+      properties:
+        RequestInfo:
+          $ref: '#/definitions/RequestInfo'
+        existingPassword:
+          type: string
+          description: Existing password.
+          minLength: 1
+          maxLength: 64
+        newPassword:
+          type: string
+          description: New password.
+          minLength: 1
+          maxLength: 64
+      required:
+        - RequestInfo
+        - existingPassword
+        - newPassword
+
 
   User:
     type: object
@@ -668,10 +690,20 @@ definitions:
       authToken:
         type: string
         description: //session/jwt/saml token/oauth token
+      userInfo:
+        $ref: '#/definitions/UserInfo'
+
     required:
       - apiId
       - ver
       - ts
+
+  UserInfo:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: Logged in user id
 
   ResponseInfo:
     type: object

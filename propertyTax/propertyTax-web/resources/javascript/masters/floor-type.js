@@ -3,20 +3,36 @@ class FloorType extends React.Component {
     super(props);
     this.state={list:[],searchSet:{
     name:"",
-        },isSearchClicked:false,FloorType:[]}
+  },isSearchClicked:false,floorTypeList:[],type:""}
     this.handleChange=this.handleChange.bind(this);
     this.search=this.search.bind(this);
+    this.updateType=this.updateType.bind(this);
+
   }
 
   search(e)
   {
     e.preventDefault();
+    // var type = getUrlVars()["id"];
+
+    console.log(e);
+    console.log(this.state.type);
+      if(this.state.type==="Update")
+
+        return (  window.location.href='app/create/create-floor-type.html?type=Update')
+        //console.log(type);
+      //
+      //
+      else
+
+
+        return (  window.location.href='app/create/create-floor-type.html?type=View')
+
+
+
     //call api call
     //  var list=commonApiPost("asset-services","assets","_search",this.state.searchSet).responseJSON["Assets"] ||[];
-      this.setState({
-      isSearchClicked:true,
-      list
-    })
+
 
     // $('#agreementTable').DataTable().draw();
     // console.log($('#agreementTable').length);
@@ -36,7 +52,7 @@ class FloorType extends React.Component {
 
       this.setState({
 
-        FloorType: [{
+        floorTypeList: [{
                 id: "cement",
                 name: "Cement",
 
@@ -83,11 +99,17 @@ class FloorType extends React.Component {
       // widow.close();
       open(location, '_self').close();
   }
+  updateType(e, type){
+    // console.log("hi");
+    this.setState({
+      type
+    })
+  }
 
 
 
   render() {
-    let {handleChange,search,updateTable,handleSelectChange}=this;
+    let {handleChange,search,updateType}=this;
     let {isSearchClicked,list}=this.state;
     let {name}=this.state.searchSet;
 
@@ -117,10 +139,10 @@ class FloorType extends React.Component {
                         <div className="col-sm-8">
                             <div className="styled-select">
                                 <select id="name" name="name" value={name}
-                  onChange={(e)=>{  handleChange(e,"name")}} >
+                  onChange={(e)=>{  handleChange(e,"name")}} required>
 
                                   <option value="">Choose name</option>
-                                  {renderOption(this.state.FloorType)}
+                                  {renderOption(this.state.floorTypeList)}
 
                                 </select>
                             </div>
@@ -132,16 +154,17 @@ class FloorType extends React.Component {
 
 
 
-                    <div className="text-center">
-                    <button type="submit" className="btn btn-submit" onClick={(e)=>{window.location.href='app/create/create-floor-type.html'}}>Create</button>
+                <div className="text-center">
+                <button type="button" className="btn btn-danger" onClick={(e)=>{window.location.href='app/create/create-roof-type.html?type=Create'}}>Create</button>
+                &nbsp;
+                <button type="submit" className="btn btn-submit" id="Update" value="Update" onClick={(e)=>{  updateType(e,"Update")}}>Update</button>
+                &nbsp;
+
+                    <button type="submit" className="btn btn-submit" value="View" onClick={(e)=>{  updateType(e,"View")}} >View</button>
                     &nbsp;
-                    <button type="submit" className="btn btn-submit">Update</button>
-                    &nbsp;
-                        <button type="submit" className="btn btn-submit">View</button>
-                        &nbsp;
-                        <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>
-                    </div>
-                    </form>
+                    <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>
+                </div>
+                </form>
 
 
           </div>

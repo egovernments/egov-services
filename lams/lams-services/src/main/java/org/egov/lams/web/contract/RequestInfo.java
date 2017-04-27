@@ -26,6 +26,7 @@ public class RequestInfo {
 	private String key;	
 	private String msgId;	
 	private String requesterId;	
+	private String correlationId;	
 	private String authToken;
 	private User userInfo;
 }

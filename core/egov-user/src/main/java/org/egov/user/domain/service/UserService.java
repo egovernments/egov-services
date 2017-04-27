@@ -1,10 +1,12 @@
 package org.egov.user.domain.service;
 
 import org.egov.user.domain.exception.*;
+import org.egov.user.domain.model.UpdatePassword;
 import org.egov.user.domain.model.User;
 import org.egov.user.domain.model.UserSearch;
 import org.egov.user.persistence.repository.OtpRepository;
 import org.egov.user.persistence.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,12 +16,15 @@ public class UserService {
 
     private UserRepository userRepository;
     private OtpRepository otpRepository;
+    private PasswordEncoder passwordEncoder;
 
     public UserService(UserRepository userRepository,
-                       OtpRepository otpRepository) {
+					   OtpRepository otpRepository,
+					   PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.otpRepository = otpRepository;
-    }
+		this.passwordEncoder = passwordEncoder;
+	}
 
     public User getUserByUsername(final String userName) {
         return userRepository.findByUsername(userName);
@@ -50,14 +55,35 @@ public class UserService {
 
     public User updateWithoutOtpValidation(final Long id, final User user) {
         validateUser(id, user);
-        return updateExistingUser(id, user);
+        return updateExistingUser(user);
     }
 
     public User partialUpdate(final User user) {
 		validateUserId(user);
 		validateProfileUpdateIsDoneByTheSameLoggedInUser(user);
 		user.nullifySensitiveFields();
-		return updateExistingUser(user.getId(), user);
+		return updateExistingUser(user);
+	}
+
+	public void updatePasswordForLoggedInUser(UpdatePassword updatePasswordRequest) {
+    	updatePasswordRequest.validate();
+		final User user = userRepository.getUserById(updatePasswordRequest.getUserId());
+		validateUserPresent(user);
+		validateExistingPassword(updatePasswordRequest, user);
+		user.update(updatePasswordRequest);
+		userRepository.update(user);
+	}
+
+	private void validateExistingPassword(UpdatePassword updatePasswordRequest, User user) {
+		if(!passwordEncoder.matches(updatePasswordRequest.getExistingPassword(), user.getPassword())) {
+			throw new PasswordMismatchException();
+		}
+	}
+
+	private void validateUserPresent(User user) {
+		if (user == null) {
+			throw new UserNotFoundException(null);
+		}
 	}
 
 	private void validateProfileUpdateIsDoneByTheSameLoggedInUser(User user) {
@@ -100,7 +126,7 @@ public class UserService {
         }
     }
 
-    private User updateExistingUser(final Long id, final User user) {
-        return userRepository.update(id, user);
+    private User updateExistingUser(final User user) {
+        return userRepository.update(user);
     }
 }

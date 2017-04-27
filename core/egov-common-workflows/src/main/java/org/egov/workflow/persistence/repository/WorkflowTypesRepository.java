@@ -16,6 +16,7 @@ public interface WorkflowTypesRepository extends JpaRepository<WorkflowTypes,jav
 	 WorkflowTypes findByTypeAndEnabledIsTrue(String type);
 
 	    WorkflowTypes findByType(String type);
+	    WorkflowTypes findByTypeAndTenantId(String type,String tenantId);
 	    @Query("select type from WorkflowTypes where enabled=:isEnabled  ")
 	    List<String>  findTypeEnabled(@Param("isEnabled") Boolean enabled);
 	    @Query("select type from WorkflowTypes where enabled is null  ")

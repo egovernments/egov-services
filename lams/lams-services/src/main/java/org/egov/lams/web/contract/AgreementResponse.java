@@ -19,8 +19,8 @@ import lombok.ToString;
 @ToString
 public class AgreementResponse {
 
-	@JsonProperty("ResposneInfo")
-	private ResponseInfo resposneInfo;
+	@JsonProperty("ResponseInfo")
+	private ResponseInfo responseInfo;
 	
 	@JsonProperty("Agreements")
 	private List<Agreement> agreement;

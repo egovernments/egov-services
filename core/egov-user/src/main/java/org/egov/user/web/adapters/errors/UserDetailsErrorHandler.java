@@ -10,13 +10,13 @@ import java.util.Collections;
 import java.util.List;
 
 @Getter
-public class UserDetailsErrorHandler extends RuntimeException {
+public class UserDetailsErrorHandler implements ErrorAdapter<Void> {
 
     private static final String USER_DETAILS_NOT_FOUND_CODE = "USER_DETAILS_NOT_FOUND";
     private static final String USER_DETAILS_NOT_FOUND = "Error while fetching user details";
 	private static final long serialVersionUID = -6686068213873485044L;
 
-	public ErrorResponse adapt() {
+	public ErrorResponse adapt(Void model) {
         final Error error = getError();
         return new ErrorResponse(null, error);
     }

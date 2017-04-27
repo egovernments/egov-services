@@ -1,5 +1,6 @@
 package org.egov.user.persistence.repository;
 
+import org.egov.user.Resources;
 import org.egov.user.domain.model.Action;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,7 +43,7 @@ public class ActionRestRepositoryTest {
 				.andRespond(withSuccess(resources.getFileContents("actionsResponse.json"),
 						MediaType.APPLICATION_JSON_UTF8));
 
-		final List<Action> actions = actionRestRepository.getActionByRoleCodes(getRoles(), "ap.public");
+		final List<Action> actions = actionRestRepository.getActionByRoleCodes(getRoles(), "default");
 
 		server.verify();
 		assertEquals(2, actions.size());

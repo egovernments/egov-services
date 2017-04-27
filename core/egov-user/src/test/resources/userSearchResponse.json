@@ -36,11 +36,7 @@
         {
           "id":1,
           "name":"name of the role 1",
-          "description":"description",
-          "createdBy":0,
-          "createdDate":"07/01/1990",
-          "lastModifiedBy":0,
-          "lastModifiedDate":"07/01/1990"
+          "code":"roleCode"
         }
       ],
       "fatherOrHusbandName": "name of relative",

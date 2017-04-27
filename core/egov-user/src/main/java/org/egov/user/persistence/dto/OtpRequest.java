@@ -1,4 +1,4 @@
-package org.egov.user.web.contract;
+package org.egov.user.persistence.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

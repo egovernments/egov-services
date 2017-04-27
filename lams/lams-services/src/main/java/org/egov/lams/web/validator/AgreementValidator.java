@@ -19,11 +19,15 @@ import org.egov.lams.web.contract.AssetResponse;
 import org.egov.lams.web.contract.LamsConfigurationGetRequest;
 import org.egov.lams.web.contract.RequestInfo;
 import org.egov.lams.web.contract.RequestInfoWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class AgreementValidator {
+	
+	public static final Logger logger = LoggerFactory.getLogger(AgreementValidator.class);
 
 	@Autowired
 	private AssetService assetService;
@@ -64,6 +68,7 @@ public class AgreementValidator {
 		validateAllottee(agreementRequest);
 		validateAsset(agreementRequest);
 		validateRentIncrementType(agreement);
+		logger.info("after the validations");
 	}
 
 	public void validateAsset(AgreementRequest agreementRequest) {
@@ -86,8 +91,10 @@ public class AgreementValidator {
 		Allottee allottee = agreementRequest.getAgreement().getAllottee();
 		RequestInfo requestInfo = agreementRequest.getRequestInfo();
 		AllotteeResponse allotteeResponse = allotteeService.isAllotteeExist(allottee, requestInfo);
-		if (allotteeResponse.getAllottee() == null || allotteeResponse.getAllottee().size() == 0)
+		if (allotteeResponse.getAllottee() == null || allotteeResponse.getAllottee().size() == 0){
+			allottee.setTenantId(agreementRequest.getAgreement().getTenantId());
 			allotteeService.createAllottee(allottee, requestInfo);
+		}
 		else 
 			allottee.setId(allotteeResponse.getAllottee().get(0).getId());
 	}
@@ -100,9 +107,10 @@ public class AgreementValidator {
 		LamsConfigurationGetRequest lamsConfigurationGetRequest = new LamsConfigurationGetRequest();
 		String keyName = propertiesManager.getRentIncrementAssetCategoryKey();
 		lamsConfigurationGetRequest.setName(keyName);
+		logger.info("the asset category names found ::: "+ lamsConfigurationGetRequest);
 		List<String> assetCategoryNames = lamsConfigurationService.getLamsConfigurations(lamsConfigurationGetRequest)
 				.get(keyName);
-
+		logger.info("the asset category names found ::: "+ assetCategoryNames);
 		for (String string : assetCategoryNames) {
 			if (string.equals(assetCategory.getName())) {
 				if (rentIncrement != null) {
@@ -116,10 +124,11 @@ public class AgreementValidator {
 				}
 			}
 		}
-
+		logger.info("after the loop");
 		if (rentIncrement == null) {
 			rentIncrement = new RentIncrementType();
 			rentIncrement.setId(null);
 		}
+		logger.info("end of method");
 	}
 }

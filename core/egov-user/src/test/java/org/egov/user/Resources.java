@@ -1,4 +1,4 @@
-package org.egov.user.persistence.repository;
+package org.egov.user;
 
 import org.apache.commons.io.IOUtils;
 

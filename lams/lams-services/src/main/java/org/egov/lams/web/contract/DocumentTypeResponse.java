@@ -16,9 +16,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class DocumentTypeResponse {
 
-	@JsonProperty("ResposneInfo")
-	private ResponseInfo resposneInfo = null;
+	@JsonProperty("ResponseInfo")
+	private ResponseInfo responseInfo = null;
 
 	@JsonProperty("documentTypes")
-	private List<DocumentType> documentTypes = new ArrayList<DocumentType>();
+	private List<DocumentType> documentTypes = new ArrayList<>();
 }

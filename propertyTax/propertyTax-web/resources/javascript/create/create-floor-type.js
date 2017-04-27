@@ -4,28 +4,91 @@ class CreateFloorType extends React.Component {
     this.state={list:[],searchSet:{
     name:""}
       }
-    // this.handleChange=this.handleChange.bind(this);
+     this.handleChange=this.handleChange.bind(this);
+     this.addOrUpdate=this.addOrUpdate.bind(this);
+
   }
 
+  handleChange(e,name)
+      {
+        console.log(name);
+          this.setState({
+              searchSet:{
+                  ...this.state.searchSet,
+                  [name]:e.target.value
+              }
+          })
+      }
 
   close(){
       // widow.close();
       open(location, '_self').close();
   }
+  componentDidMount(){
+        var type=getUrlVars()["type"];
+        var id=getUrlVars()["id"];
+
+        if(getUrlVars()["type"]==="View")
+        {
+           $("input").prop("disabled", true);
+
+          }
+
+
+        if(type==="View"||type==="Update")
+        {
+            this.setState({
+              // gradeSet:getCommonMasterById("hr-masters","grades","Grade",id).responseJSON["Grade"][0]
+            })
+        }
+
+
+
+      }
+
+      
+      addOrUpdate(e,mode){
+        e.preventDefault();
+         console.log(this.state.searchSet);
+        // console.log(mode);
+        if (mode==="update") {
+            console.log("update");
+        } else {
+
+          this.setState({searchSet:{
+            name:"",
+
+          } })
+        }
+      }
+
 
 
 
   render() {
-    let {handleChange}=this;
+    let {handleChange,addOrUpdate}=this;
     let {list}=this.state;
     let {name}=this.state.searchSet;
+    let mode=getUrlVars()["type"];
+
+    const showActionButton=function() {
+      if(mode==="Create")
+        return (<button type="submit" className="btn btn-submit">Add</button>);
+
+     else if(mode==="Update")
+          return (<button type="submit" className="btn btn-submit">Update</button>);
+
+
+    }
+
 
 
 
     return (
     <div>
-         
-          <form>
+    <h3>{mode} Floor Type </h3>
+    <form onSubmit={(e)=>{addOrUpdate(e,mode)}}>
+
             <div className="row">
                 <div className="col-sm-6">
                     <div className="row">
@@ -34,7 +97,8 @@ class CreateFloorType extends React.Component {
                         </div>
                         <div className="col-sm-6">
                             <div className="row">
-                              <input type="text" name="name" id="name" />
+                              <input type="text" name="name" id="name" value={name}
+                onChange={(e)=>{  handleChange(e,"name")}} />
                             </div>
                         </div>
                     </div>
@@ -45,8 +109,7 @@ class CreateFloorType extends React.Component {
 
 
                     <div className="text-center">
-                    <button type="submit" className="btn btn-submit">Add</button>
-                    &nbsp;
+                    {showActionButton()} &nbsp;&nbsp;
                     <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>
                     </div>
                     </form>
@@ -63,3 +126,6 @@ ReactDOM.render(
   <CreateFloorType />,
   document.getElementById('root')
 );
+//
+// <button type="submit" className="btn btn-submit">Add</button>
+// &nbsp;

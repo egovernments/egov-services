@@ -109,18 +109,18 @@ public class WorkFlowMatrixService {
 	 */
 
 	public WorkFlowMatrix getWfMatrix(final String type, final String department, final BigDecimal amountRule,
-			final String additionalRule, final String currentState, final String pendingActions) {
+			final String additionalRule, final String currentState, final String pendingActions,String tenantId) {
 		final Criteria wfMatrixCriteria = createWfMatrixAdditionalCriteria(type, department, amountRule, additionalRule,
-				currentState, pendingActions);
+				currentState, pendingActions,tenantId);
 
 		return getWorkflowMatrixObj(type, additionalRule, currentState, pendingActions, wfMatrixCriteria);
 
 	}
 
 	public WorkFlowMatrix getWfMatrix(final String type, final String department, final BigDecimal amountRule,
-			final String additionalRule, final String currentState, final String pendingActions, final Date date) {
+			final String additionalRule, final String currentState, final String pendingActions, final Date date,String tenantId) {
 		final Criteria wfMatrixCriteria = createWfMatrixAdditionalCriteria(type, department, amountRule, additionalRule,
-				currentState, pendingActions);
+				currentState, pendingActions,tenantId);
 		final Criterion crit1 = Restrictions.le("fromDate", date == null ? new Date() : date);
 		final Criterion crit2 = Restrictions.ge("toDate", date == null ? new Date() : date);
 		final Criterion crit3 = Restrictions.conjunction().add(crit1).add(crit2);
@@ -196,12 +196,19 @@ public class WorkFlowMatrixService {
 
 	private Criteria createWfMatrixAdditionalCriteria(final String type, final String department,
 			final BigDecimal amountRule, final String additionalRule, final String currentState,
-			final String pendingActions) {
+			final String pendingActions,String tenantId) {
 		final Criteria wfMatrixCriteria = commonWorkFlowMatrixCriteria(type, additionalRule, currentState,
 				pendingActions);
 		if (department != null && !"".equals(department.trim()))
 			wfMatrixCriteria.add(Restrictions.eq("department", department));
+	
+		if(tenantId!=null)
+		{
+			wfMatrixCriteria.add(Restrictions.eq("tenantId", tenantId));
+		}
 
+		 
+		
 		// Added restriction for amount rule
 		if (amountRule != null && BigDecimal.ZERO.compareTo(amountRule) != 0) {
 			final Criterion amount1st = Restrictions.conjunction().add(Restrictions.le("fromQty", amountRule))
@@ -217,11 +224,16 @@ public class WorkFlowMatrixService {
 
 	private Criteria createWfMatrixAdditionalCriteria(final String type, final String department,
 			final BigDecimal amountRule, final String additionalRule, final String currentState,
-			final String pendingActions, final String designation) {
+			final String pendingActions, final String designation,String tenantId) {
 		final Criteria wfMatrixCriteria = commonWorkFlowMatrixCriteria(type, additionalRule, currentState,
 				pendingActions);
 		if (department != null && !"".equals(department.trim()))
 			wfMatrixCriteria.add(Restrictions.eq("department", department));
+		
+		if(tenantId!=null)
+		{
+			wfMatrixCriteria.add(Restrictions.eq("tenantId", tenantId));
+		}
 
 		// Added restriction for amount rule
 		if (amountRule != null && BigDecimal.ZERO.compareTo(amountRule) != 0) {
@@ -312,7 +324,7 @@ public class WorkFlowMatrixService {
 			final String pendingAction, final Date date,String tenantId) {
 
 		final WorkFlowMatrix wfMatrix = getWfMatrix(type, departmentName, businessRule, additionalRule, currentState,
-				pendingAction, date);
+				pendingAction, date,tenantId);
 		List<String> validActions = Collections.EMPTY_LIST;
 
 		if (wfMatrix != null && wfMatrix.getValidActions() != null)

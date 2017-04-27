@@ -71,9 +71,11 @@ public class WorkFlowService {
     public ProcessInstance start(final LeaveApplicationSingleRequest leaveApplicationRequest) {
         final ProcessInstanceRequest processInstanceRequest = new ProcessInstanceRequest();
         ProcessInstance processInstance = new ProcessInstance();
+        LOGGER.info("propertiesManager::" + propertiesManager);
         processInstance.setBusinessKey(propertiesManager.getWorkflowServiceBusinessKey());
         processInstance.setType(propertiesManager.getWorkflowServiceBusinessKey());
         processInstance.setComments("starting workflow from Leave Application consumer");
+        processInstance.setTenantId(leaveApplicationRequest.getLeaveApplication().getTenantId());
         Position assignee = new Position();
         LOGGER.info("leaveApplicationRequest::" + leaveApplicationRequest);
         assignee.setId(leaveApplicationRequest.getLeaveApplication().getWorkflowDetails().getAssignee());
@@ -101,6 +103,7 @@ public class WorkFlowService {
         task.setComments("updating workflow from Leave Application consumer");
         task.setAction(leaveApplicationRequest.getLeaveApplication().getWorkflowDetails().getAction());
         task.setStatus(leaveApplicationRequest.getLeaveApplication().getWorkflowDetails().getAction());
+        task.setTenantId(leaveApplicationRequest.getLeaveApplication().getTenantId());
         Position assignee = new Position();
         assignee.setId(leaveApplicationRequest.getLeaveApplication().getWorkflowDetails().getAssignee());
         task.setAssignee(assignee);

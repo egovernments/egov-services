@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class RentIncrementService {
 	
-	public static final Logger logger = LoggerFactory.getLogger(AgreementService.class);
+	public static final Logger logger = LoggerFactory.getLogger(RentIncrementService.class);
 
 	@Autowired
 	JdbcTemplate jdbcTemplate;

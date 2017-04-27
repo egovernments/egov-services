@@ -134,9 +134,8 @@ public class User {
 	// FIXME : User service is expecting & sending dates in multiple formats. Fix a common standard for date formats.
 	private String pwdExpiryDate;
 
-	@NotNull
 	@Size(max=5)
-	private String locale;
+	private String locale = "en_IN";
 
 	@NotNull
 	@Valid

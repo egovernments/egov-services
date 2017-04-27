@@ -157,7 +157,7 @@ class CompensetoryLeave extends React.Component {
       const showActionButton=function() {
         if((!mode) ||mode==="create")
         {
-          return (<button type="submit" className="btn btn-submit">{mode?"Apply":"forward"}</button>);
+          return (<button type="submit" className="btn btn-submit">{mode?"forward":"Apply"}</button>);
         }
       };
     return (

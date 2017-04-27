@@ -106,6 +106,7 @@ public class AgreementValidator {
 		LamsConfigurationGetRequest lamsConfigurationGetRequest = new LamsConfigurationGetRequest();
 		String keyName = propertiesManager.getRentIncrementAssetCategoryKey();
 		lamsConfigurationGetRequest.setName(keyName);
+		logger.info("the asset category names found ::: "+ lamsConfigurationGetRequest);
 		List<String> assetCategoryNames = lamsConfigurationService.getLamsConfigurations(lamsConfigurationGetRequest)
 				.get(keyName);
 		logger.info("the asset category names found ::: "+ assetCategoryNames);

@@ -57,5 +57,6 @@ public class ChartOfAccountContract {
     private Long id;
     private String glcode;
     private String name;
+    private String tenantId;
 
 }

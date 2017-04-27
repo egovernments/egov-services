@@ -219,7 +219,7 @@ public class PaymentService {
 			billdetail.setCreditAmount(demandDetail.getTaxAmount().subtract(demandDetail.getCollectionAmount()));
 			billdetail.setDebitAmount(BigDecimal.ZERO);
 			LOGGER.info("getGlCode before>>>>>>>" + demandDetail.getGlCode());
-			billdetail.setGlCode(getGlcodeById(demandDetail.getGlCode(), requestInfo));
+			billdetail.setGlCode(getGlcodeById(demandDetail.getGlCode(), demandDetail.getTenantId(), requestInfo));
 			LOGGER.info("getGlCode after >>>>>>>" + demandDetail.getGlCode());
 			billdetail.setDescription(demandDetail.getTaxPeriod().concat(":").concat(demandDetail.getTaxReason()));
 			billdetail.setPeriod(demandDetail.getTaxPeriod());
@@ -381,9 +381,10 @@ public class PaymentService {
 		return receiptAmountInfoResponse;
 	}
 
-	private String getGlcodeById(Long id, RequestInfo requestInfo) {
+	private String getGlcodeById(Long id, String tenantId, RequestInfo requestInfo) {
 		ChartOfAccountContract chartOfAccountContract = new ChartOfAccountContract();
 		chartOfAccountContract.setId(id);
+		chartOfAccountContract.setTenantId(tenantId);
 		return financialsRepository.getChartOfAccountGlcodeById(chartOfAccountContract, requestInfo);
 	}
 

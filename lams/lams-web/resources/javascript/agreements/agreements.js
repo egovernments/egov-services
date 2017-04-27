@@ -1010,6 +1010,13 @@ $("#createAgreementForm").validate({
         agreement["workflowDetails"]["assignee"] = getPositionId(agreement["approverName"]);
         agreement["asset"] = {};
         agreement["asset"]["id"] = getUrlVars()["assetId"];
+        agreement["asset"]["name"] = assetDetails["name"];
+        agreement["asset"]["code"] = assetDetails["code"];
+        agreement["asset"]["assetCategory"] = {};
+        agreement["asset"]["assetCategory"]["id"] = assetDetails["assetCategory"]["id"];
+        agreement["asset"]["assetCategory"]["code"] = assetDetails["assetCategory"]["code"];
+        agreement["asset"]["assetCategory"]["name"] = assetDetails["assetCategory"]["name"];
+
         agreement["rentIncrementMethod"] = {};
         agreement["rentIncrementMethod"]["id"] = $("#rentIncrementMethod").val();
         agreement["tenantId"] = tenantId;

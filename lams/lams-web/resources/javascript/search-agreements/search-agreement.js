@@ -319,8 +319,6 @@ class AgreementSearch extends React.Component {
           <h3>Search Agreement </h3>
           <div className="form-section-inner">
               <form onSubmit={(e)=>{search(e)}}>
-
-
                   <div className="">
                     <div className="form-section">
                       <div className="row">
@@ -335,17 +333,9 @@ class AgreementSearch extends React.Component {
                                     </select>
                               </div>
                         </div>
-
                       </div>
-
                     </div>
-
-
-
-
                   </div>
-
-
                   <div className="form-section">
                       <div className="row">
                           <div className="col-sm-6">
@@ -408,7 +398,6 @@ class AgreementSearch extends React.Component {
                               </div>
                           </div>
                           <div className="row">
-
                               <div className="col-sm-6">
                                   <div className="row">
                                       <div className="col-sm-6 label-text">
@@ -481,9 +470,7 @@ class AgreementSearch extends React.Component {
                                       </div>
                                   </div>
                               </div>
-
                           </div>
-
                             <div className="row">
                                 <div className="col-sm-6">
                                     <div className="row">
@@ -500,8 +487,6 @@ class AgreementSearch extends React.Component {
                                         </div>
                                     </div>
                                 </div>
-
-
                                 <div className="col-sm-6">
                                   <div className="row">
                                       <div className="col-sm-6 label-text">
@@ -520,9 +505,6 @@ class AgreementSearch extends React.Component {
                             </div>
 
                             <div className="row">
-
-
-
                                   <div className="col-sm-6">
                                     <div className="row">
                                         <div className="col-sm-6 label-text">
@@ -538,15 +520,6 @@ class AgreementSearch extends React.Component {
                               </div>
                           </div>
                         </div>
-
-
-
-
-
-
-
-
-
                   <div className="text-center">
                       <button type="submit" className="btn btn-submit">Search</button>&nbsp;&nbsp;
                       <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>

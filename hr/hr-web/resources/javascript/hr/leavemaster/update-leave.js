@@ -33,7 +33,7 @@ class ApplyLeave extends React.Component {
 
   componentDidMount(){
     var type = getUrlVars()["type"], _this = this;
-    var id = getUrlVars()["id"];
+    var stateId = getUrlVars()["id"];
     var asOnDate = _this.state.leaveSet.toDate;
 
     if(getUrlVars()["type"]==="update")
@@ -41,7 +41,7 @@ class ApplyLeave extends React.Component {
         $("input,select,textarea").prop("disabled", true);
       }
 
-      if(type === "view"){
+      if(stateId){
         var _leaveSet = getCommonMasterById("hr-leave","leaveapplications","LeaveApplication",stateId).responseJSON["LeaveApplication"][0];
         var employee = commonApiPost("hr-employee", "employees", "_search", {
             tenantId,

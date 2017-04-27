@@ -75,11 +75,15 @@ public class UserService {
 	public void updatePasswordForNonLoggedInUser(NonLoggedInUserUpdatePasswordRequest request) {
 		request.validate();
 		validateOtp(request.getOtpValidationRequest());
-		final User user = userRepository.findByUsername(request.getMobileNumber());
+		final User user = fetchUserByUserName(request.getMobileNumber());
 		validateUserPresent(user);
 		validateExistingPassword(user, request.getExistingPassword());
 		user.updatePassword(request.getNewPassword());
 		userRepository.update(user);
+	}
+
+	private User fetchUserByUserName(String userName) {
+		return userRepository.findByUsername(userName);
 	}
 
 	private void conditionallyValidateOtp(User user) {

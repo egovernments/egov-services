@@ -1,5 +1,6 @@
 package org.egov.user.persistence.repository;
 
+import org.egov.eis.service.EmployeeService;
 import org.egov.user.domain.exception.InvalidRoleCodeException;
 import org.egov.user.domain.model.UserSearch;
 import org.egov.user.persistence.entity.Role;
@@ -9,6 +10,8 @@ import org.egov.user.persistence.enums.Gender;
 import org.egov.user.persistence.enums.GuardianRelation;
 import org.egov.user.persistence.enums.UserType;
 import org.egov.user.persistence.specification.UserSearchSpecificationFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -25,7 +28,7 @@ import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Service
 public class UserRepository {
-
+	public static final Logger LOGGER = LoggerFactory.getLogger(UserRepository.class);
 	private UserJpaRepository userJpaRepository;
 	private UserSearchSpecificationFactory userSearchSpecificationFactory;
 	private RoleRepository roleRepository;
@@ -71,6 +74,8 @@ public class UserRepository {
 		Specification<User> specification = userSearchSpecificationFactory.getSpecification(userSearch);
 		PageRequest pageRequest = createPageRequest(userSearch);
 		List<User> userEntities = userJpaRepository.findAll(specification, pageRequest).getContent();
+		LOGGER.debug("userEntities" + userEntities);
+		LOGGER.debug("userEntities-----" + userEntities.stream().map(User::toDomain).collect(Collectors.toList()));
 		return userEntities.stream().map(User::toDomain).collect(Collectors.toList());
 	}
 

@@ -72,6 +72,8 @@ public class LeaveApplicationGetRequest {
 	private String applicationNumber;
 
 	private String status;
+	
+	private Long stateId;
 
 	private List<Long> employee = new ArrayList<Long>();
 

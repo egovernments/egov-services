@@ -64,7 +64,7 @@ public class EligibleLeave {
     private Long employee;
 
     @JsonProperty("noOfDays")
-    private Double noOfDays;
+    private Float noOfDays;
 
     @JsonProperty("asOnDate")
     private String asOnDate;

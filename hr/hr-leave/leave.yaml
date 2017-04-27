@@ -455,12 +455,18 @@ paths:
           required: false
           type: string
         - name: id
-          description: List of Unique id for leave allotment.
+          description: List of Unique id for leave Application.
           in: query
           required: false
           type: array
           items:
             type: integer
+          format: int64
+        - name: stateid
+          description: Unique id of workflow states.
+          in: query
+          required: false
+          type: integer
           format: int64
         - $ref: "#/parameters/sortLeaveApplications"
         - $ref: "#/parameters/pageSize"

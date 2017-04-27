@@ -144,6 +144,11 @@ public class LeaveApplicationQueryBuilder {
 			selectQuery.append(" la.toDate < ?");
 			preparedStatementValues.add(leaveApplicationGetRequest.getToDate());
 		}
+		if (leaveApplicationGetRequest.getStateId() != null) {
+		    isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+                    selectQuery.append(" la.stateId = ?");
+                    preparedStatementValues.add(leaveApplicationGetRequest.getStateId());
+		}
 	}
 
 	private void addOrderByClause(final StringBuilder selectQuery,

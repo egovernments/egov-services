@@ -118,8 +118,7 @@ public class EligibleLeavesController {
             asondate = LocalDate.parse(asOnDate, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
             yearStartDate = LocalDate.parse("01/01/" + asondate.getYear(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
         }
-        Float openingBalanceValue = 0f, allotmentValue = 0f, proratedAllotmentValue = 0f;
-        Double applicationValue = 0D;
+        Float openingBalanceValue = 0f, allotmentValue = 0f, proratedAllotmentValue = 0f, applicationValue = 0f;
 
         // validate input params
         if (requestBodyBindingResult.hasErrors())
@@ -217,7 +216,7 @@ public class EligibleLeavesController {
         if (fPart > 0.5)
             iPart++;
 
-        eligibleLeave.setNoOfDays(iPart.doubleValue());
+        eligibleLeave.setNoOfDays(iPart.floatValue());
         return getSuccessResponse(Collections.singletonList(eligibleLeave), requestInfo);
     }
 

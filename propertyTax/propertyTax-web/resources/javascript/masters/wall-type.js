@@ -2,7 +2,7 @@ class WallType extends React.Component {
   constructor(props) {
     super(props);
     this.state={list:[],searchSet:{
-    name:""},isSearchClicked:false,type:""}
+    name:""},isSearchClicked:false,type:"",wallTypeList:[],selectValue:""}
     this.handleChange=this.handleChange.bind(this);
     this.search=this.search.bind(this);
     this.updateType=this.updateType.bind(this);
@@ -12,14 +12,15 @@ class WallType extends React.Component {
   search(e)
   {
     e.preventDefault();
+    var i='hi bharath';
     // var type = getUrlVars()["id"];
+      console.log(this.state.selectValue);
+   if(this.state.type==="Update")
 
-      if(this.state.type==="Update")
-
-        return (  window.location.href='app/create/create-wall-type.html?type=Update')
+        return (  window.location.href='app/create/create-wall-type.html?type=Update&&value='+this.state.selectValue)
 
       else
-      return (  window.location.href='app/create/create-wall-type.html?type=View')
+      return (  window.location.href='app/create/create-wall-type.html?type=View&&value='+this.state.selectValue)
     }
 
   componentWillMount()
@@ -35,7 +36,7 @@ class WallType extends React.Component {
 
       this.setState({
 
-        name: [{
+        wallTypeList: [{
                 id: "Bricks With Cement",
                 name: "Bricks With Cement",
 
@@ -61,14 +62,17 @@ class WallType extends React.Component {
 
 
   })
-  
+
 
 }
 
 
   handleChange(e,name)
   {
-
+      this.setState({
+          selectValue : e.target.value
+      })
+      console.log(e.target.value);
       this.setState({
           searchSet:{
               ...this.state.searchSet,
@@ -78,6 +82,9 @@ class WallType extends React.Component {
 
   }
   updateType(e, type){
+
+  //  this.setState({selectValue:e.target.value});
+    console.log(e.target.value)
     // console.log("hi");
     this.setState({
       type
@@ -96,14 +103,14 @@ class WallType extends React.Component {
 
   render() {
     let {handleChange,search,updateType}=this;
-    let {isSearchClicked,list}=this.state;
+    let {isSearchClicked,wallTypeList}=this.state;
     let {name}=this.state.searchSet;
 
-    const renderOption=function(list)
+    const renderOption=function(wallTypeList)
     {
-        if(list)
+        if(wallTypeList)
         {
-            return list.map((item)=>
+            return wallTypeList.map((item)=>
             {
                 return (<option key={item.id} value={item.id}>
                         {item.name}
@@ -125,10 +132,10 @@ class WallType extends React.Component {
                         <div className="col-sm-8">
                             <div className="styled-select">
                                 <select id="name" name="name" value={name}
-                  onChange={(e)=>{  handleChange(e,"name")}} required>
+                                  onChange={(e)=>{  handleChange(e,"name")}} required>
 
                                   <option value="">Choose name</option>
-                                  {renderOption(this.state.name)}
+                                  {renderOption(this.state.wallTypeList)}
 
                                 </select>
                             </div>

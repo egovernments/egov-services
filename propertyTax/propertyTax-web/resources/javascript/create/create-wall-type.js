@@ -2,7 +2,7 @@ class CreateWallType extends React.Component {
   constructor(props) {
     super(props);
     this.state={list:[],searchSet:{
-    name:""}
+    name:""},selectValue:""
       }
      this.handleChange=this.handleChange.bind(this);
      this.addOrUpdate=this.addOrUpdate.bind(this);
@@ -27,7 +27,10 @@ class CreateWallType extends React.Component {
 
   componentDidMount(){
         var type=getUrlVars()["type"];
-        var id=getUrlVars()["id"];
+        var val=getUrlVars()["value"];
+        this.setState({
+            selectValue : val
+        })
 
         if(getUrlVars()["type"]==="View")
         {
@@ -66,7 +69,7 @@ class CreateWallType extends React.Component {
 
   render() {
     let {handleChange,addOrUpdate}=this;
-    let {list}=this.state;
+    let {list,selectValue}=this.state;
     let {name}=this.state.searchSet;
     let mode=getUrlVars()["type"];
 
@@ -92,7 +95,7 @@ class CreateWallType extends React.Component {
                         </div>
                         <div className="col-sm-6">
                             <div className="row">
-                              <input type="text" name="name" id="name" value={name}
+                              <input type="text" name="name" id="name" value={selectValue}
                 onChange={(e)=>{  handleChange(e,"name")}} />
                             </div>
                         </div>

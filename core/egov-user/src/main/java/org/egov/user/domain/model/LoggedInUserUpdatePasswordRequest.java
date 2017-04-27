@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import org.egov.user.domain.exception.InvalidUpdatePasswordRequestException;
+import org.egov.user.domain.exception.InvalidLoggedInUserUpdatePasswordRequestException;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
@@ -12,14 +12,14 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 @Builder
 @Getter
 @EqualsAndHashCode
-public class UpdatePassword {
+public class LoggedInUserUpdatePasswordRequest {
 	private Long userId;
 	private String existingPassword;
 	private String newPassword;
 
 	public void validate() {
 		if (isUserIdAbsent() || isExistingPasswordAbsent() || isNewPasswordAbsent()) {
-			throw new InvalidUpdatePasswordRequestException(this);
+			throw new InvalidLoggedInUserUpdatePasswordRequestException(this);
 		}
 	}
 
@@ -35,3 +35,4 @@ public class UpdatePassword {
 		return isEmpty(newPassword);
 	}
 }
+

@@ -39,8 +39,8 @@ public class CustomControllerAdvice {
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(OtpValidationPendingException.class)
-	public ErrorResponse handleInvalidComplaintException(OtpValidationPendingException ex) {
-		return new OtpValidationErrorAdapter().adapt(ex.getUser());
+	public ErrorResponse handleInvalidComplaintException() {
+		return new OtpValidationErrorAdapter().adapt(null);
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -74,8 +74,16 @@ public class CustomControllerAdvice {
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	@ExceptionHandler(InvalidUpdatePasswordRequestException.class)
-	public ErrorResponse handleInvalidUpdatePasswordRequestException(InvalidUpdatePasswordRequestException ex) {
-		return new InvalidUpdatePasswordRequestErrorHandler().adapt(ex.getRequest());
+	@ExceptionHandler(InvalidLoggedInUserUpdatePasswordRequestException.class)
+	public ErrorResponse handleInvalidUpdatePasswordRequestException(
+			InvalidLoggedInUserUpdatePasswordRequestException ex) {
+		return new InvalidLoggedInUserUpdatePasswordRequestErrorHandler().adapt(ex.getRequest());
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(InvalidNonLoggedInUserUpdatePasswordRequestException.class)
+	public ErrorResponse handleInvalidNonLoggedInUserUpdatePasswordRequestException(
+			InvalidNonLoggedInUserUpdatePasswordRequestException ex) {
+		return new InvalidNonLoggedInUserUpdatePasswordRequestErrorHandler().adapt(ex.getModel());
 	}
 }

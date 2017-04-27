@@ -3,13 +3,14 @@ package org.egov.user.web.adapters.errors;
 import org.egov.common.contract.response.Error;
 import org.egov.common.contract.response.ErrorField;
 import org.egov.common.contract.response.ErrorResponse;
-import org.egov.user.domain.model.UpdatePassword;
+import org.egov.user.domain.model.LoggedInUserUpdatePasswordRequest;
 import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class InvalidUpdatePasswordRequestErrorHandler implements ErrorAdapter<UpdatePassword> {
+public class InvalidLoggedInUserUpdatePasswordRequestErrorHandler implements
+		ErrorAdapter<LoggedInUserUpdatePasswordRequest> {
 
 	private static final String USER_ID_MANDATORY_CODE = "USER.AUTH_TOKEN_MANDATORY";
 	private static final String USER_ID_MANDATORY_FIELD = "RequestInfo.authToken";
@@ -26,11 +27,11 @@ public class InvalidUpdatePasswordRequestErrorHandler implements ErrorAdapter<Up
 	private static final String PASSWORD_UPDATE_FAILED_MESSAGE = "Password update failed.";
 
 	@Override
-	public ErrorResponse adapt(UpdatePassword model) {
+	public ErrorResponse adapt(LoggedInUserUpdatePasswordRequest model) {
 		return new ErrorResponse(null, getError(model));
 	}
 
-	private Error getError(UpdatePassword model) {
+	private Error getError(LoggedInUserUpdatePasswordRequest model) {
 		return Error.builder()
 				.code(HttpStatus.BAD_REQUEST.value())
 				.message(PASSWORD_UPDATE_FAILED_MESSAGE)
@@ -38,7 +39,7 @@ public class InvalidUpdatePasswordRequestErrorHandler implements ErrorAdapter<Up
 				.build();
 	}
 
-	private List<ErrorField> getErrorFields(UpdatePassword model) {
+	private List<ErrorField> getErrorFields(LoggedInUserUpdatePasswordRequest model) {
 		final ArrayList<ErrorField> errorFields = new ArrayList<>();
 		addUserIdMandatoryError(model, errorFields);
 		addExistingPasswordMandatoryError(model, errorFields);
@@ -46,7 +47,7 @@ public class InvalidUpdatePasswordRequestErrorHandler implements ErrorAdapter<Up
 		return errorFields;
 	}
 
-	private void addNewPasswordMandatoryError(UpdatePassword model, ArrayList<ErrorField> errorFields) {
+	private void addNewPasswordMandatoryError(LoggedInUserUpdatePasswordRequest model, ArrayList<ErrorField> errorFields) {
 		if(!model.isNewPasswordAbsent()) {
 			return;
 		}
@@ -58,7 +59,7 @@ public class InvalidUpdatePasswordRequestErrorHandler implements ErrorAdapter<Up
 		errorFields.add(errorField);
 	}
 
-	private void addExistingPasswordMandatoryError(UpdatePassword model, ArrayList<ErrorField> errorFields) {
+	private void addExistingPasswordMandatoryError(LoggedInUserUpdatePasswordRequest model, ArrayList<ErrorField> errorFields) {
 		if(!model.isExistingPasswordAbsent()) {
 			return;
 		}
@@ -70,7 +71,7 @@ public class InvalidUpdatePasswordRequestErrorHandler implements ErrorAdapter<Up
 		errorFields.add(errorField);
 	}
 
-	private void addUserIdMandatoryError(UpdatePassword model, ArrayList<ErrorField> errorFields) {
+	private void addUserIdMandatoryError(LoggedInUserUpdatePasswordRequest model, ArrayList<ErrorField> errorFields) {
 		if(!model.isUserIdAbsent()) {
 			return;
 		}

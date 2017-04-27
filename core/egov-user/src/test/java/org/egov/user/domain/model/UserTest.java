@@ -262,4 +262,20 @@ public class UserTest {
 		assertNull(user.getRoles());
 	}
 
+	@Test
+	public void test_should_map_from_user_to_otp_validation_request() {
+		final User user = User.builder()
+				.tenantId("tenantId")
+				.otpReference("otpReference")
+				.mobileNumber("mobileNumber")
+				.build();
+
+		final OtpValidationRequest otpValidationRequest = user.getOtpValidationRequest();
+
+		assertNotNull(otpValidationRequest);
+		assertEquals("tenantId", otpValidationRequest.getTenantId());
+		assertEquals("mobileNumber", otpValidationRequest.getMobileNumber());
+		assertEquals("otpReference", otpValidationRequest.getOtpReference());
+	}
+
 }

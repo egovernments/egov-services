@@ -53,27 +53,12 @@ public class UserRequestControllerTest {
 
     @Test
     @WithMockUser
-    public void testShouldRegisterACitizen() throws Exception {
-        when(userService.save(any(org.egov.user.domain.model.User.class))).thenReturn(buildUser());
-
-        String fileContents = getFileContents("createValidatedCitizenSuccessRequest.json");
-        mockMvc.perform(post("/users/_create/")
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(fileContents)
-        )
-                .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(content().json(getFileContents("createValidatedCitizenSuccessResponse.json")));
-    }
-
-    @Test
-    @WithMockUser
     public void testShouldThrowErrorWhileRegisteringWithInvalidCitizen() throws Exception {
         InvalidUserException exception = new InvalidUserException(org.egov.user.domain.model.User.builder().build());
-        when(userService.save(any(org.egov.user.domain.model.User.class))).thenThrow(exception);
+        when(userService.createCitizen(any(org.egov.user.domain.model.User.class))).thenThrow(exception);
 
         String fileContents = getFileContents("createCitizenUnsuccessfulRequest.json");
-        mockMvc.perform(post("/users/_create/")
+        mockMvc.perform(post("/citizen/_create/")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(fileContents)
         )
@@ -84,13 +69,12 @@ public class UserRequestControllerTest {
 
     @Test
     @WithMockUser
-    public void testShouldThrowErrorWhileRegisteringWithPendingOtpValidation() throws Exception {
-        OtpValidationPendingException exception = new OtpValidationPendingException(org.egov.user.domain.model.User
-                .builder().build());
-        when(userService.save(any(org.egov.user.domain.model.User.class))).thenThrow(exception);
+    public void testShouldThrowErrorWhileRegisteringCitizenWithPendingOtpValidation() throws Exception {
+        OtpValidationPendingException exception = new OtpValidationPendingException();
+        when(userService.createCitizen(any(org.egov.user.domain.model.User.class))).thenThrow(exception);
 
         String fileContents = getFileContents("createValidatedCitizenSuccessRequest.json");
-        mockMvc.perform(post("/users/_create/")
+        mockMvc.perform(post("/citizen/_create")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(fileContents)
         )

@@ -3,14 +3,13 @@ package org.egov.user.web.contract;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
-import org.egov.user.domain.model.UpdatePassword;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-public class UpdatePasswordRequestTest {
+public class LoggedInUserUpdatePasswordRequestTest {
 
 	@Test
 	public void test_should_map_from_contract_to_domain() {
@@ -20,13 +19,13 @@ public class UpdatePasswordRequestTest {
 		final RequestInfo requestInfo = RequestInfo.builder()
 				.userInfo(userInfo)
 				.build();
-		final UpdatePasswordRequest updatePasswordRequest = UpdatePasswordRequest.builder()
+		final LoggedInUserUpdatePasswordRequest loggedInUserUpdatePasswordRequest = LoggedInUserUpdatePasswordRequest.builder()
 				.requestInfo(requestInfo)
 				.existingPassword("existingPassword")
 				.newPassword("newPassword")
 				.build();
 
-		final UpdatePassword domain = updatePasswordRequest.toDomain();
+		final org.egov.user.domain.model.LoggedInUserUpdatePasswordRequest domain = loggedInUserUpdatePasswordRequest.toDomain();
 
 		assertNotNull(domain);
 		assertEquals("existingPassword", domain.getExistingPassword());
@@ -36,13 +35,13 @@ public class UpdatePasswordRequestTest {
 
 	@Test
 	public void test_should_return_user_id_as_null_when_request_info_is_not_present() {
-		final UpdatePasswordRequest updatePasswordRequest = UpdatePasswordRequest.builder()
+		final LoggedInUserUpdatePasswordRequest loggedInUserUpdatePasswordRequest = LoggedInUserUpdatePasswordRequest.builder()
 				.requestInfo(null)
 				.existingPassword("existingPassword")
 				.newPassword("newPassword")
 				.build();
 
-		final UpdatePassword domain = updatePasswordRequest.toDomain();
+		final org.egov.user.domain.model.LoggedInUserUpdatePasswordRequest domain = loggedInUserUpdatePasswordRequest.toDomain();
 
 		assertNull(domain.getUserId());
 	}
@@ -52,13 +51,13 @@ public class UpdatePasswordRequestTest {
 		final RequestInfo requestInfo = RequestInfo.builder()
 				.userInfo(null)
 				.build();
-		final UpdatePasswordRequest updatePasswordRequest = UpdatePasswordRequest.builder()
+		final LoggedInUserUpdatePasswordRequest loggedInUserUpdatePasswordRequest = LoggedInUserUpdatePasswordRequest.builder()
 				.requestInfo(requestInfo)
 				.existingPassword("existingPassword")
 				.newPassword("newPassword")
 				.build();
 
-		final UpdatePassword domain = updatePasswordRequest.toDomain();
+		final org.egov.user.domain.model.LoggedInUserUpdatePasswordRequest domain = loggedInUserUpdatePasswordRequest.toDomain();
 
 		assertNull(domain.getUserId());
 	}

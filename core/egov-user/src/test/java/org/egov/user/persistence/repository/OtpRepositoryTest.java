@@ -1,6 +1,7 @@
 package org.egov.user.persistence.repository;
 
 import org.egov.user.Resources;
+import org.egov.user.domain.model.OtpValidationRequest;
 import org.egov.user.domain.model.User;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,8 +40,10 @@ public class OtpRepositoryTest {
                 .andExpect(content().string(new Resources().getFileContents("otpSearchSuccessRequest.json")))
                 .andRespond(withSuccess(new Resources().getFileContents("otpSearchValidatedResponse.json"),
                         MediaType.APPLICATION_JSON_UTF8));
+		final OtpValidationRequest request = buildRequest();
 
-        Boolean isOtpValidated = otpRepository.isOtpValidationComplete(buildUser());
+		boolean isOtpValidated = otpRepository.isOtpValidationComplete(request);
+
         server.verify();
         assertEquals(Boolean.TRUE, isOtpValidated);
     }
@@ -52,8 +55,9 @@ public class OtpRepositoryTest {
                 .andExpect(content().string(new Resources().getFileContents("otpSearchSuccessRequest.json")))
                 .andRespond(withSuccess(new Resources().getFileContents("otpSearchNonValidatedResponse.json"),
                         MediaType.APPLICATION_JSON_UTF8));
+		final OtpValidationRequest request = buildRequest();
 
-        boolean isOtpValidated = otpRepository.isOtpValidationComplete(buildUser());
+		boolean isOtpValidated = otpRepository.isOtpValidationComplete(request);
         server.verify();
         assertFalse(isOtpValidated);
     }
@@ -65,14 +69,16 @@ public class OtpRepositoryTest {
                 .andExpect(content().string(new Resources().getFileContents("otpSearchSuccessRequest.json")))
                 .andRespond(withSuccess(new Resources().getFileContents("otpSearchIdentityDifferentResponse.json"),
                         MediaType.APPLICATION_JSON_UTF8));
+		final OtpValidationRequest request = buildRequest();
 
-        boolean isOtpValidated = otpRepository.isOtpValidationComplete(buildUser());
+		boolean isOtpValidated = otpRepository.isOtpValidationComplete(request);
+
         server.verify();
         assertFalse(isOtpValidated);
     }
 
-    private User buildUser() {
-        return User.builder()
+    private OtpValidationRequest buildRequest() {
+        return OtpValidationRequest.builder()
                 .otpReference("2b936aae-c3b6-4c89-b3b3-a098cdcbb706")
                 .mobileNumber("9988776655")
                 .tenantId("tenantId")

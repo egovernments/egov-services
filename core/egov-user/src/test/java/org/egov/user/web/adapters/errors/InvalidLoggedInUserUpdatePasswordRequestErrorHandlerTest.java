@@ -3,7 +3,7 @@ package org.egov.user.web.adapters.errors;
 import org.egov.common.contract.response.Error;
 import org.egov.common.contract.response.ErrorField;
 import org.egov.common.contract.response.ErrorResponse;
-import org.egov.user.domain.model.UpdatePassword;
+import org.egov.user.domain.model.LoggedInUserUpdatePasswordRequest;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -13,18 +13,18 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class InvalidUpdatePasswordRequestErrorHandlerTest {
+public class InvalidLoggedInUserUpdatePasswordRequestErrorHandlerTest {
 
-	private InvalidUpdatePasswordRequestErrorHandler errorHandler;
+	private InvalidLoggedInUserUpdatePasswordRequestErrorHandler errorHandler;
 
 	@Before
 	public void before() {
-		errorHandler = new InvalidUpdatePasswordRequestErrorHandler();
+		errorHandler = new InvalidLoggedInUserUpdatePasswordRequestErrorHandler();
 	}
 
 	@Test
 	public void test_should_return_error_when_user_id_is_not_present() {
-		final UpdatePassword updatePassword = mock(UpdatePassword.class);
+		final LoggedInUserUpdatePasswordRequest updatePassword = mock(LoggedInUserUpdatePasswordRequest.class);
 		when(updatePassword.isUserIdAbsent()).thenReturn(true);
 
 		final ErrorResponse errorResponse = errorHandler.adapt(updatePassword);
@@ -39,7 +39,7 @@ public class InvalidUpdatePasswordRequestErrorHandlerTest {
 
 	@Test
 	public void test_should_return_error_when_existing_password_is_not_present() {
-		final UpdatePassword updatePassword = mock(UpdatePassword.class);
+		final LoggedInUserUpdatePasswordRequest updatePassword = mock(LoggedInUserUpdatePasswordRequest.class);
 		when(updatePassword.isExistingPasswordAbsent()).thenReturn(true);
 
 		final ErrorResponse errorResponse = errorHandler.adapt(updatePassword);
@@ -54,7 +54,7 @@ public class InvalidUpdatePasswordRequestErrorHandlerTest {
 
 	@Test
 	public void test_should_return_error_when_new_password_is_not_present() {
-		final UpdatePassword updatePassword = mock(UpdatePassword.class);
+		final LoggedInUserUpdatePasswordRequest updatePassword = mock(LoggedInUserUpdatePasswordRequest.class);
 		when(updatePassword.isNewPasswordAbsent()).thenReturn(true);
 
 		final ErrorResponse errorResponse = errorHandler.adapt(updatePassword);

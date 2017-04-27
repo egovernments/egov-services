@@ -1,9 +1,7 @@
 package org.egov.user.domain.service;
 
 import org.egov.user.domain.exception.*;
-import org.egov.user.domain.model.UpdatePassword;
-import org.egov.user.domain.model.User;
-import org.egov.user.domain.model.UserSearch;
+import org.egov.user.domain.model.*;
 import org.egov.user.persistence.repository.OtpRepository;
 import org.egov.user.persistence.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,68 +12,84 @@ import java.util.List;
 @Service
 public class UserService {
 
-    private UserRepository userRepository;
-    private OtpRepository otpRepository;
-    private PasswordEncoder passwordEncoder;
+	private UserRepository userRepository;
+	private OtpRepository otpRepository;
+	private PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository,
+	public UserService(UserRepository userRepository,
 					   OtpRepository otpRepository,
 					   PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.otpRepository = otpRepository;
+		this.userRepository = userRepository;
+		this.otpRepository = otpRepository;
 		this.passwordEncoder = passwordEncoder;
 	}
 
-    public User getUserByUsername(final String userName) {
-        return userRepository.findByUsername(userName);
-    }
+	public User getUserByUsername(final String userName) {
+		return userRepository.findByUsername(userName);
+	}
 
-    public User getUserByEmailId(final String emailId) {
-        return userRepository.findByEmailId(emailId);
-    }
+	public User getUserByEmailId(final String emailId) {
+		return userRepository.findByEmailId(emailId);
+	}
 
-    public User save(User user) {
-        user.validate();
-        validateOtp(user);
-        validateDuplicateUserName(user);
-        return persistNewUser(user);
-    }
-
-	public User createCitizen(User user) {
-		user.setRoleToCitizen();
-    	user.validate();
-		validateOtp(user);
+	public User createUser(User user) {
+		user.validate();
+		conditionallyValidateOtp(user);
 		validateDuplicateUserName(user);
 		return persistNewUser(user);
 	}
 
-    public List<org.egov.user.domain.model.User> searchUsers(UserSearch userSearch) {
-        return userRepository.findAll(userSearch);
-    }
+	public User createCitizen(User user) {
+		user.setRoleToCitizen();
+		user.validate();
+		validateOtp(user.getOtpValidationRequest());
+		validateDuplicateUserName(user);
+		return persistNewUser(user);
+	}
 
-    public User updateWithoutOtpValidation(final Long id, final User user) {
-        validateUser(id, user);
-        return updateExistingUser(user);
-    }
+	public List<org.egov.user.domain.model.User> searchUsers(UserSearch userSearch) {
+		return userRepository.findAll(userSearch);
+	}
 
-    public User partialUpdate(final User user) {
+	public User updateWithoutOtpValidation(final Long id, final User user) {
+		validateUser(id, user);
+		return updateExistingUser(user);
+	}
+
+	public User partialUpdate(final User user) {
 		validateUserId(user);
 		validateProfileUpdateIsDoneByTheSameLoggedInUser(user);
 		user.nullifySensitiveFields();
 		return updateExistingUser(user);
 	}
 
-	public void updatePasswordForLoggedInUser(UpdatePassword updatePasswordRequest) {
-    	updatePasswordRequest.validate();
+	public void updatePasswordForLoggedInUser(LoggedInUserUpdatePasswordRequest updatePasswordRequest) {
+		updatePasswordRequest.validate();
 		final User user = userRepository.getUserById(updatePasswordRequest.getUserId());
 		validateUserPresent(user);
-		validateExistingPassword(updatePasswordRequest, user);
-		user.update(updatePasswordRequest);
+		validateExistingPassword(user, updatePasswordRequest.getExistingPassword());
+		user.updatePassword(updatePasswordRequest.getNewPassword());
 		userRepository.update(user);
 	}
 
-	private void validateExistingPassword(UpdatePassword updatePasswordRequest, User user) {
-		if(!passwordEncoder.matches(updatePasswordRequest.getExistingPassword(), user.getPassword())) {
+	public void updatePasswordForNonLoggedInUser(NonLoggedInUserUpdatePasswordRequest request) {
+		request.validate();
+		validateOtp(request.getOtpValidationRequest());
+		final User user = userRepository.findByUsername(request.getMobileNumber());
+		validateUserPresent(user);
+		validateExistingPassword(user, request.getExistingPassword());
+		user.updatePassword(request.getNewPassword());
+		userRepository.update(user);
+	}
+
+	private void conditionallyValidateOtp(User user) {
+		if (user.isOtpValidationMandatory()) {
+			validateOtp(user.getOtpValidationRequest());
+		}
+	}
+
+	private void validateExistingPassword(User user, String existingRawPassword) {
+		if (!passwordEncoder.matches(existingRawPassword, user.getPassword())) {
 			throw new PasswordMismatchException();
 		}
 	}
@@ -87,7 +101,7 @@ public class UserService {
 	}
 
 	private void validateProfileUpdateIsDoneByTheSameLoggedInUser(User user) {
-		if(user.isLoggedInUserDifferentFromUpdatedUser()) {
+		if (user.isLoggedInUserDifferentFromUpdatedUser()) {
 			throw new UserProfileUpdateDeniedException();
 		}
 	}
@@ -99,13 +113,13 @@ public class UserService {
 	}
 
 	private void validateDuplicateUserName(Long id, User user) {
-		if( userRepository.isUserPresent(user.getUsername(), id, user.getTenantId())) {
+		if (userRepository.isUserPresent(user.getUsername(), id, user.getTenantId())) {
 			throw new DuplicateUserNameException(user);
 		}
 	}
 
 	private void validateDuplicateUserName(User user) {
-		if( userRepository.isUserPresent(user.getUsername(), user.getTenantId())) {
+		if (userRepository.isUserPresent(user.getUsername(), user.getTenantId())) {
 			throw new DuplicateUserNameException(user);
 		}
 	}
@@ -114,19 +128,20 @@ public class UserService {
 		return userRepository.save(user);
 	}
 
-	private void validateOtp(User user) {
-		if (user.isOtpValidationMandatory() && !otpRepository.isOtpValidationComplete(user))
-			throw new OtpValidationPendingException(user);
+	private void validateOtp(OtpValidationRequest otpValidationRequest) {
+		if (!otpRepository.isOtpValidationComplete(otpValidationRequest))
+			throw new OtpValidationPendingException();
 	}
 
 	private void validateUser(final Long id, final User user) {
-        validateDuplicateUserName(id, user);
-        if (userRepository.getUserById(id) == null) {
-            throw new UserNotFoundException(user);
-        }
-    }
+		validateDuplicateUserName(id, user);
+		if (userRepository.getUserById(id) == null) {
+			throw new UserNotFoundException(user);
+		}
+	}
 
-    private User updateExistingUser(final User user) {
-        return userRepository.update(user);
-    }
+	private User updateExistingUser(final User user) {
+		return userRepository.update(user);
+	}
+
 }

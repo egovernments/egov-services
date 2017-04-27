@@ -1,20 +1,20 @@
 package org.egov.user.domain.model;
 
-import org.egov.user.domain.exception.InvalidUpdatePasswordRequestException;
+import org.egov.user.domain.exception.InvalidLoggedInUserUpdatePasswordRequestException;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class UpdatePasswordTest {
+public class LoggedInUserUpdatePasswordRequestTest {
 
 	@Test
 	public void test_equals_should_return_true_when_both_instances_have_same_field_values() {
-		final UpdatePassword updatePassword1 = UpdatePassword.builder()
+		final LoggedInUserUpdatePasswordRequest updatePassword1 = LoggedInUserUpdatePasswordRequest.builder()
 				.userId(123L)
 				.existingPassword("existingPassword")
 				.newPassword("newPassword")
 				.build();
-		final UpdatePassword updatePassword2 = UpdatePassword.builder()
+		final LoggedInUserUpdatePasswordRequest updatePassword2 = LoggedInUserUpdatePasswordRequest.builder()
 				.userId(123L)
 				.existingPassword("existingPassword")
 				.newPassword("newPassword")
@@ -25,12 +25,12 @@ public class UpdatePasswordTest {
 
 	@Test
 	public void test_hashcode_should_be_same_when_both_instances_have_same_field_values() {
-		final UpdatePassword updatePassword1 = UpdatePassword.builder()
+		final LoggedInUserUpdatePasswordRequest updatePassword1 = LoggedInUserUpdatePasswordRequest.builder()
 				.userId(123L)
 				.existingPassword("existingPassword")
 				.newPassword("newPassword")
 				.build();
-		final UpdatePassword updatePassword2 = UpdatePassword.builder()
+		final LoggedInUserUpdatePasswordRequest updatePassword2 = LoggedInUserUpdatePasswordRequest.builder()
 				.userId(123L)
 				.existingPassword("existingPassword")
 				.newPassword("newPassword")
@@ -41,12 +41,12 @@ public class UpdatePasswordTest {
 
 	@Test
 	public void test_equals_should_return_false_when_both_instances_have_different_field_values() {
-		final UpdatePassword updatePassword1 = UpdatePassword.builder()
+		final LoggedInUserUpdatePasswordRequest updatePassword1 = LoggedInUserUpdatePasswordRequest.builder()
 				.userId(124L)
 				.existingPassword("oldPassword1")
 				.newPassword("newPassword1")
 				.build();
-		final UpdatePassword updatePassword2 = UpdatePassword.builder()
+		final LoggedInUserUpdatePasswordRequest updatePassword2 = LoggedInUserUpdatePasswordRequest.builder()
 				.userId(123L)
 				.existingPassword("existingPassword")
 				.newPassword("newPassword")
@@ -57,12 +57,12 @@ public class UpdatePasswordTest {
 
 	@Test
 	public void test_hashcode_should_differ_when_both_instances_have_different_field_values() {
-		final UpdatePassword updatePassword1 = UpdatePassword.builder()
+		final LoggedInUserUpdatePasswordRequest updatePassword1 = LoggedInUserUpdatePasswordRequest.builder()
 				.userId(124L)
 				.existingPassword("oldPassword1")
 				.newPassword("newPassword1")
 				.build();
-		final UpdatePassword updatePassword2 = UpdatePassword.builder()
+		final LoggedInUserUpdatePasswordRequest updatePassword2 = LoggedInUserUpdatePasswordRequest.builder()
 				.userId(123L)
 				.existingPassword("existingPassword")
 				.newPassword("newPassword")
@@ -73,7 +73,7 @@ public class UpdatePasswordTest {
 
 	@Test
 	public void test_validate_should_not_throw_exception_when_all_mandatory_fields_are_present() {
-		final UpdatePassword updatePassword = UpdatePassword.builder()
+		final LoggedInUserUpdatePasswordRequest updatePassword = LoggedInUserUpdatePasswordRequest.builder()
 				.existingPassword("existingPassword")
 				.newPassword("newPassword")
 				.userId(123L)
@@ -82,9 +82,9 @@ public class UpdatePasswordTest {
 		updatePassword.validate();
 	}
 
-	@Test(expected = InvalidUpdatePasswordRequestException.class)
+	@Test(expected = InvalidLoggedInUserUpdatePasswordRequestException.class)
 	public void test_validate_should_throw_exception_when_user_id_is_not_present() {
-		final UpdatePassword updatePassword = UpdatePassword.builder()
+		final LoggedInUserUpdatePasswordRequest updatePassword = LoggedInUserUpdatePasswordRequest.builder()
 				.existingPassword("existingPassword")
 				.newPassword("newPassword")
 				.userId(null)
@@ -93,9 +93,9 @@ public class UpdatePasswordTest {
 		updatePassword.validate();
 	}
 
-	@Test(expected = InvalidUpdatePasswordRequestException.class)
+	@Test(expected = InvalidLoggedInUserUpdatePasswordRequestException.class)
 	public void test_validate_should_throw_exception_when_old_password_is_not_present() {
-		final UpdatePassword updatePassword = UpdatePassword.builder()
+		final LoggedInUserUpdatePasswordRequest updatePassword = LoggedInUserUpdatePasswordRequest.builder()
 				.existingPassword(null)
 				.newPassword("newPassword")
 				.userId(123L)
@@ -104,9 +104,9 @@ public class UpdatePasswordTest {
 		updatePassword.validate();
 	}
 
-	@Test(expected = InvalidUpdatePasswordRequestException.class)
+	@Test(expected = InvalidLoggedInUserUpdatePasswordRequestException.class)
 	public void test_validate_should_throw_exception_when_new_password_is_not_present() {
-		final UpdatePassword updatePassword = UpdatePassword.builder()
+		final LoggedInUserUpdatePasswordRequest updatePassword = LoggedInUserUpdatePasswordRequest.builder()
 				.existingPassword("existingPassword")
 				.newPassword(null)
 				.userId(123L)

@@ -1,6 +1,6 @@
 package org.egov.user.persistence.repository;
 
-import org.egov.user.domain.model.User;
+import org.egov.user.domain.model.OtpValidationRequest;
 import org.egov.user.persistence.dto.Otp;
 import org.egov.user.persistence.dto.OtpRequest;
 import org.egov.user.persistence.dto.OtpResponse;
@@ -22,11 +22,10 @@ public class OtpRepository {
         this.otpSearchEndpoint = otpServiceHost + otpSearchContextEndpoint;
     }
 
-    public boolean isOtpValidationComplete(User user) {
-        Otp otp = Otp.builder().tenantId(user.getTenantId()).uuid(user.getOtpReference()).build();
-        OtpRequest otpRequest = new OtpRequest(otp);
-        OtpResponse otpResponse = restTemplate.postForObject(otpSearchEndpoint, otpRequest, OtpResponse.class);
-        return otpResponse.isValidationComplete(user.getMobileNumber());
-    }
-
+	public boolean isOtpValidationComplete(OtpValidationRequest request) {
+		Otp otp = Otp.builder().tenantId(request.getTenantId()).uuid(request.getOtpReference()).build();
+		OtpRequest otpRequest = new OtpRequest(otp);
+		OtpResponse otpResponse = restTemplate.postForObject(otpSearchEndpoint, otpRequest, OtpResponse.class);
+		return otpResponse.isValidationComplete(request.getMobileNumber());
+	}
 }

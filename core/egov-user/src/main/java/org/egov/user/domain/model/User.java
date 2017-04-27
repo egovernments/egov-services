@@ -123,7 +123,16 @@ public class User {
 		return this;
 	}
 
-	public void update(UpdatePassword updatePasswordRequest) {
-		password = updatePasswordRequest.getNewPassword();
+	public void updatePassword(String newPassword) {
+		password = newPassword;
+	}
+
+	public OtpValidationRequest getOtpValidationRequest() {
+		return OtpValidationRequest.builder()
+				.mobileNumber(mobileNumber)
+				.tenantId(tenantId)
+				.otpReference(otpReference)
+				.build();
 	}
 }
+

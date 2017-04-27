@@ -2,7 +2,7 @@ package org.egov.user.web.controller;
 
 import org.egov.user.Resources;
 import org.egov.user.TestConfiguration;
-import org.egov.user.domain.model.UpdatePassword;
+import org.egov.user.domain.model.LoggedInUserUpdatePasswordRequest;
 import org.egov.user.domain.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,7 +43,7 @@ public class PasswordControllerTest {
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(resources.getFileContents("updatePasswordResponse.json")));
 
-		final UpdatePassword expectedRequest = UpdatePassword.builder()
+		final LoggedInUserUpdatePasswordRequest expectedRequest = LoggedInUserUpdatePasswordRequest.builder()
 				.existingPassword("oldPassword")
 				.newPassword("newPassword")
 				.userId(123L)

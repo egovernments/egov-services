@@ -93,14 +93,14 @@ public class UserControllerTest {
 
 	@Test
 	@WithMockUser
-	public void test_should_create_user() throws Exception {
+	public void test_should_create_user_without_otp_validation() throws Exception {
 		final org.egov.user.domain.model.User user = org.egov.user.domain.model.User.builder()
 				.username("userName")
 				.name("foo")
 				.build();
-		when(userService.save(any())).thenReturn(user);
+		when(userService.createUser(any())).thenReturn(user);
 
-		mockMvc.perform(post("/users/_create")
+		mockMvc.perform(post("/users/_createnovalidate")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
 				.content(getFileContents("userCreateRequest.json")))
 				.andExpect(status().isOk())

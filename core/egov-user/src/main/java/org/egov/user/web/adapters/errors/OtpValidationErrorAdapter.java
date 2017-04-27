@@ -3,20 +3,19 @@ package org.egov.user.web.adapters.errors;
 import org.egov.common.contract.response.Error;
 import org.egov.common.contract.response.ErrorField;
 import org.egov.common.contract.response.ErrorResponse;
-import org.egov.user.domain.model.User;
 import org.springframework.http.HttpStatus;
 
 import java.util.Collections;
 import java.util.List;
 
-public class OtpValidationErrorAdapter implements ErrorAdapter<User> {
+public class OtpValidationErrorAdapter implements ErrorAdapter<Void> {
 
     private static final String OTP_FIELD = "User.otpReference";
     private static final String OTP_VALIDATION_CODE = "core-user.006";
     private static final String OTP_VALIDATION_MSG = "Otp validation is pending.";
     private static final String OTP_VALIDATION_PENDING = "Otp validation is pending.";
 
-    public ErrorResponse adapt(User user) {
+    public ErrorResponse adapt(Void model) {
         final Error error = getError();
         return new ErrorResponse(null, error);
     }

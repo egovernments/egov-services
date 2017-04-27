@@ -25,11 +25,6 @@ public class UserController {
 		this.tokenService = tokenService;
 	}
 
-	@PostMapping("/users/_create")
-	public UserDetailResponse createUserWithValidation(@RequestBody CreateUserRequest createUserRequest) {
-		return createUser(createUserRequest, true);
-	}
-
 	@PostMapping("/citizen/_create")
 	public UserDetailResponse createCitizen(@RequestBody CreateUserRequest createUserRequest) {
 		User user = createUserRequest.toDomain();
@@ -40,7 +35,10 @@ public class UserController {
 
 	@PostMapping("/users/_createnovalidate")
 	public UserDetailResponse createUserWithoutValidation(@RequestBody CreateUserRequest createUserRequest) {
-		return createUser(createUserRequest, false);
+		User user = createUserRequest.toDomain();
+		user.setOtpValidationMandatory(false);
+		final User newUser = userService.createUser(user);
+		return createResponse(newUser);
 	}
 
 	@PostMapping("/_search")
@@ -71,13 +69,6 @@ public class UserController {
 		User user = createUserRequest.toDomain();
 		final User updatedUser = userService.partialUpdate(user);
 		return createResponse(updatedUser);
-	}
-
-	private UserDetailResponse createUser(@RequestBody CreateUserRequest createUserRequest, boolean validateUser) {
-		User user = createUserRequest.toDomain();
-		user.setOtpValidationMandatory(validateUser);
-		final User newUser = userService.save(user);
-		return createResponse(newUser);
 	}
 
 	private UserDetailResponse createResponse(User newUser) {

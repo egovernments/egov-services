@@ -127,7 +127,7 @@ public class LeaveOpeningBalanceQueryBuilder {
 
 	private void addOrderByClause(StringBuilder selectQuery,
 			LeaveOpeningBalanceGetRequest leaveOpeningBalanceGetRequest) {
-		String sortBy = (leaveOpeningBalanceGetRequest.getSortBy() == null ? "lob.calendarYear"
+		String sortBy = (leaveOpeningBalanceGetRequest.getSortBy() == null ? "lob.leaveTypeId , lob.employeeId "
 				: leaveOpeningBalanceGetRequest.getSortBy());
 		String sortOrder = (leaveOpeningBalanceGetRequest.getSortOrder() == null ? "ASC"
 				: leaveOpeningBalanceGetRequest.getSortOrder());

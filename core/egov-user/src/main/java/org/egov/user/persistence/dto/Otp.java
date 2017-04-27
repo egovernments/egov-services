@@ -1,4 +1,4 @@
-package org.egov.user.web.contract;
+package org.egov.user.persistence.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

@@ -198,13 +198,13 @@ public class UserControllerTest {
 	}
 
 	private List<org.egov.user.domain.model.Role> getListOfRoles() {
-		User user = User.builder().id(0L).build();
 		Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("IST"));
 		calendar.set(1990, Calendar.JULY, 1, 16, 41, 11);
 
 		org.egov.user.domain.model.Role role1 = org.egov.user.domain.model.Role.builder()
 				.id(1L)
 				.name("name of the role 1")
+				.code("roleCode")
 				.description("description")
 				.createdBy(0L)
 				.lastModifiedBy(0L)

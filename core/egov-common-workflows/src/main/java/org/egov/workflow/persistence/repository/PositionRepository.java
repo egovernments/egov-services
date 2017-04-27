@@ -8,12 +8,16 @@ import org.egov.workflow.web.contract.Position;
 import org.egov.workflow.web.contract.PositionResponse;
 import org.egov.workflow.web.contract.RequestInfo;
 import org.egov.workflow.web.contract.RequestInfoWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
 public class PositionRepository {
+	
+	public static final Logger logger = LoggerFactory.getLogger(PositionRepository.class);
 
 	private final RestTemplate restTemplate;
 	private final String positionsByIdUrl;
@@ -88,8 +92,10 @@ public class PositionRepository {
 		} else
 			requestInfoWrapper.setRequestInfo(new RequestInfo());
 
-		PositionResponse positionResponse = restTemplate.postForObject(positionsForEmployeeCodeUrl+"?tenantId={tenantId}", requestInfoWrapper,
-				PositionResponse.class, id, tenantId);
+		String hrEmployeeUrl = positionsForEmployeeCodeUrl.replace("{id}",id);
+		logger.info("the url for hr-employee position search call ::: "+hrEmployeeUrl);
+		PositionResponse positionResponse = restTemplate.postForObject(hrEmployeeUrl+"?tenantId="+tenantId, requestInfoWrapper,
+				PositionResponse.class);
 
 		return positionResponse.getPosition();
 	}

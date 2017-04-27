@@ -201,9 +201,10 @@ class PersonalInform extends React.Component {
                               noOfDay: "",
                               noOfLeave: "",
                               calendarYear: new Date().getFullYear()
-                          },employees:[]
+                          },employees:[],
+                          isSearchClicked: false
                         });
-                        $('#employeeTable').dataTable().fnClearTable();
+                        $('#employeeTable').dataTable().fnDestroy();
                     }
                 })
             } else {
@@ -218,9 +219,10 @@ class PersonalInform extends React.Component {
                       noOfDay: "",
                       noOfLeave: "",
                       calendarYear: new Date().getFullYear()
-                  },employees:[]
+                  },employees:[],
+                  isSearchClicked: false
                 });
-                $('#employeeTable').dataTable().fnClearTable();
+                $('#employeeTable').dataTable().fnDestroy();
             }
         })
     } else {
@@ -239,9 +241,10 @@ class PersonalInform extends React.Component {
                       noOfDay: "",
                       noOfLeave: "",
                       calendarYear: new Date().getFullYear()
-                  }, employees:[]
+                  }, employees:[],
+                  isSearchClicked: false
                 });
-                $('#employeeTable').dataTable().fnClearTable();
+                $('#employeeTable').dataTable().fnDestroy();
             }
          })
     }

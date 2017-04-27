@@ -22,8 +22,6 @@ class ViewApply extends React.Component {
   }
 
   componentWillMount() {
-    console.log(getUrlVars()["type"]);
-    // console.log(getCommonMaster("hr-masters","grades","Grade").responseJSON["Grade"]);
 
 
   }
@@ -32,7 +30,8 @@ class ViewApply extends React.Component {
 
   componentDidMount() {
     var employee = getUrlVars()["id"];
-    var leaveApp = commonApiPost("hr-leave","leaveapplications","_search",{employee,tenantId}).responseJSON["LeaveApplication"][0];
+    var leaveApp = commonApiPost("hr-leave","leaveapplications","_search",{employee,tenantId}).responseJSON["LeaveApplication"] ;
+    console.log(leaveApp);
     var empIds = [];
     for(var i=0; i<leaveApp.length; i++) {
       if(empIds.indexOf(leaveApp[i].employee) == -1)
@@ -80,32 +79,32 @@ class ViewApply extends React.Component {
 
 
   render() {
-    console.log(this.state.leaveSet);
     let {list}=this.state;
     let {employee,name,code,leaveType,fromDate,toDate,availableDays,leaveDays,reason}=this.state.leaveSet;
 
 
-
     const renderBody=function()
     {
+      console.log("hi");
       return list.map((item,index)=>
       {
             return (<tr key={index}>
-                    <td>{index+1}</td>
-                    <td data-label="name">{item.name}</td>
-                    <td data-label="fromDate">{item.fromDate}</td>
-                    <td data-label="toDate">{item.toDate}</td>
-                    <td data-label="availableDays">{item.availableDays}</td>
-                    <td data-label="leaveDays">{item.leaveDays}</td>
-                    <td data-label="status">{item.status}</td>
-                    <td data-label="action">
-                      <a href={`app/hr/leavemaster/apply-leave.html?id=${item.id}&type=view`}>View-Details</a>
-                    </td>
-                </tr>
+              <td>{index+1}</td>
+              <td data-label="name">{item.name}</td>
+              <td data-label="fromDate">{item.fromDate}</td>
+              <td data-label="toDate">{item.toDate}</td>
+              <td data-label="availableDays">{item.availableDays}</td>
+              <td data-label="leaveDays">{item.leaveDays}</td>
+              <td data-label="status">{item.status}</td>
+              <td data-label="action">
+                <a href={`app/hr/leavemaster/apply-leave.html?id=${item.id}&type=view`}>View-Details</a>
+              </td>
+          </tr>
             );
 
       })
     }
+
 
       return (<div>
         <table id="viewleaveTable" className="table table-bordered">

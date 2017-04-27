@@ -82,12 +82,12 @@ componentWillMount(){
             e.preventDefault();
 
             var tempInfo=Object.assign({},this.state.Holiday) , type = getUrlVars()["type"];
+            console.log(this.state.Holiday);
               if(type==="update"){
                 delete tempInfo.calendarYear.id;
                 delete tempInfo.calendarYear.active;
                 delete tempInfo.calendarYear.endDate;
                 delete tempInfo.calendarYear.startDate;
-                delete tempInfo.calendarYear.tenantId;
               }
 
             var body={
@@ -96,7 +96,7 @@ componentWillMount(){
               },_this=this;
                 if(type == "update") {
                   $.ajax({
-                        url:baseUrl+"/egov-common-masters/holidays/" + this.state.Holiday.id + "/" + "_update?tenantId=" + tenantId,
+                        url:baseUrl+"/egov-common-masters/holidays/" + _this.state.Holiday.id + "/" + "_update?tenantId=" + tenantId,
                         type: 'POST',
                         dataType: 'json',
                         data:JSON.stringify(body),
@@ -114,13 +114,10 @@ componentWillMount(){
                                     },
                                     "name": "",
                                     "applicableOn": "",
-                                    "tenantId": ""
+                                    "tenantId": tenantId
+
                                   }
                                 })
-
-                        },
-                        error: function(err) {
-                            showError("Holiday already defined on present date");
 
                         }
                     });
@@ -145,7 +142,8 @@ componentWillMount(){
                                     },
                                     "name": "",
                                     "applicableOn": "",
-                                    "tenantId": ""
+                                    "tenantId": tenantId
+
                                   }
                                 })
                         },

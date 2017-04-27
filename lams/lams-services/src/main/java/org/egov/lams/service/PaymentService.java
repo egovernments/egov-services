@@ -130,7 +130,7 @@ public class PaymentService {
 			billInfo.setCollModesNotAllowed("");
 			if (agreement.getAsset().getLocationDetails().getElectionWard() != null) {
 				BoundaryResponse boundaryResponse = getBoundariesById(
-						agreement.getAsset().getLocationDetails().getElectionWard());
+						agreement.getAsset().getLocationDetails().getElectionWard(),agreement.getTenantId());
 				billInfo.setBoundaryNumber(boundaryResponse.getBoundarys().get(0).getBoundaryNum());
 				lamsGetRequest.setName("BOUNDARY_TYPE");
 				String boundaryType = lamsConfigurationService.getLamsConfigurations(lamsGetRequest)
@@ -387,13 +387,15 @@ public class PaymentService {
 		return financialsRepository.getChartOfAccountGlcodeById(chartOfAccountContract, requestInfo);
 	}
 
-	private BoundaryResponse getBoundariesById(Long boundaryId) {
+	private BoundaryResponse getBoundariesById(Long boundaryId,String tenantId) {
 
 		BoundaryResponse boundaryResponse = null;
 		String boundaryUrl = propertiesManager.getBoundaryServiceHostName()
-				+ propertiesManager.getBoundaryServiceSearchPath() + "?Boundary.id=" + boundaryId;
+							+ propertiesManager.getBoundaryServiceSearchPath() 
+							+ "?Boundary.id=" + boundaryId
+							+ "&Boundary.tenantId=" + tenantId;
 		// FIXME in boundary contract id is string
-		LOGGER.info(boundaryUrl);
+		LOGGER.info("the boundary url from payment service ::"+boundaryUrl);
 		try {
 			boundaryResponse = restTemplate.getForObject(boundaryUrl, BoundaryResponse.class);
 		} catch (Exception e) {

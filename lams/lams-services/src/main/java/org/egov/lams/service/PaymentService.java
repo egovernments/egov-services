@@ -400,6 +400,7 @@ public class PaymentService {
 			e.printStackTrace();
 			LOGGER.info("the exception thrown from boundary request is :: " + e);
 		}
+		LOGGER.info("the response from boundary ::"+boundaryResponse);
 		return boundaryResponse;
 	}
 

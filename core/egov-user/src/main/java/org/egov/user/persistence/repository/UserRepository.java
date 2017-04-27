@@ -1,6 +1,5 @@
 package org.egov.user.persistence.repository;
 
-import org.egov.eis.service.EmployeeService;
 import org.egov.user.domain.exception.InvalidRoleCodeException;
 import org.egov.user.domain.model.UserSearch;
 import org.egov.user.persistence.entity.Role;

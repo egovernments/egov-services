@@ -265,8 +265,8 @@ $(document).ready(function() {
         //removing renew section and renew button
         $("#renew,#workFlowDetails,#renewBtn,#cancel,#evict").remove();
     } else if (getUrlVars()["view"] == "inbox") {
-        $("#historyTable,#renew,#renewBtn").show();
-        $("#cancel,#evict").remove();
+        $("#historyTable").show();
+        $("#cancel,#evict,#renew,#renewBtn").remove();
         //Fetch workFlow
         var workflow = commonApiPost("egov-common-workflows", "history", "", {
             tenantId: tenantId,

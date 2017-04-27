@@ -68,6 +68,7 @@ public class AgreementValidator {
 		validateAllottee(agreementRequest);
 		validateAsset(agreementRequest);
 		validateRentIncrementType(agreement);
+		logger.info("after the validations");
 	}
 
 	public void validateAsset(AgreementRequest agreementRequest) {
@@ -123,10 +124,11 @@ public class AgreementValidator {
 				}
 			}
 		}
-
+		logger.info("after the loop");
 		if (rentIncrement == null) {
 			rentIncrement = new RentIncrementType();
 			rentIncrement.setId(null);
 		}
+		logger.info("end of method");
 	}
 }

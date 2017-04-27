@@ -19,11 +19,15 @@ import org.egov.lams.web.contract.AssetResponse;
 import org.egov.lams.web.contract.LamsConfigurationGetRequest;
 import org.egov.lams.web.contract.RequestInfo;
 import org.egov.lams.web.contract.RequestInfoWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class AgreementValidator {
+	
+	public static final Logger logger = LoggerFactory.getLogger(AgreementValidator.class);
 
 	@Autowired
 	private AssetService assetService;
@@ -104,7 +108,7 @@ public class AgreementValidator {
 		lamsConfigurationGetRequest.setName(keyName);
 		List<String> assetCategoryNames = lamsConfigurationService.getLamsConfigurations(lamsConfigurationGetRequest)
 				.get(keyName);
-
+		logger.info("the asset category names found ::: "+ assetCategoryNames);
 		for (String string : assetCategoryNames) {
 			if (string.equals(assetCategory.getName())) {
 				if (rentIncrement != null) {

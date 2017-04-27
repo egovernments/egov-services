@@ -12,9 +12,7 @@ class WallType extends React.Component {
   search(e)
   {
     e.preventDefault();
-    var i='hi bharath';
-    // var type = getUrlVars()["id"];
-      console.log(this.state.selectValue);
+
    if(this.state.type==="Update")
 
         return (  window.location.href='app/create/create-wall-type.html?type=Update&&value='+this.state.selectValue)
@@ -64,7 +62,7 @@ class WallType extends React.Component {
   })
 
 
-}
+  }
 
 
   handleChange(e,name)

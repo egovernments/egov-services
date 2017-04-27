@@ -178,7 +178,7 @@ public class EmployeeService {
 
 		List<Long> ids = employeeInfoList.stream().map(employeeInfo -> employeeInfo.getId())
 				.collect(Collectors.toList());
-
+		LOGGER.debug("Employee ids " + ids);
 		List<User> usersList = userService.getUsers(ids, employeeCriteria.getTenantId(), requestInfo);
 		LOGGER.debug("userService: " + usersList);
 		employeeUserMapper.mapUsersWithEmployees(employeeInfoList, usersList);

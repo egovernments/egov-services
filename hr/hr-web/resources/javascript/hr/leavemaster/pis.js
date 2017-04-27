@@ -1,3 +1,4 @@
+var flag = 0;
 const defaultState = {
         employees: [],
         searchSet: {
@@ -89,6 +90,7 @@ class PersonalInform extends React.Component {
   }
 
   search(e) {
+
     let {
         name,
         employee,
@@ -99,6 +101,7 @@ class PersonalInform extends React.Component {
         calendarYear
     } = this.state.searchSet;
     e.preventDefault();
+
     //call api call
     try {
         var _emps = commonApiPost("hr-employee","employees","_search",{
@@ -145,9 +148,11 @@ class PersonalInform extends React.Component {
             createdDate: _createdDate
         })
     }
+
+    flag = 1;
     this.setState({
         isSearchClicked: true,
-        employees
+        employees: Object.assign([], employees)
     })
   }
 
@@ -286,19 +291,24 @@ class PersonalInform extends React.Component {
       open(location, '_self').close();
   }
 
-
+  componentWillUpdate() {
+    if(flag == 1) {
+      flag = 0;
+      $('#employeeTable').dataTable().fnDestroy();
+    }
+  }
 
   componentDidUpdate(prevProps, prevState)
-  {
+  {   
       if (prevState.employees.length != this.state.employees.length && this.state.employees.length) {
-          $('#employeeTable').DataTable({
-            dom: 'Bfrtip',
-            buttons: [
-                     'copy', 'csv', 'excel', 'pdf', 'print'
-             ],
-             ordering: false,
-             bDestroy: true
-          });
+            $('#employeeTable').DataTable({
+              dom: 'Bfrtip',
+              buttons: [
+                       'copy', 'csv', 'excel', 'pdf', 'print'
+               ],
+               ordering: false,
+               bDestroy: true
+            });
       }
   }
 

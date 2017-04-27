@@ -47,8 +47,9 @@ public class UserService {
 		return persistNewUser(user);
 	}
 
-	public List<org.egov.user.domain.model.User> searchUsers(UserSearch userSearch) {
-		return userRepository.findAll(userSearch);
+	public List<org.egov.user.domain.model.User> searchUsers(UserSearchCriteria searchCriteria) {
+		searchCriteria.validate();
+		return userRepository.findAll(searchCriteria);
 	}
 
 	public User updateWithoutOtpValidation(final Long id, final User user) {

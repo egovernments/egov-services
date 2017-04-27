@@ -1,6 +1,6 @@
 package org.egov.user.web.contract;
 
-import org.egov.user.domain.model.UserSearch;
+import org.egov.user.domain.model.UserSearchCriteria;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -24,7 +24,7 @@ public class UserSearchRequestTest {
         userSearchRequest.setFuzzyLogic(false);
         userSearchRequest.setUserType("CITIZEN");
 
-        UserSearch userSearch = userSearchRequest.toDomain();
+        UserSearchCriteria userSearch = userSearchRequest.toDomain();
 
         assertThat(userSearch.getId()).isEqualTo(ids);
         assertThat(userSearch.getUserName()).isEqualTo("userName");

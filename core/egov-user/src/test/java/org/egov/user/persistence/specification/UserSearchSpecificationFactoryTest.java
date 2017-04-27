@@ -1,6 +1,6 @@
 package org.egov.user.persistence.specification;
 
-import org.egov.user.domain.model.UserSearch;
+import org.egov.user.domain.model.UserSearchCriteria;
 import org.junit.Test;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -10,7 +10,7 @@ public class UserSearchSpecificationFactoryTest {
 
     @Test
     public void test_should_return_fuzzy_specification_if_fuzzyLogic_is_true() throws Exception {
-        UserSearch userSearch = UserSearch.builder().name("name").fuzzyLogic(true).build();
+        UserSearchCriteria userSearch = UserSearchCriteria.builder().name("name").fuzzyLogic(true).build();
 
         UserSearchSpecificationFactory userSearchSpecificationFactory = new UserSearchSpecificationFactory();
 
@@ -20,7 +20,7 @@ public class UserSearchSpecificationFactoryTest {
 
     @Test
     public void test_should_return_multiFieldSpecification_if_not_fuzzyLogic() throws Exception {
-        UserSearch userSearch = UserSearch.builder().fuzzyLogic(false).build();
+        UserSearchCriteria userSearch = UserSearchCriteria.builder().fuzzyLogic(false).build();
 
         UserSearchSpecificationFactory userSearchSpecificationFactory = new UserSearchSpecificationFactory();
 

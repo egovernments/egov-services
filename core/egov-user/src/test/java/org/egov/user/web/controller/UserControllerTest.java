@@ -2,10 +2,11 @@ package org.egov.user.web.controller;
 
 import org.apache.commons.io.IOUtils;
 import org.egov.user.TestConfiguration;
+import org.egov.user.domain.exception.InvalidUserSearchCriteriaException;
 import org.egov.user.domain.model.Action;
 import org.egov.user.domain.model.SecureUser;
 import org.egov.user.domain.model.UserDetail;
-import org.egov.user.domain.model.UserSearch;
+import org.egov.user.domain.model.UserSearchCriteria;
 import org.egov.user.domain.model.enums.*;
 import org.egov.user.domain.service.TokenService;
 import org.egov.user.domain.service.UserService;
@@ -52,13 +53,26 @@ public class UserControllerTest {
 
 	@Test
 	@WithMockUser
-	public void testUserSearch() throws Exception {
+	public void test_should_search_users() throws Exception {
 		when(userService.searchUsers(argThat(new UserSearchMatcher(getUserSearch())))).thenReturn(getUserModels());
 
 		mockMvc.perform(post("/_search/").contentType(MediaType.APPLICATION_JSON_UTF8)
 				.content(getFileContents("getUserByIdRequest.json"))).andExpect(status().isOk())
 				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(getFileContents("userSearchResponse.json")));
+	}
+
+	@Test
+	@WithMockUser
+	public void test_should_return_error_response_when_user_search_is_invalid() throws Exception {
+		final UserSearchCriteria invalidSearchCriteria = UserSearchCriteria.builder().build();
+		when(userService.searchUsers(any())).thenThrow(new InvalidUserSearchCriteriaException(invalidSearchCriteria));
+
+		mockMvc.perform(post("/_search").contentType(MediaType.APPLICATION_JSON_UTF8)
+				.content(getFileContents("getUserByIdRequest.json")))
+				.andExpect(status().isBadRequest())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(content().json(getFileContents("userSearchErrorResponse.json")));
 	}
 
 	@Test
@@ -122,8 +136,8 @@ public class UserControllerTest {
 				.andExpect(content().json(getFileContents("userDetailsResponse.json")));
 	}
 
-	private UserSearch getUserSearch() {
-		return UserSearch.builder()
+	private UserSearchCriteria getUserSearch() {
+		return UserSearchCriteria.builder()
 				.id(asList(1L, 2L))
 				.userName("userName")
 				.name("name")
@@ -223,17 +237,17 @@ public class UserControllerTest {
 		}
 	}
 
-	class UserSearchMatcher extends ArgumentMatcher<UserSearch> {
+	class UserSearchMatcher extends ArgumentMatcher<UserSearchCriteria> {
 
-		private UserSearch expectedUserSearch;
+		private UserSearchCriteria expectedUserSearch;
 
-		public UserSearchMatcher(UserSearch expectedUserSearch) {
+		public UserSearchMatcher(UserSearchCriteria expectedUserSearch) {
 			this.expectedUserSearch = expectedUserSearch;
 		}
 
 		@Override
 		public boolean matches(Object o) {
-			UserSearch userSearch = (UserSearch) o;
+			UserSearchCriteria userSearch = (UserSearchCriteria) o;
 			return userSearch.getId().equals(expectedUserSearch.getId()) &&
 					userSearch.getUserName().equals(expectedUserSearch.getUserName()) &&
 					userSearch.getName().equals(expectedUserSearch.getName()) &&

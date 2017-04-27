@@ -1,7 +1,7 @@
 package org.egov.user.persistence.repository;
 
 import org.egov.user.domain.exception.InvalidRoleCodeException;
-import org.egov.user.domain.model.UserSearch;
+import org.egov.user.domain.model.UserSearchCriteria;
 import org.egov.user.persistence.entity.Role;
 import org.egov.user.persistence.entity.User;
 import org.egov.user.persistence.enums.BloodGroup;
@@ -69,7 +69,7 @@ public class UserRepository {
 		return userJpaRepository.save(entityUser).toDomain();
 	}
 
-	public List<org.egov.user.domain.model.User> findAll(UserSearch userSearch) {
+	public List<org.egov.user.domain.model.User> findAll(UserSearchCriteria userSearch) {
 		Specification<User> specification = userSearchSpecificationFactory.getSpecification(userSearch);
 		PageRequest pageRequest = createPageRequest(userSearch);
 		List<User> userEntities = userJpaRepository.findAll(specification, pageRequest).getContent();
@@ -81,12 +81,12 @@ public class UserRepository {
 		entityUser.setPassword(encodedPassword);
 	}
 
-	private PageRequest createPageRequest(UserSearch userSearch) {
+	private PageRequest createPageRequest(UserSearchCriteria userSearch) {
 		Sort sort = createSort(userSearch);
 		return new PageRequest(userSearch.getPageNumber(), userSearch.getPageSize(), sort);
 	}
 
-	private Sort createSort(UserSearch userSearch) {
+	private Sort createSort(UserSearchCriteria userSearch) {
 		List<String> sortFields = Arrays.asList("username", "name", "gender");
 		List<Sort.Order> orders = userSearch.getSort()
 				.stream()

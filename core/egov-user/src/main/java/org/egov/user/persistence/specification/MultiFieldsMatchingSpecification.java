@@ -1,7 +1,7 @@
 package org.egov.user.persistence.specification;
 
 import org.apache.commons.lang3.StringUtils;
-import org.egov.user.domain.model.UserSearch;
+import org.egov.user.domain.model.UserSearchCriteria;
 import org.egov.user.persistence.entity.User;
 import org.egov.user.persistence.entity.User_;
 import org.egov.user.persistence.enums.UserType;
@@ -11,12 +11,14 @@ import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+
 public class MultiFieldsMatchingSpecification implements Specification<User> {
 
-    private UserSearch userSearch;
+    private UserSearchCriteria searchCriteria;
 
-    public MultiFieldsMatchingSpecification(UserSearch userSearch) {
-        this.userSearch = userSearch;
+    public MultiFieldsMatchingSpecification(UserSearchCriteria searchCriteria) {
+        this.searchCriteria = searchCriteria;
     }
 
     @Override
@@ -30,76 +32,84 @@ public class MultiFieldsMatchingSpecification implements Specification<User> {
         Path<String> emailId = root.get(User_.emailId);
         Path<Boolean> active = root.get(User_.active);
         Path<UserType> type = root.get(User_.type);
+        Path<String> tenantId = root.get(User_.tenantId);
 
         List<Predicate> predicates = new ArrayList<>();
 
-        if (isIdPresent(userSearch)) {
-            predicates.add(longPath.in(userSearch.getId()));
+        if (isIdPresent(searchCriteria)) {
+            predicates.add(longPath.in(searchCriteria.getId()));
         }
 
-        if (isUserNamePresent(userSearch)) {
-            predicates.add(criteriaBuilder.equal(userName, userSearch.getUserName()));
+		if (isTenantIdPresent(searchCriteria)) {
+			predicates.add(criteriaBuilder.equal(tenantId, searchCriteria.getTenantId()));
+		}
+
+		if (isUserNamePresent(searchCriteria)) {
+            predicates.add(criteriaBuilder.equal(userName, searchCriteria.getUserName()));
         }
 
-        if (isNamePresent(userSearch)) {
-            predicates.add(criteriaBuilder.equal(name, userSearch.getName()));
+        if (isNamePresent(searchCriteria)) {
+            predicates.add(criteriaBuilder.equal(name, searchCriteria.getName()));
         }
 
-        if (isMobileNumberPresent(userSearch)) {
-            predicates.add(criteriaBuilder.equal(mobileNumber, userSearch.getMobileNumber()));
+        if (isMobileNumberPresent(searchCriteria)) {
+            predicates.add(criteriaBuilder.equal(mobileNumber, searchCriteria.getMobileNumber()));
         }
 
-        if (isEmailIdPresent(userSearch)) {
-            predicates.add(criteriaBuilder.equal(emailId, userSearch.getEmailId()));
+        if (isEmailIdPresent(searchCriteria)) {
+            predicates.add(criteriaBuilder.equal(emailId, searchCriteria.getEmailId()));
         }
 
-        if (isAadhaarNumberPresent(userSearch)) {
-            predicates.add(criteriaBuilder.equal(aadhaarNumber, userSearch.getAadhaarNumber()));
+        if (isAadhaarNumberPresent(searchCriteria)) {
+            predicates.add(criteriaBuilder.equal(aadhaarNumber, searchCriteria.getAadhaarNumber()));
         }
 
-        if (isPanPresent(userSearch)) {
-            predicates.add(criteriaBuilder.equal(pan, userSearch.getPan()));
+        if (isPanPresent(searchCriteria)) {
+            predicates.add(criteriaBuilder.equal(pan, searchCriteria.getPan()));
         }
 
-        if(isUserTypePresent(userSearch)) {
-            predicates.add(criteriaBuilder.equal(type, UserType.valueOf(userSearch.getType())));
+        if(isUserTypePresent(searchCriteria)) {
+            predicates.add(criteriaBuilder.equal(type, UserType.valueOf(searchCriteria.getType())));
         }
 
-        predicates.add(criteriaBuilder.equal(active, userSearch.isActive()));
-
+        predicates.add(criteriaBuilder.equal(active, searchCriteria.isActive()));
 
         return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
     }
 
-    private boolean isUserTypePresent(UserSearch userSearch) {
+    private boolean isUserTypePresent(UserSearchCriteria userSearch) {
         return StringUtils.isNotBlank(userSearch.getType());
     }
 
-    private boolean isIdPresent(UserSearch userSearch) {
+    private boolean isIdPresent(UserSearchCriteria userSearch) {
         return userSearch.getId() != null && userSearch.getId().size() > 0;
     }
 
-    private boolean isNamePresent(UserSearch userSearch) {
+    private boolean isNamePresent(UserSearchCriteria userSearch) {
         return StringUtils.isNotBlank(userSearch.getName());
     }
 
-    private boolean isEmailIdPresent(UserSearch userSearch) {
+    private boolean isEmailIdPresent(UserSearchCriteria userSearch) {
         return StringUtils.isNotBlank(userSearch.getEmailId());
     }
 
-    private boolean isAadhaarNumberPresent(UserSearch userSearch) {
+    private boolean isAadhaarNumberPresent(UserSearchCriteria userSearch) {
         return StringUtils.isNotBlank(userSearch.getAadhaarNumber());
     }
 
-    private boolean isMobileNumberPresent(UserSearch userSearch) {
+    private boolean isMobileNumberPresent(UserSearchCriteria userSearch) {
         return StringUtils.isNotBlank(userSearch.getMobileNumber());
     }
 
-    private boolean isPanPresent(UserSearch userSearch) {
+    private boolean isPanPresent(UserSearchCriteria userSearch) {
         return StringUtils.isNotBlank(userSearch.getPan());
     }
 
-    private boolean isUserNamePresent(UserSearch userSearch) {
+    private boolean isUserNamePresent(UserSearchCriteria userSearch) {
         return StringUtils.isNotBlank(userSearch.getUserName());
     }
+
+    private boolean isTenantIdPresent(UserSearchCriteria searchCriteria) {
+    	return isNotEmpty(searchCriteria.getTenantId());
+	}
 }

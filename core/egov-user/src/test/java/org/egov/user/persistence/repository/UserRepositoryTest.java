@@ -2,7 +2,7 @@ package org.egov.user.persistence.repository;
 
 import org.egov.user.domain.exception.InvalidRoleCodeException;
 import org.egov.user.domain.model.User;
-import org.egov.user.domain.model.UserSearch;
+import org.egov.user.domain.model.UserSearchCriteria;
 import org.egov.user.persistence.entity.Role;
 import org.egov.user.persistence.specification.UserSearchSpecificationFactory;
 import org.hamcrest.CustomMatcher;
@@ -197,7 +197,7 @@ public class UserRepositoryTest {
 		when(mockUserEntity.toDomain()).thenReturn(mockUserModel);
 		List<org.egov.user.persistence.entity.User> listOfEntities = Collections.singletonList(mockUserEntity);
 		List<org.egov.user.domain.model.User> listOfModels = Collections.singletonList(mockUserModel);
-		UserSearch userSearch = mock(UserSearch.class);
+		UserSearchCriteria userSearch = mock(UserSearchCriteria.class);
 		Specification<org.egov.user.persistence.entity.User> userSpecification = mock(Specification.class);
 		when(userSearch.getPageNumber()).thenReturn(1);
 		when(userSearch.getPageSize()).thenReturn(20);

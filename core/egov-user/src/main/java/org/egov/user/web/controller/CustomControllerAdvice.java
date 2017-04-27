@@ -86,4 +86,11 @@ public class CustomControllerAdvice {
 			InvalidNonLoggedInUserUpdatePasswordRequestException ex) {
 		return new InvalidNonLoggedInUserUpdatePasswordRequestErrorHandler().adapt(ex.getModel());
 	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(InvalidUserSearchCriteriaException.class)
+	public ErrorResponse handleInvalidNonLoggedInUserUpdatePasswordRequestException(
+			InvalidUserSearchCriteriaException ex) {
+		return new InvalidUserSearchRequestErrorHandler().adapt(ex.getSearchCriteria());
+	}
 }

@@ -1,80 +1,79 @@
 package org.egov.user.web.contract;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.user.domain.model.UserSearch;
+import org.egov.user.domain.model.UserSearchCriteria;
 
 import java.util.Collections;
 import java.util.List;
 
 @Getter
 @Setter
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class UserSearchRequest {
 
-    @JsonProperty("RequestInfo")
-    private RequestInfo requestInfo;
+	@JsonProperty("RequestInfo")
+	private RequestInfo requestInfo;
 
-    @JsonProperty("id")
-    private List<Long> id;
+	@JsonProperty("id")
+	private List<Long> id;
 
-    @JsonProperty("userName")
-    private String userName;
+	@JsonProperty("userName")
+	private String userName;
 
-    @JsonProperty("name")
-    private String name;
+	@JsonProperty("name")
+	private String name;
 
-    @JsonProperty("mobileNumber")
-    private String mobileNumber;
+	@JsonProperty("mobileNumber")
+	private String mobileNumber;
 
-    @JsonProperty("aadhaarNumber")
-    private String aadhaarNumber;
+	@JsonProperty("aadhaarNumber")
+	private String aadhaarNumber;
 
-    @JsonProperty("pan")
-    private String pan;
+	@JsonProperty("pan")
+	private String pan;
 
-    @JsonProperty("emailId")
-    private String emailId;
+	@JsonProperty("emailId")
+	private String emailId;
 
-    @JsonProperty("fuzzyLogic")
-    private boolean fuzzyLogic;
+	@JsonProperty("fuzzyLogic")
+	private boolean fuzzyLogic;
 
-    @JsonProperty("active")
-    private boolean active = true;
+	@JsonProperty("active")
+	private boolean active = true;
 
-    @JsonProperty("tenantId")
-    private String tenantId;
+	@JsonProperty("tenantId")
+	private String tenantId;
 
-    @JsonProperty("pageSize")
-    private int pageSize = 20;
+	@JsonProperty("pageSize")
+	private int pageSize = 20;
 
-    @JsonProperty("pageNumber")
-    private int pageNumber = 0;
+	@JsonProperty("pageNumber")
+	private int pageNumber = 0;
 
-    @JsonProperty("sort")
-    private List<String> sort = Collections.singletonList("name");
+	@JsonProperty("sort")
+	private List<String> sort = Collections.singletonList("name");
 
-    @JsonProperty("userType")
-    private String userType;
+	@JsonProperty("userType")
+	private String userType;
 
-    public UserSearch toDomain() {
-        return UserSearch.builder()
-                .id(id)
-                .userName(userName)
-                .name(name)
-                .mobileNumber(mobileNumber)
-                .aadhaarNumber(aadhaarNumber)
-                .pan(pan)
-                .emailId(emailId)
-                .fuzzyLogic(fuzzyLogic)
-                .active(active)
-                .pageSize(pageSize)
-                .pageNumber(pageNumber)
-                .sort(sort)
-                .type(userType)
-                .build();
-    }
+	public UserSearchCriteria toDomain() {
+		return UserSearchCriteria.builder()
+				.id(id)
+				.userName(userName)
+				.name(name)
+				.mobileNumber(mobileNumber)
+				.aadhaarNumber(aadhaarNumber)
+				.pan(pan)
+				.emailId(emailId)
+				.fuzzyLogic(fuzzyLogic)
+				.active(active)
+				.pageSize(pageSize)
+				.pageNumber(pageNumber)
+				.sort(sort)
+				.type(userType)
+				.tenantId(tenantId)
+				.build();
+	}
 }

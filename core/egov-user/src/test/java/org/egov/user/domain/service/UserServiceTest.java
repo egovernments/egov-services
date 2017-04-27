@@ -60,14 +60,25 @@ public class UserServiceTest {
 	}
 
 	@Test
-	public void test_should_search_user() throws Exception {
-		UserSearch userSearch = UserSearch.builder().build();
+	public void test_should_search_for_users() {
+		UserSearchCriteria userSearch = mock(UserSearchCriteria.class);
 		List<org.egov.user.domain.model.User> expectedListOfUsers = mock(List.class);
 		when(userRepository.findAll(userSearch)).thenReturn(expectedListOfUsers);
 
 		List<org.egov.user.domain.model.User> actualResult = userService.searchUsers(userSearch);
 
 		assertThat(expectedListOfUsers).isEqualTo(actualResult);
+	}
+
+	@Test
+	public void test_should_validate_search_critieria() {
+		UserSearchCriteria userSearch = mock(UserSearchCriteria.class);
+		List<org.egov.user.domain.model.User> expectedListOfUsers = mock(List.class);
+		when(userRepository.findAll(userSearch)).thenReturn(expectedListOfUsers);
+
+		userService.searchUsers(userSearch);
+
+		verify(userSearch).validate();
 	}
 
 	@Test

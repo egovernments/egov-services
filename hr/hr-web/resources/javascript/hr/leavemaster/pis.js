@@ -197,7 +197,8 @@ class PersonalInform extends React.Component {
                               noOfLeave: "",
                               calendarYear: new Date().getFullYear()
                           },employees:[]
-                        })
+                        });
+                        $('#employeeTable').dataTable().fnClearTable();
                     }
                 })
             } else {
@@ -213,7 +214,8 @@ class PersonalInform extends React.Component {
                       noOfLeave: "",
                       calendarYear: new Date().getFullYear()
                   },employees:[]
-                })
+                });
+                $('#employeeTable').dataTable().fnClearTable();
             }
         })
     } else {
@@ -232,8 +234,9 @@ class PersonalInform extends React.Component {
                       noOfDay: "",
                       noOfLeave: "",
                       calendarYear: new Date().getFullYear()
-                  },employees:[]
-                })
+                  }, employees:[]
+                });
+                $('#employeeTable').dataTable().fnClearTable();
             }
          })
     }
@@ -264,7 +267,7 @@ class PersonalInform extends React.Component {
       this.setState({
           searchSet:{
               ...this.state.searchSet,
-              [name]:e.target.value,
+              [name]:e.target.value
           }
       })
   }
@@ -293,7 +296,8 @@ class PersonalInform extends React.Component {
             buttons: [
                      'copy', 'csv', 'excel', 'pdf', 'print'
              ],
-             ordering: false
+             ordering: false,
+             bDestroy: true
           });
       }
   }
@@ -430,7 +434,7 @@ class PersonalInform extends React.Component {
                           <div className="styled-select">
                               <select id="department" name="department" value={department}
                               onChange={(e)=>{ handleChange(e,"department")}}>
-                                <option>Select Department</option>
+                                <option value="">Select Department</option>
                                 {renderOption(this.state.departmentsList)}
                              </select>
                           </div>

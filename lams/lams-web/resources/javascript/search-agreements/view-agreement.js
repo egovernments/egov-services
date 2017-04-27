@@ -315,7 +315,7 @@ $(document).ready(function() {
         $(`label[for=renew_rent]`).text(getUrlVars()["type"] == "shop" ? "Shop Rent (Rs)" : "Land Rent (Rs)");
     } else if (["cancel", "eviction"].indexOf(getUrlVars()["view"]) > -1) {
         $("#renew").remove();
-        $("#renewBtn").text("Submit");
+        //$("#renewBtn").text("Submit");
         $(".hide-sec").hide();
         $("#viewDetBtn").show();
         $("#minDetSec").show();
@@ -325,7 +325,7 @@ $(document).ready(function() {
             $("#cancel").remove();
         }
     } else {
-        $("#viewDcb.#cancel,#evict").remove();
+        $("#viewDcb,#cancel,#evict").remove();
     }
 
     for (var variable in department) {

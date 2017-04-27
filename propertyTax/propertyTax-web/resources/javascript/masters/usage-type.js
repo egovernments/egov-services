@@ -1,4 +1,4 @@
-class FloorType extends React.Component {
+class UsageType extends React.Component {
   constructor(props) {
     super(props);
     this.state={list:[],searchSet:{
@@ -174,6 +174,6 @@ class FloorType extends React.Component {
 
 
 ReactDOM.render(
-  <FloorType />,
+  <UsageType />,
   document.getElementById('root')
 );

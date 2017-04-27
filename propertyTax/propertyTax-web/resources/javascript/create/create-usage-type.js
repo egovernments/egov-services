@@ -87,7 +87,7 @@ class CreateUsageType extends React.Component {
 
     return (
     <div>
-    <h3>{mode} Floor Type </h3>
+    <h3>{mode} Usage Type </h3>
     <form onSubmit={(e)=>{addOrUpdate(e,mode)}}>
 
     <div className="row">

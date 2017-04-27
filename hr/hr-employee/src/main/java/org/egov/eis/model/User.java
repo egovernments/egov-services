@@ -86,8 +86,8 @@ public class User {
 	@Size(min=3, max=100)
 	private String name;
 
-	@NotNull
 	@Valid
+	@NotNull
 	private Gender gender;
 
 	@NotNull
@@ -137,13 +137,14 @@ public class User {
 	@Size(max=5)
 	private String locale = "en_IN";
 
-	@NotNull
 	@Valid
+	@NotNull
 	private UserType type = UserType.EMPLOYEE;
 
 	private Boolean accountLocked;
 
 	@Valid
+	@NotNull
 	private List<Role> roles = new ArrayList<Role>();
 
 	@Size(max=100)

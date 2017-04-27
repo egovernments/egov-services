@@ -1,0 +1,1 @@
+alter table eg_wf_states alter column status type bigint using status::bigint ;

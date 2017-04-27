@@ -143,10 +143,7 @@ public class AllotteeService {
 					ioe.printStackTrace();
 				}
 				 //return new ResponseEntity<>(userErrorResponse, HttpStatus.BAD_REQUEST);
-				if(allotteeResponse!=null) 
-					return allotteeResponse;
-				else 
-					throw new RuntimeException(userErrorResponse.getError());
+					logger.info("the exception from user module inside first catch block ::"+userErrorResponse.getError().toString());
 			} catch (Exception e) {
 				logger.debug("Following Exception Occurred While Calling User Service : " + e.getMessage());
 				e.printStackTrace();

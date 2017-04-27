@@ -1,3 +1,4 @@
+var flag = 0;
 class SearchLeaveApplication extends React.Component {
   constructor(props) {
     super(props);
@@ -36,7 +37,8 @@ class SearchLeaveApplication extends React.Component {
       code:"",
       departmentId:"",
       designationId:""}
-    })
+    });
+    $('#employeeTable').dataTable().fnDestroy();
   }
 
 
@@ -81,6 +83,12 @@ class SearchLeaveApplication extends React.Component {
       }
   }
 }
+componentWillUpdate() {
+  if(flag == 1) {
+    flag = 0;
+    $('#employeeTable').dataTable().fnDestroy();
+  }
+}
 
 
 
@@ -103,7 +111,8 @@ class SearchLeaveApplication extends React.Component {
             buttons: [
                      'copy', 'csv', 'excel', 'pdf', 'print'
              ],
-             ordering: false
+             ordering: false,
+             bDestroy: true
           });
       }
   }

@@ -302,7 +302,7 @@ class PersonalInform extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState)
-  {   
+  {
       if (prevState.employees.length != this.state.employees.length && this.state.employees.length) {
             $('#employeeTable').DataTable({
               dom: 'Bfrtip',
@@ -463,7 +463,7 @@ class PersonalInform extends React.Component {
                               <div className="styled-select">
                                 <select id="designation" name="designation" value={designation} onChange={(e)=>{
                                     handleChange(e,"designation")}}>
-                                <option>Select Designation</option>
+                                <option value="">Select Designation</option>
                                 {renderOption(this.state.designationList)}
                                </select>
                             </div>
@@ -511,7 +511,8 @@ class PersonalInform extends React.Component {
                 </div>
 
             <div className="text-center">
-                <button type="submit"  className="btn btn-submit">Search</button>
+                <button type="submit"  className="btn btn-submit">Search</button>&nbsp;&nbsp;
+                <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>
             </div>
           </fieldset>
           </form>

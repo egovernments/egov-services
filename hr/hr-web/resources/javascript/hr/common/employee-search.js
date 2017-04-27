@@ -1,3 +1,4 @@
+var flag = 0;
 class EmployeeSearch extends React.Component {
   constructor(props) {
     super(props);
@@ -34,7 +35,8 @@ class EmployeeSearch extends React.Component {
     this.setState({
       isSearchClicked:true,
       employees
-    })
+    });
+    $('#employeeTable').dataTable().fnDestroy();
 
   }
   handleBlur(e) {
@@ -58,6 +60,12 @@ class EmployeeSearch extends React.Component {
   }
 }
 
+componentWillUpdate() {
+  if(flag == 1) {
+    flag = 0;
+    $('#employeeTable').dataTable().fnDestroy();
+  }
+}
 
 
   componentWillMount() {
@@ -75,7 +83,8 @@ class EmployeeSearch extends React.Component {
             buttons: [
                      'copy', 'csv', 'excel', 'pdf', 'print'
              ],
-             ordering: false
+             ordering: false,
+             bDestroy: true
           });
       }
   }

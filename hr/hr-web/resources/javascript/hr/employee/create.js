@@ -1569,7 +1569,7 @@ function updateTable(tableName, modalName, object) {
       try {
         assignments_position = commonApiPost("hr-masters", "positions", "_search", {
           tenantId,
-          id: employee[object][i][key]
+          id: employee[object][i]["position"]
         }).responseJSON["Position"] || [];
       } catch (e) {
         console.log(e);
@@ -1596,8 +1596,9 @@ function updateTable(tableName, modalName, object) {
                                                                                                                                       ${getNameById("grade",employee[object][i]["grade"],"")}
                                                                                                                                 </td>`)
       $(tableName).append(`<td data-label=${"hod"}>
-                                                                                                                                                        ${employee[object][i]["hod"].length>0?"Yes":"No"}
-                                                                                                                                                  </td>`)
+      ${(employee[object][i]["hod"].length &&typeof(employee[object][i]["hod"])=="object") ?getHodDetails(employee[object][i]["hod"]):""}
+
+      </td>`)
 
       $(tableName).append(`<td data-label=${"govtOrderNumber"}>
 
@@ -1790,6 +1791,15 @@ function updateTable(tableName, modalName, object) {
   }
 }
 
+function getHodDetails(object) {
+  var returnObj="<ol>";
+  for (var i = 0; i < object.length; i++) {
+    returnObj+=`<li>${getNameById("department",object[i]["department"],"")}</li>`
+  }
+  returnObj+="</ol>";
+  return returnObj;
+}
+
 //common edit mark index
 function markEditIndex(index = -1, modalName = "", object = "") {
   editIndex = index;
@@ -1822,7 +1832,7 @@ function markEditIndex(index = -1, modalName = "", object = "") {
         }
 
         if (key == "isPrimary") {
-          if (employeeSubObject[object][key] == "true") {
+          if (employeeSubObject[object][key] == "true" ||employeeSubObject[object][key]==true) {
             $('[data-primary="yes"]').prop("checked", true);
             $('[data-primary="no"]').prop("checked", false);
           } else {
@@ -1830,7 +1840,7 @@ function markEditIndex(index = -1, modalName = "", object = "") {
             $('[data-primary="no"]').prop("checked", true);
           }
         } else if (key == "hod") {
-          if (employeeSubObject[object][key] && employeeSubObject[object][key].constructor == Array && employeeSubObject[object][key].length) {
+          if ((employeeSubObject[object][key] && employeeSubObject[object][key].constructor == Array && employeeSubObject[object][key].length)||(employeeSubObject[object][key]==true ||employeeSubObject[object][key]=="true")) {
             $('[data-hod="yes"]').prop("checked", true);
             $('[data-hod="no"]').prop("checked", false);
             $("#departments").show();

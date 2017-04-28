@@ -80,6 +80,9 @@ public class LeaveApplicationService {
 
     @Autowired
     private LeaveApplicationRepository leaveApplicationRepository;
+    
+    @Autowired
+    private LeaveApplicationNumberGeneratorService leaveApplicationNumberGeneratorService;
 
     public List<LeaveApplication> getLeaveApplications(final LeaveApplicationGetRequest leaveApplicationGetRequest) {
         return leaveApplicationRepository.findForCriteria(leaveApplicationGetRequest);
@@ -88,6 +91,7 @@ public class LeaveApplicationService {
     public LeaveApplication createLeaveApplication(final LeaveApplicationSingleRequest leaveApplicationRequest) {
         final LeaveApplication leaveApplication = leaveApplicationRequest.getLeaveApplication();
         leaveApplication.setStatus(LeaveStatus.APPLIED);
+        leaveApplication.setApplicationNumber(leaveApplicationNumberGeneratorService.generate());
         String leaveApplicationRequestJson = null;
         try {
             final ObjectMapper mapper = new ObjectMapper();

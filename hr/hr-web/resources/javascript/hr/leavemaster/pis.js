@@ -315,7 +315,10 @@ class PersonalInform extends React.Component {
                        'copy', 'csv', 'excel', 'pdf', 'print'
                ],
                ordering: false,
-               bDestroy: true
+               bDestroy: true,
+               language: {
+                "emptyTable": "No Records"
+              }
             });
       }
   }

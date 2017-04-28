@@ -76,9 +76,8 @@ public class UserService {
 	public void updatePasswordForNonLoggedInUser(NonLoggedInUserUpdatePasswordRequest request) {
 		request.validate();
 		validateOtp(request.getOtpValidationRequest());
-		final User user = fetchUserByUserName(request.getMobileNumber());
+		final User user = fetchUserByUserName(request.getUserName());
 		validateUserPresent(user);
-		validateExistingPassword(user, request.getExistingPassword());
 		user.updatePassword(request.getNewPassword());
 		userRepository.update(user);
 	}

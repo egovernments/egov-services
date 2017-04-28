@@ -10,9 +10,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BillTypeRepository
 		extends JpaRepository<EgBillType, java.lang.Long>, JpaSpecificationExecutor<EgBillType> {
-	EgBillType findByName(String name);
+	EgBillType findByNameAndTenantId(String name, String tenantId);
 
-	EgBillType findByCode(String code);
+	EgBillType findByCodeAndTenantId(String code, String tenantId);
 
 	@Transactional
 	EgBillType save(EgBillType billType);

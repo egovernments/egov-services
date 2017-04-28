@@ -54,21 +54,20 @@ public class RequestValidator {
 	private ErrorHandler errHandler;
 
 	/**
-	 * Validate RequestInfo object & returns ErrorResponseEntity if there are
-	 * any errors or else returns null
+	 * Validates request & returns ErrorResponseEntity if there are any errors or else returns null
 	 * 
 	 * @param requestInfo
-	 * @param headers
-	 * @param bindingResult
+	 * @param modelAttributeBindingResult
+	 * @param requestBodyBindingResult
 	 * @return ResponseEntity<?>
 	 */
 	public ResponseEntity<?> validateSearchRequest(RequestInfo requestInfo, BindingResult modelAttributeBindingResult,
 			BindingResult requestBodyBindingResult) {
 		// validate input params
-		if (modelAttributeBindingResult.hasErrors()) {
+		if (modelAttributeBindingResult != null && modelAttributeBindingResult.hasErrors()) {
 			return errHandler.getErrorResponseEntityForMissingParameters(modelAttributeBindingResult, requestInfo);
 		}
-		if (requestBodyBindingResult.hasErrors()) {
+		if (requestBodyBindingResult != null && requestBodyBindingResult.hasErrors()) {
 			return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
 		}
 		return null;

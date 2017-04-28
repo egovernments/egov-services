@@ -38,48 +38,32 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.model.enums;
+package org.egov.eis.web.contract;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-public enum BloodGroup {
-	A_POSITIVE("A+"), B_POSITIVE("B+"), AB_POSITIVE("AB+"), O_POSITIVE("O+"),
-	A_NEGATIVE("A-"), B_NEGATIVE("B-"), AB_NEGATIVE("AB-"), O_NEGATIVE("O-");
+@AllArgsConstructor
+@EqualsAndHashCode
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+public class MaritalStatusResponse {
 
-	private String value;
+	@JsonProperty("ResponseInfo")
+	private ResponseInfo responseInfo;
 
-	BloodGroup(String value) {
-		this.value = value;
-	}
+	@JsonProperty("MaritalStatus")
+	private List<String> maritalStatus = new ArrayList<String>();
 
-	@Override
-	@JsonValue
-    public String toString() {
-        return StringUtils.capitalize(name());
-    }
-
-	@JsonCreator
-	public static List<String> getAllObjectValues() {
-		List<String> allObjectValues = new ArrayList<>();
-		for (BloodGroup obj : BloodGroup.values()) {
-			allObjectValues.add(obj.value);
-		}
-		return allObjectValues;
-	}
-
-	@JsonCreator
-	public static BloodGroup fromValue(String passedValue) {
-		for (BloodGroup obj : BloodGroup.values()) {
-			if (String.valueOf(obj.value).equals(passedValue.toUpperCase())) {
-				return obj;
-			}
-		}
-		return null;
-	}
 }

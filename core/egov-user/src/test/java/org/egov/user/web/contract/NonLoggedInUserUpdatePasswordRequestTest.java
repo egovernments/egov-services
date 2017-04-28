@@ -10,9 +10,8 @@ public class NonLoggedInUserUpdatePasswordRequestTest {
 	@Test
 	public void test_should_map_from_contract_to_domain() {
 		final NonLoggedInUserUpdatePasswordRequest request = NonLoggedInUserUpdatePasswordRequest.builder()
-				.existingPassword("existingPassword")
 				.newPassword("newPassword")
-				.mobileNumber("mobileNumber")
+				.userName("userName")
 				.otpReference("otpReference")
 				.tenantId("tenant")
 				.build();
@@ -20,8 +19,7 @@ public class NonLoggedInUserUpdatePasswordRequestTest {
 		final org.egov.user.domain.model.NonLoggedInUserUpdatePasswordRequest domain = request.toDomain();
 
 		assertNotNull(domain);
-		assertEquals("existingPassword", domain.getExistingPassword());
-		assertEquals("mobileNumber", domain.getMobileNumber());
+		assertEquals("userName", domain.getUserName());
 		assertEquals("newPassword", domain.getNewPassword());
 		assertEquals("otpReference", domain.getOtpReference());
 		assertEquals("tenant", domain.getTenantId());

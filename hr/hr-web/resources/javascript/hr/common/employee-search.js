@@ -56,6 +56,14 @@ class EmployeeSearch extends React.Component {
         console.log(e);
       }
   }
+  else {
+    _this.setState({
+      searchSet: {
+        ..._this.state.searchSet,
+        name: ""
+      }
+    })
+  }
 }
 
 componentWillUpdate() {

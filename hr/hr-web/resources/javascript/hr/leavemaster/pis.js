@@ -532,7 +532,7 @@ class PersonalInform extends React.Component {
                                 <label for=""> Calendar Year</label> <span className="text-danger">*</span>
                             </div>
                             <div className="col-sm-6">
-                            <div className="text-no-ui">
+                              <div className="styled-select">
                                 <select id="calendarYear" name="calendarYear" value={calendarYear} onChange={(e)=>{
                                   handleChange(e,"calendarYear")
                                 }} required>

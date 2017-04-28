@@ -91,6 +91,13 @@ class SearchLeaveApplication extends React.Component {
       catch (e){
         console.log(e);
       }
+  } else {
+    _this.setState({
+      searchSet: {
+        ..._this.state.searchSet,
+        name: ""
+      }
+    })
   }
 }
 

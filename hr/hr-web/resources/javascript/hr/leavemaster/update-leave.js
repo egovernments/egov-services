@@ -184,6 +184,7 @@ class ApplyLeave extends React.Component {
                departmentId:this.getPrimaryAssigmentDep(obj,"department")
 
             })
+
     }
 
     getPrimaryAssigmentDep(obj,type)

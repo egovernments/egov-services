@@ -1,3 +1,4 @@
+var flag = 0;
 class SearchLeaveApplication extends React.Component {
   constructor(props) {
     super(props);
@@ -61,32 +62,38 @@ class SearchLeaveApplication extends React.Component {
       })
   }
 
-  handleBlur(e) {
-    var _this = this;
-
-    if (e.target.value) {
-        try {
-            var code = e.target.value;
-            //Make get employee call
-            var obj = commonApiPost("hr-employee", "employees", "_search", { code, tenantId }).responseJSON["Employee"][0];
-            _this.setState({
-                searchSet: {
-                    ..._this.state.searchSet,
-                    name: obj.name
-                }
-            })
-        } catch (e) {
-            console.log(e);
-        }
-    } else {
-      this.setState({
-        searchSet: {
-          ...this.state.searchSet,
-          name: ""
-        }
-      })
+  componentWillUpdate() {
+    if(flag == 1) {
+      flag = 0;
+      $('#employeeTable').dataTable().fnDestroy();
     }
   }
+
+  handleBlur(e) {
+    var _this = this;
+      if (e.target.value) {
+          try {
+              var code = e.target.value;
+              //Make get employee call
+              var obj = commonApiPost("hr-employee", "employees", "_search", { code, tenantId }).responseJSON["Employee"][0];
+              _this.setState({
+                  searchSet: {
+                      ..._this.state.searchSet,
+                      name: obj.name
+                  }
+              })
+          } catch (e) {
+              console.log(e);
+          }
+      } else {
+        _this.setState({
+          searchSet: {
+            ..._this.state.searchSet,
+            name: ""
+          }
+        })
+      }
+    }
 
 
 

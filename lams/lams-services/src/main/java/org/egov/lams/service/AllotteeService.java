@@ -70,6 +70,7 @@ public class AllotteeService {
 		userSearchRequest.setName(allottee.getName());
 		userSearchRequest.setEmailId(allottee.getEmailId());
 		userSearchRequest.setMobileNumber(allottee.getMobileNumber());
+		userSearchRequest.setTenantId(allottee.getTenantId());
 		logger.info("url for allottee api post call :: " + url
 				+ "the request object for isAllotteeExist is userSearchRequest ::: " + userSearchRequest);
 		AllotteeResponse allotteeResponse = callAllotteSearch(url, userSearchRequest);

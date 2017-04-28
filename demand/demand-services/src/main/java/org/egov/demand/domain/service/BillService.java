@@ -28,7 +28,7 @@ public class BillService {
 		egBill.setEgDemand(demandId);
 		egBill.setModule(billInfo.getModuleName());
 		
-		EgBillType egBillType = billTypeRepository.findByName(billInfo.getBillType());
+		EgBillType egBillType = billTypeRepository.findByNameAndTenantId(billInfo.getBillType(), billInfo.getTenantId());
 		LOGGER.info(" BillService  the egbilltype response object from findbnamemethod call ::"+egBillType);
 		egBill.setEgBillType(egBillType);
 		egBill.setUserId(1l);

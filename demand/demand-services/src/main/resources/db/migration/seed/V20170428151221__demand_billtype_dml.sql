@@ -1,0 +1,2 @@
+insert into eg_bill_type (id, name, code, create_date, modified_date, tenantid) values (nextval('seq_eg_bill_type'), 'MANUAL','MANUAL', now(), now(), 'default');
+insert into eg_bill_type (id, name, code, create_date, modified_date, tenantid) values (nextval('seq_eg_bill_type'), 'AUTO','AUTO', now(), now(), 'default');

@@ -77,6 +77,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -157,13 +158,15 @@ public class EmployeeController {
         @PostMapping("_loggedinemployee")
         @ResponseBody
         public ResponseEntity<?> loggedInEmployee(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
-                        BindingResult modelAttributeBindingResult,
-                        BindingResult requestBodyBindingResult) {
+                        BindingResult requestBodyBindingResult,
+                        @RequestParam(value = "tenantId", required = true) String tenantId,
+                        BindingResult modelAttributeBindingResult) {
                 RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
                 List<Long> ids = new ArrayList<>();
                 ids.add(requestInfo.getUserInfo().getId());
                 EmployeeCriteria employeeCriteria = new EmployeeCriteria();
                 employeeCriteria.setId(ids);
+                employeeCriteria.setTenantId(tenantId);
 
                 ResponseEntity<?> errorResponseEntity = requestValidator.validateSearchRequest(requestInfo,
                                 modelAttributeBindingResult, requestBodyBindingResult);

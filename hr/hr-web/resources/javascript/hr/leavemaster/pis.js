@@ -11,7 +11,8 @@ const defaultState = {
             noOfLeave: "",
             calendarYear: new Date().getFullYear()
         },
-        isSearchClicked: false
+        isSearchClicked: false,
+        readonly: false
 };
 const callAjax = (type, empArr, cb) => {
     if(type == "update") {
@@ -82,11 +83,16 @@ class PersonalInform extends React.Component {
     this.search = this.search.bind(this);
     this.addOrUpdate = this.addOrUpdate.bind(this);
     this.handleChangeSrchRslt = this.handleChangeSrchRslt.bind(this);
+    this.handleBlur = this.handleBlur.bind(this);
   }
 
 
   componentDidMount(){
-
+    if(getUrlVars()["type"] == "view") {
+      this.setState({
+        readonly: true
+      })
+    }
   }
 
   search(e) {
@@ -109,7 +115,6 @@ class PersonalInform extends React.Component {
             departmentId: department || null,
             designationId: designation || null,
             code: employee || null,
-            employeeName: name || null,
             pageSize: 500
         }).responseJSON["Employee"] || [];
     } catch(e) {
@@ -142,6 +147,7 @@ class PersonalInform extends React.Component {
             name: _emps[i].name,
             employee: _emps[i].id,
             noOfDays: _noDays || "",
+            oldNoOfDays: _noDays || "",
             code: _emps[i].code,
             leaveId: _leaveId || "",
             lastModifiedDate: _lastModifiedDate || "",
@@ -161,7 +167,7 @@ class PersonalInform extends React.Component {
     var tempEmpsCreate = [], tempEmpsUpdate = [], _this = this;
 
     for(var i=0; i<this.state.employees.length; i++) {
-        if(this.state.employees[i].noOfDays) {
+        if(this.state.employees[i].noOfDays && this.state.employees[i].noOfDays != this.state.employees[i].oldNoOfDays) {
             var tmp = {
                 "id": this.state.employees[i].leaveId || null,
                 "employee": this.state.employees[i].employee,
@@ -315,17 +321,46 @@ class PersonalInform extends React.Component {
       }
   }
 
+  handleBlur(e) {
+    var _this = this;
+
+    if (e.target.value) {
+        try {
+            var code = e.target.value;
+            //Make get employee call
+            var obj = commonApiPost("hr-employee", "employees", "_search", { code, tenantId }).responseJSON["Employee"][0];
+            _this.setState({
+                searchSet: {
+                    ..._this.state.searchSet,
+                    name: obj.name
+                }
+            })
+        } catch (e) {
+            console.log(e);
+        }
+    } else {
+      this.setState({
+        searchSet: {
+          ...this.state.searchSet,
+          name: ""
+        }
+      })
+    }
+  }
+
   render() {
     let {
         handleChange,
         search,
         updateTable,
         addOrUpdate,
-        handleChangeSrchRslt
+        handleChangeSrchRslt,
+        handleBlur
     } = this;
     let {
         isSearchClicked,
-        employees
+        employees,
+        readonly
     } = this.state;
     let {
         name,
@@ -389,7 +424,7 @@ class PersonalInform extends React.Component {
                     <td data-label="code">{item.code}</td>
                     <td data-label="noOfDay">
                     <input type="number" id={item.id} name="noOfDays"  value={item.noOfDays}
-                      onChange={(e)=>{handleChangeSrchRslt(e, "noOfDays", index)}}/>
+                      onChange={(e)=>{handleChangeSrchRslt(e, "noOfDays", index)}} disabled={readonly}/>
                     </td>
                 </tr>
             );
@@ -420,7 +455,7 @@ class PersonalInform extends React.Component {
                         </div>
                         <div className="col-sm-6">
                             <input type="text" id="employee" name="employee" value={employee}
-                              onChange={(e)=>{handleChange(e,"employee")}}/>
+                              onChange={(e)=>{handleChange(e,"employee")}} onBlur={(e)=>{handleBlur(e)}}/>
                         </div>
                     </div>
                   </div>
@@ -431,7 +466,7 @@ class PersonalInform extends React.Component {
                           </div>
                           <div className="col-sm-6">
                               <input type="text" id="name" name="name" value={name}
-                                onChange={(e)=>{  handleChange(e,"name")}} />
+                                onChange={(e)=>{  handleChange(e,"name")}} disabled/>
                           </div>
                       </div>
                     </div>

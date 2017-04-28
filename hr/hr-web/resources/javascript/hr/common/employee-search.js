@@ -31,13 +31,11 @@ class EmployeeSearch extends React.Component {
       employees = [];
       console.log(e);
     }
-
+    flag = 1;
     this.setState({
       isSearchClicked:true,
       employees
     });
-    $('#employeeTable').dataTable().fnDestroy();
-
   }
   handleBlur(e) {
     var _this=this;

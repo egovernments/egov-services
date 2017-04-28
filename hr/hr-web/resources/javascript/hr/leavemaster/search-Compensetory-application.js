@@ -30,6 +30,7 @@ class SearchLeaveApplication extends React.Component {
     //call api call
     var employees=[];
     employees=commonApiPost("hr-employee","employees","_search",{tenantId,code,departmentId,designationId,pageSize:500},this.state.searchSet).responseJSON["Employee"] || [];
+    flag = 1;
     this.setState({
       isSearchClicked:true,
       employees,searchSet:{
@@ -40,7 +41,6 @@ class SearchLeaveApplication extends React.Component {
       designationId:"",
       employeeType:""}
     });
-    $('#employeeTable').dataTable().fnDestroy();
   }
 
 

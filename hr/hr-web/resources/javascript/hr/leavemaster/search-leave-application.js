@@ -1,4 +1,3 @@
-var flag = 0;
 class SearchLeaveApplication extends React.Component {
   constructor(props) {
     super(props);
@@ -29,6 +28,7 @@ class SearchLeaveApplication extends React.Component {
     //call api call
     var employees=[];
     employees=commonApiPost("hr-employee","employees","_search",{tenantId,code,departmentId,designationId,pageSize:500},this.state.searchSet).responseJSON["Employee"] || [];
+    flag = 1;
     this.setState({
       isSearchClicked:true,
       employees,searchSet:{
@@ -37,8 +37,7 @@ class SearchLeaveApplication extends React.Component {
       code:"",
       departmentId:"",
       designationId:""}
-    });
-    $('#employeeTable').dataTable().fnDestroy();
+    })
   }
 
 
@@ -63,32 +62,32 @@ class SearchLeaveApplication extends React.Component {
   }
 
   handleBlur(e) {
-    var _this=this;
+    var _this = this;
 
-    if(e.target.value) {
-      try{
-        var code = e.target.value;
-       //Make get employee call
-       var obj = commonApiPost("hr-employee","employees","_search",{code,tenantId}).responseJSON["Employee"][0];
-       console.log(obj);
-       _this.setState({
-         searchSet:{
-             ..._this.state.searchSet,
-             name:obj.name
-           }
-     })
+    if (e.target.value) {
+        try {
+            var code = e.target.value;
+            //Make get employee call
+            var obj = commonApiPost("hr-employee", "employees", "_search", { code, tenantId }).responseJSON["Employee"][0];
+            _this.setState({
+                searchSet: {
+                    ..._this.state.searchSet,
+                    name: obj.name
+                }
+            })
+        } catch (e) {
+            console.log(e);
+        }
+    } else {
+      this.setState({
+        searchSet: {
+          ...this.state.searchSet,
+          name: ""
+        }
+      })
+    }
   }
-      catch (e){
-        console.log(e);
-      }
-  }
-}
-componentWillUpdate() {
-  if(flag == 1) {
-    flag = 0;
-    $('#employeeTable').dataTable().fnDestroy();
-  }
-}
+
 
 
 
@@ -111,8 +110,7 @@ componentWillUpdate() {
             buttons: [
                      'copy', 'csv', 'excel', 'pdf', 'print'
              ],
-             ordering: false,
-             bDestroy: true
+             ordering: false
           });
       }
   }

@@ -232,8 +232,12 @@ public class AssetQueryBuilder {
 	}
 	
 	public String getInsertQuery(){
-		String INSERT_QUERY="INSERT into egasset_asset values"
-				+"(nextval('seq_egasset_asset'),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		String INSERT_QUERY="INSERT into egasset_asset "
+				+"(id,assetcategory,name,code,department,assetdetails,description,"
+				+ "dateofcreation,remarks,length,width,totalarea,modeofacquisition,status,tenantid,"
+				+ "zone,revenueward,street,electionward,doorno,pincode,locality,block,properties,createdby,"
+				+ "createddate,lastmodifiedby,lastmodifieddate,grossvalue,accumulateddepreciation,assetrefrance,version)"
+				+"values(nextval('seq_egasset_asset'),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		return INSERT_QUERY;
 	}
 

@@ -47,12 +47,12 @@ import java.util.Date;
 import java.util.List;
 
 import org.egov.asset.contract.AssetRequest;
-import org.egov.asset.contract.RequestInfo;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCriteria;
 import org.egov.asset.model.Location;
 import org.egov.asset.repository.builder.AssetQueryBuilder;
 import org.egov.asset.repository.rowmapper.AssetRowMapper;
+import org.egov.common.contract.request.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -112,7 +112,7 @@ public class AssetRepository {
 			 ObjectMapper objectMapper=new ObjectMapper();
 			 objectMapper.setSerializationInclusion(Include.NON_NULL);
 			 Asset asset2=new Asset();
-			 asset2.setProperties(asset.getProperties());
+			 asset2.setAssetAttributes(asset.getAssetAttributes());
 			 property = objectMapper.writeValueAsString(asset2);
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
@@ -131,14 +131,14 @@ public class AssetRepository {
 		status = asset.getStatus().toString();
 
 		Location location = asset.getLocationDetails();
-		
+	
 		Object[] obj = new Object[] {asset.getAssetCategory().getId(), asset.getName(), asset.getCode(),asset.getDepartment().getId(),
 				asset.getAssetDetails(), asset.getDescription(),asset.getDateOfCreation(), asset.getRemarks(), 
 				asset.getLength(),asset.getWidth(),asset.getTotalArea(),modeOfAcquisition,
 				status,asset.getTenantId(),location.getZone(),location.getRevenueWard(),location.getStreet(),
 				location.getElectionWard(),location.getDoorNo(),location.getPinCode(),location.getLocality(),location.getBlock(),
-				property,requestInfo.getRequesterId(), new Date(), requestInfo.getRequesterId(), new Date(),
-				asset.getGrossValue(),asset.getAccumulatedDepreciation()};
+				property,requestInfo.getUserInfo().getId(), new Date(), requestInfo.getUserInfo().getId(), new Date(),
+				asset.getGrossValue(),asset.getAccumulatedDepreciation(),asset.getAssetRefrance(),asset.getVersion()};
 		try{
 			 jdbcTemplate.update(query, obj);
 		} catch(Exception ex) {
@@ -159,7 +159,7 @@ public class AssetRepository {
 			 ObjectMapper objectMapper=new ObjectMapper();
 			 objectMapper.setSerializationInclusion(Include.NON_NULL);
 			 Asset asset2=new Asset();
-			 asset2.setProperties(asset.getProperties());
+			 asset2.setAssetAttributes(asset.getAssetAttributes());
 			 property = objectMapper.writeValueAsString(asset2);
 		
 		} catch (JsonProcessingException e) {
@@ -194,8 +194,6 @@ public class AssetRepository {
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}
-		
-		
 		return asset;
 	}
 }

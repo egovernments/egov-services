@@ -2,6 +2,8 @@ package org.egov.asset.model;
 
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+
 import org.egov.asset.model.enums.Status;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,7 +32,7 @@ public class AssetCriteria {
 	private Long electionWard;
 	private String doorNo;
 	private Long pinCode;
-	
+	@NotNull
 	private String tenantId;
 	private Long size;
 	private Long offset;

@@ -102,7 +102,7 @@ public class AssetRowMapper implements RowMapper<Asset> {
 			e.printStackTrace();
 		}
 		
-		asset.setProperties(asset2.getProperties());
+		asset.setAssetAttributes(asset2.getAssetAttributes());
 		
 		Department department=new Department();
 		department.setId((Long)rs.getObject("department"));

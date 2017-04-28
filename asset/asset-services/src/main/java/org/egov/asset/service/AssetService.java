@@ -43,6 +43,7 @@ package org.egov.asset.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.contract.AssetRequest;
 import org.egov.asset.contract.AssetResponse;
 import org.egov.asset.model.Asset;
@@ -64,6 +65,9 @@ public class AssetService {
 	@Autowired
 	private AssetProducer assetProducer;
 	
+	@Autowired
+	private ApplicationProperties applicationProperties;
+	
 	public List<Asset> getAssets(AssetCriteria searchAsset) {
 		System.out.println("AssetService");
 		return assetRepository.findForCriteria(searchAsset);
@@ -77,7 +81,7 @@ public class AssetService {
 		return assetResponse;
 	}
 	
-	public AssetResponse createAsync(String topic,String key,AssetRequest assetRequest) {
+	public AssetResponse createAsync(AssetRequest assetRequest) {
 		
 		assetRequest.getAsset().setCode(assetRepository.getAssetCode());
 		
@@ -92,7 +96,7 @@ public class AssetService {
 			e.printStackTrace();
 		}
 		
-		assetProducer.sendMessage(topic, key, value);
+		assetProducer.sendMessage(applicationProperties.getCreateAssetTopicName(),"save-asset", value);
 		
 		List<Asset> assets = new ArrayList<Asset>();
 		assets.add(assetRequest.getAsset());

@@ -11,18 +11,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.web.indexer.config.IndexerProperties;
-import org.egov.web.indexer.contract.Assignment;
-import org.egov.web.indexer.contract.Boundary;
-import org.egov.web.indexer.contract.ComplaintType;
-import org.egov.web.indexer.contract.Department;
-import org.egov.web.indexer.contract.Designation;
-import org.egov.web.indexer.contract.Employee;
-import org.egov.web.indexer.contract.ServiceRequest;
-import org.egov.web.indexer.repository.BoundaryRepository;
-import org.egov.web.indexer.repository.CityRepository;
-import org.egov.web.indexer.repository.ComplaintTypeRepository;
-import org.egov.web.indexer.repository.EmployeeRepository;
+import org.egov.web.indexer.contract.*;
+import org.egov.web.indexer.repository.*;
 import org.egov.web.indexer.repository.contract.ComplaintIndex;
+import org.hibernate.validator.constraints.Mod10Check;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -53,8 +45,11 @@ public class ComplaintAdapterTest {
 
 	@InjectMocks
 	private ComplaintAdapter complaintAdapter;
-	
-     public static String toDefaultDateTimeFormat(final Date date) {
+
+	@Mock
+    private TenantRepository tenantRepository;
+
+    public static String toDefaultDateTimeFormat(final Date date) {
          return sdf.format(date);
      }
 
@@ -93,6 +88,7 @@ public class ComplaintAdapterTest {
 		serviceRequest.setLat(0.0);
 		serviceRequest.setLng(0.0);
 		serviceRequest.setComplaintTypeCode("AOS");
+		serviceRequest.setCrn("AB-123");
 		Map<String, String> values = serviceRequest.getValues();
 		values.put("receivingMode", "");
 		values.put("userType", "");
@@ -108,6 +104,7 @@ public class ComplaintAdapterTest {
 		when(complaintTypeRepository.fetchComplaintTypeByCode("AOS","ap.public")).thenReturn(expectedComplaintType);
 		when(boundaryRepository.fetchBoundaryById(Long.valueOf(values.get("locationId")),"ap.public")).thenReturn(expectedBoundary);
 		when(boundaryRepository.fetchBoundaryById(Long.valueOf(values.get("child_location_id")),"ap.public")).thenReturn(expectedBoundary);
+		when(tenantRepository.fetchTenantByCode("ap.public")).thenReturn(getCity());
 		//when(cityRepository.fetchCityById(Long.valueOf(values.get("tenantId")))).thenReturn(expectedCityContent);
 		when(employeeRepository.fetchEmployeeByPositionId(Long.valueOf(values.get("assignment_id")), new LocalDate(),
 				serviceRequest.getTenantId())).thenReturn(expectedAssignment);
@@ -140,6 +137,16 @@ public class ComplaintAdapterTest {
 		city.setRegionName("Kurnool Region");
 		return city;
 	}*/
+
+	private City getCity(){
+	    City city=new City();
+	    city.setCode("KC");
+	    city.setDistrictCode("Kurnool");
+	    city.setDistrictName("kurnool");
+	    city.setName("kurnool");
+	    city.setId("kurnool");
+	    return  city;
+    }
 
 	private Employee getExpectedEmployee() {
 		Employee employee = new Employee();

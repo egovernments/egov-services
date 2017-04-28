@@ -213,6 +213,7 @@ public class PaymentService {
 			RequestInfo requestInfo, Map<String, String> purpose) {
 		final List<BillDetailInfo> billDetails = new ArrayList<>();
 
+		LOGGER.info("paymentservice demand detail ::"+demandDetail);
 		try {
 			BillDetailInfo billdetail = new BillDetailInfo();
 			// TODO: Fix me: As per the rules for the order no.

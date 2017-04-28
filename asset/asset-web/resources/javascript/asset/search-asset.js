@@ -1,3 +1,4 @@
+var flag = 0;
 class SearchAsset extends React.Component {
   constructor(props) {
     super(props);
@@ -27,31 +28,37 @@ class SearchAsset extends React.Component {
 
   search(e) {
     e.preventDefault();
-    //call api call
-    var list=commonApiPost("asset-services","assets","_search",this.state.searchSet).responseJSON["Assets"];
-     //console.log(commonApiPost("asset-services","assets","_search",this.state.searchSet).responseJSON["Assets"]);
-    this.setState({
-      isSearchClicked:true,
-      list
-    })
-
-    // $('#agreementTable').DataTable().draw();
-    // console.log($('#agreementTable').length);
-
+    try {
+      //call api call
+      var list=commonApiPost("asset-services","assets","_search",this.state.searchSet).responseJSON["Assets"];
+      flag = 1;
+      this.setState({
+        isSearchClicked:true,
+        list
+      })
+    } catch(e) {
+      console.log(e);
+    }
   }
-  componentDidUpdate(prevProps, prevState)
-  {
+
+  componentWillUpdate() {
+    if(flag == 1) {
+      flag = 0;
+      $('#agreementTable').dataTable().fnDestroy();
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
       if (prevState.list.length!=this.state.list.length) {
-          // $('#agreementTable').DataTable().draw();
-          // alert(prevState.list.length);
-          // alert(this.state.list.length);
-          // alert('updated');
           $('#agreementTable').DataTable({
             dom: 'Bfrtip',
             buttons: [
                      'copy', 'csv', 'excel', 'pdf', 'print'
              ],
-             ordering: false
+             ordering: false,
+             language: {
+                "emptyTable": "No Records"
+             }
           });
       }
   }

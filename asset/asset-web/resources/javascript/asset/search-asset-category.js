@@ -1,3 +1,4 @@
+var flag = 0;
 class SearchAssetCategory extends React.Component {
   constructor(props) {
     super(props);
@@ -10,48 +11,50 @@ class SearchAssetCategory extends React.Component {
 
   }
 
-  search(e)
-  {
+  search(e) {
     e.preventDefault();
-    //call api call
-     var list=commonApiPost("asset-services","assetCategories","_search",this.state.searchSet).responseJSON["AssetCategory"];
-    //  console.log(commonApiPost("asset-services","","_search",this.state.searchSet).responseJSON["Assets"]);
-    this.setState({
-      isSearchClicked:true,
-      list
-    })
-
-    // $('#agreementTable').DataTable().draw();
-    // console.log($('#agreementTable').length);
-
+    try {
+      //call api call
+      var list = commonApiPost("asset-services","assetCategories","_search",this.state.searchSet).responseJSON["AssetCategory"];
+      flag = 1;
+      this.setState({
+        isSearchClicked:true,
+        list
+      })
+    } catch(e) {
+      console.log(e);
+    }
   }
 
   close(){
-      // widow.close();
       open(location, '_self').close();
   }
-  componentDidMount()
-  {
-    //console.log(commonApiGet("asset-services","","GET_STATUS",{}).responseJSON);
+
+  componentDidMount() {
      this.setState({
       asset_category_type
     })
   }
 
+  componentWillUpdate() {
+    if(flag == 1) {
+      flag = 0;
+      $('#agreementTable').dataTable().fnDestroy();
+    }
+  }
 
-  componentDidUpdate(prevProps, prevState)
-  {
+  componentDidUpdate(prevProps, prevState) {
       if (prevState.list.length!=this.state.list.length) {
-          // $('#agreementTable').DataTable().draw();
-          // alert(prevState.list.length);
-          // alert(this.state.list.length);
-          // alert('updated');
           $('#agreementTable').DataTable({
             dom: 'Bfrtip',
             buttons: [
                      'copy', 'csv', 'excel', 'pdf', 'print'
              ],
-             ordering: false
+             ordering: false,
+             bDestroy: true,
+             language: {
+                "emptyTable": "No Records"
+             }
           });
       }
   }
@@ -120,9 +123,7 @@ class SearchAssetCategory extends React.Component {
       }
       else {
          return (
-             <tr>
-                 <td colSpan="6">No records</td>
-             </tr>
+             ""
          )
      }
 }

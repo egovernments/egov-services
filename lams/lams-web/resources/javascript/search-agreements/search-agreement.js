@@ -1,3 +1,4 @@
+var flag = 0;
 class AgreementSearch extends React.Component {
   constructor(props) {
     super(props);
@@ -16,29 +17,26 @@ class AgreementSearch extends React.Component {
     this.search=this.search.bind(this);
   }
 
-  search(e)
-  {
+  search(e) {
     e.preventDefault();
-    //call api call
-    var agreements=commonApiPost("lams-services","agreements","_search",this.state.searchSet).responseJSON["Agreements"] ||[];
-    // console.log(agreements);
-    this.setState({
-      isSearchClicked:true,
-      agreements
-    })
+    try {
+      //call api call
+      var agreements = commonApiPost("lams-services", "agreements", "_search", this.state.searchSet).responseJSON["Agreements"] ||[];
+      flag = 1;
+      this.setState({
+        isSearchClicked: true,
+        agreements
+      })
+    } catch(e) {
+      console.log(e);
+    }
+  }
 
-    // $('#agreementTable').DataTable().draw();
-    // console.log($('#agreementTable').length);
+  componentWillMount() {
 
   }
 
-  componentWillMount()
-  {
-
-  }
-
-  componentDidMount()
-  {
+  componentDidMount() {
     let _this = this;
     this.setState({
       assetCategories,
@@ -83,13 +81,15 @@ class AgreementSearch extends React.Component {
     });
   }
 
-  componentDidUpdate(prevProps, prevState)
-  {
-      if (prevState.agreements.length!=this.state.agreements.length) {
-          // $('#agreementTable').DataTable().draw();
-          // alert(prevState.agreements.length);
-          // alert(this.state.agreements.length);
-          // alert('updated');
+  componentWillUpdate() {
+    if(flag == 1) {
+      flag = 0;
+      $('#agreementTable').dataTable().fnDestroy();
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+      if (prevState.agreements.length != this.state.agreements.length) {
           $('#agreementTable').DataTable({
             dom: 'Bfrtip',
             buttons: [
@@ -267,16 +267,18 @@ class AgreementSearch extends React.Component {
 
     }
 
-    // const showCancelNEvict = function(status) {
-    //   if(status == "APPROVED") {
-    //     return (
-    //       <option value="cancel">Cancel Agreement</option>
-    //       <option value="eviction">Evict Agreement</option>
-    //     )
-    //   }  else {
-    //     return;
-    //   }
-    // }
+    /*const showCancelNEvict = function(status) {
+      if(status == "APPROVED") {
+        var values = [{label: "Cancel Agreement", value: "cancel"}, {label: "Evict Agreement", value: "eviction"}];
+        return values.map(function(val, ind) {
+          return (
+            <option value={val.value}>{val.label}</option>
+          )
+        })
+      }  else {
+        return;
+      }
+    }*/
 
     const getOption = function(isShopOrLand, item) {
         if (isShopOrLand) {
@@ -288,7 +290,6 @@ class AgreementSearch extends React.Component {
                 <option value="view">View</option>
                 <option value="renew">Renew</option>
                 <option value="collTax">Collect Tax</option>
-
             </select>
           )
 
@@ -300,7 +301,6 @@ class AgreementSearch extends React.Component {
                 <option value="">Select Action</option>
                 <option value="view">View</option>
                 <option value="collTax">Collect Tax</option>
-
             </select>
           )
 

@@ -1,3 +1,4 @@
+var flag = 1;
 class AssetSearch extends React.Component {
   constructor(props) {
     super(props);
@@ -13,32 +14,33 @@ class AssetSearch extends React.Component {
     this.search=this.search.bind(this);
   }
 
-  search(e)
-  {
+  search(e) {
     e.preventDefault();
-    //call api call
-     var list=commonApiPost("asset-services","assets","_search",this.state.searchSet).responseJSON["Assets"] ||[];
+    try {
+      //call api call
+      var list=commonApiPost("asset-services","assets","_search",this.state.searchSet).responseJSON["Assets"] ||[];
+      flag = 1;
       this.setState({
-      isSearchClicked:true,
-      list
-    })
+        isSearchClicked:true,
+        list
+      })
+    } catch(e) {
+      console.log(e);
+    }
+  }
 
-    // $('#agreementTable').DataTable().draw();
-    // console.log($('#agreementTable').length);
+  componentWillMount() {
 
   }
 
-  componentWillMount()
-  {
-
-
+  componentWillUpdate() {
+    if(flag == 1) {
+      flag = 0;
+      $('#agreementTable').dataTable().fnDestroy();
+    }
   }
 
-
-
-  componentDidMount()
-  {
-
+  componentDidMount() {
      this.setState({
       assetCategories,
       locality,
@@ -46,13 +48,9 @@ class AssetSearch extends React.Component {
     })
   }
 
-  componentDidUpdate(prevProps, prevState)
-  {
+
+  componentDidUpdate(prevProps, prevState) {
       if (prevState.list.length!=this.state.list.length) {
-          // $('#agreementTable').DataTable().draw();
-          // alert(prevState.list.length);
-          // alert(this.state.list.length);
-          // alert('updated');
           $('#agreementTable').DataTable({
             dom: 'Bfrtip',
             buttons: [
@@ -62,36 +60,23 @@ class AssetSearch extends React.Component {
              bDestroy: true
           });
       }
-      // else {
-      //   $('#agreementTable').DataTable({
-      //     dom: 'Bfrtip',
-      //     buttons: [
-      //              'copy', 'csv', 'excel', 'pdf', 'print'
-      //      ],
-      //      ordering: false
-      //   });
-      // }
   }
 
-  handleChange(e,name)
-  {
-
+  handleChange(e,name) {
       this.setState({
           searchSet:{
               ...this.state.searchSet,
               [name]:e.target.value
           }
       })
-
   }
 
-  handleSelectChange(type,id,category)
-  {
+  handleSelectChange(type,id,category) {
     console.log(type);
     console.log(category);
     if (type === "create") {
-                  window.open("app/agreements/new.html?type="+category+"&assetId="+id, "fs", "fullscreen=yes")
-             }
+      window.open("app/agreements/new.html?type="+category+"&assetId="+id, "fs", "fullscreen=yes")
+    }
 
     // window.open("app/agreements/new.html?type="+category+"&assetId="+id, "fs", "fullscreen=yes")
   }

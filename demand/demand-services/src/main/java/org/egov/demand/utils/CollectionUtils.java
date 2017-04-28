@@ -55,7 +55,7 @@ public class CollectionUtils {
                         bill.getTotalAmount(), bill.getMinAmtPayable());
                 billPayeeDetList.add(billPayeeDet);
                 billInfoImpl.setPayees(billPayeeDetList);
-                billInfoImpl.setCallbackForApportioning(bill.getCallBackForApportion() == 'Y' ? true : false);
+                billInfoImpl.setCallbackForApportioning(bill.getCallBackForApportion() == true ? true : false);
                 boolean isActualDemand = false;
 
                 for (EgBillDetails egBillDet : bill.getEgBillDetails()) {

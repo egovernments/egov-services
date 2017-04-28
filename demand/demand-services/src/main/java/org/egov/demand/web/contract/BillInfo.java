@@ -54,7 +54,7 @@ public class BillInfo {
 	private Double minAmountPayable=0d;
 	private String consumerCode = null;
 	private String displayMessage = null;
-	private Character callbackForApportion = null;
+	private Boolean callbackForApportion = null;
 	private String emailId = null;
 	private String consumerType = null;
 	private Double totalAmount = null;

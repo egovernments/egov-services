@@ -158,7 +158,7 @@ public class PaymentService {
 
 			billInfo.setConsumerCode(StringUtils.isBlank(agreement.getAgreementNumber())
 					? agreement.getAcknowledgementNumber() : agreement.getAgreementNumber());
-			billInfo.setCallbackForApportion('N');
+			billInfo.setCallbackForApportion(false);
 			LOGGER.info("after billInfo.setConsumerCode>>>>>>>" + billInfo.getConsumerCode());
 
 			billInfo.setEmailId(agreement.getAllottee().getEmailId());

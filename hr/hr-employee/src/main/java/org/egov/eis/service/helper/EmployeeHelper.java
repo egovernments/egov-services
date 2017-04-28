@@ -60,14 +60,10 @@ import org.egov.eis.model.TechnicalQualification;
 import org.egov.eis.model.User;
 import org.egov.eis.repository.EmployeeRepository;
 import org.egov.eis.web.contract.EmployeeRequest;
-import org.egov.eis.web.contract.EmployeeResponse;
 import org.egov.eis.web.contract.RequestInfo;
-import org.egov.eis.web.contract.ResponseInfo;
 import org.egov.eis.web.contract.UserRequest;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 @Component

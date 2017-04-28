@@ -40,6 +40,7 @@
 
 package org.egov.eis.service.helper;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,7 +54,7 @@ public class EmployeeUserMapper {
 
 	public List<EmployeeInfo> mapUsersWithEmployees(List<EmployeeInfo> employeeInfoList, List<User> userInfoList) {
 		Map<Long, User> userInfoMap = new HashMap<Long, User>();
-
+		List<EmployeeInfo> finalEmployeeList = new ArrayList<EmployeeInfo>();
 		System.err.println("userInfoList inside EmployeeUserMapper: " + userInfoList);
 
 		if (userInfoList != null)
@@ -75,8 +76,9 @@ public class EmployeeUserMapper {
 					employeeInfo.setAadhaarNumber(userInfo.getAadhaarNumber());
 					employeeInfo.setType(userInfo.getType());
 					employeeInfo.setActive(userInfo.getActive());
+					finalEmployeeList.add(employeeInfo);
 				}
 			}
-		return employeeInfoList;
+		return finalEmployeeList;
 	}
 }

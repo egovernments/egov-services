@@ -181,8 +181,8 @@ public class EmployeeService {
 		LOGGER.debug("Employee ids " + ids);
 		List<User> usersList = userService.getUsers(ids, employeeCriteria.getTenantId(), requestInfo);
 		LOGGER.debug("userService: " + usersList);
-		employeeUserMapper.mapUsersWithEmployees(employeeInfoList, usersList);
-
+		employeeInfoList = employeeUserMapper.mapUsersWithEmployees(employeeInfoList, usersList);
+		System.err.println("employeeInfoList size inside getEmployees: " + employeeInfoList.size());
 		if (!ids.isEmpty()) {
 			List<EmployeeDocument> employeeDocuments = employeeRepository.getDocumentsForListOfEmployeeIds(ids,
 					employeeCriteria.getTenantId());

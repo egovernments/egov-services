@@ -55,8 +55,6 @@ public class EmployeeUserMapper {
 	public List<EmployeeInfo> mapUsersWithEmployees(List<EmployeeInfo> employeeInfoList, List<User> userInfoList) {
 		Map<Long, User> userInfoMap = new HashMap<Long, User>();
 		List<EmployeeInfo> finalEmployeeList = new ArrayList<EmployeeInfo>();
-		System.err.println("userInfoList inside EmployeeUserMapper: " + userInfoList);
-
 		if (userInfoList != null)
 			for (User userInfo : userInfoList) {
 				userInfoMap.put(userInfo.getId(), userInfo);
@@ -79,15 +77,6 @@ public class EmployeeUserMapper {
 					finalEmployeeList.add(employeeInfo);
 				}
 			}
-		System.err.println("employeeInfoList size inside EmployeeUserMapper: " + employeeInfoList.size());
-		employeeInfoList = new ArrayList<EmployeeInfo>();
-		employeeInfoList.addAll(finalEmployeeList);
-		
-		System.err.println("userInfoList size inside EmployeeUserMapper: " + userInfoList.size());
-		
-		System.err.println("finalEmployeeList size inside EmployeeUserMapper: " + finalEmployeeList.size());
-		
-		System.err.println("employeeInfoList size inside EmployeeUserMapper: " + employeeInfoList.size());
-		return employeeInfoList;
+		return finalEmployeeList;
 	}
 }

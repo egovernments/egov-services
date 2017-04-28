@@ -40,7 +40,7 @@
 
 package org.egov.asset.exception;
 
-import org.egov.asset.contract.ResponseInfo;
+import org.egov.common.contract.response.ResponseInfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

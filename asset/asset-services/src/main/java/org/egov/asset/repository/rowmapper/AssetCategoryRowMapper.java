@@ -40,7 +40,7 @@ public class AssetCategoryRowMapper implements RowMapper<AssetCategory>{
 		}
 		
 		if(obj!=null) 
-		assetCategory.setCustomFields(obj.getCustomFields());
+		assetCategory.setAssetFieldsDefination(obj.getAssetFieldsDefination());
 		
 		assetCategory.setDepreciationExpenseAccount((Long)rs.getObject("depreciationexpenseaccount"));
 		assetCategory.setDepreciationMethod(DepreciationMethod.fromValue(rs.getString("depreciationmethod")));
@@ -51,7 +51,8 @@ public class AssetCategoryRowMapper implements RowMapper<AssetCategory>{
 		assetCategory.setParent((Long)rs.getObject("parentid"));
 		assetCategory.setRevaluationReserveAccount((Long)rs.getObject("revaluationreserveaccount"));
 		assetCategory.setUnitOfMeasurement((Long)rs.getObject("unitofmeasurement"));
-		
+		assetCategory.setIsAssetAllow(rs.getBoolean("isassetallow"));
+		assetCategory.setVersion(rs.getString("version"));
 		return assetCategory;
 	}
 

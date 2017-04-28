@@ -6,11 +6,11 @@ import java.util.Date;
 import java.util.List;
 
 import org.egov.asset.contract.AssetCategoryRequest;
-import org.egov.asset.contract.RequestInfo;
 import org.egov.asset.model.AssetCategory;
 import org.egov.asset.model.AssetCategoryCriteria;
 import org.egov.asset.repository.builder.AssetCategoryQueryBuilder;
 import org.egov.asset.repository.rowmapper.AssetCategoryRowMapper;
+import org.egov.common.contract.request.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -66,7 +66,7 @@ public class AssetCategoryRepository {
 		mapper.setSerializationInclusion(Include.NON_NULL);
 		
 		AssetCategory assetCategory2=new AssetCategory();
-		assetCategory2.setCustomFields(assetCategory.getCustomFields());
+		assetCategory2.setAssetFieldsDefination(assetCategory.getAssetFieldsDefination());
 		
 		String customFields = null;
 		String assetCategoryType = null;
@@ -85,11 +85,12 @@ public class AssetCategoryRepository {
 			e.printStackTrace();
 		}
 		
-		//TODO depreciationrate as of now hardcoded as  3L
+		//TODO depreciationrate as of now hardcoded as null
 		Object[] obj = new Object[] {assetCategory.getName(), assetCategory.getCode(), assetCategory.getParent(),
-				assetCategoryType, depreciationMethod,3L, assetCategory.getAssetAccount(), assetCategory.getAccumulatedDepreciationAccount(),
+				assetCategoryType, depreciationMethod,null, assetCategory.getAssetAccount(), assetCategory.getAccumulatedDepreciationAccount(),
 				assetCategory.getRevaluationReserveAccount(), assetCategory.getDepreciationExpenseAccount(), assetCategory.getUnitOfMeasurement(),
-				customFields, assetCategory.getTenantId(), requestInfo.getMsgId(), new Date(), requestInfo.getMsgId(), new Date()};
+				customFields, assetCategory.getTenantId(), requestInfo.getUserInfo().getId(), new Date(), requestInfo.getUserInfo().getId(), new Date(),
+				assetCategory.getIsAssetAllow(),assetCategory.getVersion()};
 
 		try {
 			 jdbcTemplate.update(queryStr, obj);

@@ -87,7 +87,20 @@
 			<artifactId>spring-kafka</artifactId>
 			<version>1.1.2.RELEASE</version><!--$NO-MVN-MAN-VER$-->
 		</dependency>
+		<dependency>
+            <groupId>org.egov.services</groupId>
+            <artifactId>services-common</artifactId>
+            <version>0.6.0</version>
+        </dependency>
 	</dependencies>
+	
+	<repositories>
+        <repository>
+            <id>repo.egovernments.org</id>
+            <name>eGov ERP Releases Repository</name>
+            <url>http://repo.egovernments.org/nexus/content/repositories/releases/</url>
+        </repository>
+    </repositories>
 
 	<build>
 		<plugins>

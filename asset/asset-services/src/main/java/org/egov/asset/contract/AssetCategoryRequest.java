@@ -3,6 +3,7 @@ package org.egov.asset.contract;
 import javax.validation.Valid;
 
 import org.egov.asset.model.AssetCategory;
+import org.egov.common.contract.request.RequestInfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

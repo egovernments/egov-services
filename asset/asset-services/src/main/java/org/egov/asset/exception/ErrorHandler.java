@@ -1,7 +1,7 @@
 package org.egov.asset.exception;
 
-import org.egov.asset.contract.ResponseInfo;
 import org.egov.asset.web.wrapperfactory.ResponseInfoFactory;
+import org.egov.common.contract.response.ResponseInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

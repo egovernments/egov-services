@@ -103,8 +103,9 @@ public class AssetCategoryQueryBuilder {
 	public String getInsertQuery(){
 		String INSERT_QUERY="INSERT into egasset_assetcategory "
 	+"(id,name,code,parentid,assetcategorytype,depreciationmethod,depreciationrate,assetaccount,accumulateddepreciationaccount,"
-	+ "revaluationreserveaccount,depreciationexpenseaccount,unitofmeasurement,customfields,tenantid,createdby,createddate,lastmodifiedby,lastmodifieddate)"
-	+ "values(nextval('seq_egasset_assetcategory'),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+	+ "revaluationreserveaccount,depreciationexpenseaccount,unitofmeasurement,customfields,tenantid,createdby,createddate,"
+	+ "lastmodifiedby,lastmodifieddate,isassetallow,version)"
+	+ "values(nextval('seq_egasset_assetcategory'),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		return INSERT_QUERY;
 	}
 }

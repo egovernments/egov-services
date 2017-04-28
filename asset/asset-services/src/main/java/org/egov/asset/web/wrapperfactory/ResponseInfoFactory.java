@@ -40,7 +40,7 @@
 
 package org.egov.asset.web.wrapperfactory;
 
-import org.egov.asset.contract.ResponseInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestHeader;

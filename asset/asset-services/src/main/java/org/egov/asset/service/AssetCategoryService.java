@@ -4,6 +4,7 @@ package org.egov.asset.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.contract.AssetCategoryRequest;
 import org.egov.asset.contract.AssetCategoryResponse;
 import org.egov.asset.model.AssetCategory;
@@ -25,6 +26,10 @@ public class AssetCategoryService {
 	@Autowired
 	private AssetProducer assetProducer;
 	
+	@Autowired
+	private ApplicationProperties applicationProperties;
+	
+	
 	public List<AssetCategory> search(AssetCategoryCriteria assetCategoryCriteria){
 	  return assetCategoryRepository.search(assetCategoryCriteria);	
 	}
@@ -40,7 +45,7 @@ public class AssetCategoryService {
 	  return assetCategoryResponse;	
 	}
 	
-	public AssetCategoryResponse createAsync(String topic,String key,AssetCategoryRequest assetCategoryRequest){
+	public AssetCategoryResponse createAsync(AssetCategoryRequest assetCategoryRequest){
 		
 		assetCategoryRequest.getAssetCategory().setCode(assetCategoryRepository.getAssetCategoryCode());
 		System.out.println("AssetCategoryService createAsync"+assetCategoryRequest);
@@ -51,9 +56,11 @@ public class AssetCategoryService {
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
-		
-		assetProducer.sendMessage(topic, key, value);
-		
+		try{
+			assetProducer.sendMessage(applicationProperties.getCreateAssetCategoryTopicName(),"save-aasetcategory", value);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 		List<AssetCategory> assetCategories = new ArrayList<AssetCategory>();
 		assetCategories.add(assetCategoryRequest.getAssetCategory());
 		AssetCategoryResponse assetCategoryResponse = getAssetCategoryResponse(assetCategories);

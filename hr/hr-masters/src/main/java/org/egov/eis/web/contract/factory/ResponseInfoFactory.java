@@ -57,6 +57,7 @@ public class ResponseInfoFactory {
 		if (requestInfo != null) {
 			apiId = requestInfo.getApiId();
 			ver = requestInfo.getVer();
+			if(requestInfo.getTs()!=null)
 			ts = requestInfo.getTs().toString();
 			msgId = requestInfo.getMsgId();
 		}

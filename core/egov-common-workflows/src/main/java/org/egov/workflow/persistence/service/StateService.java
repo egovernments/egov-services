@@ -54,12 +54,13 @@ public class StateService {
 	}
 	
 	
-	  public  List<State>  getStates(List<Long> ownerIds,List<String> types,Long userId)
+	  public  List<State>  getStates(List<Long> ownerIds,List<String> types,Long userId,String tenantId)
 	    {
 	     return getSession().createCriteria(State.class)
 	            .setFlushMode(FlushMode.MANUAL).setReadOnly(true).setCacheable(true)
 	            .add(Restrictions.in("type", types))
-	            .add(Restrictions.in("ownerPosition.id", ownerIds))
+	            .add(Restrictions.in("ownerPosition", ownerIds))
+	            .add(Restrictions.eq("tenantId", tenantId))
 	            .add(Restrictions.ne("status", StateStatus.ENDED))
 	            .add(Restrictions.not(Restrictions.conjunction().add(Restrictions.eq("status", StateStatus.STARTED))
 	                    .add(Restrictions.eq("createdBy.id", userId)))).addOrder(Order.desc("createdDate"))

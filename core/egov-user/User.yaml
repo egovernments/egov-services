@@ -151,7 +151,7 @@ paths:
           schema:
             $ref: '#/definitions/ErrorRes'
 
-  /user/{userId}/_updatenovalidate:
+  /{userId}/_updatenovalidate:
     parameters:
       - $ref: "#/parameters/userId"
     post:
@@ -176,7 +176,7 @@ paths:
           schema:
             $ref: '#/definitions/ErrorRes'
 
-  /user/_patch:
+  /_patch:
       post:
         summary: User profile update. All fields expect username and mobilenumber are allowed to be updated.
         description: User profile update. All fields expect username and mobilenumber are allowed to be updated.
@@ -222,7 +222,7 @@ paths:
             schema:
               $ref: '#/definitions/ErrorRes'
 
-  /user/oauth/token:
+  /oauth/token:
     post:
       summary: Login a user based on username and password auth and return oAuth tokens.
       description: Login a user based on username and password auth and return oAuth tokens.
@@ -256,7 +256,7 @@ paths:
           schema:
             $ref: '#/definitions/ErrorRes'
 
-  /user/_logout:
+  /_logout:
     post:
       summary: Logout a user based on access token auth
       description:  Logout a user based on access token auth
@@ -281,7 +281,7 @@ paths:
           schema:
             $ref: '#/definitions/ErrorRes'
 
-  /user/_details:
+  /_details:
     post:
       summary: Get user details based on access token auth
       description:  Get user details based on access token auth

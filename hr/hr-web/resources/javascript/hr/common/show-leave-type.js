@@ -13,20 +13,24 @@ class ShowLeaveType extends React.Component {
   this.handleChange=this.handleChange.bind(this);
 }
 
-componentWillMount()
-{
-  //call employee api and get leaveList
-  console.log(getUrlVars()["type"]);
-//  var queryParam=getUrlVars();
-}
+
 
 componentDidMount()
 {
+  try {
+      var _leaveTypes = commonApiPost("hr-leave", "leavetypes","_search",{tenantId,pageSize:500}).responseJSON["LeaveType"] || [];
+  } catch(e) {
+      var _leaveTypes = [];
+  }
   this.setState({
-  leaveList:getCommonMaster("hr-leave","leavetypes","LeaveType").responseJSON["LeaveType"]
+  leaveList:_leaveTypes
     });
 }
 
+close(){
+    // widow.close();
+    open(location, '_self').close();
+}
 
 
 componentDidUpdate(prevProps, prevState)
@@ -82,9 +86,8 @@ handleChange(e,name)
     }
   const  renderAction=function(type,id)
     {
-      if(type==="update")
+      if(type==="Update")
       {
-
         return(
           <a href={`app/hr/leavemaster/leave-type.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-pencil"></span></a>)
       }
@@ -93,8 +96,8 @@ handleChange(e,name)
             return(
                     <a href={`app/hr/leavemaster/leave-type.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-modal-window"></span></a>
                   )
-                }
-         }
+            }
+      }
 
 
 
@@ -117,6 +120,9 @@ handleChange(e,name)
                     {renderBody()}
                   </tbody>
               </table>
+              <div className="text-center">
+                  <button type="button" className="btn btn-close"onClick={(e)=>{this.close()}}>Close</button>
+              </div>
       </div>
 
     );

@@ -10,17 +10,16 @@ class ShowPosition extends React.Component {
 
   }
 
-  componentWillMount()
-  {
-
-  }
-
-
+  
   componentDidMount()
   {
-    console.log(getUrlVars()["type"]);
+    try {
+        var _position = commonApiPost("hr-masters","positions","_search",{tenantId,pageSize:500}).responseJSON["Position"] || [];
+    } catch(e) {
+        var _position = [];
+    }
     this.setState({
-      list:getCommonMaster("hr-masters","positions","Position").responseJSON["Position"]
+      list: _position
     });
   }
 
@@ -44,12 +43,12 @@ class ShowPosition extends React.Component {
   }
 
   render() {
-    console.log(this.state.positionSet);
     let {list}=this.state;
     let {department,designation,name,isPostOutsourced,active}=this.state.positionSet;
+    var mode = getUrlVars()["type"];
 
     const renderAction=function(type,id){
-      if (type==="update") {
+      if (type==="Update") {
 
               return (
                       <a href={`app/hr/master/position.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-pencil"></span></a>
@@ -69,7 +68,7 @@ class ShowPosition extends React.Component {
       {
             return (<tr key={index}>
                     <td>{index+1}</td>
-                    <td data-label="department">{item.deptdesig.department}</td>
+                    <td data-label="department">{getNameById(assignments_department,item.deptdesig.department)}</td>
                     <td data-label="designation">{item.deptdesig.designation.name}</td>
                     <td data-label="name">{item.name}</td>
                     <td data-label="isPostOutsourced">{item.isPostOutsourced?item.isPostOutsourced:"false"}</td>
@@ -85,6 +84,7 @@ class ShowPosition extends React.Component {
     }
 
       return (<div>
+        <h3>{mode} Position </h3>
         <table id="positionTable" className="table table-bordered">
             <thead>
                 <tr>
@@ -106,6 +106,9 @@ class ShowPosition extends React.Component {
             </tbody>
 
         </table>
+        <div className="text-center">
+            <button type="button" className="btn btn-close"onClick={(e)=>{this.close()}}>Close</button>
+        </div>
       </div>
     );
   }

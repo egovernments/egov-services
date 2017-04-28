@@ -36,12 +36,12 @@ class ApplyLeave extends React.Component {
     var id = getUrlVars()["id"];
     var asOnDate = _this.state.leaveSet.toDate;
 
-    if(getUrlVars()["type"]==="view")
+    if(getUrlVars()["type"]==="View")
     {
         $("input,select,textarea").prop("disabled", true);
       }
 
-      if(type === "view"){
+      if(type === "View"){
         var _leaveSet = getCommonMasterById("hr-leave","leaveapplications","LeaveApplication",id).responseJSON["LeaveApplication"][0];
         var employee = commonApiPost("hr-employee", "employees", "_search", {
             tenantId,
@@ -206,10 +206,17 @@ class ApplyLeave extends React.Component {
 
   componentWillMount()
   {
+    try {
+        var _leaveTypes = getCommonMaster("hr-leave","leavetypes","LeaveType").responseJSON["LeaveType"] || [];
+    } catch(e) {
+        var _leaveTypes = [];
+    }
     this.setState({
-      leaveList:getCommonMaster("hr-leave","leavetypes","LeaveType").responseJSON["LeaveType"]
-    })
+    leaveList:_leaveTypes
+      });
   }
+
+
 
   handleChangeThreeLevel(e,pName,name) {
     var _this=this;
@@ -288,7 +295,7 @@ addOrUpdate(e,mode)
             "RequestInfo":requestInfo,
             "LeaveApplication":tempInfo
           },_this=this;
-            if(type == "update") {
+            if(type == "Update") {
               $.ajax({
 
                     url:baseUrl+"/hr-leave/leaveapplications/" + this.state.leaveSet.id + "/" + "_update?tenantId=" + tenantId,

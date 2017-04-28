@@ -11,22 +11,19 @@ class ShowGrade extends React.Component {
 
   }
 
-  componentWillMount()
-  {
-    console.log(getUrlVars()["type"]);
-    // console.log(getCommonMaster("hr-masters","grades","Grade").responseJSON["Grade"]);
-
-
-  }
-
-
 
   componentDidMount()
   {
+    try {
+        var _grade = commonApiPost("hr-masters","grades","_search",{tenantId,pageSize:500}).responseJSON["Grade"] || [];
+    } catch(e) {
+        var _grade = [];
+    }
     this.setState({
-      grades:getCommonMaster("hr-masters","grades","Grade").responseJSON["Grade"]
+      grades:_grade
     });
-  }
+}
+
 
   componentDidUpdate(prevProps, prevState)
   {
@@ -54,12 +51,11 @@ class ShowGrade extends React.Component {
 
 
   render() {
-    console.log(this.state.gradeSet);
     let {grades}=this.state;
     let {name,description,orderNo,active}=this.state.gradeSet;
 
     const renderAction=function(type,id){
-      if (type==="update") {
+      if (type==="Update") {
 
               return (
                       <a href={`app/hr/master/grade-master.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-pencil"></span></a>
@@ -93,6 +89,7 @@ class ShowGrade extends React.Component {
     }
 
       return (<div>
+        <h3>{getUrlVars()["type"]} Grade</h3>
         <table id="gradeTable" className="table table-bordered">
             <thead>
                 <tr>
@@ -112,6 +109,9 @@ class ShowGrade extends React.Component {
             </tbody>
 
         </table>
+        <div className="text-center">
+            <button type="button" className="btn btn-close"onClick={(e)=>{this.close()}}>Close</button>
+        </div>
       </div>
     );
   }

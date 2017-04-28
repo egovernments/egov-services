@@ -10,18 +10,15 @@ class ShowCalender extends React.Component {
   }
 }
 
-  componentWillMount()
-  {
-    console.log(getUrlVars()["type"]);
 
-}
-
-
-
-  componentDidMount()
-  {
+  componentDidMount() {
+    try {
+        var _years = commonApiPost("egov-common-masters","calendaryears","_search",{tenantId,pageSize:500}).responseJSON["CalendarYear"] || [];
+    } catch(e) {
+        var _years = [];
+    }
         this.setState({
-            list:getCommonMaster("egov-common-masters","calendaryears","CalendarYear").responseJSON["CalendarYear"]
+            list:_years
         });
   }
 
@@ -47,14 +44,12 @@ class ShowCalender extends React.Component {
 
 
   render() {
-    console.log(this.state.calenderSet);
     let {list}=this.state;
     let {name,startDate,endDate,active}=this.state.calenderSet;
 
 
     const renderAction=function(type,id){
-      if (type==="update") {
-
+      if (type==="Update") {
               return (
                       <a href={`app/hr/master/calendar-setup.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-pencil"></span></a>
               );
@@ -105,8 +100,10 @@ class ShowCalender extends React.Component {
                     renderBody()
                 }
             </tbody>
-
         </table>
+        <div className="text-center">
+            <button type="button" className="btn btn-close"onClick={(e)=>{this.close()}}>Close</button>
+        </div>
       </div>
     );
   }

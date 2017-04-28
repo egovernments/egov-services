@@ -24,18 +24,79 @@ class Calender_setup extends React.Component{
         })
 
     }
+    componentWillMount() {
+
+    }
+
+
+
 
     componentDidMount(){
       var type=getUrlVars()["type"];
       var id=getUrlVars()["id"];
+      var _this = this;
+      $('#startDate').datepicker({
+        format: 'dd/mm/yyyy',
+        autoclose:true
 
-      if(getUrlVars()["type"]==="view")
+    });
+    $('#startDate').on("change", function(e) {
+      var from = $('#startDate').val();
+      var to = $('#endDate').val();
+      var dateParts = from.split("/");
+      var newDateStr = dateParts[1] + "/" + dateParts[0] + "/ " + dateParts[2];
+      var date1 = new Date(newDateStr);
+
+      var dateParts = to.split("/");
+      var newDateStr = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2];
+      var date2 = new Date(newDateStr);
+      if (date1 > date2) {
+          showError("From date must be before of End date");
+          $('#startDate').val("");
+      }
+      _this.setState({
+            calenderSet: {
+                ..._this.state.calenderSet,
+                "startDate":$("#startDate").val()
+            }
+      })
+
+      });
+
+      $('#endDate').datepicker({
+          format: 'dd/mm/yyyy',
+          autoclose:true
+      });
+      $('#endDate').on("change", function(e) {
+        var from = $('#startDate').val();
+        var to = $('#endDate').val();
+        var dateParts = from.split("/");
+        var newDateStr = dateParts[1] + "/" + dateParts[0] + "/ " + dateParts[2];
+        var date1 = new Date(newDateStr);
+
+        var dateParts = to.split("/");
+        var newDateStr = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2];
+        var date2 = new Date(newDateStr);
+        if (date1 > date2) {
+            showError("End date must be after of From date");
+            $('#endDate').val("");
+        }
+
+        _this.setState({
+              calenderSet: {
+                  ..._this.state.calenderSet,
+                  "endDate":$("#endDate").val()
+              }
+            })
+        });
+
+      if(getUrlVars()["type"]==="View")
       {
         for (var variable in this.state.calenderSet)
           document.getElementById(variable).disabled = true;
         }
 
-        if(type==="view"||type==="update")
+        if(type==="View"||type==="Update")
         {
             this.setState({
               calenderSet:getCommonMasterById("egov-common-masters","calendaryears","CalendarYear",id).responseJSON["CalendarYear"][0]
@@ -52,19 +113,13 @@ class Calender_setup extends React.Component{
     addOrUpdate(e,mode){
          console.log(this.state.calenderSet);
         e.preventDefault();
-        // console.log(mode);
-        if (mode==="update") {
-            console.log("update");
-        } else {
           this.setState({calenderSet:{
               name:"",
               startDate:"",
               endDate:"",
               active:""
           } })
-        }
       }
-
 
   render(){
 
@@ -73,7 +128,7 @@ class Calender_setup extends React.Component{
     let {name,startDate,endDate,active}=this.state.calenderSet;
 
     const showActionButton=function() {
-      if((!mode) ||mode==="update")
+      if((!mode) ||mode==="Update")
       {
         return (<button type="submit" className="btn btn-submit">{mode?"Update":"Add"}</button>);
       }
@@ -105,7 +160,7 @@ class Calender_setup extends React.Component{
                                   <span>
                                       <i className="glyphicon glyphicon-calendar"></i>
                                   </span>
-                                  <input type="date" name="startDate" id="startDate" value={startDate}
+                                  <input type="text" name="startDate" id="startDate" value={startDate}
                                   onChange={(e)=>{handleChange(e,"startDate")}}required/>
                                 </div>
                             </div>
@@ -123,7 +178,7 @@ class Calender_setup extends React.Component{
                                     <span>
                                         <i className="glyphicon glyphicon-calendar"></i>
                                     </span>
-                                    <input type="date" name="endDate" id="endDate"value={endDate}
+                                    <input type="text" name="endDate" id="endDate"value={endDate}
                                     onChange={(e)=>{handleChange(e,"endDate")}}required/>
                                   </div>
                               </div>

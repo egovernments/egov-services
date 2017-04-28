@@ -10,7 +10,7 @@ class LeaveType extends React.Component{
         "payEligible": "false",
         "accumulative": "false",
         "encashable": "false",
-        "active": "true",
+        "active": "",
         "createdBy": "",
         "createdDate": "",
         "lastModifiedBy": "",
@@ -23,7 +23,6 @@ class LeaveType extends React.Component{
 
   handleChange(e,name)
   {
-    console.log(e.target.value);
       this.setState({
           LeaveType:{
               ...this.state.LeaveType,
@@ -49,7 +48,7 @@ addOrUpdate(e,mode)
             "RequestInfo":requestInfo,
             "LeaveType":[tempInfo]
           },_this=this;
-            if(type == "update") {
+            if(type == "Update") {
         $.ajax({
               url:baseUrl+"/hr-leave/leavetypes/" + _this.state.LeaveType.id + "/" + "_update?tenantId=" + tenantId,
               type: 'POST',
@@ -131,12 +130,12 @@ addOrUpdate(e,mode)
     var type=getUrlVars()["type"];
     var id=getUrlVars()["id"];
 
-    if(getUrlVars()["type"]==="view")
+    if(getUrlVars()["type"]==="View")
     {
       $("input,select,radio,textarea").prop("disabled", true);
       }
 
-      if(type==="view"||type==="update")
+      if(type==="View"||type==="Update")
       {
           this.setState({
             LeaveType:getCommonMasterById("hr-leave","leavetypes","LeaveType",id).responseJSON["LeaveType"][0]
@@ -145,12 +144,11 @@ addOrUpdate(e,mode)
   }
   render()
   {
-    console.log(this.state.LeaveType);
     let {handleChange,addOrUpdate}=this;
-    let {name,payEligible,encashable,halfdayAllowed,accumulative,description}=this.state.LeaveType;
+    let {name,payEligible,encashable,halfdayAllowed,accumulative,description,active}=this.state.LeaveType;
     let mode=getUrlVars()["type"];
     const showActionButton=function() {
-      if((!mode)|| mode==="update")
+      if((!mode)|| mode==="Update")
       {
           return (<button type="submit" className="btn btn-submit">{mode?"Update":"Add"}</button>);
       }
@@ -267,8 +265,8 @@ addOrUpdate(e,mode)
                     </div>
                         <div className="col-sm-6">
                               <label className="radioUi">
-                                <input type="checkbox" name="active" id="active" value="true" onChange={(e)=>{
-                                    handleChange(e,"active")}} checked/>
+                                <input type="checkbox" name="active"  value="true" onChange={(e)=>{
+                                    handleChange(e,"active")}} checked="checked"/>
                               </label>
                         </div>
                     </div>

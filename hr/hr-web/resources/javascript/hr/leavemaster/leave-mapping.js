@@ -24,9 +24,14 @@ constructor(props){
 }
 componentWillMount()
 {
+  try {
+      var _leaveTypes = getCommonMaster("hr-leave", "leavetypes", "LeaveType").responseJSON["LeaveType"] || [];
+  } catch(e) {
+      var _leaveTypes = [];
+  }
   this.setState({
     assignments_designation,
-    leaveTypeList:getCommonMaster("hr-leave","leavetypes","LeaveType").responseJSON["LeaveType"],
+    leaveTypeList: _leaveTypes
 
 })
 }
@@ -47,14 +52,13 @@ componentWillMount()
 
         addOrUpdate(e){
           e.preventDefault();
-          //  console.log(tempObj);
           // var tempInfo=this.state.leave;
           var tempInfo=Object.assign({},this.state.leave) , type = getUrlVars()["type"];
           // var date1 = new Date(tempInfo.createdDate);
           // var date2 = new Date(tempInfo.lastModifiedDate);
           // tempInfo.createdDate = ( date1.getFullYear() + '/' + (date1.getMonth() + 1) + '/' + date1.getDate()     );
           // tempInfo.lastModifiedDate = ( date2.getDate() + '/' + (date2.getMonth() + 1) + '/' +  date2.getFullYear());
-          if(type==="update"){
+          if(type==="Update"){
           delete tempInfo.leaveType.name;
           delete tempInfo.leaveType.active;
           delete tempInfo.leaveType.description;
@@ -66,7 +70,7 @@ componentWillMount()
               "RequestInfo":requestInfo,
               "LeaveAllotment":[tempInfo]
             },_this=this;
-            if (type == "update") {
+            if (type == "Update") {
               $.ajax({
                    url:baseUrl+"/hr-leave/leaveallotments/" + this.state.leave.id + "/" + "_update?tenantId=" + tenantId,
                     type: 'POST',
@@ -154,12 +158,12 @@ componentWillMount()
       var type=getUrlVars()["type"];
       var id=getUrlVars()["id"];
 
-      if(getUrlVars()["type"]==="view")
+      if(getUrlVars()["type"]==="View")
       {
         $("input,select,radio,textarea").prop("disabled", true);
         }
 
-        if(type==="view"||type==="update")
+        if(type==="View"||type==="Update")
         {
             this.setState({
               leave:getCommonMasterById("hr-leave","leaveallotments","LeaveAllotment",id).responseJSON["LeaveAllotment"][0]
@@ -186,7 +190,7 @@ componentWillMount()
     }
 
     const showActionButton=function(){
-      if((!mode)||mode==="update"){
+      if((!mode)||mode==="Update"){
         return (<button type="submit" className="btn btn-submit">{mode?"Update":"Add"}</button>);
       }
     }

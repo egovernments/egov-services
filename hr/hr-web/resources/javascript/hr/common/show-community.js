@@ -8,18 +8,16 @@ class ShowCommunity extends React.Component {
       }
   }
 
-  componentWillMount()
-  {
-    console.log(getUrlVars()["type"]);
-
-  }
-
-
 
   componentDidMount()
   {
-    this.setState({
-    list:getCommonMaster("egov-common-masters","communities","Community").responseJSON["Community"]
+      try {
+          var _communities = commonApiPost("egov-common-masters","communities","_search",{tenantId,pageSize:500}).responseJSON["Community"] || [];
+      } catch(e) {
+          var _communities = [];
+      }
+      this.setState({
+        list: _communities
       });
   }
 
@@ -47,13 +45,13 @@ class ShowCommunity extends React.Component {
 
 
   render() {
-    console.log(this.state.communitySet);
     let {list}=this.state;
     let {name,description,active}=this.state.communitySet;
+    var mode = getUrlVars()["type"];
 
 
     const renderAction=function(type,id){
-      if (type==="update") {
+      if (type==="Update") {
 
               return (
                       <a href={`app/hr/master/community.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-pencil"></span></a>
@@ -86,6 +84,7 @@ class ShowCommunity extends React.Component {
     }
 
       return (<div>
+          <h3> {mode} Community</h3>
         <table id="communityTable" className="table table-bordered">
             <thead>
                 <tr>
@@ -105,6 +104,9 @@ class ShowCommunity extends React.Component {
             </tbody>
 
         </table>
+        <div className="text-center">
+            <button type="button" className="btn btn-close"onClick={(e)=>{this.close()}}>Close</button>
+        </div>
       </div>
     );
   }

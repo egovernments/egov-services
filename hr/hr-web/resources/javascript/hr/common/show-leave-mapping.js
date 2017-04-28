@@ -16,20 +16,16 @@ class ShowLeaveMapping extends React.Component {
 
   }
 
-  componentWillMount()
-  {
-    console.log(getUrlVars()["type"]);
-    // console.log(getCommonMaster("hr-masters","grades","Grade").responseJSON["Grade"]);
-
-
-  }
-
-
 
   componentDidMount()
   {
+    try {
+        var _leaveAllotment = commonApiPost("hr-leave","leaveallotments","_search",{tenantId,pageSize:500}).responseJSON["LeaveAllotment"] || [];
+    } catch(e) {
+        var _leaveAllotment = [];
+    }
     this.setState({
-      leaveTypeList:commonApiPost("hr-leave","leaveallotments","_search",{tenantId,pageSize:500}).responseJSON["LeaveAllotment"]
+      leaveTypeList: _leaveAllotment
 
     });
   }
@@ -78,7 +74,7 @@ class ShowLeaveMapping extends React.Component {
 
 
     const renderAction=function(type,id){
-      if (type==="update") {
+      if (type==="Update") {
 
               return (
                       <a href={`app/hr/leavemaster/leave-mapping.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-pencil"></span></a>
@@ -127,6 +123,9 @@ class ShowLeaveMapping extends React.Component {
             </tbody>
 
         </table>
+        <div className="text-center">
+            <button type="button" className="btn btn-close"onClick={(e)=>{this.close()}}>Close</button>
+        </div>
       </div>
     );
   }

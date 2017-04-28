@@ -6,15 +6,16 @@ class ShowDesignation extends React.Component {
 
   }
 
-  componentWillMount()
-  {console.log(getUrlVars()["type"]);}
-
-
 
   componentDidMount()
   {
+    try {
+        var _designation = commonApiPost("hr-masters","designations","_search",{tenantId,pageSize:500}).responseJSON["Designation"] || [];
+    } catch(e) {
+        var _designation = [];
+    }
     this.setState({
-      list:getCommonMaster("hr-masters","designations","Designation").responseJSON["Designation"]
+      list:_designation
     });
 
   }
@@ -40,12 +41,12 @@ class ShowDesignation extends React.Component {
   }
 
   render() {
-    console.log(this.state.designationSet);
     let {list}=this.state;
     let {name,code,description,active}=this.state.designationSet;
+    var mode = getUrlVars()["type"];
 
     const renderAction=function(type,id){
-      if (type==="update") {
+      if (type==="Update") {
 
               return (
                       <a href={`app/hr/master/designation.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-pencil"></span></a>
@@ -79,6 +80,7 @@ class ShowDesignation extends React.Component {
     }
 
       return (<div>
+        <h3>{mode} Designation </h3>
         <table id="designationTable" className="table table-bordered">
             <thead>
                 <tr>
@@ -99,6 +101,9 @@ class ShowDesignation extends React.Component {
             </tbody>
 
         </table>
+        <div className="text-center">
+            <button type="button" className="btn btn-close"onClick={(e)=>{this.close()}}>Close</button>
+        </div>
       </div>
     );
   }

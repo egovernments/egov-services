@@ -9,16 +9,17 @@ class ShowCategory extends React.Component {
   }
 }
 
-  componentWillMount()
-  {
-    console.log(getUrlVars()["type"]);
-}
 
   componentDidMount()
   {
+    try {
+        var _categories = commonApiPost("egov-common-masters","categories","_search",{tenantId,pageSize:500}).responseJSON["Category"] || [];
+    } catch(e) {
+        var _categories = [];
+    }
     this.setState({
-        list:getCommonMaster("egov-common-masters","categories","Category").responseJSON["Category"]
-  });
+        list:_categories
+      });
   }
 
   componentDidUpdate(prevProps, prevState)
@@ -47,12 +48,12 @@ class ShowCategory extends React.Component {
 
 
   render() {
-    console.log(this.state.categorySet);
     let {list}=this.state;
     let {name,description,active}=this.state.categorySet;
+    var mode = getUrlVars()["type"];
 
     const renderAction=function(type,id){
-      if (type==="update") {
+      if (type==="Update") {
 
               return (
                       <a href={`app/hr/master/category.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-pencil"></span></a>
@@ -85,6 +86,7 @@ class ShowCategory extends React.Component {
     }
 
       return (<div>
+        <h3> {mode} Category</h3>
         <table id="categoryTable" className="table table-bordered">
             <thead>
                 <tr>
@@ -102,8 +104,10 @@ class ShowCategory extends React.Component {
                     renderBody()
                 }
             </tbody>
-
         </table>
+        <div className="text-center">
+            <button type="button" className="btn btn-close"onClick={(e)=>{this.close()}}>Close</button>
+        </div>
       </div>
     );
   }

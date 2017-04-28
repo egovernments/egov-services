@@ -3,18 +3,18 @@ class Designation extends React.Component{
     super(props);
     this.state={designationSet:{name:"",
     code:"",description:"", chartOfAccounts:"",active:""},
-    descriptionList:[]  }
+      }
 
       this.handleChange=this.handleChange.bind(this);
       this.addOrUpdate=this.addOrUpdate.bind(this);
     }
 
-    componentWillMount(){
-      this.setState({
-      descriptionList:commonApiPost("hr-masters","designations","_search",{tenantId}).responseJSON["Designation"]
-    })
-
-    }
+    // componentWillMount(){
+    //   this.setState({
+    //   descriptionList:commonApiPost("hr-masters","designations","_search",{tenantId}).responseJSON["Designation"]
+    // })
+    //
+    // }
       handleChange(e,name){
         this.setState({
           designationSet:{
@@ -35,12 +35,12 @@ class Designation extends React.Component{
         var type=getUrlVars()["type"];
         var id=getUrlVars()["id"];
 
-        if(getUrlVars()["type"]==="view")
+        if(getUrlVars()["type"]==="View")
         {
             $("input,select").prop("disabled", true);
           }
 
-          if(type==="update"||type==="view")
+          if(type==="Update"||type==="View")
           {
                this.setState({
                 designationSet:getCommonMasterById("hr-masters","designations","Designation",id).responseJSON["Designation"][0]
@@ -51,19 +51,16 @@ class Designation extends React.Component{
       addOrUpdate(e,mode){
            console.log(this.state.designationSet);
           e.preventDefault();
-          // console.log(mode);
-          if (mode==="update") {
-              console.log("update");
-          } else {
             this.setState({designationSet:{
             name:"",
             code:"",
             description:"",
             chartOfAccounts:"",
             active:""},
-            descriptionList:""  })
-          }
+            descriptionList:""
+          })
         }
+
 
 
       render(){
@@ -85,7 +82,7 @@ class Designation extends React.Component{
         }
 
         const showActionButton=function() {
-          if((!mode) ||mode==="update")
+          if((!mode) ||mode==="Update")
           {
             return (<button type="submit" className="btn btn-submit">{mode?"Update":"Add"}</button>);
           }

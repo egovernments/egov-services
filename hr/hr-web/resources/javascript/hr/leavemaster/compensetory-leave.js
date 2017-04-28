@@ -46,7 +46,7 @@ class CompensetoryLeave extends React.Component {
               "RequestInfo":requestInfo,
               "LeaveApplication":tempInfo
             },_this=this;
-              if(type == "update") {
+              if(type == "Update") {
                 $.ajax({
 
                       url:baseUrl+"/hr-leave/leaveapplications/" + this.state.compensetorySet.id + "/" + "_update?tenantId=" + tenantId,

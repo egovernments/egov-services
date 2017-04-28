@@ -42,7 +42,7 @@ componentWillMount(){
       var id = getUrlVars()["id"];
       $('#applicableOn').datepicker({
           format: 'dd/mm/yyyy',
-          autclose:true
+          autoclose:true
 
       });
 			$('#applicableOn').on("change", function(e) {
@@ -54,13 +54,13 @@ componentWillMount(){
 			      })
 				});
 
-      if(getUrlVars()["type"]==="view")
+      if(getUrlVars()["type"]==="View")
       {
         $("input,select").prop("disabled", true);
       }
 
 
-            if(type==="view"||type==="update")
+            if(type==="View"||type==="Update")
             {
                 this.setState({
                   Holiday:getCommonMasterById("egov-common-masters","holidays","Holiday",id).responseJSON["Holiday"][0]
@@ -82,8 +82,7 @@ componentWillMount(){
             e.preventDefault();
 
             var tempInfo=Object.assign({},this.state.Holiday) , type = getUrlVars()["type"];
-            console.log(this.state.Holiday);
-              if(type==="update"){
+              if(type==="Update"){
                 delete tempInfo.calendarYear.id;
                 delete tempInfo.calendarYear.active;
                 delete tempInfo.calendarYear.endDate;
@@ -94,7 +93,7 @@ componentWillMount(){
                 "RequestInfo":requestInfo,
                 "Holiday":tempInfo
               },_this=this;
-                if(type == "update") {
+                if(type == "Update") {
                   $.ajax({
                         url:baseUrl+"/egov-common-masters/holidays/" + _this.state.Holiday.id + "/" + "_update?tenantId=" + tenantId,
                         type: 'POST',
@@ -197,7 +196,7 @@ componentWillMount(){
     }
 
     const showActionButton=function() {
-      if((!mode) ||mode==="update")
+      if((!mode) ||mode==="Update")
       {
         return (<button type="submit" className="btn btn-submit">{mode?"Update":"Add"}</button>);
       }

@@ -19,11 +19,6 @@ class ShowCalenderHoliday extends React.Component {
   })
   }
 
-  componentDidMount()
-  {
-
-  }
-
   componentDidUpdate(prevProps, prevState)
   {
       if (prevState.list.length!=this.state.list.length) {
@@ -89,7 +84,7 @@ search(e)
         }
     }
     const renderAction=function(type,id){
-      if (type==="update") {
+      if (type==="Update") {
 
               return (
                       <a href={`app/hr/master/calendar-holidays-setup.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-pencil"></span></a>

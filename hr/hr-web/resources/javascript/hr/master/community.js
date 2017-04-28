@@ -17,13 +17,13 @@ class Community extends React.Component{
       var id=getUrlVars()["id"];
 
 
-      if(getUrlVars()["type"]==="view")
+      if(getUrlVars()["type"]==="View")
       {
         for (var variable in this.state.communitySet)
           document.getElementById(variable).disabled = true;
         }
 
-        if(type==="view"||type==="update")
+        if(type==="View"||type==="Update")
         {
             this.setState({
               communitySet:getCommonMasterById("egov-common-masters","communities","Community",id).responseJSON["Community"][0]
@@ -46,20 +46,19 @@ class Community extends React.Component{
         // widow.close();
         open(location, '_self').close();
     }
-    addOrUpdate(e,mode){
 
+
+    addOrUpdate(e,mode){
         console.log(this.state.communitySet);
-        e.preventDefault();
-        if (mode==="update") {
-            console.log("update");
-        } else {
         this.setState({communitySet:{
             name:"",
             description:"",
             active:""
-        } })
-    }
+        }
+    })
   }
+
+  
 
   render(){
 
@@ -69,7 +68,7 @@ class Community extends React.Component{
 
 
       const showActionButton=function() {
-        if((!mode) ||mode==="update")
+        if((!mode) ||mode==="Update")
         {
           return (<button type="submit" className="btn btn-submit">{mode?"Update":"Add"}</button>);
         }

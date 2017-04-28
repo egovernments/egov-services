@@ -27,8 +27,8 @@ class PositionMaster extends React.Component{
     componentWillMount()
     {
       this.setState({
-        departmentsList:getCommonMaster("egov-common-masters","departments","Department").responseJSON["Department"] || [],
-        designationList:getCommonMaster("hr-masters","designations","Designation").responseJSON["Designation"] || []
+        departmentsList: assignments_department,
+        designationList: assignments_designation
     })
     }
 
@@ -52,12 +52,12 @@ class PositionMaster extends React.Component{
       var type=getUrlVars()["type"];
       var id=getUrlVars()["id"];
 
-      if(getUrlVars()["type"]==="view")
+      if(getUrlVars()["type"]==="View")
       {
           $("input,select").prop("disabled", true);
         }
 
-        if(type==="view"||type==="update")
+        if(type==="View"||type==="Update")
         {
             this.setState({
               positionSet:getCommonMasterById("hr-masters","positions","Position",id).responseJSON["Position"][0]
@@ -70,14 +70,11 @@ class PositionMaster extends React.Component{
     addOrUpdate(e,mode){
       e.preventDefault();
       console.log({name:this.state.positionSet.name,deptdesig:{designationList:this.state.positionSet.designation,departmentsList:this.state.positionSet.department},isPostOutsourced:this.state.positionSet.isPostOutsourced});
-      if (mode==="update") {
-          console.log("update");
-      } else {
       this.setState({positionSet:{
       "id": "",
       "name": "",
       "deptdesig": {
-        "id": "",
+      "id": "",
         "department": "",
         "designation": {
           "id": "",
@@ -87,18 +84,18 @@ class PositionMaster extends React.Component{
           "chartOfAccounts": null,
           "active": true,
           "tenantId": ""
-        }
-      },
+          }
+        },
       "isPostOutsourced": "",
       "active": "",
     },designationList:[],departmentsList:[]})
-    }
   }
+
 
     render(){
 
       let {handleChange,addOrUpdate}=this;
-      let {department,designation,name,isPostOutsourced,deptdesig}=this.state.positionSet;
+      let {department,designation,name,isPostOutsourced,deptdesig,active}=this.state.positionSet;
       let mode =getUrlVars()["type"];
 
 
@@ -115,7 +112,7 @@ class PositionMaster extends React.Component{
           }
       }
       const showActionButton=function() {
-        if((!mode) ||mode==="update")
+        if((!mode) ||mode==="Update")
         {
           return (<button type="submit" className="btn btn-submit">{mode?"Update":"Add"}</button>);
         }

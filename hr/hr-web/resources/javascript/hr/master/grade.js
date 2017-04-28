@@ -15,13 +15,12 @@ class GradeMaster extends React.Component{
 
     handleChange(e,name)
     {
-      console.log(name);
-        this.setState({
-            gradeSet:{
-                ...this.state.gradeSet,
-                [name]:e.target.value
-            }
-        })
+      this.setState({
+      gradeSet:{
+          ...this.state.gradeSet,
+          [name]:e.target.value
+        }
+      })
     }
 
 
@@ -29,14 +28,14 @@ class GradeMaster extends React.Component{
       var type=getUrlVars()["type"];
       var id=getUrlVars()["id"];
 
-      if(getUrlVars()["type"]==="view")
+      if(getUrlVars()["type"]==="View")
       {
         for (var variable in this.state.gradeSet)
           document.getElementById(variable).disabled = true;
         }
 
 
-      if(type==="view"||type==="update")
+      if(type==="View"||type==="Update")
       {
           this.setState({
             gradeSet:getCommonMasterById("hr-masters","grades","Grade",id).responseJSON["Grade"][0]
@@ -56,18 +55,13 @@ class GradeMaster extends React.Component{
     addOrUpdate(e,mode){
         e.preventDefault();
          console.log(this.state.gradeSet);
-        // console.log(mode);
-        if (mode==="update") {
-            console.log("update");
-        } else {
-
           this.setState({gradeSet:{
             name:"",
             description:"",
             orderNo:"",
             active:""
-          } })
-        }
+          }
+        })
       }
 
 
@@ -80,7 +74,7 @@ class GradeMaster extends React.Component{
 
 
     const showActionButton=function() {
-      if((!mode) ||mode==="update")
+      if((!mode) ||mode==="Update")
       {
         return (<button type="submit" className="btn btn-submit">{mode?"Update":"Add"}</button>);
       }
@@ -123,7 +117,7 @@ class GradeMaster extends React.Component{
                   <label for="">Order No <span>* </span></label>
               </div>
               <div className="col-sm-6">
-                  <input type="number" name="orderNo" id="orderNo"  value={orderNo}
+                  <input type="number" name="orderNo" id="orderNo" min="0" value={orderNo}
                       onChange={(e)=>{ handleChange(e,"orderNo")}}required/>
               </div>
           </div>

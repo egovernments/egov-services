@@ -41,7 +41,6 @@ class ApplyLeave extends React.Component {
         $("input,select,textarea").prop("disabled", true);
       }
 
-      if(stateId){
         var _leaveSet = getCommonMasterById("hr-leave","leaveapplications","LeaveApplication",stateId).responseJSON["LeaveApplication"][0];
         var employee = commonApiPost("hr-employee", "employees", "_search", {
             tenantId,
@@ -53,8 +52,7 @@ class ApplyLeave extends React.Component {
            leaveSet: _leaveSet
         })
 
-      }
-      else{
+
         $('#fromDate').datepicker({
             format: 'dd/mm/yyyy',
             autoclose:true
@@ -186,11 +184,6 @@ class ApplyLeave extends React.Component {
                departmentId:this.getPrimaryAssigmentDep(obj,"department")
 
             })
-
-
-
-      }
-
     }
 
     getPrimaryAssigmentDep(obj,type)

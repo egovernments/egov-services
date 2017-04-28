@@ -272,6 +272,72 @@ public class UserServiceTest {
 		verify(userRepository).update(domainUser);
 	}
 
+	@Test
+	public void test_should_validate_request_when_updating_password_for_non_logged_in_user() {
+		final NonLoggedInUserUpdatePasswordRequest request = mock(NonLoggedInUserUpdatePasswordRequest.class);
+		when(otpRepository.isOtpValidationComplete(any())).thenReturn(true);
+		final User domainUser = mock(User.class);
+		when(userRepository.findByUsername(anyString())).thenReturn(domainUser);
+
+		userService.updatePasswordForNonLoggedInUser(request);
+
+		verify(request).validate();
+	}
+
+	@Test(expected = OtpValidationPendingException.class)
+	public void test_should_throw_exception_when_otp_validation_is_incomplete_when_updating_password_for_non_logged_in_user() {
+		final NonLoggedInUserUpdatePasswordRequest request = mock(NonLoggedInUserUpdatePasswordRequest.class);
+		when(otpRepository.isOtpValidationComplete(any())).thenReturn(false);
+		final User domainUser = mock(User.class);
+		when(userRepository.findByUsername(anyString())).thenReturn(domainUser);
+
+		userService.updatePasswordForNonLoggedInUser(request);
+	}
+
+	@Test(expected = UserNotFoundException.class)
+	public void test_should_throw_exception_when_user_does_not_exist_when_updating_password_for_non_logged_in_user() {
+		final NonLoggedInUserUpdatePasswordRequest request = mock(NonLoggedInUserUpdatePasswordRequest.class);
+		when(otpRepository.isOtpValidationComplete(any())).thenReturn(true);
+		when(userRepository.findByUsername(anyString())).thenReturn(null);
+
+		userService.updatePasswordForNonLoggedInUser(request);
+	}
+
+	@Test
+	public void test_should_update_existing_password_for_non_logged_in_user() {
+		final NonLoggedInUserUpdatePasswordRequest request = mock(NonLoggedInUserUpdatePasswordRequest.class);
+		when(request.getNewPassword()).thenReturn("newPassword");
+		when(otpRepository.isOtpValidationComplete(any())).thenReturn(true);
+		final User domainUser = mock(User.class);
+		when(userRepository.findByUsername(anyString())).thenReturn(domainUser);
+
+		userService.updatePasswordForNonLoggedInUser(request);
+
+		verify(domainUser).updatePassword("newPassword");
+	}
+
+	@Test
+	public void test_should_persist_changes_on_updating_password_for_non_logged_in_user() {
+		final NonLoggedInUserUpdatePasswordRequest request = NonLoggedInUserUpdatePasswordRequest.builder()
+				.userName("mobileNumber")
+				.tenantId("tenant")
+				.otpReference("otpReference")
+				.newPassword("newPassword")
+				.build();
+		final OtpValidationRequest expectedRequest = OtpValidationRequest.builder()
+				.otpReference("otpReference")
+				.mobileNumber("mobileNumber")
+				.tenantId("tenant")
+				.build();
+		when(otpRepository.isOtpValidationComplete(expectedRequest)).thenReturn(true);
+		final User domainUser = mock(User.class);
+		when(userRepository.findByUsername("mobileNumber")).thenReturn(domainUser);
+
+		userService.updatePasswordForNonLoggedInUser(request);
+
+		verify(userRepository).update(domainUser);
+	}
+
 	private org.egov.user.domain.model.User validDomainUser(boolean otpValidationMandatory) {
 		return User.builder()
 				.username("supandi_rocks")

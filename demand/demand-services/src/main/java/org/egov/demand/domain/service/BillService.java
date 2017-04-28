@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.egov.demand.persistence.entity.EgBill;
 import org.egov.demand.persistence.entity.EgBillDetails;
+import org.egov.demand.persistence.entity.EgBillType;
 import org.egov.demand.persistence.repository.BillRepository;
 import org.egov.demand.persistence.repository.BillTypeRepository;
 import org.egov.demand.web.contract.BillDetailInfo;
@@ -23,10 +24,13 @@ public class BillService {
 
 	public EgBill createBill(Long demandId, BillInfo billInfo) {
 		EgBill egBill = new EgBill(billInfo);
-		List<EgBillDetails> billDetails = new ArrayList<EgBillDetails>();
+		List<EgBillDetails> billDetails = new ArrayList<>();
 		egBill.setEgDemand(demandId);
 		egBill.setModule(billInfo.getModuleName());
-		egBill.setEgBillType(billTypeRepository.findByName(billInfo.getBillType()));
+		
+		EgBillType egBillType = billTypeRepository.findByName(billInfo.getBillType());
+		LOGGER.info(" BillService  the egbilltype response object from findbnamemethod call ::"+egBillType);
+		egBill.setEgBillType(egBillType);
 		egBill.setUserId(1l);
 		egBill.setTenantId(billInfo.getTenantId());
 		for (BillDetailInfo billDetailInfo : billInfo.getBillDetailInfos()) {

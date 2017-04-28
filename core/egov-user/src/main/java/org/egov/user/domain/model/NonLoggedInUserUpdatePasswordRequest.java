@@ -2,6 +2,7 @@ package org.egov.user.domain.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.egov.user.domain.exception.InvalidNonLoggedInUserUpdatePasswordRequestException;
 
@@ -10,10 +11,10 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 @AllArgsConstructor
 @Builder
 @Getter
+@EqualsAndHashCode
 public class NonLoggedInUserUpdatePasswordRequest {
 	private String otpReference;
-	private String mobileNumber;
-	private String existingPassword;
+	private String userName;
 	private String newPassword;
 	private String tenantId;
 
@@ -26,7 +27,7 @@ public class NonLoggedInUserUpdatePasswordRequest {
 	public OtpValidationRequest getOtpValidationRequest() {
 		return OtpValidationRequest.builder()
 				.otpReference(otpReference)
-				.mobileNumber(mobileNumber)
+				.mobileNumber(userName)
 				.tenantId(tenantId)
 				.build();
 	}
@@ -36,18 +37,18 @@ public class NonLoggedInUserUpdatePasswordRequest {
 	}
 
 	public boolean isMobileNumberAbsent() {
-		return isEmpty(mobileNumber);
-	}
-
-	public boolean isExistingPasswordAbsent() {
-		return isEmpty(existingPassword);
+		return isEmpty(userName);
 	}
 
 	public boolean isNewPasswordAbsent() {
 		return isEmpty(newPassword);
 	}
 
+	public boolean isTenantIdAbsent() {
+		return isEmpty(tenantId);
+	}
+
 	private boolean isModelInvalid() {
-		return isOtpReferenceAbsent() || isMobileNumberAbsent() || isExistingPasswordAbsent() || isNewPasswordAbsent();
+		return isOtpReferenceAbsent() || isMobileNumberAbsent() || isTenantIdAbsent() || isNewPasswordAbsent();
 	}
 }

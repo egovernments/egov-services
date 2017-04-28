@@ -3,35 +3,33 @@ package org.egov.user.domain.model;
 import org.egov.user.domain.exception.InvalidNonLoggedInUserUpdatePasswordRequestException;
 import org.junit.Test;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class NonLoggedInUserUpdatePasswordRequestTest {
 
 	@Test
 	public void test_should_not_throw_exception_when_all_mandatory_fields_are_present() {
 		final NonLoggedInUserUpdatePasswordRequest request = NonLoggedInUserUpdatePasswordRequest.builder()
-				.existingPassword("existingPassword")
+				.tenantId("tenant")
 				.newPassword("newPassword")
-				.mobileNumber("mobileNumber")
+				.userName("userName")
 				.otpReference("otpReference")
 				.build();
 
 		request.validate();
 
-		assertFalse(request.isExistingPasswordAbsent());
+		assertFalse(request.isTenantIdAbsent());
 		assertFalse(request.isMobileNumberAbsent());
 		assertFalse(request.isNewPasswordAbsent());
-		assertFalse(request.isExistingPasswordAbsent());
 		assertFalse(request.isOtpReferenceAbsent());
 	}
 
 	@Test(expected = InvalidNonLoggedInUserUpdatePasswordRequestException.class)
-	public void test_should_throw_exception_when_existing_password_is_not_present() {
+	public void test_should_throw_exception_when_tenant_id_is_not_present() {
 		final NonLoggedInUserUpdatePasswordRequest request = NonLoggedInUserUpdatePasswordRequest.builder()
-				.existingPassword(null)
+				.tenantId(null)
 				.newPassword("newPassword")
-				.mobileNumber("mobileNumber")
+				.userName("userName")
 				.otpReference("otpReference")
 				.build();
 
@@ -39,23 +37,23 @@ public class NonLoggedInUserUpdatePasswordRequestTest {
 	}
 
 	@Test
-	public void test_should_return_true_when_existing_password_is_not_present() {
+	public void test_should_return_true_when_tenant_is_not_present() {
 		final NonLoggedInUserUpdatePasswordRequest request = NonLoggedInUserUpdatePasswordRequest.builder()
-				.existingPassword(null)
+				.tenantId(null)
 				.newPassword("newPassword")
-				.mobileNumber("mobileNumber")
+				.userName("userName")
 				.otpReference("otpReference")
 				.build();
 
-		assertTrue(request.isExistingPasswordAbsent());
+		assertTrue(request.isTenantIdAbsent());
 	}
 
 	@Test(expected = InvalidNonLoggedInUserUpdatePasswordRequestException.class)
 	public void test_should_throw_exception_when_new_password_is_not_present() {
 		final NonLoggedInUserUpdatePasswordRequest request = NonLoggedInUserUpdatePasswordRequest.builder()
-				.existingPassword("existingPassword")
+				.tenantId("tenantId")
 				.newPassword(null)
-				.mobileNumber("mobileNumber")
+				.userName("userName")
 				.otpReference("otpReference")
 				.build();
 
@@ -65,9 +63,9 @@ public class NonLoggedInUserUpdatePasswordRequestTest {
 	@Test
 	public void test_should_return_true_when_new_password_is_not_present() {
 		final NonLoggedInUserUpdatePasswordRequest request = NonLoggedInUserUpdatePasswordRequest.builder()
-				.existingPassword("existingPassword")
+				.tenantId("tenantId")
 				.newPassword(null)
-				.mobileNumber("mobileNumber")
+				.userName("userName")
 				.otpReference("otpReference")
 				.build();
 
@@ -77,9 +75,9 @@ public class NonLoggedInUserUpdatePasswordRequestTest {
 	@Test(expected = InvalidNonLoggedInUserUpdatePasswordRequestException.class)
 	public void test_should_throw_exception_when_mobile_number_is_not_present() {
 		final NonLoggedInUserUpdatePasswordRequest request = NonLoggedInUserUpdatePasswordRequest.builder()
-				.existingPassword("existingPassword")
+				.tenantId("tenantId")
 				.newPassword("newPassword")
-				.mobileNumber(null)
+				.userName(null)
 				.otpReference("otpReference")
 				.build();
 
@@ -89,9 +87,9 @@ public class NonLoggedInUserUpdatePasswordRequestTest {
 	@Test
 	public void test_should_return_true_when_mobile_number_is_not_present() {
 		final NonLoggedInUserUpdatePasswordRequest request = NonLoggedInUserUpdatePasswordRequest.builder()
-				.existingPassword("existingPassword")
+				.tenantId("tenantId")
 				.newPassword("newPassword")
-				.mobileNumber(null)
+				.userName(null)
 				.otpReference("otpReference")
 				.build();
 
@@ -101,9 +99,9 @@ public class NonLoggedInUserUpdatePasswordRequestTest {
 	@Test(expected = InvalidNonLoggedInUserUpdatePasswordRequestException.class)
 	public void test_should_throw_exception_when_otp_reference_is_not_present() {
 		final NonLoggedInUserUpdatePasswordRequest request = NonLoggedInUserUpdatePasswordRequest.builder()
-				.existingPassword("existingPassword")
+				.tenantId("tenantId")
 				.newPassword("newPassword")
-				.mobileNumber("mobileNumber")
+				.userName("userName")
 				.otpReference(null)
 				.build();
 
@@ -113,13 +111,89 @@ public class NonLoggedInUserUpdatePasswordRequestTest {
 	@Test
 	public void test_should_return_true_when_otp_reference_is_not_present() {
 		final NonLoggedInUserUpdatePasswordRequest request = NonLoggedInUserUpdatePasswordRequest.builder()
-				.existingPassword("existingPassword")
+				.tenantId("tenantId")
 				.newPassword("newPassword")
-				.mobileNumber("mobileNumber")
+				.userName("userName")
 				.otpReference(null)
 				.build();
 
 		assertTrue(request.isOtpReferenceAbsent());
+	}
+
+	@Test
+	public void test_equality_should_return_true_when_both_instances_have_same_field_values() {
+		final NonLoggedInUserUpdatePasswordRequest request1 = NonLoggedInUserUpdatePasswordRequest.builder()
+				.tenantId("tenantId")
+				.newPassword("newPassword")
+				.userName("userName")
+				.otpReference("otpReference")
+				.build();
+
+		final NonLoggedInUserUpdatePasswordRequest request2 = NonLoggedInUserUpdatePasswordRequest.builder()
+				.tenantId("tenantId")
+				.newPassword("newPassword")
+				.userName("userName")
+				.otpReference("otpReference")
+				.build();
+
+		assertTrue(request1.equals(request2));
+	}
+
+	@Test
+	public void test_hash_code_should_be_same_when_both_instances_have_same_field_values() {
+		final NonLoggedInUserUpdatePasswordRequest request1 = NonLoggedInUserUpdatePasswordRequest.builder()
+				.tenantId("tenantId")
+				.newPassword("newPassword")
+				.userName("userName")
+				.otpReference("otpReference")
+				.build();
+
+		final NonLoggedInUserUpdatePasswordRequest request2 = NonLoggedInUserUpdatePasswordRequest.builder()
+				.tenantId("tenantId")
+				.newPassword("newPassword")
+				.userName("userName")
+				.otpReference("otpReference")
+				.build();
+
+		assertEquals(request1.hashCode(), request2.hashCode());
+	}
+
+	@Test
+	public void test_equality_should_return_false_when_both_instances_have_different_field_values() {
+		final NonLoggedInUserUpdatePasswordRequest request1 = NonLoggedInUserUpdatePasswordRequest.builder()
+				.tenantId("tenantId1")
+				.newPassword("newPassword1")
+				.userName("userName1")
+				.otpReference("otpReference1")
+				.build();
+
+		final NonLoggedInUserUpdatePasswordRequest request2 = NonLoggedInUserUpdatePasswordRequest.builder()
+				.tenantId("tenantId2")
+				.newPassword("newPassword2")
+				.userName("userName2")
+				.otpReference("otpReference2")
+				.build();
+
+		assertFalse(request1.equals(request2));
+	}
+
+	@Test
+	public void test_hash_code_should_be_different_when_both_instances_have_different_field_values() {
+		final NonLoggedInUserUpdatePasswordRequest request1 = NonLoggedInUserUpdatePasswordRequest.builder()
+				.tenantId("tenantId1")
+				.newPassword("newPassword1")
+				.userName("userName1")
+				.otpReference("otpReference1")
+				.build();
+
+		final NonLoggedInUserUpdatePasswordRequest request2 = NonLoggedInUserUpdatePasswordRequest.builder()
+				.tenantId("tenantId2")
+				.newPassword("newPassword2")
+				.userName("userName2")
+				.otpReference("otpReference2")
+				.build();
+
+		assertNotEquals(request1.hashCode(), request2.hashCode());
 	}
 
 }

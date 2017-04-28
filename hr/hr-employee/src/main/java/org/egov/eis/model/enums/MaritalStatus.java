@@ -40,6 +40,9 @@
 
 package org.egov.eis.model.enums;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -59,6 +62,15 @@ public enum MaritalStatus {
     public String toString() {
         return StringUtils.capitalize(name());
     }
+
+	@JsonCreator
+	public static List<String> getAllObjectValues() {
+		List<String> allObjectValues = new ArrayList<>();
+		for (MaritalStatus obj : MaritalStatus.values()) {
+			allObjectValues.add(obj.value);
+		}
+		return allObjectValues;
+	}
 
 	@JsonCreator
 	public static MaritalStatus fromValue(String passedValue) {

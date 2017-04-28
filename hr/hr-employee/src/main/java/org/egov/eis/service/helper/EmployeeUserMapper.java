@@ -79,6 +79,8 @@ public class EmployeeUserMapper {
 					finalEmployeeList.add(employeeInfo);
 				}
 			}
-		return finalEmployeeList;
+		employeeInfoList = new ArrayList<EmployeeInfo>();
+		employeeInfoList.addAll(finalEmployeeList);
+		return employeeInfoList;
 	}
 }

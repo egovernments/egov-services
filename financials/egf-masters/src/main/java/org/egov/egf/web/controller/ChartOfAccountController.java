@@ -153,7 +153,7 @@ public class ChartOfAccountController {
         if (errors.hasErrors()) {
             throw new CustomBindException(errors);
         }
-        String tenantId = requestInfo.getTenantId();
+        String tenantId = chartOfAccountContracts.getTenantId();
         // chartOfAccountService.fetchRelatedContracts(chartOfAccountContractRequest);
         ChartOfAccountContractResponse chartOfAccountContractResponse = new ChartOfAccountContractResponse();
         chartOfAccountContractResponse.setChartOfAccounts(new ArrayList<ChartOfAccountContract>());

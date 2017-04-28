@@ -59,6 +59,7 @@ public class BillInfo {
 	private Character callbackForApportion = null;
 	private String emailId = null;
 	private String consumerType = null;
+	private String tenantId = null;
 	private Double totalAmount = null;
 	private List<BillDetailInfo> billDetailInfos = new ArrayList<>();
 }

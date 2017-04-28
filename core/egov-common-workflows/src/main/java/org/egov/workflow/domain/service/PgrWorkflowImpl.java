@@ -212,7 +212,7 @@ public class PgrWorkflowImpl implements Workflow {
 	}
 
 	@Override
-	public ProcessInstance getProcess(String jurisdiction, ProcessInstance processInstance) {
+	public ProcessInstance getProcess(String jurisdiction, ProcessInstance processInstance, final RequestInfo requestInfo) {
 		// TODO Auto-generated method stub
 		return null;
 	}

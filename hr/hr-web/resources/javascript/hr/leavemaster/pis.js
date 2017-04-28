@@ -96,7 +96,6 @@ class PersonalInform extends React.Component {
   }
 
   search(e) {
-
     let {
         name,
         employee,
@@ -325,6 +324,11 @@ class PersonalInform extends React.Component {
   }
 
   handleBlur(e) {
+    setTimeout(function(){
+       if(document.activeElement.id == "sub") {
+          $("#sub").click();
+       }
+    }, 100);
     var _this = this;
 
     if (e.target.value) {
@@ -549,7 +553,7 @@ class PersonalInform extends React.Component {
                 </div>
 
             <div className="text-center">
-                <button type="submit"  className="btn btn-submit">Search</button>&nbsp;&nbsp;
+                <button id="sub" type="submit"  className="btn btn-submit">Search</button>&nbsp;&nbsp;
                 <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>
             </div>
           </fieldset>

@@ -90,6 +90,7 @@ public class PaymentService {
 				billInfo.setDemandId(Long.valueOf(agreement.getDemands().get(0)));
 			}
 			billInfo.setCitizenName(agreement.getAllottee().getName());
+			billInfo.setTenantId(agreement.getTenantId());
 			// billInfo.setCitizenAddress(agreement.getAllottee().getAddress());
 			// TODO: Fix me after the issue is fixed by user service
 			billInfo.setCitizenAddress("Test");
@@ -212,6 +213,7 @@ public class PaymentService {
 			RequestInfo requestInfo, Map<String, String> purpose) {
 		final List<BillDetailInfo> billDetails = new ArrayList<>();
 
+		LOGGER.info("paymentservice demand detail ::"+demandDetail);
 		try {
 			BillDetailInfo billdetail = new BillDetailInfo();
 			// TODO: Fix me: As per the rules for the order no.

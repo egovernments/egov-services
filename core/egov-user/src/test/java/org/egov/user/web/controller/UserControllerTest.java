@@ -80,7 +80,7 @@ public class UserControllerTest {
 	public void test_should_partially_update_user() throws Exception {
 		when(userService.partialUpdate(any())).thenReturn(org.egov.user.domain.model.User.builder().build());
 
-		mockMvc.perform(post("/user/_patch")
+		mockMvc.perform(post("/_patch")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
 				.content(getFileContents("patchUserRequest.json")))
 				.andExpect(status().isOk())

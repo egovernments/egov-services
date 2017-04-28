@@ -130,7 +130,7 @@ public class WorkFlowController {
 
 		p = p.builder().id(id).build();
 
-		p = matrixWorkflow.getProcess(tenantId, p);
+		p = matrixWorkflow.getProcess(tenantId, p,requestInfo);
 		pres.setProcessInstance(p);
 		pres.setResponseInfo(getResponseInfo(requestInfo));
 		LOGGER.info("The response  owner value before sending :::"+pres.getProcessInstance().getOwner());

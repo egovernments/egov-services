@@ -333,7 +333,7 @@ public class WorkflowMatrixImpl implements Workflow {
 				.parallelStream().map(position -> position.getId()).collect(Collectors.toList());
 		List<State> states = new ArrayList<State>();
 		if (!types.isEmpty())
-			states = stateService.getStates(ownerIds, types, userId);
+			states = stateService.getStates(ownerIds, types, userId,taskRequest.getRequestInfo().getTenantId());
 		for (final State s : states)
 			tasks.add(s.map());
 

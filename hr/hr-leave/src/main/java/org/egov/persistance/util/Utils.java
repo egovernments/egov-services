@@ -38,32 +38,32 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.web.contract.factory;
+package org.egov.persistance.util;
 
-import org.egov.eis.web.contract.RequestInfo;
-import org.egov.eis.web.contract.ResponseInfo;
-import org.springframework.stereotype.Component;
+import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.springframework.stereotype.Service;
 
-@Component
-public class ResponseInfoFactory {
+@Service
+public class Utils {
 
-	public ResponseInfo createResponseInfoFromRequestInfo(RequestInfo requestInfo, Boolean success) {
+    private final DateTimeFormatter FORMAT_DATE_TO_YEAR = DateTimeFormat.forPattern("yyyy");
+    private final DateTimeFormatter FORMAT_DATE_TO_MONTH = DateTimeFormat.forPattern("MM");
 
-		String apiId = null;
-		String ver = null;
-		String ts = null;
-		String resMsgId = "uief87324"; // FIXME : Hard-coded
-		String msgId = null;
-		if (requestInfo != null) {
-			apiId = requestInfo.getApiId();
-			ver = requestInfo.getVer();
-			if(requestInfo.getTs()!=null)
-			ts = requestInfo.getTs().toString();
-			msgId = requestInfo.getMsgId();
-		}
-		String responseStatus = success ? "successful" : "failed";
+    public String currentDateToYearFormat() {
+        return toYearFormat(new LocalDate());
+    }
+    
+    public String currentDateToMonthFormat() {
+        return toMonthFormat(new LocalDate());
+    }
 
-		return new ResponseInfo(apiId, ver, ts, resMsgId, msgId, responseStatus);
-	}
+    private String toMonthFormat(final LocalDate date) {
+        return FORMAT_DATE_TO_MONTH.print(date);
+    }
 
+    private String toYearFormat(final LocalDate date) {
+        return FORMAT_DATE_TO_YEAR.print(date);
+    }
 }

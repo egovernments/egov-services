@@ -33,15 +33,15 @@ class ApplyLeave extends React.Component {
 
   componentDidMount(){
     var type = getUrlVars()["type"], _this = this;
-    var stateId = getUrlVars()["id"];
+    var stateId = getUrlVars()["stateId"];
     var asOnDate = _this.state.leaveSet.toDate;
+    //
+    // if(getUrlVars()["type"]==="update")
+    // {
+    //     $("input,select,textarea").prop("disabled", true);
+    //   }
 
-    if(getUrlVars()["type"]==="update")
-    {
-        $("input,select,textarea").prop("disabled", true);
-      }
-
-        var _leaveSet = getCommonMasterById("hr-leave","leaveapplications","LeaveApplication",stateId).responseJSON["LeaveApplication"][0];
+        var _leaveSet = commonApiPost("hr-leave","leaveapplications","_search",{tenantId,stateId}).responseJSON["LeaveApplication"][0];
         var employee = commonApiPost("hr-employee", "employees", "_search", {
             tenantId,
             id: _leaveSet.employee
@@ -162,29 +162,101 @@ class ApplyLeave extends React.Component {
                   }
             });
 
-            if (!id) {
 
-             var obj = commonApiPost("hr-employee","employees","_loggedinemployee",{tenantId}).responseJSON["Employee"][0];
-            } else {
-              var obj = getCommonMasterById("hr-employee","employees","Employee",id).responseJSON["Employee"][0];
+            try{
+              var process = commonApiPost("egov-common-workflows", "process", "_search", {
+              tenantId: tenantId,
+              id: stateId
+          }).responseJSON["processInstance"];
+          if (process && process.attributes && process.attributes.validActions && process.attributes.validActions.values && process.attributes.validActions.values.length) {
+              for (var i = 0; i < process.attributes.validActions.values.length; i++) {
+                  if (process.attributes.validActions.values[i].key)
+                      $("#footer-btn-grp").append($(`<button data-action=${process.attributes.validActions.values[i].key} id=${process.attributes.validActions.values[i].key} type="button" class="btn btn-submit">${process.attributes.validActions.values[i].name}<button/>`));
+              }
+          }
+      } catch(e){
+        console.log(e);
+      }
+
+
+
+
+
+
+        $('body').on('click', 'button', function(e) {
+        e.preventDefault();
+        if (!e.target.id) return;
+        var data = $("#" + e.target.id).data();
+        if (data.action ){
+          e.preventDefault();
+          var employee;
+          var asOnDate = this.state.leaveSet.toDate;
+          var departmentId = this.state.departmentId;
+          var tempInfo=Object.assign({},this.state.leaveSet) , type = getUrlVars()["type"];
+          delete  tempInfo.name;
+          delete tempInfo.code;
+          var res = commonApiPost("hr-employee","hod/employees","_search",{tenantId,asOnDate,departmentId})
+            if(res && res.responseJSON && res.responseJSON["Employee"] && res.responseJSON["Employee"][0]){
+              employee = res.responseJSON["Employee"][0]
             }
+            else{
+              employee={};
+            }
+            tempInfo.workflowDetails.assignee = employee.assignments && employee.assignments[0] ? employee.assignments[0].id : "";
+          var body={
+              "RequestInfo":requestInfo,
+              "LeaveApplication":tempInfo
+            },_this=this;
+                $.ajax({
 
-            _this.setState({
-              leaveSet:{
-                  ..._this.state.leaveSet,
-                  name:obj.name,
-                  code:obj.code,
-                  employee:obj.id,
-                  // workflowDetails:{
-                  //   ..._this.state.leaveSet.workflowDetails,
-                  //   assignee: assignee || ""
-                  // }
+                      url:baseUrl+"/hr-leave/leaveapplications/" + this.state.leaveSet.id + "/" + "_update?tenantId=" + tenantId,
+                      type: 'POST',
+                      dataType: 'json',
+                      data:JSON.stringify(body),
 
-                },
-               departmentId:this.getPrimaryAssigmentDep(obj,"department")
+                      contentType: 'application/json',
+                      headers:{
+                        'auth-token': authToken
+                      },
+                      success: function(res) {
+                              showSuccess("Leave Application Modified successfully.");
+                              _this.setState({
+                                leaveSet:{
+                                  "name":"",
+                                  "code":"",
+                                  "employee": "",
+                                   "leaveType": {
+                                   	"id" : ""
+                                   },
+                                   "fromDate" : "",
+                                   "toDate": "",
+                                   "availableDays": "",
+                                   "reason": "",
+                                   "leaveDays":"",
+                                   "status": "",
+                                   "stateId": "",
+                                   "tenantId" : tenantId,
+                                   "workflowDetails": {
+                                    "department": "",
+                                    "designation": "",
+                                    "assignee": "",
+                                    "action": "",
+                                    "status": ""
+                                  }
+                                 },leaveList:[]
+                              })
 
-            })
+                      },
+                      error: function(err) {
+                          showError(err);
 
+                      }
+                  });
+
+
+        }
+
+      });
     }
 
     getPrimaryAssigmentDep(obj,type)
@@ -386,12 +458,7 @@ addOrUpdate(e,mode)
     let mode=getUrlVars()["type"];
 
 
-    const showActionButton=function() {
-      if((!mode) ||mode==="create")
-      {
-        return (<button type="submit" className="btn btn-submit">{mode?"Approve":"Apply"}</button>);
-      }
-    };
+
 
     const renderOption=function(list)
     {
@@ -536,7 +603,7 @@ addOrUpdate(e,mode)
 
 
             <div className="text-center">
-            {showActionButton()} &nbsp;&nbsp;
+
             <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>
 
             </div>

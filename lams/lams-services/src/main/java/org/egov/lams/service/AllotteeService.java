@@ -50,6 +50,7 @@ public class AllotteeService {
 		allotteeId.addAll(agreementCriteria.getAllottee());
 		userSearchRequest.setId(allotteeId);
 		userSearchRequest.setName(agreementCriteria.getAllotteeName());
+		userSearchRequest.setTenantId(agreementCriteria.getTenantId());
 		if (agreementCriteria.getMobileNumber() != null)
 			userSearchRequest.setMobileNumber(agreementCriteria.getMobileNumber().toString());
 		logger.info("the request object for allotte search is userSearchRequest ::: " + userSearchRequest);

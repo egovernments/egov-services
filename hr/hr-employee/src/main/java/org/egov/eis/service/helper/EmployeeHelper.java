@@ -358,6 +358,7 @@ public class EmployeeHelper {
 				employeeInfo.setDocuments(documents);
 			}
 		}
+		System.err.println("employeeInfoList size inside mapDocumentsWithEmployees: " + employeeInfoList.size());
 	}
 
 }

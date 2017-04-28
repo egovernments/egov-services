@@ -36,13 +36,16 @@ public class PaymentController {
 	public ResponseEntity<?> create(
 			@RequestBody RequestInfoWrapper requestInfoWrapper,
 			@RequestParam (name="agreementNumber", required=false)  String agreementNumber,
-			@RequestParam (name="acknowledgementNumber", required=false)  String acknowledgementNumber) {
-		LOGGER.info("PaymentController create:"+agreementNumber+","+acknowledgementNumber);
+			@RequestParam (name="acknowledgementNumber", required=false)  String acknowledgementNumber,
+			@RequestParam (name="tenantId", required=true)  String tenantId) {
+		LOGGER.info("PaymentController create:"+agreementNumber+","+acknowledgementNumber+"tenantId ::"+tenantId);
 		AgreementCriteria agreementCriteria = new AgreementCriteria();
 		if (StringUtils.isNotBlank(agreementNumber))
 			agreementCriteria.setAgreementNumber(agreementNumber);
 		else if (StringUtils.isNotBlank(acknowledgementNumber))
 			agreementCriteria.setAcknowledgementNumber(acknowledgementNumber);
+		
+		agreementCriteria.setTenantId(tenantId);
 		Agreement agreement = agreementService.searchAgreement(
 				agreementCriteria).get(0);
 		System.out.print("PaymentController - create - agreement - "+agreement);

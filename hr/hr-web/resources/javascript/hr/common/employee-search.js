@@ -90,7 +90,10 @@ componentWillUpdate() {
                      'copy', 'csv', 'excel', 'pdf', 'print'
              ],
              ordering: false,
-             bDestroy: true
+             bDestroy: true,
+             language: {
+               "emptyTable": "No Records"
+            }
           });
       }
   }
@@ -233,17 +236,8 @@ const getTodaysDate = function() {
             );
 
       })
-    }
-       else {
-          return (
-              <tr>
-                  <td colSpan="6">No records</td>
-              </tr>
-          )
-      }
-
-
-    }
+    } 
+}
 
     const disbaled=function(type) {
         if (type==="view") {

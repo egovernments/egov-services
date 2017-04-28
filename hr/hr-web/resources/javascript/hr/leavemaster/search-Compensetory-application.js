@@ -123,7 +123,10 @@ class SearchLeaveApplication extends React.Component {
                      'copy', 'csv', 'excel', 'pdf', 'print'
              ],
              ordering: false,
-             bDestroy: true
+             bDestroy: true,
+             language: {
+              "emptyTable": "No Records"
+            }
           });
       }
   }
@@ -215,15 +218,9 @@ class SearchLeaveApplication extends React.Component {
                 </tr>
             );
       })
-    }
-    else {
-      return (
-          <tr>
-              <td colSpan="6">No records</td>
-          </tr>
-      )
-    }
+    } 
   }
+
     return (
       <div>
         <h3>Search employee to {getUrlVars()["type"]} a Compensetory application</h3>

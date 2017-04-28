@@ -53,18 +53,18 @@ public class InvalidNonLoggedInUserUpdatePasswordRequestErrorHandlerTest {
 	}
 
 	@Test
-	public void test_should_return_error_when_existing_password_is_not_present() {
+	public void test_should_return_error_when_tenant_id_is_not_present() {
 		final NonLoggedInUserUpdatePasswordRequest updatePassword = mock(NonLoggedInUserUpdatePasswordRequest.class);
-		when(updatePassword.isExistingPasswordAbsent()).thenReturn(true);
+		when(updatePassword.isTenantIdAbsent()).thenReturn(true);
 
 		final ErrorResponse errorResponse = errorHandler.adapt(updatePassword);
 
 		final Error error = errorResponse.getError();
 		final List<ErrorField> fields = error.getFields();
 		assertEquals(1, fields.size());
-		assertEquals("existingPassword", fields.get(0).getField());
-		assertEquals("Existing password is mandatory", fields.get(0).getMessage());
-		assertEquals("USER.EXISTING_PASSWORD_MANDATORY", fields.get(0).getCode());
+		assertEquals("tenantId", fields.get(0).getField());
+		assertEquals("Tenant id is mandatory", fields.get(0).getMessage());
+		assertEquals("USER.TENANT_ID_MANDATORY", fields.get(0).getCode());
 	}
 
 	@Test

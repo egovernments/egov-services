@@ -3,6 +3,7 @@ package org.egov.user.web.controller;
 import org.egov.user.Resources;
 import org.egov.user.TestConfiguration;
 import org.egov.user.domain.model.LoggedInUserUpdatePasswordRequest;
+import org.egov.user.domain.model.NonLoggedInUserUpdatePasswordRequest;
 import org.egov.user.domain.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,6 +16,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -38,7 +40,7 @@ public class PasswordControllerTest {
 	public void test_should_update_password_for_logged_in_user() throws Exception {
 		mockMvc.perform(post("/password/_update")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(resources.getFileContents("updatePasswordRequest.json")))
+				.content(resources.getFileContents("loggedInUserUpdatePasswordRequest.json")))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(resources.getFileContents("updatePasswordResponse.json")));
@@ -50,6 +52,26 @@ public class PasswordControllerTest {
 				.build();
 
 		verify(userService).updatePasswordForLoggedInUser(expectedRequest);
+	}
+
+	@Test
+	@WithMockUser
+	public void test_should_update_password_for_non_logged_in_user() throws Exception {
+		mockMvc.perform(post("/password/nologin/_update")
+				.contentType(MediaType.APPLICATION_JSON_UTF8)
+				.content(resources.getFileContents("nonLoggedInUserUpdatePasswordRequest.json")))
+				.andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(content().json(resources.getFileContents("updatePasswordResponse.json")));
+
+		final NonLoggedInUserUpdatePasswordRequest expectedRequest = NonLoggedInUserUpdatePasswordRequest.builder()
+				.tenantId("tenant")
+				.newPassword("newPassword")
+				.otpReference("otpReference")
+				.userName("userName")
+				.build();
+
+		verify(userService).updatePasswordForNonLoggedInUser(expectedRequest);
 	}
 
 }

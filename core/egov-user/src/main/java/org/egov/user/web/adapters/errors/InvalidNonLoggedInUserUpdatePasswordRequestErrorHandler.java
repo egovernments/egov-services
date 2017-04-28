@@ -20,9 +20,9 @@ public class InvalidNonLoggedInUserUpdatePasswordRequestErrorHandler
 	private static final String OTP_REFERENCE_MANDATORY_FIELD = "otpReference";
 	private static final String OTP_REFERENCE_MANDATORY_MESSAGE = "OTP reference is mandatory";
 
-	private static final String EXISTING_PASSWORD_MANDATORY_CODE = "USER.EXISTING_PASSWORD_MANDATORY";
-	private static final String EXISTING_PASSWORD_MANDATORY_FIELD = "existingPassword";
-	private static final String EXISTING_PASSWORD_MANDATORY_MESSAGE = "Existing password is mandatory";
+	private static final String TENANT_MANDATORY_CODE = "USER.TENANT_ID_MANDATORY";
+	private static final String TENANT_MANDATORY_FIELD = "tenantId";
+	private static final String TENANT_MANDATORY_MESSAGE = "Tenant id is mandatory";
 
 	private static final String NEW_PASSWORD_MANDATORY_CODE = "USER.NEW_PASSWORD_MANDATORY";
 	private static final String NEW_PASSWORD_MANDATORY_FIELD = "newPassword";
@@ -47,7 +47,7 @@ public class InvalidNonLoggedInUserUpdatePasswordRequestErrorHandler
 		final ArrayList<ErrorField> errorFields = new ArrayList<>();
 		addMobileNumberMandatoryError(model, errorFields);
 		addOtpReferenceMandatoryError(model, errorFields);
-		addExistingPasswordMandatoryError(model, errorFields);
+		addTenantIdMandatoryError(model, errorFields);
 		addNewPasswordMandatoryError(model, errorFields);
 		return errorFields;
 	}
@@ -65,15 +65,15 @@ public class InvalidNonLoggedInUserUpdatePasswordRequestErrorHandler
 		errorFields.add(errorField);
 	}
 
-	private void addExistingPasswordMandatoryError(NonLoggedInUserUpdatePasswordRequest model,
+	private void addTenantIdMandatoryError(NonLoggedInUserUpdatePasswordRequest model,
 												   ArrayList<ErrorField> errorFields) {
-		if(!model.isExistingPasswordAbsent()) {
+		if(!model.isTenantIdAbsent()) {
 			return;
 		}
 		final ErrorField errorField = ErrorField.builder()
-				.code(EXISTING_PASSWORD_MANDATORY_CODE)
-				.field(EXISTING_PASSWORD_MANDATORY_FIELD)
-				.message(EXISTING_PASSWORD_MANDATORY_MESSAGE)
+				.code(TENANT_MANDATORY_CODE)
+				.field(TENANT_MANDATORY_FIELD)
+				.message(TENANT_MANDATORY_MESSAGE)
 				.build();
 		errorFields.add(errorField);
 	}

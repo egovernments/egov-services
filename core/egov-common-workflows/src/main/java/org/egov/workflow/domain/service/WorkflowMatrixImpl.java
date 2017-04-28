@@ -278,7 +278,7 @@ public class WorkflowMatrixImpl implements Workflow {
 	}
 
 	@Override
-	public ProcessInstance getProcess(final String jurisdiction, final ProcessInstance processInstance) {
+	public ProcessInstance getProcess(final String jurisdiction, final ProcessInstance processInstance,final RequestInfo requestInfo) {
 		LOG.debug("Starting getProcess for  " + processInstance.toString() + " for tenant" + jurisdiction);
 		final WorkflowBean wfbean = new WorkflowBean();
 		processInstance.setTenantId(jurisdiction);
@@ -288,9 +288,9 @@ public class WorkflowMatrixImpl implements Workflow {
 		if (state != null) {
 			processInstance.setBusinessKey(state.getType());
 			if (state.getOwnerPosition() != null)
-				processInstance.setOwner(positionRepository.getById(state.getOwnerPosition(), null));
+				processInstance.setOwner(positionRepository.getById(state.getOwnerPosition(), requestInfo));
 			else if (state.getOwnerUser() != null)
-				processInstance.setOwner(positionRepository.getById(state.getOwnerUser(), null));
+				processInstance.setOwner(positionRepository.getById(state.getOwnerUser(), requestInfo));
 
 			if (processInstance.getOwner() == null) {
 				Position p = new Position();

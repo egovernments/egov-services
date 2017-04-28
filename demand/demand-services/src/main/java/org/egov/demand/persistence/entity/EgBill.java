@@ -150,7 +150,7 @@ public class EgBill implements java.io.Serializable {
 	@Column(name = "dspl_message")
 	private String displayMessage;
 	@Column(name = "callback_for_apportion")
-	private Boolean callBackForApportion;
+	private Character callBackForApportion;
 	@Column(name = "emailid")
 	private String emailId;
 	@Column(name = "tenantid")

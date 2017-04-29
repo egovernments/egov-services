@@ -10,7 +10,7 @@ class LeaveType extends React.Component{
         "payEligible": "false",
         "accumulative": "false",
         "encashable": "false",
-        "active": "",
+        "active": "true",
         "createdBy": "",
         "createdDate": "",
         "lastModifiedBy": "",
@@ -23,12 +23,23 @@ class LeaveType extends React.Component{
 
   handleChange(e,name)
   {
-      this.setState({
+      if(name === "active"){
+        this.setState({
           LeaveType:{
               ...this.state.LeaveType,
-              [name]:e.target.value
+              active: !this.state.LeaveType.active
+
           }
-      })
+        })
+      } else{
+        this.setState({
+            LeaveType:{
+                ...this.state.LeaveType,
+                [name]:e.target.value
+            }
+        })
+      }
+
 
   }
 
@@ -43,11 +54,12 @@ addOrUpdate(e,mode)
         e.preventDefault();
 
         var tempInfo=Object.assign({},this.state.LeaveType) , type = getUrlVars()["type"];
-
+        console.log(tempInfo);
         var body={
             "RequestInfo":requestInfo,
             "LeaveType":[tempInfo]
           },_this=this;
+
             if(type == "Update") {
         $.ajax({
               url:baseUrl+"/hr-leave/leavetypes/" + _this.state.LeaveType.id + "/" + "_update?tenantId=" + tenantId,
@@ -65,11 +77,11 @@ addOrUpdate(e,mode)
                           "id": "",
                           "name": "",
                           "description": "",
-                          "halfdayAllowed": "",
-                          "payEligible": "",
-                          "accumulative": "",
-                          "encashable": "",
-                          "active": "",
+                          "halfdayAllowed": "false",
+                          "payEligible": "false",
+                          "accumulative": "false",
+                          "encashable": "false",
+                          "active": "true",
                           "createdBy": "",
                           "createdDate": "",
                           "lastModifiedBy": "",
@@ -102,11 +114,11 @@ addOrUpdate(e,mode)
                             "id": "",
                             "name": "",
                             "description": "",
-                            "halfdayAllowed": "",
-                            "payEligible": "",
-                            "accumulative": "",
-                            "encashable": "",
-                            "active": "",
+                            "halfdayAllowed": "false",
+                            "payEligible": "false",
+                            "accumulative": "false",
+                            "encashable": "false",
+                            "active": "true",
                             "createdBy": "",
                             "createdDate": "",
                             "lastModifiedBy": "",
@@ -265,8 +277,9 @@ addOrUpdate(e,mode)
                     </div>
                         <div className="col-sm-6">
                               <label className="radioUi">
-                                <input type="checkbox" name="active"  value="true" onChange={(e)=>{
-                                    handleChange(e,"active")}} checked="checked"/>
+                                <input type="checkbox" name="active" value="true" checked={active == "true" || active  ==  true}
+                                 onChange={(e)=>{ handleChange(e,"active")}}/>
+
                               </label>
                         </div>
                     </div>

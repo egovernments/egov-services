@@ -19,29 +19,32 @@ class SearchLeaveApplication extends React.Component {
 
   search(e)
   {
-      e.preventDefault();
     let {
     name,
     code,
     departmentId,
-    designationId,
-    employeeTypeId}=this.state.searchSet;
+    designationId}=this.state.searchSet;
     e.preventDefault();
     //call api call
     var employees=[];
-    employees=commonApiPost("hr-employee","employees","_search",{tenantId,code,departmentId,designationId,pageSize:500},this.state.searchSet).responseJSON["Employee"] || [];
+    try{
+      employees=commonApiPost("hr-employee","employees","_search",{tenantId,
+      departmentId: departmentId || null,
+      designationId: designationId || null,
+      code: code || null,
+      pageSize: 500},this.state.searchSet).responseJSON["Employee"] || [];
+    } catch(e){
+      employees = [];
+    }
     flag = 1;
     this.setState({
       isSearchClicked:true,
-      employees,searchSet:{
-
-      name:"",
-      code:"",
-      departmentId:"",
-      designationId:"",
-      employeeType:""}
-    });
+      employees
+    })
   }
+
+
+
 
 
   componentWillMount()
@@ -85,8 +88,7 @@ class SearchLeaveApplication extends React.Component {
         var code = e.target.value;
        //Make get employee call
        var obj = commonApiPost("hr-employee","employees","_search",{code,tenantId}).responseJSON["Employee"][0];
-       console.log(obj);
-       _this.setState({
+         _this.setState({
          searchSet:{
              ..._this.state.searchSet,
              name:obj.name
@@ -223,7 +225,7 @@ class SearchLeaveApplication extends React.Component {
                 </tr>
             );
       })
-    } 
+    }
   }
 
     return (

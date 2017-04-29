@@ -40,7 +40,7 @@ class ApplyLeave extends React.Component {
     // {
     //     $("input,select,textarea").prop("disabled", true);
     //   }
-
+      try {
         var _leaveSet = commonApiPost("hr-leave","leaveapplications","_search",{tenantId,stateId}).responseJSON["LeaveApplication"][0];
         var employee = commonApiPost("hr-employee", "employees", "_search", {
             tenantId,
@@ -48,6 +48,10 @@ class ApplyLeave extends React.Component {
         }).responseJSON["Employee"][0];
         _leaveSet.name = employee.name;
         _leaveSet.code = employee.code;
+      } catch(e) {
+        console.log(e);
+      }
+
         _this.setState({
            leaveSet: _leaveSet
         })
@@ -134,6 +138,7 @@ class ApplyLeave extends React.Component {
                        if (endDay == 6 && startDay != 0)
                            days = days - 1;
                    }
+
                    if (_this.state.leaveSet.toDate && _this.state.leaveSet.leaveType.id) {
                      try{
                         var leaveType = _this.state.leaveSet.leaveType.id;
@@ -163,10 +168,10 @@ class ApplyLeave extends React.Component {
             });
 
 
-            try{
-              var process = commonApiPost("egov-common-workflows", "process", "_search", {
-              tenantId: tenantId,
-              id: stateId
+        try{
+          var process = commonApiPost("egov-common-workflows", "process", "_search", {
+          tenantId: tenantId,
+          id: stateId
           }).responseJSON["processInstance"];
           if (process && process.attributes && process.attributes.validActions && process.attributes.validActions.values && process.attributes.validActions.values.length) {
               for (var i = 0; i < process.attributes.validActions.values.length; i++) {
@@ -177,10 +182,6 @@ class ApplyLeave extends React.Component {
       } catch(e){
         console.log(e);
       }
-
-
-
-
 
 
         $('body').on('click', 'button', function(e) {
@@ -207,8 +208,8 @@ class ApplyLeave extends React.Component {
               "RequestInfo":requestInfo,
               "LeaveApplication":tempInfo
             },_this=this;
-                $.ajax({
 
+                $.ajax({
                       url:baseUrl+"/hr-leave/leaveapplications/" + this.state.leaveSet.id + "/" + "_update?tenantId=" + tenantId,
                       type: 'POST',
                       dataType: 'json',
@@ -252,12 +253,10 @@ class ApplyLeave extends React.Component {
 
                       }
                   });
-
-
-        }
-
+              }
       });
     }
+
 
     getPrimaryAssigmentDep(obj,type)
     {
@@ -269,13 +268,20 @@ class ApplyLeave extends React.Component {
         }
       }
     }
+    
+    componentWillMount()
+    {
+      try {
+          var _leaveTypes = getCommonMaster("hr-leave", "leavetypes", "LeaveType").responseJSON["LeaveType"] || [];
+      } catch(e) {
+          var _leaveTypes = [];
+      }
+      this.setState({
+        leaveList: _leaveTypes
 
-  componentWillMount()
-  {
-    this.setState({
-      leaveList:getCommonMaster("hr-leave","leavetypes","LeaveType").responseJSON["LeaveType"]
     })
-  }
+    }
+
 
   handleChangeThreeLevel(e,pName,name) {
     var _this=this;
@@ -298,11 +304,9 @@ class ApplyLeave extends React.Component {
             }
           })
         }
-        catch (e){
+        catch (e) {
           console.log(e);
         }
-
-
     } else {
       this.setState({
           leaveSet:{
@@ -332,123 +336,123 @@ class ApplyLeave extends React.Component {
       open(location, '_self').close();
   }
 
+
 addOrUpdate(e,mode)
 {
+    e.preventDefault();
+    var employee;
+    var asOnDate = this.state.leaveSet.toDate;
+    var departmentId = this.state.departmentId;
+    var tempInfo=Object.assign({},this.state.leaveSet) , type = getUrlVars()["type"];
+    delete  tempInfo.name;
+    delete tempInfo.code;
+    var res = commonApiPost("hr-employee","hod/employees","_search",{tenantId,asOnDate,departmentId})
+      if(res && res.responseJSON && res.responseJSON["Employee"] && res.responseJSON["Employee"][0]){
+        employee = res.responseJSON["Employee"][0]
+      }
+      else{
+        employee={};
+      }
+      tempInfo.workflowDetails.assignee = employee.assignments && employee.assignments[0] ? employee.assignments[0].id : "";
+    var body={
+        "RequestInfo":requestInfo,
+        "LeaveApplication":tempInfo
+      },_this=this;
+        if(type == "update") {
+          $.ajax({
 
-        e.preventDefault();
-        var employee;
-        var asOnDate = this.state.leaveSet.toDate;
-        var departmentId = this.state.departmentId;
-        var tempInfo=Object.assign({},this.state.leaveSet) , type = getUrlVars()["type"];
-        delete  tempInfo.name;
-        delete tempInfo.code;
-        var res = commonApiPost("hr-employee","hod/employees","_search",{tenantId,asOnDate,departmentId})
-          if(res && res.responseJSON && res.responseJSON["Employee"] && res.responseJSON["Employee"][0]){
-            employee = res.responseJSON["Employee"][0]
-          }
-          else{
-            employee={};
-          }
-          tempInfo.workflowDetails.assignee = employee.assignments && employee.assignments[0] ? employee.assignments[0].id : "";
-        var body={
-            "RequestInfo":requestInfo,
-            "LeaveApplication":tempInfo
-          },_this=this;
-            if(type == "update") {
-              $.ajax({
+                url:baseUrl+"/hr-leave/leaveapplications/" + this.state.leaveSet.id + "/" + "_update?tenantId=" + tenantId,
+                type: 'POST',
+                dataType: 'json',
+                data:JSON.stringify(body),
 
-                    url:baseUrl+"/hr-leave/leaveapplications/" + this.state.leaveSet.id + "/" + "_update?tenantId=" + tenantId,
-                    type: 'POST',
-                    dataType: 'json',
-                    data:JSON.stringify(body),
+                contentType: 'application/json',
+                headers:{
+                  'auth-token': authToken
+                },
+                success: function(res) {
+                        showSuccess("Leave Application Modified successfully.");
+                        _this.setState({
+                          leaveSet:{
+                            "name":"",
+                            "code":"",
+                            "employee": "",
+                             "leaveType": {
+                             	"id" : ""
+                             },
+                             "fromDate" : "",
+                             "toDate": "",
+                             "availableDays": "",
+                             "reason": "",
+                             "leaveDays":"",
+                             "status": "",
+                             "stateId": "",
+                             "tenantId" : tenantId,
+                             "workflowDetails": {
+                              "department": "",
+                              "designation": "",
+                              "assignee": "",
+                              "action": "",
+                              "status": ""
+                            }
+                           },leaveList:[]
+                        })
 
-                    contentType: 'application/json',
-                    headers:{
-                      'auth-token': authToken
-                    },
-                    success: function(res) {
-                            showSuccess("Leave Application Modified successfully.");
-                            _this.setState({
-                              leaveSet:{
-                                "name":"",
-                                "code":"",
-                                "employee": "",
-                                 "leaveType": {
-                                 	"id" : ""
-                                 },
-                                 "fromDate" : "",
-                                 "toDate": "",
-                                 "availableDays": "",
-                                 "reason": "",
-                                 "leaveDays":"",
-                                 "status": "",
-                                 "stateId": "",
-                                 "tenantId" : tenantId,
-                                 "workflowDetails": {
-                                  "department": "",
-                                  "designation": "",
-                                  "assignee": "",
-                                  "action": "",
-                                  "status": ""
-                                }
-                               },leaveList:[]
-                            })
+                },
+                error: function(err) {
+                    showError(err);
 
-                    },
-                    error: function(err) {
-                        showError(err);
-
-                    }
-                });
-            }
-            else{
-              $.ajax({
-                    url: baseUrl+"/hr-leave/leaveapplications/_create?tenantId=" + tenantId,
-                    type: 'POST',
-                    dataType: 'json',
-                    data:JSON.stringify(body),
-
-                    contentType: 'application/json',
-                    headers:{
-                      'auth-token': authToken
-                    },
-                    success: function(res) {
-                            showSuccess("Leave Application Created successfully.");
-                            _this.setState({
-                              leaveSet:{
-                                "name":"",
-                                "code":"",
-                                "employee": "",
-                                 "leaveType": {
-                                 	"id" : ""
-                                 },
-                                 "fromDate" : "",
-                                 "toDate": "",
-                                 "availableDays": "",
-                                 "leaveDays":"",
-                                 "reason": "",
-                                 "status": "",
-                                 "stateId": "",
-                                 "tenantId" : tenantId,
-                                 "workflowDetails": {
-                                  "department": "",
-                                  "designation": "",
-                                  "assignee": "",
-                                  "action": "",
-                                  "status": ""
-                                }
-                               },leaveList:[]
-                            })
-
-
-                    },
-                    error: function(err) {
-                        showError(err);
-
-                    }
-                });
-            }
+                }
+            });
         }
+        else{
+          $.ajax({
+                url: baseUrl+"/hr-leave/leaveapplications/_create?tenantId=" + tenantId,
+                type: 'POST',
+                dataType: 'json',
+                data:JSON.stringify(body),
+
+                contentType: 'application/json',
+                headers:{
+                  'auth-token': authToken
+                },
+                success: function(res) {
+                        showSuccess("Leave Application Created successfully.");
+                        _this.setState({
+                          leaveSet:{
+                            "name":"",
+                            "code":"",
+                            "employee": "",
+                             "leaveType": {
+                             	"id" : ""
+                             },
+                             "fromDate" : "",
+                             "toDate": "",
+                             "availableDays": "",
+                             "leaveDays":"",
+                             "reason": "",
+                             "status": "",
+                             "stateId": "",
+                             "tenantId" : tenantId,
+                             "workflowDetails": {
+                              "department": "",
+                              "designation": "",
+                              "assignee": "",
+                              "action": "",
+                              "status": ""
+                            }
+                           },leaveList:[]
+                        })
+
+
+                },
+                error: function(err) {
+                    showError(err);
+
+                }
+            });
+        }
+    }
 
 
   render() {

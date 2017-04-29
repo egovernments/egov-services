@@ -483,13 +483,13 @@ var commom_fields_rules = {
     aadhar:true
   },
   "user.permanentAddress": {
-    required: true
+    required: false
   },
   "user.permanentCity": {
-    required: true
+    required: false
   },
   "user.permanentPincode": {
-    required: true
+    required: false
   },
   "user.correspondenceCity": {
     required: false
@@ -875,13 +875,13 @@ var user = {
 
   },
   permanentAddress: {
-    required: true
+    required: false
   },
   permanentCity: {
-    required: true
+    required: false
   },
   permanentPincode: {
-    required: true
+    required: false
   },
   correspondenceCity: {
     required: false

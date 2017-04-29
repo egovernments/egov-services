@@ -3,6 +3,7 @@ $('#close').on("click", function() {
   window.close();
 })
 
+
 function returnObject(alies, optional) {
   switch (alies) {
     case "department":
@@ -365,9 +366,6 @@ var employeeSubObject = {
 //unicersal marker for putting edit index
 var editIndex = -1;
 
-
-
-
 //form validation
 var validation_rules = {};
 var final_validatin_rules = {};
@@ -466,27 +464,23 @@ var commom_fields_rules = {
     required: true
   },
   "user.mobileNumber": {
-    required: true
-    // ,
-    // phone:true
+    required: true,
+    phone: true
   },
   "user.emailId": {
     required: false
   },
   "user.altContactNumber": {
-    required: false
-    // ,
-    // phone:true
+    required: false,
+    phone:true
   },
   "user.pan": {
-    required: false
-    // ,
-    // panNo:true
+    required: false,
+    panNo:true
   },
   "user.aadhaarNumber": {
-    required: false
-    // ,
-    // aadhar:true
+    required: false,
+    aadhar:true
   },
   "user.permanentAddress": {
     required: true
@@ -1610,22 +1604,24 @@ function updateTable(tableName, modalName, object) {
                                                                                                                                                                                             </td>`)
 
     } else if(object=="jurisdictions"){
-      $(tableName).append(`<td data-label=${"jurisdictionsType"}>
+      /*$(tableName).append(`<td data-label=${"jurisdictionsType"}>
           ${getNameById("jurisdictionsType",employee[object][i]["jurisdictionsType"],"")}
-      </td>`)
+      </td>`)*/
 
       try {
             bnd = commonApiGet("egov-location", "boundarys", "", {
-              "Boundary.id":employee[object][i]["boundary"],
-              "Boundary.tenantId":tenantId
+              "id":employee[object][i],
+              "tenantId":tenantId
             }).responseJSON["Boundary"] || [];
           } catch (e) {
             console.log(e);
             bnd = [];
           }
           $(tableName).append(`<td data-label=${"boundary"}>
-
                                     ${bnd.length>0?bnd[0]["name"]:""}
+                              </td>`)
+          $(tableName).append(`<td data-label=${"boundary"}>
+                                    ${bnd.length>0?bnd[0]["boundaryType"]["name"]:""}
                               </td>`)
     } else if (object=="serviceHistory") {
       $(tableName).append(`<td data-label=${"serviceInfo"}>
@@ -1926,29 +1922,105 @@ for (var key in final_validatin_rules) {
   // $(`#${key}`).attr("disabled",true);
 };
 
-$.validator.addMethod('phone', function(value) {
-  return /^[0-9]{10}$/.test(value);
-}, 'Please enter a valid phone number.');
+$(document).ready(function() {
+    $.validator.addMethod('phone', function(value) {
+        return /^[0-9]{10}$/.test(value);
+    }, 'Please enter a valid phone number.');
 
-$.validator.addMethod('aadhar', function(value) {
-  return /^[0-9]{12}$/.test(value);
-}, 'Please enter a valid aadhar.');
+    $.validator.addMethod('aadhar', function(value) {
+        return value ? /^[0-9]{12}$/.test(value) : true;
+    }, 'Please enter a valid aadhar.');
 
-$.validator.addMethod('panNo', function(value) {
-  return /^[0-9a-zA-Z]{10}$/.test(value);
-}, 'Please enter a valid pan.');
+    $.validator.addMethod('panNo', function(value) {
+        return value ? /^(?:[0-9]+[a-z]|[a-z]+[0-9])[a-z0-9]*$/i.test(value) && value.length === 10 : true;
+    }, 'Please enter a valid pan.');
+
+    $(".onlyNumber").on("keydown", function(e) {
+        var key = e.keyCode ? e.keyCode : e.which;
+        if (!([8, 9, 13, 27, 46, 110, 190].indexOf(key) !== -1 ||
+                (key == 65 && (e.ctrlKey || e.metaKey)) ||
+                (key >= 35 && key <= 40) ||
+                (key >= 48 && key <= 57 && !(e.shiftKey || e.altKey)) ||
+                (key >= 96 && key <= 105)
+            )) {
+            e.preventDefault();
+        }
+    });
+})
+
 
 $("#addEmployee").on("click", function(e) {
   e.preventDefault();
   $("#createEmployeeForm").submit();
   // switchValidation("final_validatin_rules");
+});
+
+
+// Adding Jquery validation dynamically
+$("#createEmployeeForm").validate({
+  rules: final_validatin_rules,
+  submitHandler: function(form) {
+    // console.log(form);
+    if (!hasAllRequiredFields(employee)) {
+      showError("Please enter all mandatory fields.");
+    } else if ((employee.assignments.length > 0 && isHavingPrimary()) && employee.jurisdictions.length > 0) {
+      //Call api
+
+      var empJuridictiona = employee["jurisdictions"];
+      employee["jurisdictions"] = [];
+      for (var i = 0; i < empJuridictiona.length; i++) {
+        employee["jurisdictions"].push(empJuridictiona[i].boundary);
+      }
+      //Upload files if any
+      uploadFiles(employee, function(err, emp) {
+        if (err) {
+          //Handle error
+        } else {
+          var response = $.ajax({
+            url: baseUrl + "/hr-employee/employees/" + ((getUrlVars()["type"] == "update") ? "_update" : "_create") + "?tenantId=" + tenantId,
+            type: 'POST',
+            dataType: 'json',
+            data: JSON.stringify({
+              RequestInfo: requestInfo,
+              Employee: emp
+            }),
+            async: false,
+            headers: {
+              'auth-token': authToken
+            },
+            contentType: 'application/json'
+          });
+
+          if (response["status"] === 200) {
+            showSuccess("Employee" + getUrlVars()["type"] == "update" ? "update" : "add" + "ed successfully.");
+            window.location.href = "app/hr/common/employee-search.html";
+          } else {
+            alert(response["statusText"]);
+          }
+
+
+          // $.post(`${baseUrl}hr-employee/employees/_create?tenantId=1`, {
+          //     RequestInfo: requestInfo,
+          //     Employee: employee
+          // }, function(response) {
+          //     alert("submit");
+          //     // window.open("../../../../app/search-assets/create-agreement-ack.html?&agreement_id=aeiou", "", "width=1200,height=800")
+          //     console.log(response);
+          // },function(error){
+          //   alert("error")
+          //   console.log(error);
+          // })
+        }
+      })
+    } else {
+      showError("Please enter atleast one assignment and jurisdiction.");
+    }
+    //alert("submitterd");
+    // form.submit();
+
+    // console.log(agreement);
+  }
 })
-
-
-
-
-
-
 
 
 function addMandatoryStart(validationObject, prefix = "") {
@@ -2064,77 +2136,6 @@ function isHavingPrimary() {
   }
   return false;
 }
-
-
-
-// Adding Jquery validation dynamically
-$("#createEmployeeForm").validate({
-  rules: final_validatin_rules,
-  submitHandler: function(form) {
-    // console.log(form);
-    if (!hasAllRequiredFields(employee)) {
-      showError("Please enter all mandatory fields.");
-    } else if ((employee.assignments.length > 0 && isHavingPrimary()) && employee.jurisdictions.length > 0) {
-      //Call api
-
-      var empJuridictiona = employee["jurisdictions"];
-      employee["jurisdictions"] = [];
-      for (var i = 0; i < empJuridictiona.length; i++) {
-        employee["jurisdictions"].push(empJuridictiona[i].boundary);
-      }
-      //Upload files if any
-      uploadFiles(employee, function(err, emp) {
-        if (err) {
-          //Handle error
-        } else {
-          var response = $.ajax({
-            url: baseUrl + "/hr-employee/employees/" + ((getUrlVars()["type"] == "update") ? "_update" : "_create") + "?tenantId=" + tenantId,
-            type: 'POST',
-            dataType: 'json',
-            data: JSON.stringify({
-              RequestInfo: requestInfo,
-              Employee: emp
-            }),
-            async: false,
-            headers: {
-              'auth-token': authToken
-            },
-            contentType: 'application/json'
-          });
-
-          if (response["status"] === 200) {
-            showSuccess("Employee" + getUrlVars()["type"] == "update" ? "update" : "add" + "ed successfully.");
-            window.location.href = "app/hr/common/employee-search.html";
-          } else {
-            alert(response["statusText"]);
-          }
-
-
-          // $.post(`${baseUrl}hr-employee/employees/_create?tenantId=1`, {
-          //     RequestInfo: requestInfo,
-          //     Employee: employee
-          // }, function(response) {
-          //     alert("submit");
-          //     // window.open("../../../../app/search-assets/create-agreement-ack.html?&agreement_id=aeiou", "", "width=1200,height=800")
-          //     console.log(response);
-          // },function(error){
-          //   alert("error")
-          //   console.log(error);
-          // })
-        }
-      })
-    } else {
-      showError("Please enter atleast one assignment and jurisdiction.");
-    }
-    //alert("submitterd");
-    // form.submit();
-
-    // console.log(agreement);
-
-
-
-  }
-})
 
 function uploadFiles(employee, cb) {
   if (employee.user.photo && typeof employee.user.photo == "object") {
@@ -2457,6 +2458,13 @@ if (getUrlVars()["type"] == "update") {
       var currentEmployee = commonApiPost("hr-employee", "employees/" + getUrlVars()["id"], "_search", {
         tenantId
       }).responseJSON["Employee"] || {};
+    } else {
+      var obj = commonApiPost("hr-employee", "employees", "_loggedinemployee" ,{
+        tenantId}
+      ).responseJSON["Employee"][0];
+      var currentEmployee = commonApiPost("hr-employee", "employees/" + obj.id, "_search", {
+        tenantId
+      }).responseJSON["Employee"] || {};
     }
 
 
@@ -2511,6 +2519,13 @@ if (getUrlVars()["type"] == "view") {
       var currentEmployee = commonApiPost("hr-employee", "employees/" + getUrlVars()["id"], "_search", {
         tenantId
       }).responseJSON["Employee"] || {};
+    } else {
+      var obj = commonApiPost("hr-employee", "employees", "_loggedinemployee" ,{
+        tenantId}
+      ).responseJSON["Employee"][0];
+      var currentEmployee = commonApiPost("hr-employee", "employees/" + obj.id, "_search", {
+        tenantId
+      }).responseJSON["Employee"] || {};
     }
 
     $("#createEmployeeForm input").prop("disabled", true);
@@ -2526,7 +2541,6 @@ if (getUrlVars()["type"] == "view") {
 
 
     employee = currentEmployee;
-
     printValue("", currentEmployee);
 
     if (currentEmployee["assignments"].length > 0) {
@@ -2581,29 +2595,31 @@ function printValue(object = "", values) {
           if (values[key][ckey]) {
             //Get description
             if (ckey == "dob") {
-              $("[name='" + key + "." + ckey + "']").val(values[key][ckey].split("-")[2] + "-" + values[key][ckey].split("-")[1] + "-" + values[key][ckey].split("-")[0]);
+              $("[name='" + key + "." + ckey + "']").val(values[key][ckey].split("-")[2] + "/" + values[key][ckey].split("-")[1] + "/" + values[key][ckey].split("-")[0]);
 
-            }
-            // else if (ckey="active" || ckey=="gender") {
-            //   document.getElementById(shirtColor).checked = true;
-            // }
-            else {
+            } else if(ckey == "active") {
+              if([true, "true"].indexOf(values[key][ckey]) > -1) {
+                $('[data-active="yes"]').prop("checked", true);
+              } else {
+                $('[data-active="no"]').prop("checked", false);
+              }
+            } else {
               $("[name='" + key + "." + ckey + "']").val(values[key][ckey]);
 
             }
           }
         }
+      } else if(key == "physicallyDisabled") {
+        if([true, "true"].indexOf(values[key]) > -1) {
+          $('[data-ph="yes"]').prop("checked", true);
+        } else {
+          $('[data-ph="no"]').prop("checked", true);
+        }
       } else if (values[key]) {
-
         $("[name='" + key + "']").val(values[key]);
       } else {
         // $("[name='" + (isAsset ? "asset." : "") + key + "']").text("NA");
       }
-
-      // if (key.search('date') > 0) {
-      //     var d = new Date(values[key]);
-      //     $(`#${key}`).val(`${d.getDate()}-${d.getMonth()+1}-${d.getFullYear()}`);
-      // }
     }
   }
 }

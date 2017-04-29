@@ -48,7 +48,7 @@ $(document).ready(function() {
     });
 })
 
-var employeeType, employeeStatus, group, motherTounge, religion, community, category, bank, recruitmentMode, recruitmentType, recruitmentQuota, assignments_grade, assignments_designation, assignments_department, assignments_fund, assignments_functionary, assignments_function,assignments_position;
+var employeeType, employeeStatus, group, motherTounge, religion, community, category, bank, recruitmentMode, recruitmentType, recruitmentQuota, assignments_grade, assignments_designation, assignments_department, assignments_fund, assignments_functionary, assignments_function,assignments_position, maritalStatus, user_bloodGroup;
 try { employeeType = !localStorage.getItem("employeeType") || localStorage.getItem("employeeType") == "undefined" ? (localStorage.setItem("employeeType", JSON.stringify(getCommonMaster("hr-masters", "employeetypes", "EmployeeType").responseJSON["EmployeeType"] || [])), JSON.parse(localStorage.getItem("employeeType"))) : JSON.parse(localStorage.getItem("employeeType")); } catch (e) {
     console.log(e);
     employeeType = [];
@@ -61,8 +61,14 @@ try { group = !localStorage.getItem("group") || localStorage.getItem("group") ==
     console.log(e);
     group = [];
 }
-var maritalStatus = !localStorage.getItem("maritalStatus") || localStorage.getItem("maritalStatus") == "undefined" ? (localStorage.setItem("maritalStatus", JSON.stringify(["MARRIED", "UNMARRIED", "DIVORCED", "WIDOWER", "WIDOW"])), JSON.parse(localStorage.getItem("maritalStatus"))) : JSON.parse(localStorage.getItem("maritalStatus"));
-var user_bloodGroup = !localStorage.getItem("user_bloodGroup") || localStorage.getItem("user_bloodGroup") == "undefined" ? (localStorage.setItem("user_bloodGroup", JSON.stringify(["O-", "O+", "A-", "A+", "B-", "B+", "AB-", "AB+"])), JSON.parse(localStorage.getItem("user_bloodGroup"))) : JSON.parse(localStorage.getItem("user_bloodGroup"));
+try { maritalStatus = !localStorage.getItem("maritalStatus") || localStorage.getItem("maritalStatus") == "undefined" ? (localStorage.setItem("maritalStatus", JSON.stringify(commonApiPost("hr-employee", "maritalstatuses", "_search").responseJSON["MaritalStatus"] || [])), JSON.parse(localStorage.getItem("maritalStatus"))) : JSON.parse(localStorage.getItem("maritalStatus")); } catch (e) {
+    console.log(e);
+    maritalStatus = [];
+}
+try { user_bloodGroup = !localStorage.getItem("user_bloodGroup") || localStorage.getItem("user_bloodGroup") == "undefined" ? (localStorage.setItem("user_bloodGroup", JSON.stringify(commonApiPost("hr-employee", "bloodgroups", "_search").responseJSON["BloodGroup"] || [])), JSON.parse(localStorage.getItem("user_bloodGroup"))) : JSON.parse(localStorage.getItem("user_bloodGroup")); } catch (e) {
+    console.log(e);
+    user_bloodGroup = [];
+}
 try { motherTounge = !localStorage.getItem("motherTounge") || localStorage.getItem("motherTounge") == "undefined" ? (localStorage.setItem("motherTounge", JSON.stringify(getCommonMaster("egov-common-masters", "languages", "Language").responseJSON["Language"] || [])), JSON.parse(localStorage.getItem("motherTounge"))) : JSON.parse(localStorage.getItem("motherTounge")); } catch (e) {
     console.log(e);
     motherTounge = [];

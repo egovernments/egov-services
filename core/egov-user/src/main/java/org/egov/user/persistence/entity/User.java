@@ -7,11 +7,14 @@ import org.egov.user.persistence.enums.GuardianRelation;
 import org.egov.user.persistence.enums.UserType;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.egov.user.persistence.entity.EnumConverter.toEnumType;
-import static org.egov.user.persistence.entity.User.SEQ_COMPLAINT;
+import static org.egov.user.persistence.entity.User.SEQ_USER;
 
 
 @Entity
@@ -23,14 +26,14 @@ import static org.egov.user.persistence.entity.User.SEQ_COMPLAINT;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@SequenceGenerator(name = SEQ_COMPLAINT, sequenceName = SEQ_COMPLAINT, allocationSize = 1)
+@SequenceGenerator(name = SEQ_USER, sequenceName = SEQ_USER, allocationSize = 1)
 public class User extends AbstractAuditable {
 
-    public static final String SEQ_COMPLAINT = "SEQ_EG_USER";
+    public static final String SEQ_USER = "seq_eg_user";
     private static final long serialVersionUID = 1666623645834766468L;
 
     @Id
-    @GeneratedValue(generator = SEQ_COMPLAINT, strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(generator = SEQ_USER, strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @Column(name = "username")
@@ -74,14 +77,6 @@ public class User extends AbstractAuditable {
     @Column(name = "aadhaarnumber")
     private String aadhaarNumber;
 
-
-    @OneToMany(
-            mappedBy = "user",
-            cascade = CascadeType.PERSIST,
-            fetch = FetchType.EAGER
-    )
-    private List<Address> address = new ArrayList<>();
-
     @Column(name = "active")
     private Boolean active;
 
@@ -95,7 +90,7 @@ public class User extends AbstractAuditable {
     private Date dob;
 
     @Column(name = "pwdexpirydate")
-    private Date pwdExpiryDate = new Date();
+    private Date pwdExpiryDate;
 
     private String locale = "en_IN";
 
@@ -139,7 +134,7 @@ public class User extends AbstractAuditable {
         this.aadhaarNumber = user.getAadhaarNumber();
         this.active = user.getActive();
         this.dob = user.getDob();
-        this.pwdExpiryDate = user.getPwdExpiryDate();
+        this.pwdExpiryDate = user.getPasswordExpiryDate();
         this.locale = user.getLocale();
         this.type = toEntityUserType(user.getType());
         this.bloodGroup = toEntityBloodGroup(user.getBloodGroup());
@@ -147,19 +142,12 @@ public class User extends AbstractAuditable {
         this.signature = user.getSignature();
         this.photo = user.getPhoto();
         this.accountLocked = user.getAccountLocked();
-        this.setLastModifiedDate(user.getLastModifiedDate());
-        this.setCreatedDate(user.getCreatedDate());
         this.roles = convertDomainRolesToEntity(user.getRoles());
         this.tenantId = user.getTenantId();
     }
 
-
-
-    private Set<Role> convertDomainRolesToEntity(List<org.egov.user.domain.model.Role> domainRoles) {
-        return domainRoles.stream().map(Role::new).collect(Collectors.toSet());
-    }
-
-    public org.egov.user.domain.model.User toDomain() {
+    public org.egov.user.domain.model.User toDomain(org.egov.user.domain.model.Address correspondenceAddress,
+													org.egov.user.domain.model.Address permanentAddress) {
         return
         org.egov.user.domain.model.User.builder()
                 .id(id)
@@ -176,11 +164,10 @@ public class User extends AbstractAuditable {
                 .altContactNumber(altContactNumber)
                 .pan(pan)
                 .aadhaarNumber(aadhaarNumber)
-                .address(convertEntityAddressToDomain(address))
                 .active(active)
                 .roles(convertEntityRoleToDomain(roles))
                 .dob(dob)
-                .pwdExpiryDate(dob)
+                .passwordExpiryDate(pwdExpiryDate)
                 .locale(locale)
                 .type(toDomainUserType())
                 .bloodGroup(toDomainBloodGroup())
@@ -192,8 +179,15 @@ public class User extends AbstractAuditable {
                 .createdDate(getCreatedDate())
                 .lastModifiedBy(getLastModifiedId())
                 .createdBy(getCreatedById())
-                .tenantId(tenantId).build();
+                .tenantId(tenantId)
+				.correspondenceAddress(correspondenceAddress)
+				.permanentAddress(permanentAddress)
+				.build();
     }
+
+	private Set<Role> convertDomainRolesToEntity(List<org.egov.user.domain.model.Role> domainRoles) {
+		return domainRoles.stream().map(Role::new).collect(Collectors.toSet());
+	}
 
     private org.egov.user.domain.model.enums.GuardianRelation toDomainGuardianRelation() {
         return toEnumType(org.egov.user.domain.model.enums.GuardianRelation.class, guardianRelation);
@@ -242,7 +236,4 @@ public class User extends AbstractAuditable {
         return entityRoles.stream().map(Role::toDomain).collect(Collectors.toList());
     }
 
-    private List<org.egov.user.domain.model.Address> convertEntityAddressToDomain(List<Address> entityAddress) {
-        return entityAddress.stream().map(Address::toDomain).collect(Collectors.toList());
-    }
 }

@@ -63,10 +63,20 @@ INSERT INTO eg_user (
 id, title, salutation, dob, locale, username, password, pwdexpirydate, mobilenumber, altcontactnumber, emailid,
 createddate, lastmodifieddate, createdby, lastmodifiedby, active, name, gender, pan, aadhaarnumber, type, version,
 guardian, guardianrelation, signature, bloodgroup, photo, identificationmark, tenantid)
-VALUES (
-nextval('seq_eg_user'), 'title', 'Mrs', '1990-07-23 00:00:00', 'en_IN', 'ege.koyluoglu@example.com',
+VALUES ( 6, 'title', 'Mrs', '1990-07-23 00:00:00', 'en_IN', 'kumar@example.com',
 '$2a$10$uheIOutTnD33x7CDqac1zOL8DMiuz7mWplToPgcf7oxAI9OzRKxmK',
 '2020-12-31 00:00:00', '9731123456', '080292575', 'email5@gmail.com', '2010-01-01 00:00:00', '2015-01-01 00:00:00', 1,
-1, true, 'Sreerama Krishnan2', 1, 'ABCDE1234F', '12346789011', 'EMPLOYEE', 0, 'Guardian name',
+1, true, 'Kumar', 1, 'ABCDE1234F', '12346789011', 'EMPLOYEE', 0, 'Guardian name',
 'Mother', '0fef5a6f-fb86-493d-9ecf-8f4b37fa498c', 'AB_POSITIVE', '54fc046d-12be-4733-b88c-cf7c06402980',
 'identification mark', 'tenant2');
+
+INSERT INTO eg_user (
+id, title, salutation, dob, locale, username, password, pwdexpirydate, mobilenumber, altcontactnumber, emailid,
+createddate, lastmodifieddate, createdby, lastmodifiedby, active, name, gender, pan, aadhaarnumber, type, version,
+guardian, guardianrelation, signature, bloodgroup, photo, identificationmark, tenantid)
+VALUES (6, 'title', 'Mrs', '1990-07-23 00:00:00', 'en_IN', 'jackson@example.com',
+'$2a$10$uheIOutTnD33x7CDqac1zOL8DMiuz7mWplToPgcf7oxAI9OzRKxmK',
+'2020-12-31 00:00:00', '9731123456', '080292575', 'email5@gmail.com', '2010-01-01 00:00:00', '2015-01-01 00:00:00', 1,
+1, true, 'Jackson', 1, 'ABCDE1234F', '12346789011', 'EMPLOYEE', 0, 'Guardian name',
+'Mother', '0fef5a6f-fb86-493d-9ecf-8f4b37fa498c', 'AB_POSITIVE', '54fc046d-12be-4733-b88c-cf7c06402980',
+'identification mark', 'tenant3');

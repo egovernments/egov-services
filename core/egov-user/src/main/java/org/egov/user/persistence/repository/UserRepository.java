@@ -9,8 +9,6 @@ import org.egov.user.persistence.enums.Gender;
 import org.egov.user.persistence.enums.GuardianRelation;
 import org.egov.user.persistence.enums.UserType;
 import org.egov.user.persistence.specification.UserSearchSpecificationFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -18,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -27,26 +26,27 @@ import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Service
 public class UserRepository {
-	public static final Logger LOGGER = LoggerFactory.getLogger(UserRepository.class);
 	private UserJpaRepository userJpaRepository;
 	private UserSearchSpecificationFactory userSearchSpecificationFactory;
-	private RoleRepository roleRepository;
+	private RoleJpaRepository roleJpaRepository;
 	private PasswordEncoder passwordEncoder;
-
+	private AddressRepository addressRepository;
 
 	public UserRepository(UserJpaRepository userJpaRepository,
 						  UserSearchSpecificationFactory userSearchSpecificationFactory,
-						  RoleRepository roleRepository,
-						  PasswordEncoder passwordEncoder) {
+						  RoleJpaRepository roleJpaRepository,
+						  PasswordEncoder passwordEncoder,
+						  AddressRepository addressRepository) {
 		this.userJpaRepository = userJpaRepository;
 		this.userSearchSpecificationFactory = userSearchSpecificationFactory;
-		this.roleRepository = roleRepository;
+		this.roleJpaRepository = roleJpaRepository;
 		this.passwordEncoder = passwordEncoder;
+		this.addressRepository = addressRepository;
 	}
 
 	public org.egov.user.domain.model.User findByUsername(String userName) {
 		final User entityUser = userJpaRepository.findByUsername(userName);
-		return entityUser != null ? entityUser.toDomain() : null;
+		return entityUser != null ? entityUser.toDomain(null, null) : null;
 	}
 
 	public boolean isUserPresent(String userName, Long id, String tenantId) {
@@ -59,21 +59,58 @@ public class UserRepository {
 
 	public org.egov.user.domain.model.User findByEmailId(String emailId) {
 		final User entityUser = userJpaRepository.findByEmailId(emailId);
-		return entityUser != null ? entityUser.toDomain() : null;
+		return entityUser != null ? entityUser.toDomain(null, null) : null;
 	}
 
-	public org.egov.user.domain.model.User save(org.egov.user.domain.model.User domainUser) {
+	public org.egov.user.domain.model.User create(org.egov.user.domain.model.User domainUser) {
 		User entityUser = new User(domainUser);
 		setEnrichedRolesToUser(entityUser);
 		encryptPassword(entityUser);
-		return userJpaRepository.save(entityUser).toDomain();
+		entityUser.setCreatedDate(new Date());
+		final User savedUser = userJpaRepository.save(entityUser);
+		final org.egov.user.domain.model.Address savedCorrespondenceAddress =
+				saveAddress(domainUser.getCorrespondenceAddress(), savedUser.getId(), savedUser.getTenantId());
+		final org.egov.user.domain.model.Address savedPermanentAddress =
+				saveAddress(domainUser.getPermanentAddress(), savedUser.getId(), savedUser.getTenantId());
+		return savedUser.toDomain(savedCorrespondenceAddress, savedPermanentAddress);
+	}
+
+	private org.egov.user.domain.model.Address saveAddress(org.egov.user.domain.model.Address address,
+														   Long userId,
+														   String tenantId) {
+		if(address != null) {
+			addressRepository.create(address, userId, tenantId);
+			return address;
+		}
+		return null;
 	}
 
 	public List<org.egov.user.domain.model.User> findAll(UserSearchCriteria userSearch) {
 		Specification<User> specification = userSearchSpecificationFactory.getSpecification(userSearch);
 		PageRequest pageRequest = createPageRequest(userSearch);
 		List<User> userEntities = userJpaRepository.findAll(specification, pageRequest).getContent();
-		return userEntities.stream().map(User::toDomain).collect(Collectors.toList());
+		return userEntities.stream().map(this::getAddressAndMapToDomain).collect(Collectors.toList());
+	}
+
+	private org.egov.user.domain.model.User getAddressAndMapToDomain(User user) {
+		final List<org.egov.user.domain.model.Address> addresses = addressRepository.
+				find(user.getId(), user.getTenantId());
+		final org.egov.user.domain.model.Address correspondenceAddress = filter(addresses,
+				org.egov.user.domain.model.enums.AddressType.CORRESPONDENCE);
+		final org.egov.user.domain.model.Address permanentAddress =
+				filter(addresses, org.egov.user.domain.model.enums.AddressType.PERMANENT);
+		return user.toDomain(correspondenceAddress, permanentAddress);
+	}
+
+	private org.egov.user.domain.model.Address filter(List<org.egov.user.domain.model.Address> addresses,
+													  org.egov.user.domain.model.enums.AddressType addressType) {
+		if (addresses == null) {
+			return null;
+		}
+		return addresses.stream()
+				.filter(address -> addressType.equals(address.getType()))
+				.findFirst()
+				.orElse(null);
 	}
 
 	private void encryptPassword(User entityUser) {
@@ -106,7 +143,7 @@ public class UserRepository {
 	}
 
 	private Role fetchRole(User user, Role role) {
-		final Role enrichedRole = roleRepository.findByTenantIdAndCodeIgnoreCase(user.getTenantId(), role.getCode());
+		final Role enrichedRole = roleJpaRepository.findByTenantIdAndCodeIgnoreCase(user.getTenantId(), role.getCode());
 		if (enrichedRole == null) {
 			throw new InvalidRoleCodeException(role.getCode());
 		}
@@ -120,7 +157,7 @@ public class UserRepository {
 
 	public org.egov.user.domain.model.User getUserById(final Long id) {
 		final User entityUser = userJpaRepository.findOne(id);
-		return entityUser != null ? entityUser.toDomain() : null;
+		return entityUser != null ? entityUser.toDomain(null, null) : null;
 	}
 
 	public org.egov.user.domain.model.User update(final org.egov.user.domain.model.User user) {
@@ -159,8 +196,8 @@ public class UserRepository {
 			oldUser.setPassword(user.getPassword());
 		if (!isEmpty(user.getPhoto()))
 			oldUser.setPhoto(user.getPhoto());
-		if (!isEmpty(user.getPwdExpiryDate()))
-			oldUser.setPwdExpiryDate(user.getPwdExpiryDate());
+		if (!isEmpty(user.getPasswordExpiryDate()))
+			oldUser.setPwdExpiryDate(user.getPasswordExpiryDate());
 		if (!isEmpty(user.getRoles()))
 			oldUser.setRoles(user.getRoles().stream().map(Role::new).collect(Collectors.toSet()));
 		if (!isEmpty(user.getSalutation()))
@@ -171,9 +208,11 @@ public class UserRepository {
 			oldUser.setTitle(user.getTitle());
 		if (!isEmpty(user.getType()))
 			oldUser.setType(toEnumType(UserType.class, user.getType()));
+		addressRepository.update(user.getAddresses(), user.getId(), user.getTenantId());
 
 		setEnrichedRolesToUser(oldUser);
 		encryptPassword(oldUser);
-		return userJpaRepository.save(oldUser).toDomain();
+		oldUser.setLastModifiedDate(new Date());
+		return userJpaRepository.save(oldUser).toDomain(user.getCorrespondenceAddress(), user.getPermanentAddress());
 	}
 }

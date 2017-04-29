@@ -1,6 +1,8 @@
 package org.egov.user.domain.model;
 
-import org.egov.user.domain.exception.InvalidUserException;
+import org.egov.user.domain.exception.InvalidUserCreateException;
+import org.egov.user.domain.exception.InvalidUserUpdateException;
+import org.egov.user.domain.model.enums.AddressType;
 import org.egov.user.domain.model.enums.Gender;
 import org.egov.user.domain.model.enums.UserType;
 import org.junit.Test;
@@ -11,10 +13,12 @@ import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class UserTest {
 
-	@Test(expected = InvalidUserException.class)
+	@Test(expected = InvalidUserCreateException.class)
 	public void testUserWithEmptyNameIsInvalid() throws Exception {
 		User user = User.builder()
 				.mobileNumber("8899776655")
@@ -25,10 +29,10 @@ public class UserTest {
 				.build();
 
 		assertTrue(user.isNameAbsent());
-		user.validate();
+		user.validateNewUser();
 	}
 
-	@Test(expected = InvalidUserException.class)
+	@Test(expected = InvalidUserCreateException.class)
 	public void testUserWithEmptyUserNameIsInvalid() throws Exception {
 		User user = User.builder()
 				.mobileNumber("8899776655")
@@ -39,10 +43,10 @@ public class UserTest {
 				.build();
 
 		assertTrue(user.isUsernameAbsent());
-		user.validate();
+		user.validateNewUser();
 	}
 
-	@Test(expected = InvalidUserException.class)
+	@Test(expected = InvalidUserCreateException.class)
 	public void testUserWithEmptyMobileIsInvalid() throws Exception {
 		User user = User.builder()
 				.username("foolan_devi")
@@ -53,10 +57,10 @@ public class UserTest {
 				.build();
 
 		assertTrue(user.isMobileNumberAbsent());
-		user.validate();
+		user.validateNewUser();
 	}
 
-	@Test(expected = InvalidUserException.class)
+	@Test(expected = InvalidUserCreateException.class)
 	public void testUserWithEmptyTypeIsInvalid() throws Exception {
 		User user = User.builder()
 				.username("foolan_devi")
@@ -67,10 +71,10 @@ public class UserTest {
 				.build();
 
 		assertTrue(user.isTypeAbsent());
-		user.validate();
+		user.validateNewUser();
 	}
 
-	@Test(expected = InvalidUserException.class)
+	@Test(expected = InvalidUserCreateException.class)
 	public void test_should_throw_exception_when_tenant_id_is_not_present() {
 		User user = User.builder()
 				.username("foolan_devi")
@@ -83,10 +87,10 @@ public class UserTest {
 				.build();
 
 		assertTrue(user.isTenantIdAbsent());
-		user.validate();
+		user.validateNewUser();
 	}
 
-	@Test(expected = InvalidUserException.class)
+	@Test(expected = InvalidUserCreateException.class)
 	public void test_should_throw_exception_when_roles_is_not_present() {
 		User user = User.builder()
 				.username("foolan_devi")
@@ -100,10 +104,10 @@ public class UserTest {
 				.build();
 
 		assertTrue(user.isRolesAbsent());
-		user.validate();
+		user.validateNewUser();
 	}
 
-	@Test(expected = InvalidUserException.class)
+	@Test(expected = InvalidUserCreateException.class)
 	public void test_should_throw_exception_when_role_code_is_not_present() {
 		final Role role1 = Role.builder().code("roleCode1").build();
 		final Role role2 = Role.builder().code(null).build();
@@ -120,7 +124,7 @@ public class UserTest {
 				.build();
 
 		assertTrue(user.isRolesAbsent());
-		user.validate();
+		user.validateNewUser();
 	}
 
 	@Test
@@ -141,14 +145,64 @@ public class UserTest {
 		assertFalse(user.isIdAbsent());
 	}
 
-	@Test(expected = InvalidUserException.class)
+	@Test(expected = InvalidUserCreateException.class)
 	public void test_should_throw_validation_exception_when_otp_reference_is_not_present_and_mandatory_flag_is_enabled() {
 		User user = User.builder()
 				.otpReference(null)
 				.otpValidationMandatory(true)
 				.build();
 
-		user.validate();
+		user.validateNewUser();
+	}
+
+	@Test(expected = InvalidUserCreateException.class)
+	public void test_should_throw_validation_exception_when_permanent_address_is_not_valid() {
+		final Address permanentAddress = mock(Address.class);
+		when(permanentAddress.isInvalid()).thenReturn(true);
+		User user = User.builder()
+				.permanentAddress(permanentAddress)
+				.build();
+
+		assertTrue(user.isPermanentAddressInvalid());
+		user.validateNewUser();
+	}
+
+	@Test(expected = InvalidUserCreateException.class)
+	public void test_should_throw_validation_exception_when_correspondence_address_is_not_valid() {
+		final Address correspondence = mock(Address.class);
+		when(correspondence.isInvalid()).thenReturn(true);
+		User user = User.builder()
+				.correspondenceAddress(correspondence)
+				.build();
+
+		assertTrue(user.isCorrespondenceAddressInvalid());
+		user.validateNewUser();
+	}
+
+	@Test(expected = InvalidUserUpdateException.class)
+	public void test_should_throw_validation_exception_for_update_when_permanent_address_is_not_valid() {
+		final Address permanentAddress = mock(Address.class);
+		when(permanentAddress.isInvalid()).thenReturn(true);
+		User user = User.builder()
+				.permanentAddress(permanentAddress)
+				.build();
+
+		assertTrue(user.isPermanentAddressInvalid());
+
+		user.validateUserModification();
+	}
+
+	@Test(expected = InvalidUserUpdateException.class)
+	public void test_should_throw_validation_exception_for_update_when_correspondence_address_is_not_valid() {
+		final Address correspondence = mock(Address.class);
+		when(correspondence.isInvalid()).thenReturn(true);
+		User user = User.builder()
+				.correspondenceAddress(correspondence)
+				.build();
+
+		assertTrue(user.isCorrespondenceAddressInvalid());
+
+		user.validateUserModification();
 	}
 
 	@Test
@@ -181,7 +235,7 @@ public class UserTest {
 	}
 
 	@Test
-	public void testUserWithAllMandatoryValuesProvidedIsValid() {
+	public void test_should_not_throw_exception_on_user_create_with_all_mandatory_fields() {
 		final Role role1 = Role.builder().code("roleCode1").build();
 		User user = User.builder()
 				.username("foolan_devi")
@@ -192,9 +246,11 @@ public class UserTest {
 				.type(UserType.CITIZEN)
 				.tenantId("default")
 				.roles(Collections.singletonList(role1))
+				.permanentAddress(new Address("pinCode1", "city1", "address1", AddressType.PERMANENT))
+				.permanentAddress(new Address("pinCode1", "city1", "address1", AddressType.CORRESPONDENCE))
 				.build();
 
-		user.validate();
+		user.validateNewUser();
 
 		assertFalse(user.isTypeAbsent());
 		assertFalse(user.isActiveIndicatorAbsent());
@@ -203,6 +259,30 @@ public class UserTest {
 		assertFalse(user.isUsernameAbsent());
 		assertFalse(user.isTenantIdAbsent());
 		assertFalse(user.isRolesAbsent());
+		assertFalse(user.isCorrespondenceAddressInvalid());
+		assertFalse(user.isPermanentAddressInvalid());
+	}
+
+	@Test
+	public void test_should_not_throw_exception_on_user_update_with_all_mandatory_fields() {
+		final Role role1 = Role.builder().code("roleCode1").build();
+		User user = User.builder()
+				.username("foolan_devi")
+				.name("foolan")
+				.mobileNumber("9988776655")
+				.active(Boolean.TRUE)
+				.gender(Gender.FEMALE)
+				.type(UserType.CITIZEN)
+				.tenantId("default")
+				.roles(Collections.singletonList(role1))
+				.permanentAddress(new Address("pinCode1", "city1", "address1", AddressType.PERMANENT))
+				.permanentAddress(new Address("pinCode1", "city1", "address1", AddressType.CORRESPONDENCE))
+				.build();
+
+		user.validateUserModification();
+
+		assertFalse(user.isCorrespondenceAddressInvalid());
+		assertFalse(user.isPermanentAddressInvalid());
 	}
 
 	@Test
@@ -249,7 +329,7 @@ public class UserTest {
 				.username("userName")
 				.mobileNumber("mobileNumber")
 				.password("password")
-				.pwdExpiryDate(new Date())
+				.passwordExpiryDate(new Date())
 				.roles(Arrays.asList(role1, role2))
 				.build();
 
@@ -258,7 +338,7 @@ public class UserTest {
 		assertNull(user.getUsername());
 		assertNull(user.getMobileNumber());
 		assertNull(user.getPassword());
-		assertNull(user.getPwdExpiryDate());
+		assertNull(user.getPasswordExpiryDate());
 		assertNull(user.getRoles());
 	}
 

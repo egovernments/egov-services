@@ -7,15 +7,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.egov.user.domain.model.Role;
 import org.egov.user.domain.model.User;
-import org.egov.user.domain.model.enums.AddressType;
 import org.egov.user.domain.model.enums.GuardianRelation;
 import org.egov.user.domain.model.enums.UserType;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
-
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.apache.commons.lang3.StringUtils.trim;
 
 @Setter
 @Getter
@@ -76,7 +74,7 @@ public class UserSearchResponseContent {
         this.aadhaarNumber = user.getAadhaarNumber();
         this.active = user.getActive();
         this.dob = user.getDob();
-        this.pwdExpiryDate = user.getPwdExpiryDate();
+        this.pwdExpiryDate = user.getPasswordExpiryDate();
         this.locale = user.getLocale();
         this.type = user.getType();
         this.accountLocked = user.getAccountLocked();
@@ -88,73 +86,36 @@ public class UserSearchResponseContent {
         this.createdDate = user.getCreatedDate();
         this.lastModifiedBy = user.getLastModifiedBy();
         this.lastModifiedDate = user.getLastModifiedDate();
-
         this.roles = convertDomainRolesToContract(user.getRoles());
-
-        if (isGuardianRelationFatherOrHusband(user.getGuardianRelation())) {
-            this.fatherOrHusbandName = user.getGuardian();
-        }
-
-        convertAndSetAddressesToContract(user.getAddress());
+		mapFatherOrHusbandName(user);
+		mapPermanentAddress(user);
+		mapCorrespondenceAddress(user);
     }
 
-    private void convertAndSetAddressesToContract(List<org.egov.user.domain.model.Address> addresses) {
-        if (addresses == null) return;
+	private void mapFatherOrHusbandName(User user) {
+		if (isGuardianRelationFatherOrHusband(user.getGuardianRelation())) {
+			this.fatherOrHusbandName = user.getGuardian();
+		}
+	}
 
-        Optional<org.egov.user.domain.model.Address> permanentAddress =
-                getAddressOfType(addresses, AddressType.PERMANENT);
-        Optional<org.egov.user.domain.model.Address> correspondenceAddress = getAddressOfType(addresses, AddressType.CORRESPONDENCE);
-        permanentAddress.ifPresent(address -> {
-            this.permanentAddress = convertAddressEntityToString(address);
-            this.permanentCity = address.getCityTownVillage();
-            this.permanentPinCode = address.getPinCode();
-        });
+	private void mapCorrespondenceAddress(User user) {
+		if (user.getCorrespondenceAddress() != null) {
+			this.correspondenceAddress = user.getCorrespondenceAddress().getAddress();
+			this.correspondenceCity = user.getCorrespondenceAddress().getCity();
+			this.correspondencePinCode = user.getCorrespondenceAddress().getPinCode();
+		}
+	}
 
-        correspondenceAddress.ifPresent(address -> {
-            this.setCorrespondenceAddress(convertAddressEntityToString(address));
-            this.setCorrespondenceCity(address.getCityTownVillage());
-            this.setCorrespondencePinCode(address.getPinCode());
-        });
-    }
+	private void mapPermanentAddress(User user) {
+		if (user.getPermanentAddress() != null) {
+			this.permanentAddress = user.getPermanentAddress().getAddress();
+			this.permanentCity = user.getPermanentAddress().getCity();
+			this.permanentPinCode = user.getPermanentAddress().getPinCode();
+		}
+	}
 
-    private Optional<org.egov.user.domain.model.Address> getAddressOfType(List<org.egov.user.domain.model.Address> addressList, AddressType addressType) {
-        return addressList.stream()
-                .filter(address -> address.getType().equals(addressType))
-                .findFirst();
-    }
 
-    private String convertAddressEntityToString(org.egov.user.domain.model.Address address) {
-        final String ADDRESS_SEPARATOR = "%s, ";
-        final String PIN_CODE_FORMATTER = "PIN: %s";
-
-        Formatter formatter = new Formatter();
-        if (isNotBlank(address.getHouseNoBldgApt()))
-            formatter.format(ADDRESS_SEPARATOR, trim(address.getHouseNoBldgApt()));
-        if (isNotBlank(address.getAreaLocalitySector()))
-            formatter.format(ADDRESS_SEPARATOR, trim(address.getAreaLocalitySector()));
-        if (isNotBlank(address.getStreetRoadLine()))
-            formatter.format(ADDRESS_SEPARATOR, trim(address.getStreetRoadLine()));
-        if (isNotBlank(address.getLandmark()))
-            formatter.format(ADDRESS_SEPARATOR, trim(address.getLandmark()));
-        if (isNotBlank(address.getCityTownVillage()))
-            formatter.format(ADDRESS_SEPARATOR, trim(address.getCityTownVillage()));
-        if (isNotBlank(address.getPostOffice()))
-            formatter.format(ADDRESS_SEPARATOR, trim(address.getPostOffice()));
-        if (isNotBlank(address.getSubDistrict()))
-            formatter.format(ADDRESS_SEPARATOR, trim(address.getSubDistrict()));
-        if (isNotBlank(address.getDistrict()))
-            formatter.format(ADDRESS_SEPARATOR, trim(address.getDistrict()));
-        if (isNotBlank(address.getState()))
-            formatter.format(ADDRESS_SEPARATOR, trim(address.getState()));
-        if (isNotBlank(address.getCountry()))
-            formatter.format(ADDRESS_SEPARATOR, trim(address.getCountry()));
-        if (isNotBlank(address.getPinCode()))
-            formatter.format(PIN_CODE_FORMATTER, trim(address.getPinCode()));
-
-        return formatter.toString();
-    }
-
-    private List<RoleRequest> convertDomainRolesToContract(List<Role> roleEntities) {
+	private List<RoleRequest> convertDomainRolesToContract(List<Role> roleEntities) {
         if (roleEntities == null) return new ArrayList<>();
         return roleEntities.stream().map(RoleRequest::new).collect(Collectors.toList());
     }

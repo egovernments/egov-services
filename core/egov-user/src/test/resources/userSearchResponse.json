@@ -19,35 +19,35 @@
       "altContactNumber": "mobileNumber2",
       "pan": "pan",
       "aadhaarNumber": "aadhaarNumber",
-      "permanentAddress": "house number 1, area/locality/sector, street/road/line, landmark, city/town/village 1, post office, sub district, district, state, country, PIN: pincode 1",
-      "permanentCity": "city/town/village 1",
+      "permanentAddress": "post office",
+      "permanentCity": "city1",
       "permanentPinCode": "pincode 1",
-      "correspondenceAddress": "house number 2, area/locality/sector, street/road/line, landmark, city/town/village 2, post office, sub district, district, state, country, PIN: pincode 2",
-      "correspondenceCity": "city/town/village 2",
+      "correspondenceAddress": "sub district",
+      "correspondenceCity": "city2",
       "correspondencePinCode": "pincode 2",
       "active": true,
-      "dob": "07/01/1990",
-      "pwdExpiryDate": "01-07-1990 16:41:11",
       "locale": "en_IN",
       "type": "CITIZEN",
-      "signature": "7a9d7f12-bdcb-4487-9d43-709838a0ad39",
       "accountLocked": false,
-      "roles":[
+      "fatherOrHusbandName": "name of relative",
+      "signature": "7a9d7f12-bdcb-4487-9d43-709838a0ad39",
+      "bloodGroup": "A+",
+      "photo": "3b26fb49-e43d-401b-899a-f8f0a1572de0",
+      "identificationMark": "identification mark",
+      "createdBy": 1,
+      "lastModifiedBy": 1,
+      "tenantId": null,
+      "roles": [
         {
-          "id":1,
-          "name":"name of the role 1",
-          "code":"roleCode"
+          "id": 1,
+          "code": "roleCode",
+          "name": "name of the role 1"
         }
       ],
-      "fatherOrHusbandName": "name of relative",
-      "bloodGroup": "A+",
-      "identificationMark": "identification mark",
-      "photo": "3b26fb49-e43d-401b-899a-f8f0a1572de0",
-      "createdBy": 1,
       "createdDate": "01-07-1990 16:41:11",
-      "lastModifiedBy": 1,
       "lastModifiedDate": "01-07-1990 16:41:11",
-      "tenantId": null
+      "dob": "07/01/1990",
+      "pwdExpiryDate": "01-07-1990 16:41:11"
     }
   ]
 }

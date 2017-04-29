@@ -71,6 +71,34 @@ public class UserRequestErrorAdapterTest {
 	}
 
 	@Test
+	public void test_should_set_error_when_correspondence_address_is_invalid() {
+		when(user.isCorrespondenceAddressInvalid()).thenReturn(true);
+
+		final ErrorResponse errorResponse = errorAdapter.adapt(user);
+
+		assertNotNull(errorResponse);
+		final List<ErrorField> errorFields = errorResponse.getError().getFields();
+		assertEquals(1, errorFields.size());
+		assertEquals("core-user.CORRESPONDENCE_ADDRESS_INVALID", errorFields.get(0).getCode());
+		assertEquals("user.correspondenceAddress", errorFields.get(0).getField());
+		assertEquals("City max length (300), Address max length (300), PinCode max length(10)", errorFields.get(0).getMessage());
+	}
+
+	@Test
+	public void test_should_set_error_when_permanent_address_is_invalid() {
+		when(user.isPermanentAddressInvalid()).thenReturn(true);
+
+		final ErrorResponse errorResponse = errorAdapter.adapt(user);
+
+		assertNotNull(errorResponse);
+		final List<ErrorField> errorFields = errorResponse.getError().getFields();
+		assertEquals(1, errorFields.size());
+		assertEquals("core-user.PERMANENT_ADDRESS_INVALID", errorFields.get(0).getCode());
+		assertEquals("user.permanentAddress", errorFields.get(0).getField());
+		assertEquals("City max length (300), Address max length (300), PinCode max length(10)", errorFields.get(0).getMessage());
+	}
+
+	@Test
 	public void test_should_not_set_errors_when_model_is_valid() {
 		final ErrorResponse errorResponse = errorAdapter.adapt(user);
 

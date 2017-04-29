@@ -17,10 +17,10 @@ import static org.junit.Assert.assertNull;
 @RunWith(SpringRunner.class)
 @DataJpaTest
 @Import(TestConfiguration.class)
-public class RoleRepositoryTest {
+public class RoleJpaRepositoryTest {
 
     @Autowired
-    private RoleRepository roleRepository;
+    private RoleJpaRepository roleJpaRepository;
 
     @Test
     @Sql(scripts = {
@@ -29,7 +29,7 @@ public class RoleRepositoryTest {
             "/sql/createRoles.sql"
     })
     public void test_should_return_role_by_name_ignoring_case() {
-        final Role actualRole = roleRepository.findByTenantIdAndCodeIgnoreCase("ap.public","emp");
+        final Role actualRole = roleJpaRepository.findByTenantIdAndCodeIgnoreCase("ap.public","emp");
 
         assertNotNull(actualRole);
         assertEquals(Long.valueOf(1), actualRole.getId());
@@ -43,7 +43,7 @@ public class RoleRepositoryTest {
             "/sql/createRoles.sql"
     })
     public void test_should_return_null_when_role_with_given_name_does_not_exist() {
-        final Role actualRole = roleRepository.findByTenantIdAndCodeIgnoreCase("tenantId","unknown");
+        final Role actualRole = roleJpaRepository.findByTenantIdAndCodeIgnoreCase("tenantId","unknown");
 
         assertNull(actualRole);
     }

@@ -2,6 +2,7 @@ package org.egov.user.persistence.repository;
 
 import org.egov.user.TestConfiguration;
 import org.egov.user.domain.model.UserSearchCriteria;
+import org.egov.user.persistence.entity.Address;
 import org.egov.user.persistence.entity.User;
 import org.egov.user.persistence.enums.BloodGroup;
 import org.egov.user.persistence.enums.Gender;
@@ -21,6 +22,7 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
@@ -28,28 +30,36 @@ import static org.junit.Assert.assertEquals;
 public class UserJpaRepositoryTest {
 
 	@Autowired
-	private
-	UserJpaRepository userJpaRepository;
+	private UserJpaRepository userJpaRepository;
 
 	@Test
-	@Sql(scripts = {"/sql/clearUserRoles.sql", "/sql/clearAddresses.sql", "/sql/clearRoles.sql", "/sql/clearUsers.sql",
-			"/sql/createUser.sql"})
+	@Sql(scripts = {"/sql/clearUserRoles.sql",
+			"/sql/clearAddresses.sql",
+			"/sql/clearRoles.sql",
+			"/sql/clearUsers.sql",
+			"/sql/createUsers.sql"})
 	public void test_should_return_count_of_users_with_given_user_name_and_tenant_and_id_not_matching() {
 		Long count = userJpaRepository.isUserPresent("bigcat399", 5L, "ap.public");
 		assertEquals(Long.valueOf(1), count);
 	}
 
 	@Test
-	@Sql(scripts = {"/sql/clearUserRoles.sql", "/sql/clearAddresses.sql", "/sql/clearRoles.sql", "/sql/clearUsers.sql",
-			"/sql/createUser.sql"})
+	@Sql(scripts = {"/sql/clearUserRoles.sql",
+			"/sql/clearAddresses.sql",
+			"/sql/clearRoles.sql",
+			"/sql/clearUsers.sql",
+			"/sql/createUsers.sql"})
 	public void test_should_return_count_of_users_with_given_user_name_and_tenant() {
 		Long id = userJpaRepository.isUserPresent("bigcat399", "ap.public");
 		assertEquals(Long.valueOf(1), id);
 	}
 
 	@Test
-	@Sql(scripts = {"/sql/clearUserRoles.sql", "/sql/clearAddresses.sql", "/sql/clearRoles.sql", "/sql/clearUsers.sql",
-			"/sql/createUser.sql"})
+	@Sql(scripts = {"/sql/clearUserRoles.sql",
+			"/sql/clearAddresses.sql",
+			"/sql/clearRoles.sql",
+			"/sql/clearUsers.sql",
+			"/sql/createUsers.sql"})
 	public void test_should_return_zero_count_when_usesr_does_not_exist_for_given_user_name_and_tenant_not_having_id
 			() {
 		Long count = userJpaRepository.isUserPresent("bigcat399", 1L, "ap.public");
@@ -57,24 +67,33 @@ public class UserJpaRepositoryTest {
 	}
 
 	@Test
-	@Sql(scripts = {"/sql/clearUserRoles.sql", "/sql/clearAddresses.sql", "/sql/clearRoles.sql", "/sql/clearUsers.sql",
-			"/sql/createUser.sql"})
+	@Sql(scripts = {"/sql/clearUserRoles.sql",
+			"/sql/clearAddresses.sql",
+			"/sql/clearRoles.sql",
+			"/sql/clearUsers.sql",
+			"/sql/createUsers.sql"})
 	public void test_should_return_zero_count_when_user_does_not_exist_for_given_user_name_and_tenant() {
 		Long count = userJpaRepository.isUserPresent("unknown", "tenantId");
 		assertEquals(Long.valueOf(0), count);
 	}
 
 	@Test
-	@Sql(scripts = {"/sql/clearUserRoles.sql", "/sql/clearAddresses.sql", "/sql/clearRoles.sql", "/sql/clearUsers.sql",
-			"/sql/createUser.sql"})
+	@Sql(scripts = {"/sql/clearUserRoles.sql",
+			"/sql/clearAddresses.sql",
+			"/sql/clearRoles.sql",
+			"/sql/clearUsers.sql",
+			"/sql/createUsers.sql"})
 	public void should_fetch_user_by_name() {
 		User user = userJpaRepository.findByUsername("greenfish424");
 		assertThat(user.getId()).isEqualTo(2L);
 	}
 
 	@Test
-	@Sql(scripts = {"/sql/clearUserRoles.sql", "/sql/clearAddresses.sql", "/sql/clearRoles.sql", "/sql/clearUsers.sql",
-			"/sql/createUser.sql"})
+	@Sql(scripts = {"/sql/clearUserRoles.sql",
+			"/sql/clearAddresses.sql",
+			"/sql/clearRoles.sql",
+			"/sql/clearUsers.sql",
+			"/sql/createUsers.sql"})
 	public void should_fetch_user_by_email() {
 		User user = userJpaRepository.findByEmailId("email3@gmail.com");
 		assertThat(user.getId()).isEqualTo(3L);
@@ -85,7 +104,7 @@ public class UserJpaRepositoryTest {
 			"/sql/clearAddresses.sql",
 			"/sql/clearRoles.sql",
 			"/sql/clearUsers.sql",
-			"/sql/createUser.sql"})
+			"/sql/createUsers.sql"})
 	public void fuzzy_name_matching_query_test() {
 		UserSearchCriteria searchCriteria = UserSearchCriteria.builder()
 				.name("Ram")
@@ -109,7 +128,7 @@ public class UserJpaRepositoryTest {
 			"/sql/clearAddresses.sql",
 			"/sql/clearRoles.sql",
 			"/sql/clearUsers.sql",
-			"/sql/createUser.sql"})
+			"/sql/createUsers.sql"})
 	public void multi_field_matching_query_test() {
 		UserSearchCriteria userSearch = UserSearchCriteria.builder()
 				.name("Sreerama Krishnan")
@@ -134,7 +153,7 @@ public class UserJpaRepositoryTest {
 			"/sql/clearAddresses.sql",
 			"/sql/clearRoles.sql",
 			"/sql/clearUsers.sql",
-			"/sql/createUser.sql"})
+			"/sql/createUsers.sql"})
 	public void multi_field_matching_query_user_id_matching_test() {
 		UserSearchCriteria userSearch = UserSearchCriteria.builder()
 				.id(asList(1L, 2L))
@@ -163,7 +182,7 @@ public class UserJpaRepositoryTest {
 			"/sql/clearAddresses.sql",
 			"/sql/clearRoles.sql",
 			"/sql/clearUsers.sql",
-			"/sql/createUser.sql"})
+			"/sql/createUsers.sql"})
 	public void multi_field_matching_negative_test() {
 		UserSearchCriteria userSearch = UserSearchCriteria.builder()
 				.name("Sreerama Krishnan")
@@ -186,7 +205,7 @@ public class UserJpaRepositoryTest {
 			"/sql/clearAddresses.sql",
 			"/sql/clearRoles.sql",
 			"/sql/clearUsers.sql",
-			"/sql/createUser.sql"})
+			"/sql/createUsers.sql"})
 	public void multi_field_matching_empty_request_test() {
 		UserSearchCriteria userSearch = UserSearchCriteria.builder().active(true).tenantId("ap.public").build();
 		MultiFieldsMatchingSpecification multiFieldsMatchingSpecification =
@@ -202,7 +221,7 @@ public class UserJpaRepositoryTest {
 			"/sql/clearAddresses.sql",
 			"/sql/clearRoles.sql",
 			"/sql/clearUsers.sql",
-			"/sql/createUser.sql"})
+			"/sql/createUsers.sql"})
 	public void multi_field_matching_user_type_test() {
 		UserSearchCriteria userSearch = UserSearchCriteria.builder()
 				.active(true)

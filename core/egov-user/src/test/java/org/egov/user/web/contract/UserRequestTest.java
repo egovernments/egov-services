@@ -8,7 +8,6 @@ import org.junit.Test;
 
 import java.util.*;
 
-import static java.util.Arrays.asList;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.junit.Assert.*;
 
@@ -30,19 +29,15 @@ public class UserRequestTest {
         assertThat(userRequestContract.getAltContactNumber()).isEqualTo(domainUser.getAltContactNumber());
         assertThat(userRequestContract.getPan()).isEqualTo(domainUser.getPan());
         assertThat(userRequestContract.getAadhaarNumber()).isEqualTo(domainUser.getAadhaarNumber());
-        assertThat(userRequestContract.getPermanentAddress()).isEqualTo("house number 1, area/locality/sector, " +
-                "street/road/line, landmark, city/town/village 1, post office, sub district, " +
-                "district, state, country, PIN: pincode 1");
+        assertThat(userRequestContract.getPermanentAddress()).isEqualTo("post office");
         assertThat(userRequestContract.getPermanentCity()).isEqualTo("city/town/village 1");
         assertThat(userRequestContract.getPermanentPinCode()).isEqualTo("pincode 1");
-        assertThat(userRequestContract.getCorrespondenceAddress()).isEqualTo("house number 2, area/locality/sector, " +
-                "street/road/line, landmark, city/town/village 2, post office, sub district, " +
-                "district, state, country, PIN: pincode 2");
+        assertThat(userRequestContract.getCorrespondenceAddress()).isEqualTo("post office");
         assertThat(userRequestContract.getCorrespondenceCity()).isEqualTo("city/town/village 2");
         assertThat(userRequestContract.getCorrespondencePinCode()).isEqualTo("pincode 2");
         assertThat(userRequestContract.getActive()).isEqualTo(domainUser.getActive());
         assertThat(userRequestContract.getDob()).isEqualTo(domainUser.getDob());
-        assertThat(userRequestContract.getPwdExpiryDate()).isEqualTo(domainUser.getPwdExpiryDate());
+        assertThat(userRequestContract.getPwdExpiryDate()).isEqualTo(domainUser.getPasswordExpiryDate());
         assertThat(userRequestContract.getLocale()).isEqualTo(domainUser.getLocale());
         assertThat(userRequestContract.getType()).isEqualTo(domainUser.getType());
         assertThat(userRequestContract.getAccountLocked()).isEqualTo(domainUser.getAccountLocked());
@@ -81,7 +76,7 @@ public class UserRequestTest {
         assertEquals(Long.valueOf(loggedInUserId), userForCreate.getLoggedInUserId());
         assertTrue(userForCreate.getActive());
         assertEquals(expectedDate, userForCreate.getDob().toString());
-        assertEquals(expectedDate, userForCreate.getPwdExpiryDate().toString());
+        assertEquals(expectedDate, userForCreate.getPasswordExpiryDate().toString());
         assertEquals("en_IN", userForCreate.getLocale());
         assertEquals(UserType.CITIZEN, userForCreate.getType());
         assertFalse(userForCreate.getAccountLocked());
@@ -111,7 +106,7 @@ public class UserRequestTest {
 
     private UserRequest.UserRequestBuilder getUserBuilder(List<RoleRequest> roles) {
         Calendar c = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
-        c.set(2017, 01, 01, 01, 01, 01);
+        c.set(2017, 1, 1, 1, 1, 1);
         Date dateToTest = c.getTime();
         return UserRequest.builder()
                 .name("Kroorveer")
@@ -157,10 +152,11 @@ public class UserRequestTest {
                 .altContactNumber("mobileNumber2")
                 .pan("pan")
                 .aadhaarNumber("aadhaarNumber")
-                .address(getAddressList())
+                .permanentAddress(getPermanentAddress())
+                .correspondenceAddress(getCorrespondenceAddress())
                 .active(true)
                 .dob(date)
-                .pwdExpiryDate(date)
+                .passwordExpiryDate(date)
                 .locale("en_IN")
                 .type(UserType.CITIZEN)
                 .accountLocked(false)
@@ -178,44 +174,25 @@ public class UserRequestTest {
                 .build();
     }
 
-    private List<Address> getAddressList() {
-        return asList(Address.builder()
-                        .id(1L)
-                        .type(AddressType.PERMANENT)
-                        .houseNoBldgApt("house number 1")
-                        .areaLocalitySector("area/locality/sector")
-                        .streetRoadLine("street/road/line")
-                        .landmark("landmark")
-                        .cityTownVillage("city/town/village 1")
-                        .postOffice("post office")
-                        .subDistrict("sub district")
-                        .district("district")
-                        .state("state")
-                        .country("country")
-                        .pinCode("pincode 1")
-                        .build(),
+    private Address getPermanentAddress() {
+		return Address.builder()
+				.type(AddressType.PERMANENT)
+				.city("city/town/village 1")
+				.address("post office")
+				.pinCode("pincode 1")
+				.build();
+	}
 
-
-                Address.builder()
-                        .id(1L)
-                        .type(AddressType.CORRESPONDENCE)
-                        .houseNoBldgApt("house number 2")
-                        .areaLocalitySector("area/locality/sector")
-                        .streetRoadLine("street/road/line")
-                        .landmark("landmark")
-                        .cityTownVillage("city/town/village 2")
-                        .postOffice("post office")
-                        .subDistrict("sub district")
-                        .district("district")
-                        .state("state")
-                        .country("country")
-                        .pinCode("pincode 2")
-                        .build()
-        );
-    }
+	private Address getCorrespondenceAddress() {
+    	return Address.builder()
+				.type(AddressType.CORRESPONDENCE)
+				.city("city/town/village 2")
+				.address("post office")
+				.pinCode("pincode 2")
+				.build();
+	}
 
     private List<Role> getListOfRoles() {
-        User user = User.builder().id(0L).build();
         Calendar calendar = Calendar.getInstance();
         calendar.set(1990, Calendar.JULY, 1);
 

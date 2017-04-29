@@ -23,12 +23,14 @@ import redis.clients.jedis.JedisShardInfo;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
+import java.util.TimeZone;
 
 @SpringBootApplication
 @Import(TracerConfiguration.class)
 public class EgovUserApplication {
 
 	private static final String DATE_FORMAT = "dd-MM-yyyy HH:mm:ss";
+	private static final String IST = "Asia/Calcutta";
 
 	@Value("${spring.redis.host}")
 	private String host;
@@ -71,6 +73,7 @@ public class EgovUserApplication {
 	}
 
 	public static void main(String[] args) {
+		TimeZone.setDefault(TimeZone.getTimeZone(IST));
 		SpringApplication.run(EgovUserApplication.class, args);
 	}
 

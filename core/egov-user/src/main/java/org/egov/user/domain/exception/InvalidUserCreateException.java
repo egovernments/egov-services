@@ -4,12 +4,12 @@ import lombok.Getter;
 import org.egov.user.domain.model.User;
 
 @Getter
-public class InvalidUserException extends RuntimeException {
+public class InvalidUserCreateException extends RuntimeException {
 
     private static final long serialVersionUID = -761312648494992125L;
     private User user;
 
-    public InvalidUserException(User user) {
+    public InvalidUserCreateException(User user) {
         this.user = user;
     }
 

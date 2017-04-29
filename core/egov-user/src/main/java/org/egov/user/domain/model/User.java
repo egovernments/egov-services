@@ -4,14 +4,19 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import org.egov.user.domain.exception.InvalidUserException;
+import org.apache.commons.lang3.time.DateUtils;
+import org.egov.user.domain.exception.InvalidUserCreateException;
+import org.egov.user.domain.exception.InvalidUserUpdateException;
 import org.egov.user.domain.model.enums.BloodGroup;
 import org.egov.user.domain.model.enums.Gender;
 import org.egov.user.domain.model.enums.GuardianRelation;
 import org.egov.user.domain.model.enums.UserType;
 import org.springframework.util.CollectionUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 import static org.springframework.util.ObjectUtils.isEmpty;
 
@@ -19,7 +24,7 @@ import static org.springframework.util.ObjectUtils.isEmpty;
 @Getter
 @Builder
 public class User {
-
+	@Setter
 	private Long id;
 	private String tenantId;
 	private String username;
@@ -35,11 +40,12 @@ public class User {
 	private String altContactNumber;
 	private String pan;
 	private String aadhaarNumber;
-	private List<Address> address = new ArrayList<>();
+	private Address permanentAddress;
+	private Address correspondenceAddress;
 	private Boolean active;
 	private List<Role> roles = new ArrayList<>();
 	private Date dob;
-	private Date pwdExpiryDate = new Date();
+	private Date passwordExpiryDate;
 	private String locale = "en_IN";
 	private UserType type;
 	private BloodGroup bloodGroup;
@@ -56,17 +62,34 @@ public class User {
 	@Setter
 	private boolean otpValidationMandatory;
 
-	public void validate() {
+	public void validateNewUser() {
 		if (isUsernameAbsent()
 				|| isNameAbsent()
 				|| isMobileNumberAbsent()
 				|| isActiveIndicatorAbsent()
 				|| isTypeAbsent()
+				|| isPermanentAddressInvalid()
+				|| isCorrespondenceAddressInvalid()
 				|| isRolesAbsent()
 				|| isOtpReferenceAbsent()
 				|| isTenantIdAbsent()) {
-			throw new InvalidUserException(this);
+			throw new InvalidUserCreateException(this);
 		}
+	}
+
+	public void validateUserModification() {
+		if(isPermanentAddressInvalid()
+				|| isCorrespondenceAddressInvalid()) {
+			throw new InvalidUserUpdateException(this);
+		}
+	}
+
+	public boolean isCorrespondenceAddressInvalid() {
+		return correspondenceAddress != null && correspondenceAddress.isInvalid();
+	}
+
+	public boolean isPermanentAddressInvalid() {
+		return permanentAddress != null && permanentAddress.isInvalid();
 	}
 
 	public boolean isOtpReferenceAbsent() {
@@ -109,7 +132,7 @@ public class User {
 		username = null;
 		mobileNumber = null;
 		password = null;
-		pwdExpiryDate = null;
+		passwordExpiryDate = null;
 		roles = null;
 	}
 
@@ -117,10 +140,9 @@ public class User {
 		return !id.equals(loggedInUserId);
 	}
 
-	public User setRoleToCitizen() {
+	public void setRoleToCitizen() {
 		type = UserType.CITIZEN;
 		roles = Collections.singletonList(Role.getCitizenRole());
-		return this;
 	}
 
 	public void updatePassword(String newPassword) {
@@ -133,6 +155,23 @@ public class User {
 				.tenantId(tenantId)
 				.otpReference(otpReference)
 				.build();
+	}
+
+	public List<Address> getAddresses() {
+		final ArrayList<Address> addresses = new ArrayList<>();
+		if (correspondenceAddress != null && correspondenceAddress.isNotEmpty()) {
+			addresses.add(correspondenceAddress);
+		}
+		if (permanentAddress != null && permanentAddress.isNotEmpty()) {
+			addresses.add(permanentAddress);
+		}
+		return addresses;
+	}
+
+	public void setDefaultPasswordExpiry(int expiryInDays) {
+		if(passwordExpiryDate == null) {
+			passwordExpiryDate = DateUtils.addDays(new Date(), expiryInDays);
+		}
 	}
 }
 

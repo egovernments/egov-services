@@ -3,10 +3,7 @@ package org.egov.user.web.controller;
 import org.apache.commons.io.IOUtils;
 import org.egov.user.TestConfiguration;
 import org.egov.user.domain.exception.InvalidUserSearchCriteriaException;
-import org.egov.user.domain.model.Action;
-import org.egov.user.domain.model.SecureUser;
-import org.egov.user.domain.model.UserDetail;
-import org.egov.user.domain.model.UserSearchCriteria;
+import org.egov.user.domain.model.*;
 import org.egov.user.domain.model.enums.*;
 import org.egov.user.domain.service.TokenService;
 import org.egov.user.domain.service.UserService;
@@ -30,7 +27,8 @@ import java.util.*;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static org.mockito.Matchers.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -175,11 +173,12 @@ public class UserControllerTest {
 				.altContactNumber("mobileNumber2")
 				.pan("pan")
 				.aadhaarNumber("aadhaarNumber")
-				.address(getAddressList())
+				.permanentAddress(getPermanentAddress())
+				.correspondenceAddress(getCorrespondenceAddress())
 				.active(true)
 				.roles(getListOfRoles())
 				.dob(date)
-				.pwdExpiryDate(date)
+				.passwordExpiryDate(date)
 				.locale("en_IN")
 				.type(UserType.CITIZEN)
 				.bloodGroup(BloodGroup.A_POSITIVE)
@@ -195,20 +194,22 @@ public class UserControllerTest {
 		return Collections.singletonList(user);
 	}
 
-	private List<org.egov.user.domain.model.Address> getAddressList() {
-		return asList(org.egov.user.domain.model.Address.builder().id(1L).type(AddressType.PERMANENT).houseNoBldgApt
-						("house number 1")
-						.areaLocalitySector("area/locality/sector").streetRoadLine("street/road/line").landmark
-								("landmark")
-						.cityTownVillage("city/town/village 1").postOffice("post office").subDistrict("sub district")
-						.district("district").state("state").country("country").pinCode("pincode 1").build(),
+	private Address getPermanentAddress() {
+		return Address.builder()
+				.type(AddressType.PERMANENT)
+				.city("city1")
+				.address("post office")
+				.pinCode("pincode 1")
+				.build();
+	}
 
-				org.egov.user.domain.model.Address.builder().id(1L).type(AddressType.CORRESPONDENCE).houseNoBldgApt
-						("house number 2")
-						.areaLocalitySector("area/locality/sector").streetRoadLine("street/road/line")
-						.landmark("landmark").cityTownVillage("city/town/village 2").postOffice("post office")
-						.subDistrict("sub district").district("district").state("state").country("country")
-						.pinCode("pincode 2").build());
+	private Address getCorrespondenceAddress() {
+		return Address.builder()
+				.type(AddressType.CORRESPONDENCE)
+				.city("city2")
+				.address("sub district")
+				.pinCode("pincode 2")
+				.build();
 	}
 
 	private List<org.egov.user.domain.model.Role> getListOfRoles() {

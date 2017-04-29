@@ -41,6 +41,16 @@ public class UserRequestErrorAdapter implements ErrorAdapter<User> {
 	private static final String OTP_REFERENCE_FIELD = "user.OtpReference";
 	private static final String OTP_REFERENCE_MANDATORY_MESSAGE = "OTP Reference is required";
 
+	private static final String INVALID_PERMANENT_ADDRESS_CODE = "core-user.PERMANENT_ADDRESS_INVALID";
+	private static final String PERMANENT_ADDRESS_FIELD = "user.permanentAddress";
+	private static final String INVALID_PERMANENT_ADDRESS_MESSAGE =
+			"City max length (300), Address max length (300), PinCode max length(10)";
+
+	private static final String INVALID_CORRESPONDENCE_ADDRESS_CODE = "core-user.CORRESPONDENCE_ADDRESS_INVALID";
+	private static final String CORRESPONDENCE_ADDRESS_FIELD = "user.correspondenceAddress";
+	private static final String INVALID_CORRESPONDENCE_ADDRESS_MESSAGE =
+			"City max length (300), Address max length (300), PinCode max length(10)";
+
 	public ErrorResponse adapt(User user) {
 		final Error error = getError(user);
 		return new ErrorResponse(null, error);
@@ -64,7 +74,29 @@ public class UserRequestErrorAdapter implements ErrorAdapter<User> {
 		addTenantMissingError(user, errorFields);
 		addRolesMissingError(user, errorFields);
 		addOtpReferenceMissingError(user, errorFields);
+		addCorrespondenceAddressError(user, errorFields);
+		addPermanentAddressError(user, errorFields);
 		return errorFields;
+	}
+
+	private void addPermanentAddressError(User user, List<ErrorField> errorFields) {
+		if (user.isPermanentAddressInvalid()) {
+			errorFields.add(ErrorField.builder()
+					.code(INVALID_PERMANENT_ADDRESS_CODE)
+					.field(PERMANENT_ADDRESS_FIELD)
+					.message(INVALID_PERMANENT_ADDRESS_MESSAGE)
+					.build());
+		}
+	}
+
+	private void addCorrespondenceAddressError(User user, List<ErrorField> errorFields) {
+		if (user.isCorrespondenceAddressInvalid()) {
+			errorFields.add(ErrorField.builder()
+					.code(INVALID_CORRESPONDENCE_ADDRESS_CODE)
+					.field(CORRESPONDENCE_ADDRESS_FIELD)
+					.message(INVALID_CORRESPONDENCE_ADDRESS_MESSAGE)
+					.build());
+		}
 	}
 
 	private void addOtpReferenceMissingError(User user, List<ErrorField> errorFields) {

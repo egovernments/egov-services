@@ -26,9 +26,15 @@ public class CustomControllerAdvice {
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	@ExceptionHandler(InvalidUserException.class)
-	public ErrorResponse handleInvalidUserException(InvalidUserException ex) {
+	@ExceptionHandler(InvalidUserCreateException.class)
+	public ErrorResponse handleInvalidUserException(InvalidUserCreateException ex) {
 		return new UserRequestErrorAdapter().adapt(ex.getUser());
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(InvalidUserUpdateException.class)
+	public ErrorResponse handleInvalidUserUpdateException(InvalidUserUpdateException ex) {
+		return new UserUpdateErrorAdapter().adapt(ex.getUser());
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)

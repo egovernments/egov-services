@@ -27,3 +27,4 @@ public interface UserJpaRepository extends JpaRepository<User, Long>, JpaSpecifi
 	Long isUserPresent(@Param("username") String userName, @Param("tenantId") String tenantId);
 
 }
+

@@ -8,11 +8,10 @@ import org.egov.user.domain.model.Role;
 import org.egov.user.domain.model.User;
 import org.egov.user.domain.model.enums.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
-
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.apache.commons.lang3.StringUtils.trim;
 
 @Setter
 @Getter
@@ -76,7 +75,7 @@ public class UserRequest {
 		this.aadhaarNumber = user.getAadhaarNumber();
 		this.active = user.getActive();
 		this.dob = user.getDob();
-		this.pwdExpiryDate = user.getPwdExpiryDate();
+		this.pwdExpiryDate = user.getPasswordExpiryDate();
 		this.locale = user.getLocale();
 		this.type = user.getType();
 		this.accountLocked = user.getAccountLocked();
@@ -89,72 +88,35 @@ public class UserRequest {
 		this.lastModifiedBy = user.getLastModifiedBy();
 		this.lastModifiedDate = user.getLastModifiedDate();
 		this.tenantId = user.getTenantId();
-		this.roles = convertdomainRoleToContract(user.getRoles());
+		this.roles = convertDomainRoleToContract(user.getRoles());
+		mapFatherOrHusbandName(user);
+		mapPermanentAddress(user);
+		mapCorrespondenceAddress(user);
+	}
 
+	private void mapFatherOrHusbandName(User user) {
 		if (isGuardianRelationFatherOrHusband(user.getGuardianRelation())) {
 			this.fatherOrHusbandName = user.getGuardian();
 		}
-
-		convertAndSetAddressesToContract(user.getAddress());
 	}
 
-	private void convertAndSetAddressesToContract(List<Address> addresses) {
-		if (addresses == null) return;
-
-		Optional<Address> permanentAddress =
-				getAddressOfType(addresses, AddressType.PERMANENT);
-		Optional<Address> correspondenceAddress = getAddressOfType(addresses, AddressType.CORRESPONDENCE);
-		permanentAddress.ifPresent(address -> {
-			this.permanentAddress = convertAddressEntityToString(address);
-			this.permanentCity = address.getCityTownVillage();
-			this.permanentPinCode = address.getPinCode();
-		});
-
-		correspondenceAddress.ifPresent(address -> {
-			this.setCorrespondenceAddress(convertAddressEntityToString(address));
-			this.setCorrespondenceCity(address.getCityTownVillage());
-			this.setCorrespondencePinCode(address.getPinCode());
-		});
+	private void mapCorrespondenceAddress(User user) {
+		if (user.getCorrespondenceAddress() != null) {
+			this.correspondenceAddress = user.getCorrespondenceAddress().getAddress();
+			this.correspondenceCity = user.getCorrespondenceAddress().getCity();
+			this.correspondencePinCode = user.getCorrespondenceAddress().getPinCode();
+		}
 	}
 
-	private Optional<Address> getAddressOfType(List<Address> addressList, AddressType addressType) {
-		return addressList.stream()
-				.filter(address -> address.getType().equals(addressType))
-				.findFirst();
+	private void mapPermanentAddress(User user) {
+		if (user.getPermanentAddress() != null) {
+			this.permanentAddress = user.getPermanentAddress().getAddress();
+			this.permanentCity = user.getPermanentAddress().getCity();
+			this.permanentPinCode = user.getPermanentAddress().getPinCode();
+		}
 	}
 
-	private String convertAddressEntityToString(Address address) {
-		final String ADDRESS_SEPARATOR = "%s, ";
-		final String PIN_CODE_FORMATTER = "PIN: %s";
-
-		Formatter formatter = new Formatter();
-		if (isNotBlank(address.getHouseNoBldgApt()))
-			formatter.format(ADDRESS_SEPARATOR, trim(address.getHouseNoBldgApt()));
-		if (isNotBlank(address.getAreaLocalitySector()))
-			formatter.format(ADDRESS_SEPARATOR, trim(address.getAreaLocalitySector()));
-		if (isNotBlank(address.getStreetRoadLine()))
-			formatter.format(ADDRESS_SEPARATOR, trim(address.getStreetRoadLine()));
-		if (isNotBlank(address.getLandmark()))
-			formatter.format(ADDRESS_SEPARATOR, trim(address.getLandmark()));
-		if (isNotBlank(address.getCityTownVillage()))
-			formatter.format(ADDRESS_SEPARATOR, trim(address.getCityTownVillage()));
-		if (isNotBlank(address.getPostOffice()))
-			formatter.format(ADDRESS_SEPARATOR, trim(address.getPostOffice()));
-		if (isNotBlank(address.getSubDistrict()))
-			formatter.format(ADDRESS_SEPARATOR, trim(address.getSubDistrict()));
-		if (isNotBlank(address.getDistrict()))
-			formatter.format(ADDRESS_SEPARATOR, trim(address.getDistrict()));
-		if (isNotBlank(address.getState()))
-			formatter.format(ADDRESS_SEPARATOR, trim(address.getState()));
-		if (isNotBlank(address.getCountry()))
-			formatter.format(ADDRESS_SEPARATOR, trim(address.getCountry()));
-		if (isNotBlank(address.getPinCode()))
-			formatter.format(PIN_CODE_FORMATTER, trim(address.getPinCode()));
-
-		return formatter.toString();
-	}
-
-	private List<RoleRequest> convertdomainRoleToContract(List<Role> domainRoles) {
+	private List<RoleRequest> convertDomainRoleToContract(List<Role> domainRoles) {
 		if (domainRoles == null) return new ArrayList<>();
 		return domainRoles.stream().map(RoleRequest::new).collect(Collectors.toList());
 	}
@@ -179,7 +141,7 @@ public class UserRequest {
 				.aadhaarNumber(this.aadhaarNumber)
 				.active(this.active)
 				.dob(this.dob)
-				.pwdExpiryDate(this.pwdExpiryDate)
+				.passwordExpiryDate(this.pwdExpiryDate)
 				.locale(this.locale)
 				.type(this.type)
 				.accountLocked(this.accountLocked)
@@ -195,6 +157,26 @@ public class UserRequest {
 				.password(this.password)
 				.roles(toDomainRoles())
 				.loggedInUserId(loggedInUserId)
+				.permanentAddress(toDomainPermanentAddress())
+				.correspondenceAddress(toDomainCorrespondenceAddress())
+				.build();
+	}
+
+	private Address toDomainPermanentAddress() {
+		return Address.builder()
+				.type(AddressType.PERMANENT)
+				.city(permanentCity)
+				.pinCode(permanentPinCode)
+				.address(permanentAddress)
+				.build();
+	}
+
+	private Address toDomainCorrespondenceAddress() {
+		return Address.builder()
+				.type(AddressType.CORRESPONDENCE)
+				.city(correspondenceCity)
+				.pinCode(correspondencePinCode)
+				.address(correspondenceAddress)
 				.build();
 	}
 

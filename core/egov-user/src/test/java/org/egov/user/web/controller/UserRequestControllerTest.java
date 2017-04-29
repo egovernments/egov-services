@@ -3,7 +3,7 @@ package org.egov.user.web.controller;
 import org.apache.commons.io.IOUtils;
 import org.egov.user.TestConfiguration;
 import org.egov.user.domain.exception.DuplicateUserNameException;
-import org.egov.user.domain.exception.InvalidUserException;
+import org.egov.user.domain.exception.InvalidUserCreateException;
 import org.egov.user.domain.exception.OtpValidationPendingException;
 import org.egov.user.domain.exception.UserNotFoundException;
 import org.egov.user.domain.model.Role;
@@ -54,7 +54,7 @@ public class UserRequestControllerTest {
     @Test
     @WithMockUser
     public void testShouldThrowErrorWhileRegisteringWithInvalidCitizen() throws Exception {
-        InvalidUserException exception = new InvalidUserException(org.egov.user.domain.model.User.builder().build());
+        InvalidUserCreateException exception = new InvalidUserCreateException(org.egov.user.domain.model.User.builder().build());
         when(userService.createCitizen(any(org.egov.user.domain.model.User.class))).thenThrow(exception);
 
         String fileContents = getFileContents("createCitizenUnsuccessfulRequest.json");
@@ -110,7 +110,7 @@ public class UserRequestControllerTest {
                 .aadhaarNumber("96a70a9a-03bd-11e7-93ae-92361f002671")
                 .active(Boolean.TRUE)
                 .dob(dateOfBirth)
-                .pwdExpiryDate(pwdExpiryDate)
+                .passwordExpiryDate(pwdExpiryDate)
                 .locale("en_IN")
                 .type(UserType.CITIZEN)
                 .accountLocked(Boolean.FALSE)

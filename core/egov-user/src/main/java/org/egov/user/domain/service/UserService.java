@@ -4,6 +4,7 @@ import org.egov.user.domain.exception.*;
 import org.egov.user.domain.model.*;
 import org.egov.user.persistence.repository.OtpRepository;
 import org.egov.user.persistence.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,13 +16,16 @@ public class UserService {
 	private UserRepository userRepository;
 	private OtpRepository otpRepository;
 	private PasswordEncoder passwordEncoder;
+	private int defaultPasswordExpiryInDays;
 
 	public UserService(UserRepository userRepository,
 					   OtpRepository otpRepository,
-					   PasswordEncoder passwordEncoder) {
+					   PasswordEncoder passwordEncoder,
+					   @Value("${default.password.expiry.in.days}") int defaultPasswordExpiryInDays) {
 		this.userRepository = userRepository;
 		this.otpRepository = otpRepository;
 		this.passwordEncoder = passwordEncoder;
+		this.defaultPasswordExpiryInDays = defaultPasswordExpiryInDays;
 	}
 
 	public User getUserByUsername(final String userName) {
@@ -33,17 +37,19 @@ public class UserService {
 	}
 
 	public User createUser(User user) {
-		user.validate();
+		user.validateNewUser();
 		conditionallyValidateOtp(user);
 		validateDuplicateUserName(user);
+		user.setDefaultPasswordExpiry(defaultPasswordExpiryInDays);
 		return persistNewUser(user);
 	}
 
 	public User createCitizen(User user) {
 		user.setRoleToCitizen();
-		user.validate();
+		user.validateNewUser();
 		validateOtp(user.getOtpValidationRequest());
 		validateDuplicateUserName(user);
+		user.setDefaultPasswordExpiry(defaultPasswordExpiryInDays);
 		return persistNewUser(user);
 	}
 
@@ -53,6 +59,7 @@ public class UserService {
 	}
 
 	public User updateWithoutOtpValidation(final Long id, final User user) {
+		user.validateUserModification();
 		validateUser(id, user);
 		return updateExistingUser(user);
 	}
@@ -129,7 +136,7 @@ public class UserService {
 	}
 
 	private User persistNewUser(User user) {
-		return userRepository.save(user);
+		return userRepository.create(user);
 	}
 
 	private void validateOtp(OtpValidationRequest otpValidationRequest) {

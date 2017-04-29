@@ -61,7 +61,10 @@ public class UserController {
 	@PostMapping("/users/{id}/_updatenovalidate")
 	public UserDetailResponse updateUserWithoutValidation(@PathVariable final Long id,
 														  @RequestBody final CreateUserRequest createUserRequest) {
-		return updateUser(id, createUserRequest);
+		User user = createUserRequest.toDomain();
+		user.setId(id);
+		final User updatedUser = userService.updateWithoutOtpValidation(id, user);
+		return createResponse(updatedUser);
 	}
 
 	@PostMapping("/_patch")
@@ -79,9 +82,4 @@ public class UserController {
 		return new UserDetailResponse(responseInfo, Collections.singletonList(userRequest));
 	}
 
-	private UserDetailResponse updateUser(final Long id, final CreateUserRequest createUserRequest) {
-		User user = createUserRequest.toDomain();
-		final User updatedUser = userService.updateWithoutOtpValidation(id, user);
-		return createResponse(updatedUser);
-	}
 }

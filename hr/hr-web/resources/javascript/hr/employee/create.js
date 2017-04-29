@@ -1620,9 +1620,9 @@ function updateTable(tableName, modalName, object) {
           $(tableName).append(`<td data-label=${"boundary"}>
                                     ${bnd.length>0?bnd[0]["name"]:""}
                               </td>`)
-          $(tableName).append(`<td data-label=${"boundary"}>
+          /*$(tableName).append(`<td data-label=${"boundary"}>
                                     ${bnd.length>0?bnd[0]["boundaryType"]["name"]:""}
-                              </td>`)
+                              </td>`)*/
     } else if (object=="serviceHistory") {
       $(tableName).append(`<td data-label=${"serviceInfo"}>
 

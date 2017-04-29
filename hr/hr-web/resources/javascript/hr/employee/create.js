@@ -1604,25 +1604,22 @@ function updateTable(tableName, modalName, object) {
                                                                                                                                                                                             </td>`)
 
     } else if(object=="jurisdictions"){
-      /*$(tableName).append(`<td data-label=${"jurisdictionsType"}>
-          ${getNameById("jurisdictionsType",employee[object][i]["jurisdictionsType"],"")}
-      </td>`)*/
-
       try {
-            bnd = commonApiGet("egov-location", "boundarys", "", {
-              "Boundary.id":employee[object][i],
-              "Boundary.tenantId":tenantId
-            }).responseJSON["Boundary"] || [];
-          } catch (e) {
-            console.log(e);
-            bnd = [];
-          }
-          $(tableName).append(`<td data-label=${"boundary"}>
-                                    ${bnd.length>0?bnd[0]["name"]:""}
-                              </td>`)
-          /*$(tableName).append(`<td data-label=${"boundary"}>
-                                    ${bnd.length>0?bnd[0]["boundaryType"]["name"]:""}
-                              </td>`)*/
+        bnd = commonApiGet("egov-location", "boundarys", "", {
+          "Boundary.id":( typeof employee[object][i] == "object" ? employee[object][i]["boundary"] : employee[object][i]),
+          "Boundary.tenantId":tenantId
+        }).responseJSON["Boundary"] || [];
+      } catch (e) {
+        console.log(e);
+        bnd = [];
+      }
+      
+      $(tableName).append(`<td data-label=${"jurisdictionsType"}>
+                                ${bnd.length > 0 && bnd[0]["boundaryType"] ? bnd[0]["boundaryType"]["name"] : ""}
+                          </td>`)
+      $(tableName).append(`<td data-label=${"boundary"}>
+                                ${bnd.length > 0 ? bnd[0]["name"] : ""}
+                          </td>`)
     } else if (object=="serviceHistory") {
       $(tableName).append(`<td data-label=${"serviceInfo"}>
 
@@ -1803,50 +1800,86 @@ function markEditIndex(index = -1, modalName = "", object = "") {
   //assignments  details modal when it edit modalName
   $('#' + modalName).on('shown.bs.modal', function(e) {
     if (editIndex != -1) {
-      employeeSubObject[object] = Object.assign({}, employee[object][editIndex]);
-      console.log(employee[object][editIndex]);
-      for (var key in employeeSubObject[object]) {
-        // if($(`#${object}\\.${key}`).length == 0) {
-        //       alert("not there");
-        //   }
-        // if (object + "." + key == "assignments.fromDate" || object + "." + key == "assignments.toDate" || object + "." + key == "serviceHistory.serviceFrom" || object + "." + key == "probation.orderDate" || object + "." + key == "probation.declaredOn" || object + "." + key == "regularisation.declaredOn" || object + "." + key == "regularisation.orderDate" || object + "." + key == "education.yearOfPassing" || object + "." + key == "technical.yearOfPassing" || object + "." + key == "test.yearOfPassing") {
-        //     var dateSplit = employeeSubObject[object][key].split("/");
-        //     var date = new Date(dateSplit[0], dateSplit[1], dateSplit[2]);
-        //     // var day=date.getDate().toString().length===1?"0"+date.getDate():date.getDate();
-        //     // var monthIn=date.getMonth().toString().length===1?"0"+date.getMonth():date.getMonth();
-        //     // var yearIn=date.getFullYear();
-        //     // employeeSubObject[splitResult[0]][splitResult[1]] = day+"/"+monthIn+"/"+yearIn;
-        //     $(`#${object}\\.${key}`).val(date);
-        //
-        // } else {
-        //     $(`#${object}\\.${key}`).val(employeeSubObject[object][key]);
-        // }
-        if (key == "position") {
-          getPositions({
-            id: "assignments.department"
-          });
+      if(object == "jurisdictions") {
+        //Get the boundary to get boundaryType
+        var _bnd = commonApiGet("egov-location", "boundarys", "", {
+          "Boundary.id": employee[object][editIndex],
+          "Boundary.tenantId": tenantId
+        }).responseJSON["Boundary"] || [];
+
+        if(_bnd && _bnd.length) {
+          var jType = _bnd[0]["boundaryType"].id;
+          commonObject["jurisdictions_boundary"] = commonApiPost("egov-location", "boundarys", "getByBoundaryType", {
+            boundaryTypeId: jType,
+            tenantId
+          }).responseJSON["Boundary"] || [];
+          if (jType == "CITY") {
+            commonObject["juridictionTypeForCity"] = commonObject["jurisdictions_boundary"];
+          } else if (jType == "WARD") {
+            commonObject["juridictionTypeForWard"] = commonObject["jurisdictions_boundary"];
+          } else {
+            commonObject["juridictionTypeForZone"] = commonObject["jurisdictions_boundary"];
+          }
+          $(`#jurisdictions\\.boundary`).html(`<option value=''>Select</option>`)
+
+          for (var i = 0; i < commonObject["jurisdictions_boundary"].length; i++) {
+            $(`#jurisdictions\\.boundary`).append(`<option value='${commonObject["jurisdictions_boundary"][i]['id']}'>${commonObject["jurisdictions_boundary"][i]['name']}</option>`)
+          }
+
+          employeeSubObject[object] = {
+            jurisdictionsType: jType,
+            boundary: employee[object][editIndex]
+          }
+
+          for(key in employeeSubObject[object]) {
+            $(`#${object}\\.${key}`).val(employeeSubObject[object][key]);
+          }
         }
-
-        if (key == "isPrimary") {
-          if (employeeSubObject[object][key] == "true" ||employeeSubObject[object][key]==true) {
-            $('[data-primary="yes"]').prop("checked", true);
-            $('[data-primary="no"]').prop("checked", false);
-          } else {
-            $('[data-primary="yes"]').prop("checked", false);
-            $('[data-primary="no"]').prop("checked", true);
+      } else {
+        employeeSubObject[object] = Object.assign({}, employee[object][editIndex]);
+        for (var key in employeeSubObject[object]) {
+          // if($(`#${object}\\.${key}`).length == 0) {
+          //       alert("not there");
+          //   }
+          // if (object + "." + key == "assignments.fromDate" || object + "." + key == "assignments.toDate" || object + "." + key == "serviceHistory.serviceFrom" || object + "." + key == "probation.orderDate" || object + "." + key == "probation.declaredOn" || object + "." + key == "regularisation.declaredOn" || object + "." + key == "regularisation.orderDate" || object + "." + key == "education.yearOfPassing" || object + "." + key == "technical.yearOfPassing" || object + "." + key == "test.yearOfPassing") {
+          //     var dateSplit = employeeSubObject[object][key].split("/");
+          //     var date = new Date(dateSplit[0], dateSplit[1], dateSplit[2]);
+          //     // var day=date.getDate().toString().length===1?"0"+date.getDate():date.getDate();
+          //     // var monthIn=date.getMonth().toString().length===1?"0"+date.getMonth():date.getMonth();
+          //     // var yearIn=date.getFullYear();
+          //     // employeeSubObject[splitResult[0]][splitResult[1]] = day+"/"+monthIn+"/"+yearIn;
+          //     $(`#${object}\\.${key}`).val(date);
+          //
+          // } else {
+          //     $(`#${object}\\.${key}`).val(employeeSubObject[object][key]);
+          // }
+          if (key == "position") {
+            getPositions({
+              id: "assignments.department"
+            });
           }
-        } else if (key == "hod") {
-          if ((employeeSubObject[object][key] && employeeSubObject[object][key].constructor == Array && employeeSubObject[object][key].length)||(employeeSubObject[object][key]==true ||employeeSubObject[object][key]=="true")) {
-            $('[data-hod="yes"]').prop("checked", true);
-            $('[data-hod="no"]').prop("checked", false);
-            $("#departments").show();
-          } else {
-            $('[data-hod="yes"]').prop("checked", false);
-            $('[data-hod="no"]').prop("checked", true);
-          }
-        } else
-          $(`#${object}\\.${key}`).val(employeeSubObject[object][key]);
 
+          if (key == "isPrimary") {
+            if (employeeSubObject[object][key] == "true" ||employeeSubObject[object][key]==true) {
+              $('[data-primary="yes"]').prop("checked", true);
+              $('[data-primary="no"]').prop("checked", false);
+            } else {
+              $('[data-primary="yes"]').prop("checked", false);
+              $('[data-primary="no"]').prop("checked", true);
+            }
+          } else if (key == "hod") {
+            if ((employeeSubObject[object][key] && employeeSubObject[object][key].constructor == Array && employeeSubObject[object][key].length)||(employeeSubObject[object][key]==true ||employeeSubObject[object][key]=="true")) {
+              $('[data-hod="yes"]').prop("checked", true);
+              $('[data-hod="no"]').prop("checked", false);
+              $("#departments").show();
+            } else {
+              $('[data-hod="yes"]').prop("checked", false);
+              $('[data-hod="no"]').prop("checked", true);
+            }
+          } else
+            $(`#${object}\\.${key}`).val(employeeSubObject[object][key]);
+
+        }
       }
     }
   })
@@ -1924,7 +1957,7 @@ for (var key in final_validatin_rules) {
 
 $(document).ready(function() {
     $.validator.addMethod('phone', function(value) {
-        return /^[0-9]{10}$/.test(value);
+        return value ? /^[0-9]{10}$/.test(value) : true;
     }, 'Please enter a valid phone number.');
 
     $.validator.addMethod('aadhar', function(value) {
@@ -2381,7 +2414,7 @@ function makeAjaxUpload(file, cb) {
 }
 
 function hasAllRequiredFields(emp) {
-  return (emp.user.name && emp.code && emp.employeeType && emp.employeeStatus && emp.user.dob && emp.user.gender && emp.maritalStatus && emp.user.userName && emp.user.mobileNumber && emp.user.permanentAddress && emp.user.permanentCity && emp.user.permanentPincode && emp.dateOfAppointment);
+  return (emp.user.name && emp.code && emp.employeeType && emp.employeeStatus && emp.user.dob && emp.user.gender && emp.maritalStatus && emp.user.userName && emp.user.mobileNumber && emp.user.mobileNumber.length == 10 && emp.dateOfAppointment);
 }
 
 function checkIfNoDup(employee, objectType, subObject) {

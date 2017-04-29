@@ -1610,8 +1610,8 @@ function updateTable(tableName, modalName, object) {
 
       try {
             bnd = commonApiGet("egov-location", "boundarys", "", {
-              "id":employee[object][i],
-              "tenantId":tenantId
+              "Boundary.id":employee[object][i],
+              "Boundary.tenantId":tenantId
             }).responseJSON["Boundary"] || [];
           } catch (e) {
             console.log(e);
@@ -1804,7 +1804,7 @@ function markEditIndex(index = -1, modalName = "", object = "") {
   $('#' + modalName).on('shown.bs.modal', function(e) {
     if (editIndex != -1) {
       employeeSubObject[object] = Object.assign({}, employee[object][editIndex]);
-
+      console.log(employee[object][editIndex]);
       for (var key in employeeSubObject[object]) {
         // if($(`#${object}\\.${key}`).length == 0) {
         //       alert("not there");

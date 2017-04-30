@@ -1,35 +1,41 @@
 class ApplyLeave extends React.Component {
   constructor(props) {
     super(props);
-    this.state={list:[],leaveSet:{
-      "employee": "",
-      "name":"",
-      "code":"",
-       "leaveType": {
-       	"id" : ""
-       },
-       "fromDate" : "",
-       "toDate": "",
-       "availableDays": "",
-       "leaveDays":"",
-       "reason": "",
-       "status": "",
-       "stateId": "",
-       "tenantId" : tenantId,
-       "workflowDetails": {
-        "department": "",
-        "designation": "",
-        "assignee": "",
-        "action": "",
-        "status": ""
-      }
+    this.state = {
+        list: [],
+        leaveSet: {
+            "employee": "",
+            "name": "",
+            "code": "",
+            "leaveType": {
+                "id": ""
+            },
+            "fromDate": "",
+            "toDate": "",
+            "availableDays": "",
+            "leaveDays": "",
+            "reason": "",
+            "status": "",
+            "stateId": "",
+            "tenantId": tenantId,
+            "workflowDetails": {
+                "department": "",
+                "designation": "",
+                "assignee": "",
+                "action": "",
+                "status": ""
+            }
+        },
+        leaveList: [],
+        buttons: []
+    }
+    this.handleChange = this.handleChange.bind(this);
+    this.addOrUpdate = this.addOrUpdate.bind(this);
+    this.handleChangeThreeLevel = this.handleChangeThreeLevel.bind(this);
+    this.getPrimaryAssigmentDep = this.getPrimaryAssigmentDep.bind(this);
+    this.handleProcess = this.handleProcess.bind(this);
+}
 
-     },leaveList:[]}
-    this.handleChange=this.handleChange.bind(this);
-    this.addOrUpdate=this.addOrUpdate.bind(this);
-    this.handleChangeThreeLevel=this.handleChangeThreeLevel.bind(this);
-    this.getPrimaryAssigmentDep=this.getPrimaryAssigmentDep.bind(this);
-  }
 
   componentDidMount(){
     var type = getUrlVars()["type"], _this = this;
@@ -174,9 +180,20 @@ class ApplyLeave extends React.Component {
           id: stateId
           }).responseJSON["processInstance"];
           if (process && process.attributes && process.attributes.validActions && process.attributes.validActions.values && process.attributes.validActions.values.length) {
+              var _btns = [];
               for (var i = 0; i < process.attributes.validActions.values.length; i++) {
-                  if (process.attributes.validActions.values[i].key)
-                      $("#footer-btn-grp").append($(`<button data-action=${process.attributes.validActions.values[i].key} id=${process.attributes.validActions.values[i].key} type="button" class="btn btn-submit">${process.attributes.validActions.values[i].name}<button/>`));
+                  if (process.attributes.validActions.values[i].key) {
+                      _btns.push({
+                        key: process.attributes.validActions.values[i].key,
+                        name: process.attributes.validActions.values[i].name
+                      });
+                  }
+              }
+
+              if(_btns.length) {
+                _this.setState({
+                  buttons: _btns
+                })
               }
           }
       } catch(e){
@@ -331,14 +348,20 @@ class ApplyLeave extends React.Component {
 }
 
 
-  close(){
-      // widow.close();
-      open(location, '_self').close();
-  }
+close(){
+    // widow.close();
+    open(location, '_self').close();
+}
 
+handleProcess(e) {
+  e.preventDefault();
+  //Here ID = e.target.id is the key/action
+  //Make your server calls here for these actions/buttons
+  //Please test it, I have only wrote the code, not tested - Sourabh
+  //Left addOrUpdate as it is, if you think its not needed, you can delete
+}
 
-addOrUpdate(e,mode)
-{
+addOrUpdate(e, mode) {
     e.preventDefault();
     var employee;
     var asOnDate = this.state.leaveSet.toDate;
@@ -456,18 +479,25 @@ addOrUpdate(e,mode)
 
 
   render() {
-    let {handleChange,addOrUpdate,handleChangeThreeLevel}=this;
-    let {leaveSet}=this.state;
+    let {handleChange, addOrUpdate, handleChangeThreeLevel, handleProcess}=this;
+    let {leaveSet, buttons}=this.state;
     let {name,code,leaveDays,availableDays,fromDate,toDate,reason,leaveType}=leaveSet;
     let mode=getUrlVars()["type"];
 
+    const renderProcesedBtns = function() {
+      if(buttons.length) {
+        return buttons.map(function(btn, ind) {
+          return (
+            <button key={ind} id={btn.key} type='button' class='btn btn-submit' onClick={(e)=>{handleProcess(e)}}>
+              {btn.name}&nbsp;
+            </button> 
+          )
+        })
+      }
+    } 
 
-
-
-    const renderOption=function(list)
-    {
-      if(list)
-      {
+    const renderOption = function(list) {
+      if(list) {
         return list.map((item)=>
         {
             return (<option key={item.id} value={item.id}>
@@ -475,7 +505,6 @@ addOrUpdate(e,mode)
               </option>)
         })
       }
-
     }
 
 
@@ -607,7 +636,7 @@ addOrUpdate(e,mode)
 
 
             <div className="text-center">
-
+            {renderProcesedBtns()}
             <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>
 
             </div>

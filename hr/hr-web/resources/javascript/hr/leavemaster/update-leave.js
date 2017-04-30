@@ -268,7 +268,7 @@ class ApplyLeave extends React.Component {
         }
       }
     }
-    
+
     componentWillMount()
     {
       try {

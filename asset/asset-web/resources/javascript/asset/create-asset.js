@@ -656,7 +656,7 @@ class CreateAsset extends React.Component {
 							<label for={item.name}>{titleCase(item.name)}  {showStart(item.isMandatory)}</label>
 						</div>
 						<div className="col-sm-6">
-							<input id={item.name} name={item.name} type="text" maxLength= "200"
+							<input  name={item.name} type="text" maxLength= "200"
 								defaultValue={item.values} onChange={(e)=>{handleChangeTwoLevel(e, "properties", item.name)}} required={item.isMandatory} disabled={readonly}/>
 						</div>
 					</div>
@@ -672,7 +672,7 @@ class CreateAsset extends React.Component {
 							<label for={item.name}>{titleCase(item.name)}  {showStart(item.isMandatory)}</label>
 						</div>
 						<div className="col-sm-6">
-							<select id={item.name} name={item.name}
+							<select  name={item.name}
 								onChange={(e)=>{handleChangeTwoLevel(e,"properties", item.name)}} required={item.isMandatory} disabled={readonly}>
 								<option value="">Select</option>
 								{renderOption(item.values.split(','))}
@@ -720,7 +720,7 @@ class CreateAsset extends React.Component {
                         <label for={item.name}>{titleCase(item.name)}  {showStart(item.isMandatory)}</label>
                     </div>
                     <div className="col-sm-6">
-                        <input id={item.name} className="custom-date-picker" name={item.name} type="text" defaultValue={item.values} onChange={(e)=>{handleChangeTwoLevel(e, "properties", item.name)}} required={item.isMandatory} disabled={readonly}/>
+                        <input  className="custom-date-picker" name={item.name} type="text" defaultValue={item.values} onChange={(e)=>{handleChangeTwoLevel(e, "properties", item.name)}} required={item.isMandatory} disabled={readonly}/>
                     </div>
                 </div>
             </div>)
@@ -733,7 +733,7 @@ class CreateAsset extends React.Component {
                         <label for={item.name}>{titleCase(item.name)}  {showStart(item.isMandatory)}</label>
                     </div>
                     <div className="col-sm-6">
-                        <input id={item.name} name={item.name} type="file" onChange={(e)=>{handleChangeTwoLevel(e, "properties", item.name)}} required={item.isMandatory} disabled={readonly} multiple/>
+                        <input  name={item.name} type="file" onChange={(e)=>{handleChangeTwoLevel(e, "properties", item.name)}} required={item.isMandatory} disabled={readonly} multiple/>
                     </div>
                 </div>
             </div>)
@@ -757,6 +757,7 @@ class CreateAsset extends React.Component {
 				{
 					return item.columns.map((itemOne,index)=>
 					{
+						itemOne.parent=item.name;
 						return checkFields(itemOne,index)
 					})
 				}
@@ -792,7 +793,7 @@ class CreateAsset extends React.Component {
 
 											{tableRows()}
 
-											<button type="button" className="btn btn-primary" >Add/Edit</button>
+											<button type="button" className="btn btn-primary" >Add</button>
 											{/*<button type="button" className="btn btn-default">Reset</button>*/}
 
 										</div>

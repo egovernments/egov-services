@@ -676,7 +676,7 @@ class CreateAsset extends React.Component {
 								onChange={(e)=>{handleChangeTwoLevel(e,"properties", item.name)}} required={item.isMandatory} disabled={readonly}>
 								<option value="">Select</option>
 								{renderOption(item.values.split(','))}
-                            </select>
+          </select>
 						</div>
 					</div>
 				</div>
@@ -767,22 +767,10 @@ class CreateAsset extends React.Component {
 					<div className="col-sm-12" key={index}>
 						<div className="form-section" >
 					  <h3 className="categoryType">{item.name}</h3>
-						<div className="form-section" >
-							<h3 className="categoryType">Add/Modifiy </h3>
-								<div className="form-section-inner">
-										<div className="row">
 
-											{tableRows()}
-
-											<button type="button" className="btn btn-primary" >Add/Edit</button>
-											<button type="button" className="btn btn-default">Reset</button>
-
-										</div>
-									</div>
-								</div>
 
 						<div className="row">
-						<div className="land-table">
+						<div className="land-table table-responsive">
 								<table className="table table-bordered">
 										<thead>
 											<tr>
@@ -796,6 +784,21 @@ class CreateAsset extends React.Component {
 								</table>
 						</div>
 						</div>
+
+						<div className="form-section" >
+							<h3 className="categoryType">Add </h3>
+								<div className="form-section-inner">
+										<div className="row">
+
+											{tableRows()}
+
+											<button type="button" className="btn btn-primary" >Add/Edit</button>
+											{/*<button type="button" className="btn btn-default">Reset</button>*/}
+
+										</div>
+									</div>
+								</div>
+
 					</div>
 					</div>
 				)

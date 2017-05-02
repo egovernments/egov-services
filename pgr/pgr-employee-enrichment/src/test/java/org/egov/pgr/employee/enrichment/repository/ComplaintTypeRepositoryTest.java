@@ -34,7 +34,7 @@ public class ComplaintTypeRepositoryTest {
     public void test_should_get_complaint_type_id_for_given_complaint_code() {
         server.expect(once(),
             requestTo("http://host/pgr/services/complaintTypeCode?tenantId=tenantId"))
-            .andExpect(method(HttpMethod.GET))
+            .andExpect(method(HttpMethod.POST))
             .andRespond(withSuccess(resources.getFileContents("complaintTypeResponse.json"),
                 MediaType.APPLICATION_JSON_UTF8));
 

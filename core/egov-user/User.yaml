@@ -176,10 +176,10 @@ paths:
           schema:
             $ref: '#/definitions/ErrorRes'
 
-  /_patch:
+  /profile/_update:
       post:
-        summary: User profile update. All fields expect username and mobilenumber are allowed to be updated.
-        description: User profile update. All fields expect username and mobilenumber are allowed to be updated.
+        summary: User profile update. All fields expect username, password and mobilenumber are allowed to be updated.
+        description: User profile update. All fields expect username, password and mobilenumber are allowed to be updated.
         parameters:
           - name: user
             in: body

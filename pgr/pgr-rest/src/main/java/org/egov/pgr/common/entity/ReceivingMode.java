@@ -47,4 +47,10 @@ public class ReceivingMode extends AbstractPersistable<Long> {
     public String toString() {
         return StringUtils.capitalize(name);
     }
+
+   public org.egov.pgr.read.domain.model.ReceivingMode toDomain()
+         {
+           return  org.egov.pgr.read.domain.model.ReceivingMode.builder().id(id)
+                 .name(name).code(code).visible(visible).tenantId(tenantId).build();
+         }
 }

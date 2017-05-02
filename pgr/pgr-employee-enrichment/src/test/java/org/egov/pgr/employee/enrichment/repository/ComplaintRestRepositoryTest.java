@@ -18,7 +18,7 @@ import org.springframework.web.client.RestTemplate;
 public class ComplaintRestRepositoryTest {
 
     private static final String HOST = "http://host";
-    private static final String COMPLAINT_BY_CRN = "/pgr/seva/_search?tenantId={tenantId}&service_request_id="
+    private static final String COMPLAINT_BY_CRN = "/pgr/seva/_search?tenantId={tenantId}&serviceRequestId="
         + "00015-2016-AP";
 
     private ComplaintRestRepository complaintRestRepositoryRepository;
@@ -34,7 +34,7 @@ public class ComplaintRestRepositoryTest {
     @Test
     public void testShouldGetComplaintByCrnNo() {
         server.expect(once(),
-            requestTo("http://host/pgr/seva/_search?tenantId=ap.public&service_request_id=" + "00015-2016-AP"))
+            requestTo("http://host/pgr/seva/_search?tenantId=ap.public&serviceRequestId=" + "00015-2016-AP"))
             .andExpect(method(HttpMethod.POST))
             .andRespond(withSuccess(new Resources().getFileContents("complaintSearchResponse.json"),
                 MediaType.APPLICATION_JSON_UTF8));

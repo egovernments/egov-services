@@ -50,30 +50,30 @@ public class ComplaintController {
 
     @PostMapping(value = "/_search")
     public ServiceResponse getServiceRequests(@RequestParam("tenantId") String tenantId,
-                                              @RequestParam(value = "service_request_id", required = false) String
+                                              @RequestParam(value = "serviceRequestId", required = false) String
                                                   serviceRequestId,
-                                              @RequestParam(value = "service_code", required = false) String
+                                              @RequestParam(value = "serviceCode", required = false) String
                                                   serviceCode,
-                                              @RequestParam(value = "start_date", required = false) @DateTimeFormat
+                                              @RequestParam(value = "startDate", required = false) @DateTimeFormat
                                                   (pattern = "dd-MM-yyyy") Date startDate,
-                                              @RequestParam(value = "end_date", required = false) @DateTimeFormat
+                                              @RequestParam(value = "endDate", required = false) @DateTimeFormat
                                                   (pattern = "dd-MM-yyyy") Date endDate,
-                                              @RequestParam(value = "escalation_date", required = false) @DateTimeFormat
+                                              @RequestParam(value = "escalationDate", required = false) @DateTimeFormat
                                                   (pattern = "dd-MM-yyyy HH:mm:ss") Date escalationDate,
                                               @RequestParam(value = "status", required = false) List<String> status,
-                                              @RequestParam(value = "last_modified_datetime", required = false)
+                                              @RequestParam(value = "lastModifiedDatetime", required = false)
                                               @DateTimeFormat(pattern = "dd-MM-yyyy") Date lastModifiedDate,
-                                              @RequestParam(value = "assignment_id", required = false) Long
+                                              @RequestParam(value = "assignmentId", required = false) Long
                                                   assignmentId,
-                                              @RequestParam(value = "user_id", required = false) Long userId,
+                                              @RequestParam(value = "userId", required = false) Long userId,
                                               @RequestParam(value = "name", required = false) String name,
-                                              @RequestParam(value = "mobile_number", required = false) String
+                                              @RequestParam(value = "mobileNumber", required = false) String
                                                   mobileNumber,
-                                              @RequestParam(value = "email_id", required = false) String emailId,
-                                              @RequestParam(value = "receiving_mode", required = false) Long
+                                              @RequestParam(value = "emailId", required = false) String emailId,
+                                              @RequestParam(value = "receivingMode", required = false) Long
                                                   receivingMode,
-                                              @RequestParam(value = "location_id", required = false) Long locationId,
-                                              @RequestParam(value = "child_location_id", required = false) Long
+                                              @RequestParam(value = "locationId", required = false) Long locationId,
+                                              @RequestParam(value = "childLocationId", required = false) Long
                                                   childLocationId,
                                               @RequestBody RequestInfoBody requestInfoBody) {
 

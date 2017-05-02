@@ -13,12 +13,10 @@ import org.egov.common.contract.request.RequestInfo;
 @Getter
 @Builder
 public class GetUserByIdRequest {
-    @JsonProperty("requestInfo")
+    @JsonProperty("RequestInfo")
     private RequestInfo requestInfo;
 
-    @JsonProperty("id")
     private List<Long> id;
-    
-    @JsonProperty("tenantId")
+
     private String tenantId;
 }

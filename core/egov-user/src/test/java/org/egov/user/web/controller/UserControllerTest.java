@@ -75,15 +75,15 @@ public class UserControllerTest {
 
 	@Test
 	@WithMockUser
-	public void test_should_partially_update_user() throws Exception {
+	public void test_should_update_user_profile() throws Exception {
 		when(userService.partialUpdate(any())).thenReturn(org.egov.user.domain.model.User.builder().build());
 
-		mockMvc.perform(post("/_patch")
+		mockMvc.perform(post("/profile/_update")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(getFileContents("patchUserRequest.json")))
+				.content(getFileContents("userProfileUpdateRequest.json")))
 				.andExpect(status().isOk())
 				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(content().json(getFileContents("patchUserResponse.json")));
+				.andExpect(content().json(getFileContents("userProfileUpdateResponse.json")));
 	}
 
 	@Test

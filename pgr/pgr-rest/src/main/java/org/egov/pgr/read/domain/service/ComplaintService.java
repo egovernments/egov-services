@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.egov.pgr.common.repository.ComplaintJpaRepository;
 import org.egov.pgr.read.domain.model.Complaint;
 import org.egov.pgr.read.domain.model.ComplaintSearchCriteria;
 import org.egov.pgr.common.contract.SevaRequest;
-import org.egov.pgr.read.persistence.repository.ComplaintJpaRepository;
 import org.egov.pgr.read.persistence.repository.ComplaintRepository;
 import org.egov.pgr.common.repository.UserRepository;
 import org.egov.pgr.read.web.contract.User;

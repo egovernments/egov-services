@@ -11,7 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class ResponseInfo   {
-    @JsonProperty("api_id")
+    @JsonProperty("apiId")
     private String apiId;
 
     @JsonProperty("ver")
@@ -20,10 +20,10 @@ public class ResponseInfo   {
     @JsonProperty("ts")
     private String ts;
 
-    @JsonProperty("res_msg_id")
+    @JsonProperty("resMsgId")
     private String resMsgId;
 
-    @JsonProperty("msg_id")
+    @JsonProperty("msgId")
     private String msgId;
 
     @JsonProperty("status")

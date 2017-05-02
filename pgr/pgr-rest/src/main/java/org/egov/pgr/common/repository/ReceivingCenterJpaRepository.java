@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ReceivingCenterRepository extends JpaRepository<ReceivingCenter, Long> {
+public interface ReceivingCenterJpaRepository extends JpaRepository<ReceivingCenter, Long> {
     ReceivingCenter findByIdAndTenantId(Long id, String tenantId);
 
     List<ReceivingCenter> findAllByTenantId(String tenantId);

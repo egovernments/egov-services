@@ -14,7 +14,7 @@ public class ReceivingCenter {
 	private Long orderNo;
 	private String tenantId;
 
-	public ReceivingCenter(org.egov.pgr.common.entity.ReceivingCenter receivingCenter) {
+	public ReceivingCenter(org.egov.pgr.read.domain.model.ReceivingCenter receivingCenter) {
 		this.id = receivingCenter.getId();
 		this.name = receivingCenter.getName();
 		this.orderNo = receivingCenter.getOrderNo();

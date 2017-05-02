@@ -1,36 +1,45 @@
 package org.egov.pgr.read.persistence.repository;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-
-import java.util.List;
-
-import org.egov.pgr.TestConfiguration;
 import org.egov.pgr.common.entity.ReceivingMode;
-import org.egov.pgr.common.repository.ReceivingModeRepository;
+import org.egov.pgr.common.repository.ReceivingModeJpaRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
-@RunWith(SpringRunner.class)
-@DataJpaTest
-@Import(TestConfiguration.class)
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
+
+
+@RunWith(MockitoJUnitRunner.class)
 public class ReceivingModeRepositoryTest {
 
-	@Autowired
-	private ReceivingModeRepository receivingModeRepository;
+    @Mock
+    private ReceivingModeJpaRepository receivingModeJpaRepository;
 
-	@Test
-	@Sql(scripts = { "/sql/clearReceivingMode.sql", "/sql/InsertReceivingModeData.sql" })
-	public void should_fetch_all_receiving_modes() {
-		final List<ReceivingMode> actualResult = receivingModeRepository.findAll();
+    @InjectMocks
+    private ReceivingModeRepository receivingModeRepository;
 
-		assertEquals(6, actualResult.size());
-	}
+    @Test
+    public void test_should_find_all_receivingmodes_by_tenantId()
+    {
+        List<ReceivingMode> receivingMode=getReceivingModes();
+        when(receivingModeJpaRepository.findAllByTenantId("ap.public")).thenReturn(receivingMode);
+        List<org.egov.pgr.read.domain.model.ReceivingMode> receivingModes=receivingModeRepository.findAllByReceivingModeByTenantId("ap.public");
+        assertEquals(receivingMode.get(0).getName(),receivingModes.get(0).getName());
+        assertEquals(receivingMode.get(1).getName(),receivingModes.get(1).getName());
+        assertEquals(receivingMode.get(0).getId(),receivingModes.get(0).getId());
+        assertEquals(receivingMode.get(1).getId(),receivingModes.get(1).getId());
+    }
+
+    public List<ReceivingMode>  getReceivingModes() {
+        ReceivingMode receivingMode1=ReceivingMode.builder().id(1L).name("Website").code("WEBSITE").visible(false).tenantId("ap.public").build();
+        ReceivingMode receivingMode2=ReceivingMode.builder().id(2l).name("SMS").code("SMS").visible(false).tenantId("ap.public").build();
+        return Arrays.asList(receivingMode1,receivingMode2);
+    }
 }
+

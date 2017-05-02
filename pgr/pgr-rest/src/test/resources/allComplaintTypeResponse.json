@@ -1,6 +1,6 @@
 {
-    "ResponseInfo": null,
-    "ComplaintType": [
+    "responseInfo": null,
+    "complaintTypes": [
         {
             "serviceName": "Broken Bin",
             "serviceCode": "BRKNB",

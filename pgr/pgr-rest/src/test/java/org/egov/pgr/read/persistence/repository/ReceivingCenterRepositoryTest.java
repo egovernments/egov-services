@@ -1,43 +1,66 @@
 package org.egov.pgr.read.persistence.repository;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-
-import java.util.List;
-
-import org.egov.pgr.TestConfiguration;
 import org.egov.pgr.common.entity.ReceivingCenter;
-import org.egov.pgr.common.repository.ReceivingCenterRepository;
+import org.egov.pgr.common.repository.ReceivingCenterJpaRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
-@RunWith(SpringRunner.class)
-@DataJpaTest
-@Import(TestConfiguration.class)
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+import java.util.Arrays;
+import java.util.List;
+
+import static org.egov.pgr.common.entity.Complaint_.receivingCenter;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
+
+/**
+ * Created by mansibansal on 4/28/17.
+ */
+@RunWith(MockitoJUnitRunner.class)
 public class ReceivingCenterRepositoryTest {
 
-	@Autowired
-	private ReceivingCenterRepository receivingCenterRepository;
+    @Mock
+    private ReceivingCenterJpaRepository receivingCenterJpaRepository;
 
-	@Test
-	@Sql(scripts = { "/sql/clearReceivingCenter.sql", "/sql/InsertReceivingCenterData.sql" })
-	public void should_fetch_all_receiving_centers() {
-		final List<ReceivingCenter> actualResult = receivingCenterRepository.findAll();
-		assertFalse(actualResult.isEmpty());
-	}
+    @InjectMocks
+    private  ReceivingCenterRepository receivingCenterRepository;
+    @Test
+    public void test_should_find_receivingCenter_by_id_and_tenantId()
+    {
+        ReceivingCenter receivingCenter=getReceivingCenter();
+        when(receivingCenterJpaRepository.findByIdAndTenantId(1L,"ap.public")).thenReturn(receivingCenter);
+        org.egov.pgr.read.domain.model.ReceivingCenter receivingCenter1=receivingCenterRepository.findReceivingCenterByIdAndTenantId(1L,"ap.public");
+        assertEquals(receivingCenter.getName(),receivingCenter1.getName());
+        assertEquals(receivingCenter.getId(),receivingCenter1.getId());
+        assertEquals(receivingCenter.getOrderNo(),receivingCenter1.getOrderNo());
+    }
 
-	@Test
-	@Sql(scripts = { "/sql/clearReceivingCenter.sql", "/sql/InsertReceivingCenterData.sql" })
-	public void shouldFetchReceivingCenterById() {
-		final ReceivingCenter actualResult = receivingCenterRepository.findByIdAndTenantId(1L, "ap.public");
-		assertEquals(Long.valueOf(1), actualResult.getId());
-		assertEquals("Complaint Cell", actualResult.getName());
-	}
+
+    @Test
+    public void test_should_return_all_receivingcenters_by_tenantId()
+    {
+       List<ReceivingCenter> receivingCenters=getReceivingCenters();
+        when(receivingCenterJpaRepository.findAllByTenantId("ap.public")).thenReturn(receivingCenters);
+       List<org.egov.pgr.read.domain.model.ReceivingCenter> receivingCenters1= receivingCenterRepository.findAllReceivingCentersByTenantId("ap.public");
+        assertEquals(receivingCenters.size(),receivingCenters1.size());
+        assertEquals(receivingCenters.get(0).getId(),receivingCenters1.get(0).getId());
+        assertEquals(receivingCenters.get(1).getId(),receivingCenters1.get(1).getId());
+        assertEquals(receivingCenters.get(0).getName(),receivingCenters1.get(0).getName());
+        assertEquals(receivingCenters.get(1).getName(),receivingCenters1.get(1).getName());
+        assertEquals(receivingCenters.get(2).getOrderNo(),receivingCenters1.get(2).getOrderNo());
+    }
+
+    private List<ReceivingCenter> getReceivingCenters() {
+        ReceivingCenter receivingCenter1=ReceivingCenter.builder().id(1L).name("Mayor/Chairperson Office").crnRequired(true).tenantId("ap.public").orderNo(2L).build();
+        ReceivingCenter receivingCenter2=ReceivingCenter.builder().id(2L).name("CM Office'").crnRequired(false).tenantId("ap.public").orderNo(3L).build();
+        ReceivingCenter receivingCenter3=ReceivingCenter.builder().id(3L).name("Public Representatives").crnRequired(true).tenantId("ap.public").orderNo(4L).build();
+         return Arrays.asList(receivingCenter1,receivingCenter2,receivingCenter3);
+
+    }
+
+    private ReceivingCenter getReceivingCenter() {
+       return ReceivingCenter.builder().id(1L).name("Mayor/Chairperson Office").crnRequired(true).orderNo(2L).tenantId("ap.public").build();
+    }
 }

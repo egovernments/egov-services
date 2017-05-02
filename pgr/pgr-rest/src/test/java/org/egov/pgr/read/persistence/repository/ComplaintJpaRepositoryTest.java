@@ -31,7 +31,7 @@ import static org.junit.Assert.assertTrue;
 public class ComplaintJpaRepositoryTest {
 
     @Autowired
-    private ComplaintJpaRepository complaintJpaRepository;
+    private org.egov.pgr.common.repository.ComplaintJpaRepository complaintJpaRepository;
 
     @Test
     @Sql(scripts = {

@@ -1,4 +1,4 @@
-package org.egov.pgr.read.persistence.repository;
+package org.egov.pgr.common.repository;
 
 import java.util.Date;
 

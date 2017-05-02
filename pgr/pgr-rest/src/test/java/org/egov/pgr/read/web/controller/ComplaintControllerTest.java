@@ -190,9 +190,9 @@ public class ComplaintControllerTest {
             location, childLocation);
 
         mockMvc.perform(
-            post("/seva/_search?tenantId=tenantId&service_request_id=serid_123&service_code=serviceCode_123&status" +
-                "=REGISTERED,FORWARDED&assignment_id=10&user_id=10&name=kumar&email_id=abc@gmail" +
-                ".com&mobile_number=74742487428&receiving_mode=5&location_id=4&child_location_id=5")
+            post("/seva/_search?tenantId=tenantId&serviceRequestId=serid_123&serviceCode=serviceCode_123&status" +
+                "=REGISTERED,FORWARDED&assignmentId=10&userId=10&name=kumar&emailId=abc@gmail" +
+                ".com&mobileNumber=74742487428&receivingMode=5&locationId=4&childLocationId=5")
                 .content(resources.getFileContents("requestinfobody.json"))
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk()).andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))

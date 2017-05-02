@@ -31,50 +31,44 @@ public class ServiceRequest {
     private static final String RECEIVING_MODE = "receivingMode";
     private static final String RECEIVING_CENTER = "receivingCenter";
     private static final String USER_ID = "userId";
-    
-    @JsonProperty("tenantId")
+
     private String tenantId;
 
-    @JsonProperty("service_request_id")
+    @JsonProperty("serviceRequestId")
     @Setter
     private String crn;
 
-    @JsonProperty("status")
     private Boolean status;
 
-    @JsonProperty("service_name")
+    @JsonProperty("serviceName")
     private String complaintTypeName;
 
-    @JsonProperty("service_code")
+    @JsonProperty("serviceCode")
     private String complaintTypeCode;
 
-    @JsonProperty("description")
     private String description;
 
-    @JsonProperty("agency_responsible")
     private String agencyResponsible;
 
-    @JsonProperty("service_notice")
     private String serviceNotice;
 
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "IST")
-    @JsonProperty("requested_datetime")
+    @JsonProperty("requestedDatetime")
     @Setter
     private Date createdDate;
 
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "IST")
-    @JsonProperty("updated_datetime")
+    @JsonProperty("updatedDatetime")
     @Setter
     private Date lastModifiedDate;
 
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "IST")
-    @JsonProperty("expected_datetime")
+    @JsonProperty("expectedDatetime")
     private Date escalationDate;
 
-    @JsonProperty("address")
     private String address;
 
-    @JsonProperty("address_id")
+    @JsonProperty("addressId")
     private String crossHierarchyId;
 
     @JsonProperty("zipcode")
@@ -86,29 +80,21 @@ public class ServiceRequest {
     @JsonProperty("lng")
     private Double longitude;
 
-    @JsonProperty("media_urls")
     private List<String> mediaUrls;
 
     @Setter
-    @JsonProperty("first_name")
     private String firstName;
 
-    @JsonProperty("last_name")
     private String lastName;
 
-    @JsonProperty("phone")
     private String phone;
 
-    @JsonProperty("email")
     private String email;
 
-    @JsonProperty("device_id")
     private String deviceId;
 
-    @JsonProperty("account_id")
     private String accountId;
 
-    @JsonProperty("values")
     private Map<String, String> values = new HashMap<>();
 
     public ServiceRequest(Complaint complaint) {
@@ -163,19 +149,19 @@ public class ServiceRequest {
         final ComplaintLocation complaintLocation = getComplaintLocation();
         final Complainant complainant = getComplainant();
         return Complaint.builder()
-                .authenticatedUser(authenticatedUser)
-                .crn(crn)
-                .complaintType(new ComplaintType(complaintTypeName, complaintTypeCode, tenantId))
-                .address(address)
-                .mediaUrls(mediaUrls)
-                .complaintLocation(complaintLocation)
-                .complainant(complainant)
-                .tenantId(tenantId)
-                .description(description)
-                .receivingMode(getReceivingMode())
-                .receivingCenter(getReceivingCenter())
-                .modifyComplaint(isUpdate)
-                .build();
+            .authenticatedUser(authenticatedUser)
+            .crn(crn)
+            .complaintType(new ComplaintType(complaintTypeName, complaintTypeCode, tenantId))
+            .address(address)
+            .mediaUrls(mediaUrls)
+            .complaintLocation(complaintLocation)
+            .complainant(complainant)
+            .tenantId(tenantId)
+            .description(description)
+            .receivingMode(getReceivingMode())
+            .receivingCenter(getReceivingCenter())
+            .modifyComplaint(isUpdate)
+            .build();
 
     }
 
@@ -183,13 +169,13 @@ public class ServiceRequest {
         final String complainantAddress = getcomplainantAddress();
         final String complainantUserId = getComplainantUserId();
         return Complainant.builder()
-                .firstName(firstName)
-                .mobile(phone)
-                .email(email)
-                .userId(complainantUserId)
-                .address(complainantAddress)
-                .tenantId(tenantId)
-                .build();
+            .firstName(firstName)
+            .mobile(phone)
+            .email(email)
+            .userId(complainantUserId)
+            .address(complainantAddress)
+            .tenantId(tenantId)
+            .build();
     }
 
     private String getcomplainantAddress() {
@@ -199,11 +185,11 @@ public class ServiceRequest {
     private ComplaintLocation getComplaintLocation() {
         final Coordinates coordinates = new Coordinates(latitude, longitude, tenantId);
         return ComplaintLocation.builder()
-                .coordinates(coordinates)
-                .crossHierarchyId(crossHierarchyId)
-                .locationId(getLocationId())
-                .tenantId(tenantId)
-                .build();
+            .coordinates(coordinates)
+            .crossHierarchyId(crossHierarchyId)
+            .locationId(getLocationId())
+            .tenantId(tenantId)
+            .build();
     }
 
     private String getLocationId() {

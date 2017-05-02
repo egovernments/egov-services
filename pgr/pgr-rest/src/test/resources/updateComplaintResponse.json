@@ -1,28 +1,28 @@
 {
-    "response_info": {
-        "api_id": "1",
+    "responseInfo": {
+        "apiId": "1",
         "ver": "1",
-        "res_msg_id": "placeholder",
-        "msg_id": "",
+        "resMsgId": "placeholder",
+        "msgId": "",
         "status": "placeholder"
     },
-    "service_requests": [
+    "serviceRequests": [
         {
             "tenantId": "ap.public",
-            "service_request_id": "00292-2017-RZ",
+            "serviceRequestId": "00292-2017-RZ",
             "status": false,
-            "service_name": null,
-            "service_code": "PHDMG",
+            "serviceName": null,
+            "serviceCode": "PHDMG",
             "description": "There is a huge problem",
             "zipcode": null,
             "lat": 12.9188214,
             "lng": 77.6699807,
-            "media_urls": null,
-            "first_name": "Bake",
-            "last_name": null,
+            "mediaUrls": null,
+            "firstName": "Bake",
+            "lastName": null,
             "phone": "9999999990",
             "email": "jake@maildrop.cc",
-            "device_id": null,
+            "deviceId": null,
             "values": {
                 "receivingMode": "MANUAL",
                 "receivingCenter": "5"

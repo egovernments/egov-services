@@ -1,5 +1,6 @@
 package org.egov.pgr.read.persistence.repository;
 
+import org.egov.pgr.common.repository.ComplaintJpaRepository;
 import org.egov.pgr.read.domain.model.Complaint;
 import org.egov.pgr.read.domain.model.ComplaintSearchCriteria;
 import org.egov.pgr.common.contract.SevaRequest;

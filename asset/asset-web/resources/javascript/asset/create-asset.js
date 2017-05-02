@@ -1059,7 +1059,7 @@ class CreateAsset extends React.Component {
                           </div>
                           <div className="col-sm-6">
                               <div className="styled-select">
-                                <select id="department" name="department" value={department.id} onChange={(e)=>
+                                <select id="department" required name="department" value={department.id} onChange={(e)=>
                                     {handleChangeTwoLevel(e,"department","id")}} disabled={readonly}>
                                     <option value="">Select Department</option>
                                     {renderOption(this.state.departments)}

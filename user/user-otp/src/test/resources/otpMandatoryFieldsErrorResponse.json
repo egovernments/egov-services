@@ -6,14 +6,19 @@
     "description": null,
     "fields": [
       {
+        "code": "OTP.TENANT_ID_MANDATORY",
+        "message": "Tenant field is mandatory",
+        "field": "otp.tenantId"
+      },
+      {
         "code": "OTP.MOBILE_NUMBER_MANDATORY",
         "message": "Mobile number field is mandatory",
         "field": "otp.mobileNumber"
       },
       {
-        "code": "OTP.TENANT_ID_MANDATORY",
-        "message": "Tenant field is mandatory",
-        "field": "otp.tenantId"
+        "code": "OTP.REQUEST_TYPE_MANDATORY",
+        "message": "Request type (register, passwordreset) is mandatory",
+        "field": "otp.type"
       }
     ]
   }

@@ -42,13 +42,14 @@ public class OtpControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(content().json(resources.getFileContents("otpSendSuccessResponse.json")));
 
-        final OtpRequest expectedOtpRequest = new OtpRequest("mobileNumber", "tenantId");
+        final OtpRequest expectedOtpRequest =
+				new OtpRequest("mobileNumber", "tenantId", "passwordreset");
         verify(otpService).sendOtp(expectedOtpRequest);
     }
 
     @Test
     public void test_should_return_error_response_when_mandatory_fields_are_not_present_in_request() throws Exception {
-        final OtpRequest expectedOtpRequest = new OtpRequest("", "");
+        final OtpRequest expectedOtpRequest = new OtpRequest("", "", "unknown");
         doThrow(new InvalidOtpRequestException(expectedOtpRequest)).when(otpService).sendOtp(expectedOtpRequest);
 
         mockMvc.perform(post("/v1/_send").contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -59,16 +60,15 @@ public class OtpControllerTest {
 
     @Test
     public void test_should_return_error_message_when_unhandled_exception_occurs() throws Exception {
-        final OtpRequest expectedOtpRequest = new OtpRequest("mobileNumber", "tenantId");
+        final OtpRequest expectedOtpRequest =
+				new OtpRequest("mobileNumber", "tenantId", "unknown");
         final String exceptionMessage = "Some exception message";
         doThrow(new RuntimeException(exceptionMessage)).when(otpService).sendOtp(expectedOtpRequest);
 
         mockMvc.perform(post("/v1/_send").contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(resources.getFileContents("otpSendRequest.json")))
+                .content(resources.getFileContents("invalidOtpSendRequest.json")))
                 .andExpect(status().isInternalServerError())
                 .andExpect(content().string(exceptionMessage));
-
-
     }
 
 }

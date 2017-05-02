@@ -13,10 +13,15 @@ public class OtpRequest {
         return org.egov.domain.model.OtpRequest.builder()
                 .mobileNumber(getMobileNumber())
                 .tenantId(getTenantId())
+				.type(getType())
                 .build();
     }
 
-    private String getMobileNumber() {
+	private String getType() {
+		return otp != null ? otp.getTypeOrDefault() : null;
+	}
+
+	private String getMobileNumber() {
         return otp != null ? otp.getMobileNumber() : null;
     }
 

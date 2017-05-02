@@ -2,6 +2,6 @@
   "otp": {
     "mobileNumber": "mobileNumber",
     "tenantId": "tenantId",
-    "type": "passwordreset"
+    "type": "unknown"
   }
 }

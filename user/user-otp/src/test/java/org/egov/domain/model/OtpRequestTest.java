@@ -3,6 +3,7 @@ package org.egov.domain.model;
 import org.egov.domain.exception.InvalidOtpRequestException;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class OtpRequestTest {
@@ -28,4 +29,51 @@ public class OtpRequestTest {
         assertTrue(otpRequest.isMobileNumberAbsent());
         otpRequest.validate();
     }
+
+	@Test(expected = InvalidOtpRequestException.class)
+	public void test_should_throw_validation_exception_when_type_is_not_present() {
+		final OtpRequest otpRequest = OtpRequest.builder()
+				.tenantId("tenantId")
+				.mobileNumber("mobileNumber")
+				.type(null)
+				.build();
+
+		assertTrue(otpRequest.isInvalidType());
+		otpRequest.validate();
+	}
+
+	@Test(expected = InvalidOtpRequestException.class)
+	public void test_should_throw_validation_exception_when_type_is_not_known() {
+		final OtpRequest otpRequest = OtpRequest.builder()
+				.tenantId("tenantId")
+				.mobileNumber("mobileNumber")
+				.type("foo")
+				.build();
+
+		assertTrue(otpRequest.isInvalidType());
+		otpRequest.validate();
+	}
+
+	@Test
+	public void test_validate_should_not_throw_exception_for_a_valid_request() {
+		final OtpRequest otpRequest = OtpRequest.builder()
+				.tenantId("tenantId")
+				.mobileNumber("mobileNumber")
+				.type("register")
+				.build();
+
+		otpRequest.validate();
+	}
+
+	@Test
+	public void test_should_return_otp_request_enum_type_for_given_string_type() {
+		final OtpRequest otpRequest = OtpRequest.builder()
+				.tenantId("tenantId")
+				.mobileNumber("mobileNumber")
+				.type("register")
+				.build();
+
+		assertEquals(OtpRequestType.REGISTER, otpRequest.getOtpRequestType());
+	}
+
 }

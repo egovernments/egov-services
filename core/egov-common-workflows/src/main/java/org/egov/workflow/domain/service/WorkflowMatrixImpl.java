@@ -160,7 +160,7 @@ public class WorkflowMatrixImpl implements Workflow {
 		Task task = taskRequest.getTask();
 		Position owner = task.getAssignee();
 		Long ownerId = task.getAssignee().getId();
-		if (task.getAssignee() != null)
+		if (task.getAssignee() != null && task.getAssignee().getId() != null)
 			owner = positionRepository.getById(Long.valueOf(task.getAssignee().getId()), taskRequest.getRequestInfo());
 		// final WorkflowEntity entity = task.getEntity();
 		String dept = null;

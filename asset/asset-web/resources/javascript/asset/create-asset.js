@@ -303,7 +303,16 @@ class CreateAsset extends React.Component {
         error: "",
         success: ""
       })
-      var tempInfo = this.state.assetSet, _this = this, type = getUrlVars()["type"];
+      var tempInfo = Object.assign({}, this.state.assetSet) , _this = this, type = getUrlVars()["type"];
+      if(tempInfo.assetAttributes && tempInfo.assetAttributes.length) {
+        for(var i=0; i<tempInfo.assetAttributes.length;i++){
+          if(tempInfo.assetAttributes[i].type == "Table") {
+              for(var j=0; j<tempInfo.assetAttributes[i].value.length; j++)
+                delete tempInfo.assetAttributes[i].value[j]["new"];
+          }
+        }
+      }
+
       var body = {
           "RequestInfo": requestInfo,
           "Asset": tempInfo
@@ -325,7 +334,7 @@ class CreateAsset extends React.Component {
                 }
             });
             if (response["status"] === 201 || response["status"] == 200 || response["status"] == 204) {
-                window.location.href=`app/asset/create-asset-ack.html?name=${tempInfo.name}&type=`;
+                window.location.href=`app/asset/create-asset-ack.html?name=${tempInfo.name}&type=&value=${getUrlVars()["type"]}`;
             } else {
                 this.setState({
                     ...this.state,
@@ -354,16 +363,18 @@ class CreateAsset extends React.Component {
               attr[i].value[ind][col] = values;
             else {
               attr[i].value[ind] = {
-                [col]: values
+                [col]: values,
+                new: true
               };
             }
           } else {
             if(attr[i].value[ind])
               attr[i].value[ind][col] = e.target.value;
             else {
-              attr[i].value.push({
-                [col]: e.target.value
-              })
+              attr[i].value[ind] = {
+                [col]: e.target.value,
+                new: true
+              };
             }
           }
         } else {
@@ -562,6 +573,7 @@ class CreateAsset extends React.Component {
                   }
               }, 2000);
           }
+          console.log(asset.assetAttributes);
       }
   }
 
@@ -610,7 +622,8 @@ class CreateAsset extends React.Component {
       revenueWard,
       accumulatedDepreciation,
       grossValue,
-      status
+      status,
+      assetAttributes
   	} = this.state.assetSet;
     let mode = getUrlVars()["type"];
 
@@ -674,8 +687,7 @@ class CreateAsset extends React.Component {
 
     }
 
-    const renderOption = function(list)
-    {
+    const renderOption = function(list) {
         if(list)
         {
             if (list.length) {
@@ -755,7 +767,6 @@ class CreateAsset extends React.Component {
     }
 
     const checkFields = function(item, index, ifTable) {
-
 			switch (item.type) {
 				case "Text":
 					return showTextBox(item, index, ifTable);
@@ -787,9 +798,19 @@ class CreateAsset extends React.Component {
       if(ifTable) {
         return (
           <input style={{"margin-bottom": 0}} name={item.name} type="text" maxLength= "200"
-                  defaultValue={item.values} onChange={(e)=>{handleChangeAssetAttr(e, "Text", item.parent, item.name, index)}} required={item.isMandatory} disabled={readonly}/>
+                  defaultValue={item.values} onChange={(e)=>{handleChangeAssetAttr(e, "Table", item.parent, item.name, index)}} required={item.isMandatory} disabled={readonly}/>
         );
       } else {
+        var type = getUrlVars()["type"];
+        var _values;
+        if(["view", "update"].indexOf(type) > -1 && assetAttributes.length) {
+          var textItem = assetAttributes.filter(function(val, ind) {
+            return (val.type == "Text" && item.name == val.key);
+          });
+
+          if(textItem && textItem[0])
+            _values = textItem[0].value;
+        } 
         return (
           <div className="col-sm-6" key={index}>
             <div className="row">
@@ -798,7 +819,7 @@ class CreateAsset extends React.Component {
               </div>
               <div className="col-sm-6">
                 <input name={item.name} type="text" maxLength= "200"
-                  defaultValue={item.values} onChange={(e)=>{handleChangeAssetAttr(e, "Text", item.name)}} required={item.isMandatory} disabled={readonly}/>
+                  defaultValue={_values || item.values} onChange={(e)=>{handleChangeAssetAttr(e, "Text", item.name)}} required={item.isMandatory} disabled={readonly}/>
               </div>
             </div>
           </div>
@@ -810,12 +831,21 @@ class CreateAsset extends React.Component {
       if(ifTable) {
         return (
           <select name={item.name} multiple={multi ? true : false}
-                  onChange={(e)=>{handleChangeAssetAttr(e, (multi ? "Multiselect" : "Select"), item.parent, item.name, index, multi)}} required={item.isMandatory} disabled={readonly}>
+                  onChange={(e)=>{handleChangeAssetAttr(e, "Table", item.parent, item.name, index, multi)}} required={item.isMandatory} disabled={readonly}>
                   <option value="">Select</option>
                   {renderOption(item.values.split(','))}
           </select>
         )
       } else {
+        var type = getUrlVars()["type"];
+        var _values;
+        if(["view", "update"].indexOf(type) > -1 && assetAttributes.length && !ifTable) {
+          var textItem = assetAttributes.filter(function(val, ind) {
+            return (val.type == "Select" && item.name == val.key);
+          });
+          if(textItem && textItem[0])
+            _values = textItem[0].value;
+        }
         return (
           <div className="col-sm-6" key={index}>
             <div className="row">
@@ -824,7 +854,7 @@ class CreateAsset extends React.Component {
               </div>
               <div className="col-sm-6">
                 <select name={item.name} multiple={multi ? true : false}
-                  onChange={(e)=>{handleChangeAssetAttr(e, (multi ? "Multiselect" : "Select"), item.name, null, null, multi)}} required={item.isMandatory} disabled={readonly}>
+                  defaultValue={_values || ""} onChange={(e)=>{handleChangeAssetAttr(e, (multi ? "Multiselect" : "Select"), item.name, null, null, multi)}} required={item.isMandatory} disabled={readonly}>
                   <option value="">Select</option>
                   {renderOption(item.values.split(','))}
                 </select>
@@ -868,7 +898,7 @@ class CreateAsset extends React.Component {
     const showDatePicker = function(item, index, ifTable) {
       if(ifTable) {
         return (
-          <input  className="custom-date-picker" name={item.name} type="text" defaultValue={item.values} onChange={(e)=>{handleChangeAssetAttr(e, "Date", item.parent, item.name, index)}} required={item.isMandatory} disabled={readonly}/>
+          <input  className="custom-date-picker" name={item.name} type="text" defaultValue={item.values} onChange={(e)=>{handleChangeAssetAttr(e, "Table", item.parent, item.name, index)}} required={item.isMandatory} disabled={readonly}/>
         )
       } else {
         return (<div className="col-sm-6" key={index}>
@@ -887,7 +917,7 @@ class CreateAsset extends React.Component {
     const showFile = function(item, index, ifTable) {
       if(ifTable) {
         return (
-          <input  name={item.name} type="file" onChange={(e)=>{handleChangeAssetAttr(e, "File", item.parent, item.name, index)}} required={item.isMandatory} disabled={readonly} multiple/>
+          <input  name={item.name} type="file" onChange={(e)=>{handleChangeAssetAttr(e, "Table", item.parent, item.name, index)}} required={item.isMandatory} disabled={readonly} multiple/>
         )
       } else {
         return (<div className="col-sm-6" key={index}>
@@ -908,20 +938,68 @@ class CreateAsset extends React.Component {
       if(!newRows[name]) {
         return tr;
       } else {
+        var type = getUrlVars()["type"];
+        var tableItems, len;
+        if(["view", "update"].indexOf(type) > -1 && assetAttributes.length) {
+          tableItems = assetAttributes.filter(function(val, ind) {
+            return (val.type == "Table" && name == val.key);
+          });
+          if(tableItems && tableItems[0] && tableItems[0].value) {
+            len = 0;
+            for(var i=0; i< tableItems[0].value.length; i++)
+              if(!tableItems[0].value[i].new)
+                len++;
+          }
+        }
         return newRows[name].map(function(val, ind) {
           return (<tr>{item.columns.map((itemOne, index) => {
               itemOne.parent = item.name;
               return (
-                <td>{checkFields(itemOne, ind+1, true)}</td>
+                <td>{checkFields(itemOne, ((len+ind) || (ind+1)), true)}</td>
               );
             })}</tr>)
         })
       }
     }
 
-		const showTable = function(item, index)
-		{
-				let tableColumns = function() {
+    const renderOldRows = function(name, item) {
+      var type = getUrlVars()["type"];
+      if(["view", "update"].indexOf(type) > -1 && assetAttributes.length) {
+        var tableItems = assetAttributes.filter(function(val, ind) {
+          return (val.type == "Table" && name == val.key);
+        });
+        return tableItems.map(function(val, index) {
+          return val.value.map(function(itm, ind){
+              if(Object.keys(itm).indexOf("new") == -1) {
+                var _itms = [];
+                for(var key in itm) {
+                  _itms.push({
+                    key: key,
+                    value: itm[key]
+                  })
+                };
+                return (<tr>{_itms.map(function(_itm, ind2) {
+                    for(var i=0; i<item.columns.length; i++) {
+                      if(item.columns[i].name == _itm.key) {
+                        var newItem = Object.assign({}, item.columns[i]);
+                        newItem.values = _itm.value;
+                        newItem.parent = name;
+                        return (
+                          <td>{checkFields(newItem, ind, true)}</td>
+                        );
+                      }
+                    }
+                })}</tr>)
+              }
+            })
+        })
+      }
+    }
+
+		const showTable = function(item, index) {
+        var type = getUrlVars()["type"];
+
+        let tableColumns = function() {
 					return item.columns.map((itemOne, index) => {
 						return (
 							<th key={index}>
@@ -932,59 +1010,54 @@ class CreateAsset extends React.Component {
 				}
 
 				let tableRows = function() {
-					return item.columns.map((itemOne, index) => {
-              itemOne.parent = item.name;
-              return (
-                <td>{checkFields(itemOne, 0, true)}</td>
-              );
-            })
+          var rndr = false;
+          if(["view", "update"].indexOf(type) > -1 && assetAttributes.length) {
+              rndr = assetAttributes.some(function(val, ind) {
+                if(val.type == "Table" && item.name == val.key && !val.new) {
+                  return true;
+                }
+              });
+          }
+          if(!rndr)
+  					return (<tr>{item.columns.map((itemOne, index) => {
+                itemOne.parent = item.name;
+                return (
+                  <td>{checkFields(itemOne, 0, true)}</td>
+                )
+              })} </tr>)
 				}
 
-				return (
+        return (
+        <div className="col-sm-12" key={index}>
+          <div className="form-section row">
+          <div className="row">
+            <div className="col-md-8">
+              <h3 className="categoryType">{item.name}</h3>
+            </div>
+            <div className="col-md-4 text-right">
+              <button type="button" className="btn btn-primary" onClick={(e) => {addNewRow(e, item.name)}}>Add</button>
+            </div>
+          </div>
 
-					<div className="col-sm-12" key={index}>
-						<div className="form-section" >
-					  <h3 className="categoryType">{item.name}</h3>
-
-
-						<div className="row">
-						<div className="land-table table-responsive">
-								<table className="table table-bordered">
-										<thead>
-											<tr>
-													{tableColumns()}
-													<th>Action</th>
-											</tr>
-										</thead>
-										<tbody>
-                        <tr>
-                          {tableRows()}
-                          <td><button type="button" className="btn btn-submit" onClick={(e) => {addNewRow(e, item.name)}}>Add</button></td>
-                        </tr>
-                        {renderNewRows(item.name, item)}
-										</tbody>
-								</table>
-						</div>
-						</div>
-
-						{/*<div className="form-section" >
-							<h3 className="categoryType">Add </h3>
-								<div className="form-section-inner">
-										<div className="row">
-
-											
-
-											<button type="button" className="btn btn-primary" >Add</button>
-
-										</div>
-									</div>
-								</div>*/}
-
-					</div>
-					</div>
-				)
-
-
+          <div className="row">
+          <div className="land-table table-responsive">
+              <table className="table table-bordered">
+                  <thead>
+                    <tr>
+                        {tableColumns()}
+                    </tr>
+                  </thead>
+                  <tbody>
+                      {tableRows()}
+                      {renderOldRows(item.name, item)}
+                      {renderNewRows(item.name, item)}
+                  </tbody>
+              </table>
+          </div>
+          </div>
+        </div>
+        </div>
+        )
 		}
 
 

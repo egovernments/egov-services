@@ -330,7 +330,7 @@ class CreateAsset extends React.Component {
           //   typeList:[]
           //
           // })
-          window.location.href=`app/asset/create-asset-ack.html?name=${tempInfo.name}&type=category`;
+          window.location.href=`app/asset/create-asset-ack.html?name = ${tempInfo.name}&type=category&value=${getUrlVars()["type"]}`;
         } else {
           showError(response["statusText"]);
         }

@@ -64,6 +64,7 @@ public class PropertiesManager {
 	
 	@Value("${kafka.topics.update.workflow}")
 	private String updateWorkflowTopic;
+	
 	@Value("${egov.services.demand_service.searchpath}")
 	private String demandSearchService;
 	
@@ -118,4 +119,9 @@ public class PropertiesManager {
 	@Value("${egov.services.lams.rentincrement_assetcategories}")
 	public String rentIncrementAssetCategoryKey;
 	
+	@Value("${kafka.topics.save.agreement}")
+	private String saveAgreementTopic;
+	
+	@Value("${kafka.topics.update.agreement}")
+	private String updateAgreementTopic;
 }

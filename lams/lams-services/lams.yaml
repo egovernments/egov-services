@@ -591,6 +591,10 @@ definitions:
         type: number
         format: double
         description: Corporations charge good will of the asset depends up on asset demand/area.
+      collectedGoodWillAmount:
+        type: number
+        format: double
+        description: collected partial good will of the agreement demand/area.
       tradeLicenseNumber:
         type: string
         description: Trade license number assigned to the shop should be captured.
@@ -603,6 +607,12 @@ definitions:
           - QUARTER
           - HALFYEAR
           - ANNUAL
+      Source:
+        type: string
+        description: source from which agreement is being persisted.
+        enum:
+          - SYSTEM
+          - DATE_ENTRY
       rentIncrementMethod:
         $ref: '#/definitions/RentIncrementType'
       orderNumber:
@@ -868,6 +878,10 @@ definitions:
         type: number
         format: double
         description: Security deposit amount.
+      collectedSecurityDeposit:
+        type: number
+        format: double
+        description: Security deposit amount collected in partial payment.
       securityDepositInWord:
         type: number
         format: double

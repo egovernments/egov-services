@@ -7,6 +7,7 @@ import java.util.Map;
 import org.egov.lams.model.RentIncrementType;
 import org.egov.lams.model.enums.NatureOfAllotment;
 import org.egov.lams.model.enums.PaymentCycle;
+import org.egov.lams.model.enums.Source;
 import org.egov.lams.model.enums.Status;
 import org.egov.lams.service.RentIncrementService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,15 @@ public class LamsMasterController {
 			natureOfAllotment.put(key.name(),key);
 		}
 		return natureOfAllotment;
+	}
+	
+	@RequestMapping(value = "/getsource")
+	public Map<String, Source> getSourceEnum() {
+		Map<String, Source> source = new HashMap<>();
+		for (Source key : Source.values()) {
+			source.put(key.name(),key);
+		}
+		return source;
 	}
 
 	@RequestMapping(value = "/getrentincrements")

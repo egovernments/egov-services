@@ -20,6 +20,7 @@ import org.egov.asset.service.AssetCategoryService;
 import org.egov.asset.web.validator.AssetCategoryValidator;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
+import org.egov.common.contract.response.ResponseInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +63,7 @@ public class AssetCategoryController {
 		List<AssetCategory> assetCategories=assetCategoryService.search(assetCategoryCriteria);
 		AssetCategoryResponse response=new AssetCategoryResponse();
 		response.setAssetCategory(assetCategories);
+		response.setResponseInfo(new ResponseInfo());
 		
 		return new ResponseEntity<AssetCategoryResponse>(response, HttpStatus.OK);
 	}

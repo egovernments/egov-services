@@ -2,15 +2,14 @@ package org.egov.lams.model;
 
 import java.util.Date;
 import java.util.List;
-
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-
 import org.egov.lams.model.enums.NatureOfAllotment;
 import org.egov.lams.model.enums.PaymentCycle;
+import org.egov.lams.model.enums.Source;
 import org.egov.lams.model.enums.Status;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -24,12 +23,16 @@ public class Agreement {
 	private String tenantId;
 	private String agreementNumber;
 	private String acknowledgementNumber;
-	private String StateId;
+	private String stateId;
 
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date agreementDate;
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date closeDate;
+	
+	@NotNull
+	@Max(5)
+	@Min(1)
 	private Long timePeriod;
 	private Allottee allottee;
 	private Asset asset;
@@ -47,11 +50,11 @@ public class Agreement {
 	private Date bankGuaranteeDate;
 	@NotNull
 	private Double securityDeposit;
+	@Min(0)
+	private Double collectedSecurityDeposit;
 
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date securityDepositDate;
-
-	@NotNull
 	private Status status;
 
 	@NotNull
@@ -90,4 +93,8 @@ public class Agreement {
 	private List<String> demands;
 	private WorkFlowDetails workflowDetails;
 	private Double goodWillAmount;
+	@Min(0)
+	private Double collectedGoodWillAmount;
+	@NotNull
+	private Source source;
 }

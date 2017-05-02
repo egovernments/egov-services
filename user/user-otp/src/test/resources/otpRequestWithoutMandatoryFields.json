@@ -1,6 +1,7 @@
 {
   "otp": {
     "mobileNumber": "",
-    "tenantId": ""
+    "tenantId": "",
+    "type": "unknown"
   }
 }

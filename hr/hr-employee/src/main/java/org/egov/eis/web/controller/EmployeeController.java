@@ -51,7 +51,6 @@ import org.egov.eis.service.EmployeeService;
 import org.egov.eis.service.exception.EmployeeIdNotFoundException;
 import org.egov.eis.service.exception.UserCreateException;
 import org.egov.eis.service.exception.UserUpdateException;
-import org.egov.eis.service.helper.EmployeeHelper;
 import org.egov.eis.web.contract.EmployeeCriteria;
 import org.egov.eis.web.contract.EmployeeGetRequest;
 import org.egov.eis.web.contract.EmployeeInfoResponse;
@@ -107,9 +106,6 @@ public class EmployeeController {
 
 	@Autowired
 	private DataIntegrityValidatorForUpdate dataIntegrityValidatorForUpdate;
-
-	@Autowired
-	private EmployeeHelper employeeHelper;
 
 	/**
 	 * Maps Post Requests for _search & returns ResponseEntity of either

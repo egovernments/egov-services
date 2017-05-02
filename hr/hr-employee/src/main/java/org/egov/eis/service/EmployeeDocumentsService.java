@@ -175,6 +175,8 @@ public class EmployeeDocumentsService {
 					if (probation.getId().equals(document.getReferenceId()))
 						probation.getDocuments().add(document.getDocument());
 				break;
+			default:
+				break;
 			}
 		}
 	}

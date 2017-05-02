@@ -111,7 +111,7 @@ public class CategoryController {
 	}
 
 	/**
-	 * Populate Response object and returncategoriesList
+	 * Populate Response object and returns categories List
 	 * 
 	 * @param categoriesList
 	 * @return

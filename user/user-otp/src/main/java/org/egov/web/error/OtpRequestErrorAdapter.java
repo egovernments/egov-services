@@ -21,6 +21,10 @@ public class OtpRequestErrorAdapter implements ErrorAdapter<OtpRequest> {
     private static final String MOBILE_MANDATORY_MESSAGE = "Mobile number field is mandatory";
     private static final String MOBILE_FIELD = "otp.mobileNumber";
 
+	private static final String TYPE_INVALID_CODE = "OTP.REQUEST_TYPE_MANDATORY";
+	private static final String TYPE_INVALID_MESSAGE = "Request type (register, passwordreset) is mandatory";
+	private static final String TYPE_FIELD = "otp.type";
+
 
     @Override
     public ErrorResponse adapt(OtpRequest model) {
@@ -41,10 +45,23 @@ public class OtpRequestErrorAdapter implements ErrorAdapter<OtpRequest> {
         List<ErrorField> errorFields = new ArrayList<>();
         addTenantIdValidationErrors(model, errorFields);
         addMobileNumberValidationErrors(model, errorFields);
+        addRequestTypeValidationErrors(model, errorFields);
         return errorFields;
     }
 
-    private void addMobileNumberValidationErrors(OtpRequest model, List<ErrorField> errorFields) {
+	private void addRequestTypeValidationErrors(OtpRequest model, List<ErrorField> errorFields) {
+		if (!model.isInvalidType()) {
+			return;
+		}
+		final ErrorField latitudeErrorField = ErrorField.builder()
+				.code(TYPE_INVALID_CODE)
+				.message(TYPE_INVALID_MESSAGE)
+				.field(TYPE_FIELD)
+				.build();
+		errorFields.add(latitudeErrorField);
+	}
+
+	private void addMobileNumberValidationErrors(OtpRequest model, List<ErrorField> errorFields) {
         if (!model.isMobileNumberAbsent()) {
             return;
         }

@@ -111,7 +111,7 @@ public class CommunityController {
 	}
 
 	/**
-	 * Populate Response object and returncommunitiesList
+	 * Populate Response object and returns communities List
 	 * 
 	 * @param communitiesList
 	 * @return

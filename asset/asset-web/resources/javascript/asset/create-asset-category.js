@@ -121,6 +121,7 @@ class CreateAsset extends React.Component {
     super(props);
     this.state = {
       list: [],
+      readonly: false,
       assetCategory: {
         tenantId,
         "name": "",
@@ -236,12 +237,30 @@ class CreateAsset extends React.Component {
         }
       })
     } else {
-      this.setState({
-        [pName]: {
-          ...this.state[pName],
-          [name]: e.target.value
+      if(pName == "customField" && name == "type") {
+        var bool;
+        if(e.target.value == "Table") {
+          bool = true;
+        } else {
+          bool = false;
         }
-      })
+
+        this.setState({
+          readonly: bool,
+          [pName]: {
+            ...this.state[pName],
+            [name]: e.target.value
+          }
+        });
+
+      } else {
+        this.setState({
+          [pName]: {
+            ...this.state[pName],
+            [name]: e.target.value
+          }
+        })
+      }
     }
   }
 
@@ -359,7 +378,7 @@ class CreateAsset extends React.Component {
           }
         })
       } else {
-        var temp = assetCategory;
+        var temp = Object.assign({}, assetCategory);
         temp.assetFieldsDefination.push(customField);
         this.setState({
           assetCategory: temp,
@@ -421,7 +440,7 @@ class CreateAsset extends React.Component {
   render() {
     // console.log(this.state);
     let {handleChange,addOrUpdate,renderDelEvent,addAsset,handleChangeTwoLevel,showCustomFieldForm}=this;
-    let {isSearchClicked,list,customField,column,isEdit,index,assetCategory,isCustomFormVisible}=this.state;
+    let {isSearchClicked,list,customField,column,isEdit,index,assetCategory,isCustomFormVisible, readonly}=this.state;
 
     let {assetCategoryType,AssetCategory,parent,name,assetFieldsDefination,isMandatory,depreciationMethod,assetAccount,accumulatedDepreciationAccount,revaluationReserveAccount,depreciationExpenseAccount,unitOfMeasurement}=assetCategory;
     let mode = getUrlVars()["type"];
@@ -638,7 +657,7 @@ class CreateAsset extends React.Component {
                       <label htmlFor="">RegEx Format</label>
                     </div>
                     <div className="col-sm-6">
-                      <input type="text" name="regExFormate" value={customField.regExFormate} onChange={(e)=>{ handleChangeTwoLevel(e,"customField","regExFormate")}}/>
+                      <input type="text" name="regExFormate" value={customField.regExFormate} onChange={(e)=>{ handleChangeTwoLevel(e,"customField","regExFormate")}} disabled={readonly}/>
                     </div>
                   </div>
                 </div>
@@ -648,7 +667,7 @@ class CreateAsset extends React.Component {
                       <label htmlFor="">Active</label>
                     </div>
                     <div className="col-sm-6">
-                      <input type="checkbox" name="isActive"  value={customField.isActive} onChange={(e)=>{ handleChangeTwoLevel(e,"customField","isActive", true)}} checked={customField.isActive ? true : false} />
+                      <input type="checkbox" name="isActive" disabled={readonly}  value={customField.isActive} onChange={(e)=>{ handleChangeTwoLevel(e,"customField","isActive", true)}} checked={customField.isActive ? true : false} />
                     </div>
                   </div>
                 </div>
@@ -661,7 +680,7 @@ class CreateAsset extends React.Component {
                       <label htmlFor="">Mandatory</label>
                     </div>
                     <div className="col-sm-6">
-                      <input type="checkbox" name="isMandatory"  value={customField.isMandatory} onChange={(e)=>{ handleChangeTwoLevel(e,"customField","isMandatory", true)}} checked={customField.isMandatory ? true : false}/>
+                      <input type="checkbox" name="isMandatory" disabled={readonly}  value={customField.isMandatory} onChange={(e)=>{ handleChangeTwoLevel(e,"customField","isMandatory", true)}} checked={customField.isMandatory ? true : false}/>
                     </div>
                   </div>
                 </div>
@@ -671,7 +690,7 @@ class CreateAsset extends React.Component {
                       <label for="values">Value</label>
                     </div>
                     <div className="col-sm-6">
-                      <textarea  name="values" value={ customField.values} onChange={(e)=>{handleChangeTwoLevel(e,"customField","values")}} max="1024"></textarea>
+                      <textarea  name="values" disabled={readonly} value={ customField.values} onChange={(e)=>{handleChangeTwoLevel(e,"customField","values")}} max="1024"></textarea>
                     </div>
                   </div>
                 </div>
@@ -684,7 +703,7 @@ class CreateAsset extends React.Component {
                       <label htmlFor="">Local Text</label>
                     </div>
                     <div className="col-sm-6">
-                      <input type="text" name="localText"  value={customField.localText} onChange={(e)=>{ handleChangeTwoLevel(e,"customField","localText")}}/>
+                      <input type="text" name="localText" disabled={readonly}  value={customField.localText} onChange={(e)=>{ handleChangeTwoLevel(e,"customField","localText")}}/>
                     </div>
                   </div>
                 </div>
@@ -694,7 +713,7 @@ class CreateAsset extends React.Component {
                       <label htmlFor="">Url</label>
                     </div>
                     <div className="col-sm-6">
-                      <input type="text" name="url"  value={customField.url} onChange={(e)=>{ handleChangeTwoLevel(e,"customField","url")}}/>
+                      <input type="text" name="url" disabled={readonly}  value={customField.url} onChange={(e)=>{ handleChangeTwoLevel(e,"customField","url")}}/>
                     </div>
                   </div>
                 </div>
@@ -707,7 +726,7 @@ class CreateAsset extends React.Component {
                       <label htmlFor="">Order</label>
                     </div>
                     <div className="col-sm-6">
-                      <input type="text" name="order" value={customField.order} onChange={(e)=>{ handleChangeTwoLevel(e,"customField","order")}}/>
+                      <input type="text" name="order" disabled={readonly} value={customField.order} onChange={(e)=>{ handleChangeTwoLevel(e,"customField","order")}}/>
                     </div>
                   </div>
                 </div>

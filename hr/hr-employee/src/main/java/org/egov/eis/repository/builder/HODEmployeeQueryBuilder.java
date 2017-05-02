@@ -62,9 +62,9 @@ public class HODEmployeeQueryBuilder {
 			+ " JOIN egeis_hodDepartment hod ON a.id = hod.assignmentId AND hod.tenantId = a.tenantId"
 			+ " WHERE a.tenantId = ?";
 
-	private static final String BASE_QUERY = "SELECT e.id AS e_id, e.code AS e_code, e.employeeStatus AS e_employeeStatus,"
-			+ " e.employeeTypeId AS e_employeeTypeId, e.bankId AS e_bankId, e.bankBranchId AS e_bankBranchId,"
-			+ " e.bankAccount AS e_bankAccount, e.tenantId AS e_tenantId,"
+	private static final String BASE_QUERY = "SELECT e.id AS e_id, e.code AS e_code,"
+			+ " e.employeeStatus AS e_employeeStatus, e.employeeTypeId AS e_employeeTypeId, e.bankId AS e_bankId,"
+			+ " e.bankBranchId AS e_bankBranchId, e.bankAccount AS e_bankAccount, e.tenantId AS e_tenantId,"
 			+ " a.id AS a_id, a.positionId AS a_positionId, a.fundId AS a_fundId, a.functionaryId AS a_functionaryId,"
 			+ " a.functionId AS a_functionId, a.designationId AS a_designationId, a.departmentId AS a_departmentId,"
 			+ " a.isPrimary AS a_isPrimary, a.fromDate AS a_fromDate, a.toDate AS a_toDate, a.gradeId AS a_gradeId,"

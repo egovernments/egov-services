@@ -67,18 +67,18 @@ public class EmployeeRepository {
 	public static final Logger LOGGER = LoggerFactory.getLogger(EmployeeRepository.class);
 
 	public static final String INSERT_EMPLOYEE_QUERY = "INSERT INTO egeis_employee"
-			+ " (id, code, dateOfAppointment, dateofjoining, dateofretirement, employeestatus, recruitmentmodeId,"
-			+ " recruitmenttypeId, recruitmentquotaId, retirementage, dateofresignation, dateoftermination,"
-			+ " employeetypeId, mothertongueId, religionId, communityId, categoryId, physicallydisabled,"
-			+ " medicalreportproduced, maritalstatus, passportno, gpfno, bankId, bankbranchId, bankaccount, groupId,"
-			+ " placeofbirth, tenantId)" + " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			+ " (id, code, dateOfAppointment, dateOfJoining, dateOfRetirement, employeeStatus, recruitmentModeId,"
+			+ " recruitmentTypeId, recruitmentQuotaId, retirementAge, dateOfResignation, dateOfTermination,"
+			+ " employeeTypeId, motherTongueId, religionId, communityId, categoryId, physicallyDisabled,"
+			+ " medicalReportProduced, maritalStatus, passportNo, gpfNo, bankId, bankBranchId, bankAccount, groupId,"
+			+ " placeOfBirth, tenantId)" + " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
 	public static final String UPDATE_EMPLOYEE_QUERY = "UPDATE egeis_employee"
-			+ " SET (dateOfAppointment, dateofjoining, dateofretirement, employeestatus, recruitmentmodeId,"
-			+ " recruitmenttypeId, recruitmentquotaId, retirementage, dateofresignation, dateoftermination,"
-			+ " employeetypeId, mothertongueId, religionId, communityId, categoryId, physicallydisabled,"
-			+ " medicalreportproduced, maritalstatus, passportno, gpfno, bankId, bankbranchId, bankaccount, groupId,"
-			+ " placeofbirth)" + "= (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" + "WHERE id = ? AND tenantId = ?";
+			+ " SET (dateOfAppointment, dateOfJoining, dateOfRetirement, employeeStatus, recruitmentModeId,"
+			+ " recruitmentTypeId, recruitmentQuotaId, retirementAge, dateOfResignation, dateOfTermination,"
+			+ " employeeTypeId, motherTongueId, religionId, communityId, categoryId, physicallyDisabled,"
+			+ " medicalReportProduced, maritalStatus, passportNo, gpfNo, bankId, bankBranchId, bankAccount, groupId,"
+			+ " placeOfBirth)" + "= (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" + "WHERE id = ? AND tenantId = ?";
 
 	public static final String EMPLOYEE_EXISTENCE_CHECK_QUERY = "SELECT exists(SELECT id FROM egeis_employee"
 			+ " WHERE id = ? AND tenantId = ?)";
@@ -88,10 +88,10 @@ public class EmployeeRepository {
 	public static final String GET_ID_QUERY = "SELECT id FROM $table WHERE $column = ? AND tenantId = ?";
 
 	public static final String SELECT_BY_EMPLOYEEID_QUERY = "SELECT"
-			+ " id, code, dateofappointment, dateofjoining, dateofretirement, employeestatus, recruitmentmodeid,"
-			+ " recruitmenttypeid, recruitmentquotaid, retirementage, dateofresignation, dateoftermination, employeetypeid,"
-			+ " mothertongueid, religionid, communityid, categoryid, physicallydisabled, medicalReportproduced,"
-			+ " passportno, gpfno, bankid, bankbranchid, bankaccount, groupid, placeofbirth, tenantid"
+			+ " id, code, dateOfAppointment, dateOfJoining, dateOfRetirement, employeeStatus, recruitmentModeId,"
+			+ " recruitmentTypeId, recruitmentQuotaId, retirementAge, dateOfResignation, dateOfTermination,"
+			+ " employeeTypeId, motherTongueId, religionId, communityId, categoryId, physicallyDisabled, placeOfBirth,"
+			+ " medicalReportProduced, passportNo, gpfNo, bankId, bankBranchId, bankAccount, groupId, tenantId"
 			+ " FROM egeis_employee" + " WHERE id = ? AND tenantId = ? ";
 	
 		public static final String DUPLICATE_EXISTS_QUERY = "SELECT exists(SELECT id FROM $table WHERE $column = ?"

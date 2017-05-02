@@ -66,7 +66,7 @@ public class EmployeeTableRowMapper implements ResultSetExtractor<Employee> {
 		Employee employee = new Employee();
 		employee.setId((Long) rs.getObject("id"));
 		employee.setCode(rs.getString("code"));
-		employee.setEmployeeStatus(rs.getString("employeestatus"));
+		employee.setEmployeeStatus((Long) rs.getObject("employeeStatus"));
 		employee.setRecruitmentMode((Long) rs.getObject("recruitmentmodeid"));
 		employee.setRecruitmentType((Long) rs.getObject("recruitmenttypeid"));
 		employee.setRecruitmentQuota((Long) rs.getObject("recruitmentquotaid"));

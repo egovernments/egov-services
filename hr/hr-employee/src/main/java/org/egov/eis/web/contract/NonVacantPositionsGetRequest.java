@@ -43,6 +43,7 @@ package org.egov.eis.web.contract;
 import java.util.Date;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -74,6 +75,7 @@ public class NonVacantPositionsGetRequest {
 	private Long departmentId;
 
 	@NotNull
+	@Size(max=256)
 	private String tenantId;
 
 }

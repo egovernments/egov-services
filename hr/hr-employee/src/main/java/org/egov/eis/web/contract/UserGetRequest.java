@@ -43,6 +43,8 @@ package org.egov.eis.web.contract;
 import java.util.Collections;
 import java.util.List;
 
+import javax.validation.constraints.Size;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -65,16 +67,22 @@ public class UserGetRequest {
 
 	private List<Long> id;
 
+	@Size(min=1, max=100)
     private String userName;
 
+	@Size(min=3, max=100)
     private String name;
 
+	@Size(max=10)
     private String mobileNumber;
 
+	@Size(max=12)
     private String aadhaarNumber;
 
+	@Size(max=10)
     private String pan;
 
+	@Size(max=128)
     private String emailId;
 
     private boolean active = true;
@@ -85,6 +93,7 @@ public class UserGetRequest {
 
     private List<String> sort = Collections.singletonList("name");
 
+	@Size(max=256)
 	private String tenantId;
 
 }

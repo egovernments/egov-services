@@ -13,6 +13,7 @@ import org.egov.workflow.web.contract.ProcessInstance;
 import org.egov.workflow.web.contract.ProcessInstanceRequest;
 import org.egov.workflow.web.contract.ProcessInstanceResponse;
 import org.egov.workflow.web.contract.RequestInfo;
+import org.egov.workflow.web.contract.RequestInfoWrapper;
 import org.egov.workflow.web.contract.ResponseInfo;
 import org.egov.workflow.web.contract.Task;
 import org.egov.workflow.web.contract.TaskRequest;
@@ -84,11 +85,11 @@ public class WorkFlowController {
 	}
 
 	@PostMapping(value = "/history")
-	public TaskResponse getHistory(@RequestBody  RequestInfo requestInfo ,@RequestParam final String tenantId, @RequestParam final String workflowId) {
+	public TaskResponse getHistory(@RequestBody RequestInfoWrapper requestInfoWrapper ,@RequestParam final String tenantId, @RequestParam final String workflowId) {
 		
 		List<Task> historyDetail = workflow.getHistoryDetail(tenantId, workflowId);
 		TaskResponse response=new TaskResponse();
-		response.setResponseInfo(getResponseInfo(requestInfo));
+		response.setResponseInfo(getResponseInfo(requestInfoWrapper.getRequestInfo()));
 		response.setTasks(historyDetail);
 		return response;
 	}
@@ -112,34 +113,34 @@ public class WorkFlowController {
 	}
 
 	@PostMapping(value = "/tasks/_search")
-	public TaskResponse getTasks(@RequestBody final RequestInfo requestInfo,@ModelAttribute Task task) {
+	public TaskResponse getTasks(@RequestBody final RequestInfoWrapper requestInfoWrapper, @ModelAttribute Task task) {
 		TaskRequest taskRequest=new TaskRequest();
-		taskRequest.setRequestInfo(requestInfo);
+		taskRequest.setRequestInfo(requestInfoWrapper.getRequestInfo());
 		taskRequest.setTask(task);		
 		TaskResponse	response=	matrixWorkflow.getTasks(taskRequest);
-		response.setResponseInfo(getResponseInfo(requestInfo));
+		response.setResponseInfo(getResponseInfo(requestInfoWrapper.getRequestInfo()));
 		return response;
 	}
 
 	@PostMapping(value = "/process/_search")
-	public ProcessInstanceResponse getProcess(@RequestBody RequestInfo requestInfo, @RequestParam String tenantId,
+	public ProcessInstanceResponse getProcess(@RequestBody RequestInfoWrapper requestInfoWrapper, @RequestParam String tenantId,
 			@RequestParam String id) {
 
 		ProcessInstance p = new ProcessInstance();
 		ProcessInstanceResponse pres = new ProcessInstanceResponse();
 
 		p = p.builder().id(id).build();
-
-		p = matrixWorkflow.getProcess(tenantId, p,requestInfo);
+		LOGGER.info("The RequestInfoWrapper :::"+requestInfoWrapper.getRequestInfo().toString());
+		p = matrixWorkflow.getProcess(tenantId, p, requestInfoWrapper.getRequestInfo());
 		pres.setProcessInstance(p);
-		pres.setResponseInfo(getResponseInfo(requestInfo));
+		pres.setResponseInfo(getResponseInfo(requestInfoWrapper.getRequestInfo()));
 		LOGGER.info("The response  owner value before sending :::"+pres.getProcessInstance().getOwner());
 		return pres;
 
 	}
 
 	@PostMapping(value = "/designations/_search")
-	public List<Designation> getDesignationsByObjectType(@RequestBody RequestInfo requestInfo,
+	public List<Designation> getDesignationsByObjectType(@RequestBody RequestInfoWrapper requestInfoWrapper,
 			@RequestParam final String departmentRule,
 			@RequestParam final String currentStatus,
 			@RequestParam final String businessKey,
@@ -166,7 +167,7 @@ public class WorkFlowController {
 		amountRuleAtt.setCode(designation);
 		t.getAttributes().put("designation", designationAtt);
 		
-		t.setTenantId(requestInfo.getTenantId());
+		t.setTenantId(requestInfoWrapper.getRequestInfo().getTenantId());
         t.setStatus(currentStatus);
 		return matrixWorkflow.getDesignations(t, approvalDepartmentName);
 

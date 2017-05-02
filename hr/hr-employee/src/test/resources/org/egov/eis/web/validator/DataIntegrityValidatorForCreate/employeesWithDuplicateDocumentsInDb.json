@@ -3,7 +3,7 @@
     "dateOfAppointment": "20/02/2017",
     "dateOfJoining": "20/02/2017",
     "dateOfRetirement": "20/02/2017",
-    "employeeStatus": "EMPLOYED",
+    "employeeStatus": 1,
     "recruitmentMode": "3",
     "recruitmentType": "1",
     "recruitmentQuota": "1",

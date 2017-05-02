@@ -11,7 +11,8 @@ import static java.lang.String.format;
 
 @Service
 public class OtpMessageRepository {
-    private static final String SMS_OTP_MESSAGE = "Use OTP %s for portal registration.";
+    private static final String SMS_REGISTER_OTP_MESSAGE = "Use OTP %s for portal registration.";
+    private static final String SMS_PASSWORD_RESET_OTP_MESSAGE = "Your OTP for recovering password is %s.";
     private LogAwareKafkaTemplate<String, SMSRequest> kafkaTemplate;
     private String smsTopic;
 
@@ -23,10 +24,18 @@ public class OtpMessageRepository {
     }
 
     public void send(OtpRequest otpRequest, String otpNumber) {
-            kafkaTemplate.send(smsTopic, new SMSRequest(otpRequest.getMobileNumber(), getMessage(otpNumber)));
+		final String message = getMessage(otpNumber, otpRequest);
+		kafkaTemplate.send(smsTopic, new SMSRequest(otpRequest.getMobileNumber(), message));
     }
 
-    private String getMessage(String otpNumber) {
-        return format(SMS_OTP_MESSAGE, otpNumber);
+    private String getMessage(String otpNumber, OtpRequest otpRequest) {
+		final String messageFormat = getMessageFormat(otpRequest);
+		return format(messageFormat, otpNumber);
     }
+
+	private String getMessageFormat(OtpRequest otpRequest) {
+		return otpRequest.isRegistrationRequestType()
+				? SMS_REGISTER_OTP_MESSAGE
+				: SMS_PASSWORD_RESET_OTP_MESSAGE;
+	}
 }

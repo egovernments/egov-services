@@ -111,7 +111,7 @@ public class LanguageController {
 	}
 
 	/**
-	 * Populate Response object and returnlanguagesList
+	 * Populate Response object and returns languages List
 	 * 
 	 * @param languagesList
 	 * @return

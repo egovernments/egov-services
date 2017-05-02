@@ -46,6 +46,7 @@ import java.util.List;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -78,6 +79,7 @@ public class AssignmentGetRequest {
 	private String sortOrder;
 
 	@NotNull
+	@Size(max=256)
 	private String tenantId;
 
 	@Min(1)

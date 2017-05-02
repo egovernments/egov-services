@@ -11,7 +11,6 @@ public class Resources {
                     .getResourceAsStream(fileName), "UTF-8")
                     .replaceAll("\\s*\\{\\s*", "\\{")
                     .replaceAll("\\s*\\}\\s*", "\\}")
-                    .replaceAll("\\s*,\\s*", ",")
                     .replaceAll("\\s*:\\s*", ":")
                     .replace("\n", "");
         } catch (IOException e) {

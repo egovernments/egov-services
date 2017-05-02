@@ -52,7 +52,8 @@ public class AgreementDao {
 				agreement.getTinNumber(),agreement.getTenderDate(),agreement.getTenderNumber(), agreement.getTradelicenseNumber(),
 				agreement.getTenantId(),agreement.getTenantId(), new Date(), new Date(),agreement.getAllottee().getId(),
 				agreement.getAsset().getId(),agreement.getRentIncrementMethod().getId(), agreement.getAcknowledgementNumber(),
-				agreement.getStateId(), agreement.getTenantId() };
+				agreement.getStateId(), agreement.getTenantId(),agreement.getCollectedSecurityDeposit(),
+				agreement.getCollectedGoodWillAmount(),agreement.getSource() };
 
 		try {
 			jdbcTemplate.update(agreementinsert, obj);

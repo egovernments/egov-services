@@ -31,9 +31,7 @@ public class Message {
 
     @Column(name = "tenantid")
     private String tenantId;
-    
-    
-    
+
     public org.egov.domain.model.Message toDomain() {
         return new org.egov.domain.model.Message(code,message,tenantId,locale);
     }

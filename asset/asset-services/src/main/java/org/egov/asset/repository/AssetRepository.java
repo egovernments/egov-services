@@ -180,13 +180,14 @@ public class AssetRepository {
 		status = asset.getStatus().toString();
 
 		Location location = asset.getLocationDetails();
-		
+				
 		Object[] obj = new Object[] {asset.getAssetCategory().getId(), asset.getName(),asset.getDepartment().getId(),
 				asset.getAssetDetails(), asset.getDescription(), asset.getRemarks(), 
 				asset.getLength(),asset.getWidth(),asset.getTotalArea(),modeOfAcquisition,
 				status,location.getZone(),location.getRevenueWard(),location.getStreet(),
 				location.getElectionWard(),location.getDoorNo(),location.getPinCode(),location.getLocality(),location.getBlock(),
-				property,requestInfo.getMsgId(), new Date(),asset.getCode(),asset.getTenantId()};
+				property,requestInfo.getMsgId(), new Date(),asset.getGrossValue(),asset.getAccumulatedDepreciation(),asset.getAssetRefrance(),
+				asset.getVersion(),asset.getCode(),asset.getTenantId()};
 		try{
 			System.out.println("query1::"+query+","+Arrays.toString(obj));
 			int i= jdbcTemplate.update(query, obj);

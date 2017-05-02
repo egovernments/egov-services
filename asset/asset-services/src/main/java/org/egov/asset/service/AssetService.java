@@ -114,7 +114,7 @@ public class AssetService {
 		return assetResponse;
 	}
 	
-	public AssetResponse updateAsync(String topic,String key,AssetRequest assetRequest){
+	public AssetResponse updateAsync(AssetRequest assetRequest){
 		
 		ObjectMapper objectMapper=new ObjectMapper();
 		System.out.println("assetRequest createAsync::"+assetRequest);
@@ -126,7 +126,7 @@ public class AssetService {
 			e.printStackTrace();
 		}
 		
-		assetProducer.sendMessage(topic, key, value);
+		assetProducer.sendMessage(applicationProperties.getUpdateAssetTopicName(),"update-asset", value);
 		
 		List<Asset> assets = new ArrayList<Asset>();
 		assets.add(assetRequest.getAsset());

@@ -1,10 +1,128 @@
+let typeList=[{
+    id: "Text",
+    name: "Text",
+    active: true
+  },
+  {
+    id: "Number",
+    name: "Number",
+    active: true
+  },
+  {
+    id: "Email",
+    name: "Email",
+    active: true
+  },
+  // {
+  //   id: "Check Box",
+  //   name: "Check Box",
+  //   active: true
+  // },
+  // {
+  //   id: "Radio",
+  //   name: "Radio",
+  //   active: true
+  // },
+  {
+    id: "Select",
+    name: "Select",
+    active: true
+  },
+  {
+    id: "Multiselect",
+    name: "Multiselect",
+    active: true
+  },
+  {
+    id: "Date",
+    name: "Date",
+    active: true
+  },
+  {
+    id: "File",
+    name: "File",
+    active: true
+  },
+  {
+    id: "Table",
+    name: "Table",
+    active: true
+  }
+];
+
+let typeListWithoutTable=[{
+    id: "Text",
+    name: "Text",
+    active: true
+  },
+  {
+    id: "Number",
+    name: "Number",
+    active: true
+  },
+  {
+    id: "Email",
+    name: "Email",
+    active: true
+  },
+  // {
+  //   id: "Check Box",
+  //   name: "Check Box",
+  //   active: true
+  // },
+  // {
+  //   id: "Radio",
+  //   name: "Radio",
+  //   active: true
+  // },
+  {
+    id: "Select",
+    name: "Select",
+    active: true
+  },
+  {
+    id: "Multiselect",
+    name: "Multiselect",
+    active: true
+  },
+  {
+    id: "Date",
+    name: "Date",
+    active: true
+  },
+  {
+    id: "File",
+    name: "File",
+    active: true
+  }
+  // ,
+  // {
+  //   id: "Table",
+  //   name: "Table",
+  //   active: true
+  // }
+];
+
+let customFieldData={
+     "name": null,
+     "type": null,
+     "isActive": false,
+     "isMandatory": false,
+     "values": null,
+     "localText": null,
+     "regExFormate": null,
+     "url": null,
+     "order": null,
+     "columns": []
+};
+
 class CreateAsset extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       list: [],
       assetCategory: {
-        "tenantId": tenantId,
+        tenantId,
         "name": "",
         "assetCategoryType": "",
         "parent": "",
@@ -15,40 +133,87 @@ class CreateAsset extends React.Component {
         "depreciationExpenseAccount": "",
         "unitOfMeasurement": "",
         "depreciationRate": null,
-        "customFields": []
+        "assetFieldsDefination": []
       },
-      customField: {
-        "name": "",
-        "type": "",
-        "isActive": "",
-        "isMandatory": "",
-        "values": "",
-        "localText": "",
-        "regExFormate": ""
+      customField:{
+           "name": null,
+           "type": null,
+           "isActive": false,
+           "isMandatory": false,
+           "values": null,
+           "localText": null,
+           "regExFormate": null,
+           "url": null,
+           "order": null,
+           "columns": []
       },
-      asset_category_type: [],
-      assetCategories: [],
-      depreciationMethod: {},
-      assetAccount: [],
-      accumulatedDepreciationAccount: [],
-      revaluationReserveAccount: [],
-      depreciationExpenseAccount: [],
-      assignments_unitOfMeasurement: [],
+      column:{
+           "name": null,
+           "type": null,
+           "isActive": false,
+           "isMandatory": false,
+           "values": null,
+           "localText": null,
+           "regExFormate": null,
+           "url": null,
+           "order": null,
+           "columns": []
+      },
+      asset_category_type,
+      assetCategories,
+      depreciationMethod,
+      assetAccount,
+      accumulatedDepreciationAccount,
+      revaluationReserveAccount,
+      depreciationExpenseAccount,
+      assignments_unitOfMeasurement,
       dataType: [],
       isEdit: false,
       index: -1,
-      typeList: []
+      typeList,
+      isCustomFormVisible:false
     }
     this.handleChange = this.handleChange.bind(this);
     this.addAsset = this.addAsset.bind(this);
     this.renderDelEvent = this.renderDelEvent.bind(this);
     this.addOrUpdate = this.addOrUpdate.bind(this);
     this.handleChangeTwoLevel = this.handleChangeTwoLevel.bind(this);
+    this.showCustomFieldForm=this.showCustomFieldForm.bind(this);
   }
+
+  componentDidMount() {
+    var type = getUrlVars()["type"];
+    var id = getUrlVars()["id"];
+    if (getUrlVars()["type"] === "view") {
+      // for (var variable in this.state.assetCategory)
+      //   // document.getElementById(variable).disabled = true;
+      //   console.log($('#'+variable).length);
+      $("input,select").prop("disabled", true);
+    }
+    if (type === "view" || type === "update") {
+      // console.log(getCommonMasterById("asset-services", "assetCategories", "AssetCategory", id).responseJSON);
+      this.setState({
+        assetCategory: getCommonMasterById("asset-services", "assetCategories", "AssetCategory", id).responseJSON["AssetCategory"][0]
+      })
+    }
+    // console.log(commonApiPost("egf-masters","chartofaccounts","_search",{tenantId}).responseJSON["chartOfAccounts"]);
+    // this.setState({
+    //   assetCategories,
+    //   asset_category_type,
+    //   depreciationMethod,
+    //   assetAccount,
+    //   accumulatedDepreciationAccount,
+    //   revaluationReserveAccount,
+    //   depreciationExpenseAccount,
+    //   assignments_unitOfMeasurement
+    // })
+  }
+
   close() {
     // widow.close();
     open(location, '_self').close();
   }
+
   handleChange(e, name) {
     if(name == "name" && !e.target.value.trim() && e.target.value == " ") {
       e.preventDefault();
@@ -61,6 +226,7 @@ class CreateAsset extends React.Component {
       })
     }
   }
+
   handleChangeTwoLevel(e, pName, name, isCheckBox) {
     if(isCheckBox) {
       this.setState({
@@ -107,167 +273,64 @@ class CreateAsset extends React.Component {
           });
 
         if(response["status"]==  201 || response["status"]==  200) {
-          this.setState({
-            assetCategory:{
-              "tenantId": tenantId,
-              "name": "",
-              "assetCategoryType": "",
-              "parent":"",
-              "depreciationMethod": "",
-              "assetAccount": "",
-              "accumulatedDepreciationAccount": "",
-              "revaluationReserveAccount": "",
-              "depreciationExpenseAccount": "",
-              "unitOfMeasurement": "",
-              "depreciationRate": null,
-              "customFields":[]
-            },
-            customField: {
-                      "name": "",
-                      "type": "",
-                      "isActive": "",
-                      "isMandatory": "",
-                      "values": "",
-                      "localText": "",
-                      "regExFormate": ""
-                    },
-            asset_category_type:[],
-            assetCategories:[],
-            depreciationMethod:{},
-            assetAccount:[],
-            accumulatedDepreciationAccount:[],
-            revaluationReserveAccount:[],
-            depreciationExpenseAccount:[],
-            assignments_unitOfMeasurement:[],
-            typeList:[]
-
-          })
+          // this.setState({
+          //   assetCategory:{
+          //     "tenantId": tenantId,
+          //     "name": "",
+          //     "assetCategoryType": "",
+          //     "parent":"",
+          //     "depreciationMethod": "",
+          //     "assetAccount": "",
+          //     "accumulatedDepreciationAccount": "",
+          //     "revaluationReserveAccount": "",
+          //     "depreciationExpenseAccount": "",
+          //     "unitOfMeasurement": "",
+          //     "depreciationRate": null,
+          //     "assetFieldsDefination":[]
+          //   },
+          //   customField: {
+          //     "name": null,
+          //     "type": null,
+          //     "isActive": false,
+          //     "isMandatory": false,
+          //     "values": null,
+          //     "localText": null,
+          //     "regExFormate": null,
+          //     "url": null,
+          //     "order": null,
+          //     "columns": null
+          //   },
+          //   asset_category_type:[],
+          //   assetCategories:[],
+          //   depreciationMethod:{},
+          //   assetAccount:[],
+          //   accumulatedDepreciationAccount:[],
+          //   revaluationReserveAccount:[],
+          //   depreciationExpenseAccount:[],
+          //   assignments_unitOfMeasurement:[],
+          //   typeList:[]
+          //
+          // })
           window.location.href=`app/asset/create-asset-ack.html?name=${tempInfo.name}&type=category`;
         } else {
           showError(response["statusText"]);
         }
   }
-  componentWillMount(){
-      this.setState({
-        assetCategory: {
-          "tenantId": "ap.kurnool",
-          "name": "",
-          "assetCategoryType": "",
-          "parent": "",
-          "depreciationMethod": "",
-          "assetAccount": "",
-          "accumulatedDepreciationAccount": "",
-          "revaluationReserveAccount": "",
-          "depreciationExpenseAccount": "",
-          "unitOfMeasurement": "",
-          "depreciationRate": null,
-          "customFields": []
-        },
-        customField: {
-          "name": "",
-          "type": "",
-          "isActive": "",
-          "isMandatory": "",
-          "values": "",
-          "localText": "",
-          "regExFormate": ""
-        },
-        asset_category_type: [],
-        assetCategories: [],
-        depreciationMethod: {},
-        assetAccount: [],
-        accumulatedDepreciationAccount: [],
-        revaluationReserveAccount: [],
-        depreciationExpenseAccount: [],
-        assignments_unitOfMeasurement: [],
-        typeList: []
-      })
-  }
-  componentWillMount() {
-    this.setState({
-      typeList: [{
-          id: "Text",
-          name: "Text",
-          active: true
-        },
-        {
-          id: "Number",
-          name: "Number",
-          active: true
-        },
-        {
-          id: "Email",
-          name: "Email",
-          active: true
-        },
-        {
-          id: "Check Box",
-          name: "Check Box",
-          active: true
-        },
-        {
-          id: "Radio",
-          name: "Radio",
-          active: true
-        },
-        {
-          id: "Select",
-          name: "Select",
-          active: true
-        },
-        {
-          id: "Date",
-          name: "Date",
-          active: true
-        },
-        {
-          id: "File",
-          name: "File",
-          active: true
-        }
-      ]
-    })
-  }
-  componentDidMount() {
-    var type = getUrlVars()["type"];
-    var id = getUrlVars()["id"];
-    if (getUrlVars()["type"] === "view") {
-      // for (var variable in this.state.assetCategory)
-      //   // document.getElementById(variable).disabled = true;
-      //   console.log($('#'+variable).length);
-      $("input,select").prop("disabled", true);
-    }
-    if (type === "view" || type === "update") {
-      // console.log(getCommonMasterById("asset-services", "assetCategories", "AssetCategory", id).responseJSON);
-      this.setState({
-        assetCategory: getCommonMasterById("asset-services", "assetCategories", "AssetCategory", id).responseJSON["AssetCategory"][0]
-      })
-    }
-    // console.log(commonApiPost("egf-masters","chartofaccounts","_search",{tenantId}).responseJSON["chartOfAccounts"]);
-    this.setState({
-      assetCategories,
-      asset_category_type,
-      depreciationMethod,
-      assetAccount,
-      accumulatedDepreciationAccount,
-      revaluationReserveAccount,
-      depreciationExpenseAccount,
-      assignments_unitOfMeasurement
-    })
-  }
-  addAsset() {
+
+  addAsset(to="") {
     var {
       isEdit,
       index,
       list,
       customField,
+      column,
       assetCategory
     } = this.state;
 
     if (isEdit) {
       // console.log(isEdit,index);
       //update holidays with current holiday
-      assetCategory["customFields"][index] = customField
+      assetCategory["assetFieldsDefination"][index] = customField
       this.setState({
         assetCategory,
         isEdit: false
@@ -275,38 +338,92 @@ class CreateAsset extends React.Component {
       //this.setState({isEdit:false})
     } else {
       //get asset Category from state
-      var temp = assetCategory;
-      temp.customFields.push(customField);
-      this.setState({
-        assetCategory: temp,
-        customField: {
-          "name": "",
-          "type": "",
-          "isActive": "",
-          "isMandatory": "",
-          "values": "",
-          "localText": "",
-          "regExFormate": ""
-        }
-      })
+      // customFieldData["columns"]=[];
+
+      if (to=="column") {
+        var temp = customField;
+        temp.columns.push(column);
+        this.setState({
+          customField: temp,
+          column:{
+               "name": null,
+               "type": null,
+               "isActive": false,
+               "isMandatory": false,
+               "values": null,
+               "localText": null,
+               "regExFormate": null,
+               "url": null,
+               "order": null,
+               "columns": []
+          }
+        })
+      } else {
+        var temp = assetCategory;
+        temp.assetFieldsDefination.push(customField);
+        this.setState({
+          assetCategory: temp,
+          customField: {
+               "name": null,
+               "type": null,
+               "isActive": false,
+               "isMandatory": false,
+               "values": null,
+               "localText": null,
+               "regExFormate": null,
+               "url": null,
+               "order": null,
+               "columns": []
+          } ,
+          isCustomFormVisible:false,
+          column: {
+               "name": null,
+               "type": null,
+               "isActive": false,
+               "isMandatory": false,
+               "values": null,
+               "localText": null,
+               "regExFormate": null,
+               "url": null,
+               "order": null,
+               "columns": []
+          }
+        })
+      }
+
       //use push to add new customField inside assetCategory
       //set back assetCategory to state
     }
   }
-  renderDelEvent(index) {
-    var customFields = this.state.assetCategory.customFields;
-    customFields.splice(index, 1);
-    this.setState({
-      customFields
-    });
+
+  renderDelEvent(index,to="") {
+    if (to=="column") {
+      var columns = this.state.customField.columns;
+      columns.splice(index, 1);
+      this.setState({
+        ...this.state.customField,
+        columns
+      });
+    } else {
+      var assetFieldsDefination = this.state.assetCategory.assetFieldsDefination;
+      assetFieldsDefination.splice(index, 1);
+      this.setState({
+        assetFieldsDefination
+      });
+    }
+  }
+
+  showCustomFieldForm(isShow)
+  {
+    this.setState({isCustomFormVisible:isShow})
   }
 
   render() {
     // console.log(this.state);
-    let {handleChange,addOrUpdate,renderDelEvent,addAsset,handleChangeTwoLevel}=this;
-    let {isSearchClicked,list,customField,isEdit,index,assetCategory}=this.state;
+    let {handleChange,addOrUpdate,renderDelEvent,addAsset,handleChangeTwoLevel,showCustomFieldForm}=this;
+    let {isSearchClicked,list,customField,column,isEdit,index,assetCategory,isCustomFormVisible}=this.state;
 
-    let {assetCategoryType,AssetCategory,parent,name,customFields,isMandatory,depreciationMethod,assetAccount,accumulatedDepreciationAccount,revaluationReserveAccount,depreciationExpenseAccount,unitOfMeasurement}=assetCategory;
+    let {assetCategoryType,AssetCategory,parent,name,assetFieldsDefination,isMandatory,depreciationMethod,assetAccount,accumulatedDepreciationAccount,revaluationReserveAccount,depreciationExpenseAccount,unitOfMeasurement}=assetCategory;
     let mode = getUrlVars()["type"];
 
     const showActionButton = function() {
@@ -314,8 +431,6 @@ class CreateAsset extends React.Component {
           return (<button type="submit" className="btn btn-submit">{mode?"Update":"Create"}</button>);
         }
     };
-
-
 
     const renderOption=function(list)
     {
@@ -344,207 +459,281 @@ class CreateAsset extends React.Component {
 
         }
     }
-    const renderBody=function()
-    {
-        if(customFields.length>0) {
-            return customFields.map((item,index)=> {
-                return (<tr  key={index} className="text-center">
-                  <td  >
-                {item.name}
-                  </td>
-                  <td  >
-                    {item.type}
-                  </td>
-                  <td  >
-                  {item.regExFormate}
-                  </td>
-                  <td  >
-                {item.isActive?"true":"false"}
-                  </td>
-                  <td  >
-                {item.isMandatory?"true":"false"}
-                  </td>
-                  <td  >
-                {item.values}
-                  </td>
-                  <td  >
-                {item.localText}
-                  </td>
 
-                  <td data-label="Action">
-                  <button type="button" className="btn btn-default btn-action"><span className="glyphicon glyphicon-trash"onClick={(e)=>{renderDelEvent(index)}}></span></button>
-                </td></tr>)
-            })
+    const renderBody=function(to="")
+    {
+        if (to=="column") {
+          if(customField.columns.length>0) {
+              return customField.columns.map((item,index)=> {
+                  return (<tr  key={index} className="text-center">
+                    <td  >
+                  {item.name}
+                    </td>
+                    <td  >
+                      {item.type}
+                    </td>
+                    <td  >
+                    {item.regExFormate}
+                    </td>
+                    <td  >
+                  {item.isActive?"true":"false"}
+                    </td>
+                    <td  >
+                  {item.isMandatory?"true":"false"}
+                    </td>
+                    <td  >
+                  {item.values}
+                    </td>
+                    <td  >
+                  {item.localText}
+                    </td>
+                    <td  >
+                  {item.url}
+                    </td>
+
+                    <td  >
+                  {item.order}
+                    </td>
+
+                  {/*  <td  >
+                  {item.columns.length>0?item.columns.length:""}
+                    </td>
+                  */}
+
+                    <td data-label="Action">
+                    <button type="button" className="btn btn-default btn-action"><span className="glyphicon glyphicon-trash"onClick={(e)=>{renderDelEvent(index,column)}}></span></button>
+                  </td></tr>)
+              })
+          }
+        } else {
+          if(assetFieldsDefination.length>0) {
+              return assetFieldsDefination.map((item,index)=> {
+                  return (<tr  key={index} className="text-center">
+                    <td  >
+                  {item.name}
+                    </td>
+                    <td  >
+                      {item.type}
+                    </td>
+                    <td  >
+                    {item.regExFormate}
+                    </td>
+                    <td  >
+                  {item.isActive?"true":"false"}
+                    </td>
+                    <td  >
+                  {item.isMandatory?"true":"false"}
+                    </td>
+                    <td  >
+                  {item.values}
+                    </td>
+                    <td  >
+                  {item.localText}
+                    </td>
+                    <td  >
+                  {item.url}
+                    </td>
+
+                    <td  >
+                  {item.order}
+                    </td>
+
+                    <td  >
+                  {item.columns.length>0?item.columns.length:""}
+                    </td>
+
+                    <td data-label="Action">
+                    <button type="button" className="btn btn-default btn-action"><span className="glyphicon glyphicon-trash"onClick={(e)=>{renderDelEvent(index)}}></span></button>
+                  </td></tr>)
+              })
+          }
+        }
+
+
+    }
+
+    const showCustomFieldsTable=function()
+    {
+      return (
+        <div className="form-section">
+          <h3 className="categoryType">Custom Fields</h3>
+          <button type="button" className="btn btn-default btn-action pull-right" onClick={()=>{showCustomFieldForm(true)}}><span className="glyphicon glyphicon-plus"></span></button>
+
+          <div className="land-table table-responsive">
+              <table className="table table-bordered">
+                  <thead>
+                  <tr>
+                     <th>Name</th>
+                     <th>Data Type</th>
+                     <th>RegEx format</th>
+                     <th>Active</th>
+                     <th>Mandatory</th>
+                     <th>Values</th>
+                     <th>Local Text</th>
+                     <th>Url</th>
+                     <th>Order</th>
+                     <th>Columns</th>
+                     <th>Action</th>
+                   </tr>
+
+                  </thead>
+
+                  <tbody>
+                  {renderBody()}
+
+                  </tbody>
+
+              </table>
+          </div>
+
+            {showCustomFieldAddForm()}
+        </div>
+
+      )
+    }
+
+    const showCustomFieldAddForm=function()
+    {
+        if(isCustomFormVisible)
+        {
+          return (
+          <div>
+            <h3 className="categoryType">Add</h3>
+
+            <div className="form-section">
+              <div className="row">
+                <div className="col-sm-6">
+                  <div className="row">
+                    <div className="col-sm-6 label-text">
+                      <label htmlFor="">Name</label>
+                    </div>
+                    <div className="col-sm-6">
+                      <input type="text" name="name"  value={customField.name} onChange={(e)=>{ handleChangeTwoLevel(e,"customField","name")}}/>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-sm-6">
+                  <div className="row">
+                    <div className="col-sm-6 label-text">
+                      <label for="type"> Data Type  </label>
+                    </div>
+                    <div className="col-sm-6">
+                      <div className="styled-select">
+                        <select  name="type" value={customField.type} onChange={(e)=>{
+                            handleChangeTwoLevel(e,"customField","type")
+                            }}required>
+                              <option>Select Type</option>
+                              {renderOption(typeList)}
+                         </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="row">
+                <div className="col-sm-6">
+                  <div className="row">
+                    <div className="col-sm-6 label-text">
+                      <label htmlFor="">RegEx Format</label>
+                    </div>
+                    <div className="col-sm-6">
+                      <input type="text" name="regExFormate" value={customField.regExFormate} onChange={(e)=>{ handleChangeTwoLevel(e,"customField","regExFormate")}}/>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-sm-6">
+                  <div className="row">
+                    <div className="col-sm-6 label-text">
+                      <label htmlFor="">Active</label>
+                    </div>
+                    <div className="col-sm-6">
+                      <input type="checkbox" name="isActive"  value={customField.isActive} onChange={(e)=>{ handleChangeTwoLevel(e,"customField","isActive", true)}} checked={customField.isActive ? true : false} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="row">
+                <div className="col-sm-6">
+                  <div className="row">
+                    <div className="col-sm-6 label-text">
+                      <label htmlFor="">Mandatory</label>
+                    </div>
+                    <div className="col-sm-6">
+                      <input type="checkbox" name="isMandatory"  value={customField.isMandatory} onChange={(e)=>{ handleChangeTwoLevel(e,"customField","isMandatory", true)}} checked={customField.isMandatory ? true : false}/>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-sm-6">
+                  <div className="row">
+                    <div className="col-sm-6 label-text">
+                      <label for="values">Value</label>
+                    </div>
+                    <div className="col-sm-6">
+                      <textarea  name="values" value={ customField.values} onChange={(e)=>{handleChangeTwoLevel(e,"customField","values")}} max="1024"></textarea>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="row">
+                <div className="col-sm-6">
+                  <div className="row">
+                    <div className="col-sm-6 label-text">
+                      <label htmlFor="">Local Text</label>
+                    </div>
+                    <div className="col-sm-6">
+                      <input type="text" name="localText"  value={customField.localText} onChange={(e)=>{ handleChangeTwoLevel(e,"customField","localText")}}/>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-sm-6">
+                  <div className="row">
+                    <div className="col-sm-6 label-text">
+                      <label htmlFor="">Url</label>
+                    </div>
+                    <div className="col-sm-6">
+                      <input type="text" name="url"  value={customField.url} onChange={(e)=>{ handleChangeTwoLevel(e,"customField","url")}}/>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="row">
+                <div className="col-sm-6">
+                  <div className="row">
+                    <div className="col-sm-6 label-text">
+                      <label htmlFor="">Order</label>
+                    </div>
+                    <div className="col-sm-6">
+                      <input type="text" name="order" value={customField.order} onChange={(e)=>{ handleChangeTwoLevel(e,"customField","order")}}/>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {showNestedCustomFieldTable()}
+
+              {/*  <button type="button" className="btn btn-default" >reset</button>*/}
+                <button type="button" className="btn btn-primary" onClick={(e)=>{addAsset()}}>Add/Edit</button>
+              </div>
+
+                  {/**/}
+            </div>
+          )
         }
     }
 
-
-    return (
-
-                  <div>
-
-
-                  <form onSubmit={(e)=>{addOrUpdate(e)}}>
-                        <div className="form-section-inner">
-
-                        <div className="row">
-                        <div className="col-sm-6">
-                        <div className="row">
-                        <div className="col-sm-6 label-text">
-                                <label for="name">Name <span> * </span> </label>
-                        </div>
-                        <div className="col-sm-6">
-                                <input type="text" id="name" name="name" value={name}
-                                onChange={(e)=>{handleChange(e,"name")}} required/>
-                        </div>
-                        </div>
-                        </div>
-                        <div className="col-sm-6">
-                        <div className="row">
-                        <div className="col-sm-6 label-text">
-                              <label for="assetCategoryType"> Asset Category Type <span> * </span> </label>
-                        </div>
-                        <div className="col-sm-6">
-                        <div className="styled-select">
-                        <select id="assetCategoryType" name="assetCategoryType" required="true" value={assetCategoryType} onChange={(e)=>{
-                        handleChange(e,"assetCategoryType")}}>
-                            <option value="">Select Asset Category Type</option>
-                            {renderOption(this.state.asset_category_type)}
-                          </select>
-                        </div>
-                        </div>
-                        </div>
-                        </div>
-                        </div>
-                        <div className="row">
-                        <div className="col-sm-6">
-                        <div className="row">
-                        <div className="col-sm-6 label-text">
-                              <label for="parent"> Parent Category  </label>
-                        </div>
-                        <div className="col-sm-6">
-                        <div className="styled-select">
-                        <select id="parent" name="parent"  value={parent} onChange={(e)=>{
-                        handleChange(e,"parent")}}>
-                            <option value="">Select Parent Category</option>
-                            {renderOption(this.state.assetCategories)}
-                          </select>
-                        </div>
-                        </div>
-                        </div>
-                        </div>
-                        <div className="col-sm-6">
-                        <div className="row">
-                        <div className="col-sm-6 label-text">
-                              <label for="depreciationMethod"> Depreciation Method  </label>
-                        </div>
-                        <div className="col-sm-6">
-                        <div className="styled-select">
-                        <select id="depreciationMethod" name="depreciationMethod" value={depreciationMethod} onChange={(e)=>{
-                        handleChange(e,"depreciationMethod")}}>
-                            <option value="">Select Depreciation Method </option>
-                            {renderOption(this.state.depreciationMethod)}
-                          </select>
-                        </div>
-                        </div>
-                        </div>
-                        </div>
-
-                        </div>
-                        <div className="row">
-                        <div className="col-sm-6">
-                        <div className="row">
-                        <div className="col-sm-6 label-text">
-                              <label for="assetAccount"> Asset Account Code  </label>
-                        </div>
-                        <div className="col-sm-6">
-                        <div className="styled-select">
-                        <select id="assetAccount" name="assetAccount"  value={assetAccount} onChange={(e)=>{
-                        handleChange(e,"assetAccount")}}>
-                            <option value="">Select Asset Account </option>
-                            {renderOption(this.state.assetAccount)}
-                          </select>
-                        </div>
-                        </div>
-                        </div>
-                        </div>
-                        <div className="col-sm-6">
-                        <div className="row">
-                        <div className="col-sm-6 label-text">
-                              <label for="accumulatedDepreciationAccount"> Accumulated Depreciation Code  </label>
-                        </div>
-                        <div className="col-sm-6">
-                        <div className="styled-select">
-                        <select id="accumulatedDepreciationAccount" name="accumulatedDepreciationAccount"  value={accumulatedDepreciationAccount} onChange={(e)=>{
-                        handleChange(e,"accumulatedDepreciationAccount")}}>
-                            <option value="">Select Accumulated Account </option>
-                            {renderOption(this.state.accumulatedDepreciationAccount)}
-                          </select>
-                        </div>
-                        </div>
-                        </div>
-                        </div>
-                        </div>
-
-                        <div className="row">
-
-                        <div className="col-sm-6">
-                        <div className="row">
-                        <div className="col-sm-6 label-text">
-                              <label for="revaluationReserveAccount"> Revaluation Reserve Account Code <span> *</span>  </label>
-                        </div>
-                        <div className="col-sm-6">
-                        <div className="styled-select">
-                        <select id="revaluationReserveAccount" name="revaluationReserveAccount" required="true" value={revaluationReserveAccount} onChange={(e)=>{
-                        handleChange(e,"revaluationReserveAccount")}}>
-                            <option value="">Select Reserve Account </option>
-                            {renderOption(this.state.revaluationReserveAccount)}
-                          </select>
-
-                        </div>
-                        </div>
-                        </div>
-                        </div>
-                        <div className="col-sm-6">
-                        <div className="row">
-                        <div className="col-sm-6 label-text">
-                             <label for="depreciationExpenseAccount"> Depreciation Expense Account  </label>
-                        </div>
-                        <div className="col-sm-6">
-                         <div className="styled-select">
-                         <select id="depreciationExpenseAccount" name="depreciationExpenseAccount"  value={depreciationExpenseAccount} onChange={(e)=>{
-                         handleChange(e,"depreciationExpenseAccount")}}>
-                             <option value="">Select Expense Account </option>
-                             {renderOption(this.state.depreciationExpenseAccount)}
-                           </select>
-                         </div>
-                        </div>
-                        </div>
-                        </div>
-                        </div>
-                        <div className="row">
-                        <div className="col-sm-6">
-                        <div className="row">
-                        <div className="col-sm-6 label-text">
-                            <label for="unitOfMeasurement"> UOM   </label>
-                        </div>
-                        <div className="col-sm-6">
-                        <div className="styled-select">
-                        <select id="unitOfMeasurement" name="unitOfMeasurement"  value={unitOfMeasurement} onChange={(e)=>{
-                        handleChange(e,"unitOfMeasurement")}}>
-                          <option value="">Select Unit Of Measurment </option>
-                          {renderOption(this.state.assignments_unitOfMeasurement)}
-                        </select>
-                        </div>
-                        </div>
-                        </div>
-                        </div>
-                        </div>
-
-
-          <h3 className="categoryType">Custom Fields</h3>
-          <a href="#" className="btn btn-default btn-action pull-right" data-toggle="modal" data-target="#calHoiday"><span className="glyphicon glyphicon-plus"></span></a>
-              <div className="land-table">
+    const showNestedCustomFieldTable=function()
+    {
+      if(customField.type=="Table")
+      {
+        return (
+          <div className="form-section">
+            <h4>Add Columns</h4>
+            <button type="button" className="btn btn-default btn-action pull-right" data-toggle="modal" data-target="#calHoiday"><span className="glyphicon glyphicon-plus"></span></button>
+              <div className="land-table table-responsive">
                   <table className="table table-bordered">
                       <thead>
                       <tr>
@@ -555,148 +744,341 @@ class CreateAsset extends React.Component {
                          <th>Mandatory</th>
                          <th>Values</th>
                          <th>Local Text</th>
+                         <th>Url</th>
+                         <th>Order</th>
+                        {/* <th>Columns</th> */}
                          <th>Action</th>
                        </tr>
 
                       </thead>
 
                       <tbody>
-                      {renderBody()}
+                      {renderBody("column")}
 
                       </tbody>
 
                   </table>
               </div>
-              <div className="modal fade" id="calHoiday" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                  <div className="modal-dialog" role="document">
-                      <div className="modal-content">
-                          <form className="jurisdictionDetail" id="jurisdictionDetail">
-                              <div className="modal-header">
-                                  <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                  <h4 className="modal-title" id="myModalLabel">Custom Fields</h4>
-                              </div>
-                              <div className="modal-body">
-                            <div className="row">
-                                <div className="col-sm-6">
-                                    <div className="row">
-                                        <div className="col-sm-6 label-text">
-                                          <label htmlFor="">Name</label>
-                                        </div>
-                                        <div className="col-sm-6">
-                                        <input type="text" name="name" id="customField_name" value={customField.name} onChange={(e)=>{
-                                          handleChangeTwoLevel(e,"customField","name")}}/>
-                                        </div>
-                                    </div>
-                                  </div>
-                                  <div className="col-sm-6">
-                                  <div className="row">
-                                  <div className="col-sm-6 label-text">
-                                      <label for="type"> Data Type  </label>
-                                  </div>
-                                  <div className="col-sm-6">
-                                  <div className="styled-select">
-                                  <select id="type" name="type" value={customField.type} onChange={(e)=>{
-                            handleChangeTwoLevel(e,"customField","type")
-                          }}required>
-                              <option>Select Type</option>
-                              {renderOption(this.state.typeList)}
-                         </select>
-                                  </div>
-                                  </div>
-                                  </div>
-                                  </div>
-                              </div>
-                              <div className="row">
-                                  <div className="col-sm-6">
-                                      <div className="row">
-                                          <div className="col-sm-6 label-text">
-                                            <label htmlFor="">RegEx Format</label>
-                                          </div>
-                                          <div className="col-sm-6">
-                                          <input type="text" name="regExFormate" id="regExFormate" value={customField.regExFormate} onChange={(e)=>{
-                                              handleChangeTwoLevel(e,"customField","regExFormate")}}/>
-                                          </div>
-                                      </div>
-                                      </div>
-                                      <div className="col-sm-6">
-                                          <div className="row">
-                                              <div className="col-sm-6 label-text">
-                                                <label htmlFor="">Active</label>
-                                              </div>
-                                              <div className="col-sm-6">
-                                              <input type="checkbox" name="isActive" id="isActive" value={customField.isActive} onChange={(e)=>{
-                                          handleChangeTwoLevel(e,"customField","isActive", true)}} checked={customField.isActive ? true : false} />
-                                              </div>
-                                          </div>
-                                          </div>
-                  </div>
+            {/*showCustomFieldsTable()*/}
+          </div>
+        )
+      }
+    }
 
-                  <div className="row">
-                  <div className="col-sm-6">
-                      <div className="row">
-                          <div className="col-sm-6 label-text">
-                            <label htmlFor="">Mandatory</label>
-                          </div>
-                          <div className="col-sm-6">
-                          <input type="checkbox" name="isMandatory" id="isMandatory" value={customField.isMandatory} onChange={(e)=>{
-                    handleChangeTwoLevel(e,"customField","isMandatory", true)}} checked={customField.isMandatory ? true : false}/>
-                          </div>
-                      </div>
-                      </div>
-                        <div className="col-sm-6">
-                        <div className="row">
+    return (
+      <div>
+        <form onSubmit={(e)=>{addOrUpdate(e)}}>
+          <div className="form-section-inner">
+
+            <div className="row">
+              <div className="col-sm-6">
+                <div className="row">
                   <div className="col-sm-6 label-text">
-                    <label for="values">Value</label>
+                    <label for="name">Name <span> * </span> </label>
                   </div>
                   <div className="col-sm-6">
-                    <textarea id="values" name="values" value= {customField.values}
-                    onChange={(e)=>{handleChangeTwoLevel(e,"customField","values")}} max="1024"></textarea>
+                    <input type="text"  name="name" value={name} onChange={(e)=>{handleChange(e,"name")}} required/>
                   </div>
-                  </div>
-                  </div>
+                </div>
+              </div>
 
+              <div className="col-sm-6">
+                <div className="row">
+                  <div className="col-sm-6 label-text">
+                    <label for="assetCategoryType"> Asset Category Type <span> * </span> </label>
+                  </div>
+                  <div className="col-sm-6">
+                    <div className="styled-select">
+                      <select  name="assetCategoryType" required="true" value={assetCategoryType} onChange={(e)=>{
+                            handleChange(e,"assetCategoryType")}}>
+                            <option value="">Select Asset Category Type</option>
+                            {renderOption(this.state.asset_category_type)}
+                      </select>
                     </div>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-                    <div className="row">
+            <div className="row">
+              <div className="col-sm-6">
+                <div className="row">
+                  <div className="col-sm-6 label-text">
+                    <label for="parent"> Parent Category  </label>
+                  </div>
+                  <div className="col-sm-6">
+                    <div className="styled-select">
+                      <select  name="parent" value={parent} onChange={(e)=>{
+                          handleChange(e,"parent")}}>
+                          <option value="">Select Parent Category</option>
+                            {renderOption(this.state.assetCategories)}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col-sm-6">
+                <div className="row">
+                  <div className="col-sm-6 label-text">
+                    <label for="depreciationMethod"> Depreciation Method  </label>
+                  </div>
+                  <div className="col-sm-6">
+                    <div className="styled-select">
+                      <select  name="depreciationMethod" value={depreciationMethod} onChange={(e)=>{
+                        handleChange(e,"depreciationMethod")}}>
+                        <option value="">Select Depreciation Method </option>
+                        {renderOption(this.state.depreciationMethod)}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <div className="row">
+              <div className="col-sm-6">
+                <div className="row">
+                  <div className="col-sm-6 label-text">
+                    <label for="assetAccount"> Asset Account Code  </label>
+                  </div>
+                  <div className="col-sm-6">
+                    <div className="styled-select">
+                      <select  name="assetAccount" value={assetAccount} onChange={(e)=>{
+                        handleChange(e,"assetAccount")}}>
+                        <option value="">Select Asset Account </option>
+                        {renderOption(this.state.assetAccount)}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col-sm-6">
+                <div className="row">
+                  <div className="col-sm-6 label-text">
+                    <label for="accumulatedDepreciationAccount"> Accumulated Depreciation Code  </label>
+                  </div>
+                  <div className="col-sm-6">
+                    <div className="styled-select">
+                      <select  name="accumulatedDepreciationAccount" value={accumulatedDepreciationAccount} onChange={(e)=>{
+                          handleChange(e,"accumulatedDepreciationAccount")}}>
+                        <option value="">Select Accumulated Account </option>
+                        {renderOption(this.state.accumulatedDepreciationAccount)}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="row">
+              <div className="col-sm-6">
+                <div className="row">
+                  <div className="col-sm-6 label-text">
+                    <label for="revaluationReserveAccount"> Revaluation Reserve Account Code  </label>
+                  </div>
+                  <div className="col-sm-6">
+                    <div className="styled-select">
+                      <select  name="revaluationReserveAccount" value={revaluationReserveAccount} onChange={(e)=>{
+                          handleChange(e,"revaluationReserveAccount")}}>
+                        <option value="">Select Reserve Account </option>
+                        {renderOption(this.state.revaluationReserveAccount)}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col-sm-6">
+                <div className="row">
+                  <div className="col-sm-6 label-text">
+                    <label for="depreciationExpenseAccount"> Depreciation Expense Account  </label>
+                  </div>
+                  <div className="col-sm-6">
+                    <div className="styled-select">
+                      <select  name="depreciationExpenseAccount" value={depreciationExpenseAccount} onChange={(e)=>{
+                          handleChange(e,"depreciationExpenseAccount")}}>
+                         <option value="">Select Expense Account </option>
+                         {renderOption(this.state.depreciationExpenseAccount)}
+                       </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="row">
+              <div className="col-sm-6">
+                <div className="row">
+                  <div className="col-sm-6 label-text">
+                    <label for="unitOfMeasurement"> UOM   </label>
+                  </div>
+                  <div className="col-sm-6">
+                    <div className="styled-select">
+                      <select  name="unitOfMeasurement" value={unitOfMeasurement} onChange={(e)=>{
+                          handleChange(e,"unitOfMeasurement")}}>
+                        <option value="">Select Unit Of Measurment </option>
+                        {renderOption(this.state.assignments_unitOfMeasurement)}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            {showCustomFieldsTable()}
+
+
+
+            <div className="modal fade" id="calHoiday" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+              <div className="modal-dialog" role="document">
+                <div className="modal-content">
+                  <form>
+                    <div className="modal-header">
+                      <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                      <h4 className="modal-title" id="myModalLabel">Custom Fields</h4>
+                    </div>
+                    <div className="modal-body">
+                      <div className="row">
                         <div className="col-sm-6">
-                            <div className="row">
-                                <div className="col-sm-6 label-text">
-                                  <label htmlFor="">Local Text</label>
-                                </div>
-                                <div className="col-sm-6">
-                                <input type="text" name="localText" id="localText" value={customField.localText} onChange={(e)=>{
-                                  handleChangeTwoLevel(e,"customField","localText")}}/>
-                                </div>
+                          <div className="row">
+                            <div className="col-sm-6 label-text">
+                              <label htmlFor="">Name</label>
+                            </div>
+                            <div className="col-sm-6">
+                              <input type="text" name="name"  value={column.name} onChange={(e)=>{ handleChangeTwoLevel(e,"column","name")}}/>
                             </div>
                           </div>
                         </div>
-                  </div>
-                                  <div className="modal-footer">
-                                  <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
-                                  <button type="button"  data-dismiss="modal"id="" className="btn btn-primary"  onClick={(e)=>{addAsset()}}>Add/Edit</button>
-                                  </div>
-                              </form>
+                        <div className="col-sm-6">
+                          <div className="row">
+                            <div className="col-sm-6 label-text">
+                              <label for="type"> Data Type  </label>
+                            </div>
+                            <div className="col-sm-6">
+                              <div className="styled-select">
+                                <select id="type" name="type" value={column.type} onChange={(e)=>{
+                                    handleChangeTwoLevel(e,"column","type")
+                                    }}required>
+                                      <option>Select Type</option>
+                                      {renderOption(typeListWithoutTable)}
+                                 </select>
+                              </div>
+                            </div>
                           </div>
+                        </div>
                       </div>
-                  </div>
+
+                      <div className="row">
+                        <div className="col-sm-6">
+                          <div className="row">
+                            <div className="col-sm-6 label-text">
+                              <label htmlFor="">RegEx Format</label>
+                            </div>
+                            <div className="col-sm-6">
+                              <input type="text" name="regExFormate" id="regExFormate" value={column.regExFormate} onChange={(e)=>{ handleChangeTwoLevel(e,"column","regExFormate")}}/>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="col-sm-6">
+                          <div className="row">
+                            <div className="col-sm-6 label-text">
+                              <label htmlFor="">Active</label>
+                            </div>
+                            <div className="col-sm-6">
+                              <input type="checkbox" name="isActive" id="isActive" value={column.isActive} onChange={(e)=>{ handleChangeTwoLevel(e,"column","isActive", true)}} checked={column.isActive ? true : false} />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="row">
+                        <div className="col-sm-6">
+                          <div className="row">
+                            <div className="col-sm-6 label-text">
+                              <label htmlFor="">Mandatory</label>
+                            </div>
+                            <div className="col-sm-6">
+                              <input type="checkbox" name="isMandatory" id="isMandatory" value={column.isMandatory} onChange={(e)=>{ handleChangeTwoLevel(e,"column","isMandatory", true)}} checked={column.isMandatory ? true : false}/>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="col-sm-6">
+                          <div className="row">
+                            <div className="col-sm-6 label-text">
+                              <label for="values">Value</label>
+                            </div>
+                            <div className="col-sm-6">
+                              <textarea id="values" name="values" value={ column.values} onChange={(e)=>{handleChangeTwoLevel(e,"column","values")}} max="1024"></textarea>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="row">
+                        <div className="col-sm-6">
+                          <div className="row">
+                            <div className="col-sm-6 label-text">
+                              <label htmlFor="">Local Text</label>
+                            </div>
+                            <div className="col-sm-6">
+                              <input type="text" name="localText" id="localText" value={column.localText} onChange={(e)=>{ handleChangeTwoLevel(e,"column","localText")}}/>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="col-sm-6">
+                          <div className="row">
+                            <div className="col-sm-6 label-text">
+                              <label htmlFor="">Url</label>
+                            </div>
+                            <div className="col-sm-6">
+                              <input type="text" name="url" id="url" value={column.url} onChange={(e)=>{ handleChangeTwoLevel(e,"column","url")}}/>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="row">
+                        <div className="col-sm-6">
+                          <div className="row">
+                            <div className="col-sm-6 label-text">
+                              <label htmlFor="">Order</label>
+                            </div>
+                            <div className="col-sm-6">
+                              <input type="text" name="order" id="order" value={column.order} onChange={(e)=>{ handleChangeTwoLevel(e,"column","order")}}/>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="row">
+                        {/*showCustomFieldsTable()*/}
+                      </div>
+
+
+                    </div>
+
+                    <div className="modal-footer">
+                      <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
+                      <button type="button" data-dismiss="modal" id="" className="btn btn-primary" onClick={(e)=>{addAsset("column")}}>Add/Edit</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
 
 
 
-                        <div className="text-center">
+            <div className="text-center">
               {showActionButton()} &nbsp;&nbsp;
               <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>
 
-          </div>
+            </div>
 
           </div>
-          </form>
+        </form>
       </div>
-
-
-
-
-
-    );
+        );
   }
 }
 

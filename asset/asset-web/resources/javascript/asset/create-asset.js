@@ -1,3 +1,128 @@
+// const cutf=[
+//       {
+//         "name": "Description",
+//         "type": "SingleValueList",
+//         "isActive": null,
+//         "isMandatory": null,
+//         "values": "ABC,BCD",
+//         "localText": null,
+//         "regExFormate": null,
+//         "url": null,
+//         "order": null,
+//         "columns": null
+//       },
+//       {
+//         "name": "Floor Details",
+//         "type": "Table",
+//         "isActive": null,
+//         "isMandatory": null,
+//         "values": null,
+//         "localText": null,
+//         "regExFormate": null,
+//         "url": null,
+//         "order": null,
+//         "columns": [
+//           {
+//             "name": "column1",
+//             "type": "string",
+//             "isActive": null,
+//             "isMandatory": null,
+//             "values": null,
+//             "localText": null,
+//             "regExFormate": null,
+//             "url": null,
+//             "order": null,
+//             "columns": null
+//           },
+//           {
+//             "name": "column2",
+//             "type": "number",
+//             "isActive": null,
+//             "isMandatory": null,
+//             "values": null,
+//             "localText": null,
+//             "regExFormate": null,
+//             "url": null,
+//             "order": null,
+//             "columns": null
+//           },
+//           {
+//             "name": "column2",
+//             "type": "number",
+//             "isActive": null,
+//             "isMandatory": null,
+//             "values": null,
+//             "localText": null,
+//             "regExFormate": null,
+//             "url": null,
+//             "order": null,
+//             "columns": null
+//           }
+//         ]
+//       },
+//       {
+//         "name": "Details",
+//         "type": "text",
+//         "isActive": null,
+//         "isMandatory": null,
+//         "values": null,
+//         "localText": null,
+//         "regExFormate": null,
+//         "url": null,
+//         "order": null,
+//         "columns": null
+//       },
+//       {
+//         "name": "Amenities Details",
+//         "type": "Table",
+//         "isActive": null,
+//         "isMandatory": null,
+//         "values": null,
+//         "localText": null,
+//         "regExFormate": null,
+//         "url": null,
+//         "order": null,
+//         "columns": [
+//           {
+//             "name": "column11",
+//             "type": "string",
+//             "isActive": null,
+//             "isMandatory": null,
+//             "values": null,
+//             "localText": null,
+//             "regExFormate": null,
+//             "url": null,
+//             "order": null,
+//             "columns": null
+//           },
+//           {
+//             "name": "column22",
+//             "type": "number",
+//             "isActive": null,
+//             "isMandatory": null,
+//             "values": null,
+//             "localText": null,
+//             "regExFormate": null,
+//             "url": null,
+//             "order": null,
+//             "columns": null
+//           },
+//           {
+//             "name": "column23",
+//             "type": "number",
+//             "isActive": null,
+//             "isMandatory": null,
+//             "values": null,
+//             "localText": null,
+//             "regExFormate": null,
+//             "url": null,
+//             "order": null,
+//             "columns": null
+//           }
+//         ]
+//       }
+//     ]
+
 const titleCase = (field) => {
 	var newField = field[0].toUpperCase();
 	for(let i=1; i<field.length; i++) {
@@ -80,29 +205,29 @@ const defaultAssetSetState = {
         "id": "",
         "name": ""
     },
-    "description": "",
-    "assetCategoryType": "",
-    "modeOfAcquisition": "",
-    "status": "",
+		"assetDetails": "",
+    "modeOfAcquisition": "ACQUIRED",
+    "status": "CWIP",
+    "grossValue": "",
+    "accumulatedDepreciation": "",
     "description": "",
     "dateOfCreation": "",
     "locationDetails": {
-        "locality": "",
-        "zone": "",
-        "revenueWard": "",
-        "block": "",
-        "street": "",
-        "electionWard": "",
-        "doorNo": "",
-        "pinCode": ""
+      "locality": "",
+      "zone": "",
+      "revenueWard": "",
+      "block": "",
+      "street": "",
+      "electionWard": "",
+      "doorNo": "",
+      "pinCode": ""
     },
     "remarks": "",
     "length": "",
     "width": "",
     "totalArea": "",
-    "properties": {},
-    "grossValue": "",
-    "accumulatedDepreciation": ""
+    "assetRefrance": "",
+    "assetAttributes":[]
 };
 
 class CreateAsset extends React.Component {
@@ -111,21 +236,22 @@ class CreateAsset extends React.Component {
     this.state = {
         list: [],
         assetSet: Object.assign({}, defaultAssetSetState),
-        assetCategories: [],
-        locality: [],
-        electionwards: [],
-        departments: [],
-        acquisitionList: [],
-        revenueZone: [],
-        street: [],
-        revenueWards: [],
-        revenueBlock: [],
-        customFields: [],
-        statusList: {},
-        asset_category_type: {},
+        assetCategories,
+        locality,
+        electionwards,
+        departments,
+        acquisitionList,
+        revenueZone,
+        street,
+        revenueWards,
+        revenueBlock,
+        customFields:[],
+        statusList,
+        asset_category_type,
         capitalized: false,
         error: "",
         success: "",
+				assetAttribute:{},
         readonly: false
     }
     this.handleChange = this.handleChange.bind(this);
@@ -140,12 +266,15 @@ class CreateAsset extends React.Component {
 
   getCategory(id) {
       if(this.state.assetCategories.length) {
+				// return cutf;
+
         for (var i = 0; i < this.state.assetCategories.length; i++) {
           if (this.state.assetCategories[i].id == id) {
-              return this.state.assetCategories[i]["customFields"];
+              return this.state.assetCategories[i]["assetFieldsDefination"];
           }
         }
-      } else {
+      }
+			else {
         return [];
       }
   }
@@ -185,7 +314,7 @@ class CreateAsset extends React.Component {
                 url: baseUrl + "/asset-services/assets/" + (type == "update" ? ("_update/"+ _this.state.assetSet.code) : "_create") + "?tenantId=" + tenantId,
                 type: 'POST',
                 dataType: 'json',
-                data: JSON.stringify(_body),
+                data: JSON.ify(_body),
                 async: false,
                 contentType: 'application/json',
                 headers:{
@@ -224,7 +353,7 @@ class CreateAsset extends React.Component {
          }
 
       }
-      
+
       let innerJSON = {
             ...this.state.assetSet[pName],
             [name]: e.target.type == "file" ? e.target.files : e.target.value
@@ -276,17 +405,17 @@ class CreateAsset extends React.Component {
       });
 
       this.setState({
-          assetCategories,
-					locality,
-					electionwards,
-					asset_category_type,
-					acquisitionList,
-					departments,
-          revenueZone,
-          street,
-          revenueWards,
-          revenueBlock,
-          statusList,
+          // assetCategories,
+					// locality,
+					// electionwards,
+					// asset_category_type,
+					// acquisitionList,
+					// departments,
+          // revenueZone,
+          // street,
+          // revenueWards,
+          // revenueBlock,
+          // statusList,
           readonly: (type === "view")
       });
 
@@ -347,7 +476,7 @@ class CreateAsset extends React.Component {
       accumulatedDepreciation,
       grossValue,
       status
-  } = this.state.assetSet;
+  	} = this.state.assetSet;
     let mode = getUrlVars()["type"];
 
     const getType = function() {
@@ -389,7 +518,7 @@ class CreateAsset extends React.Component {
         if(list && list.length) {
             return list.map((item, ind) => {
                 return (
-                    <label class="radio-inline radioUi">
+                    <label className="radio-inline radioUi">
                         <input type="radio" name={name} value={item} disabled={readonly} required={isMandatory} onClick={(e)=>{handleChangeTwoLevel(e,"properties", name)}}/> {item} &nbsp;&nbsp;
                     </label>
                 )
@@ -401,7 +530,7 @@ class CreateAsset extends React.Component {
         if(list && list.length) {
             return list.map((item, ind) => {
                 return (
-                    <label class="radio-inline radioUi">
+                    <label className="radio-inline radioUi">
                         <input type="checkbox" name={item} value={item} disabled={readonly} onClick={(e)=>{handleChangeTwoLevel(e,"properties", name)}}/> &nbsp; {item} &nbsp;&nbsp;
                     </label>
                 )
@@ -445,8 +574,14 @@ class CreateAsset extends React.Component {
     {
         if(customFields.length > 0)
         {
+					let customFieldsDisply=function(){
+							return customFields.map((item, index) => {
+						 			return checkFields(item,index)
+								})
+					}
+
               return (
-                <div className="form-section" id="allotteeDetailsBlock">
+                <div className="form-section" id="customFieldsDetailsBlock">
                   <h3 className="categoryType">Category Details </h3>
                   <div className="form-section-inner">
                       <div className="row">
@@ -475,7 +610,8 @@ class CreateAsset extends React.Component {
                               </div>
                             </div>
                           </div>*/}
-                          {checkFields()}
+													{customFieldsDisply()}
+
                       </div>
                   </div>
                 </div>
@@ -483,30 +619,34 @@ class CreateAsset extends React.Component {
         }
     }
 
-    const checkFields = function() {
-	return customFields.map((item, index) => {
-		switch (item.type) {
-			case "Text":
-				return showTextBox(item, index);
-			case "Number":
-				return showTextBox(item, index);
-			case "Email":
-				return showTextBox(item, index);
-			case "Radio":
-				return showRadioButton(item, index);
-			case "Check Box":
-				return showCheckBox(item, index);
-			case "Select":
-				return showSelect(item, index);
-			case "Date":
-                return showDatePicker(item, index);
-            case "File": 
-                return showFile(item, index);
-			default:
-				return showTextBox(item, index);
+    const checkFields = function(item,index) {
+
+			switch (item.type) {
+				case "Text":
+					return showTextBox(item, index);
+				case "Number":
+					return showTextBox(item, index);
+				case "Email":
+					return showTextBox(item, index);
+				// case "Radio":
+				// 	return showRadioButton(item, index);
+				// case "Check Box":
+				// 	return showCheckBox(item, index);
+				case "Select":
+					return showSelect(item, index);
+				case "Multiselect":
+					return showSelect(item, index);
+				case "Date":
+	        return showDatePicker(item, index);
+	      case "File":
+			  	return showFile(item, index);
+				case "Table":
+				  	return showTable(item, index);
+				default:
+					return showTextBox(item, index);
 		}
-	})
-}
+
+			}
 
 		const showTextBox = function(item, index) {
 			return (
@@ -516,7 +656,7 @@ class CreateAsset extends React.Component {
 							<label for={item.name}>{titleCase(item.name)}  {showStart(item.isMandatory)}</label>
 						</div>
 						<div className="col-sm-6">
-							<input id={item.name} name={item.name} type="text" maxLength= "200"
+							<input  name={item.name} type="text" maxLength= "200"
 								defaultValue={item.values} onChange={(e)=>{handleChangeTwoLevel(e, "properties", item.name)}} required={item.isMandatory} disabled={readonly}/>
 						</div>
 					</div>
@@ -532,11 +672,11 @@ class CreateAsset extends React.Component {
 							<label for={item.name}>{titleCase(item.name)}  {showStart(item.isMandatory)}</label>
 						</div>
 						<div className="col-sm-6">
-							<select id={item.name} name={item.name}
+							<select  name={item.name}
 								onChange={(e)=>{handleChangeTwoLevel(e,"properties", item.name)}} required={item.isMandatory} disabled={readonly}>
 								<option value="">Select</option>
 								{renderOption(item.values.split(','))}
-                            </select>
+          </select>
 						</div>
 					</div>
 				</div>
@@ -573,31 +713,101 @@ class CreateAsset extends React.Component {
 			);
 		}
 
-        const showDatePicker = function(item, index) {
+    const showDatePicker = function(item, index) {
             return (<div className="col-sm-6" key={index}>
                 <div className="row">
                     <div className="col-sm-6 label-text">
                         <label for={item.name}>{titleCase(item.name)}  {showStart(item.isMandatory)}</label>
                     </div>
                     <div className="col-sm-6">
-                        <input id={item.name} className="custom-date-picker" name={item.name} type="text" defaultValue={item.values} onChange={(e)=>{handleChangeTwoLevel(e, "properties", item.name)}} required={item.isMandatory} disabled={readonly}/>
+                        <input  className="custom-date-picker" name={item.name} type="text" defaultValue={item.values} onChange={(e)=>{handleChangeTwoLevel(e, "properties", item.name)}} required={item.isMandatory} disabled={readonly}/>
                     </div>
                 </div>
             </div>)
         }
 
-        const showFile = function(item, index) {
+    const showFile = function(item, index) {
             return (<div className="col-sm-6" key={index}>
                 <div className="row">
                     <div className="col-sm-6 label-text">
                         <label for={item.name}>{titleCase(item.name)}  {showStart(item.isMandatory)}</label>
                     </div>
                     <div className="col-sm-6">
-                        <input id={item.name} name={item.name} type="file" onChange={(e)=>{handleChangeTwoLevel(e, "properties", item.name)}} required={item.isMandatory} disabled={readonly} multiple/>
+                        <input  name={item.name} type="file" onChange={(e)=>{handleChangeTwoLevel(e, "properties", item.name)}} required={item.isMandatory} disabled={readonly} multiple/>
                     </div>
                 </div>
             </div>)
         }
+
+		const showTable=function(item,index)
+		{
+				let tableColumns =function()
+				{
+					return item.columns.map((itemOne,index)=>
+					{
+						return (
+							<th key={index}>
+									{itemOne.name}
+						 	</th>
+						)
+					})
+				}
+
+				let tableRows =function()
+				{
+					return item.columns.map((itemOne,index)=>
+					{
+						itemOne.parent=item.name;
+						return checkFields(itemOne,index)
+					})
+				}
+
+				// console.log(table);
+				return (
+
+					<div className="col-sm-12" key={index}>
+						<div className="form-section" >
+					  <h3 className="categoryType">{item.name}</h3>
+
+
+						<div className="row">
+						<div className="land-table table-responsive">
+								<table className="table table-bordered">
+										<thead>
+											<tr>
+													{tableColumns()}
+													<th>Action</th>
+											</tr>
+										</thead>
+										<tbody>
+
+										</tbody>
+								</table>
+						</div>
+						</div>
+
+						<div className="form-section" >
+							<h3 className="categoryType">Add </h3>
+								<div className="form-section-inner">
+										<div className="row">
+
+											{tableRows()}
+
+											<button type="button" className="btn btn-primary" >Add</button>
+											{/*<button type="button" className="btn btn-default">Reset</button>*/}
+
+										</div>
+									</div>
+								</div>
+
+					</div>
+					</div>
+				)
+
+
+		}
+
+
 
     const showStart = function(status) {
         if (status) {
@@ -933,6 +1143,11 @@ class CreateAsset extends React.Component {
               <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>
             </div>
         </form>
+
+
+
+
+
       </div>
     );
   }

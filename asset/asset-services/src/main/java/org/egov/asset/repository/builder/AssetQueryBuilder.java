@@ -244,7 +244,7 @@ public class AssetQueryBuilder {
 	public String getUpdateQuery(){
 		String UPDATE_QUERY="UPDATE egasset_asset SET assetcategory=?,name=?,department=?,assetdetails=?,description=?,remarks=?,length=?,"
 				+ "width=?,totalarea=?,modeofacquisition=?,status=?,zone=?,revenueward=?,street=?,electionward=?,doorno=?,pincode=?,locality=?,"
-				+ "block=?,properties=?,lastmodifiedby=?,lastmodifieddate=? "
+				+ "block=?,properties=?,lastmodifiedby=?,lastmodifieddate=?,grossvalue=?,accumulateddepreciation=?,assetrefrance=?,version=? "
 				+ "WHERE code=? and tenantid=?";
 				
 		return UPDATE_QUERY;

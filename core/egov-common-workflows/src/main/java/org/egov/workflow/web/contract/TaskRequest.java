@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Data;
+import lombok.ToString;
 
+@ToString
 public @Data class TaskRequest {
 	private RequestInfo requestInfo = new RequestInfo();
 	private List<Task> tasks = new ArrayList<Task>();

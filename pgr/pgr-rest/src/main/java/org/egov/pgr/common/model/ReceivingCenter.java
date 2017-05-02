@@ -1,12 +1,9 @@
-package org.egov.pgr.read.domain.model;
+package org.egov.pgr.common.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-/**
- * Created by mansibansal on 4/27/17.
- */
 @AllArgsConstructor
 @Getter
 @Builder

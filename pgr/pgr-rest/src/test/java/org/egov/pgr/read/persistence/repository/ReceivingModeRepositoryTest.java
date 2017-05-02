@@ -29,7 +29,7 @@ public class ReceivingModeRepositoryTest {
     {
         List<ReceivingMode> receivingMode=getReceivingModes();
         when(receivingModeJpaRepository.findAllByTenantId("ap.public")).thenReturn(receivingMode);
-        List<org.egov.pgr.read.domain.model.ReceivingMode> receivingModes=receivingModeRepository.findAllByReceivingModeByTenantId("ap.public");
+        List<org.egov.pgr.common.model.ReceivingMode> receivingModes=receivingModeRepository.findAllByReceivingModeByTenantId("ap.public");
         assertEquals(receivingMode.get(0).getName(),receivingModes.get(0).getName());
         assertEquals(receivingMode.get(1).getName(),receivingModes.get(1).getName());
         assertEquals(receivingMode.get(0).getId(),receivingModes.get(0).getId());

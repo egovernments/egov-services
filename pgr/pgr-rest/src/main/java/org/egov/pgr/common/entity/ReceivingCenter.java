@@ -52,9 +52,9 @@ public class ReceivingCenter extends AbstractPersistable<Long> {
         this.id = id;
     }
 
-  public  org.egov.pgr.read.domain.model.ReceivingCenter toDomain()
+  public  org.egov.pgr.common.model.ReceivingCenter toDomain()
     {
-        return org.egov.pgr.read.domain.model.ReceivingCenter.builder().id(id).name(name).crnRequired(crnRequired)
+        return org.egov.pgr.common.model.ReceivingCenter.builder().id(id).name(name).crnRequired(crnRequired)
             .orderNo(orderNo).tenantId(tenantId).build();
     }
 }

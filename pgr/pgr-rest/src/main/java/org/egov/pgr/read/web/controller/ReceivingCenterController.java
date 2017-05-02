@@ -22,8 +22,8 @@ public class ReceivingCenterController {
 	public ReceivingCenterResponse getAllReceivingCenters(
 			@RequestParam(value = "tenantId", defaultValue = "default") String tenantId,
 			@RequestParam(value = "id", required = false) Long id) {
-		List<org.egov.pgr.read.domain.model.ReceivingCenter> receivingCenters;
-        org.egov.pgr.read.domain.model.ReceivingCenter receivingCenter;
+		List<org.egov.pgr.common.model.ReceivingCenter> receivingCenters;
+        org.egov.pgr.common.model.ReceivingCenter receivingCenter;
 		if (id == null) {
 			receivingCenters = receivingCenterService.getAllReceivingCenters(tenantId);
 			List<org.egov.pgr.read.web.contract.ReceivingCenter> receiveCenters = receivingCenters.stream()

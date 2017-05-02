@@ -1,5 +1,5 @@
 CREATE TABLE egpgr_receiving_center (
-    id serial primary key ,
+    id bigint primary key ,
     name character varying(100),
     iscrnrequired boolean DEFAULT false,
     orderno bigint DEFAULT 0,

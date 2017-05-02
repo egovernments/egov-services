@@ -7,17 +7,12 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
 import java.util.Arrays;
 import java.util.List;
-
-import static org.egov.pgr.common.entity.Complaint_.receivingCenter;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
-/**
- * Created by mansibansal on 4/28/17.
- */
+
 @RunWith(MockitoJUnitRunner.class)
 public class ReceivingCenterRepositoryTest {
 
@@ -31,7 +26,7 @@ public class ReceivingCenterRepositoryTest {
     {
         ReceivingCenter receivingCenter=getReceivingCenter();
         when(receivingCenterJpaRepository.findByIdAndTenantId(1L,"ap.public")).thenReturn(receivingCenter);
-        org.egov.pgr.read.domain.model.ReceivingCenter receivingCenter1=receivingCenterRepository.findReceivingCenterByIdAndTenantId(1L,"ap.public");
+        org.egov.pgr.common.model.ReceivingCenter receivingCenter1=receivingCenterRepository.findReceivingCenterByIdAndTenantId(1L,"ap.public");
         assertEquals(receivingCenter.getName(),receivingCenter1.getName());
         assertEquals(receivingCenter.getId(),receivingCenter1.getId());
         assertEquals(receivingCenter.getOrderNo(),receivingCenter1.getOrderNo());
@@ -43,7 +38,7 @@ public class ReceivingCenterRepositoryTest {
     {
        List<ReceivingCenter> receivingCenters=getReceivingCenters();
         when(receivingCenterJpaRepository.findAllByTenantId("ap.public")).thenReturn(receivingCenters);
-       List<org.egov.pgr.read.domain.model.ReceivingCenter> receivingCenters1= receivingCenterRepository.findAllReceivingCentersByTenantId("ap.public");
+       List<org.egov.pgr.common.model.ReceivingCenter> receivingCenters1= receivingCenterRepository.findAllReceivingCentersByTenantId("ap.public");
         assertEquals(receivingCenters.size(),receivingCenters1.size());
         assertEquals(receivingCenters.get(0).getId(),receivingCenters1.get(0).getId());
         assertEquals(receivingCenters.get(1).getId(),receivingCenters1.get(1).getId());

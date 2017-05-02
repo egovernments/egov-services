@@ -195,6 +195,8 @@
                                         <exclude>org.egov.pgr.common.model.Role</exclude>
                                         <exclude>org.egov.pgr.common.model.Role.RoleBuilder</exclude>
                                         <exclude>org.egov.pgr.write.consumer.HashMapDeserializer</exclude>
+                                        <exclude>org.egov.pgr.common.model.ReceivingMode</exclude>
+                                        <exclude>org.egov.pgr.common.model.ReceivingCenter</exclude>
                                     </excludes>
                                     <limits>
                                         <limit>

@@ -18,7 +18,7 @@ public class ReceivingModeRepository {
         this.receivingModeJpaRepository = receivingModeJpaRepository;
     }
     
-    public List<org.egov.pgr.read.domain.model.ReceivingMode> findAllByReceivingModeByTenantId (String tenantId) {
+    public List<org.egov.pgr.common.model.ReceivingMode> findAllByReceivingModeByTenantId (String tenantId) {
     	return receivingModeJpaRepository.findAllByTenantId(tenantId).stream().map(ReceivingMode::toDomain)
             .collect(Collectors.toList());
     }

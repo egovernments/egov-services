@@ -42,7 +42,8 @@ public class PositionRepository {
 		String tenantId = "";
 		if (requestInfo != null) {
 			requestInfoWrapper.setRequestInfo(requestInfo);
-			tenantId = requestInfo.getUserInfo().getTenantId();
+			if (requestInfo.getUserInfo() != null)
+			    tenantId = requestInfo.getUserInfo().getTenantId();
 		} else
 			requestInfoWrapper.setRequestInfo(new RequestInfo());
 

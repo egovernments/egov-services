@@ -15,7 +15,7 @@ public class ReceivingMode {
  private String code;
  private String tenantId;
  
-public ReceivingMode(org.egov.pgr.read.domain.model.ReceivingMode receivingMode)
+public ReceivingMode(org.egov.pgr.common.model.ReceivingMode receivingMode)
  {
     this.id  = receivingMode.getId();
     this.name = receivingMode.getName();

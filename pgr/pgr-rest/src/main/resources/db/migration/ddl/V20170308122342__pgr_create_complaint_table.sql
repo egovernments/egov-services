@@ -21,7 +21,7 @@ CREATE SEQUENCE seq_egpgr_complainant
 
 CREATE TABLE egpgr_complainttype_category
 (
-  id numeric NOT NULL,
+  id bigint NOT NULL,
   name character varying(100),
   description character varying(250),
   version numeric DEFAULT 0,
@@ -35,7 +35,7 @@ CREATE SEQUENCE seq_egpgr_complainttype_category;
 
 CREATE TABLE egpgr_complainttype
 (
-  id numeric NOT NULL,
+  id bigint NOT NULL,
   name character varying(150),
   department numeric,
   version bigint,

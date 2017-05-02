@@ -1,8 +1,9 @@
 package org.egov.pgr.read.persistence.repository;
 
 
+import org.egov.pgr.common.model.ReceivingCenter;
 import org.egov.pgr.common.repository.ReceivingCenterJpaRepository;
-import org.egov.pgr.read.domain.model.ReceivingCenter;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

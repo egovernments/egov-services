@@ -96,6 +96,7 @@ public class WorkFlowController {
 
 	@PostMapping(value = "/tasks/{id}/_update")
 	public TaskResponse updateTask(@RequestBody final TaskRequest taskRequest,@PathVariable String id) {
+	        LOGGER.info("Update Task request:::::" + taskRequest);
 		TaskResponse response=new TaskResponse();
 		Task task = taskRequest.getTask();
 		task.setId(id);
@@ -130,7 +131,7 @@ public class WorkFlowController {
 		ProcessInstanceResponse pres = new ProcessInstanceResponse();
 
 		p = p.builder().id(id).build();
-		LOGGER.info("The RequestInfoWrapper :::"+requestInfoWrapper.getRequestInfo().toString());
+
 		p = matrixWorkflow.getProcess(tenantId, p, requestInfoWrapper.getRequestInfo());
 		pres.setProcessInstance(p);
 		pres.setResponseInfo(getResponseInfo(requestInfoWrapper.getRequestInfo()));

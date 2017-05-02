@@ -16,7 +16,7 @@ import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.egov.pgr.TestConfiguration;
-import org.egov.pgr.read.domain.model.ReceivingCenter;
+import org.egov.pgr.common.model.ReceivingCenter;
 import org.egov.pgr.read.domain.service.ReceivingCenterService;
 import org.junit.Test;
 import org.junit.runner.RunWith;

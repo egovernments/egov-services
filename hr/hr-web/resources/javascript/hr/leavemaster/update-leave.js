@@ -281,7 +281,7 @@ close(){
 
 handleProcess(e) {
   e.preventDefault();
-  //Here ID = e.target.id is the key/action
+  var ID = e.target.id ;
   //Make your server calls here for these actions/buttons
   //Please test it, I have only wrote the code, not tested - Sourabh
     var employee;
@@ -290,14 +290,17 @@ handleProcess(e) {
     var tempInfo=Object.assign({},this.state.leaveSet) , type = getUrlVars()["type"];
     delete  tempInfo.name;
     delete tempInfo.code;
-    var res = commonApiPost("hr-employee","hod/employees","_search",{tenantId,asOnDate,departmentId})
-      if(res && res.responseJSON && res.responseJSON["Employee"] && res.responseJSON["Employee"][0]){
-        employee = res.responseJSON["Employee"][0]
-      }
-      else{
-        employee={};
-      }
-      tempInfo.workflowDetails.assignee = employee.assignments && employee.assignments[0] ? employee.assignments[0].id : "";
+    // var res = commonApiPost("hr-employee","hod/employees","_search",{tenantId,asOnDate,departmentId})
+    //   if(res && res.responseJSON && res.responseJSON["Employee"] && res.responseJSON["Employee"][0]){
+    //     employee = res.responseJSON["Employee"][0]
+    //   }
+    //   else{
+    //     employee={};
+    //   }
+    if(!tempInfo.workflowDetails){
+
+      tempInfo.workflowDetails = {action : ID};
+    }
     var body={
         "RequestInfo":requestInfo,
         "LeaveApplication":tempInfo

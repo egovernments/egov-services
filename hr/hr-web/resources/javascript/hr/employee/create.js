@@ -2622,8 +2622,6 @@ function printValue(object = "", values) {
 
   } else {
     for (var key in values) {
-      console.log(key);
-      console.log(values[key]);
       if (typeof values[key] === "object" && key == "user") {
         for (ckey in values[key]) {
           if (values[key][ckey]) {

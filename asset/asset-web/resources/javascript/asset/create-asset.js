@@ -257,6 +257,7 @@ class CreateAsset extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleChangeTwoLevel = this.handleChangeTwoLevel.bind(this);
     this.addOrUpdate = this.addOrUpdate.bind(this);
+    this.handleChangeAssetAttr = this.handleChangeAssetAttr.bind(this);
 
   }
   close() {
@@ -333,9 +334,115 @@ class CreateAsset extends React.Component {
       })
   }
 
+  handleChangeAssetAttr(e, type, key, col, ind, multi) {
+    let attr = Object.assign([], this.state.assetAttributes);
+    for(var i=0; i<attr.length; i++) {
+      if(attr[i].key == key) {
+        if(col) {
+          if(multi) {
+            var options = e.target.options;
+            var values = [];
+            for (var i = 0, l = options.length; i < l; i++) {
+              if (options[i].selected) {
+                values.push(options[i].value);
+              }
+            }
 
-  handleChangeTwoLevel(e, pName, name) {
-      let text, type, codeNo;
+            if(attr[i].value[ind])
+              attr[i].value[ind][col] = values;
+            else {
+              attr[i].value[ind] = {
+                [col]: values
+              };
+            }
+          } else {
+            if(ind)
+              attr[i].value[ind][col] = e.target.value;
+            else {
+              attr[i].value.push({
+                [col]: e.target.value
+              })
+            }
+          }
+        } else {
+          if(multi) {
+            var options = e.target.options;
+            var values = [];
+            for (var i = 0, l = options.length; i < l; i++) {
+              if (options[i].selected) {
+                values.push(options[i].value);
+              }
+            }
+            attr[i].value = values;
+          } else {
+            attr[i].value = e.target.value;
+          }
+        }
+
+        this.setState({
+          assetAttributes: Object.assign([], attr)
+        });
+
+        return;
+      }
+    }
+
+    if(col) {
+      if(multi) {
+        var options = e.target.options;
+        var values = [];
+        for (var i = 0, l = options.length; i < l; i++) {
+          if (options[i].selected) {
+            values.push(options[i].value);
+          }
+        }
+        var val = [];
+        val[ind] = {
+          [col]: values
+        };
+        attr.push({
+          key: key,
+          type: type,
+          value: val
+        })
+      } else {
+        var val = [];
+        val[ind] = {
+          [col]: values
+        };
+        attr.push({
+          key: key,
+          type: type,
+          value: val
+        })
+      }
+    } else if(multi) {
+       var options = e.target.options;
+        var values = [];
+        for (var i = 0, l = options.length; i < l; i++) {
+          if (options[i].selected) {
+            values.push(options[i].value);
+          }
+        }
+        attr.push({
+          key: key,
+          type: type,
+          value: values
+        })
+    } else {
+      attr.push({
+          key: key,
+          type: type,
+          value: e.target.value
+        })
+    }
+    this.setState({
+      assetAttributes: Object.assign([], attr)
+    });
+  }
+
+  handleChangeTwoLevel(e, pName, name, multi) {
+      let text, type, codeNo, innerJSON;
       if (pName == "assetCategory") {
           let el = document.getElementById('assetCategory');
           text = el.options[el.selectedIndex].innerHTML;
@@ -353,11 +460,24 @@ class CreateAsset extends React.Component {
          }
 
       }
-
-      let innerJSON = {
+      if(multi) {
+        var options = e.target.options;
+        var values = [];
+        for (var i = 0, l = options.length; i < l; i++) {
+          if (options[i].selected) {
+            values.push(options[i].value);
+          }
+        }
+        innerJSON = {
+            ...this.state.assetSet[pName],
+            [name]: values;
+        };
+      } else {
+        innerJSON = {
             ...this.state.assetSet[pName],
             [name]: e.target.type == "file" ? e.target.files : e.target.value
-      };
+        };
+      }
 
       if(type) {
         innerJSON["assetCategoryType"] = type;
@@ -405,17 +525,6 @@ class CreateAsset extends React.Component {
       });
 
       this.setState({
-          // assetCategories,
-					// locality,
-					// electionwards,
-					// asset_category_type,
-					// acquisitionList,
-					// departments,
-          // revenueZone,
-          // street,
-          // revenueWards,
-          // revenueBlock,
-          // statusList,
           readonly: (type === "view")
       });
 
@@ -519,7 +628,7 @@ class CreateAsset extends React.Component {
             return list.map((item, ind) => {
                 return (
                     <label className="radio-inline radioUi">
-                        <input type="radio" name={name} value={item} disabled={readonly} required={isMandatory} onClick={(e)=>{handleChangeTwoLevel(e,"properties", name)}}/> {item} &nbsp;&nbsp;
+                        <input type="radio" name={name} value={item} disabled={readonly} required={isMandatory} onClick={(e)=>{handleChangeAssetAttr(e,"Radio", name)}}/> {item} &nbsp;&nbsp;
                     </label>
                 )
             })
@@ -531,7 +640,7 @@ class CreateAsset extends React.Component {
             return list.map((item, ind) => {
                 return (
                     <label className="radio-inline radioUi">
-                        <input type="checkbox" name={item} value={item} disabled={readonly} onClick={(e)=>{handleChangeTwoLevel(e,"properties", name)}}/> &nbsp; {item} &nbsp;&nbsp;
+                        <input type="checkbox" name={item} value={item} disabled={readonly} onClick={(e)=>{handleChangeAssetAttr(e,"Check Box", name)}}/> &nbsp; {item} &nbsp;&nbsp;
                     </label>
                 )
             })
@@ -576,7 +685,7 @@ class CreateAsset extends React.Component {
         {
 					let customFieldsDisply=function(){
 							return customFields.map((item, index) => {
-						 			return checkFields(item,index)
+						 			return checkFields(item, index)
 								})
 					}
 
@@ -619,36 +728,36 @@ class CreateAsset extends React.Component {
         }
     }
 
-    const checkFields = function(item,index) {
+    const checkFields = function(item, index, ifTable) {
 
 			switch (item.type) {
 				case "Text":
-					return showTextBox(item, index);
+					return showTextBox(item, index, ifTable);
 				case "Number":
-					return showTextBox(item, index);
+					return showTextBox(item, index, ifTable);
 				case "Email":
-					return showTextBox(item, index);
+					return showTextBox(item, index, ifTable);
 				// case "Radio":
-				// 	return showRadioButton(item, index);
+				// 	return showRadioButton(item, index, ifTable);
 				// case "Check Box":
-				// 	return showCheckBox(item, index);
+				// 	return showCheckBox(item, index, ifTable);
 				case "Select":
-					return showSelect(item, index);
+					return showSelect(item, index, false, ifTable);
 				case "Multiselect":
-					return showSelect(item, index);
+					return showSelect(item, index, true, ifTable);
 				case "Date":
-	        return showDatePicker(item, index);
+	        return showDatePicker(item, index, ifTable);
 	      case "File":
-			  	return showFile(item, index);
+			  	return showFile(item, index, ifTable);
 				case "Table":
 				  	return showTable(item, index);
 				default:
-					return showTextBox(item, index);
+					return showTextBox(item, index, ifTable);
 		}
 
 			}
 
-		const showTextBox = function(item, index) {
+		const showTextBox = function(item, index, ifTable) {
 			return (
 				<div className="col-sm-6" key={index}>
 					<div className="row">
@@ -657,14 +766,14 @@ class CreateAsset extends React.Component {
 						</div>
 						<div className="col-sm-6">
 							<input  name={item.name} type="text" maxLength= "200"
-								defaultValue={item.values} onChange={(e)=>{handleChangeTwoLevel(e, "properties", item.name)}} required={item.isMandatory} disabled={readonly}/>
+								defaultValue={item.values} onChange={(e)=>{handleChangeAssetAttr(e, "Text", (ifTable ? item.parent : item.name), (ifTable ? item.name : "") (ifTable ? index : ""))}} required={item.isMandatory} disabled={readonly}/>
 						</div>
 					</div>
 				</div>
 			);
 		}
 
-		const showSelect = function(item,index) {
+		const showSelect = function(item, index, multi, ifTable) {
 			return (
 				<div className="col-sm-6" key={index}>
 					<div className="row">
@@ -672,8 +781,8 @@ class CreateAsset extends React.Component {
 							<label for={item.name}>{titleCase(item.name)}  {showStart(item.isMandatory)}</label>
 						</div>
 						<div className="col-sm-6">
-							<select  name={item.name}
-								onChange={(e)=>{handleChangeTwoLevel(e,"properties", item.name)}} required={item.isMandatory} disabled={readonly}>
+							<select name={item.name} multiple={multi ? true : false}
+								onChange={(e)=>{handleChangeAssetAttr(e, (multi ? "Multiselect" : "Select"), (ifTable ? item.parent : item.name), (ifTable ? item.name : "") (ifTable ? index : ""), multi)}} required={item.isMandatory} disabled={readonly}>
 								<option value="">Select</option>
 								{renderOption(item.values.split(','))}
           </select>
@@ -683,7 +792,7 @@ class CreateAsset extends React.Component {
 			);
 		}
 
-		const showRadioButton = function(item, index) {
+		const showRadioButton = function(item, index, ifTable) {
 			return (
 				<div className="col-sm-6" key={index}>
 					<div className="row">
@@ -698,7 +807,7 @@ class CreateAsset extends React.Component {
 			);
 		}
 
-		const showCheckBox = function(item,index) {
+		const showCheckBox = function(item, index, ifTable) {
 			return (
 				<div className="col-sm-6" key={index}>
 					<div className="row">
@@ -713,33 +822,33 @@ class CreateAsset extends React.Component {
 			);
 		}
 
-    const showDatePicker = function(item, index) {
+    const showDatePicker = function(item, index, ifTable) {
             return (<div className="col-sm-6" key={index}>
                 <div className="row">
                     <div className="col-sm-6 label-text">
                         <label for={item.name}>{titleCase(item.name)}  {showStart(item.isMandatory)}</label>
                     </div>
                     <div className="col-sm-6">
-                        <input  className="custom-date-picker" name={item.name} type="text" defaultValue={item.values} onChange={(e)=>{handleChangeTwoLevel(e, "properties", item.name)}} required={item.isMandatory} disabled={readonly}/>
+                        <input  className="custom-date-picker" name={item.name} type="text" defaultValue={item.values} onChange={(e)=>{handleChangeAssetAttr(e, "Date", (ifTable ? item.parent : item.name), (ifTable ? item.name : "") (ifTable ? index : ""))}} required={item.isMandatory} disabled={readonly}/>
                     </div>
                 </div>
             </div>)
         }
 
-    const showFile = function(item, index) {
+    const showFile = function(item, index, ifTable) {
             return (<div className="col-sm-6" key={index}>
                 <div className="row">
                     <div className="col-sm-6 label-text">
                         <label for={item.name}>{titleCase(item.name)}  {showStart(item.isMandatory)}</label>
                     </div>
                     <div className="col-sm-6">
-                        <input  name={item.name} type="file" onChange={(e)=>{handleChangeTwoLevel(e, "properties", item.name)}} required={item.isMandatory} disabled={readonly} multiple/>
+                        <input  name={item.name} type="file" onChange={(e)=>{handleChangeAssetAttr(e, "File", (ifTable ? item.parent : item.name), (ifTable ? item.name : "") (ifTable ? index : ""))}} required={item.isMandatory} disabled={readonly} multiple/>
                     </div>
                 </div>
             </div>)
         }
 
-		const showTable=function(item,index)
+		const showTable=function(item, index)
 		{
 				let tableColumns =function()
 				{
@@ -757,8 +866,8 @@ class CreateAsset extends React.Component {
 				{
 					return item.columns.map((itemOne,index)=>
 					{
-						itemOne.parent=item.name;
-						return checkFields(itemOne,index)
+						itemOne.parent = item.name;
+						return checkFields(itemOne, index, true);
 					})
 				}
 

@@ -1,17 +1,11 @@
 package org.egov.eis.utils;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 
 public class DateUtils {
 	
 	public static boolean areDatesEqualWithoutTimePart(Date date1, Date date2) {
-		
-		LocalDateTime time = LocalDateTime.ofInstant(
-				date1.toInstant(), 
-				ZoneId.systemDefault());
 		
 		Calendar c1 = Calendar.getInstance();
 		Calendar c2 = Calendar.getInstance();

@@ -99,7 +99,7 @@ public class EmployeeInfo {
 	@Valid
 	private UserType type = UserType.EMPLOYEE;
 
-	private String employeeStatus;
+	private Long employeeStatus;
 
 	private Long employeeType;
 

@@ -62,7 +62,6 @@ import org.egov.eis.repository.EmployeeRepository;
 import org.egov.eis.web.contract.EmployeeRequest;
 import org.egov.eis.web.contract.RequestInfo;
 import org.egov.eis.web.contract.UserRequest;
-import org.egov.eis.web.contract.factory.ResponseInfoFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -71,9 +70,6 @@ public class EmployeeHelper {
 
 	@Autowired
 	private EmployeeRepository employeeRepository;
-
-	@Autowired
-	private ResponseInfoFactory responseInfoFactory;
 
 	private enum Sequences {
 		ASSIGNMENT("seq_egeis_assignment"),

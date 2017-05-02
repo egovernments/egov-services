@@ -74,6 +74,7 @@ public class Employee {
 	private Long id;
 
 	@NotNull
+	@Size(min=1, max=256)
 	private String code;
 
 	@NotNull
@@ -90,7 +91,7 @@ public class Employee {
 	private Date dateOfRetirement;
 
 	@NotNull
-	private String employeeStatus;
+	private Long employeeStatus;
 
 	private Long recruitmentMode;
 
@@ -180,6 +181,7 @@ public class Employee {
 	private User user;
 
 	@NotNull
+	@Size(max=256)
 	private String tenantId;
 
 }

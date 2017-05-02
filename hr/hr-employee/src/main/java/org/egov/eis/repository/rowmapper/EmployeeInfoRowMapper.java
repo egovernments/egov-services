@@ -96,7 +96,7 @@ public class EmployeeInfoRowMapper implements ResultSetExtractor<List<EmployeeIn
 				empInfo = new EmpInfo();
 				empInfo.setId((Long) rs.getObject("e_id"));
 				empInfo.setCode(rs.getString("e_code"));
-				empInfo.setEmployeeStatus(rs.getString("e_employeeStatus"));
+				empInfo.setEmployeeStatus((Long) rs.getObject("e_employeeStatus"));
 				empInfo.setEmployeeType((Long) rs.getObject("e_employeeTypeId"));
 				empInfo.setBank((Long) rs.getObject("e_bankId"));
 				empInfo.setBankBranch((Long) rs.getObject("e_bankBranchId"));
@@ -228,7 +228,7 @@ public class EmployeeInfoRowMapper implements ResultSetExtractor<List<EmployeeIn
 	private class EmpInfo {
 		private Long id;
 		private String code;
-		private String employeeStatus;
+		private Long employeeStatus;
 		private Long employeeType;
 		// Key is assignmentId in the assignments map
 		private Map<Long, AssignmentInfo> assignments = new LinkedHashMap<>();

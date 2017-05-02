@@ -78,7 +78,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -89,9 +88,6 @@ public class EmployeeService {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(EmployeeService.class);
 
-	@Autowired
-	private PlatformTransactionManager transactionManager;
-	
 	@Autowired
 	private AssignmentService assignmentService;
 

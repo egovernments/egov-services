@@ -298,8 +298,7 @@ class CreateAsset extends React.Component {
 
   addOrUpdate(e) {
       e.preventDefault();
-      console.log(JSON.stringify(this.state.assetSet));
-      /*this.setState({
+      this.setState({
         ...this.state,
         error: "",
         success: ""
@@ -310,17 +309,15 @@ class CreateAsset extends React.Component {
           "Asset": tempInfo
       };
 
-      console.log(body);
-      return;
-      uploadFiles(body, function(err, _body) {
+      /*uploadFiles(body, function(err, _body) {
         if(err) {
             showError(err);
-        } else {
+        } else {*/
             var response = $.ajax({
                 url: baseUrl + "/asset-services/assets/" + (type == "update" ? ("_update/"+ _this.state.assetSet.code) : "_create") + "?tenantId=" + tenantId,
                 type: 'POST',
                 dataType: 'json',
-                data: JSON.ify(_body),
+                data: JSON.stringify(body),
                 async: false,
                 contentType: 'application/json',
                 headers:{
@@ -335,7 +332,7 @@ class CreateAsset extends React.Component {
                     error: response["statusText"]
                 })
             }
-        }
+        /*}
       })*/
   }
 
@@ -459,7 +456,7 @@ class CreateAsset extends React.Component {
           text = el.options[el.selectedIndex].innerHTML;
           this.setState({
               customFields: this.getCategory(e.target.value),
-              properties: {}
+              assetAttributes: []
           })
           e.target.value = parseInt(e.target.value);
           for(var i=0;i< this.state.assetCategories.length; i++){

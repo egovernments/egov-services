@@ -96,6 +96,7 @@ public class WorkFlowController {
 
 	@PostMapping(value = "/tasks/{id}/_update")
 	public TaskResponse updateTask(@RequestBody final TaskRequest taskRequest,@PathVariable String id) {
+	        LOGGER.info("Update Task request:::::" + taskRequest);
 		TaskResponse response=new TaskResponse();
 		Task task = taskRequest.getTask();
 		task.setId(id);

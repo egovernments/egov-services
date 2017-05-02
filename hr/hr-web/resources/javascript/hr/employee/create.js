@@ -1328,15 +1328,14 @@ function fillValueToObject(currentState) {
 
     var splitResult = currentState.id.split(".");
     if (splitResult[0] === "user") {
-      // if (currentState.id == "user.dob") {
-      //     var dateSplit = currentState.value.split("-");
-      //     var date = new Date(dateSplit[0], dateSplit[1], dateSplit[2]);
-      //     var day = date.getDate().toString().length === 1 ? "0" + date.getDate() : date.getDate();
-      //     var monthIn = date.getMonth().toString().length === 1 ? "0" + date.getMonth() : date.getMonth();
-      //     var yearIn = date.getFullYear();
-      //     employee[splitResult[0]][splitResult[1]] = day + "/" + monthIn + "/" + yearIn;
-      //
-      // } else
+      if (currentState.id == "user.dob") {
+          var dateSplit = currentState.value.split("/");
+          var date = new Date(dateSplit[0], dateSplit[1], dateSplit[2]);
+          var day = date.getDate().toString().length === 1 ? "0" + date.getDate() : date.getDate();
+          var monthIn = date.getMonth().toString().length === 1 ? "0" + date.getMonth() : date.getMonth();
+          var yearIn = date.getFullYear();
+          employee[splitResult[0]][splitResult[1]] =  monthIn  + "/" + day + "/" + yearIn;
+      } else
       if (currentState.id == "user.active") {
         employee[splitResult[0]][splitResult[1]] = currentState.value;
 
@@ -1613,7 +1612,7 @@ function updateTable(tableName, modalName, object) {
         console.log(e);
         bnd = [];
       }
-      
+
       $(tableName).append(`<td data-label=${"jurisdictionsType"}>
                                 ${bnd.length > 0 && bnd[0]["boundaryType"] ? bnd[0]["boundaryType"]["name"] : ""}
                           </td>`)
@@ -2623,6 +2622,8 @@ function printValue(object = "", values) {
 
   } else {
     for (var key in values) {
+      console.log(key);
+      console.log(values[key]);
       if (typeof values[key] === "object" && key == "user") {
         for (ckey in values[key]) {
           if (values[key][ckey]) {

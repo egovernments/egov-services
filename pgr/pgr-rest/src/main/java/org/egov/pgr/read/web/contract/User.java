@@ -1,16 +1,9 @@
 package org.egov.pgr.read.web.contract;
 
-import java.util.Set;
-
+import lombok.*;
 import org.egov.pgr.common.model.Role;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import java.util.Set;
 
 @Setter
 @Getter
@@ -19,30 +12,21 @@ import lombok.Setter;
 @AllArgsConstructor
 public class User {
 
-	@JsonProperty("id")
-	private Long id;
+    private Long id;
 
-	@JsonProperty("userName")
-	private String userName;
+    private String userName;
 
-	@JsonProperty("name")
-	private String name;
+    private String name;
 
-	@JsonProperty("mobileNumber")
-	private String mobileNumber;
+    private String mobileNumber;
 
-	@JsonProperty("emailId")
-	private String emailId;
+    private String emailId;
 
-	@JsonProperty("type")
-	private String type;
+    private String type;
 
-    @JsonProperty("permanentAddress")
     private String permanentAddress;
-    
-    @JsonProperty("tenantId")
+
     private String tenantId;
 
-    @JsonProperty("roles")
-	private Set<Role> roles = null;
+    private Set<Role> roles = null;
 }

@@ -11,15 +11,12 @@ import org.egov.common.contract.request.RequestInfo;
 @Setter
 @Getter
 public class UserRequest {
-	@JsonProperty("requestInfo")
+	@JsonProperty("RequestInfo")
 	private RequestInfo requestInfo;
 
-	@JsonProperty("id")
 	private List<Long> id;
 
-	@JsonProperty("userName")
 	private String userName;
 	
-	@JsonProperty("tenantId")
     private String tenantId;
 }

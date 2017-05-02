@@ -12,7 +12,7 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 @Builder
 public class ServiceRequest {
 
-    @JsonProperty("address_id")
+    @JsonProperty("addressId")
     private String crossHierarchyId;
 
     public boolean isCrossHierarchyIdPresent() {

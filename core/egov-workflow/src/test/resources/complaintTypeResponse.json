@@ -1,7 +1,11 @@
-{    
- "ComplaintType" : {                          
- "id" : 2,
- "serviceName" : "Water Problem",
- "serviceCode" : "C001"
- }
+{
+    "responseInfo": null,
+    "complaintTypes": [
+        {
+            "id": 2,
+            "serviceName": "Water Problem",
+            "serviceCode": "C001",
+            "tenantId": "ap.public"
+        }
+    ]
 }

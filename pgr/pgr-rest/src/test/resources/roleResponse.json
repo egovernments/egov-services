@@ -1,13 +1,13 @@
 {
- "ResponseInfo" : {
-  "api_id" : "",
+ "responseInfo" : {
+  "apiId" : "",
   "ver" : "",
   "ts" : "",
-  "res_msg_id" : "",
-  "msg_id" : "",
+  "resMsgId" : "",
+  "msgId" : "",
   "status" : "Successfull message"
   },
- "Employees" : [{
+ "employees" : [{
     "id" : "1",
     "name" : "narasappa",
     "code" : "001",

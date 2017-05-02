@@ -1,7 +1,10 @@
 package org.egov.pgr.employee.enrichment.repository;
 
-import org.egov.pgr.employee.enrichment.repository.contract.ComplaintTypeResponse;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.pgr.employee.enrichment.repository.contract.ComplaintTypeServiceResponse;
+import org.egov.pgr.employee.enrichment.repository.contract.RequestInfoBody;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -19,9 +22,11 @@ public class ComplaintTypeRepository {
     }
 
     public String getComplaintTypeId(String complaintTypeCode, String tenantId) {
-        final ComplaintTypeResponse response =
-            restTemplate.getForObject(this.url, ComplaintTypeResponse.class, complaintTypeCode, tenantId);
-        return String.valueOf(response.getId());
+        final RequestInfoBody requestInfoBody = new RequestInfoBody(RequestInfo.builder().build());
+
+        final HttpEntity<RequestInfoBody> request = new HttpEntity<>(requestInfoBody);
+        return String.valueOf(restTemplate.postForObject(url, request, ComplaintTypeServiceResponse.class, complaintTypeCode, tenantId).getComplaintTypes().get(0).getId());
+
     }
 }
 

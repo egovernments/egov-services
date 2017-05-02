@@ -177,6 +177,7 @@
                                         <exclude>org.egov.workflow.persistence.entity.*</exclude>
                                         <exclude>org.egov.workflow.persistence.producer.*</exclude>
                                         <exclude>org.egov.workflow.web.controller.WorkflowControllerAdvice</exclude>
+                                        <exclude>org.egov.workflow.persistence.repository.RequestInfoBody</exclude>
                                     </excludes>
                                     <limits>
                                         <limit>

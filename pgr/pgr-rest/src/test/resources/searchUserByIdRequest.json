@@ -1,5 +1,9 @@
 {
-    "requestInfo": {
+    "id": [
+        67
+    ],
+    "tenantId": "tenantId",
+    "RequestInfo": {
         "apiId": null,
         "ver": null,
         "ts": null,
@@ -11,9 +15,5 @@
         "authToken": null,
         "correlationId": null,
         "userInfo": null
-    },
-    "id": [
-        67
-    ],
-    "tenantId":"tenantId"
+    }
 }

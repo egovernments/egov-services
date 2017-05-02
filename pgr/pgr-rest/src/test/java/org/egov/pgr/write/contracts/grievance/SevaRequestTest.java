@@ -147,7 +147,7 @@ public class SevaRequestTest {
     @SuppressWarnings("unchecked")
     public void test_should_return_receiving_center_as_null_when_not_present_in_request_map() {
         final HashMap<String, Object> sevaRequestMap = SevaRequestMapFactory.create();
-        final HashMap<String, Object> serviceRequest = (HashMap<String, Object>) sevaRequestMap.get("ServiceRequest");
+        final HashMap<String, Object> serviceRequest = (HashMap<String, Object>) sevaRequestMap.get("serviceRequest");
         final HashMap<String, String> values = (HashMap<String, String>) serviceRequest.get("values");
         values.put("receivingCenter", "");
 

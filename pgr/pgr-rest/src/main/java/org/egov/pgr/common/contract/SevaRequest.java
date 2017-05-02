@@ -22,7 +22,6 @@ public class SevaRequest {
     @JsonProperty("RequestInfo")
     private RequestInfo requestInfo;
 
-    @JsonProperty("ServiceRequest")
     private ServiceRequest serviceRequest;
 
     @JsonIgnore
@@ -37,7 +36,7 @@ public class SevaRequest {
 
     @JsonIgnore
     public Long getUserId() {
-        return  getUserInfo() == null ? null : getUserInfo().getId();
+        return getUserInfo() == null ? null : getUserInfo().getId();
     }
 
     @JsonIgnore

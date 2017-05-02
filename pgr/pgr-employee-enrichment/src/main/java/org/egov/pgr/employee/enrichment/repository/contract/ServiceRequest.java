@@ -14,7 +14,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class ServiceRequest {
 
-	@JsonProperty("service_code")
+	@JsonProperty("serviceCode")
 	private String complaintTypeCode;
 
 	@JsonProperty("description")

@@ -1,18 +1,14 @@
 package org.egov.pgr.read.web.contract;
 
-import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+
+import java.util.List;
 
 @AllArgsConstructor
 @Getter
 public class UserResponse {
-	@JsonProperty("responseInfo")
-	ResponseInfo responseInfo;
+    ResponseInfo responseInfo;
 
-	@JsonProperty("user")
-	List<User> user;
+    List<User> user;
 }

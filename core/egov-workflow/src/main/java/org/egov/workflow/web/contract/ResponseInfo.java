@@ -1,4 +1,4 @@
-package org.egov.pgr.read.web.contract;
+package org.egov.workflow.web.contract;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @Builder
-public class ResponseInfo   {
+public class ResponseInfo {
     @JsonProperty("apiId")
     private String apiId;
 

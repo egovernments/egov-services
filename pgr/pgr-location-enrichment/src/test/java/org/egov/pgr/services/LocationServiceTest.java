@@ -42,7 +42,7 @@ public class LocationServiceTest {
         final HashMap<String, String> valuesMap = new HashMap<>();
         valuesMap.put("locationId", "5");
         serviceRequestMap.put("values", valuesMap);
-        sevaRequestMap.put("ServiceRequest", serviceRequestMap);
+        sevaRequestMap.put("serviceRequest", serviceRequestMap);
         final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
 
         final SevaRequest actualSevaRequest = locationService.enrich(sevaRequest);
@@ -59,7 +59,7 @@ public class LocationServiceTest {
         serviceRequestMap.put("lat", 1.2d);
         serviceRequestMap.put("lng", 4.5d);
         serviceRequestMap.put("tenantId","ap.public");
-        sevaRequestMap.put("ServiceRequest", serviceRequestMap);
+        sevaRequestMap.put("serviceRequest", serviceRequestMap);
         final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
 
         final BoundaryResponse boundaryResponse = new BoundaryResponse(LOCATION_ID, BOUNDARY_NAME);
@@ -74,9 +74,9 @@ public class LocationServiceTest {
     public void test_should_set_location_based_on_cross_hierarchy_id_when_present() {
         final HashMap<String, Object> sevaRequestMap = new HashMap<>();
         final HashMap<Object, Object> serviceRequestMap = new HashMap<>();
-        serviceRequestMap.put("address_id", "crossHierarchyId");
+        serviceRequestMap.put("addressId", "crossHierarchyId");
         serviceRequestMap.put("tenantId", "ap.public");
-        sevaRequestMap.put("ServiceRequest", serviceRequestMap);
+        sevaRequestMap.put("serviceRequest", serviceRequestMap);
         final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
         final BoundaryResponse parentBoundaryResponse = new BoundaryResponse(1L, "parent");
         final BoundaryResponse childBoundaryResponse = new BoundaryResponse(2L, "child");

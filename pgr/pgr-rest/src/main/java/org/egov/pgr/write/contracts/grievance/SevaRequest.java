@@ -12,7 +12,7 @@ import static org.hibernate.internal.util.StringHelper.isEmpty;
 
 public class SevaRequest {
 
-    private static final String SERVICE_REQUEST = "ServiceRequest";
+    private static final String SERVICE_REQUEST = "serviceRequest";
     private static final String REQUEST_INFO = "RequestInfo";
     public static final String CITIZEN = "CITIZEN";
 

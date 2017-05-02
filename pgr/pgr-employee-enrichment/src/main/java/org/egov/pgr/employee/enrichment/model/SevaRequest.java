@@ -17,9 +17,9 @@ import static org.egov.pgr.employee.enrichment.repository.contract.WorkflowRespo
 
 public class SevaRequest {
 
-    public final static String SERVICE_REQUEST = "ServiceRequest";
+    public final static String SERVICE_REQUEST = "serviceRequest";
     public final static String REQUEST_INFO = "RequestInfo";
-    public static final String VALUES_ASSIGNEE_ID = "assignment_id";
+    public static final String VALUES_ASSIGNEE_ID = "assignmentId";
     public static final String VALUES_STATE_ID = "stateId";
     private static final String VALUES_DESIGNATION_ID = "designationId";
     private static final String VALUES_DEPARTMENT_ID = "departmentId";
@@ -29,14 +29,14 @@ public class SevaRequest {
     public static final String STATE_DETAILS = "stateDetails";
     private static final String WORKFLOW_TYPE = "Complaint";
     public static final String STATUS = "status";
-    public static final String SERVICE_CODE = "service_code";
+    public static final String SERVICE_CODE = "serviceCode";
     public static final String VALUES_LOCATION_ID = "locationId";
     public static final String VALUES_APPROVAL_COMMENT = "approvalComments";
     public static final String USER_ROLE = "userRole";
-    private static final String SERVICE_REQUEST_ID = "service_request_id";
+    private static final String SERVICE_REQUEST_ID = "serviceRequestId";
     public static final String DEPARTMENT_ID = "departmentId";
     private static final String COMPLAINT_CRN = "crn";
-    private static final String EXPECTED_DATETIME = "expected_datetime";
+    private static final String EXPECTED_DATETIME = "expectedDatetime";
     private static final String TENANT_ID = "tenantId";
     private static final String ESCALATION_HOURS = "escalationHours";
 

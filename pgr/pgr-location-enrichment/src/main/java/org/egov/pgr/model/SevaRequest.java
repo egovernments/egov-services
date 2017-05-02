@@ -13,9 +13,9 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 public class SevaRequest {
 
     private static final String LOCATION_ID = "locationId";
-    private static final String LOCATION_NAME = "location_name";
-    private static final String CHILD_LOCATION_ID = "child_location_id";
-    private final static String SERVICE_REQUEST = "ServiceRequest";
+    private static final String LOCATION_NAME = "locationName";
+    private static final String CHILD_LOCATION_ID = "childLocationId";
+    private final static String SERVICE_REQUEST = "serviceRequest";
     private static final String VALUES = "values";
   
     private final ServiceRequest serviceRequestObject;

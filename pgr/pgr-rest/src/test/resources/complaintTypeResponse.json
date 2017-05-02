@@ -1,6 +1,6 @@
 {
-    "ResponseInfo": null,
-    "ComplaintType": [
+    "responseInfo": null,
+    "complaintTypes": [
         {
             "serviceName": "Building plan sanction",
             "serviceCode": "BPS",

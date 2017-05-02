@@ -1,22 +1,17 @@
-package org.egov.pgr.read.web.contract;
-
-import java.util.List;
+package org.egov.workflow.persistence.repository;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.egov.common.contract.request.RequestInfo;
 
-@Setter
 @Getter
-@Builder
-public class GetUserByIdRequest {
+@Setter
+@AllArgsConstructor
+public class RequestInfoBody {
+
     @JsonProperty("RequestInfo")
     private RequestInfo requestInfo;
 
-    private List<Long> id;
-
-    private String tenantId;
 }

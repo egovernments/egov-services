@@ -3,6 +3,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.pgr.common.contract.ServiceRequest;
 import org.egov.pgr.common.contract.SevaRequest;
 import org.egov.pgr.common.entity.Complaint;
+import org.egov.pgr.common.repository.ComplaintJpaRepository;
 import org.egov.pgr.read.domain.model.ComplaintSearchCriteria;
 import org.junit.Before;
 import org.junit.Test;

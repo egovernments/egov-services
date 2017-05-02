@@ -130,7 +130,7 @@ public class WorkFlowController {
 		ProcessInstanceResponse pres = new ProcessInstanceResponse();
 
 		p = p.builder().id(id).build();
-
+		LOGGER.info("The RequestInfoWrapper :::"+requestInfoWrapper);
 		p = matrixWorkflow.getProcess(tenantId, p, requestInfoWrapper.getRequestInfo());
 		pres.setProcessInstance(p);
 		pres.setResponseInfo(getResponseInfo(requestInfoWrapper.getRequestInfo()));

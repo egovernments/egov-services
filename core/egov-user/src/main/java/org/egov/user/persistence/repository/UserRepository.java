@@ -208,11 +208,11 @@ public class UserRepository {
 			oldUser.setTitle(user.getTitle());
 		if (!isEmpty(user.getType()))
 			oldUser.setType(toEnumType(UserType.class, user.getType()));
-		addressRepository.update(user.getAddresses(), user.getId(), user.getTenantId());
 
 		setEnrichedRolesToUser(oldUser);
 		encryptPassword(oldUser);
 		oldUser.setLastModifiedDate(new Date());
+		addressRepository.update(user.getAddresses(), user.getId(), user.getTenantId());
 		return userJpaRepository.save(oldUser).toDomain(user.getCorrespondenceAddress(), user.getPermanentAddress());
 	}
 }

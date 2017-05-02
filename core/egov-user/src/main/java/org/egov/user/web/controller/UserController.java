@@ -67,7 +67,7 @@ public class UserController {
 		return createResponse(updatedUser);
 	}
 
-	@PostMapping("/_patch")
+	@PostMapping("/profile/_update")
 	public UserDetailResponse patch(@RequestBody final CreateUserRequest createUserRequest) {
 		User user = createUserRequest.toDomain();
 		final User updatedUser = userService.partialUpdate(user);

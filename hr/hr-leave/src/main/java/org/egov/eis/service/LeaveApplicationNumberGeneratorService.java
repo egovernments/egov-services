@@ -42,7 +42,7 @@ public class LeaveApplicationNumberGeneratorService {
 				sequenceNumber = dbSequenceGenerator.createAndGetNextSequence(sequenceName);
 			}
 
-			return String.format("%05d-%02s-%04s", sequenceNumber, currentMonth, currentYear);
+			return String.format("%05d-%s-%s", sequenceNumber, currentMonth, currentYear);
 		} catch (final SQLException e) {
 			throw new RuntimeException("Error occurred while generating Leave Application Number", e);
 		}

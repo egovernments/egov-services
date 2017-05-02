@@ -208,7 +208,7 @@ public class WorkflowMatrixImpl implements Workflow {
 		state.setValue(nextState);
 		state.setComments(task.getComments());
 		state.setSenderName(taskRequest.getRequestInfo().getUserInfo().getName());
-		if (owner != null)
+		if (owner != null && owner.getId() != null)
 			state.setOwnerPosition(owner.getId());
 		else
 			state.setOwnerPosition(task.getAssignee().getId());

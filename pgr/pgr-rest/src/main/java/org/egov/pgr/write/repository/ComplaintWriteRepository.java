@@ -5,9 +5,9 @@ import org.egov.pgr.common.entity.Complaint;
 import org.egov.pgr.common.entity.ComplaintType;
 import org.egov.pgr.common.entity.ReceivingCenter;
 import org.egov.pgr.common.repository.ComplaintTypeJpaRepository;
-import org.egov.pgr.common.repository.ReceivingCenterRepository;
-import org.egov.pgr.common.repository.ReceivingModeRepository;
-import org.egov.pgr.read.persistence.repository.ComplaintJpaRepository;
+import org.egov.pgr.common.repository.ComplaintJpaRepository;
+import org.egov.pgr.common.repository.ReceivingCenterJpaRepository;
+import org.egov.pgr.common.repository.ReceivingModeJpaRepository;
 import org.egov.pgr.write.model.ComplaintRecord;
 import org.springframework.stereotype.Service;
 
@@ -17,13 +17,13 @@ import java.util.Date;
 public class ComplaintWriteRepository {
 
     private ComplaintJpaRepository complaintJpaRepository;
-    private ReceivingModeRepository receivingModeRepository;
-    private ReceivingCenterRepository receivingCenterRepository;
+    private ReceivingModeJpaRepository receivingModeRepository;
+    private ReceivingCenterJpaRepository receivingCenterRepository;
     private ComplaintTypeJpaRepository complaintTypeJpaRepository;
 
 
     public ComplaintWriteRepository(ComplaintJpaRepository complaintJpaRepository,
-            ReceivingModeRepository receivingModeRepository, ReceivingCenterRepository receivingCenterRepository) {
+            ReceivingModeJpaRepository receivingModeRepository, ReceivingCenterJpaRepository receivingCenterRepository) {
         this.complaintJpaRepository = complaintJpaRepository;
         this.receivingModeRepository = receivingModeRepository;
         this.receivingCenterRepository = receivingCenterRepository;

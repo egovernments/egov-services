@@ -2,8 +2,8 @@ package org.egov.pgr.read.web.controller;
 
 import org.egov.pgr.TestConfiguration;
 
+import org.egov.pgr.read.domain.model.ReceivingMode;
 import org.egov.pgr.read.domain.service.ReceivingModeService;
-import org.egov.pgr.common.entity.ReceivingMode;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +20,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.Mockito.when;
@@ -44,12 +45,13 @@ public class ReceivingModeControllerTest {
 	@Test
 	public void testGetReceivingModes() throws Exception {
         String tenantId = "ap.public";
-		List<ReceivingMode> recievingModes =getReceivingModes();
-		when(mockReceivingModeService.getAllReceivingModes(tenantId)).thenReturn(recievingModes);
+		List<ReceivingMode> receivingModes =getReceivingModes();
+		when(mockReceivingModeService.getAllReceivingModes(tenantId)).thenReturn(receivingModes);
 		  String expectedContent = readResource("getServiceRequests.json");
 		mockMvc.perform(
-				post("/receivingmode?tenantId=" + tenantId))
-		.andExpect(status().isOk()).andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+				post("/receivingmode/_search?tenantId=ap.public"))
+		.andExpect(status().isOk())
+		.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 		.andExpect(content().json(expectedContent));
 
 	}
@@ -57,11 +59,11 @@ public class ReceivingModeControllerTest {
 	private String readResource(String string) throws Exception{
 	      File file = ResourceUtils.getFile(this.getClass().getResource("/getReceivingModes.json"));
 	        return new String(Files.readAllBytes(Paths.get(file.getAbsolutePath())));
-		
+
 	}
 
 	private List<ReceivingMode> getReceivingModes() {
-		
+
 		ReceivingMode receivingMode1=ReceivingMode.builder().id(1L).name("Website").code("WEBSITE").tenantId("ap.public").build();
 		ReceivingMode receivingMode2=ReceivingMode.builder().id(2L).name("SMS").tenantId("ap.public").code("SMS").build();
 		return Arrays.asList(receivingMode1,receivingMode2);

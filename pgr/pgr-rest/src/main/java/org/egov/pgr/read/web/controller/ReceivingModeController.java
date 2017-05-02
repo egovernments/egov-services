@@ -3,7 +3,8 @@ package org.egov.pgr.read.web.controller;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import org.egov.pgr.common.entity.ReceivingMode;
+
+
 import org.egov.pgr.read.domain.service.ReceivingModeService;
 import org.egov.pgr.read.web.contract.ReceivingModeResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,17 +17,21 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/receivingmode")
 public class ReceivingModeController {
 
-	@Autowired
-	private ReceivingModeService receivingModeService;
+    private ReceivingModeService receivingModeService;
 
-	@PostMapping
-	public ReceivingModeResponse getAll(@RequestParam(value = "tenantId",defaultValue="default") final String tenantId) {
+    @Autowired
+    public ReceivingModeController(ReceivingModeService receivingModeService) {
+        this.receivingModeService = receivingModeService;
+    }
+
+	@PostMapping(value="/_search")
+	public ReceivingModeResponse getAll(@RequestParam(value = "tenantId",defaultValue="default") final String tenantId){
 	
-		List<ReceivingMode> receivingModes  = receivingModeService.getAllReceivingModes(tenantId);
+		List<org.egov.pgr.read.domain.model.ReceivingMode> receivingModes  = receivingModeService
+            .getAllReceivingModes(tenantId);
 		List<org.egov.pgr.read.web.contract.ReceivingMode> receivingMode = receivingModes.stream()
 				.map(org.egov.pgr.read.web.contract.ReceivingMode::new).collect(Collectors.toList());
-
-		return new ReceivingModeResponse(null,receivingMode);
+        return new ReceivingModeResponse(null,receivingMode);
 
 	}
 }

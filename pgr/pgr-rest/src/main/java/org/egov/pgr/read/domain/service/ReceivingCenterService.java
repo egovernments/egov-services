@@ -41,9 +41,7 @@
 package org.egov.pgr.read.domain.service;
 
 import java.util.List;
-
-import org.egov.pgr.common.entity.ReceivingCenter;
-import org.egov.pgr.common.repository.ReceivingCenterRepository;
+import org.egov.pgr.read.persistence.repository.ReceivingCenterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -57,11 +55,11 @@ public class ReceivingCenterService {
 		this.receivingCenterRepository = receivingCenterRepository;
 	}
 
-	public List<ReceivingCenter> getAllReceivingCenters(String tenantId) {
-		return receivingCenterRepository.findAllByTenantId(tenantId);
+	public List<org.egov.pgr.read.domain.model.ReceivingCenter> getAllReceivingCenters(String tenantId) {
+		return receivingCenterRepository.findAllReceivingCentersByTenantId(tenantId);
 	}
 
-	public ReceivingCenter getReceivingCenterById(String tenantId,Long id) {
-		return receivingCenterRepository.findByIdAndTenantId(id,tenantId);
+	public org.egov.pgr.read.domain.model.ReceivingCenter getReceivingCenterById(String tenantId,Long id) {
+		return receivingCenterRepository.findReceivingCenterByIdAndTenantId(id,tenantId);
 	}
 }

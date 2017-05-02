@@ -10,6 +10,7 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class RequestInfo {
 
     private String apiId;

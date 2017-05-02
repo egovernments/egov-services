@@ -55,11 +55,11 @@ public class ReceivingCenterService {
 		this.receivingCenterRepository = receivingCenterRepository;
 	}
 
-	public List<org.egov.pgr.read.domain.model.ReceivingCenter> getAllReceivingCenters(String tenantId) {
+	public List<org.egov.pgr.common.model.ReceivingCenter> getAllReceivingCenters(String tenantId) {
 		return receivingCenterRepository.findAllReceivingCentersByTenantId(tenantId);
 	}
 
-	public org.egov.pgr.read.domain.model.ReceivingCenter getReceivingCenterById(String tenantId,Long id) {
+	public org.egov.pgr.common.model.ReceivingCenter getReceivingCenterById(String tenantId,Long id) {
 		return receivingCenterRepository.findReceivingCenterByIdAndTenantId(id,tenantId);
 	}
 }

@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 
-import org.egov.pgr.read.domain.model.ReceivingMode;
+import org.egov.pgr.common.model.ReceivingMode;
 import org.egov.pgr.read.persistence.repository.ReceivingModeRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;

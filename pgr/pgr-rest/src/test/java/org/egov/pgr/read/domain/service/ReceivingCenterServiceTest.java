@@ -6,9 +6,7 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-
-import org.egov.pgr.read.domain.model.ReceivingCenter;
+import org.egov.pgr.common.model.ReceivingCenter;
 import org.egov.pgr.read.persistence.repository.ReceivingCenterRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;

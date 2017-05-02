@@ -33,6 +33,7 @@ public class ReceivingModeJpaRepositoryTest {
 
 		assertEquals(6, actualResult.size());
 	}
+
 	@Test
     @Sql(scripts = { "/sql/clearReceivingMode.sql", "/sql/InsertReceivingModeData.sql" })
     public void test_should_find_receivingmode_when_code_isProvided(){

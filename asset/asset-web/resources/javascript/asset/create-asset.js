@@ -470,7 +470,7 @@ class CreateAsset extends React.Component {
         }
         innerJSON = {
             ...this.state.assetSet[pName],
-            [name]: values;
+            [name]: values
         };
       } else {
         innerJSON = {

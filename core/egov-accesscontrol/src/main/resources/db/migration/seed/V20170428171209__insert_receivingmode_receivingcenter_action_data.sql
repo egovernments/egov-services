@@ -1,0 +1,4 @@
+insert into eg_action(id, name,url,servicecode,queryparams,parentmodule,ordernumber,displayname,enabled,createdby,createddate,lastmodifiedby,lastmodifieddate,tenantId)
+values(nextval('SEQ_EG_ACTION'),'Get all ReceivingMode','/pgr/receivingmode/_search','PGR','tenantId=',(select code from service where name ='PGR' and contextroot='pgr'),null,'Get all ReceivingMode',false,1,now(),1,now(),'ap.public');
+insert into eg_action(id, name,url,servicecode,queryparams,parentmodule,ordernumber,displayname,enabled,createdby,createddate,lastmodifiedby,lastmodifieddate,tenantId)
+values(nextval('SEQ_EG_ACTION'),'Get all ReceivingCenters','/pgr/receivingcenter/_search','PGR','tenantId=',(select code from service where name ='PGR' and contextroot='pgr'),null,'Get all ReceivingMode',false,1,now(),1,now(),'ap.public');

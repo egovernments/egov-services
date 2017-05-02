@@ -40,26 +40,25 @@
 
 package org.egov.commons.web.contract;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.Module;
+import java.util.List;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
+import org.egov.commons.model.UOMCategory;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@AllArgsConstructor
-@EqualsAndHashCode
-@Getter
-@NoArgsConstructor
 @Setter
+@Getter
 @ToString
-public class ModuleRequest {
-	@JsonProperty("RequestInfo")
-	private RequestInfo requestInfo;
+public class UOMCategoryResponse {
+	
+	@JsonProperty("ResponseInfo")
+	private ResponseInfo responseInfo;
+	
+	@JsonProperty("UOMCategory")
+	private List<UOMCategory> uomCategory;
 
-	@JsonProperty("Module")
-	private Module module;
 }

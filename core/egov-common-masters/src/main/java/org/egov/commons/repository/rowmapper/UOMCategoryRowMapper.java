@@ -38,28 +38,29 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.commons.web.contract;
+package org.egov.commons.repository.rowmapper;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.Module;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import org.egov.commons.model.UOMCategory;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
-@AllArgsConstructor
-@EqualsAndHashCode
-@Getter
-@NoArgsConstructor
-@Setter
-@ToString
-public class ModuleRequest {
-	@JsonProperty("RequestInfo")
-	private RequestInfo requestInfo;
+@Component
+public class UOMCategoryRowMapper implements RowMapper<UOMCategory> {
 
-	@JsonProperty("Module")
-	private Module module;
+	@Override
+	public UOMCategory mapRow(ResultSet rs, int arg1) throws SQLException {
+
+		UOMCategory uomCategory = new UOMCategory();
+		uomCategory.setId((Long) rs.getObject("id"));
+		uomCategory.setName(rs.getString("name"));
+		uomCategory.setDescription(rs.getString("description"));
+		uomCategory.setActive((Boolean) rs.getObject("active"));
+		uomCategory.setTenantId(rs.getString("tenantId"));
+
+		return uomCategory;
+	}
+
 }

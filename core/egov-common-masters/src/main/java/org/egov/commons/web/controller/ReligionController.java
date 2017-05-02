@@ -111,7 +111,7 @@ public class ReligionController {
 	}
 
 	/**
-	 * Populate Response object and returnreligionsList
+	 * Populate Response object and returns religions List
 	 * 
 	 * @param religionsList
 	 * @return

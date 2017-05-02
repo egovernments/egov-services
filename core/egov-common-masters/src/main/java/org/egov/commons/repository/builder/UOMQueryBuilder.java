@@ -43,102 +43,101 @@ package org.egov.commons.repository.builder;
 import java.util.List;
 
 import org.egov.commons.config.ApplicationProperties;
-import org.egov.commons.web.contract.ModuleGetRequest;
+import org.egov.commons.web.contract.UOMGetRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ModuleQueryBuilder {
-	private static final Logger logger = LoggerFactory.getLogger(ModuleQueryBuilder.class);
+public class UOMQueryBuilder {
+
+	private static final Logger logger = LoggerFactory.getLogger(UOMQueryBuilder.class);
 
 	@Autowired
 	private ApplicationProperties applicationProperties;
 
-	private static final String BASE_QUERY = "SELECT id, name, enabled, contextroot, parentmodule, displayname, ordernumber FROM eg_module";
+	private static final String BASE_QUERY = "SELECT uc.id AS uc_id, uc.name AS uc_name, uc.description AS uc_description,"
+			+ " uc.active AS uc_active, uc.tenantId AS uc_tenantId,"
+			+ " u.id AS u_id, u.code AS u_code, u.description AS u_description, u.categoryId AS u_categoryId,"
+			+ " u.active AS u_active, u.coversionFactor AS u_coversionFactor, u.baseuom AS u_baseuom,"
+			+ " u.createdBy AS u_createdBy, u.createdDate AS u_createdDate, u.lastModifiedBy AS u_lastModifiedBy,"
+			+ " u.lastModifiedDate AS u_lastModifiedDate, u.tenantId AS u_tenantId"
+			+ " FROM eg_uom u"
+			+ " LEFT JOIN eg_uomCategory uc ON uc.id = u.categoryId AND uc.tenantId = u.tenantId";
 
 	@SuppressWarnings("rawtypes")
-	public String getQuery(ModuleGetRequest moduleGetRequest, List preparedStatementValues) {
+	public String getQuery(UOMGetRequest uomGetRequest, List preparedStatementValues) {
 		StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
 
-		addWhereClause(selectQuery, preparedStatementValues, moduleGetRequest);
-		addOrderByClause(selectQuery, moduleGetRequest);
-		addPagingClause(selectQuery, preparedStatementValues, moduleGetRequest);
+		addWhereClause(selectQuery, preparedStatementValues, uomGetRequest);
+		addOrderByClause(selectQuery, uomGetRequest);
+		addPagingClause(selectQuery, preparedStatementValues, uomGetRequest);
 
 		logger.debug("Query : " + selectQuery);
 		return selectQuery.toString();
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void addWhereClause(StringBuilder selectQuery, List preparedStatementValues,
-			ModuleGetRequest moduleGetRequest) {
+	private void addWhereClause(StringBuilder selectQuery, List preparedStatementValues, UOMGetRequest uomGetRequest) {
 
-		if (moduleGetRequest.getId() == null && moduleGetRequest.getName() == null
-				&& moduleGetRequest.getTenantId() == null)
+		if (uomGetRequest.getId() == null && uomGetRequest.getCode() == null && uomGetRequest.getActive() == null
+				&& uomGetRequest.getCategoryId() == null && uomGetRequest.getTenantId() == null)
 			return;
 
 		selectQuery.append(" WHERE");
 		boolean isAppendAndClause = false;
 
-		if (moduleGetRequest.getTenantId() != null) {
+		if (uomGetRequest.getTenantId() != null) {
 			isAppendAndClause = true;
-			selectQuery.append(" tenantId = ?");
-			preparedStatementValues.add(moduleGetRequest.getTenantId());
+			selectQuery.append(" u.tenantId = ?");
+			preparedStatementValues.add(uomGetRequest.getTenantId());
 		}
 
-		if (moduleGetRequest.getId() != null) {
+		if (uomGetRequest.getId() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" id IN " + getIdQuery(moduleGetRequest.getId()));
+			selectQuery.append(" u.id IN " + getIdQuery(uomGetRequest.getId()));
 		}
 
-		if (moduleGetRequest.getName() != null) {
+		if (uomGetRequest.getCode() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" name = ?");
-			preparedStatementValues.add(moduleGetRequest.getName());
+			selectQuery.append(" u.code = ?");
+			preparedStatementValues.add(uomGetRequest.getCode());
 		}
 
-		if (moduleGetRequest.getEnabled() != null) {
+		if (uomGetRequest.getActive() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" enabled = ?");
-			preparedStatementValues.add(moduleGetRequest.getEnabled());
-		}
-		if (moduleGetRequest.getContextRoot() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" contextroot = ?");
-			preparedStatementValues.add(moduleGetRequest.getContextRoot());
+			selectQuery.append(" u.active = ?");
+			preparedStatementValues.add(uomGetRequest.getActive());
 		}
 
-		if (moduleGetRequest.getParentModule() != null) {
+		if (uomGetRequest.getCategoryId() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" parentmodule = ?");
-			preparedStatementValues.add(moduleGetRequest.getParentModule());
+			selectQuery.append(" u.categoryId IN " + getIdQuery(uomGetRequest.getCategoryId()));
 		}
 	}
 
-	private void addOrderByClause(StringBuilder selectQuery, ModuleGetRequest moduleGetRequest) {
-		String sortBy = (moduleGetRequest.getSortBy() == null ? "name" : moduleGetRequest.getSortBy());
-		String sortOrder = (moduleGetRequest.getSortOrder() == null ? "ASC" : moduleGetRequest.getSortOrder());
+	private void addOrderByClause(StringBuilder selectQuery, UOMGetRequest uomGetRequest) {
+		String sortBy = (uomGetRequest.getSortBy() == null ? "u.code" : uomGetRequest.getSortBy());
+		String sortOrder = (uomGetRequest.getSortOrder() == null ? "ASC" : uomGetRequest.getSortOrder());
 		selectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void addPagingClause(StringBuilder selectQuery, List preparedStatementValues,
-			ModuleGetRequest moduleGetRequest) {
+	private void addPagingClause(StringBuilder selectQuery, List preparedStatementValues, UOMGetRequest uomGetRequest) {
 		// handle limit(also called pageSize) here
 		selectQuery.append(" LIMIT ?");
 		long pageSize = Integer.parseInt(applicationProperties.commonsSearchPageSizeDefault());
-		if (moduleGetRequest.getPageSize() != null)
-			pageSize = moduleGetRequest.getPageSize();
+		if (uomGetRequest.getPageSize() != null)
+			pageSize = uomGetRequest.getPageSize();
 		preparedStatementValues.add(pageSize); // Set limit to pageSize
 
 		// handle offset here
 		selectQuery.append(" OFFSET ?");
 		int pageNumber = 0; // Default pageNo is zero meaning first page
-		if (moduleGetRequest.getPageNumber() != null)
-			pageNumber = moduleGetRequest.getPageNumber() - 1;
-		preparedStatementValues.add(pageNumber * pageSize); // Set offset to
-															// pageNo * pageSize
+		if (uomGetRequest.getPageNumber() != null)
+			pageNumber = uomGetRequest.getPageNumber() - 1;
+		preparedStatementValues.add(pageNumber * pageSize); // Set offset to pageNo * pageSize
 	}
 
 	/**

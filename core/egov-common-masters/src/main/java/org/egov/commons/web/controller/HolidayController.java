@@ -224,7 +224,7 @@ public class HolidayController {
 	}
 
 	/**
-	 * Populate Response object and returnholidaysList
+	 * Populate Response object and returns holidays List
 	 * 
 	 * @param holidaysList
 	 * @return

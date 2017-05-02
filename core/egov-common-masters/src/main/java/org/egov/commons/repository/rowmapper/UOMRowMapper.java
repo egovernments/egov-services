@@ -40,25 +40,58 @@
 
 package org.egov.commons.repository.rowmapper;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-import org.egov.commons.model.Module;
+import org.egov.commons.model.UOM;
+import org.egov.commons.model.UOMCategory;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ModuleRowMapper implements RowMapper<Module> {
+public class UOMRowMapper implements RowMapper<UOM> {
+
 	@Override
-	public Module mapRow(ResultSet rs, int rowNum) throws SQLException {
-		Module module = new Module();
-		module.setId(rs.getLong("id"));
-		module.setName(rs.getString("name"));
-		module.setEnabled((Boolean) rs.getObject("enabled"));
-		module.setContextRoot(rs.getString("contextroot"));
-		module.setParentModule((Long) rs.getObject("parentmodule"));
-		module.setDisplayName(rs.getString("displayname"));
-		module.setOrderNumber((Long) rs.getObject("ordernumber"));
-		return module;
+	public UOM mapRow(ResultSet rs, int arg1) throws SQLException {
+		final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
+		UOM uom = new UOM();
+		uom.setId((Long) rs.getObject("u_id"));
+		uom.setCode(rs.getString("u_code"));
+		uom.setDescription(rs.getString("u_description"));
+		uom.setActive((Boolean) rs.getObject("u_active"));
+		uom.setCoversionFactor((Float) rs.getObject("u_coversionFactor"));
+		uom.setBaseuom((Boolean) rs.getObject("u_baseuom"));
+		uom.setTenantId(rs.getString("u_tenantId"));
+		uom.setCreatedBy((Long) rs.getObject("u_createdBy"));
+		uom.setLastModifiedBy((Long) rs.getObject("u_lastModifiedBy"));
+		try {
+			Date date = isEmpty(rs.getDate("u_createdDate")) ? null
+					: sdf.parse(sdf.format(rs.getDate("u_createdDate")));
+			uom.setCreatedDate(date);
+			date = isEmpty(rs.getDate("u_lastModifiedDate")) ? null
+					: sdf.parse(sdf.format(rs.getDate("u_lastModifiedDate")));
+			uom.setLastModifiedDate(date);
+		} catch (ParseException e) {
+			e.printStackTrace();
+			throw new SQLException("Parse exception while parsing date");
+		}
+
+		UOMCategory uomCategory = new UOMCategory();
+		uomCategory.setId((Long) rs.getObject("uc_id"));
+		uomCategory.setName(rs.getString("uc_name"));
+		uomCategory.setDescription(rs.getString("uc_description"));
+		uomCategory.setActive((Boolean) rs.getObject("uc_active"));
+		uomCategory.setTenantId(rs.getString("uc_tenantId"));
+
+		uom.setCategory(uomCategory);
+
+		return uom;
 	}
+
 }

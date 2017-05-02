@@ -18,8 +18,8 @@
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with this program. If not, see http://www.gnu.org/licenses/ or
- *  http://www.gnu.org/licenses/gpl.html .
+ *  along with this program. If not, see http://www.gnorg/licenses/ or
+ *  http://www.gnorg/licenses/gpl.html .
  *
  *  In addition to the terms of the GPL license to be adhered to in using this
  *  program, the following additional terms are to be complied with:
@@ -43,102 +43,90 @@ package org.egov.commons.repository.builder;
 import java.util.List;
 
 import org.egov.commons.config.ApplicationProperties;
-import org.egov.commons.web.contract.ModuleGetRequest;
+import org.egov.commons.web.contract.UOMCategoryGetRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ModuleQueryBuilder {
-	private static final Logger logger = LoggerFactory.getLogger(ModuleQueryBuilder.class);
+public class UOMCategoryQueryBuilder {
+
+	private static final Logger logger = LoggerFactory.getLogger(UOMCategoryQueryBuilder.class);
 
 	@Autowired
 	private ApplicationProperties applicationProperties;
 
-	private static final String BASE_QUERY = "SELECT id, name, enabled, contextroot, parentmodule, displayname, ordernumber FROM eg_module";
+	private static final String BASE_QUERY = "SELECT id, name, description, active, tenantId"
+			+ " FROM eg_uomCategory";
 
 	@SuppressWarnings("rawtypes")
-	public String getQuery(ModuleGetRequest moduleGetRequest, List preparedStatementValues) {
+	public String getQuery(UOMCategoryGetRequest uomCategoryGetRequest, List preparedStatementValues) {
 		StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
 
-		addWhereClause(selectQuery, preparedStatementValues, moduleGetRequest);
-		addOrderByClause(selectQuery, moduleGetRequest);
-		addPagingClause(selectQuery, preparedStatementValues, moduleGetRequest);
+		addWhereClause(selectQuery, preparedStatementValues, uomCategoryGetRequest);
+		addOrderByClause(selectQuery, uomCategoryGetRequest);
+		addPagingClause(selectQuery, preparedStatementValues, uomCategoryGetRequest);
 
 		logger.debug("Query : " + selectQuery);
 		return selectQuery.toString();
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void addWhereClause(StringBuilder selectQuery, List preparedStatementValues,
-			ModuleGetRequest moduleGetRequest) {
+	private void addWhereClause(StringBuilder selectQuery, List preparedStatementValues, UOMCategoryGetRequest uomCategoryGetRequest) {
 
-		if (moduleGetRequest.getId() == null && moduleGetRequest.getName() == null
-				&& moduleGetRequest.getTenantId() == null)
+		if (uomCategoryGetRequest.getId() == null && uomCategoryGetRequest.getName() == null
+				&& uomCategoryGetRequest.getActive() == null && uomCategoryGetRequest.getTenantId() == null)
 			return;
 
 		selectQuery.append(" WHERE");
 		boolean isAppendAndClause = false;
 
-		if (moduleGetRequest.getTenantId() != null) {
+		if (uomCategoryGetRequest.getTenantId() != null) {
 			isAppendAndClause = true;
 			selectQuery.append(" tenantId = ?");
-			preparedStatementValues.add(moduleGetRequest.getTenantId());
+			preparedStatementValues.add(uomCategoryGetRequest.getTenantId());
 		}
 
-		if (moduleGetRequest.getId() != null) {
+		if (uomCategoryGetRequest.getId() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" id IN " + getIdQuery(moduleGetRequest.getId()));
+			selectQuery.append(" id IN " + getIdQuery(uomCategoryGetRequest.getId()));
 		}
 
-		if (moduleGetRequest.getName() != null) {
+		if (uomCategoryGetRequest.getName() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" name = ?");
-			preparedStatementValues.add(moduleGetRequest.getName());
+			preparedStatementValues.add(uomCategoryGetRequest.getName());
 		}
 
-		if (moduleGetRequest.getEnabled() != null) {
+		if (uomCategoryGetRequest.getActive() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" enabled = ?");
-			preparedStatementValues.add(moduleGetRequest.getEnabled());
-		}
-		if (moduleGetRequest.getContextRoot() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" contextroot = ?");
-			preparedStatementValues.add(moduleGetRequest.getContextRoot());
-		}
-
-		if (moduleGetRequest.getParentModule() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" parentmodule = ?");
-			preparedStatementValues.add(moduleGetRequest.getParentModule());
+			selectQuery.append(" active = ?");
+			preparedStatementValues.add(uomCategoryGetRequest.getActive());
 		}
 	}
 
-	private void addOrderByClause(StringBuilder selectQuery, ModuleGetRequest moduleGetRequest) {
-		String sortBy = (moduleGetRequest.getSortBy() == null ? "name" : moduleGetRequest.getSortBy());
-		String sortOrder = (moduleGetRequest.getSortOrder() == null ? "ASC" : moduleGetRequest.getSortOrder());
+	private void addOrderByClause(StringBuilder selectQuery, UOMCategoryGetRequest uomCategoryGetRequest) {
+		String sortBy = (uomCategoryGetRequest.getSortBy() == null ? "name" : uomCategoryGetRequest.getSortBy());
+		String sortOrder = (uomCategoryGetRequest.getSortOrder() == null ? "ASC" : uomCategoryGetRequest.getSortOrder());
 		selectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void addPagingClause(StringBuilder selectQuery, List preparedStatementValues,
-			ModuleGetRequest moduleGetRequest) {
+	private void addPagingClause(StringBuilder selectQuery, List preparedStatementValues, UOMCategoryGetRequest uomCategoryGetRequest) {
 		// handle limit(also called pageSize) here
 		selectQuery.append(" LIMIT ?");
 		long pageSize = Integer.parseInt(applicationProperties.commonsSearchPageSizeDefault());
-		if (moduleGetRequest.getPageSize() != null)
-			pageSize = moduleGetRequest.getPageSize();
+		if (uomCategoryGetRequest.getPageSize() != null)
+			pageSize = uomCategoryGetRequest.getPageSize();
 		preparedStatementValues.add(pageSize); // Set limit to pageSize
 
 		// handle offset here
 		selectQuery.append(" OFFSET ?");
 		int pageNumber = 0; // Default pageNo is zero meaning first page
-		if (moduleGetRequest.getPageNumber() != null)
-			pageNumber = moduleGetRequest.getPageNumber() - 1;
-		preparedStatementValues.add(pageNumber * pageSize); // Set offset to
-															// pageNo * pageSize
+		if (uomCategoryGetRequest.getPageNumber() != null)
+			pageNumber = uomCategoryGetRequest.getPageNumber() - 1;
+		preparedStatementValues.add(pageNumber * pageSize); // Set offset to pageNo * pageSize
 	}
 
 	/**

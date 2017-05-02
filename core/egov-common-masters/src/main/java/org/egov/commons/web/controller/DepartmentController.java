@@ -111,7 +111,7 @@ public class DepartmentController {
 	}
 
 	/**
-	 * Populate Response object and returndepartmentsList
+	 * Populate Response object and returns departments List
 	 * 
 	 * @param departmentsList
 	 * @return

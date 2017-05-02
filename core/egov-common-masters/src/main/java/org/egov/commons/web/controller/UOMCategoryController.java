@@ -44,13 +44,13 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.egov.commons.model.Module;
-import org.egov.commons.service.ModuleService;
-import org.egov.commons.web.contract.ModuleGetRequest;
-import org.egov.commons.web.contract.ModuleResponse;
+import org.egov.commons.model.UOMCategory;
+import org.egov.commons.service.UOMCategoryService;
 import org.egov.commons.web.contract.RequestInfo;
 import org.egov.commons.web.contract.RequestInfoWrapper;
 import org.egov.commons.web.contract.ResponseInfo;
+import org.egov.commons.web.contract.UOMCategoryGetRequest;
+import org.egov.commons.web.contract.UOMCategoryResponse;
 import org.egov.commons.web.contract.factory.ResponseInfoFactory;
 import org.egov.commons.web.errorhandlers.ErrorHandler;
 import org.slf4j.Logger;
@@ -67,21 +67,23 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/modules")
-public class ModuleController {
-	private static final Logger logger = LoggerFactory.getLogger(ModuleController.class);
+@RequestMapping("/uomcategories")
+public class UOMCategoryController {
+
+	private static final Logger logger = LoggerFactory.getLogger(UOMCategoryController.class);
+
 	@Autowired
-	private ModuleService moduleService;
+	private UOMCategoryService uomCategoryService;
+
+	@Autowired
+	private ResponseInfoFactory responseInfoFactory;
 
 	@Autowired
 	private ErrorHandler errHandler;
 
-	@Autowired
-	private ResponseInfoFactory responseInfoFactory;
-	
 	@PostMapping("_search")
 	@ResponseBody
-	public ResponseEntity<?> search(@ModelAttribute @Valid ModuleGetRequest moduleGetRequest,
+	public ResponseEntity<?> search(@ModelAttribute @Valid UOMCategoryGetRequest uomCategoryGetRequest,
 			BindingResult modelAttributeBindingResult, @RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
 			BindingResult requestBodyBindingResult) {
 		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
@@ -97,30 +99,29 @@ public class ModuleController {
 		}
 
 		// Call service
-		List<Module> modulesList = null;
+		List<UOMCategory> uomCategoriesList = null;
 		try {
-			modulesList = moduleService.getModules(moduleGetRequest);
+			uomCategoriesList = uomCategoryService.getUOMCategories(uomCategoryGetRequest);
 		} catch (Exception exception) {
-			logger.error("Error while processing request " + moduleGetRequest, exception);
+			logger.error("Error while processing request " + uomCategoryGetRequest, exception);
 			return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
 		}
-
-		return getSuccessResponse(modulesList, requestInfo);
+		return getSuccessResponse(uomCategoriesList, requestInfo);
 	}
-	
+
 	/**
-	 * Populate Response object and returns modules List
+	 * Populate Response object and returns uomCategories List
 	 * 
-	 * @param modulesList
+	 * @param uomCategoriesList
 	 * @return
 	 */
-	private ResponseEntity<?> getSuccessResponse(List<Module> modulesList, RequestInfo requestInfo) {
-		ModuleResponse moduleRes = new ModuleResponse();
-		moduleRes.setModules(modulesList);
+	private ResponseEntity<?> getSuccessResponse(List<UOMCategory> uomCategoriesList, RequestInfo requestInfo) {
+		UOMCategoryResponse uomCategoryResponse = new UOMCategoryResponse();
+		uomCategoryResponse.setUomCategory(uomCategoriesList);
 		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 		responseInfo.setStatus(HttpStatus.OK.toString());
-		moduleRes.setResponseInfo(responseInfo);
-		return new ResponseEntity<ModuleResponse>(moduleRes, HttpStatus.OK);
+		uomCategoryResponse.setResponseInfo(responseInfo);
+		return new ResponseEntity<UOMCategoryResponse>(uomCategoryResponse, HttpStatus.OK);
 
 	}
 }

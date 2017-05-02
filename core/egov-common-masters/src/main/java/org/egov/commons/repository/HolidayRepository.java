@@ -47,7 +47,6 @@ import java.util.Map;
 
 import org.egov.commons.model.CalendarYear;
 import org.egov.commons.model.Holiday;
-import org.egov.commons.repository.builder.CalendarYearQueryBuilder;
 import org.egov.commons.repository.builder.HolidayQueryBuilder;
 import org.egov.commons.repository.rowmapper.HolidayRowMapper;
 import org.egov.commons.web.contract.HolidayGetRequest;
@@ -71,9 +70,6 @@ public class HolidayRepository {
 
 	@Autowired
 	private HolidayQueryBuilder holidayQueryBuilder;
-
-	@Autowired
-	private CalendarYearQueryBuilder calendarYearQueryBuilder;
 
 	@Autowired
 	private CalendarYearRepository calendarYearRepository;

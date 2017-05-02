@@ -44,13 +44,13 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.egov.commons.model.Module;
-import org.egov.commons.service.ModuleService;
-import org.egov.commons.web.contract.ModuleGetRequest;
-import org.egov.commons.web.contract.ModuleResponse;
+import org.egov.commons.model.UOM;
+import org.egov.commons.service.UOMService;
 import org.egov.commons.web.contract.RequestInfo;
 import org.egov.commons.web.contract.RequestInfoWrapper;
 import org.egov.commons.web.contract.ResponseInfo;
+import org.egov.commons.web.contract.UOMGetRequest;
+import org.egov.commons.web.contract.UOMResponse;
 import org.egov.commons.web.contract.factory.ResponseInfoFactory;
 import org.egov.commons.web.errorhandlers.ErrorHandler;
 import org.slf4j.Logger;
@@ -67,21 +67,23 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/modules")
-public class ModuleController {
-	private static final Logger logger = LoggerFactory.getLogger(ModuleController.class);
+@RequestMapping("/uoms")
+public class UOMController {
+
+	private static final Logger logger = LoggerFactory.getLogger(UOMController.class);
+
 	@Autowired
-	private ModuleService moduleService;
+	private UOMService uomService;
+
+	@Autowired
+	private ResponseInfoFactory responseInfoFactory;
 
 	@Autowired
 	private ErrorHandler errHandler;
 
-	@Autowired
-	private ResponseInfoFactory responseInfoFactory;
-	
 	@PostMapping("_search")
 	@ResponseBody
-	public ResponseEntity<?> search(@ModelAttribute @Valid ModuleGetRequest moduleGetRequest,
+	public ResponseEntity<?> search(@ModelAttribute @Valid UOMGetRequest uomGetRequest,
 			BindingResult modelAttributeBindingResult, @RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
 			BindingResult requestBodyBindingResult) {
 		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
@@ -97,30 +99,30 @@ public class ModuleController {
 		}
 
 		// Call service
-		List<Module> modulesList = null;
+		List<UOM> uomsList = null;
 		try {
-			modulesList = moduleService.getModules(moduleGetRequest);
+			uomsList = uomService.getUOMs(uomGetRequest);
 		} catch (Exception exception) {
-			logger.error("Error while processing request " + moduleGetRequest, exception);
+			logger.error("Error while processing request " + uomGetRequest, exception);
 			return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
 		}
-
-		return getSuccessResponse(modulesList, requestInfo);
+		return getSuccessResponse(uomsList, requestInfo);
 	}
-	
+
 	/**
-	 * Populate Response object and returns modules List
+	 * Populate Response object and returns uoms List
 	 * 
-	 * @param modulesList
+	 * @param uomsList
 	 * @return
 	 */
-	private ResponseEntity<?> getSuccessResponse(List<Module> modulesList, RequestInfo requestInfo) {
-		ModuleResponse moduleRes = new ModuleResponse();
-		moduleRes.setModules(modulesList);
+	private ResponseEntity<?> getSuccessResponse(List<UOM> uomsList, RequestInfo requestInfo) {
+		UOMResponse uomResponse = new UOMResponse();
+		uomResponse.setUoms(uomsList);
 		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 		responseInfo.setStatus(HttpStatus.OK.toString());
-		moduleRes.setResponseInfo(responseInfo);
-		return new ResponseEntity<ModuleResponse>(moduleRes, HttpStatus.OK);
+		uomResponse.setResponseInfo(responseInfo);
+		return new ResponseEntity<UOMResponse>(uomResponse, HttpStatus.OK);
 
 	}
+
 }

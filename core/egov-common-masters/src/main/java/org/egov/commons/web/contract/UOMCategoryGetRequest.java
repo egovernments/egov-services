@@ -40,8 +40,12 @@
 
 package org.egov.commons.web.contract;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.Module;
+import java.util.List;
+
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -50,16 +54,32 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@AllArgsConstructor
-@EqualsAndHashCode
 @Getter
-@NoArgsConstructor
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @ToString
-public class ModuleRequest {
-	@JsonProperty("RequestInfo")
-	private RequestInfo requestInfo;
+@EqualsAndHashCode
+public class UOMCategoryGetRequest {
 
-	@JsonProperty("Module")
-	private Module module;
+	private List<Long> id;
+
+	@Size(min=3, max=50)
+	private String name;
+
+	private Boolean active;
+
+	@NotNull
+	private String tenantId;
+
+    private String sortBy;
+
+	private String sortOrder;
+
+	@Min(1)
+	@Max(500)
+	private Short pageSize;
+
+	private Short pageNumber;
+
 }

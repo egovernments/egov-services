@@ -38,28 +38,58 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.commons.web.contract;
+package org.egov.commons.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.Module;
+import java.util.Date;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@AllArgsConstructor
-@EqualsAndHashCode
-@Getter
-@NoArgsConstructor
 @Setter
+@Getter
 @ToString
-public class ModuleRequest {
-	@JsonProperty("RequestInfo")
-	private RequestInfo requestInfo;
+public class UOM {
 
-	@JsonProperty("Module")
-	private Module module;
+	@NotNull
+	private Long id;
+
+	@Size(min=1, max=30)
+	private String code;
+
+	@Size(max=250)
+	private String description;
+
+	private UOMCategory category;
+
+	@NotNull
+	private Boolean active = true;
+
+	private Float coversionFactor;
+
+	private Boolean baseuom;
+
+	private Long createdBy;
+
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date createdDate;
+
+	private Long lastModifiedBy;
+
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date lastModifiedDate;
+
+	@NotNull
+	@Size(max=256)
+	private String tenantId;
+
 }

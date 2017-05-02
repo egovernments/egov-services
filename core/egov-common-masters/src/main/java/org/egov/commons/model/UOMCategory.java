@@ -38,28 +38,35 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.commons.web.contract;
+package org.egov.commons.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.Module;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@AllArgsConstructor
-@EqualsAndHashCode
-@Getter
-@NoArgsConstructor
 @Setter
+@Getter
 @ToString
-public class ModuleRequest {
-	@JsonProperty("RequestInfo")
-	private RequestInfo requestInfo;
+public class UOMCategory {
+	
+	@NotNull
+	private Long id;
 
-	@JsonProperty("Module")
-	private Module module;
+	@NotNull
+	@Size(min=3, max=50)
+	private String name;
+
+	@Size(max=250)
+	private String description;
+
+	@NotNull
+	private Boolean active = true;
+
+	@NotNull
+	@Size(max=256)
+	private String tenantId;
+
 }

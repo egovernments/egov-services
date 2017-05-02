@@ -38,28 +38,36 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.commons.web.contract;
+package org.egov.commons.repository;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.Module;
+import java.util.ArrayList;
+import java.util.List;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import org.egov.commons.model.UOMCategory;
+import org.egov.commons.repository.builder.UOMCategoryQueryBuilder;
+import org.egov.commons.repository.rowmapper.UOMCategoryRowMapper;
+import org.egov.commons.web.contract.UOMCategoryGetRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
-@AllArgsConstructor
-@EqualsAndHashCode
-@Getter
-@NoArgsConstructor
-@Setter
-@ToString
-public class ModuleRequest {
-	@JsonProperty("RequestInfo")
-	private RequestInfo requestInfo;
+@Repository
+public class UOMCategoryRepository {
 
-	@JsonProperty("Module")
-	private Module module;
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
+
+	@Autowired
+	private UOMCategoryQueryBuilder uomCategoryQueryBuilder;
+
+	@Autowired
+	private UOMCategoryRowMapper uomCategoryRowMapper;
+
+	public List<UOMCategory> findForCriteria(UOMCategoryGetRequest uomCategoryGetRequest) {
+		List<Object> preparedStatementValues = new ArrayList<Object>();
+		String queryStr = uomCategoryQueryBuilder.getQuery(uomCategoryGetRequest, preparedStatementValues);
+		List<UOMCategory> uomCategories = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
+				uomCategoryRowMapper);
+		return uomCategories;
+	}
 }

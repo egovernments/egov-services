@@ -44,12 +44,13 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.egov.eis.web.contract.RequestInfoWrapper;
 import org.egov.eis.model.Position;
 import org.egov.eis.service.PositionService;
 import org.egov.eis.web.contract.PositionGetRequest;
+import org.egov.eis.web.contract.PositionRequest;
 import org.egov.eis.web.contract.PositionResponse;
 import org.egov.eis.web.contract.RequestInfo;
+import org.egov.eis.web.contract.RequestInfoWrapper;
 import org.egov.eis.web.contract.ResponseInfo;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
 import org.egov.eis.web.errorhandlers.ErrorHandler;
@@ -60,6 +61,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -111,6 +113,47 @@ public class PositionController {
 	}
 
 	/**
+	 * Maps Post Requests for _create & returns ResponseEntity of either
+	 * DositionResponse type or ErrorResponse type
+	 * 
+	 * @param PositionRequest
+	 * @param BindingResult
+	 * @return ResponseEntity<?>
+	 */
+
+	@PostMapping("_create")
+	@ResponseBody
+	public ResponseEntity<?> create(@RequestBody PositionRequest positionRequest, BindingResult bindingResult) {
+
+		ResponseEntity<?> errorResponseEntity = validatePositionRequest(positionRequest, bindingResult);
+		if (errorResponseEntity != null)
+			return errorResponseEntity;
+
+		return positionService.createPosition(positionRequest);
+	}
+
+	/**
+	 * Maps Post Requests for _create & returns ResponseEntity of either
+	 * PositionResponse type or ErrorResponse type
+	 * 
+	 * @param PositionRequest
+	 * @param BindingResult
+	 * @return ResponseEntity<?>
+	 */
+
+	@PostMapping("/{id}/_update")
+	@ResponseBody
+	public ResponseEntity<?> update(@RequestBody PositionRequest positionRequest,
+			@PathVariable(required = true, name = "id") Long id, BindingResult bindingResult) {
+
+		ResponseEntity<?> errorResponseEntity = validatePositionRequest(positionRequest, bindingResult);
+		if (errorResponseEntity != null)
+			return errorResponseEntity;
+		positionRequest.getPosition().get(0).setId(id);
+		return positionService.updatePosition(positionRequest);
+	}
+
+	/**
 	 * Populate Response object and returnpositionsList
 	 * 
 	 * @param positionsList
@@ -124,6 +167,22 @@ public class PositionController {
 		positionRes.setResponseInfo(responseInfo);
 		return new ResponseEntity<PositionResponse>(positionRes, HttpStatus.OK);
 
+	}
+
+	/**
+	 * Validate PositionRequest object & returns ErrorResponseEntity if there
+	 * are any errors or else returns null
+	 * 
+	 * @param PositionRequest
+	 * @param bindingResult
+	 * @return ResponseEntity<?>
+	 */
+	private ResponseEntity<?> validatePositionRequest(PositionRequest positionRequest, BindingResult bindingResult) {
+		// validate input params that can be handled by annotations
+		if (bindingResult.hasErrors()) {
+			return errHandler.getErrorResponseEntityForBindingErrors(bindingResult, positionRequest.getRequestInfo());
+		}
+		return null;
 	}
 
 }

@@ -165,12 +165,6 @@ public class AssetQueryBuilder {
 			preparedStatementValues.add(searchAsset.getElectionWard());
 		}
 		
-		if (searchAsset.getStatus() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" ASSET.doorNo = ?");
-			preparedStatementValues.add(searchAsset.getDoorNo());
-		}
-		
 		if (searchAsset.getPinCode() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" ASSET.pinCode = ?");
@@ -236,7 +230,7 @@ public class AssetQueryBuilder {
 				+"(id,assetcategory,name,code,department,assetdetails,description,"
 				+ "dateofcreation,remarks,length,width,totalarea,modeofacquisition,status,tenantid,"
 				+ "zone,revenueward,street,electionward,doorno,pincode,locality,block,properties,createdby,"
-				+ "createddate,lastmodifiedby,lastmodifieddate,grossvalue,accumulateddepreciation,assetrefrance,version)"
+				+ "createddate,lastmodifiedby,lastmodifieddate,grossvalue,accumulateddepreciation,assetreference,version)"
 				+"values(nextval('seq_egasset_asset'),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		return INSERT_QUERY;
 	}
@@ -244,7 +238,7 @@ public class AssetQueryBuilder {
 	public String getUpdateQuery(){
 		String UPDATE_QUERY="UPDATE egasset_asset SET assetcategory=?,name=?,department=?,assetdetails=?,description=?,remarks=?,length=?,"
 				+ "width=?,totalarea=?,modeofacquisition=?,status=?,zone=?,revenueward=?,street=?,electionward=?,doorno=?,pincode=?,locality=?,"
-				+ "block=?,properties=?,lastmodifiedby=?,lastmodifieddate=?,grossvalue=?,accumulateddepreciation=?,assetrefrance=?,version=? "
+				+ "block=?,properties=?,lastmodifiedby=?,lastmodifieddate=?,grossvalue=?,accumulateddepreciation=?,assetreference=?,version=? "
 				+ "WHERE code=? and tenantid=?";
 				
 		return UPDATE_QUERY;

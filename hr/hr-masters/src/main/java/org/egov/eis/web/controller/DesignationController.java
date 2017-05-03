@@ -170,10 +170,10 @@ public class DesignationController {
 	}
 
 	/**
-	 * Validate EmployeeRequest object & returns ErrorResponseEntity if there
+	 * Validate DesignationRequest object & returns ErrorResponseEntity if there
 	 * are any errors or else returns null
 	 * 
-	 * @param EmployeeRequest
+	 * @param DesignationRequest
 	 * @param bindingResult
 	 * @return ResponseEntity<?>
 	 */

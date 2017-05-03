@@ -1,6 +1,5 @@
 package org.egov.asset.web.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -13,9 +12,6 @@ import org.egov.asset.exception.Error;
 import org.egov.asset.exception.ErrorResponse;
 import org.egov.asset.model.AssetCategory;
 import org.egov.asset.model.AssetCategoryCriteria;
-import org.egov.asset.model.AttributeDefination;
-import org.egov.asset.model.enums.AssetCategoryType;
-import org.egov.asset.model.enums.DepreciationMethod;
 import org.egov.asset.service.AssetCategoryService;
 import org.egov.asset.web.validator.AssetCategoryValidator;
 import org.egov.common.contract.request.RequestInfo;
@@ -28,7 +24,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

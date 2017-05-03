@@ -74,7 +74,7 @@ public class AgreementValidator {
 	public void validateAsset(AgreementRequest agreementRequest) {
 
 		Long assetId = agreementRequest.getAgreement().getAsset().getId();
-		String queryString = "id=" + assetId;
+		String queryString = "id=" + assetId + "&tenantId=" + agreementRequest.getAgreement().getTenantId();
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(agreementRequest.getRequestInfo());
 		AssetResponse assetResponse = assetService.getAssets(queryString,requestInfoWrapper);
@@ -108,10 +108,10 @@ public class AgreementValidator {
 		LamsConfigurationGetRequest lamsConfigurationGetRequest = new LamsConfigurationGetRequest();
 		String keyName = propertiesManager.getRentIncrementAssetCategoryKey();
 		lamsConfigurationGetRequest.setName(keyName);
-		logger.info("the asset category names found ::: "+ lamsConfigurationGetRequest);
+		logger.info("the asset category names found ::: " + lamsConfigurationGetRequest);
 		List<String> assetCategoryNames = lamsConfigurationService.getLamsConfigurations(lamsConfigurationGetRequest)
 				.get(keyName);
-		logger.info("the asset category names found ::: "+ assetCategoryNames);
+		logger.info("the asset category names found ::: " + assetCategoryNames);
 		for (String string : assetCategoryNames) {
 			if (string.equals(assetCategory.getName())) {
 				if (rentIncrement != null) {
@@ -125,11 +125,6 @@ public class AgreementValidator {
 				}
 			}
 		}
-		logger.info("after the loop");
-		if (rentIncrement == null) {
-			rentIncrement = new RentIncrementType();
-			rentIncrement.setId(null);
-		}
-		logger.info("end of method");
+		logger.info("after the loop , end of method");
 	}
 }

@@ -55,4 +55,12 @@ public class DepartmentDesignationService {
 		return departmentDesignationRepository.findForId(id);
 	}
 
+	public DepartmentDesignation getByDepartmentAndDesignation(Long department, Long designation) {
+		return departmentDesignationRepository.findByDepartmentAndDesignation(department, designation);
+	}
+
+	public void create(DepartmentDesignation departmentDesignation) {
+		departmentDesignationRepository.create(departmentDesignation);
+	}
+
 }

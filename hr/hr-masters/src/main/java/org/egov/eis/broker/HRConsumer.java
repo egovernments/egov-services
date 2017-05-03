@@ -44,7 +44,9 @@ import java.io.IOException;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.egov.eis.service.DesignationService;
+import org.egov.eis.service.PositionService;
 import org.egov.eis.web.contract.DesignationRequest;
+import org.egov.eis.web.contract.PositionRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,11 +65,21 @@ public class HRConsumer {
 	@Value("${kafka.topics.designation.update.name}")
 	private String designationUpdateTopic;
 
+	@Value("${kafka.topics.position.create.name}")
+	private String positionCreateTopic;
+
+	@Value("${kafka.topics.position.update.name}")
+	private String positionUpdateTopic;
+
 	@Autowired
 	private DesignationService designationService;
 
+	@Autowired
+	private PositionService positionService;
+
 	@KafkaListener(containerFactory = "kafkaListenerContainerFactory", topics = {
-			"${kafka.topics.designation.create.name}", "${kafka.topics.designation.update.name}" })
+			"${kafka.topics.designation.create.name}", "${kafka.topics.designation.update.name}",
+			"${kafka.topics.position.create.name}", "${kafka.topics.position.update.name}" })
 
 	public void listen(final ConsumerRecord<String, String> record) {
 		LOGGER.info("key:" + record.key() + ":" + "value:" + record.value());
@@ -77,6 +89,10 @@ public class HRConsumer {
 				designationService.create(objectMapper.readValue(record.value(), DesignationRequest.class));
 			else if (record.topic().equalsIgnoreCase(designationUpdateTopic))
 				designationService.update(objectMapper.readValue(record.value(), DesignationRequest.class));
+			else if (record.topic().equalsIgnoreCase(positionCreateTopic))
+				positionService.create(objectMapper.readValue(record.value(), PositionRequest.class));
+			else if (record.topic().equalsIgnoreCase(positionUpdateTopic))
+				positionService.update(objectMapper.readValue(record.value(), PositionRequest.class));
 		} catch (final IOException e) {
 			e.printStackTrace();
 		}

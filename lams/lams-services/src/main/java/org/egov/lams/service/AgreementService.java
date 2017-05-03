@@ -1,13 +1,11 @@
 package org.egov.lams.service;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
 import org.egov.lams.config.PropertiesManager;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.AgreementCriteria;
@@ -23,7 +21,6 @@ import org.egov.lams.web.contract.AgreementRequest;
 import org.egov.lams.web.contract.DemandResponse;
 import org.egov.lams.web.contract.LamsConfigurationGetRequest;
 import org.egov.lams.web.contract.Position;
-import org.egov.lams.web.contract.PositionGetRequest;
 import org.egov.lams.web.contract.PositionResponse;
 import org.egov.lams.web.contract.RequestInfo;
 import org.egov.lams.web.contract.RequestInfoWrapper;
@@ -32,7 +29,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

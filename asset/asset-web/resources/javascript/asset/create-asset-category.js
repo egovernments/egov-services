@@ -120,6 +120,7 @@ class CreateAsset extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      showMsg: false,
       list: [],
       readonly: false,
       assetCategory: {
@@ -347,6 +348,19 @@ class CreateAsset extends React.Component {
       assetCategory
     } = this.state;
 
+    if(!to && (!customField.name || !customField.type)) {
+      return this.setState({
+        showMsg: true
+      })
+    } else {
+      var _this = this;
+      setTimeout(function() {
+        _this.setState({
+          showMsg: false
+        });
+      }, 300);
+    }
+
     if (isEdit) {
       // console.log(isEdit,index);
       //update holidays with current holiday
@@ -439,9 +453,8 @@ class CreateAsset extends React.Component {
   }
 
   render() {
-    // console.log(this.state);
     let {handleChange,addOrUpdate,renderDelEvent,addAsset,handleChangeTwoLevel,showCustomFieldForm}=this;
-    let {isSearchClicked,list,customField,column,isEdit,index,assetCategory,isCustomFormVisible, readonly}=this.state;
+    let {isSearchClicked,list,customField,column,isEdit,index,assetCategory,isCustomFormVisible, readonly, showMsg}=this.state;
 
     let {assetCategoryType,AssetCategory,parent,name,assetFieldsDefination,isMandatory,depreciationMethod,assetAccount,accumulatedDepreciationAccount,revaluationReserveAccount,depreciationExpenseAccount,unitOfMeasurement, version}=assetCategory;
     let mode = getUrlVars()["type"];
@@ -572,6 +585,13 @@ class CreateAsset extends React.Component {
 
     }
 
+    const showNoteMsg = function() {
+      if(showMsg) {
+        return (<p className="text-danger">Name and Data Type is mandatory.</p>)
+      } else 
+        return "";
+    }
+
     const showCustomFieldsTable=function()
     {
       return (
@@ -625,7 +645,7 @@ class CreateAsset extends React.Component {
                 <div className="col-sm-6">
                   <div className="row">
                     <div className="col-sm-6 label-text">
-                      <label htmlFor="">Name</label>
+                      <label htmlFor="">Name <span>*</span></label>
                     </div>
                     <div className="col-sm-6">
                       <input type="text" name="name"  value={customField.name} onChange={(e)=>{ handleChangeTwoLevel(e,"customField","name")}}/>
@@ -635,7 +655,7 @@ class CreateAsset extends React.Component {
                 <div className="col-sm-6">
                   <div className="row">
                     <div className="col-sm-6 label-text">
-                      <label for="type"> Data Type  </label>
+                      <label for="type"> Data Type <span>*</span>  </label>
                     </div>
                     <div className="col-sm-6">
                       <div className="styled-select">
@@ -734,7 +754,7 @@ class CreateAsset extends React.Component {
               </div>
 
               {showNestedCustomFieldTable()}
-
+              {showNoteMsg()}
               {/*  <button type="button" className="btn btn-default" >reset</button>*/}
                 <button type="button" className="btn btn-primary" onClick={(e)=>{addAsset()}}>Add/Edit</button>
               </div>

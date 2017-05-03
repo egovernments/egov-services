@@ -3,6 +3,7 @@ package org.egov.web.controller;
 import org.egov.Resources;
 import org.egov.domain.exception.InvalidOtpRequestException;
 import org.egov.domain.model.OtpRequest;
+import org.egov.domain.model.OtpRequestType;
 import org.egov.domain.service.OtpService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,13 +44,13 @@ public class OtpControllerTest {
                 .andExpect(content().json(resources.getFileContents("otpSendSuccessResponse.json")));
 
         final OtpRequest expectedOtpRequest =
-				new OtpRequest("mobileNumber", "tenantId", "passwordreset");
+				new OtpRequest("mobileNumber", "tenantId", OtpRequestType.PASSWORD_RESET);
         verify(otpService).sendOtp(expectedOtpRequest);
     }
 
     @Test
     public void test_should_return_error_response_when_mandatory_fields_are_not_present_in_request() throws Exception {
-        final OtpRequest expectedOtpRequest = new OtpRequest("", "", "unknown");
+        final OtpRequest expectedOtpRequest = new OtpRequest("", "", null);
         doThrow(new InvalidOtpRequestException(expectedOtpRequest)).when(otpService).sendOtp(expectedOtpRequest);
 
         mockMvc.perform(post("/v1/_send").contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -61,7 +62,7 @@ public class OtpControllerTest {
     @Test
     public void test_should_return_error_message_when_unhandled_exception_occurs() throws Exception {
         final OtpRequest expectedOtpRequest =
-				new OtpRequest("mobileNumber", "tenantId", "unknown");
+				new OtpRequest("mobileNumber", "tenantId", null);
         final String exceptionMessage = "Some exception message";
         doThrow(new RuntimeException(exceptionMessage)).when(otpService).sendOtp(expectedOtpRequest);
 

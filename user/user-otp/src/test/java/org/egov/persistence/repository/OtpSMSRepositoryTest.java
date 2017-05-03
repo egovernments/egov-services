@@ -1,6 +1,7 @@
 package org.egov.persistence.repository;
 
 import org.egov.domain.model.OtpRequest;
+import org.egov.domain.model.OtpRequestType;
 import org.egov.persistence.LogAwareKafkaTemplate;
 import org.egov.persistence.contract.SMSRequest;
 import org.hamcrest.CustomMatcher;
@@ -17,15 +18,15 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class OtpMessageRepositoryTest {
+public class OtpSMSRepositoryTest {
     private static final String SMS_TOPIC = "sms.topic";
     @Mock
     private LogAwareKafkaTemplate<String, SMSRequest> kafkaTemplate;
-    private OtpMessageRepository otpMessageRepository;
+    private OtpSMSRepository otpSMSRepository;
 
     @Before
     public void before() {
-        otpMessageRepository = new OtpMessageRepository(kafkaTemplate, SMS_TOPIC);
+        otpSMSRepository = new OtpSMSRepository(kafkaTemplate, SMS_TOPIC);
     }
 
     @Test
@@ -33,7 +34,7 @@ public class OtpMessageRepositoryTest {
         final String mobileNumber = "mobileNumber";
         final String tenantId = "tenantId";
         final String otpNumber = "otpNumber";
-        final String type = "register";
+        final OtpRequestType type = OtpRequestType.REGISTER;
         final OtpRequest otpRequest = new OtpRequest(mobileNumber, tenantId, type);
         final String expectedMessage = "Use OTP otpNumber for portal registration.";
         final SMSRequest expectedSmsRequest = new SMSRequest(mobileNumber, expectedMessage);
@@ -41,7 +42,7 @@ public class OtpMessageRepositoryTest {
         when(kafkaTemplate.send(eq(SMS_TOPIC), argThat(new SmsRequestMatcher(expectedSmsRequest))))
                 .thenReturn(sendResult);
 
-        otpMessageRepository.send(otpRequest, otpNumber);
+        otpSMSRepository.send(otpRequest, otpNumber);
 
         verify(kafkaTemplate).send(eq(SMS_TOPIC), argThat(new SmsRequestMatcher(expectedSmsRequest)));
     }
@@ -51,7 +52,7 @@ public class OtpMessageRepositoryTest {
 		final String mobileNumber = "mobileNumber";
 		final String tenantId = "tenantId";
 		final String otpNumber = "otpNumber";
-		final String type = "passwordreset";
+		final OtpRequestType type = OtpRequestType.PASSWORD_RESET;
 		final OtpRequest otpRequest = new OtpRequest(mobileNumber, tenantId, type);
 		final String expectedMessage = "Your OTP for recovering password is otpNumber.";
 		final SMSRequest expectedSmsRequest = new SMSRequest(mobileNumber, expectedMessage);
@@ -59,7 +60,7 @@ public class OtpMessageRepositoryTest {
 		when(kafkaTemplate.send(eq(SMS_TOPIC), argThat(new SmsRequestMatcher(expectedSmsRequest))))
 				.thenReturn(sendResult);
 
-		otpMessageRepository.send(otpRequest, otpNumber);
+		otpSMSRepository.send(otpRequest, otpNumber);
 
 		verify(kafkaTemplate).send(eq(SMS_TOPIC), argThat(new SmsRequestMatcher(expectedSmsRequest)));
 	}
@@ -69,14 +70,14 @@ public class OtpMessageRepositoryTest {
         final String mobileNumber = "mobileNumber";
         final String tenantId = "tenantId";
         final String otpNumber = "otpNumber";
-		final String type = "register";
+		final OtpRequestType type = OtpRequestType.REGISTER;
 		final OtpRequest otpRequest = new OtpRequest(mobileNumber, tenantId, type);
         final String expectedMessage = "Use OTP otpNumber for portal registration.";
         final SMSRequest expectedSmsRequest = new SMSRequest(mobileNumber, expectedMessage);
         when(kafkaTemplate.send(eq(SMS_TOPIC), argThat(new SmsRequestMatcher(expectedSmsRequest))))
                 .thenThrow(new InterruptedException());
 
-        otpMessageRepository.send(otpRequest, otpNumber);
+        otpSMSRepository.send(otpRequest, otpNumber);
     }
 
     private class SmsRequestMatcher extends CustomMatcher<SMSRequest> {

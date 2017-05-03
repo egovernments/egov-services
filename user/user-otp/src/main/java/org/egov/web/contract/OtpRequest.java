@@ -2,6 +2,7 @@ package org.egov.web.contract;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.egov.domain.model.OtpRequestType;
 
 @Getter
 @AllArgsConstructor
@@ -17,7 +18,7 @@ public class OtpRequest {
                 .build();
     }
 
-	private String getType() {
+	private OtpRequestType getType() {
 		return otp != null ? otp.getTypeOrDefault() : null;
 	}
 

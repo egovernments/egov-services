@@ -6,8 +6,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.egov.domain.exception.InvalidOtpRequestException;
 
-import java.util.stream.Stream;
-
 import static org.springframework.util.StringUtils.isEmpty;
 
 @Getter
@@ -17,7 +15,7 @@ import static org.springframework.util.StringUtils.isEmpty;
 public class OtpRequest {
     private String mobileNumber;
     private String tenantId;
-    private String type;
+    private OtpRequestType type;
 
     public void validate() {
         if(isTenantIdAbsent()
@@ -27,24 +25,15 @@ public class OtpRequest {
         }
     }
 
-    public OtpRequestType getOtpRequestType() {
-    	return OtpRequestType.valueOf(type.toUpperCase());
-	}
-
 	public boolean isRegistrationRequestType() {
-    	return OtpRequestType.REGISTER.equals(getOtpRequestType());
+    	return OtpRequestType.REGISTER.equals(getType());
 	}
 
 	public boolean isInvalidType() {
-    	return isEmpty(type) || isTypeUnknown() ;
+    	return isEmpty(type);
 	}
 
-	private boolean isTypeUnknown() {
-    	return Stream.of(OtpRequestType.values())
-				.noneMatch(type -> type.name().equalsIgnoreCase(this.type));
-	}
-
-    public boolean isTenantIdAbsent() {
+	public boolean isTenantIdAbsent() {
         return isEmpty(tenantId);
     }
 

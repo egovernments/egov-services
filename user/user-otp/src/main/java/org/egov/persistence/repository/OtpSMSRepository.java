@@ -10,15 +10,15 @@ import org.springframework.stereotype.Service;
 import static java.lang.String.format;
 
 @Service
-public class OtpMessageRepository {
+public class OtpSMSRepository {
     private static final String SMS_REGISTER_OTP_MESSAGE = "Use OTP %s for portal registration.";
     private static final String SMS_PASSWORD_RESET_OTP_MESSAGE = "Your OTP for recovering password is %s.";
     private LogAwareKafkaTemplate<String, SMSRequest> kafkaTemplate;
     private String smsTopic;
 
     @Autowired
-    public OtpMessageRepository(LogAwareKafkaTemplate<String, SMSRequest> kafkaTemplate,
-                                @Value("${sms.topic}") String smsTopic) {
+    public OtpSMSRepository(LogAwareKafkaTemplate<String, SMSRequest> kafkaTemplate,
+							@Value("${sms.topic}") String smsTopic) {
         this.kafkaTemplate = kafkaTemplate;
         this.smsTopic = smsTopic;
     }

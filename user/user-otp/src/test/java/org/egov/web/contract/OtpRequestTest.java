@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 public class OtpRequestTest {
 
@@ -18,8 +19,7 @@ public class OtpRequestTest {
         assertNotNull(domainOtpRequest);
         assertEquals("mobileNumber", domainOtpRequest.getMobileNumber());
         assertEquals("tenantId", domainOtpRequest.getTenantId());
-        assertEquals("register", domainOtpRequest.getType());
-        assertEquals(OtpRequestType.REGISTER, domainOtpRequest.getOtpRequestType());
+        assertEquals(OtpRequestType.REGISTER, domainOtpRequest.getType());
     }
 
 	@Test
@@ -29,6 +29,36 @@ public class OtpRequestTest {
 
 		final org.egov.domain.model.OtpRequest domainOtpRequest = request.toDomain();
 
-		assertEquals(OtpRequestType.REGISTER, domainOtpRequest.getOtpRequestType());
+		assertEquals(OtpRequestType.REGISTER, domainOtpRequest.getType());
+	}
+
+	@Test
+	public void test_should_set_request_type_to_null_when_type_is_unknown() {
+		final Otp otp = new Otp("mobileNumber", "tenantId", "unknown");
+		final OtpRequest request = new OtpRequest(null, otp);
+
+		final org.egov.domain.model.OtpRequest domainOtpRequest = request.toDomain();
+
+		assertNull(domainOtpRequest.getType());
+	}
+
+	@Test
+	public void test_should_set_request_type_to_register_when_type_is_register() {
+		final Otp otp = new Otp("mobileNumber", "tenantId", "regisTER");
+		final OtpRequest request = new OtpRequest(null, otp);
+
+		final org.egov.domain.model.OtpRequest domainOtpRequest = request.toDomain();
+
+		assertEquals(OtpRequestType.REGISTER, domainOtpRequest.getType());
+	}
+
+	@Test
+	public void test_should_set_request_type_to_password_reset_when_type_is_passwordreset() {
+		final Otp otp = new Otp("mobileNumber", "tenantId", "passwordRESET");
+		final OtpRequest request = new OtpRequest(null, otp);
+
+		final org.egov.domain.model.OtpRequest domainOtpRequest = request.toDomain();
+
+		assertEquals(OtpRequestType.PASSWORD_RESET, domainOtpRequest.getType());
 	}
 }

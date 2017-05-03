@@ -40,11 +40,7 @@
 
 package org.egov.asset.web.controller;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -55,15 +51,9 @@ import org.egov.asset.contract.RequestInfoWrapper;
 import org.egov.asset.exception.Error;
 import org.egov.asset.exception.ErrorResponse;
 import org.egov.asset.model.Asset;
-import org.egov.asset.model.AssetCategory;
 import org.egov.asset.model.AssetCriteria;
-import org.egov.asset.model.Attributes;
-import org.egov.asset.model.Department;
-import org.egov.asset.model.Location;
-import org.egov.asset.model.enums.ModeOfAcquisition;
 import org.egov.asset.service.AssetService;
 import org.egov.asset.web.validator.AssetValidator;
-import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,7 +62,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -125,7 +114,7 @@ public class AssetController {
 			return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
 		//TODO Input field validation, it will be a part of phash-2
-		assetValidator.findAssetCategory(assetRequest);
+		assetValidator.validateAsset(assetRequest);
 		
 		AssetResponse assetResponse=assetService.createAsync(assetRequest);
 		return new ResponseEntity<AssetResponse>(assetResponse, HttpStatus.CREATED);

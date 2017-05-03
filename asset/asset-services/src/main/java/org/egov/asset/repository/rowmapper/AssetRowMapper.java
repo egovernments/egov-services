@@ -84,6 +84,8 @@ public class AssetRowMapper implements RowMapper<Asset> {
 		asset.setTotalArea(rs.getString("totalArea"));
 		asset.setAccumulatedDepreciation(rs.getDouble("accumulateddepreciation"));
 		asset.setGrossValue(rs.getDouble("grossvalue"));
+		asset.setAssetReference((Long)rs.getObject("assetreference"));
+		asset.setVersion(rs.getString("version"));
 		
 		String properties=rs.getString("properties");
 		Asset asset2=null;
@@ -132,7 +134,7 @@ public class AssetRowMapper implements RowMapper<Asset> {
 		assetCategory.setAccumulatedDepreciationAccount((Long)rs.getObject("accumulatedDepreciationAccount"));
 		assetCategory.setRevaluationReserveAccount((Long)rs.getObject("revaluationReserveAccount"));
 		assetCategory.setUnitOfMeasurement((Long)rs.getObject("unitOfMeasurement"));
-		//assetCategory.setCustomFields(rs.getString("customFields"));
+		
 		
 		
 		asset.setAssetCategory(assetCategory);

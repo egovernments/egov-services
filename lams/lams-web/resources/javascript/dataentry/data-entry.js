@@ -1013,6 +1013,7 @@ $("#createAgreementForm").validate({
         agreement["rentIncrementMethod"] = {};
         agreement["rentIncrementMethod"]["id"] = $("#rentIncrementMethod").val();
         agreement["tenantId"] = tenantId;
+        agreement["Source"] = 'DATE_ENTRY';
         uploadFiles(agreement, function(err, _agreement) {
             if (err) {
                 //Handle error
@@ -1033,6 +1034,7 @@ $("#createAgreementForm").validate({
                     data: JSON.stringify({
                         RequestInfo: requestInfo,
                         Agreement: _agreement
+
                     }),
                     async: false,
                     headers: {

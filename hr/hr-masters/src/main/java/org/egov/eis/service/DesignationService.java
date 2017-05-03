@@ -40,22 +40,128 @@
 
 package org.egov.eis.service;
 
+import java.util.Collections;
 import java.util.List;
 
+import org.egov.eis.broker.DesignationProducer;
 import org.egov.eis.model.Designation;
 import org.egov.eis.repository.DesignationRepository;
 import org.egov.eis.web.contract.DesignationGetRequest;
+import org.egov.eis.web.contract.DesignationRequest;
+import org.egov.eis.web.contract.DesignationResponse;
+import org.egov.eis.web.contract.RequestInfo;
+import org.egov.eis.web.contract.ResponseInfo;
+import org.egov.eis.web.contract.factory.ResponseInfoFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class DesignationService {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(DesignationService.class);
+	
+	@Value("${kafka.topics.designation.create.name}")
+	private String designationCreateTopic;
+
+	@Value("${kafka.topics.designation.create.key}")
+	private String designationCreateKey;
+
+	@Value("${kafka.topics.designation.update.name}")
+	private String designationUpdateTopic;
+
+	@Value("${kafka.topics.designation.update.key}")
+	private String designationUpdateKey;
+	
+	@Autowired
+	private ResponseInfoFactory responseInfoFactory;
+	
+	@Autowired
+	private DesignationProducer designationProducer;
+	
 	@Autowired
 	private DesignationRepository designationRepository;
 
 	public List<Designation> getDesignations(DesignationGetRequest designationGetRequest) {
 		return designationRepository.findForCriteria(designationGetRequest);
+	}
+	
+	public ResponseEntity<?> createDesignation(DesignationRequest designationRequest) {
+		Designation designation = designationRequest.getDesignation();
+		String designationJson = null;
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			designationJson = mapper.writeValueAsString(designationRequest);
+			LOGGER.info("designationJson::" + designationJson);
+		} catch (JsonProcessingException e) {
+			LOGGER.error("Error while converting designation to JSON", e);
+			e.printStackTrace();
+		}
+		try {
+			designationProducer.sendMessage(designationCreateTopic, designationCreateKey,
+					designationJson);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return getSuccessResponseForCreate(Collections.singletonList(designation), designationRequest.getRequestInfo());
+	}
+	
+	public ResponseEntity<?> updateDesignation(DesignationRequest designationRequest) {
+		Designation designation = designationRequest.getDesignation();
+		String designationRequestJson = null;
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			designationRequestJson = mapper.writeValueAsString(designationRequest);
+			LOGGER.info("designationRequestJson::" + designationRequestJson);
+		} catch (JsonProcessingException e) {
+			LOGGER.error("Error while converting Employee to JSON", e);
+			e.printStackTrace();
+		}
+		try {
+			designationProducer.sendMessage(designationUpdateTopic, designationUpdateKey,
+					designationRequestJson);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return getSuccessResponseForCreate(Collections.singletonList(designation), designationRequest.getRequestInfo());
+	}
+	
+	/**
+	 * Populate DesignationResponse object & returns ResponseEntity of
+	 * type DesignationResponse containing ResponseInfo & array of
+	 * Designation objects
+	 * 
+	 * @param Designation
+	 * @param requestInfo
+	 * @param headers
+	 * @return ResponseEntity<?>
+	 */
+	public ResponseEntity<?> getSuccessResponseForCreate(List<Designation> designationList,
+			RequestInfo requestInfo) {
+		DesignationResponse designationResponse = new DesignationResponse();
+		designationResponse.getDesignation().addAll(designationList);
+
+		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+		responseInfo.setStatus(HttpStatus.OK.toString());
+		designationResponse.setResponseInfo(responseInfo);
+		return new ResponseEntity<DesignationResponse>(designationResponse, HttpStatus.OK);
+	}
+	
+	public void create(DesignationRequest designationRequest) {
+		designationRepository.create(designationRequest);
+	}
+
+	public void update(DesignationRequest designationRequest) {
+		designationRepository.update(designationRequest);
 	}
 
 }

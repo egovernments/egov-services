@@ -47,12 +47,21 @@ import org.egov.eis.model.Designation;
 import org.egov.eis.repository.builder.DesignationQueryBuilder;
 import org.egov.eis.repository.rowmapper.DesignationRowMapper;
 import org.egov.eis.web.contract.DesignationGetRequest;
+import org.egov.eis.web.contract.DesignationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class DesignationRepository {
+
+	public static final String INSERT_DESIGNATION_QUERY = "INSERT INTO egeis_designation"
+			+ " (id, code, name, description, chartOfAccounts, active,tenantId)"
+			+ " VALUES (nextval('seq_egeis_designation'),?,?,?,?,?,?)";
+
+	public static final String UPDATE_DESIGNATION_QUERY = "UPDATE egeis_designation"
+			+ " SET code=?, name=?, description=?, chartOfAccounts=?, active=? where id=? and tenantid=? ";
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -69,5 +78,42 @@ public class DesignationRepository {
 		List<Designation> designations = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
 				designationRowMapper);
 		return designations;
+	}
+
+	public void create(DesignationRequest designationRequest) {
+
+		List<Object[]> batchArgs = new ArrayList<>();
+		Object[] lobRecord = { designationRequest.getDesignation().getCode(),
+				designationRequest.getDesignation().getName(), designationRequest.getDesignation().getDescription(),
+				designationRequest.getDesignation().getChartOfAccounts(),
+				designationRequest.getDesignation().getActive(), designationRequest.getDesignation().getTenantId() };
+		batchArgs.add(lobRecord);
+
+		try {
+			jdbcTemplate.batchUpdate(INSERT_DESIGNATION_QUERY, batchArgs);
+		} catch (DataAccessException ex) {
+			ex.printStackTrace();
+			throw new RuntimeException(ex.getMessage());
+		}
+
+	}
+
+	public void update(DesignationRequest designationRequest) {
+
+		List<Object[]> batchArgs = new ArrayList<>();
+		Object[] lobRecord = { designationRequest.getDesignation().getCode(),
+				designationRequest.getDesignation().getName(), designationRequest.getDesignation().getDescription(),
+				designationRequest.getDesignation().getChartOfAccounts(),
+				designationRequest.getDesignation().getActive(), designationRequest.getDesignation().getId(),
+				designationRequest.getDesignation().getTenantId() };
+		batchArgs.add(lobRecord);
+
+		try {
+			jdbcTemplate.batchUpdate(UPDATE_DESIGNATION_QUERY, batchArgs);
+		} catch (DataAccessException ex) {
+			ex.printStackTrace();
+			throw new RuntimeException(ex.getMessage());
+		}
+
 	}
 }

@@ -16,13 +16,13 @@ class Category extends React.Component{
       var type=getUrlVars()["type"];
       var id=getUrlVars()["id"];
 
-      if(getUrlVars()["type"]==="View")
+      if(getUrlVars()["type"]==="view")
       {
         for (var variable in this.state.categorySet)
           document.getElementById(variable).disabled = true;
         }
 
-        if(type==="View"||type==="Update")
+        if(type==="view"||type==="update")
         {
             this.setState({
               categorySet:getCommonMasterById("egov-common-masters","categories","Category",id).responseJSON["Category"][0]
@@ -66,13 +66,15 @@ class Category extends React.Component{
 
 
       const showActionButton=function() {
-        if((!mode) ||mode==="Update")
+        if((!mode) ||mode==="update")
         {
           return (<button type="submit" className="btn btn-submit">{mode?"Update":"Add"}</button>);
         }
       };
 
     return (<div>
+
+        <h3>{ getUrlVars()["type"] ? titleCase(getUrlVars()["type"]) : "Create"} Category </h3>
       <form onSubmit={(e)=>{addOrUpdate(e,mode)}}>
       <fieldset>
       <div className="row">

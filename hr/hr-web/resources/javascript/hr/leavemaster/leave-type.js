@@ -166,6 +166,7 @@ addOrUpdate(e,mode)
     }
 
     return(<div>
+      <h3>{ getUrlVars()["type"] ? titleCase(getUrlVars()["type"]) :  "Create"} Leave Type</h3>
       <form onSubmit={(e)=>{addOrUpdate(e,mode)}}>
       <fieldset>
       <div className="row">

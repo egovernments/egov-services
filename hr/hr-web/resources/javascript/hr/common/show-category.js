@@ -53,7 +53,7 @@ class ShowCategory extends React.Component {
     var mode = getUrlVars()["type"];
 
     const renderAction=function(type,id){
-      if (type==="Update") {
+      if (type==="update") {
 
               return (
                       <a href={`app/hr/master/category.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-pencil"></span></a>
@@ -86,7 +86,7 @@ class ShowCategory extends React.Component {
     }
 
       return (<div>
-        <h3> {mode} Category</h3>
+        <h3>{titleCase(getUrlVars()["type"])} Category</h3>
         <table id="categoryTable" className="table table-bordered">
             <thead>
                 <tr>

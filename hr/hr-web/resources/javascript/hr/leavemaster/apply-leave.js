@@ -36,12 +36,12 @@ class ApplyLeave extends React.Component {
     var id = getUrlVars()["id"];
     var asOnDate = _this.state.leaveSet.toDate;
 
-    if(getUrlVars()["type"]==="View")
+    if(getUrlVars()["type"]==="view")
     {
         $("input,select,textarea").prop("disabled", true);
       }
 
-      if(type === "View"){
+      if(type === "view"){
         var _leaveSet = getCommonMasterById("hr-leave","leaveapplications","LeaveApplication",id).responseJSON["LeaveApplication"][0];
         var employee = commonApiPost("hr-employee", "employees", "_search", {
             tenantId,
@@ -295,7 +295,7 @@ addOrUpdate(e,mode)
             "RequestInfo":requestInfo,
             "LeaveApplication":tempInfo
           },_this=this;
-            if(type == "Update") {
+            if(type == "update") {
               $.ajax({
 
                     url:baseUrl+"/hr-leave/leaveapplications/" + this.state.leaveSet.id + "/" + "_update?tenantId=" + tenantId,
@@ -423,6 +423,7 @@ addOrUpdate(e,mode)
 
     return (
       <div>
+        <h3>{ getUrlVars()["type"] ? titleCase(getUrlVars()["type"]) : "Apply"} Leave Application </h3>
         <form onSubmit={(e)=>{addOrUpdate(e)}}>
           <fieldset>
               <div className="row">

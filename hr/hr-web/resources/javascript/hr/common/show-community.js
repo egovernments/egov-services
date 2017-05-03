@@ -51,7 +51,7 @@ class ShowCommunity extends React.Component {
 
 
     const renderAction=function(type,id){
-      if (type==="Update") {
+      if (type==="update") {
 
               return (
                       <a href={`app/hr/master/community.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-pencil"></span></a>
@@ -84,7 +84,7 @@ class ShowCommunity extends React.Component {
     }
 
       return (<div>
-          <h3> {mode} Community</h3>
+          <h3> {titleCase(getUrlVars()["type"])} Community</h3>
         <table id="communityTable" className="table table-bordered">
             <thead>
                 <tr>

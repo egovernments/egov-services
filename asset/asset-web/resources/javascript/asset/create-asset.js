@@ -222,6 +222,7 @@ const defaultAssetSetState = {
       "doorNo": "",
       "pinCode": ""
     },
+    "version": "",
     "remarks": "",
     "length": "",
     "width": "",
@@ -389,6 +390,7 @@ class CreateAsset extends React.Component {
         success: ""
       })
       var tempInfo = Object.assign({}, this.state.assetSet) , _this = this, type = getUrlVars()["type"];
+      return console.log(tempInfo);
       delete tempInfo.assetReferenceName;
       if(tempInfo.assetAttributes && tempInfo.assetAttributes.length) {
         for(var i=0; i<tempInfo.assetAttributes.length;i++){
@@ -547,10 +549,11 @@ class CreateAsset extends React.Component {
   }
 
   handleChangeTwoLevel(e, pName, name, multi) {
-      let text, type, codeNo, innerJSON;
+      let text, type, codeNo, innerJSON, version;
       if (pName == "assetCategory") {
           let el = document.getElementById('assetCategory');
           text = el.options[el.selectedIndex].innerHTML;
+          version = el.options[el.selectedIndex].getAttribute("data");
           this.setState({
               customFields: this.getCategory(e.target.value),
               assetAttributes: []
@@ -599,7 +602,8 @@ class CreateAsset extends React.Component {
       this.setState({
           assetSet: {
               ...this.state.assetSet,
-              [pName]: innerJSON
+              [pName]: innerJSON,
+              version: version || this.state.assetSet.version || ""
           }
       })
 
@@ -664,7 +668,10 @@ class CreateAsset extends React.Component {
             let res = getCommonMasterById("asset-services", "assets", "Assets", asset.assetReference);
             if(res && res.responseJSON && res.responseJSON["Assets"] && res.responseJSON["Assets"][0]) {
               this.setState({
-                assetReferenceName: asset.name
+                assetSet: {
+                    ...this.state.assetSet,
+                    assetReferenceName: asset.name
+                }
               })
             }
           }
@@ -783,14 +790,14 @@ class CreateAsset extends React.Component {
 
     }
 
-    const renderOption = function(list) {
+    const renderOption = function(list, assetCatBool) {
         if(list)
         {
             if (list.length) {
               return list.map((item, ind)=>
               {
                   if(typeof item == "object") {
-                    return (<option key={ind} value={item.id}>
+                    return (<option key={ind} data={assetCatBool ? item.version : ""} value={item.id}>
                           {item.name}
                     </option>)
                   } else {
@@ -817,8 +824,18 @@ class CreateAsset extends React.Component {
     {
         if(customFields.length > 0)
         {
-					let customFieldsDisply=function(){
-							return customFields.map((item, index) => {
+					let customFieldsDisply = function(){
+              var _custFields = [], _tables = [];
+              for(var i=0; i<customFields.length; i++) {
+                if(customFields[i].type != "Table") {
+                  _custFields.push(customFields[i]);
+                } else 
+                  _tables.push(customFields[i]);
+              }
+
+              _custFields = _custFields.concat(_tables);
+
+							return _custFields.map((item, index) => {
 						 			return checkFields(item, index)
 								})
 					}
@@ -1131,7 +1148,7 @@ class CreateAsset extends React.Component {
                       <h3 className="categoryType">{item.name}</h3>
                    </div>
                    <div className="col-md-4 text-right">
-                      <button type="button" className="btn btn-primary" onClick={(e) => {addNewRow(e, item.name)}}>Add</button>
+                      <button type="button" className="btn btn-primary" onClick={(e) => {addNewRow(e, item.name)}} disabled={getUrlVars()["type"] == "view"}>Add</button>
                    </div>
                 </div>
                 <div className="row">
@@ -1215,6 +1232,7 @@ class CreateAsset extends React.Component {
       if (references.length > 0) {
         return references.map((item, index) => {
               return (<tr key={index}>
+                        <td>{index+1}</td>
                         <td>{item.code}</td>
                         <td>{item.name}</td>
                         <td>{item.assetCategory.name}</td>
@@ -1235,6 +1253,7 @@ class CreateAsset extends React.Component {
           <table id="refTable" className="table table-bordered">
               <thead>
               <tr>
+                  <th>Sr. No.</th>
                   <th>Code</th>
                   <th>Name</th>
                   <th>Asset Category Type</th>
@@ -1306,7 +1325,7 @@ class CreateAsset extends React.Component {
                                 <select id="assetCategory" name="assetCategory" required value={assetCategory.id} onChange={(e)=>
                                     {handleChangeTwoLevel(e,"assetCategory","id")}} disabled={readonly}>
                                     <option value="">Select Asset Category</option>
-                                    {renderOption(this.state.assetCategories)}
+                                    {renderOption(this.state.assetCategories, true)}
                                 </select>
                               </div>
                           </div>
@@ -1379,7 +1398,7 @@ class CreateAsset extends React.Component {
                             <input id="assetReferenceName" name="assetReferenceName" value={assetReferenceName} type="text" disabled/>
                           </div>
                           <div className="col-xs-2">
-                            <button className="btn btn-close" onClick={(e) => {loadModal(e)}}>
+                            <button className="btn btn-close" onClick={(e) => {loadModal(e)}} disabled={getUrlVars()["type"] == "view"}>
                               <span className="glyphicon glyphicon-search"></span>
                             </button>
                           </div>

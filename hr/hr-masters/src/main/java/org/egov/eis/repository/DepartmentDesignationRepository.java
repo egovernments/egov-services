@@ -40,17 +40,28 @@
 
 package org.egov.eis.repository;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.egov.eis.model.DepartmentDesignation;
 import org.egov.eis.repository.rowmapper.DepartmentDesignationRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class DepartmentDesignationRepository {
 
+	public static final String INSERT_DEPARTMENTDESIGNATION_QUERY = "INSERT INTO egeis_departmentDesignation"
+			+ " (id, departmentId, designationId,tenantId)"
+			+ " VALUES (nextval('seq_egeis_departmentDesignation'),?,?,?)";
+
 	private static final String BASE_QUERY = "SELECT id, departmentId, designationId, tenantId"
 			+ " FROM egeis_departmentDesignation WHERE id = ?";
+
+	private static final String GET_BY_DEPT_AND_DESG_QUERY = "SELECT id, departmentId, designationId, tenantId"
+			+ " FROM egeis_departmentDesignation WHERE departmentId = ? and designationId = ?";
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -63,4 +74,30 @@ public class DepartmentDesignationRepository {
 				departmentDesignationRowMapper, id);
 		return departmentDesignation;
 	}
+
+	public DepartmentDesignation findByDepartmentAndDesignation(Long department, Long designation) {
+		List<Object> preparedStatementValues = new ArrayList<Object>();
+		preparedStatementValues.add(department);
+		preparedStatementValues.add(designation);
+		List<DepartmentDesignation> departmentDesignations = jdbcTemplate.query(GET_BY_DEPT_AND_DESG_QUERY,
+				preparedStatementValues.toArray(), departmentDesignationRowMapper);
+		return departmentDesignations.isEmpty() ? null : departmentDesignations.get(0);
+	}
+
+	public void create(DepartmentDesignation departmentDesignation) {
+
+		List<Object[]> batchArgs = new ArrayList<>();
+		Object[] deptDesgRecord = { departmentDesignation.getDepartmentId(),
+				departmentDesignation.getDesignation().getId(), departmentDesignation.getTenantId() };
+		batchArgs.add(deptDesgRecord);
+
+		try {
+			jdbcTemplate.batchUpdate(INSERT_DEPARTMENTDESIGNATION_QUERY, batchArgs);
+		} catch (DataAccessException ex) {
+			ex.printStackTrace();
+			throw new RuntimeException(ex.getMessage());
+		}
+
+	}
+
 }

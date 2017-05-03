@@ -89,7 +89,7 @@ class ViewApply extends React.Component {
               <td data-label="leaveDays">{item.leaveDays}</td>
               <td data-label="status">{item.status}</td>
               <td data-label="action">
-                <a href={`app/hr/leavemaster/apply-leave.html?id=${item.id}&type=View`}>View-Details</a>
+                <a href={`app/hr/leavemaster/apply-leave.html?id=${item.id}&type=view`}>View-Details</a>
               </td>
           </tr>
             );

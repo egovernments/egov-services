@@ -46,7 +46,7 @@ class ShowDesignation extends React.Component {
     var mode = getUrlVars()["type"];
 
     const renderAction=function(type,id){
-      if (type==="Update") {
+      if (type==="update") {
 
               return (
                       <a href={`app/hr/master/designation.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-pencil"></span></a>
@@ -80,7 +80,7 @@ class ShowDesignation extends React.Component {
     }
 
       return (<div>
-        <h3>{mode} Designation </h3>
+        <h3>{titleCase(getUrlVars()["type"])} Designation </h3>
         <table id="designationTable" className="table table-bordered">
             <thead>
                 <tr>

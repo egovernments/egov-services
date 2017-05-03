@@ -49,6 +49,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.egov.eis.model.Employee;
+import org.egov.eis.model.enums.MaritalStatus;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Component;
@@ -79,6 +80,7 @@ public class EmployeeTableRowMapper implements ResultSetExtractor<Employee> {
 		employee.setCategory((Long) rs.getObject("categoryid"));
 		employee.setPhysicallyDisabled((Boolean) rs.getObject("physicallydisabled"));
 		employee.setMedicalReportProduced((Boolean) rs.getObject("medicalReportproduced"));
+		employee.setMaritalStatus(MaritalStatus.fromValue(rs.getString("maritalStatus")));
 		employee.setPassportNo(rs.getString("passportno"));
 		employee.setGpfNo(rs.getString("gpfno"));
 		employee.setBank((Long) rs.getObject("bankid"));

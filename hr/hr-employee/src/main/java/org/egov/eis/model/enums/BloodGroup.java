@@ -41,7 +41,9 @@
 package org.egov.eis.model.enums;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -64,13 +66,15 @@ public enum BloodGroup {
         return StringUtils.capitalize(name());
     }
 
-	@JsonCreator
-	public static List<String> getAllObjectValues() {
-		List<String> allObjectValues = new ArrayList<>();
+	public static List<Map<String, String>> getBloodGroups() {
+		List<Map<String, String>> bloodGroups = new ArrayList<>();
 		for (BloodGroup obj : BloodGroup.values()) {
-			allObjectValues.add(obj.value);
+			Map<String, String> bloodGroup = new HashMap<>();
+			bloodGroup.put("id", obj.toString());
+			bloodGroup.put("name", obj.value);
+			bloodGroups.add(bloodGroup);
 		}
-		return allObjectValues;
+		return bloodGroups;
 	}
 
 	@JsonCreator

@@ -41,6 +41,7 @@
 package org.egov.eis.web.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -96,8 +97,7 @@ public class EnumsController {
 			return errorResponseEntity;
 
 		// Call service
-		List<String> bloodGroups = BloodGroup.getAllObjectValues();
-
+		List<Map<String, String>> bloodGroups = BloodGroup.getBloodGroups();
 		LOGGER.debug("BloodGroups : " + bloodGroups);
 
 		return getSuccessResponseForSearchBloodGroup(bloodGroups, requestInfo);
@@ -139,7 +139,7 @@ public class EnumsController {
 	 * @param RequestInfo
 	 * @return ResponseEntity<?>
 	 */
-	private ResponseEntity<?> getSuccessResponseForSearchBloodGroup(List<String> bloodGroups,
+	private ResponseEntity<?> getSuccessResponseForSearchBloodGroup(List<Map<String, String>> bloodGroups,
 			RequestInfo requestInfo) {
 		BloodGroupResponse bloodGroupResponse = new BloodGroupResponse();
 		bloodGroupResponse.setBloodGroup(bloodGroups);

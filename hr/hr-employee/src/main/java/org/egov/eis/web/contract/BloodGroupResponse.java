@@ -42,6 +42,7 @@ package org.egov.eis.web.contract;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -64,6 +65,6 @@ public class BloodGroupResponse {
 	private ResponseInfo responseInfo;
 
 	@JsonProperty("BloodGroup")
-	private List<String> bloodGroup = new ArrayList<String>();
+	private List<Map<String, String>> bloodGroup = new ArrayList<>();
 
 }

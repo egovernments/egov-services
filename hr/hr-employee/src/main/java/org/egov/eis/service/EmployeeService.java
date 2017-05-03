@@ -209,6 +209,8 @@ public class EmployeeService {
 		employee.setTest(departmentalTestRepository.findByEmployeeId(employeeId, tenantId));
 		employeeDocumentsService.populateDocumentsInRespectiveObjects(employee);
 
+		System.err.println("After Employee Search: " + employee);
+
 		return employee;
 	}
 
@@ -217,8 +219,7 @@ public class EmployeeService {
 
 		ResponseEntity<?> responseEntity = null;
 
-		// FIXME : User service is expecting & sending dates in multiple
-		// formats. Fix a common standard
+		// FIXME : User service is expecting & sending dates in multiple formats. Fix a common standard
 		try {
 			responseEntity = userService.createUser(userRequest);
 

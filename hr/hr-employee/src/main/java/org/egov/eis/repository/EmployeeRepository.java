@@ -89,7 +89,7 @@ public class EmployeeRepository {
 
 	public static final String SELECT_BY_EMPLOYEEID_QUERY = "SELECT"
 			+ " id, code, dateOfAppointment, dateOfJoining, dateOfRetirement, employeeStatus, recruitmentModeId,"
-			+ " recruitmentTypeId, recruitmentQuotaId, retirementAge, dateOfResignation, dateOfTermination,"
+			+ " recruitmentTypeId, recruitmentQuotaId, maritalStatus, retirementAge, dateOfResignation, dateOfTermination,"
 			+ " employeeTypeId, motherTongueId, religionId, communityId, categoryId, physicallyDisabled, placeOfBirth,"
 			+ " medicalReportProduced, passportNo, gpfNo, bankId, bankBranchId, bankAccount, groupId, tenantId"
 			+ " FROM egeis_employee" + " WHERE id = ? AND tenantId = ? ";

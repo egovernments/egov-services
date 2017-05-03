@@ -96,6 +96,7 @@ public class UserService {
 		try {
 			UserResponse userResponse = new RestTemplate().postForObject(url, userGetRequest, UserResponse.class);
 			users = userResponse.getUser();
+			System.err.println("After User Search: " + users.get(0));
 		} catch (Exception e) {
 			LOGGER.debug("Following Exception Occurred While Calling User Service : " + e.getMessage());
 			e.printStackTrace();
@@ -111,7 +112,9 @@ public class UserService {
 
 		UserResponse userResponse = null;
 		try {
+			System.err.println("Before User Create: " + userRequest.getUser());
 			userResponse = new RestTemplate().postForObject(url, userRequest, UserResponse.class);
+			System.err.println("After User Create: " + userResponse.getUser());
 		} catch (HttpClientErrorException e) {
 			String errorResponseBody = e.getResponseBodyAsString();
 			System.err.println("Following exception occurred: " + e.getResponseBodyAsString());

@@ -171,7 +171,7 @@ class SearchAsset extends React.Component {
                                   <td>{item.assetCategory.name}</td>
                                   <td>{getNameById(departments,item.department.id)}</td>
                                   <td>{item.status}</td>
-                                  <td>{item.assetDetails?item.assetDetails:"NULL"}</td>
+                                  <td>{item.assetDetails?item.assetDetails:"-"}</td>
 
                                   <td data-label="action">
                       {renderAction(getUrlVars()["type"],item.id)}
@@ -265,7 +265,7 @@ class SearchAsset extends React.Component {
                       <select id="status" name="status" value={status} onChange={(e)=>{
                               handleChange(e,"status")
                           }}>
-                            <option>Select Department</option>
+                            <option>Select Status</option>
                             {renderOption(this.state.statusList)}
                          </select>
                   </div>

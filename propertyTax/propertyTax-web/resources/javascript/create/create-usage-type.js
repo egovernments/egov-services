@@ -2,15 +2,21 @@ class CreateUsageType extends React.Component {
   constructor(props) {
     super(props);
     this.state={list:[],searchSet:{
-    name:"",
-    code:"",
-    factor:""}
+    "name":"",
+    "code":"",
+    "factor":"",
+  "description":"",
+"nameLocal":"",
+"factor":"",
+"active":"",
+"isResidential":"",
+"toDate":"",
+"fromDate":""}
       }
      this.handleChange=this.handleChange.bind(this);
      this.addOrUpdate=this.addOrUpdate.bind(this);
 
   }
-
   handleChange(e,name)
       {
           this.setState({
@@ -43,6 +49,18 @@ class CreateUsageType extends React.Component {
             })
         }
 
+        $('#fromDate').datepicker({
+                  format: 'dd/mm/yyyy',
+                  autoclose:true
+
+              });
+              $('#toDate').datepicker({
+                          format: 'dd/mm/yyyy',
+                          autoclose:true
+
+                      });
+
+
 
 
       }
@@ -69,7 +87,7 @@ class CreateUsageType extends React.Component {
   render() {
     let {handleChange,addOrUpdate}=this;
     let {list}=this.state;
-    let {name,code,factor}=this.state.searchSet;
+    let {name,code,factor,description,nameLocal,active,isResidential,toDate,fromDate}=this.state.searchSet;
     let mode=getUrlVars()["type"];
 
     const showActionButton=function() {
@@ -94,22 +112,22 @@ class CreateUsageType extends React.Component {
           <div className="col-sm-6">
               <div className="row">
                   <div className="col-sm-6 label-text">
-                    <label for=""> Code </label>
+                    <label for=""> Name </label>
                   </div>
                   <div className="col-sm-6">
-                      <input type="text" id="code" name="code" value={code}
-                        onChange={(e)=>{  handleChange(e,"code")}}/>
+                      <input type="text" id="name" name="name" value={name}
+                        onChange={(e)=>{  handleChange(e,"name")}}/>
                   </div>
               </div>
             </div>
             <div className="col-sm-6">
                 <div className="row">
                     <div className="col-sm-6 label-text">
-                      <label for="">Name</label>
+                      <label for="">Name Local</label>
                     </div>
                     <div className="col-sm-6">
-                        <input  type="text" id="name" name="name" value={name}
-                        onChange={(e)=>{  handleChange(e,"name")}}/>
+                        <input  type="text" id="nameLocal" name="nameLocal" value={nameLocal}
+                        onChange={(e)=>{  handleChange(e,"nameLocal")}}/>
 
                       </div>
                     </div>
@@ -119,20 +137,104 @@ class CreateUsageType extends React.Component {
                     <div className="col-sm-6">
                         <div className="row">
                             <div className="col-sm-6 label-text">
-                              <label for=""> Factor Value </label>
+                              <label for=""> Code </label>
                             </div>
                             <div className="col-sm-6">
-                                <input type="number" id="factor" name="factor" value={factor}
-                                  onChange={(e)=>{  handleChange(e,"factor")}}/>
+                                <input type="text" id="code" name="code" value={code}
+                                  onChange={(e)=>{  handleChange(e,"code")}}/>
                             </div>
                         </div>
                       </div>
+                      <div className="col-sm-6">
+                          <div className="row">
+                              <div className="col-sm-6 label-text">
+                                <label for=""> Description </label>
+                              </div>
+                              <div className="col-sm-6">
+                                  <input type="text" id="description" name="description" value={description}
+                                    onChange={(e)=>{  handleChange(e,"description")}}/>
+                              </div>
+                          </div>
+                        </div>
+
                     </div>
 
 
+                    <div className="row">
+                       <div className="col-sm-6">
+                           <div className="row">
+                               <div className="col-sm-6 label-text">
+                                 <label for=""> Factor </label>
+                               </div>
+                               <div className="col-sm-6">
+                                   <input type="text" id="factor" name="factor" value={factor}
+                                     onChange={(e)=>{  handleChange(e,"factor")}}/>
+                               </div>
+                           </div>
+                         </div>
+                         <div className="col-sm-6">
+                             <div className="row">
+                                 <div className="col-sm-6 label-text">
+                                   <label for=""> Active </label>
+                                 </div>
+                                 <div className="col-sm-6">
+                                     <input type="checkbox" id="active" name="active" value={active}
+                                       onChange={(e)=>{  handleChange(e,"active")}}/>
+                                 </div>
+                             </div>
+                           </div>
+                          </div>
 
 
-                    <div className="text-center">
+
+                            <div className="row">
+                     <div className="col-sm-6">
+                         <div className="row">
+                             <div className="col-sm-6 label-text">
+                               <label for="">From Date <span>*</span></label>
+                             </div>
+                             <div className="col-sm-6">
+                             <div className="text-no-ui">
+                             <span><i className="glyphicon glyphicon-calendar"></i></span>
+                             <input type="text" id="fromDate" name="fromDate" value="fromDate" value={fromDate}
+                             onChange={(e)=>{handleChange(e,"fromDate")}}required/>
+
+                             </div>
+                         </div>
+                       </div>
+                   </div>
+                       <div className="col-sm-6">
+                           <div className="row">
+                               <div className="col-sm-6 label-text">
+                                 <label for="">To Date <span>*</span> </label>
+                               </div>
+                               <div className="col-sm-6">
+                               <div className="text-no-ui">
+                             <span><i className="glyphicon glyphicon-calendar"></i></span>
+                             <input type="text"  id="toDate" name="toDate" value={toDate}
+                             onChange={(e)=>{
+                                 handleChange(e,"toDate")}}required/>
+                             </div>
+                         </div>
+                     </div>
+                   </div>
+               </div>
+
+               <div className="row">
+                  <div className="col-sm-6">
+                      <div className="row">
+                          <div className="col-sm-6 label-text">
+                            <label for=""> Is Residential </label>
+                          </div>
+                          <div className="col-sm-6">
+                              <input type="checkbox" id="isResidential" name="isResidential" value={isResidential}
+                                onChange={(e)=>{  handleChange(e,"isResidential")}}/>
+                          </div>
+                      </div>
+                    </div>
+                 </div>
+
+                      <div className="text-center">
                     {showActionButton()} &nbsp;&nbsp;
                     <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>
                     </div>

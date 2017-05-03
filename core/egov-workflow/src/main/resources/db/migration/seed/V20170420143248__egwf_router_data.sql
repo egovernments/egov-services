@@ -1,1 +1,1 @@
-INSERT INTO egpgr_router (id, complainttypeid, "position", bndryid, version, createdby, createddate, lastmodifiedby, lastmodifieddate,tenantid) VALUES (1, NULL, 2, 1, 0, 1, '2015-08-28', 1, '2015-08-28','ap.public');
+INSERT INTO egpgr_router (id, complainttypeid, "position", bndryid, version, createdby, createddate, lastmodifiedby, lastmodifieddate,tenantid) VALUES (1, NULL,1, 172, 0, 1, '2015-08-28', 1, '2015-08-28','default');

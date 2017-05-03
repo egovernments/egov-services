@@ -59,7 +59,7 @@ public class AgreementDao {
 				agreement.getTenantId(), new Date(), new Date(), agreement.getAllottee().getId(),
 				agreement.getAsset().getId(), rentIncrement, agreement.getAcknowledgementNumber(),
 				agreement.getStateId(), agreement.getTenantId(), agreement.getCollectedSecurityDeposit(),
-				agreement.getCollectedGoodWillAmount(), agreement.getSource() };
+				agreement.getCollectedGoodWillAmount(), agreement.getSource().toString() };
 
 		try {
 			jdbcTemplate.update(agreementinsert, obj);

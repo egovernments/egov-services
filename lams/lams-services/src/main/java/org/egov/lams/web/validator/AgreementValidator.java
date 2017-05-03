@@ -74,7 +74,7 @@ public class AgreementValidator {
 	public void validateAsset(AgreementRequest agreementRequest) {
 
 		Long assetId = agreementRequest.getAgreement().getAsset().getId();
-		String queryString = "id=" + assetId;
+		String queryString = "id=" + assetId + "&tenantId=" + agreementRequest.getAgreement().getTenantId();
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(agreementRequest.getRequestInfo());
 		AssetResponse assetResponse = assetService.getAssets(queryString,requestInfoWrapper);

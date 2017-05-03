@@ -14,9 +14,9 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
-@EnableTransactionManagement
 public class AgreementDao {
 
 	@Autowired
@@ -24,6 +24,7 @@ public class AgreementDao {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(AgreementDao.class);
 
+	@Transactional
 	public void saveAgreement(AgreementRequest agreementRequest) {
 		
 		Agreement agreement = agreementRequest.getAgreement();
@@ -44,9 +45,7 @@ public class AgreementDao {
 		if(agreement.getRentIncrementMethod() !=null)
 			rentIncrement = agreement.getRentIncrementMethod().getId();
 		
-
-		Object[] obj = new Object[] { 
-				agreement.getId(), agreement.getAgreementDate(), agreement.getAgreementNumber(),
+		Object[] obj = new Object[] { agreement.getId(), agreement.getAgreementDate(), agreement.getAgreementNumber(),
 				agreement.getBankGuaranteeAmount(), agreement.getBankGuaranteeDate(), agreement.getCaseNo(),
 				agreement.getCommencementDate(), agreement.getCouncilDate(), agreement.getCouncilNumber(),
 				agreement.getExpiryDate(), agreement.getNatureOfAllotment().toString(), agreement.getOrderDate(),
@@ -58,7 +57,8 @@ public class AgreementDao {
 				agreement.getTenderNumber(), agreement.getTradelicenseNumber(), agreement.getTenantId(),
 				agreement.getTenantId(), new Date(), new Date(), agreement.getAllottee().getId(),
 				agreement.getAsset().getId(), rentIncrement, agreement.getAcknowledgementNumber(),
-				agreement.getStateId(), agreement.getTenantId(), agreement.getCollectedSecurityDeposit(),
+				agreement.getStateId(), agreement.getTenantId(), agreement.getGoodWillAmount(),
+				agreement.getTimePeriod(), agreement.getCollectedSecurityDeposit(),
 				agreement.getCollectedGoodWillAmount(), agreement.getSource().toString() };
 
 		try {
@@ -69,18 +69,20 @@ public class AgreementDao {
 		}
 		
 		String sql ="INSERT INTO eglams_demand values ( nextval('seq_eglams_demand'),?,?,?)";
-		List<Object[]> batchArgs = new ArrayList<>();
 		List<String> demands = agreement.getDemands();
-		int demandsCount = demands.size();
-		for(int i=0;i<demandsCount;i++){
-			Object[] demandRecord = {agreement.getTenantId(),agreement.getId(),demands.get(i)};
-			batchArgs.add(demandRecord);
-		}
-		try {
-			jdbcTemplate.batchUpdate(sql, batchArgs);
-		} catch (DataAccessException ex) {
-			ex.printStackTrace();
-			throw new RuntimeException(ex.getMessage());
+		if (demands != null) {
+			List<Object[]> batchArgs = new ArrayList<>();
+			int demandsCount = demands.size();
+			for (int i = 0; i < demandsCount; i++) {
+				Object[] demandRecord = { agreement.getTenantId(), agreement.getId(), demands.get(i) };
+				batchArgs.add(demandRecord);
+			}
+			try {
+				jdbcTemplate.batchUpdate(sql, batchArgs);
+			} catch (DataAccessException ex) {
+				ex.printStackTrace();
+				throw new RuntimeException(ex.getMessage());
+			}
 		}
 	}
 
@@ -103,7 +105,9 @@ public class AgreementDao {
 				agreement.getTenderNumber(), agreement.getTradelicenseNumber(), 1, null, new Date(), null,
 				agreement.getAllottee().getId(), agreement.getAsset().getId(),
 				agreement.getRentIncrementMethod().getId(), agreement.getAcknowledgementNumber(),
-				agreement.getStateId(), agreement.getTenantId(),
+				agreement.getStateId(), agreement.getTenantId(),agreement.getGoodWillAmount(),
+				agreement.getTimePeriod(),agreement.getCollectedSecurityDeposit(),
+				agreement.getCollectedGoodWillAmount(),agreement.getSource(),
 				
 				agreement.getAcknowledgementNumber(),agreement.getTenantId()};
 

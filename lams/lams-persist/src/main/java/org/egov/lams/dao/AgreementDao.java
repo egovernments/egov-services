@@ -44,9 +44,7 @@ public class AgreementDao {
 		if(agreement.getRentIncrementMethod() !=null)
 			rentIncrement = agreement.getRentIncrementMethod().getId();
 		
-
-		Object[] obj = new Object[] { 
-				agreement.getId(), agreement.getAgreementDate(), agreement.getAgreementNumber(),
+		Object[] obj = new Object[] { agreement.getId(), agreement.getAgreementDate(), agreement.getAgreementNumber(),
 				agreement.getBankGuaranteeAmount(), agreement.getBankGuaranteeDate(), agreement.getCaseNo(),
 				agreement.getCommencementDate(), agreement.getCouncilDate(), agreement.getCouncilNumber(),
 				agreement.getExpiryDate(), agreement.getNatureOfAllotment().toString(), agreement.getOrderDate(),
@@ -58,7 +56,8 @@ public class AgreementDao {
 				agreement.getTenderNumber(), agreement.getTradelicenseNumber(), agreement.getTenantId(),
 				agreement.getTenantId(), new Date(), new Date(), agreement.getAllottee().getId(),
 				agreement.getAsset().getId(), rentIncrement, agreement.getAcknowledgementNumber(),
-				agreement.getStateId(), agreement.getTenantId(), agreement.getCollectedSecurityDeposit(),
+				agreement.getStateId(), agreement.getTenantId(), agreement.getGoodWillAmount(),
+				agreement.getTimePeriod(), agreement.getCollectedSecurityDeposit(),
 				agreement.getCollectedGoodWillAmount(), agreement.getSource().toString() };
 
 		try {

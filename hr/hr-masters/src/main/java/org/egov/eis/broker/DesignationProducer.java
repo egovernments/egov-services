@@ -1,4 +1,3 @@
-
 /*
  * eGov suite of products aim to improve the internal efficiency,transparency,
  * accountability and the service delivery of the government  organizations.
@@ -39,68 +38,34 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.asset.model;
+package org.egov.eis.broker;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.SendResult;
+import org.springframework.stereotype.Service;
+import org.springframework.util.concurrent.ListenableFuture;
+import org.springframework.util.concurrent.ListenableFutureCallback;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+@Service
+public class DesignationProducer {
 
-import org.egov.asset.model.enums.ModeOfAcquisition;
-import org.egov.asset.model.enums.Status;
+	@Autowired
+	private KafkaTemplate<String, Object> kafkaTemplate;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+	public void sendMessage(String topic, String key, Object message) {
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+		ListenableFuture<SendResult<String, Object>> future = kafkaTemplate.send(topic, key, message);
 
-@AllArgsConstructor
-@EqualsAndHashCode
-@Getter
-@NoArgsConstructor
-@Setter
-@ToString
-public class Asset {
+		// Handle success or failure of sending
+		future.addCallback(new ListenableFutureCallback<SendResult<String, Object>>() {
+			@Override
+			public void onSuccess(SendResult<String, Object> stringTSendResult) {
+			}
 
-	@NotNull
-	private String tenantId;
-	private Long id;
-	
-	@NotNull
-	private String name;
-	private String code;
-	
-	private Department department;
-	
-	@Valid
-	private AssetCategory assetCategory;
-	private String assetDetails;
-	private ModeOfAcquisition modeOfAcquisition;
-	
-	@NotNull
-	private Status status;
-	private String description;
-	
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date dateOfCreation;
-	
-	private Location locationDetails;
-	
-	private String remarks;
-	private String length;
-	private String width;
-	private String totalArea;
-	private Double grossValue;
-	private Double accumulatedDepreciation;
-	private Long assetReference = null;
-	private String version;
-    private List<Attributes> assetAttributes = new ArrayList<Attributes>();
-    
-	
+			@Override
+			public void onFailure(Throwable throwable) {
+			}
+		});
+	}
 }

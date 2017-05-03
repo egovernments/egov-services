@@ -24,11 +24,6 @@ class Calender_setup extends React.Component{
         })
 
     }
-    componentWillMount() {
-
-    }
-
-
 
 
     componentDidMount(){

@@ -54,7 +54,6 @@ addOrUpdate(e,mode)
         e.preventDefault();
 
         var tempInfo=Object.assign({},this.state.LeaveType) , type = getUrlVars()["type"];
-        console.log(tempInfo);
         var body={
             "RequestInfo":requestInfo,
             "LeaveType":[tempInfo]
@@ -142,12 +141,12 @@ addOrUpdate(e,mode)
     var type=getUrlVars()["type"];
     var id=getUrlVars()["id"];
 
-    if(getUrlVars()["type"]==="View")
+    if(getUrlVars()["type"]==="view")
     {
       $("input,select,radio,textarea").prop("disabled", true);
       }
 
-      if(type==="View"||type==="Update")
+      if(type==="view"||type==="update")
       {
           this.setState({
             LeaveType:getCommonMasterById("hr-leave","leavetypes","LeaveType",id).responseJSON["LeaveType"][0]
@@ -160,7 +159,7 @@ addOrUpdate(e,mode)
     let {name,payEligible,encashable,halfdayAllowed,accumulative,description,active}=this.state.LeaveType;
     let mode=getUrlVars()["type"];
     const showActionButton=function() {
-      if((!mode)|| mode==="Update")
+      if((!mode)|| mode==="update")
       {
           return (<button type="submit" className="btn btn-submit">{mode?"Update":"Add"}</button>);
       }

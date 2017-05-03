@@ -44,12 +44,13 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.egov.eis.web.contract.RequestInfoWrapper;
 import org.egov.eis.model.Designation;
 import org.egov.eis.service.DesignationService;
 import org.egov.eis.web.contract.DesignationGetRequest;
+import org.egov.eis.web.contract.DesignationRequest;
 import org.egov.eis.web.contract.DesignationResponse;
 import org.egov.eis.web.contract.RequestInfo;
+import org.egov.eis.web.contract.RequestInfoWrapper;
 import org.egov.eis.web.contract.ResponseInfo;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
 import org.egov.eis.web.errorhandlers.ErrorHandler;
@@ -60,6 +61,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -111,6 +113,47 @@ public class DesignationController {
 	}
 
 	/**
+	 * Maps Post Requests for _create & returns ResponseEntity of either
+	 * DesignationResponse type or ErrorResponse type
+	 * 
+	 * @param DesignationRequest
+	 * @param BindingResult
+	 * @return ResponseEntity<?>
+	 */
+
+	@PostMapping("_create")
+	@ResponseBody
+	public ResponseEntity<?> create(@RequestBody DesignationRequest designationRequest, BindingResult bindingResult) {
+
+		ResponseEntity<?> errorResponseEntity = validateDesignationRequest(designationRequest, bindingResult);
+		if (errorResponseEntity != null)
+			return errorResponseEntity;
+
+		return designationService.createDesignation(designationRequest);
+	}
+
+	/**
+	 * Maps Post Requests for _create & returns ResponseEntity of either
+	 * DesignationDesignationResponse type or ErrorResponse type
+	 * 
+	 * @param DesignationRequest
+	 * @param BindingResult
+	 * @return ResponseEntity<?>
+	 */
+
+	@PostMapping("/{id}/_update")
+	@ResponseBody
+	public ResponseEntity<?> update(@RequestBody DesignationRequest designationRequest,
+			@PathVariable(required = true, name = "id") Long id, BindingResult bindingResult) {
+
+		ResponseEntity<?> errorResponseEntity = validateDesignationRequest(designationRequest, bindingResult);
+		if (errorResponseEntity != null)
+			return errorResponseEntity;
+		designationRequest.getDesignation().setId(id);
+		return designationService.updateDesignation(designationRequest);
+	}
+
+	/**
 	 * Populate Response object and returndesignationsList
 	 * 
 	 * @param designationsList
@@ -126,4 +169,21 @@ public class DesignationController {
 
 	}
 
+	/**
+	 * Validate EmployeeRequest object & returns ErrorResponseEntity if there
+	 * are any errors or else returns null
+	 * 
+	 * @param EmployeeRequest
+	 * @param bindingResult
+	 * @return ResponseEntity<?>
+	 */
+	private ResponseEntity<?> validateDesignationRequest(DesignationRequest designationRequest,
+			BindingResult bindingResult) {
+		// validate input params that can be handled by annotations
+		if (bindingResult.hasErrors()) {
+			return errHandler.getErrorResponseEntityForBindingErrors(bindingResult,
+					designationRequest.getRequestInfo());
+		}
+		return null;
+	}
 }

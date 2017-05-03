@@ -21,17 +21,10 @@ class ViewApply extends React.Component {
 
   }
 
-  componentWillMount() {
-
-
-  }
-
-
 
   componentDidMount() {
     var employee = getUrlVars()["id"];
     var leaveApp = commonApiPost("hr-leave","leaveapplications","_search",{employee,tenantId}).responseJSON["LeaveApplication"] ;
-    console.log(leaveApp);
     var empIds = [];
     for(var i=0; i<leaveApp.length; i++) {
       if(empIds.indexOf(leaveApp[i].employee) == -1)
@@ -85,7 +78,6 @@ class ViewApply extends React.Component {
 
     const renderBody=function()
     {
-      console.log("hi");
       return list.map((item,index)=>
       {
             return (<tr key={index}>

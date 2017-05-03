@@ -9,12 +9,6 @@ class Designation extends React.Component{
       this.addOrUpdate=this.addOrUpdate.bind(this);
     }
 
-    // componentWillMount(){
-    //   this.setState({
-    //   descriptionList:commonApiPost("hr-masters","designations","_search",{tenantId}).responseJSON["Designation"]
-    // })
-    //
-    // }
       handleChange(e,name){
         this.setState({
           designationSet:{

@@ -2009,7 +2009,7 @@ $("#createEmployeeForm").validate({
           //Handle error
         } else {
           var response = $.ajax({
-            url: baseUrl + "/hr-employee/employees/" + ((getUrlVars()["type"] == "update") ? "_update" : "_create") + "?tenantId=" + tenantId,
+            url: baseUrl + "/hr-employee/employees/" + ((getUrlVars()["type"] == "update") ? ( employee.id + "/_update") : "_create") + "?tenantId=" + tenantId,
             type: 'POST',
             dataType: 'json',
             data: JSON.stringify({
@@ -2627,7 +2627,7 @@ function printValue(object = "", values) {
           if (values[key][ckey]) {
             //Get description
             if (ckey == "dob") {
-              $("[name='" + key + "." + ckey + "']").val(values[key][ckey].split("-")[2] + "/" + values[key][ckey].split("-")[1] + "/" + values[key][ckey].split("-")[0]);
+              $("[name='" + key + "." + ckey + "']").val(values[key][ckey] ? values[key][ckey].split("-")[2] + "/" + values[key][ckey].split("-")[1] + "/" + values[key][ckey].split("-")[0] : "");
 
             } else if(ckey == "active") {
               if([true, "true"].indexOf(values[key][ckey]) > -1) {
@@ -2636,7 +2636,7 @@ function printValue(object = "", values) {
                 $('[data-active="no"]').prop("checked", false);
               }
             } else {
-              $("[name='" + key + "." + ckey + "']").val(values[key][ckey]);
+              $("[name='" + key + "." + ckey + "']").val(values[key][ckey] ? values[key][ckey] : "");
 
             }
           }
@@ -2648,7 +2648,7 @@ function printValue(object = "", values) {
           $('[data-ph="no"]').prop("checked", true);
         }
       } else if (values[key]) {
-        $("[name='" + key + "']").val(values[key]);
+        $("[name='" + key + "']").val(values[key] ? values[key] : "");
       } else {
         // $("[name='" + (isAsset ? "asset." : "") + key + "']").text("NA");
       }

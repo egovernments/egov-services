@@ -138,7 +138,7 @@ public class AssetRepository {
 				status,asset.getTenantId(),location.getZone(),location.getRevenueWard(),location.getStreet(),
 				location.getElectionWard(),location.getDoorNo(),location.getPinCode(),location.getLocality(),location.getBlock(),
 				property,requestInfo.getUserInfo().getId(), new Date(), requestInfo.getUserInfo().getId(), new Date(),
-				asset.getGrossValue(),asset.getAccumulatedDepreciation(),asset.getAssetRefrance(),asset.getVersion()};
+				asset.getGrossValue(),asset.getAccumulatedDepreciation(),asset.getAssetReference(),asset.getVersion()};
 		try{
 			 jdbcTemplate.update(query, obj);
 		} catch(Exception ex) {
@@ -186,7 +186,7 @@ public class AssetRepository {
 				asset.getLength(),asset.getWidth(),asset.getTotalArea(),modeOfAcquisition,
 				status,location.getZone(),location.getRevenueWard(),location.getStreet(),
 				location.getElectionWard(),location.getDoorNo(),location.getPinCode(),location.getLocality(),location.getBlock(),
-				property,requestInfo.getMsgId(), new Date(),asset.getGrossValue(),asset.getAccumulatedDepreciation(),asset.getAssetRefrance(),
+				property,requestInfo.getMsgId(), new Date(),asset.getGrossValue(),asset.getAccumulatedDepreciation(),asset.getAssetReference(),
 				asset.getVersion(),asset.getCode(),asset.getTenantId()};
 		try{
 			System.out.println("query1::"+query+","+Arrays.toString(obj));

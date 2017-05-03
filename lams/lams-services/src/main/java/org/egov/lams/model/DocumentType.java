@@ -2,9 +2,7 @@ package org.egov.lams.model;
 
 
 import org.egov.lams.model.enums.Application;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

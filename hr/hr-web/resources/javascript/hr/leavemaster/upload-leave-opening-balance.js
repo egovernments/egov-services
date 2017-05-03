@@ -4,21 +4,12 @@ class UploadLeaveType extends React.Component{
     super(props);
     this.state={LeaveType:{
         "id": "",
-        "name": "",
-        "description": "",
-        "halfdayAllowed": "false",
-        "payEligible": "false",
-        "accumulative": "false",
-        "encashable": "false",
-        "active": "true",
-        "createdBy": "",
-        "createdDate": "",
-        "lastModifiedBy": "",
-        "lastModifiedDate": "",
+        "my_file_input":"",
         "tenantId": tenantId
-  },dataType:[]}
+  },temp:[],dataType:[]}
     this.handleChange=this.handleChange.bind(this);
     this.addOrUpdate=this.addOrUpdate.bind(this);
+    this.filePicked=this.filePicked.bind(this);
   }
 
   handleChange(e,name)
@@ -43,63 +34,69 @@ class UploadLeaveType extends React.Component{
 
   }
 
+  filePicked(oEvent) {
+      // Get The File From The Input
+      var oFile = oEvent.target.files[0];
+      var sFilename = oFile.name;
+      var _this = this, oJS;
+      // Create A File Reader HTML5
+      var reader = new FileReader();
+
+      // Ready The Event For When A File Gets Selected
+      reader.onload = function(e) {
+          var data = e.target.result;
+
+          var cfb = XLSX.read(data, {
+              type: 'binary'
+          });
+          cfb.SheetNames.forEach(function(sheetName) {
+              // Obtain The Current Row As CSV
+                var sCSV = XLS.utils.make_csv(cfb.Sheets[sheetName]);
+               oJS = XLS.utils.sheet_to_json(cfb.Sheets[sheetName]);
+          });
+          var finalObject = [];
+          console.log("OJS",oJS);
+          oJS.forEach(function(d){
+            finalObject.push({"employee": d["Employee Code"],
+                              "calendarYear":d["Calendar Year"],
+                              "leaveType":  { "id": d["Leave type"]},
+                              "noOfDays" : d["Number of days as on 1st Jan 2017"]
+            });
+          });
+          console.log(JSON.stringify(finalObject));
+          _this.setState({
+            LeaveType:{
+              ..._this.state.LeaveType
+            }, temp : finalObject
+          })
+      };
+
+      // Tell JS To Start Reading The File.. You could delay this if desired
+      reader.readAsBinaryString(oFile);
+  }
+
   close(){
       // widow.close();
       open(location, '_self').close();
   }
 
+
+
 addOrUpdate(e,mode)
 {
 
         e.preventDefault();
-
-        var tempInfo=Object.assign({},this.state.LeaveType) , type = getUrlVars()["type"];
-        console.log(tempInfo);
+        console.log(JSON.stringify(this.state.temp));
+        var tempInfo=Object.assign([],this.state.temp);
+        console.log(JSON.stringify(tempInfo));
         var body={
             "RequestInfo":requestInfo,
-            "LeaveType":[tempInfo]
+            "LeaveOpeningBalance":tempInfo
           },_this=this;
 
-            if(type == "Update") {
-        $.ajax({
-              url:baseUrl+"/hr-leave/leavetypes/" + _this.state.LeaveType.id + "/" + "_update?tenantId=" + tenantId,
-              type: 'POST',
-              dataType: 'json',
-              data:JSON.stringify(body),
-              contentType: 'application/json',
-              headers:{
-                'auth-token': authToken
-              },
-              success: function(res) {
-                      showSuccess("Leave Modified successfully.");
-                      _this.setState({
-                        LeaveType:{
-                          "id": "",
-                          "name": "",
-                          "description": "",
-                          "halfdayAllowed": "false",
-                          "payEligible": "false",
-                          "accumulative": "false",
-                          "encashable": "false",
-                          "active": "true",
-                          "createdBy": "",
-                          "createdDate": "",
-                          "lastModifiedBy": "",
-                          "lastModifiedDate": "",
-                          "tenantId": tenantId
-                      }
-                      })
-
-              },
-              error: function(err) {
-                  showError("Leave Type already defined");
-
-              }
-          });
-        } else {
           $.ajax({
 
-                url:baseUrl+"/hr-leave/leavetypes/_create?tenantId=" + tenantId,
+                url: baseUrl + "/hr-leave/leaveopeningbalances/_create?tenantId=" + tenantId,
                 type: 'POST',
                 dataType: 'json',
                 data:JSON.stringify(body),
@@ -108,55 +105,27 @@ addOrUpdate(e,mode)
                   'auth-token': authToken
                 },
                 success: function(res) {
-                        showSuccess("Leave Created successfully.");
+                        showSuccess("File Uploaded successfully.");
                         _this.setState({
                           LeaveType:{
                             "id": "",
-                            "name": "",
-                            "description": "",
-                            "halfdayAllowed": "false",
-                            "payEligible": "false",
-                            "accumulative": "false",
-                            "encashable": "false",
-                            "active": "true",
-                            "createdBy": "",
-                            "createdDate": "",
-                            "lastModifiedBy": "",
-                            "lastModifiedDate": "",
+                            "my_file_input": "",
                             "tenantId": tenantId
                         }
                         })
 
                 },
                 error: function(err) {
-                    showError("Leave Type already defined");
+                    showError("Only excel file can Upload");
 
                 }
             });
 
-        }
   }
 
-
-  componentDidMount(){
-    var type=getUrlVars()["type"];
-    var id=getUrlVars()["id"];
-
-    if(getUrlVars()["type"]==="View")
-    {
-      $("input,select,radio,textarea").prop("disabled", true);
-      }
-
-      if(type==="View"||type==="Update")
-      {
-          this.setState({
-            LeaveType:getCommonMasterById("hr-leave","leavetypes","LeaveType",id).responseJSON["LeaveType"][0]
-          })
-      }
-  }
   render()
   {
-    let {handleChange,addOrUpdate}=this;
+    let {handleChange,addOrUpdate,filePicked}=this;
     let {name,payEligible,encashable,halfdayAllowed,accumulative,description,active}=this.state.LeaveType;
     let mode=getUrlVars()["type"];
 
@@ -168,11 +137,11 @@ addOrUpdate(e,mode)
         <div className="col-sm-6">
             <div className="row">
                 <div className="col-sm-6 label-text">
-                    <label for="">Leave Type Name <span> * </span></label>
+                    <label for="">Upload File <span> * </span></label>
                 </div>
                 <div className="col-sm-6">
-                    <input type="text" name="name" id="name" value={name}
-                    onChange={(e)=>{handleChange(e,"name")}} required/>
+                    <input type="file" id="my_file_input" name="my_file_input"
+                    onChange={(e)=>{filePicked(e)}} required/>
 
                 </div>
             </div>

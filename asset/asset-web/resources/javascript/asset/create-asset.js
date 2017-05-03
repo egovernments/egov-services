@@ -122,7 +122,7 @@
 //         ]
 //       }
 //     ]
-
+var flag = 0;
 const titleCase = (field) => {
 	var newField = field[0].toUpperCase();
 	for(let i=1; i<field.length; i++) {
@@ -226,7 +226,8 @@ const defaultAssetSetState = {
     "length": "",
     "width": "",
     "totalArea": "",
-    "assetRefrance": "",
+    "assetReference": "",
+    "assetReferenceName": "",
     "assetAttributes":[]
 };
 
@@ -236,6 +237,14 @@ class CreateAsset extends React.Component {
     this.state = {
         list: [],
         assetSet: Object.assign({}, defaultAssetSetState),
+        refSet: {
+          tenantId: tenantId,
+          name: "",
+          department: "",
+          assetCategory: "",
+          status: "",
+          code: ""
+        },
         assetCategories,
         locality,
         electionwards,
@@ -253,13 +262,17 @@ class CreateAsset extends React.Component {
         success: "",
 				assetAttribute:{},
         readonly: false,
-        newRows: {}
+        newRows: {},
+        references: []
     }
     this.handleChange = this.handleChange.bind(this);
     this.handleChangeTwoLevel = this.handleChangeTwoLevel.bind(this);
     this.addOrUpdate = this.addOrUpdate.bind(this);
     this.handleChangeAssetAttr = this.handleChangeAssetAttr.bind(this);
     this.addNewRow = this.addNewRow.bind(this);
+    this.handleReferenceChange = this.handleReferenceChange.bind(this);
+    this.handleRefSearch = this.handleRefSearch.bind(this);
+    this.selectRef = this.selectRef.bind(this);
 
   }
   close() {
@@ -280,6 +293,78 @@ class CreateAsset extends React.Component {
 			else {
         return [];
       }
+  }
+
+  handleReferenceChange(e, name) {
+    e.preventDefault();
+    this.setState({
+      refSet: {
+        ...this.state.refSet,
+        [name]: e.target.value
+      }
+    })
+  }
+
+  selectRef(e, id, name) {
+    e.preventDefault();
+    this.setState({
+      assetSet: {
+        ...this.state.assetSet,
+        assetReference: id,
+        assetReferenceName: name
+      },
+      refSet: {
+        tenantId: tenantId,
+        name: "",
+        department: "",
+        assetCategory: "",
+        status: "",
+        code: ""
+      },
+      references: []
+    });
+    flag = 1;
+    $("#refModal").modal("hide");
+  }
+
+  componentWillUpdate() {
+    if(flag == 1) {
+      flag = 0;
+      $('#refTable').dataTable().fnDestroy();
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+      if (prevState.references.length != this.state.references.length) {
+          $('#refTable').DataTable({
+             dom: 'Bfrtip',
+             ordering: false,
+             bDestroy: true,
+             language: {
+                "emptyTable": "No Records"
+             },
+             buttons: []
+          });
+      }
+  }
+
+  handleRefSearch(e) {
+    e.preventDefault();
+    if(!this.state.refSet.assetCategory) return;
+    var assets = [];
+    var res = commonApiPost("asset-services","assets","_search", this.state.refSet);
+    if(res.responseJSON && res.responseJSON["Assets"]) {
+      assets = res.responseJSON["Assets"];
+      this.setState({
+        references: assets
+      })
+    } else {
+      this.setState({
+        references: []
+      })
+    }
+
+    flag = 1;
   }
 
   handleChange(e, name) {
@@ -304,6 +389,7 @@ class CreateAsset extends React.Component {
         success: ""
       })
       var tempInfo = Object.assign({}, this.state.assetSet) , _this = this, type = getUrlVars()["type"];
+      delete tempInfo.assetReferenceName;
       if(tempInfo.assetAttributes && tempInfo.assetAttributes.length) {
         for(var i=0; i<tempInfo.assetAttributes.length;i++){
           if(tempInfo.assetAttributes[i].type == "Table") {
@@ -573,7 +659,15 @@ class CreateAsset extends React.Component {
                   }
               }, 2000);
           }
-          console.log(asset.assetAttributes);
+          
+          if(asset.assetReference) {
+            let res = getCommonMasterById("asset-services", "assets", "Assets", asset.assetReference);
+            if(res && res.responseJSON && res.responseJSON["Assets"] && res.responseJSON["Assets"][0]) {
+              this.setState({
+                assetReferenceName: asset.name
+              })
+            }
+          }
       }
   }
 
@@ -596,8 +690,8 @@ class CreateAsset extends React.Component {
   }
 
   render() {
-    let {handleChange, addOrUpdate, handleChangeTwoLevel, handleChangeAssetAttr, addNewRow}=this;
-    let {isSearchClicked, list, customFields, error, success, acquisitionList, readonly, newRows}=this.state;
+    let {handleChange, addOrUpdate, handleChangeTwoLevel, handleChangeAssetAttr, addNewRow, handleReferenceChange, handleRefSearch, selectRef} = this;
+    let {isSearchClicked, list, customFields, error, success, acquisitionList, readonly, newRows, refSet, references} = this.state;
     let {
       assetCategory,
       locationDetails,
@@ -623,7 +717,9 @@ class CreateAsset extends React.Component {
       accumulatedDepreciation,
       grossValue,
       status,
-      assetAttributes
+      assetAttributes,
+      assetReferenceName,
+      assetReference
   	} = this.state.assetSet;
     let mode = getUrlVars()["type"];
 
@@ -1028,39 +1124,42 @@ class CreateAsset extends React.Component {
 				}
 
         return (
-        <div className="col-sm-12" key={index}>
-          <div className="form-section row">
-          <div className="row">
-            <div className="col-md-8">
-              <h3 className="categoryType">{item.name}</h3>
-            </div>
-            <div className="col-md-4 text-right">
-              <button type="button" className="btn btn-primary" onClick={(e) => {addNewRow(e, item.name)}}>Add</button>
-            </div>
+          <div className="col-sm-12" key={index}>
+             <div className="form-section row">
+                <div className="row">
+                   <div className="col-md-8">
+                      <h3 className="categoryType">{item.name}</h3>
+                   </div>
+                   <div className="col-md-4 text-right">
+                      <button type="button" className="btn btn-primary" onClick={(e) => {addNewRow(e, item.name)}}>Add</button>
+                   </div>
+                </div>
+                <div className="row">
+                   <div className="land-table table-responsive">
+                      <table className="table table-bordered">
+                         <thead>
+                            <tr>
+                               {tableColumns()}
+                            </tr>
+                         </thead>
+                         <tbody>
+                            {tableRows()}
+                            {renderOldRows(item.name, item)}
+                            {renderNewRows(item.name, item)}
+                         </tbody>
+                      </table>
+                   </div>
+                </div>
+             </div>
           </div>
-
-          <div className="row">
-          <div className="land-table table-responsive">
-              <table className="table table-bordered">
-                  <thead>
-                    <tr>
-                        {tableColumns()}
-                    </tr>
-                  </thead>
-                  <tbody>
-                      {tableRows()}
-                      {renderOldRows(item.name, item)}
-                      {renderNewRows(item.name, item)}
-                  </tbody>
-              </table>
-          </div>
-          </div>
-        </div>
-        </div>
         )
 		}
 
-
+    const loadModal = function(e) {
+      e.preventDefault();
+      if(getUrlVars()["type"] == "view") return;
+      $("#refModal").modal("show");
+    }
 
     const showStart = function(status) {
         if (status) {
@@ -1099,16 +1198,58 @@ class CreateAsset extends React.Component {
               <div className="col-sm-6">
                   <div className="row">
                     <div className="col-sm-6 label-text">
-                        <label for="accumulatedDepreciation">Gross Value</label>
+                        <label for="accumulatedDepreciation">Accumulated Depreciation</label>
                     </div>
                     <div className="col-sm-6">
                         <input type="number" id="accumulatedDepreciation" name="accumulatedDepreciation" value= {accumulatedDepreciation}
-                          onChange={(e)=>{handleChange(e,"accumulatedDepreciation")}} min="1" maxlength="16" step="0.01" disabled={readonly}/>
+                          onChange={(e)=>{handleChange(e, "accumulatedDepreciation")}} min="1" maxlength="16" step="0.01" disabled={readonly}/>
                     </div>
                   </div>
               </div>
           </div>
         )
+      }
+    }
+
+    const renderRefBody = function() {
+      if (references.length > 0) {
+        return references.map((item, index) => {
+              return (<tr key={index}>
+                        <td>{item.code}</td>
+                        <td>{item.name}</td>
+                        <td>{item.assetCategory.name}</td>
+                        <td>{getNameById(departments, item.department.id)}</td>
+                        <td>{item.status}</td>
+                        <td data-label="action">
+                          <button className="btn btn-close" onClick={(e) => {selectRef(e, item.id, item.name)}}>Select</button>
+                        </td>
+                      </tr>  
+              );
+        })
+      }
+    }
+
+    const renderRefTable = function() {
+      if(references) {
+        return (
+          <table id="refTable" className="table table-bordered">
+              <thead>
+              <tr>
+                  <th>Code</th>
+                  <th>Name</th>
+                  <th>Asset Category Type</th>
+                  <th>Department</th>
+                  <th>Status</th>
+                  <th>Action</th>
+              </tr>
+              </thead>
+              <tbody id="tblRef">
+                  {
+                      renderRefBody()
+                  }
+              </tbody>
+         </table>
+            )
       }
     }
 
@@ -1226,6 +1367,27 @@ class CreateAsset extends React.Component {
 										</div>
 									</div>
 								</div>
+                <div className="row">
+                  <div className="col-sm-6">
+                      <div className="row">
+                        <div className="col-sm-6 label-text">
+                          <label for="assetReferenceName">Asset Reference </label>
+                        </div>
+                        <div className="col-sm-6">
+                        <div className="row">
+                          <div className="col-xs-10">
+                            <input id="assetReferenceName" name="assetReferenceName" value={assetReferenceName} type="text" disabled/>
+                          </div>
+                          <div className="col-xs-2">
+                            <button className="btn btn-close" onClick={(e) => {loadModal(e)}}>
+                              <span className="glyphicon glyphicon-search"></span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
             </div>
 						  </div>
             <div className="form-section" id="allotteeDetailsBlock">
@@ -1396,11 +1558,103 @@ class CreateAsset extends React.Component {
               <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>
             </div>
         </form>
-
-
-
-
-
+        <div className="modal fade" tabindex="-1" role="dialog" id="refModal">
+          <div className="modal-dialog modal-lg" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 className="modal-title">Asset Reference Search</h4>
+              </div>
+              <div className="modal-body">
+                <form onSubmit={(e) => {handleRefSearch(e)}}>
+                    <div className="row">
+                      <div className="col-sm-6">
+                          <div className="row">
+                            <div className="col-sm-6 label-text">
+                              <label for="refSet.department">Department </label>
+                            </div>
+                            <div className="col-sm-6">
+                            <div>
+                              <select id="refSet.department" name="refSet.department" value={refSet.department} onChange={(e) => {handleReferenceChange(e, "department")}}>
+                                    <option value="">Select Department</option>
+                                    {renderOption(this.state.departments)}
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="col-sm-6">
+                          <div className="row">
+                            <div className="col-sm-6 label-text">
+                              <label for="refSet.assetCategory">Asset Category <span>*</span> </label>
+                            </div>
+                            <div className="col-sm-6">
+                            <div>
+                              <select id="refSet.assetCategory" required name="refSet.assetCategory" value={refSet.assetCategory} onChange={(e) => {handleReferenceChange(e, "assetCategory")}}>
+                                    <option value="">Select Asset Category</option>
+                                    {renderOption(this.state.assetCategories)}
+                                </select>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="row">
+                      <div className="col-sm-6">
+                          <div className="row">
+                            <div className="col-sm-6 label-text">
+                              <label for="refSet.code">Code </label>
+                            </div>
+                            <div className="col-sm-6">
+                              <input id="refSet.code" name="refSet.code" value={refSet.code} type="text" onChange={(e) => {handleReferenceChange(e, "code")}}/>
+                            <div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="col-sm-6">
+                          <div className="row">
+                            <div className="col-sm-6 label-text">
+                              <label for="refSet.name">Name </label>
+                            </div>
+                            <div className="col-sm-6">
+                            <div>
+                              <input id="refSet.name" name="refSet.name" value={refSet.name} type="text" onChange={(e) => {handleReferenceChange(e, "name")}}/>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="row">
+                      <div className="col-sm-6">
+                          <div className="row">
+                            <div className="col-sm-6 label-text">
+                              <label for="refSet.status">Status </label>
+                            </div>
+                            <div className="col-sm-6">
+                              <select id="refSet.status" name="refSet.status" value={refSet.status} onChange={(e) => {handleReferenceChange(e, "status")}}>
+                                    <option value="">Select Status</option>
+                                    {renderOption(this.state.statusList)}
+                              </select>
+                            <div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="row text-center">
+                      <button type="submit" className="btn btn-submit">Search</button>
+                    </div>
+                  </form>
+                    <br/>
+                    {renderRefTable()}
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

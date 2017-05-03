@@ -86,7 +86,7 @@ handleChange(e,name)
     }
   const  renderAction=function(type,id)
     {
-      if(type==="Update")
+      if(type==="update")
       {
         return(
           <a href={`app/hr/leavemaster/leave-type.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-pencil"></span></a>)

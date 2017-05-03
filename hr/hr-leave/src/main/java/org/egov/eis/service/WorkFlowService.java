@@ -41,6 +41,7 @@
 package org.egov.eis.service;
 
 import org.egov.eis.config.PropertiesManager;
+import org.egov.eis.model.enums.LeaveStatus;
 import org.egov.eis.service.helper.WorkFlowSearchURLHelper;
 import org.egov.eis.web.contract.LeaveApplicationSingleRequest;
 import org.egov.eis.web.contract.Position;
@@ -97,12 +98,20 @@ public class WorkFlowService {
     public Task update(final LeaveApplicationSingleRequest leaveApplicationRequest) {
         final TaskRequest taskRequest = new TaskRequest();
         Task task = new Task();
+        final String workFlowAction = leaveApplicationRequest.getLeaveApplication().getWorkflowDetails().getAction();
         task.setId(leaveApplicationRequest.getLeaveApplication().getStateId().toString());
         task.setBusinessKey(propertiesManager.getWorkflowServiceBusinessKey());
         task.setType(propertiesManager.getWorkflowServiceBusinessKey());
         task.setComments("updating workflow from Leave Application consumer");
-        task.setAction(leaveApplicationRequest.getLeaveApplication().getWorkflowDetails().getAction());
-        task.setStatus(leaveApplicationRequest.getLeaveApplication().getWorkflowDetails().getAction());
+        task.setAction(workFlowAction);
+        if ("Approve".equalsIgnoreCase(workFlowAction))
+            task.setStatus(LeaveStatus.APPROVED.toString());
+        else if ("Reject".equalsIgnoreCase(workFlowAction))
+            task.setStatus(LeaveStatus.REJECTED.toString());
+        else if ("Cancel".equalsIgnoreCase(workFlowAction))
+            task.setStatus(LeaveStatus.CANCELLED.toString());
+        else if ("Submit".contains(workFlowAction))
+            task.setStatus(LeaveStatus.APPLIED.toString());
         task.setTenantId(leaveApplicationRequest.getLeaveApplication().getTenantId());
         Position assignee = new Position();
         assignee.setId(leaveApplicationRequest.getLeaveApplication().getWorkflowDetails().getAssignee());

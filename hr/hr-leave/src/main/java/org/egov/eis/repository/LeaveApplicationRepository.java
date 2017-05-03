@@ -128,7 +128,7 @@ public class LeaveApplicationRepository {
             leaveApplication.setStatus(LeaveStatus.REJECTED);
         else if ("Cancel".equalsIgnoreCase(workFlowAction))
             leaveApplication.setStatus(LeaveStatus.CANCELLED);
-        else if ("submit".contains(workFlowAction))
+        else if ("Submit".contains(workFlowAction))
             leaveApplication.setStatus(LeaveStatus.APPLIED);
     }
 }

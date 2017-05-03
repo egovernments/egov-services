@@ -85,13 +85,13 @@ class Calender_setup extends React.Component{
             })
         });
 
-      if(getUrlVars()["type"]==="View")
+      if(getUrlVars()["type"]==="view")
       {
         for (var variable in this.state.calenderSet)
           document.getElementById(variable).disabled = true;
         }
 
-        if(type==="View"||type==="Update")
+        if(type==="view"||type==="update")
         {
             this.setState({
               calenderSet:getCommonMasterById("egov-common-masters","calendaryears","CalendarYear",id).responseJSON["CalendarYear"][0]
@@ -123,7 +123,7 @@ class Calender_setup extends React.Component{
     let {name,startDate,endDate,active}=this.state.calenderSet;
 
     const showActionButton=function() {
-      if((!mode) ||mode==="Update")
+      if((!mode) ||mode==="update")
       {
         return (<button type="submit" className="btn btn-submit">{mode?"Update":"Add"}</button>);
       }
@@ -131,6 +131,7 @@ class Calender_setup extends React.Component{
 
 
     return (<div>
+      <h3>{ getUrlVars()["type"] ? titleCase(getUrlVars()["type"]) :  "Create"} Calendar Setup</h3>
       <form onSubmit={(e)=>{addOrUpdate(e,mode)}}>
       <fieldset>
       <div className="row">

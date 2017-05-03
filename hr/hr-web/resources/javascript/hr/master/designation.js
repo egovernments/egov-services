@@ -29,12 +29,12 @@ class Designation extends React.Component{
         var type=getUrlVars()["type"];
         var id=getUrlVars()["id"];
 
-        if(getUrlVars()["type"]==="View")
+        if(getUrlVars()["type"]==="view")
         {
             $("input,select").prop("disabled", true);
           }
 
-          if(type==="Update"||type==="View")
+          if(type==="update"||type==="view")
           {
                this.setState({
                 designationSet:getCommonMasterById("hr-masters","designations","Designation",id).responseJSON["Designation"][0]
@@ -76,7 +76,7 @@ class Designation extends React.Component{
         }
 
         const showActionButton=function() {
-          if((!mode) ||mode==="Update")
+          if((!mode) ||mode==="update")
           {
             return (<button type="submit" className="btn btn-submit">{mode?"Update":"Add"}</button>);
           }
@@ -85,6 +85,7 @@ class Designation extends React.Component{
 
         return(
         <div>
+          <h3>{ getUrlVars()["type"] ? titleCase(getUrlVars()["type"]) : "Create"} Designation</h3>
           <form  onSubmit={(e)=>{addOrUpdate(e,mode)}}>
           <fieldset>
           <div className="row">

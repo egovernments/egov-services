@@ -58,19 +58,17 @@ componentWillMount()
           // var date2 = new Date(tempInfo.lastModifiedDate);
           // tempInfo.createdDate = ( date1.getFullYear() + '/' + (date1.getMonth() + 1) + '/' + date1.getDate()     );
           // tempInfo.lastModifiedDate = ( date2.getDate() + '/' + (date2.getMonth() + 1) + '/' +  date2.getFullYear());
-          if(type==="Update"){
-          delete tempInfo.leaveType.name;
-          delete tempInfo.leaveType.active;
-          delete tempInfo.leaveType.description;
-          delete tempInfo.leaveType.createdDate;
-          delete tempInfo.leaveType.lastModifiedDate;
-          delete tempInfo.leaveType.tenantId;
-        }
           var body={
               "RequestInfo":requestInfo,
               "LeaveAllotment":[tempInfo]
             },_this=this;
-            if (type == "Update") {
+            if (type == "update") {
+              delete tempInfo.leaveType.name;
+              delete tempInfo.leaveType.active;
+              delete tempInfo.leaveType.description;
+              delete tempInfo.leaveType.createdDate;
+              delete tempInfo.leaveType.lastModifiedDate;
+              delete tempInfo.leaveType.tenantId;
               $.ajax({
                    url:baseUrl+"/hr-leave/leaveallotments/" + this.state.leave.id + "/" + "_update?tenantId=" + tenantId,
                     type: 'POST',
@@ -158,12 +156,12 @@ componentWillMount()
       var type=getUrlVars()["type"];
       var id=getUrlVars()["id"];
 
-      if(getUrlVars()["type"]==="View")
+      if(getUrlVars()["type"]==="view")
       {
         $("input,select,radio,textarea").prop("disabled", true);
         }
 
-        if(type==="View"||type==="Update")
+        if(type==="view"||type==="update")
         {
             this.setState({
               leave:getCommonMasterById("hr-leave","leaveallotments","LeaveAllotment",id).responseJSON["LeaveAllotment"][0]
@@ -190,7 +188,7 @@ componentWillMount()
     }
 
     const showActionButton=function(){
-      if((!mode)||mode==="Update"){
+      if((!mode)||mode==="update"){
         return (<button type="submit" className="btn btn-submit">{mode?"Update":"Add"}</button>);
       }
     }
@@ -198,6 +196,7 @@ componentWillMount()
 
       return(
       <div>
+        <h3>{ getUrlVars()["type"] ? titleCase(getUrlVars()["type"]) :  "Create"} Leave Mapping</h3>
       <form onSubmit={(e)=>{addOrUpdate(e,mode)}}>
       <fieldset>
         <div className="row">

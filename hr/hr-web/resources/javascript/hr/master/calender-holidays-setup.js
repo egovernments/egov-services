@@ -54,13 +54,13 @@ componentWillMount(){
 			      })
 				});
 
-      if(getUrlVars()["type"]==="View")
+      if(getUrlVars()["type"]==="view")
       {
         $("input,select").prop("disabled", true);
       }
 
 
-            if(type==="View"||type==="Update")
+            if(type==="view"||type==="update")
             {
                 this.setState({
                   Holiday:getCommonMasterById("egov-common-masters","holidays","Holiday",id).responseJSON["Holiday"][0]
@@ -82,7 +82,7 @@ componentWillMount(){
             e.preventDefault();
 
             var tempInfo=Object.assign({},this.state.Holiday) , type = getUrlVars()["type"];
-              if(type==="Update"){
+              if(type==="update"){
                 delete tempInfo.calendarYear.id;
                 delete tempInfo.calendarYear.active;
                 delete tempInfo.calendarYear.endDate;
@@ -93,7 +93,7 @@ componentWillMount(){
                 "RequestInfo":requestInfo,
                 "Holiday":tempInfo
               },_this=this;
-                if(type == "Update") {
+                if(type == "update") {
                   $.ajax({
                         url:baseUrl+"/egov-common-masters/holidays/" + _this.state.Holiday.id + "/" + "_update?tenantId=" + tenantId,
                         type: 'POST',
@@ -196,7 +196,7 @@ componentWillMount(){
     }
 
     const showActionButton=function() {
-      if((!mode) ||mode==="Update")
+      if((!mode) ||mode==="update")
       {
         return (<button type="submit" className="btn btn-submit">{mode?"Update":"Add"}</button>);
       }
@@ -204,6 +204,7 @@ componentWillMount(){
 
       return(
       <div>
+      <h3>{ getUrlVars()["type"] ? titleCase(getUrlVars()["type"]) :  "Create"} Calender Holiday Setup</h3>
       <form onSubmit={(e)=>{addOrUpdate(e,mode)}}>
       <fieldset>
         <div className="row">

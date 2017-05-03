@@ -49,7 +49,7 @@ class ShowCalender extends React.Component {
 
 
     const renderAction=function(type,id){
-      if (type==="Update") {
+      if (type==="update") {
               return (
                       <a href={`app/hr/master/calendar-setup.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-pencil"></span></a>
               );
@@ -82,6 +82,7 @@ class ShowCalender extends React.Component {
     }
 
       return (<div>
+        <h3>{titleCase(getUrlVars()["type"])} Calendar Setup</h3>
         <table id="calenderTable" className="table table-bordered">
             <thead>
                 <tr>

@@ -52,12 +52,12 @@ class PositionMaster extends React.Component{
       var type=getUrlVars()["type"];
       var id=getUrlVars()["id"];
 
-      if(getUrlVars()["type"]==="View")
+      if(getUrlVars()["type"]==="view")
       {
           $("input,select").prop("disabled", true);
         }
 
-        if(type==="View"||type==="Update")
+        if(type==="view"||type==="update")
         {
             this.setState({
               positionSet:getCommonMasterById("hr-masters","positions","Position",id).responseJSON["Position"][0]
@@ -112,7 +112,7 @@ class PositionMaster extends React.Component{
           }
       }
       const showActionButton=function() {
-        if((!mode) ||mode==="Update")
+        if((!mode) ||mode==="update")
         {
           return (<button type="submit" className="btn btn-submit">{mode?"Update":"Add"}</button>);
         }
@@ -120,6 +120,7 @@ class PositionMaster extends React.Component{
 
 
       return (<div>
+        <h3>{ getUrlVars()["type"] ? titleCase(getUrlVars()["type"]) : "Create"} Position</h3>
         <form  onSubmit={(e)=>{addOrUpdate(e,mode)}}>
         <fieldset>
         <div className="row">

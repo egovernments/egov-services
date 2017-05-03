@@ -105,7 +105,7 @@ handleChange(e,name)
 
      return (
       <div>
-          <h3>{getUrlVars()["type"]} leave Type</h3>
+          <h3>{titleCase(getUrlVars()["type"])} Leave Type</h3>
                 <table id="leaveTable" className="table table-bordered">
                   <thead>
                       <tr>

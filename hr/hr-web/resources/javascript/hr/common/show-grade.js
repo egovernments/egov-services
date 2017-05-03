@@ -55,7 +55,7 @@ class ShowGrade extends React.Component {
     let {name,description,orderNo,active}=this.state.gradeSet;
 
     const renderAction=function(type,id){
-      if (type==="Update") {
+      if (type==="update") {
 
               return (
                       <a href={`app/hr/master/grade-master.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-pencil"></span></a>
@@ -89,7 +89,7 @@ class ShowGrade extends React.Component {
     }
 
       return (<div>
-        <h3>{getUrlVars()["type"]} Grade</h3>
+        <h3>{titleCase(getUrlVars()["type"])} Grade</h3>
         <table id="gradeTable" className="table table-bordered">
             <thead>
                 <tr>

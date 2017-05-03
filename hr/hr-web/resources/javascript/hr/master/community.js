@@ -17,13 +17,13 @@ class Community extends React.Component{
       var id=getUrlVars()["id"];
 
 
-      if(getUrlVars()["type"]==="View")
+      if(getUrlVars()["type"]==="view")
       {
         for (var variable in this.state.communitySet)
           document.getElementById(variable).disabled = true;
         }
 
-        if(type==="View"||type==="Update")
+        if(type==="view"||type==="update")
         {
             this.setState({
               communitySet:getCommonMasterById("egov-common-masters","communities","Community",id).responseJSON["Community"][0]
@@ -58,7 +58,7 @@ class Community extends React.Component{
     })
   }
 
-  
+
 
   render(){
 
@@ -68,13 +68,14 @@ class Community extends React.Component{
 
 
       const showActionButton=function() {
-        if((!mode) ||mode==="Update")
+        if((!mode) ||mode==="update")
         {
           return (<button type="submit" className="btn btn-submit">{mode?"Update":"Add"}</button>);
         }
       };
 
     return (<div>
+      <h3>{ getUrlVars()["type"] ? titleCase(getUrlVars()["type"]) :  "Create"} Community</h3>
       <form onSubmit={(e)=>{addOrUpdate(e,mode)}}>
       <fieldset>
       <div className="row">

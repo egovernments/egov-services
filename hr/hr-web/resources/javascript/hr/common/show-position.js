@@ -10,7 +10,7 @@ class ShowPosition extends React.Component {
 
   }
 
-  
+
   componentDidMount()
   {
     try {
@@ -48,7 +48,7 @@ class ShowPosition extends React.Component {
     var mode = getUrlVars()["type"];
 
     const renderAction=function(type,id){
-      if (type==="Update") {
+      if (type==="update") {
 
               return (
                       <a href={`app/hr/master/position.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-pencil"></span></a>

@@ -84,7 +84,7 @@ search(e)
         }
     }
     const renderAction=function(type,id){
-      if (type==="Update") {
+      if (type==="update") {
 
               return (
                       <a href={`app/hr/master/calendar-holidays-setup.html?id=${id}&type=${type}`} className="btn btn-default btn-action"><span className="glyphicon glyphicon-pencil"></span></a>
@@ -140,7 +140,7 @@ const showTable=function()
     }
 
       return (<div>
-        <h3>{getUrlVars()["type"]} Calender Holiday Setup</h3>
+        <h3>{titleCase(getUrlVars()["type"])} Calender Holiday Setup</h3>
         <form onSubmit={(e)=>{search(e)}}>
         <fieldset>
         <div className="row">

@@ -50,6 +50,7 @@ import org.egov.eis.service.LeaveApplicationService;
 import org.egov.eis.service.LeaveOpeningBalanceService;
 import org.egov.eis.service.LeaveTypeService;
 import org.egov.eis.web.contract.LeaveAllotmentRequest;
+import org.egov.eis.web.contract.LeaveApplicationRequest;
 import org.egov.eis.web.contract.LeaveApplicationSingleRequest;
 import org.egov.eis.web.contract.LeaveOpeningBalanceRequest;
 import org.egov.eis.web.contract.LeaveTypeRequest;
@@ -132,7 +133,7 @@ public class LeaveConsumer {
             else if (record.topic().equalsIgnoreCase(leaveAllotmentUpdateTopic))
                 leaveAllotmentService.update(objectMapper.readValue(record.value(), LeaveAllotmentRequest.class));
             else if (record.topic().equalsIgnoreCase(leaveApplicationCreateTopic))
-                leaveApplicationService.create(objectMapper.readValue(record.value(), LeaveApplicationSingleRequest.class));
+                leaveApplicationService.create(objectMapper.readValue(record.value(), LeaveApplicationRequest.class));
             else if (record.topic().equalsIgnoreCase(leaveApplicationUpdateTopic))
                 leaveApplicationService.update(objectMapper.readValue(record.value(), LeaveApplicationSingleRequest.class));
         } catch (final IOException e) {

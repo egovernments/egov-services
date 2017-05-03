@@ -48,6 +48,7 @@ import javax.validation.Valid;
 import org.egov.eis.model.LeaveApplication;
 import org.egov.eis.service.LeaveApplicationService;
 import org.egov.eis.web.contract.LeaveApplicationGetRequest;
+import org.egov.eis.web.contract.LeaveApplicationRequest;
 import org.egov.eis.web.contract.LeaveApplicationResponse;
 import org.egov.eis.web.contract.LeaveApplicationSingleRequest;
 import org.egov.eis.web.contract.RequestInfo;
@@ -121,17 +122,15 @@ public class LeaveApplicationController {
 
     @PostMapping("_create")
     @ResponseBody
-    public ResponseEntity<?> create(@RequestBody final LeaveApplicationSingleRequest leaveApplicationRequest,
+    public ResponseEntity<?> create(@RequestBody final LeaveApplicationRequest leaveApplicationRequest,
             final BindingResult bindingResult) {
 
-        final ResponseEntity<?> errorResponseEntity = validateLeaveApplicationRequest(leaveApplicationRequest,
+        final ResponseEntity<?> errorResponseEntity = validateLeaveApplicationRequests(leaveApplicationRequest,
                 bindingResult);
         if (errorResponseEntity != null)
             return errorResponseEntity;
 
-        final LeaveApplication leaveApplication = leaveApplicationService.createLeaveApplication(leaveApplicationRequest);
-        final List<LeaveApplication> applications = new ArrayList<>();
-        applications.add(leaveApplication);
+        final List<LeaveApplication> applications = leaveApplicationService.createLeaveApplication(leaveApplicationRequest);
         return getSuccessResponse(applications, leaveApplicationRequest.getRequestInfo());
     }
 
@@ -155,7 +154,7 @@ public class LeaveApplicationController {
     }
 
     /**
-     * Populate Response object and returnleaveApplicationsList
+     * Populate Response object and return leaveApplicationsList
      *
      * @param leaveApplicationsList
      * @return
@@ -172,13 +171,29 @@ public class LeaveApplicationController {
     }
 
     /**
-     * Validate EmployeeRequest object & returns ErrorResponseEntity if there are any errors or else returns null
+     * Validate LeaveApplicationSingleRequest object & returns ErrorResponseEntity if there are any errors or else returns null
      *
-     * @param EmployeeRequest
+     * @param LeaveApplicationSingleRequest
      * @param bindingResult
      * @return ResponseEntity<?>
      */
     private ResponseEntity<?> validateLeaveApplicationRequest(final LeaveApplicationSingleRequest leaveApplicationRequest,
+            final BindingResult bindingResult) {
+        // validate input params that can be handled by annotations
+        if (bindingResult.hasErrors())
+            return errorHandler.getErrorResponseEntityForBindingErrors(bindingResult,
+                    leaveApplicationRequest.getRequestInfo());
+        return null;
+    }
+    
+    /**
+     * Validate LeaveApplicationRequests object & returns ErrorResponseEntity if there are any errors or else returns null
+     *
+     * @param LeaveApplicationRequest
+     * @param bindingResult
+     * @return ResponseEntity<?>
+     */
+    private ResponseEntity<?> validateLeaveApplicationRequests(final LeaveApplicationRequest leaveApplicationRequest,
             final BindingResult bindingResult) {
         // validate input params that can be handled by annotations
         if (bindingResult.hasErrors())

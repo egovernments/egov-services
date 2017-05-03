@@ -50,6 +50,7 @@ import org.egov.eis.repository.builder.LeaveApplicationQueryBuilder;
 import org.egov.eis.repository.rowmapper.LeaveApplicationRowMapper;
 import org.egov.eis.service.WorkFlowService;
 import org.egov.eis.web.contract.LeaveApplicationGetRequest;
+import org.egov.eis.web.contract.LeaveApplicationRequest;
 import org.egov.eis.web.contract.LeaveApplicationSingleRequest;
 import org.egov.eis.web.contract.ProcessInstance;
 import org.egov.eis.web.contract.Task;
@@ -80,23 +81,29 @@ public class LeaveApplicationRepository {
         return leaveApplications;
     }
 
-    public LeaveApplicationSingleRequest saveLeaveApplication(final LeaveApplicationSingleRequest leaveApplicationRequest) {
-        final ProcessInstance processInstance = workFlowService.start(leaveApplicationRequest);
+    public LeaveApplicationRequest saveLeaveApplication(final LeaveApplicationRequest leaveApplicationRequest) {
+        ProcessInstance processInstance = new ProcessInstance();
+        Long stateId = null;
+        if (leaveApplicationRequest.getLeaveApplication().size() > 1)
+            processInstance = workFlowService.start(leaveApplicationRequest);
+        if (processInstance.getId() != null)
+            stateId = Long.valueOf(processInstance.getId());
         final String leaveApplicationInsertQuery = LeaveApplicationQueryBuilder.insertLeaveApplicationQuery();
         final Date now = new Date();
-        final LeaveApplication leaveApplication = leaveApplicationRequest.getLeaveApplication();
-        leaveApplication.setStateId(Long.valueOf(processInstance.getId()));
-        leaveApplicationStatusChange(leaveApplication);
-        final Object[] obj = new Object[] { leaveApplication.getApplicationNumber(), leaveApplication.getEmployee(),
-                leaveApplication.getLeaveType().getId(),
-                leaveApplication.getFromDate(), leaveApplication.getToDate(), leaveApplication.getCompensatoryForDate(),
-                leaveApplication.getLeaveDays(),
-                leaveApplication.getAvailableDays(), leaveApplication.getHalfdays(), leaveApplication.getFirstHalfleave(),
-                leaveApplication.getReason(),
-                leaveApplication.getStatus().toString(), Long.valueOf(processInstance.getId()),
-                leaveApplicationRequest.getRequestInfo().getUserInfo().getId(),
-                now, leaveApplicationRequest.getRequestInfo().getUserInfo().getId(), now, leaveApplication.getTenantId() };
-        jdbcTemplate.update(leaveApplicationInsertQuery, obj);
+        for (LeaveApplication leaveApplication : leaveApplicationRequest.getLeaveApplication()) {
+            leaveApplication.setStateId(stateId);
+            leaveApplicationStatusChange(leaveApplication);
+            final Object[] obj = new Object[] { leaveApplication.getApplicationNumber(), leaveApplication.getEmployee(),
+                    leaveApplication.getLeaveType().getId(),
+                    leaveApplication.getFromDate(), leaveApplication.getToDate(), leaveApplication.getCompensatoryForDate(),
+                    leaveApplication.getLeaveDays(),
+                    leaveApplication.getAvailableDays(), leaveApplication.getHalfdays(), leaveApplication.getFirstHalfleave(),
+                    leaveApplication.getReason(),
+                    leaveApplication.getStatus().toString(), leaveApplication.getStateId(),
+                    leaveApplicationRequest.getRequestInfo().getUserInfo().getId(),
+                    now, leaveApplicationRequest.getRequestInfo().getUserInfo().getId(), now, leaveApplication.getTenantId() };
+            jdbcTemplate.update(leaveApplicationInsertQuery, obj);
+        }
         return leaveApplicationRequest;
     }
 
@@ -129,6 +136,6 @@ public class LeaveApplicationRepository {
         else if ("Cancel".equalsIgnoreCase(workFlowAction))
             leaveApplication.setStatus(LeaveStatus.CANCELLED);
         else if ("Submit".contains(workFlowAction))
-            leaveApplication.setStatus(LeaveStatus.APPLIED);
+            leaveApplication.setStatus(LeaveStatus.RESUBMITTED);
     }
 }

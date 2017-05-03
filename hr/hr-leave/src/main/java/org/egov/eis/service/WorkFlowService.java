@@ -43,6 +43,7 @@ package org.egov.eis.service;
 import org.egov.eis.config.PropertiesManager;
 import org.egov.eis.model.enums.LeaveStatus;
 import org.egov.eis.service.helper.WorkFlowSearchURLHelper;
+import org.egov.eis.web.contract.LeaveApplicationRequest;
 import org.egov.eis.web.contract.LeaveApplicationSingleRequest;
 import org.egov.eis.web.contract.Position;
 import org.egov.eis.web.contract.ProcessInstance;
@@ -69,17 +70,17 @@ public class WorkFlowService {
     @Autowired
     private PropertiesManager propertiesManager;
 
-    public ProcessInstance start(final LeaveApplicationSingleRequest leaveApplicationRequest) {
+    public ProcessInstance start(final LeaveApplicationRequest leaveApplicationRequest) {
         final ProcessInstanceRequest processInstanceRequest = new ProcessInstanceRequest();
         ProcessInstance processInstance = new ProcessInstance();
         LOGGER.info("propertiesManager::" + propertiesManager);
         processInstance.setBusinessKey(propertiesManager.getWorkflowServiceBusinessKey());
         processInstance.setType(propertiesManager.getWorkflowServiceBusinessKey());
         processInstance.setComments("starting workflow from Leave Application consumer");
-        processInstance.setTenantId(leaveApplicationRequest.getLeaveApplication().getTenantId());
+        processInstance.setTenantId(leaveApplicationRequest.getLeaveApplication().get(0).getTenantId());
         Position assignee = new Position();
         LOGGER.info("leaveApplicationRequest::" + leaveApplicationRequest);
-        assignee.setId(leaveApplicationRequest.getLeaveApplication().getWorkflowDetails().getAssignee());
+        assignee.setId(leaveApplicationRequest.getLeaveApplication().get(0).getWorkflowDetails().getAssignee());
         processInstance.setAssignee(assignee);
         processInstanceRequest.setRequestInfo(leaveApplicationRequest.getRequestInfo());
         processInstanceRequest.setProcessInstance(processInstance);

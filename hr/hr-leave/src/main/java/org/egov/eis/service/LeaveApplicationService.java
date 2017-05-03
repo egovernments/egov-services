@@ -48,6 +48,7 @@ import org.egov.eis.model.LeaveApplication;
 import org.egov.eis.model.enums.LeaveStatus;
 import org.egov.eis.repository.LeaveApplicationRepository;
 import org.egov.eis.web.contract.LeaveApplicationGetRequest;
+import org.egov.eis.web.contract.LeaveApplicationRequest;
 import org.egov.eis.web.contract.LeaveApplicationSingleRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,10 +89,15 @@ public class LeaveApplicationService {
         return leaveApplicationRepository.findForCriteria(leaveApplicationGetRequest);
     }
 
-    public LeaveApplication createLeaveApplication(final LeaveApplicationSingleRequest leaveApplicationRequest) {
-        final LeaveApplication leaveApplication = leaveApplicationRequest.getLeaveApplication();
-        leaveApplication.setStatus(LeaveStatus.APPLIED);
-        leaveApplication.setApplicationNumber(leaveApplicationNumberGeneratorService.generate());
+    public List<LeaveApplication> createLeaveApplication(final LeaveApplicationRequest leaveApplicationRequest) {
+        final Boolean isExcelUpload = leaveApplicationRequest.getLeaveApplication().size() > 1 ? true : false;
+        for (LeaveApplication leaveApplication : leaveApplicationRequest.getLeaveApplication()) {
+            if (isExcelUpload)
+                leaveApplication.setStatus(LeaveStatus.APPROVED);
+            else
+                leaveApplication.setStatus(LeaveStatus.APPLIED);
+            leaveApplication.setApplicationNumber(leaveApplicationNumberGeneratorService.generate());
+        }
         String leaveApplicationRequestJson = null;
         try {
             final ObjectMapper mapper = new ObjectMapper();
@@ -108,10 +114,10 @@ public class LeaveApplicationService {
             ex.printStackTrace();
         }
 
-        return leaveApplication;
+        return leaveApplicationRequest.getLeaveApplication();
     }
 
-    public LeaveApplicationSingleRequest create(final LeaveApplicationSingleRequest leaveApplicationRequest) {
+    public LeaveApplicationRequest create(final LeaveApplicationRequest leaveApplicationRequest) {
         return leaveApplicationRepository.saveLeaveApplication(leaveApplicationRequest);
     }
 
@@ -151,8 +157,8 @@ public class LeaveApplicationService {
             leaveApplication.setStatus(LeaveStatus.REJECTED);
         else if ("Cancel".equalsIgnoreCase(workFlowAction))
             leaveApplication.setStatus(LeaveStatus.CANCELLED);
-        else if ("submit".contains(workFlowAction))
-            leaveApplication.setStatus(LeaveStatus.APPLIED);
+        else if ("Submit".contains(workFlowAction))
+            leaveApplication.setStatus(LeaveStatus.RESUBMITTED);
     }
 
     public LeaveApplication update(final LeaveApplicationSingleRequest leaveApplicationRequest) {

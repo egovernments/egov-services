@@ -43,16 +43,27 @@ package org.egov.eis.repository;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.eis.model.DepartmentDesignation;
 import org.egov.eis.model.Position;
 import org.egov.eis.repository.builder.PositionQueryBuilder;
 import org.egov.eis.repository.rowmapper.PositionRowMapper;
+import org.egov.eis.service.DepartmentDesignationService;
 import org.egov.eis.web.contract.PositionGetRequest;
+import org.egov.eis.web.contract.PositionRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class PositionRepository {
+
+	public static final String INSERT_POSITION_QUERY = "INSERT INTO egeis_position"
+			+ " (id, name, deptdesigId, isPostOutsourced, active,tenantId)"
+			+ " VALUES (nextval('seq_egeis_position'),?,?,?,?,?)";
+
+	public static final String UPDATE_POSITION_QUERY = "UPDATE egeis_position"
+			+ " SET  name=?, deptdesigId=?, isPostOutsourced=?, active=? where id=? and tenantid=? ";
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -63,10 +74,75 @@ public class PositionRepository {
 	@Autowired
 	private PositionQueryBuilder positionQueryBuilder;
 
+	@Autowired
+	private DepartmentDesignationService departmentDesignationService;
+
 	public List<Position> findForCriteria(PositionGetRequest positionGetRequest) {
 		List<Object> preparedStatementValues = new ArrayList<Object>();
 		String queryStr = positionQueryBuilder.getQuery(positionGetRequest, preparedStatementValues);
 		List<Position> positions = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), positionRowMapper);
 		return positions;
+	}
+
+	public void create(PositionRequest positionRequest) {
+
+		List<Object[]> batchArgs = new ArrayList<>();
+
+		for (Position position : positionRequest.getPosition()) {
+			DepartmentDesignation deptDesg = null;
+			if (position.getDeptdesig() != null && position.getDeptdesig().getDepartmentId() != null
+					&& position.getDeptdesig().getDesignation() != null
+					&& position.getDeptdesig().getDesignation().getId() != null) {
+				deptDesg = departmentDesignationService.getByDepartmentAndDesignation(
+						position.getDeptdesig().getDepartmentId(), position.getDeptdesig().getDesignation().getId());
+			}
+			if (deptDesg == null) {
+				position.getDeptdesig().setTenantId(position.getTenantId());
+				departmentDesignationService.create(position.getDeptdesig());
+				deptDesg = departmentDesignationService.getByDepartmentAndDesignation(
+						position.getDeptdesig().getDepartmentId(), position.getDeptdesig().getDesignation().getId());
+			}
+			Object[] positionRecord = { position.getName(), deptDesg.getId(), position.getIsPostOutsourced(),
+					position.getActive(), position.getTenantId() };
+			batchArgs.add(positionRecord);
+		}
+
+		try {
+			jdbcTemplate.batchUpdate(INSERT_POSITION_QUERY, batchArgs);
+		} catch (DataAccessException ex) {
+			ex.printStackTrace();
+			throw new RuntimeException(ex.getMessage());
+		}
+
+	}
+
+	public void update(PositionRequest positionRequest) {
+
+		List<Object[]> batchArgs = new ArrayList<>();
+
+		for (Position position : positionRequest.getPosition()) {
+			DepartmentDesignation deptDesg = null;
+			if (position.getDeptdesig() != null && position.getDeptdesig().getDepartmentId() != null
+					&& position.getDeptdesig().getDesignation() != null
+					&& position.getDeptdesig().getDesignation().getId() != null) {
+				deptDesg = departmentDesignationService.getByDepartmentAndDesignation(
+						position.getDeptdesig().getDepartmentId(), position.getDeptdesig().getDesignation().getId());
+			}
+			if (deptDesg == null) {
+				departmentDesignationService.create(position.getDeptdesig());
+				deptDesg = departmentDesignationService.getByDepartmentAndDesignation(
+						position.getDeptdesig().getDepartmentId(), position.getDeptdesig().getDesignation().getId());
+			}
+			Object[] positionRecord = { position.getName(), deptDesg.getId(), position.getIsPostOutsourced(),
+					position.getActive(), position.getId(), position.getTenantId() };
+			batchArgs.add(positionRecord);
+		}
+
+		try {
+			jdbcTemplate.batchUpdate(UPDATE_POSITION_QUERY, batchArgs);
+		} catch (DataAccessException ex) {
+			ex.printStackTrace();
+			throw new RuntimeException(ex.getMessage());
+		}
 	}
 }

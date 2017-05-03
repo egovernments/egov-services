@@ -25,7 +25,7 @@ class UpdateLeave extends React.Component {
                 "action": "",
                 "status": ""
             }
-        },
+        },leaveNumber:"",
         leaveList: [],
         buttons: []
     }
@@ -33,6 +33,7 @@ class UpdateLeave extends React.Component {
     this.handleChangeThreeLevel = this.handleChangeThreeLevel.bind(this);
     this.getPrimaryAssigmentDep = this.getPrimaryAssigmentDep.bind(this);
     this.handleProcess = this.handleProcess.bind(this);
+    this.getPrimaryAssigmentDep=this.getPrimaryAssigmentDep.bind(this);
 }
 
 
@@ -40,6 +41,8 @@ class UpdateLeave extends React.Component {
     var type = getUrlVars()["type"], _this = this;
     var stateId = getUrlVars()["stateId"];
     var asOnDate = _this.state.leaveSet.toDate;
+    var leaveNumber ;
+
     //
     // if(getUrlVars()["type"]==="update")
     // {
@@ -56,11 +59,15 @@ class UpdateLeave extends React.Component {
       } catch(e) {
         console.log(e);
       }
-
         _this.setState({
-           leaveSet: _leaveSet
+           leaveSet: _leaveSet,
+           departmentId:this.getPrimaryAssigmentDep(employee,"department"),
+           leaveNumber:_leaveSet.applicationNumber
         })
 
+      if(_leaveSet.status!="REJECTED"){
+          $("input,select,textarea").prop("disabled", true);
+        }
 
         $('#fromDate').datepicker({
             format: 'dd/mm/yyyy',
@@ -191,7 +198,8 @@ class UpdateLeave extends React.Component {
 
               if(_btns.length) {
                 _this.setState({
-                  buttons: _btns
+                  buttons: _btns,
+                  owner:process.owner.id
                 })
               }
           }
@@ -284,19 +292,61 @@ handleProcess(e) {
   var ID = e.target.id ;
   //Make your server calls here for these actions/buttons
   //Please test it, I have only wrote the code, not tested - Sourabh
+  if(ID==="Submit"){
     var employee;
     var asOnDate = this.state.leaveSet.toDate;
     var departmentId = this.state.departmentId;
+    var leaveNumber = this.state.leaveNumber;
+    var owner = this.state.owner;
     var tempInfo=Object.assign({},this.state.leaveSet) , type = getUrlVars()["type"];
     delete  tempInfo.name;
     delete tempInfo.code;
-    // var res = commonApiPost("hr-employee","hod/employees","_search",{tenantId,asOnDate,departmentId})
-    //   if(res && res.responseJSON && res.responseJSON["Employee"] && res.responseJSON["Employee"][0]){
-    //     employee = res.responseJSON["Employee"][0]
-    //   }
-    //   else{
-    //     employee={};
-    //   }
+    var res = commonApiPost("hr-employee","hod/employees","_search",{tenantId,asOnDate,departmentId})
+      if(res && res.responseJSON && res.responseJSON["Employee"] && res.responseJSON["Employee"][0]){
+        employee = res.responseJSON["Employee"][0]
+      }
+      else{
+        employee={};
+      }
+
+    if(!tempInfo.workflowDetails){
+      tempInfo.workflowDetails = {action : ID,
+                                  assignee : employee.assignments && employee.assignments[0] ? employee.assignments[0].id : ""};
+    }
+    var body={
+        "RequestInfo":requestInfo,
+        "LeaveApplication":tempInfo
+      },_this=this;
+
+          $.ajax({
+                url:baseUrl+"/hr-leave/leaveapplications/" + this.state.leaveSet.id + "/" + "_update?tenantId=" + tenantId,
+                type: 'POST',
+                dataType: 'json',
+                data:JSON.stringify(body),
+
+                contentType: 'application/json',
+                headers:{
+                  'auth-token': authToken
+                },
+                success: function(res) {
+
+                    window.location.href=`app/hr/leavemaster/ack-page.html?type=Reject&applicationNumber=${leaveNumber}&owner=${owner}`;
+
+                },
+                error: function(err) {
+                    showError(err);
+
+                }
+            });
+  }else{
+    var employee;
+    var asOnDate = this.state.leaveSet.toDate;
+    var departmentId = this.state.departmentId;
+    var leaveNumber = this.state.leaveNumber;
+    var owner = this.state.owner;
+    var tempInfo=Object.assign({},this.state.leaveSet) , type = getUrlVars()["type"];
+    delete  tempInfo.name;
+    delete tempInfo.code;
     if(!tempInfo.workflowDetails){
 
       tempInfo.workflowDetails = {action : ID};
@@ -317,32 +367,9 @@ handleProcess(e) {
                   'auth-token': authToken
                 },
                 success: function(res) {
-                        showSuccess("Leave Application Modified successfully.");
-                        _this.setState({
-                          leaveSet:{
-                            "name":"",
-                            "code":"",
-                            "employee": "",
-                             "leaveType": {
-                              "id" : ""
-                             },
-                             "fromDate" : "",
-                             "toDate": "",
-                             "availableDays": "",
-                             "reason": "",
-                             "leaveDays":"",
-                             "status": "",
-                             "stateId": "",
-                             "tenantId" : tenantId,
-                             "workflowDetails": {
-                              "department": "",
-                              "designation": "",
-                              "assignee": "",
-                              "action": "",
-                              "status": ""
-                            }
-                           },leaveList:[]
-                        })
+
+                   window.location.href=`app/hr/leavemaster/ack-page.html?type=Approve&applicationNumber=${leaveNumber}&owner=${owner}`;
+
 
                 },
                 error: function(err) {
@@ -350,6 +377,7 @@ handleProcess(e) {
 
                 }
             });
+  }
 }
 
 

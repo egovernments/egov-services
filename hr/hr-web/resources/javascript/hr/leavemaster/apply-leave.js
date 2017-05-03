@@ -50,7 +50,9 @@ class ApplyLeave extends React.Component {
         _leaveSet.name = employee.name;
         _leaveSet.code = employee.code;
         _this.setState({
-           leaveSet: _leaveSet
+           leaveSet: _leaveSet,
+           leaveNumber:_leaveSet.applicationNumber,
+           stateId:_leaveSet.stateId
         })
 
       }
@@ -136,6 +138,19 @@ class ApplyLeave extends React.Component {
                        if (endDay == 6 && startDay != 0)
                            days = days - 1;
                    }
+                   try{
+                     var process = commonApiPost("egov-common-workflows", "process", "_search", {
+                     tenantId: tenantId,
+                     id: this.state.stateId
+                     }).responseJSON["processInstance"];
+
+                   }catch(e){
+                     console.log(e);
+                   }
+                   _this.setState({
+                     owner:process.owner.id
+                   })
+
                    if (_this.state.leaveSet.toDate && _this.state.leaveSet.leaveType.id) {
                      try{
                         var leaveType = _this.state.leaveSet.leaveType.id;
@@ -280,6 +295,8 @@ addOrUpdate(e,mode)
         var employee;
         var asOnDate = this.state.leaveSet.toDate;
         var departmentId = this.state.departmentId;
+        var leaveNumber = this.state.leaveNumber;
+        var owner = this.state.owner;
         var tempInfo=Object.assign({},this.state.leaveSet) , type = getUrlVars()["type"];
         delete  tempInfo.name;
         delete tempInfo.code;
@@ -293,56 +310,8 @@ addOrUpdate(e,mode)
           tempInfo.workflowDetails.assignee = employee.assignments && employee.assignments[0] ? employee.assignments[0].id : "";
         var body={
             "RequestInfo":requestInfo,
-            "LeaveApplication":tempInfo
+            "LeaveApplication":[tempInfo]
           },_this=this;
-            if(type == "update") {
-              $.ajax({
-
-                    url:baseUrl+"/hr-leave/leaveapplications/" + this.state.leaveSet.id + "/" + "_update?tenantId=" + tenantId,
-                    type: 'POST',
-                    dataType: 'json',
-                    data:JSON.stringify(body),
-
-                    contentType: 'application/json',
-                    headers:{
-                      'auth-token': authToken
-                    },
-                    success: function(res) {
-                            showSuccess("Leave Application Modified successfully.");
-                            _this.setState({
-                              leaveSet:{
-                                "name":"",
-                                "code":"",
-                                "employee": "",
-                                 "leaveType": {
-                                 	"id" : ""
-                                 },
-                                 "fromDate" : "",
-                                 "toDate": "",
-                                 "availableDays": "",
-                                 "reason": "",
-                                 "leaveDays":"",
-                                 "status": "",
-                                 "stateId": "",
-                                 "tenantId" : tenantId,
-                                 "workflowDetails": {
-                                  "department": "",
-                                  "designation": "",
-                                  "assignee": "",
-                                  "action": "",
-                                  "status": ""
-                                }
-                               },leaveList:[]
-                            })
-
-                    },
-                    error: function(err) {
-                        showError(err);
-
-                    }
-                });
-            }
-            else{
               $.ajax({
                     url: baseUrl+"/hr-leave/leaveapplications/_create?tenantId=" + tenantId,
                     type: 'POST',
@@ -354,33 +323,7 @@ addOrUpdate(e,mode)
                       'auth-token': authToken
                     },
                     success: function(res) {
-                            showSuccess("Leave Application Created successfully.");
-                            _this.setState({
-                              leaveSet:{
-                                "name":"",
-                                "code":"",
-                                "employee": "",
-                                 "leaveType": {
-                                 	"id" : ""
-                                 },
-                                 "fromDate" : "",
-                                 "toDate": "",
-                                 "availableDays": "",
-                                 "leaveDays":"",
-                                 "reason": "",
-                                 "status": "",
-                                 "stateId": "",
-                                 "tenantId" : tenantId,
-                                 "workflowDetails": {
-                                  "department": "",
-                                  "designation": "",
-                                  "assignee": "",
-                                  "action": "",
-                                  "status": ""
-                                }
-                               },leaveList:[]
-                            })
-
+                            window.location.href=`app/hr/leavemaster/ack-page.html?type=Apply&applicationNumber=${leaveNumber}&owner=${owner}`;
 
                     },
                     error: function(err) {
@@ -388,7 +331,6 @@ addOrUpdate(e,mode)
 
                     }
                 });
-            }
         }
 
 

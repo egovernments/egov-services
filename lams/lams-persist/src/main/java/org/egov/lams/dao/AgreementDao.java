@@ -14,9 +14,9 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
-@EnableTransactionManagement
 public class AgreementDao {
 
 	@Autowired
@@ -24,6 +24,7 @@ public class AgreementDao {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(AgreementDao.class);
 
+	@Transactional
 	public void saveAgreement(AgreementRequest agreementRequest) {
 		
 		Agreement agreement = agreementRequest.getAgreement();

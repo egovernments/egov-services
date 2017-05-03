@@ -134,7 +134,8 @@ class CreateAsset extends React.Component {
         "depreciationExpenseAccount": "",
         "unitOfMeasurement": "",
         "depreciationRate": null,
-        "assetFieldsDefination": []
+        "assetFieldsDefination": [],
+        "version": ""
       },
       customField:{
            "name": null,
@@ -442,7 +443,7 @@ class CreateAsset extends React.Component {
     let {handleChange,addOrUpdate,renderDelEvent,addAsset,handleChangeTwoLevel,showCustomFieldForm}=this;
     let {isSearchClicked,list,customField,column,isEdit,index,assetCategory,isCustomFormVisible, readonly}=this.state;
 
-    let {assetCategoryType,AssetCategory,parent,name,assetFieldsDefination,isMandatory,depreciationMethod,assetAccount,accumulatedDepreciationAccount,revaluationReserveAccount,depreciationExpenseAccount,unitOfMeasurement}=assetCategory;
+    let {assetCategoryType,AssetCategory,parent,name,assetFieldsDefination,isMandatory,depreciationMethod,assetAccount,accumulatedDepreciationAccount,revaluationReserveAccount,depreciationExpenseAccount,unitOfMeasurement, version}=assetCategory;
     let mode = getUrlVars()["type"];
 
     const showActionButton = function() {
@@ -939,6 +940,16 @@ class CreateAsset extends React.Component {
                         {renderOption(this.state.assignments_unitOfMeasurement)}
                       </select>
                     </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col-sm-6">
+                <div className="row">
+                  <div className="col-sm-6 label-text">
+                    <label for="version"> Version   </label>
+                  </div>
+                  <div className="col-sm-6">
+                    <input type="text"  name="version" value={version} onChange={(e)=>{handleChange(e,"version")}} required/>
                   </div>
                 </div>
               </div>

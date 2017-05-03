@@ -390,7 +390,6 @@ class CreateAsset extends React.Component {
         success: ""
       })
       var tempInfo = Object.assign({}, this.state.assetSet) , _this = this, type = getUrlVars()["type"];
-      return console.log(tempInfo);
       delete tempInfo.assetReferenceName;
       if(tempInfo.assetAttributes && tempInfo.assetAttributes.length) {
         for(var i=0; i<tempInfo.assetAttributes.length;i++){
@@ -639,8 +638,12 @@ class CreateAsset extends React.Component {
 
       if (type === "view" || type === "update") {
           let asset = getCommonMasterById("asset-services", "assets", "Assets", id).responseJSON["Assets"][0];
+          var _date = asset.dateOfCreation ? asset.dateOfCreation.split("-") : "";
           this.setState({
-              assetSet: asset
+              assetSet: {
+                ...asset,
+                dateOfCreation: _date ? (_date[2] + "/" + _date[1] + "/" + _date[0]) : ""
+              }
           });
 
           if(asset.status == "CAPITALIZED") {
@@ -667,12 +670,15 @@ class CreateAsset extends React.Component {
           if(asset.assetReference) {
             let res = getCommonMasterById("asset-services", "assets", "Assets", asset.assetReference);
             if(res && res.responseJSON && res.responseJSON["Assets"] && res.responseJSON["Assets"][0]) {
-              this.setState({
-                assetSet: {
-                    ...this.state.assetSet,
-                    assetReferenceName: asset.name
-                }
-              })
+              var _this = this;
+              setTimeout(function() {
+                _this.setState({
+                  assetSet: {
+                      ..._this.state.assetSet,
+                      assetReferenceName: res.responseJSON["Assets"][0].name
+                  }
+                })
+              }, 200);
             }
           }
       }

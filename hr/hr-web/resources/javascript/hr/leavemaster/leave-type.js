@@ -54,7 +54,6 @@ addOrUpdate(e,mode)
         e.preventDefault();
 
         var tempInfo=Object.assign({},this.state.LeaveType) , type = getUrlVars()["type"];
-        console.log(tempInfo);
         var body={
             "RequestInfo":requestInfo,
             "LeaveType":[tempInfo]

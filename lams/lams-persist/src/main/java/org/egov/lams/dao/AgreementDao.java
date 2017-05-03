@@ -68,18 +68,20 @@ public class AgreementDao {
 		}
 		
 		String sql ="INSERT INTO eglams_demand values ( nextval('seq_eglams_demand'),?,?,?)";
-		List<Object[]> batchArgs = new ArrayList<>();
 		List<String> demands = agreement.getDemands();
-		int demandsCount = demands.size();
-		for(int i=0;i<demandsCount;i++){
-			Object[] demandRecord = {agreement.getTenantId(),agreement.getId(),demands.get(i)};
-			batchArgs.add(demandRecord);
-		}
-		try {
-			jdbcTemplate.batchUpdate(sql, batchArgs);
-		} catch (DataAccessException ex) {
-			ex.printStackTrace();
-			throw new RuntimeException(ex.getMessage());
+		if (demands != null) {
+			List<Object[]> batchArgs = new ArrayList<>();
+			int demandsCount = demands.size();
+			for (int i = 0; i < demandsCount; i++) {
+				Object[] demandRecord = { agreement.getTenantId(), agreement.getId(), demands.get(i) };
+				batchArgs.add(demandRecord);
+			}
+			try {
+				jdbcTemplate.batchUpdate(sql, batchArgs);
+			} catch (DataAccessException ex) {
+				ex.printStackTrace();
+				throw new RuntimeException(ex.getMessage());
+			}
 		}
 	}
 

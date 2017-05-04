@@ -296,7 +296,6 @@ handleProcess(e) {
   }
 
     var owner = employee.name;
-    console.log(owner);
 
   if(ID==="Submit"){
     var employee;
@@ -348,7 +347,6 @@ handleProcess(e) {
       var asOnDate = _this.state.leaveSet.toDate;
       var departmentId = _this.state.departmentId;
       var leaveNumber = _this.state.leaveNumber;
-      var owner = _this.state.owner;
       var tempInfo=Object.assign({},_this.state.leaveSet);
       delete  tempInfo.name;
       delete tempInfo.code;

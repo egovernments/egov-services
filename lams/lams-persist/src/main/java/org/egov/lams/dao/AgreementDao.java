@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.egov.lams.contract.AgreementRequest;
 import org.egov.lams.model.Agreement;
+import org.egov.lams.model.Document;
 import org.egov.lams.querybuilder.AgreementQueryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository
@@ -68,22 +68,44 @@ public class AgreementDao {
 			throw new RuntimeException(ex.getMessage());
 		}
 		
-		String sql ="INSERT INTO eglams_demand values ( nextval('seq_eglams_demand'),?,?,?)";
 		List<String> demands = agreement.getDemands();
 		if (demands != null) {
-			List<Object[]> batchArgs = new ArrayList<>();
+			String sql = "INSERT INTO eglams_demand values ( nextval('seq_eglams_demand'),?,?,?)";
+			List<Object[]> demandBatchArgs = new ArrayList<>();
 			int demandsCount = demands.size();
+
 			for (int i = 0; i < demandsCount; i++) {
 				Object[] demandRecord = { agreement.getTenantId(), agreement.getId(), demands.get(i) };
-				batchArgs.add(demandRecord);
+				demandBatchArgs.add(demandRecord);
 			}
+
 			try {
-				jdbcTemplate.batchUpdate(sql, batchArgs);
+				jdbcTemplate.batchUpdate(sql, demandBatchArgs);
 			} catch (DataAccessException ex) {
 				ex.printStackTrace();
 				throw new RuntimeException(ex.getMessage());
 			}
 		}
+		
+		List<Document> documents = agreement.getDocuments();
+		if(documents != null){
+			String sql = "INSERT INTO eglams_document values ( nextval('seq_eglams_document'),?,?,?,?)";
+			List<Object[]> documentBatchArgs = new ArrayList<>();
+			
+			for (Document document : documents) {
+				Object[] documentRecord = { document.getDocumentType().getId(), agreement.getId(),
+						document.getFileStore(), agreement.getTenantId() };
+				documentBatchArgs.add(documentRecord);
+			}
+		
+			try {
+				jdbcTemplate.batchUpdate(sql, documentBatchArgs);
+			} catch (DataAccessException ex) {
+				ex.printStackTrace();
+				throw new RuntimeException(ex.getMessage());
+			}
+		}
+		
 	}
 
 	public void updateAgreement(AgreementRequest agreementRequest) {
@@ -135,6 +157,26 @@ public class AgreementDao {
 				throw new RuntimeException(ex.getMessage());
 			}
 		}*/
-		//FIXME do we need to update demand 
+		//FIXME do we need to update demand??? the nation wants to know? 
+	
+		List<Document> documents = agreement.getDocuments();
+		if(documents != null){
+			String sql = "INSERT INTO eglams_document values ( nextval('seq_eglams_document'),?,?,?,?)";
+			List<Object[]> documentBatchArgs = new ArrayList<>();
+			
+			for (Document document : documents) {
+				Object[] documentRecord = { document.getDocumentType().getId(), agreement.getId(),
+						document.getFileStore(), agreement.getTenantId() };
+				documentBatchArgs.add(documentRecord);
+			}
+		
+			try {
+				jdbcTemplate.batchUpdate(sql, documentBatchArgs);
+			} catch (DataAccessException ex) {
+				ex.printStackTrace();
+				throw new RuntimeException(ex.getMessage());
+			}
+		}
+	
 	}
 }

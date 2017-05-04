@@ -75,7 +75,7 @@ if (hrConfigurations["HRConfiguration"]["Autogenerate_employeecode"] == "N" || t
 //     group: getCommonMaster("hr-masters", "groups", "Group").responseJSON["Group"] || [],
 //     maritalStatus: ["MARRIED", "UNMARRIED", "DIVORCED", "WIDOWER", "WIDOW"],
 //     user_bloodGroup: ["O-", "O+", "A-", "A+", "B-", "B+", "AB-", "AB+"],
-//     motherTounge: getCommonMaster("egov-common-masters", "languages", "Language").responseJSON["Language"] || [],
+//     motherTongue: getCommonMaster("egov-common-masters", "languages", "Language").responseJSON["Language"] || [],
 //     religion: getCommonMaster("egov-common-masters", "religions", "Religion").responseJSON["Religion"] || [],
 //     community: getCommonMaster("egov-common-masters", "communities", "Community").responseJSON["Community"] || [],
 //     category: getCommonMaster("egov-common-masters", "categories", "Category").responseJSON["Category"] || [],
@@ -154,7 +154,7 @@ var commonObject = {
   group,
   maritalStatus,
   user_bloodGroup,
-  motherTounge,
+  motherTongue,
   religion,
   community,
   category,
@@ -182,8 +182,8 @@ var commonObject = {
 
 //common shared object
 commonObject["assignments_mainDepartments"] = commonObject["assignments_department"];
-commonObject["languagesKnown"] = commonObject["motherTounge"];
-commonObject["user_locale"] = commonObject["motherTounge"];
+commonObject["languagesKnown"] = commonObject["motherTongue"];
+commonObject["user_locale"] = commonObject["motherTongue"];
 commonObject["probation_designation"] = commonObject["assignments_designation"];
 commonObject["regularisation_designation"] = commonObject["assignments_designation"];
 commonObject["education_yearOfPassing"] = commonObject["yearOfPassing"];
@@ -239,7 +239,7 @@ var employee = {
   employeeType: "",
   assignments: [],
   jurisdictions: [],
-  motherTounge: "",
+  motherTongue: "",
   religion: "",
   community: "",
   category: "",
@@ -406,7 +406,7 @@ var commom_fields_rules = {
   employeeType: {
     required: true
   },
-  motherTounge: {
+  motherTongue: {
     required: false
   },
   religion: {

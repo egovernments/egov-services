@@ -24,7 +24,7 @@ class ApplyLeave extends React.Component {
         "status": ""
       }
 
-     },leaveList:[]}
+    },leaveList:[],stateId:"",owner:"",leaveNumber:""}
     this.handleChange=this.handleChange.bind(this);
     this.addOrUpdate=this.addOrUpdate.bind(this);
     this.handleChangeThreeLevel=this.handleChangeThreeLevel.bind(this);
@@ -35,6 +35,7 @@ class ApplyLeave extends React.Component {
     var type = getUrlVars()["type"], _this = this;
     var id = getUrlVars()["id"];
     var asOnDate = _this.state.leaveSet.toDate;
+
 
     if(getUrlVars()["type"]==="view")
     {
@@ -51,10 +52,8 @@ class ApplyLeave extends React.Component {
         _leaveSet.code = employee.code;
         _this.setState({
            leaveSet: _leaveSet,
-           leaveNumber:_leaveSet.applicationNumber,
-           stateId:_leaveSet.stateId
+           leaveNumber:_leaveSet.applicationNumber
         })
-
       }
       else{
         $('#fromDate').datepicker({
@@ -138,18 +137,6 @@ class ApplyLeave extends React.Component {
                        if (endDay == 6 && startDay != 0)
                            days = days - 1;
                    }
-                   try{
-                     var process = commonApiPost("egov-common-workflows", "process", "_search", {
-                     tenantId: tenantId,
-                     id: this.state.stateId
-                     }).responseJSON["processInstance"];
-
-                   }catch(e){
-                     console.log(e);
-                   }
-                   _this.setState({
-                     owner:process.owner.id
-                   })
 
                    if (_this.state.leaveSet.toDate && _this.state.leaveSet.leaveType.id) {
                      try{
@@ -292,6 +279,7 @@ addOrUpdate(e,mode)
 {
 
         e.preventDefault();
+        console.log(this.state.leaveNumber);
         var employee;
         var asOnDate = this.state.leaveSet.toDate;
         var departmentId = this.state.departmentId;
@@ -307,7 +295,8 @@ addOrUpdate(e,mode)
           else{
             employee={};
           }
-          tempInfo.workflowDetails.assignee = employee.assignments && employee.assignments[0] ? employee.assignments[0].id : "";
+          var hodname = employee.name;
+          tempInfo.workflowDetails.assignee = employee.assignments && employee.assignments[0] ? employee.assignments[0].position : "";
         var body={
             "RequestInfo":requestInfo,
             "LeaveApplication":[tempInfo]
@@ -323,7 +312,9 @@ addOrUpdate(e,mode)
                       'auth-token': authToken
                     },
                     success: function(res) {
-                            window.location.href=`app/hr/leavemaster/ack-page.html?type=Apply&applicationNumber=${leaveNumber}&owner=${owner}`;
+
+                    var leaveNumber = res.LeaveApplication[0].applicationNumber;
+                    window.location.href=`app/hr/leavemaster/ack-page.html?type=Apply&applicationNumber=${leaveNumber}&owner=${hodname}`;
 
                     },
                     error: function(err) {

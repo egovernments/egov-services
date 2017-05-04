@@ -1997,11 +1997,19 @@ $("#createEmployeeForm").validate({
       showError("Please enter all mandatory fields.");
     } else if ((employee.assignments.length > 0 && isHavingPrimary()) && employee.jurisdictions.length > 0) {
       //Call api
+      var __emp = Object.assign({}, employee);
 
-      var empJuridictiona = employee["jurisdictions"];
-      employee["jurisdictions"] = [];
-      for (var i = 0; i < empJuridictiona.length; i++) {
-        employee["jurisdictions"].push(empJuridictiona[i].boundary);
+      if(employee["jurisdictions"] && employee["jurisdictions"].length && typeof employee["jurisdictions"][0] == "object") {
+          var empJuridictiona = employee["jurisdictions"];
+          employee["jurisdictions"] = [];
+          for (var i = 0; i < empJuridictiona.length; i++) {
+            employee["jurisdictions"].push(empJuridictiona[i].boundary);
+          }
+      }
+
+      if(employee.user && employee.user.dob) {
+        var _date = employee.user.dob.split("-");
+        employee.user.dob = _date[1] + "/" + _date[2] + "/" + _date[0];
       }
       //Upload files if any
       uploadFiles(employee, function(err, emp) {
@@ -2024,10 +2032,11 @@ $("#createEmployeeForm").validate({
           });
 
           if (response["status"] === 200) {
-            showSuccess("Employee" + getUrlVars()["type"] == "update" ? "update" : "add" + "ed successfully.");
+            //showSuccess("Employee" + getUrlVars()["type"] == "update" ? "update" : "add" + "ed successfully.");
             window.location.href = "app/hr/common/employee-search.html";
           } else {
-            alert(response["statusText"]);
+            showError(response["statusText"]);
+            employee = Object.assign({}, __emp);
           }
 
 

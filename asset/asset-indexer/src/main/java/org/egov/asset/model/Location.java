@@ -54,8 +54,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class Location {
-	
-	
+
 	private Long locality;
 	private Long zone;
 	private Long revenueWard;

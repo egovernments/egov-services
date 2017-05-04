@@ -1,4 +1,4 @@
-package org.egov.asset.indexer.consumers;
+package org.egov.asset.consumers;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -69,10 +69,11 @@ public class AssetConsumerConfig {
 	        return propsMap;
 	    }
 
-
 	    @Bean
-	    public SaveAssetConsumer listener() {
-	        return new SaveAssetConsumer();
+	    public AssetConsumers listener() {
+	        return new AssetConsumers();
 	    }
+	    
+	    
 
 }

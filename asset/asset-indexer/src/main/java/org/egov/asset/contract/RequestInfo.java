@@ -2,7 +2,7 @@ package org.egov.asset.contract;
 
 import java.util.Date;
 
-import org.springframework.stereotype.Component;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,9 +10,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-
-
-@Component
 @Setter
 @Getter
 @NoArgsConstructor
@@ -20,17 +17,16 @@ import lombok.ToString;
 @ToString
 public class RequestInfo {
 
-	private String apiId;
-	private String ver;
-	private String ts;
-	private String action;
-	private String did;
-	private String key;
-	private String msgId;
-	private String requesterId;
+	private String apiId;	
+	private String ver;	
+	@JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "IST")
+	private Date ts;	
+	private String action;	
+	private String did;	
+	private String key;	
+	private String msgId;	
+	private String requesterId;	
+	private String correlationId;	
 	private String authToken;
-	
-	
-	
-	
+	private User userInfo;
 }

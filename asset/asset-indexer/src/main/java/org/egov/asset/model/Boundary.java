@@ -1,4 +1,3 @@
-
 /*
  * eGov suite of products aim to improve the internal efficiency,transparency,
  * accountability and the service delivery of the government  organizations.
@@ -39,33 +38,15 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.asset.contract;
+package org.egov.asset.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
-import javax.validation.Valid;
-
-import org.egov.asset.model.Asset;
-
-@AllArgsConstructor
-@EqualsAndHashCode
-@Getter
-@NoArgsConstructor
 @Setter
-@ToString
-public class AssetRequest {
-	
-	@JsonProperty("RequestInfo")
-	private RequestInfo requestInfo;
+@Getter
+public class Boundary {
 
-	@JsonProperty("Asset")
-	@Valid
-	private Asset asset;
-
+	 private Long id;
+     private String name;
 }

@@ -1,4 +1,3 @@
-
 /*
  * eGov suite of products aim to improve the internal efficiency,transparency,
  * accountability and the service delivery of the government  organizations.
@@ -39,33 +38,22 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.asset.contract;
+package org.egov.asset;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.client.RestTemplate;
 
-import javax.validation.Valid;
+@SpringBootApplication
+public class EgovAssetIndexApplication {
 
-import org.egov.asset.model.Asset;
+	@Bean
+	public RestTemplate getRestTemplate() {
+		return new RestTemplate();
+	}
 
-@AllArgsConstructor
-@EqualsAndHashCode
-@Getter
-@NoArgsConstructor
-@Setter
-@ToString
-public class AssetRequest {
-	
-	@JsonProperty("RequestInfo")
-	private RequestInfo requestInfo;
-
-	@JsonProperty("Asset")
-	@Valid
-	private Asset asset;
-
+	public static void main(String[] args) {
+		SpringApplication.run(EgovAssetIndexApplication.class, args);
+	}
 }

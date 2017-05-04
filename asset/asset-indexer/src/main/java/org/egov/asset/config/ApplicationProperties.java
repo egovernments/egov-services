@@ -39,33 +39,32 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.asset.contract;
+package org.egov.asset.config;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
+
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
-import javax.validation.Valid;
-
-import org.egov.asset.model.Asset;
-
-@AllArgsConstructor
-@EqualsAndHashCode
+@Configuration
 @Getter
-@NoArgsConstructor
-@Setter
-@ToString
-public class AssetRequest {
+public class ApplicationProperties {
+
+	@Value("${kafka.topics.save.asset}")
+	private String createAssetTopicName;
 	
-	@JsonProperty("RequestInfo")
-	private RequestInfo requestInfo;
-
-	@JsonProperty("Asset")
-	@Valid
-	private Asset asset;
-
+	@Value("${kafka.topics.update.asset}")
+	private String updateAssetTopicName;
+	
+	@Value("${egov.services.boundary_service.searchpath}")
+	private String boundaryServiceHostName;
+	
+	@Value("${egov.services.boundary_service.hostname}")
+	private String boundaryServiceSearchPath;
+	
+	@Value("${egov.services.asset.indexer.host}")
+	private String indexerHost;
+	
+	@Value("${egov.services.asset.indexer.name}")
+	private String indexName;
 }

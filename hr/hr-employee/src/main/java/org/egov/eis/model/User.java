@@ -119,7 +119,7 @@ public class User {
 	private String correspondenceCity;
 
 	@Size(max=6)
-	private String correspondencePincode;
+	private String correspondencePinCode;
 
 	@Size(max=300)
 	private String correspondenceAddress;

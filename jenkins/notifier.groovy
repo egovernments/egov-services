@@ -1,4 +1,4 @@
-def notifyBuild(String buildStatus = 'STARTED') {
+def notifyBuild(buildStatus = 'STARTED') {
   buildStatus =  buildStatus ?: 'SUCCESSFUL'
   def BUILD_STATUS = "${buildStatus}"
   def colorName = 'RED'
@@ -20,7 +20,7 @@ def notifyBuild(String buildStatus = 'STARTED') {
     slackSend (color: colorCode, message: summary)
     emailext (
       body: '${JELLY_SCRIPT, template="html_gmail"}',
-      recipientProviders: [[$class: 'CulpritsRecipientProvider'], [$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']], replyTo: '$DEFAULT_REPLYTO', subject: '$PROJECT_NAME - Build # $BUILD_NUMBER - ${BUILD_STATUS}!', to: '$DEFAULT_RECIPIENTS'
+      recipientProviders: [[$class: 'CulpritsRecipientProvider'], [$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']], replyTo: '$DEFAULT_REPLYTO', subject: '$PROJECT_NAME - Build # $BUILD_NUMBER - ${buildStatus}!', to: '$DEFAULT_RECIPIENTS'
     )
 }
 

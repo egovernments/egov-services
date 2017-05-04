@@ -12,19 +12,10 @@ var requestInfo = {
     "key": "xyz",
     "msgId": "654654",
     "requesterId": "61",
-    "authToken": authToken,
-    "userInfo": {
-      "id": 1,
-      "userName": null,
-      "name": null,
-      "type": null,
-      "mobileNumber": null,
-      "emailId": null,
-      "roles": null
-    }
+    "authToken": authToken
 };
 
-var tenantId = "ap.kurnool"//"ap." + window.location.origin.split("-")[0].split("//")[1];
+var tenantId = "ap." + window.location.origin.split("-")[0].split("//")[1];
 
 function blockUI() {
     $('body').css('overflow', 'hidden');

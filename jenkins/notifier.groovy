@@ -19,7 +19,7 @@ def notifyBuild(String buildStatus = 'STARTED') {
 
     slackSend (color: colorCode, message: summary)
     emailext (
-      body: '${SCRIPT, template="jenkins/template/build-failure.template"}',
+      body: '${JELLY_SCRIPT, template="html_gmail"}',
       recipientProviders: [[$class: 'CulpritsRecipientProvider'], [$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']], replyTo: '$DEFAULT_REPLYTO', subject: '$PROJECT_NAME - Build # $BUILD_NUMBER - ${BUILD_STATUS}!', to: '$DEFAULT_RECIPIENTS'
     )
 }

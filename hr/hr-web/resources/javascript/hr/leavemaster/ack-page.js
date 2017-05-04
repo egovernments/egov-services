@@ -15,7 +15,7 @@ class AckPage extends React.Component {
                   </h4>)
           break;
           case "Approve": return(<h4>
-                      <center><font color="black"> Leave Application with Application Number: <strong style={{'fontWeight':700}}> {getUrlVars()["applicationNumber"]}</strong> has been Approved and forwarded to <strong style={{'fontWeight':700}}> {getUrlVars()["owner"] ?  decodeURIComponent(getUrlVars()["owner"]) : ""} </strong>  </font> </center>
+                      <center><font color="black"> Leave Application with Application Number: <strong style={{'fontWeight':700}}> {getUrlVars()["applicationNumber"]}</strong> has been Approved </font> </center>
                   </h4>)
           break;
           case "Apply": return(<h4>

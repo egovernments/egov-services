@@ -371,9 +371,10 @@ handleProcess(e) {
                   },
                   success: function(res) {
 
-
-                    window.location.href=`app/hr/leavemaster/ack-page.html?type=${ID}&applicationNumber=${leaveNumber}&owner=${owner}`;
-
+                    if(ID=="Approve"|| ID== "Cancel")
+                      window.location.href=`app/hr/leavemaster/ack-page.html?type=${ID}&applicationNumber=${leaveNumber}`;
+                    else
+                      window.location.href=`app/hr/leavemaster/ack-page.html?type=${ID}&applicationNumber=${leaveNumber}&owner=${owner}`;
                   },
                   error: function(err) {
                       showError(err);

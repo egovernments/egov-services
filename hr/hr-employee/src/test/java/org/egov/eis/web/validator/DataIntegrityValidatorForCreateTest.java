@@ -57,7 +57,7 @@ public class DataIntegrityValidatorForCreateTest {
 		// gpf, passport and code are valid and hence hasErrors returns false
 		assertFalse(validateEmployee(true, true, true, "employees1.json").hasErrors());
 		// gpfNo is invalid and hence hasErrors returns true
-		assertTrue(validateEmployee(false, true, true, "employees1.json").hasErrors());
+		assertTrue(validateEmployee(false, false, true, "employees1.json").hasErrors());
 		// passportNo is invalid
 		assertTrue(validateEmployee(true, false, true, "employees1.json").hasErrors());
 		// code is invalid
@@ -66,7 +66,7 @@ public class DataIntegrityValidatorForCreateTest {
 	
 	@Test
 	public void checkForErrorsWhenDocumentsWithDuplicatesWithinInput() {
-		// documents within input has duplicates(repeated) and hence invalid
+		// documents within input has duplicates(repeated) and hence invalid 
 		assertTrue(validateEmployee(true, true, true, "employeesWithDuplicateDocumentsWithin.json").hasErrors());
 	}
 	

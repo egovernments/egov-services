@@ -237,6 +237,9 @@ class CreateAsset extends React.Component {
     super(props);
     this.state = {
         list: [],
+        tblSet: {
+          removeCustom: false
+        },
         assetSet: Object.assign({}, defaultAssetSetState),
         refSet: {
           tenantId: tenantId,
@@ -274,6 +277,7 @@ class CreateAsset extends React.Component {
     this.handleReferenceChange = this.handleReferenceChange.bind(this);
     this.handleRefSearch = this.handleRefSearch.bind(this);
     this.selectRef = this.selectRef.bind(this);
+    this.removeRow = this.removeRow.bind(this);
 
   }
   close() {
@@ -390,7 +394,10 @@ class CreateAsset extends React.Component {
         success: ""
       })
       var tempInfo = Object.assign({}, this.state.assetSet) , _this = this, type = getUrlVars()["type"];
+      if(tempInfo && tempInfo.assetCategory)
+        tempInfo.assetCategory.tenantId = tenantId;
       delete tempInfo.assetReferenceName;
+
       if(tempInfo.assetAttributes && tempInfo.assetAttributes.length) {
         for(var i=0; i<tempInfo.assetAttributes.length;i++){
           if(tempInfo.assetAttributes[i].type == "Table") {
@@ -685,6 +692,26 @@ class CreateAsset extends React.Component {
       }
   }
 
+  removeRow(e, type, index) {
+    e.preventDefault();
+    switch(type) {
+      case "custom":
+        this.setState({
+          tblSet: {
+            ...this.state.tblSet,
+            removeCustom: true
+          }
+        });
+        break;
+      case "old":
+        console.log("2");
+        break;
+      case "new":
+        console.log("3");
+        break;
+    }
+  }
+
   addNewRow(e, name) {
     e.preventDefault();
     if(!this.state.newRows[name])
@@ -704,8 +731,8 @@ class CreateAsset extends React.Component {
   }
 
   render() {
-    let {handleChange, addOrUpdate, handleChangeTwoLevel, handleChangeAssetAttr, addNewRow, handleReferenceChange, handleRefSearch, selectRef} = this;
-    let {isSearchClicked, list, customFields, error, success, acquisitionList, readonly, newRows, refSet, references} = this.state;
+    let {handleChange, addOrUpdate, handleChangeTwoLevel, handleChangeAssetAttr, addNewRow, handleReferenceChange, handleRefSearch, selectRef, removeRow} = this;
+    let {isSearchClicked, list, customFields, error, success, acquisitionList, readonly, newRows, refSet, references, tblSet} = this.state;
     let {
       assetCategory,
       locationDetails,
@@ -1079,7 +1106,11 @@ class CreateAsset extends React.Component {
               return (
                 <td>{checkFields(itemOne, (len ? (len+ind) : (ind+1)), true)}</td>
               );
-            })}</tr>)
+            })}
+                <td>
+                  <button className="btn btn-close" onClick={(e) => {removeRow(e, "new", (len ? (len+ind) : (ind+1)))}}>Remove</button>
+                </td>
+              </tr>)
         })
       }
     }
@@ -1113,7 +1144,11 @@ class CreateAsset extends React.Component {
                         );
                       }
                     }
-                })}</tr>)
+                })}
+                    <td>
+                      <button className="btn btn-close" onClick={(e) => {removeRow(e, "old", ind)}}>Remove</button>
+                    </td>
+                    </tr>)
               }
             })
         })
@@ -1142,7 +1177,8 @@ class CreateAsset extends React.Component {
                 }
               });
           }
-          if(!rndr)
+
+          if(!rndr && !tblSet.removeCustom)
   					return (<tr>
                 <td  style={{"padding-top": "12px"}}>1</td>
                 {item.columns.map((itemOne, index) => {
@@ -1150,7 +1186,11 @@ class CreateAsset extends React.Component {
                 return (
                   <td>{checkFields(itemOne, 0, true)}</td>
                 )
-              })} </tr>)
+              })}
+                <td>
+                  <button className="btn btn-close" onClick={(e) => {removeRow(e, "custom")}}>Remove</button>
+                </td>
+               </tr>)
 				}
 
         return (
@@ -1171,6 +1211,7 @@ class CreateAsset extends React.Component {
                             <tr>
                                <th>Sr. No.</th>
                                {tableColumns()}
+                               <th>Action</th>
                             </tr>
                          </thead>
                          <tbody>

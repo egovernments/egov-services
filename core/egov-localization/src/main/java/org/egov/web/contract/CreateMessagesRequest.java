@@ -2,6 +2,7 @@ package org.egov.web.contract;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.egov.domain.model.Tenant;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.Valid;
@@ -22,17 +23,17 @@ public class CreateMessagesRequest {
     @Valid
     private List<Message> messages;
 
-    public List<org.egov.persistence.entity.Message> toEntityMessages() {
+    public List<org.egov.domain.model.Message> toDomainMessages() {
         return messages.stream()
-                .map(this::toEntityMessage)
+                .map(this::toDomainMessage)
                 .collect(Collectors.toList());
     }
 
-    private org.egov.persistence.entity.Message toEntityMessage(Message contractMessage) {
-        return org.egov.persistence.entity.Message.builder()
+    private org.egov.domain.model.Message toDomainMessage(Message contractMessage) {
+        return org.egov.domain.model.Message.builder()
                 .code(contractMessage.getCode())
                 .message(contractMessage.getMessage())
-                .tenantId(contractMessage.getTenantId())
+                .tenant(new Tenant(contractMessage.getTenantId()))
                 .locale(locale)
                 .build();
     }

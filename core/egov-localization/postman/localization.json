@@ -1,0 +1,42 @@
+{
+	"variables": [],
+	"info": {
+		"name": "localization",
+		"_postman_id": "edb7f3a5-54db-0eab-407f-ceab4d4d399b",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "fetch messages",
+			"request": {
+				"url": "http://localhost:8087/localization/messages?locale=en_IN&tenantId=ap.public.d.e",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"RequestInfo\": {\n\t\t\n\t},\n\t\"user\": {\n      \"permanentAddress\": \"new padd1\",\n      \"permanentCity\": \"new pcity1\",\n      \"permanentPinCode\": \"new 1\",\n      \"correspondenceAddress\": \"new cadd2\",\n      \"correspondenceCity\": \"new ccity2\",\n      \"correspondencePinCode\": \"new pin2\",\n      \"tenantId\": \"ap.public\"\n\t}\n}"
+				},
+				"description": "Fetch messages for given locale"
+			},
+			"response": []
+		},
+		{
+			"name": "bust localization cache",
+			"request": {
+				"url": "http://localhost:8087/localization/messages/cache-bust",
+				"method": "POST",
+				"header": [],
+				"body": {},
+				"description": "Bust Redis cache for localization messages"
+			},
+			"response": []
+		}
+	]
+}

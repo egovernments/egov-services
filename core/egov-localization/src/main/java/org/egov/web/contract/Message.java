@@ -19,6 +19,6 @@ public class Message {
     public Message(org.egov.domain.model.Message domainMessage) {
         this.code = domainMessage.getCode();
         this.message = domainMessage.getMessage();
-        this.tenantId = domainMessage.getTenantId();
+        this.tenantId = domainMessage.getTenant().getTenantId();
     }
 }

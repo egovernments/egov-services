@@ -84,7 +84,7 @@ public class LeaveApplicationRepository {
     public LeaveApplicationRequest saveLeaveApplication(final LeaveApplicationRequest leaveApplicationRequest) {
         ProcessInstance processInstance = new ProcessInstance();
         Long stateId = null;
-        if (leaveApplicationRequest.getLeaveApplication().size() > 1)
+        if (leaveApplicationRequest.getLeaveApplication().size() == 1)
             processInstance = workFlowService.start(leaveApplicationRequest);
         if (processInstance.getId() != null)
             stateId = Long.valueOf(processInstance.getId());
@@ -92,7 +92,6 @@ public class LeaveApplicationRepository {
         final Date now = new Date();
         for (LeaveApplication leaveApplication : leaveApplicationRequest.getLeaveApplication()) {
             leaveApplication.setStateId(stateId);
-            leaveApplicationStatusChange(leaveApplication);
             final Object[] obj = new Object[] { leaveApplication.getApplicationNumber(), leaveApplication.getEmployee(),
                     leaveApplication.getLeaveType().getId(),
                     leaveApplication.getFromDate(), leaveApplication.getToDate(), leaveApplication.getCompensatoryForDate(),
@@ -135,7 +134,7 @@ public class LeaveApplicationRepository {
             leaveApplication.setStatus(LeaveStatus.REJECTED);
         else if ("Cancel".equalsIgnoreCase(workFlowAction))
             leaveApplication.setStatus(LeaveStatus.CANCELLED);
-        else if ("Submit".contains(workFlowAction))
+        else if ("Submit".equalsIgnoreCase(workFlowAction))
             leaveApplication.setStatus(LeaveStatus.RESUBMITTED);
     }
 }

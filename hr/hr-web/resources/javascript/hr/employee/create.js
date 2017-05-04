@@ -2656,6 +2656,16 @@ function printValue(object = "", values) {
         } else {
           $('[data-ph="no"]').prop("checked", true);
         }
+      } else if(key == "bank" && values[key]) {
+        commonObject["bankbranches"] = commonApiPost("egf-masters", "bankbranches", "_search", {
+            tenantId,
+            "bank.id": values[key]
+        }).responseJSON["bankBranches"] || [];
+        $(`#bankBranch`).html(`<option value=''>Select</option>`)
+        for (var i = 0; i < commonObject["bankbranches"].length; i++) {
+          $(`#bankBranch`).append(`<option value='${commonObject["bankbranches"][i]['id']}'>${commonObject["bankbranches"][i]['name']}</option>`)
+        }
+        $("[name='" + key + "']").val(values[key] ? values[key] : "");
       } else if (values[key]) {
         $("[name='" + key + "']").val(values[key] ? values[key] : "");
       } else {

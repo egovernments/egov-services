@@ -2,7 +2,8 @@ class Designation extends React.Component{
   constructor(props){
     super(props);
     this.state={designationSet:{name:"",
-    code:"",description:"", chartOfAccounts:"",active:""},
+    code:"",description:"", chartOfAccounts:null,active:"true",
+    tenantId:tenantId}
       }
 
       this.handleChange=this.handleChange.bind(this);
@@ -10,14 +11,23 @@ class Designation extends React.Component{
     }
 
       handleChange(e,name){
+        if(name === "active"){
+        this.setState({
+          designationSet:{
+              ...this.state.designationSet,
+              active: !this.state.designationSet.active
+
+          }
+        })
+      }else{
         this.setState({
           designationSet:{
             ...this.state.designationSet,
             [name]:e.target.value
           }
         })
-
       }
+    }
       close(){
           // widow.close();
           open(location, '_self').close();
@@ -42,18 +52,74 @@ class Designation extends React.Component{
           }
       }
 
-      addOrUpdate(e,mode){
-           console.log(this.state.designationSet);
+          addOrUpdate(e){
           e.preventDefault();
-            this.setState({designationSet:{
-            name:"",
-            code:"",
-            description:"",
-            chartOfAccounts:"",
-            active:""},
-            descriptionList:""
-          })
-        }
+          var tempInfo=Object.assign({},this.state.designationSet) , type = getUrlVars()["type"];
+                    var body={
+              "RequestInfo":requestInfo,
+              "Designation":tempInfo
+            },_this=this;
+            if (type == "update") {
+                            $.ajax({
+                   url:baseUrl+"/hr-masters/designations/" + this.state.designationSet.id + "/" + "_update?tenantId=" + tenantId,
+                    type: 'POST',
+                    dataType: 'json',
+                    data:JSON.stringify(body),
+                    async: false,
+                    contentType: 'application/json',
+                    headers:{
+                      'auth-token': authToken
+                    },
+                    success: function(res) {
+                            showSuccess("Designation Modified successfully.");
+                            _this.setState({designationSet:{
+                            name:"",
+                            code:"",
+                            description:"",
+
+                            active:"",
+                            "tenantId": tenantId
+                          },
+
+                          })
+
+
+                    },
+                    error: function(err) {
+                        showError(err);
+
+                    }
+                });
+            } else {
+              $.ajax({
+                    url:baseUrl+"/hr-masters/designations/_create?tenantId=" + tenantId,
+                    type: 'POST',
+                    dataType: 'json',
+                    data:JSON.stringify(body),
+                    async: false,
+                    contentType: 'application/json',
+                    headers:{
+                      'auth-token': authToken
+                    },
+                    success: function(res) {
+                            showSuccess("Designation Created successfully.");
+                            _this.setState({designationSet:{
+                            name:"",
+                            code:"",
+                            description:"",
+                            active:"",
+                          "tenantId": tenantId},
+
+                          })
+
+                    },
+                    error: function(err) {
+                        showError(err);
+
+                    }
+                });
+            }
+     }
 
 
 
@@ -120,34 +186,28 @@ class Designation extends React.Component{
                         <label for="">Description <span>*</span></label>
                     </div>
                     <div className="col-sm-6">
-                        <div className="styled-select">
-                          <select id="description" name="description" value={description} required="true"
-                            onChange={(e)=>{  handleChange(e,"description")}}>
+                      <textarea name="description" id="description" value={description}
+                      onChange={(e)=>{handleChange(e,"description")}} required/>
 
-                              <option>Select description</option>
-                              {renderOption(this.state.descriptionList)}
-                         </select>
+                  </div>
+                </div>
+              </div>
+              <div className="col-sm-6">
+                  <div className="row">
+                    <div className="col-sm-6 label-text">
+                        <label for="">Active</label>
+                    </div>
+                        <div className="col-sm-6">
+                              <label className="radioUi">
+                                <input type="checkbox" name="active" value="true" checked={active == "true" || active  ==  true}
+                                 onChange={(e)=>{ handleChange(e,"active")}}/>
+
+                              </label>
                         </div>
                     </div>
-                </div>
-              </div>
+                  </div>
           </div>
 
-        <div className="row">
-          <div className="col-sm-6">
-              <div className="row">
-                <div className="col-sm-6 label-text">
-                    <label for="">Active</label>
-                </div>
-                    <div className="col-sm-6">
-                          <label className="radioUi">
-                            <input type="checkbox" name="active" id="active" value="true" onChange={(e)=>{
-                                handleChange(e,"active")}} checked={active == "true" || active  ==  true }/>
-                          </label>
-                    </div>
-                </div>
-              </div>
-            </div>
 
 
           <div className="text-center">

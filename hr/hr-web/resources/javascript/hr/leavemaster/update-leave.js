@@ -296,7 +296,6 @@ handleProcess(e) {
   }
 
     var owner = employee.name;
-    console.log(owner);
 
   if(ID==="Submit"){
     var employee;
@@ -348,7 +347,6 @@ handleProcess(e) {
       var asOnDate = _this.state.leaveSet.toDate;
       var departmentId = _this.state.departmentId;
       var leaveNumber = _this.state.leaveNumber;
-      var owner = _this.state.owner;
       var tempInfo=Object.assign({},_this.state.leaveSet);
       delete  tempInfo.name;
       delete tempInfo.code;
@@ -373,9 +371,10 @@ handleProcess(e) {
                   },
                   success: function(res) {
 
-
-                    window.location.href=`app/hr/leavemaster/ack-page.html?type=${ID}&applicationNumber=${leaveNumber}&owner=${owner}`;
-
+                    if(ID=="Approve"|| ID== "Cancel")
+                      window.location.href=`app/hr/leavemaster/ack-page.html?type=${ID}&applicationNumber=${leaveNumber}`;
+                    else
+                      window.location.href=`app/hr/leavemaster/ack-page.html?type=${ID}&applicationNumber=${leaveNumber}&owner=${owner}`;
                   },
                   error: function(err) {
                       showError(err);

@@ -5,24 +5,26 @@ class PositionMaster extends React.Component{
       "id": "",
       "name": "",
       "deptdesig": {
-        "id": "",
-        "department": "",
-        "designation": {
           "id": "",
-          "name": "",
-          "code": "",
-          "description": "",
-          "chartOfAccounts": null,
-          "active": true,
-          "tenantId": ""
-        }
-      },
-      "isPostOutsourced": "",
-      "active": "",
+          "department": "",
+        "designation": {
+                            "id": "",
+                            "name": "",
+                            "code": "",
+                            "description": "",
+                            "chartOfAccounts": null,
+                            "tenantId": ""
+                        }
+                    },
+                    "isPostOutsourced": "",
+                    "active": "true",
     },
       departmentsList:[],designationList:[]}
       this.handleChange=this.handleChange.bind(this);
       this.addOrUpdate=this.addOrUpdate.bind(this);
+      this.handleChangeThreeLevel=this.handleChangeThreeLevel.bind(this);
+      this.handleChangeTwoLevel=this.handleChangeTwoLevel.bind(this);
+
 }
     componentWillMount()
     {
@@ -32,15 +34,59 @@ class PositionMaster extends React.Component{
     })
     }
 
+
     handleChange(e,name){
+      if(name === "active"){
+      this.setState({
+        positionSet:{
+            ...this.state.positionSet,
+            active: !this.state.positionSet.active
+
+        }
+      })
+    }else{
       this.setState({
         positionSet:{
           ...this.state.positionSet,
           [name]:e.target.value
         }
       })
-
     }
+  }
+
+
+
+  handleChangeTwoLevel(e,pName,name)
+  {
+    this.setState({
+      positionSet:{
+        ...this.state.positionSet,
+        [pName]:{
+            ...this.state.positionSet[pName],
+            [name]:e.target.value
+        }
+      }
+
+    })
+
+}
+handleChangeThreeLevel(e,pName,name,val)
+{
+  this.setState({
+    positionSet:{
+      ...this.state.positionSet,
+      [pName]:{
+          ...this.state.positionSet[pName],
+
+          [name]:{
+              ...this.state.positionSet[name],
+                  [val]:e.target.value
+      }
+    }
+  }
+  })
+
+}
     close(){
         // widow.close();
         open(location, '_self').close();
@@ -67,34 +113,93 @@ class PositionMaster extends React.Component{
 
 
 
-    addOrUpdate(e,mode){
-      e.preventDefault();
-      console.log({name:this.state.positionSet.name,deptdesig:{designationList:this.state.positionSet.designation,departmentsList:this.state.positionSet.department},isPostOutsourced:this.state.positionSet.isPostOutsourced});
-      this.setState({positionSet:{
-      "id": "",
-      "name": "",
-      "deptdesig": {
-      "id": "",
-        "department": "",
-        "designation": {
-          "id": "",
-          "name": "",
-          "code": "",
-          "description": "",
-          "chartOfAccounts": null,
-          "active": true,
-          "tenantId": ""
-          }
-        },
-      "isPostOutsourced": "",
-      "active": "",
-    },designationList:[],departmentsList:[]})
+
+  addOrUpdate(e){
+  e.preventDefault();
+  var tempInfo=Object.assign({},this.state.positionSet) , type = getUrlVars()["type"];
+            var body={
+      "RequestInfo":requestInfo,
+      "Position":[tempInfo]
+    },_this=this;
+    if (type == "update") {
+                    $.ajax({
+           url:baseUrl+"/hr-masters/positions/" + this.state.positionSet.id + "/" + "_update?tenantId=" + tenantId,
+            type: 'POST',
+            dataType: 'json',
+            data:JSON.stringify(body),
+            async: false,
+            contentType: 'application/json',
+            headers:{
+              'auth-token': authToken
+            },
+            success: function(res) {
+                    showSuccess("Position Modified successfully.");
+                    _this.setState({positionSet:{
+                        "id": "",
+                        "name": "",
+                        "deptdesig": {
+                        "id": "",
+                          "department": "",
+                          "designation": {
+                            "id": "",
+
+                            }
+                          },
+                        "isPostOutsourced": "",
+                        "active": "",
+                        "tenantId": null
+                      },designationList:[],departmentsList:[]})
+
+            },
+            error: function(err) {
+                showError(err);
+
+            }
+        });
+    } else {
+      $.ajax({
+            url:baseUrl+"/hr-masters/positions/_create?tenantId=" + tenantId,
+            type: 'POST',
+            dataType: 'json',
+            data:JSON.stringify(body),
+            async: false,
+            contentType: 'application/json',
+            headers:{
+              'auth-token': authToken
+            },
+            success: function(res) {
+                    showSuccess("Position Created successfully.");
+                    _this.setState({positionSet:{
+                        "id": "",
+                        "name": "",
+                        "deptdesig": {
+                        "id": "",
+                          "department": "",
+                          "designation": {
+                            "id": "",
+                            "tenantId": null
+                            }
+                          },
+                        "isPostOutsourced": "",
+                        "active": "",
+                        "tenantId": null
+                      },designationList:[],departmentsList:[]})
+
+            },
+            error: function(err) {
+                showError(err);
+
+            }
+        });
+    }
   }
+
+
 
 
     render(){
 
-      let {handleChange,addOrUpdate}=this;
+      let {handleChange,addOrUpdate,handleChangeTwoLevel,handleChangeThreeLevel}=this;
       let {department,designation,name,isPostOutsourced,deptdesig,active}=this.state.positionSet;
       let mode =getUrlVars()["type"];
 
@@ -105,7 +210,7 @@ class PositionMaster extends React.Component{
           {
               return list.map((item)=>
               {
-                  return (<option key={item.name} value={item.name}>
+                  return (<option key={item.id} value={item.id}>
                           {item.name}
                     </option>)
               })
@@ -132,7 +237,7 @@ class PositionMaster extends React.Component{
                   <div className="col-sm-6">
                   <div className="styled-select">
                       <select id="department" name="department" value={deptdesig.department} onChange={(e)=>{
-                          handleChange(e,"department")
+                          handleChangeTwoLevel(e,"deptdesig","department")
                       }}>
                         <option>Select Department</option>
                         {renderOption(this.state.departmentsList)}
@@ -148,8 +253,8 @@ class PositionMaster extends React.Component{
                     </div>
                     <div className="col-sm-6">
                     <div className="styled-select">
-                        <select id="designation" name="designation" value={deptdesig.designation.name} onChange={(e)=>{
-                            handleChange(e,"designation")
+                        <select id="designation" name="designation" value={deptdesig.designation.id} onChange={(e)=>{
+                            handleChangeThreeLevel(e,"deptdesig","designation","id")
                         }}>
                         <option>Select Designation</option>
                         {renderOption(this.state.designationList)}
@@ -163,7 +268,7 @@ class PositionMaster extends React.Component{
           <div className="col-sm-6">
               <div className="row">
                   <div className="col-sm-6 label-text">
-                      <label for="">Position <span>*</span></label>
+                      <label for="">Name <span>*</span></label>
                   </div>
                   <div className="col-sm-6">
                   <input type="text" name="name" value={name} id= "name" onChange={(e)=>{

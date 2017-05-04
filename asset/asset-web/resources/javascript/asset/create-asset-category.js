@@ -534,7 +534,7 @@ class CreateAsset extends React.Component {
                   */}
 
                     <td data-label="Action">
-                    <button type="button" className="btn btn-default btn-action"><span className="glyphicon glyphicon-trash"onClick={(e)=>{renderDelEvent(index,column)}}></span></button>
+                    <button type="button" className="btn btn-default btn-action" onClick={(e)=>{renderDelEvent(index,column)}} ><span className="glyphicon glyphicon-trash"></span></button>
                   </td></tr>)
               })
           }
@@ -576,7 +576,7 @@ class CreateAsset extends React.Component {
                     </td>
 
                     <td data-label="Action">
-                    <button type="button" className="btn btn-default btn-action"><span className="glyphicon glyphicon-trash"onClick={(e)=>{renderDelEvent(index)}}></span></button>
+                    <button type="button" className="btn btn-default btn-action" onClick={(e)=>{renderDelEvent(index)}} ><span className="glyphicon glyphicon-trash"></span></button>
                   </td></tr>)
               })
           }
@@ -588,7 +588,7 @@ class CreateAsset extends React.Component {
     const showNoteMsg = function() {
       if(showMsg) {
         return (<p className="text-danger">Name and Data Type is mandatory.</p>)
-      } else 
+      } else
         return "";
     }
 

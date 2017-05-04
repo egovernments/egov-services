@@ -277,9 +277,9 @@ var employee = {
     aadhaarNumber: "",
     permanentAddress: "",
     permanentCity: "",
-    permanentPincode: "",
+    permanentPinCode: "",
     correspondenceCity: "",
-    correspondencePincode: "",
+    correspondencePinCode: "",
     correspondenceAddress: "",
     active: true,
     dob: "",
@@ -488,13 +488,13 @@ var commom_fields_rules = {
   "user.permanentCity": {
     required: false
   },
-  "user.permanentPincode": {
+  "user.permanentPinCode": {
     required: false
   },
   "user.correspondenceCity": {
     required: false
   },
-  "user.correspondencePincode": {
+  "user.correspondencePinCode": {
     required: false
   },
   "user.correspondenceAddress": {
@@ -880,13 +880,13 @@ var user = {
   permanentCity: {
     required: false
   },
-  permanentPincode: {
+  permanentPinCode: {
     required: false
   },
   correspondenceCity: {
     required: false
   },
-  correspondencePincode: {
+  correspondencePinCode: {
     required: false
   },
   correspondenceAddress: {
@@ -2009,7 +2009,7 @@ $("#createEmployeeForm").validate({
           //Handle error
         } else {
           var response = $.ajax({
-            url: baseUrl + "/hr-employee/employees/" + ((getUrlVars()["type"] == "update") ? ( employee.id + "/_update") : "_create") + "?tenantId=" + tenantId,
+            url: baseUrl + "/hr-employee/employees/" + ((getUrlVars()["type"] == "update") ? "_update" : "_create") + "?tenantId=" + tenantId,
             type: 'POST',
             dataType: 'json',
             data: JSON.stringify({

@@ -126,7 +126,7 @@ public class AssetQueryBuilder {
 		if (searchAsset.getStatus() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" ASSET.status = ?");
-			preparedStatementValues.add(searchAsset.getStatus());
+			preparedStatementValues.add(searchAsset.getStatus().toString());
 		}
 		
 		if (searchAsset.getLocality() != null) {

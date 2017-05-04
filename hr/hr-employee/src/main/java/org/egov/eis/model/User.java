@@ -113,13 +113,13 @@ public class User {
 	private String permanentCity;
 
 	@Size(max=6)
-	private String permanentPincode;
+	private String permanentPinCode;
 
 	@Size(max=50)
 	private String correspondenceCity;
 
 	@Size(max=6)
-	private String correspondencePincode;
+	private String correspondencePinCode;
 
 	@Size(max=300)
 	private String correspondenceAddress;

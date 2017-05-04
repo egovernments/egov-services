@@ -400,6 +400,7 @@ class CreateAsset extends React.Component {
         }
       }
 
+      //return console.log(tempInfo);
       var body = {
           "RequestInfo": requestInfo,
           "Asset": tempInfo
@@ -421,7 +422,7 @@ class CreateAsset extends React.Component {
                 }
             });
             if (response["status"] === 201 || response["status"] == 200 || response["status"] == 204) {
-                window.location.href=`app/asset/create-asset-ack.html?name=${tempInfo.name}&type=&value=${getUrlVars()["type"]}`;
+                window.location.href=`app/asset/create-asset-ack.html?name=${tempInfo.name}&type=&value=${getUrlVars()["type"]}&code=${_this.state.assetSet.code}`;
             } else {
                 this.setState({
                     ...this.state,
@@ -1071,10 +1072,12 @@ class CreateAsset extends React.Component {
           }
         }
         return newRows[name].map(function(val, ind) {
-          return (<tr>{item.columns.map((itemOne, index) => {
+          return (<tr>
+              <td style={{"padding-top": "12px"}}>{len ? (len+ind+1) : (ind+2)}</td>
+              {item.columns.map((itemOne, index) => {
               itemOne.parent = item.name;
               return (
-                <td>{checkFields(itemOne, ((len+ind) || (ind+1)), true)}</td>
+                <td>{checkFields(itemOne, (len ? (len+ind) : (ind+1)), true)}</td>
               );
             })}</tr>)
         })
@@ -1097,7 +1100,9 @@ class CreateAsset extends React.Component {
                     value: itm[key]
                   })
                 };
-                return (<tr>{_itms.map(function(_itm, ind2) {
+                return (<tr>
+                    <td style={{"padding-top": "12px"}}>{ind+1}</td>
+                    {_itms.map(function(_itm, ind2) {
                     for(var i=0; i<item.columns.length; i++) {
                       if(item.columns[i].name == _itm.key) {
                         var newItem = Object.assign({}, item.columns[i]);
@@ -1138,7 +1143,9 @@ class CreateAsset extends React.Component {
               });
           }
           if(!rndr)
-  					return (<tr>{item.columns.map((itemOne, index) => {
+  					return (<tr>
+                <td  style={{"padding-top": "12px"}}>1</td>
+                {item.columns.map((itemOne, index) => {
                 itemOne.parent = item.name;
                 return (
                   <td>{checkFields(itemOne, 0, true)}</td>
@@ -1154,7 +1161,7 @@ class CreateAsset extends React.Component {
                       <h3 className="categoryType">{item.name}</h3>
                    </div>
                    <div className="col-md-4 text-right">
-                      <button type="button" className="btn btn-primary" onClick={(e) => {addNewRow(e, item.name)}} disabled={getUrlVars()["type"] == "view"}>Add</button>
+                      
                    </div>
                 </div>
                 <div className="row">
@@ -1162,6 +1169,7 @@ class CreateAsset extends React.Component {
                       <table className="table table-bordered">
                          <thead>
                             <tr>
+                               <th>Sr. No.</th>
                                {tableColumns()}
                             </tr>
                          </thead>
@@ -1173,6 +1181,9 @@ class CreateAsset extends React.Component {
                       </table>
                    </div>
                 </div>
+             </div>
+             <div className="row text-right">
+                <button type="button" className="btn btn-primary" onClick={(e) => {addNewRow(e, item.name)}} disabled={getUrlVars()["type"] == "view"}>Add</button>
              </div>
           </div>
         )

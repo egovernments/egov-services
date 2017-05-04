@@ -597,8 +597,6 @@ class CreateAsset extends React.Component {
       return (
         <div className="form-section">
           <h3 className="categoryType">Custom Fields</h3>
-          <button type="button" className="btn btn-default btn-action pull-right" onClick={()=>{showCustomFieldForm(true)}}><span className="glyphicon glyphicon-plus"></span></button>
-
           <div className="land-table table-responsive">
               <table className="table table-bordered">
                   <thead>
@@ -620,12 +618,13 @@ class CreateAsset extends React.Component {
 
                   <tbody>
                   {renderBody()}
-
                   </tbody>
-
               </table>
           </div>
-
+          <div className="row" style={{"padding-right": "18px"}}>
+            <button type="button" className="btn btn-primary btn-action pull-right" onClick={()=>{showCustomFieldForm(true)}}>Add New</button>
+            <br/>
+          </div>
             {showCustomFieldAddForm()}
         </div>
 
@@ -755,11 +754,10 @@ class CreateAsset extends React.Component {
 
               {showNestedCustomFieldTable()}
               {showNoteMsg()}
-              {/*  <button type="button" className="btn btn-default" >reset</button>*/}
+              <div className="text-center">
                 <button type="button" className="btn btn-primary" onClick={(e)=>{addAsset()}}>Add/Edit</button>
               </div>
-
-                  {/**/}
+              </div>
             </div>
           )
         }

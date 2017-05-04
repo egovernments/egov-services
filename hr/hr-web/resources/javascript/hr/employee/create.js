@@ -2007,7 +2007,7 @@ $("#createEmployeeForm").validate({
           }
       }
 
-      if(employee.user && employee.user.dob) {
+      if(employee.user && employee.user.dob && getUrlVars["type"] == "update") {
         var _date = employee.user.dob.split("-");
         employee.user.dob = _date[1] + "/" + _date[2] + "/" + _date[0];
       }

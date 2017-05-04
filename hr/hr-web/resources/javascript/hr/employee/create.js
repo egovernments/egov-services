@@ -1874,7 +1874,7 @@ function markEditIndex(index = -1, modalName = "", object = "") {
               $('[data-hod="yes"]').prop("checked", true);
               $('[data-hod="no"]').prop("checked", false);
               $("#departments").show();
-              tempListBox = employeeSubObject[object][key];
+              tempListBox = Object.assign([], employeeSubObject[object][key]);
               $("#assignments\\.mainDepartments option:selected").removeAttr("selected");
               var _val = [];
               for(var i=0; i<employeeSubObject[object][key].length; i++) {

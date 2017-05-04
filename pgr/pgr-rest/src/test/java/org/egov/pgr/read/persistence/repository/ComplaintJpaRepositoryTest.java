@@ -35,7 +35,6 @@ public class ComplaintJpaRepositoryTest {
 
     @Test
     @Sql(scripts = {
-            "/sql/addLastAccessedTime.sql",
             "/sql/clearComplaint.sql",
             "/sql/InsertComplaintData.sql"
           })

@@ -2009,7 +2009,7 @@ $("#createEmployeeForm").validate({
           //Handle error
         } else {
           var response = $.ajax({
-            url: baseUrl + "/hr-employee/employees/" + ((getUrlVars()["type"] == "update") ? ( employee.id + "/_update") : "_create") + "?tenantId=" + tenantId,
+            url: baseUrl + "/hr-employee/employees/" + ((getUrlVars()["type"] == "update") ? "_update" : "_create") + "?tenantId=" + tenantId,
             type: 'POST',
             dataType: 'json',
             data: JSON.stringify({
